@@ -1,0 +1,7 @@
+[tool.poetry]
+name = "workers"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic-settings = "^2.2.1"

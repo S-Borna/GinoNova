@@ -1,2 +1,3 @@
 # saas-project
-Modern SaaS platform – monorepo foundation
+
+Baseline Strong Mode scaffold. No features implemented yet.

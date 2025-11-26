@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "backend"
+version = "1.0.0"
+description = ""
+authors = ["SaaS Project"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.111.0"
+uvicorn = "^0.30.0"
+pydantic-settings = "^2.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
