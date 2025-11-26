@@ -1,0 +1,12 @@
+{
+    "name": "@shared/ts",
+    "version": "1.1.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc && node generate-json-schema.js"
+    },
+    "dependencies": {
+        "zod": "latest"
+    }
+}

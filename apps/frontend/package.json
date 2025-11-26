@@ -1,0 +1,25 @@
+{
+    "name": "frontend",
+    "version": "1.2.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "next": "latest",
+        "react": "latest",
+        "react-dom": "latest"
+    },
+    "netlify": {
+        "build": {
+            "command": "npm run build",
+            "publish": "apps/frontend/.next"
+        }
+    },
+    "devDependencies": {
+        "@types/node": "24.10.1",
+        "@types/react": "19.2.7"
+    }
+}

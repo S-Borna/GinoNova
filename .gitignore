@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+.env
+.env.*local
+__pycache__/
+*.pyc
+.cache/
+.next/
+logs/
+*.log
+.turbo/
+.venv/
