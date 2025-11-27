@@ -22,10 +22,12 @@ jobs:
               run: npm install
 
             - name: Lint
-              run: npm run lint --workspaces=frontend
+              working-directory: apps/frontend
+              run: npm run lint
 
             - name: Build
-              run: npm run build --workspaces=frontend
+              working-directory: apps/frontend
+              run: npm run build
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
