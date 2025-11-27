@@ -1,9 +1,9 @@
 """
 Difficulty Service
-Phase 7.5: AI service layer with rule engine integration
+Phase 7.6: AI service layer with DB integration
 
-Estimates user-adjusted task difficulty using the deterministic
-rule engine's compute_difficulty_adjustment function.
+Estimates user-adjusted task difficulty using real data from
+repositories and the deterministic rule engine.
 """
 import logging
 from datetime import datetime
@@ -18,6 +18,10 @@ from shared.ai import (
     TaskData,
 )
 
+from ...db import user_repository, task_repository, progress_repository
+from ...db.memory import USERS
+from ...schemas.user import UserInDB
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,13 +29,13 @@ class DifficultyService:
     """
     Service for estimating task difficulty for specific users.
 
-    Phase 7.5: Uses compute_difficulty_adjustment from the rule engine
-    to provide personalized difficulty estimates.
+    Phase 7.6: Integrates with repositories for real task and user data.
+    Uses compute_difficulty_adjustment from the rule engine.
     """
 
     def __init__(self) -> None:
         """Initialize the difficulty service."""
-        logger.info("DifficultyService initialized (engine=active)")
+        logger.info("DifficultyService initialized (engine=active, db=integrated)")
 
     def estimate_difficulty(
         self,
@@ -41,11 +45,8 @@ class DifficultyService:
         """
         Estimate how difficult a task will be for a specific user.
 
-        Uses the rule engine to adjust base difficulty based on:
-        - User's skill level vs task difficulty
-        - Prerequisite completion status
-        - Learning momentum (streak, XP)
-        - Time of day factors
+        Uses real task data from repository and rule engine to adjust
+        base difficulty based on user context and progress.
 
         Args:
             task_id: UUID of the task to estimate
@@ -58,9 +59,15 @@ class DifficultyService:
 
         now = datetime.utcnow()
 
+        # Resolve user
+        user = self._resolve_user(user_id)
+        resolved_user_id = user.id if user else user_id
+
         # Build context
-        user_ctx = self._build_user_context(user_id)
-        task_data = self._get_task_data(task_id)
+        user_ctx = self._build_user_context(user, resolved_user_id)
+
+        # Load task data
+        task_data = self._load_task_data(task_id, resolved_user_id)
 
         # Compute adjustment using rule engine
         adjustment = compute_difficulty_adjustment(user_ctx, task_data)
@@ -114,13 +121,14 @@ class DifficultyService:
             f"task_count={len(task_ids)}, user_id={user_id}"
         )
 
-        # Build context once for all tasks
-        user_ctx = self._build_user_context(user_id)
+        user = self._resolve_user(user_id)
+        resolved_user_id = user.id if user else user_id
+        user_ctx = self._build_user_context(user, resolved_user_id)
         now = datetime.utcnow()
 
         results = []
         for task_id in task_ids:
-            task_data = self._get_task_data(task_id)
+            task_data = self._load_task_data(task_id, resolved_user_id)
             adjustment = compute_difficulty_adjustment(user_ctx, task_data)
 
             prerequisites = task_data.get("prerequisites", [])
@@ -156,8 +164,10 @@ class DifficultyService:
         """
         logger.info(f"check_prerequisites called: task_id={task_id}, user_id={user_id}")
 
-        user_ctx = self._build_user_context(user_id)
-        task_data = self._get_task_data(task_id)
+        user = self._resolve_user(user_id)
+        resolved_user_id = user.id if user else user_id
+        user_ctx = self._build_user_context(user, resolved_user_id)
+        task_data = self._load_task_data(task_id, resolved_user_id)
 
         prerequisites = task_data.get("prerequisites", [])
         if not prerequisites:
@@ -166,13 +176,24 @@ class DifficultyService:
         completed = user_ctx.get("completed_task_ids", [])
         return all(p in completed for p in prerequisites)
 
-    def _build_user_context(self, user_id: Optional[UUID]) -> UserContext:
-        """
-        Build user context for difficulty calculation.
+    def _resolve_user(self, user_id: Optional[UUID]) -> Optional[UserInDB]:
+        """Resolve user from ID or fallback to first available user."""
+        if user_id:
+            user = user_repository.get_user_by_id(user_id)
+            if user:
+                return user
 
-        Phase 7.5: Returns deterministic sample context.
-        Phase 7.6+: Will query actual user data from DB.
-        """
+        if USERS:
+            return next(iter(USERS.values()))
+
+        return None
+
+    def _build_user_context(
+        self,
+        user: Optional[UserInDB],
+        user_id: Optional[UUID],
+    ) -> UserContext:
+        """Build user context from real user data and progress."""
         hour = datetime.utcnow().hour
         if hour < 12:
             time_of_day = "morning"
@@ -183,29 +204,78 @@ class DifficultyService:
         else:
             time_of_day = "night"
 
-        return {
+        ctx: UserContext = {
             "user_id": str(user_id) if user_id else "anonymous",
             "skill_level": "intermediate",
-            "streak_days": 5,
-            "xp": 1500,
-            "completed_module_ids": ["docker-basics", "linux-fundamentals"],
-            "completed_task_ids": ["task-001", "task-002", "task-003"],
+            "streak_days": 0,
+            "xp": 0,
+            "completed_module_ids": [],
+            "completed_task_ids": [],
             "focus_energy": "high" if hour < 16 else "medium",
             "time_of_day": time_of_day,
             "available_minutes": 45,
         }
 
-    def _get_task_data(self, task_id: UUID) -> TaskData:
-        """
-        Get task data by ID.
+        if not user_id:
+            return ctx
 
-        Phase 7.5: Returns deterministic sample task based on ID pattern.
-        Phase 7.6+: Will query from DB.
+        progress_records = progress_repository.list_progress_by_user(user_id)
+
+        completed_modules = []
+        completed_tasks = []
+
+        for p in progress_records:
+            if p.status == "completed":
+                if p.module_id:
+                    completed_modules.append(str(p.module_id))
+                if p.task_id:
+                    completed_tasks.append(str(p.task_id))
+
+        ctx["completed_module_ids"] = completed_modules
+        ctx["completed_task_ids"] = completed_tasks
+        ctx["xp"] = len(completed_tasks) * 10 + len(completed_modules) * 50
+
+        total_completions = len(completed_tasks) + len(completed_modules)
+        if total_completions >= 20:
+            ctx["skill_level"] = "advanced"
+        elif total_completions >= 5:
+            ctx["skill_level"] = "intermediate"
+        else:
+            ctx["skill_level"] = "beginner"
+
+        return ctx
+
+    def _load_task_data(
+        self,
+        task_id: UUID,
+        user_id: Optional[UUID],
+    ) -> TaskData:
         """
+        Load task data from repository and convert to engine format.
+
+        Args:
+            task_id: UUID of the task to load
+            user_id: User ID for context (unused for now)
+
+        Returns:
+            TaskData dict for engine computation
+        """
+        task = task_repository.get_task_by_id(task_id)
+
+        if task:
+            return {
+                "id": str(task.id),
+                "title": task.title,
+                "difficulty": task.difficulty,
+                "priority": "medium",
+                "module_id": str(task.module_id),
+                "due_date": None,
+                "estimated_minutes": 25,
+                "prerequisites": [],
+            }
+
+        # Fallback: deterministic sample task based on ID hash
         task_id_str = str(task_id)
-
-        # Return different task data based on ID hash (deterministic)
-        # This simulates different tasks in the system
         id_hash = hash(task_id_str) % 3
 
         if id_hash == 0:
@@ -217,7 +287,7 @@ class DifficultyService:
                 "module_id": "kubernetes-101",
                 "due_date": None,
                 "estimated_minutes": 30,
-                "prerequisites": ["task-001"],
+                "prerequisites": [],
             }
         elif id_hash == 1:
             return {
@@ -239,5 +309,5 @@ class DifficultyService:
                 "module_id": "terraform-basics",
                 "due_date": None,
                 "estimated_minutes": 45,
-                "prerequisites": ["task-002", "task-003"],
+                "prerequisites": [],
             }

@@ -1,9 +1,9 @@
 """
 Next Step Service
-Phase 7.5: AI service layer with rule engine integration
+Phase 7.6: AI service layer with DB integration
 
 Provides the single most optimal next action recommendation
-using the deterministic rule engine.
+using real data from repositories and the deterministic rule engine.
 """
 import logging
 from datetime import datetime, timedelta
@@ -20,6 +20,10 @@ from shared.ai import (
     StudyflowData,
 )
 
+from ...db import user_repository, module_repository, task_repository, progress_repository
+from ...db.memory import USERS
+from ...schemas.user import UserInDB
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,13 +31,13 @@ class NextStepService:
     """
     Service for determining the single best next action for a user.
 
-    Phase 7.5: Uses compute_recommendation_scores to select the
-    highest-scoring action across tasks, modules, and studyflow.
+    Phase 7.6: Integrates with repositories for real user/module/task data.
+    Uses compute_recommendation_scores to select the highest-scoring action.
     """
 
     def __init__(self) -> None:
         """Initialize the next step service."""
-        logger.info("NextStepService initialized (engine=active)")
+        logger.info("NextStepService initialized (engine=active, db=integrated)")
 
     def get_next_step(
         self,
@@ -42,8 +46,8 @@ class NextStepService:
         """
         Determine the single most optimal next action for a user.
 
-        Compares top-scored task, module, and studyflow to select
-        the best overall recommendation.
+        Compares top-scored task, module, and studyflow from real data
+        to select the best overall recommendation.
 
         Args:
             user_id: Optional user UUID for personalization
@@ -55,10 +59,14 @@ class NextStepService:
 
         now = datetime.utcnow()
 
-        # Build context and get items
-        user_ctx = self._build_user_context(user_id)
-        modules = self._get_available_modules()
-        tasks = self._get_available_tasks()
+        # Resolve user
+        user = self._resolve_user(user_id)
+        resolved_user_id = user.id if user else None
+
+        # Build context and load data
+        user_ctx = self._build_user_context(user, resolved_user_id)
+        modules = self._load_modules(resolved_user_id)
+        tasks = self._load_tasks(resolved_user_id)
         studyflows = self._get_studyflow_options()
 
         # Compute scores
@@ -83,6 +91,18 @@ class NextStepService:
         )
 
         return response
+
+    def _resolve_user(self, user_id: Optional[UUID]) -> Optional[UserInDB]:
+        """Resolve user from ID or fallback to first available user."""
+        if user_id:
+            user = user_repository.get_user_by_id(user_id)
+            if user:
+                return user
+
+        if USERS:
+            return next(iter(USERS.values()))
+
+        return None
 
     def _select_best_action(
         self,
@@ -120,21 +140,20 @@ class NextStepService:
                 "action_id": module.get("id"),
                 "title": f"Continue: {module.get('name', 'Module')}",
                 "description": self._build_module_description(module, top["triggered_rules"]),
-                "score": top["score"] * 0.9,  # Slight discount for modules
+                "score": top["score"] * 0.9,
                 "confidence": min(1.0, top["score"] / 100.0),
                 "estimated_duration": 30,
             })
 
-        # Add studyflow if user energy is low (suggests break/refocus)
+        # Add studyflow if user energy is low
         if scores["top_studyflow"]:
             top = scores["top_studyflow"]
             sf = top["studyflow"]
-            # Studyflow is recommended when energy is low or time is short
             sf_weight = 0.7
             if user_ctx.get("focus_energy") == "low":
-                sf_weight = 1.1  # Prioritize if tired
+                sf_weight = 1.1
             if user_ctx.get("available_minutes", 60) < 20:
-                sf_weight = 1.0  # Good for short time slots
+                sf_weight = 1.0
 
             candidates.append({
                 "action_type": "studyflow",
@@ -146,9 +165,7 @@ class NextStepService:
                 "estimated_duration": sf.get("duration", 25),
             })
 
-        # Select highest scoring
         if not candidates:
-            # Fallback if no candidates
             return {
                 "action_type": "task",
                 "action_id": None,
@@ -209,8 +226,6 @@ class NextStepService:
         """
         Check if user should take a break and return break recommendation.
 
-        Uses deterministic rules based on time and context.
-
         Args:
             user_id: User UUID to check
 
@@ -220,9 +235,9 @@ class NextStepService:
         logger.info(f"get_break_recommendation called: user_id={user_id}")
 
         now = datetime.utcnow()
-        user_ctx = self._build_user_context(user_id)
+        user = self._resolve_user(user_id)
+        user_ctx = self._build_user_context(user, user_id)
 
-        # Determine break duration based on energy/time
         energy = user_ctx.get("focus_energy", "medium")
         time_of_day = user_ctx.get("time_of_day", "afternoon")
 
@@ -249,8 +264,12 @@ class NextStepService:
             generated_at=now,
         )
 
-    def _build_user_context(self, user_id: Optional[UUID]) -> UserContext:
-        """Build user context for scoring."""
+    def _build_user_context(
+        self,
+        user: Optional[UserInDB],
+        user_id: Optional[UUID],
+    ) -> UserContext:
+        """Build user context from real user data and progress."""
         hour = datetime.utcnow().hour
         if hour < 12:
             time_of_day = "morning"
@@ -261,66 +280,136 @@ class NextStepService:
         else:
             time_of_day = "night"
 
-        return {
+        ctx: UserContext = {
             "user_id": str(user_id) if user_id else "anonymous",
             "skill_level": "intermediate",
-            "streak_days": 5,
-            "xp": 1500,
-            "completed_module_ids": ["docker-basics", "linux-fundamentals"],
-            "completed_task_ids": ["task-001", "task-002", "task-003"],
+            "streak_days": 0,
+            "xp": 0,
+            "completed_module_ids": [],
+            "completed_task_ids": [],
             "focus_energy": "high" if hour < 16 else "medium",
             "time_of_day": time_of_day,
             "available_minutes": 45,
         }
 
-    def _get_available_modules(self) -> list[ModuleData]:
-        """Get available modules."""
-        return [
-            {
-                "id": "kubernetes-101",
-                "name": "Introduction to Kubernetes",
-                "difficulty": "medium",
-                "total_tasks": 12,
-                "completed_tasks": 0,
-                "prerequisites": ["docker-basics"],
-                "category": "containers",
-            },
-            {
-                "id": "ci-cd-pipelines",
-                "name": "CI/CD Pipeline Fundamentals",
-                "difficulty": "medium",
-                "total_tasks": 10,
-                "completed_tasks": 2,
-                "prerequisites": [],
-                "category": "devops",
-            },
-        ]
+        if not user_id:
+            return ctx
 
-    def _get_available_tasks(self) -> list[TaskData]:
-        """Get available tasks."""
-        now = datetime.utcnow()
-        return [
-            {
-                "id": "task-k8s-001",
-                "title": "Deploy your first Pod",
-                "difficulty": "easy",
-                "priority": "high",
-                "module_id": "kubernetes-101",
-                "due_date": (now + timedelta(days=2)).isoformat(),
-                "estimated_minutes": 20,
-                "prerequisites": [],
-            },
-            {
-                "id": "task-cicd-001",
-                "title": "Configure GitHub Actions workflow",
+        progress_records = progress_repository.list_progress_by_user(user_id)
+
+        completed_modules = []
+        completed_tasks = []
+
+        for p in progress_records:
+            if p.status == "completed":
+                if p.module_id:
+                    completed_modules.append(str(p.module_id))
+                if p.task_id:
+                    completed_tasks.append(str(p.task_id))
+
+        ctx["completed_module_ids"] = completed_modules
+        ctx["completed_task_ids"] = completed_tasks
+        ctx["xp"] = len(completed_tasks) * 10 + len(completed_modules) * 50
+
+        total_completions = len(completed_tasks) + len(completed_modules)
+        if total_completions >= 20:
+            ctx["skill_level"] = "advanced"
+        elif total_completions >= 5:
+            ctx["skill_level"] = "intermediate"
+        else:
+            ctx["skill_level"] = "beginner"
+
+        return ctx
+
+    def _load_modules(self, user_id: Optional[UUID]) -> list[ModuleData]:
+        """Load modules from repository and convert to engine format."""
+        db_modules = module_repository.list_modules()
+
+        if not db_modules:
+            return [
+                {
+                    "id": "sample-kubernetes-101",
+                    "name": "Introduction to Kubernetes",
+                    "difficulty": "medium",
+                    "total_tasks": 12,
+                    "completed_tasks": 0,
+                    "prerequisites": [],
+                    "category": "containers",
+                },
+            ]
+
+        modules: list[ModuleData] = []
+        for m in db_modules:
+            if not m.is_active:
+                continue
+
+            module_tasks = task_repository.list_tasks_by_module(m.id)
+            total_tasks = len(module_tasks)
+
+            completed_tasks = 0
+            if user_id:
+                for t in module_tasks:
+                    task_progress = progress_repository.get_progress_by_user_and_target(
+                        user_id=user_id, task_id=t.id
+                    )
+                    if task_progress and task_progress.status == "completed":
+                        completed_tasks += 1
+
+            modules.append({
+                "id": str(m.id),
+                "name": m.name,
                 "difficulty": "medium",
-                "priority": "medium",
-                "module_id": "ci-cd-pipelines",
-                "due_date": (now + timedelta(days=5)).isoformat(),
-                "estimated_minutes": 35,
+                "total_tasks": total_tasks,
+                "completed_tasks": completed_tasks,
                 "prerequisites": [],
-            },
-        ]
+                "category": "general",
+            })
+
+        return modules if modules else self._load_modules(None)
+
+    def _load_tasks(self, user_id: Optional[UUID]) -> list[TaskData]:
+        """Load tasks from repository and convert to engine format."""
+        db_tasks = task_repository.list_tasks()
+
+        if not db_tasks:
+            now = datetime.utcnow()
+            return [
+                {
+                    "id": "sample-task-k8s-001",
+                    "title": "Deploy your first Pod",
+                    "difficulty": "easy",
+                    "priority": "high",
+                    "module_id": "sample-kubernetes-101",
+                    "due_date": (now + timedelta(days=2)).isoformat(),
+                    "estimated_minutes": 20,
+                    "prerequisites": [],
+                },
+            ]
+
+        now = datetime.utcnow()
+        completed_task_ids: set[UUID] = set()
+        if user_id:
+            for p in progress_repository.list_progress_by_user(user_id):
+                if p.task_id and p.status == "completed":
+                    completed_task_ids.add(p.task_id)
+
+        tasks: list[TaskData] = []
+        for t in db_tasks:
+            if not t.is_active or t.id in completed_task_ids:
+                continue
+
+            tasks.append({
+                "id": str(t.id),
+                "title": t.title,
+                "difficulty": t.difficulty,
+                "priority": "medium",
+                "module_id": str(t.module_id),
+                "due_date": (now + timedelta(days=7)).isoformat(),
+                "estimated_minutes": 25,
+                "prerequisites": [],
+            })
+
+        return tasks if tasks else self._load_tasks(None)
 
     def _get_studyflow_options(self) -> list[StudyflowData]:
         """Get studyflow options."""
