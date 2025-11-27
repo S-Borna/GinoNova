@@ -126,9 +126,8 @@ export default function RegisterPage() {
                                 }}
                                 onBlur={handleEmailBlur}
                                 disabled={isLoading}
-                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                    emailError ? "border-red-500" : "border-gray-300"
-                                }`}
+                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${emailError ? "border-red-500" : "border-gray-300"
+                                    }`}
                             />
                             {emailError && (
                                 <p className="mt-1 text-sm text-red-500">{emailError}</p>
@@ -153,9 +152,8 @@ export default function RegisterPage() {
                                 }}
                                 onBlur={handlePasswordBlur}
                                 disabled={isLoading}
-                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                    passwordError ? "border-red-500" : "border-gray-300"
-                                }`}
+                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${passwordError ? "border-red-500" : "border-gray-300"
+                                    }`}
                             />
                             {passwordError && (
                                 <p className="mt-1 text-sm text-red-500">{passwordError}</p>
