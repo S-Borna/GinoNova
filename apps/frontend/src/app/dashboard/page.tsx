@@ -2,7 +2,7 @@
 
 /**
  * Dashboard Page
- * Phase 6.2: Enhanced Dashboard with Skeletons, Empty States, Soft-fail, Refresh
+ * Phase 6.3: Enhanced Dashboard with Design Polish (layout, cards, hierarchy)
  */
 
 import { useEffect, useState, useCallback } from "react"
@@ -22,96 +22,111 @@ import {
 } from "@/lib/dashboard"
 
 // ============================================================================
+// DESIGN TOKENS (Consistent styling)
+// ============================================================================
+
+const cardStyles = "rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-200"
+const sectionHeadingStyles = "text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2"
+const listItemStyles = "flex items-center justify-between px-3 py-2.5 rounded-lg bg-gray-50/80 hover:bg-gray-100 transition-all duration-150 cursor-pointer group"
+const linkStyles = "text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors"
+
+// ============================================================================
+// SECTION DIVIDER
+// ============================================================================
+
+function SectionDivider() {
+    return <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-10" />
+}
+
+// ============================================================================
 // SKELETON COMPONENTS
 // ============================================================================
 
 function Skeleton({ className = "" }: { className?: string }) {
-    return <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
+    return <div className={`animate-pulse bg-gray-200/80 rounded ${className}`} />
 }
 
 function StatCardSkeleton() {
     return (
-        <Card>
-            <CardHeader className="pb-2">
-                <Skeleton className="h-4 w-24 mb-2" />
-                <Skeleton className="h-8 w-16" />
-            </CardHeader>
-            <CardContent>
-                <Skeleton className="h-3 w-20" />
-            </CardContent>
-        </Card>
+        <div className={cardStyles}>
+            <div className="p-5">
+                <Skeleton className="h-3 w-20 mb-3" />
+                <Skeleton className="h-9 w-14 mb-2" />
+                <Skeleton className="h-2.5 w-16" />
+            </div>
+        </div>
     )
 }
 
 function PanelSkeleton({ lines = 3 }: { lines?: number }) {
     return (
-        <Card>
-            <CardHeader>
-                <div className="flex items-center justify-between">
+        <div className={cardStyles}>
+            <div className="p-5 border-b border-gray-50">
+                <div className="flex items-center justify-between mb-1">
                     <Skeleton className="h-5 w-24" />
                     <Skeleton className="h-5 w-8 rounded-full" />
                 </div>
-                <Skeleton className="h-4 w-40 mt-1" />
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-3">
+                <Skeleton className="h-3.5 w-36" />
+            </div>
+            <div className="p-5">
+                <div className="space-y-2.5">
                     {Array.from({ length: lines }).map((_, i) => (
-                        <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-5 w-16 rounded-full" />
+                        <div key={i} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-gray-50/80">
+                            <Skeleton className="h-4 w-28" />
+                            <Skeleton className="h-5 w-14 rounded-full" />
                         </div>
                     ))}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
 function ProgressPanelSkeleton() {
     return (
-        <Card>
-            <CardHeader>
-                <div className="flex items-center justify-between">
+        <div className={cardStyles}>
+            <div className="p-5 border-b border-gray-50">
+                <div className="flex items-center justify-between mb-1">
                     <Skeleton className="h-5 w-28" />
                     <Skeleton className="h-5 w-8 rounded-full" />
                 </div>
-                <Skeleton className="h-4 w-44 mt-1" />
-            </CardHeader>
-            <CardContent>
+                <Skeleton className="h-3.5 w-40" />
+            </div>
+            <div className="p-5">
                 <div className="space-y-3">
                     {Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="p-3 rounded-lg bg-muted/50">
-                            <div className="flex items-center justify-between mb-2">
-                                <Skeleton className="h-4 w-20" />
+                        <div key={i} className="px-3 py-3 rounded-lg bg-gray-50/80">
+                            <div className="flex items-center justify-between mb-2.5">
+                                <Skeleton className="h-4 w-16" />
                                 <Skeleton className="h-5 w-20 rounded-full" />
                             </div>
-                            <Skeleton className="h-2.5 w-full rounded-full" />
+                            <Skeleton className="h-2 w-full rounded-full" />
                         </div>
                     ))}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
 function SystemPanelSkeleton() {
     return (
-        <Card>
-            <CardHeader>
-                <Skeleton className="h-5 w-24" />
-                <Skeleton className="h-4 w-36 mt-1" />
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-2 gap-4">
+        <div className={cardStyles}>
+            <div className="p-5 border-b border-gray-50">
+                <Skeleton className="h-5 w-24 mb-1" />
+                <Skeleton className="h-3.5 w-32" />
+            </div>
+            <div className="p-5">
+                <div className="grid grid-cols-2 gap-5">
                     {Array.from({ length: 4 }).map((_, i) => (
                         <div key={i}>
-                            <Skeleton className="h-3 w-16 mb-1" />
-                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-3 w-14 mb-1.5" />
+                            <Skeleton className="h-4 w-20" />
                         </div>
                     ))}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -126,13 +141,17 @@ function EmptyState({ icon, title, description, action }: {
     action?: { label: string; href: string }
 }) {
     return (
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-            <span className="text-4xl mb-3">{icon}</span>
-            <p className="text-sm font-medium text-gray-900 mb-1">{title}</p>
-            <p className="text-xs text-muted-foreground mb-3">{description}</p>
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                <span className="text-2xl">{icon}</span>
+            </div>
+            <p className="text-sm font-semibold text-gray-900 mb-1">{title}</p>
+            <p className="text-xs text-gray-500 mb-4 max-w-[200px]">{description}</p>
             {action && (
                 <Link href={action.href}>
-                    <Button variant="outline" size="sm">{action.label}</Button>
+                    <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-lg">
+                        {action.label}
+                    </Button>
                 </Link>
             )}
         </div>
@@ -145,20 +164,22 @@ function EmptyState({ icon, title, description, action }: {
 
 function PanelError({ title, onRetry }: { title: string; onRetry?: () => void }) {
     return (
-        <Card className="border-red-200">
-            <CardContent className="py-8">
+        <div className={`${cardStyles} border-red-100`}>
+            <div className="py-10 px-5">
                 <div className="flex flex-col items-center justify-center text-center">
-                    <span className="text-3xl mb-2">⚠️</span>
-                    <p className="text-sm font-medium text-red-600 mb-1">Failed to load {title}</p>
-                    <p className="text-xs text-muted-foreground mb-3">Something went wrong. Try refreshing.</p>
+                    <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
+                        <span className="text-xl">⚠️</span>
+                    </div>
+                    <p className="text-sm font-semibold text-red-600 mb-1">Failed to load {title}</p>
+                    <p className="text-xs text-gray-500 mb-4">Something went wrong. Try refreshing.</p>
                     {onRetry && (
-                        <Button variant="outline" size="sm" onClick={onRetry}>
+                        <Button variant="outline" size="sm" onClick={onRetry} className="text-xs h-8 px-3 rounded-lg">
                             Retry
                         </Button>
                     )}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -166,19 +187,26 @@ function PanelError({ title, onRetry }: { title: string; onRetry?: () => void })
 // STAT CARD
 // ============================================================================
 
-function StatCard({ title, value, subtitle }: { title: string; value: number | string; subtitle?: string }) {
+function StatCard({ title, value, subtitle, icon }: { title: string; value: number | string; subtitle?: string; icon?: string }) {
     return (
-        <Card>
-            <CardHeader className="pb-2">
-                <CardDescription>{title}</CardDescription>
-                <CardTitle className="text-3xl">{value}</CardTitle>
-            </CardHeader>
-            {subtitle && (
-                <CardContent>
-                    <p className="text-xs text-muted-foreground">{subtitle}</p>
-                </CardContent>
-            )}
-        </Card>
+        <div className={cardStyles}>
+            <div className="p-5">
+                <div className="flex items-start justify-between">
+                    <div>
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">{title}</p>
+                        <p className="text-3xl font-bold text-gray-900 tracking-tight">{value}</p>
+                        {subtitle && (
+                            <p className="text-xs text-gray-400 mt-1">{subtitle}</p>
+                        )}
+                    </div>
+                    {icon && (
+                        <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center">
+                            <span className="text-lg">{icon}</span>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -188,15 +216,15 @@ function StatCard({ title, value, subtitle }: { title: string; value: number | s
 
 function ModulesPanel({ modules }: { modules: DashboardModule[] }) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                    <span>Modules</span>
-                    <Badge variant="secondary">{modules.length}</Badge>
-                </CardTitle>
-                <CardDescription>Learning modules overview</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className={cardStyles}>
+            <div className="px-5 py-4 border-b border-gray-50">
+                <div className="flex items-center justify-between">
+                    <h4 className="text-base font-semibold text-gray-900">Modules</h4>
+                    <Badge variant="secondary" className="text-xs font-medium">{modules.length}</Badge>
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">Learning modules overview</p>
+            </div>
+            <div className="p-4">
                 {modules.length === 0 ? (
                     <EmptyState
                         icon="📚"
@@ -205,28 +233,29 @@ function ModulesPanel({ modules }: { modules: DashboardModule[] }) {
                         action={{ label: "Create Module", href: "/modules/new" }}
                     />
                 ) : (
-                    <ul className="space-y-2">
+                    <ul className="space-y-1.5">
                         {modules.slice(0, 5).map((m) => (
-                            <li key={m.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-                                <Link href={`/modules/${m.id}`} className="text-sm font-medium hover:underline">
-                                    {m.name}
+                            <li key={m.id}>
+                                <Link href={`/modules/${m.id}`} className={listItemStyles}>
+                                    <span className={linkStyles}>{m.name}</span>
+                                    <Badge variant={m.is_active ? "success" : "inactive"} className="text-[10px] px-2 py-0.5">
+                                        {m.is_active ? "Active" : "Inactive"}
+                                    </Badge>
                                 </Link>
-                                <Badge variant={m.is_active ? "success" : "inactive"}>
-                                    {m.is_active ? "Active" : "Inactive"}
-                                </Badge>
                             </li>
                         ))}
                         {modules.length > 5 && (
-                            <li className="text-center pt-2">
-                                <Link href="/modules" className="text-xs text-muted-foreground hover:underline">
-                                    View all {modules.length} modules →
+                            <li className="pt-2">
+                                <Link href="/modules" className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center gap-1">
+                                    View all {modules.length} modules
+                                    <span>→</span>
                                 </Link>
                             </li>
                         )}
                     </ul>
                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -235,25 +264,25 @@ function ModulesPanel({ modules }: { modules: DashboardModule[] }) {
 // ============================================================================
 
 function TasksPanel({ tasks }: { tasks: DashboardTask[] }) {
-    const difficultyColor = (d: string) => {
+    const difficultyStyles = (d: string) => {
         switch (d.toLowerCase()) {
-            case "easy": return "bg-green-100 text-green-800"
-            case "medium": return "bg-yellow-100 text-yellow-800"
-            case "hard": return "bg-red-100 text-red-800"
-            default: return "bg-gray-100 text-gray-800"
+            case "easy": return "bg-emerald-50 text-emerald-700 border-emerald-100"
+            case "medium": return "bg-amber-50 text-amber-700 border-amber-100"
+            case "hard": return "bg-rose-50 text-rose-700 border-rose-100"
+            default: return "bg-gray-50 text-gray-600 border-gray-100"
         }
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                    <span>Tasks</span>
-                    <Badge variant="secondary">{tasks.length}</Badge>
-                </CardTitle>
-                <CardDescription>Practice tasks overview</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className={cardStyles}>
+            <div className="px-5 py-4 border-b border-gray-50">
+                <div className="flex items-center justify-between">
+                    <h4 className="text-base font-semibold text-gray-900">Tasks</h4>
+                    <Badge variant="secondary" className="text-xs font-medium">{tasks.length}</Badge>
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">Practice tasks overview</p>
+            </div>
+            <div className="p-4">
                 {tasks.length === 0 ? (
                     <EmptyState
                         icon="✅"
@@ -262,28 +291,29 @@ function TasksPanel({ tasks }: { tasks: DashboardTask[] }) {
                         action={{ label: "Browse Modules", href: "/modules" }}
                     />
                 ) : (
-                    <ul className="space-y-2">
+                    <ul className="space-y-1.5">
                         {tasks.slice(0, 5).map((t) => (
-                            <li key={t.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-                                <Link href={`/tasks/${t.id}`} className="text-sm font-medium hover:underline">
-                                    {t.title}
+                            <li key={t.id}>
+                                <Link href={`/tasks/${t.id}`} className={listItemStyles}>
+                                    <span className={linkStyles}>{t.title}</span>
+                                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${difficultyStyles(t.difficulty)}`}>
+                                        {t.difficulty}
+                                    </span>
                                 </Link>
-                                <span className={`text-xs px-2 py-0.5 rounded-full ${difficultyColor(t.difficulty)}`}>
-                                    {t.difficulty}
-                                </span>
                             </li>
                         ))}
                         {tasks.length > 5 && (
-                            <li className="text-center pt-2">
-                                <Link href="/tasks" className="text-xs text-muted-foreground hover:underline">
-                                    View all {tasks.length} tasks →
+                            <li className="pt-2">
+                                <Link href="/tasks" className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center gap-1">
+                                    View all {tasks.length} tasks
+                                    <span>→</span>
                                 </Link>
                             </li>
                         )}
                     </ul>
                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -293,15 +323,15 @@ function TasksPanel({ tasks }: { tasks: DashboardTask[] }) {
 
 function StudyflowPanel({ studyflows }: { studyflows: DashboardStudyflow[] }) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                    <span>Studyflows</span>
-                    <Badge variant="secondary">{studyflows.length}</Badge>
-                </CardTitle>
-                <CardDescription>Learning paths overview</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className={cardStyles}>
+            <div className="px-5 py-4 border-b border-gray-50">
+                <div className="flex items-center justify-between">
+                    <h4 className="text-base font-semibold text-gray-900">Studyflows</h4>
+                    <Badge variant="secondary" className="text-xs font-medium">{studyflows.length}</Badge>
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">Learning paths overview</p>
+            </div>
+            <div className="p-4">
                 {studyflows.length === 0 ? (
                     <EmptyState
                         icon="🎯"
@@ -310,28 +340,29 @@ function StudyflowPanel({ studyflows }: { studyflows: DashboardStudyflow[] }) {
                         action={{ label: "Browse Modules", href: "/modules" }}
                     />
                 ) : (
-                    <ul className="space-y-2">
+                    <ul className="space-y-1.5">
                         {studyflows.slice(0, 5).map((sf) => (
-                            <li key={sf.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-                                <Link href={`/studyflow/${sf.id}`} className="text-sm font-medium hover:underline">
-                                    {sf.title}
+                            <li key={sf.id}>
+                                <Link href={`/studyflow/${sf.id}`} className={listItemStyles}>
+                                    <span className={linkStyles}>{sf.title}</span>
+                                    <span className="text-[10px] font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                                        Step {sf.order}
+                                    </span>
                                 </Link>
-                                <span className="text-xs text-muted-foreground">
-                                    Step {sf.order}
-                                </span>
                             </li>
                         ))}
                         {studyflows.length > 5 && (
-                            <li className="text-center pt-2">
-                                <Link href="/studyflow" className="text-xs text-muted-foreground hover:underline">
-                                    View all {studyflows.length} studyflows →
+                            <li className="pt-2">
+                                <Link href="/studyflow" className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center gap-1">
+                                    View all {studyflows.length} studyflows
+                                    <span>→</span>
                                 </Link>
                             </li>
                         )}
                     </ul>
                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -340,11 +371,11 @@ function StudyflowPanel({ studyflows }: { studyflows: DashboardStudyflow[] }) {
 // ============================================================================
 
 function ProgressPanel({ progress }: { progress: DashboardProgress[] }) {
-    const statusColor = (s: string) => {
+    const statusStyles = (s: string) => {
         switch (s) {
-            case "completed": return "bg-green-100 text-green-800"
-            case "in_progress": return "bg-yellow-100 text-yellow-800"
-            default: return "bg-gray-100 text-gray-800"
+            case "completed": return "bg-emerald-50 text-emerald-700 border-emerald-100"
+            case "in_progress": return "bg-amber-50 text-amber-700 border-amber-100"
+            default: return "bg-gray-50 text-gray-600 border-gray-100"
         }
     }
 
@@ -357,15 +388,15 @@ function ProgressPanel({ progress }: { progress: DashboardProgress[] }) {
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                    <span>Your Progress</span>
-                    <Badge variant="secondary">{progress.length}</Badge>
-                </CardTitle>
-                <CardDescription>Track your learning journey</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className={cardStyles}>
+            <div className="px-5 py-4 border-b border-gray-50">
+                <div className="flex items-center justify-between">
+                    <h4 className="text-base font-semibold text-gray-900">Your Progress</h4>
+                    <Badge variant="secondary" className="text-xs font-medium">{progress.length}</Badge>
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">Track your learning journey</p>
+            </div>
+            <div className="p-4">
                 {progress.length === 0 ? (
                     <EmptyState
                         icon="📈"
@@ -374,14 +405,14 @@ function ProgressPanel({ progress }: { progress: DashboardProgress[] }) {
                         action={{ label: "Get Started", href: "/modules" }}
                     />
                 ) : (
-                    <ul className="space-y-3">
+                    <ul className="space-y-2.5">
                         {progress.slice(0, 5).map((p) => (
-                            <li key={p.id} className="p-3 rounded-lg bg-muted/50">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-sm font-medium">
+                            <li key={p.id} className="px-3 py-3 rounded-lg bg-gray-50/80">
+                                <div className="flex items-center justify-between mb-2.5">
+                                    <span className="text-xs font-semibold text-gray-700">
                                         {p.module_id ? "Module" : p.task_id ? "Task" : "Studyflow"}
                                     </span>
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${statusColor(p.status)}`}>
+                                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${statusStyles(p.status)}`}>
                                         {statusLabel(p.status)}
                                     </span>
                                 </div>
@@ -389,16 +420,17 @@ function ProgressPanel({ progress }: { progress: DashboardProgress[] }) {
                             </li>
                         ))}
                         {progress.length > 5 && (
-                            <li className="text-center pt-2">
-                                <Link href="/progress" className="text-xs text-muted-foreground hover:underline">
-                                    View all {progress.length} progress records →
+                            <li className="pt-1">
+                                <Link href="/progress" className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center gap-1">
+                                    View all {progress.length} progress records
+                                    <span>→</span>
                                 </Link>
                             </li>
                         )}
                     </ul>
                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -408,32 +440,32 @@ function ProgressPanel({ progress }: { progress: DashboardProgress[] }) {
 
 function SystemInfoPanel({ system, version }: { system: DashboardSummary["system"]; version: DashboardSummary["version"] }) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>System Info</CardTitle>
-                <CardDescription>Backend service status</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <p className="text-muted-foreground">Service</p>
-                        <p className="font-medium">{system.service}</p>
+        <div className={cardStyles}>
+            <div className="px-5 py-4 border-b border-gray-50">
+                <h4 className="text-base font-semibold text-gray-900">System Info</h4>
+                <p className="text-xs text-gray-500 mt-0.5">Backend service status</p>
+            </div>
+            <div className="p-5">
+                <div className="grid grid-cols-2 gap-5">
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Service</p>
+                        <p className="text-sm font-semibold text-gray-900">{system.service}</p>
                     </div>
-                    <div>
-                        <p className="text-muted-foreground">Version</p>
-                        <p className="font-medium">{system.version}</p>
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Version</p>
+                        <p className="text-sm font-semibold text-gray-900">{system.version}</p>
                     </div>
-                    <div>
-                        <p className="text-muted-foreground">Environment</p>
-                        <p className="font-medium capitalize">{system.environment}</p>
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Environment</p>
+                        <p className="text-sm font-semibold text-gray-900 capitalize">{system.environment}</p>
                     </div>
-                    <div>
-                        <p className="text-muted-foreground">Phase</p>
-                        <p className="font-medium">{version.phase}</p>
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Phase</p>
+                        <p className="text-sm font-semibold text-gray-900">{version.phase}</p>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }
 
@@ -448,10 +480,10 @@ function RefreshButton({ onClick, loading }: { onClick: () => void; loading: boo
             size="sm"
             onClick={onClick}
             disabled={loading}
-            className="gap-2"
+            className="gap-2 h-9 px-4 rounded-lg text-xs font-medium shadow-sm hover:shadow transition-shadow"
         >
             <svg
-                className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+                className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -508,28 +540,41 @@ function DashboardContent() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100/50">
             {/* Navigation */}
-            <nav className="bg-white shadow sticky top-0 z-10">
+            <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex items-center space-x-8">
-                            <h1 className="text-xl font-bold text-gray-900">DevOpsHub</h1>
-                            <div className="hidden md:flex space-x-4">
-                                <Link href="/modules" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Modules</Link>
-                                <Link href="/tasks" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Tasks</Link>
-                                <Link href="/studyflow" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Studyflow</Link>
-                                <Link href="/progress" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Progress</Link>
+                            <h1 className="text-xl font-bold text-gray-900 tracking-tight">DevOpsHub</h1>
+                            <div className="hidden md:flex items-center space-x-1">
+                                {[
+                                    { href: "/modules", label: "Modules" },
+                                    { href: "/tasks", label: "Tasks" },
+                                    { href: "/studyflow", label: "Studyflow" },
+                                    { href: "/progress", label: "Progress" },
+                                ].map((link) => (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        className="text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition-all"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                ))}
                             </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-sm text-gray-600">{user?.email}</span>
+                        <div className="flex items-center space-x-3">
+                            <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-gray-50 rounded-lg">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                <span className="text-xs font-medium text-gray-600">{user?.email}</span>
+                            </div>
                             {user?.is_admin && (
-                                <Badge variant="secondary">Admin</Badge>
+                                <Badge variant="secondary" className="text-xs">Admin</Badge>
                             )}
                             <button
                                 onClick={logout}
-                                className="text-sm text-red-600 hover:text-red-500 transition-colors"
+                                className="text-xs font-medium text-gray-500 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all"
                             >
                                 Logout
                             </button>
@@ -541,12 +586,12 @@ function DashboardContent() {
             {/* Main Content */}
             <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 {/* Welcome Header with Refresh */}
-                <div className="flex items-start justify-between mb-8">
+                <div className="flex items-start justify-between mb-10">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
+                        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
                             Welcome back, {user?.full_name || user?.email?.split("@")[0]}!
                         </h2>
-                        <p className="text-gray-600 mt-1">Here&apos;s your learning dashboard overview.</p>
+                        <p className="text-sm text-gray-500 mt-1">Here&apos;s your learning dashboard overview.</p>
                     </div>
                     <RefreshButton onClick={handleRefresh} loading={refreshing} />
                 </div>
@@ -555,80 +600,121 @@ function DashboardContent() {
                 {loading ? (
                     <>
                         {/* Stats Skeleton */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                            {Array.from({ length: 4 }).map((_, i) => (
-                                <StatCardSkeleton key={i} />
-                            ))}
-                        </div>
+                        <section className="mb-10">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                                Overview
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {Array.from({ length: 4 }).map((_, i) => (
+                                    <StatCardSkeleton key={i} />
+                                ))}
+                            </div>
+                        </section>
+
+                        <SectionDivider />
 
                         {/* Main Panels Skeleton */}
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                            <PanelSkeleton lines={4} />
-                            <PanelSkeleton lines={4} />
-                            <PanelSkeleton lines={4} />
-                        </div>
+                        <section className="mb-10">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                                Content
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <PanelSkeleton lines={4} />
+                                <PanelSkeleton lines={4} />
+                                <PanelSkeleton lines={4} />
+                            </div>
+                        </section>
+
+                        <SectionDivider />
 
                         {/* Bottom Section Skeleton */}
-                        <div className="grid md:grid-cols-2 gap-6">
-                            <ProgressPanelSkeleton />
-                            <SystemPanelSkeleton />
-                        </div>
+                        <section>
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+                                Status
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-5">
+                                <ProgressPanelSkeleton />
+                                <SystemPanelSkeleton />
+                            </div>
+                        </section>
                     </>
                 ) : error && !dashboard ? (
                     /* Full error state (only when no data at all) */
-                    <Card className="border-red-200 bg-red-50">
-                        <CardContent className="py-12">
+                    <div className={`${cardStyles} border-red-100 bg-red-50/50`}>
+                        <div className="py-16 px-5">
                             <div className="flex flex-col items-center justify-center text-center">
-                                <span className="text-5xl mb-4">😔</span>
-                                <p className="text-lg font-medium text-red-600 mb-2">Unable to load dashboard</p>
-                                <p className="text-sm text-muted-foreground mb-4">{error}</p>
-                                <Button onClick={handleRefresh} disabled={refreshing}>
+                                <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                                    <span className="text-3xl">😔</span>
+                                </div>
+                                <p className="text-lg font-semibold text-red-600 mb-2">Unable to load dashboard</p>
+                                <p className="text-sm text-gray-500 mb-6 max-w-sm">{error}</p>
+                                <Button onClick={handleRefresh} disabled={refreshing} className="rounded-lg">
                                     {refreshing ? "Retrying..." : "Try Again"}
                                 </Button>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 ) : dashboard ? (
                     <>
                         {/* Stats Grid */}
-                        <section className="mb-8">
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Overview</h3>
+                        <section className="mb-10">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
+                                Overview
+                            </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <StatCard
                                     title="Total Modules"
                                     value={dashboard.stats.total_modules}
                                     subtitle={`${dashboard.stats.active_modules} active`}
+                                    icon="📚"
                                 />
                                 <StatCard
                                     title="Total Tasks"
                                     value={dashboard.stats.total_tasks}
                                     subtitle={`${dashboard.stats.active_tasks} active`}
+                                    icon="✅"
                                 />
                                 <StatCard
                                     title="Studyflows"
                                     value={dashboard.stats.total_studyflows}
+                                    icon="🎯"
                                 />
                                 <StatCard
-                                    title="Progress Records"
+                                    title="Progress"
                                     value={dashboard.stats.total_progress_records}
+                                    icon="📈"
                                 />
                             </div>
                         </section>
 
+                        <SectionDivider />
+
                         {/* Main Panels Grid */}
-                        <section className="mb-8">
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Content</h3>
-                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <section className="mb-10">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                                Content
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                                 <ModulesPanel modules={dashboard.modules} />
                                 <TasksPanel tasks={dashboard.tasks} />
                                 <StudyflowPanel studyflows={dashboard.studyflow} />
                             </div>
                         </section>
 
+                        <SectionDivider />
+
                         {/* Bottom Section */}
                         <section>
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Status</h3>
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+                                Status
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-5">
                                 <ProgressPanel progress={dashboard.progress} />
                                 <SystemInfoPanel system={dashboard.system} version={dashboard.version} />
                             </div>
