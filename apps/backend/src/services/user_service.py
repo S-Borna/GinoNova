@@ -46,7 +46,7 @@ class UserService:
 
         # Hash password with bcrypt
         hashed = hash_password(user_data.password)
-        
+
         # Create UserInDB using factory function
         user_in_db = create_user_in_db(
             email=user_data.email,
@@ -102,7 +102,7 @@ class UserService:
         updated = user_repository.update_user(user_id, **kwargs)
         if not updated:
             return None
-        
+
         return UserPublic(
             id=updated.id,
             email=updated.email,
