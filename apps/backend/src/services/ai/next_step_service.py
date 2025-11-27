@@ -1,6 +1,7 @@
 """
 Next Step Service
 Phase 7.7: AI service layer with DB integration and caching
+Phase 7.13: Added AI event logging for telemetry diagnostics
 
 Provides the single most optimal next action recommendation
 using real data from repositories and the deterministic rule engine.
@@ -9,7 +10,7 @@ Includes in-memory caching with TTL.
 import logging
 from datetime import datetime, timedelta
 from typing import Any, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from shared.ai import (
     NextStepResponse,
@@ -24,6 +25,7 @@ from shared.ai import (
 from ...db import user_repository, module_repository, task_repository, progress_repository
 from ...db.memory import USERS
 from ...schemas.user import UserInDB
+from ...ai_logs.logger import log_ai_event
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +109,21 @@ class NextStepService:
 
         # Store in cache
         self._store_in_cache(cache_key, response)
+
+        # Phase 7.13: Log next_step event for telemetry
+        request_id = str(uuid4())
+        log_ai_event(
+            event_type="next_step_selected",
+            payload={
+                "action_type": best_action["action_type"],
+                "action_id": best_action["action_id"],
+                "confidence": best_action["confidence"],
+                "estimated_duration": best_action["estimated_duration"],
+            },
+            engine="next_step_service",
+            request_id=request_id,
+            user_id=str(resolved_user_id) if resolved_user_id else None,
+        )
 
         return response
 

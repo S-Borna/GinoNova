@@ -1,15 +1,17 @@
 """
 Recommendation Service
 Phase 7.7: AI service layer with DB integration and caching
+Phase 7.13: Added AI event logging for telemetry diagnostics
 
 Provides personalized task, module, and studyflow recommendations
 using real data from repositories and the deterministic rule engine.
 Includes in-memory caching with TTL.
 """
 import logging
+import time
 from datetime import datetime, timedelta
 from typing import Any, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from shared.ai import (
     TaskRecommendation,
@@ -29,6 +31,7 @@ from ...db import user_repository, module_repository, task_repository, progress_
 from ...db.memory import USERS
 from ...schemas.user import UserInDB
 from ...schemas.progress import ProgressInDB
+from ...ai_logs.logger import log_ai_event
 
 logger = logging.getLogger(__name__)
 
@@ -166,6 +169,23 @@ class RecommendationService:
 
         # Store in cache
         self._store_in_cache(cache_key, response)
+
+        # Phase 7.13: Log recommendation event for telemetry
+        request_id = str(uuid4())
+        log_ai_event(
+            event_type="recommendation_generated",
+            payload={
+                "type": "personalized" if user_id else "anonymous",
+                "limit": limit,
+                "include_reasoning": include_reasoning,
+                "has_task": response.recommendations.next_task is not None,
+                "has_module": response.recommendations.next_module is not None,
+                "has_studyflow": response.recommendations.studyflow is not None,
+            },
+            engine="recommendation_service",
+            request_id=request_id,
+            user_id=str(resolved_user_id) if resolved_user_id else None,
+        )
 
         logger.debug(f"Returning recommendations: {response.model_dump_json()[:200]}...")
         return response

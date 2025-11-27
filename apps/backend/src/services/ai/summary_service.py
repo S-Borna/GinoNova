@@ -1,6 +1,7 @@
 """
 Summary Service
 Phase 7.7: AI service layer with DB integration and caching
+Phase 7.13: Added AI event logging for telemetry diagnostics
 
 Generates AI-powered daily and weekly summaries using real data
 from repositories and the deterministic rule engine.
@@ -9,7 +10,7 @@ Includes in-memory caching with TTL.
 import logging
 from datetime import datetime, timedelta
 from typing import Any, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from shared.ai import (
     DailySummaryResponse,
@@ -24,6 +25,7 @@ from ...db import user_repository, module_repository, task_repository, progress_
 from ...db.memory import USERS
 from ...schemas.user import UserInDB
 from ...schemas.progress import ProgressInDB
+from ...ai_logs.logger import log_ai_event
 
 logger = logging.getLogger(__name__)
 
@@ -119,6 +121,22 @@ class SummaryService:
 
         # Store in cache
         self._store_in_cache(cache_key, response)
+
+        # Phase 7.13: Log summary event for telemetry
+        request_id = str(uuid4())
+        log_ai_event(
+            event_type="summary_generated",
+            payload={
+                "date": today,
+                "highlights_count": len(highlights),
+                "tasks_completed": response.tasks_completed,
+                "xp_earned": response.xp_earned,
+                "streak_days": response.streak_days,
+            },
+            engine="summary_service",
+            request_id=request_id,
+            user_id=str(resolved_user_id) if resolved_user_id else None,
+        )
 
         logger.debug(
             f"Returning daily summary: date={response.date}, "
