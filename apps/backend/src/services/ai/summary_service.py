@@ -1,31 +1,39 @@
 """
 Summary Service
-Phase 7.3: AI service layer with shared schemas
+Phase 7.4: AI service layer with rule engine foundation
 
 Generates AI-powered daily and weekly summaries for users.
-Currently returns placeholder data; actual AI logic in Phase 7.4+.
+Currently returns placeholder data; actual heuristics integration in Phase 7.5+.
 """
 import logging
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from shared.ai import DailySummaryResponse, SummaryHighlight
+from shared.ai import (
+    DailySummaryResponse,
+    SummaryHighlight,
+    # Engine imports (Phase 7.4) - wired but not used yet
+    compute_daily_highlights,
+)
 
 logger = logging.getLogger(__name__)
+
+# Engine reference for future use
+_engine_available = True
 
 
 class SummaryService:
     """
     Service for generating AI-powered learning summaries.
 
-    Phase 7.2: Stub implementation with placeholder responses.
-    Phase 7.4+: Will aggregate real user data and generate insights.
+    Phase 7.4: Rule engine foundation wired.
+    Phase 7.5+: Will use compute_daily_highlights for actual logic.
     """
 
     def __init__(self) -> None:
         """Initialize the summary service."""
-        logger.info("SummaryService initialized (stub mode)")
+        logger.info(f"SummaryService initialized (engine_available={_engine_available})")
 
     def get_daily_summary(
         self,
@@ -49,13 +57,16 @@ class SummaryService:
             DailySummaryResponse with full daily summary
 
         Note:
-            Phase 7.2: Returns static placeholder data.
-            Phase 7.4+: Will aggregate actual user activity data.
+            Phase 7.4: Engine wired but returns placeholder data.
+            Phase 7.5+: Will use compute_daily_highlights.
         """
         logger.info(f"get_daily_summary called: user_id={user_id}")
 
         now = datetime.utcnow()
         today = now.strftime("%Y-%m-%d")
+
+        # TODO Phase 7.5: Use actual highlights computation
+        # highlights = compute_daily_highlights(user_ctx, progress)
 
         # Build placeholder highlights
         highlights = [
@@ -114,7 +125,7 @@ class SummaryService:
             Dictionary with weekly summary data
 
         Note:
-            Phase 7.2: Returns minimal placeholder.
+            Phase 7.4: Returns minimal placeholder.
             Phase 7.5+: Will implement full weekly summary.
         """
         logger.info(f"get_weekly_summary called: user_id={user_id}")
@@ -146,8 +157,8 @@ class SummaryService:
             Motivational message string
 
         Note:
-            Phase 7.2: Returns static messages.
-            Phase 7.4+: Will use LLM for personalized messages.
+            Phase 7.4: Returns static messages.
+            Phase 7.5+: Will use LLM for personalized messages.
         """
         logger.info(
             f"generate_motivation_message called: "

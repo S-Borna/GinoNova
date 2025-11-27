@@ -1,0 +1,43 @@
+"""
+AI Rule Engine
+Phase 7.4: Deterministic rule engine foundation
+
+This package provides the core AI engine components:
+- scoring: Pure scoring functions (0-100 range)
+- rules: Static rule definitions
+- heuristics: High-level recommendation logic
+
+No ML. No randomness. Pure deterministic logic.
+"""
+from .scoring import (
+    score_task_relevance,
+    score_module_priority,
+    score_studyflow_mode,
+)
+from .rules import (
+    TASK_PRIORITY_RULES,
+    MODULE_SELECTION_RULES,
+    STUDYFLOW_MODE_RULES,
+    apply_rules,
+)
+from .heuristics import (
+    compute_recommendation_scores,
+    compute_difficulty_adjustment,
+    compute_daily_highlights,
+)
+
+__all__ = [
+    # Scoring functions
+    "score_task_relevance",
+    "score_module_priority",
+    "score_studyflow_mode",
+    # Rule sets
+    "TASK_PRIORITY_RULES",
+    "MODULE_SELECTION_RULES",
+    "STUDYFLOW_MODE_RULES",
+    "apply_rules",
+    # Heuristics
+    "compute_recommendation_scores",
+    "compute_difficulty_adjustment",
+    "compute_daily_highlights",
+]
