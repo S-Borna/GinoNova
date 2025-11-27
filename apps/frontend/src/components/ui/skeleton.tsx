@@ -126,7 +126,7 @@ export function SkeletonProgressCard({ className }: { className?: string }) {
 
 export function SkeletonHeader({ className }: { className?: string }) {
     return (
-        <div 
+        <div
             className={cn("rounded-2xl p-6", className)}
             style={{ background: 'linear-gradient(to right, var(--muted), var(--secondary))' }}
         >
