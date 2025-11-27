@@ -1,5 +1,11 @@
-from .system_info import SystemInfo
-from .ai import (
+"""
+Shared AI Schemas Package
+Phase 7.3: Cross-language schema module for AI Engine
+
+This package provides the shared Pydantic models for the AI Engine,
+enabling consistent data contracts across the monorepo.
+"""
+from .schemas import (
     TaskRecommendation,
     ModuleRecommendation,
     StudyflowRecommendation,
@@ -13,17 +19,19 @@ from .ai import (
 )
 
 __all__ = [
-    # System info
-    "SystemInfo",
-    # AI schemas
+    # Recommendation schemas
     "TaskRecommendation",
     "ModuleRecommendation",
     "StudyflowRecommendation",
     "Recommendations",
     "RecommendationsResponse",
+    # Next step schemas
     "NextStepResponse",
+    # Difficulty schemas
     "DifficultyEstimate",
+    # Summary schemas
     "SummaryHighlight",
     "DailySummaryResponse",
+    # Status schemas
     "AIStatusResponse",
 ]

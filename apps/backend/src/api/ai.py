@@ -10,7 +10,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Query
 
-from .ai_schemas import (
+from shared.ai import (
     RecommendationsResponse,
     NextStepResponse,
     DifficultyEstimate,
@@ -40,7 +40,7 @@ ai_router = APIRouter()
 def ai_status() -> AIStatusResponse:
     """
     Phase 7.2 AI Engine status check.
-    
+
     Returns the current status of all AI engine components.
     """
     return AIStatusResponse(
@@ -68,12 +68,12 @@ def get_recommendations(
 ) -> RecommendationsResponse:
     """
     Get personalized AI recommendations.
-    
+
     Returns recommendations for:
     - Next task to complete
     - Next module to start/continue
     - Optimal studyflow session configuration
-    
+
     **Phase 7.2:** Delegates to RecommendationService (stub mode).
     """
     return recommendation_service.get_recommendations(
@@ -91,10 +91,10 @@ def get_next_step(
 ) -> NextStepResponse:
     """
     Get the single most optimal next action.
-    
+
     Returns a single recommendation for what the user should do next,
     considering their current progress, recent activity, and learning goals.
-    
+
     **Phase 7.2:** Delegates to NextStepService (stub mode).
     """
     return next_step_service.get_next_step(user_id=user_id)
@@ -109,12 +109,12 @@ def get_difficulty_estimate(
 ) -> DifficultyEstimate:
     """
     Get user-adjusted difficulty estimate for a task.
-    
+
     Estimates how difficult a specific task will be for a given user,
     taking into account their skill level, past performance, and prerequisites.
-    
+
     **Phase 7.2:** Delegates to DifficultyService (stub mode).
-    
+
     Args:
         task_id: UUID of the task to estimate
         user_id: Optional user ID for personalized estimate
@@ -133,10 +133,10 @@ def get_daily_summary(
 ) -> DailySummaryResponse:
     """
     Get AI-generated daily summary.
-    
+
     Returns a personalized summary of the user's progress today,
     including achievements, highlights, and motivational messaging.
-    
+
     **Phase 7.2:** Delegates to SummaryService (stub mode).
     """
     return summary_service.get_daily_summary(user_id=user_id)
