@@ -26,6 +26,7 @@ from ..services.ai import (
     difficulty_service,
     summary_service,
 )
+from ..ai_logs.diagnostics import get_daily_diagnostics
 
 
 # ============================================================================
@@ -33,6 +34,28 @@ from ..services.ai import (
 # ============================================================================
 
 ai_router = APIRouter()
+
+
+# ============================================================================
+# DIAGNOSTICS ENDPOINT (Phase 7.13)
+# ============================================================================
+
+@ai_router.get("/diagnostics")
+def ai_diagnostics() -> dict:
+    """
+    Phase 7.13: AI Logs + Telemetry Diagnostics.
+
+    Returns daily diagnostic summary from AI logs including:
+    - AI calls today
+    - Average latency
+    - Error counts
+    - Recommendation type breakdown
+    - Next step usage counts
+
+    This endpoint has zero performance impact on AI operations.
+    Pure log-based summarization with no model usage.
+    """
+    return get_daily_diagnostics()
 
 
 # ============================================================================
