@@ -13,3 +13,7 @@ logs/**
 *.log
 .turbo/
 .venv/
+
+# macOS
+.DS_Store
+**/.DS_Store
