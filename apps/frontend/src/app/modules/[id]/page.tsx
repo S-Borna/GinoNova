@@ -2,13 +2,28 @@
 
 /**
  * Module Details Page
- * Phase 2.0: Modules Foundation
+ * Phase 2.1: Enhanced card layout with breadcrumb
  */
 
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { getModule, ModulePublic } from "@/lib/modules"
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+
+function formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    })
+}
 
 export default function ModuleDetailsPage() {
     const params = useParams()
@@ -26,14 +41,13 @@ export default function ModuleDetailsPage() {
                 return
             }
 
-            try {
-                const data = await getModule(moduleId)
-                setModule(data)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "Failed to load module")
-            } finally {
-                setLoading(false)
+            const result = await getModule(moduleId)
+            if (result.ok) {
+                setModule(result.data)
+            } else {
+                setError(result.message)
             }
+            setLoading(false)
         }
 
         fetchModule()
@@ -52,53 +66,101 @@ export default function ModuleDetailsPage() {
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
                     <p className="text-red-500 mb-4">{error}</p>
-                    <Link href="/modules" className="text-blue-600 hover:text-blue-500">
-                        Back to Modules
+                    <Link href="/modules">
+                        <Button variant="outline">Back to Modules</Button>
                     </Link>
                 </div>
             </div>
         )
     }
 
+    if (!module) {
+        return null
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-4xl mx-auto px-4">
-                <div className="bg-white rounded-lg shadow p-6">
-                    <div className="mb-4">
-                        <Link href="/modules" className="text-blue-600 hover:text-blue-500 text-sm">
-                            ← Back to Modules
-                        </Link>
-                    </div>
+                {/* Breadcrumb */}
+                <nav className="mb-6 text-sm">
+                    <Link href="/modules" className="text-blue-600 hover:text-blue-500">
+                        Modules
+                    </Link>
+                    <span className="mx-2 text-gray-400">/</span>
+                    <span className="text-gray-600">{module.name}</span>
+                </nav>
 
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Module Details Online
-                    </h1>
-                    <p className="text-gray-600 mb-6">Phase 2.0 - Modules Foundation</p>
-
-                    {module && (
-                        <div className="space-y-4">
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-start justify-between">
                             <div>
-                                <span className="font-medium text-gray-700">Name:</span>
-                                <span className="ml-2 text-gray-900">{module.name}</span>
-                            </div>
-                            {module.description && (
-                                <div>
-                                    <span className="font-medium text-gray-700">Description:</span>
-                                    <span className="ml-2 text-gray-900">{module.description}</span>
+                                <CardTitle className="text-2xl">{module.name}</CardTitle>
+                                <div className="mt-2">
+                                    <Badge variant={module.is_active ? "success" : "inactive"}>
+                                        {module.is_active ? "Active" : "Inactive"}
+                                    </Badge>
                                 </div>
-                            )}
+                            </div>
+                            <Link href={`/modules/${module.id}/edit`}>
+                                <Button variant="outline">Edit</Button>
+                            </Link>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        {/* Description */}
+                        <div>
+                            <Label className="text-gray-500 text-sm">Description</Label>
+                            <p className="mt-1 text-gray-900">
+                                {module.description || "No description provided"}
+                            </p>
+                        </div>
+
+                        {/* Status toggle (disabled - UI only) */}
+                        <div className="flex items-center justify-between py-3 border-t border-b">
                             <div>
-                                <span className="font-medium text-gray-700">Status:</span>
-                                <span className={`ml-2 ${module.is_active ? "text-green-600" : "text-red-600"}`}>
-                                    {module.is_active ? "Active" : "Inactive"}
-                                </span>
+                                <Label>Active Status</Label>
+                                <p className="text-xs text-gray-500">
+                                    Toggle to enable/disable this module
+                                </p>
+                            </div>
+                            <Switch
+                                checked={module.is_active}
+                                disabled={true}
+                                aria-label="Module active status"
+                            />
+                        </div>
+
+                        {/* Timestamps */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Label className="text-gray-500 text-sm">Created At</Label>
+                                <p className="mt-1 text-gray-900">
+                                    {formatDate(module.created_at)}
+                                </p>
                             </div>
                             <div>
-                                <span className="font-medium text-gray-700">ID:</span>
-                                <span className="ml-2 text-gray-500 text-sm font-mono">{module.id}</span>
+                                <Label className="text-gray-500 text-sm">Updated At</Label>
+                                <p className="mt-1 text-gray-900">
+                                    {formatDate(module.updated_at)}
+                                </p>
                             </div>
                         </div>
-                    )}
+
+                        {/* UUID */}
+                        <div>
+                            <Label className="text-gray-500 text-sm">Module ID (UUID)</Label>
+                            <p className="mt-1 text-gray-600 font-mono text-sm break-all">
+                                {module.id}
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Back link */}
+                <div className="mt-6">
+                    <Link href="/modules">
+                        <Button variant="secondary">← Back to Modules</Button>
+                    </Link>
                 </div>
             </div>
         </div>
