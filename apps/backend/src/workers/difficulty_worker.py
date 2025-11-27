@@ -1,14 +1,15 @@
 """
 Difficulty Worker
-Phase 7.9: Stubbed worker for async difficulty estimation
+Phase 7.10: Stubbed worker for async difficulty estimation
 
 Uses deterministic rule engine calls only.
 No DB writes, no async scheduling, no queues.
+Includes strict error handling and metadata.
 """
 from typing import Any
 
 from .base import BaseWorker
-from .worker_protocol import WorkerTask, DifficultyPayload
+from .worker_protocol import WorkerTask
 
 # Import rule engine for deterministic computations
 from shared.ai.engine.scoring import UserContext
@@ -79,6 +80,9 @@ class DifficultyWorker(BaseWorker):
         Returns:
             Dict with task_id, base_difficulty, adjusted_difficulty,
             adjustment_factor, reason
+
+        Raises:
+            Exception: On rule engine failure (handled by BaseWorker)
         """
         user_id = payload.get("user_id")
         task_id = payload.get("task_id")
@@ -89,15 +93,19 @@ class DifficultyWorker(BaseWorker):
             user_ctx["user_id"] = user_id
 
         # Get task info
-        task_info = FALLBACK_TASKS.get(task_id, {
+        task_id_str = str(task_id) if task_id else "unknown"
+        task_info = FALLBACK_TASKS.get(task_id_str, {
             "difficulty": "medium",
-            "title": f"Task {task_id}",
+            "title": f"Task {task_id_str}",
         })
         base_difficulty = task_info["difficulty"]
         base_value = DIFFICULTY_VALUES.get(base_difficulty, 2)
 
-        # Compute adjustment using heuristics
-        adjustment = compute_difficulty_adjustment(user_ctx, FALLBACK_PROGRESS)
+        # Compute adjustment using heuristics with error handling
+        try:
+            adjustment = compute_difficulty_adjustment(user_ctx, FALLBACK_PROGRESS)
+        except Exception as e:
+            raise RuntimeError(f"Difficulty heuristics engine failed: {e}") from e
 
         # Apply adjustment to base difficulty
         adjusted_value = base_value * adjustment["adjustment_factor"]
@@ -126,4 +134,7 @@ class DifficultyWorker(BaseWorker):
             "recommended_difficulty": adjustment["recommended_difficulty"],
             "reason": " | ".join(reasons),
             "user_id": user_id,
+            "_metadata": {
+                "heuristics_used": ["compute_difficulty_adjustment"],
+            },
         }

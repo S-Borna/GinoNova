@@ -331,7 +331,7 @@ class DifficultyService:
             }
 
     # =========================================================================
-    # ASYNC WORKER PATH (Phase 7.9)
+    # ASYNC WORKER PATH (Phase 7.10)
     # =========================================================================
 
     def estimate_difficulty_async(
@@ -342,7 +342,8 @@ class DifficultyService:
         """
         Estimate difficulty via async worker path.
 
-        Phase 7.9: Builds payload and delegates to DifficultyWorker stub.
+        Phase 7.10: Builds payload and delegates to DifficultyWorker stub.
+        Includes strict result validation and error handling.
         Currently synchronous - async scheduling will be added later.
 
         Args:
@@ -351,8 +352,14 @@ class DifficultyService:
 
         Returns:
             WorkerResult dict with difficulty data
+
+        Raises:
+            HTTPException: If worker returns an error result
         """
+        from fastapi import HTTPException
+
         from ...workers import DifficultyWorker, DifficultyPayload
+        from ...workers.worker_protocol import validate_worker_result, ResultValidationError
 
         logger.info(f"estimate_difficulty_async called: task_id={task_id}, user_id={user_id}")
 
@@ -364,10 +371,33 @@ class DifficultyService:
 
         # Invoke worker (direct call for now - no actual async)
         worker = DifficultyWorker()
-        result = worker.run(payload)
+        result = worker.run(payload)  # type: ignore
 
-        logger.debug(f"Worker result: success={result['success']}, task_type={result['task_type']}")
-        return result
+        # Validate result structure
+        try:
+            validate_worker_result(result)  # type: ignore
+        except ResultValidationError as e:
+            logger.error(f"Worker result validation failed: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Worker result validation failed: {e}",
+            )
+
+        # Check for worker-level errors
+        if not result["success"]:
+            error = result["error"]
+            error_message = error["message"] if error else "Unknown worker error"
+            logger.error(f"Worker returned error: {error_message}")
+            raise HTTPException(
+                status_code=500,
+                detail=error_message,
+            )
+
+        logger.debug(
+            f"Worker result: success={result['success']}, "
+            f"worker={result['metadata'].get('worker')}"
+        )
+        return result  # type: ignore
 
     def invalidate_cache(self, user_id: Optional[UUID] = None, task_id: Optional[UUID] = None) -> int:
         """

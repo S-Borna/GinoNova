@@ -1,14 +1,15 @@
 """
 Next Step Worker
-Phase 7.9: Stubbed worker for async next step recommendation
+Phase 7.10: Stubbed worker for async next step recommendation
 
 Uses deterministic rule engine calls only.
 No DB writes, no async scheduling, no queues.
+Includes strict error handling and metadata.
 """
 from typing import Any
 
 from .base import BaseWorker
-from .worker_protocol import WorkerTask, NextStepPayload
+from .worker_protocol import WorkerTask
 
 # Import rule engine for deterministic computations
 from shared.ai.engine.scoring import (
@@ -96,6 +97,9 @@ class NextStepWorker(BaseWorker):
 
         Returns:
             Dict with next_task, score, reason
+
+        Raises:
+            Exception: On rule engine failure (handled by BaseWorker)
         """
         user_id = payload.get("user_id")
 
@@ -104,32 +108,38 @@ class NextStepWorker(BaseWorker):
         if user_id:
             user_ctx["user_id"] = user_id
 
-        # Score all tasks
+        all_triggered_rules: list[str] = []
+
+        # Score all tasks with error handling
         scored_tasks = []
-        for task in FALLBACK_TASKS:
-            # Check prerequisites
-            prereqs = task.get("prerequisites", [])
-            prereqs_met = all(
-                p in user_ctx.get("completed_task_ids", [])
-                for p in prereqs
-            )
+        try:
+            for task in FALLBACK_TASKS:
+                # Check prerequisites
+                prereqs = task.get("prerequisites", [])
+                prereqs_met = all(
+                    p in user_ctx.get("completed_task_ids", [])
+                    for p in prereqs
+                )
 
-            if not prereqs_met:
-                continue
+                if not prereqs_met:
+                    continue
 
-            # Already completed?
-            if task["task_id"] in user_ctx.get("completed_task_ids", []):
-                continue
+                # Already completed?
+                if task["task_id"] in user_ctx.get("completed_task_ids", []):
+                    continue
 
-            base_score = score_task_relevance(user_ctx, task)
-            modifier, triggered_rules = apply_rules(TASK_PRIORITY_RULES, user_ctx, task)
-            final_score = min(100, max(0, base_score + modifier))
+                base_score = score_task_relevance(user_ctx, task)
+                modifier, triggered_rules = apply_rules(TASK_PRIORITY_RULES, user_ctx, task)
+                all_triggered_rules.extend(triggered_rules)
+                final_score = min(100, max(0, base_score + modifier))
 
-            scored_tasks.append({
-                "task": task,
-                "score": final_score,
-                "triggered_rules": triggered_rules,
-            })
+                scored_tasks.append({
+                    "task": task,
+                    "score": final_score,
+                    "triggered_rules": triggered_rules,
+                })
+        except Exception as e:
+            raise RuntimeError(f"Task scoring engine failed: {e}") from e
 
         # Sort by score and get best
         scored_tasks.sort(key=lambda x: x["score"], reverse=True)
@@ -140,6 +150,9 @@ class NextStepWorker(BaseWorker):
                 "score": 0,
                 "reason": "No available tasks - all completed or prerequisites not met",
                 "user_id": user_id,
+                "_metadata": {
+                    "triggered_rules": [],
+                },
             }
 
         best = scored_tasks[0]
@@ -163,4 +176,7 @@ class NextStepWorker(BaseWorker):
             "score": best["score"],
             "reason": " | ".join(reasons),
             "user_id": user_id,
+            "_metadata": {
+                "triggered_rules": list(set(all_triggered_rules)),
+            },
         }

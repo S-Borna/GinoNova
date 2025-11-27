@@ -1,10 +1,10 @@
 """
 AI Engine API Controller
-Phase 7.9: AI Controller with worker integration layer
+Phase 7.10: AI Controller with validated worker integration layer
 
 This module provides the API surface for the DevOpsHub AI Engine.
 Endpoints delegate to service classes for business logic.
-Async endpoints delegate to stubbed workers for future async pipelines.
+Async endpoints delegate to workers with strict contract validation.
 """
 from typing import Any, Optional
 from uuid import UUID
@@ -40,13 +40,13 @@ ai_router = APIRouter()
 @ai_router.get("/status", response_model=AIStatusResponse)
 def ai_status() -> AIStatusResponse:
     """
-    Phase 7.9 AI Engine status check.
+    Phase 7.10 AI Engine status check.
 
     Returns the current status of all AI engine components.
     """
     return AIStatusResponse(
-        phase="7.9",
-        feature="Worker Integration Layer (Stubbed)",
+        phase="7.10",
+        feature="Worker Contract Validation",
         status="operational",
         engines={
             "recommendation": "active (db-integrated, cached)",
@@ -58,7 +58,7 @@ def ai_status() -> AIStatusResponse:
             "heuristics": "active",
             "cache": "active (in-memory, TTL=300s)",
             "tests": "ready",
-            "workers": "stubbed",
+            "workers": "validated",
         },
         cache_enabled=True,
         fallback_mode="deterministic",
@@ -150,7 +150,7 @@ def get_daily_summary(
 
 
 # ============================================================================
-# ASYNC WORKER ENDPOINTS (Phase 7.9)
+# ASYNC WORKER ENDPOINTS (Phase 7.10)
 # ============================================================================
 
 @ai_router.get("/recommendations/async")
@@ -162,8 +162,8 @@ def get_recommendations_async(
     """
     Get personalized AI recommendations via async worker path.
 
-    Phase 7.9: Delegates to RecommendWorker stub.
-    Returns raw WorkerResult - no schema transformation.
+    Phase 7.10: Delegates to RecommendWorker with contract validation.
+    Returns validated WorkerResult with strict type safety.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
@@ -181,8 +181,8 @@ def get_next_step_async(
     """
     Get the single most optimal next action via async worker path.
 
-    Phase 7.9: Delegates to NextStepWorker stub.
-    Returns raw WorkerResult - no schema transformation.
+    Phase 7.10: Delegates to NextStepWorker with contract validation.
+    Returns validated WorkerResult with strict type safety.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
@@ -197,8 +197,8 @@ def get_difficulty_estimate_async(
     """
     Get user-adjusted difficulty estimate via async worker path.
 
-    Phase 7.9: Delegates to DifficultyWorker stub.
-    Returns raw WorkerResult - no schema transformation.
+    Phase 7.10: Delegates to DifficultyWorker with contract validation.
+    Returns validated WorkerResult with strict type safety.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
@@ -215,8 +215,8 @@ def get_daily_summary_async(
     """
     Get AI-generated daily summary via async worker path.
 
-    Phase 7.9: Delegates to SummaryWorker stub.
-    Returns raw WorkerResult - no schema transformation.
+    Phase 7.10: Delegates to SummaryWorker with contract validation.
+    Returns validated WorkerResult with strict type safety.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
