@@ -1,8 +1,8 @@
 """
 Dependencies - FastAPI dependency injection for auth
-Phase 1.2: Updated for new user models
+Phase 1.4: Enhanced error messages and is_active check
 """
-from typing import Annotated
+from typing import Annotated, Optional
 from uuid import UUID
 
 from fastapi import Depends, HTTPException, status
@@ -12,12 +12,12 @@ from ..core.jwt import decode_access_token
 from ..services.user_service import user_service
 from ..schemas.user import UserPublic
 
-# HTTP Bearer token security scheme
-security = HTTPBearer()
+# HTTP Bearer token security scheme (auto_error=False for explicit error handling)
+security = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]
+    credentials: Annotated[Optional[HTTPAuthorizationCredentials], Depends(security)]
 ) -> UserPublic:
     """
     Dependency to get the current authenticated user from JWT token.
@@ -29,8 +29,17 @@ async def get_current_user(
         UserPublic schema of the authenticated user
 
     Raises:
-        HTTPException: 401 if token is invalid or user not found
+        HTTPException: 401 if token is missing, invalid, or user not found
+        HTTPException: 403 if user account is deactivated
     """
+    # Check if credentials are provided
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -55,6 +64,13 @@ async def get_current_user(
     user = user_service.get_user_by_id(user_id)
     if user is None:
         raise credentials_exception
+
+    # Check if user is active
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User account is deactivated"
+        )
 
     return UserPublic(
         id=user.id,
@@ -95,6 +111,9 @@ async def get_current_active_user(
 ) -> UserPublic:
     """
     Dependency to verify the current user is active.
+
+    Note: get_current_user already checks is_active, but this can be used
+    for explicit documentation purposes.
 
     Args:
         current_user: The authenticated user from get_current_user

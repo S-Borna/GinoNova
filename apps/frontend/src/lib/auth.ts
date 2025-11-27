@@ -1,10 +1,14 @@
 /**
  * Auth Client Module
- * Phase 1.3: JWT authentication client functions
+ * Phase 1.4: JWT authentication with email normalization and validation
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const TOKEN_KEY = "auth_token"
+
+// Validation constants
+export const PASSWORD_MIN_LENGTH = 8
+export const PASSWORD_MAX_LENGTH = 128
 
 // Types matching backend schemas
 export interface UserPublic {
@@ -24,6 +28,50 @@ export interface TokenResponse {
 
 export interface AuthError {
     detail: string
+}
+
+export interface ValidationResult {
+    valid: boolean
+    error?: string
+}
+
+/**
+ * Normalize email to lowercase and trim whitespace
+ */
+export function normalizeEmail(email: string): string {
+    return email.toLowerCase().trim()
+}
+
+/**
+ * Validate email format
+ */
+export function validateEmail(email: string): ValidationResult {
+    const normalized = normalizeEmail(email)
+    if (!normalized) {
+        return { valid: false, error: "Email is required" }
+    }
+    // Basic email regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(normalized)) {
+        return { valid: false, error: "Invalid email format" }
+    }
+    return { valid: true }
+}
+
+/**
+ * Validate password strength
+ */
+export function validatePassword(password: string): ValidationResult {
+    if (!password) {
+        return { valid: false, error: "Password is required" }
+    }
+    if (password.length < PASSWORD_MIN_LENGTH) {
+        return { valid: false, error: `Password must be at least ${PASSWORD_MIN_LENGTH} characters` }
+    }
+    if (password.length > PASSWORD_MAX_LENGTH) {
+        return { valid: false, error: `Password must be at most ${PASSWORD_MAX_LENGTH} characters` }
+    }
+    return { valid: true }
 }
 
 /**
@@ -62,13 +110,16 @@ export async function register(
     password: string,
     fullName?: string
 ): Promise<TokenResponse> {
+    // Normalize email before sending
+    const normalizedEmail = normalizeEmail(email)
+
     const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            email,
+            email: normalizedEmail,
             password,
             full_name: fullName || null,
         }),
@@ -91,12 +142,15 @@ export async function login(
     email: string,
     password: string
 ): Promise<TokenResponse> {
+    // Normalize email before sending
+    const normalizedEmail = normalizeEmail(email)
+
     const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: normalizedEmail, password }),
     })
 
     if (!res.ok) {

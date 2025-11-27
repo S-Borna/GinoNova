@@ -2,29 +2,57 @@
 
 /**
  * Login Page
- * Phase 1.3: Minimal login form
+ * Phase 1.4: Login form with inline validation
  */
 
-import { useState, FormEvent } from "react"
-import { useRouter } from "next/navigation"
+import { useState, FormEvent, useEffect } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/components/auth"
+import { validateEmail, normalizeEmail } from "@/lib/auth"
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
+    const [emailError, setEmailError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const { login } = useAuth()
     const router = useRouter()
+    const pathname = usePathname()
+
+    // Clear errors on route change
+    useEffect(() => {
+        setError("")
+        setEmailError("")
+    }, [pathname])
+
+    const handleEmailBlur = () => {
+        const validation = validateEmail(email)
+        setEmailError(validation.valid ? "" : validation.error || "")
+    }
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         setError("")
+        setEmailError("")
+
+        // Client-side validation
+        const emailValidation = validateEmail(email)
+        if (!emailValidation.valid) {
+            setEmailError(emailValidation.error || "Invalid email")
+            return
+        }
+
+        if (!password) {
+            setError("Password is required")
+            return
+        }
+
         setIsLoading(true)
 
         try {
-            await login(email, password)
+            await login(normalizeEmail(email), password)
             router.push("/dashboard")
         } catch (err) {
             setError(err instanceof Error ? err.message : "Login failed")
@@ -61,9 +89,19 @@ export default function LoginPage() {
                                 autoComplete="email"
                                 required
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={(e) => {
+                                    setEmail(e.target.value)
+                                    if (emailError) setEmailError("")
+                                }}
+                                onBlur={handleEmailBlur}
+                                disabled={isLoading}
+                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    emailError ? "border-red-500" : "border-gray-300"
+                                }`}
                             />
+                            {emailError && (
+                                <p className="mt-1 text-sm text-red-500">{emailError}</p>
+                            )}
                         </div>
 
                         <div>
@@ -78,7 +116,8 @@ export default function LoginPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                disabled={isLoading}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
@@ -87,7 +126,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? "Signing in..." : "Sign in"}
                         </button>
