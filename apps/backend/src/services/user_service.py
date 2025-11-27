@@ -1,72 +1,74 @@
 """
 User Service - Business logic for user operations
-Phase 1.1: In-memory storage with bcrypt password hashing
+Phase 1.2: Uses repository layer with in-memory storage
 """
 from typing import Optional
 from uuid import UUID
 
-from ..models.user import User, UserRole
-from ..schemas.user import UserCreate, UserLogin
+from ..schemas.user import UserCreate, UserLogin, UserPublic, UserInDB, create_user_in_db
 from ..core.security import hash_password, verify_password
+from ..db import user_repository
 
 
 class UserService:
     """
     User service handles all user-related business logic.
 
-    Phase 1.1: Uses in-memory storage (dict) with bcrypt hashing
-    Phase 2: Will use SQLAlchemy + PostgreSQL
+    Phase 1.2: Uses repository layer with in-memory storage
+    Phase 2: Repository will use SQLAlchemy + PostgreSQL
     """
 
-    def __init__(self):
-        # In-memory user storage (placeholder for Phase 1)
-        self._users: dict[str, User] = {}
-
-    def get_user_by_email(self, email: str) -> Optional[User]:
+    def get_user_by_email(self, email: str) -> Optional[UserInDB]:
         """Get user by email address"""
-        normalized_email = email.lower().strip()
-        return self._users.get(normalized_email)
+        return user_repository.get_user_by_email(email)
 
-    def get_user_by_id(self, user_id: UUID) -> Optional[User]:
+    def get_user_by_id(self, user_id: UUID) -> Optional[UserInDB]:
         """Get user by UUID"""
-        for user in self._users.values():
-            if user.id == user_id:
-                return user
-        return None
+        return user_repository.get_user_by_id(user_id)
 
-    def create_user(self, user_data: UserCreate) -> User:
+    def create_user(self, user_data: UserCreate) -> UserPublic:
         """
         Create a new user.
 
         Args:
-            user_data: UserCreate schema with email and password
+            user_data: UserCreate schema with email, password, and optional full_name
 
         Returns:
-            Created User object
+            UserPublic object (without password_hash)
 
         Raises:
             ValueError: If email already exists
         """
-        normalized_email = user_data.email.lower().strip()
-
         # Check if user already exists
-        if normalized_email in self._users:
-            raise ValueError(f"User with email {normalized_email} already exists")
+        existing = user_repository.get_user_by_email(user_data.email)
+        if existing:
+            raise ValueError(f"User with email {user_data.email.lower().strip()} already exists")
 
-        # Hash password with bcrypt and create user
+        # Hash password with bcrypt
         hashed = hash_password(user_data.password)
-        user = User(
-            email=normalized_email,
-            hashed_password=hashed,
-            role=UserRole.USER,
+        
+        # Create UserInDB using factory function
+        user_in_db = create_user_in_db(
+            email=user_data.email,
+            password_hash=hashed,
+            full_name=user_data.full_name,
         )
 
-        # Store user
-        self._users[normalized_email] = user
+        # Store in repository
+        user_repository.create_user(user_in_db)
 
-        return user
+        # Return public user data
+        return UserPublic(
+            id=user_in_db.id,
+            email=user_in_db.email,
+            full_name=user_in_db.full_name,
+            is_active=user_in_db.is_active,
+            is_admin=user_in_db.is_admin,
+            created_at=user_in_db.created_at,
+            updated_at=user_in_db.updated_at,
+        )
 
-    def authenticate_user(self, login_data: UserLogin) -> Optional[User]:
+    def authenticate_user(self, login_data: UserLogin) -> Optional[UserInDB]:
         """
         Authenticate user with email and password.
 
@@ -74,19 +76,19 @@ class UserService:
             login_data: UserLogin schema with email and password
 
         Returns:
-            User object if authentication successful, None otherwise
+            UserInDB object if authentication successful, None otherwise
         """
-        user = self.get_user_by_email(login_data.email)
+        user = user_repository.get_user_by_email(login_data.email)
 
         if not user:
             return None
 
-        if not verify_password(login_data.password, user.hashed_password):
+        if not verify_password(login_data.password, user.password_hash):
             return None
 
         return user
 
-    def update_user(self, user_id: UUID, **kwargs) -> Optional[User]:
+    def update_user(self, user_id: UUID, **kwargs) -> Optional[UserPublic]:
         """
         Update user fields.
 
@@ -95,18 +97,22 @@ class UserService:
             **kwargs: Fields to update
 
         Returns:
-            Updated User object or None if not found
+            Updated UserPublic or None if not found
         """
-        user = self.get_user_by_id(user_id)
-        if not user:
+        updated = user_repository.update_user(user_id, **kwargs)
+        if not updated:
             return None
+        
+        return UserPublic(
+            id=updated.id,
+            email=updated.email,
+            full_name=updated.full_name,
+            is_active=updated.is_active,
+            is_admin=updated.is_admin,
+            created_at=updated.created_at,
+            updated_at=updated.updated_at,
+        )
 
-        for key, value in kwargs.items():
-            if hasattr(user, key) and key not in ["id", "email", "hashed_password"]:
-                setattr(user, key, value)
 
-        return user
-
-
-# Singleton instance for Phase 1 (in-memory storage)
+# Singleton instance
 user_service = UserService()

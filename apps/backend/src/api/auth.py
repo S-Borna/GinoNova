@@ -1,6 +1,6 @@
 """
 Auth Router - Authentication endpoints
-Phase 1.1: Register, Login with JWT, /me, and protected routes
+Phase 1.2: Register, Login with JWT, /me, and protected routes
 """
 from fastapi import APIRouter, HTTPException, status
 
@@ -15,7 +15,7 @@ auth_router = APIRouter()
 @auth_router.get("/status")
 def auth_status():
     """Check auth module status"""
-    return {"auth": "configured", "phase": "1.1", "jwt": True}
+    return {"auth": "configured", "phase": "1.2", "jwt": True, "models": "UserBase/UserCreate/UserInDB/UserPublic"}
 
 
 @auth_router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
@@ -25,6 +25,7 @@ def register(user_data: UserCreate):
 
     - **email**: Valid email address (will be normalized to lowercase)
     - **password**: Minimum 6 characters
+    - **full_name**: Optional full name
 
     Returns JWT access token on successful registration.
     """
@@ -35,7 +36,7 @@ def register(user_data: UserCreate):
         access_token = create_access_token(
             user_id=user.id,
             email=user.email,
-            role=user.role.value
+            role="admin" if user.is_admin else "user"
         )
 
         return TokenResponse(
@@ -69,7 +70,7 @@ def login(login_data: UserLogin):
     access_token = create_access_token(
         user_id=user.id,
         email=user.email,
-        role=user.role.value
+        role="admin" if user.is_admin else "user"
     )
 
     return TokenResponse(
@@ -84,6 +85,7 @@ def get_current_user_info(current_user: CurrentUser):
     Get the current authenticated user's information.
 
     Requires valid JWT token in Authorization header.
+    Returns UserPublic schema.
     """
     return current_user
 
@@ -98,5 +100,6 @@ def test_protected_route(current_user: CurrentUser):
     return {
         "ok": True,
         "message": f"Hello {current_user.email}! You are authenticated.",
-        "user_id": str(current_user.id)
+        "user_id": str(current_user.id),
+        "is_admin": current_user.is_admin
     }
