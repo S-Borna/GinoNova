@@ -5,6 +5,9 @@ WORKDIR /app
 # Install poetry
 RUN pip install poetry==1.8.3
 
+# Copy shared python package (local dependency)
+COPY packages/shared/python ./packages/shared/python
+
 # Copy dependency files
 COPY pyproject.toml poetry.lock ./
 
