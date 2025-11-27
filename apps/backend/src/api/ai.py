@@ -39,25 +39,25 @@ ai_router = APIRouter()
 @ai_router.get("/status", response_model=AIStatusResponse)
 def ai_status() -> AIStatusResponse:
     """
-    Phase 7.4 AI Engine status check.
+    Phase 7.5 AI Engine status check.
 
     Returns the current status of all AI engine components.
     """
     return AIStatusResponse(
-        phase="7.4",
-        feature="AI Rule Engine Foundation",
+        phase="7.5",
+        feature="AI Service Integration (Engine Active)",
         status="operational",
         engines={
-            "recommendation": "engine_wired",
-            "next_step": "engine_wired",
-            "difficulty_estimator": "engine_wired",
-            "summary": "engine_wired",
-            "scoring": "ready",
-            "rules": "ready",
-            "heuristics": "ready",
+            "recommendation": "active",
+            "next_step": "active",
+            "difficulty_estimator": "active",
+            "summary": "active",
+            "scoring": "active",
+            "rules": "active",
+            "heuristics": "active",
         },
         cache_enabled=False,
-        fallback_mode="static",
+        fallback_mode="deterministic",
     )
 # ============================================================================
 # RECOMMENDATIONS ENDPOINT

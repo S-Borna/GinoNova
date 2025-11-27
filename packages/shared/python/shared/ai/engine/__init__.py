@@ -1,6 +1,6 @@
 """
 AI Rule Engine
-Phase 7.4: Deterministic rule engine foundation
+Phase 7.5: Deterministic rule engine foundation
 
 This package provides the core AI engine components:
 - scoring: Pure scoring functions (0-100 range)
@@ -13,6 +13,11 @@ from .scoring import (
     score_task_relevance,
     score_module_priority,
     score_studyflow_mode,
+    # TypedDicts
+    UserContext,
+    TaskData,
+    ModuleData,
+    StudyflowData,
 )
 from .rules import (
     TASK_PRIORITY_RULES,
@@ -24,6 +29,8 @@ from .heuristics import (
     compute_recommendation_scores,
     compute_difficulty_adjustment,
     compute_daily_highlights,
+    # TypedDicts
+    ProgressData,
 )
 
 __all__ = [
@@ -31,6 +38,11 @@ __all__ = [
     "score_task_relevance",
     "score_module_priority",
     "score_studyflow_mode",
+    # TypedDicts (scoring)
+    "UserContext",
+    "TaskData",
+    "ModuleData",
+    "StudyflowData",
     # Rule sets
     "TASK_PRIORITY_RULES",
     "MODULE_SELECTION_RULES",
@@ -40,4 +52,6 @@ __all__ = [
     "compute_recommendation_scores",
     "compute_difficulty_adjustment",
     "compute_daily_highlights",
+    # TypedDicts (heuristics)
+    "ProgressData",
 ]
