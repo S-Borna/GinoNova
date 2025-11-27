@@ -1,18 +1,26 @@
 """
 Base Worker Implementation
-Phase 7.10: Abstract base class for all AI workers
+Phase 7.11: Abstract base class with performance metrics and tracing
 
 Provides:
 - Strict payload validation with contract enforcement
 - Deterministic error objects (WorkerError)
 - Task start/end logging
 - Result validation before return
+- Distributed tracing with trace_id (uuid4 hex)
+- Performance metrics (latency histograms, error counters)
 """
 from abc import abstractmethod
 from datetime import datetime, timezone
-from typing import Any, Optional
 import logging
+import time
+from typing import Any, Optional
+from uuid import uuid4
 
+from packages.shared.python.shared.ai.engine import (
+    record_worker_latency,
+    record_worker_error,
+)
 from .worker_protocol import (
     BaseWorkerProtocol,
     WorkerResult,
@@ -187,12 +195,13 @@ class BaseWorker(BaseWorkerProtocol):
         )
         return duration_ms
 
-    def _build_metadata(self, duration_ms: float) -> WorkerResultMetadata:
+    def _build_metadata(self, duration_ms: float, trace_id: str) -> WorkerResultMetadata:
         """
         Build standardized metadata for WorkerResult.
 
         Args:
             duration_ms: Task duration in milliseconds
+            trace_id: 32-char hex trace ID for distributed tracing
 
         Returns:
             WorkerResultMetadata dict
@@ -202,6 +211,7 @@ class BaseWorker(BaseWorkerProtocol):
             task_type=self.task_type.value,
             timestamp=datetime.now(timezone.utc).isoformat(),
             duration_ms=duration_ms,
+            trace_id=trace_id,
         )
 
     def _build_result(
@@ -210,6 +220,7 @@ class BaseWorker(BaseWorkerProtocol):
         data: Optional[dict[str, Any]] = None,
         error: Optional[WorkerError] = None,
         duration_ms: float = 0.0,
+        trace_id: str = "",
         extra_metadata: Optional[dict[str, Any]] = None,
     ) -> WorkerResult:
         """
@@ -220,13 +231,18 @@ class BaseWorker(BaseWorkerProtocol):
             data: Result data payload
             error: WorkerError if failed
             duration_ms: Task duration
+            trace_id: 32-char hex trace ID for distributed tracing
             extra_metadata: Additional metadata to include
 
         Returns:
             WorkerResult TypedDict
         """
+        # Generate trace_id if not provided
+        if not trace_id:
+            trace_id = uuid4().hex
+
         # Build base metadata
-        metadata = self._build_metadata(duration_ms)
+        metadata = self._build_metadata(duration_ms, trace_id)
 
         # Merge extra metadata if provided
         if extra_metadata:
@@ -255,7 +271,7 @@ class BaseWorker(BaseWorkerProtocol):
                     code=WorkerErrorCode.INTERNAL_ERROR,
                     message=f"Result validation failed: {e}",
                 ),
-                metadata=self._build_metadata(duration_ms),  # type: ignore
+                metadata=self._build_metadata(duration_ms, trace_id),  # type: ignore
             )
 
         return result
@@ -278,44 +294,68 @@ class BaseWorker(BaseWorkerProtocol):
 
     def run(self, payload: dict[str, Any]) -> WorkerResult:
         """
-        Execute the worker task with validation and logging.
+        Execute the worker task with validation, logging, metrics, and tracing.
 
         Args:
             payload: Task payload
 
         Returns:
-            WorkerResult with success status and data
+            WorkerResult with success status, data, and trace_id
         """
+        # Generate trace_id for this execution
+        trace_id = uuid4().hex
+
         # Validate payload
         is_valid, error = self.validate_payload(payload)
         if not is_valid:
+            # Record error metric
+            record_worker_error(self.task_type.value)
             return self._build_result(
                 success=False,
                 error=error,
+                trace_id=trace_id,
             )
 
         # Log start
         start_time = self.log_task_start(payload)
 
+        # Use monotonic_ns for accurate duration measurement
+        start_ns = time.monotonic_ns()
+
         try:
             # Execute core logic
             data = self._execute(payload)
 
+            # Calculate precise duration
+            end_ns = time.monotonic_ns()
+            duration_ms = (end_ns - start_ns) / 1_000_000
+
+            # Record latency metric
+            record_worker_latency(self.task_type.value, duration_ms)
+
             # Log end
-            duration_ms = self.log_task_end(start_time, success=True)
+            self.log_task_end(start_time, success=True)
 
             return self._build_result(
                 success=True,
                 data=data,
                 duration_ms=duration_ms,
+                trace_id=trace_id,
             )
 
         except Exception as e:
+            # Calculate duration even on failure
+            end_ns = time.monotonic_ns()
+            duration_ms = (end_ns - start_ns) / 1_000_000
+
+            # Record error metric
+            record_worker_error(self.task_type.value)
+
             # Convert exception to WorkerError
             worker_error = self.handle_exception(e)
 
             # Log failure
-            duration_ms = self.log_task_end(
+            self.log_task_end(
                 start_time,
                 success=False,
                 error=worker_error,
@@ -325,4 +365,5 @@ class BaseWorker(BaseWorkerProtocol):
                 success=False,
                 error=worker_error,
                 duration_ms=duration_ms,
+                trace_id=trace_id,
             )

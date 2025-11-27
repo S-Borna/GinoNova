@@ -438,25 +438,29 @@ class NextStepService:
         ]
 
     # =========================================================================
-    # ASYNC WORKER PATH (Phase 7.10)
+    # ASYNC WORKER PATH (Phase 7.11)
     # =========================================================================
 
     def get_next_step_async(
         self,
         user_id: Optional[UUID],
+        include_trace: bool = False,
     ) -> dict[str, Any]:
         """
         Determine next step via async worker path.
 
-        Phase 7.10: Builds payload and delegates to NextStepWorker stub.
+        Phase 7.11: Includes trace_id and performance metrics support.
+        Builds payload and delegates to NextStepWorker stub.
         Includes strict result validation and error handling.
         Currently synchronous - async scheduling will be added later.
 
         Args:
             user_id: Optional user UUID for personalization
+            include_trace: Whether to include trace metadata envelope
 
         Returns:
             WorkerResult dict with next step data
+            If include_trace=True, returns {"data": {...}, "meta": {...}}
 
         Raises:
             HTTPException: If worker returns an error result
@@ -499,8 +503,23 @@ class NextStepService:
 
         logger.debug(
             f"Worker result: success={result['success']}, "
-            f"worker={result['metadata'].get('worker')}"
+            f"worker={result['metadata'].get('worker')}, "
+            f"trace_id={result['metadata'].get('trace_id')}"
         )
+
+        # Return with trace envelope if requested
+        if include_trace:
+            return {
+                "data": result["data"],
+                "meta": {
+                    "trace_id": result["metadata"]["trace_id"],
+                    "worker": result["metadata"]["worker"],
+                    "task_type": result["metadata"]["task_type"],
+                    "duration_ms": result["metadata"]["duration_ms"],
+                    "timestamp": result["metadata"]["timestamp"],
+                },
+            }
+
         return result  # type: ignore
 
     def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:

@@ -331,27 +331,31 @@ class DifficultyService:
             }
 
     # =========================================================================
-    # ASYNC WORKER PATH (Phase 7.10)
+    # ASYNC WORKER PATH (Phase 7.11)
     # =========================================================================
 
     def estimate_difficulty_async(
         self,
         task_id: UUID,
         user_id: Optional[UUID],
+        include_trace: bool = False,
     ) -> dict[str, Any]:
         """
         Estimate difficulty via async worker path.
 
-        Phase 7.10: Builds payload and delegates to DifficultyWorker stub.
+        Phase 7.11: Includes trace_id and performance metrics support.
+        Builds payload and delegates to DifficultyWorker stub.
         Includes strict result validation and error handling.
         Currently synchronous - async scheduling will be added later.
 
         Args:
             task_id: UUID of the task to estimate
             user_id: Optional user UUID for personalized estimate
+            include_trace: Whether to include trace metadata envelope
 
         Returns:
             WorkerResult dict with difficulty data
+            If include_trace=True, returns {"data": {...}, "meta": {...}}
 
         Raises:
             HTTPException: If worker returns an error result
@@ -395,8 +399,23 @@ class DifficultyService:
 
         logger.debug(
             f"Worker result: success={result['success']}, "
-            f"worker={result['metadata'].get('worker')}"
+            f"worker={result['metadata'].get('worker')}, "
+            f"trace_id={result['metadata'].get('trace_id')}"
         )
+
+        # Return with trace envelope if requested
+        if include_trace:
+            return {
+                "data": result["data"],
+                "meta": {
+                    "trace_id": result["metadata"]["trace_id"],
+                    "worker": result["metadata"]["worker"],
+                    "task_type": result["metadata"]["task_type"],
+                    "duration_ms": result["metadata"]["duration_ms"],
+                    "timestamp": result["metadata"]["timestamp"],
+                },
+            }
+
         return result  # type: ignore
 
     def invalidate_cache(self, user_id: Optional[UUID] = None, task_id: Optional[UUID] = None) -> int:

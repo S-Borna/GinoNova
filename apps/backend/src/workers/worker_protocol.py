@@ -1,14 +1,16 @@
 """
 Worker Protocol Definitions
-Phase 7.10: TypedDicts, enums, interfaces, and validation for worker layer
+Phase 7.11: TypedDicts, enums, interfaces, validation, and tracing for worker layer
 
 This module defines the contracts for the async worker integration layer.
 All payloads are TypedDicts for type safety and serialization compatibility.
 Includes strict validation functions for contract enforcement.
+Adds trace_id for distributed tracing support.
 """
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
+import re
 from typing import Any, Optional, TypedDict
 
 
@@ -83,11 +85,13 @@ class WorkerResultMetadata(TypedDict):
         task_type: The WorkerTask enum value as string
         timestamp: ISO8601 formatted timestamp of result creation
         duration_ms: Task execution duration in milliseconds
+        trace_id: 32-character hex uuid4 for distributed tracing
     """
     worker: str
     task_type: str
     timestamp: str
     duration_ms: float
+    trace_id: str
 
 
 class WorkerResult(TypedDict):
@@ -98,7 +102,7 @@ class WorkerResult(TypedDict):
         success: Whether the task completed successfully
         data: The actual result payload (task-specific), None on error
         error: WorkerError dict if success=False, None on success
-        metadata: Required metadata (worker, task_type, timestamp, duration_ms)
+        metadata: Required metadata (worker, task_type, timestamp, duration_ms, trace_id)
     """
     success: bool
     data: Optional[dict[str, Any]]
@@ -158,7 +162,31 @@ def validate_worker_payload(
 
 
 # Required metadata keys
-REQUIRED_METADATA_KEYS = ["worker", "task_type", "timestamp", "duration_ms"]
+REQUIRED_METADATA_KEYS = ["worker", "task_type", "timestamp", "duration_ms", "trace_id"]
+
+
+# Trace ID validation pattern (32-char hex)
+TRACE_ID_PATTERN = re.compile(r"^[a-f0-9]{32}$")
+
+
+def validate_trace_id(trace_id: str) -> None:
+    """
+    Validate that trace_id is a valid 32-character hex string.
+
+    Args:
+        trace_id: The trace ID to validate
+
+    Raises:
+        ResultValidationError: If trace_id is invalid
+    """
+    if not isinstance(trace_id, str):
+        raise ResultValidationError(
+            f"trace_id must be a string, got {type(trace_id).__name__}"
+        )
+    if not TRACE_ID_PATTERN.match(trace_id):
+        raise ResultValidationError(
+            f"trace_id must be a 32-character lowercase hex string, got '{trace_id}'"
+        )
 
 
 def validate_worker_result(result: dict[str, Any]) -> None:
@@ -240,6 +268,9 @@ def validate_worker_result(result: dict[str, Any]) -> None:
         raise ResultValidationError(
             f"'timestamp' must be valid ISO8601 format, got: {timestamp}"
         )
+
+    # Validate trace_id format
+    validate_trace_id(result["metadata"]["trace_id"])
 
 
 # ============================================================================

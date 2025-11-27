@@ -1,11 +1,12 @@
 """
 AI Rule Engine
-Phase 7.5: Deterministic rule engine foundation
+Phase 7.11: Deterministic rule engine with metrics and tracing
 
 This package provides the core AI engine components:
 - scoring: Pure scoring functions (0-100 range)
 - rules: Static rule definitions
 - heuristics: High-level recommendation logic
+- metrics: Performance instrumentation (histograms, counters)
 
 No ML. No randomness. Pure deterministic logic.
 """
@@ -32,6 +33,18 @@ from .heuristics import (
     # TypedDicts
     ProgressData,
 )
+from .metrics import (
+    Histogram,
+    Counter,
+    MetricRegistry,
+    WORKER_METRICS,
+    get_worker_latency,
+    get_worker_errors,
+    record_worker_latency,
+    record_worker_error,
+    get_all_metrics,
+    reset_all_metrics,
+)
 
 __all__ = [
     # Scoring functions
@@ -54,4 +67,15 @@ __all__ = [
     "compute_daily_highlights",
     # TypedDicts (heuristics)
     "ProgressData",
+    # Metrics
+    "Histogram",
+    "Counter",
+    "MetricRegistry",
+    "WORKER_METRICS",
+    "get_worker_latency",
+    "get_worker_errors",
+    "record_worker_latency",
+    "record_worker_error",
+    "get_all_metrics",
+    "reset_all_metrics",
 ]

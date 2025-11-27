@@ -1,10 +1,11 @@
 """
 AI Engine API Controller
-Phase 7.10: AI Controller with validated worker integration layer
+Phase 7.11: AI Controller with worker performance instrumentation and tracing
 
 This module provides the API surface for the DevOpsHub AI Engine.
 Endpoints delegate to service classes for business logic.
 Async endpoints delegate to workers with strict contract validation.
+Tracing support with optional include_trace parameter for metrics visibility.
 """
 from typing import Any, Optional
 from uuid import UUID
@@ -40,13 +41,13 @@ ai_router = APIRouter()
 @ai_router.get("/status", response_model=AIStatusResponse)
 def ai_status() -> AIStatusResponse:
     """
-    Phase 7.10 AI Engine status check.
+    Phase 7.11 AI Engine status check.
 
     Returns the current status of all AI engine components.
     """
     return AIStatusResponse(
-        phase="7.10",
-        feature="Worker Contract Validation",
+        phase="7.11",
+        feature="Worker Performance Instrumentation",
         status="operational",
         engines={
             "recommendation": "active (db-integrated, cached)",
@@ -59,6 +60,8 @@ def ai_status() -> AIStatusResponse:
             "cache": "active (in-memory, TTL=300s)",
             "tests": "ready",
             "workers": "validated",
+            "metrics": "active (histogram, counters)",
+            "tracing": "enabled",
         },
         cache_enabled=True,
         fallback_mode="deterministic",
@@ -150,7 +153,7 @@ def get_daily_summary(
 
 
 # ============================================================================
-# ASYNC WORKER ENDPOINTS (Phase 7.10)
+# ASYNC WORKER ENDPOINTS (Phase 7.11)
 # ============================================================================
 
 @ai_router.get("/recommendations/async")
@@ -158,12 +161,14 @@ def get_recommendations_async(
     user_id: Optional[UUID] = Query(None, description="User ID for personalized recommendations"),
     limit: int = Query(5, ge=1, le=20, description="Maximum number of recommendations"),
     include_reasoning: bool = Query(False, description="Include reasoning explanations"),
+    include_trace: bool = Query(False, description="Include trace metadata envelope"),
 ) -> dict[str, Any]:
     """
     Get personalized AI recommendations via async worker path.
 
-    Phase 7.10: Delegates to RecommendWorker with contract validation.
+    Phase 7.11: Delegates to RecommendWorker with contract validation and tracing.
     Returns validated WorkerResult with strict type safety.
+    If include_trace=True, returns {"data": {...}, "meta": {...}} with trace_id.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
@@ -171,53 +176,67 @@ def get_recommendations_async(
         user_id=user_id,
         limit=limit,
         include_reasoning=include_reasoning,
+        include_trace=include_trace,
     )
 
 
 @ai_router.get("/next_step/async")
 def get_next_step_async(
     user_id: Optional[UUID] = Query(None, description="User ID for personalized recommendation"),
+    include_trace: bool = Query(False, description="Include trace metadata envelope"),
 ) -> dict[str, Any]:
     """
     Get the single most optimal next action via async worker path.
 
-    Phase 7.10: Delegates to NextStepWorker with contract validation.
+    Phase 7.11: Delegates to NextStepWorker with contract validation and tracing.
     Returns validated WorkerResult with strict type safety.
+    If include_trace=True, returns {"data": {...}, "meta": {...}} with trace_id.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
-    return next_step_service.get_next_step_async(user_id=user_id)
+    return next_step_service.get_next_step_async(
+        user_id=user_id,
+        include_trace=include_trace,
+    )
 
 
 @ai_router.get("/difficulty/{task_id}/async")
 def get_difficulty_estimate_async(
     task_id: UUID,
     user_id: Optional[UUID] = Query(None, description="User ID for personalized estimate"),
+    include_trace: bool = Query(False, description="Include trace metadata envelope"),
 ) -> dict[str, Any]:
     """
     Get user-adjusted difficulty estimate via async worker path.
 
-    Phase 7.10: Delegates to DifficultyWorker with contract validation.
+    Phase 7.11: Delegates to DifficultyWorker with contract validation and tracing.
     Returns validated WorkerResult with strict type safety.
+    If include_trace=True, returns {"data": {...}, "meta": {...}} with trace_id.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
     return difficulty_service.estimate_difficulty_async(
         task_id=task_id,
         user_id=user_id,
+        include_trace=include_trace,
     )
 
 
 @ai_router.get("/summary/today/async")
 def get_daily_summary_async(
     user_id: Optional[UUID] = Query(None, description="User ID for personalized summary"),
+    include_trace: bool = Query(False, description="Include trace metadata envelope"),
 ) -> dict[str, Any]:
     """
     Get AI-generated daily summary via async worker path.
 
-    Phase 7.10: Delegates to SummaryWorker with contract validation.
+    Phase 7.11: Delegates to SummaryWorker with contract validation and tracing.
     Returns validated WorkerResult with strict type safety.
+    If include_trace=True, returns {"data": {...}, "meta": {...}} with trace_id.
 
     **Note:** Currently synchronous - async scheduling will be added later.
     """
-    return summary_service.get_daily_summary_async(user_id=user_id)
+    return summary_service.get_daily_summary_async(
+        user_id=user_id,
+        include_trace=include_trace,
+    )
