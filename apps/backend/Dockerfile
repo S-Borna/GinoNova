@@ -5,18 +5,22 @@ WORKDIR /app
 # Install poetry
 RUN pip install poetry==1.8.3
 
-# Copy shared python package (local dependency)
+# Copy shared python package (must be built from repo root with context)
+# Build command: docker build -f apps/backend/Dockerfile -t backend .
 COPY packages/shared/python ./packages/shared/python
 
-# Copy dependency files
-COPY pyproject.toml poetry.lock ./
+# Copy dependency files from backend directory
+COPY apps/backend/pyproject.toml apps/backend/poetry.lock ./
+
+# Fix shared package path for Docker context (../../packages -> ./packages)
+RUN sed -i 's|path = "../../packages/shared/python"|path = "./packages/shared/python"|' pyproject.toml
 
 # Install dependencies (no virtualenv, install to system)
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi --only main
 
 # Copy application code
-COPY src ./src
+COPY apps/backend/src ./src
 
 # Create non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
