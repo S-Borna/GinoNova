@@ -3,6 +3,7 @@ Summary Service
 Phase 7.7: AI service layer with DB integration and caching
 Phase 7.13: Added AI event logging for telemetry diagnostics
 Phase 7.14: Added debug frames for error isolation
+Phase 7.15: Added traceability and execution mapping
 
 Generates AI-powered daily and weekly summaries using real data
 from repositories and the deterministic rule engine.
@@ -28,6 +29,8 @@ from ...schemas.user import UserInDB
 from ...schemas.progress import ProgressInDB
 from ...ai_logs.logger import log_ai_event
 from ...ai_diagnostics.debug_frames import build_debug_frame, log_debug_frame
+from ...ai_trace.provenance import build_provenance_frame
+from ...ai_trace.execution_map import record_execution
 
 logger = logging.getLogger(__name__)
 
@@ -152,6 +155,18 @@ class SummaryService:
                 engine="summary_service",
                 request_id=request_id,
                 user_id=str(resolved_user_id) if resolved_user_id else None,
+            )
+
+            # Phase 7.15: Build provenance and record execution
+            build_provenance_frame(
+                engine_name="summary_service",
+                context=context_dict,
+                output=output_dict,
+            )
+            record_execution(
+                engine_name="summary_service",
+                input_keys=list(context_dict.keys()) if context_dict else [],
+                output_keys=list(output_dict.keys()) if output_dict else [],
             )
 
             logger.debug(
