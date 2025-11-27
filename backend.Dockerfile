@@ -2,31 +2,29 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install build tools
-RUN pip install --upgrade pip
+# Install Poetry
+RUN pip install --upgrade pip && pip install poetry==1.8.3
 
-# Copy shared python package first (build context is repo root)
+# Copy shared python package (preserving relative structure for pyproject.toml path)
 COPY packages/shared/python /app/packages/shared/python
 
-# Install shared package
-RUN pip install /app/packages/shared/python
+# Copy backend directory (preserving structure so ../../packages/shared/python resolves)
+COPY apps/backend /app/apps/backend
 
-# Copy backend requirements and install dependencies
-COPY apps/backend/requirements.txt /app/backend/requirements.txt
-RUN pip install -r /app/backend/requirements.txt
+# Set working directory to backend for Poetry
+WORKDIR /app/apps/backend
 
-# Copy backend application
-COPY apps/backend /app/backend
+# Install dependencies with Poetry (no virtualenv, install to system)
+# The path "../../packages/shared/python" now correctly resolves to /app/packages/shared/python
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-interaction --no-ansi --only main
 
-# Set PYTHONPATH so backend can import src modules
-ENV PYTHONPATH="/app/backend:${PYTHONPATH}"
+# Set PYTHONPATH for module imports
+ENV PYTHONPATH="/app/apps/backend:${PYTHONPATH}"
 
 # Create non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
-
-# Set working directory to backend for uvicorn
-WORKDIR /app/backend
 
 # Expose port (Railway sets $PORT dynamically)
 EXPOSE 8000
