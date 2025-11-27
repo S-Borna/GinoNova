@@ -1,13 +1,14 @@
 """
 Summary Service
-Phase 7.6: AI service layer with DB integration
+Phase 7.7: AI service layer with DB integration and caching
 
 Generates AI-powered daily and weekly summaries using real data
 from repositories and the deterministic rule engine.
+Includes in-memory caching with TTL.
 """
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from shared.ai import (
@@ -26,18 +27,23 @@ from ...schemas.progress import ProgressInDB
 
 logger = logging.getLogger(__name__)
 
+# Cache TTL constant (5 minutes)
+CACHE_TTL_SECONDS = 300
+
 
 class SummaryService:
     """
     Service for generating AI-powered learning summaries.
 
-    Phase 7.6: Integrates with repositories for real progress data.
+    Phase 7.7: Integrates with repositories for real progress data.
     Uses compute_daily_highlights from the rule engine.
+    Includes in-memory caching with 5-minute TTL.
     """
 
     def __init__(self) -> None:
-        """Initialize the summary service."""
-        logger.info("SummaryService initialized (engine=active, db=integrated)")
+        """Initialize the summary service with cache."""
+        self._cache: dict[str, dict[str, Any]] = {}
+        logger.info("SummaryService initialized (engine=active, db=integrated, cache=active)")
 
     def get_daily_summary(
         self,
@@ -59,6 +65,15 @@ class SummaryService:
 
         now = datetime.utcnow()
         today = now.strftime("%Y-%m-%d")
+
+        # Build cache key
+        cache_key = f"summary:{user_id}:{today}"
+
+        # Check cache
+        cached = self._get_from_cache(cache_key)
+        if cached is not None:
+            logger.debug(f"Cache hit for {cache_key}")
+            return cached
 
         # Resolve user
         user = self._resolve_user(user_id)
@@ -101,6 +116,9 @@ class SummaryService:
             motivation_message=motivation,
             generated_at=now,
         )
+
+        # Store in cache
+        self._store_in_cache(cache_key, response)
 
         logger.debug(
             f"Returning daily summary: date={response.date}, "
@@ -495,3 +513,62 @@ class SummaryService:
             return "Streak started! Come back tomorrow to keep it going."
         else:
             return "Start a new streak today! Consistency beats intensity."
+
+    def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:
+        """
+        Invalidate cached summaries for a user or all users.
+
+        Args:
+            user_id: User UUID whose cache should be invalidated.
+                     If None, invalidates all summary caches.
+
+        Returns:
+            Number of cache entries invalidated.
+        """
+        if user_id is None:
+            count = len(self._cache)
+            self._cache.clear()
+            logger.info(f"invalidate_cache: cleared all {count} entries")
+            return count
+
+        prefix = f"summary:{user_id}:"
+        keys_to_remove = [k for k in self._cache if k.startswith(prefix)]
+        for key in keys_to_remove:
+            del self._cache[key]
+        logger.info(f"invalidate_cache: cleared {len(keys_to_remove)} entries for user_id={user_id}")
+        return len(keys_to_remove)
+
+    def _get_from_cache(self, key: str) -> Optional[DailySummaryResponse]:
+        """
+        Get value from cache if exists and not expired.
+
+        Args:
+            key: Cache key to look up
+
+        Returns:
+            Cached value if valid, None otherwise
+        """
+        entry = self._cache.get(key)
+        if entry is None:
+            return None
+
+        if datetime.utcnow() > entry["expires_at"]:
+            del self._cache[key]
+            logger.debug(f"Cache expired for key={key}")
+            return None
+
+        return entry["value"]
+
+    def _store_in_cache(self, key: str, value: DailySummaryResponse) -> None:
+        """
+        Store value in cache with TTL.
+
+        Args:
+            key: Cache key
+            value: Value to cache
+        """
+        self._cache[key] = {
+            "value": value,
+            "expires_at": datetime.utcnow() + timedelta(seconds=CACHE_TTL_SECONDS),
+        }
+        logger.debug(f"Cached value for key={key}")

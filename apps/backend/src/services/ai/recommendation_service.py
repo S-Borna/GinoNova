@@ -1,13 +1,14 @@
 """
 Recommendation Service
-Phase 7.6: AI service layer with DB integration
+Phase 7.7: AI service layer with DB integration and caching
 
 Provides personalized task, module, and studyflow recommendations
 using real data from repositories and the deterministic rule engine.
+Includes in-memory caching with TTL.
 """
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from shared.ai import (
@@ -31,18 +32,23 @@ from ...schemas.progress import ProgressInDB
 
 logger = logging.getLogger(__name__)
 
+# Cache TTL constant (5 minutes)
+CACHE_TTL_SECONDS = 300
+
 
 class RecommendationService:
     """
     Service for generating personalized AI recommendations.
 
-    Phase 7.6: Integrates with repositories for real user/module/task data.
+    Phase 7.7: Integrates with repositories for real user/module/task data.
     Uses compute_recommendation_scores from the rule engine.
+    Includes in-memory caching with 5-minute TTL.
     """
 
     def __init__(self) -> None:
-        """Initialize the recommendation service."""
-        logger.info("RecommendationService initialized (engine=active, db=integrated)")
+        """Initialize the recommendation service with cache."""
+        self._cache: dict[str, dict[str, Any]] = {}
+        logger.info("RecommendationService initialized (engine=active, db=integrated, cache=active)")
 
     def get_recommendations(
         self,
@@ -68,6 +74,15 @@ class RecommendationService:
             f"get_recommendations called: user_id={user_id}, "
             f"limit={limit}, include_reasoning={include_reasoning}"
         )
+
+        # Build cache key
+        cache_key = f"recommendations:{user_id}:{include_reasoning}"
+
+        # Check cache
+        cached = self._get_from_cache(cache_key)
+        if cached is not None:
+            logger.debug(f"Cache hit for {cache_key}")
+            return cached
 
         now = datetime.utcnow()
 
@@ -148,6 +163,9 @@ class RecommendationService:
             generated_at=now,
             expires_at=now + timedelta(minutes=10),
         )
+
+        # Store in cache
+        self._store_in_cache(cache_key, response)
 
         logger.debug(f"Returning recommendations: {response.model_dump_json()[:200]}...")
         return response
@@ -400,15 +418,61 @@ class RecommendationService:
             {"mode": "sprint", "duration": 15, "intensity": "low"},
         ]
 
-    def invalidate_cache(self, user_id: UUID) -> None:
+    def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:
         """
-        Invalidate cached recommendations for a user.
+        Invalidate cached recommendations for a user or all users.
 
         Args:
-            user_id: User UUID whose cache should be invalidated
+            user_id: User UUID whose cache should be invalidated.
+                     If None, invalidates all recommendation caches.
 
-        Note:
-            Phase 7.6: No-op (no cache implemented yet).
-            Future: Will clear Redis cache for user.
+        Returns:
+            Number of cache entries invalidated.
         """
-        logger.info(f"invalidate_cache called for user_id={user_id} (no-op, cache not implemented)")
+        if user_id is None:
+            count = len(self._cache)
+            self._cache.clear()
+            logger.info(f"invalidate_cache: cleared all {count} entries")
+            return count
+
+        prefix = f"recommendations:{user_id}:"
+        keys_to_remove = [k for k in self._cache if k.startswith(prefix)]
+        for key in keys_to_remove:
+            del self._cache[key]
+        logger.info(f"invalidate_cache: cleared {len(keys_to_remove)} entries for user_id={user_id}")
+        return len(keys_to_remove)
+
+    def _get_from_cache(self, key: str) -> Optional[RecommendationsResponse]:
+        """
+        Get value from cache if exists and not expired.
+
+        Args:
+            key: Cache key to look up
+
+        Returns:
+            Cached value if valid, None otherwise
+        """
+        entry = self._cache.get(key)
+        if entry is None:
+            return None
+
+        if datetime.utcnow() > entry["expires_at"]:
+            del self._cache[key]
+            logger.debug(f"Cache expired for key={key}")
+            return None
+
+        return entry["value"]
+
+    def _store_in_cache(self, key: str, value: RecommendationsResponse) -> None:
+        """
+        Store value in cache with TTL.
+
+        Args:
+            key: Cache key
+            value: Value to cache
+        """
+        self._cache[key] = {
+            "value": value,
+            "expires_at": datetime.utcnow() + timedelta(seconds=CACHE_TTL_SECONDS),
+        }
+        logger.debug(f"Cached value for key={key}")
