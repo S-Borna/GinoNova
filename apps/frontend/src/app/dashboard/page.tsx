@@ -2,7 +2,7 @@
 
 /**
  * Dashboard Page
- * Phase 6.3: Enhanced Dashboard with Design Polish (layout, cards, hierarchy)
+ * Phase 6.2: Refactored with dedicated components
  */
 
 import { useEffect, useState, useCallback } from "react"
@@ -20,6 +20,15 @@ import {
     DashboardStudyflow,
     DashboardProgress,
 } from "@/lib/dashboard"
+
+// Phase 6.2 Components
+import {
+    DashboardHeader,
+    ProgressOverview,
+    DailyActivity,
+    ModulesPreview,
+    RecommendationsPanel,
+} from "@/components/dashboard"
 
 // ============================================================================
 // DESIGN TOKENS (Consistent styling)
@@ -585,14 +594,16 @@ function DashboardContent() {
 
             {/* Main Content */}
             <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-                {/* Welcome Header with Refresh */}
-                <div className="flex items-start justify-between mb-10">
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-                            Welcome back, {user?.full_name || user?.email?.split("@")[0]}!
-                        </h2>
-                        <p className="text-sm text-gray-500 mt-1">Here&apos;s your learning dashboard overview.</p>
-                    </div>
+                {/* Phase 6.2: Dashboard Header Component */}
+                <div className="mb-8">
+                    <DashboardHeader
+                        user={dashboard?.user ?? user}
+                        currentXP={dashboard?.stats?.total_progress_records ?? 0}
+                    />
+                </div>
+
+                {/* Refresh Button Row */}
+                <div className="flex justify-end mb-6">
                     <RefreshButton onClick={handleRefresh} loading={refreshing} />
                 </div>
 
@@ -693,11 +704,56 @@ function DashboardContent() {
 
                         <SectionDivider />
 
-                        {/* Main Panels Grid */}
+                        {/* Phase 6.2: Enhanced Panels Grid */}
                         <section className="mb-10">
                             <div className={sectionHeadingStyles}>
                                 <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
-                                Content
+                                Your Learning Journey
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                {/* Phase 6.2: ModulesPreview Component */}
+                                <ModulesPreview
+                                    modules={dashboard.modules}
+                                    progress={dashboard.progress}
+                                />
+                                {/* Phase 6.2: ProgressOverview Component */}
+                                <ProgressOverview
+                                    stats={dashboard.stats}
+                                    completedModules={dashboard.progress.filter(p => p.module_id && p.status === "completed").length}
+                                    completedTasks={dashboard.progress.filter(p => p.task_id && p.status === "completed").length}
+                                />
+                                {/* Phase 6.2: DailyActivity Component */}
+                                <DailyActivity
+                                    studyflows={dashboard.studyflow}
+                                    studyMinutesToday={0}
+                                    tasksCompletedToday={0}
+                                    currentStreak={0}
+                                />
+                            </div>
+                        </section>
+
+                        <SectionDivider />
+
+                        {/* Phase 6.2: AI Recommendations + System Info */}
+                        <section className="mb-10">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-indigo-500 rounded-full"></span>
+                                Insights & Recommendations
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-5">
+                                {/* Phase 6.2: RecommendationsPanel Component */}
+                                <RecommendationsPanel isEnabled={false} />
+                                <SystemInfoPanel system={dashboard.system} version={dashboard.version} />
+                            </div>
+                        </section>
+
+                        <SectionDivider />
+
+                        {/* Legacy Content Panels (keeping for backward compatibility) */}
+                        <section className="mb-10">
+                            <div className={sectionHeadingStyles}>
+                                <span className="w-1 h-4 bg-gray-400 rounded-full"></span>
+                                Detailed Content
                             </div>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                                 <ModulesPanel modules={dashboard.modules} />
@@ -712,11 +768,10 @@ function DashboardContent() {
                         <section>
                             <div className={sectionHeadingStyles}>
                                 <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
-                                Status
+                                Progress Tracking
                             </div>
                             <div className="grid md:grid-cols-2 gap-5">
                                 <ProgressPanel progress={dashboard.progress} />
-                                <SystemInfoPanel system={dashboard.system} version={dashboard.version} />
                             </div>
                         </section>
                     </>
