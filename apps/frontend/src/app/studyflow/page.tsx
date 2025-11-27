@@ -1,130 +1,201 @@
 "use client"
 
 /**
- * Studyflow List Page
- * Phase 4.0: Display all studyflows with order and module links
+ * ============================================================================
+ * STUDYFLOW PAGE - Focused Study Mode Experience
+ * ============================================================================
+ * 
+ * Features:
+ * - Pre-session setup (mode, task, goals)
+ * - Active session with timer and controls
+ * - Session complete celebration
+ * - Session history
+ * - Calming, focused design
+ * 
+ * @phase D.5 - Studyflow UI
  */
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { getStudyflows, StudyflowPublic, truncateText } from "@/lib/studyflow"
-import { Button } from "@/components/ui/button"
+import * as React from "react"
+import { useRouter } from "next/navigation"
+import { AppShell } from "@/components/layout/AppShell"
+import { GlassCard } from "@/components/ui/glass-card"
 import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+    SessionSetup,
+    ActiveSession,
+    SessionComplete,
+    SessionHistory,
+    StreakDisplay,
+    type SessionConfig,
+    type SessionSummary,
+    type SessionRecord,
+} from "@/components/studyflow"
+
+/* ============================================================================
+   TYPES
+   ============================================================================ */
+
+type SessionState = "setup" | "active" | "complete"
+
+/* ============================================================================
+   MOCK DATA
+   ============================================================================ */
+
+const MOCK_SESSIONS: SessionRecord[] = [
+    {
+        id: "1",
+        date: new Date(),
+        durationMinutes: 25,
+        tasksCompleted: 1,
+        xpEarned: 75,
+        mode: "pomodoro",
+    },
+    {
+        id: "2",
+        date: new Date(Date.now() - 86400000), // Yesterday
+        durationMinutes: 50,
+        tasksCompleted: 2,
+        xpEarned: 150,
+        mode: "deep-focus",
+    },
+    {
+        id: "3",
+        date: new Date(Date.now() - 86400000 * 2), // 2 days ago
+        durationMinutes: 30,
+        tasksCompleted: 1,
+        xpEarned: 80,
+        mode: "custom",
+    },
+]
+
+const MOCK_TASKS = [
+    { id: "1", title: "Install Docker", moduleId: "m9", moduleTitle: "Module 09 · Containers", isRecommended: true },
+    { id: "2", title: "Write Dockerfile", moduleId: "m9", moduleTitle: "Module 09 · Containers" },
+    { id: "3", title: "Docker Compose Basics", moduleId: "m9", moduleTitle: "Module 09 · Containers" },
+    { id: "4", title: "Linux File Permissions", moduleId: "m3", moduleTitle: "Module 03 · Linux Basics" },
+]
+
+/* ============================================================================
+   MAIN PAGE COMPONENT
+   ============================================================================ */
 
 export default function StudyflowPage() {
-    const [studyflows, setStudyflows] = useState<StudyflowPublic[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    const router = useRouter()
+    
+    // Session state
+    const [sessionState, setSessionState] = React.useState<SessionState>("setup")
+    const [sessionConfig, setSessionConfig] = React.useState<SessionConfig | null>(null)
+    const [sessionSummary, setSessionSummary] = React.useState<SessionSummary | null>(null)
+    const [sessions, setSessions] = React.useState<SessionRecord[]>(MOCK_SESSIONS)
+    const [tasksCompletedInSession, setTasksCompletedInSession] = React.useState(0)
 
-    useEffect(() => {
-        async function fetchStudyflows() {
-            const result = await getStudyflows()
-            if (result.ok) {
-                setStudyflows(result.data)
-            } else {
-                setError(result.message)
-            }
-            setLoading(false)
-        }
-
-        fetchStudyflows()
-    }, [])
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-gray-600">Loading studyflows...</p>
-            </div>
-        )
+    // Handle start session
+    const handleStartSession = (config: SessionConfig) => {
+        setSessionConfig(config)
+        setTasksCompletedInSession(0)
+        setSessionState("active")
     }
 
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <p className="text-red-500 mb-4">{error}</p>
-                    <Button
-                        onClick={() => window.location.reload()}
-                        variant="outline"
-                    >
-                        Retry
-                    </Button>
-                </div>
-            </div>
-        )
+    // Handle end session
+    const handleEndSession = (completed: boolean) => {
+        // Create summary
+        const summary: SessionSummary = {
+            totalFocusMinutes: sessionConfig?.workMinutes || 25,
+            tasksCompleted: tasksCompletedInSession,
+            xpEarned: tasksCompletedInSession * 50 + 25, // Base 25 XP + 50 per task
+            streakDays: 7,
+            isNewRecord: false,
+        }
+        setSessionSummary(summary)
+        setSessionState("complete")
+
+        // Add to history
+        if (sessionConfig) {
+            const newSession: SessionRecord = {
+                id: Date.now().toString(),
+                date: new Date(),
+                durationMinutes: sessionConfig.workMinutes,
+                tasksCompleted: tasksCompletedInSession,
+                xpEarned: summary.xpEarned,
+                mode: sessionConfig.mode,
+            }
+            setSessions(prev => [newSession, ...prev])
+        }
+    }
+
+    // Handle task completion
+    const handleCompleteTask = () => {
+        setTasksCompletedInSession(prev => prev + 1)
+    }
+
+    // Handle start another session
+    const handleStartAnother = () => {
+        setSessionConfig(null)
+        setSessionSummary(null)
+        setSessionState("setup")
+    }
+
+    // Handle view progress
+    const handleViewProgress = () => {
+        router.push("/progress")
+    }
+
+    // Handle close complete modal
+    const handleCloseComplete = () => {
+        setSessionConfig(null)
+        setSessionSummary(null)
+        setSessionState("setup")
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-6xl mx-auto px-4">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-10">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Studyflows</h1>
-                        <p className="text-gray-600 mt-1">
-                            Browse all learning studyflows
-                        </p>
-                    </div>
-                    <Link href="/modules">
-                        <Button variant="outline">View Modules</Button>
-                    </Link>
-                </div>
+        <AppShell showBreadcrumbs={sessionState === "setup"}>
+            <div className="max-w-6xl mx-auto">
+                {/* Pre-Session Setup */}
+                {sessionState === "setup" && (
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Main Setup Area */}
+                        <div className="lg:col-span-2">
+                            <SessionSetup
+                                onStartSession={handleStartSession}
+                                availableTasks={MOCK_TASKS}
+                            />
+                        </div>
 
-                {/* Studyflows Grid */}
-                {studyflows.length === 0 ? (
-                    <Card className="p-8 text-center">
-                        <p className="text-gray-500 mb-4">No studyflows found.</p>
-                        <p className="text-sm text-gray-400">
-                            Studyflows are created within modules. Go to a module to add studyflows.
-                        </p>
-                    </Card>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {studyflows.map((studyflow) => (
-                            <Link key={studyflow.id} href={`/studyflow/${studyflow.id}`}>
-                                <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                                    <CardHeader>
-                                        <div className="flex items-start justify-between gap-2">
-                                            <CardTitle className="text-lg">
-                                                {studyflow.title}
-                                            </CardTitle>
-                                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                                #{studyflow.order}
-                                            </span>
-                                        </div>
-                                        <CardDescription>
-                                            {truncateText(studyflow.description, 120) || "No description"}
-                                        </CardDescription>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="flex items-center justify-between">
-                                            <Link
-                                                href={`/modules/${studyflow.module_id}`}
-                                                className="text-xs text-blue-600 hover:text-blue-500"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                View Module →
-                                            </Link>
-                                            <Badge
-                                                variant={studyflow.is_active ? "success" : "inactive"}
-                                            >
-                                                {studyflow.is_active ? "Active" : "Inactive"}
-                                            </Badge>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        ))}
+                        {/* Sidebar */}
+                        <div className="space-y-6">
+                            {/* Streak Display */}
+                            <GlassCard padding="lg">
+                                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                                    Your Streak
+                                </h3>
+                                <StreakDisplay streak={7} />
+                            </GlassCard>
+
+                            {/* Recent Sessions */}
+                            <SessionHistory sessions={sessions} maxDisplay={5} />
+                        </div>
                     </div>
                 )}
+
+                {/* Active Session */}
+                {sessionState === "active" && sessionConfig && (
+                    <ActiveSession
+                        config={sessionConfig}
+                        onEndSession={handleEndSession}
+                        onCompleteTask={handleCompleteTask}
+                    />
+                )}
+
+                {/* Session Complete Modal */}
+                {sessionSummary && (
+                    <SessionComplete
+                        isOpen={sessionState === "complete"}
+                        summary={sessionSummary}
+                        onStartAnother={handleStartAnother}
+                        onViewProgress={handleViewProgress}
+                        onClose={handleCloseComplete}
+                    />
+                )}
             </div>
-        </div>
+        </AppShell>
     )
 }
