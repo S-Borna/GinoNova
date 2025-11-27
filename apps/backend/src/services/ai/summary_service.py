@@ -1,12 +1,12 @@
 """
 Summary Service
-Phase 7.5: AI service layer with rule engine integration
+Phase 7.6: AI service layer with DB integration
 
-Generates AI-powered daily and weekly summaries using the
-deterministic rule engine's compute_daily_highlights function.
+Generates AI-powered daily and weekly summaries using real data
+from repositories and the deterministic rule engine.
 """
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 from uuid import UUID
 
@@ -19,6 +19,11 @@ from shared.ai import (
     ProgressData,
 )
 
+from ...db import user_repository, module_repository, task_repository, progress_repository
+from ...db.memory import USERS
+from ...schemas.user import UserInDB
+from ...schemas.progress import ProgressInDB
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,13 +31,13 @@ class SummaryService:
     """
     Service for generating AI-powered learning summaries.
 
-    Phase 7.5: Uses compute_daily_highlights from the rule engine
-    to generate personalized, deterministic summaries.
+    Phase 7.6: Integrates with repositories for real progress data.
+    Uses compute_daily_highlights from the rule engine.
     """
 
     def __init__(self) -> None:
         """Initialize the summary service."""
-        logger.info("SummaryService initialized (engine=active)")
+        logger.info("SummaryService initialized (engine=active, db=integrated)")
 
     def get_daily_summary(
         self,
@@ -41,13 +46,8 @@ class SummaryService:
         """
         Generate a daily learning summary for a user.
 
-        Uses the rule engine to compute highlights based on:
-        - Tasks completed today
-        - XP earned
-        - Study time
-        - Streak status
-        - Module progress
-        - Achievements
+        Uses real progress data from repository combined with rule engine
+        to compute highlights and metrics.
 
         Args:
             user_id: Optional user UUID for personalized summary
@@ -60,14 +60,18 @@ class SummaryService:
         now = datetime.utcnow()
         today = now.strftime("%Y-%m-%d")
 
-        # Build context and progress data
-        user_ctx = self._build_user_context(user_id)
-        progress = self._get_progress_data(user_id)
+        # Resolve user
+        user = self._resolve_user(user_id)
+        resolved_user_id = user.id if user else None
+
+        # Build context and progress data from real DB
+        user_ctx = self._build_user_context(user, resolved_user_id)
+        progress = self._build_progress_data(resolved_user_id)
 
         # Compute highlights using rule engine
         raw_highlights = compute_daily_highlights(user_ctx, progress)
 
-        logger.debug(f"Computed {len(raw_highlights)} highlights")
+        logger.debug(f"Computed {len(raw_highlights)} highlights from DB data")
 
         # Convert engine highlights to schema highlights
         highlights = [
@@ -116,23 +120,17 @@ class SummaryService:
 
         Returns:
             Dictionary with weekly summary data
-
-        Note:
-            Phase 7.5: Returns computed summary based on weekly progress.
-            Full weekly summary schema in future phases.
         """
         logger.info(f"get_weekly_summary called: user_id={user_id}")
 
         now = datetime.utcnow()
-        progress = self._get_weekly_progress_data(user_id)
+        progress = self._build_weekly_progress_data(user_id)
 
-        # Aggregate weekly stats
         total_tasks = progress.get("tasks_completed_week", 0)
         total_xp = progress.get("xp_earned_week", 0)
         total_minutes = progress.get("study_minutes_week", 0)
         streak = progress.get("streak_days", 0)
 
-        # Determine week quality
         if total_tasks >= 15 and total_minutes >= 300:
             quality = "exceptional"
             message = "Outstanding week! You're making incredible progress."
@@ -146,9 +144,13 @@ class SummaryService:
             quality = "needs_improvement"
             message = "Room to grow! Try setting smaller daily goals next week."
 
+        # Calculate week start/end
+        week_start = (now - timedelta(days=now.weekday())).strftime("%Y-%m-%d")
+        week_end = (now + timedelta(days=6 - now.weekday())).strftime("%Y-%m-%d")
+
         return {
-            "week_start": "2025-11-24",
-            "week_end": "2025-11-30",
+            "week_start": week_start,
+            "week_end": week_end,
             "status": "computed",
             "quality": quality,
             "tasks_completed": total_tasks,
@@ -167,8 +169,6 @@ class SummaryService:
         """
         Generate a contextual motivation message.
 
-        Uses deterministic rules based on context type.
-
         Args:
             user_id: User UUID for personalization
             context: Context for the message
@@ -181,11 +181,11 @@ class SummaryService:
             f"user_id={user_id}, context={context}"
         )
 
-        user_ctx = self._build_user_context(user_id)
+        user = self._resolve_user(user_id)
+        user_ctx = self._build_user_context(user, user_id)
         streak = user_ctx.get("streak_days", 0)
         xp = user_ctx.get("xp", 0)
 
-        # Context-based messages with personalization
         messages = {
             "general": self._general_motivation(streak, xp),
             "streak": self._streak_motivation(streak),
@@ -197,6 +197,226 @@ class SummaryService:
         }
 
         return messages.get(context, messages["general"])
+
+    def _resolve_user(self, user_id: Optional[UUID]) -> Optional[UserInDB]:
+        """Resolve user from ID or fallback to first available user."""
+        if user_id:
+            user = user_repository.get_user_by_id(user_id)
+            if user:
+                return user
+
+        if USERS:
+            return next(iter(USERS.values()))
+
+        return None
+
+    def _build_user_context(
+        self,
+        user: Optional[UserInDB],
+        user_id: Optional[UUID],
+    ) -> UserContext:
+        """Build user context from real user data and progress."""
+        hour = datetime.utcnow().hour
+        if hour < 12:
+            time_of_day = "morning"
+        elif hour < 18:
+            time_of_day = "afternoon"
+        elif hour < 21:
+            time_of_day = "evening"
+        else:
+            time_of_day = "night"
+
+        ctx: UserContext = {
+            "user_id": str(user_id) if user_id else "anonymous",
+            "skill_level": "intermediate",
+            "streak_days": 0,
+            "xp": 0,
+            "completed_module_ids": [],
+            "completed_task_ids": [],
+            "focus_energy": "high" if hour < 16 else "medium",
+            "time_of_day": time_of_day,
+            "available_minutes": 45,
+        }
+
+        if not user_id:
+            return ctx
+
+        progress_records = progress_repository.list_progress_by_user(user_id)
+
+        completed_modules = []
+        completed_tasks = []
+
+        for p in progress_records:
+            if p.status == "completed":
+                if p.module_id:
+                    completed_modules.append(str(p.module_id))
+                if p.task_id:
+                    completed_tasks.append(str(p.task_id))
+
+        ctx["completed_module_ids"] = completed_modules
+        ctx["completed_task_ids"] = completed_tasks
+        ctx["xp"] = len(completed_tasks) * 10 + len(completed_modules) * 50
+
+        total_completions = len(completed_tasks) + len(completed_modules)
+        if total_completions >= 20:
+            ctx["skill_level"] = "advanced"
+        elif total_completions >= 5:
+            ctx["skill_level"] = "intermediate"
+        else:
+            ctx["skill_level"] = "beginner"
+
+        return ctx
+
+    def _build_progress_data(self, user_id: Optional[UUID]) -> ProgressData:
+        """
+        Build progress data from real DB records.
+
+        Args:
+            user_id: User ID to load progress for
+
+        Returns:
+            ProgressData dict for engine computation
+        """
+        if not user_id:
+            # Return minimal data for anonymous users
+            return {
+                "tasks_completed_today": 0,
+                "xp_earned_today": 0,
+                "study_minutes_today": 0,
+                "streak_days": 0,
+                "modules_in_progress": [],
+                "recent_achievements": [],
+            }
+
+        # Get all progress records for user
+        progress_records = progress_repository.list_progress_by_user(user_id)
+        now = datetime.utcnow()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        # Count today's completions
+        tasks_completed_today = 0
+        for p in progress_records:
+            if p.task_id and p.status == "completed":
+                if p.updated_at >= today_start:
+                    tasks_completed_today += 1
+
+        # Calculate XP (10 per task completed today)
+        xp_earned_today = tasks_completed_today * 10
+
+        # Build modules in progress
+        modules_in_progress = []
+        db_modules = module_repository.list_modules()
+
+        for m in db_modules:
+            if not m.is_active:
+                continue
+
+            module_tasks = task_repository.list_tasks_by_module(m.id)
+            total_tasks = len(module_tasks)
+            completed_tasks = 0
+
+            for t in module_tasks:
+                task_progress = progress_repository.get_progress_by_user_and_target(
+                    user_id=user_id, task_id=t.id
+                )
+                if task_progress and task_progress.status == "completed":
+                    completed_tasks += 1
+
+            if 0 < completed_tasks < total_tasks:
+                modules_in_progress.append({
+                    "id": str(m.id),
+                    "name": m.name,
+                    "total_tasks": total_tasks,
+                    "completed_tasks": completed_tasks,
+                })
+
+        # Count completed modules for achievements
+        completed_modules = []
+        for m in db_modules:
+            module_tasks = task_repository.list_tasks_by_module(m.id)
+            if not module_tasks:
+                continue
+
+            all_completed = True
+            for t in module_tasks:
+                task_prog = progress_repository.get_progress_by_user_and_target(
+                    user_id=user_id, task_id=t.id
+                )
+                if not task_prog or task_prog.status != "completed":
+                    all_completed = False
+                    break
+
+            if all_completed:
+                completed_modules.append(f"Completed {m.name} module")
+
+        # Calculate streak (simplified - days with activity)
+        streak_days = self._calculate_streak(progress_records)
+
+        return {
+            "tasks_completed_today": tasks_completed_today,
+            "xp_earned_today": xp_earned_today,
+            "study_minutes_today": tasks_completed_today * 15,  # Estimate 15 min per task
+            "streak_days": streak_days,
+            "modules_in_progress": modules_in_progress,
+            "recent_achievements": completed_modules[:3],
+        }
+
+    def _build_weekly_progress_data(self, user_id: UUID) -> dict:
+        """Build weekly aggregated progress data."""
+        progress_records = progress_repository.list_progress_by_user(user_id)
+        now = datetime.utcnow()
+        week_start = now - timedelta(days=now.weekday())
+        week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        tasks_completed_week = 0
+        for p in progress_records:
+            if p.task_id and p.status == "completed":
+                if p.updated_at >= week_start:
+                    tasks_completed_week += 1
+
+        xp_earned_week = tasks_completed_week * 10
+        study_minutes_week = tasks_completed_week * 15
+        streak_days = self._calculate_streak(progress_records)
+
+        return {
+            "tasks_completed_week": tasks_completed_week,
+            "xp_earned_week": xp_earned_week,
+            "study_minutes_week": study_minutes_week,
+            "streak_days": streak_days,
+        }
+
+    def _calculate_streak(self, progress_records: list[ProgressInDB]) -> int:
+        """
+        Calculate current streak from progress records.
+
+        Simple algorithm: count consecutive days with completed tasks
+        going backwards from today.
+        """
+        if not progress_records:
+            return 0
+
+        # Get all completion dates
+        completion_dates: set[str] = set()
+        for p in progress_records:
+            if p.status == "completed" and p.task_id:
+                completion_dates.add(p.updated_at.strftime("%Y-%m-%d"))
+
+        if not completion_dates:
+            return 0
+
+        # Count consecutive days
+        streak = 0
+        current_date = datetime.utcnow().date()
+
+        while True:
+            date_str = current_date.strftime("%Y-%m-%d")
+            if date_str in completion_dates:
+                streak += 1
+                current_date -= timedelta(days=1)
+            else:
+                break
+
+        return streak
 
     def _generate_greeting(
         self,
@@ -223,7 +443,7 @@ class SummaryService:
         elif tasks > 0:
             return f"{base_greeting} You're making progress!"
         else:
-            return f"{base_greeting}"
+            return base_greeting
 
     def _generate_motivation(
         self,
@@ -275,68 +495,3 @@ class SummaryService:
             return "Streak started! Come back tomorrow to keep it going."
         else:
             return "Start a new streak today! Consistency beats intensity."
-
-    def _build_user_context(self, user_id: Optional[UUID]) -> UserContext:
-        """Build user context for summary generation."""
-        hour = datetime.utcnow().hour
-        if hour < 12:
-            time_of_day = "morning"
-        elif hour < 18:
-            time_of_day = "afternoon"
-        elif hour < 21:
-            time_of_day = "evening"
-        else:
-            time_of_day = "night"
-
-        return {
-            "user_id": str(user_id) if user_id else "anonymous",
-            "skill_level": "intermediate",
-            "streak_days": 5,
-            "xp": 1500,
-            "completed_module_ids": ["docker-basics", "linux-fundamentals"],
-            "completed_task_ids": ["task-001", "task-002", "task-003"],
-            "focus_energy": "high" if hour < 16 else "medium",
-            "time_of_day": time_of_day,
-            "available_minutes": 45,
-        }
-
-    def _get_progress_data(self, user_id: Optional[UUID]) -> ProgressData:
-        """
-        Get daily progress data for a user.
-
-        Phase 7.5: Returns deterministic sample data.
-        Phase 7.6+: Will query from DB.
-        """
-        # Deterministic sample data
-        return {
-            "tasks_completed_today": 3,
-            "xp_earned_today": 150,
-            "study_minutes_today": 45,
-            "streak_days": 5,
-            "modules_in_progress": [
-                {
-                    "id": "kubernetes-101",
-                    "name": "Introduction to Kubernetes",
-                    "total_tasks": 12,
-                    "completed_tasks": 4,
-                },
-                {
-                    "id": "ci-cd-pipelines",
-                    "name": "CI/CD Pipeline Fundamentals",
-                    "total_tasks": 10,
-                    "completed_tasks": 6,
-                },
-            ],
-            "recent_achievements": [
-                "Completed Docker Fundamentals module",
-            ],
-        }
-
-    def _get_weekly_progress_data(self, user_id: UUID) -> dict:
-        """Get weekly aggregated progress data."""
-        return {
-            "tasks_completed_week": 18,
-            "xp_earned_week": 850,
-            "study_minutes_week": 240,
-            "streak_days": 5,
-        }

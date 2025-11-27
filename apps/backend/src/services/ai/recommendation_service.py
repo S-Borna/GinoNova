@@ -1,9 +1,9 @@
 """
 Recommendation Service
-Phase 7.5: AI service layer with rule engine integration
+Phase 7.6: AI service layer with DB integration
 
 Provides personalized task, module, and studyflow recommendations
-using the deterministic rule engine (scoring + rules + heuristics).
+using real data from repositories and the deterministic rule engine.
 """
 import logging
 from datetime import datetime, timedelta
@@ -24,6 +24,11 @@ from shared.ai import (
     StudyflowData,
 )
 
+from ...db import user_repository, module_repository, task_repository, progress_repository
+from ...db.memory import USERS
+from ...schemas.user import UserInDB
+from ...schemas.progress import ProgressInDB
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,13 +36,13 @@ class RecommendationService:
     """
     Service for generating personalized AI recommendations.
 
-    Phase 7.5: Uses compute_recommendation_scores from the rule engine
-    to provide deterministic, explainable recommendations.
+    Phase 7.6: Integrates with repositories for real user/module/task data.
+    Uses compute_recommendation_scores from the rule engine.
     """
 
     def __init__(self) -> None:
         """Initialize the recommendation service."""
-        logger.info("RecommendationService initialized (engine=active)")
+        logger.info("RecommendationService initialized (engine=active, db=integrated)")
 
     def get_recommendations(
         self,
@@ -48,8 +53,8 @@ class RecommendationService:
         """
         Generate personalized recommendations for a user.
 
-        Uses the deterministic rule engine to score and rank all available
-        modules, tasks, and studyflow configurations.
+        Uses real data from repositories combined with the deterministic
+        rule engine to score and rank all available entities.
 
         Args:
             user_id: Optional user UUID for personalization
@@ -66,14 +71,16 @@ class RecommendationService:
 
         now = datetime.utcnow()
 
-        # Build user context
-        # Phase 7.5: Static context - real DB integration in Phase 7.6+
-        user_ctx: UserContext = self._build_user_context(user_id)
+        # Resolve user (use provided or fallback to first user)
+        user = self._resolve_user(user_id)
+        resolved_user_id = user.id if user else None
 
-        # Get available items
-        # Phase 7.5: Static data - real DB queries in Phase 7.6+
-        modules = self._get_available_modules()
-        tasks = self._get_available_tasks()
+        # Build user context from real data
+        user_ctx: UserContext = self._build_user_context(user, resolved_user_id)
+
+        # Load real data from repositories
+        modules = self._load_modules(resolved_user_id)
+        tasks = self._load_tasks(resolved_user_id)
         studyflows = self._get_studyflow_options()
 
         # Compute scores using rule engine
@@ -82,7 +89,8 @@ class RecommendationService:
         logger.debug(
             f"Engine scores computed: "
             f"top_task={scores['top_task']['score'] if scores['top_task'] else 'N/A'}, "
-            f"top_module={scores['top_module']['score'] if scores['top_module'] else 'N/A'}"
+            f"top_module={scores['top_module']['score'] if scores['top_module'] else 'N/A'}, "
+            f"modules_count={len(modules)}, tasks_count={len(tasks)}"
         )
 
         # Build response from top scored items
@@ -144,14 +152,42 @@ class RecommendationService:
         logger.debug(f"Returning recommendations: {response.model_dump_json()[:200]}...")
         return response
 
-    def _build_user_context(self, user_id: Optional[UUID]) -> UserContext:
+    def _resolve_user(self, user_id: Optional[UUID]) -> Optional[UserInDB]:
         """
-        Build user context for scoring.
+        Resolve user from ID or fallback to first available user.
 
-        Phase 7.5: Returns deterministic sample context.
-        Phase 7.6+: Will query actual user data from DB.
+        Args:
+            user_id: Optional user UUID
+
+        Returns:
+            UserInDB if found, None otherwise
         """
-        # Deterministic context based on user_id presence
+        if user_id:
+            user = user_repository.get_user_by_id(user_id)
+            if user:
+                return user
+
+        # Fallback: get first user from in-memory store
+        if USERS:
+            return next(iter(USERS.values()))
+
+        return None
+
+    def _build_user_context(
+        self,
+        user: Optional[UserInDB],
+        user_id: Optional[UUID],
+    ) -> UserContext:
+        """
+        Build user context from real user data and progress.
+
+        Args:
+            user: User object if found
+            user_id: User ID for progress lookup
+
+        Returns:
+            UserContext dict for engine scoring
+        """
         hour = datetime.utcnow().hour
         if hour < 12:
             time_of_day = "morning"
@@ -162,118 +198,206 @@ class RecommendationService:
         else:
             time_of_day = "night"
 
-        return {
+        # Default context
+        ctx: UserContext = {
             "user_id": str(user_id) if user_id else "anonymous",
             "skill_level": "intermediate",
-            "streak_days": 5,
-            "xp": 1500,
-            "completed_module_ids": ["docker-basics", "linux-fundamentals"],
-            "completed_task_ids": ["task-001", "task-002", "task-003"],
+            "streak_days": 0,
+            "xp": 0,
+            "completed_module_ids": [],
+            "completed_task_ids": [],
             "focus_energy": "high" if hour < 16 else "medium",
             "time_of_day": time_of_day,
             "available_minutes": 45,
         }
 
-    def _get_available_modules(self) -> list[ModuleData]:
-        """
-        Get available modules for recommendation.
+        if not user_id:
+            return ctx
 
-        Phase 7.5: Returns deterministic sample modules.
-        Phase 7.6+: Will query from DB.
+        # Load real progress data
+        progress_records = progress_repository.list_progress_by_user(user_id)
+
+        completed_modules = []
+        completed_tasks = []
+
+        for p in progress_records:
+            if p.status == "completed":
+                if p.module_id:
+                    completed_modules.append(str(p.module_id))
+                if p.task_id:
+                    completed_tasks.append(str(p.task_id))
+
+        ctx["completed_module_ids"] = completed_modules
+        ctx["completed_task_ids"] = completed_tasks
+
+        # Calculate XP (10 XP per completed task, 50 XP per completed module)
+        ctx["xp"] = len(completed_tasks) * 10 + len(completed_modules) * 50
+
+        # Estimate skill level based on completions
+        total_completions = len(completed_tasks) + len(completed_modules)
+        if total_completions >= 20:
+            ctx["skill_level"] = "advanced"
+        elif total_completions >= 5:
+            ctx["skill_level"] = "intermediate"
+        else:
+            ctx["skill_level"] = "beginner"
+
+        return ctx
+
+    def _load_modules(self, user_id: Optional[UUID]) -> list[ModuleData]:
         """
+        Load modules from repository and convert to engine format.
+
+        Args:
+            user_id: User ID for progress lookup
+
+        Returns:
+            List of ModuleData dicts for engine scoring
+        """
+        db_modules = module_repository.list_modules()
+
+        if not db_modules:
+            # Return sample data if no modules exist
+            return self._get_sample_modules()
+
+        # Get user progress for modules
+        user_progress: dict[UUID, ProgressInDB] = {}
+        if user_id:
+            for p in progress_repository.list_progress_by_user(user_id):
+                if p.module_id:
+                    user_progress[p.module_id] = p
+
+        modules: list[ModuleData] = []
+        for m in db_modules:
+            if not m.is_active:
+                continue
+
+            # Count tasks in module
+            module_tasks = task_repository.list_tasks_by_module(m.id)
+            total_tasks = len(module_tasks)
+
+            # Get completed tasks count
+            completed_tasks = 0
+            if user_id:
+                for t in module_tasks:
+                    task_progress = progress_repository.get_progress_by_user_and_target(
+                        user_id=user_id, task_id=t.id
+                    )
+                    if task_progress and task_progress.status == "completed":
+                        completed_tasks += 1
+
+            modules.append({
+                "id": str(m.id),
+                "name": m.name,
+                "difficulty": "medium",  # Default, can be extended later
+                "total_tasks": total_tasks,
+                "completed_tasks": completed_tasks,
+                "prerequisites": [],
+                "category": "general",
+            })
+
+        return modules if modules else self._get_sample_modules()
+
+    def _load_tasks(self, user_id: Optional[UUID]) -> list[TaskData]:
+        """
+        Load tasks from repository and convert to engine format.
+
+        Args:
+            user_id: User ID for progress lookup
+
+        Returns:
+            List of TaskData dicts for engine scoring
+        """
+        db_tasks = task_repository.list_tasks()
+
+        if not db_tasks:
+            # Return sample data if no tasks exist
+            return self._get_sample_tasks()
+
+        now = datetime.utcnow()
+
+        # Get user completed tasks
+        completed_task_ids: set[UUID] = set()
+        if user_id:
+            for p in progress_repository.list_progress_by_user(user_id):
+                if p.task_id and p.status == "completed":
+                    completed_task_ids.add(p.task_id)
+
+        tasks: list[TaskData] = []
+        for t in db_tasks:
+            if not t.is_active:
+                continue
+            if t.id in completed_task_ids:
+                continue  # Skip completed tasks
+
+            tasks.append({
+                "id": str(t.id),
+                "title": t.title,
+                "difficulty": t.difficulty,
+                "priority": "medium",  # Default priority
+                "module_id": str(t.module_id),
+                "due_date": (now + timedelta(days=7)).isoformat(),  # Default deadline
+                "estimated_minutes": 25,  # Default estimate
+                "prerequisites": [],
+            })
+
+        return tasks if tasks else self._get_sample_tasks()
+
+    def _get_sample_modules(self) -> list[ModuleData]:
+        """Return sample modules when DB is empty."""
         return [
             {
-                "id": "kubernetes-101",
+                "id": "sample-kubernetes-101",
                 "name": "Introduction to Kubernetes",
                 "difficulty": "medium",
                 "total_tasks": 12,
                 "completed_tasks": 0,
-                "prerequisites": ["docker-basics"],
+                "prerequisites": [],
                 "category": "containers",
             },
             {
-                "id": "ci-cd-pipelines",
+                "id": "sample-ci-cd-pipelines",
                 "name": "CI/CD Pipeline Fundamentals",
                 "difficulty": "medium",
                 "total_tasks": 10,
-                "completed_tasks": 2,
+                "completed_tasks": 0,
                 "prerequisites": [],
                 "category": "devops",
             },
-            {
-                "id": "terraform-basics",
-                "name": "Infrastructure as Code with Terraform",
-                "difficulty": "hard",
-                "total_tasks": 15,
-                "completed_tasks": 0,
-                "prerequisites": ["linux-fundamentals"],
-                "category": "iac",
-            },
         ]
 
-    def _get_available_tasks(self) -> list[TaskData]:
-        """
-        Get available tasks for recommendation.
-
-        Phase 7.5: Returns deterministic sample tasks.
-        Phase 7.6+: Will query from DB.
-        """
+    def _get_sample_tasks(self) -> list[TaskData]:
+        """Return sample tasks when DB is empty."""
         now = datetime.utcnow()
         return [
             {
-                "id": "task-k8s-001",
+                "id": "sample-task-k8s-001",
                 "title": "Deploy your first Pod",
                 "difficulty": "easy",
                 "priority": "high",
-                "module_id": "kubernetes-101",
+                "module_id": "sample-kubernetes-101",
                 "due_date": (now + timedelta(days=2)).isoformat(),
                 "estimated_minutes": 20,
                 "prerequisites": [],
             },
             {
-                "id": "task-cicd-001",
+                "id": "sample-task-cicd-001",
                 "title": "Configure GitHub Actions workflow",
                 "difficulty": "medium",
                 "priority": "medium",
-                "module_id": "ci-cd-pipelines",
+                "module_id": "sample-ci-cd-pipelines",
                 "due_date": (now + timedelta(days=5)).isoformat(),
                 "estimated_minutes": 35,
                 "prerequisites": [],
             },
-            {
-                "id": "task-tf-001",
-                "title": "Write your first Terraform module",
-                "difficulty": "hard",
-                "priority": "low",
-                "module_id": "terraform-basics",
-                "due_date": (now + timedelta(days=7)).isoformat(),
-                "estimated_minutes": 45,
-                "prerequisites": ["task-001"],
-            },
         ]
 
     def _get_studyflow_options(self) -> list[StudyflowData]:
-        """
-        Get available studyflow configurations.
-
-        Phase 7.5: Returns deterministic options.
-        """
+        """Get available studyflow configurations."""
         return [
-            {
-                "mode": "pomodoro",
-                "duration": 25,
-                "intensity": "medium",
-            },
-            {
-                "mode": "taskrunner",
-                "duration": 45,
-                "intensity": "high",
-            },
-            {
-                "mode": "sprint",
-                "duration": 15,
-                "intensity": "low",
-            },
+            {"mode": "pomodoro", "duration": 25, "intensity": "medium"},
+            {"mode": "taskrunner", "duration": 45, "intensity": "high"},
+            {"mode": "sprint", "duration": 15, "intensity": "low"},
         ]
 
     def invalidate_cache(self, user_id: UUID) -> None:
@@ -284,7 +408,7 @@ class RecommendationService:
             user_id: User UUID whose cache should be invalidated
 
         Note:
-            Phase 7.5: No-op (no cache implemented yet).
-            Phase 7.6+: Will clear Redis cache for user.
+            Phase 7.6: No-op (no cache implemented yet).
+            Future: Will clear Redis cache for user.
         """
         logger.info(f"invalidate_cache called for user_id={user_id} (no-op, cache not implemented)")
