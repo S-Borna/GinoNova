@@ -3,7 +3,7 @@
 /**
  * ModulesOverview Component
  * Phase D.2: Apple-Inspired Module Cards Grid
- * 
+ *
  * Features:
  * - Module cards with icons
  * - Progress bars
@@ -62,26 +62,26 @@ function getModuleIcon(index: number, icon?: string): string {
 function getStatusBadge(status?: string): { label: string; variant: "default" | "secondary" | "destructive" | "outline"; className?: string } {
     switch (status) {
         case "complete":
-            return { 
-                label: "Complete", 
+            return {
+                label: "Complete",
                 variant: "default",
                 className: "bg-emerald-500 hover:bg-emerald-600 text-white"
             }
         case "in_progress":
-            return { 
-                label: "In Progress", 
+            return {
+                label: "In Progress",
                 variant: "default",
                 className: "bg-primary-500 hover:bg-primary-600 text-white"
             }
         case "locked":
-            return { 
-                label: "Locked", 
+            return {
+                label: "Locked",
                 variant: "secondary",
                 className: "bg-neutral-300 text-neutral-600"
             }
         default:
-            return { 
-                label: "Not Started", 
+            return {
+                label: "Not Started",
                 variant: "outline",
                 className: "border-neutral-300 text-neutral-500"
             }
@@ -139,9 +139,9 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
                 )}>
                     {isLocked ? "🔒" : icon}
                 </div>
-                
+
                 {/* Status badge */}
-                <Badge 
+                <Badge
                     variant={statusBadge.variant}
                     className={cn("text-xs", statusBadge.className)}
                 >
@@ -154,7 +154,7 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
                 <h3 className="font-semibold text-neutral-900 dark:text-white line-clamp-1">
                     {module.name}
                 </h3>
-                
+
                 {module.description && (
                     <p className="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
                         {module.description}
@@ -176,10 +176,10 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
                     </span>
                 </div>
                 <div className="h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
-                    <div 
+                    <div
                         className={cn(
                             "h-full rounded-full transition-all duration-700 ease-out",
-                            status === "complete" 
+                            status === "complete"
                                 ? "bg-gradient-to-r from-emerald-500 to-teal-500"
                                 : "bg-gradient-to-r from-primary-500 to-primary-400"
                         )}
@@ -241,7 +241,7 @@ export function ModulesOverview({ modules = [], className }: ModulesOverviewProp
                         {displayModules.length} modules in your bootcamp
                     </p>
                 </div>
-                <Link 
+                <Link
                     href="/modules"
                     className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline"
                 >

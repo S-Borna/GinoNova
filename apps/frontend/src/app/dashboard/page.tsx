@@ -4,13 +4,13 @@
  * ============================================================================
  * DASHBOARD PAGE - Apple-Inspired Design (D.2)
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Inspired by Apple Fitness+, Notion, and Linear
  * - Clean, minimal, premium aesthetic
  * - Glassmorphism with subtle depth
  * - Staggered animations for visual delight
- * 
+ *
  * Features:
  * - Time-aware hero greeting
  * - Stats row with animated counters
@@ -18,7 +18,7 @@
  * - Modules overview grid
  * - Recent activity timeline
  * - Quick actions panel
- * 
+ *
  * @phase D.2 - Dashboard UI Complete
  */
 
@@ -38,21 +38,13 @@ import { ModulesOverview } from "@/components/dashboard/ModulesOverview"
 import { RecentActivity, Activity } from "@/components/dashboard/RecentActivity"
 import { QuickActions } from "@/components/dashboard/QuickActions"
 
+// D.3 Layout Components
+import { AppShell } from "@/components/layout"
+
 // UI Components
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
-import { RefreshCw, Settings, Bell, LogOut } from "lucide-react"
-
-/* ============================================================================
-   TYPES
-   ============================================================================ */
-
-interface DashboardUser {
-    id: string
-    email: string
-    full_name?: string
-    is_admin?: boolean
-}
+import { RefreshCw } from "lucide-react"
 
 /* ============================================================================
    HELPERS
@@ -86,7 +78,7 @@ function DashboardSkeleton() {
         <div className="space-y-8 animate-pulse">
             {/* Hero skeleton */}
             <div className="h-32 rounded-3xl bg-neutral-200 dark:bg-neutral-800" />
-            
+
             {/* Stats row skeleton */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {Array.from({ length: 4 }).map((_, i) => (
@@ -133,92 +125,6 @@ function DashboardError({ onRetry, error }: { onRetry: () => void; error: string
                 Try Again
             </Button>
         </GlassCard>
-    )
-}
-
-/* ============================================================================
-   NAVIGATION BAR
-   ============================================================================ */
-
-interface NavBarProps {
-    user: DashboardUser | null
-    onLogout: () => void
-    onRefresh: () => void
-    isRefreshing: boolean
-}
-
-function NavBar({ user, onLogout, onRefresh, isRefreshing }: NavBarProps) {
-    return (
-        <nav className={cn(
-            "sticky top-0 z-50 backdrop-blur-xl",
-            "bg-white/70 dark:bg-neutral-900/70",
-            "border-b border-neutral-200/50 dark:border-neutral-800/50"
-        )}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo & Brand */}
-                    <div className="flex items-center gap-3">
-                        <div className={cn(
-                            "w-9 h-9 rounded-xl flex items-center justify-center",
-                            "bg-gradient-to-br from-primary-500 to-primary-600",
-                            "shadow-lg shadow-primary-500/25"
-                        )}>
-                            <span className="text-white text-lg font-bold">D</span>
-                        </div>
-                        <span className="text-lg font-semibold text-neutral-900 dark:text-white">
-                            DevOpsHub
-                        </span>
-                    </div>
-
-                    {/* Right side actions */}
-                    <div className="flex items-center gap-2">
-                        {/* Refresh button */}
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={onRefresh}
-                            disabled={isRefreshing}
-                            className="rounded-xl"
-                        >
-                            <RefreshCw className={cn(
-                                "h-4 w-4",
-                                isRefreshing && "animate-spin"
-                            )} />
-                        </Button>
-
-                        {/* Notifications */}
-                        <Button variant="ghost" size="sm" className="rounded-xl relative">
-                            <Bell className="h-4 w-4" />
-                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
-                        </Button>
-
-                        {/* Settings */}
-                        <Button variant="ghost" size="sm" className="rounded-xl">
-                            <Settings className="h-4 w-4" />
-                        </Button>
-
-                        {/* User menu */}
-                        <div className="flex items-center gap-2 ml-2 pl-2 border-l border-neutral-200 dark:border-neutral-700">
-                            <div className={cn(
-                                "w-8 h-8 rounded-full flex items-center justify-center",
-                                "bg-gradient-to-br from-primary-400 to-primary-600",
-                                "text-white text-sm font-medium"
-                            )}>
-                                {user?.full_name?.[0] || user?.email?.[0] || "?"}
-                            </div>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={onLogout}
-                                className="rounded-xl text-neutral-500 hover:text-red-600"
-                            >
-                                <LogOut className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
     )
 }
 
@@ -305,21 +211,9 @@ function DashboardContent() {
     ]
 
     return (
-        <div className={cn(
-            "min-h-screen",
-            "bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-50",
-            "dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-900"
-        )}>
-            {/* Navigation */}
-            <NavBar
-                user={user as DashboardUser}
-                onLogout={logout}
-                onRefresh={handleRefresh}
-                isRefreshing={refreshing}
-            />
-
-            {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <AppShell>
+            {/* Dashboard Content */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {loading ? (
                     <DashboardSkeleton />
                 ) : error && !dashboard ? (
@@ -363,7 +257,7 @@ function DashboardContent() {
                                 <ModulesOverview modules={modulesWithProgress} />
                             </div>
 
-                            {/* Sidebar - 1 column */}
+                            {/* Right Sidebar - 1 column */}
                             <div className="space-y-6">
                                 {/* XP Progress Ring */}
                                 <XPProgress
@@ -378,8 +272,8 @@ function DashboardContent() {
                         </div>
                     </div>
                 )}
-            </main>
-        </div>
+            </div>
+        </AppShell>
     )
 }
 

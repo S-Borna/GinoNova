@@ -3,7 +3,7 @@
 /**
  * XPProgress Component
  * Phase D.2: Apple Watch-Style XP Ring
- * 
+ *
  * Features:
  * - Large circular progress indicator
  * - Current XP / XP to next level
@@ -77,7 +77,7 @@ function CircularProgress({
                     </feMerge>
                 </filter>
             </defs>
-            
+
             {/* Background track */}
             <circle
                 cx={size / 2}
@@ -88,7 +88,7 @@ function CircularProgress({
                 strokeWidth={strokeWidth}
                 className="text-neutral-200 dark:text-neutral-700"
             />
-            
+
             {/* Progress arc */}
             <circle
                 cx={size / 2}
@@ -103,7 +103,7 @@ function CircularProgress({
                 filter="url(#glow)"
                 className="transition-all duration-1500 ease-out"
             />
-            
+
             {/* Progress end cap glow */}
             {animatedProgress > 0 && (
                 <circle
@@ -136,7 +136,7 @@ export function XPProgress({
     className,
 }: XPProgressProps) {
     // Calculate percentage
-    const progress = xpToNextLevel > 0 
+    const progress = xpToNextLevel > 0
         ? Math.min(100, Math.round((currentXP / xpToNextLevel) * 100))
         : 0
 
@@ -172,14 +172,14 @@ export function XPProgress({
                 {/* Circular Progress */}
                 <div className="relative">
                     <CircularProgress progress={progress} size={200} strokeWidth={14} />
-                    
+
                     {/* Center content */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                         {/* Level badge */}
                         <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 text-white text-xs font-bold mb-2 shadow-lg">
                             LEVEL {level}
                         </div>
-                        
+
                         {/* XP value */}
                         <div className="text-3xl font-bold text-neutral-900 dark:text-white">
                             {displayXP.toLocaleString()}
@@ -208,7 +208,7 @@ export function XPProgress({
                             <span className="font-medium text-primary-600 dark:text-primary-400">{progress}%</span>
                         </div>
                         <div className="h-3 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className="h-full bg-gradient-to-r from-primary-500 via-primary-400 to-accent-info rounded-full transition-all duration-1000 ease-out animate-shimmer"
                                 style={{ width: `${progress}%` }}
                             />
