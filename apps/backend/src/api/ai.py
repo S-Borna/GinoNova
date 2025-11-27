@@ -1,11 +1,12 @@
 """
 AI Engine API Controller
-Phase 7.11: AI Controller with worker performance instrumentation and tracing
+Phase 7.12: AI Controller with worker load simulator and stress harness
 
 This module provides the API surface for the DevOpsHub AI Engine.
 Endpoints delegate to service classes for business logic.
 Async endpoints delegate to workers with strict contract validation.
 Tracing support with optional include_trace parameter for metrics visibility.
+Load simulator available for deterministic stress testing.
 """
 from typing import Any, Optional
 from uuid import UUID
@@ -41,13 +42,13 @@ ai_router = APIRouter()
 @ai_router.get("/status", response_model=AIStatusResponse)
 def ai_status() -> AIStatusResponse:
     """
-    Phase 7.11 AI Engine status check.
+    Phase 7.12 AI Engine status check.
 
     Returns the current status of all AI engine components.
     """
     return AIStatusResponse(
-        phase="7.11",
-        feature="Worker Performance Instrumentation",
+        phase="7.12",
+        feature="Worker Load Simulator",
         status="operational",
         engines={
             "recommendation": "active (db-integrated, cached)",
@@ -62,6 +63,7 @@ def ai_status() -> AIStatusResponse:
             "workers": "validated",
             "metrics": "active (histogram, counters)",
             "tracing": "enabled",
+            "load_simulator": "ready",
         },
         cache_enabled=True,
         fallback_mode="deterministic",
