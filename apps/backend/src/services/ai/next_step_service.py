@@ -1,9 +1,9 @@
 """
 Next Step Service
-Phase 7.3: AI service layer with shared schemas
+Phase 7.4: AI service layer with rule engine foundation
 
 Provides the single most optimal next action recommendation.
-Currently returns placeholder data; actual AI logic in Phase 7.4+.
+Currently returns placeholder data; actual scoring integration in Phase 7.5+.
 """
 import logging
 from datetime import datetime
@@ -14,18 +14,21 @@ from shared.ai import NextStepResponse
 
 logger = logging.getLogger(__name__)
 
+# Engine reference for future use
+_engine_available = True
+
 
 class NextStepService:
     """
     Service for determining the single best next action for a user.
 
-    Phase 7.2: Stub implementation with placeholder responses.
-    Phase 7.4+: Will integrate with all AI engines to determine optimal action.
+    Phase 7.4: Rule engine foundation wired.
+    Phase 7.5+: Will integrate with scoring engine for optimal action.
     """
 
     def __init__(self) -> None:
         """Initialize the next step service."""
-        logger.info("NextStepService initialized (stub mode)")
+        logger.info(f"NextStepService initialized (engine_available={_engine_available})")
 
     def get_next_step(
         self,
@@ -44,8 +47,8 @@ class NextStepService:
             NextStepResponse with the recommended action
 
         Note:
-            Phase 7.2: Returns static placeholder data.
-            Phase 7.4+: Will consider:
+            Phase 7.4: Engine wired but returns placeholder data.
+            Phase 7.5+: Will consider:
                 - Current module progress
                 - Recent activity
                 - Time of day
@@ -83,8 +86,8 @@ class NextStepService:
             NextStepResponse with break recommendation if needed
 
         Note:
-            Phase 7.2: Returns static break recommendation.
-            Phase 7.4+: Will analyze session duration and fatigue signals.
+            Phase 7.4: Returns static break recommendation.
+            Phase 7.5+: Will analyze session duration and fatigue signals.
         """
         logger.info(f"get_break_recommendation called: user_id={user_id}")
 

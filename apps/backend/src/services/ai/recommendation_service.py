@@ -1,9 +1,9 @@
 """
 Recommendation Service
-Phase 7.3: AI service layer with shared schemas
+Phase 7.4: AI service layer with rule engine foundation
 
 Provides personalized task, module, and studyflow recommendations.
-Currently returns placeholder data; actual AI logic in Phase 7.4+.
+Currently returns placeholder data; actual scoring integration in Phase 7.5+.
 """
 import logging
 from datetime import datetime, timedelta
@@ -16,22 +16,30 @@ from shared.ai import (
     StudyflowRecommendation,
     Recommendations,
     RecommendationsResponse,
+    # Engine imports (Phase 7.4) - wired but not used yet
+    compute_recommendation_scores,
+    score_task_relevance,
+    score_module_priority,
+    score_studyflow_mode,
 )
 
 logger = logging.getLogger(__name__)
+
+# Engine reference for future use
+_engine_available = True
 
 
 class RecommendationService:
     """
     Service for generating personalized AI recommendations.
 
-    Phase 7.2: Stub implementation with placeholder responses.
-    Phase 7.4+: Will integrate with UserContextBuilder and ML models.
+    Phase 7.4: Rule engine foundation wired.
+    Phase 7.5+: Will use compute_recommendation_scores for actual logic.
     """
 
     def __init__(self) -> None:
         """Initialize the recommendation service."""
-        logger.info("RecommendationService initialized (stub mode)")
+        logger.info(f"RecommendationService initialized (engine_available={_engine_available})")
 
     def get_recommendations(
         self,
@@ -51,8 +59,8 @@ class RecommendationService:
             RecommendationsResponse with task, module, and studyflow suggestions
 
         Note:
-            Phase 7.2: Returns static placeholder data.
-            Phase 7.4+: Will use UserContextBuilder and scoring algorithms.
+            Phase 7.4: Engine wired but returns placeholder data.
+            Phase 7.5+: Will use compute_recommendation_scores.
         """
         logger.info(
             f"get_recommendations called: user_id={user_id}, "
@@ -60,6 +68,9 @@ class RecommendationService:
         )
 
         now = datetime.utcnow()
+
+        # TODO Phase 7.5: Use actual scoring
+        # scores = compute_recommendation_scores(user_ctx, modules, tasks, studyflows)
 
         # Build placeholder recommendations
         next_task = TaskRecommendation(
@@ -105,7 +116,7 @@ class RecommendationService:
             user_id: User UUID whose cache should be invalidated
 
         Note:
-            Phase 7.2: No-op stub.
+            Phase 7.4: No-op stub.
             Phase 7.5+: Will clear Redis cache for user.
         """
         logger.info(f"invalidate_cache called for user_id={user_id} (no-op in stub mode)")

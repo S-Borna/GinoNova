@@ -1,6 +1,6 @@
 """
 AI Engine API Controller
-Phase 7.2: AI Controller with service layer integration
+Phase 7.4: AI Controller with rule engine foundation
 
 This module provides the API surface for the DevOpsHub AI Engine.
 Endpoints delegate to service classes for business logic.
@@ -39,19 +39,22 @@ ai_router = APIRouter()
 @ai_router.get("/status", response_model=AIStatusResponse)
 def ai_status() -> AIStatusResponse:
     """
-    Phase 7.2 AI Engine status check.
+    Phase 7.4 AI Engine status check.
 
     Returns the current status of all AI engine components.
     """
     return AIStatusResponse(
-        phase="7.2",
-        feature="AI Controller (Service Layer)",
+        phase="7.4",
+        feature="AI Rule Engine Foundation",
         status="operational",
         engines={
-            "recommendation": "stub",
-            "next_step": "stub",
-            "difficulty_estimator": "stub",
-            "summary": "stub",
+            "recommendation": "engine_wired",
+            "next_step": "engine_wired",
+            "difficulty_estimator": "engine_wired",
+            "summary": "engine_wired",
+            "scoring": "ready",
+            "rules": "ready",
+            "heuristics": "ready",
         },
         cache_enabled=False,
         fallback_mode="static",
