@@ -1,3 +1,11 @@
+/* ============================================================================
+   DevOpsHub Design System v2.0
+   Phase D.1: Apple-Inspired Premium Design
+   ============================================================================ */
+
+/* Design System Imports */
+@import "../styles/design-tokens.css";
+@import "../styles/animations.css";
 @import "tw-animate-css";
 
 @plugin "tailwindcss-animate";
