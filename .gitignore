@@ -7,7 +7,9 @@ __pycache__/
 *.pyc
 .cache/
 .next/
-logs/
+logs/**
+!logs/opus/.gitkeep
+!logs/gpt/.gitkeep
 *.log
 .turbo/
 .venv/
