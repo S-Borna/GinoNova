@@ -2,6 +2,7 @@
 Recommendation Service
 Phase 7.7: AI service layer with DB integration and caching
 Phase 7.13: Added AI event logging for telemetry diagnostics
+Phase 7.14: Added debug frames for error isolation
 
 Provides personalized task, module, and studyflow recommendations
 using real data from repositories and the deterministic rule engine.
@@ -32,6 +33,7 @@ from ...db.memory import USERS
 from ...schemas.user import UserInDB
 from ...schemas.progress import ProgressInDB
 from ...ai_logs.logger import log_ai_event
+from ...ai_diagnostics.debug_frames import build_debug_frame, log_debug_frame
 
 logger = logging.getLogger(__name__)
 
@@ -73,122 +75,150 @@ class RecommendationService:
         Returns:
             RecommendationsResponse with task, module, and studyflow suggestions
         """
-        logger.info(
-            f"get_recommendations called: user_id={user_id}, "
-            f"limit={limit}, include_reasoning={include_reasoning}"
-        )
+        errors: list[str] = []
+        context_dict: dict[str, Any] = {}
+        output_dict: Optional[dict[str, Any]] = None
 
-        # Build cache key
-        cache_key = f"recommendations:{user_id}:{include_reasoning}"
-
-        # Check cache
-        cached = self._get_from_cache(cache_key)
-        if cached is not None:
-            logger.debug(f"Cache hit for {cache_key}")
-            return cached
-
-        now = datetime.utcnow()
-
-        # Resolve user (use provided or fallback to first user)
-        user = self._resolve_user(user_id)
-        resolved_user_id = user.id if user else None
-
-        # Build user context from real data
-        user_ctx: UserContext = self._build_user_context(user, resolved_user_id)
-
-        # Load real data from repositories
-        modules = self._load_modules(resolved_user_id)
-        tasks = self._load_tasks(resolved_user_id)
-        studyflows = self._get_studyflow_options()
-
-        # Compute scores using rule engine
-        scores = compute_recommendation_scores(user_ctx, modules, tasks, studyflows)
-
-        logger.debug(
-            f"Engine scores computed: "
-            f"top_task={scores['top_task']['score'] if scores['top_task'] else 'N/A'}, "
-            f"top_module={scores['top_module']['score'] if scores['top_module'] else 'N/A'}, "
-            f"modules_count={len(modules)}, tasks_count={len(tasks)}"
-        )
-
-        # Build response from top scored items
-        next_task: Optional[TaskRecommendation] = None
-        next_module: Optional[ModuleRecommendation] = None
-        studyflow: Optional[StudyflowRecommendation] = None
-
-        if scores["top_task"]:
-            top = scores["top_task"]
-            task_data = top["task"]
-            confidence = min(1.0, top["score"] / 100.0)
-            reason = None
-            if include_reasoning and top["triggered_rules"]:
-                reason = f"Selected based on: {', '.join(top['triggered_rules'][:3])}"
-
-            next_task = TaskRecommendation(
-                task_id=task_data.get("id", "task-001"),
-                title=task_data.get("title", "Recommended Task"),
-                confidence=round(confidence, 2),
-                reason=reason,
+        try:
+            logger.info(
+                f"get_recommendations called: user_id={user_id}, "
+                f"limit={limit}, include_reasoning={include_reasoning}"
             )
 
-        if scores["top_module"]:
-            top = scores["top_module"]
-            module_data = top["module"]
-            confidence = min(1.0, top["score"] / 100.0)
-            reason = None
-            if include_reasoning and top["triggered_rules"]:
-                reason = f"Selected based on: {', '.join(top['triggered_rules'][:3])}"
+            # Build cache key
+            cache_key = f"recommendations:{user_id}:{include_reasoning}"
 
-            next_module = ModuleRecommendation(
-                module_id=module_data.get("id", "module-001"),
-                name=module_data.get("name", "Recommended Module"),
-                confidence=round(confidence, 2),
-                reason=reason,
+            # Check cache
+            cached = self._get_from_cache(cache_key)
+            if cached is not None:
+                logger.debug(f"Cache hit for {cache_key}")
+                return cached
+
+            now = datetime.utcnow()
+
+            # Resolve user (use provided or fallback to first user)
+            user = self._resolve_user(user_id)
+            resolved_user_id = user.id if user else None
+
+            # Build user context from real data
+            user_ctx: UserContext = self._build_user_context(user, resolved_user_id)
+            context_dict = dict(user_ctx)  # Capture for debug frame
+
+            # Load real data from repositories
+            modules = self._load_modules(resolved_user_id)
+            tasks = self._load_tasks(resolved_user_id)
+            studyflows = self._get_studyflow_options()
+
+            # Compute scores using rule engine
+            scores = compute_recommendation_scores(user_ctx, modules, tasks, studyflows)
+
+            logger.debug(
+                f"Engine scores computed: "
+                f"top_task={scores['top_task']['score'] if scores['top_task'] else 'N/A'}, "
+                f"top_module={scores['top_module']['score'] if scores['top_module'] else 'N/A'}, "
+                f"modules_count={len(modules)}, tasks_count={len(tasks)}"
             )
 
-        if scores["top_studyflow"]:
-            top = scores["top_studyflow"]
-            sf_data = top["studyflow"]
-            studyflow = StudyflowRecommendation(
-                mode=sf_data.get("mode", "pomodoro"),
-                duration=sf_data.get("duration", 25),
-                intensity=sf_data.get("intensity", "medium"),
+            # Build response from top scored items
+            next_task: Optional[TaskRecommendation] = None
+            next_module: Optional[ModuleRecommendation] = None
+            studyflow: Optional[StudyflowRecommendation] = None
+
+            if scores["top_task"]:
+                top = scores["top_task"]
+                task_data = top["task"]
+                confidence = min(1.0, top["score"] / 100.0)
+                reason = None
+                if include_reasoning and top["triggered_rules"]:
+                    reason = f"Selected based on: {', '.join(top['triggered_rules'][:3])}"
+
+                next_task = TaskRecommendation(
+                    task_id=task_data.get("id", "task-001"),
+                    title=task_data.get("title", "Recommended Task"),
+                    confidence=round(confidence, 2),
+                    reason=reason,
+                )
+
+            if scores["top_module"]:
+                top = scores["top_module"]
+                module_data = top["module"]
+                confidence = min(1.0, top["score"] / 100.0)
+                reason = None
+                if include_reasoning and top["triggered_rules"]:
+                    reason = f"Selected based on: {', '.join(top['triggered_rules'][:3])}"
+
+                next_module = ModuleRecommendation(
+                    module_id=module_data.get("id", "module-001"),
+                    name=module_data.get("name", "Recommended Module"),
+                    confidence=round(confidence, 2),
+                    reason=reason,
+                )
+
+            if scores["top_studyflow"]:
+                top = scores["top_studyflow"]
+                sf_data = top["studyflow"]
+                studyflow = StudyflowRecommendation(
+                    mode=sf_data.get("mode", "pomodoro"),
+                    duration=sf_data.get("duration", 25),
+                    intensity=sf_data.get("intensity", "medium"),
+                )
+
+            recommendations = Recommendations(
+                next_task=next_task,
+                next_module=next_module,
+                studyflow=studyflow,
             )
 
-        recommendations = Recommendations(
-            next_task=next_task,
-            next_module=next_module,
-            studyflow=studyflow,
-        )
+            response = RecommendationsResponse(
+                recommendations=recommendations,
+                generated_at=now,
+                expires_at=now + timedelta(minutes=10),
+            )
 
-        response = RecommendationsResponse(
-            recommendations=recommendations,
-            generated_at=now,
-            expires_at=now + timedelta(minutes=10),
-        )
+            # Capture output for debug frame
+            output_dict = {
+                "has_task": next_task is not None,
+                "has_module": next_module is not None,
+                "has_studyflow": studyflow is not None,
+            }
 
-        # Store in cache
-        self._store_in_cache(cache_key, response)
+            # Store in cache
+            self._store_in_cache(cache_key, response)
 
-        # Phase 7.13: Log recommendation event for telemetry
-        request_id = str(uuid4())
-        log_ai_event(
-            event_type="recommendation_generated",
-            payload={
-                "type": "personalized" if user_id else "anonymous",
-                "limit": limit,
-                "include_reasoning": include_reasoning,
-                "has_task": response.recommendations.next_task is not None,
-                "has_module": response.recommendations.next_module is not None,
-                "has_studyflow": response.recommendations.studyflow is not None,
-            },
-            engine="recommendation_service",
-            request_id=request_id,
-            user_id=str(resolved_user_id) if resolved_user_id else None,
-        )
+            # Phase 7.13: Log recommendation event for telemetry
+            request_id = str(uuid4())
+            log_ai_event(
+                event_type="recommendation_generated",
+                payload={
+                    "type": "personalized" if user_id else "anonymous",
+                    "limit": limit,
+                    "include_reasoning": include_reasoning,
+                    "has_task": response.recommendations.next_task is not None,
+                    "has_module": response.recommendations.next_module is not None,
+                    "has_studyflow": response.recommendations.studyflow is not None,
+                },
+                engine="recommendation_service",
+                request_id=request_id,
+                user_id=str(resolved_user_id) if resolved_user_id else None,
+            )
 
-        logger.debug(f"Returning recommendations: {response.model_dump_json()[:200]}...")
-        return response
+            logger.debug(f"Returning recommendations: {response.model_dump_json()[:200]}...")
+            return response
+
+        except Exception as e:
+            errors.append(f"RecommendationService error: {str(e)}")
+            logger.error(f"RecommendationService exception: {e}")
+            raise
+
+        finally:
+            # Phase 7.14: Always build and log debug frame
+            frame = build_debug_frame(
+                context=context_dict,
+                engine="recommendation_service",
+                output=output_dict,
+                errors=errors,
+            )
+            log_debug_frame(frame)
 
     def _resolve_user(self, user_id: Optional[UUID]) -> Optional[UserInDB]:
         """

@@ -1,6 +1,7 @@
 """
 AI Engine API Controller
 Phase 7.12: AI Controller with worker load simulator and stress harness
+Phase 7.14: Added debug frames endpoint for error isolation diagnostics
 
 This module provides the API surface for the DevOpsHub AI Engine.
 Endpoints delegate to service classes for business logic.
@@ -27,6 +28,7 @@ from ..services.ai import (
     summary_service,
 )
 from ..ai_logs.diagnostics import get_daily_diagnostics
+from ..ai_diagnostics.debug_frames import get_recent_debug_frames
 
 
 # ============================================================================
@@ -56,6 +58,32 @@ def ai_diagnostics() -> dict:
     Pure log-based summarization with no model usage.
     """
     return get_daily_diagnostics()
+
+
+# ============================================================================
+# DEBUG FRAMES ENDPOINT (Phase 7.14)
+# ============================================================================
+
+@ai_router.get("/debug-frames")
+def ai_debug_frames(
+    limit: int = Query(25, ge=1, le=100, description="Maximum number of frames to return"),
+) -> list[dict[str, Any]]:
+    """
+    Phase 7.14: AI Debug Frames for Error Isolation.
+
+    Returns the most recent debug frames from AI engine operations.
+    Frames include:
+    - Engine identification
+    - Context validation status
+    - Output validation status
+    - Error messages
+    - Schema/key introspection
+    - Timestamps
+
+    Frames are returned newest-first for debugging.
+    This endpoint has zero performance impact on AI operations.
+    """
+    return get_recent_debug_frames(limit=limit)
 
 
 # ============================================================================
