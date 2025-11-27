@@ -27,7 +27,7 @@ class TestRawTaskEvent:
             duration_seconds=1800,
             xp_awarded=50,
         )
-        
+
         assert event.event_id == "evt_001"
         assert event.event_type == "task_completed"
         assert event.difficulty == 5
@@ -42,7 +42,7 @@ class TestRawTaskEvent:
             task_id=uuid4(),
             timestamp=datetime.utcnow(),
         )
-        
+
         with pytest.raises(Exception):  # ValidationError for frozen model
             event.event_id = "changed"
 
@@ -57,7 +57,7 @@ class TestRawTaskEvent:
             "task_paused",
             "task_resumed",
         ]
-        
+
         for event_type in valid_types:
             event = RawTaskEvent(
                 event_id=f"evt_{event_type}",
@@ -106,7 +106,7 @@ class TestRawStudyflowSession:
             focus_score=0.85,
             tasks_in_session=[uuid4()],
         )
-        
+
         assert session.session_id == "sess_001"
         assert session.duration_minutes == 45
         assert session.focus_score == 0.85
@@ -136,7 +136,7 @@ class TestRawUserActivity:
             timestamp=datetime.utcnow(),
             value_change=50,
         )
-        
+
         assert activity.activity_id == "act_001"
         assert activity.activity_type == "xp_gained"
         assert activity.value_change == 50
@@ -155,7 +155,7 @@ class TestRawUserActivity:
             "streak_updated",
             "xp_gained",
         ]
-        
+
         for activity_type in valid_types:
             activity = RawUserActivity(
                 activity_id=f"act_{activity_type}",

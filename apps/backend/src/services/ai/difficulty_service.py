@@ -290,7 +290,7 @@ class DifficultyService:
             perf_data = query_difficulty_performance(str(user_id))
             if perf_data.get("has_data"):
                 ctx["_difficulty_performance"] = perf_data.get("performance", {})
-            
+
             rec_data = query_recommended_difficulty(str(user_id))
             if rec_data.get("has_data"):
                 ctx["_recommended_difficulty"] = rec_data.get("recommended", "medium")

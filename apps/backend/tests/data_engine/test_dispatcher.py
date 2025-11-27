@@ -31,13 +31,13 @@ class TestDispatcher:
             timestamp=datetime.utcnow(),
             difficulty=5,
         )
-        
+
         result = dispatch_event(raw, "task")
-        
+
         assert result["status"] == "dispatched"
         assert result["category"] == "task"
         assert result["event_id"] == "evt_dispatch_001"
-        
+
         # Verify stored
         stats = get_store_stats()
         assert stats["task_events_count"] == 1
@@ -51,12 +51,12 @@ class TestDispatcher:
             timestamp=datetime.utcnow(),
             duration_minutes=30,
         )
-        
+
         result = dispatch_event(raw, "session")
-        
+
         assert result["status"] == "dispatched"
         assert result["category"] == "session"
-        
+
         stats = get_store_stats()
         assert stats["session_events_count"] == 1
 
@@ -69,12 +69,12 @@ class TestDispatcher:
             timestamp=datetime.utcnow(),
             value_change=25,
         )
-        
+
         result = dispatch_event(raw, "activity")
-        
+
         assert result["status"] == "dispatched"
         assert result["category"] == "activity"
-        
+
         stats = get_store_stats()
         assert stats["activity_events_count"] == 1
 
@@ -87,10 +87,10 @@ class TestDispatcher:
             task_id=uuid4(),
             timestamp=datetime.utcnow(),
         )
-        
+
         with pytest.raises(ValueError) as exc_info:
             dispatch_event(raw, "invalid_category")
-        
+
         assert "Unknown event category" in str(exc_info.value)
 
     def test_dispatch_batch(self):
@@ -105,14 +105,14 @@ class TestDispatcher:
             )
             for i in range(5)
         ]
-        
+
         result = dispatch_batch(events, "task")
-        
+
         assert result["status"] == "batch_complete"
         assert result["total"] == 5
         assert result["success"] == 5
         assert result["errors"] == []
-        
+
         stats = get_store_stats()
         assert stats["task_events_count"] == 5
 
@@ -129,12 +129,12 @@ class TestDispatcher:
             )
             for i in range(3)
         ]
-        
+
         dispatch_batch(events, "task")
-        
+
         from src.data.store.memory_store import get_task_events
         stored = get_task_events(user_id=str(user_id))
-        
+
         # Should be sorted newest first
         assert len(stored) == 3
         timestamps = [e.timestamp_iso for e in stored]

@@ -30,7 +30,7 @@ def get_raw_data(
     """
     Get raw event data from the store.
     Read-only endpoint for debugging.
-    
+
     Note: Returns normalized events (raw events are transformed on ingest).
     """
     if event_type == "task":

@@ -29,7 +29,7 @@ def store_task_event(event: NormalizedTaskEvent) -> None:
     """
     Store a normalized task event.
     Automatically evicts oldest when at capacity.
-    
+
     Args:
         event: Normalized task event to store
     """
@@ -41,7 +41,7 @@ def store_session_event(event: NormalizedStudyflowSession) -> None:
     """
     Store a normalized session event.
     Automatically evicts oldest when at capacity.
-    
+
     Args:
         event: Normalized session event to store
     """
@@ -53,7 +53,7 @@ def store_activity_event(event: NormalizedUserActivity) -> None:
     """
     Store a normalized activity event.
     Automatically evicts oldest when at capacity.
-    
+
     Args:
         event: Normalized activity event to store
     """
@@ -68,26 +68,26 @@ def get_task_events(
     """
     Get task events, optionally filtered by user.
     Returns sorted by timestamp (newest first) for determinism.
-    
+
     Args:
         user_id: Optional user ID filter
         limit: Optional max number of events
-        
+
     Returns:
         List of normalized task events, sorted newest first
     """
     with _store_lock:
         events = list(_task_events)
-    
+
     if user_id:
         events = [e for e in events if e.user_id == user_id]
-    
+
     # Sort by timestamp descending for determinism
     events = sorted(events, key=lambda e: e.timestamp_iso, reverse=True)
-    
+
     if limit:
         events = events[:limit]
-    
+
     return events
 
 
@@ -98,26 +98,26 @@ def get_session_events(
     """
     Get session events, optionally filtered by user.
     Returns sorted by timestamp (newest first) for determinism.
-    
+
     Args:
         user_id: Optional user ID filter
         limit: Optional max number of events
-        
+
     Returns:
         List of normalized session events, sorted newest first
     """
     with _store_lock:
         events = list(_session_events)
-    
+
     if user_id:
         events = [e for e in events if e.user_id == user_id]
-    
+
     # Sort by timestamp descending for determinism
     events = sorted(events, key=lambda e: e.timestamp_iso, reverse=True)
-    
+
     if limit:
         events = events[:limit]
-    
+
     return events
 
 
@@ -128,33 +128,33 @@ def get_activity_events(
     """
     Get activity events, optionally filtered by user.
     Returns sorted by timestamp (newest first) for determinism.
-    
+
     Args:
         user_id: Optional user ID filter
         limit: Optional max number of events
-        
+
     Returns:
         List of normalized activity events, sorted newest first
     """
     with _store_lock:
         events = list(_activity_events)
-    
+
     if user_id:
         events = [e for e in events if e.user_id == user_id]
-    
+
     # Sort by timestamp descending for determinism
     events = sorted(events, key=lambda e: e.timestamp_iso, reverse=True)
-    
+
     if limit:
         events = events[:limit]
-    
+
     return events
 
 
 def get_store_stats() -> Dict[str, Any]:
     """
     Get current store statistics.
-    
+
     Returns:
         Dict with counts and capacity info
     """
@@ -175,7 +175,7 @@ def clear_store() -> Dict[str, int]:
     Clear all events from store.
     Returns counts of cleared events.
     Used for testing.
-    
+
     Returns:
         Dict with counts of cleared events per type
     """

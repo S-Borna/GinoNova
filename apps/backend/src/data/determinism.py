@@ -21,7 +21,7 @@ def set_static_clock(dt: datetime) -> None:
     """
     Set a static clock for deterministic time operations.
     Used in testing and when precise time control is needed.
-    
+
     Args:
         dt: Datetime to use as the static clock
     """
@@ -42,7 +42,7 @@ def get_deterministic_now() -> datetime:
     Get current time in a deterministic way.
     If a static clock is set, returns that.
     Otherwise returns utcnow but logs a warning in strict mode.
-    
+
     Returns:
         Datetime representing "now"
     """
@@ -59,27 +59,27 @@ def deterministic_sort(
     """
     Sort a list with deterministic tie-breaking.
     Uses stable sort and includes item index for tie-breaking.
-    
+
     Args:
         items: List to sort
         key: Key function for primary sort
         reverse: Whether to reverse sort order
-        
+
     Returns:
         Sorted list with deterministic ordering
     """
     if not items:
         return []
-    
+
     # Create indexed tuples for stable tie-breaking
     indexed = [(i, item) for i, item in enumerate(items)]
-    
+
     if key:
         # Sort by key first, then by original index for tie-breaking
         indexed.sort(key=lambda x: (key(x[1]), x[0]), reverse=reverse)
     else:
         indexed.sort(key=lambda x: x[0], reverse=reverse)
-    
+
     return [item for _, item in indexed]
 
 
@@ -90,10 +90,10 @@ def ensure_sorted_return(key_func: Callable[[Any], Any] | None = None):
     """
     Decorator to ensure function returns are sorted.
     Applies deterministic sorting to list returns.
-    
+
     Args:
         key_func: Optional key function for sorting
-        
+
     Returns:
         Decorator function
     """
@@ -112,10 +112,10 @@ def validate_no_randomness(data: dict | list | Any) -> bool:
     """
     Validate that data structure contains no random values.
     Checks for common random patterns like UUIDs and random floats.
-    
+
     Args:
         data: Data structure to validate
-        
+
     Returns:
         True if no random values detected
     """
@@ -129,21 +129,21 @@ class DeterministicContext:
     Context manager for deterministic operations.
     Sets a static clock and ensures cleanup.
     """
-    
+
     def __init__(self, timestamp: datetime | None = None):
         """
         Initialize deterministic context.
-        
+
         Args:
             timestamp: Optional static timestamp to use
         """
         self.timestamp = timestamp or datetime.utcnow()
         self._previous_clock = _static_clock
-    
+
     def __enter__(self) -> 'DeterministicContext':
         set_static_clock(self.timestamp)
         return self
-    
+
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         if self._previous_clock is not None:
             set_static_clock(self._previous_clock)

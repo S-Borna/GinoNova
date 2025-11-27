@@ -59,15 +59,15 @@ def normalize_task_event(raw: RawTaskEvent) -> NormalizedTaskEvent:
     """
     Normalize a raw task event into a deterministic normalized record.
     No randomness, no time.now() — uses provided timestamp.
-    
+
     Args:
         raw: Raw task event from capture layer
-        
+
     Returns:
         NormalizedTaskEvent with computed fields
     """
     ts = raw.timestamp
-    
+
     return NormalizedTaskEvent(
         event_id=raw.event_id,
         event_type=raw.event_type,
