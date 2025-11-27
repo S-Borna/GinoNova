@@ -4,6 +4,7 @@ Phase 7.7: AI service layer with DB integration and caching
 Phase 7.13: Added AI event logging for telemetry diagnostics
 Phase 7.14: Added debug frames for error isolation
 Phase 7.15: Added traceability and execution mapping
+Phase 8.8: Added read-only data query engine integration
 
 Provides personalized task, module, and studyflow recommendations
 using real data from repositories and the deterministic rule engine.
@@ -37,6 +38,9 @@ from ...ai_logs.logger import log_ai_event
 from ...ai_diagnostics.debug_frames import build_debug_frame, log_debug_frame
 from ...ai_trace.provenance import build_provenance_frame
 from ...ai_trace.execution_map import record_execution
+# Phase 8.8: Data query engine integration
+from ...data.query.task_query import get_task_summary
+from ...data.query.pattern_query import query_peak_hours
 
 logger = logging.getLogger(__name__)
 
@@ -296,6 +300,25 @@ class RecommendationService:
 
         if not user_id:
             return ctx
+
+        # Phase 8.8: Enrich context with data query engine (read-only)
+        try:
+            task_summary = get_task_summary(str(user_id))
+            if task_summary.get("has_data"):
+                summary = task_summary.get("summary", {})
+                # Enrich with historical data (does not change AI output structure)
+                ctx["_data_enrichment"] = {
+                    "total_events": task_summary.get("total_events", 0),
+                    "preferred_difficulty": summary.get("preferred_difficulty", "medium"),
+                    "peak_hour": summary.get("peak_hour"),
+                }
+            
+            peak_hours_data = query_peak_hours(str(user_id))
+            if peak_hours_data.get("has_data"):
+                ctx["_peak_hours"] = peak_hours_data.get("peak_hours", [])
+        except Exception as e:
+            # Data enrichment is optional - log and continue
+            logger.debug(f"Data enrichment skipped: {e}")
 
         # Load real progress data
         progress_records = progress_repository.list_progress_by_user(user_id)
