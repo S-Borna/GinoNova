@@ -3,7 +3,7 @@
 /**
  * DashboardHero Component
  * Phase D.2: Apple-Inspired Hero Header
- * 
+ *
  * Features:
  * - Time-aware greeting
  * - Motivational subtext based on streak/progress
@@ -80,8 +80,8 @@ function getMotivationalText(
     }
 
     // Progress-based messages
-    const progressPercent = totalModules > 0 
-        ? Math.round((modulesCompleted / totalModules) * 100) 
+    const progressPercent = totalModules > 0
+        ? Math.round((modulesCompleted / totalModules) * 100)
         : 0
 
     if (progressPercent >= 90) {
@@ -125,19 +125,19 @@ export function DashboardHero({
     return (
         <div className={cn("relative", className)}>
             {/* Background gradient overlay */}
-            <div 
+            <div
                 className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-500/20 via-primary-600/10 to-transparent opacity-50"
                 aria-hidden="true"
             />
-            
-            <GlassCard 
-                variant="default" 
-                padding="lg" 
+
+            <GlassCard
+                variant="default"
+                padding="lg"
                 radius="lg"
                 className="relative overflow-hidden"
             >
                 {/* Subtle gradient accent on top */}
-                <div 
+                <div
                     className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-primary-400 to-accent-info"
                     aria-hidden="true"
                 />
@@ -176,7 +176,7 @@ export function DashboardHero({
                 </div>
 
                 {/* Decorative elements */}
-                <div 
+                <div
                     className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-primary-400/10 to-transparent blur-3xl"
                     aria-hidden="true"
                 />

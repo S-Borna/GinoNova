@@ -3,7 +3,7 @@
 /**
  * StatsRow Component
  * Phase D.2: Apple-Inspired Stats Cards
- * 
+ *
  * Four stat cards in a row:
  * - Current Level (with XP progress ring)
  * - Study Streak (flame icon, days count)
@@ -103,7 +103,7 @@ function StatCard({
             style={{ animationDelay: `${delay}ms` }}
         >
             {/* Icon with gradient background */}
-            <div 
+            <div
                 className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
                     "bg-gradient-to-br shadow-lg",
@@ -134,7 +134,7 @@ function StatCard({
             )}
 
             {/* Hover glow effect */}
-            <div 
+            <div
                 className={cn(
                     "absolute -bottom-12 -right-12 w-32 h-32 rounded-full blur-2xl opacity-0",
                     "transition-opacity duration-300 group-hover:opacity-30"
@@ -152,25 +152,25 @@ function StatCard({
    MINI PROGRESS RING
    ============================================================================ */
 
-function MiniProgressRing({ 
-    progress, 
+function MiniProgressRing({
+    progress,
     size = 48,
     strokeWidth = 4,
-    className 
-}: { 
+    className
+}: {
     progress: number
     size?: number
     strokeWidth?: number
-    className?: string 
+    className?: string
 }) {
     const radius = (size - strokeWidth) / 2
     const circumference = radius * 2 * Math.PI
     const offset = circumference - (progress / 100) * circumference
 
     return (
-        <svg 
-            width={size} 
-            height={size} 
+        <svg
+            width={size}
+            height={size}
             className={cn("transform -rotate-90", className)}
         >
             {/* Background circle */}
@@ -227,7 +227,7 @@ export function StatsRow({
     const animatedXP = useAnimatedNumber(totalXP, 1200, 400)
 
     // Calculate XP progress percentage
-    const xpProgress = xpToNextLevel > 0 
+    const xpProgress = xpToNextLevel > 0
         ? Math.min(100, Math.round((currentXP / xpToNextLevel) * 100))
         : 0
 
@@ -259,9 +259,9 @@ export function StatsRow({
                     </div>
                     <MiniProgressRing progress={xpProgress} />
                 </div>
-                
+
                 {/* Glow effect */}
-                <div 
+                <div
                     className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-primary-500/20 blur-2xl opacity-0 transition-opacity group-hover:opacity-100"
                     aria-hidden="true"
                 />
@@ -289,7 +289,7 @@ export function StatsRow({
                 style={{ animationDelay: "300ms" }}
             >
                 <div className="flex items-start justify-between mb-3">
-                    <div 
+                    <div
                         className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg transition-transform duration-300 group-hover:scale-110"
                     >
                         <span className="text-2xl text-white">📚</span>
@@ -303,13 +303,13 @@ export function StatsRow({
                 </div>
                 {/* Mini progress bar */}
                 <div className="mt-3 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
-                    <div 
+                    <div
                         className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${(modulesCompleted / totalModules) * 100}%` }}
                     />
                 </div>
-                
-                <div 
+
+                <div
                     className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-emerald-500/20 blur-2xl opacity-0 transition-opacity group-hover:opacity-100"
                     aria-hidden="true"
                 />

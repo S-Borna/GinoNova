@@ -4,19 +4,19 @@
  * ============================================================================
  * QUICK ACTIONS - Apple-Inspired Action Buttons
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Inspired by Apple's card-based quick actions
  * - Large, tappable targets with clear icons
  * - Gradient backgrounds with hover effects
  * - Encourages immediate action
- * 
+ *
  * Features:
  * - Primary CTA: Start/Continue Studyflow
  * - Secondary actions: View modules, check progress
  * - Responsive grid layout
  * - Animated hover states
- * 
+ *
  * @phase D.2 - Dashboard UI Complete
  * @design Apple Fitness+ quick action cards
  */
@@ -69,7 +69,7 @@ interface ActionCardProps {
 
 function ActionCard({ action, delay = 0 }: ActionCardProps) {
     const Icon = action.icon
-    
+
     return (
         <Link href={action.href}>
             <GlassCard
@@ -102,8 +102,8 @@ function ActionCard({ action, delay = 0 }: ActionCardProps) {
                     )}>
                         <Icon className={cn(
                             "h-7 w-7",
-                            action.isPrimary 
-                                ? "text-white" 
+                            action.isPrimary
+                                ? "text-white"
                                 : "text-neutral-700 dark:text-neutral-200"
                         )} />
                     </div>
@@ -140,7 +140,7 @@ function ActionCard({ action, delay = 0 }: ActionCardProps) {
    MAIN COMPONENT
    ============================================================================ */
 
-export function QuickActions({ 
+export function QuickActions({
     className,
     hasActiveStudyflow = false,
     currentModule
@@ -150,8 +150,8 @@ export function QuickActions({
         {
             id: "studyflow",
             title: hasActiveStudyflow ? "Continue Studyflow" : "Start Studyflow",
-            description: hasActiveStudyflow 
-                ? "Pick up where you left off" 
+            description: hasActiveStudyflow
+                ? "Pick up where you left off"
                 : "Begin your daily learning session",
             icon: PlayCircle,
             href: "/studyflow",
@@ -162,8 +162,8 @@ export function QuickActions({
         {
             id: "modules",
             title: currentModule ? `Continue ${currentModule.name}` : "Browse Modules",
-            description: currentModule 
-                ? `${currentModule.progress}% complete` 
+            description: currentModule
+                ? `${currentModule.progress}% complete`
                 : "Explore all learning paths",
             icon: BookOpen,
             href: currentModule ? `/modules/${currentModule.id}` : "/modules",
@@ -193,8 +193,8 @@ export function QuickActions({
             {/* Actions grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {actions.map((action, index) => (
-                    <ActionCard 
-                        key={action.id} 
+                    <ActionCard
+                        key={action.id}
                         action={action}
                         delay={index * 100}
                     />

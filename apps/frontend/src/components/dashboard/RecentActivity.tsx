@@ -4,19 +4,19 @@
  * ============================================================================
  * RECENT ACTIVITY - Apple-Inspired Activity Timeline
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Inspired by Apple Fitness activity feed
  * - Clean timeline with subtle animations
  * - Relative timestamps for freshness
  * - Icon-based activity indicators
- * 
+ *
  * Features:
  * - Activity type icons with color coding
  * - Relative time formatting (just now, 5m ago, 2h ago, yesterday)
  * - Empty state with encouraging message
  * - Staggered fade-in animations
- * 
+ *
  * @phase D.2 - Dashboard UI Complete
  * @design Apple Fitness+ activity feed aesthetic
  */
@@ -40,10 +40,10 @@ import {
    TYPES
    ============================================================================ */
 
-export type ActivityType = 
-    | "task_completed" 
-    | "module_completed" 
-    | "xp_earned" 
+export type ActivityType =
+    | "task_completed"
+    | "module_completed"
+    | "xp_earned"
     | "streak_milestone"
     | "level_up"
     | "achievement"
@@ -135,34 +135,34 @@ function getRelativeTime(timestamp: string | Date): string {
     const now = new Date()
     const date = new Date(timestamp)
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-    
+
     if (diffInSeconds < 60) {
         return "just now"
     }
-    
+
     const diffInMinutes = Math.floor(diffInSeconds / 60)
     if (diffInMinutes < 60) {
         return `${diffInMinutes}m ago`
     }
-    
+
     const diffInHours = Math.floor(diffInMinutes / 60)
     if (diffInHours < 24) {
         return `${diffInHours}h ago`
     }
-    
+
     const diffInDays = Math.floor(diffInHours / 24)
     if (diffInDays === 1) {
         return "yesterday"
     }
-    
+
     if (diffInDays < 7) {
         return `${diffInDays}d ago`
     }
-    
+
     // Format as date for older items
-    return date.toLocaleDateString("en-US", { 
-        month: "short", 
-        day: "numeric" 
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric"
     })
 }
 
@@ -182,7 +182,7 @@ function ActivityItem({ activity, isLast, delay = 0 }: ActivityItemProps) {
     const relativeTime = getRelativeTime(activity.timestamp)
 
     return (
-        <div 
+        <div
             className={cn(
                 "relative flex gap-4 pb-4 animate-fade-in-up",
                 !isLast && "border-l-2 border-neutral-200 dark:border-neutral-700 ml-4"
@@ -261,8 +261,8 @@ function EmptyState() {
    MAIN COMPONENT
    ============================================================================ */
 
-export function RecentActivity({ 
-    activities = [], 
+export function RecentActivity({
+    activities = [],
     className,
     maxItems = 5
 }: RecentActivityProps) {
