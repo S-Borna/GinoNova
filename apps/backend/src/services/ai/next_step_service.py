@@ -1,13 +1,14 @@
 """
 Next Step Service
-Phase 7.6: AI service layer with DB integration
+Phase 7.7: AI service layer with DB integration and caching
 
 Provides the single most optimal next action recommendation
 using real data from repositories and the deterministic rule engine.
+Includes in-memory caching with TTL.
 """
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from shared.ai import (
@@ -26,18 +27,23 @@ from ...schemas.user import UserInDB
 
 logger = logging.getLogger(__name__)
 
+# Cache TTL constant (5 minutes)
+CACHE_TTL_SECONDS = 300
+
 
 class NextStepService:
     """
     Service for determining the single best next action for a user.
 
-    Phase 7.6: Integrates with repositories for real user/module/task data.
+    Phase 7.7: Integrates with repositories for real user/module/task data.
     Uses compute_recommendation_scores to select the highest-scoring action.
+    Includes in-memory caching with 5-minute TTL.
     """
 
     def __init__(self) -> None:
-        """Initialize the next step service."""
-        logger.info("NextStepService initialized (engine=active, db=integrated)")
+        """Initialize the next step service with cache."""
+        self._cache: dict[str, dict[str, Any]] = {}
+        logger.info("NextStepService initialized (engine=active, db=integrated, cache=active)")
 
     def get_next_step(
         self,
@@ -56,6 +62,15 @@ class NextStepService:
             NextStepResponse with the recommended action
         """
         logger.info(f"get_next_step called: user_id={user_id}")
+
+        # Build cache key
+        cache_key = f"next_step:{user_id}"
+
+        # Check cache
+        cached = self._get_from_cache(cache_key)
+        if cached is not None:
+            logger.debug(f"Cache hit for {cache_key}")
+            return cached
 
         now = datetime.utcnow()
 
@@ -89,6 +104,9 @@ class NextStepService:
             estimated_duration=best_action["estimated_duration"],
             generated_at=now,
         )
+
+        # Store in cache
+        self._store_in_cache(cache_key, response)
 
         return response
 
@@ -418,3 +436,62 @@ class NextStepService:
             {"mode": "taskrunner", "duration": 45, "intensity": "high"},
             {"mode": "sprint", "duration": 15, "intensity": "low"},
         ]
+
+    def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:
+        """
+        Invalidate cached next_step results for a user or all users.
+
+        Args:
+            user_id: User UUID whose cache should be invalidated.
+                     If None, invalidates all next_step caches.
+
+        Returns:
+            Number of cache entries invalidated.
+        """
+        if user_id is None:
+            count = len(self._cache)
+            self._cache.clear()
+            logger.info(f"invalidate_cache: cleared all {count} entries")
+            return count
+
+        key = f"next_step:{user_id}"
+        if key in self._cache:
+            del self._cache[key]
+            logger.info(f"invalidate_cache: cleared entry for user_id={user_id}")
+            return 1
+        return 0
+
+    def _get_from_cache(self, key: str) -> Optional[NextStepResponse]:
+        """
+        Get value from cache if exists and not expired.
+
+        Args:
+            key: Cache key to look up
+
+        Returns:
+            Cached value if valid, None otherwise
+        """
+        entry = self._cache.get(key)
+        if entry is None:
+            return None
+
+        if datetime.utcnow() > entry["expires_at"]:
+            del self._cache[key]
+            logger.debug(f"Cache expired for key={key}")
+            return None
+
+        return entry["value"]
+
+    def _store_in_cache(self, key: str, value: NextStepResponse) -> None:
+        """
+        Store value in cache with TTL.
+
+        Args:
+            key: Cache key
+            value: Value to cache
+        """
+        self._cache[key] = {
+            "value": value,
+            "expires_at": datetime.utcnow() + timedelta(seconds=CACHE_TTL_SECONDS),
+        }
+        logger.debug(f"Cached value for key={key}")

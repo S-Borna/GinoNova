@@ -1,13 +1,14 @@
 """
 Difficulty Service
-Phase 7.6: AI service layer with DB integration
+Phase 7.7: AI service layer with DB integration and caching
 
 Estimates user-adjusted task difficulty using real data from
 repositories and the deterministic rule engine.
+Includes in-memory caching with TTL.
 """
 import logging
-from datetime import datetime
-from typing import Optional
+from datetime import datetime, timedelta
+from typing import Any, Optional
 from uuid import UUID
 
 from shared.ai import (
@@ -24,18 +25,23 @@ from ...schemas.user import UserInDB
 
 logger = logging.getLogger(__name__)
 
+# Cache TTL constant (5 minutes)
+CACHE_TTL_SECONDS = 300
+
 
 class DifficultyService:
     """
     Service for estimating task difficulty for specific users.
 
-    Phase 7.6: Integrates with repositories for real task and user data.
+    Phase 7.7: Integrates with repositories for real task and user data.
     Uses compute_difficulty_adjustment from the rule engine.
+    Includes in-memory caching with 5-minute TTL.
     """
 
     def __init__(self) -> None:
-        """Initialize the difficulty service."""
-        logger.info("DifficultyService initialized (engine=active, db=integrated)")
+        """Initialize the difficulty service with cache."""
+        self._cache: dict[str, dict[str, Any]] = {}
+        logger.info("DifficultyService initialized (engine=active, db=integrated, cache=active)")
 
     def estimate_difficulty(
         self,
@@ -56,6 +62,15 @@ class DifficultyService:
             DifficultyEstimate with adjusted difficulty and predictions
         """
         logger.info(f"estimate_difficulty called: task_id={task_id}, user_id={user_id}")
+
+        # Build cache key
+        cache_key = f"difficulty:{user_id}:{task_id}"
+
+        # Check cache
+        cached = self._get_from_cache(cache_key)
+        if cached is not None:
+            logger.debug(f"Cache hit for {cache_key}")
+            return cached
 
         now = datetime.utcnow()
 
@@ -93,6 +108,9 @@ class DifficultyService:
             prerequisites_met=prereqs_met,
             generated_at=now,
         )
+
+        # Store in cache
+        self._store_in_cache(cache_key, response)
 
         logger.debug(
             f"Returning difficulty estimate: base={response.base_difficulty}, "
@@ -311,3 +329,76 @@ class DifficultyService:
                 "estimated_minutes": 45,
                 "prerequisites": [],
             }
+
+    def invalidate_cache(self, user_id: Optional[UUID] = None, task_id: Optional[UUID] = None) -> int:
+        """
+        Invalidate cached difficulty estimates.
+
+        Args:
+            user_id: User UUID whose cache should be invalidated.
+            task_id: Task UUID whose cache should be invalidated.
+            If both None, invalidates all caches.
+
+        Returns:
+            Number of cache entries invalidated.
+        """
+        if user_id is None and task_id is None:
+            count = len(self._cache)
+            self._cache.clear()
+            logger.info(f"invalidate_cache: cleared all {count} entries")
+            return count
+
+        if user_id is not None and task_id is not None:
+            key = f"difficulty:{user_id}:{task_id}"
+            if key in self._cache:
+                del self._cache[key]
+                logger.info(f"invalidate_cache: cleared entry for user_id={user_id}, task_id={task_id}")
+                return 1
+            return 0
+
+        # Partial match - clear all matching entries
+        prefix = f"difficulty:{user_id}:" if user_id else "difficulty:"
+        suffix = f":{task_id}" if task_id else ""
+        keys_to_remove = [
+            k for k in self._cache
+            if k.startswith(prefix) or (suffix and k.endswith(suffix))
+        ]
+        for key in keys_to_remove:
+            del self._cache[key]
+        logger.info(f"invalidate_cache: cleared {len(keys_to_remove)} entries")
+        return len(keys_to_remove)
+
+    def _get_from_cache(self, key: str) -> Optional[DifficultyEstimate]:
+        """
+        Get value from cache if exists and not expired.
+
+        Args:
+            key: Cache key to look up
+
+        Returns:
+            Cached value if valid, None otherwise
+        """
+        entry = self._cache.get(key)
+        if entry is None:
+            return None
+
+        if datetime.utcnow() > entry["expires_at"]:
+            del self._cache[key]
+            logger.debug(f"Cache expired for key={key}")
+            return None
+
+        return entry["value"]
+
+    def _store_in_cache(self, key: str, value: DifficultyEstimate) -> None:
+        """
+        Store value in cache with TTL.
+
+        Args:
+            key: Cache key
+            value: Value to cache
+        """
+        self._cache[key] = {
+            "value": value,
+            "expires_at": datetime.utcnow() + timedelta(seconds=CACHE_TTL_SECONDS),
+        }
+        logger.debug(f"Cached value for key={key}")
