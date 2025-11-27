@@ -1,11 +1,11 @@
 """
 AI Engine Response Schemas
-Phase 7.2: Extracted schemas for service layer
+Phase 7.3: Shared cross-language schema module
 
-These schemas define the response models for the AI Engine API.
-They are kept separate from the controller to avoid circular imports.
+These schemas define the response models for the DevOpsHub AI Engine.
+They are the single source of truth for AI data contracts across the monorepo.
 
-Note: Will be moved to packages/shared in Phase 7.3.
+TypeScript equivalents: packages/shared/ts/ai/schemas.ts
 """
 from datetime import datetime
 from typing import Literal, Optional

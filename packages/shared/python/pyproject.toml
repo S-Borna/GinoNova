@@ -1,6 +1,13 @@
 [tool.poetry]
 name = "shared"
 version = "1.0.0"
+description = "Shared Python schemas for DevOpsHub monorepo"
+packages = [{include = "shared"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pydantic = "^2.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
