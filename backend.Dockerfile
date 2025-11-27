@@ -29,5 +29,5 @@ USER appuser
 # Expose port (Railway sets $PORT dynamically)
 EXPOSE 8000
 
-# Start command - shell form for $PORT variable expansion
-CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Start command - shell form for $PORT variable expansion with debug logging
+CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000} --log-level debug
