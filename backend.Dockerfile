@@ -28,8 +28,8 @@ COPY apps/backend/src ./src
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
+# Expose port (Railway sets $PORT dynamically)
 EXPOSE 8000
 
-# Start command - uvicorn with src.main:app (src/ is in WORKDIR /app)
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start command - shell form for $PORT variable expansion
+CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
