@@ -2,6 +2,7 @@
 Difficulty Service
 Phase 7.7: AI service layer with DB integration and caching
 Phase 7.15: Added traceability and execution mapping
+Phase 8.8: Added read-only data query engine integration
 
 Estimates user-adjusted task difficulty using real data from
 repositories and the deterministic rule engine.
@@ -25,6 +26,8 @@ from ...db.memory import USERS
 from ...schemas.user import UserInDB
 from ...ai_trace.provenance import build_provenance_frame
 from ...ai_trace.execution_map import record_execution
+# Phase 8.8: Data query engine integration
+from ...data.query.difficulty_query import query_difficulty_performance, query_recommended_difficulty
 
 logger = logging.getLogger(__name__)
 
@@ -281,6 +284,19 @@ class DifficultyService:
             ctx["skill_level"] = "intermediate"
         else:
             ctx["skill_level"] = "beginner"
+
+        # Phase 8.8: Enrich context with data query engine (read-only)
+        try:
+            perf_data = query_difficulty_performance(str(user_id))
+            if perf_data.get("has_data"):
+                ctx["_difficulty_performance"] = perf_data.get("performance", {})
+            
+            rec_data = query_recommended_difficulty(str(user_id))
+            if rec_data.get("has_data"):
+                ctx["_recommended_difficulty"] = rec_data.get("recommended", "medium")
+        except Exception as e:
+            # Data enrichment is optional - log and continue
+            logger.debug(f"Data enrichment skipped: {e}")
 
         return ctx
 
