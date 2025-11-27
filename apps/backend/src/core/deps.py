@@ -1,5 +1,6 @@
 """
 Dependencies - FastAPI dependency injection for auth
+Phase 1.2: Updated for new user models
 """
 from typing import Annotated
 from uuid import UUID
@@ -58,10 +59,9 @@ async def get_current_user(
     return UserPublic(
         id=user.id,
         email=user.email,
-        role=user.role.value,
-        onboarding_complete=user.onboarding_complete,
-        baseline_skills=user.baseline_skills,
-        preferences=user.preferences,
+        full_name=user.full_name,
+        is_active=user.is_active,
+        is_admin=user.is_admin,
         created_at=user.created_at,
         updated_at=user.updated_at,
     )
@@ -82,7 +82,7 @@ async def get_current_admin_user(
     Raises:
         HTTPException: 403 if user is not an admin
     """
-    if current_user.role != "admin":
+    if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"
@@ -90,6 +90,30 @@ async def get_current_admin_user(
     return current_user
 
 
+async def get_current_active_user(
+    current_user: Annotated[UserPublic, Depends(get_current_user)]
+) -> UserPublic:
+    """
+    Dependency to verify the current user is active.
+
+    Args:
+        current_user: The authenticated user from get_current_user
+
+    Returns:
+        UserPublic schema if user is active
+
+    Raises:
+        HTTPException: 403 if user is not active
+    """
+    if not current_user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User account is deactivated"
+        )
+    return current_user
+
+
 # Type aliases for cleaner dependency injection
 CurrentUser = Annotated[UserPublic, Depends(get_current_user)]
 AdminUser = Annotated[UserPublic, Depends(get_current_admin_user)]
+ActiveUser = Annotated[UserPublic, Depends(get_current_active_user)]
