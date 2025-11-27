@@ -330,6 +330,45 @@ class DifficultyService:
                 "prerequisites": [],
             }
 
+    # =========================================================================
+    # ASYNC WORKER PATH (Phase 7.9)
+    # =========================================================================
+
+    def estimate_difficulty_async(
+        self,
+        task_id: UUID,
+        user_id: Optional[UUID],
+    ) -> dict[str, Any]:
+        """
+        Estimate difficulty via async worker path.
+
+        Phase 7.9: Builds payload and delegates to DifficultyWorker stub.
+        Currently synchronous - async scheduling will be added later.
+
+        Args:
+            task_id: UUID of the task to estimate
+            user_id: Optional user UUID for personalized estimate
+
+        Returns:
+            WorkerResult dict with difficulty data
+        """
+        from ...workers import DifficultyWorker, DifficultyPayload
+
+        logger.info(f"estimate_difficulty_async called: task_id={task_id}, user_id={user_id}")
+
+        # Build payload
+        payload: DifficultyPayload = {
+            "user_id": str(user_id) if user_id else None,
+            "task_id": str(task_id),
+        }
+
+        # Invoke worker (direct call for now - no actual async)
+        worker = DifficultyWorker()
+        result = worker.run(payload)
+
+        logger.debug(f"Worker result: success={result['success']}, task_type={result['task_type']}")
+        return result
+
     def invalidate_cache(self, user_id: Optional[UUID] = None, task_id: Optional[UUID] = None) -> int:
         """
         Invalidate cached difficulty estimates.

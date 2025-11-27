@@ -418,6 +418,51 @@ class RecommendationService:
             {"mode": "sprint", "duration": 15, "intensity": "low"},
         ]
 
+    # =========================================================================
+    # ASYNC WORKER PATH (Phase 7.9)
+    # =========================================================================
+
+    def get_recommendations_async(
+        self,
+        user_id: Optional[UUID],
+        limit: int = 5,
+        include_reasoning: bool = False,
+    ) -> dict[str, Any]:
+        """
+        Generate recommendations via async worker path.
+
+        Phase 7.9: Builds payload and delegates to RecommendWorker stub.
+        Currently synchronous - async scheduling will be added later.
+
+        Args:
+            user_id: Optional user UUID for personalization
+            limit: Maximum number of recommendations per category
+            include_reasoning: Whether to include explanation text
+
+        Returns:
+            WorkerResult dict with recommendations data
+        """
+        from ...workers import RecommendWorker, RecommendPayload
+
+        logger.info(
+            f"get_recommendations_async called: user_id={user_id}, "
+            f"limit={limit}, include_reasoning={include_reasoning}"
+        )
+
+        # Build payload
+        payload: RecommendPayload = {
+            "user_id": str(user_id) if user_id else None,
+            "limit": limit,
+            "include_reasoning": include_reasoning,
+        }
+
+        # Invoke worker (direct call for now - no actual async)
+        worker = RecommendWorker()
+        result = worker.run(payload)
+
+        logger.debug(f"Worker result: success={result['success']}, task_type={result['task_type']}")
+        return result
+
     def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:
         """
         Invalidate cached recommendations for a user or all users.

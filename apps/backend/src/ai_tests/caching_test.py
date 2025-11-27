@@ -108,13 +108,13 @@ class TestRecommendationServiceCaching:
         """Second call should use cache, not call engine again."""
         # First call - should compute and cache
         await service.get_recommendations(MOCK_USER_ID)
-        
+
         # Track engine calls by checking repository calls
         initial_call_count = service._user_repo.get_user_context.call_count
-        
+
         # Second call - should use cache
         await service.get_recommendations(MOCK_USER_ID)
-        
+
         # Repository should NOT have been called again
         assert service._user_repo.get_user_context.call_count == initial_call_count, \
             "Engine was called when cache should have been used"
@@ -125,11 +125,11 @@ class TestRecommendationServiceCaching:
         # Call for user 1
         await service.get_recommendations(MOCK_USER_ID)
         call_count_1 = service._user_repo.get_user_context.call_count
-        
+
         # Call for user 2 - should trigger new computation
         await service.get_recommendations(MOCK_USER_ID_2)
         call_count_2 = service._user_repo.get_user_context.call_count
-        
+
         assert call_count_2 > call_count_1, "Different user should trigger new computation"
 
     @pytest.mark.asyncio
@@ -137,7 +137,7 @@ class TestRecommendationServiceCaching:
         """Cached result should be identical to original."""
         result1 = await service.get_recommendations(MOCK_USER_ID)
         result2 = await service.get_recommendations(MOCK_USER_ID)
-        
+
         assert result1 == result2, "Cache returned different result"
 
     @pytest.mark.asyncio
@@ -146,13 +146,13 @@ class TestRecommendationServiceCaching:
         # Populate cache
         await service.get_recommendations(MOCK_USER_ID)
         initial_call_count = service._user_repo.get_user_context.call_count
-        
+
         # Invalidate cache
         service.invalidate_cache()
-        
+
         # Next call should trigger computation
         await service.get_recommendations(MOCK_USER_ID)
-        
+
         assert service._user_repo.get_user_context.call_count > initial_call_count, \
             "Cache invalidation did not force recomputation"
 
@@ -162,17 +162,17 @@ class TestRecommendationServiceCaching:
         # Populate cache for both users
         await service.get_recommendations(MOCK_USER_ID)
         await service.get_recommendations(MOCK_USER_ID_2)
-        
+
         # Invalidate only user 1
         service.invalidate_cache(user_id=MOCK_USER_ID)
-        
+
         # Reset call counter reference
         user1_calls_before = service._user_repo.get_user_context.call_count
-        
+
         # User 1 should recompute
         await service.get_recommendations(MOCK_USER_ID)
         assert service._user_repo.get_user_context.call_count > user1_calls_before
-        
+
         # User 2 should still use cache (no additional call)
         user2_calls_before = service._user_repo.get_user_context.call_count
         await service.get_recommendations(MOCK_USER_ID_2)
@@ -204,9 +204,9 @@ class TestNextStepServiceCaching:
         """Cached next step should not trigger recomputation."""
         await service.get_next_step(MOCK_USER_ID)
         initial_count = service._task_repo.get_pending_tasks.call_count
-        
+
         await service.get_next_step(MOCK_USER_ID)
-        
+
         assert service._task_repo.get_pending_tasks.call_count == initial_count
 
     @pytest.mark.asyncio
@@ -214,10 +214,10 @@ class TestNextStepServiceCaching:
         """Invalidation should force next step to recompute."""
         await service.get_next_step(MOCK_USER_ID)
         initial_count = service._task_repo.get_pending_tasks.call_count
-        
+
         service.invalidate_cache()
         await service.get_next_step(MOCK_USER_ID)
-        
+
         assert service._task_repo.get_pending_tasks.call_count > initial_count
 
 
@@ -244,9 +244,9 @@ class TestDifficultyServiceCaching:
         """Cached difficulty should not trigger recomputation."""
         await service.get_difficulty_assessment(MOCK_USER_ID)
         initial_count = service._progress_repo.get_user_progress.call_count
-        
+
         await service.get_difficulty_assessment(MOCK_USER_ID)
-        
+
         assert service._progress_repo.get_user_progress.call_count == initial_count
 
     @pytest.mark.asyncio
@@ -254,10 +254,10 @@ class TestDifficultyServiceCaching:
         """Invalidation should force difficulty to recompute."""
         await service.get_difficulty_assessment(MOCK_USER_ID)
         initial_count = service._progress_repo.get_user_progress.call_count
-        
+
         service.invalidate_cache()
         await service.get_difficulty_assessment(MOCK_USER_ID)
-        
+
         assert service._progress_repo.get_user_progress.call_count > initial_count
 
 
@@ -286,9 +286,9 @@ class TestSummaryServiceCaching:
         """Cached summary should not trigger recomputation."""
         await service.get_daily_summary(MOCK_USER_ID)
         initial_count = service._task_repo.get_pending_tasks.call_count
-        
+
         await service.get_daily_summary(MOCK_USER_ID)
-        
+
         assert service._task_repo.get_pending_tasks.call_count == initial_count
 
     @pytest.mark.asyncio
@@ -296,10 +296,10 @@ class TestSummaryServiceCaching:
         """Invalidation should force summary to recompute."""
         await service.get_daily_summary(MOCK_USER_ID)
         initial_count = service._task_repo.get_pending_tasks.call_count
-        
+
         service.invalidate_cache()
         await service.get_daily_summary(MOCK_USER_ID)
-        
+
         assert service._task_repo.get_pending_tasks.call_count > initial_count
 
 
@@ -316,11 +316,11 @@ class TestCacheTTLExpiration:
         repos = create_mock_repositories()
         service = RecommendationService(**repos)
         service.invalidate_cache()
-        
+
         # First call
         await service.get_recommendations(MOCK_USER_ID)
         initial_count = repos["user_repo"].get_user_context.call_count
-        
+
         # Simulate TTL expiration by manipulating cache timestamps
         # The cache stores (result, timestamp) tuples
         if hasattr(service, "_cache") and MOCK_USER_ID in service._cache:
@@ -328,10 +328,10 @@ class TestCacheTTLExpiration:
             cached_result = service._cache[MOCK_USER_ID][0]
             expired_timestamp = time.time() - 400  # 400 seconds ago (TTL is 300)
             service._cache[MOCK_USER_ID] = (cached_result, expired_timestamp)
-        
+
         # Next call should recompute due to expiration
         await service.get_recommendations(MOCK_USER_ID)
-        
+
         # May or may not have additional call depending on implementation
         # This test documents the expected behavior
 
@@ -347,7 +347,7 @@ class TestCacheKeyFormat:
         """Recommendation cache key should be user_id based."""
         repos = create_mock_repositories()
         service = RecommendationService(**repos)
-        
+
         # Verify cache key generation method exists
         assert hasattr(service, "_get_cache_key") or hasattr(service, "_cache"), \
             "Service should have cache mechanism"
@@ -360,7 +360,7 @@ class TestCacheKeyFormat:
             module_repo=repos["module_repo"],
             user_repo=repos["user_repo"],
         )
-        
+
         assert hasattr(service, "_cache"), "Service should have cache"
 
     def test_difficulty_cache_key_format(self) -> None:
@@ -370,7 +370,7 @@ class TestCacheKeyFormat:
             progress_repo=repos["progress_repo"],
             user_repo=repos["user_repo"],
         )
-        
+
         assert hasattr(service, "_cache"), "Service should have cache"
 
     def test_summary_cache_key_format(self) -> None:
@@ -382,7 +382,7 @@ class TestCacheKeyFormat:
             progress_repo=repos["progress_repo"],
             user_repo=repos["user_repo"],
         )
-        
+
         assert hasattr(service, "_cache"), "Service should have cache"
 
 
@@ -398,19 +398,19 @@ class TestCacheIsolation:
         """Different service instances should have independent caches."""
         repos1 = create_mock_repositories()
         repos2 = create_mock_repositories()
-        
+
         service1 = RecommendationService(**repos1)
         service2 = RecommendationService(**repos2)
-        
+
         service1.invalidate_cache()
         service2.invalidate_cache()
-        
+
         # Populate service1 cache
         await service1.get_recommendations(MOCK_USER_ID)
-        
+
         # Service2 should not have cached result
         await service2.get_recommendations(MOCK_USER_ID)
-        
+
         # Both should have called their respective repos
         assert repos1["user_repo"].get_user_context.call_count >= 1
         assert repos2["user_repo"].get_user_context.call_count >= 1
@@ -420,25 +420,25 @@ class TestCacheIsolation:
         """Invalidating one service's cache should not affect another."""
         repos1 = create_mock_repositories()
         repos2 = create_mock_repositories()
-        
+
         service1 = RecommendationService(**repos1)
         service2 = DifficultyService(
             progress_repo=repos2["progress_repo"],
             user_repo=repos2["user_repo"],
         )
-        
+
         service1.invalidate_cache()
         service2.invalidate_cache()
-        
+
         # Populate both caches
         await service1.get_recommendations(MOCK_USER_ID)
         await service2.get_difficulty_assessment(MOCK_USER_ID)
-        
+
         count1_before = repos1["user_repo"].get_user_context.call_count
-        
+
         # Invalidate service2 only
         service2.invalidate_cache()
-        
+
         # Service1 cache should still work
         await service1.get_recommendations(MOCK_USER_ID)
         assert repos1["user_repo"].get_user_context.call_count == count1_before
