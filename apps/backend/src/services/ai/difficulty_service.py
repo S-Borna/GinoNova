@@ -1,6 +1,7 @@
 """
 Difficulty Service
 Phase 7.7: AI service layer with DB integration and caching
+Phase 7.15: Added traceability and execution mapping
 
 Estimates user-adjusted task difficulty using real data from
 repositories and the deterministic rule engine.
@@ -22,6 +23,8 @@ from shared.ai import (
 from ...db import user_repository, task_repository, progress_repository
 from ...db.memory import USERS
 from ...schemas.user import UserInDB
+from ...ai_trace.provenance import build_provenance_frame
+from ...ai_trace.execution_map import record_execution
 
 logger = logging.getLogger(__name__)
 
@@ -111,6 +114,24 @@ class DifficultyService:
 
         # Store in cache
         self._store_in_cache(cache_key, response)
+
+        # Phase 7.15: Build provenance and record execution
+        context_dict = dict(user_ctx)
+        output_dict = {
+            "base_difficulty": adjustment["base_difficulty"],
+            "adjusted_difficulty": adjustment["adjusted_difficulty"],
+            "success_probability": adjustment["success_probability"],
+        }
+        build_provenance_frame(
+            engine_name="difficulty_service",
+            context=context_dict,
+            output=output_dict,
+        )
+        record_execution(
+            engine_name="difficulty_service",
+            input_keys=list(context_dict.keys()) if context_dict else [],
+            output_keys=list(output_dict.keys()) if output_dict else [],
+        )
 
         logger.debug(
             f"Returning difficulty estimate: base={response.base_difficulty}, "

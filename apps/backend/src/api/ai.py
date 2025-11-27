@@ -2,6 +2,7 @@
 AI Engine API Controller
 Phase 7.12: AI Controller with worker load simulator and stress harness
 Phase 7.14: Added debug frames endpoint for error isolation diagnostics
+Phase 7.15: Added traceability matrix and execution map endpoints
 
 This module provides the API surface for the DevOpsHub AI Engine.
 Endpoints delegate to service classes for business logic.
@@ -29,6 +30,8 @@ from ..services.ai import (
 )
 from ..ai_logs.diagnostics import get_daily_diagnostics
 from ..ai_diagnostics.debug_frames import get_recent_debug_frames
+from ..ai_trace.trace_matrix import get_trace_matrix
+from ..ai_trace.execution_map import get_recent_executions
 
 
 # ============================================================================
@@ -84,6 +87,51 @@ def ai_debug_frames(
     This endpoint has zero performance impact on AI operations.
     """
     return get_recent_debug_frames(limit=limit)
+
+
+# ============================================================================
+# TRACE MATRIX ENDPOINT (Phase 7.15)
+# ============================================================================
+
+@ai_router.get("/trace-matrix")
+def ai_trace_matrix() -> dict[str, Any]:
+    """
+    Phase 7.15: AI Traceability Matrix.
+
+    Returns the static dependency mapping for all AI engines.
+    Shows which sub-engines each service relies on.
+
+    Response includes:
+    - matrix: Engine dependency mapping
+    - version: Matrix version
+    - engines: List of tracked engines
+    - total_dependencies: Count of all dependencies
+    """
+    return get_trace_matrix()
+
+
+# ============================================================================
+# EXECUTIONS ENDPOINT (Phase 7.15)
+# ============================================================================
+
+@ai_router.get("/executions")
+def ai_executions(
+    limit: int = Query(50, ge=1, le=100, description="Maximum number of executions to return"),
+) -> list[dict[str, Any]]:
+    """
+    Phase 7.15: AI Execution Map.
+
+    Returns recent AI engine execution records.
+    Records include:
+    - Engine name
+    - Timestamp
+    - Input/output key counts
+    - Execution metadata
+
+    Records are returned newest-first for debugging.
+    Rolling storage with max 50 entries retained.
+    """
+    return get_recent_executions(limit=limit)
 
 
 # ============================================================================
