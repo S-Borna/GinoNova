@@ -30,9 +30,9 @@ class TestTaskNormalizer:
             duration_seconds=1800,
             xp_awarded=50,
         )
-        
+
         normalized = normalize_task_event(raw)
-        
+
         assert normalized.event_id == "evt_001"
         assert normalized.event_type == "task_completed"
         assert normalized.date_key == "2025-11-27"
@@ -57,7 +57,7 @@ class TestTaskNormalizer:
             (10, "extreme"),
             (None, "easy"),
         ]
-        
+
         for difficulty, expected_bucket in test_cases:
             raw = RawTaskEvent(
                 event_id=f"evt_diff_{difficulty}",
@@ -112,9 +112,9 @@ class TestSessionNormalizer:
             tasks_in_session=[uuid4()],
             interruptions=2,
         )
-        
+
         normalized = normalize_studyflow_session(raw)
-        
+
         assert normalized.session_id == "sess_001"
         assert normalized.date_key == "2025-11-27"
         assert normalized.hour_of_day == 14
@@ -137,7 +137,7 @@ class TestSessionNormalizer:
             (1.0, "peak"),
             (None, "low"),
         ]
-        
+
         for focus_score, expected_bucket in test_cases:
             raw = RawStudyflowSession(
                 session_id=f"sess_focus_{focus_score}",
@@ -162,9 +162,9 @@ class TestActivityNormalizer:
             timestamp=datetime(2025, 11, 27, 9, 0, 0),
             value_change=50,
         )
-        
+
         normalized = normalize_user_activity(raw)
-        
+
         assert normalized.activity_id == "act_001"
         assert normalized.activity_category == "progression"
         assert normalized.date_key == "2025-11-27"
@@ -184,7 +184,7 @@ class TestActivityNormalizer:
             ("badge_earned", "progression"),
             ("profile_updated", "engagement"),
         ]
-        
+
         for activity_type, expected_category in test_cases:
             raw = RawUserActivity(
                 activity_id=f"act_{activity_type}",
@@ -199,7 +199,7 @@ class TestActivityNormalizer:
         """Test milestone event detection."""
         milestone_types = ["badge_earned", "level_up"]
         non_milestone_types = ["xp_gained", "login", "page_view"]
-        
+
         for activity_type in milestone_types:
             raw = RawUserActivity(
                 activity_id=f"act_{activity_type}",
@@ -209,7 +209,7 @@ class TestActivityNormalizer:
             )
             normalized = normalize_user_activity(raw)
             assert normalized.is_milestone is True
-        
+
         for activity_type in non_milestone_types:
             raw = RawUserActivity(
                 activity_id=f"act_{activity_type}",

@@ -359,12 +359,12 @@ class SummaryService:
             completion_data = query_task_completions(str(user_id), days=7)
             if completion_data.get("totals"):
                 ctx["_completion_stats"] = completion_data.get("totals", {})
-            
+
             # Get productivity trends
             trend_data = query_productivity_trends(str(user_id), days=14)
             if trend_data.get("has_data"):
                 ctx["_productivity_trend"] = trend_data.get("trend", "unknown")
-            
+
             # Build daily snapshot for summary (stores for future use)
             today = datetime.utcnow().strftime("%Y-%m-%d")
             build_daily_snapshot(str(user_id), today)

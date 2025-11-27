@@ -54,39 +54,39 @@ def dispatch_event(
     Dispatch a single raw event through the pipeline.
     Deterministic order: validate → normalize → store → log.
     No async operations.
-    
+
     Args:
         event: Raw event to dispatch
         event_category: One of "task", "session", "activity"
-        
+
     Returns:
         Dict with dispatch status and normalized event info
     """
     if event_category not in _EVENT_HANDLERS:
         raise ValueError(f"Unknown event category: {event_category}")
-    
+
     handler = _EVENT_HANDLERS[event_category]
-    
+
     # Step 1: Validate type (already done via Pydantic, but explicit check)
     if not isinstance(event, handler["raw_type"]):
         raise TypeError(
             f"Event type mismatch: expected {handler['raw_type'].__name__}, "
             f"got {type(event).__name__}"
         )
-    
+
     # Step 2: Normalize (deterministic transformation)
     normalized = handler["normalizer"](event)
-    
+
     # Step 3: Store in memory
     handler["store"](normalized)
-    
+
     # Step 4: Log via Phase 7 telemetry
     _log_dispatch_event(event_category, normalized)
-    
+
     logger.debug(
         f"Dispatched {event_category} event: {_get_event_id(event, event_category)}"
     )
-    
+
     return {
         "status": "dispatched",
         "category": event_category,
@@ -102,17 +102,17 @@ def dispatch_batch(
     """
     Dispatch a batch of raw events.
     Events are processed in deterministic order (as provided).
-    
+
     Args:
         events: List of raw events to dispatch
         event_category: One of "task", "session", "activity"
-        
+
     Returns:
         Dict with batch dispatch status
     """
     results = []
     errors = []
-    
+
     for i, event in enumerate(events):
         try:
             result = dispatch_event(event, event_category)
@@ -124,7 +124,7 @@ def dispatch_batch(
                 "error": str(e),
             })
             logger.error(f"Batch dispatch error at index {i}: {e}")
-    
+
     # Log batch telemetry
     log_ai_event(
         event_type="data_batch_dispatched",
@@ -136,7 +136,7 @@ def dispatch_batch(
         },
         engine="data_dispatcher",
     )
-    
+
     return {
         "status": "batch_complete",
         "category": event_category,
@@ -163,7 +163,7 @@ def _get_event_id(
 def _log_dispatch_event(category: str, normalized: Any) -> None:
     """Log dispatch event via Phase 7 telemetry."""
     payload_size = len(str(normalized.model_dump()))
-    
+
     log_ai_event(
         event_type="data_event_dispatched",
         payload={

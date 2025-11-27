@@ -69,18 +69,18 @@ def _compute_productivity(
     All operations are deterministic.
     """
     base = focus_score if focus_score is not None else 0.5
-    
+
     # Duration factor: longer focused sessions are more productive (capped)
     duration_factor = min(duration / 60.0, 1.5) if duration > 0 else 0.5
-    
+
     # Task bonus: more tasks completed = higher productivity
     task_factor = 1.0 + (min(tasks_count, 5) * 0.1)
-    
+
     # Interruption penalty
     interruption_penalty = min(interruptions * 0.05, 0.3)
-    
+
     score = base * duration_factor * task_factor - interruption_penalty
-    
+
     # Clamp to 0-1
     return max(0.0, min(1.0, score))
 
@@ -89,10 +89,10 @@ def normalize_studyflow_session(raw: RawStudyflowSession) -> NormalizedStudyflow
     """
     Normalize a raw studyflow session into a deterministic normalized record.
     No randomness, no time.now() — uses provided timestamp.
-    
+
     Args:
         raw: Raw studyflow session from capture layer
-        
+
     Returns:
         NormalizedStudyflowSession with computed fields
     """
@@ -100,7 +100,7 @@ def normalize_studyflow_session(raw: RawStudyflowSession) -> NormalizedStudyflow
     duration = raw.duration_minutes or 0
     tasks_count = len(raw.tasks_in_session)
     interruptions = raw.interruptions or 0
-    
+
     return NormalizedStudyflowSession(
         session_id=raw.session_id,
         event_type=raw.event_type,

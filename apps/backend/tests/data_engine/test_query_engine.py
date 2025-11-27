@@ -35,7 +35,7 @@ class TestTaskQuery:
         """Clear store and add test data."""
         clear_store()
         self.user_id = uuid4()
-        
+
         # Add test events
         for i in range(5):
             event = RawTaskEvent(
@@ -52,7 +52,7 @@ class TestTaskQuery:
     def test_query_user_tasks(self):
         """Test querying tasks for a user."""
         result = query_user_tasks(str(self.user_id))
-        
+
         assert result["user_id"] == str(self.user_id)
         assert result["total_events"] == 5
         assert len(result["events"]) == 5
@@ -60,13 +60,13 @@ class TestTaskQuery:
     def test_query_user_tasks_with_limit(self):
         """Test querying with limit."""
         result = query_user_tasks(str(self.user_id), limit=3)
-        
+
         assert len(result["events"]) == 3
 
     def test_query_task_completions(self):
         """Test querying task completions."""
         result = query_task_completions(str(self.user_id), days=7)
-        
+
         assert result["user_id"] == str(self.user_id)
         assert "totals" in result
         assert result["totals"]["completions"] == 3  # i=0,2,4
@@ -75,7 +75,7 @@ class TestTaskQuery:
     def test_get_task_summary(self):
         """Test getting task summary."""
         result = get_task_summary(str(self.user_id))
-        
+
         assert result["user_id"] == str(self.user_id)
         assert result["has_data"] is True
         assert result["total_events"] == 5
@@ -85,7 +85,7 @@ class TestTaskQuery:
     def test_get_task_summary_no_data(self):
         """Test task summary with no data."""
         result = get_task_summary(str(uuid4()))
-        
+
         assert result["has_data"] is False
         assert result["total_events"] == 0
 
@@ -97,7 +97,7 @@ class TestPatternQuery:
         """Clear store and add test session data."""
         clear_store()
         self.user_id = uuid4()
-        
+
         # Add test sessions
         for i in range(3):
             session = RawStudyflowSession(
@@ -114,7 +114,7 @@ class TestPatternQuery:
     def test_query_study_patterns(self):
         """Test querying study patterns."""
         result = query_study_patterns(str(self.user_id), days=7)
-        
+
         assert result["user_id"] == str(self.user_id)
         assert result["has_data"] is True
         assert "patterns" in result
@@ -122,7 +122,7 @@ class TestPatternQuery:
     def test_query_peak_hours(self):
         """Test querying peak hours."""
         result = query_peak_hours(str(self.user_id))
-        
+
         assert result["user_id"] == str(self.user_id)
         assert result["has_data"] is True
         assert "peak_hours" in result
@@ -131,14 +131,14 @@ class TestPatternQuery:
     def test_query_productivity_trends(self):
         """Test querying productivity trends."""
         result = query_productivity_trends(str(self.user_id), days=14)
-        
+
         assert result["user_id"] == str(self.user_id)
         assert "trend" in result
 
     def test_query_patterns_no_data(self):
         """Test patterns with no data."""
         result = query_study_patterns(str(uuid4()))
-        
+
         assert result["has_data"] is False
 
 
@@ -149,12 +149,12 @@ class TestDifficultyQuery:
         """Clear store and add varied difficulty data."""
         clear_store()
         self.user_id = uuid4()
-        
+
         # Add events with different difficulties
         difficulties = [2, 3, 5, 5, 6, 7, 8, 9]  # easy, easy, medium, medium, hard, hard, extreme, extreme
-        event_types = ["task_completed", "task_completed", "task_completed", "task_failed", 
+        event_types = ["task_completed", "task_completed", "task_completed", "task_failed",
                        "task_completed", "task_failed", "task_failed", "task_completed"]
-        
+
         for i, (diff, etype) in enumerate(zip(difficulties, event_types)):
             event = RawTaskEvent(
                 event_id=f"evt_diff_{i}",
@@ -170,7 +170,7 @@ class TestDifficultyQuery:
     def test_query_difficulty_distribution(self):
         """Test querying difficulty distribution."""
         result = query_difficulty_distribution(str(self.user_id))
-        
+
         assert result["user_id"] == str(self.user_id)
         assert result["has_data"] is True
         assert "distribution" in result
@@ -182,7 +182,7 @@ class TestDifficultyQuery:
     def test_query_difficulty_performance(self):
         """Test querying difficulty performance."""
         result = query_difficulty_performance(str(self.user_id))
-        
+
         assert result["user_id"] == str(self.user_id)
         assert result["has_data"] is True
         assert "performance" in result
@@ -192,7 +192,7 @@ class TestDifficultyQuery:
     def test_query_recommended_difficulty(self):
         """Test getting recommended difficulty."""
         result = query_recommended_difficulty(str(self.user_id))
-        
+
         assert result["user_id"] == str(self.user_id)
         assert "recommended" in result
         assert result["recommended"] in ["easy", "medium", "hard", "extreme"]
@@ -200,5 +200,5 @@ class TestDifficultyQuery:
     def test_difficulty_no_data(self):
         """Test difficulty queries with no data."""
         result = query_difficulty_distribution(str(uuid4()))
-        
+
         assert result["has_data"] is False

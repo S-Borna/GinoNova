@@ -14,37 +14,37 @@ def query_difficulty_distribution(user_id: str) -> Dict[str, Any]:
     """
     Query difficulty distribution for a user.
     Shows what difficulty levels user engages with.
-    
+
     Args:
         user_id: User ID to query
-        
+
     Returns:
         Dict with difficulty distribution
     """
     events = get_task_events(user_id=user_id)
-    
+
     if not events:
         return {
             "user_id": user_id,
             "has_data": False,
             "distribution": {"easy": 0, "medium": 0, "hard": 0, "extreme": 0},
         }
-    
+
     # Count by difficulty
     distribution = {"easy": 0, "medium": 0, "hard": 0, "extreme": 0}
     for event in events:
         distribution[event.difficulty_bucket] += 1
-    
+
     total = sum(distribution.values())
     percentages = {
         k: round(v / total * 100, 2) if total > 0 else 0.0
         for k, v in distribution.items()
     }
-    
+
     # Find dominant difficulty (deterministic: alphabetical tie-breaker)
     sorted_dist = sorted(distribution.items(), key=lambda x: (-x[1], x[0]))
     dominant = sorted_dist[0][0] if sorted_dist else "medium"
-    
+
     return {
         "user_id": user_id,
         "has_data": True,
@@ -59,22 +59,22 @@ def query_difficulty_performance(user_id: str) -> Dict[str, Any]:
     """
     Query user performance by difficulty level.
     Shows completion rates per difficulty.
-    
+
     Args:
         user_id: User ID to query
-        
+
     Returns:
         Dict with performance by difficulty
     """
     events = get_task_events(user_id=user_id)
-    
+
     if not events:
         return {
             "user_id": user_id,
             "has_data": False,
             "performance": {},
         }
-    
+
     # Aggregate by difficulty
     stats: Dict[str, Dict[str, int]] = {
         "easy": {"completions": 0, "failures": 0, "total": 0, "xp": 0, "duration": 0},
@@ -82,7 +82,7 @@ def query_difficulty_performance(user_id: str) -> Dict[str, Any]:
         "hard": {"completions": 0, "failures": 0, "total": 0, "xp": 0, "duration": 0},
         "extreme": {"completions": 0, "failures": 0, "total": 0, "xp": 0, "duration": 0},
     }
-    
+
     for event in events:
         bucket = event.difficulty_bucket
         stats[bucket]["total"] += 1
@@ -92,7 +92,7 @@ def query_difficulty_performance(user_id: str) -> Dict[str, Any]:
             stats[bucket]["completions"] += 1
         if event.is_failure:
             stats[bucket]["failures"] += 1
-    
+
     # Calculate rates
     performance = {}
     for bucket, data in stats.items():
@@ -109,7 +109,7 @@ def query_difficulty_performance(user_id: str) -> Dict[str, Any]:
                 data["duration"] / data["total"], 2
             ) if data["total"] > 0 else 0.0,
         }
-    
+
     return {
         "user_id": user_id,
         "has_data": True,
@@ -121,15 +121,15 @@ def query_recommended_difficulty(user_id: str) -> Dict[str, Any]:
     """
     Query recommended difficulty level for a user.
     Based on recent performance trends.
-    
+
     Args:
         user_id: User ID to query
-        
+
     Returns:
         Dict with difficulty recommendation
     """
     performance = query_difficulty_performance(user_id)
-    
+
     if not performance["has_data"]:
         return {
             "user_id": user_id,
@@ -137,25 +137,25 @@ def query_recommended_difficulty(user_id: str) -> Dict[str, Any]:
             "recommended": "medium",
             "reasoning": "No data available, defaulting to medium",
         }
-    
+
     perf_data = performance["performance"]
-    
+
     # Find optimal difficulty based on completion rate and engagement
     # Target: ~70-85% completion rate (challenge but not frustration)
     optimal_range = (0.70, 0.85)
-    
+
     candidates = []
     difficulty_order = ["easy", "medium", "hard", "extreme"]
-    
+
     for bucket in difficulty_order:
         data = perf_data[bucket]
         rate = data["completion_rate"]
         events = data["total_events"]
-        
+
         if events < 3:
             # Not enough data for this difficulty
             continue
-        
+
         # Score based on how close to optimal range
         if optimal_range[0] <= rate <= optimal_range[1]:
             score = 1.0  # Perfect range
@@ -163,14 +163,14 @@ def query_recommended_difficulty(user_id: str) -> Dict[str, Any]:
             score = 0.8  # Too easy
         else:
             score = 0.6  # Too hard
-        
+
         candidates.append({
             "bucket": bucket,
             "rate": rate,
             "events": events,
             "score": score,
         })
-    
+
     if not candidates:
         return {
             "user_id": user_id,
@@ -178,7 +178,7 @@ def query_recommended_difficulty(user_id: str) -> Dict[str, Any]:
             "recommended": "medium",
             "reasoning": "Insufficient events per difficulty, defaulting to medium",
         }
-    
+
     # Sort by score desc, then by difficulty progression for tie-breaker
     # (prefer harder when equal score)
     difficulty_rank = {"easy": 0, "medium": 1, "hard": 2, "extreme": 3}
@@ -186,9 +186,9 @@ def query_recommended_difficulty(user_id: str) -> Dict[str, Any]:
         candidates,
         key=lambda x: (-x["score"], -difficulty_rank[x["bucket"]])
     )
-    
+
     best = candidates[0]
-    
+
     # Determine reasoning
     if best["rate"] > optimal_range[1]:
         reasoning = f"High success rate ({best['rate']:.0%}) at {best['bucket']}, consider increasing difficulty"
@@ -205,7 +205,7 @@ def query_recommended_difficulty(user_id: str) -> Dict[str, Any]:
     else:
         reasoning = f"Optimal success rate ({best['rate']:.0%}) at {best['bucket']}"
         recommended = best["bucket"]
-    
+
     return {
         "user_id": user_id,
         "has_data": True,

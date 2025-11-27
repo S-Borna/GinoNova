@@ -47,7 +47,7 @@ def _categorize_activity(
     auth_types = {"login", "logout"}
     navigation_types = {"page_view", "feature_used"}
     progression_types = {"xp_gained", "level_up", "badge_earned", "streak_updated"}
-    
+
     if activity_type in auth_types:
         return "auth"
     elif activity_type in navigation_types:
@@ -71,15 +71,15 @@ def normalize_user_activity(raw: RawUserActivity) -> NormalizedUserActivity:
     """
     Normalize a raw user activity into a deterministic normalized record.
     No randomness, no time.now() — uses provided timestamp.
-    
+
     Args:
         raw: Raw user activity from capture layer
-        
+
     Returns:
         NormalizedUserActivity with computed fields
     """
     ts = raw.timestamp
-    
+
     return NormalizedUserActivity(
         activity_id=raw.activity_id,
         activity_type=raw.activity_type,

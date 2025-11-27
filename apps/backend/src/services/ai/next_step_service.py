@@ -408,7 +408,7 @@ class NextStepService:
             completion_data = query_task_completions(str(user_id), days=7)
             if completion_data.get("totals"):
                 ctx["_completion_stats"] = completion_data.get("totals", {})
-            
+
             pattern_data = query_study_patterns(str(user_id), days=7)
             if pattern_data.get("has_data"):
                 ctx["_study_patterns"] = pattern_data.get("patterns", {}).get("aggregates", {})

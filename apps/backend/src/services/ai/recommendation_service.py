@@ -312,7 +312,7 @@ class RecommendationService:
                     "preferred_difficulty": summary.get("preferred_difficulty", "medium"),
                     "peak_hour": summary.get("peak_hour"),
                 }
-            
+
             peak_hours_data = query_peak_hours(str(user_id))
             if peak_hours_data.get("has_data"):
                 ctx["_peak_hours"] = peak_hours_data.get("peak_hours", [])

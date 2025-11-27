@@ -16,26 +16,26 @@ def query_study_patterns(
     """
     Query study patterns for a user over recent days.
     Returns deterministic, aggregated results.
-    
+
     Args:
         user_id: User ID to query
         days: Number of recent days to include
-        
+
     Returns:
         Dict with study pattern analysis
     """
     events = get_session_events(user_id=user_id)
-    
+
     # Filter to ended sessions only for meaningful patterns
     ended_sessions = [e for e in events if e.is_session_end]
-    
+
     if not ended_sessions:
         return {
             "user_id": user_id,
             "has_data": False,
             "patterns": {},
         }
-    
+
     # Group by date
     by_date: Dict[str, List] = {}
     for session in ended_sessions:
@@ -43,10 +43,10 @@ def query_study_patterns(
         if date not in by_date:
             by_date[date] = []
         by_date[date].append(session)
-    
+
     # Get recent days (sorted for determinism)
     sorted_dates = sorted(by_date.keys(), reverse=True)[:days]
-    
+
     # Calculate daily patterns
     daily_patterns = []
     for date in sorted_dates:
@@ -57,7 +57,7 @@ def query_study_patterns(
             for s in sessions
         ) / len(sessions) if sessions else 0.0
         avg_productivity = sum(s.productivity_score for s in sessions) / len(sessions) if sessions else 0.0
-        
+
         daily_patterns.append({
             "date": date,
             "sessions": len(sessions),
@@ -65,13 +65,13 @@ def query_study_patterns(
             "avg_focus": round(avg_focus, 3),
             "avg_productivity": round(avg_productivity, 3),
         })
-    
+
     # Aggregate patterns
     total_sessions = sum(p["sessions"] for p in daily_patterns)
     total_duration = sum(p["total_duration_minutes"] for p in daily_patterns)
     avg_focus_overall = sum(p["avg_focus"] for p in daily_patterns) / len(daily_patterns) if daily_patterns else 0.0
     avg_productivity_overall = sum(p["avg_productivity"] for p in daily_patterns) / len(daily_patterns) if daily_patterns else 0.0
-    
+
     return {
         "user_id": user_id,
         "has_data": True,
@@ -94,23 +94,23 @@ def query_peak_hours(user_id: str) -> Dict[str, Any]:
     """
     Query peak study hours for a user.
     Identifies when user is most productive.
-    
+
     Args:
         user_id: User ID to query
-        
+
     Returns:
         Dict with peak hour analysis
     """
     events = get_session_events(user_id=user_id)
     ended_sessions = [e for e in events if e.is_session_end]
-    
+
     if not ended_sessions:
         return {
             "user_id": user_id,
             "has_data": False,
             "peak_hours": [],
         }
-    
+
     # Aggregate by hour
     hour_stats: Dict[int, Dict[str, float]] = {}
     for session in ended_sessions:
@@ -124,13 +124,13 @@ def query_peak_hours(user_id: str) -> Dict[str, Any]:
         hour_stats[hour]["sessions"] += 1
         hour_stats[hour]["total_duration"] += session.duration_minutes
         hour_stats[hour]["total_productivity"] += session.productivity_score
-    
+
     # Calculate averages and rank
     hour_rankings = []
     for hour, stats in hour_stats.items():
         avg_productivity = stats["total_productivity"] / stats["sessions"] if stats["sessions"] > 0 else 0.0
         avg_duration = stats["total_duration"] / stats["sessions"] if stats["sessions"] > 0 else 0.0
-        
+
         hour_rankings.append({
             "hour": hour,
             "sessions": stats["sessions"],
@@ -139,13 +139,13 @@ def query_peak_hours(user_id: str) -> Dict[str, Any]:
             # Score: weighted combination for ranking
             "score": round(avg_productivity * 0.7 + min(avg_duration / 60, 1) * 0.3, 3),
         })
-    
+
     # Sort by score descending, then by hour for determinism
     hour_rankings = sorted(hour_rankings, key=lambda x: (-x["score"], x["hour"]))
-    
+
     # Top 3 peak hours
     peak_hours = hour_rankings[:3]
-    
+
     return {
         "user_id": user_id,
         "has_data": True,
@@ -161,17 +161,17 @@ def query_productivity_trends(
     """
     Query productivity trends over time.
     Shows how productivity is changing.
-    
+
     Args:
         user_id: User ID to query
         days: Number of recent days to analyze
-        
+
     Returns:
         Dict with productivity trend analysis
     """
     events = get_session_events(user_id=user_id)
     ended_sessions = [e for e in events if e.is_session_end]
-    
+
     if not ended_sessions:
         return {
             "user_id": user_id,
@@ -179,7 +179,7 @@ def query_productivity_trends(
             "trend": "unknown",
             "details": {},
         }
-    
+
     # Group by date
     by_date: Dict[str, List] = {}
     for session in ended_sessions:
@@ -187,10 +187,10 @@ def query_productivity_trends(
         if date not in by_date:
             by_date[date] = []
         by_date[date].append(session)
-    
+
     # Get recent days
     sorted_dates = sorted(by_date.keys(), reverse=True)[:days]
-    
+
     if len(sorted_dates) < 2:
         return {
             "user_id": user_id,
@@ -198,7 +198,7 @@ def query_productivity_trends(
             "trend": "insufficient_data",
             "details": {"days_available": len(sorted_dates)},
         }
-    
+
     # Calculate daily productivity
     daily_productivity = []
     for date in reversed(sorted_dates):  # Oldest to newest for trend
@@ -208,15 +208,15 @@ def query_productivity_trends(
             "date": date,
             "productivity": round(avg_prod, 3),
         })
-    
+
     # Calculate trend (simple linear direction)
     if len(daily_productivity) >= 2:
         first_half = daily_productivity[:len(daily_productivity)//2]
         second_half = daily_productivity[len(daily_productivity)//2:]
-        
+
         first_avg = sum(d["productivity"] for d in first_half) / len(first_half) if first_half else 0.0
         second_avg = sum(d["productivity"] for d in second_half) / len(second_half) if second_half else 0.0
-        
+
         if second_avg > first_avg + 0.05:
             trend = "improving"
         elif second_avg < first_avg - 0.05:
@@ -225,7 +225,7 @@ def query_productivity_trends(
             trend = "stable"
     else:
         trend = "insufficient_data"
-    
+
     return {
         "user_id": user_id,
         "has_data": True,
