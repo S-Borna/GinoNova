@@ -8,6 +8,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   PHASE 6.3: DevOpsHub Design System
+   ============================================================================ */
+
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
@@ -79,6 +83,21 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+
+    /* DevOpsHub Brand Colors */
+    --devops-primary: #6366f1;
+    --devops-primary-dark: #4f46e5;
+    --devops-secondary: #8b5cf6;
+    --devops-success: #22c55e;
+    --devops-warning: #f97316;
+    --devops-info: #06b6d4;
+    --devops-danger: #ef4444;
+
+    /* Gradient Variables */
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --gradient-success: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    --gradient-warning: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+    --gradient-hero: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
 }
 
 .dark {
@@ -113,6 +132,10 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+
+    /* Dark mode brand adjustments */
+    --devops-primary: #818cf8;
+    --devops-secondary: #a78bfa;
 }
 
 @layer base {
@@ -121,6 +144,385 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-background text-foreground antialiased;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Better focus states */
+    :focus-visible {
+        outline: 2px solid var(--devops-primary);
+        outline-offset: 2px;
+    }
+}
+
+@layer components {
+    /* ============================================================================
+       Dashboard Card Styles
+       ============================================================================ */
+    .dashboard-card {
+        border-radius: 0.75rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease-out;
+    }
+
+    .dashboard-card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Glass morphism effect */
+    .glass {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dark .glass {
+        background: rgba(17, 24, 39, 0.8);
+        border-color: rgba(55, 65, 81, 0.5);
+    }
+
+    /* ============================================================================
+       Progress Bar Animations
+       ============================================================================ */
+    .progress-bar-animated {
+        animation: progress-fill 1s ease-out forwards;
+    }
+
+    @keyframes progress-fill {
+        from {
+            width: 0%;
+        }
+    }
+
+    .progress-bar-gradient-success {
+        background: linear-gradient(90deg, #22c55e 0%, #10b981 100%);
+    }
+
+    .progress-bar-gradient-warning {
+        background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+    }
+
+    .progress-bar-gradient-info {
+        background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    }
+
+    .progress-bar-gradient-primary {
+        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+    }
+
+    /* Shimmer effect for loading */
+    .shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    /* ============================================================================
+       Skeleton Loading States
+       ============================================================================ */
+    .skeleton {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        border-radius: 0.25rem;
+        background: var(--muted);
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .skeleton-text {
+        height: 1rem;
+        width: 100%;
+    }
+
+    .skeleton-title {
+        height: 1.5rem;
+        width: 75%;
+    }
+
+    .skeleton-avatar {
+        border-radius: 9999px;
+    }
+
+    .skeleton-card {
+        border-radius: 0.75rem;
+    }
+
+    /* ============================================================================
+       Button Enhancements
+       ============================================================================ */
+    .btn-primary {
+        background: linear-gradient(to right, var(--devops-primary), var(--devops-secondary));
+        color: white;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease-out;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+
+    .btn-secondary {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-weight: 500;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease-out;
+    }
+
+    .btn-secondary:hover {
+        filter: brightness(0.95);
+    }
+
+    .btn-secondary:active {
+        transform: scale(0.98);
+    }
+
+    /* ============================================================================
+       Section Headings
+       ============================================================================ */
+    .section-heading {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-heading::before {
+        content: '';
+        width: 0.25rem;
+        height: 1rem;
+        border-radius: 9999px;
+        background: var(--devops-primary);
+    }
+
+    /* ============================================================================
+       Card Hover Effects
+       ============================================================================ */
+    .card-hover {
+        transition: all 0.2s ease-out;
+    }
+
+    .card-hover:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* ============================================================================
+       Badge Styles
+       ============================================================================ */
+    .badge-success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .dark .badge-success {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .badge-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+        border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .dark .badge-warning {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-info {
+        background: rgba(59, 130, 246, 0.1);
+        color: #2563eb;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .dark .badge-info {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-neutral {
+        background: var(--secondary);
+        color: var(--muted-foreground);
+        border: 1px solid var(--border);
+    }
+
+    /* ============================================================================
+       Typography Utilities
+       ============================================================================ */
+    .text-gradient {
+        background: linear-gradient(to right, var(--devops-primary), var(--devops-secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    /* ============================================================================
+       Dashboard-specific utilities
+       ============================================================================ */
+    .stat-value {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--foreground);
+        letter-spacing: -0.025em;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .stat-subtitle {
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+    }
+
+    /* ============================================================================
+       Animations
+       ============================================================================ */
+    .fade-in {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .slide-up {
+        animation: slideUp 0.4s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .scale-in {
+        animation: scaleIn 0.2s ease-out forwards;
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Staggered animation delays */
+    .stagger-1 { animation-delay: 0.05s; }
+    .stagger-2 { animation-delay: 0.1s; }
+    .stagger-3 { animation-delay: 0.15s; }
+    .stagger-4 { animation-delay: 0.2s; }
+    .stagger-5 { animation-delay: 0.25s; }
+}
+
+@layer utilities {
+    /* Touch-friendly tap targets */
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Hide scrollbar but allow scrolling */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Custom scrollbar */
+    .scrollbar-thin {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(156 163 175) transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background-color: rgb(156 163 175);
+        border-radius: 3px;
+    }
+
+    /* Safe area padding for mobile */
+    .safe-area-inset {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        padding-bottom: env(safe-area-inset-bottom);
     }
 }
