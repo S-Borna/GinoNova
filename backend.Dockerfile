@@ -18,6 +18,9 @@ RUN sed -i 's|path = "../../packages/shared/python"|path = "./packages/shared/py
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi --only main
 
+# Ensure uvicorn is installed (fallback if poetry resolution fails)
+RUN pip install uvicorn[standard]==0.30.0
+
 # Copy application code
 COPY apps/backend/src ./src
 
@@ -28,5 +31,5 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Start command (Railway overrides this via Custom Start Command)
-CMD ["python", "-m", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start command - uvicorn with src.main:app (src/ is in WORKDIR /app)
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
