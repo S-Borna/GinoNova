@@ -1,0 +1,93 @@
+"""
+JWT Token handling - Creation and validation
+"""
+from datetime import datetime, timedelta
+from typing import Optional
+from uuid import UUID
+
+from jose import JWTError, jwt
+
+# JWT Configuration
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_HOURS = 24
+
+# Secret key - in production, use a secure random key from environment
+# TODO: Move to settings in production
+SECRET_KEY = "devops-hub-secret-key-change-in-production-abc123xyz789"
+
+
+def create_access_token(
+    user_id: UUID,
+    email: str,
+    role: str = "user",
+    expires_delta: Optional[timedelta] = None
+) -> str:
+    """
+    Create a JWT access token.
+
+    Args:
+        user_id: User's UUID
+        email: User's email
+        role: User's role (user/admin)
+        expires_delta: Optional custom expiration time
+
+    Returns:
+        Encoded JWT token string
+    """
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+
+    to_encode = {
+        "sub": str(user_id),
+        "email": email,
+        "role": role,
+        "iat": datetime.utcnow(),
+        "exp": expire,
+        "version": "1.0",
+    }
+
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def decode_access_token(token: str) -> Optional[dict]:
+    """
+    Decode and validate a JWT access token.
+
+    Args:
+        token: JWT token string
+
+    Returns:
+        Decoded token payload if valid, None if invalid
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        return None
+
+
+def get_token_user_id(token: str) -> Optional[UUID]:
+    """
+    Extract user ID from a JWT token.
+
+    Args:
+        token: JWT token string
+
+    Returns:
+        User UUID if valid token, None otherwise
+    """
+    payload = decode_access_token(token)
+    if payload is None:
+        return None
+
+    user_id_str = payload.get("sub")
+    if user_id_str is None:
+        return None
+
+    try:
+        return UUID(user_id_str)
+    except ValueError:
+        return None

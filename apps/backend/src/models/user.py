@@ -17,7 +17,7 @@ class User:
     User model placeholder.
     In Phase 2, this will be a SQLAlchemy model with actual database persistence.
     """
-    
+
     def __init__(
         self,
         email: str,
@@ -39,7 +39,7 @@ class User:
         self.preferences = preferences or {}
         self.created_at = created_at or datetime.utcnow()
         self.updated_at = updated_at or datetime.utcnow()
-    
+
     def to_dict(self) -> dict:
         """Convert user to dictionary (excluding password)"""
         return {
