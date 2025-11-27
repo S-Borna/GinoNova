@@ -70,7 +70,7 @@ def log_ai_event(
         }
 
         log_file = _get_log_file()
-        
+
         # Append JSON line to log file
         with open(log_file, "a", encoding="utf-8") as f:
             f.write(json.dumps(log_entry, default=str) + "\n")

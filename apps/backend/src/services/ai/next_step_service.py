@@ -2,6 +2,7 @@
 Next Step Service
 Phase 7.7: AI service layer with DB integration and caching
 Phase 7.13: Added AI event logging for telemetry diagnostics
+Phase 7.14: Added debug frames for error isolation
 
 Provides the single most optimal next action recommendation
 using real data from repositories and the deterministic rule engine.
@@ -26,6 +27,7 @@ from ...db import user_repository, module_repository, task_repository, progress_
 from ...db.memory import USERS
 from ...schemas.user import UserInDB
 from ...ai_logs.logger import log_ai_event
+from ...ai_diagnostics.debug_frames import build_debug_frame, log_debug_frame
 
 logger = logging.getLogger(__name__)
 
@@ -63,69 +65,97 @@ class NextStepService:
         Returns:
             NextStepResponse with the recommended action
         """
-        logger.info(f"get_next_step called: user_id={user_id}")
+        errors: list[str] = []
+        context_dict: dict[str, Any] = {}
+        output_dict: Optional[dict[str, Any]] = None
 
-        # Build cache key
-        cache_key = f"next_step:{user_id}"
+        try:
+            logger.info(f"get_next_step called: user_id={user_id}")
 
-        # Check cache
-        cached = self._get_from_cache(cache_key)
-        if cached is not None:
-            logger.debug(f"Cache hit for {cache_key}")
-            return cached
+            # Build cache key
+            cache_key = f"next_step:{user_id}"
 
-        now = datetime.utcnow()
+            # Check cache
+            cached = self._get_from_cache(cache_key)
+            if cached is not None:
+                logger.debug(f"Cache hit for {cache_key}")
+                return cached
 
-        # Resolve user
-        user = self._resolve_user(user_id)
-        resolved_user_id = user.id if user else None
+            now = datetime.utcnow()
 
-        # Build context and load data
-        user_ctx = self._build_user_context(user, resolved_user_id)
-        modules = self._load_modules(resolved_user_id)
-        tasks = self._load_tasks(resolved_user_id)
-        studyflows = self._get_studyflow_options()
+            # Resolve user
+            user = self._resolve_user(user_id)
+            resolved_user_id = user.id if user else None
 
-        # Compute scores
-        scores = compute_recommendation_scores(user_ctx, modules, tasks, studyflows)
+            # Build context and load data
+            user_ctx = self._build_user_context(user, resolved_user_id)
+            context_dict = dict(user_ctx)  # Capture for debug frame
+            modules = self._load_modules(resolved_user_id)
+            tasks = self._load_tasks(resolved_user_id)
+            studyflows = self._get_studyflow_options()
 
-        # Determine best action by comparing top scores
-        best_action = self._select_best_action(scores, user_ctx)
+            # Compute scores
+            scores = compute_recommendation_scores(user_ctx, modules, tasks, studyflows)
 
-        logger.debug(
-            f"Selected next_step: action_type={best_action['action_type']}, "
-            f"score={best_action['score']}"
-        )
+            # Determine best action by comparing top scores
+            best_action = self._select_best_action(scores, user_ctx)
 
-        response = NextStepResponse(
-            action_type=best_action["action_type"],
-            action_id=best_action["action_id"],
-            title=best_action["title"],
-            description=best_action["description"],
-            confidence=best_action["confidence"],
-            estimated_duration=best_action["estimated_duration"],
-            generated_at=now,
-        )
+            logger.debug(
+                f"Selected next_step: action_type={best_action['action_type']}, "
+                f"score={best_action['score']}"
+            )
 
-        # Store in cache
-        self._store_in_cache(cache_key, response)
+            response = NextStepResponse(
+                action_type=best_action["action_type"],
+                action_id=best_action["action_id"],
+                title=best_action["title"],
+                description=best_action["description"],
+                confidence=best_action["confidence"],
+                estimated_duration=best_action["estimated_duration"],
+                generated_at=now,
+            )
 
-        # Phase 7.13: Log next_step event for telemetry
-        request_id = str(uuid4())
-        log_ai_event(
-            event_type="next_step_selected",
-            payload={
+            # Capture output for debug frame
+            output_dict = {
                 "action_type": best_action["action_type"],
                 "action_id": best_action["action_id"],
                 "confidence": best_action["confidence"],
-                "estimated_duration": best_action["estimated_duration"],
-            },
-            engine="next_step_service",
-            request_id=request_id,
-            user_id=str(resolved_user_id) if resolved_user_id else None,
-        )
+            }
 
-        return response
+            # Store in cache
+            self._store_in_cache(cache_key, response)
+
+            # Phase 7.13: Log next_step event for telemetry
+            request_id = str(uuid4())
+            log_ai_event(
+                event_type="next_step_selected",
+                payload={
+                    "action_type": best_action["action_type"],
+                    "action_id": best_action["action_id"],
+                    "confidence": best_action["confidence"],
+                    "estimated_duration": best_action["estimated_duration"],
+                },
+                engine="next_step_service",
+                request_id=request_id,
+                user_id=str(resolved_user_id) if resolved_user_id else None,
+            )
+
+            return response
+
+        except Exception as e:
+            errors.append(f"NextStepService error: {str(e)}")
+            logger.error(f"NextStepService exception: {e}")
+            raise
+
+        finally:
+            # Phase 7.14: Always build and log debug frame
+            frame = build_debug_frame(
+                context=context_dict,
+                engine="next_step_service",
+                output=output_dict,
+                errors=errors,
+            )
+            log_debug_frame(frame)
 
     def _resolve_user(self, user_id: Optional[UUID]) -> Optional[UserInDB]:
         """Resolve user from ID or fallback to first available user."""

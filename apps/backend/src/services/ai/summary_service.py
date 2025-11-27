@@ -2,6 +2,7 @@
 Summary Service
 Phase 7.7: AI service layer with DB integration and caching
 Phase 7.13: Added AI event logging for telemetry diagnostics
+Phase 7.14: Added debug frames for error isolation
 
 Generates AI-powered daily and weekly summaries using real data
 from repositories and the deterministic rule engine.
@@ -26,6 +27,7 @@ from ...db.memory import USERS
 from ...schemas.user import UserInDB
 from ...schemas.progress import ProgressInDB
 from ...ai_logs.logger import log_ai_event
+from ...ai_diagnostics.debug_frames import build_debug_frame, log_debug_frame
 
 logger = logging.getLogger(__name__)
 
@@ -63,85 +65,115 @@ class SummaryService:
         Returns:
             DailySummaryResponse with full daily summary
         """
-        logger.info(f"get_daily_summary called: user_id={user_id}")
+        errors: list[str] = []
+        context_dict: dict[str, Any] = {}
+        output_dict: Optional[dict[str, Any]] = None
 
-        now = datetime.utcnow()
-        today = now.strftime("%Y-%m-%d")
+        try:
+            logger.info(f"get_daily_summary called: user_id={user_id}")
 
-        # Build cache key
-        cache_key = f"summary:{user_id}:{today}"
+            now = datetime.utcnow()
+            today = now.strftime("%Y-%m-%d")
 
-        # Check cache
-        cached = self._get_from_cache(cache_key)
-        if cached is not None:
-            logger.debug(f"Cache hit for {cache_key}")
-            return cached
+            # Build cache key
+            cache_key = f"summary:{user_id}:{today}"
 
-        # Resolve user
-        user = self._resolve_user(user_id)
-        resolved_user_id = user.id if user else None
+            # Check cache
+            cached = self._get_from_cache(cache_key)
+            if cached is not None:
+                logger.debug(f"Cache hit for {cache_key}")
+                return cached
 
-        # Build context and progress data from real DB
-        user_ctx = self._build_user_context(user, resolved_user_id)
-        progress = self._build_progress_data(resolved_user_id)
+            # Resolve user
+            user = self._resolve_user(user_id)
+            resolved_user_id = user.id if user else None
 
-        # Compute highlights using rule engine
-        raw_highlights = compute_daily_highlights(user_ctx, progress)
+            # Build context and progress data from real DB
+            user_ctx = self._build_user_context(user, resolved_user_id)
+            progress = self._build_progress_data(resolved_user_id)
+            context_dict = dict(user_ctx)  # Capture for debug frame
 
-        logger.debug(f"Computed {len(raw_highlights)} highlights from DB data")
+            # Compute highlights using rule engine
+            raw_highlights = compute_daily_highlights(user_ctx, progress)
 
-        # Convert engine highlights to schema highlights
-        highlights = [
-            SummaryHighlight(
-                type=h["type"],
-                title=h["title"],
-                description=h["description"],
-                metric=h.get("metric"),
+            logger.debug(f"Computed {len(raw_highlights)} highlights from DB data")
+
+            # Convert engine highlights to schema highlights
+            highlights = [
+                SummaryHighlight(
+                    type=h["type"],
+                    title=h["title"],
+                    description=h["description"],
+                    metric=h.get("metric"),
+                )
+                for h in raw_highlights
+            ]
+
+            # Generate greeting based on time and progress
+            greeting = self._generate_greeting(user_ctx, progress)
+
+            # Generate motivation message
+            motivation = self._generate_motivation(user_ctx, progress)
+
+            response = DailySummaryResponse(
+                date=today,
+                greeting=greeting,
+                highlights=highlights,
+                tasks_completed=progress.get("tasks_completed_today", 0),
+                xp_earned=progress.get("xp_earned_today", 0),
+                study_minutes=progress.get("study_minutes_today", 0),
+                streak_days=progress.get("streak_days", 0),
+                motivation_message=motivation,
+                generated_at=now,
             )
-            for h in raw_highlights
-        ]
 
-        # Generate greeting based on time and progress
-        greeting = self._generate_greeting(user_ctx, progress)
-
-        # Generate motivation message
-        motivation = self._generate_motivation(user_ctx, progress)
-
-        response = DailySummaryResponse(
-            date=today,
-            greeting=greeting,
-            highlights=highlights,
-            tasks_completed=progress.get("tasks_completed_today", 0),
-            xp_earned=progress.get("xp_earned_today", 0),
-            study_minutes=progress.get("study_minutes_today", 0),
-            streak_days=progress.get("streak_days", 0),
-            motivation_message=motivation,
-            generated_at=now,
-        )
-
-        # Store in cache
-        self._store_in_cache(cache_key, response)
-
-        # Phase 7.13: Log summary event for telemetry
-        request_id = str(uuid4())
-        log_ai_event(
-            event_type="summary_generated",
-            payload={
+            # Capture output for debug frame
+            output_dict = {
                 "date": today,
                 "highlights_count": len(highlights),
                 "tasks_completed": response.tasks_completed,
                 "xp_earned": response.xp_earned,
-                "streak_days": response.streak_days,
-            },
-            engine="summary_service",
-            request_id=request_id,
-            user_id=str(resolved_user_id) if resolved_user_id else None,
-        )
+            }
 
-        logger.debug(
-            f"Returning daily summary: date={response.date}, "
-            f"tasks={response.tasks_completed}, xp={response.xp_earned}"
-        )
+            # Store in cache
+            self._store_in_cache(cache_key, response)
+
+            # Phase 7.13: Log summary event for telemetry
+            request_id = str(uuid4())
+            log_ai_event(
+                event_type="summary_generated",
+                payload={
+                    "date": today,
+                    "highlights_count": len(highlights),
+                    "tasks_completed": response.tasks_completed,
+                    "xp_earned": response.xp_earned,
+                    "streak_days": response.streak_days,
+                },
+                engine="summary_service",
+                request_id=request_id,
+                user_id=str(resolved_user_id) if resolved_user_id else None,
+            )
+
+            logger.debug(
+                f"Returning daily summary: date={response.date}, "
+                f"tasks={response.tasks_completed}, xp={response.xp_earned}"
+            )
+            return response
+
+        except Exception as e:
+            errors.append(f"SummaryService error: {str(e)}")
+            logger.error(f"SummaryService exception: {e}")
+            raise
+
+        finally:
+            # Phase 7.14: Always build and log debug frame
+            frame = build_debug_frame(
+                context=context_dict,
+                engine="summary_service",
+                output=output_dict,
+                errors=errors,
+            )
+            log_debug_frame(frame)
         return response
 
     def get_weekly_summary(
