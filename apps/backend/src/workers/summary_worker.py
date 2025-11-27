@@ -1,15 +1,16 @@
 """
 Summary Worker
-Phase 7.9: Stubbed worker for async daily summary generation
+Phase 7.10: Stubbed worker for async daily summary generation
 
 Uses deterministic rule engine calls only.
 No DB writes, no async scheduling, no queues.
+Includes strict error handling and metadata.
 """
 from datetime import datetime, timezone
 from typing import Any
 
 from .base import BaseWorker
-from .worker_protocol import WorkerTask, SummaryPayload
+from .worker_protocol import WorkerTask
 
 # Import rule engine for deterministic computations
 from shared.ai.engine.scoring import UserContext, TaskData, ModuleData
@@ -116,6 +117,9 @@ class SummaryWorker(BaseWorker):
 
         Returns:
             Dict with greeting, highlights, progress, motivational_message
+
+        Raises:
+            Exception: On rule engine failure (handled by BaseWorker)
         """
         user_id = payload.get("user_id")
 
@@ -128,13 +132,16 @@ class SummaryWorker(BaseWorker):
         time_of_day = user_ctx.get("time_of_day", "afternoon")
         greeting = GREETINGS.get(time_of_day, GREETINGS["afternoon"])
 
-        # Compute daily highlights using heuristics
-        highlights = compute_daily_highlights(
-            user_ctx,
-            FALLBACK_TASKS,
-            FALLBACK_MODULES,
-            FALLBACK_PROGRESS,
-        )
+        # Compute daily highlights using heuristics with error handling
+        try:
+            highlights = compute_daily_highlights(
+                user_ctx,
+                FALLBACK_TASKS,
+                FALLBACK_MODULES,
+                FALLBACK_PROGRESS,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Daily highlights heuristics engine failed: {e}") from e
 
         # Format highlights for response
         formatted_highlights = [
@@ -175,4 +182,8 @@ class SummaryWorker(BaseWorker):
             "motivational_message": motivational,
             "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
             "user_id": user_id,
+            "_metadata": {
+                "heuristics_used": ["compute_daily_highlights"],
+                "highlight_count": len(formatted_highlights),
+            },
         }
