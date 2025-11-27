@@ -514,6 +514,42 @@ class SummaryService:
         else:
             return "Start a new streak today! Consistency beats intensity."
 
+    # =========================================================================
+    # ASYNC WORKER PATH (Phase 7.9)
+    # =========================================================================
+
+    def get_daily_summary_async(
+        self,
+        user_id: Optional[UUID],
+    ) -> dict[str, Any]:
+        """
+        Generate daily summary via async worker path.
+
+        Phase 7.9: Builds payload and delegates to SummaryWorker stub.
+        Currently synchronous - async scheduling will be added later.
+
+        Args:
+            user_id: Optional user UUID for personalized summary
+
+        Returns:
+            WorkerResult dict with summary data
+        """
+        from ...workers import SummaryWorker, SummaryPayload
+
+        logger.info(f"get_daily_summary_async called: user_id={user_id}")
+
+        # Build payload
+        payload: SummaryPayload = {
+            "user_id": str(user_id) if user_id else None,
+        }
+
+        # Invoke worker (direct call for now - no actual async)
+        worker = SummaryWorker()
+        result = worker.run(payload)
+
+        logger.debug(f"Worker result: success={result['success']}, task_type={result['task_type']}")
+        return result
+
     def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:
         """
         Invalidate cached summaries for a user or all users.

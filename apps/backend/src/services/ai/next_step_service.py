@@ -437,6 +437,42 @@ class NextStepService:
             {"mode": "sprint", "duration": 15, "intensity": "low"},
         ]
 
+    # =========================================================================
+    # ASYNC WORKER PATH (Phase 7.9)
+    # =========================================================================
+
+    def get_next_step_async(
+        self,
+        user_id: Optional[UUID],
+    ) -> dict[str, Any]:
+        """
+        Determine next step via async worker path.
+
+        Phase 7.9: Builds payload and delegates to NextStepWorker stub.
+        Currently synchronous - async scheduling will be added later.
+
+        Args:
+            user_id: Optional user UUID for personalization
+
+        Returns:
+            WorkerResult dict with next step data
+        """
+        from ...workers import NextStepWorker, NextStepPayload
+
+        logger.info(f"get_next_step_async called: user_id={user_id}")
+
+        # Build payload
+        payload: NextStepPayload = {
+            "user_id": str(user_id) if user_id else None,
+        }
+
+        # Invoke worker (direct call for now - no actual async)
+        worker = NextStepWorker()
+        result = worker.run(payload)
+
+        logger.debug(f"Worker result: success={result['success']}, task_type={result['task_type']}")
+        return result
+
     def invalidate_cache(self, user_id: Optional[UUID] = None) -> int:
         """
         Invalidate cached next_step results for a user or all users.
