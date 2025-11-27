@@ -479,33 +479,73 @@ function SystemInfoPanel({ system, version }: { system: DashboardSummary["system
 }
 
 // ============================================================================
-// REFRESH BUTTON
+// REFRESH CONTROLS
 // ============================================================================
 
-function RefreshButton({ onClick, loading }: { onClick: () => void; loading: boolean }) {
+function RefreshControls({
+    onRefresh,
+    loading,
+    autoRefreshEnabled,
+    onToggleAutoRefresh,
+    lastUpdated,
+}: {
+    onRefresh: () => void
+    loading: boolean
+    autoRefreshEnabled: boolean
+    onToggleAutoRefresh: () => void
+    lastUpdated: Date | null
+}) {
+    const formatLastUpdated = (date: Date | null) => {
+        if (!date) return "Never"
+        return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    }
+
     return (
-        <Button
-            variant="outline"
-            size="sm"
-            onClick={onClick}
-            disabled={loading}
-            className="gap-2 h-9 px-4 rounded-lg text-xs font-medium shadow-sm hover:shadow transition-shadow"
-        >
-            <svg
-                className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+        <div className="flex items-center gap-4">
+            {/* Last Updated */}
+            {lastUpdated && (
+                <span className="text-xs text-gray-400">
+                    Updated {formatLastUpdated(lastUpdated)}
+                </span>
+            )}
+
+            {/* Auto-refresh Toggle */}
+            <button
+                onClick={onToggleAutoRefresh}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    autoRefreshEnabled
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100"
+                }`}
             >
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-            </svg>
-            {loading ? "Refreshing..." : "Refresh"}
-        </Button>
+                <div className={`w-2 h-2 rounded-full ${autoRefreshEnabled ? "bg-emerald-500 animate-pulse" : "bg-gray-400"}`} />
+                Auto-refresh {autoRefreshEnabled ? "ON" : "OFF"}
+            </button>
+
+            {/* Manual Refresh Button */}
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={onRefresh}
+                disabled={loading}
+                className="gap-2 h-9 px-4 rounded-lg text-xs font-medium shadow-sm hover:shadow transition-shadow"
+            >
+                <svg
+                    className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                </svg>
+                {loading ? "Refreshing..." : "Refresh"}
+            </Button>
+        </div>
     )
 }
 
@@ -513,12 +553,17 @@ function RefreshButton({ onClick, loading }: { onClick: () => void; loading: boo
 // DASHBOARD CONTENT
 // ============================================================================
 
+// Auto-refresh interval (60 seconds)
+const AUTO_REFRESH_INTERVAL = 60000
+
 function DashboardContent() {
     const { user, logout } = useAuth()
     const [dashboard, setDashboard] = useState<DashboardSummary | null>(null)
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false)
+    const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
     const fetchDashboard = useCallback(async (isRefresh = false) => {
         if (isRefresh) {
@@ -532,6 +577,7 @@ function DashboardContent() {
         if (result.ok) {
             setDashboard(result.data)
             setError(null)
+            setLastUpdated(new Date())
         } else {
             setError(result.message)
         }
@@ -540,12 +586,28 @@ function DashboardContent() {
         setRefreshing(false)
     }, [user?.id])
 
+    // Initial fetch
     useEffect(() => {
         fetchDashboard()
     }, [fetchDashboard])
 
+    // Auto-refresh effect
+    useEffect(() => {
+        if (!autoRefreshEnabled) return
+
+        const intervalId = setInterval(() => {
+            fetchDashboard(true)
+        }, AUTO_REFRESH_INTERVAL)
+
+        return () => clearInterval(intervalId)
+    }, [autoRefreshEnabled, fetchDashboard])
+
     const handleRefresh = () => {
         fetchDashboard(true)
+    }
+
+    const toggleAutoRefresh = () => {
+        setAutoRefreshEnabled(prev => !prev)
     }
 
     return (
@@ -602,9 +664,15 @@ function DashboardContent() {
                     />
                 </div>
 
-                {/* Refresh Button Row */}
+                {/* Refresh Controls Row */}
                 <div className="flex justify-end mb-6">
-                    <RefreshButton onClick={handleRefresh} loading={refreshing} />
+                    <RefreshControls
+                        onRefresh={handleRefresh}
+                        loading={refreshing}
+                        autoRefreshEnabled={autoRefreshEnabled}
+                        onToggleAutoRefresh={toggleAutoRefresh}
+                        lastUpdated={lastUpdated}
+                    />
                 </div>
 
                 {/* Loading State: Skeletons */}
