@@ -7,6 +7,7 @@ from .tasks import tasks_router
 from .studyflow import studyflow_router
 from .progress import progress_router
 from .dashboard import dashboard_router
+from .ai import ai_router
 
 api_router = APIRouter()
 
@@ -18,3 +19,4 @@ api_router.include_router(tasks_router, prefix="/tasks", tags=["tasks"])
 api_router.include_router(studyflow_router, prefix="/studyflow", tags=["studyflow"])
 api_router.include_router(progress_router, prefix="/progress", tags=["progress"])
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboard"])
+api_router.include_router(ai_router, prefix="/ai", tags=["ai"])
