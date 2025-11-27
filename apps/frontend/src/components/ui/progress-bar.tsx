@@ -1,7 +1,7 @@
 /**
  * ProgressBar Component
  * Phase D.1: Apple-Inspired Progress Visualization
- * 
+ *
  * Features:
  * - Multiple size variants
  * - Gradient, solid, and striped styles
@@ -102,8 +102,8 @@ const progressBarFillVariants = cva(
 
 export interface ProgressBarProps
     extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">,
-        VariantProps<typeof progressBarContainerVariants>,
-        Omit<VariantProps<typeof progressBarFillVariants>, "color"> {
+    VariantProps<typeof progressBarContainerVariants>,
+    Omit<VariantProps<typeof progressBarFillVariants>, "color"> {
     /**
      * Progress value (0-100)
      */
@@ -188,7 +188,7 @@ export function ProgressBar({
                     >
                         {/* Shimmer overlay for gradient variant */}
                         {(variant === "gradient" || variant === "glow") && (
-                            <div 
+                            <div
                                 className="w-full h-full animate-shimmer opacity-30"
                                 aria-hidden="true"
                             />

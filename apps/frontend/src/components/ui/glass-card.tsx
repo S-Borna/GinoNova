@@ -1,7 +1,7 @@
 /**
  * GlassCard Component
  * Phase D.1: Apple-Inspired Glassmorphism Card
- * 
+ *
  * Premium glass effect with subtle blur, soft borders,
  * and elegant shadows for a sophisticated look.
  */
@@ -158,7 +158,7 @@ const glassCardVariants = cva(
 
 export interface GlassCardProps
     extends React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof glassCardVariants> {
+    VariantProps<typeof glassCardVariants> {
     /**
      * Optional shine effect overlay
      */
