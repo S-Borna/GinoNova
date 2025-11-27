@@ -62,7 +62,7 @@ class TestTraceIdFormat:
     def test_uuid4_hex_format(self) -> None:
         """Test that uuid4().hex produces valid trace_id."""
         from uuid import uuid4
-        
+
         for _ in range(10):
             trace_id = uuid4().hex
             assert TRACE_ID_PATTERN.match(trace_id)
@@ -119,7 +119,7 @@ class TestWorkerResultMetadata:
         """Test valid WorkerResult with trace_id passes validation."""
         from datetime import datetime, timezone
         from uuid import uuid4
-        
+
         result = {
             "success": True,
             "data": {"key": "value"},
@@ -138,7 +138,7 @@ class TestWorkerResultMetadata:
     def test_missing_trace_id_raises(self) -> None:
         """Test missing trace_id raises error."""
         from datetime import datetime, timezone
-        
+
         result = {
             "success": True,
             "data": {"key": "value"},
@@ -160,7 +160,7 @@ class TestWorkerResultMetadata:
     def test_invalid_trace_id_format_raises(self) -> None:
         """Test invalid trace_id format raises error."""
         from datetime import datetime, timezone
-        
+
         result = {
             "success": True,
             "data": {"key": "value"},
@@ -190,14 +190,14 @@ class TestWorkerExecutionPropagation:
     def test_recommend_worker_includes_trace_id(self) -> None:
         """Test RecommendWorker includes trace_id in result."""
         from workers import RecommendWorker
-        
+
         worker = RecommendWorker()
         result = worker.run({
             "user_id": None,
             "limit": 5,
             "include_reasoning": False,
         })
-        
+
         assert "metadata" in result
         assert "trace_id" in result["metadata"]
         assert TRACE_ID_PATTERN.match(result["metadata"]["trace_id"])
@@ -205,12 +205,12 @@ class TestWorkerExecutionPropagation:
     def test_next_step_worker_includes_trace_id(self) -> None:
         """Test NextStepWorker includes trace_id in result."""
         from workers import NextStepWorker
-        
+
         worker = NextStepWorker()
         result = worker.run({
             "user_id": None,
         })
-        
+
         assert "metadata" in result
         assert "trace_id" in result["metadata"]
         assert TRACE_ID_PATTERN.match(result["metadata"]["trace_id"])
@@ -218,13 +218,13 @@ class TestWorkerExecutionPropagation:
     def test_difficulty_worker_includes_trace_id(self) -> None:
         """Test DifficultyWorker includes trace_id in result."""
         from workers import DifficultyWorker
-        
+
         worker = DifficultyWorker()
         result = worker.run({
             "user_id": None,
             "task_id": "test-task-123",
         })
-        
+
         assert "metadata" in result
         assert "trace_id" in result["metadata"]
         assert TRACE_ID_PATTERN.match(result["metadata"]["trace_id"])
@@ -232,12 +232,12 @@ class TestWorkerExecutionPropagation:
     def test_summary_worker_includes_trace_id(self) -> None:
         """Test SummaryWorker includes trace_id in result."""
         from workers import SummaryWorker
-        
+
         worker = SummaryWorker()
         result = worker.run({
             "user_id": None,
         })
-        
+
         assert "metadata" in result
         assert "trace_id" in result["metadata"]
         assert TRACE_ID_PATTERN.match(result["metadata"]["trace_id"])
@@ -253,34 +253,34 @@ class TestDurationValidation:
     def test_duration_is_positive(self) -> None:
         """Test duration_ms is positive after execution."""
         from workers import RecommendWorker
-        
+
         worker = RecommendWorker()
         result = worker.run({
             "user_id": None,
             "limit": 5,
             "include_reasoning": False,
         })
-        
+
         assert result["metadata"]["duration_ms"] > 0
 
     def test_duration_is_float(self) -> None:
         """Test duration_ms is a float."""
         from workers import NextStepWorker
-        
+
         worker = NextStepWorker()
         result = worker.run({
             "user_id": None,
         })
-        
+
         assert isinstance(result["metadata"]["duration_ms"], float)
 
     def test_different_executions_have_unique_trace_ids(self) -> None:
         """Test each execution gets a unique trace_id."""
         from workers import RecommendWorker
-        
+
         worker = RecommendWorker()
         trace_ids = set()
-        
+
         for _ in range(5):
             result = worker.run({
                 "user_id": None,
@@ -288,6 +288,6 @@ class TestDurationValidation:
                 "include_reasoning": False,
             })
             trace_ids.add(result["metadata"]["trace_id"])
-        
+
         # All trace_ids should be unique
         assert len(trace_ids) == 5

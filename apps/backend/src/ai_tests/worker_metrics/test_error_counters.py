@@ -42,7 +42,7 @@ class TestCounter:
         """Test counter increments by 1 by default."""
         c = Counter("test_inc_default")
         c.inc()
-        
+
         data = c.to_dict()
         assert data["count"] == 1
 
@@ -50,7 +50,7 @@ class TestCounter:
         """Test counter increments by custom amount."""
         c = Counter("test_inc_custom")
         c.inc(5)
-        
+
         data = c.to_dict()
         assert data["count"] == 5
 
@@ -60,7 +60,7 @@ class TestCounter:
         c.inc()
         c.inc(3)
         c.inc(2)
-        
+
         data = c.to_dict()
         assert data["count"] == 6
 
@@ -68,7 +68,7 @@ class TestCounter:
         """Test counter serialization."""
         c = Counter("test_serialize")
         c.inc(10)
-        
+
         data = c.to_dict()
         assert data["name"] == "test_serialize"
         assert data["count"] == 10
@@ -85,7 +85,7 @@ class TestRegistryCounters:
         """Test registry creates counters lazily."""
         registry = MetricRegistry()
         c = registry.get_counter("error_task")
-        
+
         assert isinstance(c, Counter)
         assert c.name == "error_task"
 
@@ -94,7 +94,7 @@ class TestRegistryCounters:
         registry = MetricRegistry()
         c1 = registry.get_counter("same_error")
         c2 = registry.get_counter("same_error")
-        
+
         assert c1 is c2
 
     def test_registry_creates_separate_counters(self) -> None:
@@ -102,7 +102,7 @@ class TestRegistryCounters:
         registry = MetricRegistry()
         c1 = registry.get_counter("error_a")
         c2 = registry.get_counter("error_b")
-        
+
         assert c1 is not c2
 
     def test_registry_to_dict_includes_counters(self) -> None:
@@ -110,7 +110,7 @@ class TestRegistryCounters:
         registry = MetricRegistry()
         registry.get_counter("error_x").inc()
         registry.get_counter("error_y").inc(5)
-        
+
         data = registry.to_dict()
         assert "errors" in data
         assert "error_x" in data["errors"]
@@ -133,7 +133,7 @@ class TestGlobalErrorRecording:
     def test_record_worker_error(self) -> None:
         """Test recording worker error via helper function."""
         record_worker_error("recommend")
-        
+
         metrics = get_all_metrics()
         assert metrics["errors"]["recommend"]["count"] == 1
 
@@ -142,7 +142,7 @@ class TestGlobalErrorRecording:
         record_worker_error("difficulty")
         record_worker_error("difficulty")
         record_worker_error("difficulty")
-        
+
         metrics = get_all_metrics()
         assert metrics["errors"]["difficulty"]["count"] == 3
 
@@ -151,7 +151,7 @@ class TestGlobalErrorRecording:
         record_worker_error("recommend")
         record_worker_error("next_step")
         record_worker_error("summary")
-        
+
         metrics = get_all_metrics()
         assert "recommend" in metrics["errors"]
         assert "next_step" in metrics["errors"]
@@ -161,7 +161,7 @@ class TestGlobalErrorRecording:
         """Test getting worker error counter."""
         record_worker_error("next_step")
         record_worker_error("next_step")
-        
+
         c = get_worker_errors("next_step")
         data = c.to_dict()
         assert data["count"] == 2
@@ -181,14 +181,14 @@ class TestErrorAndLatencyCombined:
     def test_both_metrics_recorded(self) -> None:
         """Test recording both latency and errors."""
         from shared.ai.engine.metrics import record_worker_latency
-        
+
         # Record some successful executions
         record_worker_latency("recommend", 15.0)
         record_worker_latency("recommend", 25.0)
-        
+
         # Record an error
         record_worker_error("recommend")
-        
+
         metrics = get_all_metrics()
         assert metrics["latency"]["recommend"]["count"] == 2
         assert metrics["errors"]["recommend"]["count"] == 1
@@ -196,17 +196,17 @@ class TestErrorAndLatencyCombined:
     def test_error_rate_calculation(self) -> None:
         """Test calculating error rate from metrics."""
         from shared.ai.engine.metrics import record_worker_latency
-        
+
         # 8 successes, 2 errors = 20% error rate
         for _ in range(8):
             record_worker_latency("difficulty", 30.0)
         for _ in range(2):
             record_worker_error("difficulty")
-        
+
         metrics = get_all_metrics()
         success_count = metrics["latency"]["difficulty"]["count"]
         error_count = metrics["errors"]["difficulty"]["count"]
         total = success_count + error_count
         error_rate = error_count / total * 100
-        
+
         assert error_rate == 20.0
