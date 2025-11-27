@@ -1,8 +1,8 @@
 [build]
-builder = "Docker"
+builder = "DOCKERFILE"
+dockerfilePath = "./Dockerfile"
 
 [deploy]
-startCommand = "poetry run uvicorn src.main:app --host 0.0.0.0 --port 8000"
-
-[env]
-RAILWAY_ENV = "production"
+startCommand = "poetry run uvicorn src.main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
