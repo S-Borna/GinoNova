@@ -2,31 +2,36 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install poetry
-RUN pip install poetry==1.8.3
+# Install build tools (pip-based installation, no Poetry dependency resolution)
+RUN pip install --upgrade pip
 
-# Copy shared python package (build context is repo root)
-COPY packages/shared/python ./packages/shared/python
+# Copy shared python package first (build context is repo root)
+COPY packages/shared/python /app/packages/shared/python
 
-# Copy dependency files from backend directory
-COPY apps/backend/pyproject.toml apps/backend/poetry.lock ./
+# Install shared package
+RUN pip install /app/packages/shared/python
 
-# Fix shared package path for Docker context (../../packages -> ./packages)
-RUN sed -i 's|path = "../../packages/shared/python"|path = "./packages/shared/python"|' pyproject.toml
+# Copy backend application
+COPY apps/backend /app/backend
 
-# Install dependencies (no virtualenv, install to system)
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi --only main
+# Install backend dependencies directly via pip (bypass Poetry lockfile)
+RUN pip install \
+    "fastapi>=0.111.0" \
+    "uvicorn[standard]>=0.30.0" \
+    "pydantic[email]>=2.0.0" \
+    "pydantic-settings>=2.2.1" \
+    "python-jose[cryptography]>=3.3.0" \
+    "bcrypt>=4.0.0"
 
-# Ensure uvicorn is installed (fallback if poetry resolution fails)
-RUN pip install uvicorn[standard]==0.30.0
-
-# Copy application code
-COPY apps/backend/src ./src
+# Set PYTHONPATH so backend can import src modules
+ENV PYTHONPATH="/app/backend:${PYTHONPATH}"
 
 # Create non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
+
+# Set working directory to backend for uvicorn
+WORKDIR /app/backend
 
 # Expose port (Railway sets $PORT dynamically)
 EXPOSE 8000
