@@ -512,11 +512,10 @@ function RefreshControls({
             {/* Auto-refresh Toggle */}
             <button
                 onClick={onToggleAutoRefresh}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    autoRefreshEnabled
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${autoRefreshEnabled
                         ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                         : "bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100"
-                }`}
+                    }`}
             >
                 <div className={`w-2 h-2 rounded-full ${autoRefreshEnabled ? "bg-emerald-500 animate-pulse" : "bg-gray-400"}`} />
                 Auto-refresh {autoRefreshEnabled ? "ON" : "OFF"}
