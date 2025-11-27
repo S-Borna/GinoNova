@@ -1,33 +1,33 @@
 name: Backend CI
 
 on:
-    push:
-        branches: ["main"]
-    pull_request:
+  push:
+    branches: ["main"]
+  pull_request:
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Setup Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.11"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-            - name: Install Poetry
-              run: pip install poetry==1.8.3
+      - name: Install Poetry
+        run: pip install poetry==1.8.3
 
-            - name: Install dependencies
-              working-directory: apps/backend
-              run: poetry install --no-interaction --no-ansi
+      - name: Install dependencies
+        working-directory: apps/backend
+        run: poetry install --no-interaction --no-ansi
 
-            - name: Run tests (placeholder)
-              working-directory: apps/backend
-              run: echo "No tests yet"
+      - name: Run tests (placeholder)
+        working-directory: apps/backend
+        run: echo "No tests yet"
 
-            - name: Build Docker image
-              run: docker build -f apps/backend/Dockerfile -t saas-backend .
+      - name: Build Docker image
+        run: docker build -f backend.Dockerfile -t saas-backend .
