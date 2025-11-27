@@ -1,12 +1,13 @@
 """
 User Service - Business logic for user operations
-Phase 1.2: Uses repository layer with in-memory storage
+Phase 1.4: Uses repository layer with custom exceptions
 """
 from typing import Optional
 from uuid import UUID
 
 from ..schemas.user import UserCreate, UserLogin, UserPublic, UserInDB, create_user_in_db
 from ..core.security import hash_password, verify_password
+from ..core.exceptions import UserAlreadyExistsError, InvalidCredentialsError
 from ..db import user_repository
 
 
@@ -14,13 +15,14 @@ class UserService:
     """
     User service handles all user-related business logic.
 
-    Phase 1.2: Uses repository layer with in-memory storage
+    Phase 1.4: Uses repository layer with custom exceptions
     Phase 2: Repository will use SQLAlchemy + PostgreSQL
     """
 
     def get_user_by_email(self, email: str) -> Optional[UserInDB]:
-        """Get user by email address"""
-        return user_repository.get_user_by_email(email)
+        """Get user by email address (normalized to lowercase)"""
+        normalized_email = email.lower().strip()
+        return user_repository.get_user_by_email(normalized_email)
 
     def get_user_by_id(self, user_id: UUID) -> Optional[UserInDB]:
         """Get user by UUID"""
@@ -37,19 +39,22 @@ class UserService:
             UserPublic object (without password_hash)
 
         Raises:
-            ValueError: If email already exists
+            UserAlreadyExistsError: If email already exists
         """
+        # Normalize email before checking (schema also normalizes, but be safe)
+        normalized_email = user_data.email.lower().strip()
+
         # Check if user already exists
-        existing = user_repository.get_user_by_email(user_data.email)
+        existing = user_repository.get_user_by_email(normalized_email)
         if existing:
-            raise ValueError(f"User with email {user_data.email.lower().strip()} already exists")
+            raise UserAlreadyExistsError(f"User with email {normalized_email} already exists")
 
         # Hash password with bcrypt
         hashed = hash_password(user_data.password)
 
         # Create UserInDB using factory function
         user_in_db = create_user_in_db(
-            email=user_data.email,
+            email=normalized_email,
             password_hash=hashed,
             full_name=user_data.full_name,
         )
@@ -76,15 +81,20 @@ class UserService:
             login_data: UserLogin schema with email and password
 
         Returns:
-            UserInDB object if authentication successful, None otherwise
+            UserInDB object if authentication successful
+
+        Raises:
+            InvalidCredentialsError: If credentials are invalid
         """
-        user = user_repository.get_user_by_email(login_data.email)
+        # Normalize email before lookup (schema also normalizes, but be safe)
+        normalized_email = login_data.email.lower().strip()
+        user = user_repository.get_user_by_email(normalized_email)
 
         if not user:
-            return None
+            raise InvalidCredentialsError("Invalid email or password")
 
         if not verify_password(login_data.password, user.password_hash):
-            return None
+            raise InvalidCredentialsError("Invalid email or password")
 
         return user
 

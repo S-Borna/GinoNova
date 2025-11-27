@@ -1,11 +1,11 @@
 """
 User schemas - Pydantic models for API validation
-Phase 1.2: Full user models with repository layer
+Phase 1.4: Production-grade validation and error handling
 """
 from datetime import datetime
 from typing import Optional
 from uuid import UUID, uuid4
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class UserBase(BaseModel):
@@ -15,18 +15,46 @@ class UserBase(BaseModel):
     is_active: bool = True
     is_admin: bool = False
 
+    class Config:
+        from_attributes = True
+
 
 class UserCreate(BaseModel):
-    """Schema for user registration"""
+    """Schema for user registration with strict validation"""
     email: EmailStr
-    password: str = Field(..., min_length=6, description="Password must be at least 6 characters")
-    full_name: Optional[str] = None
+    password: str = Field(
+        ...,
+        min_length=8,
+        max_length=128,
+        description="Password must be 8-128 characters"
+    )
+    full_name: Optional[str] = Field(None, max_length=100)
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, v: str) -> str:
+        """Normalize email to lowercase"""
+        return v.lower().strip()
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        """Validate password strength"""
+        if len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        return v
 
 
 class UserLogin(BaseModel):
-    """Schema for user login"""
+    """Schema for user login with email normalization"""
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=1)
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, v: str) -> str:
+        """Normalize email to lowercase"""
+        return v.lower().strip()
 
 
 class UserPublic(UserBase):
@@ -34,9 +62,6 @@ class UserPublic(UserBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class UserInDB(UserPublic):

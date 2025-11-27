@@ -2,7 +2,7 @@
 
 /**
  * AuthContext Provider
- * Phase 1.3: React context for authentication state
+ * Phase 1.4: React context with error clearing on route change
  */
 
 import {
@@ -13,6 +13,7 @@ import {
     useCallback,
     ReactNode,
 } from "react"
+import { usePathname } from "next/navigation"
 import {
     UserPublic,
     login as authLogin,
@@ -20,6 +21,7 @@ import {
     getMe,
     logout as authLogout,
     getToken,
+    normalizeEmail,
 } from "@/lib/auth"
 
 interface AuthContextType {
@@ -29,6 +31,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<void>
     register: (email: string, password: string, fullName?: string) => Promise<void>
     logout: () => void
+    clearError: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -41,6 +44,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserPublic | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const pathname = usePathname()
+
+    // Clear error on route change
+    useEffect(() => {
+        setError(null)
+    }, [pathname])
 
     // Load user on mount if token exists
     useEffect(() => {
@@ -65,11 +74,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         loadUser()
     }, [])
 
+    const clearError = useCallback(() => {
+        setError(null)
+    }, [])
+
     const login = useCallback(async (email: string, password: string) => {
         setError(null)
         setLoading(true)
         try {
-            await authLogin(email, password)
+            // Normalize email before sending
+            await authLogin(normalizeEmail(email), password)
             const userData = await getMe()
             setUser(userData)
         } catch (err) {
@@ -86,7 +100,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setError(null)
             setLoading(true)
             try {
-                await authRegister(email, password, fullName)
+                // Normalize email before sending
+                await authRegister(normalizeEmail(email), password, fullName)
                 const userData = await getMe()
                 setUser(userData)
             } catch (err) {
@@ -108,7 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     return (
         <AuthContext.Provider
-            value={{ user, loading, error, login, register, logout }}
+            value={{ user, loading, error, login, register, logout, clearError }}
         >
             {children}
         </AuthContext.Provider>

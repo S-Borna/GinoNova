@@ -2,30 +2,72 @@
 
 /**
  * Register Page
- * Phase 1.3: Minimal registration form
+ * Phase 1.4: Registration form with inline validation
  */
 
-import { useState, FormEvent } from "react"
-import { useRouter } from "next/navigation"
+import { useState, FormEvent, useEffect } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/components/auth"
+import {
+    validateEmail,
+    validatePassword,
+    normalizeEmail,
+    PASSWORD_MIN_LENGTH,
+} from "@/lib/auth"
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [fullName, setFullName] = useState("")
     const [error, setError] = useState("")
+    const [emailError, setEmailError] = useState("")
+    const [passwordError, setPasswordError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const { register } = useAuth()
     const router = useRouter()
+    const pathname = usePathname()
+
+    // Clear errors on route change
+    useEffect(() => {
+        setError("")
+        setEmailError("")
+        setPasswordError("")
+    }, [pathname])
+
+    const handleEmailBlur = () => {
+        const validation = validateEmail(email)
+        setEmailError(validation.valid ? "" : validation.error || "")
+    }
+
+    const handlePasswordBlur = () => {
+        const validation = validatePassword(password)
+        setPasswordError(validation.valid ? "" : validation.error || "")
+    }
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         setError("")
+        setEmailError("")
+        setPasswordError("")
+
+        // Client-side validation
+        const emailValidation = validateEmail(email)
+        if (!emailValidation.valid) {
+            setEmailError(emailValidation.error || "Invalid email")
+            return
+        }
+
+        const passwordValidation = validatePassword(password)
+        if (!passwordValidation.valid) {
+            setPasswordError(passwordValidation.error || "Invalid password")
+            return
+        }
+
         setIsLoading(true)
 
         try {
-            await register(email, password, fullName || undefined)
+            await register(normalizeEmail(email), password, fullName || undefined)
             router.push("/dashboard")
         } catch (err) {
             setError(err instanceof Error ? err.message : "Registration failed")
@@ -62,7 +104,8 @@ export default function RegisterPage() {
                                 autoComplete="name"
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                disabled={isLoading}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
 
@@ -77,14 +120,24 @@ export default function RegisterPage() {
                                 autoComplete="email"
                                 required
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={(e) => {
+                                    setEmail(e.target.value)
+                                    if (emailError) setEmailError("")
+                                }}
+                                onBlur={handleEmailBlur}
+                                disabled={isLoading}
+                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    emailError ? "border-red-500" : "border-gray-300"
+                                }`}
                             />
+                            {emailError && (
+                                <p className="mt-1 text-sm text-red-500">{emailError}</p>
+                            )}
                         </div>
 
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Password (min 6 characters)
+                                Password (min {PASSWORD_MIN_LENGTH} characters)
                             </label>
                             <input
                                 id="password"
@@ -92,11 +145,21 @@ export default function RegisterPage() {
                                 type="password"
                                 autoComplete="new-password"
                                 required
-                                minLength={6}
+                                minLength={PASSWORD_MIN_LENGTH}
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                    if (passwordError) setPasswordError("")
+                                }}
+                                onBlur={handlePasswordBlur}
+                                disabled={isLoading}
+                                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    passwordError ? "border-red-500" : "border-gray-300"
+                                }`}
                             />
+                            {passwordError && (
+                                <p className="mt-1 text-sm text-red-500">{passwordError}</p>
+                            )}
                         </div>
                     </div>
 
@@ -104,7 +167,7 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? "Creating account..." : "Create account"}
                         </button>

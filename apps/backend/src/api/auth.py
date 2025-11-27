@@ -1,6 +1,6 @@
 """
 Auth Router - Authentication endpoints
-Phase 1.2: Register, Login with JWT, /me, and protected routes
+Phase 1.4: Register, Login with JWT, standardized errors, rate-limit placeholders
 """
 from fastapi import APIRouter, HTTPException, status
 
@@ -8,14 +8,27 @@ from ..schemas.user import UserCreate, UserLogin, UserPublic, TokenResponse
 from ..services.user_service import user_service
 from ..core.jwt import create_access_token
 from ..core.deps import CurrentUser
+from ..core.exceptions import (
+    raise_conflict,
+    raise_unauthorized,
+    UserAlreadyExistsError,
+    InvalidCredentialsError,
+)
 
 auth_router = APIRouter()
+
+
+# === RATE LIMIT PLACEHOLDERS ===
+# TODO Phase 2: Add rate limiting middleware (e.g., slowapi)
+# from slowapi import Limiter
+# limiter = Limiter(key_func=get_remote_address)
+# @limiter.limit("5/minute")  # 5 requests per minute for auth endpoints
 
 
 @auth_router.get("/status")
 def auth_status():
     """Check auth module status"""
-    return {"auth": "configured", "phase": "1.2", "jwt": True, "models": "UserBase/UserCreate/UserInDB/UserPublic"}
+    return {"auth": "configured", "phase": "1.4", "jwt": True, "models": "UserBase/UserCreate/UserInDB/UserPublic"}
 
 
 @auth_router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
@@ -24,11 +37,16 @@ def register(user_data: UserCreate):
     Register a new user.
 
     - **email**: Valid email address (will be normalized to lowercase)
-    - **password**: Minimum 6 characters
-    - **full_name**: Optional full name
+    - **password**: Minimum 8 characters
+    - **full_name**: Optional full name (max 100 chars)
 
     Returns JWT access token on successful registration.
+
+    Raises:
+        409 Conflict: If email already exists
+        422 Validation Error: If password/email invalid
     """
+    # TODO: Add rate limit - limiter.limit("5/minute")
     try:
         user = user_service.create_user(user_data)
 
@@ -43,11 +61,8 @@ def register(user_data: UserCreate):
             access_token=access_token,
             token_type="bearer"
         )
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+    except UserAlreadyExistsError:
+        raise_conflict("A user with this email already exists")
 
 
 @auth_router.post("/login", response_model=TokenResponse)
@@ -56,15 +71,18 @@ def login(login_data: UserLogin):
     Login with email and password.
 
     Returns JWT access token on successful authentication.
+
+    Raises:
+        401 Unauthorized: If email/password is incorrect
     """
-    user = user_service.authenticate_user(login_data)
+    # TODO: Add rate limit - limiter.limit("10/minute")
+    try:
+        user = user_service.authenticate_user(login_data)
+    except InvalidCredentialsError:
+        raise_unauthorized("Incorrect email or password")
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise_unauthorized("Incorrect email or password")
 
     # Generate JWT token
     access_token = create_access_token(
