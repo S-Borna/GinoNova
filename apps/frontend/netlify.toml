@@ -1,6 +1,13 @@
 [build]
-command = "npm run build"
+base = "apps/frontend"
+command = "npm install && npm run build"
 publish = ".next"
+
+[build.environment]
+NPM_FLAGS = "--prefix=/dev/null"
+
+[[plugins]]
+package = "@netlify/plugin-nextjs"
 
 # Future API proxy mapping placeholder
 [[redirects]]
