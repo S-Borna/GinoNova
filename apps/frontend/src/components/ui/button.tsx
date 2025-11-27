@@ -1,7 +1,7 @@
 /**
  * Button Component
  * Phase D.1: Apple-Inspired Premium Button System
- * 
+ *
  * Features:
  * - 10 variants including gradient, glass, and glow effects
  * - 5 sizes from xs to xl
@@ -204,7 +204,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   /**
    * Render as child element (for composition with Next.js Link, etc.)
    */

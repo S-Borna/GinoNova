@@ -3,7 +3,7 @@
 /**
  * Skeleton Component
  * Phase D.1: Apple-Inspired Loading States
- * 
+ *
  * Features:
  * - Multiple preset variants
  * - Smooth shimmer animation
@@ -100,7 +100,7 @@ const skeletonVariants = cva(
 
 export interface SkeletonProps
     extends React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof skeletonVariants> {
+    VariantProps<typeof skeletonVariants> {
     /**
      * Custom width (number = px, string = CSS value)
      */
@@ -258,10 +258,10 @@ export function SkeletonTableRow({ columns = 4, className }: { columns?: number;
     return (
         <div className={cn("flex items-center gap-4 py-3 px-4", className)}>
             {Array.from({ length: columns }).map((_, i) => (
-                <Skeleton 
-                    key={i} 
-                    variant="text" 
-                    width={i === 0 ? "30%" : i === columns - 1 ? "15%" : "20%"} 
+                <Skeleton
+                    key={i}
+                    variant="text"
+                    width={i === 0 ? "30%" : i === columns - 1 ? "15%" : "20%"}
                 />
             ))}
         </div>
