@@ -1,0 +1,345 @@
+/**
+ * ============================================================================
+ * MICRO-INTERACTIONS — CSS Animation Utilities
+ * ============================================================================
+ *
+ * Tailwind CSS utilities for micro-interactions.
+ * Import this in your globals.css or tailwind config.
+ *
+ * @phase A.7 - Polish & Animations
+ */
+
+/* ============================================================================
+   BUTTON HOVER EFFECTS
+   ============================================================================ */
+
+.btn-hover-lift {
+  @apply transition-all duration-200;
+}
+
+.btn-hover-lift:hover {
+  @apply -translate-y-0.5 shadow-lg;
+}
+
+.btn-hover-lift:active {
+  @apply translate-y-0 shadow-md;
+}
+
+/* Glow effect on hover */
+.btn-hover-glow {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+
+.btn-hover-glow::before {
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+  content: '';
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.btn-hover-glow:hover::before {
+  @apply opacity-100;
+}
+
+/* ============================================================================
+   CARD HOVER EFFECTS
+   ============================================================================ */
+
+.card-hover-lift {
+  @apply transition-all duration-300 ease-out;
+}
+
+.card-hover-lift:hover {
+  @apply -translate-y-1 shadow-xl;
+}
+
+.card-hover-glow {
+  @apply transition-all duration-300;
+}
+
+.card-hover-glow:hover {
+  @apply shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)];
+}
+
+/* Border highlight on hover */
+.card-hover-border {
+  @apply transition-all duration-300 border-transparent;
+}
+
+.card-hover-border:hover {
+  @apply border-primary/30;
+}
+
+/* ============================================================================
+   CHECKBOX ANIMATIONS
+   ============================================================================ */
+
+.checkbox-bounce {
+  @apply transition-transform duration-200;
+}
+
+.checkbox-bounce:checked {
+  animation: checkbox-pop 0.3s ease-out;
+}
+
+@keyframes checkbox-pop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ============================================================================
+   PROGRESS BAR ANIMATIONS
+   ============================================================================ */
+
+.progress-fill-animate {
+  @apply transition-all duration-700 ease-out;
+}
+
+.progress-pulse {
+  animation: progress-glow 2s ease-in-out infinite;
+}
+
+@keyframes progress-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+  }
+}
+
+/* Stripe animation for indeterminate progress */
+.progress-stripe {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-stripe-move 1s linear infinite;
+}
+
+@keyframes progress-stripe-move {
+  0% {
+    background-position: 1rem 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* ============================================================================
+   TAB SWITCH ANIMATIONS
+   ============================================================================ */
+
+.tab-indicator {
+  @apply absolute bottom-0 left-0 h-0.5 bg-primary;
+  @apply transition-all duration-300 ease-out;
+}
+
+.tab-content-enter {
+  animation: tab-fade-in 0.3s ease-out forwards;
+}
+
+@keyframes tab-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   ICON ANIMATIONS
+   ============================================================================ */
+
+.icon-spin {
+  animation: icon-rotate 1s linear infinite;
+}
+
+@keyframes icon-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-pulse {
+  animation: icon-pulse-scale 1.5s ease-in-out infinite;
+}
+
+@keyframes icon-pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.icon-bounce {
+  animation: icon-bounce-move 0.6s ease-out;
+}
+
+@keyframes icon-bounce-move {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* ============================================================================
+   SKELETON SHIMMER (Enhanced)
+   ============================================================================ */
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  @apply relative overflow-hidden;
+}
+
+.skeleton-shimmer::after {
+  @apply absolute inset-0;
+  content: '';
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* ============================================================================
+   FOCUS RING ANIMATIONS
+   ============================================================================ */
+
+.focus-ring-animate {
+  @apply outline-none ring-0 transition-all duration-200;
+}
+
+.focus-ring-animate:focus-visible {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+}
+
+/* ============================================================================
+   LIST ITEM ANIMATIONS
+   ============================================================================ */
+
+.list-item-enter {
+  animation: list-slide-in 0.3s ease-out forwards;
+}
+
+@keyframes list-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.list-item-stagger {
+  @apply opacity-0;
+  animation: list-slide-in 0.3s ease-out forwards;
+}
+
+.list-item-stagger:nth-child(1) { animation-delay: 0.05s; }
+.list-item-stagger:nth-child(2) { animation-delay: 0.1s; }
+.list-item-stagger:nth-child(3) { animation-delay: 0.15s; }
+.list-item-stagger:nth-child(4) { animation-delay: 0.2s; }
+.list-item-stagger:nth-child(5) { animation-delay: 0.25s; }
+.list-item-stagger:nth-child(6) { animation-delay: 0.3s; }
+.list-item-stagger:nth-child(7) { animation-delay: 0.35s; }
+.list-item-stagger:nth-child(8) { animation-delay: 0.4s; }
+.list-item-stagger:nth-child(9) { animation-delay: 0.45s; }
+.list-item-stagger:nth-child(10) { animation-delay: 0.5s; }
+
+/* ============================================================================
+   NOTIFICATION ANIMATIONS
+   ============================================================================ */
+
+.notification-enter {
+  animation: notification-slide-in 0.3s ease-out forwards;
+}
+
+@keyframes notification-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.notification-exit {
+  animation: notification-slide-out 0.2s ease-in forwards;
+}
+
+@keyframes notification-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+/* ============================================================================
+   RIPPLE EFFECT
+   ============================================================================ */
+
+.ripple {
+  @apply relative overflow-hidden;
+}
+
+.ripple::after {
+  content: '';
+  @apply absolute rounded-full opacity-0;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+.ripple:active::after {
+  @apply opacity-100;
+  transform: scale(4);
+  transition: 0s;
+}
