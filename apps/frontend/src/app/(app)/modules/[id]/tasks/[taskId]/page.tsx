@@ -16,6 +16,9 @@
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import ReactMarkdown from "react-markdown"
+import rehypeHighlight from "rehype-highlight"
+import remarkGfm from "remark-gfm"
 import { cn } from "@/lib/utils"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
@@ -31,6 +34,9 @@ import {
     AlertCircle,
     Zap,
 } from "lucide-react"
+
+// Import highlight.js theme for syntax highlighting
+import "highlight.js/styles/github-dark.css"
 
 /* ============================================================================
    SKELETON
@@ -92,67 +98,82 @@ function ErrorState({ error, onRetry, moduleId }: { error: string; onRetry: () =
 }
 
 /* ============================================================================
-   MARKDOWN RENDERER (Simple)
+   MARKDOWN RENDERER - With Syntax Highlighting
    ============================================================================ */
 
 function MarkdownContent({ content }: { content: string }) {
-    // Simple markdown rendering - in production, use react-markdown or similar
-    const renderMarkdown = (md: string) => {
-        // Convert headers
-        let html = md
-            .replace(/^### (.+)$/gm, '<h3 class="text-xl font-semibold text-neutral-900 dark:text-white mt-8 mb-4">$1</h3>')
-            .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-bold text-neutral-900 dark:text-white mt-10 mb-5">$1</h2>')
-            .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold text-neutral-900 dark:text-white mt-10 mb-6">$1</h1>')
-
-        // Convert code blocks - visible in both light and dark mode
-        html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => {
-            return `<pre class="bg-neutral-900 dark:bg-neutral-950 text-neutral-100 rounded-xl p-5 my-6 overflow-x-auto text-sm font-mono border border-neutral-800"><code>${code.trim()}</code></pre>`
-        })
-
-        // Convert inline code - visible in both modes
-        html = html.replace(/`([^`]+)`/g, '<code class="bg-neutral-200 dark:bg-neutral-800 px-2 py-1 rounded text-sm font-mono text-indigo-700 dark:text-indigo-400">$1</code>')
-
-        // Convert bold
-        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-neutral-900 dark:text-white">$1</strong>')
-
-        // Convert italic
-        html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>')
-
-        // Convert tables (basic support)
-        html = html.replace(/^\|(.+)\|$/gm, (match, content) => {
-            const cells = content.split('|').map((cell: string) => cell.trim())
-            if (cells.every((cell: string) => /^[-:]+$/.test(cell))) {
-                return '' // Skip separator row
-            }
-            const cellsHtml = cells.map((cell: string) => `<td class="border border-neutral-300 dark:border-neutral-700 px-4 py-2">${cell}</td>`).join('')
-            return `<tr class="bg-neutral-50 dark:bg-neutral-800/50">${cellsHtml}</tr>`
-        })
-        
-        // Wrap tables
-        html = html.replace(/(<tr[^>]*>.*<\/tr>\n?)+/g, (match) => {
-            return `<table class="w-full border-collapse my-6 text-sm"><tbody>${match}</tbody></table>`
-        })
-
-        // Convert lists - single bullet, no double
-        html = html.replace(/^- (.+)$/gm, '<li class="ml-6 text-neutral-700 dark:text-neutral-300 mb-2 list-disc">$1</li>')
-        html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="ml-6 text-neutral-700 dark:text-neutral-300 mb-2 list-decimal">$1. $2</li>')
-
-        // Wrap consecutive list items in ul/ol
-        html = html.replace(/(<li class="[^"]*list-disc[^"]*">[\s\S]*?<\/li>\n?)+/g, (match) => {
-            return `<ul class="my-4 space-y-1">${match}</ul>`
-        })
-
-        // Convert paragraphs (lines that aren't already wrapped)
-        html = html.replace(/^(?!<[hpuol]|<li|<pre|<code|<table|<tr)(.+)$/gm, '<p class="text-neutral-700 dark:text-neutral-300 mb-4 leading-relaxed text-base">$1</p>')
-
-        return html
-    }
-
     return (
-        <div
-            className="prose prose-neutral dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
-        />
+        <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:text-neutral-900 dark:prose-headings:text-white prose-p:text-neutral-700 dark:prose-p:text-neutral-300 prose-li:text-neutral-700 dark:prose-li:text-neutral-300 prose-strong:text-neutral-900 dark:prose-strong:text-white prose-code:text-indigo-600 dark:prose-code:text-indigo-400 prose-code:bg-neutral-100 dark:prose-code:bg-neutral-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-neutral-900 prose-pre:border prose-pre:border-neutral-800 prose-h1:text-3xl prose-h1:mt-8 prose-h1:mb-4 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3">
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeHighlight]}
+                components={{
+                    // Custom ordered list - convert inner numbers to bullets
+                    ol: ({ children, ...props }) => (
+                        <ol className="list-decimal ml-6 my-4 space-y-2" {...props}>
+                            {children}
+                        </ol>
+                    ),
+                    // Custom list item - handle nested numbering
+                    li: ({ children, ...props }) => {
+                        // Check if content starts with a number (like "1. " inside ordered list)
+                        const content = String(children)
+                        const nestedNumberMatch = content.match(/^(\d+)\.\s*(.*)/)
+                        if (nestedNumberMatch) {
+                            return (
+                                <li className="text-neutral-700 dark:text-neutral-300" {...props}>
+                                    <span className="font-medium">{nestedNumberMatch[1]}.</span> {nestedNumberMatch[2]}
+                                </li>
+                            )
+                        }
+                        return (
+                            <li className="text-neutral-700 dark:text-neutral-300" {...props}>
+                                {children}
+                            </li>
+                        )
+                    },
+                    // Tables
+                    table: ({ children }) => (
+                        <table className="w-full border-collapse my-6 text-sm">
+                            {children}
+                        </table>
+                    ),
+                    th: ({ children }) => (
+                        <th className="border border-neutral-300 dark:border-neutral-700 px-4 py-2 bg-neutral-100 dark:bg-neutral-800 font-semibold text-left">
+                            {children}
+                        </th>
+                    ),
+                    td: ({ children }) => (
+                        <td className="border border-neutral-300 dark:border-neutral-700 px-4 py-2">
+                            {children}
+                        </td>
+                    ),
+                    // Code blocks with syntax highlighting
+                    pre: ({ children }) => (
+                        <pre className="bg-neutral-900 dark:bg-neutral-950 rounded-xl p-5 my-6 overflow-x-auto border border-neutral-800">
+                            {children}
+                        </pre>
+                    ),
+                    code: ({ className, children, ...props }) => {
+                        const isInline = !className
+                        if (isInline) {
+                            return (
+                                <code className="bg-neutral-200 dark:bg-neutral-800 px-2 py-1 rounded text-sm font-mono text-indigo-700 dark:text-indigo-400" {...props}>
+                                    {children}
+                                </code>
+                            )
+                        }
+                        return (
+                            <code className={cn("text-sm", className)} {...props}>
+                                {children}
+                            </code>
+                        )
+                    },
+                }}
+            >
+                {content}
+            </ReactMarkdown>
+        </div>
     )
 }
 
