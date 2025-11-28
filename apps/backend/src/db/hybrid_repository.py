@@ -13,12 +13,12 @@ T = TypeVar('T')
 
 class HybridRepository(Generic[T]):
     """Base class for hybrid repositories"""
-    
+
     def __init__(self, model_class, memory_db: dict):
         self.model_class = model_class
         self.memory_db = memory_db
         self.use_postgres = is_db_configured()
-    
+
     def _to_dict(self, obj) -> dict:
         """Convert SQLAlchemy model to dict"""
         if hasattr(obj, '__table__'):
@@ -34,10 +34,10 @@ from .user_repository import _users_db
 
 class UserRepository:
     """Hybrid user repository"""
-    
+
     def __init__(self):
         self.use_postgres = is_db_configured()
-    
+
     def get_by_id(self, user_id: UUID) -> Optional[models.User]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -45,7 +45,7 @@ class UserRepository:
         else:
             from .user_repository import get_user_by_id
             return get_user_by_id(user_id)
-    
+
     def get_by_email(self, email: str) -> Optional[models.User]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -53,7 +53,7 @@ class UserRepository:
         else:
             from .user_repository import get_user_by_email
             return get_user_by_email(email)
-    
+
     def create(self, user_data: dict) -> models.User:
         if self.use_postgres:
             with get_db_context() as db:
@@ -66,7 +66,7 @@ class UserRepository:
             from .user_repository import create_user
             from ..schemas.user import UserCreate
             return create_user(UserCreate(**user_data))
-    
+
     def update(self, user_id: UUID, update_data: dict) -> Optional[models.User]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -82,7 +82,7 @@ class UserRepository:
             from .user_repository import update_user
             from ..schemas.user import UserUpdate
             return update_user(user_id, UserUpdate(**update_data))
-    
+
     def list_all(self) -> List[models.User]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -93,15 +93,15 @@ class UserRepository:
 
 
 # ==============================================================================
-# PROGRESS REPOSITORY  
+# PROGRESS REPOSITORY
 # ==============================================================================
 
 class ProgressRepository:
     """Hybrid progress repository"""
-    
+
     def __init__(self):
         self.use_postgres = is_db_configured()
-    
+
     def get_by_user(self, user_id: UUID) -> List[models.Progress]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -109,7 +109,7 @@ class ProgressRepository:
         else:
             from .progress_repository import list_progress_by_user
             return list_progress_by_user(user_id)
-    
+
     def get_by_user_and_task(self, user_id: UUID, task_id: UUID) -> Optional[models.Progress]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -120,7 +120,7 @@ class ProgressRepository:
         else:
             from .progress_repository import get_progress_by_user_and_task
             return get_progress_by_user_and_task(user_id, task_id)
-    
+
     def create(self, progress_data: dict) -> models.Progress:
         if self.use_postgres:
             with get_db_context() as db:
@@ -133,7 +133,7 @@ class ProgressRepository:
             from .progress_repository import create_progress
             from ..schemas.progress import ProgressCreate
             return create_progress(ProgressCreate(**progress_data))
-    
+
     def update(self, progress_id: UUID, update_data: dict) -> Optional[models.Progress]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -149,7 +149,7 @@ class ProgressRepository:
             from .progress_repository import update_progress
             from ..schemas.progress import ProgressUpdate
             return update_progress(progress_id, ProgressUpdate(**update_data))
-    
+
     def delete_by_user(self, user_id: UUID) -> int:
         """Delete all progress for a user (for reset). Returns count deleted."""
         if self.use_postgres:
@@ -171,10 +171,10 @@ class ProgressRepository:
 
 class ModuleRepository:
     """Hybrid module repository"""
-    
+
     def __init__(self):
         self.use_postgres = is_db_configured()
-    
+
     def get_all(self) -> List[models.Module]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -182,7 +182,7 @@ class ModuleRepository:
         else:
             from .module_repository import list_modules
             return list_modules()
-    
+
     def get_by_id(self, module_id: UUID) -> Optional[models.Module]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -198,10 +198,10 @@ class ModuleRepository:
 
 class TaskRepository:
     """Hybrid task repository"""
-    
+
     def __init__(self):
         self.use_postgres = is_db_configured()
-    
+
     def get_all(self) -> List[models.Task]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -209,7 +209,7 @@ class TaskRepository:
         else:
             from .task_repository import list_tasks
             return list_tasks()
-    
+
     def get_by_id(self, task_id: UUID) -> Optional[models.Task]:
         if self.use_postgres:
             with get_db_context() as db:
@@ -217,7 +217,7 @@ class TaskRepository:
         else:
             from .task_repository import get_task_by_id
             return get_task_by_id(task_id)
-    
+
     def get_by_module(self, module_id: UUID) -> List[models.Task]:
         if self.use_postgres:
             with get_db_context() as db:

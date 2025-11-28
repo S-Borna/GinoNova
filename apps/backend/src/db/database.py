@@ -29,9 +29,9 @@ async_engine = create_async_engine(ASYNC_DATABASE_URL, echo=False) if ASYNC_DATA
 # Session factories
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False) if engine else None
 AsyncSessionLocal = sessionmaker(
-    bind=async_engine, 
-    class_=AsyncSession, 
-    autocommit=False, 
+    bind=async_engine,
+    class_=AsyncSession,
+    autocommit=False,
     autoflush=False,
     expire_on_commit=False
 ) if async_engine else None
