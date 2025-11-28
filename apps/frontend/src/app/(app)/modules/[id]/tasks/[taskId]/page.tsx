@@ -19,7 +19,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
-import { getTask, TaskPublic } from "@/lib/tasks"
+import { getTask, getTasksForModule, TaskPublic } from "@/lib/tasks"
 import { getModule, ModulePublic } from "@/lib/modules"
 import {
     ArrowLeft,
@@ -148,6 +148,7 @@ export default function TaskDetailPage() {
 
     const [task, setTask] = useState<TaskPublic | null>(null)
     const [module, setModule] = useState<ModulePublic | null>(null)
+    const [allTasks, setAllTasks] = useState<TaskPublic[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [completing, setCompleting] = useState(false)
@@ -158,10 +159,11 @@ export default function TaskDetailPage() {
         setError(null)
 
         try {
-            // Fetch task and module in parallel
-            const [taskResult, moduleResult] = await Promise.all([
+            // Fetch task, module, and all tasks in parallel
+            const [taskResult, moduleResult, tasksResult] = await Promise.all([
                 getTask(taskId),
                 getModule(moduleId),
+                getTasksForModule(moduleId),
             ])
 
             if (!taskResult.ok) {
@@ -178,6 +180,11 @@ export default function TaskDetailPage() {
 
             setTask(taskResult.data)
             setModule(moduleResult.data)
+            if (tasksResult.ok) {
+                // Sort tasks by order_index
+                const sorted = [...tasksResult.data].sort((a, b) => a.order_index - b.order_index)
+                setAllTasks(sorted)
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to load task")
         } finally {
@@ -196,6 +203,24 @@ export default function TaskDetailPage() {
         await new Promise((resolve) => setTimeout(resolve, 500))
         setIsCompleted(true)
         setCompleting(false)
+    }
+
+    // Find current task index and next task
+    const currentIndex = allTasks.findIndex(t => t.id === taskId)
+    const nextTask = currentIndex >= 0 && currentIndex < allTasks.length - 1 
+        ? allTasks[currentIndex + 1] 
+        : null
+    const prevTask = currentIndex > 0 
+        ? allTasks[currentIndex - 1] 
+        : null
+
+    const handleContinue = () => {
+        if (nextTask) {
+            router.push(`/modules/${moduleId}/tasks/${nextTask.id}`)
+        } else {
+            // No more tasks, go back to module
+            router.push(`/modules/${moduleId}`)
+        }
     }
 
     // Placeholder content when task has no content
@@ -321,9 +346,12 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                         </Link>
 
                         {isCompleted ? (
-                            <Button className="rounded-xl bg-emerald-500 hover:bg-emerald-600">
+                            <Button 
+                                onClick={handleContinue}
+                                className="rounded-xl bg-emerald-500 hover:bg-emerald-600"
+                            >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                                Completed! Continue
+                                {nextTask ? "Continue to Next" : "Back to Module"}
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         ) : (
