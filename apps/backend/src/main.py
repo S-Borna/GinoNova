@@ -140,7 +140,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown events."""
     # Startup
     logger.info("🚀 Starting DevOps Hub Backend...")
-    
+
     # Run database migrations if PostgreSQL is configured
     from .db.database import is_db_configured, init_db
     if is_db_configured():
@@ -152,7 +152,7 @@ async def lifespan(app: FastAPI):
             logger.error(f"❌ Database init failed: {e}")
     else:
         logger.info("📝 Using in-memory storage (no DATABASE_URL)")
-    
+
     auto_seed_if_empty()
     logger.info("✅ Backend ready!")
 

@@ -44,7 +44,7 @@ def list_users() -> list[UserInDB]:
         with SessionLocal() as db:
             users = db.query(UserModel).all()
             return [_model_to_schema(u) for u in users]
-    
+
     return list(USERS.values())
 
 
@@ -59,13 +59,13 @@ def get_user_by_email(email: str) -> Optional[UserInDB]:
         UserInDB if found, None otherwise
     """
     normalized_email = email.lower().strip()
-    
+
     if is_db_configured():
         UserModel = _get_user_model()
         with SessionLocal() as db:
             user = db.query(UserModel).filter(UserModel.email == normalized_email).first()
             return _model_to_schema(user) if user else None
-    
+
     return USERS.get(normalized_email)
 
 
@@ -84,7 +84,7 @@ def get_user_by_id(user_id: UUID) -> Optional[UserInDB]:
         with SessionLocal() as db:
             user = db.query(UserModel).filter(UserModel.id == user_id).first()
             return _model_to_schema(user) if user else None
-    
+
     for user in USERS.values():
         if user.id == user_id:
             return user
@@ -113,7 +113,7 @@ def create_user(user: UserInDB) -> UserInDB:
             existing = db.query(UserModel).filter(UserModel.email == normalized_email).first()
             if existing:
                 raise ValueError(f"User with email {normalized_email} already exists")
-            
+
             # Create new user
             db_user = UserModel(
                 id=user.id,
@@ -129,7 +129,7 @@ def create_user(user: UserInDB) -> UserInDB:
             db.commit()
             db.refresh(db_user)
             return _model_to_schema(db_user)
-    
+
     # Fallback to in-memory
     if normalized_email in USERS:
         raise ValueError(f"User with email {normalized_email} already exists")
@@ -155,21 +155,21 @@ def update_user(user_id: UUID, **kwargs) -> Optional[UserInDB]:
             user = db.query(UserModel).filter(UserModel.id == user_id).first()
             if not user:
                 return None
-            
+
             # Update allowed fields
-            allowed_fields = ['full_name', 'is_active', 'is_admin', 'avatar_url', 'bio', 
+            allowed_fields = ['full_name', 'is_active', 'is_admin', 'avatar_url', 'bio',
                             'github_username', 'linkedin_url', 'website_url', 'timezone',
                             'total_xp', 'current_streak', 'longest_streak', 'last_activity_at']
-            
+
             for key, value in kwargs.items():
                 if key in allowed_fields:
                     setattr(user, key, value)
-            
+
             user.updated_at = datetime.utcnow()
             db.commit()
             db.refresh(user)
             return _model_to_schema(user)
-    
+
     # Fallback to in-memory
     user = get_user_by_id(user_id)
     if not user:
@@ -201,11 +201,11 @@ def delete_user(user_id: UUID) -> bool:
             user = db.query(UserModel).filter(UserModel.id == user_id).first()
             if not user:
                 return False
-            
+
             db.delete(user)
             db.commit()
             return True
-    
+
     # Fallback to in-memory
     user = get_user_by_id(user_id)
     if not user:

@@ -1,18 +1,19 @@
 """
 Admin API - Administrative endpoints for system management
-Phase C.1: Seed Bootcamp v3.0 Content (Redo)
+Phase 10: Admin Panel
 
-Updated to support Bootcamp v3.0 with:
-- 4 Tracks
-- 15 Modules
-- 60+ Labs
-- 15+ Projects
+Features:
+- User management (list, view, update, deactivate)
+- System statistics
+- Content management (seed, clear, status)
+- System health checks
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime, timedelta
 from uuid import UUID
+import math
 
 from ..db.module_repository import create_module, clear_modules, list_modules
 from ..db.task_repository import create_task, clear_tasks, list_tasks
@@ -20,6 +21,7 @@ from ..db.track_repository import create_track, clear_tracks, list_tracks, get_t
 from ..db.lab_repository import create_lab, clear_labs, list_labs
 from ..db.project_repository import create_project, clear_projects, list_projects
 from ..db import user_repository, progress_repository
+from ..db.database import is_db_configured
 from ..db.seeds.bootcamp_v3_data import (
     get_tracks,
     get_modules,
@@ -30,74 +32,83 @@ from ..schemas.task import TaskCreate
 from ..schemas.track import TrackCreate
 from ..schemas.lab import LabCreate
 from ..schemas.project import ProjectCreate
+from ..schemas.admin import (
+    AdminUserDetail,
+    AdminUserUpdate,
+    AdminUsersListResponse,
+    SystemStats,
+    ContentSummary,
+    ContentHealthCheck,
+)
 from ..core.deps import CurrentUser
+from ..core.admin import require_admin, is_admin
 
 
 admin_router = APIRouter()
 
-
-# Temporary admin email check
-ADMIN_EMAIL = "said.ebadi@hotmail.com"
-
-
-class AdminUserResponse(BaseModel):
-    """Response schema for admin user list"""
-    id: str
-    full_name: Optional[str]
-    email: str
-    created_at: datetime
-    updated_at: datetime
-    total_xp: int
-    level: int
-    tasks_completed: int
-    modules_started: int
-    modules_completed: int
-    last_active: Optional[datetime]
-    is_active: bool
+# Phase version
+PHASE_VERSION = "10.0"
 
 
-class AdminStatsResponse(BaseModel):
-    """Response schema for admin stats overview"""
-    total_users: int
-    users_today: int
-    users_this_week: int
-    total_tasks_completed: int
-    total_xp_earned: int
-    active_users_today: int
-    avg_tasks_per_user: float
-    avg_xp_per_user: float
-    total_modules: int
-    total_tasks: int
+def add_phase_header(response: Response) -> None:
+    """Add X-Phase header to response"""
+    response.headers["X-Phase"] = PHASE_VERSION
 
 
-class AdminUsersListResponse(BaseModel):
-    """Response schema for admin users list"""
-    users: List[AdminUserResponse]
-    total: int
-    stats: AdminStatsResponse
+# Level calculation
+LEVEL_THRESHOLDS = [
+    0, 100, 250, 500, 800, 1200, 1700, 2300, 3000, 3800,
+    4700, 5700, 6800, 8000, 9500, 11000, 12800, 14800, 17000, 20000
+]
 
 
 def calculate_level(xp: int) -> int:
-    """Calculate level from XP (simple formula: level = 1 + xp // 100)"""
-    return 1 + xp // 100
+    """Calculate level from XP"""
+    for i in range(len(LEVEL_THRESHOLDS) - 1, -1, -1):
+        if xp >= LEVEL_THRESHOLDS[i]:
+            return i + 1
+    return 1
 
+
+# ==============================================================================
+# STATUS ENDPOINT
+# ==============================================================================
+
+@admin_router.get("/status")
+def admin_status(response: Response):
+    """Check admin module status"""
+    add_phase_header(response)
+    return {
+        "admin": "configured",
+        "phase": PHASE_VERSION,
+        "database": "postgres" if is_db_configured() else "memory",
+        "endpoints": [
+            "users", "users/{id}", "stats", "content/summary",
+            "content/health", "seed-bootcamp", "seed-status", "clear-data"
+        ]
+    }
+
+
+# ==============================================================================
+# USER MANAGEMENT ENDPOINTS
+# ==============================================================================
 
 @admin_router.get("/users", response_model=AdminUsersListResponse)
-def list_all_users(current_user: CurrentUser) -> AdminUsersListResponse:
+def list_all_users(
+    response: Response,
+    current_user: CurrentUser,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100),
+    search: Optional[str] = Query(None, description="Search by email or name"),
+    status: Optional[str] = Query(None, pattern="^(active|inactive|all)$"),
+) -> AdminUsersListResponse:
     """
-    Get all users with their stats.
+    Get all users with their stats (admin only).
 
-    Only accessible to admin (said.ebadi@hotmail.com).
-
-    Returns:
-        List of users with detailed stats and global stats overview
+    Supports pagination, search, and filtering.
     """
-    # Check if user is admin
-    if current_user.email.lower() != ADMIN_EMAIL:
-        raise HTTPException(
-            status_code=403,
-            detail="Admin access required"
-        )
+    add_phase_header(response)
+    require_admin(current_user)
 
     users = user_repository.list_users()
     all_modules = list_modules()
@@ -105,95 +116,387 @@ def list_all_users(current_user: CurrentUser) -> AdminUsersListResponse:
 
     now = datetime.utcnow()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    week_ago = now - timedelta(days=7)
 
-    user_responses = []
-    total_tasks_completed = 0
-    total_xp = 0
-    users_today = 0
-    users_this_week = 0
-    active_today = 0
+    # Filter by search
+    if search:
+        search_lower = search.lower()
+        users = [
+            u for u in users
+            if search_lower in u.email.lower()
+            or (u.full_name and search_lower in u.full_name.lower())
+        ]
 
+    # Filter by status
+    if status == "active":
+        users = [u for u in users if u.is_active]
+    elif status == "inactive":
+        users = [u for u in users if not u.is_active]
+
+    # Build user details
+    user_details = []
     for user in users:
-        # Get progress records for this user
+        # Get progress records
         progress_records = progress_repository.list_progress_by_user(user.id)
 
-        # Count completed tasks (status == "completed" or progress == 100)
         tasks_completed = sum(
             1 for p in progress_records
             if p.task_id and (p.status == "completed" or p.progress == 100)
         )
+        modules_completed = sum(
+            1 for p in progress_records
+            if p.module_id and (p.status == "completed" or p.progress == 100)
+        )
+        labs_completed = sum(
+            1 for p in progress_records
+            if getattr(p, 'lab_id', None) and p.status == "completed"
+        )
+        projects_completed = sum(
+            1 for p in progress_records
+            if getattr(p, 'project_id', None) and p.status == "completed"
+        )
 
-        # Count modules started and completed
-        module_progress = [p for p in progress_records if p.module_id]
-        modules_started = len(module_progress)
-        modules_completed = sum(1 for p in module_progress if p.status == "completed" or p.progress == 100)
-
-        # Calculate XP (25 per completed task for now)
-        user_xp = tasks_completed * 25
-
-        # Determine last active (from progress records or updated_at)
+        user_xp = getattr(user, 'total_xp', tasks_completed * 25)
         last_active = user.updated_at
         if progress_records:
-            latest_progress = max(progress_records, key=lambda p: p.updated_at)
-            if latest_progress.updated_at > last_active:
-                last_active = latest_progress.updated_at
+            latest = max(progress_records, key=lambda p: p.updated_at)
+            if latest.updated_at > last_active:
+                last_active = latest.updated_at
 
-        # Check if user was active today
-        if last_active >= today_start:
-            active_today += 1
-
-        # Count users registered today/this week
-        if user.created_at >= today_start:
-            users_today += 1
-        if user.created_at >= week_ago:
-            users_this_week += 1
-
-        total_tasks_completed += tasks_completed
-        total_xp += user_xp
-
-        user_responses.append(AdminUserResponse(
-            id=str(user.id),
-            full_name=user.full_name,
+        user_details.append(AdminUserDetail(
+            id=user.id,
             email=user.email,
-            created_at=user.created_at,
-            updated_at=user.updated_at,
+            full_name=getattr(user, 'full_name', None),
+            avatar_url=getattr(user, 'avatar_url', None),
+            bio=getattr(user, 'bio', None),
+            is_active=user.is_active,
+            is_admin=getattr(user, 'is_admin', False),
+            is_verified=getattr(user, 'is_verified', False),
             total_xp=user_xp,
             level=calculate_level(user_xp),
+            current_streak=getattr(user, 'current_streak', 0),
+            longest_streak=getattr(user, 'longest_streak', 0),
             tasks_completed=tasks_completed,
-            modules_started=modules_started,
             modules_completed=modules_completed,
-            last_active=last_active,
-            is_active=user.is_active,
+            labs_completed=labs_completed,
+            projects_completed=projects_completed,
+            total_study_time=0,
+            created_at=user.created_at,
+            updated_at=user.updated_at,
+            last_activity_at=last_active,
         ))
 
-    # Sort by last active (most recent first)
-    user_responses.sort(key=lambda u: u.last_active or datetime.min, reverse=True)
+    # Sort by last activity
+    user_details.sort(key=lambda u: u.last_activity_at or datetime.min, reverse=True)
 
-    # Calculate averages
-    user_count = len(users)
-    avg_tasks = total_tasks_completed / user_count if user_count > 0 else 0
-    avg_xp = total_xp / user_count if user_count > 0 else 0
-
-    stats = AdminStatsResponse(
-        total_users=user_count,
-        users_today=users_today,
-        users_this_week=users_this_week,
-        total_tasks_completed=total_tasks_completed,
-        total_xp_earned=total_xp,
-        active_users_today=active_today,
-        avg_tasks_per_user=round(avg_tasks, 1),
-        avg_xp_per_user=round(avg_xp, 1),
-        total_modules=len(all_modules),
-        total_tasks=len(all_tasks),
-    )
+    # Pagination
+    total = len(user_details)
+    total_pages = math.ceil(total / per_page) if total > 0 else 1
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_users = user_details[start:end]
 
     return AdminUsersListResponse(
-        users=user_responses,
-        total=len(user_responses),
-        stats=stats,
+        users=paginated_users,
+        total=total,
+        page=page,
+        per_page=per_page,
+        total_pages=total_pages,
     )
 
+
+@admin_router.get("/users/{user_id}", response_model=AdminUserDetail)
+def get_user_detail(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+) -> AdminUserDetail:
+    """
+    Get detailed user information (admin only).
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    progress_records = progress_repository.list_progress_by_user(user.id)
+
+    tasks_completed = sum(
+        1 for p in progress_records
+        if p.task_id and (p.status == "completed" or p.progress == 100)
+    )
+    modules_completed = sum(
+        1 for p in progress_records
+        if p.module_id and (p.status == "completed" or p.progress == 100)
+    )
+
+    user_xp = getattr(user, 'total_xp', tasks_completed * 25)
+
+    return AdminUserDetail(
+        id=user.id,
+        email=user.email,
+        full_name=getattr(user, 'full_name', None),
+        avatar_url=getattr(user, 'avatar_url', None),
+        bio=getattr(user, 'bio', None),
+        is_active=user.is_active,
+        is_admin=getattr(user, 'is_admin', False),
+        is_verified=getattr(user, 'is_verified', False),
+        total_xp=user_xp,
+        level=calculate_level(user_xp),
+        current_streak=getattr(user, 'current_streak', 0),
+        longest_streak=getattr(user, 'longest_streak', 0),
+        tasks_completed=tasks_completed,
+        modules_completed=modules_completed,
+        labs_completed=0,
+        projects_completed=0,
+        total_study_time=0,
+        created_at=user.created_at,
+        updated_at=user.updated_at,
+        last_activity_at=getattr(user, 'last_activity_at', None),
+    )
+
+
+@admin_router.put("/users/{user_id}", response_model=AdminUserDetail)
+def update_user(
+    user_id: UUID,
+    data: AdminUserUpdate,
+    response: Response,
+    current_user: CurrentUser,
+) -> AdminUserDetail:
+    """
+    Update user (admin only).
+
+    Can update: is_active, is_admin, is_verified, total_xp
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Update user
+    update_data = data.model_dump(exclude_unset=True)
+    updated = user_repository.update_user(user_id, **update_data)
+
+    if not updated:
+        raise HTTPException(status_code=500, detail="Failed to update user")
+
+    return get_user_detail(user_id, response, current_user)
+
+
+@admin_router.delete("/users/{user_id}")
+def deactivate_user(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+    hard_delete: bool = Query(False, description="Permanently delete user"),
+):
+    """
+    Deactivate or delete user (admin only).
+
+    By default, soft-deletes (deactivates) the user.
+    Use hard_delete=true to permanently delete.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    # Prevent self-deletion
+    if user_id == current_user.id:
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete your own account"
+        )
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if hard_delete:
+        success = user_repository.delete_user(user_id)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to delete user")
+        return {"success": True, "message": "User permanently deleted"}
+    else:
+        user_repository.update_user(user_id, is_active=False)
+        return {"success": True, "message": "User deactivated"}
+
+
+# ==============================================================================
+# SYSTEM STATS ENDPOINTS
+# ==============================================================================
+
+@admin_router.get("/stats", response_model=SystemStats)
+def get_system_stats(
+    response: Response,
+    current_user: CurrentUser,
+) -> SystemStats:
+    """
+    Get system-wide statistics (admin only).
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    users = user_repository.list_users()
+    tracks = list_tracks()
+    modules = list_modules()
+    tasks = list_tasks()
+    labs = list_labs()
+    projects = list_projects()
+
+    now = datetime.utcnow()
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_ago = now - timedelta(days=7)
+
+    # User stats
+    total_users = len(users)
+    active_users = sum(1 for u in users if u.is_active)
+    admin_users = sum(1 for u in users if is_admin(u))
+    users_today = sum(1 for u in users if u.created_at >= today_start)
+    users_this_week = sum(1 for u in users if u.created_at >= week_ago)
+
+    # Activity stats
+    total_tasks_completed = 0
+    total_xp_earned = 0
+
+    for user in users:
+        progress = progress_repository.list_progress_by_user(user.id)
+        completed = sum(1 for p in progress if p.task_id and p.status == "completed")
+        total_tasks_completed += completed
+        total_xp_earned += completed * 25
+
+    # Averages
+    avg_tasks = total_tasks_completed / total_users if total_users > 0 else 0
+    avg_xp = total_xp_earned / total_users if total_users > 0 else 0
+
+    return SystemStats(
+        total_users=total_users,
+        active_users=active_users,
+        admin_users=admin_users,
+        users_today=users_today,
+        users_this_week=users_this_week,
+        total_tracks=len(tracks),
+        total_modules=len(modules),
+        total_tasks=len(tasks),
+        total_labs=len(labs),
+        total_projects=len(projects),
+        total_tasks_completed=total_tasks_completed,
+        total_xp_earned=total_xp_earned,
+        total_study_minutes=0,
+        active_sessions=0,
+        avg_tasks_per_user=round(avg_tasks, 1),
+        avg_xp_per_user=round(avg_xp, 1),
+        avg_session_minutes=0.0,
+        database_status="postgres" if is_db_configured() else "memory",
+        cache_status="not_configured",
+        api_version="1.0.0",
+    )
+
+
+# ==============================================================================
+# CONTENT MANAGEMENT ENDPOINTS
+# ==============================================================================
+
+@admin_router.get("/content/summary", response_model=ContentSummary)
+def get_content_summary(
+    response: Response,
+    current_user: CurrentUser,
+) -> ContentSummary:
+    """
+    Get content summary (admin only).
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    tracks = list_tracks()
+    modules = list_modules()
+    tasks = list_tasks()
+    labs = list_labs()
+    projects = list_projects()
+
+    # Calculate total hours from modules
+    total_hours = sum(getattr(m, 'estimated_hours', 10.0) for m in modules)
+
+    summary = get_bootcamp_summary()
+    is_seeded = (
+        len(tracks) >= summary["tracks"] and
+        len(modules) >= summary["modules"]
+    )
+
+    return ContentSummary(
+        tracks=len(tracks),
+        modules=len(modules),
+        tasks=len(tasks),
+        labs=len(labs),
+        projects=len(projects),
+        total_hours=total_hours,
+        is_seeded=is_seeded,
+        last_seed_at=None,
+    )
+
+
+@admin_router.get("/content/health", response_model=ContentHealthCheck)
+def check_content_health(
+    response: Response,
+    current_user: CurrentUser,
+) -> ContentHealthCheck:
+    """
+    Check content health (admin only).
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    tracks = list_tracks()
+    modules = list_modules()
+    tasks = list_tasks()
+    labs = list_labs()
+
+    # Check for issues
+    missing_content = []
+    orphaned_tasks = 0
+    orphaned_labs = 0
+
+    # Check tracks
+    tracks_ok = len(tracks) >= 4
+    if not tracks_ok:
+        missing_content.append(f"Expected 4 tracks, found {len(tracks)}")
+
+    # Check modules
+    modules_ok = len(modules) >= 15
+    if not modules_ok:
+        missing_content.append(f"Expected 15 modules, found {len(modules)}")
+
+    # Check for orphaned content
+    module_ids = {m.id for m in modules}
+    for task in tasks:
+        if task.module_id not in module_ids:
+            orphaned_tasks += 1
+    for lab in labs:
+        if lab.module_id not in module_ids:
+            orphaned_labs += 1
+
+    # Determine status
+    if tracks_ok and modules_ok and orphaned_tasks == 0 and orphaned_labs == 0:
+        status = "healthy"
+    elif orphaned_tasks > 0 or orphaned_labs > 0:
+        status = "warning"
+    else:
+        status = "error"
+
+    return ContentHealthCheck(
+        status=status,
+        tracks_ok=tracks_ok,
+        modules_ok=modules_ok,
+        orphaned_tasks=orphaned_tasks,
+        orphaned_labs=orphaned_labs,
+        missing_content=missing_content,
+    )
+
+
+# ==============================================================================
+# SEED & DATA MANAGEMENT ENDPOINTS
+# ==============================================================================
 
 class SeedResponse(BaseModel):
     """Response schema for seed operations"""
@@ -229,9 +532,13 @@ class BootcampSummaryResponse(BaseModel):
 
 
 @admin_router.post("/seed-bootcamp", response_model=SeedResponse)
-def seed_bootcamp(clear_existing: bool = True) -> SeedResponse:
+def seed_bootcamp(
+    response: Response,
+    current_user: CurrentUser,
+    clear_existing: bool = True,
+) -> SeedResponse:
     """
-    Seed the database with Bootcamp v3.0 content.
+    Seed the database with Bootcamp v3.0 content (admin only).
 
     Bootcamp v3.0 includes:
     - 4 Tracks (Foundation, Cloud, Containers, Platform)
@@ -246,6 +553,8 @@ def seed_bootcamp(clear_existing: bool = True) -> SeedResponse:
     Returns:
         SeedResponse with counts of created items.
     """
+    add_phase_header(response)
+    require_admin(current_user)
     try:
         # Optionally clear existing data
         if clear_existing:
@@ -359,13 +668,14 @@ def seed_bootcamp(clear_existing: bool = True) -> SeedResponse:
 
 
 @admin_router.get("/seed-status", response_model=SeedStatusResponse)
-def get_seed_status() -> SeedStatusResponse:
+def get_seed_status(response: Response) -> SeedStatusResponse:
     """
     Check the current seed status of the database.
 
     Returns:
         SeedStatusResponse with current counts vs expected.
     """
+    add_phase_header(response)
     summary = get_bootcamp_summary()
 
     current_tracks = len(list_tracks())
@@ -393,27 +703,41 @@ def get_seed_status() -> SeedStatusResponse:
 
 
 @admin_router.get("/bootcamp-summary", response_model=BootcampSummaryResponse)
-def get_bootcamp_content_summary() -> BootcampSummaryResponse:
+def get_bootcamp_content_summary(response: Response) -> BootcampSummaryResponse:
     """
     Get a summary of Bootcamp v3.0 content.
 
     Returns:
         BootcampSummaryResponse with content counts.
     """
+    add_phase_header(response)
     summary = get_bootcamp_summary()
     return BootcampSummaryResponse(**summary)
 
 
 @admin_router.delete("/clear-data")
-def clear_all_data() -> dict:
+def clear_all_data(
+    response: Response,
+    current_user: CurrentUser,
+    confirm: bool = Query(False, description="Confirm deletion"),
+) -> dict:
     """
-    Clear all bootcamp data from the database.
+    Clear all bootcamp data from the database (admin only).
 
     ⚠️ WARNING: This is a destructive operation.
+    Requires confirm=true query parameter.
 
     Returns:
         Confirmation message with counts of deleted items.
     """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not confirm:
+        raise HTTPException(
+            status_code=400,
+            detail="Destructive operation requires confirm=true parameter"
+        )
     tracks_before = len(list_tracks())
     modules_before = len(list_modules())
     tasks_before = len(list_tasks())
