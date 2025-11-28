@@ -207,11 +207,11 @@ export default function TaskDetailPage() {
 
     // Find current task index and next task
     const currentIndex = allTasks.findIndex(t => t.id === taskId)
-    const nextTask = currentIndex >= 0 && currentIndex < allTasks.length - 1 
-        ? allTasks[currentIndex + 1] 
+    const nextTask = currentIndex >= 0 && currentIndex < allTasks.length - 1
+        ? allTasks[currentIndex + 1]
         : null
-    const prevTask = currentIndex > 0 
-        ? allTasks[currentIndex - 1] 
+    const prevTask = currentIndex > 0
+        ? allTasks[currentIndex - 1]
         : null
 
     const handleContinue = () => {
@@ -346,7 +346,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                         </Link>
 
                         {isCompleted ? (
-                            <Button 
+                            <Button
                                 onClick={handleContinue}
                                 className="rounded-xl bg-emerald-500 hover:bg-emerald-600"
                             >
