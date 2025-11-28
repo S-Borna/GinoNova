@@ -10,13 +10,16 @@ Updated to support Bootcamp v3.0 with:
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
+from uuid import UUID
 
 from ..db.module_repository import create_module, clear_modules, list_modules
 from ..db.task_repository import create_task, clear_tasks, list_tasks
 from ..db.track_repository import create_track, clear_tracks, list_tracks, get_track_by_slug
 from ..db.lab_repository import create_lab, clear_labs, list_labs
 from ..db.project_repository import create_project, clear_projects, list_projects
+from ..db import user_repository, progress_repository
 from ..db.seeds.bootcamp_v3_data import (
     get_tracks,
     get_modules,
@@ -27,9 +30,85 @@ from ..schemas.task import TaskCreate
 from ..schemas.track import TrackCreate
 from ..schemas.lab import LabCreate
 from ..schemas.project import ProjectCreate
+from ..core.deps import CurrentUser
 
 
 admin_router = APIRouter()
+
+
+# Temporary admin email check
+ADMIN_EMAIL = "said.ebadi@hotmail.com"
+
+
+class AdminUserResponse(BaseModel):
+    """Response schema for admin user list"""
+    id: str
+    full_name: Optional[str]
+    email: str
+    created_at: datetime
+    total_xp: int
+    level: int
+    tasks_completed: int
+
+
+class AdminUsersListResponse(BaseModel):
+    """Response schema for admin users list"""
+    users: List[AdminUserResponse]
+    total: int
+
+
+def calculate_level(xp: int) -> int:
+    """Calculate level from XP (simple formula: level = 1 + xp // 100)"""
+    return 1 + xp // 100
+
+
+@admin_router.get("/users", response_model=AdminUsersListResponse)
+def list_all_users(current_user: CurrentUser) -> AdminUsersListResponse:
+    """
+    Get all users with their stats.
+    
+    Only accessible to admin (said.ebadi@hotmail.com).
+    
+    Returns:
+        List of users with id, name, email, created_at, total_xp, level, tasks_completed
+    """
+    # Check if user is admin
+    if current_user.email.lower() != ADMIN_EMAIL:
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access required"
+        )
+    
+    users = user_repository.list_users()
+    user_responses = []
+    
+    for user in users:
+        # Get progress records for this user
+        progress_records = progress_repository.list_progress_by_user(user.id)
+        
+        # Count completed tasks (status == "completed" or progress == 100)
+        tasks_completed = sum(
+            1 for p in progress_records 
+            if p.task_id and (p.status == "completed" or p.progress == 100)
+        )
+        
+        # Calculate XP (25 per completed task for now)
+        total_xp = tasks_completed * 25
+        
+        user_responses.append(AdminUserResponse(
+            id=str(user.id),
+            full_name=user.full_name,
+            email=user.email,
+            created_at=user.created_at,
+            total_xp=total_xp,
+            level=calculate_level(total_xp),
+            tasks_completed=tasks_completed,
+        ))
+    
+    return AdminUsersListResponse(
+        users=user_responses,
+        total=len(user_responses)
+    )
 
 
 class SeedResponse(BaseModel):
