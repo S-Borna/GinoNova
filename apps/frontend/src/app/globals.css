@@ -575,6 +575,53 @@
 
 @layer utilities {
 
+    /* Shadow utilities */
+    .shadow-soft {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .shadow-glow {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .shadow-glow-primary {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .shadow-glow-success {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.25);
+    }
+
+    .shadow-glow-warning {
+        box-shadow: 0 0 20px rgba(249, 115, 22, 0.25);
+    }
+
+    .shadow-glow-info {
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+    }
+
+    .hover\:shadow-glow:hover {
+        box-shadow: 0 0 25px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Fade in up animation */
+    .animate-fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     /* Touch-friendly tap targets */
     .touch-target {
         min-height: 44px;

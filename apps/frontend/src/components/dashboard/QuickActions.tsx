@@ -23,7 +23,6 @@
 
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { GlassCard } from "@/components/ui/glass-card"
 import {
     PlayCircle,
     BookOpen,
@@ -70,68 +69,55 @@ interface ActionCardProps {
 function ActionCard({ action, delay = 0 }: ActionCardProps) {
     const Icon = action.icon
 
-    return (
-        <Link href={action.href}>
-            <GlassCard
-                variant="default"
-                padding="lg"
-                radius="xl"
-                interactive
-                className={cn(
-                    "h-full animate-fade-in-up group relative overflow-hidden",
-                    "hover:shadow-glow transition-all duration-300",
-                    action.isPrimary && "ring-2 ring-primary-200 dark:ring-primary-800"
-                )}
-                style={{ animationDelay: `${delay}ms` }}
-            >
-                {/* Gradient overlay for primary */}
-                {action.isPrimary && (
-                    <div className={cn(
-                        "absolute inset-0 opacity-5 dark:opacity-10",
-                        action.gradient
-                    )} />
-                )}
-
-                <div className="relative z-10">
-                    {/* Icon container */}
-                    <div className={cn(
-                        "w-14 h-14 rounded-2xl flex items-center justify-center mb-4",
-                        "shadow-sm transition-transform duration-300",
-                        "group-hover:scale-110 group-hover:shadow-md",
-                        action.iconBg
-                    )}>
-                        <Icon className={cn(
-                            "h-7 w-7",
-                            action.isPrimary
-                                ? "text-white"
-                                : "text-neutral-700 dark:text-neutral-200"
-                        )} />
+    if (action.isPrimary) {
+        // Primary action with gradient background
+        return (
+            <Link href={action.href}>
+                <div
+                    className="flex items-center gap-4 p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 animate-fade-in-up"
+                    style={{ animationDelay: `${delay}ms` }}
+                >
+                    <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                        <Icon className="h-6 w-6 text-white" />
                     </div>
-
-                    {/* Content */}
-                    <div className="space-y-1">
-                        <h3 className="font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                    <div>
+                        <h3 className="font-semibold text-lg flex items-center gap-2">
                             {action.title}
-                            {action.isPrimary && (
-                                <Sparkles className="h-4 w-4 text-primary-500" />
-                            )}
+                            <Sparkles className="h-4 w-4 text-white/80" />
                         </h3>
-                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        <p className="text-sm text-white/80">
                             {action.description}
                         </p>
                     </div>
-
-                    {/* Action indicator */}
-                    <div className={cn(
-                        "mt-4 flex items-center text-sm font-medium",
-                        "text-primary-600 dark:text-primary-400",
-                        "opacity-0 group-hover:opacity-100 transition-opacity"
-                    )}>
-                        <span>Get started</span>
-                        <ArrowRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
-                    </div>
+                    <ArrowRight className="h-5 w-5 ml-auto" />
                 </div>
-            </GlassCard>
+            </Link>
+        )
+    }
+
+    // Secondary action with white background
+    return (
+        <Link href={action.href}>
+            <div
+                className="flex items-center gap-4 p-6 bg-white dark:bg-neutral-800 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 animate-fade-in-up"
+                style={{ animationDelay: `${delay}ms` }}
+            >
+                <div className={cn(
+                    "w-12 h-12 rounded-xl flex items-center justify-center",
+                    action.iconBg
+                )}>
+                    <Icon className="h-6 w-6 text-gray-700 dark:text-neutral-200" />
+                </div>
+                <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                        {action.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-neutral-400">
+                        {action.description}
+                    </p>
+                </div>
+                <ArrowRight className="h-5 w-5 ml-auto text-gray-400 dark:text-neutral-500" />
+            </div>
         </Link>
     )
 }
@@ -168,7 +154,7 @@ export function QuickActions({
             icon: BookOpen,
             href: currentModule ? `/modules/${currentModule.id}` : "/modules",
             gradient: "bg-gradient-to-br from-emerald-500 to-teal-500",
-            iconBg: "bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/50 dark:to-teal-900/50"
+            iconBg: "bg-emerald-100 dark:bg-emerald-900/50"
         },
         {
             id: "progress",
@@ -177,15 +163,15 @@ export function QuickActions({
             icon: TrendingUp,
             href: "/progress",
             gradient: "bg-gradient-to-br from-amber-500 to-orange-500",
-            iconBg: "bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/50 dark:to-orange-900/50"
+            iconBg: "bg-amber-100 dark:bg-amber-900/50"
         }
     ]
 
     return (
-        <section className={cn("animate-fade-in", className)}>
+        <section className={cn("", className)}>
             {/* Section header */}
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     Quick Actions
                 </h2>
             </div>

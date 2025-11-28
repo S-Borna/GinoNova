@@ -12,7 +12,6 @@
  */
 
 import * as React from "react"
-import { GlassCard } from "@/components/ui/glass-card"
 import { cn } from "@/lib/utils"
 
 /* ============================================================================
@@ -161,11 +160,11 @@ export function XPProgress({
     }, [currentXP])
 
     return (
-        <GlassCard
-            variant="default"
-            padding="lg"
-            radius="lg"
-            className={cn("animate-fade-in-up", className)}
+        <div
+            className={cn(
+                "bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 animate-fade-in-up",
+                className
+            )}
             style={{ animationDelay: "200ms" }}
         >
             <div className="flex flex-col lg:flex-row items-center gap-8">
@@ -176,15 +175,15 @@ export function XPProgress({
                     {/* Center content */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                         {/* Level badge */}
-                        <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 text-white text-xs font-bold mb-2 shadow-lg">
+                        <div className="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold mb-2 shadow-lg">
                             LEVEL {level}
                         </div>
 
                         {/* XP value */}
-                        <div className="text-3xl font-bold text-neutral-900 dark:text-white">
+                        <div className="text-3xl font-bold text-gray-900 dark:text-white">
                             {displayXP.toLocaleString()}
                         </div>
-                        <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                        <div className="text-sm text-gray-500 dark:text-neutral-400">
                             / {xpToNextLevel.toLocaleString()} XP
                         </div>
                     </div>
@@ -193,10 +192,10 @@ export function XPProgress({
                 {/* XP Details */}
                 <div className="flex-1 text-center lg:text-left space-y-4">
                     <div>
-                        <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-1">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                             XP Progress
                         </h3>
-                        <p className="text-neutral-500 dark:text-neutral-400">
+                        <p className="text-gray-500 dark:text-neutral-400">
                             {xpNeeded.toLocaleString()} XP to Level {level + 1}
                         </p>
                     </div>
@@ -204,26 +203,26 @@ export function XPProgress({
                     {/* Progress bar */}
                     <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                            <span className="text-neutral-600 dark:text-neutral-400">Progress</span>
-                            <span className="font-medium text-primary-600 dark:text-primary-400">{progress}%</span>
+                            <span className="text-gray-600 dark:text-neutral-400">Progress</span>
+                            <span className="font-medium text-indigo-600 dark:text-indigo-400">{progress}%</span>
                         </div>
-                        <div className="h-3 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                        <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-3">
                             <div
-                                className="h-full bg-gradient-to-r from-primary-500 via-primary-400 to-accent-info rounded-full transition-all duration-1000 ease-out animate-shimmer"
+                                className="bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 h-3 rounded-full transition-all duration-1000 ease-out"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
                     </div>
 
                     {/* Total XP stat */}
-                    <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                    <div className="pt-4 border-t border-gray-200 dark:border-neutral-700">
                         <div className="flex items-center justify-center lg:justify-start gap-2">
                             <span className="text-2xl">⚡</span>
                             <div>
-                                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
+                                <div className="text-2xl font-bold text-gray-900 dark:text-white">
                                     {totalXP.toLocaleString()}
                                 </div>
-                                <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                                <div className="text-xs text-gray-500 dark:text-neutral-400">
                                     Total XP Earned
                                 </div>
                             </div>
@@ -231,6 +230,6 @@ export function XPProgress({
                     </div>
                 </div>
             </div>
-        </GlassCard>
+        </div>
     )
 }

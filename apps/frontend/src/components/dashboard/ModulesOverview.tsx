@@ -13,7 +13,6 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { GlassCard } from "@/components/ui/glass-card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
@@ -115,15 +114,11 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
     const isLocked = status === "locked"
 
     const cardContent = (
-        <GlassCard
-            variant="default"
-            padding="md"
-            radius="lg"
-            interactive={!isLocked}
+        <div
             className={cn(
-                "h-full animate-fade-in-up group",
+                "bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-5 transition-all duration-200 animate-fade-in-up h-full",
                 isLocked && "opacity-60 cursor-not-allowed",
-                !isLocked && "hover:shadow-glow"
+                !isLocked && "hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
             )}
             style={{ animationDelay: `${delay}ms` }}
         >
@@ -131,11 +126,8 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
             <div className="flex items-start justify-between mb-4">
                 {/* Icon */}
                 <div className={cn(
-                    "w-12 h-12 rounded-xl flex items-center justify-center text-2xl",
-                    "bg-gradient-to-br from-neutral-100 to-neutral-50",
-                    "dark:from-neutral-800 dark:to-neutral-700",
-                    "shadow-sm transition-transform duration-300",
-                    !isLocked && "group-hover:scale-110"
+                    "w-10 h-10 rounded-lg flex items-center justify-center text-xl",
+                    "bg-gray-100 dark:bg-neutral-700"
                 )}>
                     {isLocked ? "🔒" : icon}
                 </div>
@@ -151,12 +143,12 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
 
             {/* Content */}
             <div className="space-y-2">
-                <h3 className="font-semibold text-neutral-900 dark:text-white line-clamp-1">
+                <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-1">
                     {module.name}
                 </h3>
 
                 {module.description && (
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                    <p className="text-sm text-gray-500 dark:text-neutral-400 line-clamp-2">
                         {module.description}
                     </p>
                 )}
@@ -165,38 +157,29 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
             {/* Progress */}
             <div className="mt-4 space-y-2">
                 <div className="flex justify-between text-xs">
-                    <span className="text-neutral-500 dark:text-neutral-400">
+                    <span className="text-gray-500 dark:text-neutral-400">
                         {completed} / {total} tasks
                     </span>
                     <span className={cn(
                         "font-medium",
-                        status === "complete" ? "text-emerald-600" : "text-primary-600"
+                        status === "complete" ? "text-emerald-600" : "text-indigo-600"
                     )}>
                         {progress}%
                     </span>
                 </div>
-                <div className="h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-1.5">
                     <div
                         className={cn(
-                            "h-full rounded-full transition-all duration-700 ease-out",
+                            "h-1.5 rounded-full transition-all duration-700 ease-out",
                             status === "complete"
                                 ? "bg-gradient-to-r from-emerald-500 to-teal-500"
-                                : "bg-gradient-to-r from-primary-500 to-primary-400"
+                                : "bg-gradient-to-r from-indigo-500 to-purple-500"
                         )}
                         style={{ width: `${progress}%` }}
                     />
                 </div>
             </div>
-
-            {/* Action hint */}
-            {!isLocked && (
-                <div className="mt-4 flex items-center justify-between text-sm">
-                    <span className="text-primary-600 dark:text-primary-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                        {status === "complete" ? "Review →" : status === "in_progress" ? "Continue →" : "Start →"}
-                    </span>
-                </div>
-            )}
-        </GlassCard>
+        </div>
     )
 
     if (isLocked) {
@@ -234,16 +217,16 @@ export function ModulesOverview({ modules = [], className }: ModulesOverviewProp
             {/* Section header */}
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                         Learning Path
                     </h2>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    <p className="text-sm text-gray-500 dark:text-neutral-400">
                         {displayModules.length} modules in your bootcamp
                     </p>
                 </div>
                 <Link
                     href="/modules"
-                    className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline"
+                    className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
                     View all →
                 </Link>
@@ -266,7 +249,7 @@ export function ModulesOverview({ modules = [], className }: ModulesOverviewProp
                 <div className="mt-6 text-center">
                     <Link
                         href="/modules"
-                        className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 font-medium hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors"
                     >
                         View all {displayModules.length} modules
                         <span>→</span>
