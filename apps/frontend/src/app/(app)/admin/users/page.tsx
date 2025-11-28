@@ -112,16 +112,16 @@ function StatCard({
 // Time ago helper
 function timeAgo(dateString: string | null): string {
     if (!dateString) return "Never"
-    
+
     const date = new Date(dateString)
     const now = new Date()
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-    
+
     if (seconds < 60) return "Just now"
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`
     if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`
-    
+
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
 }
 
@@ -135,11 +135,11 @@ function ActivityIndicator({ lastActive }: { lastActive: string | null }) {
             </span>
         )
     }
-    
+
     const date = new Date(lastActive)
     const now = new Date()
     const hoursSinceActive = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-    
+
     if (hoursSinceActive < 1) {
         return (
             <span className="inline-flex items-center gap-1.5 text-green-600">
@@ -148,7 +148,7 @@ function ActivityIndicator({ lastActive }: { lastActive: string | null }) {
             </span>
         )
     }
-    
+
     if (hoursSinceActive < 24) {
         return (
             <span className="inline-flex items-center gap-1.5 text-amber-600">
@@ -157,7 +157,7 @@ function ActivityIndicator({ lastActive }: { lastActive: string | null }) {
             </span>
         )
     }
-    
+
     return (
         <span className="inline-flex items-center gap-1.5 text-gray-500">
             <span className="w-2 h-2 rounded-full bg-gray-400" />
@@ -210,7 +210,7 @@ export default function AdminUsersPage() {
         }
 
         fetchUsers()
-        
+
         // Auto-refresh every 30 seconds
         const interval = setInterval(fetchUsers, 30000)
         return () => clearInterval(interval)
@@ -477,7 +477,7 @@ export default function AdminUsersPage() {
                     </table>
                 </div>
             </div>
-            
+
             {/* Auto-refresh indicator */}
             <p className="mt-4 text-xs text-center text-gray-400">
                 Auto-refreshes every 30 seconds
