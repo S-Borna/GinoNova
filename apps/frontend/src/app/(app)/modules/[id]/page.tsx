@@ -11,7 +11,7 @@
  * - Continue learning button
  * - Prerequisites display
  *
- * @phase A.3 - App Shell & Routing
+ * @phase A.3 - App Shell & Routing (Updated to use real API)
  */
 
 import { useState, useEffect } from "react"
@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { ProgressBar } from "@/components/ui/progress-bar"
+import { getModule, ModulePublic } from "@/lib/modules"
+import { getTasksForModule, TaskPublic } from "@/lib/tasks"
 import {
     ArrowLeft,
     Play,
@@ -38,7 +40,7 @@ import {
    TYPES
    ============================================================================ */
 
-interface Task {
+interface TaskUI {
     id: string
     title: string
     description: string
@@ -49,7 +51,7 @@ interface Task {
     xpReward: number
 }
 
-interface ModuleDetail {
+interface ModuleDetailUI {
     id: string
     slug: string
     title: string
@@ -64,127 +66,15 @@ interface ModuleDetail {
         slug: string
         title: string
     }
-    tasks: Task[]
+    tasks: TaskUI[]
 }
 
-/* ============================================================================
-   MOCK DATA (until backend ready)
-   ============================================================================ */
-
-const MOCK_MODULE: ModuleDetail = {
-    id: "1-3",
-    slug: "user-permissions",
-    title: "User & Permissions",
-    description:
-        "Master Linux user management, groups, and file permissions. Learn to secure your system with proper access control.",
-    icon: "🔐",
-    progress: 40,
-    completedTasks: 4,
-    totalTasks: 10,
-    estimatedHours: 3,
-    isLocked: false,
-    tasks: [
-        {
-            id: "t1",
-            title: "Understanding Users & Groups",
-            description: "Learn about the Linux user model and how groups work",
-            order: 1,
-            isCompleted: true,
-            isLocked: false,
-            estimatedMinutes: 15,
-            xpReward: 25,
-        },
-        {
-            id: "t2",
-            title: "Creating Users with useradd",
-            description: "Practice creating new user accounts",
-            order: 2,
-            isCompleted: true,
-            isLocked: false,
-            estimatedMinutes: 20,
-            xpReward: 30,
-        },
-        {
-            id: "t3",
-            title: "Managing Groups",
-            description: "Create and manage user groups",
-            order: 3,
-            isCompleted: true,
-            isLocked: false,
-            estimatedMinutes: 15,
-            xpReward: 25,
-        },
-        {
-            id: "t4",
-            title: "File Permissions Basics",
-            description: "Understand read, write, and execute permissions",
-            order: 4,
-            isCompleted: true,
-            isLocked: false,
-            estimatedMinutes: 25,
-            xpReward: 35,
-        },
-        {
-            id: "t5",
-            title: "Using chmod",
-            description: "Change file permissions with chmod command",
-            order: 5,
-            isCompleted: false,
-            isLocked: false,
-            estimatedMinutes: 20,
-            xpReward: 30,
-        },
-        {
-            id: "t6",
-            title: "Using chown",
-            description: "Change file ownership with chown command",
-            order: 6,
-            isCompleted: false,
-            isLocked: false,
-            estimatedMinutes: 15,
-            xpReward: 25,
-        },
-        {
-            id: "t7",
-            title: "Special Permissions",
-            description: "Learn about SUID, SGID, and sticky bit",
-            order: 7,
-            isCompleted: false,
-            isLocked: true,
-            estimatedMinutes: 30,
-            xpReward: 40,
-        },
-        {
-            id: "t8",
-            title: "Access Control Lists (ACLs)",
-            description: "Advanced file permissions with ACLs",
-            order: 8,
-            isCompleted: false,
-            isLocked: true,
-            estimatedMinutes: 25,
-            xpReward: 35,
-        },
-        {
-            id: "t9",
-            title: "sudo & Elevated Privileges",
-            description: "Configure and use sudo for administrative tasks",
-            order: 9,
-            isCompleted: false,
-            isLocked: true,
-            estimatedMinutes: 20,
-            xpReward: 30,
-        },
-        {
-            id: "t10",
-            title: "Module Quiz",
-            description: "Test your knowledge of users and permissions",
-            order: 10,
-            isCompleted: false,
-            isLocked: true,
-            estimatedMinutes: 15,
-            xpReward: 50,
-        },
-    ],
+// Map difficulty to icon
+const DIFFICULTY_ICONS: Record<string, string> = {
+    beginner: "🌱",
+    intermediate: "🌿",
+    advanced: "🌳",
+    expert: "🏔️",
 }
 
 /* ============================================================================
@@ -252,7 +142,7 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
    LOCKED STATE
    ============================================================================ */
 
-function LockedState({ module }: { module: ModuleDetail }) {
+function LockedState({ module }: { module: ModuleDetailUI }) {
     return (
         <GlassCard
             variant="default"
@@ -292,20 +182,22 @@ function LockedState({ module }: { module: ModuleDetail }) {
    ============================================================================ */
 
 interface TaskItemProps {
-    task: Task
+    task: TaskUI
+    moduleId: string
     onStart: (taskId: string) => void
 }
 
-function TaskItem({ task, onStart }: TaskItemProps) {
+function TaskItem({ task, moduleId, onStart }: TaskItemProps) {
     return (
-        <div
+        <Link
+            href={`/modules/${moduleId}/tasks/${task.id}`}
             className={cn(
-                "group relative rounded-xl p-4 transition-all duration-200",
+                "group relative rounded-xl p-4 transition-all duration-200 block",
                 "border border-neutral-200/50 dark:border-neutral-700/50",
                 task.isLocked
-                    ? "bg-neutral-50 dark:bg-neutral-800/30 opacity-60"
+                    ? "bg-neutral-50 dark:bg-neutral-800/30 opacity-60 pointer-events-none"
                     : task.isCompleted
-                        ? "bg-success-50/50 dark:bg-success-900/10"
+                        ? "bg-emerald-50/50 dark:bg-emerald-900/10 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                         : "bg-white dark:bg-neutral-800/50 hover:bg-neutral-50 dark:hover:bg-neutral-800"
             )}
         >
@@ -317,16 +209,16 @@ function TaskItem({ task, onStart }: TaskItemProps) {
                         task.isLocked
                             ? "bg-neutral-200 dark:bg-neutral-700"
                             : task.isCompleted
-                                ? "bg-success-100 dark:bg-success-900/30"
-                                : "bg-primary-100 dark:bg-primary-900/30"
+                                ? "bg-emerald-100 dark:bg-emerald-900/30"
+                                : "bg-indigo-100 dark:bg-indigo-900/30"
                     )}
                 >
                     {task.isLocked ? (
                         <Lock className="w-5 h-5 text-neutral-400" />
                     ) : task.isCompleted ? (
-                        <CheckCircle2 className="w-5 h-5 text-success-500" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                     ) : (
-                        <Circle className="w-5 h-5 text-primary-500" />
+                        <Circle className="w-5 h-5 text-indigo-500" />
                     )}
                 </div>
 
@@ -360,17 +252,20 @@ function TaskItem({ task, onStart }: TaskItemProps) {
                             <Clock className="w-3.5 h-3.5" />
                             {task.estimatedMinutes} min
                         </span>
-                        <span className="flex items-center gap-1 text-xs text-primary-500 font-medium">
+                        <span className="flex items-center gap-1 text-xs text-indigo-500 font-medium">
                             +{task.xpReward} XP
                         </span>
                     </div>
                 </div>
 
-                {/* Action */}
+                {/* Action - show on non-completed tasks */}
                 {!task.isLocked && !task.isCompleted && (
                     <Button
                         size="sm"
-                        onClick={() => onStart(task.id)}
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onStart(task.id)
+                        }}
                         className={cn(
                             "rounded-xl shrink-0",
                             "opacity-0 group-hover:opacity-100 transition-opacity"
@@ -381,7 +276,7 @@ function TaskItem({ task, onStart }: TaskItemProps) {
                     </Button>
                 )}
             </div>
-        </div>
+        </Link>
     )
 }
 
@@ -392,9 +287,9 @@ function TaskItem({ task, onStart }: TaskItemProps) {
 export default function ModuleDetailPage() {
     const params = useParams()
     const router = useRouter()
-    const slug = params.id as string
+    const moduleId = params.id as string
 
-    const [module, setModule] = useState<ModuleDetail | null>(null)
+    const [module, setModule] = useState<ModuleDetailUI | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -402,34 +297,62 @@ export default function ModuleDetailPage() {
         setLoading(true)
         setError(null)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 500))
+        try {
+            // Fetch module details from API
+            const moduleResult = await getModule(moduleId)
+            if (!moduleResult.ok) {
+                setError(moduleResult.message)
+                setLoading(false)
+                return
+            }
 
-        // For demo, use mock data if slug matches, otherwise 404
-        if (slug === "user-permissions" || slug === "1-3") {
-            setModule(MOCK_MODULE)
-        } else {
-            // Still show mock module for demo purposes
-            setModule({
-                ...MOCK_MODULE,
-                slug,
-                title: slug
-                    .split("-")
-                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(" "),
-            })
+            const moduleData = moduleResult.data
+
+            // Fetch tasks for this module
+            const tasksResult = await getTasksForModule(moduleId)
+            const tasks: TaskUI[] = tasksResult.ok
+                ? tasksResult.data.map((t, index) => ({
+                    id: t.id,
+                    title: t.title,
+                    description: t.description || "",
+                    order: t.order_index || index + 1,
+                    isCompleted: false, // TODO: Get from progress API
+                    isLocked: false, // TODO: Implement prerequisites logic
+                    estimatedMinutes: t.estimated_minutes || 15,
+                    xpReward: t.xp_reward || 25,
+                }))
+                : []
+
+            // Convert API data to UI format
+            const moduleUI: ModuleDetailUI = {
+                id: moduleData.id,
+                slug: moduleData.slug,
+                title: moduleData.name,
+                description: moduleData.description || "",
+                icon: DIFFICULTY_ICONS[moduleData.difficulty] || "📚",
+                progress: 0, // TODO: Calculate from completed tasks
+                completedTasks: 0, // TODO: Get from progress API
+                totalTasks: tasks.length,
+                estimatedHours: moduleData.estimated_hours || Math.ceil(tasks.length * 0.25),
+                isLocked: false,
+                tasks,
+            }
+
+            setModule(moduleUI)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to load module")
+        } finally {
+            setLoading(false)
         }
-
-        setLoading(false)
     }
 
     useEffect(() => {
         fetchModule()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [slug])
+    }, [moduleId])
 
     const handleStartTask = (taskId: string) => {
-        router.push(`/studyflow?module=${slug}&task=${taskId}`)
+        router.push(`/modules/${moduleId}/tasks/${taskId}`)
     }
 
     const handleContinue = () => {
@@ -489,7 +412,6 @@ export default function ModuleDetailPage() {
                                     {module.description}
                                 </p>
 
-                                {/* Stats */}
                                 <div className="flex flex-wrap items-center gap-4 mb-4">
                                     <span className="flex items-center gap-1.5 text-sm text-neutral-500">
                                         <BookOpen className="w-4 h-4" />
@@ -499,7 +421,7 @@ export default function ModuleDetailPage() {
                                         <Clock className="w-4 h-4" />
                                         {module.estimatedHours}h estimated
                                     </span>
-                                    <span className="flex items-center gap-1.5 text-sm text-success-500 font-medium">
+                                    <span className="flex items-center gap-1.5 text-sm text-emerald-500 font-medium">
                                         <CheckCircle2 className="w-4 h-4" />
                                         {module.completedTasks}/{module.totalTasks} completed
                                     </span>
@@ -511,7 +433,7 @@ export default function ModuleDetailPage() {
                                         <span className="text-neutral-600 dark:text-neutral-400">
                                             Progress
                                         </span>
-                                        <span className="font-semibold text-primary-500">
+                                        <span className="font-semibold text-indigo-500">
                                             {module.progress}%
                                         </span>
                                     </div>
@@ -536,7 +458,7 @@ export default function ModuleDetailPage() {
                         </h2>
                         <div className="space-y-3">
                             {module.tasks.map((task) => (
-                                <TaskItem key={task.id} task={task} onStart={handleStartTask} />
+                                <TaskItem key={task.id} task={task} moduleId={module.id} onStart={handleStartTask} />
                             ))}
                         </div>
                     </div>

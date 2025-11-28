@@ -25,9 +25,30 @@ class TaskBase(BaseModel):
         max_length=500,
         description="Optional task description (max 500 characters)"
     )
+    content: Optional[str] = Field(
+        None,
+        description="Markdown content for the lesson"
+    )
+    order_index: int = Field(
+        default=1,
+        ge=1,
+        description="Order within the module (1-based)"
+    )
     difficulty: DifficultyLevel = Field(
         default="medium",
         description="Task difficulty: easy, medium, or hard"
+    )
+    estimated_minutes: int = Field(
+        default=15,
+        ge=1,
+        le=240,
+        description="Estimated time to complete in minutes"
+    )
+    xp_reward: int = Field(
+        default=25,
+        ge=0,
+        le=500,
+        description="XP points awarded on completion"
     )
     is_active: bool = Field(default=True, description="Whether task is active")
 
@@ -67,9 +88,30 @@ class TaskCreate(BaseModel):
         max_length=500,
         description="Optional task description (max 500 characters)"
     )
+    content: Optional[str] = Field(
+        None,
+        description="Markdown content for the lesson"
+    )
+    order_index: int = Field(
+        default=1,
+        ge=1,
+        description="Order within the module (1-based)"
+    )
     difficulty: DifficultyLevel = Field(
         default="medium",
         description="Task difficulty: easy, medium, or hard"
+    )
+    estimated_minutes: int = Field(
+        default=15,
+        ge=1,
+        le=240,
+        description="Estimated time to complete in minutes"
+    )
+    xp_reward: int = Field(
+        default=25,
+        ge=0,
+        le=500,
+        description="XP points awarded on completion"
     )
 
     @field_validator("title")
@@ -104,9 +146,30 @@ class TaskUpdate(BaseModel):
         max_length=500,
         description="Optional task description (max 500 characters)"
     )
+    content: Optional[str] = Field(
+        None,
+        description="Markdown content for the lesson"
+    )
+    order_index: Optional[int] = Field(
+        None,
+        ge=1,
+        description="Order within the module (1-based)"
+    )
     difficulty: Optional[DifficultyLevel] = Field(
         None,
         description="Task difficulty: easy, medium, or hard"
+    )
+    estimated_minutes: Optional[int] = Field(
+        None,
+        ge=1,
+        le=240,
+        description="Estimated time to complete in minutes"
+    )
+    xp_reward: Optional[int] = Field(
+        None,
+        ge=0,
+        le=500,
+        description="XP points awarded on completion"
     )
     is_active: Optional[bool] = Field(None, description="Whether task is active")
 
@@ -151,7 +214,11 @@ def create_task_in_db(
     module_id: UUID,
     title: str,
     description: Optional[str] = None,
+    content: Optional[str] = None,
+    order_index: int = 1,
     difficulty: DifficultyLevel = "medium",
+    estimated_minutes: int = 15,
+    xp_reward: int = 25,
     is_active: bool = True,
 ) -> TaskInDB:
     """Factory function to create a new TaskInDB with generated UUID and timestamps"""
@@ -161,7 +228,11 @@ def create_task_in_db(
         module_id=module_id,
         title=title.strip(),
         description=description,
+        content=content,
+        order_index=order_index,
         difficulty=difficulty,
+        estimated_minutes=estimated_minutes,
+        xp_reward=xp_reward,
         is_active=is_active,
         created_at=now,
         updated_at=now,
