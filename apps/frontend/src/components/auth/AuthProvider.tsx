@@ -32,6 +32,7 @@ interface AuthContextType {
     register: (email: string, password: string, fullName?: string) => Promise<void>
     logout: () => void
     clearError: () => void
+    refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -76,6 +77,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const clearError = useCallback(() => {
         setError(null)
+    }, [])
+
+    const refreshUser = useCallback(async () => {
+        const token = getToken()
+        if (!token) return
+        try {
+            const userData = await getMe()
+            setUser(userData)
+        } catch {
+            // Token invalid or expired
+            setUser(null)
+        }
     }, [])
 
     const login = useCallback(async (email: string, password: string) => {
@@ -123,7 +136,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     return (
         <AuthContext.Provider
-            value={{ user, loading, error, login, register, logout, clearError }}
+            value={{ user, loading, error, login, register, logout, clearError, refreshUser }}
         >
             {children}
         </AuthContext.Provider>

@@ -17,6 +17,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
@@ -48,6 +49,7 @@ interface TopBarProps {
 
 function UserDropdown() {
     const { user, logout } = useAuth()
+    const { theme, setTheme } = useTheme()
     const router = useRouter()
     const [isOpen, setIsOpen] = React.useState(false)
     const dropdownRef = React.useRef<HTMLDivElement>(null)
@@ -152,8 +154,7 @@ function UserDropdown() {
 
                         <button
                             onClick={() => {
-                                // Toggle theme (placeholder)
-                                document.documentElement.classList.toggle("dark")
+                                setTheme(theme === "dark" ? "light" : "dark")
                                 setIsOpen(false)
                             }}
                             className={cn(

@@ -166,7 +166,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                     {/* Logo text */}
                     {!collapsed && (
                         <span className="text-lg font-semibold text-neutral-900 dark:text-white">
-                            DevOpsHub
+                            My DevOps Hub
                         </span>
                     )}
                 </Link>

@@ -77,7 +77,7 @@ function LoadingScreen() {
                     <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-transparent border-t-primary-500 animate-spin" />
                 </div>
                 <p className="text-neutral-600 dark:text-neutral-400 text-sm font-medium">
-                    Loading DevOpsHub...
+                    Loading My DevOps Hub...
                 </p>
             </div>
         </div>
