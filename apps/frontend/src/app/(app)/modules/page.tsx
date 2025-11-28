@@ -18,6 +18,8 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { getModules, ModulePublic } from "@/lib/modules"
+import { getTasksForModule, TaskPublic } from "@/lib/tasks"
+import { getUserProgress, ProgressPublic } from "@/lib/progress"
 import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -263,7 +265,7 @@ function Header({
    ============================================================================ */
 
 export default function ModulesPage() {
-    useAuth()
+    const { user } = useAuth()
     const [modules, setModules] = useState<EnhancedModule[]>([])
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
@@ -280,29 +282,83 @@ export default function ModulesPage() {
         try {
             const result = await getModules()
             if (result.ok) {
-                // Transform modules to enhanced format
-                const enhanced: EnhancedModule[] = result.data.map((mod, index) => ({
-                    ...mod,
-                    orderIndex: mod.order_index || index + 1,
-                    icon: getModuleIcon(mod.name),
-                    // Progress data (would come from user progress API in real app)
-                    progress: index === 0 ? 100 : index === 1 ? 65 : index === 2 ? 30 : 0,
-                    tasksCompleted: index === 0 ? 8 : index === 1 ? 5 : index === 2 ? 2 : 0,
-                    totalTasks: 8,
-                    status:
-                        index === 0
-                            ? "complete"
-                            : index === 1
-                                ? "in_progress"
-                                : index === 2
-                                    ? "not_started"
-                                    : index > 3
-                                        ? "locked"
-                                        : "not_started",
-                    estimatedHours: mod.estimated_hours || 4 + index * 2,
-                    prerequisiteModule: mod.prerequisites?.[0],
-                }))
-                setModules(enhanced)
+                // Fetch user progress if logged in
+                let userProgress: ProgressPublic[] = []
+                if (user?.id) {
+                    const progressResult = await getUserProgress(user.id)
+                    if (progressResult.ok) {
+                        userProgress = progressResult.data
+                    }
+                }
+
+                // Create a map of module_id -> progress
+                const progressMap = new Map<string, ProgressPublic>()
+                userProgress.forEach(p => {
+                    if (p.module_id) {
+                        progressMap.set(p.module_id, p)
+                    }
+                })
+
+                // Create a map of task progress by task_id
+                const taskProgressMap = new Map<string, ProgressPublic>()
+                userProgress.forEach(p => {
+                    if (p.task_id) {
+                        taskProgressMap.set(p.task_id, p)
+                    }
+                })
+
+                // Fetch tasks for each module to get accurate counts
+                const modulesWithTasks = await Promise.all(
+                    result.data.map(async (mod, index) => {
+                        // Get tasks for this module
+                        const tasksResult = await getTasksForModule(mod.id)
+                        const tasks: TaskPublic[] = tasksResult.ok ? tasksResult.data : []
+                        const totalTasks = tasks.length
+
+                        // Count completed tasks from progress data
+                        const completedTasks = tasks.filter(t => {
+                            const taskProgress = taskProgressMap.get(t.id)
+                            return taskProgress?.status === "completed"
+                        }).length
+
+                        // Calculate progress percentage
+                        const progressPercent = totalTasks > 0 
+                            ? Math.round((completedTasks / totalTasks) * 100) 
+                            : 0
+
+                        // Determine status
+                        let status: ModuleStatus = "not_started"
+                        if (progressPercent === 100) {
+                            status = "complete"
+                        } else if (progressPercent > 0) {
+                            status = "in_progress"
+                        } else if (index > 0) {
+                            // Check if previous module is complete for locking
+                            const prevMod = result.data[index - 1]
+                            const prevProgress = progressMap.get(prevMod.id)
+                            if (!prevProgress || prevProgress.progress < 100) {
+                                // Only lock if prerequisites exist
+                                if (mod.prerequisites && mod.prerequisites.length > 0) {
+                                    status = "locked"
+                                }
+                            }
+                        }
+
+                        return {
+                            ...mod,
+                            orderIndex: mod.order_index || index + 1,
+                            icon: getModuleIcon(mod.name),
+                            progress: progressPercent,
+                            tasksCompleted: completedTasks,
+                            totalTasks,
+                            status,
+                            estimatedHours: mod.estimated_hours || 4 + index * 2,
+                            prerequisiteModule: mod.prerequisites?.[0],
+                        } as EnhancedModule
+                    })
+                )
+
+                setModules(modulesWithTasks)
             } else {
                 setError(result.message)
             }
@@ -316,7 +372,8 @@ export default function ModulesPage() {
 
     useEffect(() => {
         fetchModules()
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id])
 
     const handleRefresh = () => {
         fetchModules(true)
