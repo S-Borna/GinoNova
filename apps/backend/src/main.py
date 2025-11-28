@@ -12,6 +12,10 @@ from .api.router import api_router
 from .db.module_repository import list_modules
 from .db.seeds.bootcamp_v3_data import get_bootcamp_summary
 
+# Import ILE content for interactive tasks
+from .db.seeds.ile_sample_content import SAMPLE_PERMISSIONS_TASK
+from .db.seeds.module_01_linux_content import MODULE_01_TASKS
+
 configure_logging()
 logger = logging.getLogger(__name__)
 
@@ -86,15 +90,40 @@ def auto_seed_if_empty():
 
         # Create tasks for this module
         for idx, task_data in enumerate(module_data.get("tasks", [])):
+            task_title = task_data["title"]
+
+            # Check if we have ILE content for this task
+            ile_content = None
+            if task_title == "Understanding File Permissions" or "file permissions" in task_title.lower():
+                ile_content = SAMPLE_PERMISSIONS_TASK
+            elif task_title in MODULE_01_TASKS:
+                ile_content = MODULE_01_TASKS[task_title]
+
+            # Use ILE content if available, otherwise use original task data
+            if ile_content:
+                content_blocks = ile_content.get("content_blocks")
+                requirements = ile_content.get("requirements")
+                description = ile_content.get("description") or task_data.get("description")
+                estimated_minutes = ile_content.get("estimated_minutes") or task_data.get("estimated_minutes")
+                xp_reward = ile_content.get("xp_reward") or task_data.get("xp_reward")
+            else:
+                content_blocks = task_data.get("content_blocks")
+                requirements = task_data.get("requirements")
+                description = task_data.get("description")
+                estimated_minutes = task_data.get("estimated_minutes")
+                xp_reward = task_data.get("xp_reward")
+
             difficulty = task_data.get("difficulty", "medium")
-            estimated_minutes = {"easy": 10, "medium": 15, "hard": 25}.get(difficulty, 15)
-            xp_reward = {"easy": 20, "medium": 30, "hard": 50}.get(difficulty, 30)
+            estimated_minutes = estimated_minutes or {"easy": 10, "medium": 15, "hard": 25}.get(difficulty, 15)
+            xp_reward = xp_reward or {"easy": 20, "medium": 30, "hard": 50}.get(difficulty, 30)
 
             create_task(TaskCreate(
                 module_id=module.id,
-                title=task_data["title"],
-                description=task_data.get("description"),
+                title=task_title,
+                description=description,
                 content=task_data.get("content"),
+                content_blocks=content_blocks,
+                requirements=requirements,
                 order_index=idx + 1,
                 difficulty=difficulty,
                 estimated_minutes=estimated_minutes,
