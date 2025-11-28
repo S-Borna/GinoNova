@@ -76,3 +76,9 @@ export {
     useStreakChecker,
     useLevelUpDetector,
 } from "./useProgressSync"
+
+// Studyflow session management hooks (A.6)
+export { useTimer, type UseTimerOptions, type UseTimerReturn } from "./useTimer"
+export { useStudyflowSession as useStudyflowSessionManager } from "./useStudyflowSession"
+export { useStudyflowShortcuts, type KeyboardShortcut } from "./useStudyflowShortcuts"
+export { useNotifications } from "./useNotifications"

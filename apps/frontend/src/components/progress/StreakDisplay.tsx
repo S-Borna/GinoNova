@@ -123,9 +123,9 @@ export function StreakDisplay({
                         animate={
                             hasStreak && isActiveToday
                                 ? {
-                                      scale: [1, 1.2, 1],
-                                      rotate: [0, -5, 5, 0],
-                                  }
+                                    scale: [1, 1.2, 1],
+                                    rotate: [0, -5, 5, 0],
+                                }
                                 : {}
                         }
                         transition={{
@@ -181,8 +181,8 @@ export function StreakDisplay({
                     animate={
                         hasStreak && isActiveToday
                             ? {
-                                  scale: [1, 1.1, 1],
-                              }
+                                scale: [1, 1.1, 1],
+                            }
                             : {}
                     }
                     transition={{
@@ -231,8 +231,8 @@ export function StreakDisplay({
                         {!hasStreak
                             ? "Start learning to build your streak!"
                             : isActiveToday
-                              ? "Great job! You've learned today."
-                              : "Complete a task today to extend your streak!"}
+                                ? "Great job! You've learned today."
+                                : "Complete a task today to extend your streak!"}
                     </p>
                 </div>
             </div>
@@ -308,8 +308,8 @@ function WeekProgress({ isActiveToday, currentStreak }: WeekProgressProps) {
                                 backgroundColor: isActive
                                     ? "rgb(249, 115, 22)"
                                     : isToday
-                                      ? "rgb(249, 115, 22, 0.3)"
-                                      : "rgb(255, 255, 255, 0.1)",
+                                        ? "rgb(249, 115, 22, 0.3)"
+                                        : "rgb(255, 255, 255, 0.1)",
                                 scale: isToday ? 1.1 : 1,
                             }}
                             className={cn(
