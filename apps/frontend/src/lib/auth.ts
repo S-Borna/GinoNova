@@ -197,3 +197,33 @@ export async function getMe(): Promise<UserPublic> {
 export function logout(): void {
     removeToken()
 }
+
+/**
+ * Reset all user progress
+ */
+export async function resetProgress(): Promise<{ ok: boolean; deleted_records: number }> {
+    const token = getToken()
+
+    if (!token) {
+        throw new Error("No auth token")
+    }
+
+    const res = await fetch(`${API_BASE_URL}/api/auth/me/reset-progress`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    })
+
+    if (!res.ok) {
+        if (res.status === 401) {
+            removeToken()
+            throw new Error("Session expired")
+        }
+        const error: AuthError = await res.json()
+        throw new Error(error.detail || "Failed to reset progress")
+    }
+
+    return res.json()
+}
