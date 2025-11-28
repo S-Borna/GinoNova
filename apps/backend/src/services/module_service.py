@@ -37,8 +37,14 @@ class ModuleService:
         return ModulePublic(
             id=module.id,
             name=module.name,
+            slug=getattr(module, 'slug', module.name.lower().replace(' ', '-')),
             description=module.description,
+            order_index=getattr(module, 'order_index', 1),
+            difficulty=getattr(module, 'difficulty', 'intermediate'),
+            estimated_hours=getattr(module, 'estimated_hours', 10.0),
+            prerequisites=getattr(module, 'prerequisites', []),
             is_active=module.is_active,
+            track_id=getattr(module, 'track_id', None),
             created_at=module.created_at,
             updated_at=module.updated_at,
         )
@@ -55,8 +61,14 @@ class ModuleService:
             ModulePublic(
                 id=m.id,
                 name=m.name,
+                slug=getattr(m, 'slug', m.name.lower().replace(' ', '-')),
                 description=m.description,
+                order_index=getattr(m, 'order_index', 1),
+                difficulty=getattr(m, 'difficulty', 'intermediate'),
+                estimated_hours=getattr(m, 'estimated_hours', 10.0),
+                prerequisites=getattr(m, 'prerequisites', []),
                 is_active=m.is_active,
+                track_id=getattr(m, 'track_id', None),
                 created_at=m.created_at,
                 updated_at=m.updated_at,
             )
@@ -86,8 +98,14 @@ class ModuleService:
         return ModulePublic(
             id=module.id,
             name=module.name,
+            slug=getattr(module, 'slug', module.name.lower().replace(' ', '-')),
             description=module.description,
+            order_index=getattr(module, 'order_index', 1),
+            difficulty=getattr(module, 'difficulty', 'intermediate'),
+            estimated_hours=getattr(module, 'estimated_hours', 10.0),
+            prerequisites=getattr(module, 'prerequisites', []),
             is_active=module.is_active,
+            track_id=getattr(module, 'track_id', None),
             created_at=module.created_at,
             updated_at=module.updated_at,
         )
@@ -125,8 +143,14 @@ class ModuleService:
         return ModulePublic(
             id=module.id,
             name=module.name,
+            slug=getattr(module, 'slug', module.name.lower().replace(' ', '-')),
             description=module.description,
+            order_index=getattr(module, 'order_index', 1),
+            difficulty=getattr(module, 'difficulty', 'intermediate'),
+            estimated_hours=getattr(module, 'estimated_hours', 10.0),
+            prerequisites=getattr(module, 'prerequisites', []),
             is_active=module.is_active,
+            track_id=getattr(module, 'track_id', None),
             created_at=module.created_at,
             updated_at=module.updated_at,
         )

@@ -4,14 +4,14 @@
  * ============================================================================
  * SESSION HISTORY COMPONENT - Recent Sessions List
  * ============================================================================
- * 
+ *
  * Features:
  * - Recent sessions list
  * - Date/time
  * - Duration
  * - Tasks completed
  * - XP earned
- * 
+ *
  * @phase D.5 - Studyflow UI
  */
 
