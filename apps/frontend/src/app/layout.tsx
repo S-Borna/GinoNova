@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/auth';
 import { QueryProvider } from '@/providers/QueryProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 // Primary font: Inter — Clean, modern, highly legible
 const inter = Inter({
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <QueryProvider>
                     <AuthProvider>{children}</AuthProvider>
                 </QueryProvider>
+                <Toaster position="top-right" richColors closeButton />
             </body>
         </html>
     );
