@@ -34,7 +34,7 @@ const buttonVariants = cva(
     // Focus states
     "focus-visible:outline-none",
     "focus-visible:ring-2",
-    "focus-visible:ring-primary-500",
+    "focus-visible:ring-indigo-500",
     "focus-visible:ring-offset-2",
     // Disabled states
     "disabled:pointer-events-none",
@@ -52,22 +52,22 @@ const buttonVariants = cva(
       variant: {
         // Default: Solid primary button
         default: [
-          "bg-primary-600",
+          "bg-indigo-600",
           "text-white",
           "shadow-sm",
-          "hover:bg-primary-700",
-          "active:bg-primary-800",
+          "hover:bg-indigo-700",
+          "active:bg-indigo-800",
         ],
 
         // Gradient: Premium gradient effect (Apple-style)
         gradient: [
           "bg-gradient-to-r",
-          "from-primary-500",
-          "to-primary-600",
+          "from-indigo-500",
+          "to-purple-600",
           "text-white",
           "shadow-md",
-          "hover:from-primary-600",
-          "hover:to-primary-700",
+          "hover:from-indigo-600",
+          "hover:to-purple-700",
           "hover:shadow-lg",
           "hover:-translate-y-0.5",
           "active:translate-y-0",
@@ -76,23 +76,25 @@ const buttonVariants = cva(
 
         // Ghost Gradient: Subtle gradient on hover
         "ghost-gradient": [
-          "text-primary-600",
-          "dark:text-primary-400",
+          "text-indigo-600",
+          "dark:text-indigo-400",
           "hover:bg-gradient-to-r",
-          "hover:from-primary-50",
-          "hover:to-primary-100/50",
-          "dark:hover:from-primary-900/30",
-          "dark:hover:to-primary-800/20",
+          "hover:from-indigo-50",
+          "hover:to-indigo-100/50",
+          "dark:hover:from-indigo-900/30",
+          "dark:hover:to-indigo-800/20",
         ],
 
         // Glow: Gradient with animated glow effect
         glow: [
           "bg-gradient-to-r",
-          "from-primary-500",
-          "to-primary-600",
+          "from-indigo-500",
+          "to-purple-600",
           "text-white",
-          "shadow-glow-primary",
-          "hover:shadow-glow-lg",
+          "shadow-lg",
+          "shadow-indigo-500/30",
+          "hover:shadow-xl",
+          "hover:shadow-indigo-500/40",
           "hover:-translate-y-0.5",
           "active:translate-y-0",
           "transition-all",
@@ -105,8 +107,8 @@ const buttonVariants = cva(
           "backdrop-blur-md",
           "border",
           "border-white/20",
-          "text-neutral-900",
-          "shadow-soft",
+          "text-gray-900",
+          "shadow-sm",
           "hover:bg-white/20",
           "hover:border-white/30",
           "dark:text-white",
@@ -115,7 +117,7 @@ const buttonVariants = cva(
 
         // Destructive: Danger/delete actions
         destructive: [
-          "bg-accent-danger",
+          "bg-red-500",
           "text-white",
           "shadow-sm",
           "hover:bg-red-600",
@@ -125,46 +127,46 @@ const buttonVariants = cva(
         // Outline: Bordered button
         outline: [
           "border",
-          "border-neutral-200",
+          "border-gray-200",
           "bg-transparent",
-          "text-neutral-900",
+          "text-gray-900",
           "shadow-sm",
-          "hover:bg-neutral-50",
-          "hover:border-neutral-300",
-          "dark:border-neutral-700",
-          "dark:text-neutral-100",
-          "dark:hover:bg-neutral-800",
-          "dark:hover:border-neutral-600",
+          "hover:bg-gray-50",
+          "hover:border-gray-300",
+          "dark:border-gray-700",
+          "dark:text-gray-100",
+          "dark:hover:bg-gray-800",
+          "dark:hover:border-gray-600",
         ],
 
         // Secondary: Muted secondary button
         secondary: [
-          "bg-neutral-100",
-          "text-neutral-900",
+          "bg-gray-100",
+          "text-gray-900",
           "shadow-sm",
-          "hover:bg-neutral-200",
-          "active:bg-neutral-300",
-          "dark:bg-neutral-800",
-          "dark:text-neutral-100",
-          "dark:hover:bg-neutral-700",
+          "hover:bg-gray-200",
+          "active:bg-gray-300",
+          "dark:bg-gray-800",
+          "dark:text-gray-100",
+          "dark:hover:bg-gray-700",
         ],
 
         // Ghost: Minimal hover effect
         ghost: [
-          "text-neutral-600",
-          "hover:bg-neutral-100",
-          "hover:text-neutral-900",
-          "dark:text-neutral-400",
-          "dark:hover:bg-neutral-800",
-          "dark:hover:text-neutral-100",
+          "text-gray-600",
+          "hover:bg-gray-100",
+          "hover:text-gray-900",
+          "dark:text-gray-400",
+          "dark:hover:bg-gray-800",
+          "dark:hover:text-gray-100",
         ],
 
         // Link: Text-only with underline
         link: [
-          "text-primary-600",
+          "text-indigo-600",
           "underline-offset-4",
           "hover:underline",
-          "dark:text-primary-400",
+          "dark:text-indigo-400",
         ],
       },
 

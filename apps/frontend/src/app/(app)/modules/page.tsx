@@ -280,12 +280,12 @@ export default function ModulesPage() {
         try {
             const result = await getModules()
             if (result.ok) {
-                // Transform modules to enhanced format with mock progress data
+                // Transform modules to enhanced format
                 const enhanced: EnhancedModule[] = result.data.map((mod, index) => ({
                     ...mod,
-                    orderIndex: index + 1,
+                    orderIndex: mod.order_index || index + 1,
                     icon: getModuleIcon(mod.name),
-                    // Mock progress data (would come from backend in real app)
+                    // Progress data (would come from user progress API in real app)
                     progress: index === 0 ? 100 : index === 1 ? 65 : index === 2 ? 30 : 0,
                     tasksCompleted: index === 0 ? 8 : index === 1 ? 5 : index === 2 ? 2 : 0,
                     totalTasks: 8,
@@ -299,8 +299,8 @@ export default function ModulesPage() {
                                     : index > 3
                                         ? "locked"
                                         : "not_started",
-                    estimatedHours: 4 + index * 2,
-                    prerequisiteModule: index > 3 ? result.data[index - 1]?.name : undefined,
+                    estimatedHours: mod.estimated_hours || 4 + index * 2,
+                    prerequisiteModule: mod.prerequisites?.[0],
                 }))
                 setModules(enhanced)
             } else {

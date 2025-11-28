@@ -9,8 +9,14 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 export interface ModulePublic {
     id: string
     name: string
+    slug: string
     description: string | null
+    order_index: number
+    difficulty: "beginner" | "intermediate" | "advanced" | "expert"
+    estimated_hours: number
+    prerequisites: string[]
     is_active: boolean
+    track_id: string | null
     created_at: string
     updated_at: string
 }
