@@ -101,7 +101,7 @@ export function Footer() {
                         </Link>
 
                         <p className="text-neutral-400 text-sm leading-relaxed mb-6 max-w-xs">
-                            The most comprehensive DevOps learning platform. 
+                            The most comprehensive DevOps learning platform.
                             Master modern infrastructure, from Linux to Kubernetes.
                         </p>
 

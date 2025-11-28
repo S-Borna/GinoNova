@@ -456,7 +456,7 @@ function SubmissionArea({ trackColor }: SubmissionAreaProps) {
                 <p className="text-sm text-neutral-600 dark:text-neutral-400 flex items-start gap-2">
                     <FileText className="h-4 w-4 mt-0.5 flex-shrink-0" />
                     <span>
-                        After submission, your project will be reviewed. You&apos;ll receive feedback 
+                        After submission, your project will be reviewed. You&apos;ll receive feedback
                         and XP once approved.
                     </span>
                 </p>
