@@ -121,3 +121,32 @@ def test_protected_route(current_user: CurrentUser):
         "user_id": str(current_user.id),
         "is_admin": current_user.is_admin
     }
+
+
+@auth_router.post("/me/reset-progress")
+def reset_user_progress(current_user: CurrentUser):
+    """
+    Reset all progress for the current user.
+
+    This will:
+    - Delete all progress records for the user
+    - Keep account info (email, password, name)
+
+    Returns:
+        Success message with count of deleted records
+    """
+    from ..db import progress_repository
+
+    # Get all progress records for this user
+    user_progress = progress_repository.list_progress_by_user(current_user.id)
+    deleted_count = len(user_progress)
+
+    # Delete each progress record
+    for progress in user_progress:
+        progress_repository.delete_progress(progress.id)
+
+    return {
+        "ok": True,
+        "message": f"Successfully reset all progress",
+        "deleted_records": deleted_count
+    }

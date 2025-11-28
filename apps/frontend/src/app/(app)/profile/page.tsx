@@ -11,6 +11,7 @@
  * - Account settings
  * - Notification preferences
  * - Theme toggle
+ * - Reset progress functionality
  *
  * @phase A.3 - App Shell & Routing
  */
@@ -35,7 +36,11 @@ import {
     Trophy,
     Flame,
     Clock,
+    AlertTriangle,
+    RotateCcw,
+    X,
 } from "lucide-react"
+import { resetProgress } from "@/lib/auth"
 
 /* ============================================================================
    USER STATS
@@ -61,6 +66,88 @@ function StatBadge({ icon, label, value, color }: StatBadgeProps) {
 }
 
 /* ============================================================================
+   CONFIRMATION MODAL
+   ============================================================================ */
+
+interface ConfirmModalProps {
+    isOpen: boolean
+    onClose: () => void
+    onConfirm: () => void
+    isLoading: boolean
+}
+
+function ConfirmResetModal({ isOpen, onClose, onConfirm, isLoading }: ConfirmModalProps) {
+    if (!isOpen) return null
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                onClick={onClose}
+            />
+
+            {/* Modal */}
+            <div className="relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6">
+                {/* Close button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                    <X className="w-5 h-5 text-gray-500" />
+                </button>
+
+                {/* Icon */}
+                <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                        <AlertTriangle className="w-8 h-8 text-red-500" />
+                    </div>
+                </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-2">
+                    Reset All Progress?
+                </h3>
+                <p className="text-center text-gray-500 dark:text-gray-400 mb-6">
+                    This will permanently delete <strong>all</strong> your learning progress,
+                    completed tasks, and achievements. This action cannot be undone.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex gap-3">
+                    <Button
+                        variant="outline"
+                        onClick={onClose}
+                        className="flex-1 rounded-xl"
+                        disabled={isLoading}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={onConfirm}
+                        className="flex-1 rounded-xl"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <RotateCcw className="w-4 h-4 mr-2 animate-spin" />
+                                Resetting...
+                            </>
+                        ) : (
+                            <>
+                                <AlertTriangle className="w-4 h-4 mr-2" />
+                                Yes, Reset Everything
+                            </>
+                        )}
+                    </Button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
    PROFILE PAGE
    ============================================================================ */
 
@@ -70,6 +157,8 @@ export default function ProfilePage() {
     const [notificationsEnabled, setNotificationsEnabled] = useState(true)
     const [emailNotifications, setEmailNotifications] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
+    const [showResetModal, setShowResetModal] = useState(false)
+    const [isResetting, setIsResetting] = useState(false)
 
     // Form state
     const [fullName, setFullName] = useState(user?.full_name || "")
@@ -84,6 +173,21 @@ export default function ProfilePage() {
 
     const handleLogout = () => {
         logout()
+    }
+
+    const handleResetProgress = async () => {
+        setIsResetting(true)
+        try {
+            const result = await resetProgress()
+            setShowResetModal(false)
+            // Show success - could add a toast here
+            alert(`All progress has been reset successfully! (${result.deleted_records} records deleted)`)
+        } catch (error) {
+            console.error("Failed to reset progress:", error)
+            alert("Failed to reset progress. Please try again.")
+        } finally {
+            setIsResetting(false)
+        }
     }
 
     const toggleTheme = () => {
@@ -328,24 +432,63 @@ export default function ProfilePage() {
                 {/* Danger Zone */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-red-200 dark:border-red-900/50 p-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <LogOut className="w-5 h-5 text-red-500" />
+                        <AlertTriangle className="w-5 h-5 text-red-500" />
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Session
+                            Danger Zone
                         </h3>
                     </div>
-                    <p className="text-gray-500 dark:text-gray-400 mb-4">
-                        Sign out of your account on this device.
-                    </p>
-                    <Button
-                        variant="destructive"
-                        onClick={handleLogout}
-                        className="rounded-xl"
-                    >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
-                    </Button>
+
+                    <div className="space-y-4">
+                        {/* Reset Progress */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-red-100 dark:border-red-900/30">
+                            <div>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                    Reset All Progress
+                                </p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Delete all your learning progress and start fresh. This cannot be undone.
+                                </p>
+                            </div>
+                            <Button
+                                variant="outline"
+                                onClick={() => setShowResetModal(true)}
+                                className="rounded-xl border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+                            >
+                                <RotateCcw className="w-4 h-4 mr-2" />
+                                Reset Progress
+                            </Button>
+                        </div>
+
+                        {/* Sign Out */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                    Sign Out
+                                </p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Sign out of your account on this device.
+                                </p>
+                            </div>
+                            <Button
+                                variant="destructive"
+                                onClick={handleLogout}
+                                className="rounded-xl"
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                Sign Out
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            {/* Reset Confirmation Modal */}
+            <ConfirmResetModal
+                isOpen={showResetModal}
+                onClose={() => setShowResetModal(false)}
+                onConfirm={handleResetProgress}
+                isLoading={isResetting}
+            />
         </div>
     )
 }
