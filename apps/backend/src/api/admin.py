@@ -11,7 +11,7 @@ Updated to support Bootcamp v3.0 with:
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from ..db.module_repository import create_module, clear_modules, list_modules
@@ -46,15 +46,35 @@ class AdminUserResponse(BaseModel):
     full_name: Optional[str]
     email: str
     created_at: datetime
+    updated_at: datetime
     total_xp: int
     level: int
     tasks_completed: int
+    modules_started: int
+    modules_completed: int
+    last_active: Optional[datetime]
+    is_active: bool
+
+
+class AdminStatsResponse(BaseModel):
+    """Response schema for admin stats overview"""
+    total_users: int
+    users_today: int
+    users_this_week: int
+    total_tasks_completed: int
+    total_xp_earned: int
+    active_users_today: int
+    avg_tasks_per_user: float
+    avg_xp_per_user: float
+    total_modules: int
+    total_tasks: int
 
 
 class AdminUsersListResponse(BaseModel):
     """Response schema for admin users list"""
     users: List[AdminUserResponse]
     total: int
+    stats: AdminStatsResponse
 
 
 def calculate_level(xp: int) -> int:
@@ -66,11 +86,11 @@ def calculate_level(xp: int) -> int:
 def list_all_users(current_user: CurrentUser) -> AdminUsersListResponse:
     """
     Get all users with their stats.
-    
+
     Only accessible to admin (said.ebadi@hotmail.com).
-    
+
     Returns:
-        List of users with id, name, email, created_at, total_xp, level, tasks_completed
+        List of users with detailed stats and global stats overview
     """
     # Check if user is admin
     if current_user.email.lower() != ADMIN_EMAIL:
@@ -78,36 +98,100 @@ def list_all_users(current_user: CurrentUser) -> AdminUsersListResponse:
             status_code=403,
             detail="Admin access required"
         )
-    
+
     users = user_repository.list_users()
+    all_modules = list_modules()
+    all_tasks = list_tasks()
+
+    now = datetime.utcnow()
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_ago = now - timedelta(days=7)
+
     user_responses = []
-    
+    total_tasks_completed = 0
+    total_xp = 0
+    users_today = 0
+    users_this_week = 0
+    active_today = 0
+
     for user in users:
         # Get progress records for this user
         progress_records = progress_repository.list_progress_by_user(user.id)
-        
+
         # Count completed tasks (status == "completed" or progress == 100)
         tasks_completed = sum(
-            1 for p in progress_records 
+            1 for p in progress_records
             if p.task_id and (p.status == "completed" or p.progress == 100)
         )
-        
+
+        # Count modules started and completed
+        module_progress = [p for p in progress_records if p.module_id]
+        modules_started = len(module_progress)
+        modules_completed = sum(1 for p in module_progress if p.status == "completed" or p.progress == 100)
+
         # Calculate XP (25 per completed task for now)
-        total_xp = tasks_completed * 25
-        
+        user_xp = tasks_completed * 25
+
+        # Determine last active (from progress records or updated_at)
+        last_active = user.updated_at
+        if progress_records:
+            latest_progress = max(progress_records, key=lambda p: p.updated_at)
+            if latest_progress.updated_at > last_active:
+                last_active = latest_progress.updated_at
+
+        # Check if user was active today
+        if last_active >= today_start:
+            active_today += 1
+
+        # Count users registered today/this week
+        if user.created_at >= today_start:
+            users_today += 1
+        if user.created_at >= week_ago:
+            users_this_week += 1
+
+        total_tasks_completed += tasks_completed
+        total_xp += user_xp
+
         user_responses.append(AdminUserResponse(
             id=str(user.id),
             full_name=user.full_name,
             email=user.email,
             created_at=user.created_at,
-            total_xp=total_xp,
-            level=calculate_level(total_xp),
+            updated_at=user.updated_at,
+            total_xp=user_xp,
+            level=calculate_level(user_xp),
             tasks_completed=tasks_completed,
+            modules_started=modules_started,
+            modules_completed=modules_completed,
+            last_active=last_active,
+            is_active=user.is_active,
         ))
-    
+
+    # Sort by last active (most recent first)
+    user_responses.sort(key=lambda u: u.last_active or datetime.min, reverse=True)
+
+    # Calculate averages
+    user_count = len(users)
+    avg_tasks = total_tasks_completed / user_count if user_count > 0 else 0
+    avg_xp = total_xp / user_count if user_count > 0 else 0
+
+    stats = AdminStatsResponse(
+        total_users=user_count,
+        users_today=users_today,
+        users_this_week=users_this_week,
+        total_tasks_completed=total_tasks_completed,
+        total_xp_earned=total_xp,
+        active_users_today=active_today,
+        avg_tasks_per_user=round(avg_tasks, 1),
+        avg_xp_per_user=round(avg_xp, 1),
+        total_modules=len(all_modules),
+        total_tasks=len(all_tasks),
+    )
+
     return AdminUsersListResponse(
         users=user_responses,
-        total=len(user_responses)
+        total=len(user_responses),
+        stats=stats,
     )
 
 
