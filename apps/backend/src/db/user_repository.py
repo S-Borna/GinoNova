@@ -8,7 +8,7 @@ from uuid import UUID
 from datetime import datetime
 
 from .memory import USERS
-from .database import is_db_configured, SessionLocal
+from .database import is_db_configured, get_db_context
 from ..schemas.user import UserInDB
 
 
@@ -41,7 +41,7 @@ def list_users() -> list[UserInDB]:
     """
     if is_db_configured():
         UserModel = _get_user_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             users = db.query(UserModel).all()
             return [_model_to_schema(u) for u in users]
 
@@ -62,7 +62,7 @@ def get_user_by_email(email: str) -> Optional[UserInDB]:
 
     if is_db_configured():
         UserModel = _get_user_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             user = db.query(UserModel).filter(UserModel.email == normalized_email).first()
             return _model_to_schema(user) if user else None
 
@@ -81,7 +81,7 @@ def get_user_by_id(user_id: UUID) -> Optional[UserInDB]:
     """
     if is_db_configured():
         UserModel = _get_user_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             user = db.query(UserModel).filter(UserModel.id == user_id).first()
             return _model_to_schema(user) if user else None
 
@@ -108,7 +108,7 @@ def create_user(user: UserInDB) -> UserInDB:
 
     if is_db_configured():
         UserModel = _get_user_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             # Check if email already exists
             existing = db.query(UserModel).filter(UserModel.email == normalized_email).first()
             if existing:
@@ -126,7 +126,8 @@ def create_user(user: UserInDB) -> UserInDB:
                 updated_at=user.updated_at,
             )
             db.add(db_user)
-            db.commit()
+            # Commit handled by context manager
+            db.flush()
             db.refresh(db_user)
             return _model_to_schema(db_user)
 
@@ -151,7 +152,7 @@ def update_user(user_id: UUID, **kwargs) -> Optional[UserInDB]:
     """
     if is_db_configured():
         UserModel = _get_user_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             user = db.query(UserModel).filter(UserModel.id == user_id).first()
             if not user:
                 return None
@@ -166,7 +167,7 @@ def update_user(user_id: UUID, **kwargs) -> Optional[UserInDB]:
                     setattr(user, key, value)
 
             user.updated_at = datetime.utcnow()
-            db.commit()
+            db.flush()
             db.refresh(user)
             return _model_to_schema(user)
 
@@ -197,13 +198,13 @@ def delete_user(user_id: UUID) -> bool:
     """
     if is_db_configured():
         UserModel = _get_user_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             user = db.query(UserModel).filter(UserModel.id == user_id).first()
             if not user:
                 return False
 
             db.delete(user)
-            db.commit()
+            # Commit handled by context manager
             return True
 
     # Fallback to in-memory
