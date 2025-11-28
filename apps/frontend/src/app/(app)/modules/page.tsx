@@ -322,8 +322,8 @@ export default function ModulesPage() {
                         }).length
 
                         // Calculate progress percentage
-                        const progressPercent = totalTasks > 0 
-                            ? Math.round((completedTasks / totalTasks) * 100) 
+                        const progressPercent = totalTasks > 0
+                            ? Math.round((completedTasks / totalTasks) * 100)
                             : 0
 
                         // Determine status

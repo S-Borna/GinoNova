@@ -10,6 +10,7 @@ from .dashboard import dashboard_router
 from .ai import ai_router
 from .data import data_router
 from .admin import admin_router
+from .profile import profile_router
 
 api_router = APIRouter()
 
@@ -24,3 +25,4 @@ api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboar
 api_router.include_router(ai_router, prefix="/ai", tags=["ai"])
 api_router.include_router(data_router, tags=["data"])
 api_router.include_router(admin_router, prefix="/admin", tags=["admin"])
+api_router.include_router(profile_router, prefix="/profile", tags=["profile"])
