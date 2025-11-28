@@ -63,6 +63,15 @@ def register(user_data: UserCreate):
         )
     except UserAlreadyExistsError:
         raise_conflict("A user with this email already exists")
+    except Exception as e:
+        # Log unexpected errors for debugging
+        import traceback
+        print(f"Registration error: {type(e).__name__}: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Registration failed: {type(e).__name__}: {str(e)}"
+        )
 
 
 @auth_router.post("/login", response_model=TokenResponse)
