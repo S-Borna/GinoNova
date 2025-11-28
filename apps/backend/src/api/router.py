@@ -11,6 +11,7 @@ from .ai import ai_router
 from .data import data_router
 from .admin import admin_router
 from .profile import profile_router
+from .task_progress import task_progress_router
 
 api_router = APIRouter()
 
@@ -19,6 +20,7 @@ api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
 api_router.include_router(version_router, prefix="/version", tags=["version"])
 api_router.include_router(modules_router, prefix="/modules", tags=["modules"])
 api_router.include_router(tasks_router, prefix="/tasks", tags=["tasks"])
+api_router.include_router(task_progress_router, prefix="/tasks", tags=["task-progress"])
 api_router.include_router(studyflow_router, prefix="/studyflow", tags=["studyflow"])
 api_router.include_router(progress_router, prefix="/progress", tags=["progress"])
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboard"])

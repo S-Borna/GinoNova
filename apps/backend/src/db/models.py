@@ -99,14 +99,19 @@ class Module(Base):
 
 
 class Task(Base):
-    """Task/Lesson model"""
+    """Task/Lesson model - Enhanced with ILE content blocks"""
     __tablename__ = "tasks"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     module_id = Column(UUID(as_uuid=True), ForeignKey("modules.id"), nullable=False)
     title = Column(String(200), nullable=False)
     description = Column(Text, nullable=True)
-    content = Column(Text, nullable=True)  # Markdown content
+    content = Column(Text, nullable=True)  # Legacy markdown content
+    
+    # ILE Phase 1: Interactive content blocks
+    content_blocks = Column(JSON, default=list)  # List of ContentBlock
+    requirements = Column(JSON, default=list)  # List of CompletionRequirement
+    
     order_index = Column(Integer, default=1)
     difficulty = Column(String(20), default="medium")
     estimated_minutes = Column(Integer, default=15)
@@ -230,4 +235,35 @@ class StudyflowSession(Base):
 
     __table_args__ = (
         Index('ix_studyflow_user_date', 'user_id', 'started_at'),
+    )
+
+
+class TaskBlockProgress(Base):
+    """Interactive task progress tracking - ILE Phase 1"""
+    __tablename__ = "task_block_progress"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False)
+
+    status = Column(String(20), default="not_started")  # not_started, in_progress, completed
+
+    # JSON storage for block-level tracking
+    block_progress = Column(JSON, default=list)  # List of BlockProgress
+    quiz_answers = Column(JSON, default=list)  # List of QuizAnswer
+    terminal_history = Column(JSON, default=list)  # List of TerminalCommand
+
+    # Timing
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    total_time_spent = Column(Integer, default=0)  # seconds
+
+    # XP
+    xp_earned = Column(Integer, default=0)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        Index('ix_task_block_progress_user_task', 'user_id', 'task_id', unique=True),
     )
