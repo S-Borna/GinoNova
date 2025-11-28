@@ -20,11 +20,9 @@ import Link from "next/link"
 import { getModules, ModulePublic } from "@/lib/modules"
 import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
-import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
-import { ProgressBar } from "@/components/ui/progress-bar"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
-import { BookOpen, Trophy, RefreshCw, AlertCircle, Rocket } from "lucide-react"
+import { BookOpen, Trophy, RefreshCw, AlertCircle } from "lucide-react"
 
 /* ============================================================================
    TYPES
@@ -79,47 +77,46 @@ function getModuleIcon(name: string): string {
 
 function ModuleCardSkeleton() {
     return (
-        <div
-            className={cn(
-                "rounded-2xl p-6 animate-pulse",
-                "bg-white dark:bg-neutral-800/50",
-                "border border-neutral-200/50 dark:border-neutral-700/50"
-            )}
-        >
+        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 animate-pulse">
             {/* Top row */}
-            <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-neutral-200 dark:bg-neutral-700" />
-                <div className="w-20 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gray-200 dark:bg-neutral-700" />
+                    <div>
+                        <div className="h-5 w-32 rounded bg-gray-200 dark:bg-neutral-700 mb-1" />
+                        <div className="h-4 w-20 rounded bg-gray-200 dark:bg-neutral-700" />
+                    </div>
+                </div>
+                <div className="w-20 h-6 rounded-full bg-gray-200 dark:bg-neutral-700" />
             </div>
-            {/* Icon */}
-            <div className="w-12 h-12 mb-3 rounded-lg bg-neutral-200 dark:bg-neutral-700" />
-            {/* Title */}
-            <div className="h-6 w-3/4 mb-2 rounded bg-neutral-200 dark:bg-neutral-700" />
             {/* Description */}
             <div className="space-y-2 mb-4">
-                <div className="h-4 w-full rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="h-4 w-2/3 rounded bg-neutral-200 dark:bg-neutral-700" />
+                <div className="h-4 w-full rounded bg-gray-200 dark:bg-neutral-700" />
+                <div className="h-4 w-2/3 rounded bg-gray-200 dark:bg-neutral-700" />
             </div>
             {/* Progress */}
-            <div className="h-2 w-full mb-2 rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-2 w-full mb-2 rounded bg-gray-200 dark:bg-neutral-700" />
             <div className="flex justify-between mb-4">
-                <div className="h-4 w-20 rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="h-4 w-10 rounded bg-neutral-200 dark:bg-neutral-700" />
+                <div className="h-4 w-12 rounded bg-gray-200 dark:bg-neutral-700" />
+                <div className="h-4 w-8 rounded bg-gray-200 dark:bg-neutral-700" />
             </div>
             {/* Button */}
-            <div className="h-10 w-full rounded-xl bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-10 w-full rounded-xl bg-gray-200 dark:bg-neutral-700" />
         </div>
     )
 }
 
 function PageSkeleton() {
     return (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-8">
             {/* Header skeleton */}
-            <div className="rounded-2xl p-6 bg-white dark:bg-neutral-800/50">
-                <div className="h-8 w-48 mb-2 rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="h-4 w-64 mb-4 rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="h-3 w-full rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="mb-8">
+                <div className="h-8 w-48 rounded bg-gray-200 dark:bg-neutral-700 mb-2" />
+                <div className="h-5 w-32 rounded bg-gray-200 dark:bg-neutral-700 mb-6" />
+                <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6">
+                    <div className="h-4 w-full mb-3 rounded bg-gray-200 dark:bg-neutral-700" />
+                    <div className="h-3 w-full rounded bg-gray-200 dark:bg-neutral-700" />
+                </div>
             </div>
             {/* Grid skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -137,30 +134,19 @@ function PageSkeleton() {
 
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
     return (
-        <GlassCard
-            variant="default"
-            padding="xl"
-            radius="xl"
-            className="max-w-md mx-auto text-center animate-fade-in"
-        >
-            <div
-                className={cn(
-                    "w-16 h-16 rounded-full mx-auto mb-4",
-                    "bg-red-100 dark:bg-red-900/30",
-                    "flex items-center justify-center"
-                )}
-            >
+        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-8 max-w-md mx-auto text-center">
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                 <AlertCircle className="w-8 h-8 text-red-500" />
             </div>
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 Unable to Load Modules
             </h2>
-            <p className="text-neutral-600 dark:text-neutral-400 mb-6">{error}</p>
+            <p className="text-gray-600 dark:text-neutral-400 mb-6">{error}</p>
             <Button onClick={onRetry} className="rounded-xl">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Try Again
             </Button>
-        </GlassCard>
+        </div>
     )
 }
 
@@ -170,31 +156,20 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
 
 function EmptyState() {
     return (
-        <GlassCard
-            variant="default"
-            padding="xl"
-            radius="xl"
-            className="max-w-md mx-auto text-center animate-fade-in"
-        >
-            <div
-                className={cn(
-                    "w-16 h-16 rounded-full mx-auto mb-4",
-                    "bg-primary-100 dark:bg-primary-900/30",
-                    "flex items-center justify-center"
-                )}
-            >
-                <BookOpen className="w-8 h-8 text-primary-500" />
+        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-8 max-w-md mx-auto text-center">
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                <BookOpen className="w-8 h-8 text-indigo-500" />
             </div>
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 No Modules Yet
             </h2>
-            <p className="text-neutral-600 dark:text-neutral-400 mb-6">
+            <p className="text-gray-600 dark:text-neutral-400 mb-6">
                 Modules will appear here once they&apos;re added to your learning path.
             </p>
             <Link href="/modules/new">
                 <Button className="rounded-xl">Create First Module</Button>
             </Link>
-        </GlassCard>
+        </div>
     )
 }
 
@@ -218,40 +193,22 @@ function Header({
     isRefreshing,
 }: HeaderProps) {
     return (
-        <GlassCard variant="default" padding="lg" radius="xl" className="animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div>
-                    <div className="flex items-center gap-3 mb-2">
-                        <div
-                            className={cn(
-                                "w-10 h-10 rounded-xl flex items-center justify-center",
-                                "bg-gradient-to-br from-primary-500 to-primary-600",
-                                "shadow-lg shadow-primary-500/25"
-                            )}
-                        >
-                            <Rocket className="w-5 h-5 text-white" />
-                        </div>
-                        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">
-                            Your Learning Path
-                        </h1>
-                    </div>
-                    <p className="text-neutral-600 dark:text-neutral-400">
-                        {overallProgress === 100
-                            ? "Congratulations! You've completed all modules! 🎉"
-                            : `Keep going! ${completedModules} of ${totalModules} modules complete.`}
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                        Learning Path
+                    </h1>
+                    <p className="text-gray-500 dark:text-neutral-400 mt-2">
+                        {totalModules} modules • {completedModules} completed
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                     {/* Trophy badge */}
-                    <div
-                        className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl",
-                            "bg-warning-100 dark:bg-warning-900/30"
-                        )}
-                    >
-                        <Trophy className="w-5 h-5 text-warning-500" />
-                        <span className="font-semibold text-warning-700 dark:text-warning-400">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+                        <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                        <span className="font-semibold text-amber-700 dark:text-amber-400">
                             {completedModules}/{totalModules}
                         </span>
                     </div>
@@ -269,22 +226,35 @@ function Header({
                 </div>
             </div>
 
-            {/* Progress bar */}
-            <div className="mt-4">
-                <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-neutral-600 dark:text-neutral-400">Overall Progress</span>
-                    <span
-                        className={cn(
-                            "font-semibold",
-                            overallProgress === 100 ? "text-success-500" : "text-primary-500"
-                        )}
-                    >
+            {/* Overall progress card */}
+            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6">
+                <div className="flex items-center justify-between text-sm mb-3">
+                    <span className="text-gray-600 dark:text-neutral-400">Overall Progress</span>
+                    <span className={cn(
+                        "font-semibold",
+                        overallProgress === 100 ? "text-emerald-600" : "text-indigo-600"
+                    )}>
                         {overallProgress}%
                     </span>
                 </div>
-                <ProgressBar value={overallProgress} className="h-3" />
+                <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-3">
+                    <div
+                        className={cn(
+                            "h-3 rounded-full transition-all duration-500",
+                            overallProgress === 100
+                                ? "bg-gradient-to-r from-emerald-500 to-teal-500"
+                                : "bg-gradient-to-r from-indigo-500 to-purple-600"
+                        )}
+                        style={{ width: `${overallProgress}%` }}
+                    />
+                </div>
+                <p className="text-sm text-gray-500 dark:text-neutral-400 mt-3">
+                    {overallProgress === 100
+                        ? "🎉 Congratulations! You've completed all modules!"
+                        : `Keep going! ${totalModules - completedModules} modules remaining.`}
+                </p>
             </div>
-        </GlassCard>
+        </div>
     )
 }
 

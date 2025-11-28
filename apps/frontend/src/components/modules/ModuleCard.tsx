@@ -16,18 +16,13 @@
  */
 
 import { cn } from "@/lib/utils"
-import { GlassCard } from "@/components/ui/glass-card"
-import { ProgressBar } from "@/components/ui/progress-bar"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import {
     Lock,
     Circle,
     PlayCircle,
     CheckCircle2,
-    Clock,
     ChevronRight,
-    BookOpen
 } from "lucide-react"
 
 /* ============================================================================
@@ -115,161 +110,106 @@ export function ModuleCard({
     const isLocked = status === "locked"
 
     const cardContent = (
-        <GlassCard
-            variant="default"
-            padding="none"
-            radius="xl"
-            interactive={!isLocked}
+        <div
             className={cn(
-                "group relative overflow-hidden transition-all duration-300",
-                // Hover effects for non-locked cards
-                !isLocked && [
-                    "hover:-translate-y-1",
-                    "hover:shadow-xl hover:shadow-primary-500/10",
-                    "dark:hover:shadow-primary-500/5"
-                ],
-                // Locked state styling
+                "bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 transition-all duration-200",
+                !isLocked && "hover:shadow-md hover:-translate-y-0.5 cursor-pointer",
                 isLocked && "opacity-70 cursor-not-allowed",
                 className
             )}
         >
-            {/* Gradient border on hover (non-locked only) */}
-            {!isLocked && (
-                <div className={cn(
-                    "absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300",
-                    "bg-gradient-to-br from-primary-500/20 via-transparent to-primary-600/20",
-                    "group-hover:opacity-100"
-                )} />
+            {/* Top row: Icon + Title + Status */}
+            <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                    {/* Module icon */}
+                    <span className="text-2xl">{isLocked ? "🔒" : icon}</span>
+                    <div>
+                        <h3 className={cn(
+                            "font-semibold",
+                            isLocked
+                                ? "text-gray-400 dark:text-neutral-500"
+                                : "text-gray-900 dark:text-white"
+                        )}>
+                            {title}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-neutral-400">
+                            {tasksCompleted} / {totalTasks} tasks
+                        </p>
+                    </div>
+                </div>
+
+                {/* Status badge */}
+                <span className={cn(
+                    "px-2.5 py-1 text-xs font-medium rounded-full",
+                    status === "complete" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+                    status === "in_progress" && "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400",
+                    status === "not_started" && "bg-gray-100 text-gray-600 dark:bg-neutral-700 dark:text-neutral-400",
+                    status === "locked" && "bg-gray-100 text-gray-400 dark:bg-neutral-700 dark:text-neutral-500"
+                )}>
+                    {config.label}
+                </span>
+            </div>
+
+            {/* Description */}
+            {description && (
+                <p className={cn(
+                    "text-sm line-clamp-2 mb-4",
+                    isLocked
+                        ? "text-gray-400 dark:text-neutral-500"
+                        : "text-gray-600 dark:text-neutral-400"
+                )}>
+                    {description}
+                </p>
             )}
 
-            {/* Card content */}
-            <div className="relative p-6">
-                {/* Top row: Number badge + Status */}
-                <div className="flex items-center justify-between mb-4">
-                    {/* Module number badge */}
-                    <div className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center",
-                        "text-sm font-bold",
-                        isLocked
-                            ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-400"
-                            : "bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25"
-                    )}>
-                        {String(orderIndex).padStart(2, "0")}
-                    </div>
-
-                    {/* Status badge */}
-                    <div className={cn(
-                        "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
-                        config.bgColor,
-                        config.color
-                    )}>
-                        <StatusIcon className="w-3.5 h-3.5" />
-                        <span>{config.label}</span>
-                    </div>
-                </div>
-
-                {/* Icon + Title + Description */}
-                <div className="mb-4">
-                    {/* Large icon */}
-                    <div className={cn(
-                        "text-4xl mb-3 transition-transform duration-300",
-                        !isLocked && "group-hover:scale-110"
-                    )}>
-                        {icon}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className={cn(
-                        "text-lg font-semibold mb-1.5",
-                        isLocked
-                            ? "text-neutral-400 dark:text-neutral-500"
-                            : "text-neutral-900 dark:text-white"
-                    )}>
-                        {title}
-                    </h3>
-
-                    {/* Description (2 lines max) */}
-                    <p className={cn(
-                        "text-sm line-clamp-2",
-                        isLocked
-                            ? "text-neutral-400 dark:text-neutral-500"
-                            : "text-neutral-600 dark:text-neutral-400"
-                    )}>
-                        {description}
-                    </p>
-                </div>
-
-                {/* Progress section */}
-                <div className="mb-4 space-y-2">
-                    {/* Progress bar */}
-                    <ProgressBar
-                        value={progress}
+            {/* Progress bar */}
+            <div className="mb-4">
+                <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2">
+                    <div
                         className={cn(
-                            "h-2",
-                            isLocked && "opacity-50"
-                        )}
-                    />
-
-                    {/* Progress text */}
-                    <div className="flex items-center justify-between text-xs">
-                        <span className={cn(
-                            isLocked
-                                ? "text-neutral-400"
-                                : "text-neutral-600 dark:text-neutral-400"
-                        )}>
-                            <BookOpen className="w-3 h-3 inline-block mr-1" />
-                            {tasksCompleted}/{totalTasks} tasks
-                        </span>
-                        <span className={cn(
-                            "font-medium",
+                            "h-2 rounded-full transition-all duration-500",
                             status === "complete"
-                                ? "text-success-500"
-                                : isLocked
-                                    ? "text-neutral-400"
-                                    : "text-primary-500"
-                        )}>
-                            {progress}%
-                        </span>
-                    </div>
-                </div>
-
-                {/* Estimated time (if provided) */}
-                {estimatedHours && (
-                    <div className={cn(
-                        "flex items-center gap-1.5 text-xs mb-4",
-                        isLocked
-                            ? "text-neutral-400"
-                            : "text-neutral-500 dark:text-neutral-400"
-                    )}>
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>~{estimatedHours} hours</span>
-                    </div>
-                )}
-
-                {/* Action button / Locked message */}
-                {isLocked ? (
-                    <div className={cn(
-                        "flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl",
-                        "bg-neutral-100 dark:bg-neutral-800",
-                        "text-neutral-400 text-sm"
-                    )}>
-                        <Lock className="w-4 h-4" />
-                        <span>Complete {prerequisiteModule || "previous module"} to unlock</span>
-                    </div>
-                ) : (
-                    <Button
-                        variant={status === "complete" ? "outline" : "default"}
-                        className={cn(
-                            "w-full rounded-xl group/btn",
-                            status === "in_progress" && "bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
+                                ? "bg-gradient-to-r from-emerald-500 to-teal-500"
+                                : "bg-gradient-to-r from-indigo-500 to-purple-500"
                         )}
-                    >
-                        <span>{config.buttonText}</span>
-                        <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover/btn:translate-x-0.5" />
-                    </Button>
-                )}
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+                <div className="flex justify-between text-xs mt-1.5">
+                    <span className="text-gray-500 dark:text-neutral-400">
+                        {estimatedHours && `~${estimatedHours}h`}
+                    </span>
+                    <span className={cn(
+                        "font-medium",
+                        status === "complete" ? "text-emerald-600" : "text-indigo-600"
+                    )}>
+                        {progress}%
+                    </span>
+                </div>
             </div>
-        </GlassCard>
+
+            {/* Action button / Locked message */}
+            {isLocked ? (
+                <div className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gray-100 dark:bg-neutral-700 text-gray-400 text-sm">
+                    <Lock className="w-4 h-4" />
+                    <span>Complete {prerequisiteModule || "previous"} first</span>
+                </div>
+            ) : (
+                <button
+                    className={cn(
+                        "w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-medium transition-all duration-200",
+                        status === "complete"
+                            ? "bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-600"
+                            : status === "in_progress"
+                                ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:shadow-lg"
+                                : "bg-indigo-500 text-white hover:bg-indigo-600"
+                    )}
+                >
+                    <span>{config.buttonText}</span>
+                    <ChevronRight className="w-4 h-4" />
+                </button>
+            )}
+        </div>
     )
 
     // Wrap in link if not locked
