@@ -207,21 +207,8 @@ export function Hero() {
             <AnimatedBackground />
             <FloatingParticles />
 
-            {/* Content */}
+{/* Content */}
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-                {/* Badge */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
-                >
-                    <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span className="text-sm text-neutral-300">
-                        Bootcamp v3.0 — Now Live
-                    </span>
-                </motion.div>
-
                 {/* Main headline */}
                 <motion.h1
                     initial={{ opacity: 0, y: 30 }}
@@ -229,10 +216,10 @@ export function Hero() {
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
                 >
-                    <span className="text-white">Master DevOps.</span>
+                    <span className="text-white">Master DevOps</span>
                     <br />
                     <span className="bg-gradient-to-r from-primary-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                        Build Your Career.
+                        Build Your Career
                     </span>
                 </motion.h1>
 

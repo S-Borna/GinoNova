@@ -100,30 +100,50 @@ function MarkdownContent({ content }: { content: string }) {
     const renderMarkdown = (md: string) => {
         // Convert headers
         let html = md
-            .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold text-neutral-900 dark:text-white mt-6 mb-3">$1</h3>')
-            .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-neutral-900 dark:text-white mt-8 mb-4">$1</h2>')
-            .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-neutral-900 dark:text-white mt-8 mb-4">$1</h1>')
+            .replace(/^### (.+)$/gm, '<h3 class="text-xl font-semibold text-neutral-900 dark:text-white mt-8 mb-4">$1</h3>')
+            .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-bold text-neutral-900 dark:text-white mt-10 mb-5">$1</h2>')
+            .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold text-neutral-900 dark:text-white mt-10 mb-6">$1</h1>')
 
-        // Convert code blocks
+        // Convert code blocks - visible in both light and dark mode
         html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => {
-            return `<pre class="bg-neutral-900 text-neutral-100 rounded-lg p-4 my-4 overflow-x-auto text-sm"><code>${code.trim()}</code></pre>`
+            return `<pre class="bg-neutral-900 dark:bg-neutral-950 text-neutral-100 rounded-xl p-5 my-6 overflow-x-auto text-sm font-mono border border-neutral-800"><code>${code.trim()}</code></pre>`
         })
 
-        // Convert inline code
-        html = html.replace(/`([^`]+)`/g, '<code class="bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-sm text-indigo-600 dark:text-indigo-400">$1</code>')
+        // Convert inline code - visible in both modes
+        html = html.replace(/`([^`]+)`/g, '<code class="bg-neutral-200 dark:bg-neutral-800 px-2 py-1 rounded text-sm font-mono text-indigo-700 dark:text-indigo-400">$1</code>')
 
         // Convert bold
-        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold">$1</strong>')
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-neutral-900 dark:text-white">$1</strong>')
 
         // Convert italic
         html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>')
 
-        // Convert lists
-        html = html.replace(/^- (.+)$/gm, '<li class="ml-4 text-neutral-700 dark:text-neutral-300">• $1</li>')
-        html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="ml-4 text-neutral-700 dark:text-neutral-300">$1. $2</li>')
+        // Convert tables (basic support)
+        html = html.replace(/^\|(.+)\|$/gm, (match, content) => {
+            const cells = content.split('|').map((cell: string) => cell.trim())
+            if (cells.every((cell: string) => /^[-:]+$/.test(cell))) {
+                return '' // Skip separator row
+            }
+            const cellsHtml = cells.map((cell: string) => `<td class="border border-neutral-300 dark:border-neutral-700 px-4 py-2">${cell}</td>`).join('')
+            return `<tr class="bg-neutral-50 dark:bg-neutral-800/50">${cellsHtml}</tr>`
+        })
+        
+        // Wrap tables
+        html = html.replace(/(<tr[^>]*>.*<\/tr>\n?)+/g, (match) => {
+            return `<table class="w-full border-collapse my-6 text-sm"><tbody>${match}</tbody></table>`
+        })
+
+        // Convert lists - single bullet, no double
+        html = html.replace(/^- (.+)$/gm, '<li class="ml-6 text-neutral-700 dark:text-neutral-300 mb-2 list-disc">$1</li>')
+        html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="ml-6 text-neutral-700 dark:text-neutral-300 mb-2 list-decimal">$1. $2</li>')
+
+        // Wrap consecutive list items in ul/ol
+        html = html.replace(/(<li class="[^"]*list-disc[^"]*">[\s\S]*?<\/li>\n?)+/g, (match) => {
+            return `<ul class="my-4 space-y-1">${match}</ul>`
+        })
 
         // Convert paragraphs (lines that aren't already wrapped)
-        html = html.replace(/^(?!<[hpuol]|<li|<pre|<code)(.+)$/gm, '<p class="text-neutral-700 dark:text-neutral-300 mb-4 leading-relaxed">$1</p>')
+        html = html.replace(/^(?!<[hpuol]|<li|<pre|<code|<table|<tr)(.+)$/gm, '<p class="text-neutral-700 dark:text-neutral-300 mb-4 leading-relaxed text-base">$1</p>')
 
         return html
     }

@@ -4,13 +4,13 @@
  * ============================================================================
  * SIDEBAR - Premium Desktop Navigation
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Apple-inspired clean navigation
  * - Collapsible with smooth animations
  * - Glassmorphism effect
  * - Active state with gradient background
- * 
+ *
  * @phase D.3 - Navigation + Layout
  */
 
@@ -84,8 +84,8 @@ function NavItemComponent({ item, isActive, collapsed }: NavItemProps) {
                 "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl",
                 "transition-all duration-200 ease-out",
                 isActive
-                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md shadow-primary-500/25"
-                    : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800/50",
+                    ? "bg-primary-500 text-white shadow-md"
+                    : "text-neutral-700 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-neutral-200",
                 collapsed && "justify-center px-2"
             )}
         >
@@ -93,7 +93,7 @@ function NavItemComponent({ item, isActive, collapsed }: NavItemProps) {
                 "h-5 w-5 shrink-0 transition-transform duration-200",
                 !isActive && "group-hover:scale-110"
             )} />
-            
+
             {/* Label - hidden when collapsed */}
             {!collapsed && (
                 <span className="text-sm font-medium truncate">
@@ -151,22 +151,18 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
             <div className={cn(
                 "flex items-center h-16 px-4",
                 "border-b border-neutral-200/50 dark:border-neutral-800/50",
-                collapsed && "justify-center px-2"
+                collapsed ? "justify-center px-2" : "justify-center"
             )}>
-                <Link href="/dashboard" className="flex items-center gap-3">
-                    {/* Logo icon */}
-                    <div className={cn(
-                        "w-9 h-9 rounded-xl flex items-center justify-center shrink-0",
-                        "bg-gradient-to-br from-primary-500 to-primary-600",
-                        "shadow-lg shadow-primary-500/25"
-                    )}>
-                        <span className="text-white text-lg font-bold">D</span>
-                    </div>
-                    
+                <Link href="/dashboard" className="flex items-center">
                     {/* Logo text */}
                     {!collapsed && (
-                        <span className="text-lg font-semibold text-neutral-900 dark:text-white">
+                        <span className="text-lg font-bold text-neutral-900 dark:text-white">
                             My DevOps Hub
+                        </span>
+                    )}
+                    {collapsed && (
+                        <span className="text-lg font-bold text-neutral-900 dark:text-white">
+                            D
                         </span>
                     )}
                 </Link>
