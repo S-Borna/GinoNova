@@ -305,8 +305,8 @@ function TaskItem({ task, onStart }: TaskItemProps) {
                 task.isLocked
                     ? "bg-neutral-50 dark:bg-neutral-800/30 opacity-60"
                     : task.isCompleted
-                      ? "bg-success-50/50 dark:bg-success-900/10"
-                      : "bg-white dark:bg-neutral-800/50 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                        ? "bg-success-50/50 dark:bg-success-900/10"
+                        : "bg-white dark:bg-neutral-800/50 hover:bg-neutral-50 dark:hover:bg-neutral-800"
             )}
         >
             <div className="flex items-start gap-4">
@@ -317,8 +317,8 @@ function TaskItem({ task, onStart }: TaskItemProps) {
                         task.isLocked
                             ? "bg-neutral-200 dark:bg-neutral-700"
                             : task.isCompleted
-                              ? "bg-success-100 dark:bg-success-900/30"
-                              : "bg-primary-100 dark:bg-primary-900/30"
+                                ? "bg-success-100 dark:bg-success-900/30"
+                                : "bg-primary-100 dark:bg-primary-900/30"
                     )}
                 >
                     {task.isLocked ? (

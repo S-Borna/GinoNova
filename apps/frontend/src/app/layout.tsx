@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/auth';
+import { QueryProvider } from '@/providers/QueryProvider';
 
 // Primary font: Inter — Clean, modern, highly legible
 const inter = Inter({
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
             <body className="font-sans antialiased">
-                <AuthProvider>{children}</AuthProvider>
+                <QueryProvider>
+                    <AuthProvider>{children}</AuthProvider>
+                </QueryProvider>
             </body>
         </html>
     );
