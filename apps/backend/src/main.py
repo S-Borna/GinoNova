@@ -170,7 +170,7 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("🚀 Starting DevOps Hub Backend...")
 
-    # Run database migrations if PostgreSQL is configured
+    # Initialize PostgreSQL if configured
     from .db.database import is_db_configured, init_db
     if is_db_configured():
         logger.info("🗄️ PostgreSQL detected - initializing tables...")
@@ -181,6 +181,13 @@ async def lifespan(app: FastAPI):
             logger.error(f"❌ Database init failed: {e}")
     else:
         logger.info("📝 Using in-memory storage (no DATABASE_URL)")
+
+    # Initialize Redis if configured
+    from .db.redis_client import is_redis_configured
+    if is_redis_configured():
+        logger.info("🔴 Redis connected!")
+    else:
+        logger.info("📝 Redis not configured - caching disabled")
 
     auto_seed_if_empty()
     logger.info("✅ Backend ready!")
