@@ -27,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
    ============================================================================ */
 
 const siteConfig = {
-    name: 'My DevOps Hub',
+    name: 'My DOE Hub',
     company: 'The Ebadi Group',
     description:
         'Master DevOps with 15 structured modules, 60+ hands-on labs, and real-world projects. From Linux fundamentals to Kubernetes, become a DevOps engineer.',

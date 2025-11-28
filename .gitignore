@@ -1,19 +1,47 @@
+# Dependencies
 node_modules/
+.venv/
+env/
+venv/
+
+# Build outputs
 dist/
 build/
+.next/
+.turbo/
+.cache/
+*.egg-info/
+
+# Environment files
 .env
-.env.*local
+.env.local
+.env.*.local
+
+# Python
 __pycache__/
 *.pyc
-.cache/
-.next/
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
 logs/**
 !logs/opus/.gitkeep
 !logs/gpt/.gitkeep
 *.log
-.turbo/
-.venv/
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Testing
+coverage/
+.nyc_output/

@@ -6,14 +6,17 @@
  * ============================================================================
  *
  * Features:
- * - Lesson content (markdown)
+ * - Lesson content (markdown) OR interactive content blocks
+ * - Quiz, terminal, and checkpoint support
+ * - Progress tracking
  * - Mark as complete button
  * - Navigation to next task
  *
  * @phase C.2 - Task Content Display
+ * @phase ILE - Interactive Learning Engine
  */
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
@@ -24,6 +27,9 @@ import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { getTask, getTasksForModule, TaskPublic } from "@/lib/tasks"
 import { getModule, ModulePublic } from "@/lib/modules"
+import { useAuth } from "@/components/auth"
+import { getToken } from "@/lib/auth"
+import { ContentBlockRenderer } from "@/components/learning"
 import {
     ArrowLeft,
     ArrowRight,
@@ -33,6 +39,7 @@ import {
     RefreshCw,
     AlertCircle,
     Zap,
+    Play,
 } from "lucide-react"
 
 // Import highlight.js theme for syntax highlighting
@@ -184,6 +191,7 @@ function MarkdownContent({ content }: { content: string }) {
 export default function TaskDetailPage() {
     const params = useParams()
     const router = useRouter()
+    const { user } = useAuth()
     const moduleId = params.id as string
     const taskId = params.taskId as string
 
@@ -194,6 +202,13 @@ export default function TaskDetailPage() {
     const [error, setError] = useState<string | null>(null)
     const [completing, setCompleting] = useState(false)
     const [isCompleted, setIsCompleted] = useState(false)
+    const [taskProgress, setTaskProgress] = useState<any>(null)
+
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+    const token = getToken()
+
+    // Check if task has interactive content blocks
+    const hasContentBlocks = task && Array.isArray((task as any).content_blocks) && (task as any).content_blocks.length > 0
 
     const fetchData = async () => {
         setLoading(true)
@@ -226,6 +241,24 @@ export default function TaskDetailPage() {
                 const sorted = [...tasksResult.data].sort((a, b) => a.order_index - b.order_index)
                 setAllTasks(sorted)
             }
+
+            // Fetch progress if token available
+            if (token) {
+                try {
+                    const progressRes = await fetch(`${API_URL}/api/task-progress/${taskId}/progress`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                    if (progressRes.ok) {
+                        const progressData = await progressRes.json()
+                        setTaskProgress(progressData)
+                        if (progressData.status === "completed") {
+                            setIsCompleted(true)
+                        }
+                    }
+                } catch (e) {
+                    console.log("Progress fetch skipped:", e)
+                }
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to load task")
         } finally {
@@ -238,9 +271,73 @@ export default function TaskDetailPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [moduleId, taskId])
 
+    // ILE handlers
+    const handleBlockComplete = useCallback(async (blockIndex: number, blockType: string) => {
+        if (!token) return
+        try {
+            await fetch(`${API_URL}/api/task-progress/${taskId}/progress/block?block_index=${blockIndex}&completed=true`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            fetchData()
+        } catch (e) {
+            console.error("Block complete error:", e)
+        }
+    }, [token, taskId, API_URL])
+
+    const handleQuizAnswer = useCallback(async (blockIndex: number, optionIndex: number) => {
+        if (!token) return { is_correct: false, explanation: "" }
+
+        const contentBlocks = (task as any)?.content_blocks || []
+        const quizBlock = contentBlocks[blockIndex]
+        const isCorrect = quizBlock?.options?.[optionIndex]?.isCorrect || quizBlock?.options?.[optionIndex]?.is_correct || false
+
+        try {
+            const res = await fetch(`${API_URL}/api/task-progress/${taskId}/progress/quiz?block_index=${blockIndex}&selected_option=${optionIndex}&is_correct=${isCorrect}`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            fetchData()
+            return {
+                is_correct: isCorrect,
+                feedback: quizBlock?.options?.[optionIndex]?.feedback || "",
+                explanation: quizBlock?.explanation || "",
+                xp_bonus: isCorrect ? (quizBlock?.xp_bonus || 5) : 0
+            }
+        } catch (e) {
+            console.error("Quiz answer error:", e)
+            return { is_correct: false, explanation: "" }
+        }
+    }, [token, taskId, task, API_URL])
+
+    const handleTerminalCommand = useCallback(async (blockIndex: number, commandIndex: number, command: string, wasCorrect: boolean) => {
+        if (!token) return { is_correct: false }
+        try {
+            await fetch(`${API_URL}/api/task-progress/${taskId}/progress/terminal?block_index=${blockIndex}&command_index=${commandIndex}&command=${encodeURIComponent(command)}&was_correct=${wasCorrect}`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            return { is_correct: wasCorrect }
+        } catch (e) {
+            console.error("Terminal command error:", e)
+            return { is_correct: false }
+        }
+    }, [token, taskId, API_URL])
+
     const handleMarkComplete = async () => {
         setCompleting(true)
-        // TODO: Call progress API to mark task as complete
+
+        if (token) {
+            try {
+                await fetch(`${API_URL}/api/task-progress/${taskId}/progress/complete`, {
+                    method: "POST",
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+            } catch (e) {
+                console.error("Complete error:", e)
+            }
+        }
+
         await new Promise((resolve) => setTimeout(resolve, 500))
         setIsCompleted(true)
         setCompleting(false)
@@ -368,13 +465,33 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                     {/* Lesson Content */}
                     <GlassCard variant="default" padding="lg" radius="xl">
                         <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-700">
-                            <BookOpen className="w-5 h-5 text-indigo-500" />
+                            {hasContentBlocks ? (
+                                <Play className="w-5 h-5 text-indigo-500" />
+                            ) : (
+                                <BookOpen className="w-5 h-5 text-indigo-500" />
+                            )}
                             <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">
-                                Lesson Content
+                                {hasContentBlocks ? "Interactive Lesson" : "Lesson Content"}
                             </h2>
+                            {hasContentBlocks && taskProgress && (
+                                <span className="ml-auto text-sm text-neutral-500">
+                                    {taskProgress.progress_percent || 0}% complete
+                                </span>
+                            )}
                         </div>
 
-                        <MarkdownContent content={task.content || placeholderContent} />
+                        {hasContentBlocks ? (
+                            <ContentBlockRenderer
+                                blocks={(task as any).content_blocks}
+                                taskId={taskId}
+                                progress={taskProgress}
+                                onBlockComplete={handleBlockComplete}
+                                onQuizAnswer={handleQuizAnswer}
+                                onTerminalCommand={handleTerminalCommand}
+                            />
+                        ) : (
+                            <MarkdownContent content={task.content || placeholderContent} />
+                        )}
                     </GlassCard>
 
                     {/* Actions */}

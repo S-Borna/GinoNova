@@ -67,18 +67,18 @@ def _calculate_progress_response(
 ) -> TaskProgressResponse:
     """Calculate progress statistics from TaskBlockProgress"""
     content_blocks = content_blocks or []
-    
+
     # Count block types
     quiz_blocks = [i for i, b in enumerate(content_blocks) if isinstance(b, dict) and b.get("type") == "quiz"]
     terminal_blocks = [i for i, b in enumerate(content_blocks) if isinstance(b, dict) and b.get("type") == "terminal"]
-    
+
     # Count completions
     blocks_completed = sum(1 for bp in progress.block_progress if bp.completed)
     blocks_total = len(content_blocks) if content_blocks else 0
-    
+
     quizzes_correct = sum(1 for qa in progress.quiz_answers if qa.is_correct)
     quizzes_total = len(quiz_blocks)
-    
+
     # Terminal completion (check if all expected commands done for each block)
     terminals_completed = 0
     for block_idx in terminal_blocks:
@@ -86,18 +86,18 @@ def _calculate_progress_response(
         if block_commands:  # At least one correct command
             terminals_completed += 1
     terminals_total = len(terminal_blocks)
-    
+
     # Calculate progress percent
     progress_percent = 0
     if blocks_total > 0:
         progress_percent = int((blocks_completed / blocks_total) * 100)
-    
+
     # Calculate potential XP (base + quiz bonuses)
     xp_potential = task_xp_reward
     for block in content_blocks:
         if isinstance(block, dict) and block.get("type") == "quiz":
             xp_potential += block.get("xp_bonus", 5)
-    
+
     return TaskProgressResponse(
         task_id=progress.task_id,
         user_id=progress.user_id,
@@ -125,7 +125,7 @@ def get_task_progress(
 ):
     """
     Get progress for a specific task.
-    
+
     Returns progress statistics including:
     - Overall completion percentage
     - Blocks completed
@@ -134,15 +134,15 @@ def get_task_progress(
     - XP earned
     """
     add_phase_header(response)
-    
+
     # Get task to validate it exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Get progress (may be None if not started)
     progress = progress_repo.get_progress(current_user.id, task_id)
-    
+
     if not progress:
         # Return empty progress
         return TaskProgressResponse(
@@ -162,7 +162,7 @@ def get_task_progress(
             started_at=None,
             completed_at=None,
         )
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(progress, task.xp_reward, content_blocks)
 
@@ -175,19 +175,19 @@ def start_task(
 ):
     """
     Start tracking progress for a task.
-    
+
     Creates a new progress record if one doesn't exist.
     """
     add_phase_header(response)
-    
+
     # Validate task exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Create or get existing progress
     progress = progress_repo.create_progress(current_user.id, task_id)
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(progress, task.xp_reward, content_blocks)
 
@@ -204,25 +204,25 @@ def update_block_completion(
     Update completion status for a specific block.
     """
     add_phase_header(response)
-    
+
     # Validate task exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Ensure progress exists
     progress = progress_repo.get_progress(current_user.id, task_id)
     if not progress:
         progress = progress_repo.create_progress(current_user.id, task_id)
-    
+
     # Update block
     updated = progress_repo.update_block_progress(
         current_user.id, task_id, block_index, completed
     )
-    
+
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to update progress")
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(updated, task.xp_reward, content_blocks)
 
@@ -240,17 +240,17 @@ def record_quiz_answer(
     Record a quiz answer.
     """
     add_phase_header(response)
-    
+
     # Validate task exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Ensure progress exists
     progress = progress_repo.get_progress(current_user.id, task_id)
     if not progress:
         progress = progress_repo.create_progress(current_user.id, task_id)
-    
+
     # Record answer
     quiz_answer = QuizAnswer(
         block_index=block_index,
@@ -258,16 +258,16 @@ def record_quiz_answer(
         is_correct=is_correct,
         answered_at=datetime.utcnow(),
     )
-    
+
     updated = progress_repo.add_quiz_answer(current_user.id, task_id, quiz_answer)
-    
+
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to record quiz answer")
-    
+
     # Also mark block as completed if answer is correct
     if is_correct:
         progress_repo.update_block_progress(current_user.id, task_id, block_index, True)
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(updated, task.xp_reward, content_blocks)
 
@@ -286,17 +286,17 @@ def record_terminal_command(
     Record a terminal command.
     """
     add_phase_header(response)
-    
+
     # Validate task exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Ensure progress exists
     progress = progress_repo.get_progress(current_user.id, task_id)
     if not progress:
         progress = progress_repo.create_progress(current_user.id, task_id)
-    
+
     # Record command
     terminal_command = TerminalCommand(
         block_index=block_index,
@@ -305,12 +305,12 @@ def record_terminal_command(
         was_correct=was_correct,
         timestamp=datetime.utcnow(),
     )
-    
+
     updated = progress_repo.add_terminal_command(current_user.id, task_id, terminal_command)
-    
+
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to record terminal command")
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(updated, task.xp_reward, content_blocks)
 
@@ -326,22 +326,22 @@ def update_time_spent(
     Update time spent on task.
     """
     add_phase_header(response)
-    
+
     # Validate task exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Ensure progress exists
     progress = progress_repo.get_progress(current_user.id, task_id)
     if not progress:
         progress = progress_repo.create_progress(current_user.id, task_id)
-    
+
     updated = progress_repo.update_time_spent(current_user.id, task_id, seconds)
-    
+
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to update time")
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(updated, task.xp_reward, content_blocks)
 
@@ -354,44 +354,44 @@ def complete_task_endpoint(
 ):
     """
     Mark task as completed and award XP.
-    
+
     Calculates total XP including quiz bonuses.
     """
     add_phase_header(response)
-    
+
     # Validate task exists
     task = get_task_by_id(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Get progress
     progress = progress_repo.get_progress(current_user.id, task_id)
     if not progress:
         raise HTTPException(status_code=400, detail="Task not started")
-    
+
     # Calculate XP
     base_xp = task.xp_reward
     bonus_xp = 0
-    
+
     content_blocks = getattr(task, 'content_blocks', []) or []
-    
+
     # Add quiz bonuses for correct answers
     for qa in progress.quiz_answers:
         if qa.is_correct and qa.block_index < len(content_blocks):
             block = content_blocks[qa.block_index]
             if isinstance(block, dict) and block.get("type") == "quiz":
                 bonus_xp += block.get("xp_bonus", 5)
-    
+
     total_xp = base_xp + bonus_xp
-    
+
     # Complete task
     updated = progress_repo.complete_task(current_user.id, task_id, total_xp)
-    
+
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to complete task")
-    
+
     # TODO: Update user's total XP in user model
-    
+
     return _calculate_progress_response(updated, task.xp_reward, content_blocks)
 
 
@@ -408,9 +408,9 @@ def get_all_user_progress(
     Get all task progress for current user.
     """
     add_phase_header(response)
-    
+
     progress_list = progress_repo.get_user_task_progress(current_user.id)
-    
+
     return {
         "user_id": str(current_user.id),
         "total_tasks_started": len(progress_list),

@@ -82,6 +82,8 @@ def create_task(data: TaskCreate) -> TaskInDB:
         title=data.title,
         description=data.description,
         content=data.content,
+        content_blocks=data.content_blocks,
+        requirements=data.requirements,
         order_index=data.order_index,
         difficulty=data.difficulty,
         estimated_minutes=data.estimated_minutes,

@@ -1,9 +1,10 @@
 """
 Task Schemas - Pydantic models for Task API validation
 Phase 3.0: Tasks Foundation
+Phase ILE: Added content_blocks and requirements for interactive learning
 """
 from datetime import datetime
-from typing import Optional, Literal
+from typing import Optional, Literal, List, Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_validator
@@ -27,7 +28,15 @@ class TaskBase(BaseModel):
     )
     content: Optional[str] = Field(
         None,
-        description="Markdown content for the lesson"
+        description="Markdown content for the lesson (legacy)"
+    )
+    content_blocks: Optional[List[Any]] = Field(
+        default=None,
+        description="ILE content blocks for interactive learning"
+    )
+    requirements: Optional[List[Any]] = Field(
+        default=None,
+        description="Completion requirements for task"
     )
     order_index: int = Field(
         default=1,
@@ -90,7 +99,15 @@ class TaskCreate(BaseModel):
     )
     content: Optional[str] = Field(
         None,
-        description="Markdown content for the lesson"
+        description="Markdown content for the lesson (legacy)"
+    )
+    content_blocks: Optional[List[Any]] = Field(
+        default=None,
+        description="ILE content blocks for interactive learning"
+    )
+    requirements: Optional[List[Any]] = Field(
+        default=None,
+        description="Completion requirements for task"
     )
     order_index: int = Field(
         default=1,
@@ -215,6 +232,8 @@ def create_task_in_db(
     title: str,
     description: Optional[str] = None,
     content: Optional[str] = None,
+    content_blocks: Optional[List[Any]] = None,
+    requirements: Optional[List[Any]] = None,
     order_index: int = 1,
     difficulty: DifficultyLevel = "medium",
     estimated_minutes: int = 15,
@@ -229,6 +248,8 @@ def create_task_in_db(
         title=title.strip(),
         description=description,
         content=content,
+        content_blocks=content_blocks,
+        requirements=requirements,
         order_index=order_index,
         difficulty=difficulty,
         estimated_minutes=estimated_minutes,
