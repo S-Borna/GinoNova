@@ -1,6 +1,7 @@
 """
 Module Repository - In-memory storage for modules
 Phase 2.0: Modules Foundation
+Updated for Bootcamp v3.0 (C.1 Redo)
 """
 from datetime import datetime
 from typing import Optional
@@ -43,14 +44,45 @@ def get_module_by_name(name: str) -> Optional[ModuleInDB]:
     return None
 
 
+def get_module_by_slug(slug: str) -> Optional[ModuleInDB]:
+    """
+    Get a module by its slug (case-insensitive).
+
+    Args:
+        slug: The slug of the module to retrieve
+
+    Returns:
+        ModuleInDB if found, None otherwise
+    """
+    normalized_slug = slug.strip().lower()
+    for module in _modules_db.values():
+        if module.slug.lower() == normalized_slug:
+            return module
+    return None
+
+
+def get_modules_by_track(track_id: UUID) -> list[ModuleInDB]:
+    """
+    Get all modules for a specific track, ordered by order_index.
+
+    Args:
+        track_id: The UUID of the track
+
+    Returns:
+        List of ModuleInDB objects for this track
+    """
+    track_modules = [m for m in _modules_db.values() if m.track_id == track_id]
+    return sorted(track_modules, key=lambda m: m.order_index)
+
+
 def list_modules() -> list[ModuleInDB]:
     """
-    List all modules.
+    List all modules ordered by order_index.
 
     Returns:
         List of all ModuleInDB objects
     """
-    return list(_modules_db.values())
+    return sorted(_modules_db.values(), key=lambda m: m.order_index)
 
 
 def create_module(data: ModuleCreate) -> ModuleInDB:
@@ -65,7 +97,13 @@ def create_module(data: ModuleCreate) -> ModuleInDB:
     """
     module = create_module_in_db(
         name=data.name,
+        slug=data.slug,
         description=data.description,
+        track_id=data.track_id,
+        order_index=data.order_index,
+        difficulty=data.difficulty,
+        estimated_hours=data.estimated_hours,
+        prerequisites=data.prerequisites,
     )
     _modules_db[module.id] = module
     return module
