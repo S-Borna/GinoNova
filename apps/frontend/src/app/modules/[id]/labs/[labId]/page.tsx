@@ -70,7 +70,7 @@ const SAMPLE_LAB = {
     difficulty: "beginner" as const,
     xpReward: 150,
     overview: `
-In this hands-on lab, you'll set up a complete local development environment for DevOps work. 
+In this hands-on lab, you'll set up a complete local development environment for DevOps work.
 By the end of this lab, you'll have all the essential tools installed and configured.
     `,
     instructions: `
