@@ -55,15 +55,19 @@ const routeLabels: Record<string, string> = {
     edit: "Edit",
 }
 
-function formatSegment(segment: string): string {
+function formatSegment(segment: string, prevSegment?: string): string {
     // Check if it's a known route
     if (routeLabels[segment.toLowerCase()]) {
         return routeLabels[segment.toLowerCase()]
     }
     
-    // Check if it's a UUID or ID (skip formatting)
+    // Check if it's a UUID or ID - show contextual name based on previous segment
     if (segment.match(/^[0-9a-f-]{36}$/i) || segment.match(/^\d+$/)) {
-        return segment.slice(0, 8) + "..."
+        // Context-aware naming
+        if (prevSegment === "modules") return "Module"
+        if (prevSegment === "tasks") return "Task"
+        if (prevSegment === "tracks") return "Track"
+        return "Details"
     }
     
     // Convert slug to title case
@@ -93,9 +97,10 @@ export function Breadcrumbs({
         const items: BreadcrumbItem[] = segments.map((segment, index) => {
             const href = "/" + segments.slice(0, index + 1).join("/")
             const isCurrent = index === segments.length - 1
+            const prevSegment = index > 0 ? segments[index - 1] : undefined
             
             return {
-                label: formatSegment(segment),
+                label: formatSegment(segment, prevSegment),
                 href,
                 isCurrent
             }

@@ -4,13 +4,13 @@
  * ============================================================================
  * TOP BAR - Premium Header Navigation
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Clean, minimal header with essential controls
  * - Breadcrumbs for navigation context
  * - User menu with dropdown
  * - Notifications bell with badge
- * 
+ *
  * @phase D.3 - Navigation + Layout
  */
 
@@ -82,20 +82,11 @@ function UserDropdown() {
                     "transition-colors duration-150"
                 )}
             >
-                {/* Avatar */}
-                <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center",
-                    "bg-gradient-to-br from-primary-400 to-primary-600",
-                    "text-white text-sm font-medium"
-                )}>
-                    {userInitial}
-                </div>
-                
                 {/* Name (hidden on mobile) */}
-                <span className="hidden md:block text-sm font-medium text-neutral-700 dark:text-neutral-300 max-w-[120px] truncate">
+                <span className="hidden md:block text-sm font-medium text-neutral-700 dark:text-neutral-300 max-w-[150px] truncate">
                     {user?.full_name || user?.email?.split("@")[0] || "User"}
                 </span>
-                
+
                 <ChevronDown className={cn(
                     "h-4 w-4 text-neutral-400 transition-transform duration-200",
                     isOpen && "rotate-180"
@@ -137,7 +128,7 @@ function UserDropdown() {
                             <User className="h-4 w-4" />
                             Profile
                         </Link>
-                        
+
                         <Link
                             href="/settings"
                             onClick={() => setIsOpen(false)}
