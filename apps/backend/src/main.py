@@ -8,8 +8,21 @@ from .api.router import api_router
 configure_logging()
 app = FastAPI(title="saas-backend", version=settings.PROJECT_VERSION)
 
-# Parse origins - support comma-separated list or "*"
-origins = settings.API_ORIGINS.split(",") if settings.API_ORIGINS != "*" else ["*"]
+# CORS: Allow all origins in development, specific origins in production
+# Note: allow_credentials=True requires specific origins, not "*"
+default_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://saids-devopshub.netlify.app",
+    "https://*.netlify.app",
+]
+
+# Parse custom origins from settings if provided
+if settings.API_ORIGINS and settings.API_ORIGINS != "*":
+    custom_origins = [o.strip() for o in settings.API_ORIGINS.split(",")]
+    origins = list(set(default_origins + custom_origins))
+else:
+    origins = default_origins
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,6 +30,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_origin_regex=r"https://.*\.netlify\.app",  # Allow all Netlify subdomains
 )
 
 @app.get("/health")
