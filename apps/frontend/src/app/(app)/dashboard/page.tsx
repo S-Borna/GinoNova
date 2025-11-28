@@ -2,7 +2,7 @@
 
 /**
  * ============================================================================
- * DASHBOARD PAGE - Apple-Inspired Design (D.2)
+ * DASHBOARD PAGE — Apple-Inspired Design (D.2)
  * ============================================================================
  *
  * Design Philosophy:
@@ -19,16 +19,14 @@
  * - Recent activity timeline
  * - Quick actions panel
  *
- * @phase D.2 - Dashboard UI Complete
+ * @phase A.3 - App Shell & Routing
+ * @design D.2 - Dashboard UI Complete
  */
 
 import { useEffect, useState, useCallback } from "react"
-import { Protected, useAuth } from "@/components/auth"
+import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
-import {
-    getDashboardSummary,
-    DashboardSummary,
-} from "@/lib/dashboard"
+import { getDashboardSummary, DashboardSummary } from "@/lib/dashboard"
 
 // D.2 Dashboard Components
 import { DashboardHero } from "@/components/dashboard/DashboardHero"
@@ -37,9 +35,6 @@ import { XPProgress } from "@/components/dashboard/XPProgress"
 import { ModulesOverview } from "@/components/dashboard/ModulesOverview"
 import { RecentActivity, Activity } from "@/components/dashboard/RecentActivity"
 import { QuickActions } from "@/components/dashboard/QuickActions"
-
-// D.3 Layout Components
-import { AppShell } from "@/components/layout"
 
 // UI Components
 import { GlassCard } from "@/components/ui/glass-card"
@@ -65,7 +60,7 @@ function calculateLevel(xp: number): { level: number; currentXP: number; xpToNex
     return {
         level,
         currentXP: remainingXP,
-        xpToNextLevel: totalXPForLevel
+        xpToNextLevel: totalXPForLevel,
     }
 }
 
@@ -107,19 +102,19 @@ function DashboardError({ onRetry, error }: { onRetry: () => void; error: string
             radius="xl"
             className="max-w-md mx-auto text-center animate-fade-in"
         >
-            <div className={cn(
-                "w-20 h-20 mx-auto mb-6 rounded-3xl flex items-center justify-center",
-                "bg-gradient-to-br from-red-100 to-red-50",
-                "dark:from-red-900/30 dark:to-red-800/20"
-            )}>
+            <div
+                className={cn(
+                    "w-20 h-20 mx-auto mb-6 rounded-3xl flex items-center justify-center",
+                    "bg-gradient-to-br from-red-100 to-red-50",
+                    "dark:from-red-900/30 dark:to-red-800/20"
+                )}
+            >
                 <span className="text-4xl">😔</span>
             </div>
             <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
                 Unable to load dashboard
             </h3>
-            <p className="text-neutral-500 dark:text-neutral-400 mb-6">
-                {error}
-            </p>
+            <p className="text-neutral-500 dark:text-neutral-400 mb-6">{error}</p>
             <Button onClick={onRetry} className="rounded-xl">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Try Again
@@ -132,32 +127,35 @@ function DashboardError({ onRetry, error }: { onRetry: () => void; error: string
    DASHBOARD CONTENT
    ============================================================================ */
 
-function DashboardContent() {
-    const { user, logout } = useAuth()
+export default function DashboardPage() {
+    const { user } = useAuth()
     const [dashboard, setDashboard] = useState<DashboardSummary | null>(null)
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const fetchDashboard = useCallback(async (isRefresh = false) => {
-        if (isRefresh) {
-            setRefreshing(true)
-        } else {
-            setLoading(true)
-        }
+    const fetchDashboard = useCallback(
+        async (isRefresh = false) => {
+            if (isRefresh) {
+                setRefreshing(true)
+            } else {
+                setLoading(true)
+            }
 
-        const result = await getDashboardSummary(user?.id)
+            const result = await getDashboardSummary(user?.id)
 
-        if (result.ok) {
-            setDashboard(result.data)
-            setError(null)
-        } else {
-            setError(result.message)
-        }
+            if (result.ok) {
+                setDashboard(result.data)
+                setError(null)
+            } else {
+                setError(result.message)
+            }
 
-        setLoading(false)
-        setRefreshing(false)
-    }, [user?.id])
+            setLoading(false)
+            setRefreshing(false)
+        },
+        [user?.id]
+    )
 
     useEffect(() => {
         fetchDashboard()
@@ -168,19 +166,23 @@ function DashboardContent() {
     // Calculate user stats from dashboard data
     const totalXP = dashboard?.stats?.total_progress_records ?? 0
     const levelInfo = calculateLevel(totalXP * 25) // Multiply for demo purposes
-    const completedModules = dashboard?.progress?.filter(p => p.module_id && p.status === "completed").length ?? 0
+    const completedModules =
+        dashboard?.progress?.filter((p) => p.module_id && p.status === "completed").length ?? 0
     const totalModules = dashboard?.stats?.total_modules ?? 0
     const streak = 3 // Demo streak - would come from backend
 
     // Transform modules for ModulesOverview
-    const modulesWithProgress = dashboard?.modules?.map(m => ({
-        id: m.id,
-        name: m.name,
-        description: m.description ?? undefined,
-        tasksCompleted: dashboard?.progress?.filter(p => p.module_id === m.id && p.status === "completed").length ?? 0,
-        totalTasks: 5, // Default tasks per module
-        status: m.is_active ? "in_progress" as const : "not_started" as const
-    })) ?? []
+    const modulesWithProgress =
+        dashboard?.modules?.map((m) => ({
+            id: m.id,
+            name: m.name,
+            description: m.description ?? undefined,
+            tasksCompleted:
+                dashboard?.progress?.filter((p) => p.module_id === m.id && p.status === "completed")
+                    .length ?? 0,
+            totalTasks: 5, // Default tasks per module
+            status: m.is_active ? ("in_progress" as const) : ("not_started" as const),
+        })) ?? []
 
     // Demo activities - would come from backend
     const recentActivities: Activity[] = [
@@ -190,7 +192,7 @@ function DashboardContent() {
             title: "Completed 'Install VS Code'",
             description: "Linux Basics Module",
             xp: 25,
-            timestamp: new Date(Date.now() - 15 * 60 * 1000)
+            timestamp: new Date(Date.now() - 15 * 60 * 1000),
         },
         {
             id: "2",
@@ -198,7 +200,7 @@ function DashboardContent() {
             title: "3-day streak achieved! 🔥",
             description: "Keep it up!",
             xp: 50,
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
         },
         {
             id: "3",
@@ -206,85 +208,78 @@ function DashboardContent() {
             title: "Earned bonus XP",
             description: "First task of the day",
             xp: 15,
-            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
+            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        },
     ]
 
     return (
-        <AppShell>
-            {/* Dashboard Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {loading ? (
-                    <DashboardSkeleton />
-                ) : error && !dashboard ? (
-                    <DashboardError error={error} onRetry={handleRefresh} />
-                ) : (
-                    <div className="space-y-8">
-                        {/* Hero Section */}
-                        <DashboardHero
-                            userName={user?.full_name || user?.email?.split("@")[0]}
-                            streak={streak}
-                            level={levelInfo.level}
-                            modulesCompleted={completedModules}
-                            totalModules={totalModules}
-                        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {loading ? (
+                <DashboardSkeleton />
+            ) : error && !dashboard ? (
+                <DashboardError error={error} onRetry={handleRefresh} />
+            ) : (
+                <div className="space-y-8">
+                    {/* Hero Section */}
+                    <DashboardHero
+                        userName={user?.full_name || user?.email?.split("@")[0]}
+                        streak={streak}
+                        level={levelInfo.level}
+                        modulesCompleted={completedModules}
+                        totalModules={totalModules}
+                    />
 
-                        {/* Stats Row */}
-                        <StatsRow
-                            level={levelInfo.level}
-                            currentXP={levelInfo.currentXP}
-                            xpToNextLevel={levelInfo.xpToNextLevel}
-                            streak={streak}
-                            modulesCompleted={completedModules}
-                            totalModules={totalModules}
-                            totalXP={levelInfo.level * 100 + levelInfo.currentXP}
-                        />
+                    {/* Stats Row */}
+                    <StatsRow
+                        level={levelInfo.level}
+                        currentXP={levelInfo.currentXP}
+                        xpToNextLevel={levelInfo.xpToNextLevel}
+                        streak={streak}
+                        modulesCompleted={completedModules}
+                        totalModules={totalModules}
+                        totalXP={levelInfo.level * 100 + levelInfo.currentXP}
+                    />
 
-                        {/* Quick Actions */}
-                        <QuickActions
-                            hasActiveStudyflow={false}
-                            currentModule={modulesWithProgress.find(m => m.status === "in_progress") ? {
-                                id: modulesWithProgress[0]?.id ?? "",
-                                name: modulesWithProgress[0]?.name ?? "",
-                                progress: Math.round((modulesWithProgress[0]?.tasksCompleted ?? 0) / (modulesWithProgress[0]?.totalTasks ?? 1) * 100)
-                            } : undefined}
-                        />
+                    {/* Quick Actions */}
+                    <QuickActions
+                        hasActiveStudyflow={false}
+                        currentModule={
+                            modulesWithProgress.find((m) => m.status === "in_progress")
+                                ? {
+                                    id: modulesWithProgress[0]?.id ?? "",
+                                    name: modulesWithProgress[0]?.name ?? "",
+                                    progress: Math.round(
+                                        ((modulesWithProgress[0]?.tasksCompleted ?? 0) /
+                                            (modulesWithProgress[0]?.totalTasks ?? 1)) *
+                                        100
+                                    ),
+                                }
+                                : undefined
+                        }
+                    />
 
-                        {/* Main Content Grid */}
-                        <div className="grid lg:grid-cols-3 gap-6">
-                            {/* Modules Overview - 2 columns */}
-                            <div className="lg:col-span-2">
-                                <ModulesOverview modules={modulesWithProgress} />
-                            </div>
+                    {/* Main Content Grid */}
+                    <div className="grid lg:grid-cols-3 gap-6">
+                        {/* Modules Overview - 2 columns */}
+                        <div className="lg:col-span-2">
+                            <ModulesOverview modules={modulesWithProgress} />
+                        </div>
 
-                            {/* Right Sidebar - 1 column */}
-                            <div className="space-y-6">
-                                {/* XP Progress Ring */}
-                                <XPProgress
-                                    currentXP={levelInfo.currentXP}
-                                    xpToNextLevel={levelInfo.xpToNextLevel}
-                                    level={levelInfo.level}
-                                />
+                        {/* Right Sidebar - 1 column */}
+                        <div className="space-y-6">
+                            {/* XP Progress Ring */}
+                            <XPProgress
+                                currentXP={levelInfo.currentXP}
+                                xpToNextLevel={levelInfo.xpToNextLevel}
+                                level={levelInfo.level}
+                            />
 
-                                {/* Recent Activity */}
-                                <RecentActivity activities={recentActivities} />
-                            </div>
+                            {/* Recent Activity */}
+                            <RecentActivity activities={recentActivities} />
                         </div>
                     </div>
-                )}
-            </div>
-        </AppShell>
-    )
-}
-
-/* ============================================================================
-   EXPORT
-   ============================================================================ */
-
-export default function DashboardPage() {
-    return (
-        <Protected>
-            <DashboardContent />
-        </Protected>
+                </div>
+            )}
+        </div>
     )
 }

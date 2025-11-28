@@ -2,22 +2,22 @@
 
 /**
  * ============================================================================
- * STUDYFLOW PAGE - Focused Study Mode Experience
+ * STUDYFLOW PAGE — Focused Study Mode Experience
  * ============================================================================
- * 
+ *
  * Features:
  * - Pre-session setup (mode, task, goals)
  * - Active session with timer and controls
  * - Session complete celebration
  * - Session history
  * - Calming, focused design
- * 
- * @phase D.5 - Studyflow UI
+ *
+ * @phase A.3 - App Shell & Routing
+ * @design D.5 - Studyflow UI
  */
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
-import { AppShell } from "@/components/layout/AppShell"
+import { useRouter, useSearchParams } from "next/navigation"
 import { GlassCard } from "@/components/ui/glass-card"
 import {
     SessionSetup,
@@ -68,19 +68,45 @@ const MOCK_SESSIONS: SessionRecord[] = [
 ]
 
 const MOCK_TASKS = [
-    { id: "1", title: "Install Docker", moduleId: "m9", moduleTitle: "Module 09 · Containers", isRecommended: true },
-    { id: "2", title: "Write Dockerfile", moduleId: "m9", moduleTitle: "Module 09 · Containers" },
-    { id: "3", title: "Docker Compose Basics", moduleId: "m9", moduleTitle: "Module 09 · Containers" },
-    { id: "4", title: "Linux File Permissions", moduleId: "m3", moduleTitle: "Module 03 · Linux Basics" },
+    {
+        id: "1",
+        title: "Install Docker",
+        moduleId: "m9",
+        moduleTitle: "Module 09 · Containers",
+        isRecommended: true,
+    },
+    {
+        id: "2",
+        title: "Write Dockerfile",
+        moduleId: "m9",
+        moduleTitle: "Module 09 · Containers",
+    },
+    {
+        id: "3",
+        title: "Docker Compose Basics",
+        moduleId: "m9",
+        moduleTitle: "Module 09 · Containers",
+    },
+    {
+        id: "4",
+        title: "Linux File Permissions",
+        moduleId: "m3",
+        moduleTitle: "Module 03 · Linux Basics",
+    },
 ]
 
 /* ============================================================================
-   MAIN PAGE COMPONENT
+   STUDYFLOW PAGE
    ============================================================================ */
 
 export default function StudyflowPage() {
     const router = useRouter()
-    
+    const searchParams = useSearchParams()
+
+    // Check for module/task from URL params (from module detail page)
+    const moduleSlug = searchParams.get("module")
+    const taskId = searchParams.get("task")
+
     // Session state
     const [sessionState, setSessionState] = React.useState<SessionState>("setup")
     const [sessionConfig, setSessionConfig] = React.useState<SessionConfig | null>(null)
@@ -96,7 +122,7 @@ export default function StudyflowPage() {
     }
 
     // Handle end session
-    const handleEndSession = (completed: boolean) => {
+    const handleEndSession = () => {
         // Create summary
         const summary: SessionSummary = {
             totalFocusMinutes: sessionConfig?.workMinutes || 25,
@@ -118,13 +144,13 @@ export default function StudyflowPage() {
                 xpEarned: summary.xpEarned,
                 mode: sessionConfig.mode,
             }
-            setSessions(prev => [newSession, ...prev])
+            setSessions((prev) => [newSession, ...prev])
         }
     }
 
     // Handle task completion
     const handleCompleteTask = () => {
-        setTasksCompletedInSession(prev => prev + 1)
+        setTasksCompletedInSession((prev) => prev + 1)
     }
 
     // Handle start another session
@@ -146,56 +172,61 @@ export default function StudyflowPage() {
         setSessionState("setup")
     }
 
+    // Log URL params for future integration
+    React.useEffect(() => {
+        if (moduleSlug && taskId) {
+            console.log("Starting studyflow for:", { moduleSlug, taskId })
+        }
+    }, [moduleSlug, taskId])
+
     return (
-        <AppShell showBreadcrumbs={sessionState === "setup"}>
-            <div className="max-w-6xl mx-auto">
-                {/* Pre-Session Setup */}
-                {sessionState === "setup" && (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Main Setup Area */}
-                        <div className="lg:col-span-2">
-                            <SessionSetup
-                                onStartSession={handleStartSession}
-                                availableTasks={MOCK_TASKS}
-                            />
-                        </div>
-
-                        {/* Sidebar */}
-                        <div className="space-y-6">
-                            {/* Streak Display */}
-                            <GlassCard padding="lg">
-                                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
-                                    Your Streak
-                                </h3>
-                                <StreakDisplay streak={7} />
-                            </GlassCard>
-
-                            {/* Recent Sessions */}
-                            <SessionHistory sessions={sessions} maxDisplay={5} />
-                        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Pre-Session Setup */}
+            {sessionState === "setup" && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Main Setup Area */}
+                    <div className="lg:col-span-2">
+                        <SessionSetup
+                            onStartSession={handleStartSession}
+                            availableTasks={MOCK_TASKS}
+                        />
                     </div>
-                )}
 
-                {/* Active Session */}
-                {sessionState === "active" && sessionConfig && (
-                    <ActiveSession
-                        config={sessionConfig}
-                        onEndSession={handleEndSession}
-                        onCompleteTask={handleCompleteTask}
-                    />
-                )}
+                    {/* Sidebar */}
+                    <div className="space-y-6">
+                        {/* Streak Display */}
+                        <GlassCard padding="lg">
+                            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                                Your Streak
+                            </h3>
+                            <StreakDisplay streak={7} />
+                        </GlassCard>
 
-                {/* Session Complete Modal */}
-                {sessionSummary && (
-                    <SessionComplete
-                        isOpen={sessionState === "complete"}
-                        summary={sessionSummary}
-                        onStartAnother={handleStartAnother}
-                        onViewProgress={handleViewProgress}
-                        onClose={handleCloseComplete}
-                    />
-                )}
-            </div>
-        </AppShell>
+                        {/* Recent Sessions */}
+                        <SessionHistory sessions={sessions} maxDisplay={5} />
+                    </div>
+                </div>
+            )}
+
+            {/* Active Session */}
+            {sessionState === "active" && sessionConfig && (
+                <ActiveSession
+                    config={sessionConfig}
+                    onEndSession={handleEndSession}
+                    onCompleteTask={handleCompleteTask}
+                />
+            )}
+
+            {/* Session Complete Modal */}
+            {sessionSummary && (
+                <SessionComplete
+                    isOpen={sessionState === "complete"}
+                    summary={sessionSummary}
+                    onStartAnother={handleStartAnother}
+                    onViewProgress={handleViewProgress}
+                    onClose={handleCloseComplete}
+                />
+            )}
+        </div>
     )
 }
