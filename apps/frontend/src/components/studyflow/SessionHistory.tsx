@@ -17,7 +17,6 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { GlassCard } from "@/components/ui/glass-card"
 import { Clock, Target, Zap, Calendar } from "lucide-react"
 
 /* ============================================================================
@@ -76,7 +75,7 @@ function getModeLabel(mode: string): string {
 function getModeColor(mode: string): string {
     switch (mode) {
         case "pomodoro":
-            return "bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400"
+            return "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400"
         case "deep-focus":
             return "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400"
         default:
@@ -94,13 +93,13 @@ interface SessionItemProps {
 
 function SessionItem({ session }: SessionItemProps) {
     return (
-        <div className="flex items-center gap-4 py-3 border-b border-neutral-100 dark:border-neutral-800 last:border-0">
+        <div className="flex items-center gap-4 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
             {/* Date/Time */}
             <div className="w-20 flex-shrink-0">
-                <p className="text-sm font-medium text-neutral-900 dark:text-white">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {formatDate(session.date)}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                     {formatTime(session.date)}
                 </p>
             </div>
@@ -116,13 +115,13 @@ function SessionItem({ session }: SessionItemProps) {
             {/* Stats */}
             <div className="flex-1 flex items-center gap-4 justify-end">
                 {/* Duration */}
-                <div className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
+                <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
                     <Clock className="h-3.5 w-3.5" />
                     <span className="text-sm">{session.durationMinutes}m</span>
                 </div>
 
                 {/* Tasks */}
-                <div className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
+                <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
                     <Target className="h-3.5 w-3.5" />
                     <span className="text-sm">{session.tasksCompleted}</span>
                 </div>
@@ -144,13 +143,13 @@ function SessionItem({ session }: SessionItemProps) {
 function EmptyState() {
     return (
         <div className="text-center py-8">
-            <div className="mx-auto w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-3">
-                <Calendar className="h-6 w-6 text-neutral-400" />
+            <div className="mx-auto w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-3">
+                <Calendar className="h-6 w-6 text-gray-400" />
             </div>
-            <p className="text-neutral-600 dark:text-neutral-400 font-medium">
+            <p className="text-gray-600 dark:text-gray-400 font-medium">
                 No sessions yet
             </p>
-            <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-1">
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                 Start your first study session!
             </p>
         </div>
@@ -171,20 +170,20 @@ function StatsSummary({ sessions }: StatsSummaryProps) {
     const totalXP = sessions.reduce((sum, s) => sum + s.xpEarned, 0)
 
     return (
-        <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-neutral-200 dark:border-neutral-700">
+        <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
             <div className="text-center">
-                <p className="text-2xl font-bold text-neutral-900 dark:text-white">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {Math.round(totalMinutes / 60)}h
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                     Total Time
                 </p>
             </div>
             <div className="text-center">
-                <p className="text-2xl font-bold text-neutral-900 dark:text-white">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {totalTasks}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                     Tasks Done
                 </p>
             </div>
@@ -192,7 +191,7 @@ function StatsSummary({ sessions }: StatsSummaryProps) {
                 <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                     {totalXP}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                     XP Earned
                 </p>
             </div>
@@ -212,9 +211,9 @@ export function SessionHistory({
     const displaySessions = sessions.slice(0, maxDisplay)
 
     return (
-        <GlassCard padding="lg" className={className}>
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary-500" />
+        <div className={cn("bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6", className)}>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-indigo-500" />
                 Recent Sessions
             </h3>
 
@@ -230,13 +229,13 @@ export function SessionHistory({
                     </div>
 
                     {sessions.length > maxDisplay && (
-                        <button className="w-full mt-4 text-sm text-primary-600 dark:text-primary-400 hover:underline">
+                        <button className="w-full mt-4 text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
                             View all {sessions.length} sessions
                         </button>
                     )}
                 </>
             )}
-        </GlassCard>
+        </div>
     )
 }
 

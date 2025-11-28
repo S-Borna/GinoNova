@@ -18,7 +18,6 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { GlassCard } from "@/components/ui/glass-card"
 import {
     SessionSetup,
     ActiveSession,
@@ -195,12 +194,12 @@ export default function StudyflowPage() {
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Streak Display */}
-                        <GlassCard padding="lg">
-                            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                                 Your Streak
                             </h3>
                             <StreakDisplay streak={7} />
-                        </GlassCard>
+                        </div>
 
                         {/* Recent Sessions */}
                         <SessionHistory sessions={sessions} maxDisplay={5} />
