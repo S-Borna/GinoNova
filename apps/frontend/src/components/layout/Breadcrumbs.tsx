@@ -4,13 +4,13 @@
  * ============================================================================
  * BREADCRUMBS - Navigation Context Display
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Auto-generated from current route
  * - Clickable ancestor links
  * - Current page non-clickable
  * - Truncates on mobile
- * 
+ *
  * @phase D.3 - Navigation + Layout
  */
 
@@ -60,7 +60,7 @@ function formatSegment(segment: string, prevSegment?: string): string {
     if (routeLabels[segment.toLowerCase()]) {
         return routeLabels[segment.toLowerCase()]
     }
-    
+
     // Check if it's a UUID or ID - show contextual name based on previous segment
     if (segment.match(/^[0-9a-f-]{36}$/i) || segment.match(/^\d+$/)) {
         // Context-aware naming
@@ -69,7 +69,7 @@ function formatSegment(segment: string, prevSegment?: string): string {
         if (prevSegment === "tracks") return "Track"
         return "Details"
     }
-    
+
     // Convert slug to title case
     return segment
         .split(/[-_]/)
@@ -81,24 +81,24 @@ function formatSegment(segment: string, prevSegment?: string): string {
    MAIN BREADCRUMBS COMPONENT
    ============================================================================ */
 
-export function Breadcrumbs({ 
-    className, 
+export function Breadcrumbs({
+    className,
     homeLabel = "Home",
-    maxItems = 4 
+    maxItems = 4
 }: BreadcrumbsProps) {
     const pathname = usePathname()
-    
+
     const breadcrumbs = React.useMemo((): BreadcrumbItem[] => {
         if (!pathname) return []
-        
+
         const segments = pathname.split("/").filter(Boolean)
-        
+
         // Build breadcrumb items
         const items: BreadcrumbItem[] = segments.map((segment, index) => {
             const href = "/" + segments.slice(0, index + 1).join("/")
             const isCurrent = index === segments.length - 1
             const prevSegment = index > 0 ? segments[index - 1] : undefined
-            
+
             return {
                 label: formatSegment(segment, prevSegment),
                 href,
@@ -124,7 +124,7 @@ export function Breadcrumbs({
     if (breadcrumbs.length === 0) return null
 
     return (
-        <nav 
+        <nav
             aria-label="Breadcrumb"
             className={cn("flex items-center", className)}
         >
@@ -150,9 +150,9 @@ export function Breadcrumbs({
                 {breadcrumbs.map((item, index) => (
                     <li key={item.href + index} className="flex items-center">
                         <ChevronRight className="h-4 w-4 text-neutral-300 dark:text-neutral-600 mx-1" />
-                        
+
                         {item.isCurrent ? (
-                            <span 
+                            <span
                                 className={cn(
                                     "px-2 py-1 font-medium",
                                     "text-neutral-900 dark:text-white",
