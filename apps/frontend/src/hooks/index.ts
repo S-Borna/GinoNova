@@ -5,7 +5,7 @@
  *
  * Re-exports all custom hooks from a single location.
  *
- * @phase A.4 - Data Fetching & State
+ * @phase A.4 - Data Fetching & State, A.5 - Progress & Completion Logic
  */
 
 // Auth hooks (from AuthProvider)
@@ -69,3 +69,10 @@ export {
     type StudyflowStats,
     type StudyflowSettings,
 } from "./useStudyflow"
+
+// Progress sync hooks (A.5)
+export {
+    useProgressSync,
+    useStreakChecker,
+    useLevelUpDetector,
+} from "./useProgressSync"

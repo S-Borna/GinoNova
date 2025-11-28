@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * MODULE COMPONENTS — Barrel Export (D.4)
+ * MODULE COMPONENTS — Barrel Export (D.4, A.5)
  * ============================================================================
  */
 
@@ -9,3 +9,4 @@ export { TaskCard, type TaskCardProps, type TaskType, type TaskCardStatus } from
 export { ModuleProgress, type ModuleProgressProps, type MiniTask } from "./ModuleProgress"
 export { ModuleHeader, type ModuleHeaderProps } from "./ModuleHeader"
 export { PrerequisitesSection, type PrerequisitesSectionProps, type Prerequisite } from "./PrerequisitesSection"
+export { ModuleCompleteModal } from "./ModuleCompleteModal"
