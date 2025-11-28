@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import { AuthProvider } from '@/components/auth';
 import { QueryProvider } from '@/providers/QueryProvider';
@@ -26,13 +27,14 @@ const jetbrainsMono = JetBrains_Mono({
    ============================================================================ */
 
 const siteConfig = {
-    name: 'DevOpsHub',
+    name: 'My DevOps Hub',
+    company: 'The Ebadi Group',
     description:
         'Master DevOps with 15 structured modules, 60+ hands-on labs, and real-world projects. From Linux fundamentals to Kubernetes, become a DevOps engineer.',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://devopshub.io',
     ogImage: '/og-image.png',
     twitterHandle: '@devopshub',
-    author: 'DevOpsHub Team',
+    author: 'The Ebadi Group',
     keywords: [
         'DevOps',
         'DevOps bootcamp',
@@ -126,13 +128,20 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
-        <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+        <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
             <body className="font-sans antialiased">
-                <AppInitializer />
-                <QueryProvider>
-                    <AuthProvider>{children}</AuthProvider>
-                </QueryProvider>
-                <Toaster position="top-right" richColors closeButton />
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem={false}
+                    disableTransitionOnChange
+                >
+                    <AppInitializer />
+                    <QueryProvider>
+                        <AuthProvider>{children}</AuthProvider>
+                    </QueryProvider>
+                    <Toaster position="top-right" richColors closeButton />
+                </ThemeProvider>
             </body>
         </html>
     );

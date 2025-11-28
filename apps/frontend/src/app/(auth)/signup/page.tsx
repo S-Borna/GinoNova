@@ -32,12 +32,14 @@ import {
 } from "@/lib/auth"
 
 export default function SignupPage() {
-    const [fullName, setFullName] = React.useState("")
+    const [firstName, setFirstName] = React.useState("")
+    const [lastName, setLastName] = React.useState("")
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
     const [confirmPassword, setConfirmPassword] = React.useState("")
     const [acceptTerms, setAcceptTerms] = React.useState(false)
     const [error, setError] = React.useState("")
+    const [nameError, setNameError] = React.useState("")
     const [emailError, setEmailError] = React.useState("")
     const [passwordError, setPasswordError] = React.useState("")
     const [confirmError, setConfirmError] = React.useState("")
@@ -71,9 +73,18 @@ export default function SignupPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setError("")
+        setNameError("")
         setEmailError("")
         setPasswordError("")
         setConfirmError("")
+
+        // Validation - require first and last name
+        if (!firstName.trim() || !lastName.trim()) {
+            setNameError("Both first and last name are required")
+            return
+        }
+
+        const fullName = `${firstName.trim()} ${lastName.trim()}`
 
         // Validation
         const emailValidation = validateEmail(email)
@@ -101,7 +112,7 @@ export default function SignupPage() {
         setIsLoading(true)
 
         try {
-            await register(normalizeEmail(email), password, fullName || undefined)
+            await register(normalizeEmail(email), password, fullName)
             router.push("/dashboard")
         } catch (err) {
             setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
@@ -125,7 +136,7 @@ export default function SignupPage() {
                         <Terminal className="w-5 h-5 text-white" />
                     </div>
                     <span className="text-xl font-bold text-neutral-900 dark:text-white">
-                        DevOpsHub
+                        My DevOps Hub
                     </span>
                 </div>
 
@@ -148,16 +159,37 @@ export default function SignupPage() {
                 {/* Error alert */}
                 <AuthErrorAlert message={error} />
 
-                {/* Full name */}
-                <AuthInput
-                    label="Full name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    disabled={isLoading}
-                    autoComplete="name"
-                />
+                {/* Name fields - side by side */}
+                <div className="grid grid-cols-2 gap-3">
+                    <AuthInput
+                        label="First name"
+                        type="text"
+                        placeholder="John"
+                        value={firstName}
+                        onChange={(e) => {
+                            setFirstName(e.target.value)
+                            if (nameError) setNameError("")
+                        }}
+                        error={nameError && !firstName.trim() ? nameError : ""}
+                        disabled={isLoading}
+                        autoComplete="given-name"
+                        required
+                    />
+                    <AuthInput
+                        label="Last name"
+                        type="text"
+                        placeholder="Doe"
+                        value={lastName}
+                        onChange={(e) => {
+                            setLastName(e.target.value)
+                            if (nameError) setNameError("")
+                        }}
+                        error={nameError && !lastName.trim() ? nameError : ""}
+                        disabled={isLoading}
+                        autoComplete="family-name"
+                        required
+                    />
+                </div>
 
                 {/* Email */}
                 <AuthInput

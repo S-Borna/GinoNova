@@ -222,7 +222,7 @@ export default function DashboardPage() {
                 <div className="space-y-8">
                     {/* Hero Section */}
                     <DashboardHero
-                        userName={user?.full_name || user?.email?.split("@")[0]}
+                        userName={user?.full_name?.split(" ")[0] || user?.email?.split("@")[0]}
                         streak={streak}
                         level={levelInfo.level}
                         modulesCompleted={completedModules}

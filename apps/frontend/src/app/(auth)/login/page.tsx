@@ -88,7 +88,7 @@ export default function LoginPage() {
                         <Terminal className="w-5 h-5 text-white" />
                     </div>
                     <span className="text-xl font-bold text-neutral-900 dark:text-white">
-                        DevOpsHub
+                        My DevOps Hub
                     </span>
                 </div>
 

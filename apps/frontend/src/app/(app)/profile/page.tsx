@@ -17,6 +17,7 @@
  */
 
 import { useState } from "react"
+import { useTheme } from "next-themes"
 import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -152,8 +153,8 @@ function ConfirmResetModal({ isOpen, onClose, onConfirm, isLoading }: ConfirmMod
    ============================================================================ */
 
 export default function ProfilePage() {
-    const { user, logout } = useAuth()
-    const [isDark, setIsDark] = useState(false)
+    const { user, logout, refreshUser } = useAuth()
+    const { theme, setTheme } = useTheme()
     const [notificationsEnabled, setNotificationsEnabled] = useState(true)
     const [emailNotifications, setEmailNotifications] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
@@ -180,8 +181,12 @@ export default function ProfilePage() {
         try {
             const result = await resetProgress()
             setShowResetModal(false)
+            // Refresh user data to update stats
+            await refreshUser()
             // Show success - could add a toast here
             alert(`All progress has been reset successfully! (${result.deleted_records} records deleted)`)
+            // Force page reload to refresh all components with fresh data
+            window.location.reload()
         } catch (error) {
             console.error("Failed to reset progress:", error)
             alert("Failed to reset progress. Please try again.")
@@ -191,10 +196,10 @@ export default function ProfilePage() {
     }
 
     const toggleTheme = () => {
-        setIsDark(!isDark)
-        // In real app, this would update the theme context
-        document.documentElement.classList.toggle("dark")
+        setTheme(theme === "dark" ? "light" : "dark")
     }
+
+    const isDark = theme === "dark"
 
     // Get initials for avatar
     const initials = user?.full_name
