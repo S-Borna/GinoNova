@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Optional, List
 from uuid import UUID
 
-from .database import is_db_configured, SessionLocal
+from .database import is_db_configured, get_db_context
 from ..schemas.content_blocks import (
     TaskBlockProgress as TaskBlockProgressSchema,
     BlockProgress,
@@ -59,7 +59,7 @@ def get_progress(user_id: UUID, task_id: UUID) -> Optional[TaskBlockProgressSche
     """
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress = db.query(Model).filter(
                 Model.user_id == user_id,
                 Model.task_id == task_id
@@ -85,7 +85,7 @@ def create_progress(user_id: UUID, task_id: UUID) -> TaskBlockProgressSchema:
 
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             # Check if already exists
             existing = db.query(Model).filter(
                 Model.user_id == user_id,
@@ -107,7 +107,7 @@ def create_progress(user_id: UUID, task_id: UUID) -> TaskBlockProgressSchema:
                 xp_earned=0,
             )
             db.add(progress)
-            db.commit()
+            db.flush()
             db.refresh(progress)
             return _model_to_schema(progress)
 
@@ -152,7 +152,7 @@ def update_block_progress(
 
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress = db.query(Model).filter(
                 Model.user_id == user_id,
                 Model.task_id == task_id
@@ -185,7 +185,7 @@ def update_block_progress(
 
             progress.block_progress = block_progress
             progress.updated_at = now
-            db.commit()
+            db.flush()
             db.refresh(progress)
             return _model_to_schema(progress)
 
@@ -237,7 +237,7 @@ def add_quiz_answer(
 
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress = db.query(Model).filter(
                 Model.user_id == user_id,
                 Model.task_id == task_id
@@ -250,7 +250,7 @@ def add_quiz_answer(
             quiz_answers.append(quiz_answer.model_dump())
             progress.quiz_answers = quiz_answers
             progress.updated_at = now
-            db.commit()
+            db.flush()
             db.refresh(progress)
             return _model_to_schema(progress)
 
@@ -283,7 +283,7 @@ def add_terminal_command(
 
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress = db.query(Model).filter(
                 Model.user_id == user_id,
                 Model.task_id == task_id
@@ -296,7 +296,7 @@ def add_terminal_command(
             terminal_history.append(terminal_command.model_dump())
             progress.terminal_history = terminal_history
             progress.updated_at = now
-            db.commit()
+            db.flush()
             db.refresh(progress)
             return _model_to_schema(progress)
 
@@ -327,7 +327,7 @@ def update_time_spent(
     """
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress = db.query(Model).filter(
                 Model.user_id == user_id,
                 Model.task_id == task_id
@@ -338,7 +338,7 @@ def update_time_spent(
 
             progress.total_time_spent = (progress.total_time_spent or 0) + seconds_delta
             progress.updated_at = datetime.utcnow()
-            db.commit()
+            db.flush()
             db.refresh(progress)
             return _model_to_schema(progress)
 
@@ -371,7 +371,7 @@ def complete_task(
 
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress = db.query(Model).filter(
                 Model.user_id == user_id,
                 Model.task_id == task_id
@@ -384,7 +384,7 @@ def complete_task(
             progress.completed_at = now
             progress.xp_earned = xp_earned
             progress.updated_at = now
-            db.commit()
+            db.flush()
             db.refresh(progress)
             return _model_to_schema(progress)
 
@@ -411,7 +411,7 @@ def get_user_task_progress(user_id: UUID) -> List[TaskBlockProgressSchema]:
     """
     if is_db_configured():
         Model = _get_model()
-        with SessionLocal() as db:
+        with get_db_context() as db:
             progress_list = db.query(Model).filter(Model.user_id == user_id).all()
             return [_model_to_schema(p) for p in progress_list]
 
