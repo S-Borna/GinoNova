@@ -3,6 +3,9 @@
    Phase D.1: Apple-Inspired Premium Design
    ============================================================================ */
 
+/* Tailwind CSS v4 - Import first */
+@import "tailwindcss";
+
 /* Design System Imports */
 @import "../styles/design-tokens.css";
 @import "../styles/animations.css";
@@ -10,11 +13,11 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
+/* Tailwind v4: Source/Content paths - scan components */
+@source "../**/*.{js,ts,jsx,tsx,mdx}";
+@source "../../components/**/*.{js,ts,jsx,tsx,mdx}";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@custom-variant dark (&:is(.dark *));
 
 /* ============================================================================
    PHASE 6.3: DevOpsHub Design System
