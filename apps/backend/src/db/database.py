@@ -83,4 +83,7 @@ def is_db_configured() -> bool:
 def init_db():
     """Initialize database tables"""
     if engine:
+        # Import models to register them with Base.metadata
+        # This is required before create_all() so SQLAlchemy knows about all tables
+        from . import models  # noqa: F401
         Base.metadata.create_all(bind=engine)
