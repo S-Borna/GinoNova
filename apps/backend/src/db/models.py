@@ -4,7 +4,7 @@ SQLAlchemy Models - All database tables
 import uuid
 from datetime import datetime
 from sqlalchemy import (
-    Column, String, Boolean, Integer, Float, DateTime, Text, 
+    Column, String, Boolean, Integer, Float, DateTime, Text,
     ForeignKey, JSON, Enum, Index
 )
 from sqlalchemy.dialects.postgresql import UUID
@@ -20,7 +20,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=True)
-    
+
     # Profile fields (Phase 9)
     avatar_url = Column(String(500), nullable=True)
     bio = Column(Text, nullable=True)
@@ -28,18 +28,18 @@ class User(Base):
     linkedin_url = Column(String(255), nullable=True)
     website_url = Column(String(255), nullable=True)
     timezone = Column(String(50), default="UTC")
-    
+
     # Status
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
     is_verified = Column(Boolean, default=False)
-    
+
     # Stats
     total_xp = Column(Integer, default=0)
     current_streak = Column(Integer, default=0)
     longest_streak = Column(Integer, default=0)
     last_activity_at = Column(DateTime, nullable=True)
-    
+
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -61,7 +61,7 @@ class Track(Base):
     color = Column(String(7), default="#6366f1")  # Hex color
     icon = Column(String(10), default="📚")  # Emoji
     is_active = Column(Boolean, default=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -83,7 +83,7 @@ class Module(Base):
     estimated_hours = Column(Float, default=10.0)
     prerequisites = Column(JSON, default=list)  # List of module slugs
     is_active = Column(Boolean, default=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -112,7 +112,7 @@ class Task(Base):
     estimated_minutes = Column(Integer, default=15)
     xp_reward = Column(Integer, default=25)
     is_active = Column(Boolean, default=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -141,7 +141,7 @@ class Lab(Base):
     expected_outcomes = Column(JSON, default=list)
     hints = Column(JSON, default=list)
     is_active = Column(Boolean, default=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -167,7 +167,7 @@ class Project(Base):
     estimated_hours = Column(Float, default=5.0)
     xp_reward = Column(Integer, default=500)
     is_active = Column(Boolean, default=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -181,18 +181,18 @@ class Progress(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    
+
     # What is being tracked (one of these should be set)
     module_id = Column(UUID(as_uuid=True), ForeignKey("modules.id"), nullable=True)
     task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=True)
     lab_id = Column(UUID(as_uuid=True), ForeignKey("labs.id"), nullable=True)
     project_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=True)
-    
+
     status = Column(String(20), default="not_started")  # not_started, in_progress, completed
     progress_percent = Column(Integer, default=0)
     xp_earned = Column(Integer, default=0)
     completed_at = Column(DateTime, nullable=True)
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -211,18 +211,18 @@ class StudyflowSession(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    
+
     session_type = Column(String(20), default="pomodoro")  # pomodoro, deep_focus, custom
     duration_minutes = Column(Integer, default=25)
     actual_duration = Column(Integer, nullable=True)  # Actual time spent
-    
+
     tasks_completed = Column(Integer, default=0)
     xp_earned = Column(Integer, default=0)
-    
+
     started_at = Column(DateTime, default=datetime.utcnow)
     ended_at = Column(DateTime, nullable=True)
     status = Column(String(20), default="active")  # active, completed, cancelled
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
