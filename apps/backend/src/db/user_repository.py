@@ -10,6 +10,16 @@ from .memory import USERS
 from ..schemas.user import UserInDB
 
 
+def list_users() -> list[UserInDB]:
+    """
+    Get all users from the database.
+
+    Returns:
+        List of all UserInDB objects
+    """
+    return list(USERS.values())
+
+
 def get_user_by_email(email: str) -> Optional[UserInDB]:
     """
     Get user by email address.
