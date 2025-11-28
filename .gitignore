@@ -27,10 +27,11 @@ __pycache__/
 htmlcov/
 
 # Logs
-logs/**
-!logs/opus/.gitkeep
-!logs/gpt/.gitkeep
 *.log
+# Keep session logs tracked
+!logs/
+!logs/opus/
+!logs/gpt/
 
 # IDE/Editor
 .idea/
