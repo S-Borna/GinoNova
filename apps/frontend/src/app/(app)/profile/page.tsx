@@ -18,7 +18,6 @@
 import { useState } from "react"
 import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
-import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -51,11 +50,11 @@ interface StatBadgeProps {
 
 function StatBadge({ icon, label, value, color }: StatBadgeProps) {
     return (
-        <div className={cn("flex items-center gap-2 px-3 py-2 rounded-xl", color)}>
+        <div className={cn("flex items-center gap-2 px-4 py-2 rounded-xl", color)}>
             {icon}
             <div>
-                <p className="text-xs opacity-70">{label}</p>
-                <p className="font-semibold">{value}</p>
+                <p className="text-xs font-medium opacity-80">{label}</p>
+                <p className="font-bold">{value}</p>
             </div>
         </div>
     )
@@ -110,62 +109,47 @@ export default function ProfilePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="space-y-6">
                 {/* Header */}
-                <div>
-                    <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                         Profile Settings
                     </h1>
-                    <p className="text-neutral-500 dark:text-neutral-400">
+                    <p className="text-gray-500 dark:text-gray-400">
                         Manage your account and preferences
                     </p>
                 </div>
 
                 {/* Profile Card */}
-                <GlassCard variant="default" padding="lg" radius="xl">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                     <div className="flex flex-col md:flex-row gap-6">
                         {/* Avatar */}
                         <div className="flex flex-col items-center">
-                            <div
-                                className={cn(
-                                    "relative w-24 h-24 rounded-2xl flex items-center justify-center",
-                                    "bg-gradient-to-br from-primary-500 to-primary-600",
-                                    "text-white text-3xl font-bold"
-                                )}
-                            >
+                            <div className="relative w-24 h-24 rounded-2xl flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-3xl font-bold">
                                 {initials}
-                                <button
-                                    className={cn(
-                                        "absolute -bottom-2 -right-2 w-8 h-8 rounded-xl",
-                                        "bg-white dark:bg-neutral-800",
-                                        "border border-neutral-200 dark:border-neutral-700",
-                                        "flex items-center justify-center",
-                                        "hover:bg-neutral-50 dark:hover:bg-neutral-700",
-                                        "transition-colors"
-                                    )}
-                                >
-                                    <Camera className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+                                <button className="absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                                    <Camera className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                                 </button>
                             </div>
-                            <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">
+                            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
                                 Change avatar
                             </p>
                         </div>
 
                         {/* Info */}
                         <div className="flex-1">
-                            <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-1">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                                 {user?.full_name || "DevOps Learner"}
                             </h2>
-                            <p className="text-neutral-500 dark:text-neutral-400 mb-4">
+                            <p className="text-gray-500 dark:text-gray-400 mb-4">
                                 {user?.email}
                             </p>
 
                             {/* Stats */}
                             <div className="flex flex-wrap gap-3">
                                 <StatBadge
-                                    icon={<Trophy className="w-4 h-4 text-warning-500" />}
+                                    icon={<Trophy className="w-4 h-4 text-amber-500" />}
                                     label="Level"
                                     value={7}
-                                    color="bg-warning-100 dark:bg-warning-900/30 text-warning-700 dark:text-warning-400"
+                                    color="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
                                 />
                                 <StatBadge
                                     icon={<Flame className="w-4 h-4 text-orange-500" />}
@@ -182,13 +166,13 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                </GlassCard>
+                </div>
 
                 {/* Account Settings */}
-                <GlassCard variant="default" padding="lg" radius="xl">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                     <div className="flex items-center gap-2 mb-6">
-                        <User className="w-5 h-5 text-primary-500" />
-                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                        <User className="w-5 h-5 text-indigo-500" />
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             Account Information
                         </h3>
                     </div>
@@ -197,7 +181,7 @@ export default function ProfilePage() {
                         <div className="space-y-2">
                             <Label htmlFor="fullName">Full Name</Label>
                             <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <Input
                                     id="fullName"
                                     value={fullName}
@@ -211,34 +195,34 @@ export default function ProfilePage() {
                         <div className="space-y-2">
                             <Label htmlFor="email">Email Address</Label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <Input
                                     id="email"
                                     value={email}
                                     disabled
-                                    className="pl-10 rounded-xl bg-neutral-50 dark:bg-neutral-800"
+                                    className="pl-10 rounded-xl bg-gray-50 dark:bg-gray-700"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <Button
                             onClick={handleSave}
                             disabled={isSaving}
-                            className="rounded-xl"
+                            className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
                         >
                             <Save className="w-4 h-4 mr-2" />
                             {isSaving ? "Saving..." : "Save Changes"}
                         </Button>
                     </div>
-                </GlassCard>
+                </div>
 
                 {/* Preferences */}
-                <GlassCard variant="default" padding="lg" radius="xl">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                     <div className="flex items-center gap-2 mb-6">
-                        <Shield className="w-5 h-5 text-primary-500" />
-                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                        <Shield className="w-5 h-5 text-indigo-500" />
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             Preferences
                         </h3>
                     </div>
@@ -248,15 +232,15 @@ export default function ProfilePage() {
                         <div className="flex items-center justify-between py-3">
                             <div className="flex items-center gap-3">
                                 {isDark ? (
-                                    <Moon className="w-5 h-5 text-neutral-500" />
+                                    <Moon className="w-5 h-5 text-gray-500" />
                                 ) : (
-                                    <Sun className="w-5 h-5 text-neutral-500" />
+                                    <Sun className="w-5 h-5 text-gray-500" />
                                 )}
                                 <div>
-                                    <p className="font-medium text-neutral-900 dark:text-white">
+                                    <p className="font-medium text-gray-900 dark:text-white">
                                         Dark Mode
                                     </p>
-                                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         Toggle dark/light theme
                                     </p>
                                 </div>
@@ -265,7 +249,7 @@ export default function ProfilePage() {
                                 onClick={toggleTheme}
                                 className={cn(
                                     "relative w-12 h-6 rounded-full transition-colors",
-                                    isDark ? "bg-primary-500" : "bg-neutral-200 dark:bg-neutral-700"
+                                    isDark ? "bg-indigo-500" : "bg-gray-200 dark:bg-gray-600"
                                 )}
                             >
                                 <span
@@ -278,14 +262,14 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Notifications */}
-                        <div className="flex items-center justify-between py-3 border-t border-neutral-200 dark:border-neutral-700">
+                        <div className="flex items-center justify-between py-3 border-t border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-3">
-                                <Bell className="w-5 h-5 text-neutral-500" />
+                                <Bell className="w-5 h-5 text-gray-500" />
                                 <div>
-                                    <p className="font-medium text-neutral-900 dark:text-white">
+                                    <p className="font-medium text-gray-900 dark:text-white">
                                         Push Notifications
                                     </p>
-                                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         Get notified about your progress
                                     </p>
                                 </div>
@@ -295,8 +279,8 @@ export default function ProfilePage() {
                                 className={cn(
                                     "relative w-12 h-6 rounded-full transition-colors",
                                     notificationsEnabled
-                                        ? "bg-primary-500"
-                                        : "bg-neutral-200 dark:bg-neutral-700"
+                                        ? "bg-indigo-500"
+                                        : "bg-gray-200 dark:bg-gray-600"
                                 )}
                             >
                                 <span
@@ -309,14 +293,14 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Email Notifications */}
-                        <div className="flex items-center justify-between py-3 border-t border-neutral-200 dark:border-neutral-700">
+                        <div className="flex items-center justify-between py-3 border-t border-gray-200 dark:border-gray-700">
                             <div className="flex items-center gap-3">
-                                <Mail className="w-5 h-5 text-neutral-500" />
+                                <Mail className="w-5 h-5 text-gray-500" />
                                 <div>
-                                    <p className="font-medium text-neutral-900 dark:text-white">
+                                    <p className="font-medium text-gray-900 dark:text-white">
                                         Email Notifications
                                     </p>
-                                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         Receive weekly progress reports
                                     </p>
                                 </div>
@@ -326,8 +310,8 @@ export default function ProfilePage() {
                                 className={cn(
                                     "relative w-12 h-6 rounded-full transition-colors",
                                     emailNotifications
-                                        ? "bg-primary-500"
-                                        : "bg-neutral-200 dark:bg-neutral-700"
+                                        ? "bg-indigo-500"
+                                        : "bg-gray-200 dark:bg-gray-600"
                                 )}
                             >
                                 <span
@@ -339,22 +323,17 @@ export default function ProfilePage() {
                             </button>
                         </div>
                     </div>
-                </GlassCard>
+                </div>
 
                 {/* Danger Zone */}
-                <GlassCard
-                    variant="default"
-                    padding="lg"
-                    radius="xl"
-                    className="border-red-200 dark:border-red-900/50"
-                >
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-red-200 dark:border-red-900/50 p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <LogOut className="w-5 h-5 text-red-500" />
-                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             Session
                         </h3>
                     </div>
-                    <p className="text-neutral-500 dark:text-neutral-400 mb-4">
+                    <p className="text-gray-500 dark:text-gray-400 mb-4">
                         Sign out of your account on this device.
                     </p>
                     <Button
@@ -365,7 +344,7 @@ export default function ProfilePage() {
                         <LogOut className="w-4 h-4 mr-2" />
                         Sign Out
                     </Button>
-                </GlassCard>
+                </div>
             </div>
         </div>
     )
