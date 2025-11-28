@@ -81,7 +81,11 @@ def create_task(data: TaskCreate) -> TaskInDB:
         module_id=data.module_id,
         title=data.title,
         description=data.description,
+        content=data.content,
+        order_index=data.order_index,
         difficulty=data.difficulty,
+        estimated_minutes=data.estimated_minutes,
+        xp_reward=data.xp_reward,
     )
     _tasks_db[task.id] = task
     return task

@@ -73,23 +73,608 @@ BOOTCAMP_MODULES: list[dict] = [
         "estimated_hours": 10.0,
         "prerequisites": [],
         "tasks": [
-            {"title": "macOS vs Linux for DevOps work", "difficulty": "easy"},
-            {"title": "Terminal emulators (iTerm2, Alacritty)", "difficulty": "easy"},
-            {"title": "Shell selection (zsh, bash) and configuration", "difficulty": "easy"},
-            {"title": "Package managers (Homebrew, apt, yum)", "difficulty": "easy"},
-            {"title": "VS Code with DevOps extensions", "difficulty": "easy"},
-            {"title": "Docker Desktop installation", "difficulty": "easy"},
-            {"title": "Git and GitHub CLI setup", "difficulty": "easy"},
-            {"title": "AWS CLI v2 installation", "difficulty": "medium"},
-            {"title": "Terraform installation", "difficulty": "medium"},
-            {"title": "kubectl installation", "difficulty": "medium"},
-            {"title": "Python 3.11+ setup", "difficulty": "easy"},
-            {"title": "SSH key generation and management", "difficulty": "medium"},
-            {"title": "GPG signing for commits", "difficulty": "medium"},
-            {"title": "MFA setup for all services", "difficulty": "medium"},
-            {"title": "Create personal dotfiles repository", "difficulty": "medium"},
-            {"title": "Shell aliases and functions", "difficulty": "medium"},
-            {"title": "Environment variables management", "difficulty": "medium"},
+            {
+                "title": "macOS vs Linux for DevOps work",
+                "difficulty": "easy",
+                "estimated_minutes": 15,
+                "xp_reward": 25,
+                "content": """# macOS vs Linux for DevOps Work
+
+## Introduction
+As a DevOps engineer, you'll work with Linux systems daily. Understanding the differences between macOS and Linux helps you choose the right environment for development.
+
+## macOS Advantages
+- **Unix-based**: macOS is built on Darwin (BSD), making it familiar for Linux users
+- **Hardware quality**: Great for development laptops
+- **Docker Desktop**: Works well for local container development
+- **GUI + Terminal**: Best of both worlds
+
+## Linux Advantages
+- **Production environment**: Most servers run Linux
+- **Native containers**: Docker runs natively without virtualization
+- **Resource efficiency**: Uses less RAM/CPU than macOS Docker
+- **Free and open source**: No licensing costs
+
+## Recommendation
+For this bootcamp:
+1. **Local development**: macOS or Linux both work great
+2. **Production**: Always Linux (Ubuntu, Amazon Linux, etc.)
+3. **Learning**: Consider running a Linux VM for hands-on practice
+
+## Key Commands Work Similarly
+```bash
+# These work on both macOS and Linux
+ls -la
+cd /path/to/directory
+grep "pattern" file.txt
+curl https://api.example.com
+```
+
+## What's Different
+| Task | macOS | Linux |
+|------|-------|-------|
+| Package manager | Homebrew | apt, yum, dnf |
+| File paths | /Users/name | /home/name |
+| Service management | launchctl | systemd |
+| File system | APFS | ext4, xfs |
+
+## Next Steps
+In the next lesson, we'll set up your terminal emulator for maximum productivity.
+"""
+            },
+            {
+                "title": "Terminal emulators (iTerm2, Alacritty)",
+                "difficulty": "easy",
+                "estimated_minutes": 20,
+                "xp_reward": 30,
+                "content": """# Terminal Emulators: iTerm2 & Alacritty
+
+## Why Terminal Choice Matters
+Your terminal is where you'll spend 60-80% of your DevOps time. A good terminal emulator improves productivity significantly.
+
+## iTerm2 (macOS Recommended)
+
+### Installation
+```bash
+brew install --cask iterm2
+```
+
+### Key Features
+- **Split panes**: Cmd+D (vertical), Cmd+Shift+D (horizontal)
+- **Hotkey window**: Instant terminal with a keypress
+- **Search**: Cmd+F to find text in output
+- **Profiles**: Different settings for different tasks
+
+### Recommended Settings
+1. Go to Preferences → Profiles → Colors
+2. Choose a dark theme (Solarized Dark or One Dark)
+3. Enable "Unlimited scrollback" in Terminal tab
+
+## Alacritty (Cross-platform, GPU-accelerated)
+
+### Installation
+```bash
+# macOS
+brew install --cask alacritty
+
+# Ubuntu
+sudo apt install alacritty
+```
+
+### Configuration (~/.config/alacritty/alacritty.yml)
+```yaml
+window:
+  padding:
+    x: 10
+    y: 10
+  opacity: 0.95
+
+font:
+  normal:
+    family: "JetBrains Mono"
+  size: 14.0
+
+colors:
+  primary:
+    background: '#1e1e2e'
+    foreground: '#cdd6f4'
+```
+
+### Why Alacritty?
+- **Fastest terminal** due to GPU rendering
+- **Cross-platform**: Same config on Mac and Linux
+- **Simple**: No tabs/panes built-in (use tmux instead)
+
+## Exercise
+1. Install iTerm2 or Alacritty
+2. Change the color scheme
+3. Try creating split panes (iTerm2) or install tmux (Alacritty)
+
+## Pro Tip
+Many DevOps engineers use **tmux** for terminal multiplexing, regardless of which terminal emulator they use. We'll cover tmux later!
+"""
+            },
+            {
+                "title": "Shell selection (zsh, bash) and configuration",
+                "difficulty": "easy",
+                "estimated_minutes": 25,
+                "xp_reward": 35,
+                "content": """# Shell Selection: Zsh vs Bash
+
+## What is a Shell?
+The shell is the command interpreter - it reads your commands and executes them. The two most popular shells for DevOps are **bash** and **zsh**.
+
+## Bash (Bourne Again Shell)
+- **Default on most Linux servers**
+- **POSIX compliant**: Scripts are portable
+- **Stable and predictable**
+
+## Zsh (Z Shell)
+- **Default on macOS** (since Catalina)
+- **Better autocompletion**
+- **Themes and plugins** via Oh My Zsh
+- **Bash compatible** (mostly)
+
+## Our Recommendation: Zsh for Local, Bash for Scripts
+
+### Install Oh My Zsh
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+### Useful Zsh Plugins
+Edit `~/.zshrc`:
+```bash
+plugins=(
+  git
+  docker
+  kubectl
+  aws
+  terraform
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+```
+
+### Install additional plugins:
+```bash
+# Autosuggestions (gray text completion)
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Syntax highlighting (colors commands)
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+
+## Shell Configuration Files
+
+| Shell | Login Config | Interactive Config |
+|-------|-------------|-------------------|
+| Bash | ~/.bash_profile | ~/.bashrc |
+| Zsh | ~/.zprofile | ~/.zshrc |
+
+## Important for Scripts
+Always use bash for scripts to ensure portability:
+```bash
+#!/bin/bash
+# Your script here
+```
+
+## Exercise
+1. Check your current shell: `echo $SHELL`
+2. Install Oh My Zsh if using zsh
+3. Add the git and docker plugins
+4. Run `source ~/.zshrc` to reload
+
+## Next Steps
+Now that your shell is configured, let's set up package managers to install tools efficiently.
+"""
+            },
+            {
+                "title": "Package managers (Homebrew, apt, yum)",
+                "difficulty": "easy",
+                "estimated_minutes": 20,
+                "xp_reward": 30,
+                "content": """# Package Managers: Your Tool Installation Hub
+
+## What is a Package Manager?
+A package manager automates installing, updating, and removing software. It handles dependencies and keeps everything organized.
+
+## Homebrew (macOS & Linux)
+
+### Installation
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### Common Commands
+```bash
+# Search for a package
+brew search docker
+
+# Install a package
+brew install git
+
+# Install a GUI app (cask)
+brew install --cask visual-studio-code
+
+# Update all packages
+brew update && brew upgrade
+
+# List installed packages
+brew list
+
+# Remove a package
+brew uninstall wget
+```
+
+## APT (Ubuntu/Debian)
+
+### Common Commands
+```bash
+# Update package list
+sudo apt update
+
+# Upgrade all packages
+sudo apt upgrade -y
+
+# Install a package
+sudo apt install nginx
+
+# Search for packages
+apt search docker
+
+# Remove a package
+sudo apt remove nginx
+
+# Remove package + config
+sudo apt purge nginx
+```
+
+## YUM/DNF (RHEL/CentOS/Fedora)
+
+```bash
+# Install a package
+sudo yum install nginx
+# or on newer versions
+sudo dnf install nginx
+
+# Update all packages
+sudo yum update -y
+
+# Search for packages
+yum search docker
+
+# List installed packages
+yum list installed
+```
+
+## Package Manager Comparison
+
+| Feature | Homebrew | APT | YUM/DNF |
+|---------|----------|-----|---------|
+| OS | macOS, Linux | Debian/Ubuntu | RHEL/CentOS |
+| Config location | /usr/local | /etc/apt | /etc/yum.repos.d |
+| GUI apps | ✅ (casks) | ❌ (use snap) | ❌ (use flatpak) |
+
+## Pro Tips
+1. **Always update first**: `brew update` or `apt update`
+2. **Check what's installed**: Avoid duplicate tools
+3. **Use version managers** for languages (pyenv, nvm)
+
+## Exercise
+1. Update your package manager
+2. Install `tree` command: `brew install tree` or `apt install tree`
+3. Run `tree -L 2` in your home directory
+"""
+            },
+            {
+                "title": "VS Code with DevOps extensions",
+                "difficulty": "easy",
+                "estimated_minutes": 20,
+                "xp_reward": 30,
+                "content": """# VS Code: The DevOps IDE
+
+## Why VS Code?
+Visual Studio Code is the most popular editor for DevOps because:
+- **Free and open source**
+- **Excellent extension ecosystem**
+- **Integrated terminal**
+- **Remote development** (SSH, Containers, WSL)
+
+## Installation
+```bash
+# macOS
+brew install --cask visual-studio-code
+
+# Ubuntu
+sudo snap install code --classic
+```
+
+## Essential DevOps Extensions
+
+### Install via Command Line
+```bash
+# Core extensions
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension hashicorp.terraform
+code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+code --install-extension redhat.vscode-yaml
+code --install-extension ms-vscode-remote.remote-ssh
+
+# Python (for scripts)
+code --install-extension ms-python.python
+
+# Git
+code --install-extension eamodio.gitlens
+code --install-extension mhutchie.git-graph
+```
+
+### Extension Categories
+
+**Infrastructure as Code:**
+- Terraform (HashiCorp)
+- AWS Toolkit
+- Azure Tools
+
+**Containers & Kubernetes:**
+- Docker (Microsoft)
+- Kubernetes (Microsoft)
+- YAML (Red Hat)
+
+**Remote Development:**
+- Remote - SSH
+- Remote - Containers
+- Remote - WSL
+
+## Key Settings for DevOps
+
+Open settings.json (Cmd+Shift+P → "Open Settings JSON"):
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "[terraform]": {
+    "editor.formatOnSave": true
+  },
+  "[yaml]": {
+    "editor.tabSize": 2
+  }
+}
+```
+
+## Keyboard Shortcuts to Learn
+
+| Action | Mac | Purpose |
+|--------|-----|---------|
+| Command Palette | Cmd+Shift+P | Access all commands |
+| Terminal | Ctrl+` | Open/close terminal |
+| Go to File | Cmd+P | Quick file navigation |
+| Search All | Cmd+Shift+F | Search entire project |
+| Split Editor | Cmd+\\ | Side-by-side editing |
+
+## Exercise
+1. Install VS Code
+2. Install the Docker and Terraform extensions
+3. Open the integrated terminal (Ctrl+`)
+4. Try the Command Palette (Cmd+Shift+P)
+"""
+            },
+            {
+                "title": "Docker Desktop installation",
+                "difficulty": "easy",
+                "estimated_minutes": 15,
+                "xp_reward": 25,
+                "content": """# Docker Desktop Installation
+
+## What is Docker?
+Docker lets you run applications in **containers** - lightweight, isolated environments that include everything needed to run the app.
+
+## Why Containers Matter for DevOps
+- **Consistency**: "Works on my machine" → "Works everywhere"
+- **Isolation**: Each app has its own dependencies
+- **Efficiency**: Share the OS kernel, unlike VMs
+- **Portability**: Same container runs locally and in production
+
+## Installation
+
+### macOS
+```bash
+brew install --cask docker
+```
+Then open Docker Desktop from Applications.
+
+### Ubuntu
+```bash
+# Add Docker's official GPG key
+sudo apt update
+sudo apt install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Add yourself to docker group (logout/login required)
+sudo usermod -aG docker $USER
+```
+
+## Verify Installation
+```bash
+# Check Docker version
+docker --version
+
+# Run test container
+docker run hello-world
+
+# Check running containers
+docker ps
+```
+
+## Docker Desktop Settings (macOS)
+1. Open Docker Desktop → Settings
+2. **Resources**: Allocate at least 4GB RAM, 2 CPUs
+3. **Kubernetes**: Enable if you want local K8s
+4. **File Sharing**: Ensure your project directories are shared
+
+## Basic Docker Commands
+```bash
+# Pull an image
+docker pull nginx
+
+# Run a container
+docker run -d -p 8080:80 nginx
+
+# List containers
+docker ps
+
+# Stop a container
+docker stop <container_id>
+
+# Remove a container
+docker rm <container_id>
+```
+
+## Exercise
+1. Install Docker Desktop
+2. Run `docker run hello-world`
+3. Run nginx: `docker run -d -p 8080:80 nginx`
+4. Open http://localhost:8080 in your browser
+5. Stop and remove the container
+"""
+            },
+            {
+                "title": "Git and GitHub CLI setup",
+                "difficulty": "easy",
+                "estimated_minutes": 20,
+                "xp_reward": 30,
+                "content": """# Git and GitHub CLI Setup
+
+## Git: The Foundation of DevOps
+Git is essential for version control of:
+- Application code
+- Infrastructure as Code (Terraform, Kubernetes)
+- Configuration files
+- Documentation
+
+## Install Git
+```bash
+# macOS
+brew install git
+
+# Ubuntu
+sudo apt install git
+```
+
+## Configure Git
+```bash
+# Set your identity
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+# Set default branch name
+git config --global init.defaultBranch main
+
+# Set VS Code as editor
+git config --global core.editor "code --wait"
+
+# Enable colored output
+git config --global color.ui auto
+
+# Set pull strategy
+git config --global pull.rebase false
+```
+
+## GitHub CLI (gh)
+
+The GitHub CLI lets you interact with GitHub from the terminal.
+
+### Installation
+```bash
+# macOS
+brew install gh
+
+# Ubuntu
+sudo apt install gh
+```
+
+### Authentication
+```bash
+gh auth login
+# Follow the prompts to authenticate via browser
+```
+
+### Useful Commands
+```bash
+# Clone a repo
+gh repo clone owner/repo
+
+# Create a new repo
+gh repo create my-project --public
+
+# Create a pull request
+gh pr create --title "Add feature" --body "Description"
+
+# View pull requests
+gh pr list
+
+# Check out a PR locally
+gh pr checkout 123
+
+# View issues
+gh issue list
+```
+
+## Essential Git Aliases
+
+Add to `~/.gitconfig`:
+```ini
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    lg = log --oneline --graph --decorate
+    last = log -1 HEAD
+    unstage = reset HEAD --
+```
+
+## Verify Setup
+```bash
+# Check Git version
+git --version
+
+# Check config
+git config --list
+
+# Check GitHub auth
+gh auth status
+```
+
+## Exercise
+1. Install Git and configure your identity
+2. Install GitHub CLI and authenticate
+3. Create a test repository: `gh repo create test-repo --public`
+4. Clone it: `gh repo clone <your-username>/test-repo`
+5. Make a commit and push
+"""
+            },
+            {"title": "AWS CLI v2 installation", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "Terraform installation", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
+            {"title": "kubectl installation", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
+            {"title": "Python 3.11+ setup", "difficulty": "easy", "estimated_minutes": 15, "xp_reward": 25},
+            {"title": "SSH key generation and management", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "GPG signing for commits", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "MFA setup for all services", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
+            {"title": "Create personal dotfiles repository", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45},
+            {"title": "Shell aliases and functions", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "Environment variables management", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
         ],
         "labs": [
             {"title": "Terminal Power User Setup", "slug": "lab-1-1-terminal-setup", "hours": 2.0},
@@ -121,18 +706,572 @@ BOOTCAMP_MODULES: list[dict] = [
         "estimated_hours": 20.0,
         "prerequisites": ["environment-tooling-setup"],
         "tasks": [
-            {"title": "Filesystem Hierarchy Standard (FHS)", "difficulty": "medium"},
-            {"title": "Mount points and device files", "difficulty": "medium"},
-            {"title": "Inodes, hard links, symbolic links", "difficulty": "medium"},
-            {"title": "Disk management (fdisk, lvm, df, du)", "difficulty": "hard"},
-            {"title": "File permissions (chmod, chown, umask, ACLs)", "difficulty": "medium"},
-            {"title": "Process lifecycle and states", "difficulty": "medium"},
-            {"title": "Foreground vs background processes", "difficulty": "medium"},
-            {"title": "Job control (jobs, fg, bg, nohup)", "difficulty": "medium"},
-            {"title": "Signals (SIGTERM, SIGKILL, SIGHUP)", "difficulty": "medium"},
-            {"title": "Process monitoring (ps, top, htop, pgrep)", "difficulty": "medium"},
-            {"title": "Systemd architecture", "difficulty": "hard"},
-            {"title": "Unit files (service, timer, socket)", "difficulty": "hard"},
+            {
+                "title": "Filesystem Hierarchy Standard (FHS)",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 40,
+                "content": """# Filesystem Hierarchy Standard (FHS)
+
+## What is FHS?
+The Filesystem Hierarchy Standard defines the directory structure on Linux systems. Understanding this is crucial for DevOps because you need to know where configuration files, logs, and applications live.
+
+## The Root Directory Structure
+
+```
+/
+├── bin/      → Essential user binaries (ls, cp, mv)
+├── boot/     → Boot loader files, kernel
+├── dev/      → Device files
+├── etc/      → System configuration files
+├── home/     → User home directories
+├── lib/      → Essential shared libraries
+├── media/    → Mount point for removable media
+├── mnt/      → Temporary mount points
+├── opt/      → Optional/third-party software
+├── proc/     → Virtual filesystem for process info
+├── root/     → Root user's home directory
+├── run/      → Runtime data (PIDs, sockets)
+├── sbin/     → System binaries (systemctl, fdisk)
+├── srv/      → Service data
+├── sys/      → Virtual filesystem for kernel/hardware
+├── tmp/      → Temporary files (cleared on reboot)
+├── usr/      → User programs and data
+└── var/      → Variable data (logs, databases)
+```
+
+## Key Directories for DevOps
+
+### /etc - Configuration Files
+```bash
+/etc/nginx/nginx.conf      # Nginx config
+/etc/ssh/sshd_config       # SSH server config
+/etc/hosts                  # Local DNS
+/etc/passwd                 # User accounts
+/etc/systemd/system/       # Custom service files
+```
+
+### /var - Variable Data
+```bash
+/var/log/                  # System and app logs
+/var/lib/docker/           # Docker data
+/var/www/                  # Web server files
+/var/run/ → /run/          # Runtime data (symlink)
+```
+
+### /usr - User Programs
+```bash
+/usr/local/bin/            # Locally installed binaries
+/usr/share/                # Shared data
+/usr/lib/                  # Libraries
+```
+
+### /opt - Third-party Software
+```bash
+/opt/prometheus/           # Prometheus installation
+/opt/grafana/              # Grafana installation
+```
+
+## DevOps Best Practices
+
+1. **Never modify /bin, /sbin, /lib** - These are managed by package manager
+2. **Use /opt** for manually installed tools
+3. **Use /etc** for configuration (and version control it!)
+4. **Check /var/log** first when debugging
+
+## Exercise
+1. Run `ls -la /` and identify each directory
+2. Find your SSH config: `cat /etc/ssh/sshd_config`
+3. Check disk usage: `du -sh /var/log`
+4. List running services' PIDs: `ls /run/*.pid`
+"""
+            },
+            {
+                "title": "Mount points and device files",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# Mount Points and Device Files
+
+## Understanding Device Files
+
+In Linux, **everything is a file** - including hardware devices!
+
+### Device Files Location: /dev
+```bash
+/dev/sda      → First SATA/SCSI disk
+/dev/sda1     → First partition on sda
+/dev/nvme0n1  → First NVMe drive
+/dev/null     → Discards all data written to it
+/dev/zero     → Returns zeros when read
+/dev/random   → Random number generator
+```
+
+## Block vs Character Devices
+
+```bash
+ls -la /dev/sda /dev/tty
+brw-rw---- 1 root disk  8, 0 Nov 27 10:00 /dev/sda    # 'b' = block
+crw-rw-rw- 1 root tty   5, 0 Nov 27 10:00 /dev/tty    # 'c' = character
+```
+
+- **Block devices (b)**: Read/write in blocks (disks, USB drives)
+- **Character devices (c)**: Read/write one character at a time (terminals, keyboards)
+
+## Mount Points
+
+A mount point is a directory where a filesystem is attached.
+
+### View Current Mounts
+```bash
+# Show all mounts
+mount
+
+# Show disk mounts only
+df -h
+
+# Show mount points clearly
+lsblk
+```
+
+### Mounting a Filesystem
+```bash
+# Mount a USB drive
+sudo mount /dev/sdb1 /mnt/usb
+
+# Mount with specific type
+sudo mount -t ext4 /dev/sdb1 /mnt/data
+
+# Mount read-only
+sudo mount -o ro /dev/sdb1 /mnt/backup
+
+# Unmount
+sudo umount /mnt/usb
+```
+
+## Persistent Mounts: /etc/fstab
+
+The `/etc/fstab` file defines mounts that happen at boot.
+
+```bash
+# /etc/fstab structure:
+# <device>        <mount point>  <type>  <options>      <dump> <pass>
+UUID=abc123       /              ext4    defaults       0      1
+/dev/sdb1         /data          xfs     defaults,noatime 0    2
+```
+
+### Find UUID of a Device
+```bash
+sudo blkid
+# or
+ls -la /dev/disk/by-uuid/
+```
+
+## Common Mount Options
+| Option | Description |
+|--------|-------------|
+| defaults | rw, suid, dev, exec, auto, nouser, async |
+| noatime | Don't update access time (performance) |
+| ro | Read-only |
+| rw | Read-write |
+| noexec | Can't execute binaries |
+
+## DevOps Relevance
+- **Docker**: Uses mount namespaces for isolation
+- **Kubernetes**: PersistentVolumes are mounted into pods
+- **AWS EBS**: Attached as /dev/xvd* devices
+
+## Exercise
+1. Run `lsblk` to see your disk layout
+2. Run `df -h` to see disk usage by mount
+3. Check `/etc/fstab` on a Linux system
+4. Try `mount | grep -E "^/dev"` to see real device mounts
+"""
+            },
+            {
+                "title": "Inodes, hard links, symbolic links",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 45,
+                "content": """# Inodes, Hard Links, and Symbolic Links
+
+## What is an Inode?
+
+An **inode** (index node) is a data structure that stores metadata about a file:
+- File size
+- Owner/group
+- Permissions
+- Timestamps
+- **Location of data blocks**
+
+The inode does NOT store the filename - that's stored in the directory!
+
+### View Inode Information
+```bash
+# See inode numbers
+ls -li
+
+# Detailed inode info
+stat filename.txt
+
+# Count inodes
+df -i
+```
+
+## Hard Links
+
+A **hard link** is another name for the same file (same inode).
+
+```bash
+# Create original file
+echo "Hello" > original.txt
+ls -li original.txt
+# 12345 -rw-r--r-- 1 user user 6 Nov 27 10:00 original.txt
+#  ^inode          ^link count
+
+# Create hard link
+ln original.txt hardlink.txt
+ls -li
+# 12345 -rw-r--r-- 2 user user 6 Nov 27 10:00 hardlink.txt
+# 12345 -rw-r--r-- 2 user user 6 Nov 27 10:00 original.txt
+# Same inode! Link count is now 2
+```
+
+### Hard Link Characteristics
+- ✅ Same inode number
+- ✅ Editing one edits both
+- ✅ Deleting original doesn't delete data
+- ❌ Cannot cross filesystems
+- ❌ Cannot link to directories
+
+## Symbolic Links (Symlinks)
+
+A **symbolic link** is a separate file that points to another path.
+
+```bash
+# Create symlink
+ln -s /path/to/original.txt symlink.txt
+
+ls -li
+# 12345 -rw-r--r-- 1 user user 6 Nov 27 10:00 original.txt
+# 67890 lrwxrwxrwx 1 user user 22 Nov 27 10:00 symlink.txt -> /path/to/original.txt
+# Different inode! 'l' means link
+```
+
+### Symlink Characteristics
+- ✅ Can cross filesystems
+- ✅ Can link to directories
+- ✅ Can see what it points to
+- ❌ Breaks if target is deleted (dangling link)
+- ❌ Different inode number
+
+## Comparison Table
+
+| Feature | Hard Link | Symbolic Link |
+|---------|-----------|---------------|
+| Same inode | ✅ Yes | ❌ No |
+| Cross filesystem | ❌ No | ✅ Yes |
+| Link to directory | ❌ No | ✅ Yes |
+| Target deleted | Still works | Breaks |
+| `ls -l` shows | File type | l + path |
+
+## DevOps Use Cases
+
+### Symlinks (Common)
+```bash
+# Current version pointing
+ln -s /opt/app-v1.2.3 /opt/app-current
+
+# Log rotation
+ln -s /var/log/nginx/access.log /home/user/nginx.log
+
+# Alternative binaries
+ln -s /usr/bin/python3 /usr/bin/python
+```
+
+### Hard Links (Rare)
+```bash
+# Backup systems (like rsync with --link-dest)
+# Same file stored once, appears in multiple backups
+```
+
+## Exercise
+1. Create a file and check its inode: `echo "test" > file.txt && ls -li file.txt`
+2. Create a hard link: `ln file.txt hardlink.txt && ls -li`
+3. Create a symlink: `ln -s file.txt symlink.txt && ls -li`
+4. Delete original and test both links
+"""
+            },
+            {"title": "Disk management (fdisk, lvm, df, du)", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55},
+            {
+                "title": "File permissions (chmod, chown, umask, ACLs)",
+                "difficulty": "medium",
+                "estimated_minutes": 30,
+                "xp_reward": 50,
+                "content": """# File Permissions: chmod, chown, umask, ACLs
+
+## Understanding Linux Permissions
+
+Every file has three permission sets for three user categories:
+
+```bash
+ls -la file.txt
+-rw-r--r-- 1 owner group 1234 Nov 27 10:00 file.txt
+│└┬┘└┬┘└┬┘
+│ │  │  └── Others (everyone else)
+│ │  └───── Group
+│ └──────── Owner/User
+└────────── File type (- = file, d = directory, l = link)
+```
+
+### Permission Types
+- **r** (read) = 4
+- **w** (write) = 2
+- **x** (execute) = 1
+
+## chmod - Change Mode
+
+### Numeric Method (Octal)
+```bash
+# rwxr-xr-x = 755
+chmod 755 script.sh
+
+# rw-r--r-- = 644
+chmod 644 file.txt
+
+# rwx------ = 700
+chmod 700 private.sh
+
+# Common values:
+# 755 - Scripts, executables
+# 644 - Regular files
+# 600 - Private files (SSH keys!)
+# 777 - NEVER use this! Security risk
+```
+
+### Symbolic Method
+```bash
+# Add execute for owner
+chmod u+x script.sh
+
+# Remove write for group and others
+chmod go-w file.txt
+
+# Set exact permissions
+chmod u=rwx,g=rx,o=r script.sh
+
+# Add execute for all
+chmod a+x script.sh
+```
+
+## chown - Change Owner
+
+```bash
+# Change owner
+sudo chown newuser file.txt
+
+# Change owner and group
+sudo chown newuser:newgroup file.txt
+
+# Change group only
+sudo chown :newgroup file.txt
+
+# Recursive (all files in directory)
+sudo chown -R www-data:www-data /var/www/
+```
+
+## umask - Default Permissions
+
+The umask **subtracts** from default permissions (666 for files, 777 for directories).
+
+```bash
+# Check current umask
+umask
+# 022 means: 666-022=644 for files, 777-022=755 for dirs
+
+# Set stricter umask
+umask 027
+# Files: 666-027=640 (rw-r-----)
+# Dirs: 777-027=750 (rwxr-x---)
+
+# Set in ~/.bashrc for persistence
+echo "umask 027" >> ~/.bashrc
+```
+
+## ACLs - Access Control Lists
+
+ACLs provide more granular permissions beyond owner/group/other.
+
+```bash
+# Check if ACLs are supported
+mount | grep acl
+
+# View ACLs
+getfacl file.txt
+
+# Grant user specific access
+setfacl -m u:username:rw file.txt
+
+# Grant group specific access
+setfacl -m g:devteam:r file.txt
+
+# Remove ACL entry
+setfacl -x u:username file.txt
+
+# Remove all ACLs
+setfacl -b file.txt
+```
+
+## DevOps Permission Scenarios
+
+### Web Server Files
+```bash
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+sudo chmod -R 644 /var/www/html/*.html
+```
+
+### SSH Keys (CRITICAL!)
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub
+chmod 644 ~/.ssh/authorized_keys
+```
+
+### Application Secrets
+```bash
+chmod 600 .env
+chmod 600 config/secrets.yml
+```
+
+## Exercise
+1. Create a file and check permissions: `touch test.sh && ls -la test.sh`
+2. Make it executable: `chmod +x test.sh`
+3. Try numeric: `chmod 644 test.sh && ls -la test.sh`
+4. Check your umask: `umask`
+"""
+            },
+            {
+                "title": "Process lifecycle and states",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# Process Lifecycle and States
+
+## What is a Process?
+
+A **process** is a running instance of a program. Every process has:
+- **PID**: Process ID (unique number)
+- **PPID**: Parent Process ID
+- **UID**: User who owns it
+- **State**: Current status
+
+## Process States
+
+```
+RUNNING (R)     ←→   INTERRUPTIBLE SLEEP (S)
+     ↓                        ↓
+STOPPED (T)     ←→   UNINTERRUPTIBLE SLEEP (D)
+     ↓
+ZOMBIE (Z)
+```
+
+### State Meanings
+| State | Symbol | Description |
+|-------|--------|-------------|
+| Running | R | Currently executing on CPU |
+| Sleeping | S | Waiting for event (can be interrupted) |
+| Disk Sleep | D | Waiting for I/O (cannot be interrupted) |
+| Stopped | T | Paused (e.g., Ctrl+Z) |
+| Zombie | Z | Finished but parent hasn't collected exit status |
+
+### View Process States
+```bash
+ps aux
+# USER  PID %CPU %MEM  VSZ  RSS TTY STAT START TIME COMMAND
+# root    1  0.0  0.1 1234 5678 ?   Ss   10:00 0:01 /sbin/init
+#                                    ^^
+#                                    ||__ s = session leader
+#                                    |___ S = sleeping
+```
+
+## Process Lifecycle
+
+### 1. Creation (fork + exec)
+```bash
+# When you run a command:
+$ ls
+# Shell calls fork() → creates child process
+# Child calls exec() → replaces itself with 'ls'
+```
+
+### 2. Running
+Process executes on CPU, scheduled by kernel.
+
+### 3. Waiting
+Process waits for I/O, user input, or timer.
+
+### 4. Termination
+Process calls exit(), parent collects status with wait().
+
+### 5. Zombie (if parent doesn't collect)
+```bash
+# Find zombies
+ps aux | grep Z
+
+# Zombie processes have 'Z' state
+# They consume no resources except a PID table entry
+```
+
+## Process Tree
+
+```bash
+# View process tree
+pstree -p
+
+# Output:
+# systemd(1)─┬─sshd(1234)───sshd(5678)───bash(9012)───vim(3456)
+#            ├─nginx(2345)─┬─nginx(2346)
+#            │             └─nginx(2347)
+#            └─docker(3456)───containerd(4567)
+```
+
+## Key Process Facts
+
+1. **PID 1 is special**: Always `init` or `systemd`, parent of all processes
+2. **Orphan processes**: Adopted by PID 1 when parent dies
+3. **Zombie processes**: Dead but waiting for parent to acknowledge
+
+## DevOps Relevance
+
+### Container Init Process
+```bash
+# In Docker, PID 1 must handle signals properly
+# That's why we use tini or dumb-init
+CMD ["tini", "--", "python", "app.py"]
+```
+
+### Zombie Processes in Containers
+```bash
+# If container's PID 1 doesn't reap children, zombies accumulate
+# Check for zombies:
+docker exec container_name ps aux | grep Z
+```
+
+## Exercise
+1. Run `ps aux` and identify different states
+2. Run `pstree -p` to see process hierarchy
+3. Open vim, press Ctrl+Z, then run `ps aux | grep vim` (should show T state)
+4. Type `fg` to resume vim, then `:q` to exit
+"""
+            },
+            {"title": "Foreground vs background processes", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
+            {"title": "Job control (jobs, fg, bg, nohup)", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "Signals (SIGTERM, SIGKILL, SIGHUP)", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "Process monitoring (ps, top, htop, pgrep)", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
+            {"title": "Systemd architecture", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55},
+            {"title": "Unit files (service, timer, socket)", "difficulty": "hard", "estimated_minutes": 25, "xp_reward": 50},
             {"title": "Service management (systemctl)", "difficulty": "medium"},
             {"title": "Boot process and targets", "difficulty": "hard"},
             {"title": "Journald and logging", "difficulty": "medium"},

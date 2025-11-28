@@ -14,7 +14,11 @@ export interface TaskPublic {
     module_id: string
     title: string
     description: string | null
+    content: string | null
+    order_index: number
     difficulty: DifficultyLevel
+    estimated_minutes: number
+    xp_reward: number
     is_active: boolean
     created_at: string
     updated_at: string
@@ -24,13 +28,21 @@ export interface TaskCreate {
     module_id: string
     title: string
     description?: string | null
+    content?: string | null
+    order_index?: number
     difficulty?: DifficultyLevel
+    estimated_minutes?: number
+    xp_reward?: number
 }
 
 export interface TaskUpdate {
     title?: string
     description?: string | null
+    content?: string | null
+    order_index?: number
     difficulty?: DifficultyLevel
+    estimated_minutes?: number
+    xp_reward?: number
     is_active?: boolean
 }
 

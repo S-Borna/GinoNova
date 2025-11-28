@@ -134,11 +134,20 @@ def seed_bootcamp(clear_existing: bool = True) -> SeedResponse:
 
             # Create tasks for this module
             for idx, task_data in enumerate(module_data.get("tasks", [])):
+                # Map difficulty to estimated time and XP
+                difficulty = task_data.get("difficulty", "medium")
+                estimated_minutes = {"easy": 10, "medium": 15, "hard": 25}.get(difficulty, 15)
+                xp_reward = {"easy": 20, "medium": 30, "hard": 50}.get(difficulty, 30)
+
                 create_task(TaskCreate(
                     module_id=module.id,
                     title=task_data["title"],
                     description=task_data.get("description"),
-                    difficulty=task_data.get("difficulty", "medium"),
+                    content=task_data.get("content"),
+                    order_index=idx + 1,
+                    difficulty=difficulty,
+                    estimated_minutes=estimated_minutes,
+                    xp_reward=xp_reward,
                 ))
                 tasks_created += 1
 

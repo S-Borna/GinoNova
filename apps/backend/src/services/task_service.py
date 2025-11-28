@@ -53,7 +53,11 @@ class TaskService:
             module_id=task.module_id,
             title=task.title,
             description=task.description,
+            content=task.content,
+            order_index=task.order_index,
             difficulty=task.difficulty,
+            estimated_minutes=task.estimated_minutes,
+            xp_reward=task.xp_reward,
             is_active=task.is_active,
             created_at=task.created_at,
             updated_at=task.updated_at,
@@ -73,12 +77,16 @@ class TaskService:
                 module_id=t.module_id,
                 title=t.title,
                 description=t.description,
+                content=t.content,
+                order_index=t.order_index,
                 difficulty=t.difficulty,
+                estimated_minutes=t.estimated_minutes,
+                xp_reward=t.xp_reward,
                 is_active=t.is_active,
                 created_at=t.created_at,
                 updated_at=t.updated_at,
             )
-            for t in tasks
+            for t in sorted(tasks, key=lambda x: x.order_index)
         ]
 
     def list_tasks_for_module(self, module_id: UUID) -> list[TaskPublic]:
@@ -103,12 +111,16 @@ class TaskService:
                 module_id=t.module_id,
                 title=t.title,
                 description=t.description,
+                content=t.content,
+                order_index=t.order_index,
                 difficulty=t.difficulty,
+                estimated_minutes=t.estimated_minutes,
+                xp_reward=t.xp_reward,
                 is_active=t.is_active,
                 created_at=t.created_at,
                 updated_at=t.updated_at,
             )
-            for t in tasks
+            for t in sorted(tasks, key=lambda x: x.order_index)
         ]
 
     def create_task(self, data: TaskCreate) -> TaskPublic:
@@ -144,7 +156,11 @@ class TaskService:
             module_id=task.module_id,
             title=task.title,
             description=task.description,
+            content=task.content,
+            order_index=task.order_index,
             difficulty=task.difficulty,
+            estimated_minutes=task.estimated_minutes,
+            xp_reward=task.xp_reward,
             is_active=task.is_active,
             created_at=task.created_at,
             updated_at=task.updated_at,
@@ -189,7 +205,11 @@ class TaskService:
             module_id=task.module_id,
             title=task.title,
             description=task.description,
+            content=task.content,
+            order_index=task.order_index,
             difficulty=task.difficulty,
+            estimated_minutes=task.estimated_minutes,
+            xp_reward=task.xp_reward,
             is_active=task.is_active,
             created_at=task.created_at,
             updated_at=task.updated_at,
