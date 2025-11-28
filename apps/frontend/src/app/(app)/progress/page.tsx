@@ -17,8 +17,6 @@
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
-import { GlassCard } from "@/components/ui/glass-card"
-import { ProgressBar } from "@/components/ui/progress-bar"
 import { getMockTracks, type TrackSummary } from "@/lib/api/tracks"
 import {
     Trophy,
@@ -86,7 +84,7 @@ interface StatCardProps {
 
 function StatCard({ icon, label, value, color }: StatCardProps) {
     return (
-        <GlassCard variant="default" padding="md" radius="xl">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
             <div className="flex items-center gap-3">
                 <div
                     className={cn(
@@ -97,11 +95,11 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
                     {icon}
                 </div>
                 <div>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">{label}</p>
-                    <p className="text-xl font-bold text-neutral-900 dark:text-white">{value}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">{value}</p>
                 </div>
             </div>
-        </GlassCard>
+        </div>
     )
 }
 
@@ -111,11 +109,11 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
 
 function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) {
     const getColor = (count: number) => {
-        if (count === 0) return "bg-neutral-100 dark:bg-neutral-800"
-        if (count === 1) return "bg-primary-200 dark:bg-primary-900/50"
-        if (count === 2) return "bg-primary-300 dark:bg-primary-800"
-        if (count === 3) return "bg-primary-400 dark:bg-primary-700"
-        return "bg-primary-500 dark:bg-primary-600"
+        if (count === 0) return "bg-gray-100 dark:bg-gray-800"
+        if (count === 1) return "bg-indigo-200 dark:bg-indigo-900/50"
+        if (count === 2) return "bg-indigo-300 dark:bg-indigo-800"
+        if (count === 3) return "bg-indigo-400 dark:bg-indigo-700"
+        return "bg-indigo-500 dark:bg-indigo-600"
     }
 
     // Group by weeks (7 days each)
@@ -125,10 +123,10 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
     }
 
     return (
-        <GlassCard variant="default" padding="lg" radius="xl">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center gap-2 mb-4">
-                <Calendar className="w-5 h-5 text-primary-500" />
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                <Calendar className="w-5 h-5 text-indigo-500" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Activity
                 </h3>
             </div>
@@ -148,7 +146,7 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
                     </div>
                 ))}
             </div>
-            <div className="flex items-center justify-end gap-2 mt-3 text-xs text-neutral-500">
+            <div className="flex items-center justify-end gap-2 mt-3 text-xs text-gray-500">
                 <span>Less</span>
                 <div className="flex gap-1">
                     {[0, 1, 2, 3, 4].map((level) => (
@@ -160,7 +158,7 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
                 </div>
                 <span>More</span>
             </div>
-        </GlassCard>
+        </div>
     )
 }
 
@@ -170,13 +168,7 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
 
 function TrackProgressCard({ track }: { track: TrackSummary }) {
     return (
-        <div
-            className={cn(
-                "flex items-center gap-4 p-4 rounded-xl",
-                "bg-white/50 dark:bg-neutral-800/50",
-                "border border-neutral-200/50 dark:border-neutral-700/50"
-            )}
-        >
+        <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
             {/* Icon */}
             <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
@@ -187,15 +179,24 @@ function TrackProgressCard({ track }: { track: TrackSummary }) {
 
             {/* Content */}
             <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-neutral-900 dark:text-white mb-1">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
                     {track.title}
                 </h4>
                 <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                         {track.completedModules}/{track.totalModules} modules
                     </span>
                 </div>
-                <ProgressBar value={track.progress} className="h-2" />
+                {/* Progress Bar */}
+                <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                    <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                            width: `${track.progress}%`,
+                            backgroundColor: track.color
+                        }}
+                    />
+                </div>
             </div>
 
             {/* Progress percentage */}
@@ -215,10 +216,10 @@ function TrackProgressCard({ track }: { track: TrackSummary }) {
 
 function Achievements({ achievements }: { achievements: typeof MOCK_ACHIEVEMENTS }) {
     return (
-        <GlassCard variant="default" padding="lg" radius="xl">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center gap-2 mb-4">
-                <Trophy className="w-5 h-5 text-warning-500" />
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                <Trophy className="w-5 h-5 text-amber-500" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Achievements
                 </h3>
             </div>
@@ -229,21 +230,21 @@ function Achievements({ achievements }: { achievements: typeof MOCK_ACHIEVEMENTS
                         className={cn(
                             "flex flex-col items-center p-3 rounded-xl text-center transition-all",
                             achievement.unlocked
-                                ? "bg-warning-50 dark:bg-warning-900/20"
-                                : "bg-neutral-100 dark:bg-neutral-800 opacity-50 grayscale"
+                                ? "bg-amber-50 dark:bg-amber-900/20"
+                                : "bg-gray-100 dark:bg-gray-700 opacity-50 grayscale"
                         )}
                     >
                         <span className="text-2xl mb-1">{achievement.icon}</span>
-                        <span className="text-sm font-medium text-neutral-900 dark:text-white">
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
                             {achievement.name}
                         </span>
-                        <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                             {achievement.description}
                         </span>
                     </div>
                 ))}
             </div>
-        </GlassCard>
+        </div>
     )
 }
 
@@ -270,35 +271,32 @@ export default function ProgressPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="space-y-8">
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">
-                            Your Progress
-                        </h1>
-                        <p className="text-neutral-500 dark:text-neutral-400">
-                            Track your DevOps learning journey
-                        </p>
-                    </div>
-                    <div
-                        className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl",
-                            "bg-primary-100 dark:bg-primary-900/30"
-                        )}
-                    >
-                        <Zap className="w-5 h-5 text-primary-500" />
-                        <span className="font-semibold text-primary-700 dark:text-primary-400">
-                            Level {MOCK_STATS.level}
-                        </span>
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                Your Progress
+                            </h1>
+                            <p className="text-gray-500 dark:text-gray-400">
+                                Track your DevOps learning journey
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30">
+                            <Zap className="w-5 h-5 text-indigo-500" />
+                            <span className="font-semibold text-indigo-700 dark:text-indigo-400">
+                                Level {MOCK_STATS.level}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <StatCard
-                        icon={<Trophy className="w-5 h-5 text-warning-500" />}
+                        icon={<Trophy className="w-5 h-5 text-amber-500" />}
                         label="Total XP"
                         value={MOCK_STATS.totalXP.toLocaleString()}
-                        color="bg-warning-100 dark:bg-warning-900/30"
+                        color="bg-amber-100 dark:bg-amber-900/30"
                     />
                     <StatCard
                         icon={<Flame className="w-5 h-5 text-orange-500" />}
@@ -313,10 +311,10 @@ export default function ProgressPage() {
                         color="bg-blue-100 dark:bg-blue-900/30"
                     />
                     <StatCard
-                        icon={<CheckCircle2 className="w-5 h-5 text-success-500" />}
+                        icon={<CheckCircle2 className="w-5 h-5 text-emerald-500" />}
                         label="Tasks Done"
                         value={MOCK_STATS.tasksCompleted}
-                        color="bg-success-100 dark:bg-success-900/30"
+                        color="bg-emerald-100 dark:bg-emerald-900/30"
                     />
                 </div>
 
@@ -325,32 +323,38 @@ export default function ProgressPage() {
                     {/* Left Column - Tracks & Activity */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Overall Progress */}
-                        <GlassCard variant="default" padding="lg" radius="xl">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
-                                    <Target className="w-5 h-5 text-primary-500" />
-                                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                                    <Target className="w-5 h-5 text-indigo-500" />
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Overall Progress
                                     </h3>
                                 </div>
-                                <span className="text-2xl font-bold text-primary-500">
+                                <span className="text-2xl font-bold text-indigo-500">
                                     {overallProgress}%
                                 </span>
                             </div>
-                            <ProgressBar value={overallProgress} className="h-3 mb-4" />
-                            <div className="flex items-center gap-2 text-sm text-neutral-500">
-                                <TrendingUp className="w-4 h-4 text-success-500" />
+                            {/* Progress Bar */}
+                            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
+                                <div
+                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                                    style={{ width: `${overallProgress}%` }}
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <TrendingUp className="w-4 h-4 text-emerald-500" />
                                 <span>
                                     You&apos;re making great progress! Keep it up, {user?.full_name?.split(" ")[0] || "learner"}!
                                 </span>
                             </div>
-                        </GlassCard>
+                        </div>
 
                         {/* Tracks Progress */}
-                        <GlassCard variant="default" padding="lg" radius="xl">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                             <div className="flex items-center gap-2 mb-4">
-                                <BookOpen className="w-5 h-5 text-primary-500" />
-                                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                                <BookOpen className="w-5 h-5 text-indigo-500" />
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                     Track Progress
                                 </h3>
                             </div>
@@ -359,7 +363,7 @@ export default function ProgressPage() {
                                     <TrackProgressCard key={track.id} track={track} />
                                 ))}
                             </div>
-                        </GlassCard>
+                        </div>
 
                         {/* Activity Heatmap */}
                         <ActivityHeatmap data={heatmapData} />
