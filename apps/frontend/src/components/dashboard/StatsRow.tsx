@@ -12,7 +12,6 @@
  */
 
 import * as React from "react"
-import { GlassCard } from "@/components/ui/glass-card"
 import { cn } from "@/lib/utils"
 
 /* ============================================================================
@@ -90,61 +89,39 @@ function StatCard({
     delay = 0,
 }: StatCardProps) {
     return (
-        <GlassCard
-            variant="default"
-            padding="md"
-            radius="lg"
-            interactive
-            className={cn(
-                "group relative overflow-hidden",
-                "animate-fade-in-up",
-                "hover:shadow-glow-" + glowColor
-            )}
+        <div
+            className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up"
             style={{ animationDelay: `${delay}ms` }}
         >
-            {/* Icon with gradient background */}
-            <div
-                className={cn(
-                    "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
-                    "bg-gradient-to-br shadow-lg",
-                    "transition-transform duration-300 group-hover:scale-110"
-                )}
-                style={{
-                    background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,
-                }}
-            >
-                <span className="text-2xl text-white">{icon}</span>
-            </div>
-
-            {/* Value */}
-            <div className="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight mb-1">
-                {value}
-            </div>
-
-            {/* Label */}
-            <div className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                {label}
-            </div>
-
-            {/* Subtext */}
-            {subtext && (
-                <div className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
-                    {subtext}
+            <div className="flex items-center gap-4">
+                {/* Icon with gradient background */}
+                <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                        background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,
+                    }}
+                >
+                    <span className="text-2xl text-white">{icon}</span>
                 </div>
-            )}
 
-            {/* Hover glow effect */}
-            <div
-                className={cn(
-                    "absolute -bottom-12 -right-12 w-32 h-32 rounded-full blur-2xl opacity-0",
-                    "transition-opacity duration-300 group-hover:opacity-30"
-                )}
-                style={{
-                    background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,
-                }}
-                aria-hidden="true"
-            />
-        </GlassCard>
+                <div className="min-w-0">
+                    {/* Label */}
+                    <p className="text-sm text-gray-500 dark:text-neutral-400 truncate">
+                        {label}
+                    </p>
+                    {/* Value */}
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {value}
+                    </p>
+                    {/* Subtext */}
+                    {subtext && (
+                        <p className="text-xs text-gray-400 dark:text-neutral-500 mt-0.5">
+                            {subtext}
+                        </p>
+                    )}
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -233,39 +210,34 @@ export function StatsRow({
 
     return (
         <div className={cn(
-            "grid grid-cols-2 lg:grid-cols-4 gap-4",
+            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
             className
         )}>
             {/* Level Card */}
-            <GlassCard
-                variant="default"
-                padding="md"
-                radius="lg"
-                interactive
-                className="group relative overflow-hidden animate-fade-in-up"
+            <div
+                className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up"
                 style={{ animationDelay: "100ms" }}
             >
-                <div className="flex items-start justify-between">
-                    <div>
-                        <div className="text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                            Current Level
-                        </div>
-                        <div className="text-4xl font-bold text-neutral-900 dark:text-white tracking-tight">
-                            {animatedLevel}
-                        </div>
-                        <div className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
-                            {xpProgress}% to next
+                <div className="flex items-center gap-4">
+                    <div className="relative">
+                        <MiniProgressRing progress={xpProgress} />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">{animatedLevel}</span>
                         </div>
                     </div>
-                    <MiniProgressRing progress={xpProgress} />
+                    <div>
+                        <p className="text-sm text-gray-500 dark:text-neutral-400">
+                            Current Level
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                            Level {animatedLevel}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-neutral-500">
+                            {xpProgress}% to next
+                        </p>
+                    </div>
                 </div>
-
-                {/* Glow effect */}
-                <div
-                    className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-primary-500/20 blur-2xl opacity-0 transition-opacity group-hover:opacity-100"
-                    aria-hidden="true"
-                />
-            </GlassCard>
+            </div>
 
             {/* Streak Card */}
             <StatCard
@@ -280,40 +252,36 @@ export function StatsRow({
             />
 
             {/* Modules Card */}
-            <GlassCard
-                variant="default"
-                padding="md"
-                radius="lg"
-                interactive
-                className="group relative overflow-hidden animate-fade-in-up"
+            <div
+                className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up"
                 style={{ animationDelay: "300ms" }}
             >
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-4">
                     <div
-                        className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg transition-transform duration-300 group-hover:scale-110"
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: "linear-gradient(135deg, #22c55e, #14b8a6)" }}
                     >
                         <span className="text-2xl text-white">📚</span>
                     </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm text-gray-500 dark:text-neutral-400">
+                            Modules Complete
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                            {animatedModules}/{totalModules}
+                        </p>
+                    </div>
                 </div>
-                <div className="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight mb-1">
-                    {animatedModules}/{totalModules}
+                {/* Progress bar */}
+                <div className="mt-4">
+                    <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2">
+                        <div
+                            className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-1000 ease-out"
+                            style={{ width: `${(modulesCompleted / totalModules) * 100}%` }}
+                        />
+                    </div>
                 </div>
-                <div className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                    Modules Complete
-                </div>
-                {/* Mini progress bar */}
-                <div className="mt-3 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
-                    <div
-                        className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000 ease-out"
-                        style={{ width: `${(modulesCompleted / totalModules) * 100}%` }}
-                    />
-                </div>
-
-                <div
-                    className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-emerald-500/20 blur-2xl opacity-0 transition-opacity group-hover:opacity-100"
-                    aria-hidden="true"
-                />
-            </GlassCard>
+            </div>
 
             {/* Total XP Card */}
             <StatCard

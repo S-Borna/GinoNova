@@ -12,7 +12,6 @@
  */
 
 import * as React from "react"
-import { GlassCard } from "@/components/ui/glass-card"
 import { cn } from "@/lib/utils"
 
 /* ============================================================================
@@ -124,63 +123,51 @@ export function DashboardHero({
 
     return (
         <div className={cn("relative", className)}>
-            {/* Background gradient overlay */}
-            <div
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-500/20 via-primary-600/10 to-transparent opacity-50"
-                aria-hidden="true"
-            />
-
-            <GlassCard
-                variant="default"
-                padding="lg"
-                radius="lg"
-                className="relative overflow-hidden"
-            >
-                {/* Subtle gradient accent on top */}
+            {/* Hero card with gradient background */}
+            <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 rounded-2xl p-8 text-white shadow-lg overflow-hidden relative">
+                {/* Background decorative elements */}
                 <div
-                    className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-primary-400 to-accent-info"
+                    className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-white/10 blur-3xl"
+                    aria-hidden="true"
+                />
+                <div
+                    className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-white/5 blur-2xl"
                     aria-hidden="true"
                 />
 
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     {/* Greeting Section */}
                     <div className="space-y-2">
                         <div className="flex items-center gap-3">
                             <span className="text-3xl" aria-hidden="true">{emoji}</span>
-                            <h1 className="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
                                 {greeting}, {displayName}!
                             </h1>
                         </div>
-                        <p className="text-neutral-600 dark:text-neutral-300 text-base md:text-lg max-w-xl">
+                        <p className="text-indigo-100 text-base md:text-lg max-w-xl">
                             {motivationalText}
                         </p>
                     </div>
 
                     {/* Quick Stats Mini Display */}
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         {/* Streak Badge */}
                         {streak > 0 && (
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-accent-warning/20 to-accent-xp/20 border border-accent-warning/30">
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
                                 <span className="text-xl">🔥</span>
-                                <span className="font-bold text-neutral-900 dark:text-white">{streak}</span>
-                                <span className="text-sm text-neutral-600 dark:text-neutral-400">day streak</span>
+                                <span className="font-bold">{streak}</span>
+                                <span className="text-sm text-white/80">day streak</span>
                             </div>
                         )}
 
                         {/* Level Badge */}
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500/20 to-primary-600/20 border border-primary-300/30">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
                             <span className="text-xl">⭐</span>
-                            <span className="font-bold text-neutral-900 dark:text-white">Level {level}</span>
+                            <span className="font-bold">Level {level}</span>
                         </div>
                     </div>
                 </div>
-
-                {/* Decorative elements */}
-                <div
-                    className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-primary-400/10 to-transparent blur-3xl"
-                    aria-hidden="true"
-                />
-            </GlassCard>
+            </div>
         </div>
     )
 }
