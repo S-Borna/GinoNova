@@ -73,7 +73,7 @@ export function useProgressSync(
     const performSync = useCallback(async () => {
         // Prevent concurrent syncs
         if (isSyncingRef.current) return
-        
+
         // Check debounce
         const now = Date.now()
         if (now - lastSyncRef.current < SYNC_DEBOUNCE_MS) return
@@ -162,7 +162,7 @@ export function useProgressSync(
             // This is a simplified version - in production, you'd want
             // to send any pending local progress data
             console.debug("[ProgressSync] Page unloading, attempting sync...")
-            
+
             // Note: Can't await here, but we can trigger the sync
             // For critical data, use navigator.sendBeacon()
         }

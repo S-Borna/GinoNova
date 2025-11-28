@@ -6,7 +6,7 @@
  * Export all studyflow-related components for easy imports:
  * import { Timer, SessionSetup, ActiveSession, ... } from "@/components/studyflow"
  * 
- * @phase D.5 - Studyflow UI
+ * @phase D.5 - Studyflow UI, A.6 - Studyflow Integration
  */
 
 // Timer Component
@@ -32,3 +32,16 @@ export type { StreakDisplayProps } from "./StreakDisplay"
 // Session History Component
 export { SessionHistory } from "./SessionHistory"
 export type { SessionHistoryProps, SessionRecord } from "./SessionHistory"
+
+// A.6 — Studyflow Integration Components
+// Task Panel for focus sessions
+export { TaskPanel } from "./TaskPanel"
+
+// Break Screen with activities
+export { BreakScreen } from "./BreakScreen"
+
+// Session Summary at end
+export { SessionSummary as SessionSummaryView } from "./SessionSummary"
+
+// Keyboard Shortcuts Help
+export { KeyboardShortcutsHelp } from "./KeyboardShortcutsHelp"
