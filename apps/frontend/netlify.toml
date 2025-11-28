@@ -3,6 +3,9 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  NEXT_PUBLIC_API_URL = "https://saas-project-production-31f8.up.railway.app"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
