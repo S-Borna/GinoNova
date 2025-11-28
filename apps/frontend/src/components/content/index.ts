@@ -7,10 +7,17 @@
  * - MarkdownRenderer
  * - CodeBlock
  * - TaskNav
+ * - OutcomeChecklist (C.3)
+ * - Hints (C.3)
  *
  * @phase C.2 - Task Content Display
+ * @phase C.3 - Labs & Projects Display
  */
 
 export { MarkdownRenderer } from "./MarkdownRenderer"
 export { CodeBlock, InlineCode } from "./CodeBlock"
 export { TaskNav } from "./TaskNav"
+export { OutcomeChecklist } from "./OutcomeChecklist"
+export type { OutcomeItem } from "./OutcomeChecklist"
+export { Hints } from "./Hints"
+export type { HintItem } from "./Hints"
