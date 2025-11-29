@@ -22,5 +22,37 @@ export { TaskCard, type TaskCardProps, type TaskType, type TaskStatus } from './
 // Page components
 export { TaskPage, type TaskPageProps } from './TaskPage'
 
+// Interactive components (PHASE 3)
+export {
+    // Hands-on learning
+    HandsOn,
+    type HandsOnProps,
+    ExerciseBlock,
+    type ExerciseBlockProps,
+    LabBlock,
+    type LabBlockProps,
+    // Step-based guides
+    StepBox,
+    type StepBoxProps,
+    StepSequence,
+    type StepSequenceProps,
+    // Terminal
+    TerminalBlock,
+    type TerminalBlockProps,
+    // Verification
+    CheckWork,
+    type CheckWorkProps,
+    // Navigation
+    TaskFooter,
+    type TaskFooterProps,
+    // Banners
+    InfoBanner,
+    type InfoBannerProps,
+    WarningBanner,
+    type WarningBannerProps,
+    SuccessBanner,
+    type SuccessBannerProps,
+} from './interactive'
+
 // Utilities
 export { cn } from './utils'
