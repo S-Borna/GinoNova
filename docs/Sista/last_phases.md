@@ -147,6 +147,25 @@ Railway logs ska visa:
 PHASE 11 — Billing + Tenants (Stripe)
 ================================================================================
 
+STATUS: ✅ KLAR (2025-11-29)
+
+UTFÖRT:
+- [x] Skapade apps/backend/src/db/models_billing.py med:
+      - PlanType enum (FREE, PRO, ENTERPRISE)
+      - SubscriptionStatus enum (ACTIVE, CANCELED, PAST_DUE, TRIALING, PAUSED)
+      - SubscriptionPlan model med Stripe price IDs
+      - Tenant model för multi-tenant support
+      - TenantUser model för team management
+      - Invoice model för billing history
+- [x] Skapade apps/backend/src/api/routes/billing.py med:
+      - GET /billing/plans - hämta alla planer
+      - GET /billing/status - hämta billing status för användare
+      - POST /billing/checkout - skapa Stripe checkout session
+      - POST /billing/portal - skapa Stripe billing portal session
+      - POST /billing/webhook - hantera Stripe webhooks
+- [x] La till stripe = "^7.0.0" och openai = "^1.0.0" i pyproject.toml
+- [x] Registrerade billing_router i api/router.py
+
 BAKGRUND:
 Monetisering med Free/Pro/Enterprise plans via Stripe.
 

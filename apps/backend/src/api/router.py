@@ -12,6 +12,7 @@ from .data import data_router
 from .admin import admin_router
 from .profile import profile_router
 from .task_progress import task_progress_router
+from .routes.billing import router as billing_router
 
 api_router = APIRouter()
 
@@ -28,3 +29,4 @@ api_router.include_router(ai_router, prefix="/ai", tags=["ai"])
 api_router.include_router(data_router, tags=["data"])
 api_router.include_router(admin_router, prefix="/admin", tags=["admin"])
 api_router.include_router(profile_router, prefix="/profile", tags=["profile"])
+api_router.include_router(billing_router, tags=["billing"])

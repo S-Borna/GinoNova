@@ -18,6 +18,8 @@ asyncpg = "^0.31.0"
 alembic = "^1.17.2"
 psycopg2-binary = "^2.9.11"
 redis = "^5.0.0"
+stripe = "^7.0.0"
+openai = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
