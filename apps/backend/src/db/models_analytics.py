@@ -64,29 +64,29 @@ class UserInsights(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, unique=True)
-    
+
     # Study patterns
     total_study_hours = Column(Float, default=0)
     avg_session_length = Column(Integer, default=0)  # Minutes
     favorite_study_time = Column(String(20), nullable=True)  # morning, afternoon, evening, night
     most_active_day = Column(String(10), nullable=True)  # monday, tuesday, etc.
-    
+
     # Performance
     strongest_skill = Column(String(100), nullable=True)  # Module with best performance
     weakest_skill = Column(String(100), nullable=True)  # Module needing improvement
     avg_task_completion_time = Column(Integer, nullable=True)  # Minutes
     accuracy_rate = Column(Float, nullable=True)  # 0-100%
-    
+
     # Engagement
     longest_streak = Column(Integer, default=0)
     current_streak = Column(Integer, default=0)
     streak_start_date = Column(Date, nullable=True)
     last_active_date = Column(Date, nullable=True)
-    
+
     # Predictions
     estimated_completion_date = Column(Date, nullable=True)
     recommended_pace = Column(String(50), nullable=True)  # slow, normal, fast
-    
+
     # Metadata
     calculated_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -101,20 +101,20 @@ class ModuleAnalytics(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     module_id = Column(UUID(as_uuid=True), nullable=False, unique=True)
     module_slug = Column(String(100), nullable=False)
-    
+
     # Engagement
     total_enrollments = Column(Integer, default=0)
     active_users = Column(Integer, default=0)
     completions = Column(Integer, default=0)
     completion_rate = Column(Float, default=0)  # 0-100%
-    
+
     # Performance
     avg_completion_time = Column(Float, nullable=True)  # Hours
     avg_score = Column(Float, nullable=True)
     difficulty_rating = Column(Float, nullable=True)  # User-perceived difficulty
-    
+
     # Feedback
     avg_rating = Column(Float, nullable=True)
     rating_count = Column(Integer, default=0)
-    
+
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

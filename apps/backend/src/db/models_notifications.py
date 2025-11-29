@@ -37,29 +37,29 @@ class NotificationPreference(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, unique=True)
-    
+
     # In-app notifications
     in_app_enabled = Column(Boolean, default=True)
-    
+
     # Email preferences
     email_enabled = Column(Boolean, default=True)
     email_digest = Column(String(20), default="daily")  # none, instant, daily, weekly
-    
+
     # Notification types
     streak_reminders = Column(Boolean, default=True)
     weekly_summary = Column(Boolean, default=True)
     achievement_alerts = Column(Boolean, default=True)
     new_content_alerts = Column(Boolean, default=True)
     marketing_emails = Column(Boolean, default=False)
-    
+
     # Push notifications (future)
     push_enabled = Column(Boolean, default=False)
-    
+
     # Quiet hours
     quiet_hours_start = Column(String(5), nullable=True)  # HH:MM
     quiet_hours_end = Column(String(5), nullable=True)
     timezone = Column(String(50), default="UTC")
-    
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

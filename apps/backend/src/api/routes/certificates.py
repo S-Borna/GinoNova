@@ -59,17 +59,17 @@ async def verify_certificate(code: str):
     """
     # TODO: Implement actual database lookup
     # For now, return a sample verification
-    
+
     if not code or len(code) < 10:
         return CertificateVerifyResponse(
             valid=False,
             certificate=None,
             message="Invalid verification code format"
         )
-    
+
     # TODO: Look up certificate in database
     # certificate = db.query(Certificate).filter(Certificate.verification_code == code).first()
-    
+
     # Placeholder response
     return CertificateVerifyResponse(
         valid=False,
@@ -89,16 +89,16 @@ async def generate_module_certificate(
     """
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     # TODO: Check if user has completed all tasks in module
     # module = get_module(module_id)
     # progress = get_user_module_progress(user_id, module_id)
     # if progress < 100:
     #     raise HTTPException(status_code=400, detail="Module not completed")
-    
+
     # Generate unique verification code
     verification_code = secrets.token_urlsafe(16)
-    
+
     # TODO: Create certificate in database
     # certificate = Certificate(
     #     user_id=user_id,
@@ -109,9 +109,9 @@ async def generate_module_certificate(
     # )
     # db.add(certificate)
     # db.commit()
-    
+
     logger.info(f"Certificate generated for user {user_id}, module {module_id}")
-    
+
     return {
         "certificate_id": str(user_id),  # Placeholder
         "verification_code": verification_code,
@@ -131,11 +131,11 @@ async def generate_track_certificate(
     """
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     verification_code = secrets.token_urlsafe(16)
-    
+
     logger.info(f"Track certificate generated for user {user_id}, track {track_id}")
-    
+
     return {
         "certificate_id": str(user_id),
         "verification_code": verification_code,

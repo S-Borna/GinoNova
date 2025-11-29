@@ -83,18 +83,18 @@ def check_rate_limit(identifier: str, max_requests: int, window_seconds: int) ->
     client = get_redis_client()
     if not client:
         return True, max_requests  # Allow if Redis unavailable
-    
+
     key = f"rate_limit:{identifier}"
     try:
         current = client.get(key)
         if current is None:
             client.setex(key, window_seconds, 1)
             return True, max_requests - 1
-        
+
         current_count = int(current)
         if current_count >= max_requests:
             return False, 0
-        
+
         client.incr(key)
         return True, max_requests - current_count - 1
     except Exception as e:

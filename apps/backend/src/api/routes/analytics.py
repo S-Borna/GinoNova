@@ -96,7 +96,7 @@ async def get_user_analytics(
     Get analytics summary for a user.
     """
     # TODO: Check if requesting_user can view user_id's analytics
-    
+
     # TODO: Fetch from database
     return UserAnalyticsResponse(
         total_study_hours=0,
@@ -198,7 +198,7 @@ async def get_admin_analytics(
     Admin only.
     """
     # TODO: Check admin permissions
-    
+
     return {
         "total_users": 0,
         "active_today": 0,

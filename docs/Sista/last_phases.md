@@ -582,6 +582,7 @@ PHASE 16 — AI Assistant (User-Facing)
 STATUS: ✅ KLAR (2025-11-29)
 
 UTFÖRT:
+
 - [x] Skapade apps/backend/src/db/models_ai_chat.py med:
       - ChatSession model för chattkonversationer
       - ChatMessage model för individuella meddelanden
@@ -753,6 +754,7 @@ PHASE 13 — Analytics Insight Engine
 STATUS: ✅ KLAR (2025-11-29)
 
 UTFÖRT:
+
 - [x] Skapade apps/backend/src/db/models_analytics.py med:
       - AnalyticsEvent för generisk event-tracking
       - DailyStats för daglig aggregering per användare
@@ -865,6 +867,7 @@ PHASE 12 — Notifications
 STATUS: ✅ KLAR (2025-11-29)
 
 UTFÖRT:
+
 - [x] Skapade apps/backend/src/db/models_notifications.py med:
       - Notification model för in-app notiser
       - NotificationPreference model för användarinställningar
