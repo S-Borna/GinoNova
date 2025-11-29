@@ -19,6 +19,7 @@ from .routes.ai_chat import router as ai_chat_router
 from .routes.analytics import router as analytics_router
 from .routes.notifications import router as notifications_router
 from .routes.search import router as search_router
+from .routes.notion import router as notion_router
 
 api_router = APIRouter()
 
@@ -42,3 +43,4 @@ api_router.include_router(ai_chat_router, tags=["ai-assistant"])
 api_router.include_router(analytics_router, tags=["analytics"])
 api_router.include_router(notifications_router, tags=["notifications"])
 api_router.include_router(search_router, tags=["search"])
+api_router.include_router(notion_router, tags=["notion"])
