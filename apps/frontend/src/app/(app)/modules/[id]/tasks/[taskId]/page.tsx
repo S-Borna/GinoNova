@@ -23,7 +23,17 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import remarkGfm from "remark-gfm"
-import { PageLayout, Section, Block, Headline, Subtext, CodeBlock, cn } from "@saas/ui"
+import {
+    PageLayout,
+    Section,
+    Block,
+    Headline,
+    Subtext,
+    CodeBlock,
+    TaskFooter,
+    InfoBanner,
+    cn
+} from "@saas/ui"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { getTask, getTasksForModule, TaskPublic } from "@/lib/tasks"
@@ -164,7 +174,7 @@ function MarkdownContent({ content }: { content: string }) {
                         const className = childElement?.props?.className || ''
                         const languageMatch = className.match(/language-(\w+)/)
                         const language = languageMatch ? languageMatch[1] : 'bash'
-                        
+
                         return (
                             <CodeBlock language={language} className="my-6">
                                 {String(code).trim()}
@@ -508,46 +518,16 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                         </Block>
                     </Section>
 
-                    {/* Actions */}
-                    <Section>
-                        <div className="flex items-center justify-between">
-                            <Link href={`/modules/${moduleId}`}>
-                                <Button variant="outline" className="rounded-xl">
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Back to Module
-                                </Button>
-                            </Link>
-
-                            {isCompleted ? (
-                                <Button
-                                    onClick={handleContinue}
-                                    className="rounded-xl bg-emerald-500 hover:bg-emerald-600"
-                                >
-                                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                                    {nextTask ? "Continue to Next" : "Back to Module"}
-                                    <ArrowRight className="w-4 h-4 ml-2" />
-                                </Button>
-                            ) : (
-                                <Button
-                                    onClick={handleMarkComplete}
-                                    disabled={completing}
-                                    className="rounded-xl"
-                                >
-                                    {completing ? (
-                                        <>
-                                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                                            Saving...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <CheckCircle2 className="w-4 h-4 mr-2" />
-                                            Mark as Complete
-                                        </>
-                                    )}
-                                </Button>
-                            )}
-                        </div>
-                    </Section>
+                    {/* Actions - Using TaskFooter from @saas/ui */}
+                    <TaskFooter
+                        prevTaskUrl={prevTask ? `/modules/${moduleId}/tasks/${prevTask.id}` : undefined}
+                        nextTaskUrl={nextTask ? `/modules/${moduleId}/tasks/${nextTask.id}` : undefined}
+                        onComplete={handleMarkComplete}
+                        xp={task.xp_reward}
+                        difficulty={task.difficulty as 'easy' | 'medium' | 'hard'}
+                        isCompleted={isCompleted}
+                        isLoading={completing}
+                    />
                 </div>
             ) : null}
         </PageLayout>
