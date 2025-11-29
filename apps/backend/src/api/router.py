@@ -23,6 +23,9 @@ from .routes.notion import router as notion_router
 from .routes.content import router as content_router
 from .routes.marketplace import router as marketplace_router
 from .routes.community import router as community_router
+from .routes.ai_generator import router as ai_generator_router
+from .routes.organization import router as organization_router
+from .routes.career import router as career_router
 
 api_router = APIRouter()
 
@@ -50,3 +53,6 @@ api_router.include_router(notion_router, tags=["notion"])
 api_router.include_router(content_router, tags=["content"])
 api_router.include_router(marketplace_router, tags=["marketplace"])
 api_router.include_router(community_router, tags=["community"])
+api_router.include_router(ai_generator_router, tags=["ai-generator"])
+api_router.include_router(organization_router, tags=["organization"])
+api_router.include_router(career_router, tags=["career"])
