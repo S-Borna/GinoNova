@@ -20,6 +20,9 @@ from .routes.analytics import router as analytics_router
 from .routes.notifications import router as notifications_router
 from .routes.search import router as search_router
 from .routes.notion import router as notion_router
+from .routes.content import router as content_router
+from .routes.marketplace import router as marketplace_router
+from .routes.community import router as community_router
 
 api_router = APIRouter()
 
@@ -44,3 +47,6 @@ api_router.include_router(analytics_router, tags=["analytics"])
 api_router.include_router(notifications_router, tags=["notifications"])
 api_router.include_router(search_router, tags=["search"])
 api_router.include_router(notion_router, tags=["notion"])
+api_router.include_router(content_router, tags=["content"])
+api_router.include_router(marketplace_router, tags=["marketplace"])
+api_router.include_router(community_router, tags=["community"])
