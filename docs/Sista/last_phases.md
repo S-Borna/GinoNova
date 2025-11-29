@@ -750,6 +750,26 @@ git add . && git commit -m "feat(phase16): add AI assistant chat and hints" && g
 PHASE 13 — Analytics Insight Engine
 ================================================================================
 
+STATUS: ✅ KLAR (2025-11-29)
+
+UTFÖRT:
+- [x] Skapade apps/backend/src/db/models_analytics.py med:
+      - AnalyticsEvent för generisk event-tracking
+      - DailyStats för daglig aggregering per användare
+      - UserInsights för beräknade insikter
+      - ModuleAnalytics för modul-statistik (admin)
+- [x] Skapade apps/backend/src/api/routes/analytics.py med:
+      - POST /analytics/event - spåra events
+      - GET /analytics/user/{user_id} - användarsummering
+      - GET /analytics/user/{user_id}/daily - daglig statistik
+      - GET /analytics/user/{user_id}/insights - beräknade insikter
+      - GET /analytics/user/{user_id}/activity-heatmap - GitHub-stil heatmap
+      - GET /analytics/leaderboard - topplista
+      - GET /analytics/admin/overview - plattformsöversikt
+      - GET /analytics/admin/modules - modul-analytics
+      - GET /analytics/admin/retention - retention cohorts
+- [x] Registrerade analytics_router
+
 BAKGRUND:
 Spåra användarbeteende, studietid, framsteg för insikter.
 
