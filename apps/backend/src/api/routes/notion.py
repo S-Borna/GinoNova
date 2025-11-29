@@ -65,7 +65,7 @@ def get_notion_headers() -> Dict[str, str]:
     """Get headers for Notion API requests"""
     if not NOTION_API_KEY:
         raise HTTPException(status_code=500, detail="NOTION_API_KEY not configured")
-    
+
     return {
         "Authorization": f"Bearer {NOTION_API_KEY}",
         "Content-Type": "application/json",
@@ -81,10 +81,10 @@ def is_notion_configured() -> bool:
 async def notion_request(method: str, endpoint: str, data: Optional[Dict] = None) -> Dict[str, Any]:
     """Make a request to Notion API"""
     import httpx
-    
+
     headers = get_notion_headers()
     url = f"{NOTION_BASE_URL}/{endpoint}"
-    
+
     async with httpx.AsyncClient() as client:
         if method == "GET":
             response = await client.get(url, headers=headers)
@@ -96,14 +96,14 @@ async def notion_request(method: str, endpoint: str, data: Optional[Dict] = None
             response = await client.delete(url, headers=headers)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")
-        
+
         if response.status_code >= 400:
             logger.error(f"Notion API error: {response.status_code} - {response.text}")
             raise HTTPException(
                 status_code=response.status_code,
                 detail=f"Notion API error: {response.json().get('message', 'Unknown error')}"
             )
-        
+
         return response.json()
 
 
@@ -111,11 +111,11 @@ def markdown_to_notion_blocks(markdown: str) -> List[Dict[str, Any]]:
     """Convert markdown to Notion blocks (simplified)"""
     blocks = []
     lines = markdown.split('\n')
-    
+
     for line in lines:
         if not line.strip():
             continue
-        
+
         # Headers
         if line.startswith('### '):
             blocks.append({
@@ -162,7 +162,7 @@ def markdown_to_notion_blocks(markdown: str) -> List[Dict[str, Any]]:
                     "rich_text": [{"type": "text", "text": {"content": line}}]
                 }
             })
-    
+
     return blocks
 
 
@@ -184,11 +184,11 @@ async def list_databases():
     """List accessible Notion databases"""
     if not is_notion_configured():
         raise HTTPException(status_code=400, detail="Notion not configured")
-    
+
     result = await notion_request("POST", "search", {
         "filter": {"property": "object", "value": "database"}
     })
-    
+
     databases = []
     for db in result.get("results", []):
         databases.append({
@@ -198,7 +198,7 @@ async def list_databases():
             "created_time": db.get("created_time"),
             "last_edited_time": db.get("last_edited_time")
         })
-    
+
     return {"databases": databases, "count": len(databases)}
 
 
@@ -207,9 +207,9 @@ async def get_database(database_id: str):
     """Get database details and schema"""
     if not is_notion_configured():
         raise HTTPException(status_code=400, detail="Notion not configured")
-    
+
     result = await notion_request("GET", f"databases/{database_id}")
-    
+
     return {
         "id": result["id"],
         "title": result.get("title", [{}])[0].get("plain_text", "Untitled"),
@@ -223,7 +223,7 @@ async def create_page(page: NotionPageCreate):
     """Create a new page in Notion database"""
     if not is_notion_configured():
         raise HTTPException(status_code=400, detail="Notion not configured")
-    
+
     # Build page data
     page_data = {
         "parent": {"database_id": NOTION_DATABASE_ID},
@@ -234,13 +234,13 @@ async def create_page(page: NotionPageCreate):
             **page.properties
         }
     }
-    
+
     # Add content blocks if provided
     if page.content:
         page_data["children"] = markdown_to_notion_blocks(page.content)
-    
+
     result = await notion_request("POST", "pages", page_data)
-    
+
     return {
         "id": result["id"],
         "url": result.get("url", ""),
@@ -253,13 +253,13 @@ async def update_page(page_id: str, page: NotionPageUpdate):
     """Update an existing Notion page"""
     if not is_notion_configured():
         raise HTTPException(status_code=400, detail="Notion not configured")
-    
+
     # Update properties
     if page.properties:
         await notion_request("PATCH", f"pages/{page_id}", {
             "properties": page.properties
         })
-    
+
     # Update content (append blocks)
     if page.content:
         blocks = markdown_to_notion_blocks(page.content)
@@ -267,7 +267,7 @@ async def update_page(page_id: str, page: NotionPageUpdate):
             await notion_request("PATCH", f"blocks/{page_id}/children", {
                 "children": [block]
             })
-    
+
     return {"status": "updated", "page_id": page_id}
 
 
@@ -276,14 +276,14 @@ async def sync_to_notion(sync_request: NotionSyncRequest, background_tasks: Back
     """Sync project data to Notion (runs in background)"""
     if not is_notion_configured():
         raise HTTPException(status_code=400, detail="Notion not configured")
-    
+
     # Add sync task to background
     background_tasks.add_task(
         perform_sync,
         sync_type=sync_request.sync_type,
         user_id=sync_request.user_id
     )
-    
+
     return {
         "status": "sync_started",
         "sync_type": sync_request.sync_type,
@@ -294,17 +294,17 @@ async def sync_to_notion(sync_request: NotionSyncRequest, background_tasks: Back
 async def perform_sync(sync_type: str, user_id: Optional[str] = None):
     """Perform the actual sync operation"""
     logger.info(f"Starting Notion sync: type={sync_type}, user_id={user_id}")
-    
+
     try:
         if sync_type in ["modules", "all"]:
             await sync_modules()
-        
+
         if sync_type in ["tasks", "all"]:
             await sync_tasks()
-        
+
         if sync_type in ["progress", "all"] and user_id:
             await sync_progress(user_id)
-        
+
         logger.info(f"Notion sync completed: {sync_type}")
     except Exception as e:
         logger.error(f"Notion sync failed: {e}")
@@ -313,10 +313,10 @@ async def perform_sync(sync_type: str, user_id: Optional[str] = None):
 async def sync_modules():
     """Sync modules to Notion"""
     from ...db.module_repository import list_modules
-    
+
     modules = list_modules()
     logger.info(f"Syncing {len(modules)} modules to Notion")
-    
+
     for module in modules:
         try:
             await notion_request("POST", "pages", {
@@ -336,10 +336,10 @@ async def sync_modules():
 async def sync_tasks():
     """Sync tasks to Notion"""
     from ...db.task_repository import list_all_tasks
-    
+
     tasks = list_all_tasks()
     logger.info(f"Syncing {len(tasks)} tasks to Notion")
-    
+
     for task in tasks:
         try:
             await notion_request("POST", "pages", {
@@ -360,10 +360,10 @@ async def sync_progress(user_id: str):
     """Sync user progress to Notion"""
     from uuid import UUID
     from ...db.progress_repository import get_user_progress
-    
+
     progress_list = get_user_progress(UUID(user_id))
     logger.info(f"Syncing progress for user {user_id}: {len(progress_list)} entries")
-    
+
     for progress in progress_list:
         try:
             await notion_request("POST", "pages", {
@@ -384,7 +384,7 @@ async def sync_progress(user_id: str):
 async def notion_webhook(payload: NotionWebhookPayload):
     """Handle incoming webhooks from Notion"""
     logger.info(f"Received Notion webhook: type={payload.type}")
-    
+
     # Process webhook based on type
     if payload.type == "page_updated":
         # Handle page update - could trigger sync back to app
@@ -392,7 +392,7 @@ async def notion_webhook(payload: NotionWebhookPayload):
     elif payload.type == "page_created":
         # Handle new page creation
         pass
-    
+
     return {"status": "received", "type": payload.type}
 
 
@@ -406,9 +406,9 @@ async def query_database(
     """Query a Notion database with filters"""
     if not is_notion_configured():
         raise HTTPException(status_code=400, detail="Notion not configured")
-    
+
     query_data: Dict[str, Any] = {"page_size": min(limit, 100)}
-    
+
     # Build filter
     filters = []
     if filter_type:
@@ -421,21 +421,21 @@ async def query_database(
             "property": "Status",
             "select": {"equals": status}
         })
-    
+
     if len(filters) == 1:
         query_data["filter"] = filters[0]
     elif len(filters) > 1:
         query_data["filter"] = {"and": filters}
-    
+
     result = await notion_request("POST", f"databases/{database_id}/query", query_data)
-    
+
     pages = []
     for page in result.get("results", []):
         title_prop = page.get("properties", {}).get("title", {})
         title = ""
         if title_prop.get("title"):
             title = title_prop["title"][0].get("plain_text", "") if title_prop["title"] else ""
-        
+
         pages.append({
             "id": page["id"],
             "title": title,
@@ -444,7 +444,7 @@ async def query_database(
             "last_edited_time": page.get("last_edited_time"),
             "properties": page.get("properties", {})
         })
-    
+
     return {
         "pages": pages,
         "count": len(pages),
