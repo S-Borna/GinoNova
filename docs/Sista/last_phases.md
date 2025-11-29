@@ -436,6 +436,30 @@ git add . && git commit -m "feat(phase29): add rate limiting and security harden
 PHASE 21 — Certification & Badge System
 ================================================================================
 
+STATUS: ✅ KLAR (2025-11-29)
+
+UTFÖRT:
+- [x] Skapade apps/backend/src/db/models_certification.py med:
+      - CertificateType enum (MODULE, TRACK, BOOTCAMP, MASTER)
+      - Certificate model med verification_code
+      - BadgeCategory enum (SKILL, ACHIEVEMENT, STREAK, SOCIAL, SPECIAL)
+      - Badge model med levels
+      - BadgeDefinition model för badge-konfiguration
+- [x] Skapade apps/backend/src/api/routes/certificates.py med:
+      - GET /certificates/ - hämta användarens certifikat
+      - GET /certificates/verify/{code} - verifiera certifikat (publik)
+      - POST /certificates/generate/module/{module_id}
+      - POST /certificates/generate/track/{track_id}
+      - GET /certificates/download/{certificate_id}
+- [x] Skapade apps/backend/src/api/routes/badges.py med:
+      - BADGE_DEFINITIONS med 12+ badges och kriterier
+      - GET /badges/ - hämta användarens badges
+      - GET /badges/available - alla tillgängliga badges
+      - GET /badges/{badge_slug} - badge-detaljer
+      - POST /badges/check - kontrollera och tilldela badges
+      - GET /badges/leaderboard - badge-topplista
+- [x] Registrerade certificates_router och badges_router
+
 BAKGRUND:
 Certifikat och badges för att validera kompetens.
 
