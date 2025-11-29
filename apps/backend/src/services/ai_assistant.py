@@ -38,13 +38,13 @@ async def get_ai_response(
 ) -> dict:
     """
     Get response from OpenAI API.
-    
+
     Args:
         message: User's message
         context: Optional context (module, task info)
         history: Previous messages in conversation
         system_override: Custom system prompt
-        
+
     Returns:
         dict with 'response', 'tokens_used', 'error'
     """
@@ -61,7 +61,7 @@ async def get_ai_response(
 
         # Build messages array
         system_content = system_override or SYSTEM_PROMPT
-        
+
         # Add context to system prompt if available
         if context:
             context_parts = []
@@ -125,13 +125,13 @@ async def get_hint(
 ) -> dict:
     """
     Get a hint for a specific task without giving away the answer.
-    
+
     Args:
         task_title: Title of the task
         task_description: Task description/instructions
         user_question: What the user is asking about
         user_attempt: What the user has tried (optional)
-        
+
     Returns:
         dict with 'hint', 'tokens_used', 'error'
     """
@@ -142,7 +142,7 @@ Uppgiftsbeskrivning:
 
 Studentens fråga: {user_question}
 """
-    
+
     if user_attempt:
         hint_prompt += f"\nStudentens försök:\n{user_attempt}\n"
 
@@ -168,12 +168,12 @@ async def explain_concept(
 ) -> dict:
     """
     Explain a DevOps concept in a pedagogical way.
-    
+
     Args:
         concept: The concept to explain
         context: Related context (module, task)
         level: Explanation level (beginner, intermediate, advanced)
-        
+
     Returns:
         dict with 'explanation', 'tokens_used', 'error'
     """

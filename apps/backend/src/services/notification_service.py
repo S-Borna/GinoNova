@@ -62,28 +62,28 @@ async def create_notification(
 ) -> dict:
     """
     Create an in-app notification.
-    
+
     Args:
         user_id: User to notify
         notification_type: Type from NOTIFICATION_TYPES
         data: Template variables
         action_url: Deep link URL
-        
+
     Returns:
         Created notification dict
     """
     template = NOTIFICATION_TYPES.get(notification_type, {})
-    
+
     title = template.get("title_template", notification_type)
     message = template.get("message_template", "")
-    
+
     # Fill in template variables
     try:
         title = title.format(**data)
         message = message.format(**data)
     except KeyError as e:
         logger.warning(f"Missing template variable: {e}")
-    
+
     # TODO: Save to database
     # notification = Notification(
     #     user_id=user_id,
@@ -95,9 +95,9 @@ async def create_notification(
     # )
     # db.add(notification)
     # db.commit()
-    
+
     logger.info(f"Notification created for {user_id}: {notification_type}")
-    
+
     return {
         "user_id": user_id,
         "type": notification_type,
@@ -167,13 +167,13 @@ async def send_email(
 ) -> bool:
     """
     Send email via SendGrid.
-    
+
     Args:
         to_email: Recipient email
         subject: Email subject
         html_content: HTML body
         user_id: User ID for logging
-        
+
     Returns:
         True if sent successfully
     """
@@ -196,9 +196,9 @@ async def send_email(
         response = sg.send(message)
 
         logger.info(f"Email sent to {to_email}: {response.status_code}")
-        
+
         # TODO: Log to email_logs table
-        
+
         return response.status_code in [200, 201, 202]
 
     except ImportError:
@@ -216,7 +216,7 @@ async def send_weekly_summary_email(
 ) -> bool:
     """Send weekly summary email."""
     subject = "Din veckosummering från DevOpsHub 📊"
-    
+
     html_content = f"""
     <h1>Hej!</h1>
     <p>Här är din veckosummering:</p>
@@ -229,5 +229,5 @@ async def send_weekly_summary_email(
     <p>Fortsätt så! 💪</p>
     <p><a href="https://saids-devopshub.netlify.app/dashboard">Gå till Dashboard</a></p>
     """
-    
+
     return await send_email(email, subject, html_content, user_id)

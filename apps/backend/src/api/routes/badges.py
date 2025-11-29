@@ -87,7 +87,7 @@ BADGE_DEFINITIONS = {
         },
         "xp_per_level": 75,
     },
-    
+
     # Streak badges
     "streak_warrior": {
         "name": "Streak Warrior",
@@ -127,7 +127,7 @@ BADGE_DEFINITIONS = {
         },
         "xp_per_level": 30,
     },
-    
+
     # Achievement badges
     "first_task": {
         "name": "First Steps",
@@ -229,7 +229,7 @@ async def get_badge_details(badge_slug: str):
     """
     if badge_slug not in BADGE_DEFINITIONS:
         raise HTTPException(status_code=404, detail="Badge not found")
-    
+
     data = BADGE_DEFINITIONS[badge_slug]
     return {
         "slug": badge_slug,
@@ -252,18 +252,18 @@ async def check_and_award_badges(
     """
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     # TODO: Implement actual badge checking logic
     # 1. Get user's current badges
     # 2. Get user's progress/stats
     # 3. Check each badge criteria
     # 4. Award new badges if criteria met
     # 5. Return newly awarded badges
-    
+
     new_badges = []
-    
+
     logger.info(f"Badge check for user {user_id}: {len(new_badges)} new badges")
-    
+
     return {
         "new_badges": new_badges,
         "total_checked": len(BADGE_DEFINITIONS),

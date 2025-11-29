@@ -186,7 +186,7 @@ async def update_preferences(
     # if not preferences:
     #     preferences = NotificationPreference(user_id=user_id)
     #     db.add(preferences)
-    # 
+    #
     # for field, value in request.dict(exclude_unset=True).items():
     #     setattr(preferences, field, value)
     # db.commit()
