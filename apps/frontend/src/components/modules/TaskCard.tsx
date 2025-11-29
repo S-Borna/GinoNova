@@ -33,7 +33,7 @@ import {
     Trophy,
     HelpCircle
 } from "lucide-react"
-import { designTokens } from "@/lib/design-tokens"
+import designTokens from "@/lib/design-tokens"
 
 /* ============================================================================
    TYPES
