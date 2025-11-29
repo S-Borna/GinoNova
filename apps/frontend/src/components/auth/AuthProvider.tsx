@@ -143,9 +143,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     )
 }
 
+// SSR-safe default values
+const ssrSafeDefaults: AuthContextType = {
+    user: null,
+    loading: true,
+    error: null,
+    login: async () => { throw new Error("AuthProvider not available") },
+    register: async () => { throw new Error("AuthProvider not available") },
+    logout: () => { },
+    clearError: () => { },
+    refreshUser: async () => { },
+}
+
 export function useAuth() {
     const context = useContext(AuthContext)
+    // Return safe defaults during SSR to prevent build errors
     if (context === undefined) {
+        // Check if we're on the server
+        if (typeof window === 'undefined') {
+            return ssrSafeDefaults
+        }
         throw new Error("useAuth must be used within an AuthProvider")
     }
     return context

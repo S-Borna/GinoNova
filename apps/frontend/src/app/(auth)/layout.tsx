@@ -10,6 +10,7 @@
  */
 
 import { AuthBranding } from "@/components/auth/AuthBranding"
+import { AuthProvider } from "@/components/auth"
 
 export default function AuthLayout({
     children,
@@ -17,16 +18,18 @@ export default function AuthLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="min-h-screen flex">
-            {/* Left: Branding panel (hidden on mobile) */}
-            <AuthBranding className="w-1/2 min-h-screen" />
+        <AuthProvider>
+            <div className="min-h-screen flex">
+                {/* Left: Branding panel (hidden on mobile) */}
+                <AuthBranding className="w-1/2 min-h-screen" />
 
-            {/* Right: Auth form */}
-            <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 bg-white dark:bg-neutral-950">
-                <div className="w-full max-w-md">
-                    {children}
+                {/* Right: Auth form */}
+                <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 bg-white dark:bg-neutral-950">
+                    <div className="w-full max-w-md">
+                        {children}
+                    </div>
                 </div>
             </div>
-        </div>
+        </AuthProvider>
     )
 }

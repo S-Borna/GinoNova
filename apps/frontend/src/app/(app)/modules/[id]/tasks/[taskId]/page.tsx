@@ -230,7 +230,7 @@ export default function TaskDetailPage() {
     // Check if task has interactive content blocks
     const hasContentBlocks = task && Array.isArray((task as any).content_blocks) && (task as any).content_blocks.length > 0
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true)
         setError(null)
 
@@ -284,12 +284,11 @@ export default function TaskDetailPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [taskId, moduleId, token, API_URL])
 
     useEffect(() => {
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [moduleId, taskId])
+    }, [fetchData])
 
     // ILE handlers
     const handleBlockComplete = useCallback(async (blockIndex: number, blockType: string) => {
@@ -303,7 +302,7 @@ export default function TaskDetailPage() {
         } catch (e) {
             console.error("Block complete error:", e)
         }
-    }, [token, taskId, API_URL])
+    }, [token, taskId, API_URL, fetchData])
 
     const handleQuizAnswer = useCallback(async (blockIndex: number, optionIndex: number) => {
         if (!token) return { is_correct: false, explanation: "" }
@@ -328,7 +327,7 @@ export default function TaskDetailPage() {
             console.error("Quiz answer error:", e)
             return { is_correct: false, explanation: "" }
         }
-    }, [token, taskId, task, API_URL])
+    }, [token, taskId, task, API_URL, fetchData])
 
     const handleTerminalCommand = useCallback(async (blockIndex: number, commandIndex: number, command: string, wasCorrect: boolean) => {
         if (!token) return { is_correct: false }
