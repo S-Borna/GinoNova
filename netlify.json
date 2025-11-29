@@ -1,6 +1,7 @@
 {
     "build": {
-        "command": "npm run build --workspaces=frontend",
-        "publish": "apps/frontend/.next"
+        "base": "apps/frontend",
+        "command": "cd ../.. && npm ci && npm run build --workspace frontend",
+        "publish": ".next"
     }
 }
