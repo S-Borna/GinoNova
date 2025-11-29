@@ -16,6 +16,7 @@ from .routes.billing import router as billing_router
 from .routes.certificates import router as certificates_router
 from .routes.badges import router as badges_router
 from .routes.ai_chat import router as ai_chat_router
+from .routes.analytics import router as analytics_router
 
 api_router = APIRouter()
 
@@ -36,3 +37,4 @@ api_router.include_router(billing_router, tags=["billing"])
 api_router.include_router(certificates_router, tags=["certificates"])
 api_router.include_router(badges_router, tags=["badges"])
 api_router.include_router(ai_chat_router, tags=["ai-assistant"])
+api_router.include_router(analytics_router, tags=["analytics"])
