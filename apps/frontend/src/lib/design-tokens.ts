@@ -261,7 +261,7 @@ export const tw = {
     tableBorder: "border border-black/[0.08] dark:border-white/[0.08]",
 } as const
 
-export default {
+const designTokens = {
     typography,
     spacing,
     shadows,
@@ -270,3 +270,5 @@ export default {
     transitions,
     tw,
 }
+
+export default designTokens
