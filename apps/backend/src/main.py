@@ -225,6 +225,13 @@ app.add_middleware(
     allow_origin_regex=r"https://.*\.netlify\.app",  # Allow all Netlify subdomains
 )
 
+# Phase 29: Production Hardening Middleware
+from .api.middleware.rate_limit import RateLimitMiddleware
+from .api.middleware.error_handler import ErrorHandlerMiddleware
+
+app.add_middleware(RateLimitMiddleware, requests_per_minute=100)
+app.add_middleware(ErrorHandlerMiddleware)
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
