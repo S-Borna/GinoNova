@@ -15,12 +15,12 @@ async function fetchAllBlocks(blockId) {
     let allBlocks = [];
     let cursor = undefined;
     let pageNum = 1;
-    
+
     do {
-        const url = cursor 
+        const url = cursor
             ? `https://api.notion.com/v1/blocks/${blockId}/children?page_size=100&start_cursor=${cursor}`
             : `https://api.notion.com/v1/blocks/${blockId}/children?page_size=100`;
-            
+
         const response = await fetch(url, {
             headers: {
                 'Authorization': `Bearer ${NOTION_API_KEY}`,
@@ -36,13 +36,13 @@ async function fetchAllBlocks(blockId) {
         const data = await response.json();
         allBlocks = allBlocks.concat(data.results || []);
         cursor = data.has_more ? data.next_cursor : undefined;
-        
+
         if (cursor) {
             console.log(`   📄 Page ${pageNum} fetched (${allBlocks.length} blocks so far)...`);
             pageNum++;
         }
     } while (cursor);
-    
+
     return allBlocks;
 }
 
@@ -53,12 +53,12 @@ async function fetchNotionPage() {
 async function fetchTableRows(blockId) {
     let allRows = [];
     let cursor = undefined;
-    
+
     do {
-        const url = cursor 
+        const url = cursor
             ? `https://api.notion.com/v1/blocks/${blockId}/children?start_cursor=${cursor}`
             : `https://api.notion.com/v1/blocks/${blockId}/children`;
-            
+
         const response = await fetch(url, {
             headers: {
                 'Authorization': `Bearer ${NOTION_API_KEY}`,
@@ -71,7 +71,7 @@ async function fetchTableRows(blockId) {
         allRows = allRows.concat(data.results || []);
         cursor = data.has_more ? data.next_cursor : undefined;
     } while (cursor);
-    
+
     return allRows;
 }
 
@@ -193,7 +193,7 @@ async function blockToMarkdown(block, indent = '') {
         default:
             result = '';
     }
-    
+
     // Handle nested children for blocks that support them
     if (block.has_children && !['toggle', 'table', 'column_list'].includes(type)) {
         const children = await fetchAllBlocks(block.id);
@@ -201,7 +201,7 @@ async function blockToMarkdown(block, indent = '') {
             result += await blockToMarkdown(child, indent + '  ');
         }
     }
-    
+
     return result;
 }
 

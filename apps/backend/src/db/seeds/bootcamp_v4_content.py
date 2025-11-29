@@ -961,19 +961,95 @@ def get_v4_content() -> Dict[str, Any]:
     }
 
 
-def seed_v4_content(db_session) -> None:
+def seed_v4_content() -> dict:
     """
     Seed v4.0 content into database.
-    Integrates with existing v3.0 structure.
+    Creates tracks for sections and modules with tasks.
+    Returns summary of created content.
     """
+    import logging
+    from ..module_repository import create_module, list_modules
+    from ..task_repository import create_task
+    from ..track_repository import create_track, get_track_by_slug
+    from ...schemas.module import ModuleCreate
+    from ...schemas.task import TaskCreate
+    from ...schemas.track import TrackCreate
+    
+    logger = logging.getLogger(__name__)
     content = get_v4_content()
     
-    # Implementation depends on your database models
-    # This is a placeholder for the actual seeding logic
-    print(f"Seeding {content['total_modules']} modules from Bootcamp v4.0")
-    print(f"Total estimated hours: {content['total_hours']}")
+    # Check if v4 content already exists (check for linux-mastery track)
+    existing_track = get_track_by_slug("v4-linux-mastery")
+    if existing_track:
+        logger.info("✅ Bootcamp v4.0 already seeded")
+        return {"status": "already_seeded", "modules": 0, "tasks": 0}
     
-    for section in content["sections"]:
-        print(f"  Section: {section['name']} ({section['estimated_hours']}h)")
+    logger.info(f"🌱 Seeding Bootcamp v4.0: {content['total_modules']} modules, {content['total_hours']}h")
     
-    # Add actual database insertion here
+    track_id_map = {}
+    tracks_created = 0
+    modules_created = 0
+    tasks_created = 0
+    
+    # Create tracks for each section
+    for idx, section in enumerate(content["sections"]):
+        track_slug = f"v4-{section['id']}"
+        track = create_track(TrackCreate(
+            name=f"v4.0: {section['name']}",
+            slug=track_slug,
+            description=section["description"],
+            color="#8B5CF6",  # Purple for v4
+            icon="🎓",
+            order_index=100 + idx,  # After v3 tracks
+        ))
+        track_id_map[section["id"]] = track.id
+        tracks_created += 1
+        logger.info(f"  📚 Created track: {section['name']}")
+    
+    # Create modules and tasks
+    for module_data in content["modules"]:
+        section_id = module_data.get("section_id")
+        track_id = track_id_map.get(section_id)
+        
+        if not track_id:
+            logger.warning(f"⚠️ No track for section {section_id}, skipping module {module_data['name']}")
+            continue
+        
+        # Create module
+        module = create_module(ModuleCreate(
+            track_id=track_id,
+            name=module_data["name"],
+            slug=module_data["slug"],
+            description=module_data.get("description", ""),
+            order_index=module_data.get("order", 1),
+            difficulty=module_data.get("level", "advanced"),
+            estimated_hours=module_data.get("estimated_hours", 10.0),
+            prerequisites=module_data.get("prerequisites", []),
+            is_active=False,  # v4 not active by default
+        ))
+        modules_created += 1
+        
+        # Create tasks for this module
+        for task_idx, task_data in enumerate(module_data.get("tasks", [])):
+            create_task(TaskCreate(
+                module_id=module.id,
+                title=task_data.get("title", f"Task {task_idx + 1}"),
+                description=task_data.get("description"),
+                content=task_data.get("content"),
+                content_blocks=task_data.get("content_blocks"),
+                order_index=task_idx + 1,
+                difficulty=task_data.get("difficulty", "medium"),
+                estimated_minutes=task_data.get("estimated_minutes", 30),
+                xp_reward=task_data.get("xp_reward", 50),
+            ))
+            tasks_created += 1
+    
+    logger.info(f"✅ v4.0 seeded: {tracks_created} tracks, {modules_created} modules, {tasks_created} tasks")
+    
+    return {
+        "status": "success",
+        "tracks": tracks_created,
+        "modules": modules_created,
+        "tasks": tasks_created,
+        "total_hours": content["total_hours"],
+    }

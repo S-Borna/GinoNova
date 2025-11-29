@@ -234,7 +234,38 @@ app.add_middleware(ErrorHandlerMiddleware)
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    """Detailed health check with database status."""
+    from .db.database import is_db_configured
+    from .db.redis_client import is_redis_configured, get_redis_client
+    from .db.module_repository import list_modules
+
+    status = {
+        "status": "ok",
+        "postgresql": "disconnected",
+        "redis": "disconnected",
+        "modules_count": 0
+    }
+
+    # Check PostgreSQL
+    if is_db_configured():
+        try:
+            modules = list_modules()
+            status["postgresql"] = "connected"
+            status["modules_count"] = len(modules)
+        except Exception as e:
+            status["postgresql"] = f"error: {str(e)[:50]}"
+
+    # Check Redis
+    if is_redis_configured():
+        try:
+            client = get_redis_client()
+            if client:
+                client.ping()
+                status["redis"] = "connected"
+        except Exception as e:
+            status["redis"] = f"error: {str(e)[:50]}"
+
+    return status
 
 # REQUIRED BY Railway & PaaS health checks
 @app.get("/.well-known/health")
