@@ -160,7 +160,8 @@ def update_user(user_id: UUID, **kwargs) -> Optional[UserInDB]:
             # Update allowed fields
             allowed_fields = ['full_name', 'is_active', 'is_admin', 'avatar_url', 'bio',
                             'github_username', 'linkedin_url', 'website_url', 'timezone',
-                            'total_xp', 'current_streak', 'longest_streak', 'last_activity_at']
+                            'total_xp', 'current_streak', 'longest_streak', 'last_activity_at',
+                            'hashed_password']  # Added for password reset
 
             for key, value in kwargs.items():
                 if key in allowed_fields:
