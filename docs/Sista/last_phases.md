@@ -150,6 +150,7 @@ PHASE 11 — Billing + Tenants (Stripe)
 STATUS: ✅ KLAR (2025-11-29)
 
 UTFÖRT:
+
 - [x] Skapade apps/backend/src/db/models_billing.py med:
       - PlanType enum (FREE, PRO, ENTERPRISE)
       - SubscriptionStatus enum (ACTIVE, CANCELED, PAST_DUE, TRIALING, PAUSED)
@@ -312,6 +313,7 @@ PHASE 29 — Production Hardening
 STATUS: ✅ KLAR (2025-11-29)
 
 UTFÖRT:
+
 - [x] Skapade apps/backend/src/api/middleware/rate_limit.py med:
       - RateLimitMiddleware med Redis-baserad rate limiting
       - Exempt paths för health checks
@@ -439,6 +441,7 @@ PHASE 21 — Certification & Badge System
 STATUS: ✅ KLAR (2025-11-29)
 
 UTFÖRT:
+
 - [x] Skapade apps/backend/src/db/models_certification.py med:
       - CertificateType enum (MODULE, TRACK, BOOTCAMP, MASTER)
       - Certificate model med verification_code
@@ -575,6 +578,29 @@ git add . && git commit -m "feat(phase21): add certification and badge system" &
 ================================================================================
 PHASE 16 — AI Assistant (User-Facing)
 ================================================================================
+
+STATUS: ✅ KLAR (2025-11-29)
+
+UTFÖRT:
+- [x] Skapade apps/backend/src/db/models_ai_chat.py med:
+      - ChatSession model för chattkonversationer
+      - ChatMessage model för individuella meddelanden
+      - AIUsageLog model för quota-tracking
+- [x] Skapade apps/backend/src/services/ai_assistant.py med:
+      - SYSTEM_PROMPT på svenska för DevOps-tutoring
+      - get_ai_response() med OpenAI API
+      - get_hint() för uppgiftshjälp utan svaret
+      - explain_concept() med nivåer (beginner/intermediate/advanced)
+      - suggest_next_steps() för personliga rekommendationer
+- [x] Skapade apps/backend/src/api/routes/ai_chat.py med:
+      - POST /ai/chat - chatta med AI
+      - POST /ai/hint - få hint på uppgift
+      - POST /ai/explain - förklara koncept
+      - POST /ai/suggest-next - föreslå nästa steg
+      - GET /ai/history/{session_id} - chatthistorik
+      - GET /ai/sessions - användarens sessioner
+      - GET /ai/quota - visa AI-kvot
+- [x] Registrerade ai_chat_router
 
 BAKGRUND:
 AI chatbot för hints, förklaringar och studyflow-rekommendationer.
