@@ -286,6 +286,40 @@ def update_user(
     return get_user_detail(user_id, response, current_user)
 
 
+class PasswordResetRequest(BaseModel):
+    """Schema for admin password reset"""
+    new_password: str
+
+
+@admin_router.post("/users/{user_id}/reset-password")
+def admin_reset_password(
+    user_id: UUID,
+    data: PasswordResetRequest,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Reset a user's password (admin only).
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Hash the new password
+    from ..core.security import hash_password
+    hashed = hash_password(data.new_password)
+
+    # Update user password
+    updated = user_repository.update_user(user_id, hashed_password=hashed)
+    if not updated:
+        raise HTTPException(status_code=500, detail="Failed to update password")
+
+    return {"success": True, "message": f"Password reset for {user.email}"}
+
+
 @admin_router.delete("/users/{user_id}")
 def deactivate_user(
     user_id: UUID,
