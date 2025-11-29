@@ -279,7 +279,7 @@ Apply USE to every resource:
 mpstat -P ALL 1 5          # Per-CPU utilization
 pidstat 1 5                # Per-process CPU
 
-# Memory Analysis  
+# Memory Analysis
 free -h                    # Memory utilization
 vmstat 1 5                 # Virtual memory stats
 cat /proc/meminfo          # Detailed memory info
@@ -442,7 +442,7 @@ cat /sys/fs/cgroup/demo/cpu.stat""",
             }
         ]
     },
-    
+
     # =========================================================================
     # SECTION 3: KUBERNETES ADVANCED (10 moduler)
     # =========================================================================
@@ -615,7 +615,7 @@ spec:
             }
         ]
     },
-    
+
     # =========================================================================
     # SECTION 4: SRE MASTERY (6 moduler)
     # =========================================================================
@@ -722,7 +722,7 @@ def calculate_error_budget(slo_target: float, window_days: int = 30) -> dict:
     error_budget_percent = (1 - slo_target) * 100
     window_minutes = window_days * 24 * 60
     budget_minutes = window_minutes * (1 - slo_target)
-    
+
     return {
         'slo_target': f'{slo_target * 100:.2f}%',
         'error_budget_percent': f'{error_budget_percent:.3f}%',
@@ -740,7 +740,7 @@ print(calculate_error_budget(0.99999)) # 99.999% = 26 sec/month""",
             }
         ]
     },
-    
+
     # =========================================================================
     # SECTION 5: SECURITY & ZERO TRUST (6 moduler)
     # =========================================================================
@@ -830,7 +830,7 @@ spec:
             }
         ]
     },
-    
+
     # =========================================================================
     # SECTION 6: PLATFORM ENGINEERING (4 moduler)
     # =========================================================================
@@ -887,7 +887,7 @@ metadata:
 spec:
   owner: platform-team
   type: service
-  
+
   parameters:
     - title: Service Information
       required:
@@ -902,7 +902,7 @@ spec:
           title: Owner Team
           type: string
           ui:field: OwnerPicker
-        
+
     - title: Infrastructure
       properties:
         database:
@@ -910,7 +910,7 @@ spec:
           type: string
           enum: ['postgres', 'mysql', 'none']
           default: 'postgres'
-        
+
   steps:
     - id: fetch-template
       name: Fetch Template
@@ -920,13 +920,13 @@ spec:
         values:
           name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
-          
+
     - id: create-repo
       name: Create Repository
       action: publish:github
       input:
         repoUrl: github.com?owner=company&repo=${{ parameters.name }}
-        
+
     - id: register-catalog
       name: Register in Catalog
       action: catalog:register
@@ -974,23 +974,23 @@ def seed_v4_content() -> dict:
     from ...schemas.module import ModuleCreate
     from ...schemas.task import TaskCreate
     from ...schemas.track import TrackCreate
-    
+
     logger = logging.getLogger(__name__)
     content = get_v4_content()
-    
+
     # Check if v4 content already exists (check for linux-mastery track)
     existing_track = get_track_by_slug("v4-linux-mastery")
     if existing_track:
         logger.info("✅ Bootcamp v4.0 already seeded")
         return {"status": "already_seeded", "modules": 0, "tasks": 0}
-    
+
     logger.info(f"🌱 Seeding Bootcamp v4.0: {content['total_modules']} modules, {content['total_hours']}h")
-    
+
     track_id_map = {}
     tracks_created = 0
     modules_created = 0
     tasks_created = 0
-    
+
     # Create tracks for each section
     for idx, section in enumerate(content["sections"]):
         track_slug = f"v4-{section['id']}"
@@ -1005,16 +1005,16 @@ def seed_v4_content() -> dict:
         track_id_map[section["id"]] = track.id
         tracks_created += 1
         logger.info(f"  📚 Created track: {section['name']}")
-    
+
     # Create modules and tasks
     for module_data in content["modules"]:
         section_id = module_data.get("section_id")
         track_id = track_id_map.get(section_id)
-        
+
         if not track_id:
             logger.warning(f"⚠️ No track for section {section_id}, skipping module {module_data['name']}")
             continue
-        
+
         # Create module
         module = create_module(ModuleCreate(
             track_id=track_id,
@@ -1028,7 +1028,7 @@ def seed_v4_content() -> dict:
             is_active=False,  # v4 not active by default
         ))
         modules_created += 1
-        
+
         # Create tasks for this module
         for task_idx, task_data in enumerate(module_data.get("tasks", [])):
             create_task(TaskCreate(
@@ -1043,9 +1043,9 @@ def seed_v4_content() -> dict:
                 xp_reward=task_data.get("xp_reward", 50),
             ))
             tasks_created += 1
-    
+
     logger.info(f"✅ v4.0 seeded: {tracks_created} tracks, {modules_created} modules, {tasks_created} tasks")
-    
+
     return {
         "status": "success",
         "tracks": tracks_created,
