@@ -25,9 +25,9 @@ export interface PageLayoutProps {
     /** Additional CSS classes */
     className?: string
     /** Maximum width variant */
-    maxWidth?: 'narrow' | 'content' | 'wide' | 'full'
+    maxWidth?: 'narrow' | 'content' | 'standard' | 'wide' | 'full'
     /** Background color */
-    background?: 'white' | 'gray' | 'transparent'
+    background?: 'white' | 'gray' | 'transparent' | 'subtle' | 'gradient'
     /** Remove default padding */
     noPadding?: boolean
     /** HTML element to render as */
@@ -37,6 +37,7 @@ export interface PageLayoutProps {
 const maxWidthMap = {
     narrow: 'max-w-[640px]',
     content: 'max-w-[840px]',
+    standard: 'max-w-4xl', // ~896px, matches typical prose width
     wide: 'max-w-[1200px]',
     full: 'max-w-full',
 }
@@ -45,6 +46,8 @@ const backgroundMap = {
     white: 'bg-white dark:bg-neutral-900',
     gray: 'bg-gray-50 dark:bg-neutral-950',
     transparent: 'bg-transparent',
+    subtle: 'bg-neutral-50/50 dark:bg-neutral-950/50',
+    gradient: 'bg-gradient-to-br from-white via-neutral-50 to-indigo-50/30 dark:from-neutral-900 dark:via-neutral-950 dark:to-indigo-950/20',
 }
 
 export function PageLayout({

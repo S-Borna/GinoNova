@@ -12,10 +12,11 @@
  * - Activity heatmap
  *
  * @phase A.3 - App Shell & Routing
+ * @design PHASE 2 — Design System Application Layer
  */
 
 import { useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
+import { PageLayout, Section, Block, Headline, Subtext, cn } from "@saas/ui"
 import { useAuth } from "@/components/auth"
 import { getMockTracks, type TrackSummary } from "@/lib/api/tracks"
 import {
@@ -268,113 +269,119 @@ export default function ProgressPage() {
         : 0
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PageLayout maxWidth="wide" background="subtle">
             <div className="space-y-8">
                 {/* Header */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                Your Progress
-                            </h1>
-                            <p className="text-gray-500 dark:text-gray-400">
-                                Track your DevOps learning journey
-                            </p>
+                <Section>
+                    <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <Headline level={1}>
+                                    Your Progress
+                                </Headline>
+                                <Subtext>
+                                    Track your DevOps learning journey
+                                </Subtext>
+                            </div>
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30">
+                                <Zap className="w-5 h-5 text-indigo-500" />
+                                <span className="font-semibold text-indigo-700 dark:text-indigo-400">
+                                    Level {MOCK_STATS.level}
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30">
-                            <Zap className="w-5 h-5 text-indigo-500" />
-                            <span className="font-semibold text-indigo-700 dark:text-indigo-400">
-                                Level {MOCK_STATS.level}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                    </Block>
+                </Section>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatCard
-                        icon={<Trophy className="w-5 h-5 text-amber-500" />}
-                        label="Total XP"
-                        value={MOCK_STATS.totalXP.toLocaleString()}
-                        color="bg-amber-100 dark:bg-amber-900/30"
-                    />
-                    <StatCard
-                        icon={<Flame className="w-5 h-5 text-orange-500" />}
-                        label="Day Streak"
-                        value={MOCK_STATS.streak}
-                        color="bg-orange-100 dark:bg-orange-900/30"
-                    />
-                    <StatCard
-                        icon={<Clock className="w-5 h-5 text-blue-500" />}
-                        label="Hours Learned"
-                        value={MOCK_STATS.totalHours}
-                        color="bg-blue-100 dark:bg-blue-900/30"
-                    />
-                    <StatCard
-                        icon={<CheckCircle2 className="w-5 h-5 text-emerald-500" />}
-                        label="Tasks Done"
-                        value={MOCK_STATS.tasksCompleted}
-                        color="bg-emerald-100 dark:bg-emerald-900/30"
-                    />
-                </div>
+                <Section>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <StatCard
+                            icon={<Trophy className="w-5 h-5 text-amber-500" />}
+                            label="Total XP"
+                            value={MOCK_STATS.totalXP.toLocaleString()}
+                            color="bg-amber-100 dark:bg-amber-900/30"
+                        />
+                        <StatCard
+                            icon={<Flame className="w-5 h-5 text-orange-500" />}
+                            label="Day Streak"
+                            value={MOCK_STATS.streak}
+                            color="bg-orange-100 dark:bg-orange-900/30"
+                        />
+                        <StatCard
+                            icon={<Clock className="w-5 h-5 text-blue-500" />}
+                            label="Hours Learned"
+                            value={MOCK_STATS.totalHours}
+                            color="bg-blue-100 dark:bg-blue-900/30"
+                        />
+                        <StatCard
+                            icon={<CheckCircle2 className="w-5 h-5 text-emerald-500" />}
+                            label="Tasks Done"
+                            value={MOCK_STATS.tasksCompleted}
+                            color="bg-emerald-100 dark:bg-emerald-900/30"
+                        />
+                    </div>
+                </Section>
 
                 {/* Main Grid */}
-                <div className="grid lg:grid-cols-3 gap-6">
-                    {/* Left Column - Tracks & Activity */}
-                    <div className="lg:col-span-2 space-y-6">
-                        {/* Overall Progress */}
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-2">
-                                    <Target className="w-5 h-5 text-indigo-500" />
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                        Overall Progress
-                                    </h3>
+                <Section>
+                    <div className="grid lg:grid-cols-3 gap-6">
+                        {/* Left Column - Tracks & Activity */}
+                        <div className="lg:col-span-2 space-y-6">
+                            {/* Overall Progress */}
+                            <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Target className="w-5 h-5 text-indigo-500" />
+                                        <Headline level={3}>
+                                            Overall Progress
+                                        </Headline>
+                                    </div>
+                                    <span className="text-2xl font-bold text-indigo-500">
+                                        {overallProgress}%
+                                    </span>
                                 </div>
-                                <span className="text-2xl font-bold text-indigo-500">
-                                    {overallProgress}%
-                                </span>
-                            </div>
-                            {/* Progress Bar */}
-                            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
-                                <div
-                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
-                                    style={{ width: `${overallProgress}%` }}
-                                />
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
-                                <TrendingUp className="w-4 h-4 text-emerald-500" />
-                                <span>
-                                    You&apos;re making great progress! Keep it up, {user?.full_name?.split(" ")[0] || "learner"}!
-                                </span>
-                            </div>
+                                {/* Progress Bar */}
+                                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                                        style={{ width: `${overallProgress}%` }}
+                                    />
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                                    <TrendingUp className="w-4 h-4 text-emerald-500" />
+                                    <span>
+                                        You&apos;re making great progress! Keep it up, {user?.full_name?.split(" ")[0] || "learner"}!
+                                    </span>
+                                </div>
+                            </Block>
+
+                            {/* Tracks Progress */}
+                            <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <BookOpen className="w-5 h-5 text-indigo-500" />
+                                    <Headline level={3}>
+                                        Track Progress
+                                    </Headline>
+                                </div>
+                                <div className="space-y-3">
+                                    {tracks.map((track) => (
+                                        <TrackProgressCard key={track.id} track={track} />
+                                    ))}
+                                </div>
+                            </Block>
+
+                            {/* Activity Heatmap */}
+                            <ActivityHeatmap data={heatmapData} />
                         </div>
 
-                        {/* Tracks Progress */}
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <BookOpen className="w-5 h-5 text-indigo-500" />
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                    Track Progress
-                                </h3>
-                            </div>
-                            <div className="space-y-3">
-                                {tracks.map((track) => (
-                                    <TrackProgressCard key={track.id} track={track} />
-                                ))}
-                            </div>
+                        {/* Right Column - Achievements */}
+                        <div>
+                            <Achievements achievements={MOCK_ACHIEVEMENTS} />
                         </div>
-
-                        {/* Activity Heatmap */}
-                        <ActivityHeatmap data={heatmapData} />
                     </div>
-
-                    {/* Right Column - Achievements */}
-                    <div>
-                        <Achievements achievements={MOCK_ACHIEVEMENTS} />
-                    </div>
-                </div>
+                </Section>
             </div>
-        </div>
+        </PageLayout>
     )
 }

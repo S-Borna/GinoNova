@@ -12,12 +12,13 @@
  * - Prerequisites display
  *
  * @phase A.3 - App Shell & Routing (Updated to use real API)
+ * @design PHASE 2 — Design System Application Layer
  */
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
+import { PageLayout, Section, Block, Headline, Subtext, cn } from "@saas/ui"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { ProgressBar } from "@/components/ui/progress-bar"
@@ -366,7 +367,7 @@ export default function ModuleDetailPage() {
     const nextTask = module?.tasks.find((t) => !t.isCompleted && !t.isLocked)
 
     return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PageLayout maxWidth="standard" background="subtle">
             {/* Back button */}
             <Link
                 href="/modules"
@@ -388,82 +389,84 @@ export default function ModuleDetailPage() {
             ) : module?.isLocked ? (
                 <LockedState module={module} />
             ) : module ? (
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* Module Header */}
-                    <GlassCard variant="default" padding="lg" radius="xl">
-                        <div className="flex flex-col md:flex-row md:items-start gap-6">
-                            {/* Icon */}
-                            <div
-                                className={cn(
-                                    "w-20 h-20 rounded-2xl flex items-center justify-center shrink-0",
-                                    "bg-gradient-to-br from-primary-100 to-primary-50",
-                                    "dark:from-primary-900/30 dark:to-primary-800/20"
-                                )}
-                            >
-                                <span className="text-4xl">{module.icon}</span>
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1">
-                                <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
-                                    {module.title}
-                                </h1>
-                                <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-                                    {module.description}
-                                </p>
-
-                                <div className="flex flex-wrap items-center gap-4 mb-4">
-                                    <span className="flex items-center gap-1.5 text-sm text-neutral-500">
-                                        <BookOpen className="w-4 h-4" />
-                                        {module.totalTasks} tasks
-                                    </span>
-                                    <span className="flex items-center gap-1.5 text-sm text-neutral-500">
-                                        <Clock className="w-4 h-4" />
-                                        {module.estimatedHours}h estimated
-                                    </span>
-                                    <span className="flex items-center gap-1.5 text-sm text-emerald-500 font-medium">
-                                        <CheckCircle2 className="w-4 h-4" />
-                                        {module.completedTasks}/{module.totalTasks} completed
-                                    </span>
+                    <Section>
+                        <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
+                            <div className="flex flex-col md:flex-row md:items-start gap-6">
+                                {/* Icon */}
+                                <div
+                                    className={cn(
+                                        "w-20 h-20 rounded-2xl flex items-center justify-center shrink-0",
+                                        "bg-gradient-to-br from-primary-100 to-primary-50",
+                                        "dark:from-primary-900/30 dark:to-primary-800/20"
+                                    )}
+                                >
+                                    <span className="text-4xl">{module.icon}</span>
                                 </div>
 
-                                {/* Progress */}
-                                <div className="mb-4">
-                                    <div className="flex items-center justify-between text-sm mb-2">
-                                        <span className="text-neutral-600 dark:text-neutral-400">
-                                            Progress
+                                {/* Content */}
+                                <div className="flex-1">
+                                    <Headline level={1} className="mb-2">
+                                        {module.title}
+                                    </Headline>
+                                    <Subtext className="mb-4">
+                                        {module.description}
+                                    </Subtext>
+
+                                    <div className="flex flex-wrap items-center gap-4 mb-4">
+                                        <span className="flex items-center gap-1.5 text-sm text-neutral-500">
+                                            <BookOpen className="w-4 h-4" />
+                                            {module.totalTasks} tasks
                                         </span>
-                                        <span className="font-semibold text-indigo-500">
-                                            {module.progress}%
+                                        <span className="flex items-center gap-1.5 text-sm text-neutral-500">
+                                            <Clock className="w-4 h-4" />
+                                            {module.estimatedHours}h estimated
+                                        </span>
+                                        <span className="flex items-center gap-1.5 text-sm text-emerald-500 font-medium">
+                                            <CheckCircle2 className="w-4 h-4" />
+                                            {module.completedTasks}/{module.totalTasks} completed
                                         </span>
                                     </div>
-                                    <ProgressBar value={module.progress} className="h-2" />
-                                </div>
 
-                                {/* Continue button */}
-                                {nextTask && (
-                                    <Button onClick={handleContinue} className="rounded-xl">
-                                        <Play className="w-4 h-4 mr-2" />
-                                        Continue: {nextTask.title}
-                                    </Button>
-                                )}
+                                    {/* Progress */}
+                                    <div className="mb-4">
+                                        <div className="flex items-center justify-between text-sm mb-2">
+                                            <span className="text-neutral-600 dark:text-neutral-400">
+                                                Progress
+                                            </span>
+                                            <span className="font-semibold text-indigo-500">
+                                                {module.progress}%
+                                            </span>
+                                        </div>
+                                        <ProgressBar value={module.progress} className="h-2" />
+                                    </div>
+
+                                    {/* Continue button */}
+                                    {nextTask && (
+                                        <Button onClick={handleContinue} className="rounded-xl">
+                                            <Play className="w-4 h-4 mr-2" />
+                                            Continue: {nextTask.title}
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </GlassCard>
+                        </Block>
+                    </Section>
 
                     {/* Tasks List */}
-                    <div>
-                        <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                    <Section>
+                        <Headline level={2} className="mb-4">
                             Tasks
-                        </h2>
+                        </Headline>
                         <div className="space-y-3">
                             {module.tasks.map((task) => (
                                 <TaskItem key={task.id} task={task} moduleId={module.id} onStart={handleStartTask} />
                             ))}
                         </div>
-                    </div>
+                    </Section>
                 </div>
             ) : null}
-        </div>
+        </PageLayout>
     )
 }

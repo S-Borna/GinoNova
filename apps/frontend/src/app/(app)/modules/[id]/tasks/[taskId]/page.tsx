@@ -14,6 +14,7 @@
  *
  * @phase C.2 - Task Content Display
  * @phase ILE - Interactive Learning Engine
+ * @design PHASE 2 — Design System Application Layer
  */
 
 import { useState, useEffect, useCallback } from "react"
@@ -22,7 +23,7 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import remarkGfm from "remark-gfm"
-import { cn } from "@/lib/utils"
+import { PageLayout, Section, Block, Headline, Subtext, CodeBlock, cn } from "@saas/ui"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { getTask, getTasksForModule, TaskPublic } from "@/lib/tasks"
@@ -155,12 +156,21 @@ function MarkdownContent({ content }: { content: string }) {
                             {children}
                         </td>
                     ),
-                    // Code blocks with syntax highlighting
-                    pre: ({ children }) => (
-                        <pre className="bg-neutral-900 dark:bg-neutral-950 rounded-xl p-5 my-6 overflow-x-auto border border-neutral-800">
-                            {children}
-                        </pre>
-                    ),
+                    // Code blocks using design system CodeBlock
+                    pre: ({ children }) => {
+                        // Extract code and language from children
+                        const childElement = children as React.ReactElement<{ children?: string; className?: string }>
+                        const code = childElement?.props?.children || ''
+                        const className = childElement?.props?.className || ''
+                        const languageMatch = className.match(/language-(\w+)/)
+                        const language = languageMatch ? languageMatch[1] : 'bash'
+                        
+                        return (
+                            <CodeBlock language={language} className="my-6">
+                                {String(code).trim()}
+                            </CodeBlock>
+                        )
+                    },
                     code: ({ className, children, ...props }) => {
                         const isInline = !className
                         if (isInline) {
@@ -393,7 +403,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
 `
 
     return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PageLayout maxWidth="standard" background="subtle">
             {/* Back button */}
             <Link
                 href={`/modules/${moduleId}`}
@@ -413,127 +423,133 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
             ) : error ? (
                 <ErrorState error={error} onRetry={fetchData} moduleId={moduleId} />
             ) : task ? (
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* Task Header */}
-                    <GlassCard variant="default" padding="lg" radius="xl">
-                        <div className="flex flex-col md:flex-row md:items-start gap-4">
-                            {/* Task info */}
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-xs font-medium text-neutral-400">
-                                        Task {task.order_index}
-                                    </span>
-                                    {isCompleted && (
-                                        <span className="inline-flex items-center gap-1 text-xs text-emerald-500 font-medium">
-                                            <CheckCircle2 className="w-3.5 h-3.5" />
-                                            Completed
+                    <Section>
+                        <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
+                            <div className="flex flex-col md:flex-row md:items-start gap-4">
+                                {/* Task info */}
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-xs font-medium text-neutral-400">
+                                            Task {task.order_index}
                                         </span>
+                                        {isCompleted && (
+                                            <span className="inline-flex items-center gap-1 text-xs text-emerald-500 font-medium">
+                                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                                Completed
+                                            </span>
+                                        )}
+                                    </div>
+                                    <Headline level={1} className="mb-2">
+                                        {task.title}
+                                    </Headline>
+                                    {task.description && (
+                                        <Subtext className="mb-4">
+                                            {task.description}
+                                        </Subtext>
                                     )}
-                                </div>
-                                <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
-                                    {task.title}
-                                </h1>
-                                {task.description && (
-                                    <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-                                        {task.description}
-                                    </p>
-                                )}
 
-                                {/* Meta */}
-                                <div className="flex flex-wrap items-center gap-4">
-                                    <span className="flex items-center gap-1.5 text-sm text-neutral-500">
-                                        <Clock className="w-4 h-4" />
-                                        {task.estimated_minutes} min
-                                    </span>
-                                    <span className="flex items-center gap-1.5 text-sm text-indigo-500 font-medium">
-                                        <Zap className="w-4 h-4" />
-                                        +{task.xp_reward} XP
-                                    </span>
-                                    <span className={cn(
-                                        "px-2 py-0.5 rounded text-xs font-medium",
-                                        task.difficulty === "easy" && "bg-emerald-100 text-emerald-700",
-                                        task.difficulty === "medium" && "bg-amber-100 text-amber-700",
-                                        task.difficulty === "hard" && "bg-red-100 text-red-700",
-                                    )}>
-                                        {task.difficulty}
-                                    </span>
+                                    {/* Meta */}
+                                    <div className="flex flex-wrap items-center gap-4">
+                                        <span className="flex items-center gap-1.5 text-sm text-neutral-500">
+                                            <Clock className="w-4 h-4" />
+                                            {task.estimated_minutes} min
+                                        </span>
+                                        <span className="flex items-center gap-1.5 text-sm text-indigo-500 font-medium">
+                                            <Zap className="w-4 h-4" />
+                                            +{task.xp_reward} XP
+                                        </span>
+                                        <span className={cn(
+                                            "px-2 py-0.5 rounded text-xs font-medium",
+                                            task.difficulty === "easy" && "bg-emerald-100 text-emerald-700",
+                                            task.difficulty === "medium" && "bg-amber-100 text-amber-700",
+                                            task.difficulty === "hard" && "bg-red-100 text-red-700",
+                                        )}>
+                                            {task.difficulty}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </GlassCard>
+                        </Block>
+                    </Section>
 
                     {/* Lesson Content */}
-                    <GlassCard variant="default" padding="lg" radius="xl">
-                        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-700">
-                            {hasContentBlocks ? (
-                                <Play className="w-5 h-5 text-indigo-500" />
-                            ) : (
-                                <BookOpen className="w-5 h-5 text-indigo-500" />
-                            )}
-                            <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">
-                                {hasContentBlocks ? "Interactive Lesson" : "Lesson Content"}
-                            </h2>
-                            {hasContentBlocks && taskProgress && (
-                                <span className="ml-auto text-sm text-neutral-500">
-                                    {taskProgress.progress_percent || 0}% complete
-                                </span>
-                            )}
-                        </div>
+                    <Section>
+                        <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
+                            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-700">
+                                {hasContentBlocks ? (
+                                    <Play className="w-5 h-5 text-indigo-500" />
+                                ) : (
+                                    <BookOpen className="w-5 h-5 text-indigo-500" />
+                                )}
+                                <Headline level={2}>
+                                    {hasContentBlocks ? "Interactive Lesson" : "Lesson Content"}
+                                </Headline>
+                                {hasContentBlocks && taskProgress && (
+                                    <span className="ml-auto text-sm text-neutral-500">
+                                        {taskProgress.progress_percent || 0}% complete
+                                    </span>
+                                )}
+                            </div>
 
-                        {hasContentBlocks ? (
-                            <ContentBlockRenderer
-                                blocks={(task as any).content_blocks}
-                                taskId={taskId}
-                                progress={taskProgress}
-                                onBlockComplete={handleBlockComplete}
-                                onQuizAnswer={handleQuizAnswer}
-                                onTerminalCommand={handleTerminalCommand}
-                            />
-                        ) : (
-                            <MarkdownContent content={task.content || placeholderContent} />
-                        )}
-                    </GlassCard>
+                            {hasContentBlocks ? (
+                                <ContentBlockRenderer
+                                    blocks={(task as any).content_blocks}
+                                    taskId={taskId}
+                                    progress={taskProgress}
+                                    onBlockComplete={handleBlockComplete}
+                                    onQuizAnswer={handleQuizAnswer}
+                                    onTerminalCommand={handleTerminalCommand}
+                                />
+                            ) : (
+                                <MarkdownContent content={task.content || placeholderContent} />
+                            )}
+                        </Block>
+                    </Section>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-between">
-                        <Link href={`/modules/${moduleId}`}>
-                            <Button variant="outline" className="rounded-xl">
-                                <ArrowLeft className="w-4 h-4 mr-2" />
-                                Back to Module
-                            </Button>
-                        </Link>
+                    <Section>
+                        <div className="flex items-center justify-between">
+                            <Link href={`/modules/${moduleId}`}>
+                                <Button variant="outline" className="rounded-xl">
+                                    <ArrowLeft className="w-4 h-4 mr-2" />
+                                    Back to Module
+                                </Button>
+                            </Link>
 
-                        {isCompleted ? (
-                            <Button
-                                onClick={handleContinue}
-                                className="rounded-xl bg-emerald-500 hover:bg-emerald-600"
-                            >
-                                <CheckCircle2 className="w-4 h-4 mr-2" />
-                                {nextTask ? "Continue to Next" : "Back to Module"}
-                                <ArrowRight className="w-4 h-4 ml-2" />
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={handleMarkComplete}
-                                disabled={completing}
-                                className="rounded-xl"
-                            >
-                                {completing ? (
-                                    <>
-                                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                                        Saving...
-                                    </>
-                                ) : (
-                                    <>
-                                        <CheckCircle2 className="w-4 h-4 mr-2" />
-                                        Mark as Complete
-                                    </>
-                                )}
-                            </Button>
-                        )}
-                    </div>
+                            {isCompleted ? (
+                                <Button
+                                    onClick={handleContinue}
+                                    className="rounded-xl bg-emerald-500 hover:bg-emerald-600"
+                                >
+                                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                                    {nextTask ? "Continue to Next" : "Back to Module"}
+                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={handleMarkComplete}
+                                    disabled={completing}
+                                    className="rounded-xl"
+                                >
+                                    {completing ? (
+                                        <>
+                                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CheckCircle2 className="w-4 h-4 mr-2" />
+                                            Mark as Complete
+                                        </>
+                                    )}
+                                </Button>
+                            )}
+                        </div>
+                    </Section>
                 </div>
             ) : null}
-        </div>
+        </PageLayout>
     )
 }
