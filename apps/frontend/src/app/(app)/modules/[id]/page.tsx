@@ -288,7 +288,7 @@ function TaskItem({ task, moduleId, onStart }: TaskItemProps) {
 export default function ModuleDetailPage() {
     const params = useParams()
     const router = useRouter()
-    const moduleId = params.id as string
+    const moduleId = params?.id as string
 
     const [module, setModule] = useState<ModuleDetailUI | null>(null)
     const [loading, setLoading] = useState(true)

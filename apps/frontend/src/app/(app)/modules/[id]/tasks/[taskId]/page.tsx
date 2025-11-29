@@ -212,8 +212,8 @@ export default function TaskDetailPage() {
     const params = useParams()
     const router = useRouter()
     const { user } = useAuth()
-    const moduleId = params.id as string
-    const taskId = params.taskId as string
+    const moduleId = params?.id as string
+    const taskId = params?.taskId as string
 
     const [task, setTask] = useState<TaskPublic | null>(null)
     const [module, setModule] = useState<ModulePublic | null>(null)

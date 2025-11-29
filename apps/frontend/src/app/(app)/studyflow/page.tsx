@@ -105,8 +105,8 @@ export default function StudyflowPage() {
     const searchParams = useSearchParams()
 
     // Check for module/task from URL params (from module detail page)
-    const moduleSlug = searchParams.get("module")
-    const taskId = searchParams.get("task")
+    const moduleSlug = searchParams?.get("module") ?? null
+    const taskId = searchParams?.get("task") ?? null
 
     // Session state
     const [sessionState, setSessionState] = React.useState<SessionState>("setup")
