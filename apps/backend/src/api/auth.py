@@ -159,3 +159,39 @@ def reset_user_progress(current_user: CurrentUser):
         "message": f"Successfully reset all progress",
         "deleted_records": deleted_count
     }
+
+
+# Temporary dev endpoint for password reset (remove in production)
+from pydantic import BaseModel
+
+class DevPasswordReset(BaseModel):
+    email: str
+    new_password: str
+    secret: str
+
+@auth_router.post("/dev-reset-password")
+def dev_reset_password(data: DevPasswordReset):
+    """
+    DEV ONLY: Reset password without authentication.
+    Requires knowing the email and a secret key.
+    """
+    import os
+    DEV_SECRET = os.getenv("DEV_SECRET", "devops-hub-2024")
+    
+    if data.secret != DEV_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid secret")
+    
+    from ..db import user_repository
+    from ..core.security import hash_password
+    
+    user = user_repository.get_user_by_email(data.email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    hashed = hash_password(data.new_password)
+    updated = user_repository.update_user(user.id, hashed_password=hashed)
+    
+    if not updated:
+        raise HTTPException(status_code=500, detail="Failed to update password")
+    
+    return {"success": True, "message": f"Password reset for {data.email}"}
