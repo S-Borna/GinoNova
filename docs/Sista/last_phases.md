@@ -862,6 +862,31 @@ git add . && git commit -m "feat(phase13): add analytics insight engine" && git 
 PHASE 12 — Notifications
 ================================================================================
 
+STATUS: ✅ KLAR (2025-11-29)
+
+UTFÖRT:
+- [x] Skapade apps/backend/src/db/models_notifications.py med:
+      - Notification model för in-app notiser
+      - NotificationPreference model för användarinställningar
+      - EmailLog model för email-tracking
+- [x] Skapade apps/backend/src/services/notification_service.py med:
+      - NOTIFICATION_TYPES templates (streak, achievement, badge, etc.)
+      - create_notification() för in-app notiser
+      - Hjälpfunktioner: send_streak_reminder, send_achievement_notification, etc.
+      - send_email() med SendGrid-integration
+      - send_weekly_summary_email() för veckosammanfattning
+- [x] Skapade apps/backend/src/api/routes/notifications.py med:
+      - GET /notifications/ - hämta notiser
+      - GET /notifications/unread-count - snabb badge-count
+      - POST /notifications/{id}/read - markera läst
+      - POST /notifications/read-all - markera alla lästa
+      - DELETE /notifications/{id} - radera notis
+      - GET /notifications/preferences - hämta inställningar
+      - PUT /notifications/preferences - uppdatera inställningar
+      - POST /notifications/test - skicka testnotis
+      - POST /notifications/subscribe-push - push (framtida)
+- [x] Registrerade notifications_router
+
 BAKGRUND:
 In-app och email-notifikationer.
 
