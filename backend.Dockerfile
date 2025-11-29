@@ -22,6 +22,9 @@ RUN poetry config virtualenvs.create false && \
 # Set PYTHONPATH for module imports
 ENV PYTHONPATH="/app/apps/backend:${PYTHONPATH}"
 
+# Make startup script executable
+RUN chmod +x /app/apps/backend/scripts/start.sh
+
 # Create non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
@@ -29,5 +32,5 @@ USER appuser
 # Expose port (Railway sets $PORT dynamically)
 EXPOSE 8000
 
-# Start command - shell form for $PORT variable expansion with debug logging
-CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000} --log-level debug
+# Start command - uses startup script that runs migrations first
+CMD ["bash", "/app/apps/backend/scripts/start.sh"]
