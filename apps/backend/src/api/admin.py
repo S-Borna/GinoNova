@@ -701,6 +701,54 @@ def seed_bootcamp(
         )
 
 
+class SeedV4Response(BaseModel):
+    """Response for v4 seeding"""
+    success: bool
+    status: str
+    tracks: int = 0
+    modules: int = 0
+    tasks: int = 0
+    total_hours: float = 0
+
+
+@admin_router.post("/seed-v4", response_model=SeedV4Response)
+def seed_bootcamp_v4(
+    response: Response,
+    current_user: CurrentUser,
+) -> SeedV4Response:
+    """
+    Seed Bootcamp v4.0 (Senior DevOps) content.
+    
+    v4.0 includes:
+    - 6 Sections (Linux Mastery, Networking, K8s Advanced, SRE, Security, Platform)
+    - 60+ Advanced modules
+    - ~500 hours of content
+    
+    Note: v4.0 modules are seeded as inactive by default.
+    Use /admin/activate-v4 to make them visible to users.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+    
+    try:
+        from ..db.seeds.bootcamp_v4_content import seed_v4_content
+        result = seed_v4_content()
+        
+        return SeedV4Response(
+            success=result["status"] == "success",
+            status=result["status"],
+            tracks=result.get("tracks", 0),
+            modules=result.get("modules", 0),
+            tasks=result.get("tasks", 0),
+            total_hours=result.get("total_hours", 0),
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to seed v4 content: {str(e)}"
+        )
+
+
 @admin_router.get("/seed-status", response_model=SeedStatusResponse)
 def get_seed_status(response: Response) -> SeedStatusResponse:
     """
