@@ -2,30 +2,38 @@
 
 /**
  * ============================================================================
- * TASK CARD — Apple-Inspired Design (D.4)
+ * TASK CARD — Material 3 + Tesla + Apple Hybrid Design v2.0
  * ============================================================================
  *
- * Clean task list item with:
- * - Animated checkbox
- * - Type badge (color coded)
- * - XP reward badge
- * - Expandable description
- * - Multiple states
+ * Redesigned card with:
+ * - 16px border radius (Material 3)
+ * - Tesla-style minimal borders and hover shadows
+ * - Apple grid spacing and typography
+ * - Big icon/emoji at top-left
+ * - Prominent 20px medium weight title
+ * - Clean meta-row with time, XP, difficulty
+ * - Primary accent Start button
  *
- * @phase D.4 - Modules UI
+ * @phase D.4 - Modules UI (Redesigned)
  */
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import {
-    Circle,
     CheckCircle2,
     Loader2,
-    ChevronDown,
-    ChevronUp,
-    Star,
-    Zap
+    Clock,
+    Zap,
+    Play,
+    ChevronRight,
+    BookOpen,
+    Code2,
+    Layers,
+    Rocket,
+    Trophy,
+    HelpCircle
 } from "lucide-react"
+import { designTokens } from "@/lib/design-tokens"
 
 /* ============================================================================
    TYPES
@@ -49,6 +57,7 @@ export interface TaskCardProps {
     type: TaskType
     difficulty: number // 1-5
     xpReward: number
+    estimatedMinutes?: number
     status: TaskCardStatus
     onToggleComplete?: (id: string) => void
     onClick?: (id: string) => void
@@ -57,70 +66,97 @@ export interface TaskCardProps {
 }
 
 /* ============================================================================
-   TYPE CONFIG
+   TYPE CONFIG — Material 3 Color System
    ============================================================================ */
 
 const typeConfig: Record<TaskType, {
     label: string
-    color: string
-    bgColor: string
+    icon: React.ElementType
+    emoji: string
+    colorClass: string
+    bgClass: string
+    borderClass: string
 }> = {
     foundation: {
         label: "Foundation",
-        color: "text-blue-600 dark:text-blue-400",
-        bgColor: "bg-blue-100 dark:bg-blue-900/30"
+        icon: BookOpen,
+        emoji: "📚",
+        colorClass: "text-blue-600 dark:text-blue-400",
+        bgClass: "bg-blue-50 dark:bg-blue-950/40",
+        borderClass: "border-blue-100 dark:border-blue-900/50"
     },
     practice: {
         label: "Practice",
-        color: "text-green-600 dark:text-green-400",
-        bgColor: "bg-green-100 dark:bg-green-900/30"
+        icon: Code2,
+        emoji: "💻",
+        colorClass: "text-emerald-600 dark:text-emerald-400",
+        bgClass: "bg-emerald-50 dark:bg-emerald-950/40",
+        borderClass: "border-emerald-100 dark:border-emerald-900/50"
     },
     deepening: {
-        label: "Deepening",
-        color: "text-purple-600 dark:text-purple-400",
-        bgColor: "bg-purple-100 dark:bg-purple-900/30"
+        label: "Deep Dive",
+        icon: Layers,
+        emoji: "🔍",
+        colorClass: "text-violet-600 dark:text-violet-400",
+        bgClass: "bg-violet-50 dark:bg-violet-950/40",
+        borderClass: "border-violet-100 dark:border-violet-900/50"
     },
     project: {
         label: "Project",
-        color: "text-orange-600 dark:text-orange-400",
-        bgColor: "bg-orange-100 dark:bg-orange-900/30"
+        icon: Rocket,
+        emoji: "🚀",
+        colorClass: "text-orange-600 dark:text-orange-400",
+        bgClass: "bg-orange-50 dark:bg-orange-950/40",
+        borderClass: "border-orange-100 dark:border-orange-900/50"
     },
     challenge: {
         label: "Challenge",
-        color: "text-red-600 dark:text-red-400",
-        bgColor: "bg-red-100 dark:bg-red-900/30"
+        icon: Trophy,
+        emoji: "🏆",
+        colorClass: "text-rose-600 dark:text-rose-400",
+        bgClass: "bg-rose-50 dark:bg-rose-950/40",
+        borderClass: "border-rose-100 dark:border-rose-900/50"
     },
     quiz: {
         label: "Quiz",
-        color: "text-cyan-600 dark:text-cyan-400",
-        bgColor: "bg-cyan-100 dark:bg-cyan-900/30"
+        icon: HelpCircle,
+        emoji: "❓",
+        colorClass: "text-cyan-600 dark:text-cyan-400",
+        bgClass: "bg-cyan-50 dark:bg-cyan-950/40",
+        borderClass: "border-cyan-100 dark:border-cyan-900/50"
     }
 }
 
 /* ============================================================================
-   DIFFICULTY INDICATOR
+   DIFFICULTY DOTS — Tesla Minimal Style
    ============================================================================ */
 
-function DifficultyIndicator({ difficulty }: { difficulty: number }) {
+function DifficultyDots({ difficulty }: { difficulty: number }) {
+    const labels = ["Beginner", "Easy", "Medium", "Hard", "Expert"]
     return (
-        <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                    key={i}
-                    className={cn(
-                        "w-3 h-3 transition-colors",
-                        i < difficulty
-                            ? "text-warning-500 fill-warning-500"
-                            : "text-neutral-300 dark:text-neutral-600"
-                    )}
-                />
-            ))}
+        <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className={cn(
+                            "w-1.5 h-1.5 rounded-full transition-all",
+                            i < difficulty
+                                ? "bg-neutral-800 dark:bg-neutral-200"
+                                : "bg-neutral-200 dark:bg-neutral-700"
+                        )}
+                    />
+                ))}
+            </div>
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                {labels[Math.min(difficulty - 1, 4)] || "Beginner"}
+            </span>
         </div>
     )
 }
 
 /* ============================================================================
-   TASK CARD COMPONENT
+   TASK CARD COMPONENT — Material 3 + Tesla + Apple Hybrid
    ============================================================================ */
 
 export function TaskCard({
@@ -131,24 +167,18 @@ export function TaskCard({
     type,
     difficulty,
     xpReward,
+    estimatedMinutes = 15,
     status,
     onToggleComplete,
     onClick,
     isLoading = false,
     className
 }: TaskCardProps) {
-    const [isExpanded, setIsExpanded] = useState(false)
+    const [isHovered, setIsHovered] = useState(false)
     const config = typeConfig[type]
     const isComplete = status === "complete"
     const isInProgress = status === "in_progress"
-
-    const handleCheckboxClick = (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (!isLoading && onToggleComplete) {
-            onToggleComplete(id)
-        }
-    }
+    const IconComponent = config.icon
 
     const handleCardClick = () => {
         if (onClick) {
@@ -156,127 +186,171 @@ export function TaskCard({
         }
     }
 
-    const handleExpandClick = (e: React.MouseEvent) => {
-        e.preventDefault()
+    const handleStartClick = (e: React.MouseEvent) => {
         e.stopPropagation()
-        setIsExpanded(!isExpanded)
+        if (onClick) {
+            onClick(id)
+        }
     }
 
     return (
         <div
             className={cn(
-                "group relative rounded-xl transition-all duration-200",
-                "bg-white dark:bg-neutral-800/50",
-                "border border-neutral-200/50 dark:border-neutral-700/50",
-                "hover:border-primary-200 dark:hover:border-primary-800/50",
-                "hover:shadow-md hover:shadow-primary-500/5",
+                "group relative transition-all duration-300 ease-out",
+                "rounded-2xl", // 16px radius — Material 3
+                "bg-white dark:bg-neutral-900",
+                "border border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.08)]",
+                // Tesla-style hover shadow
+                isHovered && "shadow-[0_4px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)]",
+                // Complete state
+                isComplete && "bg-neutral-50 dark:bg-neutral-900/50",
                 onClick && "cursor-pointer",
-                isComplete && "opacity-80",
                 className
             )}
             onClick={handleCardClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="flex items-start gap-3 p-4">
-                {/* Checkbox */}
-                <button
-                    onClick={handleCheckboxClick}
-                    disabled={isLoading}
-                    className={cn(
-                        "flex-shrink-0 mt-0.5 w-6 h-6 rounded-full transition-all duration-300",
-                        "flex items-center justify-center",
-                        isLoading && "cursor-wait",
-                        !isComplete && !isInProgress && [
-                            "border-2 border-neutral-300 dark:border-neutral-600",
-                            "hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
-                        ],
-                        isInProgress && [
-                            "border-2 border-primary-400",
-                            "bg-primary-100 dark:bg-primary-900/30"
-                        ],
-                        isComplete && [
-                            "bg-success-500 border-success-500",
-                            "animate-scale-in"
-                        ]
-                    )}
-                >
-                    {isLoading ? (
-                        <Loader2 className="w-4 h-4 text-primary-500 animate-spin" />
-                    ) : isComplete ? (
-                        <CheckCircle2 className="w-5 h-5 text-white" />
-                    ) : isInProgress ? (
-                        <Loader2 className="w-4 h-4 text-primary-500" />
-                    ) : (
-                        <Circle className="w-4 h-4 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    )}
-                </button>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                    {/* Top row: Task number + Type badge + Difficulty */}
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
-                            Task {orderIndex}
+            {/* Card Content */}
+            <div className="p-5">
+                {/* Top Row: Icon + Type Badge */}
+                <div className="flex items-start justify-between mb-4">
+                    {/* Big Icon Container */}
+                    <div className={cn(
+                        "w-12 h-12 rounded-xl flex items-center justify-center",
+                        "transition-transform duration-200",
+                        config.bgClass,
+                        isHovered && "scale-105"
+                    )}>
+                        <span className="text-2xl" role="img" aria-label={config.label}>
+                            {config.emoji}
                         </span>
-                        <span className={cn(
-                            "px-2 py-0.5 rounded-full text-xs font-medium",
-                            config.bgColor,
-                            config.color
-                        )}>
-                            {config.label}
-                        </span>
-                        <DifficultyIndicator difficulty={difficulty} />
                     </div>
 
-                    {/* Title */}
-                    <h4 className={cn(
-                        "text-base font-medium transition-colors",
-                        isComplete
-                            ? "text-neutral-500 dark:text-neutral-400 line-through decoration-neutral-400/50"
-                            : "text-neutral-900 dark:text-white"
-                    )}>
-                        {title}
-                    </h4>
-
-                    {/* Description preview (if exists and expanded) */}
-                    {description && isExpanded && (
-                        <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 animate-fade-in">
-                            {description}
-                        </p>
-                    )}
+                    {/* Status / Type Badge */}
+                    <div className="flex items-center gap-2">
+                        {isComplete && (
+                            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                                <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">Done</span>
+                            </div>
+                        )}
+                        {isInProgress && (
+                            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40">
+                                <Loader2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 animate-spin" />
+                                <span className="text-xs font-medium text-blue-700 dark:text-blue-300">In Progress</span>
+                            </div>
+                        )}
+                        {!isComplete && !isInProgress && (
+                            <span className={cn(
+                                "px-2.5 py-1 rounded-full text-xs font-medium",
+                                config.bgClass,
+                                config.colorClass
+                            )}>
+                                {config.label}
+                            </span>
+                        )}
+                    </div>
                 </div>
 
-                {/* Right side: XP + Expand button */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                    {/* XP Badge */}
-                    <div className={cn(
-                        "flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold",
-                        isComplete
-                            ? "bg-success-100 dark:bg-success-900/30 text-success-600 dark:text-success-400"
-                            : "bg-xp-100 dark:bg-xp-900/30 text-xp-600 dark:text-xp-400"
+                {/* Task Number */}
+                <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 tracking-wide uppercase">
+                    Task {orderIndex}
+                </span>
+
+                {/* Title — 20px Medium Weight */}
+                <h3 className={cn(
+                    "mt-1 text-xl font-medium leading-tight tracking-tight", // 20px
+                    "text-neutral-900 dark:text-white",
+                    isComplete && "text-neutral-500 dark:text-neutral-400"
+                )}>
+                    {title}
+                </h3>
+
+                {/* Description */}
+                {description && (
+                    <p className={cn(
+                        "mt-2 text-sm leading-relaxed",
+                        "text-neutral-600 dark:text-neutral-400",
+                        "line-clamp-2"
                     )}>
-                        <Zap className="w-3 h-3" />
-                        <span>{xpReward} XP</span>
+                        {description}
+                    </p>
+                )}
+
+                {/* Meta Row — Clean minimal style */}
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-800">
+                    {/* Time */}
+                    <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span className="text-xs font-medium">{estimatedMinutes} min</span>
                     </div>
 
-                    {/* Expand button (if has description) */}
-                    {description && (
+                    {/* XP */}
+                    <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
+                        <Zap className="w-3.5 h-3.5" />
+                        <span className="text-xs font-bold">{xpReward} XP</span>
+                    </div>
+
+                    {/* Difficulty */}
+                    <DifficultyDots difficulty={difficulty} />
+
+                    {/* Start Button — Pushed to right */}
+                    {!isComplete && (
                         <button
-                            onClick={handleExpandClick}
+                            onClick={handleStartClick}
+                            disabled={isLoading}
                             className={cn(
-                                "p-1 rounded-lg transition-colors",
-                                "text-neutral-400 hover:text-neutral-600",
-                                "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                                "ml-auto flex items-center gap-1.5 px-4 py-2 rounded-xl",
+                                "text-sm font-medium transition-all duration-200",
+                                "bg-neutral-900 dark:bg-white",
+                                "text-white dark:text-neutral-900",
+                                "hover:bg-neutral-800 dark:hover:bg-neutral-100",
+                                "active:scale-[0.98]",
+                                isLoading && "opacity-50 cursor-wait"
                             )}
                         >
-                            {isExpanded ? (
-                                <ChevronUp className="w-4 h-4" />
+                            {isLoading ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : isInProgress ? (
+                                <>
+                                    <span>Continue</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                </>
                             ) : (
-                                <ChevronDown className="w-4 h-4" />
+                                <>
+                                    <Play className="w-3.5 h-3.5" />
+                                    <span>Start</span>
+                                </>
                             )}
+                        </button>
+                    )}
+
+                    {/* Completed state — View button */}
+                    {isComplete && (
+                        <button
+                            onClick={handleStartClick}
+                            className={cn(
+                                "ml-auto flex items-center gap-1.5 px-4 py-2 rounded-xl",
+                                "text-sm font-medium transition-all duration-200",
+                                "bg-neutral-100 dark:bg-neutral-800",
+                                "text-neutral-600 dark:text-neutral-300",
+                                "hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                            )}
+                        >
+                            <span>Review</span>
+                            <ChevronRight className="w-4 h-4" />
                         </button>
                     )}
                 </div>
             </div>
+
+            {/* Progress indicator for in-progress tasks */}
+            {isInProgress && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-100 dark:bg-neutral-800 rounded-b-2xl overflow-hidden">
+                    <div className="h-full w-1/3 bg-blue-500 dark:bg-blue-400 animate-pulse" />
+                </div>
+            )}
         </div>
     )
 }
