@@ -14,10 +14,12 @@
  *
  * @phase A.3 - App Shell & Routing
  * @design D.5 - Studyflow UI
+ * @design PHASE 2 — Design System Application Layer
  */
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { PageLayout, Section, Block, Headline } from "@saas/ui"
 import {
     SessionSetup,
     ActiveSession,
@@ -179,41 +181,45 @@ export default function StudyflowPage() {
     }, [moduleSlug, taskId])
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PageLayout maxWidth="wide" background="subtle">
             {/* Pre-Session Setup */}
             {sessionState === "setup" && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Main Setup Area */}
-                    <div className="lg:col-span-2">
-                        <SessionSetup
-                            onStartSession={handleStartSession}
-                            availableTasks={MOCK_TASKS}
-                        />
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        {/* Streak Display */}
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                                Your Streak
-                            </h3>
-                            <StreakDisplay streak={7} />
+                <Section>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Main Setup Area */}
+                        <div className="lg:col-span-2">
+                            <SessionSetup
+                                onStartSession={handleStartSession}
+                                availableTasks={MOCK_TASKS}
+                            />
                         </div>
 
-                        {/* Recent Sessions */}
-                        <SessionHistory sessions={sessions} maxDisplay={5} />
+                        {/* Sidebar */}
+                        <div className="space-y-6">
+                            {/* Streak Display */}
+                            <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6">
+                                <Headline level={3} className="mb-4">
+                                    Your Streak
+                                </Headline>
+                                <StreakDisplay streak={7} />
+                            </Block>
+
+                            {/* Recent Sessions */}
+                            <SessionHistory sessions={sessions} maxDisplay={5} />
+                        </div>
                     </div>
-                </div>
+                </Section>
             )}
 
             {/* Active Session */}
             {sessionState === "active" && sessionConfig && (
-                <ActiveSession
-                    config={sessionConfig}
-                    onEndSession={handleEndSession}
-                    onCompleteTask={handleCompleteTask}
-                />
+                <Section>
+                    <ActiveSession
+                        config={sessionConfig}
+                        onEndSession={handleEndSession}
+                        onCompleteTask={handleCompleteTask}
+                    />
+                </Section>
             )}
 
             {/* Session Complete Modal */}
@@ -226,6 +232,6 @@ export default function StudyflowPage() {
                     onClose={handleCloseComplete}
                 />
             )}
-        </div>
+        </PageLayout>
     )
 }

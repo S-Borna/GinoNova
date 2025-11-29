@@ -2,31 +2,24 @@
 
 /**
  * ============================================================================
- * DASHBOARD PAGE — Apple-Inspired Design (D.2)
+ * DASHBOARD PAGE — Design System v2.0
  * ============================================================================
  *
- * Design Philosophy:
- * - Inspired by Apple Fitness+, Notion, and Linear
- * - Clean, minimal, premium aesthetic
- * - Glassmorphism with subtle depth
- * - Staggered animations for visual delight
+ * Updated with @saas/ui design system components:
+ * - PageLayout for consistent centering and spacing
+ * - Headline for typography
+ * - Section/Block for content organization
  *
- * Features:
- * - Time-aware hero greeting
- * - Stats row with animated counters
- * - XP progress ring (Apple Watch style)
- * - Modules overview grid
- * - Recent activity timeline
- * - Quick actions panel
- *
- * @phase A.3 - App Shell & Routing
- * @design D.2 - Dashboard UI Complete
+ * @phase DS.2 - Design System Application Layer
  */
 
 import { useEffect, useState, useCallback } from "react"
 import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
 import { getDashboardSummary, DashboardSummary } from "@/lib/dashboard"
+
+// @saas/ui Design System
+import { PageLayout, Section, Block, Headline, Subtext } from "@saas/ui"
 
 // D.2 Dashboard Components
 import { DashboardHero } from "@/components/dashboard/DashboardHero"
@@ -213,7 +206,7 @@ export default function DashboardPage() {
     ]
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PageLayout maxWidth="wide" background="gray">
             {loading ? (
                 <DashboardSkeleton />
             ) : error && !dashboard ? (
@@ -221,65 +214,73 @@ export default function DashboardPage() {
             ) : (
                 <div className="space-y-8">
                     {/* Hero Section */}
-                    <DashboardHero
-                        userName={user?.full_name?.split(" ")[0] || user?.email?.split("@")[0]}
-                        streak={streak}
-                        level={levelInfo.level}
-                        modulesCompleted={completedModules}
-                        totalModules={totalModules}
-                    />
+                    <Section spacing="none">
+                        <DashboardHero
+                            userName={user?.full_name?.split(" ")[0] || user?.email?.split("@")[0]}
+                            streak={streak}
+                            level={levelInfo.level}
+                            modulesCompleted={completedModules}
+                            totalModules={totalModules}
+                        />
+                    </Section>
 
                     {/* Stats Row */}
-                    <StatsRow
-                        level={levelInfo.level}
-                        currentXP={levelInfo.currentXP}
-                        xpToNextLevel={levelInfo.xpToNextLevel}
-                        streak={streak}
-                        modulesCompleted={completedModules}
-                        totalModules={totalModules}
-                        totalXP={levelInfo.level * 100 + levelInfo.currentXP}
-                    />
+                    <Section spacing="none">
+                        <StatsRow
+                            level={levelInfo.level}
+                            currentXP={levelInfo.currentXP}
+                            xpToNextLevel={levelInfo.xpToNextLevel}
+                            streak={streak}
+                            modulesCompleted={completedModules}
+                            totalModules={totalModules}
+                            totalXP={levelInfo.level * 100 + levelInfo.currentXP}
+                        />
+                    </Section>
 
                     {/* Quick Actions */}
-                    <QuickActions
-                        hasActiveStudyflow={false}
-                        currentModule={
-                            modulesWithProgress.find((m) => m.status === "in_progress")
-                                ? {
-                                    id: modulesWithProgress[0]?.id ?? "",
-                                    name: modulesWithProgress[0]?.name ?? "",
-                                    progress: Math.round(
-                                        ((modulesWithProgress[0]?.tasksCompleted ?? 0) /
-                                            (modulesWithProgress[0]?.totalTasks ?? 1)) *
-                                        100
-                                    ),
-                                }
-                                : undefined
-                        }
-                    />
+                    <Section spacing="none">
+                        <QuickActions
+                            hasActiveStudyflow={false}
+                            currentModule={
+                                modulesWithProgress.find((m) => m.status === "in_progress")
+                                    ? {
+                                        id: modulesWithProgress[0]?.id ?? "",
+                                        name: modulesWithProgress[0]?.name ?? "",
+                                        progress: Math.round(
+                                            ((modulesWithProgress[0]?.tasksCompleted ?? 0) /
+                                                (modulesWithProgress[0]?.totalTasks ?? 1)) *
+                                            100
+                                        ),
+                                    }
+                                    : undefined
+                            }
+                        />
+                    </Section>
 
                     {/* Main Content Grid */}
-                    <div className="grid lg:grid-cols-3 gap-6">
-                        {/* Modules Overview - 2 columns */}
-                        <div className="lg:col-span-2">
-                            <ModulesOverview modules={modulesWithProgress} />
-                        </div>
+                    <Section spacing="none">
+                        <div className="grid lg:grid-cols-3 gap-6">
+                            {/* Modules Overview - 2 columns */}
+                            <div className="lg:col-span-2">
+                                <ModulesOverview modules={modulesWithProgress} />
+                            </div>
 
-                        {/* Right Sidebar - 1 column */}
-                        <div className="space-y-6">
-                            {/* XP Progress Ring */}
-                            <XPProgress
-                                currentXP={levelInfo.currentXP}
-                                xpToNextLevel={levelInfo.xpToNextLevel}
-                                level={levelInfo.level}
-                            />
+                            {/* Right Sidebar - 1 column */}
+                            <div className="space-y-6">
+                                {/* XP Progress Ring */}
+                                <XPProgress
+                                    currentXP={levelInfo.currentXP}
+                                    xpToNextLevel={levelInfo.xpToNextLevel}
+                                    level={levelInfo.level}
+                                />
 
-                            {/* Recent Activity */}
-                            <RecentActivity activities={recentActivities} />
+                                {/* Recent Activity */}
+                                <RecentActivity activities={recentActivities} />
+                            </div>
                         </div>
-                    </div>
+                    </Section>
                 </div>
             )}
-        </div>
+        </PageLayout>
     )
 }

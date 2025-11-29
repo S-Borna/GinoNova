@@ -2,17 +2,15 @@
 
 /**
  * ============================================================================
- * MODULES LIST PAGE — Apple-Inspired Design (D.4)
+ * MODULES LIST PAGE — Design System v2.0
  * ============================================================================
  *
- * Beautiful module browsing experience with:
- * - Header with overall progress
- * - Responsive grid layout
- * - Staggered card animations
- * - Loading skeletons
+ * Updated with @saas/ui design system components:
+ * - PageLayout for consistent layout
+ * - Headline for typography
+ * - Section/Block for content organization
  *
- * @phase A.3 - App Shell & Routing
- * @design D.4 - Modules UI
+ * @phase DS.2 - Design System Application Layer
  */
 
 import { useState, useEffect } from "react"
@@ -25,6 +23,9 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
 import { BookOpen, Trophy, RefreshCw, AlertCircle } from "lucide-react"
+
+// @saas/ui Design System
+import { PageLayout, Section, Block, Headline, Subtext } from "@saas/ui"
 
 /* ============================================================================
    TYPES
@@ -387,65 +388,69 @@ export default function ModulesPage() {
 
     if (loading) {
         return (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <PageLayout maxWidth="wide" background="gray">
                 <PageSkeleton />
-            </div>
+            </PageLayout>
         )
     }
 
     if (error) {
         return (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <PageLayout maxWidth="wide" background="gray">
                 <ErrorState error={error} onRetry={handleRefresh} />
-            </div>
+            </PageLayout>
         )
     }
 
     if (modules.length === 0) {
         return (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <PageLayout maxWidth="wide" background="gray">
                 <EmptyState />
-            </div>
+            </PageLayout>
         )
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PageLayout maxWidth="wide" background="gray">
             <div className="space-y-8">
                 {/* Header */}
-                <Header
-                    totalModules={totalModules}
-                    completedModules={completedModules}
-                    overallProgress={overallProgress}
-                    onRefresh={handleRefresh}
-                    isRefreshing={refreshing}
-                />
+                <Section spacing="none">
+                    <Header
+                        totalModules={totalModules}
+                        completedModules={completedModules}
+                        overallProgress={overallProgress}
+                        onRefresh={handleRefresh}
+                        isRefreshing={refreshing}
+                    />
+                </Section>
 
                 {/* Modules grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {modules.map((module, index) => (
-                        <div
-                            key={module.id}
-                            className="animate-fade-in-up"
-                            style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                            <ModuleCard
-                                id={module.id}
-                                orderIndex={module.orderIndex}
-                                title={module.name}
-                                description={module.description || "No description available"}
-                                icon={module.icon}
-                                progress={module.progress}
-                                tasksCompleted={module.tasksCompleted}
-                                totalTasks={module.totalTasks}
-                                status={module.status}
-                                estimatedHours={module.estimatedHours}
-                                prerequisiteModule={module.prerequisiteModule}
-                            />
-                        </div>
-                    ))}
-                </div>
+                <Section spacing="none">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {modules.map((module, index) => (
+                            <div
+                                key={module.id}
+                                className="animate-fade-in-up"
+                                style={{ animationDelay: `${index * 100}ms` }}
+                            >
+                                <ModuleCard
+                                    id={module.id}
+                                    orderIndex={module.orderIndex}
+                                    title={module.name}
+                                    description={module.description || "No description available"}
+                                    icon={module.icon}
+                                    progress={module.progress}
+                                    tasksCompleted={module.tasksCompleted}
+                                    totalTasks={module.totalTasks}
+                                    status={module.status}
+                                    estimatedHours={module.estimatedHours}
+                                    prerequisiteModule={module.prerequisiteModule}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </Section>
             </div>
-        </div>
+        </PageLayout>
     )
 }
