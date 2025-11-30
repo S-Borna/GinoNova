@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Query, Response
 
-from ..schemas.monitoring import (
+from ...schemas.monitoring import (
     MonitoringStatus,
     Event,
     EventType,

@@ -8,7 +8,7 @@ import time
 
 from fastapi import APIRouter, Query, Response
 
-from ..schemas.observability import (
+from ...schemas.observability import (
     InfraStatus,
     ServiceHealth,
     ServiceStatus,

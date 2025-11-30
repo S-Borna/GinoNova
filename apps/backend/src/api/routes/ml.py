@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Query, Response
 
-from ..schemas.ml import (
+from ...schemas.ml import (
     MLStatus,
     Feature,
     FeatureType,
