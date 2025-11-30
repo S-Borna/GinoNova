@@ -115,7 +115,7 @@ class Task(Base):
     # Task Tier System (v3 standard vs v4 advanced)
     task_tier = Column(String(20), default="standard")  # standard, advanced, deep_dive
     parent_task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=True)  # Link to parent v3 task
-    
+
     order_index = Column(Integer, default=1)
     difficulty = Column(String(20), default="medium")
     estimated_minutes = Column(Integer, default=15)
