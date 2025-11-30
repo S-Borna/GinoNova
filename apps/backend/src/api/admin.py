@@ -858,10 +858,10 @@ def seed_related_tasks(
 ) -> SeedRelatedResponse:
     """
     Seed fördjupning (advanced/deep_dive) tasks linked to v3 standard tasks.
-    
+
     This creates optional advanced content that appears under
     "Vill du fördjupa dig?" section in task view.
-    
+
     Phase 4.0: Task Tier System
     """
     add_phase_header(response)
@@ -891,10 +891,10 @@ def _create_sample_related_tasks() -> SeedRelatedResponse:
     """Create sample related tasks for demonstration."""
     from ..db.task_repository import list_tasks, create_task, get_tasks_by_parent_id
     from ..schemas.task import TaskCreate
-    
+
     tasks = list_tasks()
     standard_tasks = [t for t in tasks if getattr(t, 'task_tier', 'standard') == 'standard']
-    
+
     if not standard_tasks:
         return SeedRelatedResponse(
             success=False,
@@ -902,7 +902,7 @@ def _create_sample_related_tasks() -> SeedRelatedResponse:
             tasks_created=0,
             links_created=0,
         )
-    
+
     # Unique fördjupning content for each parent task
     FORDJUPNING_CONTENT = {
         "macos vs linux": {
@@ -1088,7 +1088,7 @@ p10k configure
 
 ### Resultat:
 ```
-╭─ ~/projects/devopshub main ✔ 3m 42s 
+╭─ ~/projects/devopshub main ✔ 3m 42s
 ╰─❯ kubectl get pods
 ```
 
@@ -1114,7 +1114,7 @@ plugins=(
 git clone https://github.com/zsh-users/zsh-autosuggestions \\
   ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
 
-# zsh-syntax-highlighting  
+# zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting \\
   ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
 ```
@@ -1566,7 +1566,7 @@ docker export container_id | tar -tf - | head -20
     ├─────────────────────┤     ├─────────────────────┤
     │     Hardware        │     │     Hardware        │
     └─────────────────────┘     └─────────────────────┘
-    
+
     ~1-2 GB overhead/VM          ~50-100 MB/container
     Boot: 30-60 sekunder         Boot: <1 sekund
 ```
@@ -1661,22 +1661,22 @@ unshare --pid --uts --net --mount --ipc --fork \\
             "xp_reward": 75,
         },
     }
-    
+
     # Create fördjupning tasks with unique content
     created = 0
     skipped = 0
-    
+
     for parent_task in standard_tasks:
         # Check if this task already has related tasks
         existing_related = get_tasks_by_parent_id(parent_task.id)
         if existing_related:
             skipped += 1
             continue
-            
+
         # Find matching content based on EXACT task title (lowercase)
         task_title_lower = parent_task.title.lower()
         content_data = None
-        
+
         # Map exact task titles (lowercase) to content keys
         title_to_content = {
             "macos vs linux for devops work": "macos vs linux",
@@ -1685,14 +1685,14 @@ unshare --pid --uts --net --mount --ipc --fork \\
             "filesystem hierarchy standard (fhs)": "filesystem",
             "containers vs vms": "containers",
         }
-        
+
         content_key = title_to_content.get(task_title_lower)
         if content_key and content_key in FORDJUPNING_CONTENT:
             content_data = FORDJUPNING_CONTENT[content_key]
-        
+
         if not content_data:
             continue
-            
+
         # Create the fördjupning task
         create_task(TaskCreate(
             module_id=parent_task.module_id,
@@ -1707,7 +1707,7 @@ unshare --pid --uts --net --mount --ipc --fork \\
             parent_task_id=parent_task.id,
         ))
         created += 1
-    
+
     return SeedRelatedResponse(
         success=True,
         message=f"Created {created} fördjupning tasks (skipped {skipped} existing)",

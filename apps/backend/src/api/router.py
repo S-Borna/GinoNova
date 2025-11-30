@@ -27,6 +27,14 @@ from .routes.ai_generator import router as ai_generator_router
 from .routes.organization import router as organization_router
 from .routes.career import router as career_router
 
+# Phase 22-28: Final production-ready routes
+from .routes.observability import observability_router
+from .routes.iac import iac_router
+from .routes.finops import finops_router
+from .routes.monitoring import monitoring_router
+from .routes.ml import ml_router
+from .routes.public_api import public_api_router
+
 api_router = APIRouter()
 
 api_router.include_router(system_router, prefix="/system", tags=["system"])
@@ -56,3 +64,11 @@ api_router.include_router(community_router, tags=["community"])
 api_router.include_router(ai_generator_router, tags=["ai-generator"])
 api_router.include_router(organization_router, tags=["organization"])
 api_router.include_router(career_router, tags=["career"])
+
+# Phase 22-28: Final production-ready routes
+api_router.include_router(observability_router, tags=["observability"])
+api_router.include_router(iac_router, tags=["iac"])
+api_router.include_router(finops_router, tags=["finops"])
+api_router.include_router(monitoring_router, tags=["monitoring"])
+api_router.include_router(ml_router, tags=["ml"])
+api_router.include_router(public_api_router, tags=["public-api"])

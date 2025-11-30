@@ -430,7 +430,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                     onTerminalCommand={handleTerminalCommand}
                                 />
                             ) : (
-                                <LessonContent 
+                                <LessonContent
                                     content={task.content || placeholderContent}
                                     title={task.title}
                                     estimatedMinutes={task.estimated_minutes}
