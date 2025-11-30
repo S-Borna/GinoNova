@@ -79,7 +79,7 @@ def get_tasks_by_parent_id(parent_task_id: UUID) -> list[TaskInDB]:
         List of TaskInDB objects that have this parent_task_id
     """
     return [
-        task for task in _tasks_db.values() 
+        task for task in _tasks_db.values()
         if getattr(task, 'parent_task_id', None) == parent_task_id
     ]
 

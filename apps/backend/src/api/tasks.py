@@ -84,7 +84,7 @@ def get_task(task_id: UUID, response: Response):
 def get_related_tasks(task_id: UUID, response: Response):
     """
     Get related advanced/deep-dive tasks for a standard task.
-    
+
     This endpoint returns optional "fördjupning" (deep dive) tasks
     that are linked to the specified task. These are NOT locked -
     users can try them anytime for extra XP.
@@ -106,7 +106,7 @@ def get_related_tasks(task_id: UUID, response: Response):
 def get_task_with_related(task_id: UUID, response: Response):
     """
     Get a task with its related advanced/deep-dive tasks included.
-    
+
     Convenience endpoint that returns the task and all related
     fördjupning tasks in a single response.
 

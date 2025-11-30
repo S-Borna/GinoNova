@@ -22,7 +22,7 @@ depends_on = None
 
 def upgrade():
     """Add task_tier and parent_task_id columns to tasks table."""
-    
+
     # Add task_tier column with default 'standard'
     op.add_column(
         'tasks',
@@ -34,7 +34,7 @@ def upgrade():
             comment='Task tier: standard (v3), advanced (v4), or deep_dive'
         )
     )
-    
+
     # Add parent_task_id for linking related tasks
     op.add_column(
         'tasks',
@@ -46,14 +46,14 @@ def upgrade():
             comment='Parent task ID for linking fördjupning (advanced) content'
         )
     )
-    
+
     # Add index for efficient parent_task_id lookups
     op.create_index(
         'ix_tasks_parent_task_id',
         'tasks',
         ['parent_task_id']
     )
-    
+
     # Add index for task_tier filtering
     op.create_index(
         'ix_tasks_task_tier',
@@ -64,11 +64,11 @@ def upgrade():
 
 def downgrade():
     """Remove task_tier and parent_task_id columns."""
-    
+
     # Drop indexes first
     op.drop_index('ix_tasks_task_tier', table_name='tasks')
     op.drop_index('ix_tasks_parent_task_id', table_name='tasks')
-    
+
     # Drop columns
     op.drop_column('tasks', 'parent_task_id')
     op.drop_column('tasks', 'task_tier')

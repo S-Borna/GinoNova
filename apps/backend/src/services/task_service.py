@@ -201,7 +201,7 @@ class TaskService:
     def get_related_tasks(self, task_id: UUID) -> List[TaskPublic]:
         """
         Get related advanced/deep-dive tasks for a task.
-        
+
         Returns tasks where parent_task_id matches the given task_id.
         These are optional "fördjupning" tasks that users can try anytime.
 
