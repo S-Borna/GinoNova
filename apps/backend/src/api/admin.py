@@ -1673,24 +1673,22 @@ unshare --pid --uts --net --mount --ipc --fork \\
             skipped += 1
             continue
             
-        # Find matching content based on keywords in task title
+        # Find matching content based on EXACT task title (lowercase)
         task_title_lower = parent_task.title.lower()
         content_data = None
         
-        # Map keywords to content keys
-        keyword_mapping = [
-            (["macos", "linux", "devops work"], "macos vs linux"),
-            (["terminal emulators", "iterm", "alacritty"], "terminal"),
-            (["git object", "blobs", "trees", "commits"], "git"),
-            (["filesystem hierarchy", "fhs"], "filesystem"),
-            (["containers vs vm", "virtual"], "containers"),
-        ]
+        # Map exact task titles (lowercase) to content keys
+        title_to_content = {
+            "macos vs linux for devops work": "macos vs linux",
+            "terminal emulators (iterm2, alacritty)": "terminal",
+            "git object model (blobs, trees, commits)": "git",
+            "filesystem hierarchy standard (fhs)": "filesystem",
+            "containers vs vms": "containers",
+        }
         
-        for keywords, content_key in keyword_mapping:
-            if any(kw in task_title_lower for kw in keywords):
-                if content_key in FORDJUPNING_CONTENT:
-                    content_data = FORDJUPNING_CONTENT[content_key]
-                    break
+        content_key = title_to_content.get(task_title_lower)
+        if content_key and content_key in FORDJUPNING_CONTENT:
+            content_data = FORDJUPNING_CONTENT[content_key]
         
         if not content_data:
             continue
