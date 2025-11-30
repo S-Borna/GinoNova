@@ -947,3 +947,14 @@ Efter denna fördjupning är du redo för ännu mer avancerade ämnen.
         links_created=created,
     )
 
+
+# DEV endpoint - no auth required (remove in production)
+@admin_router.post("/dev/seed-related", response_model=SeedRelatedResponse)
+def dev_seed_related_tasks(response: Response) -> SeedRelatedResponse:
+    """
+    DEV ONLY: Seed related tasks without authentication.
+    Remove this endpoint before production launch.
+    """
+    add_phase_header(response)
+    return _create_sample_related_tasks()
+
