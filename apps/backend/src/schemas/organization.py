@@ -33,11 +33,11 @@ class OrganizationBase(BaseModel):
     """Base organization model"""
     name: str = Field(..., min_length=2, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
-    
+
     # Branding
     logo_url: Optional[str] = None
     website: Optional[str] = None
-    
+
     # Contact
     contact_email: Optional[str] = None
 
@@ -60,19 +60,19 @@ class OrganizationPublic(OrganizationBase):
     """Public organization view"""
     id: UUID
     plan: OrgPlan
-    
+
     # Seats
     seats_total: int = 5
     seats_used: int = 0
-    
+
     # Stats
     teams_count: int = 0
     members_count: int = 0
     modules_installed: int = 0
-    
+
     # Status
     is_active: bool = True
-    
+
     # Dates
     created_at: datetime
 
@@ -85,19 +85,19 @@ class OrganizationInDB(OrganizationBase):
     id: UUID = Field(default_factory=uuid4)
     owner_id: UUID  # User who created the org
     plan: OrgPlan = "free"
-    
+
     # Seats
     seats_total: int = 5
     seats_used: int = 0
-    
+
     # Stats
     teams_count: int = 0
     members_count: int = 0
     modules_installed: int = 0
-    
+
     # Status
     is_active: bool = True
-    
+
     # Dates
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -131,14 +131,14 @@ class TeamPublic(TeamBase):
     """Public team view"""
     id: UUID
     organization_id: UUID
-    
+
     # Stats
     members_count: int = 0
     modules_count: int = 0
-    
+
     # Status
     is_active: bool = True
-    
+
     created_at: datetime
 
     class Config:
@@ -149,14 +149,14 @@ class TeamInDB(TeamBase):
     """Internal team model"""
     id: UUID = Field(default_factory=uuid4)
     organization_id: UUID
-    
+
     # Stats
     members_count: int = 0
     modules_count: int = 0
-    
+
     # Status
     is_active: bool = True
-    
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -185,17 +185,17 @@ class TeamMemberPublic(BaseModel):
     team_id: UUID
     user_id: UUID
     role: TeamRole
-    
+
     # User info (populated from user)
     user_name: str = ""
     user_email: str = ""
     user_avatar: Optional[str] = None
-    
+
     # Stats
     modules_completed: int = 0
     tasks_completed: int = 0
     total_xp: int = 0
-    
+
     joined_at: datetime
 
     class Config:
@@ -208,17 +208,17 @@ class TeamMemberInDB(BaseModel):
     team_id: UUID
     user_id: UUID
     role: TeamRole = "member"
-    
+
     # User info
     user_name: str = ""
     user_email: str = ""
     user_avatar: Optional[str] = None
-    
+
     # Stats
     modules_completed: int = 0
     tasks_completed: int = 0
     total_xp: int = 0
-    
+
     is_active: bool = True
     joined_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -242,10 +242,10 @@ class TeamModuleAccessPublic(BaseModel):
     team_id: UUID
     module_slug: str
     source: ModuleSource
-    
+
     # Module info
     module_name: str = ""
-    
+
     granted_at: datetime
 
     class Config:
@@ -258,10 +258,10 @@ class TeamModuleAccessInDB(BaseModel):
     team_id: UUID
     module_slug: str
     source: ModuleSource = "core"
-    
+
     # Module info
     module_name: str = ""
-    
+
     is_active: bool = True
     granted_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -277,24 +277,24 @@ class TeamAnalytics(BaseModel):
     """Team analytics summary"""
     team_id: UUID
     team_name: str
-    
+
     # Members
     total_members: int = 0
     active_members: int = 0
-    
+
     # Progress
     avg_completion_rate: float = 0.0
     total_tasks_completed: int = 0
     total_xp_earned: int = 0
     avg_time_per_task: float = 0.0
-    
+
     # Top performers
     top_performers: List[dict] = []
-    
+
     # Skill gaps
     skill_gaps: List[str] = []
     recommended_modules: List[str] = []
-    
+
     # Activity
     weekly_active_users: int = 0
     monthly_active_users: int = 0
@@ -304,25 +304,25 @@ class OrgAnalytics(BaseModel):
     """Organization analytics summary"""
     organization_id: UUID
     organization_name: str
-    
+
     # Overview
     total_teams: int = 0
     total_members: int = 0
     total_modules_installed: int = 0
-    
+
     # Usage
     seats_used: int = 0
     seats_total: int = 0
     utilization_rate: float = 0.0
-    
+
     # Progress
     avg_completion_rate: float = 0.0
     total_tasks_completed: int = 0
     total_xp_earned: int = 0
-    
+
     # Team breakdown
     team_rankings: List[dict] = []
-    
+
     # Activity
     weekly_active_users: int = 0
     monthly_active_users: int = 0
