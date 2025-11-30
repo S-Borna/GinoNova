@@ -337,7 +337,7 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                             pre: ({ children }) => {
                                 // Extract code text robustly (fixes [object Object] bug)
                                 const code = extractCodeText(children)
-                                
+
                                 // Try to get language from className
                                 let language = 'plaintext'
                                 if (typeof children === 'object' && children !== null && 'props' in children) {
