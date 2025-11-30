@@ -46,7 +46,7 @@ def get_infra_status(response: Response) -> InfraStatus:
     Get overall infrastructure status.
     """
     add_phase_header(response)
-    
+
     services = [
         ServiceHealth(
             name="backend",
@@ -84,7 +84,7 @@ def get_infra_status(response: Response) -> InfraStatus:
             details={"provider": "s3-compatible", "files": 342}
         ),
     ]
-    
+
     return InfraStatus(
         status="operational",
         version="22.0",
@@ -105,10 +105,10 @@ def get_metrics(
     Get system metrics for the specified period.
     """
     add_phase_header(response)
-    
+
     now = datetime.utcnow()
     period_hours = {"1h": 1, "6h": 6, "24h": 24, "7d": 168}.get(period, 1)
-    
+
     metrics = [
         MetricPoint(
             name="api_requests_total",
@@ -167,7 +167,7 @@ def get_metrics(
             tags={"provider": "openai"}
         ),
     ]
-    
+
     return MetricsResponse(
         metrics=metrics,
         period_start=now - timedelta(hours=period_hours),
@@ -184,7 +184,7 @@ def get_request_metrics(
     Get API request metrics.
     """
     add_phase_header(response)
-    
+
     return RequestMetrics(
         total_requests=15420,
         success_rate=98.5,
@@ -210,7 +210,7 @@ def get_logs(
     Get system logs with optional filtering.
     """
     add_phase_header(response)
-    
+
     # Sample logs
     logs = [
         LogEntry(
@@ -224,11 +224,11 @@ def get_logs(
         )
         for i in range(min(limit, 20))
     ]
-    
+
     # Filter by level if specified
     if level:
         logs = [l for l in logs if l.level == level]
-    
+
     return LogsResponse(
         logs=logs,
         total=len(logs),
@@ -245,7 +245,7 @@ def get_error_logs(
     Get recent error logs.
     """
     add_phase_header(response)
-    
+
     errors = [
         LogEntry(
             id=str(uuid4()),
@@ -258,7 +258,7 @@ def get_error_logs(
         )
         for i in range(min(limit, 5))
     ]
-    
+
     return LogsResponse(
         logs=errors,
         total=len(errors),
@@ -274,7 +274,7 @@ def get_alerts(response: Response) -> AlertsResponse:
     Get active alerts and alert rules.
     """
     add_phase_header(response)
-    
+
     # No active critical alerts - system healthy
     active_alerts = [
         Alert(
@@ -288,7 +288,7 @@ def get_alerts(response: Response) -> AlertsResponse:
             metadata={"current_latency_ms": 120, "threshold_ms": 100}
         )
     ]
-    
+
     return AlertsResponse(
         active=active_alerts,
         resolved_today=3,
@@ -302,7 +302,7 @@ def get_alert_rules(response: Response) -> list[AlertRule]:
     Get configured alert rules.
     """
     add_phase_header(response)
-    
+
     return [
         AlertRule(
             id="rule-1",
@@ -387,7 +387,7 @@ def get_deployment_history(response: Response) -> DeploymentHistory:
     Get deployment history.
     """
     add_phase_header(response)
-    
+
     current = DeploymentInfo(
         id="deploy-001",
         version="1.0.0",
@@ -398,7 +398,7 @@ def get_deployment_history(response: Response) -> DeploymentHistory:
         commit_sha="ef4fdc5",
         rollback_available=True
     )
-    
+
     history = [
         current,
         DeploymentInfo(
@@ -412,7 +412,7 @@ def get_deployment_history(response: Response) -> DeploymentHistory:
             rollback_available=True
         ),
     ]
-    
+
     return DeploymentHistory(
         deployments=history,
         current=current
@@ -427,7 +427,7 @@ def get_resource_usage(response: Response) -> ResourceUsage:
     Get current resource usage.
     """
     add_phase_header(response)
-    
+
     return ResourceUsage(
         cpu_percent=35.5,
         memory_percent=45.2,

@@ -41,7 +41,7 @@ def get_ml_status(response: Response) -> MLStatus:
     Get ML system status.
     """
     add_phase_header(response)
-    
+
     return MLStatus(
         status="operational",
         version="27.0",
@@ -62,7 +62,7 @@ def list_features(response: Response) -> list[Feature]:
     List available ML features.
     """
     add_phase_header(response)
-    
+
     return [
         Feature(
             name="study_velocity",
@@ -143,7 +143,7 @@ def get_user_features(user_id: str, response: Response) -> FeatureVector:
     Get feature vector for a user.
     """
     add_phase_header(response)
-    
+
     return FeatureVector(
         user_id=user_id,
         features={
@@ -172,7 +172,7 @@ def list_feature_snapshots(
     List feature snapshots for a user.
     """
     add_phase_header(response)
-    
+
     return [
         FeatureSnapshot(
             id=str(uuid4()),
@@ -197,7 +197,7 @@ def list_datasets(response: Response) -> list[DatasetInfo]:
     List available datasets.
     """
     add_phase_header(response)
-    
+
     return [
         DatasetInfo(
             id="ds-1",
@@ -244,7 +244,7 @@ def preview_dataset(dataset_id: str, response: Response) -> DatasetPreview:
     Preview a dataset.
     """
     add_phase_header(response)
-    
+
     return DatasetPreview(
         id=dataset_id,
         name="user_skill_dataset",
@@ -266,7 +266,7 @@ def list_models(response: Response) -> list[ModelInfo]:
     List ML models.
     """
     add_phase_header(response)
-    
+
     return [
         ModelInfo(
             id="model-1",
@@ -304,7 +304,7 @@ def get_training_logs(
     Get training logs for a model.
     """
     add_phase_header(response)
-    
+
     return [
         TrainingLog(
             id=str(uuid4()),
@@ -335,7 +335,7 @@ def get_user_insights(
     Get AI-generated insights for a user.
     """
     add_phase_header(response)
-    
+
     insights = [
         UserInsight(
             id=str(uuid4()),
@@ -368,7 +368,7 @@ def get_user_insights(
             created_at=datetime.utcnow() - timedelta(days=1)
         ),
     ]
-    
+
     return insights[:limit]
 
 
@@ -378,7 +378,7 @@ def list_insight_categories(response: Response) -> list[InsightCategory]:
     List insight categories.
     """
     add_phase_header(response)
-    
+
     return [
         InsightCategory(name="learning_pattern", count=150, description="Patterns in study behavior"),
         InsightCategory(name="difficulty_prediction", count=85, description="Task/module difficulty predictions"),
@@ -395,7 +395,7 @@ def get_pipeline_status(response: Response) -> PipelineStatus:
     Get ML pipeline status.
     """
     add_phase_header(response)
-    
+
     return PipelineStatus(
         feature_pipeline="idle",
         dataset_builder="idle",
@@ -414,7 +414,7 @@ def list_pipeline_jobs(
     List recent pipeline jobs.
     """
     add_phase_header(response)
-    
+
     return [
         PipelineJob(
             id=str(uuid4()),
@@ -443,7 +443,7 @@ def trigger_pipeline(response: Response) -> PipelineJob:
     Trigger ML pipeline manually.
     """
     add_phase_header(response)
-    
+
     return PipelineJob(
         id=str(uuid4()),
         name="full_pipeline",
@@ -462,7 +462,7 @@ def get_storage_info(response: Response) -> MLStorageInfo:
     Get ML storage information.
     """
     add_phase_header(response)
-    
+
     return MLStorageInfo(
         total_mb=125.5,
         raw_mb=35.2,

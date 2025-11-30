@@ -50,7 +50,7 @@ def get_public_api_status(response: Response) -> PublicAPIStatus:
     Get Public API status.
     """
     add_phase_header(response)
-    
+
     return PublicAPIStatus(
         status="operational",
         version="28.0",
@@ -71,7 +71,7 @@ def list_api_keys(response: Response) -> list[APIKey]:
     List API keys for the authenticated user.
     """
     add_phase_header(response)
-    
+
     return [
         APIKey(
             id="key-1",
@@ -107,9 +107,9 @@ def create_api_key(
     Create a new API key.
     """
     add_phase_header(response)
-    
+
     new_key = generate_api_key()
-    
+
     return APIKeyCreated(
         id=str(uuid4()),
         name=key_data.name,
@@ -125,7 +125,7 @@ def revoke_api_key(key_id: str, response: Response) -> dict:
     Revoke an API key.
     """
     add_phase_header(response)
-    
+
     return {"status": "revoked", "key_id": key_id}
 
 
@@ -135,7 +135,7 @@ def get_api_key_usage(key_id: str, response: Response) -> APIKeyUsage:
     Get API key usage statistics.
     """
     add_phase_header(response)
-    
+
     return APIKeyUsage(
         key_id=key_id,
         requests_today=1250,
@@ -155,13 +155,13 @@ def validate_api_key(
     Validate an API key.
     """
     add_phase_header(response)
-    
+
     if not x_api_key or not x_api_key.startswith("dvh_"):
         return APIKeyValidation(
             valid=False,
             rate_limit_remaining=0
         )
-    
+
     return APIKeyValidation(
         valid=True,
         key_id="key-1",
@@ -179,7 +179,7 @@ def list_webhooks(response: Response) -> list[WebhookEndpoint]:
     List webhook endpoints.
     """
     add_phase_header(response)
-    
+
     return [
         WebhookEndpoint(
             id="wh-1",
@@ -211,9 +211,9 @@ def create_webhook(
     Create a new webhook endpoint.
     """
     add_phase_header(response)
-    
+
     secret = generate_webhook_secret()
-    
+
     return WebhookEndpointCreated(
         id=str(uuid4()),
         url=webhook_data.url,
@@ -229,7 +229,7 @@ def delete_webhook(webhook_id: str, response: Response) -> dict:
     Delete a webhook endpoint.
     """
     add_phase_header(response)
-    
+
     return {"status": "deleted", "webhook_id": webhook_id}
 
 
@@ -239,7 +239,7 @@ def toggle_webhook(webhook_id: str, response: Response, active: bool = True) -> 
     Enable or disable a webhook.
     """
     add_phase_header(response)
-    
+
     return WebhookEndpoint(
         id=webhook_id,
         url="https://example.com/webhooks/devopshub",
@@ -260,7 +260,7 @@ def list_webhook_deliveries(
     List webhook delivery history.
     """
     add_phase_header(response)
-    
+
     return [
         WebhookDelivery(
             id=str(uuid4()),
@@ -283,7 +283,7 @@ def test_webhook(webhook_id: str, response: Response) -> WebhookDelivery:
     Send a test webhook.
     """
     add_phase_header(response)
-    
+
     return WebhookDelivery(
         id=str(uuid4()),
         endpoint_id=webhook_id,
@@ -308,7 +308,7 @@ def get_rate_limit_info(
     Get current rate limit status.
     """
     add_phase_header(response)
-    
+
     return RateLimitInfo(
         requests_per_minute=2000,
         writes_per_minute=60,
@@ -328,7 +328,7 @@ def public_list_modules(response: Response) -> list[dict]:
     Public API: List modules.
     """
     add_phase_header(response)
-    
+
     return [
         {"id": "m-1", "name": "Environment Setup", "slug": "01-environment-setup", "tasks_count": 25},
         {"id": "m-2", "name": "Linux Mastery", "slug": "02-linux-mastery", "tasks_count": 35},
@@ -342,7 +342,7 @@ def public_get_module(module_id: str, response: Response) -> dict:
     Public API: Get module details.
     """
     add_phase_header(response)
-    
+
     return {
         "id": module_id,
         "name": "Environment Setup",
@@ -359,7 +359,7 @@ def public_list_module_tasks(module_id: str, response: Response) -> list[dict]:
     Public API: List tasks in a module.
     """
     add_phase_header(response)
-    
+
     return [
         {"id": "t-1", "title": "Install VS Code", "type": "lesson", "xp_reward": 25},
         {"id": "t-2", "title": "Configure Git", "type": "exercise", "xp_reward": 50},
@@ -373,7 +373,7 @@ def public_get_user_progress(user_id: str, response: Response) -> dict:
     Public API: Get user progress.
     """
     add_phase_header(response)
-    
+
     return {
         "user_id": user_id,
         "total_xp": 2500,
@@ -395,7 +395,7 @@ def public_update_user_progress(
     Public API: Update user progress.
     """
     add_phase_header(response)
-    
+
     return {
         "user_id": user_id,
         "task_id": task_id,
@@ -411,7 +411,7 @@ def public_get_heatmap(response: Response) -> dict:
     Public API: Get activity heatmap data.
     """
     add_phase_header(response)
-    
+
     return {
         "period": "30d",
         "data": [
