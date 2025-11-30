@@ -889,7 +889,7 @@ def seed_related_tasks(
 
 def _create_sample_related_tasks() -> SeedRelatedResponse:
     """Create sample related tasks for demonstration."""
-    from ..db.task_repository import list_tasks, create_task
+    from ..db.task_repository import list_tasks, create_task, get_tasks_by_parent_id
     from ..schemas.task import TaskCreate
     
     tasks = list_tasks()
@@ -903,38 +903,548 @@ def _create_sample_related_tasks() -> SeedRelatedResponse:
             links_created=0,
         )
     
-    # Create sample fördjupning tasks for first 5 standard tasks
-    created = 0
-    for parent_task in standard_tasks[:5]:
-        # Create an advanced task linked to this standard task
-        advanced_task = create_task(TaskCreate(
-            module_id=parent_task.module_id,
-            title=f"Fördjupning: {parent_task.title}",
-            description=f"Avancerat innehåll som bygger vidare på '{parent_task.title}'",
-            content=f"""# Fördjupning: {parent_task.title}
+    # Unique fördjupning content for each parent task
+    FORDJUPNING_CONTENT = {
+        "macos vs linux": {
+            "title": "🔬 Deep Dive: Linux Kernel vs Darwin",
+            "description": "Utforska de fundamentala skillnaderna mellan Linux och macOS på kernel-nivå",
+            "content": """# 🔬 Deep Dive: Linux Kernel vs Darwin
 
-## Översikt
-Detta är avancerat innehåll som bygger vidare på grunderna.
+## 🎯 Lärandemål
+Efter denna fördjupning kommer du kunna:
+- Förklara skillnader mellan monolitisk och hybrid kernel
+- Jämföra systemanropsmekanismer
+- Förstå containerisering på båda plattformarna
 
-## Fördjupade koncept
-- Avancerad implementation
-- Best practices för produktion
-- Prestandaoptimering
+---
 
-## Praktiska övningar
-Testa dina kunskaper med dessa utmaningar:
+## 🧠 Kernel-arkitektur
 
-1. Implementera en produktionsklar lösning
-2. Optimera för skalbarhet
-3. Felsök vanliga problem
+### Linux: Monolitisk Kernel
+```
+┌─────────────────────────────────────────┐
+│           User Space (Ring 3)           │
+├─────────────────────────────────────────┤
+│    System Call Interface (syscall)      │
+├─────────────────────────────────────────┤
+│         Linux Kernel (Ring 0)           │
+│  ┌─────────┬─────────┬─────────┐        │
+│  │ Process │ Memory  │  File   │        │
+│  │ Sched.  │  Mgmt   │ Systems │        │
+│  └─────────┴─────────┴─────────┘        │
+│  ┌─────────┬─────────┬─────────┐        │
+│  │ Network │ Device  │   IPC   │        │
+│  │  Stack  │ Drivers │         │        │
+│  └─────────┴─────────┴─────────┘        │
+└─────────────────────────────────────────┘
+```
 
-## Nästa steg
-Efter denna fördjupning är du redo för ännu mer avancerade ämnen.
+### macOS: XNU Hybrid Kernel
+```
+┌─────────────────────────────────────────┐
+│           User Space (Ring 3)           │
+├─────────────────────────────────────────┤
+│        BSD Layer (POSIX APIs)           │
+├─────────────────────────────────────────┤
+│           Mach Microkernel              │
+│  ┌─────────┬─────────┬─────────┐        │
+│  │  Tasks  │  Ports  │ Memory  │        │
+│  │         │  (IPC)  │  Mgmt   │        │
+│  └─────────┴─────────┴─────────┘        │
+├─────────────────────────────────────────┤
+│         I/O Kit (Device Drivers)        │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 💡 Praktiskt exempel: Containerisering
+
+### Varför Docker är "native" på Linux
+
+```bash
+# Linux: Containers använder kernel features direkt
+# Namespaces för isolering
+unshare --mount --uts --ipc --net --pid --fork /bin/bash
+
+# cgroups för resursbegränsning
+cat /sys/fs/cgroup/memory/docker/<container>/memory.limit_in_bytes
+```
+
+### macOS: Virtualisering krävs
+```bash
+# Docker Desktop startar en Linux VM
+# HyperKit (eller nu Virtualization.framework)
+
+# Kontrollera VM:en
+docker run --privileged --pid=host debian nsenter -t 1 -m -u -i -n cat /etc/os-release
+# Output: Linux!
+```
+
+---
+
+## 🧪 Quiz: Testa din förståelse
+
+**Fråga 1:** Varför kan inte Docker köra containers "native" på macOS?
+
+<details>
+<summary>Visa svar</summary>
+
+macOS saknar Linux-specifika kernel features som:
+- **Namespaces** (process, network, mount isolation)
+- **cgroups** (resource control)
+- **Union filesystems** (OverlayFS)
+
+Därför måste Docker Desktop köra en Linux VM i bakgrunden.
+</details>
+
+**Fråga 2:** Vad är fördelen med XNU:s Mach-baserade IPC?
+
+<details>
+<summary>Visa svar</summary>
+
+Mach ports ger:
+- Kraftfull inter-process kommunikation
+- Säker meddelandepassning
+- Grund för macOS Services (launchd, XPC)
+</details>
+
+---
+
+## 🎯 Sammanfattning
+
+| Aspekt | Linux | macOS |
+|--------|-------|-------|
+| Kernel-typ | Monolitisk | Hybrid (Mach + BSD) |
+| Containers | Native | Via VM |
+| Syscalls | ~400 direkta | BSD + Mach traps |
+| DevOps-fokus | Produktion | Utveckling |
+
+---
+
+## 📚 Vidare läsning
+- [Linux Kernel Documentation](https://kernel.org/doc/)
+- [XNU Source Code](https://github.com/apple/darwin-xnu)
+- [How Docker Works on macOS](https://docs.docker.com/desktop/mac/)
+
+**+75 XP** för att slutföra denna fördjupning! 🎉
 """,
-            order_index=100 + created,  # High order to appear last
+            "estimated_minutes": 35,
+            "xp_reward": 75,
+        },
+        "terminal": {
+            "title": "🚀 Terminal Power User: Zsh & Oh-My-Zsh Mastery",
+            "description": "Gå från nybörjare till terminal-ninja med avancerad Zsh-konfiguration",
+            "content": """# 🚀 Terminal Power User: Zsh & Oh-My-Zsh
+
+## 🎯 Lärandemål
+- Konfigurera en professionell Zsh-miljö
+- Skapa egna aliases och funktioner
+- Använda plugins för ökad produktivitet
+
+---
+
+## ⚡ Varför Zsh?
+
+| Feature | Bash | Zsh |
+|---------|------|-----|
+| Tab-completion | Basic | Intelligent |
+| Spelling correction | ❌ | ✅ |
+| Path expansion | Limited | `**` recursive |
+| Prompt themes | Manual | Themes/Powerline |
+| Plugin ecosystem | Limited | Oh-My-Zsh/Zinit |
+
+---
+
+## 🛠️ Installation & Setup
+
+```bash
+# macOS (redan standard sedan Catalina)
+echo $SHELL  # /bin/zsh
+
+# Linux
+sudo apt install zsh
+chsh -s $(which zsh)
+
+# Oh-My-Zsh installation
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+---
+
+## 🎨 Powerlevel10k Theme
+
+```bash
+# Installation
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \\
+  ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+# Aktivera i ~/.zshrc
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Konfigurera
+p10k configure
+```
+
+### Resultat:
+```
+╭─ ~/projects/devopshub main ✔ 3m 42s 
+╰─❯ kubectl get pods
+```
+
+---
+
+## 🔌 Måste-ha Plugins
+
+```bash
+# ~/.zshrc
+plugins=(
+  git                    # Git aliases (gst, gco, gp)
+  docker                 # Docker completion
+  kubectl                # K8s completion + aliases
+  zsh-autosuggestions    # Fish-like suggestions
+  zsh-syntax-highlighting # Command highlighting
+  fzf                    # Fuzzy finder
+)
+```
+
+### Installera externa plugins:
+```bash
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions \\
+  ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
+
+# zsh-syntax-highlighting  
+git clone https://github.com/zsh-users/zsh-syntax-highlighting \\
+  ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
+```
+
+---
+
+## 💪 DevOps Power Aliases
+
+```bash
+# Lägg till i ~/.zshrc
+
+# Kubernetes shortcuts
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deploy'
+alias klog='kubectl logs -f'
+alias kex='kubectl exec -it'
+
+# Docker shortcuts
+alias d='docker'
+alias dc='docker-compose'
+alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+alias dlog='docker logs -f'
+
+# Git power aliases
+alias gs='git status -sb'
+alias gl='git log --oneline -10'
+alias gd='git diff'
+alias gcm='git commit -m'
+alias gp='git push'
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ll='ls -lah'
+alias la='ls -A'
+```
+
+---
+
+## 🧪 Praktisk övning
+
+### Skapa en smart funktion:
+
+```bash
+# Lägg till i ~/.zshrc
+
+# Snabb navigering till projekt
+function proj() {
+  cd ~/projects/$1 && ls -la
+}
+
+# Skapa och gå in i mapp
+function mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Docker shell
+function dsh() {
+  docker exec -it $1 /bin/sh
+}
+
+# Kubernetes pod shell
+function ksh() {
+  kubectl exec -it $1 -- /bin/sh
+}
+```
+
+---
+
+## 🎯 Testa din setup
+
+```bash
+# Ladda om config
+source ~/.zshrc
+
+# Testa completion (tryck TAB)
+git che<TAB>     # → checkout
+kubectl get p<TAB>  # → pods
+
+# Testa alias
+kgp  # kubectl get pods
+dps  # docker ps formatted
+```
+
+---
+
+## 📊 Produktivitetsvinst
+
+| Kommando | Utan alias | Med alias | Sparar |
+|----------|-----------|-----------|--------|
+| kubectl get pods | 16 tecken | 3 tecken | 81% |
+| docker-compose up | 17 tecken | 5 tecken | 71% |
+| git status -sb | 14 tecken | 2 tecken | 86% |
+
+---
+
+**+75 XP** för terminal-mastery! 🎉
+""",
+            "estimated_minutes": 40,
+            "xp_reward": 75,
+        },
+        "git": {
+            "title": "🌳 Git Internals: Hur Git egentligen fungerar",
+            "description": "Förstå Git på djupet - objects, refs, och the DAG",
+            "content": """# 🌳 Git Internals: Under the Hood
+
+## 🎯 Lärandemål
+- Förstå Gits object model (blobs, trees, commits)
+- Navigera `.git` katalogen
+- Använda low-level Git commands (plumbing)
+
+---
+
+## 🧬 Git Object Model
+
+Git lagrar allt som **objekt** med SHA-1 hash:
+
+```
+┌─────────────────────────────────────────────┐
+│                   COMMIT                    │
+│  tree: abc123...                            │
+│  parent: def456...                          │
+│  author: Said <said@dev.com>                │
+│  message: "Add feature X"                   │
+└────────────────────┬────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│                    TREE                     │
+│  blob: 789abc... README.md                  │
+│  blob: 012def... src/main.py                │
+│  tree: 345ghi... src/utils/                 │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────┐
+│                    BLOB                     │
+│  (raw file content)                         │
+│  # My Project                               │
+│  This is the README...                      │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## 🔍 Utforska .git katalogen
+
+```bash
+# Skapa test-repo
+mkdir git-internals && cd git-internals
+git init
+
+# Skapa en fil
+echo "Hello Git" > hello.txt
+git add hello.txt
+
+# Se vad som hände i .git
+find .git/objects -type f
+# .git/objects/e9/65047ad7c57865823c7d992b1d046ea66edf78
+```
+
+### Läs objektet:
+```bash
+# git cat-file -t <hash>  → typ
+# git cat-file -p <hash>  → innehåll
+
+git cat-file -t e965047
+# blob
+
+git cat-file -p e965047
+# Hello Git
+```
+
+---
+
+## 🌿 Branches är bara pekare!
+
+```bash
+# En branch är en fil med en commit hash
+cat .git/refs/heads/main
+# abc123def456...
+
+# HEAD pekar på current branch
+cat .git/HEAD
+# ref: refs/heads/main
+
+# Skapa branch manuellt (!)
+echo "abc123def456" > .git/refs/heads/my-branch
+```
+
+### Visualisering:
+```
+refs/heads/main ──────┐
+                      ▼
+                  [Commit C]
+                      │
+refs/heads/feature ───┤
+                      │
+                      ▼
+                  [Commit B]
+                      │
+                      ▼
+                  [Commit A]
+```
+
+---
+
+## 🛠️ Plumbing vs Porcelain
+
+Git har två nivåer av kommandon:
+
+| Porcelain (user-friendly) | Plumbing (low-level) |
+|---------------------------|----------------------|
+| `git add` | `git hash-object` |
+| `git commit` | `git write-tree` |
+| `git log` | `git cat-file` |
+| `git diff` | `git diff-tree` |
+
+### Skapa commit manuellt:
+```bash
+# 1. Hasha fil till blob
+echo "Hello" | git hash-object -w --stdin
+# e965047...
+
+# 2. Skapa tree
+git write-tree
+# abc123...
+
+# 3. Skapa commit
+git commit-tree abc123 -m "Manual commit"
+# def456...
+
+# 4. Uppdatera branch
+git update-ref refs/heads/main def456
+```
+
+---
+
+## 🧪 Praktisk övning: Återskapa förlorad commit
+
+```bash
+# "Oh no!" - raderade en branch
+git branch -D important-feature
+
+# Men allt finns kvar i objects!
+git reflog
+# abc123 HEAD@{1}: checkout: moving to main
+# def456 HEAD@{2}: commit: Important feature
+
+# Återskapa!
+git checkout -b recovered-feature def456
+```
+
+---
+
+## 💡 Git Garbage Collection
+
+```bash
+# Visa "dangling" objects
+git fsck --unreachable
+
+# Packa objects effektivt
+git gc
+
+# Se pack-files
+ls .git/objects/pack/
+```
+
+---
+
+## 🎯 Quiz
+
+**Fråga:** Vad händer egentligen när du kör `git commit`?
+
+<details>
+<summary>Visa svar</summary>
+
+1. **write-tree** - skapar tree object från staging area
+2. **commit-tree** - skapar commit object med:
+   - Tree hash
+   - Parent commit(s)
+   - Author/committer
+   - Message
+3. **update-ref** - uppdaterar branch att peka på nya commit
+</details>
+
+---
+
+**+75 XP** för Git-mastery! 🎉
+""",
+            "estimated_minutes": 45,
+            "xp_reward": 75,
+        },
+    }
+    
+    # Create fördjupning tasks with unique content
+    created = 0
+    skipped = 0
+    
+    for parent_task in standard_tasks:
+        # Check if this task already has related tasks
+        existing_related = get_tasks_by_parent_id(parent_task.id)
+        if existing_related:
+            skipped += 1
+            continue
+            
+        # Find matching content
+        task_title_lower = parent_task.title.lower()
+        content_data = None
+        
+        for key, data in FORDJUPNING_CONTENT.items():
+            if key in task_title_lower:
+                content_data = data
+                break
+        
+        if not content_data:
+            continue
+            
+        # Create the fördjupning task
+        create_task(TaskCreate(
+            module_id=parent_task.module_id,
+            title=content_data["title"],
+            description=content_data["description"],
+            content=content_data["content"],
+            order_index=100 + created,
             difficulty="hard",
-            estimated_minutes=45,
-            xp_reward=75,  # More XP for advanced content
+            estimated_minutes=content_data["estimated_minutes"],
+            xp_reward=content_data["xp_reward"],
             task_tier="advanced",
             parent_task_id=parent_task.id,
         ))
@@ -942,7 +1452,7 @@ Efter denna fördjupning är du redo för ännu mer avancerade ämnen.
     
     return SeedRelatedResponse(
         success=True,
-        message=f"Created {created} sample fördjupning tasks",
+        message=f"Created {created} fördjupning tasks (skipped {skipped} existing)",
         tasks_created=created,
         links_created=created,
     )

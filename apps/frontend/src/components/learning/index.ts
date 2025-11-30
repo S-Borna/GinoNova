@@ -9,8 +9,10 @@
  * - QuizBlock: Multiple choice questions
  * - CheckpointBlock: Progress milestones
  * - ContentBlockRenderer: Renders all block types
+ * - LessonContent: Enhanced markdown lesson view
  *
  * @phase ILE Phase 3 - Content Blocks
+ * @phase 4.1 - Enhanced Learning Experience
  */
 
 export { TextBlock } from "./TextBlock"
@@ -27,3 +29,5 @@ export type { CheckpointBlockProps } from "./CheckpointBlock"
 
 export { ContentBlockRenderer } from "./ContentBlockRenderer"
 export type { ContentBlockRendererProps } from "./ContentBlockRenderer"
+
+export { LessonContent } from "./LessonContent"
