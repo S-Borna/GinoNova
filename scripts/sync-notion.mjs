@@ -262,42 +262,74 @@ async function pushToNotion() {
         // First, get existing blocks and delete them
         console.log('   🗑️  Clearing existing page content...');
         const existingBlocks = await fetchAllBlocks(PAGE_ID);
+        console.log(`   Found ${existingBlocks.length} existing blocks to delete`);
 
-        for (const block of existingBlocks) {
-            await fetch(`https://api.notion.com/v1/blocks/${block.id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${NOTION_API_KEY}`,
-                    'Notion-Version': '2022-06-28'
+        // Delete in batches with rate limiting
+        for (let i = 0; i < existingBlocks.length; i++) {
+            const block = existingBlocks[i];
+            try {
+                await fetch(`https://api.notion.com/v1/blocks/${block.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${NOTION_API_KEY}`,
+                        'Notion-Version': '2022-06-28'
+                    }
+                });
+                // Rate limiting - wait 100ms between deletes
+                if (i % 10 === 0) {
+                    await new Promise(r => setTimeout(r, 100));
                 }
-            });
+            } catch (e) {
+                console.log(`   ⚠️  Failed to delete block ${i}: ${e.message}`);
+            }
         }
+        console.log('   ✓ Cleared existing content');
 
-        // Append new blocks in chunks (Notion API limit is 100 blocks per request)
+        // Wait a moment before uploading
+        await new Promise(r => setTimeout(r, 500));
+
+        // Append new blocks in smaller chunks (50 instead of 100 for stability)
         console.log('   📝 Uploading new content...');
-        const chunkSize = 100;
+        const chunkSize = 50;
+        let successfulBlocks = 0;
+
         for (let i = 0; i < blocks.length; i += chunkSize) {
             const chunk = blocks.slice(i, i + chunkSize);
 
-            const response = await fetch(`https://api.notion.com/v1/blocks/${PAGE_ID}/children`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${NOTION_API_KEY}`,
-                    'Notion-Version': '2022-06-28',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ children: chunk })
-            });
+            try {
+                const response = await fetch(`https://api.notion.com/v1/blocks/${PAGE_ID}/children`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${NOTION_API_KEY}`,
+                        'Notion-Version': '2022-06-28',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ children: chunk })
+                });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(`Notion API error: ${response.status} - ${JSON.stringify(error)}`);
+                if (!response.ok) {
+                    const error = await response.json();
+                    console.error(`   ❌ Error uploading blocks ${i + 1}-${Math.min(i + chunkSize, blocks.length)}:`);
+                    console.error(`      Status: ${response.status}`);
+                    console.error(`      Message: ${JSON.stringify(error).substring(0, 200)}`);
+                    
+                    // Try to continue with remaining blocks
+                    continue;
+                }
+
+                successfulBlocks += chunk.length;
+                console.log(`   ✓ Uploaded blocks ${i + 1}-${Math.min(i + chunkSize, blocks.length)} (${successfulBlocks}/${blocks.length})`);
+
+                // Rate limiting - wait 300ms between uploads
+                await new Promise(r => setTimeout(r, 300));
+
+            } catch (error) {
+                console.error(`   ❌ Network error at blocks ${i + 1}-${Math.min(i + chunkSize, blocks.length)}: ${error.message}`);
             }
-
-            console.log(`   ✓ Uploaded blocks ${i + 1}-${Math.min(i + chunkSize, blocks.length)}`);
         }
 
-        console.log(`✅ Successfully pushed to Notion!`);
+        console.log(`\n✅ Push complete!`);
+        console.log(`   Successfully uploaded: ${successfulBlocks}/${blocks.length} blocks`);
         console.log(`   Page: https://notion.so/${PAGE_ID.replace(/-/g, '')}`);
 
     } catch (error) {
@@ -537,9 +569,33 @@ function createCodeBlock(code, language) {
         'yml': 'yaml',
         'md': 'markdown',
         'json': 'json',
-        'plain text': 'plain text'
+        'text': 'plain text',
+        'txt': 'plain text',
+        'plain': 'plain text',
+        '': 'plain text'
     };
-    const notionLang = langMap[language.toLowerCase()] || language.toLowerCase() || 'plain text';
+    
+    // Notion's valid language list
+    const validLangs = [
+        'abap', 'agda', 'arduino', 'assembly', 'bash', 'basic', 'bnf', 'c', 'c#', 'c++',
+        'clojure', 'coffeescript', 'coq', 'css', 'dart', 'dhall', 'diff', 'docker',
+        'ebnf', 'elixir', 'elm', 'erlang', 'f#', 'flow', 'fortran', 'gherkin', 'glsl',
+        'go', 'graphql', 'groovy', 'haskell', 'html', 'idris', 'java', 'javascript',
+        'json', 'julia', 'kotlin', 'latex', 'less', 'lisp', 'livescript', 'llvm ir',
+        'lua', 'makefile', 'markdown', 'markup', 'matlab', 'mathematica', 'mermaid',
+        'nix', 'objective-c', 'ocaml', 'pascal', 'perl', 'php', 'plain text',
+        'powershell', 'prolog', 'protobuf', 'python', 'r', 'reason', 'ruby', 'rust',
+        'sass', 'scala', 'scheme', 'scss', 'shell', 'solidity', 'sql', 'swift',
+        'toml', 'typescript', 'vb.net', 'verilog', 'vhdl', 'visual basic', 'webassembly',
+        'xml', 'yaml', 'java/c/c++/c#'
+    ];
+    
+    let notionLang = langMap[language.toLowerCase()] || language.toLowerCase() || 'plain text';
+    
+    // If language isn't valid, default to plain text
+    if (!validLangs.includes(notionLang)) {
+        notionLang = 'plain text';
+    }
 
     return {
         type: 'code',
