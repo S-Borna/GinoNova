@@ -47,6 +47,51 @@ interface LessonContentProps {
 }
 
 /* ============================================================================
+   HELPER: Extract code text from React children (fixes [object Object] bug)
+   ============================================================================ */
+
+function extractCodeText(children: React.ReactNode): string {
+    // If it's already a string, return it
+    if (typeof children === 'string') {
+        return children
+    }
+
+    // If it's a number, convert to string
+    if (typeof children === 'number') {
+        return String(children)
+    }
+
+    // If it's null or undefined, return empty
+    if (children == null) {
+        return ''
+    }
+
+    // If it's an array, recursively extract and join
+    if (Array.isArray(children)) {
+        return children.map(extractCodeText).join('')
+    }
+
+    // If it's a React element, try to get its children
+    if (typeof children === 'object' && 'props' in children) {
+        const element = children as React.ReactElement<{ children?: React.ReactNode }>
+        return extractCodeText(element.props?.children)
+    }
+
+    // Fallback: try to stringify (but avoid [object Object])
+    const str = String(children)
+    if (str === '[object Object]') {
+        // Try JSON.stringify as last resort
+        try {
+            return JSON.stringify(children, null, 2)
+        } catch {
+            return ''
+        }
+    }
+
+    return str
+}
+
+/* ============================================================================
    COPY BUTTON FOR CODE BLOCKS
    ============================================================================ */
 
@@ -290,11 +335,19 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
 
                             // Code blocks with copy button
                             pre: ({ children }) => {
-                                const childElement = children as React.ReactElement<{ children?: string; className?: string }>
-                                const code = childElement?.props?.children || ''
-                                const className = childElement?.props?.className || ''
-                                const languageMatch = className.match(/language-(\w+)/)
-                                const language = languageMatch ? languageMatch[1] : 'plaintext'
+                                // Extract code text robustly (fixes [object Object] bug)
+                                const code = extractCodeText(children)
+                                
+                                // Try to get language from className
+                                let language = 'plaintext'
+                                if (typeof children === 'object' && children !== null && 'props' in children) {
+                                    const childElement = children as React.ReactElement<{ className?: string }>
+                                    const className = childElement?.props?.className || ''
+                                    const languageMatch = className.match(/language-(\w+)/)
+                                    if (languageMatch) {
+                                        language = languageMatch[1]
+                                    }
+                                }
 
                                 return (
                                     <div className="group relative my-6">
@@ -303,10 +356,10 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                                         </div>
                                         <pre className="bg-neutral-900 rounded-xl p-4 pt-8 overflow-x-auto border border-neutral-800">
                                             <code className="text-sm font-mono text-neutral-100">
-                                                {String(code).trim()}
+                                                {code.trim()}
                                             </code>
                                         </pre>
-                                        <CopyButton code={String(code).trim()} />
+                                        <CopyButton code={code.trim()} />
                                     </div>
                                 )
                             },
