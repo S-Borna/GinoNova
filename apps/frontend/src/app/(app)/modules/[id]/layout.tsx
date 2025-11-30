@@ -88,8 +88,12 @@ function TaskSidebar({
 }) {
   if (!module) return null
 
-  const completedTasks = module.tasks.filter(t => t.is_completed).length
-  const totalTasks = module.tasks.length
+  // Defensive: ensure tasks and labs are arrays
+  const tasks = module.tasks || []
+  const labs = module.labs || []
+  
+  const completedTasks = tasks.filter(t => t.is_completed).length
+  const totalTasks = tasks.length
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
 
   return (
@@ -156,53 +160,59 @@ function TaskSidebar({
             </div>
 
             <ul className="space-y-0.5">
-              {module.tasks.map((task, index) => {
-                const taskPath = `/modules/${module.slug}/tasks/${task.id}`
-                const isActive = currentPath === taskPath
+              {tasks.length === 0 ? (
+                <li className="px-3 py-2 text-sm text-gray-500">
+                  No tasks loaded yet...
+                </li>
+              ) : (
+                tasks.map((task, index) => {
+                  const taskPath = `/modules/${module.slug}/tasks/${task.id}`
+                  const isActive = currentPath === taskPath
 
-                return (
-                  <li key={task.id}>
-                    <Link
-                      href={taskPath}
-                      onClick={onClose}
-                      className={`
-                        flex items-center gap-3 px-3 py-2.5 rounded-lg
-                        transition-all duration-150
-                        ${isActive
-                          ? 'bg-indigo-500/10 border-l-2 border-indigo-500 text-white'
-                          : 'hover:bg-gray-800/50 text-gray-400 hover:text-white border-l-2 border-transparent'
-                        }
-                      `}
-                    >
-                      {/* Status Icon */}
-                      <div className="flex-shrink-0">
-                        {task.is_completed ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-400" />
-                        ) : (
-                          <Circle className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'text-gray-600'}`} />
-                        )}
-                      </div>
-
-                      {/* Task Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className={`text-sm truncate ${isActive ? 'font-medium' : ''}`}>
-                          {index + 1}. {task.title}
+                  return (
+                    <li key={task.id}>
+                      <Link
+                        href={taskPath}
+                        onClick={onClose}
+                        className={`
+                          flex items-center gap-3 px-3 py-2.5 rounded-lg
+                          transition-all duration-150
+                          ${isActive
+                            ? 'bg-indigo-500/10 border-l-2 border-indigo-500 text-white'
+                            : 'hover:bg-gray-800/50 text-gray-400 hover:text-white border-l-2 border-transparent'
+                          }
+                        `}
+                      >
+                        {/* Status Icon */}
+                        <div className="flex-shrink-0">
+                          {task.is_completed ? (
+                            <CheckCircle2 className="w-4 h-4 text-green-400" />
+                          ) : (
+                            <Circle className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'text-gray-600'}`} />
+                          )}
                         </div>
-                      </div>
 
-                      {/* XP Badge */}
-                      <span className="flex-shrink-0 text-xs text-gray-600">
-                        +{task.xp_reward}
-                      </span>
-                    </Link>
-                  </li>
-                )
-              })}
+                        {/* Task Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className={`text-sm truncate ${isActive ? 'font-medium' : ''}`}>
+                            {index + 1}. {task.title}
+                          </div>
+                        </div>
+
+                        {/* XP Badge */}
+                        <span className="flex-shrink-0 text-xs text-gray-600">
+                          +{task.xp_reward}
+                        </span>
+                      </Link>
+                    </li>
+                  )
+                })
+              )}
             </ul>
           </div>
 
           {/* Labs Section */}
-          {module.labs.length > 0 && (
+          {labs.length > 0 && (
             <div className="px-3 mb-4">
               <div className="flex items-center gap-2 px-2 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <FlaskConical className="w-3.5 h-3.5" />
@@ -210,7 +220,7 @@ function TaskSidebar({
               </div>
 
               <ul className="space-y-0.5">
-                {module.labs.map((lab) => {
+                {labs.map((lab) => {
                   const labPath = `/modules/${module.slug}/labs/${lab.id}`
                   const isActive = currentPath === labPath
 
@@ -304,18 +314,43 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  // Fetch module data
+  // Fetch module data and tasks
   useEffect(() => {
-    async function fetchModule() {
+    async function fetchModuleAndTasks() {
       if (!params?.id) return
 
       setIsLoading(true)
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-        const res = await fetch(`${apiUrl}/api/modules/${params.id}`)
-        if (res.ok) {
-          const data = await res.json()
-          setModule(data)
+        
+        // Fetch module and tasks in parallel
+        const [moduleRes, tasksRes] = await Promise.all([
+          fetch(`${apiUrl}/api/modules/${params.id}`),
+          fetch(`${apiUrl}/api/tasks/module/${params.id}`)
+        ])
+        
+        if (moduleRes.ok) {
+          const moduleData = await moduleRes.json()
+          
+          // Fetch tasks and merge into module
+          let tasks: Task[] = []
+          if (tasksRes.ok) {
+            const tasksData = await tasksRes.json()
+            tasks = (tasksData || []).map((t: any) => ({
+              id: t.id,
+              title: t.title,
+              type: 'lesson' as const,
+              order_index: t.order_index || 0,
+              xp_reward: t.xp_reward || 25,
+              is_completed: false // TODO: fetch from progress API
+            })).sort((a: Task, b: Task) => a.order_index - b.order_index)
+          }
+          
+          setModule({
+            ...moduleData,
+            tasks,
+            labs: [], // TODO: fetch labs when API is ready
+          })
         }
       } catch (error) {
         console.error('Failed to fetch module:', error)
@@ -324,7 +359,7 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
       }
     }
 
-    fetchModule()
+    fetchModuleAndTasks()
   }, [params?.id])
 
   // Close sidebar on route change (mobile)
