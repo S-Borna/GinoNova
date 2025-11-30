@@ -1410,6 +1410,256 @@ ls .git/objects/pack/
             "estimated_minutes": 45,
             "xp_reward": 75,
         },
+        "filesystem": {
+            "title": "📁 Deep Dive: Linux Filesystem Architecture",
+            "description": "Förstå FHS på djupet - från inodes till mount namespaces",
+            "content": """# 📁 Deep Dive: Linux Filesystem Architecture
+
+## 🎯 Lärandemål
+- Förstå inode-strukturen och hur filer lagras
+- Navigera och förstå FHS på expert-nivå
+- Använda advanced filesystem-kommandon
+
+---
+
+## 🧠 Inodes: Filsystemets DNA
+
+Varje fil i Linux har en **inode** (index node) som innehåller:
+
+```
+┌────────────────────────────────────────┐
+│              INODE                      │
+├────────────────────────────────────────┤
+│ • File type (file, dir, link, etc)     │
+│ • Permissions (rwxrwxrwx)              │
+│ • Owner (UID)                          │
+│ • Group (GID)                          │
+│ • Size                                 │
+│ • Timestamps (atime, mtime, ctime)     │
+│ • Link count                           │
+│ • Data block pointers                  │
+└────────────────────────────────────────┘
+```
+
+### Utforska inodes:
+```bash
+# Visa inode-nummer
+ls -i /etc/passwd
+# 1234567 /etc/passwd
+
+# Detaljerad inode-info
+stat /etc/passwd
+
+# Hitta fil via inode
+find / -inum 1234567
+```
+
+---
+
+## 🗂️ FHS: Filesystem Hierarchy Standard
+
+| Katalog | Syfte | DevOps-relevans |
+|---------|-------|-----------------|
+| `/etc` | Systemkonfiguration | Config management |
+| `/var` | Variabel data | Logs, caches |
+| `/opt` | Third-party apps | Custom installations |
+| `/srv` | Service data | Web/app data |
+| `/tmp` | Temporära filer | Build artifacts |
+| `/proc` | Process pseudo-fs | Monitoring |
+| `/sys` | Kernel pseudo-fs | Hardware info |
+
+---
+
+## 🔧 Praktiska kommandon
+
+### Diskanalys
+```bash
+# Diskutrymme per katalog
+du -sh /var/* | sort -h
+
+# Visa bara stora filer (>100MB)
+find /var -size +100M -exec ls -lh {} \\;
+
+# Inode-användning (kan fyllas före disk!)
+df -i
+```
+
+### Mount & Bind mounts
+```bash
+# Lista mounts
+findmnt
+
+# Skapa bind mount
+mount --bind /source /target
+
+# Visa mount namespaces (containers!)
+ls -la /proc/self/ns/mnt
+```
+
+---
+
+## 🐳 DevOps: Container Filesystems
+
+```bash
+# Docker layers
+docker inspect nginx --format '{{.GraphDriver.Data}}'
+
+# Overlay filesystem
+cat /proc/mounts | grep overlay
+
+# Container root filesystem
+docker export container_id | tar -tf - | head -20
+```
+
+---
+
+## 🎯 Quiz
+
+**Fråga:** Vad är skillnaden mellan hard link och symbolic link?
+
+<details>
+<summary>Visa svar</summary>
+
+**Hard link:**
+- Samma inode som originalet
+- Kan inte korsa filsystem
+- Fungerar om originalet tas bort
+
+**Symbolic link:**
+- Egen inode, pekar på sökväg
+- Kan korsa filsystem
+- Bryts om originalet tas bort
+</details>
+
+---
+
+**+75 XP** för filesystem-mastery! 🎉
+""",
+            "estimated_minutes": 35,
+            "xp_reward": 75,
+        },
+        "containers": {
+            "title": "🐳 Deep Dive: Containers vs VMs - Under the Hood",
+            "description": "Förstå containerisering på Linux kernel-nivå",
+            "content": """# 🐳 Containers vs VMs: Under the Hood
+
+## 🎯 Lärandemål
+- Förstå Linux namespaces och cgroups
+- Se hur Docker använder kernel features
+- Jämföra performance och säkerhet
+
+---
+
+## 🏗️ Arkitektur-jämförelse
+
+```
+        Virtual Machines              Containers
+    ┌─────────────────────┐     ┌─────────────────────┐
+    │   App A  │  App B   │     │   App A  │  App B   │
+    ├──────────┼──────────┤     ├──────────┼──────────┤
+    │  Guest   │  Guest   │     │  Bins/   │  Bins/   │
+    │   OS     │   OS     │     │  Libs    │  Libs    │
+    ├──────────┴──────────┤     ├──────────┴──────────┤
+    │     Hypervisor      │     │  Container Runtime  │
+    ├─────────────────────┤     ├─────────────────────┤
+    │      Host OS        │     │      Host OS        │
+    ├─────────────────────┤     ├─────────────────────┤
+    │     Hardware        │     │     Hardware        │
+    └─────────────────────┘     └─────────────────────┘
+    
+    ~1-2 GB overhead/VM          ~50-100 MB/container
+    Boot: 30-60 sekunder         Boot: <1 sekund
+```
+
+---
+
+## 🔧 Linux Namespaces
+
+Containers använder **6 namespaces** för isolering:
+
+| Namespace | Isolerar | Flagga |
+|-----------|----------|--------|
+| **PID** | Process IDs | `CLONE_NEWPID` |
+| **NET** | Network stack | `CLONE_NEWNET` |
+| **MNT** | Mount points | `CLONE_NEWNS` |
+| **UTS** | Hostname | `CLONE_NEWUTS` |
+| **IPC** | IPC resources | `CLONE_NEWIPC` |
+| **USER** | User/Group IDs | `CLONE_NEWUSER` |
+
+### Testa själv:
+```bash
+# Skapa ny PID namespace
+sudo unshare --pid --fork --mount-proc bash
+ps aux  # Bara din bash syns!
+
+# Skapa ny UTS namespace (hostname)
+sudo unshare --uts bash
+hostname container-test
+hostname  # Ändrat! Men inte på host
+```
+
+---
+
+## 📊 cgroups: Resource Control
+
+```bash
+# Skapa cgroup för minnestest
+sudo cgcreate -g memory:/mygroup
+
+# Sätt limit till 100MB
+echo 100000000 | sudo tee /sys/fs/cgroup/memory/mygroup/memory.limit_in_bytes
+
+# Kör process i cgroup
+sudo cgexec -g memory:mygroup python3 -c "x='A'*200000000"
+# Killed! (OOM)
+```
+
+---
+
+## 🐳 Vad Docker egentligen gör
+
+```bash
+# Docker run = namespaces + cgroups + overlay fs + networking
+docker run -it --rm alpine sh
+
+# Samma sak manuellt:
+unshare --pid --uts --net --mount --ipc --fork \\
+  chroot /var/lib/docker/overlay2/.../merged /bin/sh
+```
+
+---
+
+## 🔒 Säkerhetsjämförelse
+
+| Aspekt | VM | Container |
+|--------|-----|-----------|
+| Kernel isolation | Separat | Delad |
+| Attack surface | Mindre | Större |
+| Escape risk | Låg | Högre |
+| Seccomp/AppArmor | N/A | Rekommenderat |
+
+---
+
+## 🎯 Quiz
+
+**Fråga:** Varför är containers snabbare att starta än VMs?
+
+<details>
+<summary>Visa svar</summary>
+
+- **Ingen bootprocess** - använder host kernel direkt
+- **Inget hypervisor-lager** - native syscalls
+- **Shared filesystem layers** - overlay fs cachar base images
+- **Ingen BIOS/POST** - bara process spawn
+</details>
+
+---
+
+**+75 XP** för container-mastery! 🎉
+""",
+            "estimated_minutes": 40,
+            "xp_reward": 75,
+        },
     }
     
     # Create fördjupning tasks with unique content
@@ -1423,14 +1673,24 @@ ls .git/objects/pack/
             skipped += 1
             continue
             
-        # Find matching content
+        # Find matching content based on keywords in task title
         task_title_lower = parent_task.title.lower()
         content_data = None
         
-        for key, data in FORDJUPNING_CONTENT.items():
-            if key in task_title_lower:
-                content_data = data
-                break
+        # Map keywords to content keys
+        keyword_mapping = [
+            (["macos", "linux", "devops work"], "macos vs linux"),
+            (["terminal emulators", "iterm", "alacritty"], "terminal"),
+            (["git object", "blobs", "trees", "commits"], "git"),
+            (["filesystem hierarchy", "fhs"], "filesystem"),
+            (["containers vs vm", "virtual"], "containers"),
+        ]
+        
+        for keywords, content_key in keyword_mapping:
+            if any(kw in task_title_lower for kw in keywords):
+                if content_key in FORDJUPNING_CONTENT:
+                    content_data = FORDJUPNING_CONTENT[content_key]
+                    break
         
         if not content_data:
             continue
