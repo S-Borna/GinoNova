@@ -82,3 +82,16 @@ export { useTimer, type UseTimerOptions, type UseTimerReturn } from "./useTimer"
 export { useStudyflowSession as useStudyflowSessionManager } from "./useStudyflowSession"
 export { useStudyflowShortcuts, type KeyboardShortcut } from "./useStudyflowShortcuts"
 export { useNotifications } from "./useNotifications"
+
+// Platform/OS hooks (FAS-3.1)
+export {
+    useOperatingSystem,
+    usePlatform,
+    OS_OPTIONS,
+    LINUX_DISTROS,
+    filterContentByPlatform,
+    getInstallCommand,
+    type OperatingSystem,
+    type LinuxDistro,
+    type PlatformConfig,
+} from "./useOperatingSystem"

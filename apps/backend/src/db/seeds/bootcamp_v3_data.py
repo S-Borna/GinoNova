@@ -676,7 +676,7 @@ gh auth status
 AWS CLI är det primära verktyget för att interagera med Amazon Web Services från terminalen. Som DevOps-ingenjör kommer du använda det dagligen för att hantera EC2-instanser, S3-buckets, IAM-användare och hundratals andra AWS-tjänster.
 
 ## Vad du kommer lära dig
-- Installera AWS CLI v2 på macOS och Linux
+- Installera AWS CLI v2 på ditt operativsystem
 - Konfigurera credentials och profiler
 - Verifiera installationen med ett enkelt API-anrop
 
@@ -689,24 +689,17 @@ AWS CLI är det primära verktyget för att interagera med Amazon Web Services f
 
 ### Steg 1: Installera AWS CLI v2
 
-**macOS (med Homebrew):**
+<!-- OS:macos -->
+**macOS (med Homebrew - rekommenderat):**
 ```bash
 brew install awscli
 ```
 
-**macOS (officiell installer):**
+**Alternativ: Officiell installer:**
 ```bash
 curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
 sudo installer -pkg AWSCLIV2.pkg -target /
 rm AWSCLIV2.pkg
-```
-
-**Linux (Ubuntu/Debian):**
-```bash
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-rm -rf aws awscliv2.zip
 ```
 
 **Förväntat resultat:**
@@ -714,6 +707,103 @@ rm -rf aws awscliv2.zip
 aws --version
 aws-cli/2.15.0 Python/3.11.6 Darwin/23.0.0 source/arm64
 ```
+<!-- /OS:macos -->
+
+<!-- OS:windows -->
+**Windows (via winget - rekommenderat):**
+```powershell
+winget install Amazon.AWSCLI
+```
+
+**Alternativ: MSI Installer:**
+1. Ladda ner från: https://awscli.amazonaws.com/AWSCLIV2.msi
+2. Kör MSI-filen och följ installationsguiden
+3. Starta om terminalen efter installation
+
+**WSL2 (Ubuntu i Windows):**
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+
+**Förväntat resultat (PowerShell):**
+```
+aws --version
+aws-cli/2.15.0 Python/3.11.6 Windows/10 exe/AMD64
+```
+<!-- /OS:windows -->
+
+<!-- OS:linux -->
+<!-- DISTRO:ubuntu -->
+**Ubuntu/Debian:**
+```bash
+# Ladda ner och installera
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo apt install -y unzip
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+<!-- /DISTRO:ubuntu -->
+
+<!-- DISTRO:debian -->
+**Debian:**
+```bash
+# Ladda ner och installera
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo apt install -y unzip
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+<!-- /DISTRO:debian -->
+
+<!-- DISTRO:fedora -->
+**Fedora:**
+```bash
+# Ladda ner och installera
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo dnf install -y unzip
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+<!-- /DISTRO:fedora -->
+
+<!-- DISTRO:arch -->
+**Arch Linux:**
+```bash
+# Via AUR (yay)
+yay -S aws-cli-v2-bin
+
+# Eller manuellt
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+<!-- /DISTRO:arch -->
+
+<!-- DISTRO:centos -->
+**CentOS/RHEL:**
+```bash
+# Ladda ner och installera
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo yum install -y unzip
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+<!-- /DISTRO:centos -->
+
+**Förväntat resultat:**
+```
+aws --version
+aws-cli/2.15.0 Python/3.11.6 Linux/6.5.0 source/x86_64
+```
+<!-- /OS:linux -->
 
 ### Steg 2: Skapa AWS Access Keys
 
@@ -754,16 +844,33 @@ export AWS_PROFILE=work
 aws s3 ls
 ```
 
+<!-- OS:windows -->
+**PowerShell:**
+```powershell
+$env:AWS_PROFILE = "work"
+aws s3 ls
+```
+<!-- /OS:windows -->
+
 ## Vanliga problem
 
 ### Problem: "Unable to locate credentials"
 **Lösning:** Kör `aws configure` igen eller kontrollera att `~/.aws/credentials` finns.
+
+<!-- OS:windows -->
+**Windows:** Kontrollera att filen finns på `C:\\Users\\DITTNAMN\\.aws\\credentials`
+<!-- /OS:windows -->
 
 ### Problem: "An error occurred (InvalidClientTokenId)"
 **Lösning:** Dina access keys är felaktiga eller inaktiverade. Skapa nya i AWS Console.
 
 ### Problem: "An error occurred (ExpiredToken)"
 **Lösning:** Om du använder MFA/temporary credentials, förnya din session.
+
+<!-- OS:windows -->
+### Problem: "aws is not recognized as an internal or external command"
+**Lösning:** Starta om PowerShell/CMD efter installation. Om det fortfarande inte fungerar, lägg till AWS CLI till PATH manuellt.
+<!-- /OS:windows -->
 
 ## Verifiera att det fungerar
 
@@ -1292,13 +1399,13 @@ Host github.com
     User git
     IdentityFile ~/.ssh/id_ed25519
     AddKeysToAgent yes
-    
+
 # Exempel: AWS EC2-server
 Host my-server
     HostName ec2-XX-XX-XX-XX.eu-north-1.compute.amazonaws.com
     User ubuntu
     IdentityFile ~/.ssh/aws-key.pem
-    
+
 # Wildcard för alla AWS-servrar
 Host *.amazonaws.com
     User ubuntu
@@ -1479,7 +1586,7 @@ På GitHub:
 ## Vanliga problem
 
 ### Problem: "error: gpg failed to sign the data"
-**Lösning:** 
+**Lösning:**
 ```bash
 export GPG_TTY=$(tty)
 gpgconf --kill gpg-agent

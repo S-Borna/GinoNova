@@ -2,27 +2,32 @@
 
 /**
  * ============================================================================
- * MODULES LIST PAGE — Design System v2.0
+ * MODULES LIST PAGE — Design System v2.0 + Platform Selection
  * ============================================================================
  *
  * Updated with @saas/ui design system components:
  * - PageLayout for consistent layout
  * - Headline for typography
  * - Section/Block for content organization
+ * - PlatformSelector for OS/distro selection with wave animation
  *
  * @phase DS.2 - Design System Application Layer
+ * @phase FAS-3.1 - OS-Adaptive Content System
  */
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
 import { getModules, ModulePublic } from "@/lib/modules"
 import { getTasksForModule, TaskPublic } from "@/lib/tasks"
 import { getUserProgress, ProgressPublic } from "@/lib/progress"
 import { useAuth } from "@/components/auth"
+import { usePlatform, LINUX_DISTROS } from "@/hooks/useOperatingSystem"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
-import { BookOpen, Trophy, RefreshCw, AlertCircle } from "lucide-react"
+import { PlatformSelector, PlatformBadge } from "@/components/onboarding"
+import { BookOpen, Trophy, RefreshCw, AlertCircle, Settings2 } from "lucide-react"
 
 // @saas/ui Design System
 import { PageLayout, Section, Block, Headline, Subtext } from "@saas/ui"
@@ -186,6 +191,7 @@ interface HeaderProps {
     overallProgress: number
     onRefresh: () => void
     isRefreshing: boolean
+    onChangePlatform?: () => void
 }
 
 function Header({
@@ -194,6 +200,7 @@ function Header({
     overallProgress,
     onRefresh,
     isRefreshing,
+    onChangePlatform,
 }: HeaderProps) {
     return (
         <div className="mb-8">
@@ -208,6 +215,9 @@ function Header({
                 </div>
 
                 <div className="flex items-center gap-3">
+                    {/* Platform Badge */}
+                    <PlatformBadge />
+
                     {/* Trophy badge */}
                     <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
                         <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -267,10 +277,12 @@ function Header({
 
 export default function ModulesPage() {
     const { user } = useAuth()
+    const { hasSelected, isLoading: platformLoading, os, distro } = usePlatform()
     const [modules, setModules] = useState<EnhancedModule[]>([])
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [showModules, setShowModules] = useState(false)
 
     const fetchModules = async (isRefresh = false) => {
         if (isRefresh) {
@@ -386,6 +398,38 @@ export default function ModulesPage() {
     const overallProgress =
         totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0
 
+    // Handle platform selection complete - trigger wave animation
+    const handlePlatformComplete = () => {
+        setShowModules(true)
+    }
+
+    // Show modules immediately if platform already selected
+    useEffect(() => {
+        if (hasSelected && !platformLoading) {
+            setShowModules(true)
+        }
+    }, [hasSelected, platformLoading])
+
+    // Platform selection loading
+    if (platformLoading) {
+        return (
+            <PageLayout maxWidth="wide" background="gray">
+                <PageSkeleton />
+            </PageLayout>
+        )
+    }
+
+    // Show platform selector if not yet selected
+    if (!hasSelected) {
+        return (
+            <PageLayout maxWidth="wide" background="gray">
+                <div className="min-h-[70vh] flex items-center justify-center py-12">
+                    <PlatformSelector onComplete={handlePlatformComplete} />
+                </div>
+            </PageLayout>
+        )
+    }
+
     if (loading) {
         return (
             <PageLayout maxWidth="wide" background="gray">
@@ -412,45 +456,66 @@ export default function ModulesPage() {
 
     return (
         <PageLayout maxWidth="wide" background="gray">
-            <div className="space-y-8">
-                {/* Header */}
-                <Section spacing="none">
-                    <Header
-                        totalModules={totalModules}
-                        completedModules={completedModules}
-                        overallProgress={overallProgress}
-                        onRefresh={handleRefresh}
-                        isRefreshing={refreshing}
-                    />
-                </Section>
-
-                {/* Modules grid */}
-                <Section spacing="none">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {modules.map((module, index) => (
-                            <div
-                                key={module.id}
-                                className="animate-fade-in-up"
-                                style={{ animationDelay: `${index * 100}ms` }}
+            <AnimatePresence>
+                {showModules && (
+                    <motion.div 
+                        className="space-y-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {/* Header */}
+                        <Section spacing="none">
+                            <motion.div
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1, duration: 0.4 }}
                             >
-                                <ModuleCard
-                                    id={module.id}
-                                    orderIndex={module.orderIndex}
-                                    title={module.name}
-                                    description={module.description || "No description available"}
-                                    icon={module.icon}
-                                    progress={module.progress}
-                                    tasksCompleted={module.tasksCompleted}
-                                    totalTasks={module.totalTasks}
-                                    status={module.status}
-                                    estimatedHours={module.estimatedHours}
-                                    prerequisiteModule={module.prerequisiteModule}
+                                <Header
+                                    totalModules={totalModules}
+                                    completedModules={completedModules}
+                                    overallProgress={overallProgress}
+                                    onRefresh={handleRefresh}
+                                    isRefreshing={refreshing}
                                 />
+                            </motion.div>
+                        </Section>
+
+                        {/* Modules grid with wave animation */}
+                        <Section spacing="none">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {modules.map((module, index) => (
+                                    <motion.div
+                                        key={module.id}
+                                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        transition={{
+                                            type: "spring",
+                                            stiffness: 100,
+                                            damping: 15,
+                                            delay: 0.2 + index * 0.08, // Wave effect
+                                        }}
+                                    >
+                                        <ModuleCard
+                                            id={module.id}
+                                            orderIndex={module.orderIndex}
+                                            title={module.name}
+                                            description={module.description || "No description available"}
+                                            icon={module.icon}
+                                            progress={module.progress}
+                                            tasksCompleted={module.tasksCompleted}
+                                            totalTasks={module.totalTasks}
+                                            status={module.status}
+                                            estimatedHours={module.estimatedHours}
+                                            prerequisiteModule={module.prerequisiteModule}
+                                        />
+                                    </motion.div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </Section>
-            </div>
+                        </Section>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </PageLayout>
     )
 }
