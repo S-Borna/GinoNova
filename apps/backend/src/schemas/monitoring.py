@@ -14,37 +14,37 @@ class EventType(str, Enum):
     user_logout = "user.logout"
     user_created = "user.created"
     user_updated = "user.updated"
-    
+
     # Learning events
     task_started = "task.started"
     task_completed = "task.completed"
     task_failed = "task.failed"
     module_started = "module.started"
     module_completed = "module.completed"
-    
+
     # Studyflow events
     studyflow_started = "studyflow.started"
     studyflow_paused = "studyflow.paused"
     studyflow_completed = "studyflow.completed"
     studyflow_minute = "studyflow.minute"
-    
+
     # AI events
     ai_request = "ai.request"
     ai_response = "ai.response"
     ai_error = "ai.error"
-    
+
     # Admin events
     admin_action = "admin.action"
     admin_user_update = "admin.user_update"
-    
+
     # System events
     system_alert = "system.alert"
     system_error = "system.error"
-    
+
     # Billing events
     billing_subscription = "billing.subscription"
     billing_payment = "billing.payment"
-    
+
     # Security events
     security_login_failed = "security.login_failed"
     security_rate_limit = "security.rate_limit"

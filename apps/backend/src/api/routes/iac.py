@@ -40,7 +40,7 @@ def get_iac_status(response: Response) -> IaCStatus:
     Get IaC system status.
     """
     add_phase_header(response)
-    
+
     return IaCStatus(
         status="operational",
         version="23.0",
@@ -61,7 +61,7 @@ def list_modules(response: Response) -> list[TerraformModule]:
     List all Terraform modules.
     """
     add_phase_header(response)
-    
+
     return [
         TerraformModule(
             name="backend",
@@ -139,7 +139,7 @@ def get_module_status(
     Get status of a specific module.
     """
     add_phase_header(response)
-    
+
     modules = {
         "backend": ModuleStatus(
             name="backend",
@@ -160,7 +160,7 @@ def get_module_status(
             resources_count=2
         ),
     }
-    
+
     if name not in modules:
         return ModuleStatus(
             name=name,
@@ -171,7 +171,7 @@ def get_module_status(
             drift_detected=False,
             resources_count=1
         )
-    
+
     return modules[name]
 
 
@@ -183,7 +183,7 @@ def list_state_files(response: Response) -> list[StateFile]:
     List Terraform state files.
     """
     add_phase_header(response)
-    
+
     return [
         StateFile(
             environment=Environment.production,
@@ -210,7 +210,7 @@ def get_state(environment: Environment, response: Response) -> StateFile:
     Get state file for an environment.
     """
     add_phase_header(response)
-    
+
     return StateFile(
         environment=environment,
         version=1,
@@ -233,7 +233,7 @@ def list_plans(
     List recent Terraform plans.
     """
     add_phase_header(response)
-    
+
     plans = [
         TerraformPlan(
             id=f"plan-{uuid4().hex[:8]}",
@@ -248,10 +248,10 @@ def list_plans(
         )
         for i in range(min(limit, 5))
     ]
-    
+
     if environment:
         plans = [p for p in plans if p.environment == environment]
-    
+
     return plans
 
 
@@ -264,7 +264,7 @@ def create_plan(
     Create a new Terraform plan.
     """
     add_phase_header(response)
-    
+
     return TerraformPlan(
         id=f"plan-{uuid4().hex[:8]}",
         environment=environment,
@@ -297,7 +297,7 @@ def list_applies(
     List recent Terraform applies.
     """
     add_phase_header(response)
-    
+
     applies = [
         TerraformApply(
             id=f"apply-{uuid4().hex[:8]}",
@@ -313,10 +313,10 @@ def list_applies(
         )
         for i in range(min(limit, 5))
     ]
-    
+
     if environment:
         applies = [a for a in applies if a.environment == environment]
-    
+
     return applies
 
 
@@ -328,7 +328,7 @@ def list_environments(response: Response) -> list[EnvironmentConfig]:
     List environment configurations.
     """
     add_phase_header(response)
-    
+
     return [
         EnvironmentConfig(
             name=Environment.production,
@@ -359,7 +359,7 @@ def get_environment_status(environment: Environment, response: Response) -> Envi
     Get detailed environment status.
     """
     add_phase_header(response)
-    
+
     modules = [
         ModuleStatus(
             name=name,
@@ -378,7 +378,7 @@ def get_environment_status(environment: Environment, response: Response) -> Envi
             ("storage", ResourceType.storage),
         ]
     ]
-    
+
     return EnvironmentStatus(
         name=environment,
         status="healthy",
@@ -396,7 +396,7 @@ def get_scaling_config(environment: Environment, response: Response) -> ScalingC
     Get auto-scaling configuration for an environment.
     """
     add_phase_header(response)
-    
+
     rules = [
         ScalingRule(
             resource="backend",
@@ -415,7 +415,7 @@ def get_scaling_config(environment: Environment, response: Response) -> ScalingC
             cooldown_seconds=180
         ),
     ]
-    
+
     return ScalingConfig(
         environment=environment,
         rules=rules

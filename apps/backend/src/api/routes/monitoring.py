@@ -38,7 +38,7 @@ def get_monitoring_status(response: Response) -> MonitoringStatus:
     Get monitoring system status.
     """
     add_phase_header(response)
-    
+
     return MonitoringStatus(
         status="operational",
         version="25.0",
@@ -63,7 +63,7 @@ def list_events(
     List recent events from the event bus.
     """
     add_phase_header(response)
-    
+
     event_types = [
         EventType.task_completed,
         EventType.user_login,
@@ -71,7 +71,7 @@ def list_events(
         EventType.studyflow_minute,
         EventType.module_completed,
     ]
-    
+
     events = [
         Event(
             id=str(uuid4()),
@@ -87,10 +87,10 @@ def list_events(
         )
         for i in range(min(limit, 50))
     ]
-    
+
     if event_type:
         events = [e for e in events if e.event_type == event_type]
-    
+
     return events
 
 
@@ -103,7 +103,7 @@ def get_event_stats(
     Get event statistics.
     """
     add_phase_header(response)
-    
+
     return EventStats(
         total_events=12500,
         events_per_hour=520.8,
@@ -135,7 +135,7 @@ def publish_event(
     Publish an event to the event bus (for testing).
     """
     add_phase_header(response)
-    
+
     return Event(
         id=str(uuid4()),
         event_type=event_type,
@@ -160,10 +160,10 @@ def list_audit_entries(
     List audit trail entries.
     """
     add_phase_header(response)
-    
+
     actions = [AuditAction.create, AuditAction.update, AuditAction.read, AuditAction.login]
     resources = ["task", "module", "user", "progress", "studyflow"]
-    
+
     entries = [
         AuditEntry(
             id=str(uuid4()),
@@ -178,12 +178,12 @@ def list_audit_entries(
         )
         for i in range(min(limit, 50))
     ]
-    
+
     if action:
         entries = [e for e in entries if e.action == action]
     if resource_type:
         entries = [e for e in entries if e.resource_type == resource_type]
-    
+
     return entries
 
 
@@ -193,7 +193,7 @@ def get_audit_summary(response: Response) -> AuditSummary:
     Get audit summary.
     """
     add_phase_header(response)
-    
+
     return AuditSummary(
         total_entries=45000,
         by_action={
@@ -223,7 +223,7 @@ def list_admin_audit(
     List admin audit entries.
     """
     add_phase_header(response)
-    
+
     return [
         AuditEntry(
             id=str(uuid4()),
@@ -254,7 +254,7 @@ def list_alerts(
     List system alerts.
     """
     add_phase_header(response)
-    
+
     alerts = [
         SystemAlert(
             id="alert-1",
@@ -282,14 +282,14 @@ def list_alerts(
             created_at=datetime.utcnow() - timedelta(hours=12)
         ),
     ]
-    
+
     if active_only:
         alerts = [a for a in alerts if not a.resolved]
     if alert_type:
         alerts = [a for a in alerts if a.alert_type == alert_type]
     if severity:
         alerts = [a for a in alerts if a.severity == severity]
-    
+
     return alerts
 
 
@@ -299,7 +299,7 @@ def get_alerts_overview(response: Response) -> AlertsOverview:
     Get alerts overview.
     """
     add_phase_header(response)
-    
+
     return AlertsOverview(
         active_count=1,
         by_severity={
@@ -326,7 +326,7 @@ def acknowledge_alert(alert_id: str, response: Response) -> SystemAlert:
     Acknowledge an alert.
     """
     add_phase_header(response)
-    
+
     return SystemAlert(
         id=alert_id,
         alert_type=AlertType.performance,
@@ -347,7 +347,7 @@ def resolve_alert(alert_id: str, response: Response) -> SystemAlert:
     Resolve an alert.
     """
     add_phase_header(response)
-    
+
     return SystemAlert(
         id=alert_id,
         alert_type=AlertType.performance,
@@ -370,7 +370,7 @@ def get_consumer_stats(response: Response) -> ConsumerStats:
     Get event consumer statistics.
     """
     add_phase_header(response)
-    
+
     consumers = [
         EventConsumer(
             name="studyflow_consumer",
@@ -415,7 +415,7 @@ def get_consumer_stats(response: Response) -> ConsumerStats:
             lag=3
         ),
     ]
-    
+
     return ConsumerStats(
         consumers=consumers,
         total_processed=sum(c.events_processed for c in consumers),

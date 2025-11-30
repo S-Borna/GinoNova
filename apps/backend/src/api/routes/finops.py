@@ -41,7 +41,7 @@ def get_finops_status(response: Response) -> FinOpsStatus:
     Get FinOps system status.
     """
     add_phase_header(response)
-    
+
     return FinOpsStatus(
         status="operational",
         version="24.0",
@@ -59,7 +59,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
     Get complete FinOps dashboard data.
     """
     add_phase_header(response)
-    
+
     status = FinOpsStatus(
         status="operational",
         version="24.0",
@@ -69,7 +69,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
         active_alerts=0,
         anomalies_detected=1
     )
-    
+
     cost_summary = CostSummary(
         period="2025-11",
         total_usd=245.80,
@@ -83,7 +83,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
         change_percent=5.2,
         forecast_usd=320.00
     )
-    
+
     ai_summary = AIUsageSummary(
         period="2025-11",
         total_tokens=2500000,
@@ -95,7 +95,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
             {"user_id": "user-2", "tokens": 120000, "cost_usd": 4.20},
         ]
     )
-    
+
     budgets = [
         CostBudget(
             id="budget-1",
@@ -116,7 +116,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
             created_at=datetime.utcnow() - timedelta(days=30)
         ),
     ]
-    
+
     anomalies = [
         CostAnomaly(
             id="anomaly-1",
@@ -129,7 +129,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
             detected_at=datetime.utcnow() - timedelta(hours=6)
         )
     ]
-    
+
     recommendations = [
         OptimizationRecommendation(
             id="rec-1",
@@ -150,7 +150,7 @@ def get_finops_dashboard(response: Response) -> FinOpsDashboard:
             impact="low"
         ),
     ]
-    
+
     return FinOpsDashboard(
         status=status,
         cost_summary=cost_summary,
@@ -172,7 +172,7 @@ def get_cost_summary(
     Get cost summary for a period.
     """
     add_phase_header(response)
-    
+
     return CostSummary(
         period=period,
         total_usd=245.80,
@@ -198,7 +198,7 @@ def list_cost_events(
     List recent cost events.
     """
     add_phase_header(response)
-    
+
     events = [
         CostEvent(
             id=str(uuid4()),
@@ -210,10 +210,10 @@ def list_cost_events(
         )
         for i in range(20)
     ]
-    
+
     if category:
         events = [e for e in events if e.category == category]
-    
+
     return events[:limit]
 
 
@@ -223,7 +223,7 @@ def get_compute_costs(response: Response) -> ComputeCost:
     Get compute cost breakdown.
     """
     add_phase_header(response)
-    
+
     return ComputeCost(
         backend_hours=720,
         backend_cost_usd=65.00,
@@ -239,7 +239,7 @@ def get_storage_costs(response: Response) -> StorageCost:
     Get storage cost breakdown.
     """
     add_phase_header(response)
-    
+
     return StorageCost(
         total_gb=25.5,
         cost_per_gb=0.49,
@@ -259,7 +259,7 @@ def get_database_costs(response: Response) -> DatabaseCost:
     Get database cost breakdown.
     """
     add_phase_header(response)
-    
+
     return DatabaseCost(
         size_gb=5.2,
         backup_gb=15.6,
@@ -279,7 +279,7 @@ def get_ai_usage(
     Get AI usage summary.
     """
     add_phase_header(response)
-    
+
     return AIUsageSummary(
         period=period,
         total_tokens=2500000,
@@ -304,7 +304,7 @@ def list_ai_usage_events(
     List AI usage events.
     """
     add_phase_header(response)
-    
+
     events = [
         AIUsageCost(
             id=str(uuid4()),
@@ -318,7 +318,7 @@ def list_ai_usage_events(
         )
         for i in range(30)
     ]
-    
+
     return events[:limit]
 
 
@@ -330,7 +330,7 @@ def list_budgets(response: Response) -> list[CostBudget]:
     List all budgets.
     """
     add_phase_header(response)
-    
+
     return [
         CostBudget(
             id="budget-1",
@@ -368,7 +368,7 @@ def list_budget_alerts(response: Response) -> list[BudgetAlert]:
     List budget alerts.
     """
     add_phase_header(response)
-    
+
     return [
         BudgetAlert(
             id="alert-1",
@@ -390,7 +390,7 @@ def get_cost_forecast(response: Response) -> CostForecast:
     Get cost forecast for next period.
     """
     add_phase_header(response)
-    
+
     return CostForecast(
         period="2025-12",
         predicted_usd=320.00,
@@ -419,7 +419,7 @@ def list_anomalies(response: Response) -> list[CostAnomaly]:
     List detected cost anomalies.
     """
     add_phase_header(response)
-    
+
     return [
         CostAnomaly(
             id="anomaly-1",
@@ -442,7 +442,7 @@ def list_recommendations(response: Response) -> list[OptimizationRecommendation]
     List cost optimization recommendations.
     """
     add_phase_header(response)
-    
+
     return [
         OptimizationRecommendation(
             id="rec-1",
