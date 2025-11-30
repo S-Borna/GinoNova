@@ -89,7 +89,7 @@ def has_generic_patterns(content: str) -> list[str]:
     """Check for generic placeholder patterns."""
     if not content:
         return ["no_content"]
-    
+
     found = []
     content_lower = content.lower()
     for pattern in GENERIC_PATTERNS:
@@ -101,29 +101,29 @@ def has_generic_patterns(content: str) -> list[str]:
 def assess_quality(content: Optional[str]) -> tuple[ContentQuality, list[str]]:
     """Assess the quality of task content."""
     issues = []
-    
+
     # No content at all
     if not content or len(content.strip()) < 50:
         return ContentQuality.EMPTY, ["no_content"]
-    
+
     # Check for generic patterns
     generic_found = has_generic_patterns(content)
     if generic_found:
         issues.extend([f"generic:{p[:30]}" for p in generic_found])
-    
+
     # Check content length
     if len(content) < MIN_CONTENT_LENGTH:
         issues.append("too_short")
-    
+
     # Check for code blocks
     code_blocks = count_code_blocks(content)
     if code_blocks < MIN_CODE_BLOCKS * 2:  # Count ``` pairs
         issues.append("no_code_blocks")
-    
+
     # Check for sections
     if "##" not in content:
         issues.append("no_sections")
-    
+
     # Determine quality
     if not content or len(content.strip()) < 50:
         return ContentQuality.EMPTY, issues
@@ -139,7 +139,7 @@ def audit_task(module: dict, task: dict, track_slug: str) -> TaskAudit:
     """Audit a single task."""
     content = task.get("content", "")
     quality, issues = assess_quality(content)
-    
+
     # Determine priority based on module order
     module_order = module.get("order_index", 99)
     if module_order <= 3:
@@ -148,14 +148,14 @@ def audit_task(module: dict, task: dict, track_slug: str) -> TaskAudit:
         priority = "medium"
     else:
         priority = "low"
-    
+
     # Higher priority for empty/generic
     if quality in [ContentQuality.EMPTY, ContentQuality.GENERIC]:
         if module_order <= 5:
             priority = "critical"
         else:
             priority = "high"
-    
+
     return TaskAudit(
         module_slug=module["slug"],
         module_name=module["name"],
@@ -191,14 +191,14 @@ def run_audit() -> dict:
         "tasks": [],
         "rewrite_queue": [],
     }
-    
+
     # Build track lookup
     track_map = {t["slug"]: t["name"] for t in BOOTCAMP_TRACKS}
-    
+
     for module in BOOTCAMP_MODULES:
         module_slug = module["slug"]
         track_slug = module["track_slug"]
-        
+
         module_result = {
             "name": module["name"],
             "track": track_slug,
@@ -209,16 +209,16 @@ def run_audit() -> dict:
             "complete": 0,
             "needs_rewrite": [],
         }
-        
+
         for idx, task in enumerate(module.get("tasks", [])):
             audit = audit_task(module, task, track_slug)
             audit_dict = asdict(audit)
             audit_dict["quality"] = audit.quality.value
-            
+
             results["tasks"].append(audit_dict)
             results["summary"]["total_tasks"] += 1
             module_result["total"] += 1
-            
+
             # Count by quality
             if audit.quality == ContentQuality.EMPTY:
                 results["summary"]["empty"] += 1
@@ -234,7 +234,7 @@ def run_audit() -> dict:
             else:
                 results["summary"]["complete"] += 1
                 module_result["complete"] += 1
-            
+
             # Count by priority
             if audit.priority == "critical":
                 results["summary"]["critical_priority"] += 1
@@ -256,9 +256,9 @@ def run_audit() -> dict:
                 results["summary"]["medium_priority"] += 1
             else:
                 results["summary"]["low_priority"] += 1
-        
+
         results["by_module"][module_slug] = module_result
-        
+
         # Track aggregation
         if track_slug not in results["by_track"]:
             results["by_track"][track_slug] = {
@@ -269,16 +269,16 @@ def run_audit() -> dict:
                 "partial": 0,
                 "complete": 0,
             }
-        
+
         results["by_track"][track_slug]["total"] += module_result["total"]
         results["by_track"][track_slug]["empty"] += module_result["empty"]
         results["by_track"][track_slug]["generic"] += module_result["generic"]
         results["by_track"][track_slug]["partial"] += module_result["partial"]
         results["by_track"][track_slug]["complete"] += module_result["complete"]
-    
+
     # Sort rewrite queue by priority
     results["rewrite_queue"].sort(key=lambda x: (x["priority"], x["module"]))
-    
+
     return results
 
 
@@ -297,14 +297,14 @@ def generate_markdown_report(results: dict) -> str:
         "| Quality | Count | Percentage |",
         "|---------|-------|------------|",
     ]
-    
+
     total = results["summary"]["total_tasks"]
     for quality in ["complete", "partial", "generic", "empty"]:
         count = results["summary"][quality]
         pct = (count / total * 100) if total > 0 else 0
         emoji = {"complete": "✅", "partial": "🟡", "generic": "🟠", "empty": "🔴"}[quality]
         lines.append(f"| {emoji} {quality.capitalize()} | {count} | {pct:.1f}% |")
-    
+
     lines.extend([
         "",
         "## 🚨 Priority Breakdown",
@@ -319,7 +319,7 @@ def generate_markdown_report(results: dict) -> str:
         "## 📦 By Track",
         "",
     ])
-    
+
     for track_slug, track_data in results["by_track"].items():
         complete_pct = (track_data["complete"] / track_data["total"] * 100) if track_data["total"] > 0 else 0
         needs_work = track_data["empty"] + track_data["generic"]
@@ -328,24 +328,24 @@ def generate_markdown_report(results: dict) -> str:
         lines.append(f"- Complete: {track_data['complete']} ({complete_pct:.0f}%)")
         lines.append(f"- Needs rewrite: {needs_work}")
         lines.append("")
-    
+
     lines.extend([
         "## 📋 Rewrite Queue (Top 30)",
         "",
         "| # | Module | Task | Quality |",
         "|---|--------|------|---------|",
     ])
-    
+
     for i, item in enumerate(results["rewrite_queue"][:30], 1):
         lines.append(f"| {i} | {item['module'][:25]} | {item['title'][:35]} | {item['quality']} |")
-    
+
     lines.extend([
         "",
         "---",
         "",
         "*Full details in `content_audit_report.json`*",
     ])
-    
+
     return "\n".join(lines)
 
 
@@ -353,38 +353,38 @@ def main():
     """Main entry point."""
     print("🔍 Running DevOpsHub Content Audit...")
     print()
-    
+
     results = run_audit()
-    
+
     # Save JSON report
     output_dir = Path(__file__).parent.parent / "content"
     output_dir.mkdir(exist_ok=True)
-    
+
     json_path = output_dir / "content_audit_report.json"
     with open(json_path, "w") as f:
         json.dump(results, f, indent=2)
     print(f"📄 JSON report saved: {json_path}")
-    
+
     # Save Markdown report
     md_report = generate_markdown_report(results)
     md_path = output_dir / "rewrite_queue.md"
     with open(md_path, "w") as f:
         f.write(md_report)
     print(f"📝 Markdown report saved: {md_path}")
-    
+
     # Print summary
     print()
     print("=" * 60)
     print("📊 CONTENT AUDIT SUMMARY")
     print("=" * 60)
     print()
-    
+
     total = results["summary"]["total_tasks"]
     complete = results["summary"]["complete"]
     partial = results["summary"]["partial"]
     generic = results["summary"]["generic"]
     empty = results["summary"]["empty"]
-    
+
     print(f"Total Tasks: {total}")
     print(f"  ✅ Complete:  {complete:3d} ({complete/total*100:.1f}%)")
     print(f"  🟡 Partial:   {partial:3d} ({partial/total*100:.1f}%)")
@@ -394,7 +394,7 @@ def main():
     print(f"⚠️  NEEDS REWRITE: {generic + empty} tasks")
     print(f"🔴 CRITICAL: {results['summary']['critical_priority']} tasks")
     print()
-    
+
     # Estimated work
     hours_per_task = 1.5  # Average hours to write good content
     total_hours = (generic + empty) * hours_per_task

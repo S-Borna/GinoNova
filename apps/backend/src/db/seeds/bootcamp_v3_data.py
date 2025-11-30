@@ -665,16 +665,1802 @@ gh auth status
 5. Make a commit and push
 """
             },
-            {"title": "AWS CLI v2 installation", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
-            {"title": "Terraform installation", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
-            {"title": "kubectl installation", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
-            {"title": "Python 3.11+ setup", "difficulty": "easy", "estimated_minutes": 15, "xp_reward": 25},
-            {"title": "SSH key generation and management", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
-            {"title": "GPG signing for commits", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
-            {"title": "MFA setup for all services", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
-            {"title": "Create personal dotfiles repository", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45},
-            {"title": "Shell aliases and functions", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40},
-            {"title": "Environment variables management", "difficulty": "medium", "estimated_minutes": 15, "xp_reward": 35},
+            {
+                "title": "AWS CLI v2 installation",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# AWS CLI v2 Installation
+
+## Varför detta är viktigt
+AWS CLI är det primära verktyget för att interagera med Amazon Web Services från terminalen. Som DevOps-ingenjör kommer du använda det dagligen för att hantera EC2-instanser, S3-buckets, IAM-användare och hundratals andra AWS-tjänster.
+
+## Vad du kommer lära dig
+- Installera AWS CLI v2 på macOS och Linux
+- Konfigurera credentials och profiler
+- Verifiera installationen med ett enkelt API-anrop
+
+## Förutsättningar
+- Terminal/shell konfigurerad
+- Ett AWS-konto (free tier räcker)
+- Access Key ID och Secret Access Key från AWS Console
+
+## Steg-för-steg
+
+### Steg 1: Installera AWS CLI v2
+
+**macOS (med Homebrew):**
+```bash
+brew install awscli
+```
+
+**macOS (officiell installer):**
+```bash
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+sudo installer -pkg AWSCLIV2.pkg -target /
+rm AWSCLIV2.pkg
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf aws awscliv2.zip
+```
+
+**Förväntat resultat:**
+```
+aws --version
+aws-cli/2.15.0 Python/3.11.6 Darwin/23.0.0 source/arm64
+```
+
+### Steg 2: Skapa AWS Access Keys
+
+1. Logga in på AWS Console → IAM → Users
+2. Välj din användare → Security credentials
+3. Klicka "Create access key"
+4. Välj "Command Line Interface (CLI)"
+5. Spara Access Key ID och Secret Access Key säkert!
+
+### Steg 3: Konfigurera AWS CLI
+
+```bash
+aws configure
+```
+
+**Input som krävs:**
+```
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: eu-north-1
+Default output format [None]: json
+```
+
+### Steg 4: Konfigurera flera profiler (valfritt)
+
+För att hantera flera AWS-konton:
+
+```bash
+aws configure --profile work
+aws configure --profile personal
+```
+
+Använd profil:
+```bash
+aws s3 ls --profile work
+# eller
+export AWS_PROFILE=work
+aws s3 ls
+```
+
+## Vanliga problem
+
+### Problem: "Unable to locate credentials"
+**Lösning:** Kör `aws configure` igen eller kontrollera att `~/.aws/credentials` finns.
+
+### Problem: "An error occurred (InvalidClientTokenId)"
+**Lösning:** Dina access keys är felaktiga eller inaktiverade. Skapa nya i AWS Console.
+
+### Problem: "An error occurred (ExpiredToken)"
+**Lösning:** Om du använder MFA/temporary credentials, förnya din session.
+
+## Verifiera att det fungerar
+
+```bash
+# Lista S3 buckets (kräver s3:ListAllMyBuckets permission)
+aws s3 ls
+
+# Visa din AWS-identitet
+aws sts get-caller-identity
+```
+
+**Förväntat resultat:**
+```json
+{
+    "UserId": "AIDAEXAMPLEUSERID",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/dittnamn"
+}
+```
+
+## Sammanfattning
+Du har nu AWS CLI v2 installerat och konfigurerat. Du kan interagera med alla AWS-tjänster direkt från terminalen. I kommande moduler kommer vi använda AWS CLI för att skapa VPC:er, EC2-instanser, och mycket mer.
+
+## Nästa steg
+- Lär dig grundläggande S3-kommandon: `aws s3 cp`, `aws s3 sync`
+- Utforska `aws ec2 describe-instances`
+- Sätt upp MFA för extra säkerhet
+"""
+            },
+            {
+                "title": "Terraform installation",
+                "difficulty": "medium",
+                "estimated_minutes": 15,
+                "xp_reward": 35,
+                "content": """# Terraform Installation
+
+## Varför detta är viktigt
+Terraform är industristandarden för Infrastructure as Code (IaC). Det låter dig definiera din infrastruktur i kod och versionera den med Git. Istället för att klicka i AWS Console skapar du reproducerbara, granskningsbara infrastruktur-definitioner.
+
+## Vad du kommer lära dig
+- Installera Terraform via tfenv (version manager)
+- Verifiera installationen
+- Förstå Terraform-versioner och varför de är viktiga
+
+## Förutsättningar
+- Terminal konfigurerad
+- Git installerat
+
+## Steg-för-steg
+
+### Steg 1: Installera tfenv (Terraform version manager)
+
+Vi använder tfenv istället för att installera Terraform direkt. Detta låter oss enkelt växla mellan versioner.
+
+**macOS:**
+```bash
+brew install tfenv
+```
+
+**Linux:**
+```bash
+git clone https://github.com/tfutils/tfenv.git ~/.tfenv
+echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### Steg 2: Installera Terraform
+
+```bash
+# Lista tillgängliga versioner
+tfenv list-remote | head -10
+
+# Installera senaste stabila version
+tfenv install latest
+
+# Eller installera specifik version (rekommenderat för team)
+tfenv install 1.7.0
+tfenv use 1.7.0
+```
+
+**Förväntat resultat:**
+```
+Installing Terraform v1.7.0
+Terraform v1.7.0 is successfully installed
+```
+
+### Steg 3: Verifiera installation
+
+```bash
+terraform version
+```
+
+**Förväntat resultat:**
+```
+Terraform v1.7.0
+on darwin_arm64
+```
+
+### Steg 4: Sätt upp .terraform-version fil
+
+I varje projekt, skapa en fil som specificerar vilken Terraform-version som ska användas:
+
+```bash
+echo "1.7.0" > .terraform-version
+```
+
+När du `cd` in i projektet kommer tfenv automatiskt använda rätt version.
+
+## Alternativ: Direkt installation (utan tfenv)
+
+Om du föredrar att inte använda version manager:
+
+**macOS:**
+```bash
+brew install terraform
+```
+
+**Linux:**
+```bash
+wget https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip
+unzip terraform_1.7.0_linux_amd64.zip
+sudo mv terraform /usr/local/bin/
+rm terraform_1.7.0_linux_amd64.zip
+```
+
+## Vanliga problem
+
+### Problem: "command not found: terraform"
+**Lösning:** Se till att ~/.tfenv/bin finns i din PATH. Kör `source ~/.zshrc`.
+
+### Problem: Versionskonflikt i team
+**Lösning:** Använd .terraform-version fil i alla projekt.
+
+## Verifiera att det fungerar
+
+Skapa en minimal Terraform-fil för att testa:
+
+```bash
+mkdir ~/terraform-test && cd ~/terraform-test
+
+cat > main.tf << 'EOF'
+terraform {
+  required_version = ">= 1.0"
+}
+
+output "hello" {
+  value = "Terraform fungerar!"
+}
+EOF
+
+terraform init
+terraform apply -auto-approve
+```
+
+**Förväntat resultat:**
+```
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+hello = "Terraform fungerar!"
+```
+
+## Sammanfattning
+Du har nu Terraform installerat med tfenv för enkel versionshantering. I modul 07 kommer vi dyka djupt in i Terraform och bygga riktig AWS-infrastruktur.
+
+## Nästa steg
+- Läs Terraform-dokumentationen på terraform.io
+- Titta på Terraform Registry för färdiga moduler
+- Installera VS Code extension: HashiCorp Terraform
+"""
+            },
+            {
+                "title": "kubectl installation",
+                "difficulty": "medium",
+                "estimated_minutes": 15,
+                "xp_reward": 35,
+                "content": """# kubectl Installation
+
+## Varför detta är viktigt
+kubectl är kommandorads-verktyget för att interagera med Kubernetes-kluster. Som DevOps-ingenjör kommer du använda kubectl dagligen för att deploya applikationer, felsöka pods, och hantera kluster-resurser.
+
+## Vad du kommer lära dig
+- Installera kubectl
+- Konfigurera kubectl för att ansluta till ett kluster
+- Grundläggande kubectl-kommandon
+
+## Förutsättningar
+- Terminal konfigurerad
+- (Valfritt) Docker Desktop installerat för lokal Kubernetes
+
+## Steg-för-steg
+
+### Steg 1: Installera kubectl
+
+**macOS:**
+```bash
+brew install kubectl
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+```
+
+**Förväntat resultat:**
+```bash
+kubectl version --client
+# Client Version: v1.29.0
+```
+
+### Steg 2: Installera kubectx och kubens (rekommenderat)
+
+Dessa verktyg gör det enkelt att växla mellan kluster och namespaces:
+
+```bash
+# macOS
+brew install kubectx
+
+# Linux
+sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+```
+
+### Steg 3: Aktivera kubectl autocompletion
+
+```bash
+# Zsh
+echo 'source <(kubectl completion zsh)' >> ~/.zshrc
+echo 'alias k=kubectl' >> ~/.zshrc
+echo 'complete -F __start_kubectl k' >> ~/.zshrc
+source ~/.zshrc
+
+# Bash
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Steg 4: Konfigurera ett lokalt kluster (valfritt)
+
+**Med Docker Desktop:**
+1. Öppna Docker Desktop → Settings → Kubernetes
+2. Bocka i "Enable Kubernetes"
+3. Klicka "Apply & Restart"
+
+**Med kind (Kubernetes in Docker):**
+```bash
+brew install kind  # eller: go install sigs.k8s.io/kind@latest
+kind create cluster --name devops-lab
+```
+
+**Med minikube:**
+```bash
+brew install minikube
+minikube start
+```
+
+## Vanliga problem
+
+### Problem: "The connection to the server localhost:8080 was refused"
+**Lösning:** Inget kluster är konfigurerat. Starta Docker Desktop Kubernetes eller skapa ett kind-kluster.
+
+### Problem: "error: You must be logged in to the server"
+**Lösning:** Dina credentials har gått ut. För EKS, kör `aws eks update-kubeconfig --name CLUSTER_NAME`.
+
+## Verifiera att det fungerar
+
+```bash
+# Visa kluster-info
+kubectl cluster-info
+
+# Lista nodes
+kubectl get nodes
+
+# Lista alla pods i alla namespaces
+kubectl get pods -A
+```
+
+**Förväntat resultat (Docker Desktop):**
+```
+NAME             STATUS   ROLES           AGE   VERSION
+docker-desktop   Ready    control-plane   10m   v1.29.0
+```
+
+## Användbara kubectl-kommandon
+
+```bash
+# Kortkommandon (lägg till i .zshrc)
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgn='kubectl get nodes'
+alias kaf='kubectl apply -f'
+alias kdel='kubectl delete'
+alias klog='kubectl logs'
+alias kex='kubectl exec -it'
+```
+
+## Sammanfattning
+Du har nu kubectl installerat och redo att interagera med Kubernetes-kluster. I modul 12 kommer vi dyka djupt in i Kubernetes och bygga riktiga applikationer.
+
+## Nästa steg
+- Experimentera med `kubectl run nginx --image=nginx`
+- Lär dig `kubectl describe` för felsökning
+- Utforska `kubectl explain` för API-dokumentation
+"""
+            },
+            {
+                "title": "Python 3.11+ setup",
+                "difficulty": "easy",
+                "estimated_minutes": 15,
+                "xp_reward": 25,
+                "content": """# Python 3.11+ Setup
+
+## Varför detta är viktigt
+Python är det dominerande språket för DevOps-automation. Du kommer använda det för att skriva scripts, interagera med AWS via boto3, bygga CLI-verktyg, och automatisera allt möjligt. Version 3.11+ ger bättre prestanda och nya features.
+
+## Vad du kommer lära dig
+- Installera Python via pyenv (version manager)
+- Konfigurera virtuella miljöer
+- Sätta upp en professionell Python-utvecklingsmiljö
+
+## Förutsättningar
+- Terminal konfigurerad
+- Homebrew (macOS) eller build-tools (Linux)
+
+## Steg-för-steg
+
+### Steg 1: Installera pyenv
+
+Vi använder pyenv för att hantera Python-versioner. Detta undviker konflikter med system-Python.
+
+**macOS:**
+```bash
+brew install pyenv pyenv-virtualenv
+
+# Lägg till i ~/.zshrc
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+# Installera dependencies först
+sudo apt update
+sudo apt install -y make build-essential libssl-dev zlib1g-dev \\
+  libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \\
+  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \\
+  libffi-dev liblzma-dev
+
+# Installera pyenv
+curl https://pyenv.run | bash
+
+# Lägg till i ~/.bashrc eller ~/.zshrc
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### Steg 2: Installera Python 3.12
+
+```bash
+# Lista tillgängliga versioner
+pyenv install --list | grep "^  3.12"
+
+# Installera senaste 3.12.x
+pyenv install 3.12.1
+
+# Sätt som global default
+pyenv global 3.12.1
+```
+
+**Förväntat resultat:**
+```bash
+python --version
+# Python 3.12.1
+```
+
+### Steg 3: Skapa virtuella miljöer
+
+```bash
+# Skapa en virtuell miljö för ett projekt
+pyenv virtualenv 3.12.1 devops-tools
+
+# Aktivera i ett projekt-directory
+cd ~/projects/my-devops-project
+pyenv local devops-tools
+# Nu aktiveras miljön automatiskt när du cd:ar hit
+```
+
+### Steg 4: Installera grundläggande paket
+
+```bash
+# Uppgradera pip
+pip install --upgrade pip
+
+# Installera DevOps-essentials
+pip install boto3 requests pyyaml python-dotenv click rich
+```
+
+## Vanliga problem
+
+### Problem: "pyenv: no such command 'virtualenv'"
+**Lösning:** Installera pyenv-virtualenv: `brew install pyenv-virtualenv`
+
+### Problem: "BUILD FAILED" vid Python-installation
+**Lösning:** Du saknar build dependencies. På Linux, kör apt install-kommandot från Steg 1.
+
+### Problem: "pip: command not found"
+**Lösning:** Se till att din pyenv-shims är i PATH. Kör `pyenv rehash`.
+
+## Verifiera att det fungerar
+
+```bash
+# Kontrollera Python-version
+python --version
+
+# Kontrollera pip
+pip --version
+
+# Testa ett enkelt script
+python -c "import sys; print(f'Python {sys.version}')"
+
+# Testa boto3
+pip install boto3
+python -c "import boto3; print('boto3 fungerar!')"
+```
+
+**Förväntat resultat:**
+```
+Python 3.12.1
+pip 24.0 from /Users/.../.pyenv/versions/3.12.1/lib/python3.12/site-packages/pip
+boto3 fungerar!
+```
+
+## Sammanfattning
+Du har nu en professionell Python-setup med pyenv för versionshantering och virtuella miljöer. Detta ger dig flexibilitet att arbeta med olika projekt som kräver olika Python-versioner.
+
+## Nästa steg
+- Installera VS Code Python extension
+- Läs om Python best practices i modul 05
+- Skapa ditt första boto3-script
+"""
+            },
+            {
+                "title": "SSH key generation and management",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# SSH Key Generation and Management
+
+## Varför detta är viktigt
+SSH-nycklar är fundamentet för säker autentisering i DevOps. Du använder dem för att logga in på servrar, pusha kod till GitHub, och ansluta till AWS EC2-instanser. Lösenord är inte acceptabelt i produktionsmiljöer.
+
+## Vad du kommer lära dig
+- Generera Ed25519 SSH-nycklar (moderna och säkra)
+- Konfigurera SSH config för enkel användning
+- Lägga till nycklar på GitHub och servrar
+- Använda ssh-agent för nyckelhantering
+
+## Förutsättningar
+- Terminal konfigurerad
+- GitHub-konto
+
+## Steg-för-steg
+
+### Steg 1: Generera SSH-nyckel
+
+Vi använder Ed25519-algoritmen som är modernare och säkrare än RSA:
+
+```bash
+ssh-keygen -t ed25519 -C "din.email@example.com"
+```
+
+**När du blir frågad:**
+```
+Enter file in which to save the key: [tryck Enter för default]
+Enter passphrase: [valfritt men rekommenderat]
+```
+
+**Förväntat resultat:**
+```
+Your identification has been saved in /Users/dittnamn/.ssh/id_ed25519
+Your public key has been saved in /Users/dittnamn/.ssh/id_ed25519.pub
+```
+
+### Steg 2: Sätt korrekta filrättigheter
+
+SSH är extremt strikt med filrättigheter:
+
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+### Steg 3: Starta ssh-agent och lägg till nyckel
+
+```bash
+# Starta ssh-agent
+eval "$(ssh-agent -s)"
+
+# Lägg till nyckel (macOS sparar i Keychain)
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+
+# Linux:
+ssh-add ~/.ssh/id_ed25519
+```
+
+### Steg 4: Konfigurera SSH config
+
+Skapa/redigera `~/.ssh/config`:
+
+```bash
+cat >> ~/.ssh/config << 'EOF'
+# GitHub
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+    AddKeysToAgent yes
+    
+# Exempel: AWS EC2-server
+Host my-server
+    HostName ec2-XX-XX-XX-XX.eu-north-1.compute.amazonaws.com
+    User ubuntu
+    IdentityFile ~/.ssh/aws-key.pem
+    
+# Wildcard för alla AWS-servrar
+Host *.amazonaws.com
+    User ubuntu
+    IdentityFile ~/.ssh/aws-key.pem
+    StrictHostKeyChecking no
+EOF
+```
+
+### Steg 5: Lägg till nyckel på GitHub
+
+```bash
+# Kopiera public key till clipboard
+# macOS:
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Linux:
+cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+```
+
+Sedan på GitHub:
+1. Settings → SSH and GPG keys
+2. New SSH key
+3. Klistra in nyckeln
+4. Give it a descriptive name
+
+## Vanliga problem
+
+### Problem: "Permission denied (publickey)"
+**Lösning:** Kontrollera att din public key finns på servern/GitHub. Kör `ssh-add -l` för att se laddade nycklar.
+
+### Problem: "WARNING: UNPROTECTED PRIVATE KEY FILE!"
+**Lösning:** Kör `chmod 600 ~/.ssh/id_ed25519`
+
+### Problem: "Agent admitted failure to sign"
+**Lösning:** Starta ssh-agent och lägg till nyckeln igen.
+
+## Verifiera att det fungerar
+
+```bash
+# Testa GitHub-anslutning
+ssh -T git@github.com
+```
+
+**Förväntat resultat:**
+```
+Hi dittnamn! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+## Flera nycklar för olika ändamål
+
+```bash
+# Separat nyckel för arbete
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_work -C "work@company.com"
+
+# Uppdatera ~/.ssh/config
+Host github.com-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_work
+```
+
+## Sammanfattning
+Du har nu säkra SSH-nycklar konfigurerade för GitHub och är redo att ansluta till servrar. Använd alltid Ed25519 för nya nycklar och skydda dina privata nycklar med passphrase.
+
+## Nästa steg
+- Lägg till GPG-signering för commits
+- Konfigurera SSH för AWS EC2
+- Utforska SSH tunneling
+"""
+            },
+            {
+                "title": "GPG signing for commits",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# GPG Signing for Commits
+
+## Varför detta är viktigt
+GPG-signering bevisar att commits verkligen kommer från dig och inte någon som förfalskar ditt namn. GitHub visar "Verified" på signerade commits. Många företag kräver signerade commits i production-repos.
+
+## Vad du kommer lära dig
+- Generera en GPG-nyckel
+- Konfigurera Git för automatisk signering
+- Lägga till GPG-nyckeln på GitHub
+
+## Förutsättningar
+- Git konfigurerat med din email
+- GitHub-konto
+
+## Steg-för-steg
+
+### Steg 1: Installera GPG
+
+**macOS:**
+```bash
+brew install gnupg pinentry-mac
+```
+
+**Linux:**
+```bash
+sudo apt install gnupg
+```
+
+### Steg 2: Generera GPG-nyckel
+
+```bash
+gpg --full-generate-key
+```
+
+**När du blir frågad:**
+1. Typ: `1` (RSA and RSA)
+2. Keysize: `4096`
+3. Giltighet: `0` (aldrig)
+4. Real name: Ditt namn
+5. Email: **Samma email som i Git config!**
+6. Passphrase: Välj en stark passphrase
+
+### Steg 3: Hitta ditt key ID
+
+```bash
+gpg --list-secret-keys --keyid-format=long
+```
+
+**Output:**
+```
+sec   rsa4096/3AA5C34371567BD2 2024-01-15
+      ABCDEF1234567890ABCDEF1234567890ABCDEF12
+uid           [ultimate] Ditt Namn <din.email@example.com>
+```
+
+Key ID är `3AA5C34371567BD2` (efter `rsa4096/`).
+
+### Steg 4: Konfigurera Git
+
+```bash
+# Sätt din signing key
+git config --global user.signingkey 3AA5C34371567BD2
+
+# Aktivera signering för alla commits
+git config --global commit.gpgsign true
+
+# Aktivera signering för alla tags
+git config --global tag.gpgsign true
+
+# Konfigurera GPG program
+git config --global gpg.program gpg
+```
+
+### Steg 5: Konfigurera GPG Agent (macOS)
+
+```bash
+# Skapa ~/.gnupg/gpg-agent.conf
+mkdir -p ~/.gnupg
+echo "pinentry-program /opt/homebrew/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+echo "default-cache-ttl 3600" >> ~/.gnupg/gpg-agent.conf
+echo "max-cache-ttl 86400" >> ~/.gnupg/gpg-agent.conf
+
+# Lägg till i ~/.zshrc
+echo 'export GPG_TTY=$(tty)' >> ~/.zshrc
+source ~/.zshrc
+
+# Starta om agent
+gpgconf --kill gpg-agent
+```
+
+### Steg 6: Lägg till GPG-nyckel på GitHub
+
+```bash
+# Exportera public key
+gpg --armor --export 3AA5C34371567BD2 | pbcopy
+```
+
+På GitHub:
+1. Settings → SSH and GPG keys
+2. New GPG key
+3. Klistra in nyckeln
+
+## Vanliga problem
+
+### Problem: "error: gpg failed to sign the data"
+**Lösning:** 
+```bash
+export GPG_TTY=$(tty)
+gpgconf --kill gpg-agent
+```
+
+### Problem: Pinentry öppnas inte
+**Lösning (macOS):** Installera pinentry-mac: `brew install pinentry-mac`
+
+### Problem: "secret key not available"
+**Lösning:** Kontrollera att key ID är korrekt: `gpg --list-secret-keys`
+
+## Verifiera att det fungerar
+
+```bash
+# Skapa en test-commit
+cd /tmp && mkdir gpg-test && cd gpg-test
+git init
+echo "test" > test.txt
+git add . && git commit -m "Test signed commit"
+
+# Verifiera signaturen
+git log --show-signature -1
+```
+
+**Förväntat resultat:**
+```
+commit abc123... (HEAD -> main)
+gpg: Signature made Mon Jan 15 10:00:00 2024 CET
+gpg: Good signature from "Ditt Namn <din.email@example.com>"
+```
+
+## Sammanfattning
+Dina Git commits är nu signerade och kan verifieras. GitHub kommer visa en grön "Verified" badge på alla dina signerade commits, vilket ökar förtroendet för din kod.
+
+## Nästa steg
+- Aktivera "Vigilant mode" på GitHub för att flagga osignerade commits
+- Säkerhetskopiera dina GPG-nycklar
+- Överväg att använda en hårdvarunyckel (YubiKey)
+"""
+            },
+            {
+                "title": "MFA setup for all services",
+                "difficulty": "medium",
+                "estimated_minutes": 15,
+                "xp_reward": 35,
+                "content": """# MFA Setup for All Services
+
+## Varför detta är viktigt
+Multi-Factor Authentication (MFA) är det enklaste sättet att dramatiskt öka säkerheten för dina konton. Om någon får tag på ditt lösenord behöver de fortfarande din telefon. AWS, GitHub, och alla kritiska tjänster MÅSTE ha MFA aktiverat.
+
+## Vad du kommer lära dig
+- Sätta upp MFA på GitHub, AWS, och andra tjänster
+- Använda authenticator-appar
+- Hantera backup-koder säkert
+
+## Förutsättningar
+- Smartphone med authenticator-app
+- Konton på GitHub och AWS
+
+## Steg-för-steg
+
+### Steg 1: Installera en authenticator-app
+
+Rekommenderade appar (välj EN):
+
+**1Password** (Bäst om du redan använder det)
+- Integrerad lösenordshanterare + TOTP
+
+**Authy** (Rekommenderad för de flesta)
+- Cloud backup av TOTP-koder
+- Fungerar på flera enheter
+- https://authy.com
+
+**Google Authenticator**
+- Simpel, ingen cloud backup
+- Förlorar du telefonen, förlorar du koderna
+
+### Steg 2: Aktivera MFA på GitHub
+
+1. GitHub → Settings → Password and authentication
+2. Klicka "Enable two-factor authentication"
+3. Välj "Set up using an app"
+4. Skanna QR-koden med din authenticator
+5. **VIKTIGT:** Spara recovery codes på säker plats!
+
+```bash
+# Exempel: Spara recovery codes krypterat
+echo "github-recovery-codes:
+XXXXX-XXXXX
+XXXXX-XXXXX
+..." | gpg -c > ~/recovery-codes/github.gpg
+```
+
+### Steg 3: Aktivera MFA på AWS
+
+1. AWS Console → IAM → Users → Ditt användarnamn
+2. Security credentials → Assigned MFA device → Assign MFA device
+3. Välj "Authenticator app"
+4. Skanna QR-koden
+5. Ange två på varandra följande koder
+
+**Eller via CLI:**
+```bash
+# Skapa virtuell MFA-enhet
+aws iam create-virtual-mfa-device \\
+    --virtual-mfa-device-name my-mfa \\
+    --outfile ~/mfa-qr.png \\
+    --bootstrap-method QRCodePNG
+
+# Aktivera MFA (behöver två koder)
+aws iam enable-mfa-device \\
+    --user-name dittnamn \\
+    --serial-number arn:aws:iam::123456789012:mfa/my-mfa \\
+    --authentication-code1 123456 \\
+    --authentication-code2 789012
+```
+
+### Steg 4: Aktivera MFA på andra tjänster
+
+**GitLab:**
+Settings → Account → Two-Factor Authentication
+
+**Docker Hub:**
+Account Settings → Security → Two-Factor Authentication
+
+**Cloudflare:**
+My Profile → Authentication → Two-Factor Authentication
+
+### Steg 5: Hantera backup-koder
+
+```bash
+# Skapa en säker plats för recovery codes
+mkdir -p ~/.recovery-codes
+chmod 700 ~/.recovery-codes
+
+# Kryptera med GPG
+echo "AWS: XXXXX, XXXXX
+GitHub: XXXXX, XXXXX" | gpg -c > ~/.recovery-codes/all-codes.gpg
+
+# Dekryptera när du behöver dem
+gpg -d ~/.recovery-codes/all-codes.gpg
+```
+
+## Vanliga problem
+
+### Problem: Förlorad telefon
+**Lösning:** Använd recovery codes. Därför är det KRITISKT att spara dem!
+
+### Problem: MFA-koder fungerar inte
+**Lösning:** Kontrollera att telefonens tid är korrekt. TOTP är tidsbaserat.
+
+### Problem: Låst ute från AWS root account
+**Lösning:** Kontakta AWS Support med kontobevis.
+
+## Verifiera att det fungerar
+
+```bash
+# Testa GitHub (logga ut och in igen)
+gh auth logout
+gh auth login
+# Du ska bli ombedd om MFA-kod
+
+# Testa AWS (om CLI är konfigurerat med MFA)
+aws sts get-caller-identity
+```
+
+## AWS CLI med MFA
+
+Om ditt AWS-konto kräver MFA för CLI-åtkomst:
+
+```bash
+# Skapa en script för att förnya credentials
+cat > ~/bin/aws-mfa << 'EOF'
+#!/bin/bash
+MFA_ARN="arn:aws:iam::123456789012:mfa/dittnamn"
+read -p "MFA Code: " MFA_CODE
+CREDS=$(aws sts get-session-token --serial-number $MFA_ARN --token-code $MFA_CODE)
+export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
+echo "AWS credentials updated!"
+EOF
+chmod +x ~/bin/aws-mfa
+```
+
+## Sammanfattning
+Du har nu MFA aktiverat på dina kritiska konton. Detta är en av de viktigaste säkerhetsåtgärderna du kan ta. Förlora aldrig dina recovery codes!
+
+## Nästa steg
+- Överväg hårdvarunycklar (YubiKey) för extra säkerhet
+- Sätt upp MFA på alla nya tjänster du registrerar dig på
+- Utforska AWS Organizations för centraliserad MFA-policy
+"""
+            },
+            {
+                "title": "Create personal dotfiles repository",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 45,
+                "content": """# Skapa ett personligt dotfiles-repository
+
+## Varför detta är viktigt
+Som DevOps-ingenjör kommer du arbeta på många olika maskiner — din laptop, produktionsservrar, CI/CD-runners. Ett dotfiles-repository låter dig ha samma konfiguration överallt och återställa din miljö på sekunder istället för timmar.
+
+## Vad du kommer lära dig
+- Skapa ett Git-repository för dina konfigurationsfiler
+- Organisera dotfiles på ett underhållbart sätt
+- Skapa ett installationsscript för automatisk setup
+
+## Förutsättningar
+- Git installerat (`git --version` ska fungera)
+- GitHub-konto och GitHub CLI konfigurerat
+- Grundläggande terminalkunskap
+
+## Steg-för-steg
+
+### Steg 1: Skapa repository-struktur
+
+Först skapar vi en organiserad mappstruktur:
+
+```bash
+mkdir -p ~/dotfiles/{shell,git,vim,scripts,config}
+cd ~/dotfiles
+git init
+```
+
+**Förväntat resultat:**
+```
+Initialized empty Git repository in /Users/dittnamn/dotfiles/.git/
+```
+
+### Steg 2: Flytta dina befintliga dotfiles
+
+Kopiera dina nuvarande konfigurationsfiler:
+
+```bash
+# Shell-konfiguration
+cp ~/.zshrc ~/dotfiles/shell/zshrc
+cp ~/.bashrc ~/dotfiles/shell/bashrc 2>/dev/null || true
+
+# Git-konfiguration
+cp ~/.gitconfig ~/dotfiles/git/gitconfig
+
+# Skapa en grundläggande zshrc om den inte finns
+cat > ~/dotfiles/shell/zshrc << 'EOF'
+# DevOps Zsh Configuration
+
+# Path
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# Editor
+export EDITOR="code --wait"
+
+# Aliases
+alias ll="ls -la"
+alias k="kubectl"
+alias tf="terraform"
+alias g="git"
+alias dc="docker compose"
+
+# Git aliases
+alias gs="git status"
+alias gp="git pull"
+alias gc="git commit"
+alias gco="git checkout"
+
+# AWS
+alias awswho="aws sts get-caller-identity"
+
+# Kubernetes
+alias kgp="kubectl get pods"
+alias kgs="kubectl get svc"
+alias kgn="kubectl get nodes"
+
+# Load local config if exists
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+EOF
+```
+
+### Steg 3: Skapa installationsscript
+
+Skapa `~/dotfiles/install.sh`:
+
+```bash
+cat > ~/dotfiles/install.sh << 'SCRIPT'
+#!/bin/bash
+set -e
+
+DOTFILES_DIR="$HOME/dotfiles"
+BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d)"
+
+echo "🚀 Installing dotfiles..."
+
+# Skapa backup av befintliga filer
+backup_file() {
+    if [[ -f "$1" ]] && [[ ! -L "$1" ]]; then
+        mkdir -p "$BACKUP_DIR"
+        mv "$1" "$BACKUP_DIR/"
+        echo "  📦 Backed up $1"
+    fi
+}
+
+# Skapa symbolisk länk
+link_file() {
+    local src="$1"
+    local dest="$2"
+    backup_file "$dest"
+    ln -sf "$src" "$dest"
+    echo "  ✅ Linked $dest -> $src"
+}
+
+# Shell
+link_file "$DOTFILES_DIR/shell/zshrc" "$HOME/.zshrc"
+link_file "$DOTFILES_DIR/shell/bashrc" "$HOME/.bashrc" 2>/dev/null || true
+
+# Git
+link_file "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
+
+# Skapa bin-directory
+mkdir -p "$HOME/bin"
+
+echo ""
+echo "✅ Dotfiles installed successfully!"
+echo "💡 Run 'source ~/.zshrc' to reload your shell config"
+[[ -d "$BACKUP_DIR" ]] && echo "📦 Old files backed up to: $BACKUP_DIR"
+SCRIPT
+
+chmod +x ~/dotfiles/install.sh
+```
+
+### Steg 4: Skapa gitconfig
+
+```bash
+cat > ~/dotfiles/git/gitconfig << 'EOF'
+[user]
+    name = Ditt Namn
+    email = din.email@example.com
+
+[core]
+    editor = code --wait
+    autocrlf = input
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    lg = log --oneline --graph --decorate -20
+    last = log -1 HEAD
+    unstage = reset HEAD --
+
+[color]
+    ui = auto
+EOF
+```
+
+### Steg 5: Pusha till GitHub
+
+```bash
+cd ~/dotfiles
+git add .
+git commit -m "Initial dotfiles setup"
+gh repo create dotfiles --public --source=. --push
+```
+
+## Vanliga problem
+
+### Problem: "ln: failed to create symbolic link: File exists"
+**Lösning:** Install-scriptet hanterar detta genom backup. Kör `./install.sh` igen.
+
+### Problem: Ändringar i dotfiles syns inte
+**Lösning:** Kör `source ~/.zshrc` för att ladda om konfigurationen.
+
+## Verifiera att det fungerar
+
+```bash
+# Kontrollera att länkarna finns
+ls -la ~/.zshrc
+# Output: .zshrc -> /Users/dittnamn/dotfiles/shell/zshrc
+
+# Testa på en "ny maskin" (i en container):
+docker run -it ubuntu:22.04 bash
+apt update && apt install -y git curl
+git clone https://github.com/DITTNAMN/dotfiles.git ~/dotfiles
+cd ~/dotfiles && ./install.sh
+```
+
+## Sammanfattning
+Du har nu ett versionshanterat repository med dina konfigurationsfiler. Du kan klona det på vilken maskin som helst och köra install.sh för att få exakt samma miljö.
+
+## Nästa steg
+- Lägg till tmux-konfiguration
+- Skapa en README.md som dokumenterar dina dotfiles
+- Utforska andras dotfiles för inspiration: github.com/mathiasbynens/dotfiles
+"""
+            },
+            {
+                "title": "Shell aliases and functions",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# Shell Aliases and Functions
+
+## Varför detta är viktigt
+Shell aliases och functions är dina personliga genvägar. De sparar tid, minskar skrivfel, och gör komplexa kommandon enkla att köra. Erfarna DevOps-ingenjörer har hundratals anpassade aliases.
+
+## Vad du kommer lära dig
+- Skapa och organisera aliases
+- Skriva shell-funktioner för komplexa operationer
+- Bygga ett DevOps-specifikt alias-bibliotek
+
+## Förutsättningar
+- Zsh eller Bash konfigurerat
+- Grundläggande shell-kunskap
+
+## Steg-för-steg
+
+### Steg 1: Förstå aliases vs functions
+
+**Aliases** - Enkla kommando-ersättningar:
+```bash
+alias ll="ls -la"
+```
+
+**Functions** - När du behöver argument eller logik:
+```bash
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+```
+
+### Steg 2: Skapa alias-fil
+
+Organisera aliases i en separat fil:
+
+```bash
+cat > ~/dotfiles/shell/aliases.sh << 'EOF'
+# =============================================================================
+# DevOps Shell Aliases
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Navigation
+# -----------------------------------------------------------------------------
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+alias -- -="cd -"
+
+# -----------------------------------------------------------------------------
+# Listing
+# -----------------------------------------------------------------------------
+alias ll="ls -la"
+alias la="ls -A"
+alias l="ls -CF"
+alias lt="ls -ltr"  # Sort by time, newest last
+
+# -----------------------------------------------------------------------------
+# Safety
+# -----------------------------------------------------------------------------
+alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
+
+# -----------------------------------------------------------------------------
+# Git
+# -----------------------------------------------------------------------------
+alias g="git"
+alias gs="git status"
+alias gp="git pull"
+alias gps="git push"
+alias gc="git commit"
+alias gca="git commit -a"
+alias gcm="git commit -m"
+alias gco="git checkout"
+alias gb="git branch"
+alias gba="git branch -a"
+alias gd="git diff"
+alias gds="git diff --staged"
+alias gl="git log --oneline -20"
+alias glg="git log --oneline --graph --decorate"
+alias gst="git stash"
+alias gstp="git stash pop"
+
+# -----------------------------------------------------------------------------
+# Docker
+# -----------------------------------------------------------------------------
+alias d="docker"
+alias dc="docker compose"
+alias dps="docker ps"
+alias dpsa="docker ps -a"
+alias di="docker images"
+alias drm="docker rm"
+alias drmi="docker rmi"
+alias dex="docker exec -it"
+alias dlogs="docker logs -f"
+alias dprune="docker system prune -af"
+
+# -----------------------------------------------------------------------------
+# Kubernetes
+# -----------------------------------------------------------------------------
+alias k="kubectl"
+alias kgp="kubectl get pods"
+alias kgs="kubectl get svc"
+alias kgn="kubectl get nodes"
+alias kgd="kubectl get deployments"
+alias kgi="kubectl get ingress"
+alias kga="kubectl get all"
+alias kaf="kubectl apply -f"
+alias kdel="kubectl delete"
+alias klog="kubectl logs -f"
+alias kex="kubectl exec -it"
+alias kctx="kubectx"
+alias kns="kubens"
+
+# -----------------------------------------------------------------------------
+# Terraform
+# -----------------------------------------------------------------------------
+alias tf="terraform"
+alias tfi="terraform init"
+alias tfp="terraform plan"
+alias tfa="terraform apply"
+alias tfd="terraform destroy"
+alias tfv="terraform validate"
+alias tff="terraform fmt"
+alias tfs="terraform state"
+
+# -----------------------------------------------------------------------------
+# AWS
+# -----------------------------------------------------------------------------
+alias awswho="aws sts get-caller-identity"
+alias s3ls="aws s3 ls"
+alias ec2ls="aws ec2 describe-instances --query 'Reservations[].Instances[].[InstanceId,State.Name,Tags[?Key==\`Name\`].Value|[0]]' --output table"
+
+# -----------------------------------------------------------------------------
+# Network
+# -----------------------------------------------------------------------------
+alias myip="curl -s ifconfig.me"
+alias ports="netstat -tulanp"
+alias listening="lsof -i -P -n | grep LISTEN"
+
+# -----------------------------------------------------------------------------
+# System
+# -----------------------------------------------------------------------------
+alias df="df -h"
+alias du="du -h"
+alias free="free -h"
+alias top="htop"
+alias reload="source ~/.zshrc"
+alias path='echo $PATH | tr ":" "\\n"'
+EOF
+```
+
+### Steg 3: Skapa functions-fil
+
+```bash
+cat > ~/dotfiles/shell/functions.sh << 'EOF'
+# =============================================================================
+# DevOps Shell Functions
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Utility Functions
+# -----------------------------------------------------------------------------
+
+# Create directory and cd into it
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# Extract any archive
+extract() {
+    if [[ -f "$1" ]]; then
+        case "$1" in
+            *.tar.bz2) tar xjf "$1" ;;
+            *.tar.gz)  tar xzf "$1" ;;
+            *.tar.xz)  tar xJf "$1" ;;
+            *.bz2)     bunzip2 "$1" ;;
+            *.gz)      gunzip "$1" ;;
+            *.tar)     tar xf "$1" ;;
+            *.tbz2)    tar xjf "$1" ;;
+            *.tgz)     tar xzf "$1" ;;
+            *.zip)     unzip "$1" ;;
+            *.Z)       uncompress "$1" ;;
+            *)         echo "'$1' cannot be extracted" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# Git Functions
+# -----------------------------------------------------------------------------
+
+# Git commit with message
+gcmsg() {
+    git commit -m "$*"
+}
+
+# Git add all and commit
+gacp() {
+    git add -A && git commit -m "$*" && git push
+}
+
+# Show git branch in all subdirectories
+gitbranches() {
+    for d in */; do
+        if [[ -d "$d/.git" ]]; then
+            echo -n "$d: "
+            git -C "$d" branch --show-current
+        fi
+    done
+}
+
+# -----------------------------------------------------------------------------
+# Docker Functions
+# -----------------------------------------------------------------------------
+
+# Execute bash in a running container
+dsh() {
+    docker exec -it "$1" /bin/bash || docker exec -it "$1" /bin/sh
+}
+
+# Remove all stopped containers
+drmall() {
+    docker rm $(docker ps -aq)
+}
+
+# Remove all unused images
+drmiall() {
+    docker rmi $(docker images -q --filter "dangling=true")
+}
+
+# -----------------------------------------------------------------------------
+# Kubernetes Functions
+# -----------------------------------------------------------------------------
+
+# Get shell in a pod
+ksh() {
+    kubectl exec -it "$1" -- /bin/bash || kubectl exec -it "$1" -- /bin/sh
+}
+
+# Watch pods
+kwatch() {
+    watch -n 1 kubectl get pods "$@"
+}
+
+# Port forward
+kpf() {
+    kubectl port-forward "$1" "$2:$2"
+}
+
+# -----------------------------------------------------------------------------
+# AWS Functions
+# -----------------------------------------------------------------------------
+
+# Switch AWS profile
+awsp() {
+    export AWS_PROFILE="$1"
+    aws sts get-caller-identity
+}
+
+# List EC2 instances
+ec2list() {
+    aws ec2 describe-instances \\
+        --query 'Reservations[].Instances[].[InstanceId,State.Name,PrivateIpAddress,Tags[?Key==`Name`].Value|[0]]' \\
+        --output table
+}
+
+# SSH to EC2 by name tag
+ec2ssh() {
+    local ip=$(aws ec2 describe-instances \\
+        --filters "Name=tag:Name,Values=$1" "Name=instance-state-name,Values=running" \\
+        --query 'Reservations[0].Instances[0].PublicIpAddress' \\
+        --output text)
+    ssh ubuntu@"$ip"
+}
+
+# -----------------------------------------------------------------------------
+# Development Functions
+# -----------------------------------------------------------------------------
+
+# Start a simple HTTP server
+serve() {
+    local port="${1:-8000}"
+    python3 -m http.server "$port"
+}
+
+# JSON pretty print
+jsonpp() {
+    if [[ -t 0 ]]; then
+        python3 -m json.tool "$@"
+    else
+        python3 -m json.tool
+    fi
+}
+
+# Generate random password
+genpass() {
+    local length="${1:-32}"
+    openssl rand -base64 48 | tr -dc 'a-zA-Z0-9!@#$%' | head -c "$length"
+    echo
+}
+EOF
+```
+
+### Steg 4: Ladda aliases och functions
+
+Lägg till i `~/.zshrc`:
+
+```bash
+cat >> ~/dotfiles/shell/zshrc << 'EOF'
+
+# Load aliases and functions
+[[ -f ~/dotfiles/shell/aliases.sh ]] && source ~/dotfiles/shell/aliases.sh
+[[ -f ~/dotfiles/shell/functions.sh ]] && source ~/dotfiles/shell/functions.sh
+EOF
+
+source ~/.zshrc
+```
+
+## Verifiera att det fungerar
+
+```bash
+# Testa några aliases
+ll
+gs  # git status
+k get pods  # kubectl get pods
+
+# Testa funktioner
+mkcd /tmp/test-directory
+pwd  # /tmp/test-directory
+
+genpass 16  # Random password
+```
+
+## Sammanfattning
+Du har nu ett organiserat system för shell-aliases och functions. Dessa kommer spara dig tusentals tangenttryckningar över tid. Fortsätt bygga på dessa efterhand som du hittar mönster i ditt arbete.
+
+## Nästa steg
+- Lägg till projekt-specifika aliases
+- Skapa functions för upprepade arbetsflöden
+- Dela dina bästa aliases med teamet
+"""
+            },
+            {
+                "title": "Environment variables management",
+                "difficulty": "medium",
+                "estimated_minutes": 15,
+                "xp_reward": 35,
+                "content": """# Environment Variables Management
+
+## Varför detta är viktigt
+Environment variables är det säkra sättet att hantera konfiguration och hemligheter. Du använder dem för API-nycklar, databas-URLs, och feature flags. Att hårdkoda hemligheter i kod är en säkerhetsrisk — environment variables löser detta.
+
+## Vad du kommer lära dig
+- Förstå hur environment variables fungerar
+- Hantera .env-filer säkert
+- Använda direnv för automatisk miljökonfiguration
+
+## Förutsättningar
+- Shell konfigurerat
+- Grundläggande terminalkunskap
+
+## Steg-för-steg
+
+### Steg 1: Förstå environment variables
+
+```bash
+# Visa alla environment variables
+env
+
+# Visa specifik variabel
+echo $PATH
+echo $HOME
+echo $USER
+
+# Sätta en variabel (bara i nuvarande shell)
+export MY_VAR="hello"
+echo $MY_VAR
+
+# Variabeln försvinner när du stänger terminalen
+```
+
+### Steg 2: Permanenta variabler i .zshrc
+
+```bash
+# Lägg till i ~/.zshrc för permanenta variabler
+cat >> ~/.zshrc << 'EOF'
+
+# Custom Environment Variables
+export EDITOR="code --wait"
+export VISUAL="$EDITOR"
+
+# Default AWS region
+export AWS_DEFAULT_REGION="eu-north-1"
+
+# Go
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
+# Local bin
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+EOF
+
+source ~/.zshrc
+```
+
+### Steg 3: Använda .env-filer
+
+Skapa en `.env`-fil för projektspecifika variabler:
+
+```bash
+# .env (ALDRIG committa denna fil!)
+DATABASE_URL=postgresql://user:pass@localhost:5432/mydb
+API_KEY=sk-abc123...
+DEBUG=true
+```
+
+Ladda .env i ditt shell-script:
+
+```bash
+# Metod 1: Source direkt (funkar i bash/zsh)
+set -a  # Exportera automatiskt
+source .env
+set +a
+
+# Metod 2: Med ett litet script
+while IFS= read -r line; do
+    [[ -z "$line" || "$line" =~ ^# ]] && continue
+    export "$line"
+done < .env
+```
+
+### Steg 4: Installera och konfigurera direnv
+
+direnv laddar automatiskt .envrc-filer när du cd:ar in i en mapp.
+
+**Installation:**
+```bash
+# macOS
+brew install direnv
+
+# Ubuntu
+sudo apt install direnv
+
+# Lägg till i ~/.zshrc
+eval "$(direnv hook zsh)"
+```
+
+**Användning:**
+```bash
+# Skapa .envrc i ditt projekt
+cd ~/projects/my-app
+cat > .envrc << 'EOF'
+export DATABASE_URL="postgresql://localhost:5432/myapp"
+export AWS_PROFILE="work"
+export TF_VAR_environment="dev"
+EOF
+
+# Tillåt direnv att ladda filen
+direnv allow
+
+# Nu laddas variablerna automatiskt när du cd:ar hit
+cd ~/projects/my-app
+# direnv: loading .envrc
+# direnv: export +AWS_PROFILE +DATABASE_URL +TF_VAR_environment
+```
+
+### Steg 5: Säker hemlighantering
+
+**Aldrig committa hemligheter!**
+
+```bash
+# Lägg till i .gitignore
+cat >> .gitignore << 'EOF'
+.env
+.env.*
+!.env.example
+.envrc
+.direnv/
+EOF
+
+# Skapa en .env.example som mall
+cat > .env.example << 'EOF'
+# Copy this to .env and fill in values
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+API_KEY=your-api-key-here
+EOF
+```
+
+**Bättre alternativ för produktion:**
+- AWS Secrets Manager
+- HashiCorp Vault
+- 1Password CLI
+- Doppler
+
+### Steg 6: Environment variables i Docker
+
+```dockerfile
+# Dockerfile - bygg-tid variabler
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+
+# docker-compose.yml - runtime variabler
+services:
+  app:
+    environment:
+      - DATABASE_URL
+      - API_KEY=${API_KEY}
+    env_file:
+      - .env
+```
+
+## Vanliga problem
+
+### Problem: "command not found" efter att ha lagt till i PATH
+**Lösning:** Kör `source ~/.zshrc` eller öppna en ny terminal.
+
+### Problem: Variable finns inte i subprocess
+**Lösning:** Använd `export` — `VAR=value` utan export är bara lokalt.
+
+### Problem: direnv laddar inte .envrc
+**Lösning:** Kör `direnv allow` efter varje ändring i .envrc.
+
+## Verifiera att det fungerar
+
+```bash
+# Testa direnv
+cd ~/projects/my-app
+echo $DATABASE_URL  # Ska visa URL:en
+
+# Testa .env loading
+cat > /tmp/test.env << 'EOF'
+TEST_VAR=it_works
+EOF
+set -a && source /tmp/test.env && set +a
+echo $TEST_VAR  # it_works
+```
+
+## Environment Variables Cheat Sheet
+
+```bash
+# Visa alla
+env | sort
+
+# Visa specifik
+echo $VAR_NAME
+printenv VAR_NAME
+
+# Sätt temporär (bara detta kommando)
+VAR=value command
+
+# Sätt för session
+export VAR=value
+
+# Ta bort
+unset VAR
+
+# Kontrollera om satt
+[[ -z "$VAR" ]] && echo "Not set"
+[[ -n "$VAR" ]] && echo "Is set"
+```
+
+## Sammanfattning
+Du förstår nu hur environment variables fungerar och har sätta upp direnv för automatisk miljökonfiguration. Använd alltid environment variables för konfiguration istället för att hårdkoda värden.
+
+## Nästa steg
+- Utforska AWS Secrets Manager för produktion
+- Lär dig om 12-factor app principles
+- Sätt upp secrets i CI/CD pipelines
+"""
+            },
         ],
         "labs": [
             {"title": "Terminal Power User Setup", "slug": "lab-1-1-terminal-setup", "hours": 2.0},
