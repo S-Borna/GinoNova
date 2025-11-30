@@ -1,6 +1,7 @@
 """
 Task Repository - In-memory storage for tasks
 Phase 3.0: Tasks Foundation
+Phase 4.0: Added parent_task_id support for related tasks (fördjupning)
 """
 from datetime import datetime
 from typing import Optional
@@ -67,6 +68,22 @@ def list_tasks_by_module(module_id: UUID) -> list[TaskInDB]:
     return [task for task in _tasks_db.values() if task.module_id == module_id]
 
 
+def get_tasks_by_parent_id(parent_task_id: UUID) -> list[TaskInDB]:
+    """
+    Get all tasks that are related to a parent task (fördjupning/deep dive tasks).
+
+    Args:
+        parent_task_id: The UUID of the parent task
+
+    Returns:
+        List of TaskInDB objects that have this parent_task_id
+    """
+    return [
+        task for task in _tasks_db.values() 
+        if getattr(task, 'parent_task_id', None) == parent_task_id
+    ]
+
+
 def create_task(data: TaskCreate) -> TaskInDB:
     """
     Create a new task.
@@ -88,6 +105,8 @@ def create_task(data: TaskCreate) -> TaskInDB:
         difficulty=data.difficulty,
         estimated_minutes=data.estimated_minutes,
         xp_reward=data.xp_reward,
+        task_tier=getattr(data, 'task_tier', 'standard'),
+        parent_task_id=getattr(data, 'parent_task_id', None),
     )
     _tasks_db[task.id] = task
     return task

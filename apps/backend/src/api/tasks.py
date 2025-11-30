@@ -1,18 +1,20 @@
 """
 Tasks Router - API endpoints for task management
 Phase 3.0: Tasks Foundation
+Phase v4.0: Added related tasks (fördjupning) endpoint
 """
 from uuid import UUID
+from typing import List
 
 from fastapi import APIRouter, Response, status
 
-from ..schemas.task import TaskCreate, TaskUpdate, TaskPublic
+from ..schemas.task import TaskCreate, TaskUpdate, TaskPublic, TaskWithRelated
 from ..services.task_service import task_service
 
 tasks_router = APIRouter()
 
 # Phase version header
-PHASE_VERSION = "3.0"
+PHASE_VERSION = "4.0"
 
 
 def add_phase_header(response: Response) -> None:
@@ -76,6 +78,49 @@ def get_task(task_id: UUID, response: Response):
     """
     add_phase_header(response)
     return task_service.get_task_by_id(task_id)
+
+
+@tasks_router.get("/{task_id}/related", response_model=List[TaskPublic])
+def get_related_tasks(task_id: UUID, response: Response):
+    """
+    Get related advanced/deep-dive tasks for a standard task.
+    
+    This endpoint returns optional "fördjupning" (deep dive) tasks
+    that are linked to the specified task. These are NOT locked -
+    users can try them anytime for extra XP.
+
+    Args:
+        task_id: UUID of the parent/standard task
+
+    Returns:
+        List of related TaskPublic objects (advanced/deep_dive tier)
+
+    Raises:
+        404: If task not found
+    """
+    add_phase_header(response)
+    return task_service.get_related_tasks(task_id)
+
+
+@tasks_router.get("/{task_id}/with-related", response_model=TaskWithRelated)
+def get_task_with_related(task_id: UUID, response: Response):
+    """
+    Get a task with its related advanced/deep-dive tasks included.
+    
+    Convenience endpoint that returns the task and all related
+    fördjupning tasks in a single response.
+
+    Args:
+        task_id: UUID of the task to retrieve
+
+    Returns:
+        TaskWithRelated object with task + related_tasks array
+
+    Raises:
+        404: If task not found
+    """
+    add_phase_header(response)
+    return task_service.get_task_with_related(task_id)
 
 
 @tasks_router.post("/", response_model=TaskPublic, status_code=status.HTTP_201_CREATED)
