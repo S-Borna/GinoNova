@@ -35,6 +35,50 @@ interface MarkdownRendererProps {
 }
 
 /* ============================================================================
+   HELPER: Extract code text from React children (fixes [object Object] bug)
+   ============================================================================ */
+
+function extractCodeText(children: React.ReactNode): string {
+    // If it's already a string, return it
+    if (typeof children === 'string') {
+        return children
+    }
+
+    // If it's a number, convert to string
+    if (typeof children === 'number') {
+        return String(children)
+    }
+
+    // If it's null or undefined, return empty
+    if (children == null) {
+        return ''
+    }
+
+    // If it's an array, recursively extract and join
+    if (Array.isArray(children)) {
+        return children.map(extractCodeText).join('')
+    }
+
+    // If it's a React element, try to get its children
+    if (typeof children === 'object' && 'props' in children) {
+        const element = children as React.ReactElement<{ children?: React.ReactNode }>
+        return extractCodeText(element.props?.children)
+    }
+
+    // Fallback: try to stringify (but avoid [object Object])
+    const str = String(children)
+    if (str === '[object Object]') {
+        try {
+            return JSON.stringify(children, null, 2)
+        } catch {
+            return ''
+        }
+    }
+
+    return str
+}
+
+/* ============================================================================
    CUSTOM COMPONENTS
    ============================================================================ */
 
@@ -138,12 +182,15 @@ const components = {
             const codeClassName = codeElement.props.className || ""
             const match = /language-(\w+)/.exec(codeClassName)
             const language = match ? match[1] : undefined
-            const code = String(codeElement.props.children || "").replace(/\n$/, "")
+            // Use extractCodeText to avoid [object Object] bug
+            const code = extractCodeText(codeElement.props.children).replace(/\n$/, "")
 
             return <CodeBlock language={language}>{code}</CodeBlock>
         }
 
-        return <pre {...props}>{children}</pre>
+        // Fallback: extract code from children directly
+        const code = extractCodeText(children).replace(/\n$/, "")
+        return <CodeBlock>{code}</CodeBlock>
     },
 
     // Inline code
