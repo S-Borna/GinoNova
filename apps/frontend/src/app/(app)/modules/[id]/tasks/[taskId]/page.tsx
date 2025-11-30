@@ -6,9 +6,9 @@
  * ============================================================================
  *
  * Features:
- * - Lesson content (markdown) OR interactive content blocks
- * - Quiz, terminal, and checkpoint support
- * - Progress tracking
+ * - Enhanced lesson content with progress tracking
+ * - Interactive content blocks (quiz, terminal, checkpoint)
+ * - Progress tracking with read progress bar
  * - Mark as complete button
  * - Navigation to next task
  * - Related "fördjupning" tasks (v4 optional deep-dive content)
@@ -16,24 +16,19 @@
  * @phase C.2 - Task Content Display
  * @phase ILE - Interactive Learning Engine
  * @phase 4.0 - Task Tier System with Related Tasks
- * @design PHASE 2 — Design System Application Layer
+ * @phase 4.1 - Enhanced Learning Experience
  */
 
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import ReactMarkdown from "react-markdown"
-import rehypeHighlight from "rehype-highlight"
-import remarkGfm from "remark-gfm"
 import {
     PageLayout,
     Section,
     Block,
     Headline,
     Subtext,
-    CodeBlock,
     TaskFooter,
-    InfoBanner,
     cn
 } from "@saas/ui"
 import { GlassCard } from "@/components/ui/glass-card"
@@ -42,11 +37,10 @@ import { getTask, getTasksForModule, TaskPublic } from "@/lib/tasks"
 import { getModule, ModulePublic } from "@/lib/modules"
 import { useAuth } from "@/components/auth"
 import { getToken } from "@/lib/auth"
-import { ContentBlockRenderer } from "@/components/learning"
+import { ContentBlockRenderer, LessonContent } from "@/components/learning"
 import { RelatedTasks, RelatedTask } from "@/components/tasks/RelatedTasks"
 import {
     ArrowLeft,
-    ArrowRight,
     CheckCircle2,
     Clock,
     BookOpen,
@@ -54,10 +48,8 @@ import {
     AlertCircle,
     Zap,
     Play,
+    Sparkles,
 } from "lucide-react"
-
-// Import highlight.js theme for syntax highlighting
-import "highlight.js/styles/github-dark.css"
 
 /* ============================================================================
    SKELETON
@@ -115,95 +107,6 @@ function ErrorState({ error, onRetry, moduleId }: { error: string; onRetry: () =
                 </Button>
             </div>
         </GlassCard>
-    )
-}
-
-/* ============================================================================
-   MARKDOWN RENDERER - With Syntax Highlighting
-   ============================================================================ */
-
-function MarkdownContent({ content }: { content: string }) {
-    return (
-        <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:text-neutral-900 dark:prose-headings:text-white prose-p:text-neutral-700 dark:prose-p:text-neutral-300 prose-li:text-neutral-700 dark:prose-li:text-neutral-300 prose-strong:text-neutral-900 dark:prose-strong:text-white prose-code:text-indigo-600 dark:prose-code:text-indigo-400 prose-code:bg-neutral-100 dark:prose-code:bg-neutral-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-neutral-900 prose-pre:border prose-pre:border-neutral-800 prose-h1:text-3xl prose-h1:mt-8 prose-h1:mb-4 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3">
-            <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeHighlight]}
-                components={{
-                    // Custom ordered list - convert inner numbers to bullets
-                    ol: ({ children, ...props }) => (
-                        <ol className="list-decimal ml-6 my-4 space-y-2" {...props}>
-                            {children}
-                        </ol>
-                    ),
-                    // Custom list item - handle nested numbering
-                    li: ({ children, ...props }) => {
-                        // Check if content starts with a number (like "1. " inside ordered list)
-                        const content = String(children)
-                        const nestedNumberMatch = content.match(/^(\d+)\.\s*(.*)/)
-                        if (nestedNumberMatch) {
-                            return (
-                                <li className="text-neutral-700 dark:text-neutral-300" {...props}>
-                                    <span className="font-medium">{nestedNumberMatch[1]}.</span> {nestedNumberMatch[2]}
-                                </li>
-                            )
-                        }
-                        return (
-                            <li className="text-neutral-700 dark:text-neutral-300" {...props}>
-                                {children}
-                            </li>
-                        )
-                    },
-                    // Tables
-                    table: ({ children }) => (
-                        <table className="w-full border-collapse my-6 text-sm">
-                            {children}
-                        </table>
-                    ),
-                    th: ({ children }) => (
-                        <th className="border border-neutral-300 dark:border-neutral-700 px-4 py-2 bg-neutral-100 dark:bg-neutral-800 font-semibold text-left">
-                            {children}
-                        </th>
-                    ),
-                    td: ({ children }) => (
-                        <td className="border border-neutral-300 dark:border-neutral-700 px-4 py-2">
-                            {children}
-                        </td>
-                    ),
-                    // Code blocks using design system CodeBlock
-                    pre: ({ children }) => {
-                        // Extract code and language from children
-                        const childElement = children as React.ReactElement<{ children?: string; className?: string }>
-                        const code = childElement?.props?.children || ''
-                        const className = childElement?.props?.className || ''
-                        const languageMatch = className.match(/language-(\w+)/)
-                        const language = languageMatch ? languageMatch[1] : 'bash'
-
-                        return (
-                            <CodeBlock language={language} className="my-6">
-                                {String(code).trim()}
-                            </CodeBlock>
-                        )
-                    },
-                    code: ({ className, children, ...props }) => {
-                        const isInline = !className
-                        if (isInline) {
-                            return (
-                                <code className="bg-neutral-200 dark:bg-neutral-800 px-2 py-1 rounded text-sm font-mono text-indigo-700 dark:text-indigo-400" {...props}>
-                                    {children}
-                                </code>
-                            )
-                        }
-                        return (
-                            <code className={cn("text-sm", className)} {...props}>
-                                {children}
-                            </code>
-                        )
-                    },
-                }}
-            >
-                {content}
-            </ReactMarkdown>
-        </div>
     )
 }
 
@@ -527,7 +430,11 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                     onTerminalCommand={handleTerminalCommand}
                                 />
                             ) : (
-                                <MarkdownContent content={task.content || placeholderContent} />
+                                <LessonContent 
+                                    content={task.content || placeholderContent}
+                                    title={task.title}
+                                    estimatedMinutes={task.estimated_minutes}
+                                />
                             )}
 
                             {/* Related Tasks / Fördjupning */}
