@@ -91,7 +91,7 @@ function TaskSidebar({
   // Defensive: ensure tasks and labs are arrays
   const tasks = module.tasks || []
   const labs = module.labs || []
-  
+
   const completedTasks = tasks.filter(t => t.is_completed).length
   const totalTasks = tasks.length
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
@@ -322,16 +322,16 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
       setIsLoading(true)
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-        
+
         // Fetch module and tasks in parallel
         const [moduleRes, tasksRes] = await Promise.all([
           fetch(`${apiUrl}/api/modules/${params.id}`),
           fetch(`${apiUrl}/api/tasks/module/${params.id}`)
         ])
-        
+
         if (moduleRes.ok) {
           const moduleData = await moduleRes.json()
-          
+
           // Fetch tasks and merge into module
           let tasks: Task[] = []
           if (tasksRes.ok) {
@@ -345,7 +345,7 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
               is_completed: false // TODO: fetch from progress API
             })).sort((a: Task, b: Task) => a.order_index - b.order_index)
           }
-          
+
           setModule({
             ...moduleData,
             tasks,

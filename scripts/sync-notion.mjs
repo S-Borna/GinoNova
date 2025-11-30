@@ -241,9 +241,332 @@ async function pullFromNotion() {
 }
 
 async function pushToNotion() {
-    console.log('📤 Push to Notion is not yet implemented');
-    console.log('   For now, edit directly in Notion and pull');
-    process.exit(0);
+    console.log('📤 Pushing to Notion...');
+
+    try {
+        const fs = await import('fs/promises');
+        const path = await import('path');
+        const inputPath = path.join(process.cwd(), OUTPUT_FILE);
+
+        // Read the markdown file
+        const markdown = await fs.readFile(inputPath, 'utf8');
+
+        // Remove the auto-generated header comment
+        const content = markdown.replace(/<!--[\s\S]*?-->\n*/, '').trim();
+
+        // Parse markdown to Notion blocks
+        const blocks = markdownToNotionBlocks(content);
+
+        console.log(`   📄 Parsed ${blocks.length} blocks from markdown`);
+
+        // First, get existing blocks and delete them
+        console.log('   🗑️  Clearing existing page content...');
+        const existingBlocks = await fetchAllBlocks(PAGE_ID);
+
+        for (const block of existingBlocks) {
+            await fetch(`https://api.notion.com/v1/blocks/${block.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${NOTION_API_KEY}`,
+                    'Notion-Version': '2022-06-28'
+                }
+            });
+        }
+
+        // Append new blocks in chunks (Notion API limit is 100 blocks per request)
+        console.log('   📝 Uploading new content...');
+        const chunkSize = 100;
+        for (let i = 0; i < blocks.length; i += chunkSize) {
+            const chunk = blocks.slice(i, i + chunkSize);
+
+            const response = await fetch(`https://api.notion.com/v1/blocks/${PAGE_ID}/children`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${NOTION_API_KEY}`,
+                    'Notion-Version': '2022-06-28',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ children: chunk })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(`Notion API error: ${response.status} - ${JSON.stringify(error)}`);
+            }
+
+            console.log(`   ✓ Uploaded blocks ${i + 1}-${Math.min(i + chunkSize, blocks.length)}`);
+        }
+
+        console.log(`✅ Successfully pushed to Notion!`);
+        console.log(`   Page: https://notion.so/${PAGE_ID.replace(/-/g, '')}`);
+
+    } catch (error) {
+        console.error('❌ Error:', error.message);
+        process.exit(1);
+    }
+}
+
+function markdownToNotionBlocks(markdown) {
+    const blocks = [];
+    const lines = markdown.split('\n');
+    let i = 0;
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        // Skip empty lines
+        if (!line.trim()) {
+            i++;
+            continue;
+        }
+
+        // Headings
+        if (line.startsWith('# ')) {
+            blocks.push(createHeading1(line.substring(2).trim()));
+            i++;
+            continue;
+        }
+        if (line.startsWith('## ')) {
+            blocks.push(createHeading2(line.substring(3).trim()));
+            i++;
+            continue;
+        }
+        if (line.startsWith('### ')) {
+            blocks.push(createHeading3(line.substring(4).trim()));
+            i++;
+            continue;
+        }
+
+        // Horizontal rule
+        if (line.trim() === '---') {
+            blocks.push({ type: 'divider', divider: {} });
+            i++;
+            continue;
+        }
+
+        // Code blocks
+        if (line.startsWith('```')) {
+            const lang = line.substring(3).trim() || 'plain text';
+            let code = '';
+            i++;
+            while (i < lines.length && !lines[i].startsWith('```')) {
+                code += (code ? '\n' : '') + lines[i];
+                i++;
+            }
+            blocks.push(createCodeBlock(code, lang));
+            i++; // Skip closing ```
+            continue;
+        }
+
+        // Tables
+        if (line.includes('|') && line.trim().startsWith('|')) {
+            const tableRows = [];
+            while (i < lines.length && lines[i].includes('|')) {
+                const row = lines[i].trim();
+                // Skip separator row (| --- | --- |)
+                if (!row.match(/^\|[\s-:|]+\|$/)) {
+                    const cells = row.split('|').filter(c => c.trim()).map(c => c.trim());
+                    tableRows.push(cells);
+                }
+                i++;
+            }
+            if (tableRows.length > 0) {
+                blocks.push(createTable(tableRows));
+            }
+            continue;
+        }
+
+        // Bullet list
+        if (line.match(/^[-*]\s/)) {
+            blocks.push(createBulletItem(line.replace(/^[-*]\s/, '').trim()));
+            i++;
+            continue;
+        }
+
+        // Numbered list
+        if (line.match(/^\d+\.\s/)) {
+            blocks.push(createNumberedItem(line.replace(/^\d+\.\s/, '').trim()));
+            i++;
+            continue;
+        }
+
+        // Checkbox / todo
+        if (line.match(/^-\s*\[[ x]\]/i)) {
+            const checked = line.match(/\[x\]/i) !== null;
+            const text = line.replace(/^-\s*\[[ x]\]\s*/i, '').trim();
+            blocks.push(createTodo(text, checked));
+            i++;
+            continue;
+        }
+
+        // Quote
+        if (line.startsWith('> ')) {
+            blocks.push(createQuote(line.substring(2).trim()));
+            i++;
+            continue;
+        }
+
+        // Regular paragraph
+        blocks.push(createParagraph(line.trim()));
+        i++;
+    }
+
+    return blocks;
+}
+
+function parseRichText(text) {
+    const richText = [];
+    // Simple parser - handle bold, italic, code, links
+    const regex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\)|[^*`\[]+)/g;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        let segment = match[1];
+        let annotations = { bold: false, italic: false, code: false };
+        let href = null;
+
+        // Bold
+        if (segment.startsWith('**') && segment.endsWith('**')) {
+            segment = segment.slice(2, -2);
+            annotations.bold = true;
+        }
+        // Italic
+        else if (segment.startsWith('*') && segment.endsWith('*')) {
+            segment = segment.slice(1, -1);
+            annotations.italic = true;
+        }
+        // Code
+        else if (segment.startsWith('`') && segment.endsWith('`')) {
+            segment = segment.slice(1, -1);
+            annotations.code = true;
+        }
+        // Link
+        else if (segment.match(/^\[([^\]]+)\]\(([^)]+)\)$/)) {
+            const linkMatch = segment.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+            segment = linkMatch[1];
+            href = linkMatch[2];
+        }
+
+        if (segment) {
+            const textObj = {
+                type: 'text',
+                text: { content: segment }
+            };
+            if (href) {
+                textObj.text.link = { url: href };
+            }
+            if (annotations.bold || annotations.italic || annotations.code) {
+                textObj.annotations = annotations;
+            }
+            richText.push(textObj);
+        }
+    }
+
+    // Fallback if regex didn't match anything
+    if (richText.length === 0 && text) {
+        richText.push({ type: 'text', text: { content: text } });
+    }
+
+    return richText;
+}
+
+function createHeading1(text) {
+    return {
+        type: 'heading_1',
+        heading_1: { rich_text: parseRichText(text) }
+    };
+}
+
+function createHeading2(text) {
+    return {
+        type: 'heading_2',
+        heading_2: { rich_text: parseRichText(text) }
+    };
+}
+
+function createHeading3(text) {
+    return {
+        type: 'heading_3',
+        heading_3: { rich_text: parseRichText(text) }
+    };
+}
+
+function createParagraph(text) {
+    return {
+        type: 'paragraph',
+        paragraph: { rich_text: parseRichText(text) }
+    };
+}
+
+function createBulletItem(text) {
+    return {
+        type: 'bulleted_list_item',
+        bulleted_list_item: { rich_text: parseRichText(text) }
+    };
+}
+
+function createNumberedItem(text) {
+    return {
+        type: 'numbered_list_item',
+        numbered_list_item: { rich_text: parseRichText(text) }
+    };
+}
+
+function createTodo(text, checked) {
+    return {
+        type: 'to_do',
+        to_do: { rich_text: parseRichText(text), checked }
+    };
+}
+
+function createQuote(text) {
+    return {
+        type: 'quote',
+        quote: { rich_text: parseRichText(text) }
+    };
+}
+
+function createCodeBlock(code, language) {
+    // Map common language names to Notion's supported languages
+    const langMap = {
+        'js': 'javascript',
+        'ts': 'typescript',
+        'py': 'python',
+        'sh': 'bash',
+        'shell': 'bash',
+        'yml': 'yaml',
+        'md': 'markdown',
+        'json': 'json',
+        'plain text': 'plain text'
+    };
+    const notionLang = langMap[language.toLowerCase()] || language.toLowerCase() || 'plain text';
+
+    return {
+        type: 'code',
+        code: {
+            rich_text: [{ type: 'text', text: { content: code } }],
+            language: notionLang
+        }
+    };
+}
+
+function createTable(rows) {
+    const tableWidth = rows[0]?.length || 1;
+
+    return {
+        type: 'table',
+        table: {
+            table_width: tableWidth,
+            has_column_header: true,
+            has_row_header: false,
+            children: rows.map(row => ({
+                type: 'table_row',
+                table_row: {
+                    cells: row.map(cell => parseRichText(cell))
+                }
+            }))
+        }
+    };
 }
 
 // Main
