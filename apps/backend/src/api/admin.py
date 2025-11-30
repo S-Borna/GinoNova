@@ -841,3 +841,109 @@ def clear_all_data(
         "labs_deleted": labs_before,
         "projects_deleted": projects_before,
     }
+
+
+class SeedRelatedResponse(BaseModel):
+    """Response for seeding related/fördjupning tasks"""
+    success: bool
+    message: str
+    tasks_created: int = 0
+    links_created: int = 0
+
+
+@admin_router.post("/seed-related-tasks", response_model=SeedRelatedResponse)
+def seed_related_tasks(
+    response: Response,
+    current_user: CurrentUser,
+) -> SeedRelatedResponse:
+    """
+    Seed fördjupning (advanced/deep_dive) tasks linked to v3 standard tasks.
+    
+    This creates optional advanced content that appears under
+    "Vill du fördjupa dig?" section in task view.
+    
+    Phase 4.0: Task Tier System
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    try:
+        from ..db.seeds.related_tasks_content import seed_related_tasks_content
+        result = seed_related_tasks_content()
+
+        return SeedRelatedResponse(
+            success=result.get("status") == "success",
+            message=result.get("message", ""),
+            tasks_created=result.get("tasks_created", 0),
+            links_created=result.get("links_created", 0),
+        )
+    except ImportError:
+        # Fallback: create sample related tasks
+        return _create_sample_related_tasks()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to seed related tasks: {str(e)}"
+        )
+
+
+def _create_sample_related_tasks() -> SeedRelatedResponse:
+    """Create sample related tasks for demonstration."""
+    from ..db.task_repository import list_tasks, create_task
+    from ..schemas.task import TaskCreate
+    
+    tasks = list_tasks()
+    standard_tasks = [t for t in tasks if getattr(t, 'task_tier', 'standard') == 'standard']
+    
+    if not standard_tasks:
+        return SeedRelatedResponse(
+            success=False,
+            message="No standard tasks found to link to",
+            tasks_created=0,
+            links_created=0,
+        )
+    
+    # Create sample fördjupning tasks for first 5 standard tasks
+    created = 0
+    for parent_task in standard_tasks[:5]:
+        # Create an advanced task linked to this standard task
+        advanced_task = create_task(TaskCreate(
+            module_id=parent_task.module_id,
+            title=f"Fördjupning: {parent_task.title}",
+            description=f"Avancerat innehåll som bygger vidare på '{parent_task.title}'",
+            content=f"""# Fördjupning: {parent_task.title}
+
+## Översikt
+Detta är avancerat innehåll som bygger vidare på grunderna.
+
+## Fördjupade koncept
+- Avancerad implementation
+- Best practices för produktion
+- Prestandaoptimering
+
+## Praktiska övningar
+Testa dina kunskaper med dessa utmaningar:
+
+1. Implementera en produktionsklar lösning
+2. Optimera för skalbarhet
+3. Felsök vanliga problem
+
+## Nästa steg
+Efter denna fördjupning är du redo för ännu mer avancerade ämnen.
+""",
+            order_index=100 + created,  # High order to appear last
+            difficulty="hard",
+            estimated_minutes=45,
+            xp_reward=75,  # More XP for advanced content
+            task_tier="advanced",
+            parent_task_id=parent_task.id,
+        ))
+        created += 1
+    
+    return SeedRelatedResponse(
+        success=True,
+        message=f"Created {created} sample fördjupning tasks",
+        tasks_created=created,
+        links_created=created,
+    )
+
