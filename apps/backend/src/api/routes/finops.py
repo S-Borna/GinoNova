@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Query, Response
 
-from ..schemas.finops import (
+from ...schemas.finops import (
     FinOpsStatus,
     BudgetStatus,
     CostCategory,

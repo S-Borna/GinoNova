@@ -312,7 +312,7 @@ async function pushToNotion() {
                     console.error(`   ❌ Error uploading blocks ${i + 1}-${Math.min(i + chunkSize, blocks.length)}:`);
                     console.error(`      Status: ${response.status}`);
                     console.error(`      Message: ${JSON.stringify(error).substring(0, 200)}`);
-                    
+
                     // Try to continue with remaining blocks
                     continue;
                 }
@@ -574,7 +574,7 @@ function createCodeBlock(code, language) {
         'plain': 'plain text',
         '': 'plain text'
     };
-    
+
     // Notion's valid language list
     const validLangs = [
         'abap', 'agda', 'arduino', 'assembly', 'bash', 'basic', 'bnf', 'c', 'c#', 'c++',
@@ -589,9 +589,9 @@ function createCodeBlock(code, language) {
         'toml', 'typescript', 'vb.net', 'verilog', 'vhdl', 'visual basic', 'webassembly',
         'xml', 'yaml', 'java/c/c++/c#'
     ];
-    
+
     let notionLang = langMap[language.toLowerCase()] || language.toLowerCase() || 'plain text';
-    
+
     // If language isn't valid, default to plain text
     if (!validLangs.includes(notionLang)) {
         notionLang = 'plain text';

@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Query, Response, HTTPException
 
-from ..schemas.iac import (
+from ...schemas.iac import (
     IaCStatus,
     Environment,
     ResourceType,

@@ -8,7 +8,7 @@ import secrets
 
 from fastapi import APIRouter, Query, Response, Header
 
-from ..schemas.public_api import (
+from ...schemas.public_api import (
     PublicAPIStatus,
     APIKey,
     APIKeyCreate,
