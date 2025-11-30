@@ -2,6 +2,7 @@
 Task Schemas - Pydantic models for Task API validation
 Phase 3.0: Tasks Foundation
 Phase ILE: Added content_blocks and requirements for interactive learning
+Phase v4.0: Added task_tier and parent_task_id for related advanced content
 """
 from datetime import datetime
 from typing import Optional, Literal, List, Any
@@ -11,6 +12,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 DifficultyLevel = Literal["easy", "medium", "hard"]
+TaskTier = Literal["standard", "advanced", "deep_dive"]
 
 
 class TaskBase(BaseModel):
@@ -60,6 +62,14 @@ class TaskBase(BaseModel):
         description="XP points awarded on completion"
     )
     is_active: bool = Field(default=True, description="Whether task is active")
+    task_tier: TaskTier = Field(
+        default="standard",
+        description="Task tier: standard (v3), advanced (v4), or deep_dive"
+    )
+    parent_task_id: Optional[UUID] = Field(
+        default=None,
+        description="Parent task ID for related/advanced content linking"
+    )
 
     @field_validator("title")
     @classmethod
@@ -130,6 +140,14 @@ class TaskCreate(BaseModel):
         le=500,
         description="XP points awarded on completion"
     )
+    task_tier: TaskTier = Field(
+        default="standard",
+        description="Task tier: standard (v3), advanced (v4), or deep_dive"
+    )
+    parent_task_id: Optional[UUID] = Field(
+        default=None,
+        description="Parent task ID for linking advanced content to standard tasks"
+    )
 
     @field_validator("title")
     @classmethod
@@ -189,6 +207,14 @@ class TaskUpdate(BaseModel):
         description="XP points awarded on completion"
     )
     is_active: Optional[bool] = Field(None, description="Whether task is active")
+    task_tier: Optional[TaskTier] = Field(
+        None,
+        description="Task tier: standard, advanced, or deep_dive"
+    )
+    parent_task_id: Optional[UUID] = Field(
+        None,
+        description="Parent task ID for linking advanced content"
+    )
 
     @field_validator("title")
     @classmethod
@@ -227,6 +253,14 @@ class TaskPublic(TaskBase):
     updated_at: datetime
 
 
+class TaskWithRelated(TaskPublic):
+    """Schema for task with its related advanced/deep-dive tasks"""
+    related_tasks: List["TaskPublic"] = Field(
+        default=[],
+        description="Related advanced or deep-dive tasks (fördjupning)"
+    )
+
+
 def create_task_in_db(
     module_id: UUID,
     title: str,
@@ -239,6 +273,8 @@ def create_task_in_db(
     estimated_minutes: int = 15,
     xp_reward: int = 25,
     is_active: bool = True,
+    task_tier: TaskTier = "standard",
+    parent_task_id: Optional[UUID] = None,
 ) -> TaskInDB:
     """Factory function to create a new TaskInDB with generated UUID and timestamps"""
     now = datetime.utcnow()
@@ -255,6 +291,8 @@ def create_task_in_db(
         estimated_minutes=estimated_minutes,
         xp_reward=xp_reward,
         is_active=is_active,
+        task_tier=task_tier,
+        parent_task_id=parent_task_id,
         created_at=now,
         updated_at=now,
     )

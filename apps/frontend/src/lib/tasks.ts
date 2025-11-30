@@ -1,12 +1,16 @@
 /**
  * Tasks API Client
  * Phase 3.0: Tasks Foundation with standardized error handling
+ * Phase 4.0: Added task_tier and parent_task_id for related tasks (fördjupning)
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
 // Difficulty type
 export type DifficultyLevel = "easy" | "medium" | "hard"
+
+// Task tier type (v4 feature)
+export type TaskTier = "standard" | "advanced" | "deep_dive"
 
 // Types matching backend schemas
 export interface TaskPublic {
@@ -20,6 +24,8 @@ export interface TaskPublic {
     estimated_minutes: number
     xp_reward: number
     is_active: boolean
+    task_tier: TaskTier       // v4: standard, advanced, or deep_dive
+    parent_task_id: string | null  // v4: links to parent task for fördjupning
     created_at: string
     updated_at: string
 }
@@ -33,6 +39,8 @@ export interface TaskCreate {
     difficulty?: DifficultyLevel
     estimated_minutes?: number
     xp_reward?: number
+    task_tier?: TaskTier        // v4: default "standard"
+    parent_task_id?: string | null  // v4: for linking fördjupning
 }
 
 export interface TaskUpdate {
@@ -44,6 +52,8 @@ export interface TaskUpdate {
     estimated_minutes?: number
     xp_reward?: number
     is_active?: boolean
+    task_tier?: TaskTier        // v4
+    parent_task_id?: string | null  // v4
 }
 
 // Standardized API response types
@@ -249,5 +259,44 @@ export async function deleteTask(id: string): Promise<ApiResult<void>> {
         return { ok: true, data: undefined }
     } catch (error) {
         return { ok: false, status: 0, message: error instanceof Error ? error.message : "Network error" }
+    }
+}
+
+/**
+ * Get related tasks (fördjupning) for a task
+ * Returns advanced/deep_dive tasks linked to the specified parent task
+ */
+export async function getRelatedTasks(taskId: string): Promise<ApiResult<TaskPublic[]>> {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/tasks/${taskId}/related`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+
+        if (!res.ok) {
+            const error = await res.json().catch(() => ({ detail: "Failed to fetch related tasks" }))
+            return { ok: false, status: res.status, message: error.detail || "Failed to fetch related tasks" }
+        }
+
+        const data = await res.json()
+        return { ok: true, data }
+    } catch (error) {
+        return { ok: false, status: 0, message: error instanceof Error ? error.message : "Network error" }
+    }
+}
+
+/**
+ * Get task tier display info
+ */
+export function getTaskTierInfo(tier: TaskTier): { label: string; color: string; icon: string } {
+    switch (tier) {
+        case "advanced":
+            return { label: "Fördjupning", color: "bg-purple-100 text-purple-800", icon: "🚀" }
+        case "deep_dive":
+            return { label: "Deep Dive", color: "bg-amber-100 text-amber-800", icon: "🎓" }
+        default:
+            return { label: "Standard", color: "bg-blue-100 text-blue-800", icon: "📘" }
     }
 }

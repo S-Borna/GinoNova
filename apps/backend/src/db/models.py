@@ -112,6 +112,10 @@ class Task(Base):
     content_blocks = Column(JSON, default=list)  # List of ContentBlock
     requirements = Column(JSON, default=list)  # List of CompletionRequirement
 
+    # Task Tier System (v3 standard vs v4 advanced)
+    task_tier = Column(String(20), default="standard")  # standard, advanced, deep_dive
+    parent_task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=True)  # Link to parent v3 task
+    
     order_index = Column(Integer, default=1)
     difficulty = Column(String(20), default="medium")
     estimated_minutes = Column(Integer, default=15)
@@ -123,9 +127,11 @@ class Task(Base):
 
     # Relationships
     module = relationship("Module", back_populates="tasks")
+    related_tasks = relationship("Task", backref="parent_task", remote_side=[id])
 
     __table_args__ = (
         Index('ix_tasks_module_order', 'module_id', 'order_index'),
+        Index('ix_tasks_parent', 'parent_task_id'),
     )
 
 

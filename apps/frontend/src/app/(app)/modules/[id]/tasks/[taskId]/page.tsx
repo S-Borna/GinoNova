@@ -11,9 +11,11 @@
  * - Progress tracking
  * - Mark as complete button
  * - Navigation to next task
+ * - Related "fördjupning" tasks (v4 optional deep-dive content)
  *
  * @phase C.2 - Task Content Display
  * @phase ILE - Interactive Learning Engine
+ * @phase 4.0 - Task Tier System with Related Tasks
  * @design PHASE 2 — Design System Application Layer
  */
 
@@ -41,6 +43,7 @@ import { getModule, ModulePublic } from "@/lib/modules"
 import { useAuth } from "@/components/auth"
 import { getToken } from "@/lib/auth"
 import { ContentBlockRenderer } from "@/components/learning"
+import { RelatedTasks, RelatedTask } from "@/components/tasks/RelatedTasks"
 import {
     ArrowLeft,
     ArrowRight,
@@ -218,6 +221,7 @@ export default function TaskDetailPage() {
     const [task, setTask] = useState<TaskPublic | null>(null)
     const [module, setModule] = useState<ModulePublic | null>(null)
     const [allTasks, setAllTasks] = useState<TaskPublic[]>([])
+    const [relatedTasks, setRelatedTasks] = useState<RelatedTask[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [completing, setCompleting] = useState(false)
@@ -260,6 +264,17 @@ export default function TaskDetailPage() {
                 // Sort tasks by order_index
                 const sorted = [...tasksResult.data].sort((a, b) => a.order_index - b.order_index)
                 setAllTasks(sorted)
+            }
+
+            // Fetch related tasks (fördjupning)
+            try {
+                const relatedRes = await fetch(`${API_URL}/api/tasks/${taskId}/related`)
+                if (relatedRes.ok) {
+                    const relatedData = await relatedRes.json()
+                    setRelatedTasks(relatedData)
+                }
+            } catch (e) {
+                console.log("Related tasks fetch skipped:", e)
             }
 
             // Fetch progress if token available
@@ -513,6 +528,15 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                 />
                             ) : (
                                 <MarkdownContent content={task.content || placeholderContent} />
+                            )}
+
+                            {/* Related Tasks / Fördjupning */}
+                            {relatedTasks.length > 0 && (
+                                <RelatedTasks
+                                    tasks={relatedTasks}
+                                    moduleId={moduleId}
+                                    className="mt-8"
+                                />
                             )}
                         </Block>
                     </Section>

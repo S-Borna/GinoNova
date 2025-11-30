@@ -1,10 +1,12 @@
 """
 Task Service - Business logic for task operations
 Phase 3.0: Tasks Foundation
+Phase 4.0: Added related tasks (fördjupning) support
 """
 from uuid import UUID
+from typing import List
 
-from ..schemas.task import TaskCreate, TaskUpdate, TaskPublic
+from ..schemas.task import TaskCreate, TaskUpdate, TaskPublic, TaskWithRelated
 from ..core.exceptions import raise_conflict, raise_not_found
 from ..db import task_repository, module_repository
 
@@ -14,8 +16,30 @@ class TaskService:
     Task service handles all task-related business logic.
 
     Phase 3.0: Uses repository layer with in-memory storage
-    Phase 4+: Repository will use SQLAlchemy + PostgreSQL
+    Phase 4.0: Added support for task tiers and related tasks (fördjupning)
+    Phase 5+: Repository will use SQLAlchemy + PostgreSQL
     """
+
+    def _to_task_public(self, task) -> TaskPublic:
+        """Convert a task model to TaskPublic schema."""
+        return TaskPublic(
+            id=task.id,
+            module_id=task.module_id,
+            title=task.title,
+            description=task.description,
+            content=task.content,
+            content_blocks=task.content_blocks,
+            requirements=task.requirements,
+            order_index=task.order_index,
+            difficulty=task.difficulty,
+            estimated_minutes=task.estimated_minutes,
+            xp_reward=task.xp_reward,
+            is_active=task.is_active,
+            task_tier=getattr(task, 'task_tier', 'standard'),
+            parent_task_id=getattr(task, 'parent_task_id', None),
+            created_at=task.created_at,
+            updated_at=task.updated_at,
+        )
 
     def _validate_module_exists(self, module_id: UUID) -> None:
         """
@@ -48,22 +72,7 @@ class TaskService:
         if not task:
             raise_not_found(f"Task with id {task_id} not found")
 
-        return TaskPublic(
-            id=task.id,
-            module_id=task.module_id,
-            title=task.title,
-            description=task.description,
-            content=task.content,
-            content_blocks=task.content_blocks,
-            requirements=task.requirements,
-            order_index=task.order_index,
-            difficulty=task.difficulty,
-            estimated_minutes=task.estimated_minutes,
-            xp_reward=task.xp_reward,
-            is_active=task.is_active,
-            created_at=task.created_at,
-            updated_at=task.updated_at,
-        )
+        return self._to_task_public(task)
 
     def list_tasks(self) -> list[TaskPublic]:
         """
@@ -74,22 +83,7 @@ class TaskService:
         """
         tasks = task_repository.list_tasks()
         return [
-            TaskPublic(
-                id=t.id,
-                module_id=t.module_id,
-                title=t.title,
-                description=t.description,
-                content=t.content,
-                content_blocks=t.content_blocks,
-                requirements=t.requirements,
-                order_index=t.order_index,
-                difficulty=t.difficulty,
-                estimated_minutes=t.estimated_minutes,
-                xp_reward=t.xp_reward,
-                is_active=t.is_active,
-                created_at=t.created_at,
-                updated_at=t.updated_at,
-            )
+            self._to_task_public(t)
             for t in sorted(tasks, key=lambda x: x.order_index)
         ]
 
@@ -110,22 +104,7 @@ class TaskService:
 
         tasks = task_repository.list_tasks_by_module(module_id)
         return [
-            TaskPublic(
-                id=t.id,
-                module_id=t.module_id,
-                title=t.title,
-                description=t.description,
-                content=t.content,
-                content_blocks=t.content_blocks,
-                requirements=t.requirements,
-                order_index=t.order_index,
-                difficulty=t.difficulty,
-                estimated_minutes=t.estimated_minutes,
-                xp_reward=t.xp_reward,
-                is_active=t.is_active,
-                created_at=t.created_at,
-                updated_at=t.updated_at,
-            )
+            self._to_task_public(t)
             for t in sorted(tasks, key=lambda x: x.order_index)
         ]
 
@@ -157,22 +136,7 @@ class TaskService:
 
         task = task_repository.create_task(data)
 
-        return TaskPublic(
-            id=task.id,
-            module_id=task.module_id,
-            title=task.title,
-            description=task.description,
-            content=task.content,
-            content_blocks=task.content_blocks,
-            requirements=task.requirements,
-            order_index=task.order_index,
-            difficulty=task.difficulty,
-            estimated_minutes=task.estimated_minutes,
-            xp_reward=task.xp_reward,
-            is_active=task.is_active,
-            created_at=task.created_at,
-            updated_at=task.updated_at,
-        )
+        return self._to_task_public(task)
 
     def update_task(self, task_id: UUID, data: TaskUpdate) -> TaskPublic:
         """
@@ -208,22 +172,7 @@ class TaskService:
         if not task:
             raise_not_found(f"Task with id {task_id} not found")
 
-        return TaskPublic(
-            id=task.id,
-            module_id=task.module_id,
-            title=task.title,
-            description=task.description,
-            content=task.content,
-            content_blocks=task.content_blocks,
-            requirements=task.requirements,
-            order_index=task.order_index,
-            difficulty=task.difficulty,
-            estimated_minutes=task.estimated_minutes,
-            xp_reward=task.xp_reward,
-            is_active=task.is_active,
-            created_at=task.created_at,
-            updated_at=task.updated_at,
-        )
+        return self._to_task_public(task)
 
     def delete_task(self, task_id: UUID) -> bool:
         """
@@ -248,6 +197,77 @@ class TaskService:
             raise_not_found(f"Task with id {task_id} not found")
 
         return True
+
+    def get_related_tasks(self, task_id: UUID) -> List[TaskPublic]:
+        """
+        Get related advanced/deep-dive tasks for a task.
+        
+        Returns tasks where parent_task_id matches the given task_id.
+        These are optional "fördjupning" tasks that users can try anytime.
+
+        Args:
+            task_id: The UUID of the parent task
+
+        Returns:
+            List of related TaskPublic objects (advanced/deep_dive tier)
+
+        Raises:
+            HTTPException 404: If task not found
+        """
+        # Validate task exists
+        task = task_repository.get_task_by_id(task_id)
+        if not task:
+            raise_not_found(f"Task with id {task_id} not found")
+
+        # Get related tasks from repository
+        related = task_repository.get_tasks_by_parent_id(task_id)
+        return [
+            self._to_task_public(t)
+            for t in sorted(related, key=lambda x: x.order_index)
+        ]
+
+    def get_task_with_related(self, task_id: UUID) -> TaskWithRelated:
+        """
+        Get a task with its related advanced/deep-dive tasks included.
+
+        Args:
+            task_id: The UUID of the task to retrieve
+
+        Returns:
+            TaskWithRelated object with task data + related_tasks array
+
+        Raises:
+            HTTPException 404: If task not found
+        """
+        task = task_repository.get_task_by_id(task_id)
+        if not task:
+            raise_not_found(f"Task with id {task_id} not found")
+
+        related = task_repository.get_tasks_by_parent_id(task_id)
+        related_public = [
+            self._to_task_public(t)
+            for t in sorted(related, key=lambda x: x.order_index)
+        ]
+
+        return TaskWithRelated(
+            id=task.id,
+            module_id=task.module_id,
+            title=task.title,
+            description=task.description,
+            content=task.content,
+            content_blocks=task.content_blocks,
+            requirements=task.requirements,
+            order_index=task.order_index,
+            difficulty=task.difficulty,
+            estimated_minutes=task.estimated_minutes,
+            xp_reward=task.xp_reward,
+            is_active=task.is_active,
+            task_tier=getattr(task, 'task_tier', 'standard'),
+            parent_task_id=getattr(task, 'parent_task_id', None),
+            created_at=task.created_at,
+            updated_at=task.updated_at,
+            related_tasks=related_public,
+        )
 
 
 # Singleton instance
