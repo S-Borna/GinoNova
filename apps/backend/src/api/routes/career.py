@@ -149,16 +149,16 @@ async def list_user_skills(
 ):
     """List current user's skills"""
     user_id = UUID(current_user["id"])
-    
+
     skills = user_skills_db.get(user_id, [])
-    
+
     # Filter by category
     if category:
         skills = [s for s in skills if s.skill_category == category]
-    
+
     # Filter by min level
     skills = [s for s in skills if s.level >= min_level]
-    
+
     # Convert to public
     return [
         UserSkillPublic(
@@ -183,30 +183,30 @@ async def add_or_update_skill(
 ):
     """Add or update a user skill"""
     user_id = UUID(current_user["id"])
-    
+
     # Get skill definition
     skill_def = SKILL_DEFINITIONS.get(skill.skill_slug, {
         "name": skill.skill_slug.replace("-", " ").title(),
         "category": "general",
     })
-    
+
     # Get user's skills
     if user_id not in user_skills_db:
         user_skills_db[user_id] = []
-    
+
     # Check if skill exists
     existing = next(
         (s for s in user_skills_db[user_id] if s.skill_slug == skill.skill_slug),
         None
     )
-    
+
     if existing:
         # Update
         existing.level = skill.level
         existing.evidence = skill.evidence
         existing.tasks_completed = len(skill.evidence)
         existing.updated_at = datetime.utcnow()
-        
+
         return UserSkillPublic(
             id=existing.id,
             user_id=existing.user_id,
@@ -231,7 +231,7 @@ async def add_or_update_skill(
             tasks_completed=len(skill.evidence),
         )
         user_skills_db[user_id].append(new_skill)
-        
+
         return UserSkillPublic(
             id=new_skill.id,
             user_id=new_skill.user_id,
@@ -252,14 +252,14 @@ async def remove_skill(
 ):
     """Remove a skill from user's profile"""
     user_id = UUID(current_user["id"])
-    
+
     if user_id not in user_skills_db:
         raise HTTPException(status_code=404, detail="Skill not found")
-    
+
     user_skills_db[user_id] = [
         s for s in user_skills_db[user_id] if s.skill_slug != skill_slug
     ]
-    
+
     return {"status": "deleted", "skill_slug": skill_slug}
 
 
@@ -269,9 +269,9 @@ async def get_skill_graph(
 ):
     """Get user's skill graph with relationships"""
     user_id = UUID(current_user["id"])
-    
+
     skills = user_skills_db.get(user_id, [])
-    
+
     # Build nodes
     nodes = [
         SkillGraphNode(
@@ -282,7 +282,7 @@ async def get_skill_graph(
         )
         for s in skills
     ]
-    
+
     # Build edges (related skills)
     skill_relations = {
         "docker": ["kubernetes", "linux", "docker-compose"],
@@ -293,10 +293,10 @@ async def get_skill_graph(
         "github-actions": ["git", "docker", "yaml"],
         "prometheus": ["grafana", "kubernetes", "alertmanager"],
     }
-    
+
     edges = []
     skill_slugs = {s.skill_slug for s in skills}
-    
+
     for skill_slug in skill_slugs:
         related = skill_relations.get(skill_slug, [])
         for rel in related:
@@ -306,15 +306,15 @@ async def get_skill_graph(
                     to_skill=rel,
                     strength=0.8,
                 ))
-    
+
     # Calculate summary
     avg_level = sum(s.level for s in skills) / len(skills) if skills else 0
-    
+
     categories = {}
     for s in skills:
         categories[s.skill_category] = categories.get(s.skill_category, 0) + s.level
     strongest_category = max(categories.keys(), key=lambda k: categories[k]) if categories else ""
-    
+
     return SkillGraph(
         user_id=user_id,
         nodes=nodes,
@@ -337,15 +337,15 @@ async def list_portfolio_projects(
 ):
     """List user's portfolio projects"""
     user_id = UUID(current_user["id"])
-    
+
     projects = portfolio_projects_db.get(user_id, [])
-    
+
     # Filter
     if public_only:
         projects = [p for p in projects if p.is_public]
     if featured_only:
         projects = [p for p in projects if p.is_featured]
-    
+
     return [
         PortfolioProjectPublic(
             id=p.id,
@@ -374,10 +374,10 @@ async def create_portfolio_project(
 ):
     """Create a portfolio project"""
     user_id = UUID(current_user["id"])
-    
+
     if user_id not in portfolio_projects_db:
         portfolio_projects_db[user_id] = []
-    
+
     new_project = PortfolioProjectInDB(
         id=uuid4(),
         user_id=user_id,
@@ -391,9 +391,9 @@ async def create_portfolio_project(
         is_public=project.is_public,
         is_featured=project.is_featured,
     )
-    
+
     portfolio_projects_db[user_id].append(new_project)
-    
+
     return PortfolioProjectPublic(
         id=new_project.id,
         user_id=new_project.user_id,
@@ -418,13 +418,13 @@ async def get_portfolio_project(
 ):
     """Get a specific portfolio project"""
     user_id = UUID(current_user["id"])
-    
+
     projects = portfolio_projects_db.get(user_id, [])
     project = next((p for p in projects if p.id == project_id and p.is_active), None)
-    
+
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
-    
+
     return PortfolioProjectPublic(
         id=project.id,
         user_id=project.user_id,
@@ -450,19 +450,19 @@ async def update_portfolio_project(
 ):
     """Update a portfolio project"""
     user_id = UUID(current_user["id"])
-    
+
     projects = portfolio_projects_db.get(user_id, [])
     project = next((p for p in projects if p.id == project_id and p.is_active), None)
-    
+
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
-    
+
     # Update fields
     update_data = update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(project, key, value)
     project.updated_at = datetime.utcnow()
-    
+
     return PortfolioProjectPublic(
         id=project.id,
         user_id=project.user_id,
@@ -487,16 +487,16 @@ async def delete_portfolio_project(
 ):
     """Delete a portfolio project (soft delete)"""
     user_id = UUID(current_user["id"])
-    
+
     projects = portfolio_projects_db.get(user_id, [])
     project = next((p for p in projects if p.id == project_id and p.is_active), None)
-    
+
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
-    
+
     project.is_active = False
     project.updated_at = datetime.utcnow()
-    
+
     return {"status": "deleted", "project_id": str(project_id)}
 
 
@@ -510,9 +510,9 @@ async def list_resume_versions(
 ):
     """List user's resume versions"""
     user_id = UUID(current_user["id"])
-    
+
     versions = resume_versions_db.get(user_id, [])
-    
+
     return [
         ResumeVersionPublic(
             id=v.id,
@@ -537,17 +537,17 @@ async def generate_resume(
 ):
     """Generate a new resume version"""
     user_id = UUID(current_user["id"])
-    
+
     if user_id not in resume_versions_db:
         resume_versions_db[user_id] = []
-    
+
     # Count versions
     version_num = len(resume_versions_db[user_id]) + 1
-    
+
     # Build resume content
     skills = user_skills_db.get(user_id, [])
     projects = portfolio_projects_db.get(user_id, [])
-    
+
     content = {
         "summary": request.custom_summary or "DevOps professional",
         "target_role": request.target_role,
@@ -560,7 +560,7 @@ async def generate_resume(
             for p in projects if p.is_active and p.is_public
         ] if request.include_projects else [],
     }
-    
+
     # Calculate ATS score (simplified)
     ats_score = 60
     if len(skills) >= 5:
@@ -571,7 +571,7 @@ async def generate_resume(
         ats_score += 10
     if request.target_role:
         ats_score += 10
-    
+
     # Create version
     new_version = ResumeVersionInDB(
         id=uuid4(),
@@ -584,9 +584,9 @@ async def generate_resume(
         target_role=request.target_role,
         ats_score=min(ats_score, 100),
     )
-    
+
     resume_versions_db[user_id].append(new_version)
-    
+
     return ResumeVersionPublic(
         id=new_version.id,
         user_id=new_version.user_id,
@@ -607,15 +607,15 @@ async def delete_resume_version(
 ):
     """Delete a resume version"""
     user_id = UUID(current_user["id"])
-    
+
     versions = resume_versions_db.get(user_id, [])
     version = next((v for v in versions if v.id == version_id and v.is_active), None)
-    
+
     if not version:
         raise HTTPException(status_code=404, detail="Resume version not found")
-    
+
     version.is_active = False
-    
+
     return {"status": "deleted", "version_id": str(version_id)}
 
 
@@ -634,23 +634,23 @@ async def match_role(
             status_code=400,
             detail=f"Unknown role: {role}. Supported: {list(ROLE_REQUIREMENTS.keys())}"
         )
-    
+
     user_id = UUID(current_user["id"])
     skills = user_skills_db.get(user_id, [])
     skill_levels = {s.skill_slug: s.level for s in skills}
-    
+
     role_def = ROLE_REQUIREMENTS[role]
     requirements = role_def["skills"]
-    
+
     # Analyze requirements
     gaps = []
     strengths = []
     met_count = 0
-    
+
     for skill_slug, required_level in requirements:
         user_level = skill_levels.get(skill_slug, 0)
         skill_def = SKILL_DEFINITIONS.get(skill_slug, {"name": skill_slug.title()})
-        
+
         is_met = user_level >= required_level
         if is_met:
             met_count += 1
@@ -664,19 +664,19 @@ async def match_role(
                 user_level=user_level,
                 is_met=False,
             ))
-    
+
     # Calculate readiness score
     readiness = int((met_count / len(requirements)) * 100) if requirements else 0
-    
+
     # Recommendations
     recommended_modules = []
     for gap in gaps[:3]:
         recommended_modules.append(f"module-{gap.skill_slug}")
-    
+
     # Time estimate
     gap_levels = sum(g.required_level - g.user_level for g in gaps)
     weeks = gap_levels * 2  # ~2 weeks per level gap
-    
+
     return JobMatchResult(
         role=role,
         role_name=role_def["name"],
@@ -697,14 +697,14 @@ async def match_all_roles(
 ):
     """Get job match analysis for all supported roles"""
     results = []
-    
+
     for role in ROLE_REQUIREMENTS:
         result = await match_role(role, current_user)
         results.append(result)
-    
+
     # Sort by readiness score descending
     results.sort(key=lambda r: r.readiness_score, reverse=True)
-    
+
     return results
 
 
@@ -718,10 +718,10 @@ async def list_recommendations(
 ):
     """Get career recommendations"""
     user_id = UUID(current_user["id"])
-    
+
     # Generate recommendations based on matching
     match_results = await match_all_roles(current_user)
-    
+
     recommendations = []
     for match in match_results[:3]:  # Top 3 roles
         if match.readiness_score < 100:
@@ -738,7 +738,7 @@ async def list_recommendations(
                 created_at=datetime.utcnow(),
             )
             recommendations.append(rec)
-    
+
     return recommendations
 
 
@@ -752,55 +752,55 @@ async def get_career_dashboard(
 ):
     """Get career dashboard summary"""
     user_id = UUID(current_user["id"])
-    
+
     # Skills
     skills = user_skills_db.get(user_id, [])
-    
+
     categories = {}
     for s in skills:
         if s.skill_category not in categories:
             categories[s.skill_category] = 0
         categories[s.skill_category] += 1
-    
+
     top_skills = sorted(skills, key=lambda s: s.level, reverse=True)[:5]
-    
+
     # Portfolio
     projects = portfolio_projects_db.get(user_id, [])
     active_projects = [p for p in projects if p.is_active]
     featured_projects = [p for p in active_projects if p.is_featured]
-    
+
     # Resumes
     versions = resume_versions_db.get(user_id, [])
     active_versions = [v for v in versions if v.is_active]
     latest_ats = active_versions[-1].ats_score if active_versions else 0
-    
+
     # Matching
     match_results = await match_all_roles(current_user)
     best_match = match_results[0] if match_results else None
-    
+
     # Overall readiness (average of all roles)
     overall_readiness = (
         int(sum(m.readiness_score for m in match_results) / len(match_results))
         if match_results else 0
     )
-    
+
     # Next steps
     next_steps = []
     if not skills:
         next_steps.append("Add your first skill to get started")
     elif len(skills) < 5:
         next_steps.append("Add more skills to improve your profile")
-    
+
     if not active_projects:
         next_steps.append("Create a portfolio project")
-    
+
     if not active_versions:
         next_steps.append("Generate your first resume")
-    
+
     if best_match and best_match.gaps:
         gap = best_match.gaps[0]
         next_steps.append(f"Learn {gap.skill_name} to improve {best_match.role_name} readiness")
-    
+
     return CareerDashboard(
         user_id=user_id,
         overall_readiness=overall_readiness,
@@ -829,7 +829,7 @@ async def get_career_dashboard(
 async def get_public_portfolio(user_id: UUID):
     """Get a user's public portfolio (no auth required)"""
     projects = portfolio_projects_db.get(user_id, [])
-    
+
     return [
         PortfolioProjectPublic(
             id=p.id,

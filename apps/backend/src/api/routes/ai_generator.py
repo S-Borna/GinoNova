@@ -48,7 +48,7 @@ def _generate_task_content(inputs: GenerationInputs) -> GeneratedTask:
     """Generate a task based on inputs"""
     topic = inputs.topic
     difficulty = inputs.difficulty
-    
+
     # Mock generation - in production, this calls OpenAI
     content_markdown = f"""# {topic}
 
@@ -109,7 +109,7 @@ You've learned the fundamentals of {topic}. Keep practicing!
         "Read the official documentation before diving in",
         "Practice in a sandbox environment first",
     ]
-    
+
     code_examples = [
         {
             "language": "bash",
@@ -122,7 +122,7 @@ You've learned the fundamentals of {topic}. Keep practicing!
             "explanation": f"Configuration file for {topic}",
         },
     ]
-    
+
     quiz_questions = [
         {
             "type": "quiz",
@@ -135,10 +135,10 @@ You've learned the fundamentals of {topic}. Keep practicing!
             "explanation": f"{topic} is primarily used to automate and streamline DevOps workflows.",
         },
     ]
-    
+
     xp_map = {"beginner": 20, "intermediate": 30, "advanced": 50}
     time_map = {"beginner": 10, "intermediate": 20, "advanced": 35}
-    
+
     return GeneratedTask(
         title=topic,
         description=f"Learn the fundamentals of {topic} and how to apply it in DevOps workflows.",
@@ -158,7 +158,7 @@ def _generate_module_content(inputs: GenerationInputs) -> GeneratedModule:
     """Generate a module with tasks"""
     topic = inputs.topic
     num_tasks = inputs.num_tasks or 6
-    
+
     # Generate tasks
     task_topics = [
         f"Introduction to {topic}",
@@ -170,7 +170,7 @@ def _generate_module_content(inputs: GenerationInputs) -> GeneratedModule:
         f"{topic} in Production",
         f"{topic} Security",
     ][:num_tasks]
-    
+
     tasks = []
     for i, task_topic in enumerate(task_topics):
         task_inputs = GenerationInputs(
@@ -183,9 +183,9 @@ def _generate_module_content(inputs: GenerationInputs) -> GeneratedModule:
         )
         task = _generate_task_content(task_inputs)
         tasks.append(task)
-    
+
     slug = topic.lower().replace(" ", "-").replace("_", "-")
-    
+
     return GeneratedModule(
         name=topic,
         slug=slug,
@@ -209,7 +209,7 @@ def _generate_quiz_content(inputs: GenerationInputs) -> GeneratedQuiz:
     """Generate a quiz"""
     topic = inputs.topic
     num_questions = inputs.num_questions or 5
-    
+
     questions = []
     for i in range(num_questions):
         questions.append({
@@ -224,7 +224,7 @@ def _generate_quiz_content(inputs: GenerationInputs) -> GeneratedQuiz:
             "explanation": f"This question tests your understanding of {topic}.",
             "xp_bonus": 5,
         })
-    
+
     return GeneratedQuiz(
         title=f"{topic} Quiz",
         description=f"Test your knowledge of {topic}",
@@ -238,14 +238,14 @@ def _generate_quiz_content(inputs: GenerationInputs) -> GeneratedQuiz:
 def _generate_pack_content(inputs: GenerationInputs) -> GeneratedPack:
     """Generate a marketplace pack"""
     topic = inputs.topic
-    
+
     # Generate modules for the pack
     module_topics = [
         f"{topic} Fundamentals",
         f"Advanced {topic}",
         f"{topic} in Production",
     ]
-    
+
     modules = []
     for mod_topic in module_topics:
         mod_inputs = GenerationInputs(
@@ -258,9 +258,9 @@ def _generate_pack_content(inputs: GenerationInputs) -> GeneratedPack:
         )
         module = _generate_module_content(mod_inputs)
         modules.append(module)
-    
+
     total_hours = sum(m.estimated_hours for m in modules)
-    
+
     return GeneratedPack(
         title=f"{topic} Mastery Pack",
         description=f"Complete {topic} training from fundamentals to production-ready skills.",
@@ -281,10 +281,10 @@ def _generate_pack_content(inputs: GenerationInputs) -> GeneratedPack:
 def generator_status(response: Response):
     """Get AI generator status"""
     add_phase_header(response)
-    
+
     pending = len([r for r in _generation_requests.values() if r.status == "pending"])
     total = len(_generated_content)
-    
+
     return GeneratorStatusResponse(
         status="operational",
         phase=PHASE_VERSION,
@@ -305,10 +305,10 @@ def generator_status(response: Response):
 def generate_task(data: GenerationRequestCreate, response: Response):
     """Generate a new task"""
     add_phase_header(response)
-    
+
     if data.type != "task":
         data.type = "task"
-    
+
     # Create request
     request = GenerationRequestInDB(
         id=uuid4(),
@@ -317,11 +317,11 @@ def generate_task(data: GenerationRequestCreate, response: Response):
         status="generating",
     )
     _generation_requests[request.id] = request
-    
+
     try:
         # Generate content
         task = _generate_task_content(data.inputs)
-        
+
         # Store generated content
         content = GeneratedContentInDB(
             id=uuid4(),
@@ -332,11 +332,11 @@ def generate_task(data: GenerationRequestCreate, response: Response):
             task=task,
         )
         _generated_content[content.id] = content
-        
+
         # Update request
         request.status = "completed"
         request.completed_at = datetime.utcnow()
-        
+
         return GenerationResultResponse(
             request=GenerationRequestPublic(**request.model_dump()),
             content=GeneratedContentPublic(**content.model_dump()),
@@ -354,10 +354,10 @@ def generate_task(data: GenerationRequestCreate, response: Response):
 def generate_module(data: GenerationRequestCreate, response: Response):
     """Generate a new module with tasks"""
     add_phase_header(response)
-    
+
     if data.type != "module":
         data.type = "module"
-    
+
     request = GenerationRequestInDB(
         id=uuid4(),
         type="module",
@@ -365,10 +365,10 @@ def generate_module(data: GenerationRequestCreate, response: Response):
         status="generating",
     )
     _generation_requests[request.id] = request
-    
+
     try:
         module = _generate_module_content(data.inputs)
-        
+
         content = GeneratedContentInDB(
             id=uuid4(),
             request_id=request.id,
@@ -378,10 +378,10 @@ def generate_module(data: GenerationRequestCreate, response: Response):
             module=module,
         )
         _generated_content[content.id] = content
-        
+
         request.status = "completed"
         request.completed_at = datetime.utcnow()
-        
+
         return GenerationResultResponse(
             request=GenerationRequestPublic(**request.model_dump()),
             content=GeneratedContentPublic(**content.model_dump()),
@@ -399,10 +399,10 @@ def generate_module(data: GenerationRequestCreate, response: Response):
 def generate_quiz(data: GenerationRequestCreate, response: Response):
     """Generate a quiz"""
     add_phase_header(response)
-    
+
     if data.type != "quiz":
         data.type = "quiz"
-    
+
     request = GenerationRequestInDB(
         id=uuid4(),
         type="quiz",
@@ -410,10 +410,10 @@ def generate_quiz(data: GenerationRequestCreate, response: Response):
         status="generating",
     )
     _generation_requests[request.id] = request
-    
+
     try:
         quiz = _generate_quiz_content(data.inputs)
-        
+
         content = GeneratedContentInDB(
             id=uuid4(),
             request_id=request.id,
@@ -423,10 +423,10 @@ def generate_quiz(data: GenerationRequestCreate, response: Response):
             quiz=quiz,
         )
         _generated_content[content.id] = content
-        
+
         request.status = "completed"
         request.completed_at = datetime.utcnow()
-        
+
         return GenerationResultResponse(
             request=GenerationRequestPublic(**request.model_dump()),
             content=GeneratedContentPublic(**content.model_dump()),
@@ -444,10 +444,10 @@ def generate_quiz(data: GenerationRequestCreate, response: Response):
 def generate_pack(data: GenerationRequestCreate, response: Response):
     """Generate a marketplace pack"""
     add_phase_header(response)
-    
+
     if data.type != "pack":
         data.type = "pack"
-    
+
     request = GenerationRequestInDB(
         id=uuid4(),
         type="pack",
@@ -455,10 +455,10 @@ def generate_pack(data: GenerationRequestCreate, response: Response):
         status="generating",
     )
     _generation_requests[request.id] = request
-    
+
     try:
         pack = _generate_pack_content(data.inputs)
-        
+
         content = GeneratedContentInDB(
             id=uuid4(),
             request_id=request.id,
@@ -468,10 +468,10 @@ def generate_pack(data: GenerationRequestCreate, response: Response):
             pack=pack,
         )
         _generated_content[content.id] = content
-        
+
         request.status = "completed"
         request.completed_at = datetime.utcnow()
-        
+
         return GenerationResultResponse(
             request=GenerationRequestPublic(**request.model_dump()),
             content=GeneratedContentPublic(**content.model_dump()),
@@ -490,30 +490,30 @@ def list_generated_content(
     type: Optional[GenerationType] = None,
     status: Optional[GenerationStatus] = None,
     limit: int = 20,
-    response: Optional[Response] = None,
+    response: Response = None,  # type: ignore
 ):
     """List generated content"""
     if response:
         add_phase_header(response)
-    
+
     results = []
-    
+
     for content in _generated_content.values():
         if type and content.type != type:
             continue
         if status and content.status != status:
             continue
-        
+
         request = _generation_requests.get(content.request_id)
         if request:
             results.append(GenerationResultResponse(
                 request=GenerationRequestPublic(**request.model_dump()),
                 content=GeneratedContentPublic(**content.model_dump()),
             ))
-    
+
     # Sort by created_at desc
     results.sort(key=lambda r: r.request.created_at, reverse=True)
-    
+
     return results[:limit]
 
 
@@ -521,21 +521,21 @@ def list_generated_content(
 def get_generated_content(content_id: UUID, response: Response):
     """Get specific generated content"""
     add_phase_header(response)
-    
+
     content = _generated_content.get(content_id)
     if not content:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Generated content not found"
         )
-    
+
     request = _generation_requests.get(content.request_id)
     if not request:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Generation request not found"
         )
-    
+
     return GenerationResultResponse(
         request=GenerationRequestPublic(**request.model_dump()),
         content=GeneratedContentPublic(**content.model_dump()),
@@ -546,18 +546,18 @@ def get_generated_content(content_id: UUID, response: Response):
 def approve_content(content_id: UUID, response: Response):
     """Approve generated content for publishing"""
     add_phase_header(response)
-    
+
     content = _generated_content.get(content_id)
     if not content:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Generated content not found"
         )
-    
+
     content.status = "approved"
     content.approved_at = datetime.utcnow()
     # content.approved_by = current_user.id  # TODO: Get from auth
-    
+
     return GeneratedContentPublic(**content.model_dump())
 
 
@@ -565,14 +565,14 @@ def approve_content(content_id: UUID, response: Response):
 def reject_content(content_id: UUID, response: Response):
     """Reject generated content"""
     add_phase_header(response)
-    
+
     content = _generated_content.get(content_id)
     if not content:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Generated content not found"
         )
-    
+
     content.status = "rejected"
-    
+
     return GeneratedContentPublic(**content.model_dump())

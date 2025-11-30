@@ -52,11 +52,11 @@ def _seed_sample_org():
     """Seed sample organization for demo"""
     if _organizations:
         return
-    
+
     # Create sample org
     org_id = uuid4()
     owner_id = uuid4()
-    
+
     org = OrganizationInDB(
         id=org_id,
         owner_id=owner_id,
@@ -70,14 +70,14 @@ def _seed_sample_org():
         modules_installed=8,
     )
     _organizations[org_id] = org
-    
+
     # Create sample teams
     team_data = [
         {"name": "Cloud Infrastructure", "description": "AWS, GCP, Azure specialists"},
         {"name": "Platform Engineering", "description": "Kubernetes and container orchestration"},
         {"name": "SRE Team", "description": "Site Reliability Engineering"},
     ]
-    
+
     for i, td in enumerate(team_data):
         team_id = uuid4()
         team = TeamInDB(
@@ -89,7 +89,7 @@ def _seed_sample_org():
             modules_count=3,
         )
         _teams[team_id] = team
-        
+
         # Add sample members
         for j in range(4):
             member_id = uuid4()
@@ -117,7 +117,7 @@ def org_status(response: Response):
     """Get organization system status"""
     add_phase_header(response)
     _seed_sample_org()
-    
+
     return OrgStatusResponse(
         status="operational",
         phase=PHASE_VERSION,
@@ -142,12 +142,12 @@ def get_current_organization(response: Response):
     """Get current user's organization"""
     add_phase_header(response)
     _seed_sample_org()
-    
+
     # Return first org for demo
     if _organizations:
         org = list(_organizations.values())[0]
         return OrganizationPublic(**org.model_dump())
-    
+
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="No organization found"
@@ -159,13 +159,13 @@ def get_current_organization(response: Response):
 def create_organization(data: OrganizationCreate, response: Response):
     """Create a new organization"""
     add_phase_header(response)
-    
+
     # TODO: Get user from auth
     owner_id = uuid4()
-    
+
     # Plan limits
     seat_limits = {"free": 5, "pro": 25, "enterprise": 100}
-    
+
     org = OrganizationInDB(
         id=uuid4(),
         owner_id=owner_id,
@@ -178,7 +178,7 @@ def create_organization(data: OrganizationCreate, response: Response):
         seats_total=seat_limits.get(data.plan, 5),
     )
     _organizations[org.id] = org
-    
+
     return OrganizationPublic(**org.model_dump())
 
 
@@ -186,21 +186,21 @@ def create_organization(data: OrganizationCreate, response: Response):
 def update_organization(org_id: UUID, data: OrganizationUpdate, response: Response):
     """Update an organization"""
     add_phase_header(response)
-    
+
     org = _organizations.get(org_id)
     if not org:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Organization not found"
         )
-    
+
     update_data = data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         if value is not None:
             setattr(org, field, value)
-    
+
     org.updated_at = datetime.utcnow()
-    
+
     return OrganizationPublic(**org.model_dump())
 
 
@@ -209,20 +209,20 @@ def update_organization(org_id: UUID, data: OrganizationUpdate, response: Respon
 # ==============================================================================
 
 @router.get("/teams", response_model=List[TeamPublic])
-def list_teams(org_id: Optional[UUID] = None, response: Optional[Response] = None):
+def list_teams(org_id: Optional[UUID] = None, response: Response = None):  # type: ignore
     """List teams for organization"""
     if response:
         add_phase_header(response)
-    
+
     _seed_sample_org()
-    
+
     teams = list(_teams.values())
-    
+
     if org_id:
         teams = [t for t in teams if t.organization_id == org_id]
-    
+
     teams = [t for t in teams if t.is_active]
-    
+
     return [TeamPublic(**t.model_dump()) for t in teams]
 
 
@@ -230,7 +230,7 @@ def list_teams(org_id: Optional[UUID] = None, response: Optional[Response] = Non
 def create_team(data: TeamCreate, response: Response):
     """Create a new team"""
     add_phase_header(response)
-    
+
     # Check org exists
     org = _organizations.get(data.organization_id)
     if not org:
@@ -238,7 +238,7 @@ def create_team(data: TeamCreate, response: Response):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Organization not found"
         )
-    
+
     team = TeamInDB(
         id=uuid4(),
         organization_id=data.organization_id,
@@ -246,10 +246,10 @@ def create_team(data: TeamCreate, response: Response):
         description=data.description,
     )
     _teams[team.id] = team
-    
+
     # Update org stats
     org.teams_count += 1
-    
+
     return TeamPublic(**team.model_dump())
 
 
@@ -257,14 +257,14 @@ def create_team(data: TeamCreate, response: Response):
 def get_team(team_id: UUID, response: Response):
     """Get team details"""
     add_phase_header(response)
-    
+
     team = _teams.get(team_id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team not found"
         )
-    
+
     return TeamPublic(**team.model_dump())
 
 
@@ -272,21 +272,21 @@ def get_team(team_id: UUID, response: Response):
 def update_team(team_id: UUID, data: TeamUpdate, response: Response):
     """Update a team"""
     add_phase_header(response)
-    
+
     team = _teams.get(team_id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team not found"
         )
-    
+
     update_data = data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         if value is not None:
             setattr(team, field, value)
-    
+
     team.updated_at = datetime.utcnow()
-    
+
     return TeamPublic(**team.model_dump())
 
 
@@ -294,16 +294,16 @@ def update_team(team_id: UUID, data: TeamUpdate, response: Response):
 def delete_team(team_id: UUID, response: Response):
     """Delete a team (soft delete)"""
     add_phase_header(response)
-    
+
     team = _teams.get(team_id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team not found"
         )
-    
+
     team.is_active = False
-    
+
     # Update org stats
     org = _organizations.get(team.organization_id)
     if org:
@@ -319,13 +319,13 @@ def list_team_members(team_id: UUID, response: Response):
     """List team members"""
     add_phase_header(response)
     _seed_sample_org()
-    
+
     members = [
         TeamMemberPublic(**m.model_dump())
         for m in _team_members.values()
         if m.team_id == team_id and m.is_active
     ]
-    
+
     return members
 
 
@@ -333,14 +333,14 @@ def list_team_members(team_id: UUID, response: Response):
 def add_team_member(team_id: UUID, data: TeamMemberCreate, response: Response):
     """Add a member to team"""
     add_phase_header(response)
-    
+
     team = _teams.get(team_id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team not found"
         )
-    
+
     # Check seat availability
     org = _organizations.get(team.organization_id)
     if org and org.seats_used >= org.seats_total:
@@ -348,7 +348,7 @@ def add_team_member(team_id: UUID, data: TeamMemberCreate, response: Response):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="No available seats in organization"
         )
-    
+
     member = TeamMemberInDB(
         id=uuid4(),
         team_id=team_id,
@@ -357,13 +357,13 @@ def add_team_member(team_id: UUID, data: TeamMemberCreate, response: Response):
         user_name=f"User {data.user_id}",  # TODO: Get from user service
     )
     _team_members[member.id] = member
-    
+
     # Update stats
     team.members_count += 1
     if org:
         org.seats_used += 1
         org.members_count += 1
-    
+
     return TeamMemberPublic(**member.model_dump())
 
 
@@ -371,16 +371,16 @@ def add_team_member(team_id: UUID, data: TeamMemberCreate, response: Response):
 def update_member_role(team_id: UUID, member_id: UUID, data: TeamMemberUpdate, response: Response):
     """Update team member role"""
     add_phase_header(response)
-    
+
     member = _team_members.get(member_id)
     if not member or member.team_id != team_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team member not found"
         )
-    
+
     member.role = data.role
-    
+
     return TeamMemberPublic(**member.model_dump())
 
 
@@ -388,21 +388,21 @@ def update_member_role(team_id: UUID, member_id: UUID, data: TeamMemberUpdate, r
 def remove_team_member(team_id: UUID, member_id: UUID, response: Response):
     """Remove a member from team"""
     add_phase_header(response)
-    
+
     member = _team_members.get(member_id)
     if not member or member.team_id != team_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team member not found"
         )
-    
+
     member.is_active = False
-    
+
     # Update stats
     team = _teams.get(team_id)
     if team:
         team.members_count = max(0, team.members_count - 1)
-    
+
     org = _organizations.get(team.organization_id) if team else None
     if org:
         org.seats_used = max(0, org.seats_used - 1)
@@ -417,13 +417,13 @@ def remove_team_member(team_id: UUID, member_id: UUID, response: Response):
 def list_team_modules(team_id: UUID, response: Response):
     """List modules assigned to team"""
     add_phase_header(response)
-    
+
     access = [
         TeamModuleAccessPublic(**a.model_dump())
         for a in _team_module_access.values()
         if a.team_id == team_id and a.is_active
     ]
-    
+
     return access
 
 
@@ -431,14 +431,14 @@ def list_team_modules(team_id: UUID, response: Response):
 def add_team_module(team_id: UUID, data: TeamModuleAccessCreate, response: Response):
     """Grant team access to a module"""
     add_phase_header(response)
-    
+
     team = _teams.get(team_id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team not found"
         )
-    
+
     access = TeamModuleAccessInDB(
         id=uuid4(),
         team_id=team_id,
@@ -447,14 +447,14 @@ def add_team_module(team_id: UUID, data: TeamModuleAccessCreate, response: Respo
         module_name=data.module_slug.replace("-", " ").title(),
     )
     _team_module_access[access.id] = access
-    
+
     # Update stats
     team.modules_count += 1
-    
+
     org = _organizations.get(team.organization_id)
     if org:
         org.modules_installed += 1
-    
+
     return TeamModuleAccessPublic(**access.model_dump())
 
 
@@ -462,16 +462,16 @@ def add_team_module(team_id: UUID, data: TeamModuleAccessCreate, response: Respo
 def remove_team_module(team_id: UUID, access_id: UUID, response: Response):
     """Remove team's access to a module"""
     add_phase_header(response)
-    
+
     access = _team_module_access.get(access_id)
     if not access or access.team_id != team_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Module access not found"
         )
-    
+
     access.is_active = False
-    
+
     # Update stats
     team = _teams.get(team_id)
     if team:
@@ -487,15 +487,15 @@ def get_org_analytics(response: Response):
     """Get organization analytics"""
     add_phase_header(response)
     _seed_sample_org()
-    
+
     if not _organizations:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No organization found"
         )
-    
+
     org = list(_organizations.values())[0]
-    
+
     # Build team rankings
     team_rankings = []
     for team in _teams.values():
@@ -509,9 +509,9 @@ def get_org_analytics(response: Response):
                 "total_xp": total_xp,
                 "avg_xp": total_xp / len(members) if members else 0,
             })
-    
+
     team_rankings.sort(key=lambda x: x["total_xp"], reverse=True)
-    
+
     return OrgAnalytics(
         organization_id=org.id,
         organization_name=org.name,
@@ -535,16 +535,16 @@ def get_team_analytics(team_id: UUID, response: Response):
     """Get team analytics"""
     add_phase_header(response)
     _seed_sample_org()
-    
+
     team = _teams.get(team_id)
     if not team:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Team not found"
         )
-    
+
     members = [m for m in _team_members.values() if m.team_id == team_id and m.is_active]
-    
+
     # Build top performers
     top_performers = sorted(members, key=lambda m: m.total_xp, reverse=True)[:5]
     top_performers_data = [
@@ -556,7 +556,7 @@ def get_team_analytics(team_id: UUID, response: Response):
         }
         for m in top_performers
     ]
-    
+
     return TeamAnalytics(
         team_id=team.id,
         team_name=team.name,

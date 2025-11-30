@@ -32,17 +32,17 @@ class GenerationInputs(BaseModel):
     difficulty: str = "intermediate"  # beginner, intermediate, advanced
     learning_goals: List[str] = []
     target_audience: str = "devops engineers"
-    
+
     # For modules
     num_tasks: Optional[int] = Field(None, ge=3, le=20)
-    
+
     # For quizzes
     num_questions: Optional[int] = Field(None, ge=3, le=15)
-    
+
     # Context
     related_module_slug: Optional[str] = None
     related_task_id: Optional[UUID] = None
-    
+
     # Additional instructions
     additional_context: Optional[str] = None
     include_examples: bool = True
@@ -98,12 +98,12 @@ class GeneratedTask(BaseModel):
     estimated_minutes: int = 15
     xp_reward: int = 25
     tags: List[str] = []
-    
+
     # Interactive content
     code_examples: List[dict] = []
     hints: List[str] = []
     quiz_questions: List[dict] = []
-    
+
     # Solution
     solution_markdown: Optional[str] = None
 
@@ -118,10 +118,10 @@ class GeneratedModule(BaseModel):
     learning_objectives: List[str] = []
     prerequisites: List[str] = []
     tags: List[str] = []
-    
+
     # Tasks
     tasks: List[GeneratedTask] = []
-    
+
     # Summary
     summary_markdown: Optional[str] = None
 
@@ -131,9 +131,9 @@ class GeneratedQuiz(BaseModel):
     title: str
     description: str
     difficulty: str = "medium"
-    
+
     questions: List[dict] = []  # QuizBlock format
-    
+
     # Metadata
     passing_score: int = 70
     time_limit_minutes: Optional[int] = None
@@ -147,10 +147,10 @@ class GeneratedPack(BaseModel):
     difficulty: str = "intermediate"
     estimated_hours: float = 20.0
     tags: List[str] = []
-    
+
     # Content
     modules: List[GeneratedModule] = []
-    
+
     # Pricing suggestion
     suggested_price_cents: int = 0
 
@@ -161,13 +161,13 @@ class GeneratedContentPublic(BaseModel):
     request_id: UUID
     type: GenerationType
     status: GenerationStatus
-    
+
     # Content (one of these will be populated)
     task: Optional[GeneratedTask] = None
     module: Optional[GeneratedModule] = None
     quiz: Optional[GeneratedQuiz] = None
     pack: Optional[GeneratedPack] = None
-    
+
     # Metadata
     created_at: datetime
     approved_at: Optional[datetime] = None
@@ -183,16 +183,16 @@ class GeneratedContentInDB(BaseModel):
     request_id: UUID
     type: GenerationType
     status: GenerationStatus = "pending"
-    
+
     # Raw output
     output_json: dict = {}
-    
+
     # Parsed content
     task: Optional[GeneratedTask] = None
     module: Optional[GeneratedModule] = None
     quiz: Optional[GeneratedQuiz] = None
     pack: Optional[GeneratedPack] = None
-    
+
     # Metadata
     created_at: datetime = Field(default_factory=datetime.utcnow)
     approved_at: Optional[datetime] = None

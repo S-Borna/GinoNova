@@ -24,7 +24,7 @@ SkillLevel = Literal[0, 1, 2, 3, 4, 5]  # 0=none, 1=beginner, 5=expert
 ResumeFormat = Literal["pdf", "markdown", "json"]
 CareerRole = Literal[
     "devops_engineer",
-    "cloud_engineer", 
+    "cloud_engineer",
     "platform_engineer",
     "sre",
     "release_engineer",
@@ -51,15 +51,15 @@ class UserSkillPublic(UserSkillBase):
     """Public user skill view"""
     id: UUID
     user_id: UUID
-    
+
     # Metadata
     skill_name: str = ""
     skill_category: str = "general"
-    
+
     # Evidence
     evidence: List[str] = []
     tasks_completed: int = 0
-    
+
     updated_at: datetime
 
     class Config:
@@ -70,13 +70,13 @@ class UserSkillInDB(UserSkillBase):
     """Internal user skill model"""
     id: UUID = Field(default_factory=uuid4)
     user_id: UUID
-    
+
     skill_name: str = ""
     skill_category: str = "general"
-    
+
     evidence: List[str] = []
     tasks_completed: int = 0
-    
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -104,7 +104,7 @@ class SkillGraph(BaseModel):
     user_id: UUID
     nodes: List[SkillGraphNode] = []
     edges: List[SkillGraphEdge] = []
-    
+
     # Summary
     total_skills: int = 0
     avg_level: float = 0.0
@@ -119,16 +119,16 @@ class PortfolioProjectBase(BaseModel):
     """Base portfolio project model"""
     title: str = Field(..., min_length=3, max_length=100)
     description: str = Field(..., min_length=10, max_length=2000)
-    
+
     # Links
     github_url: Optional[str] = None
     demo_url: Optional[str] = None
     screenshot_url: Optional[str] = None
-    
+
     # Skills
     skills: List[str] = []
     technologies: List[str] = []
-    
+
     # Visibility
     is_public: bool = True
     is_featured: bool = False
@@ -182,12 +182,12 @@ class PortfolioProjectInDB(PortfolioProjectBase):
 class ResumeGenerateRequest(BaseModel):
     """Request to generate a resume"""
     format: ResumeFormat = "pdf"
-    
+
     # Options
     include_skills: bool = True
     include_projects: bool = True
     include_certificates: bool = True
-    
+
     # Customization
     target_role: Optional[CareerRole] = None
     custom_summary: Optional[str] = None
@@ -199,15 +199,15 @@ class ResumeVersionPublic(BaseModel):
     user_id: UUID
     version_name: str
     format: ResumeFormat
-    
+
     # URLs
     rendered_url: Optional[str] = None
     download_url: Optional[str] = None
-    
+
     # Metadata
     target_role: Optional[str] = None
     ats_score: int = 0  # ATS compatibility score 0-100
-    
+
     created_at: datetime
 
     class Config:
@@ -220,16 +220,16 @@ class ResumeVersionInDB(BaseModel):
     user_id: UUID
     version_name: str
     format: ResumeFormat = "pdf"
-    
+
     # Content
     content_json: dict = {}
     rendered_url: Optional[str] = None
     download_url: Optional[str] = None
-    
+
     # Metadata
     target_role: Optional[str] = None
     ats_score: int = 0
-    
+
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -254,18 +254,18 @@ class JobMatchResult(BaseModel):
     """Job matching result for a role"""
     role: str  # CareerRole as string
     role_name: str
-    
+
     # Score
     readiness_score: int = Field(ge=0, le=100)
-    
+
     # Requirements analysis
     requirements_met: int = 0
     requirements_total: int = 0
-    
+
     # Details
     strengths: List[str] = []
     gaps: List[RoleRequirement] = []
-    
+
     # Recommendations
     recommended_modules: List[str] = []
     recommended_tasks: List[str] = []
@@ -276,22 +276,22 @@ class CareerRecommendation(BaseModel):
     """Career path recommendation"""
     id: UUID
     user_id: UUID
-    
+
     # Target
     target_role: CareerRole
     role_name: str
-    
+
     # Current state
     current_readiness: int = 0
-    
+
     # Path
     missing_skills: List[str] = []
     recommended_modules: List[str] = []
     recommended_tasks: List[str] = []
-    
+
     # Timeline
     estimated_weeks: int = 0
-    
+
     created_at: datetime
 
     class Config:
@@ -302,18 +302,18 @@ class CareerRecommendationInDB(BaseModel):
     """Internal career recommendation model"""
     id: UUID = Field(default_factory=uuid4)
     user_id: UUID
-    
+
     target_role: CareerRole
     role_name: str
-    
+
     current_readiness: int = 0
-    
+
     missing_skills: List[str] = []
     recommended_modules: List[str] = []
     recommended_tasks: List[str] = []
-    
+
     estimated_weeks: int = 0
-    
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:
@@ -327,28 +327,28 @@ class CareerRecommendationInDB(BaseModel):
 class CareerDashboard(BaseModel):
     """Career dashboard summary"""
     user_id: UUID
-    
+
     # Overall
     overall_readiness: int = 0
     primary_role: Optional[str] = None
-    
+
     # Skills
     total_skills: int = 0
     skills_by_category: dict = {}
     top_skills: List[dict] = []
-    
+
     # Portfolio
     portfolio_projects: int = 0
     featured_projects: int = 0
-    
+
     # Resumes
     resume_versions: int = 0
     latest_ats_score: int = 0
-    
+
     # Matching
     best_role_match: Optional[str] = None
     best_match_score: int = 0
-    
+
     # Recommendations
     next_steps: List[str] = []
 
