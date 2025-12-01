@@ -20,6 +20,7 @@ import { Sidebar } from "@/components/layout/Sidebar"
 import { TopBar } from "@/components/layout/TopBar"
 import { MobileNav } from "@/components/layout/MobileNav"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { AIWizardFAB } from "@/components/ai"
 
 /* ============================================================================
    HOOKS
@@ -150,6 +151,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* Mobile navigation - shown only on mobile */}
             {isMobile && <MobileNav />}
+
+            {/* AI Wizard FAB - Always visible */}
+            <AIWizardFAB />
         </div>
     )
 }
