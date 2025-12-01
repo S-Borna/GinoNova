@@ -339,23 +339,14 @@ export default function ModulesPage() {
                             ? Math.round((completedTasks / totalTasks) * 100)
                             : 0
 
-                        // Determine status
+                        // Determine status - NO LOCKING, all modules open!
                         let status: ModuleStatus = "not_started"
                         if (progressPercent === 100) {
                             status = "complete"
                         } else if (progressPercent > 0) {
                             status = "in_progress"
-                        } else if (index > 0) {
-                            // Check if previous module is complete for locking
-                            const prevMod = result.data[index - 1]
-                            const prevProgress = progressMap.get(prevMod.id)
-                            if (!prevProgress || prevProgress.progress < 100) {
-                                // Only lock if prerequisites exist
-                                if (mod.prerequisites && mod.prerequisites.length > 0) {
-                                    status = "locked"
-                                }
-                            }
                         }
+                        // All modules are accessible - no prerequisites blocking
 
                         return {
                             ...mod,
