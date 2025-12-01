@@ -62,21 +62,21 @@ const OSIcons = {
    WAVE ANIMATION COMPONENT
    ============================================================================ */
 
-function WaveReveal({ 
-    children, 
-    isVisible, 
-    delay = 0 
-}: { 
+function WaveReveal({
+    children,
+    isVisible,
+    delay = 0
+}: {
     children: React.ReactNode
     isVisible: boolean
-    delay?: number 
+    delay?: number
 }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={isVisible ? { 
-                opacity: 1, 
-                y: 0, 
+            animate={isVisible ? {
+                opacity: 1,
+                y: 0,
                 scale: 1,
                 transition: {
                     type: "spring",
@@ -108,7 +108,7 @@ interface OSCardProps {
 
 function OSCard({ osKey, isSelected, onClick, disabled }: OSCardProps) {
     if (!osKey) return null
-    
+
     const config = OS_OPTIONS[osKey]
     const Icon = OSIcons[osKey]
 
@@ -119,7 +119,7 @@ function OSCard({ osKey, isSelected, onClick, disabled }: OSCardProps) {
             whileHover={{ scale: 1.02, y: -4 }}
             whileTap={{ scale: 0.98 }}
             className={cn(
-                "relative flex flex-col items-center gap-4 p-6 rounded-2xl border-2 transition-all duration-300",
+                "relative flex flex-col items-center gap-4 p-6 rounded-2xl border-2 transition-all duration-300 h-[200px]",
                 "bg-white dark:bg-neutral-800 shadow-sm hover:shadow-lg",
                 isSelected
                     ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30 ring-4 ring-indigo-500/20"
@@ -181,7 +181,7 @@ interface DistroCardProps {
 
 function DistroCard({ distroKey, isSelected, onClick }: DistroCardProps) {
     if (!distroKey) return null
-    
+
     const config = LINUX_DISTROS[distroKey]
 
     return (
@@ -270,13 +270,8 @@ function HelpSection() {
                         Osäker på vad du ska välja?
                     </h4>
                     <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
-                        Om du är nybörjare rekommenderar vi <strong>Ubuntu 24.04 LTS</strong>. 
-                        Det är det mest använda operativsystemet för DevOps och har bäst dokumentation 
-                        och community-support. Alla våra tasks är testade och fungerar garanterat på Ubuntu.
-                    </p>
-                    <p className="text-sm text-amber-700 dark:text-amber-400 mt-2">
-                        Om du använder <strong>Windows</strong>, installeras WSL2 (Windows Subsystem for Linux) 
-                        med Ubuntu automatiskt — så du får det bästa av båda världar!
+                        Nybörjare? Välj <strong>Ubuntu 24.04 LTS</strong> — bäst dokumentation och community-support.
+                        På <strong>Windows</strong> installeras WSL2 med Ubuntu automatiskt.
                     </p>
                 </div>
             </div>
@@ -367,7 +362,7 @@ export function PlatformSelector({ onComplete, className }: PlatformSelectorProp
                         </div>
 
                         {/* OS Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {(["macos", "windows", "linux"] as const).map((osKey, index) => (
                                 <motion.div
                                     key={osKey}
@@ -383,8 +378,6 @@ export function PlatformSelector({ onComplete, className }: PlatformSelectorProp
                                 </motion.div>
                             ))}
                         </div>
-
-                        <HelpSection />
                     </motion.div>
                 )}
 
@@ -504,7 +497,7 @@ export function PlatformSelector({ onComplete, className }: PlatformSelectorProp
                                 Ändra val
                             </Button>
                             <Button
-                                onClick={onComplete}
+                                onClick={() => onComplete?.()}
                                 className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
                             >
                                 Fortsätt till modulerna

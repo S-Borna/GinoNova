@@ -26,6 +26,7 @@ from .routes.community import router as community_router
 from .routes.ai_generator import router as ai_generator_router
 from .routes.organization import router as organization_router
 from .routes.career import router as career_router
+from .routes.bookmarks import router as bookmarks_router
 
 # Phase 22-28: Final production-ready routes
 from .routes.observability import observability_router
@@ -64,6 +65,7 @@ api_router.include_router(community_router, tags=["community"])
 api_router.include_router(ai_generator_router, tags=["ai-generator"])
 api_router.include_router(organization_router, tags=["organization"])
 api_router.include_router(career_router, tags=["career"])
+api_router.include_router(bookmarks_router, tags=["bookmarks"])
 
 # Phase 22-28: Final production-ready routes
 api_router.include_router(observability_router, tags=["observability"])

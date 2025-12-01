@@ -273,3 +273,23 @@ class TaskBlockProgress(Base):
     __table_args__ = (
         Index('ix_task_block_progress_user_task', 'user_id', 'task_id', unique=True),
     )
+
+
+class Bookmark(Base):
+    """User bookmarks for tasks - PROMPT 4: Sidebar Bookmark System"""
+    __tablename__ = "bookmarks"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    user = relationship("User", backref="bookmarks")
+    task = relationship("Task", backref="bookmarks")
+
+    __table_args__ = (
+        Index('ix_bookmarks_user_id', 'user_id'),
+        Index('ix_bookmarks_user_task', 'user_id', 'task_id', unique=True),
+    )
+

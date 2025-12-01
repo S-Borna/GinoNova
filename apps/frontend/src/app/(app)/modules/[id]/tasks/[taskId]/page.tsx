@@ -39,6 +39,7 @@ import { useAuth } from "@/components/auth"
 import { getToken } from "@/lib/auth"
 import { ContentBlockRenderer, LessonContent } from "@/components/learning"
 import { RelatedTasks, RelatedTask } from "@/components/tasks/RelatedTasks"
+import { usePlatform, filterContentByPlatform } from "@/hooks/useOperatingSystem"
 import {
     ArrowLeft,
     CheckCircle2,
@@ -118,6 +119,7 @@ export default function TaskDetailPage() {
     const params = useParams()
     const router = useRouter()
     const { user } = useAuth()
+    const { platform: platformConfig, os, distro } = usePlatform()
     const moduleId = params?.id as string
     const taskId = params?.taskId as string
 
@@ -136,6 +138,11 @@ export default function TaskDetailPage() {
 
     // Check if task has interactive content blocks
     const hasContentBlocks = task && Array.isArray((task as any).content_blocks) && (task as any).content_blocks.length > 0
+
+    // Filter content based on user's platform selection
+    const filteredContent = task?.content
+        ? filterContentByPlatform(task.content, os, distro)
+        : null
 
     const fetchData = useCallback(async () => {
         setLoading(true)
@@ -431,7 +438,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                 />
                             ) : (
                                 <LessonContent
-                                    content={task.content || placeholderContent}
+                                    content={filteredContent || placeholderContent}
                                     title={task.title}
                                     estimatedMinutes={task.estimated_minutes}
                                 />

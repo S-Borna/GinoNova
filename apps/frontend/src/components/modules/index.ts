@@ -10,3 +10,7 @@ export { ModuleProgress, type ModuleProgressProps, type MiniTask } from "./Modul
 export { ModuleHeader, type ModuleHeaderProps } from "./ModuleHeader"
 export { PrerequisitesSection, type PrerequisitesSectionProps, type Prerequisite } from "./PrerequisitesSection"
 export { ModuleCompleteModal } from "./ModuleCompleteModal"
+
+// PROMPT 4: Bookmark System
+export { BookmarkButton } from "./BookmarkButton"
+export { BookmarkSidebar } from "./BookmarkSidebar"

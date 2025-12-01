@@ -95,3 +95,6 @@ export {
     type LinuxDistro,
     type PlatformConfig,
 } from "./useOperatingSystem"
+
+// Bookmark hooks (PROMPT 4)
+export { useBookmarks } from "./useBookmarks"
