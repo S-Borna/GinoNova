@@ -11,9 +11,8 @@
  * 2. Tracks Preview — Four learning tracks
  * 3. Features — Platform capabilities
  * 4. Curriculum Preview — All 15 modules
- * 5. Testimonials — Social proof
- * 6. CTA Section — Final conversion push
- * 7. Footer — Navigation and branding
+ * 5. CTA Section — Final conversion push
+ * 6. Footer — Navigation and branding
  *
  * @phase A.1 - Landing Page
  */
@@ -23,7 +22,6 @@ import {
     TracksPreview,
     Features,
     CurriculumPreview,
-    Testimonials,
     CTASection,
     Footer,
     Navbar,
@@ -48,9 +46,6 @@ export default function LandingPage() {
 
                 {/* Full Curriculum */}
                 <CurriculumPreview />
-
-                {/* Testimonials */}
-                <Testimonials />
 
                 {/* Final CTA */}
                 <CTASection />
