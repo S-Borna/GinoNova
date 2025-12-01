@@ -9833,6 +9833,2698 @@ sudo tcpdump -A port 80 -c 10
 ```
 """
             },
+            # =====================================================================
+            # NEW TOPICS: Filling gaps from roadmap.sh/linux analysis
+            # Added: 2025-12-01 via CONTENT_DOMINATION_PROTOCOL
+            # =====================================================================
+            {
+                "title": "Vim Editor Mastery",
+                "difficulty": "medium",
+                "estimated_minutes": 40,
+                "xp_reward": 65,
+                "content": """# Vim Editor Mastery
+
+## Varför detta är viktigt
+Vim finns på ALLA Linux-servrar, även minimala containers. När SSH-anslutningen är din enda kontakt med en server, och nano inte finns installerat, behöver du kunna använda Vim.
+
+## Vad du kommer lära dig
+- Vim:s modaler (Normal, Insert, Visual, Command)
+- Grundläggande navigering och redigering
+- Sök och ersätt
+- Att överleva när du hamnar i Vim oavsiktligt
+
+## Det viktigaste först: Hur du lämnar Vim
+
+```bash
+# Spara och avsluta
+:wq
+
+# Avsluta utan att spara
+:q!
+
+# Bara spara
+:w
+
+# Force-avsluta (om inget funkar)
+:q! eller ESC ESC :q!
+```
+
+## Vim:s fyra lägen
+
+### 1. Normal Mode (default)
+Du startar alltid här. Tryck `ESC` för att återgå.
+
+```
+h j k l    → Vänster, Ner, Upp, Höger
+w          → Nästa ord
+b          → Föregående ord
+0          → Början av rad
+$          → Slutet av rad
+gg         → Första raden
+G          → Sista raden
+10G        → Gå till rad 10
+```
+
+### 2. Insert Mode
+Tryck `i` för att skriva. Tryck `ESC` för att gå tillbaka.
+
+```
+i          → Insert före cursor
+a          → Insert efter cursor
+I          → Insert i början av rad
+A          → Insert i slutet av rad
+o          → Ny rad under
+O          → Ny rad över
+```
+
+### 3. Visual Mode
+För att markera text.
+
+```
+v          → Markera tecken
+V          → Markera rad
+Ctrl+v     → Block-markering
+```
+
+### 4. Command Mode
+Tryck `:` för kommandon.
+
+```
+:w              → Spara
+:q              → Avsluta
+:wq             → Spara och avsluta
+:e filename     → Öppna fil
+:set number     → Visa radnummer
+```
+
+## Redigering i Normal Mode
+
+```
+x          → Radera tecken
+dd         → Radera rad
+dw         → Radera ord
+D          → Radera till slutet av rad
+yy         → Kopiera rad
+yw         → Kopiera ord
+p          → Klistra in efter
+P          → Klistra in före
+u          → Undo
+Ctrl+r     → Redo
+.          → Upprepa senaste kommando
+```
+
+## Sök och ersätt
+
+```bash
+# Sök framåt
+/sökterm          # Tryck n för nästa, N för föregående
+
+# Sök bakåt
+?sökterm
+
+# Ersätt första på rad
+:s/gammal/ny/
+
+# Ersätt alla på rad
+:s/gammal/ny/g
+
+# Ersätt i hela filen
+:%s/gammal/ny/g
+
+# Ersätt med bekräftelse
+:%s/gammal/ny/gc
+```
+
+## Praktiska kommandon
+
+```bash
+# Öppna fil på specifik rad
+vim +10 file.txt
+
+# Öppna flera filer
+vim file1.txt file2.txt
+:bn                # Nästa buffer
+:bp                # Föregående buffer
+:ls                # Lista buffers
+
+# Jämför filer
+vimdiff file1 file2
+```
+
+## Minimal .vimrc för DevOps
+
+```bash
+cat > ~/.vimrc << 'EOF'
+" Visa radnummer
+set number
+
+" Syntax highlighting
+syntax on
+
+" Sökmarkering
+set hlsearch
+set incsearch
+
+" Tab = 4 mellanslag
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" Visa matchande parenteser
+set showmatch
+
+" Case-insensitive sök (om ingen versal)
+set ignorecase
+set smartcase
+EOF
+```
+
+## Vim cheatsheet (de 20 viktigaste)
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ESC` | Tillbaka till Normal mode |
+| `i` | Insert mode |
+| `:wq` | Spara och avsluta |
+| `:q!` | Avsluta utan att spara |
+| `dd` | Radera rad |
+| `yy` | Kopiera rad |
+| `p` | Klistra in |
+| `u` | Undo |
+| `/text` | Sök |
+| `n` | Nästa sökträff |
+| `gg` | Gå till toppen |
+| `G` | Gå till botten |
+| `0` | Början av rad |
+| `$` | Slutet av rad |
+| `:set number` | Visa radnummer |
+| `:%s/a/b/g` | Ersätt alla a med b |
+| `:e file` | Öppna fil |
+| `Ctrl+r` | Redo |
+| `v` | Visual mode |
+| `.` | Upprepa |
+
+## Övning
+
+```bash
+# 1. Skapa testfil
+echo -e "Line 1\\nLine 2\\nLine 3\\nLine 4\\nLine 5" > /tmp/vimtest.txt
+
+# 2. Öppna i Vim
+vim /tmp/vimtest.txt
+
+# 3. Prova:
+#    - Gå till rad 3 (3G)
+#    - Radera raden (dd)
+#    - Undo (u)
+#    - Sök efter "Line" (/Line)
+#    - Ersätt Line med Row (:%s/Line/Row/g)
+#    - Spara och avsluta (:wq)
+
+# 4. Verifiera
+cat /tmp/vimtest.txt
+```
+
+## Sammanfattning
+Vim är kraftfullt men har en brant inlärningskurva. Börja med de grundläggande kommandona och expandera gradvis. Det viktigaste är att kunna navigera, redigera, och viktigast av allt - avsluta!
+
+## Nästa steg
+- Prova vimtutor (kör `vimtutor` i terminalen)
+- Lägg till fler plugins via vim-plug
+- Lär dig macros för repetitiva uppgifter
+"""
+            },
+            {
+                "title": "Nano Editor Basics",
+                "difficulty": "easy",
+                "estimated_minutes": 15,
+                "xp_reward": 25,
+                "content": """# Nano Editor Basics
+
+## Varför detta är viktigt
+Nano är den användarvänliga texteditorn. Den visar kommandon längst ner, så du behöver inte memorera något. Perfekt för snabba edits.
+
+## Vad du kommer lära dig
+- Grundläggande redigering i Nano
+- Sök och ersätt
+- Navigering och markering
+
+## Starta Nano
+
+```bash
+# Öppna ny fil
+nano
+
+# Öppna befintlig fil
+nano filename.txt
+
+# Öppna på specifik rad
+nano +10 filename.txt
+
+# Öppna som read-only
+nano -v filename.txt
+```
+
+## Förstå gränssnittet
+
+Längst ner ser du:
+```
+^G Get Help   ^O Write Out   ^W Where Is   ^K Cut Text
+^X Exit       ^R Read File   ^\ Replace    ^U Paste Text
+```
+
+`^` betyder Ctrl. Så `^X` = Ctrl+X.
+
+## Viktiga kommandon
+
+### Spara och avsluta
+| Tangent | Funktion |
+|---------|----------|
+| Ctrl+O | Spara (Write Out) |
+| Ctrl+X | Avsluta |
+| Ctrl+X → Y → Enter | Spara och avsluta |
+
+### Navigering
+| Tangent | Funktion |
+|---------|----------|
+| Ctrl+A | Början av rad |
+| Ctrl+E | Slutet av rad |
+| Ctrl+Y | Sida upp |
+| Ctrl+V | Sida ner |
+| Ctrl+_ | Gå till rad (Ctrl+Shift+-) |
+| Ctrl+C | Visa position |
+
+### Redigering
+| Tangent | Funktion |
+|---------|----------|
+| Ctrl+K | Klipp ut rad |
+| Ctrl+U | Klistra in |
+| Alt+6 | Kopiera rad |
+| Ctrl+\\ | Sök och ersätt |
+| Ctrl+W | Sök |
+
+### Markering
+| Tangent | Funktion |
+|---------|----------|
+| Alt+A | Starta markering |
+| Ctrl+K | Klipp ut markerat |
+| Alt+6 | Kopiera markerat |
+
+## Konfiguration: ~/.nanorc
+
+```bash
+cat > ~/.nanorc << 'EOF'
+# Visa radnummer
+set linenumbers
+
+# Mjuk wrap (ingen hård radbrytning)
+set softwrap
+
+# Tab = 4 mellanslag
+set tabsize 4
+set tabstospaces
+
+# Visa cursor-position
+set constantshow
+
+# Smooth scrolling
+set smooth
+
+# Syntax highlighting för vanliga filer
+include "/usr/share/nano/*.nanorc"
+EOF
+```
+
+## Sök och ersätt
+
+```bash
+# Sök (Ctrl+W)
+Ctrl+W → skriv sökterm → Enter
+
+# Nästa träff
+Ctrl+W → Enter
+
+# Ersätt (Ctrl+\)
+Ctrl+\ → gammal text → Enter → ny text → Enter
+# Välj: Y (ja), N (nej), A (alla)
+```
+
+## Praktiska scenarion
+
+### Redigera config-fil
+```bash
+sudo nano /etc/ssh/sshd_config
+# Gör ändringar
+# Ctrl+O → Enter (spara)
+# Ctrl+X (avsluta)
+```
+
+### Multi-buffer (flera filer)
+```bash
+nano file1.txt file2.txt
+# Ctrl+X för att byta mellan filer
+# Alt+< för föregående fil
+# Alt+> för nästa fil
+```
+
+## Nano vs Vim
+
+| Aspekt | Nano | Vim |
+|--------|------|-----|
+| Inlärningskurva | Lätt | Brant |
+| Tillgänglighet | Ofta installerat | Alltid installerat |
+| Hastighet | Långsammare | Snabbare (när du kan det) |
+| Features | Grundläggande | Kraftfullt |
+| Bäst för | Snabba edits | Avancerad editering |
+
+## Övning
+
+```bash
+# 1. Skapa testfil
+echo -e "Hello\\nWorld\\nNano\\nTest" > /tmp/nanotest.txt
+
+# 2. Öppna
+nano /tmp/nanotest.txt
+
+# 3. Prova:
+#    - Gå till rad 3 (Ctrl+_)
+#    - Klipp ut raden (Ctrl+K)
+#    - Gå till rad 1 (Ctrl+_)
+#    - Klistra in (Ctrl+U)
+#    - Sök efter "World" (Ctrl+W)
+#    - Spara (Ctrl+O)
+#    - Avsluta (Ctrl+X)
+
+# 4. Verifiera
+cat /tmp/nanotest.txt
+```
+
+## Sammanfattning
+Nano är perfekt för snabba editeringar och nybörjare. Kommandona visas alltid på skärmen, så du behöver aldrig gissa. Använd Nano för enkla uppgifter, Vim för komplexa.
+
+## Nästa steg
+- Utforska syntax highlighting med .nanorc
+- Prova makron för repetitiva uppgifter
+- Lär dig Vim för mer avancerade behov
+"""
+            },
+            {
+                "title": "Archiving and Compression (tar, gzip, zip)",
+                "difficulty": "medium",
+                "estimated_minutes": 30,
+                "xp_reward": 50,
+                "content": """# Archiving and Compression
+
+## Varför detta är viktigt
+Att skapa arkiv och komprimera filer är grundläggande för DevOps: backups, deployments, log-rotation, och överföring av filer. Du måste förstå skillnaden mellan arkivering och komprimering.
+
+## Vad du kommer lära dig
+- Skillnaden mellan arkivering och komprimering
+- tar, gzip, bzip2, xz
+- zip/unzip för cross-platform
+- Praktiska backupscenarier
+
+## Arkivering vs Komprimering
+
+- **Arkivering**: Slå samman flera filer till EN fil (tar)
+- **Komprimering**: Minska filstorleken (gzip, bzip2, xz)
+- **Kombinerat**: tar + gzip = .tar.gz
+
+## tar (Tape Archive)
+
+### Skapa arkiv
+```bash
+# Skapa arkiv (-c = create, -v = verbose, -f = file)
+tar -cvf archive.tar folder/
+
+# Skapa komprimerat arkiv
+tar -czvf archive.tar.gz folder/    # gzip
+tar -cjvf archive.tar.bz2 folder/   # bzip2
+tar -cJvf archive.tar.xz folder/    # xz (bäst komprimering)
+```
+
+### Extrahera arkiv
+```bash
+# Visa innehåll först (-t = list)
+tar -tvf archive.tar.gz
+
+# Extrahera (-x = extract)
+tar -xvf archive.tar
+tar -xzvf archive.tar.gz
+tar -xjvf archive.tar.bz2
+tar -xJvf archive.tar.xz
+
+# Extrahera till specifik mapp
+tar -xzvf archive.tar.gz -C /destination/path/
+```
+
+### Vanliga flaggor
+| Flagga | Betydelse |
+|--------|-----------|
+| -c | Create (skapa) |
+| -x | Extract (extrahera) |
+| -t | List (lista innehåll) |
+| -v | Verbose (visa filer) |
+| -f | File (ange filnamn) |
+| -z | gzip komprimering |
+| -j | bzip2 komprimering |
+| -J | xz komprimering |
+| -C | Change directory (extrahera till) |
+| --exclude | Exkludera mönster |
+
+### Avancerat tar
+```bash
+# Exkludera filer
+tar -czvf backup.tar.gz --exclude='*.log' --exclude='node_modules' /app/
+
+# Inkludera endast vissa filer
+tar -czvf config.tar.gz -T filelist.txt
+
+# Uppdatera befintligt arkiv
+tar -uvf archive.tar newfile.txt
+
+# Visa storlek
+tar -tzvf archive.tar.gz | awk '{sum+=$3} END {print sum/1024/1024 " MB"}'
+```
+
+## gzip
+
+```bash
+# Komprimera (ersätter original)
+gzip file.txt
+# Resultat: file.txt.gz
+
+# Behåll original
+gzip -k file.txt
+
+# Dekomprimera
+gunzip file.txt.gz
+# eller
+gzip -d file.txt.gz
+
+# Visa info
+gzip -l file.txt.gz
+
+# Högsta komprimering (1-9, 9 = bäst)
+gzip -9 file.txt
+
+# Komprimera till stdout (för pipes)
+cat file.txt | gzip > file.txt.gz
+```
+
+## bzip2
+
+```bash
+# Komprimera
+bzip2 file.txt
+# Resultat: file.txt.bz2
+
+# Dekomprimera
+bunzip2 file.txt.bz2
+# eller
+bzip2 -d file.txt.bz2
+
+# Behåll original
+bzip2 -k file.txt
+```
+
+## xz (bäst komprimering)
+
+```bash
+# Komprimera
+xz file.txt
+# Resultat: file.txt.xz
+
+# Dekomprimera
+unxz file.txt.xz
+# eller
+xz -d file.txt.xz
+
+# Visa info
+xz -l file.txt.xz
+```
+
+## zip/unzip (Cross-platform)
+
+```bash
+# Skapa zip
+zip archive.zip file1.txt file2.txt
+
+# Zip hela mapp
+zip -r archive.zip folder/
+
+# Med lösenord
+zip -e secure.zip sensitive.txt
+
+# Lista innehåll
+unzip -l archive.zip
+
+# Extrahera
+unzip archive.zip
+
+# Extrahera till mapp
+unzip archive.zip -d /destination/
+
+# Extrahera specifik fil
+unzip archive.zip filename.txt
+```
+
+## Jämförelse
+
+| Format | Hastighet | Komprimering | Användning |
+|--------|-----------|--------------|------------|
+| tar | Snabbast | Ingen | Bara arkivering |
+| gzip (.gz) | Snabb | Bra | Standard Linux |
+| bzip2 (.bz2) | Medel | Bättre | Legacy |
+| xz (.xz) | Långsam | Bäst | Distro-paket |
+| zip | Snabb | Bra | Cross-platform |
+
+## Praktiska exempel
+
+### Backup av config
+```bash
+# Daglig backup av /etc
+sudo tar -czvf /backup/etc-$(date +%Y%m%d).tar.gz /etc/
+```
+
+### Logrotation
+```bash
+# Komprimera gamla loggar
+find /var/log -name "*.log" -mtime +7 -exec gzip {} \;
+```
+
+### Deployment-paket
+```bash
+# Skapa deploy-paket (exkludera onödigt)
+tar -czvf deploy.tar.gz \
+  --exclude='node_modules' \
+  --exclude='.git' \
+  --exclude='*.log' \
+  /app/
+```
+
+### Överför med komprimering
+```bash
+# Tar över SSH
+tar -czvf - /source/folder | ssh user@server "tar -xzvf - -C /destination/"
+
+# Eller med pv för progress
+tar -cf - /source/ | pv | gzip | ssh user@server "gunzip | tar -xf - -C /dest/"
+```
+
+## Övning
+
+```bash
+# 1. Skapa testfiler
+mkdir -p /tmp/archivetest
+echo "file1 content" > /tmp/archivetest/file1.txt
+echo "file2 content" > /tmp/archivetest/file2.txt
+dd if=/dev/zero of=/tmp/archivetest/bigfile.bin bs=1M count=10
+
+# 2. Jämför komprimeringsformat
+cd /tmp
+tar -cvf archivetest.tar archivetest/
+gzip -k archivetest.tar
+bzip2 -k archivetest.tar
+xz -k archivetest.tar
+
+# 3. Jämför storlekar
+ls -lh archivetest.tar*
+
+# 4. Verifiera innehåll
+tar -tvf archivetest.tar.gz
+
+# 5. Städa
+rm -rf /tmp/archivetest*
+```
+
+## Sammanfattning
+- Använd `tar -czvf` för Linux-backups (standard)
+- Använd `zip` för cross-platform
+- Använd `xz` när storlek spelar roll och tid inte gör det
+- Kombinera alltid med `--exclude` för att undvika onödiga filer
+
+## Nästa steg
+- Automatisera backups med cron
+- Utforska rsync för inkrementella backups
+- Lär dig om deduplicering med borg/restic
+"""
+            },
+            {
+                "title": "Process Priorities (nice, renice)",
+                "difficulty": "medium",
+                "estimated_minutes": 20,
+                "xp_reward": 40,
+                "content": """# Process Priorities: nice och renice
+
+## Varför detta är viktigt
+I produktion kör många processer samtidigt. Med nice-värden kan du prioritera viktiga processer och hindra resursslukare från att ta över systemet.
+
+## Vad du kommer lära dig
+- Vad nice-värden är
+- Hur du startar processer med annan prioritet
+- Hur du ändrar prioritet på körande processer
+- Real-time scheduling
+
+## Nice-värden förklarade
+
+```
+Nice-värde: -20 ←――――――――――――――→ +19
+            HÖG prioritet    LÅG prioritet
+
+-20 = Mest prioriterad (kräver root)
+  0 = Standard
++19 = Minst prioriterad (kan vem som helst sätta)
+```
+
+## Se aktuella prioriteter
+
+```bash
+# ps visar NI (nice) kolumn
+ps -eo pid,ni,comm | head -20
+
+# top visar NI och PR (priority)
+top
+
+# htop färgkodar prioriteter
+htop
+```
+
+## Starta process med prioritet: nice
+
+```bash
+# Standard (nice 0)
+./myprocess
+
+# Lägre prioritet (nice 10)
+nice ./myprocess
+
+# Specifikt nice-värde
+nice -n 15 ./myprocess
+
+# Högre prioritet (kräver root)
+sudo nice -n -10 ./myprocess
+
+# Bakgrundsprocess med låg prioritet
+nice -n 19 ./backup-script.sh &
+```
+
+## Ändra körande process: renice
+
+```bash
+# Ändra via PID
+renice 10 -p 1234
+
+# Ändra alla processer för en användare
+renice 5 -u www-data
+
+# Ändra alla processer i en grupp
+renice 5 -g developers
+
+# Kräver root för att höja prioritet
+sudo renice -10 -p 1234
+```
+
+## Praktiska exempel
+
+### Backup med låg prioritet
+```bash
+# Förhindra att backup stör produktion
+nice -n 19 ionice -c 3 tar -czvf backup.tar.gz /data/
+```
+
+### Databas med hög prioritet
+```bash
+# PostgreSQL bör ha prioritet
+sudo renice -5 -p $(pgrep -f postgres)
+```
+
+### Kompilering i bakgrunden
+```bash
+# make ska inte störa
+nice -n 15 make -j$(nproc) &
+```
+
+## ionice: I/O-prioritet
+
+```bash
+# Klasser:
+# 1 = Realtime (farligt!)
+# 2 = Best-effort (default)
+# 3 = Idle (bara när disk är ledig)
+
+# Starta med idle I/O
+ionice -c 3 ./backup.sh
+
+# Ändra körande process
+ionice -c 3 -p 1234
+
+# Kombinera med nice
+nice -n 19 ionice -c 3 tar -czvf backup.tar.gz /data/
+```
+
+## cgroups (modern resurshantering)
+
+```bash
+# Se cgroups för en process
+cat /proc/1234/cgroup
+
+# Docker använder cgroups automatiskt
+docker run --cpu-shares=512 nginx
+
+# systemd resource control
+systemctl set-property myservice.service CPUWeight=50
+```
+
+## Felsökning
+
+```bash
+# Hitta processer som tar mest CPU
+ps -eo pid,ni,pcpu,comm --sort=-pcpu | head -10
+
+# Hitta processer med onormala nice-värden
+ps -eo pid,ni,comm | awk '$2 != 0'
+
+# Se vad som driver load
+watch -n 1 'ps -eo pcpu,pid,ni,comm --sort=-pcpu | head -10'
+```
+
+## Best practices
+
+1. **Backups**: Kör alltid med `nice -n 19 ionice -c 3`
+2. **Kompilering**: `nice -n 15` på build-servrar
+3. **Databaser**: Överväg `renice -5` för kritiska instanser
+4. **Övervakning**: Låt monitoring-agenter ha standard nice
+5. **Containers**: Använd cgroups/docker istället
+
+## Övning
+
+```bash
+# 1. Starta CPU-intensiv process
+nice -n 19 dd if=/dev/zero of=/dev/null &
+LOWPID=$!
+
+nice -n 0 dd if=/dev/zero of=/dev/null &
+NORMPID=$!
+
+# 2. Jämför i top
+top -p $LOWPID,$NORMPID
+
+# 3. Ändra prioritet
+renice 10 -p $NORMPID
+
+# 4. Städa upp
+kill $LOWPID $NORMPID
+```
+
+## Sammanfattning
+- nice-värden styr CPU-schemaläggning (-20 till +19)
+- ionice styr disk I/O-prioritet
+- Vanliga användare kan bara sänka prioritet (höja nice)
+- Root kan höja prioritet (sänka nice)
+- Moderna system använder cgroups för mer kontroll
+
+## Nästa steg
+- Utforska cgroups v2
+- Lär dig systemd resource management
+- Förstå container resource limits
+"""
+            },
+            {
+                "title": "Swap Management",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 45,
+                "content": """# Swap Management
+
+## Varför detta är viktigt
+Swap är "overflow" för RAM. När minnet tar slut kan systemet använda disk som virtuellt minne. Korrekt swap-konfiguration förhindrar OOM (Out of Memory) kills och system-crasher.
+
+## Vad du kommer lära dig
+- Vad swap är och hur det fungerar
+- Skapa och hantera swap
+- Swap-tuning och swappiness
+- När swap är bra vs dåligt
+
+## Vad är Swap?
+
+```
+┌─────────────┐     ┌─────────────┐
+│    RAM      │────▶│   Swap      │
+│ (snabbt)    │     │  (disk)     │
+│ 16GB        │     │  4GB        │
+└─────────────┘     └─────────────┘
+                    När RAM är fullt
+                    flyttas inaktiva
+                    sidor till swap
+```
+
+## Kontrollera swap-status
+
+```bash
+# Visa swap-användning
+free -h
+
+# Detaljerad swap-info
+swapon --show
+
+# Swap i /proc
+cat /proc/swaps
+
+# Visa swap och RAM i procent
+vmstat 1 5
+```
+
+## Skapa Swap File
+
+### Modern metod (rekommenderad)
+```bash
+# 1. Skapa swap-fil (4GB)
+sudo fallocate -l 4G /swapfile
+
+# 2. Sätt rättigheter
+sudo chmod 600 /swapfile
+
+# 3. Formatera som swap
+sudo mkswap /swapfile
+
+# 4. Aktivera
+sudo swapon /swapfile
+
+# 5. Verifiera
+swapon --show
+```
+
+### Gör permanent (överskriv reboot)
+```bash
+# Lägg till i /etc/fstab
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+## Skapa Swap Partition
+
+```bash
+# 1. Skapa partition (t.ex. /dev/sdb1)
+sudo fdisk /dev/sdb
+# n (new), välj storlek, t (type), 82 (Linux swap)
+
+# 2. Formatera
+sudo mkswap /dev/sdb1
+
+# 3. Aktivera
+sudo swapon /dev/sdb1
+
+# 4. Permanent i /etc/fstab
+echo '/dev/sdb1 none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+## Hantera swap
+
+```bash
+# Visa aktiv swap
+swapon --show
+
+# Inaktivera specifik swap
+sudo swapoff /swapfile
+
+# Inaktivera ALL swap
+sudo swapoff -a
+
+# Aktivera all swap från fstab
+sudo swapon -a
+
+# Ändra storlek (stäng av först!)
+sudo swapoff /swapfile
+sudo rm /swapfile
+sudo fallocate -l 8G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+## Swappiness
+
+Swappiness (0-100) styr hur aggressivt kernel använder swap.
+
+```bash
+# Se nuvarande värde
+cat /proc/sys/vm/swappiness
+# Default: 60
+
+# Ändra temporärt
+sudo sysctl vm.swappiness=10
+
+# Ändra permanent
+echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+### Rekommenderade värden
+
+| Typ | Swappiness | Varför |
+|-----|------------|--------|
+| Desktop | 60 | Default, balanserat |
+| Server med mycket RAM | 10-30 | Undvik swap, använd RAM |
+| Databas-server | 1-10 | RAM är kritiskt för DB |
+| Laptop med liten disk | 60-80 | Spara RAM för apps |
+| Container host | 10-30 | Containers ska ha egen minneshantering |
+
+## Swap och Kubernetes
+
+```bash
+# Kubernetes kräver att swap är av!
+sudo swapoff -a
+
+# Ta bort swap från fstab
+sudo sed -i '/swap/d' /etc/fstab
+
+# Verifiera
+free -h | grep Swap
+# Swap:          0B          0B          0B
+```
+
+## Övervakning
+
+```bash
+# Se vilka processer swappar
+for f in /proc/*/status; do
+  awk '/VmSwap|Name/{printf $2 " " $3}END{ print ""}' $f
+done | sort -k 2 -n | tail -10
+
+# smem visar minne inklusive swap
+sudo apt install smem
+smem -s swap -r | head -10
+```
+
+## Felsökning
+
+```bash
+# System swappar för mycket?
+vmstat 1 10
+# Kolla si (swap in) och so (swap out) kolumner
+
+# OOM killer har dödat process?
+dmesg | grep -i "killed process"
+
+# Rensa swap (flytta tillbaka till RAM)
+sudo swapoff -a && sudo swapon -a
+```
+
+## Hur mycket swap behövs?
+
+| RAM | Swap (server) | Swap (desktop med hibernation) |
+|-----|---------------|--------------------------------|
+| 2GB | 2GB | 4GB |
+| 4GB | 2GB | 6GB |
+| 8GB | 4GB | 10GB |
+| 16GB+ | 4-8GB | RAM + 2GB |
+| 64GB+ | 4GB eller 0 | Inte praktiskt |
+
+## Övning
+
+```bash
+# 1. Kontrollera nuvarande swap
+free -h
+swapon --show
+
+# 2. Skapa temporär swap
+sudo fallocate -l 1G /tmp/testswap
+sudo chmod 600 /tmp/testswap
+sudo mkswap /tmp/testswap
+sudo swapon /tmp/testswap
+
+# 3. Verifiera
+swapon --show
+
+# 4. Städa
+sudo swapoff /tmp/testswap
+sudo rm /tmp/testswap
+```
+
+## Sammanfattning
+- Swap är backup-minne på disk
+- Swappiness styr hur aggressivt kernel swappar
+- Servrar: låg swappiness (10-30)
+- Kubernetes: swap måste vara av
+- För mycket swap = systemet är för långsamt
+
+## Nästa steg
+- Lär dig om OOM killer och oom_score_adj
+- Utforska memory cgroups
+- Förstå NUMA och memory policies
+"""
+            },
+            {
+                "title": "Filesystem Types (ext4, xfs, btrfs)",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 45,
+                "content": """# Filesystem Types: ext4, xfs, btrfs
+
+## Varför detta är viktigt
+Att välja rätt filesystem påverkar prestanda, tillförlitlighet och funktionalitet. Olika användningsfall kräver olika val.
+
+## Vad du kommer lära dig
+- Styrkor och svagheter för varje filesystem
+- När du ska välja vilket
+- Skapa och hantera filesystems
+- Praktiska jämförelser
+
+## Översikt
+
+| Filesystem | Max filstorlek | Max volymstorlek | Journaling | Snapshots | Bäst för |
+|------------|----------------|------------------|------------|-----------|----------|
+| ext4 | 16TB | 1EB | Ja | Nej | Generellt, root partition |
+| xfs | 8EB | 8EB | Ja | Nej | Stora filer, databaser |
+| btrfs | 16EB | 16EB | Ja (CoW) | Ja | Snapshots, flexibelt |
+
+## ext4 (Fourth Extended Filesystem)
+
+### Egenskaper
+- **Standard** för de flesta Linux-distros
+- **Stabil** och väl testat
+- **Snabb** för små-till-medel filer
+- **Journaling** för crash-recovery
+
+### Kommandon
+```bash
+# Skapa ext4
+sudo mkfs.ext4 /dev/sdb1
+
+# Med label
+sudo mkfs.ext4 -L mydisk /dev/sdb1
+
+# Visa info
+sudo tune2fs -l /dev/sdb1
+
+# Kolla och reparera
+sudo e2fsck -f /dev/sdb1
+
+# Ändra reserverat utrymme (default 5%)
+sudo tune2fs -m 1 /dev/sdb1
+```
+
+### När välja ext4
+- ✅ Root-partition (/)
+- ✅ /home
+- ✅ Generella servrar
+- ✅ Boot-partition (/boot)
+- ❌ Extremt stora filer (video, big data)
+
+## xfs (XFS Filesystem)
+
+### Egenskaper
+- **Optimerat** för stora filer och parallell I/O
+- **Default** för RHEL/CentOS
+- **Hög prestanda** för databaser
+- **Kan ej krympas** (bara växa)
+
+### Kommandon
+```bash
+# Skapa xfs
+sudo mkfs.xfs /dev/sdb1
+
+# Med label
+sudo mkfs.xfs -L mydisk /dev/sdb1
+
+# Visa info
+xfs_info /dev/sdb1
+
+# Reparera
+sudo xfs_repair /dev/sdb1
+
+# Expandera (online, medan monterat!)
+sudo xfs_growfs /mount/point
+```
+
+### När välja xfs
+- ✅ Databaser (MySQL, PostgreSQL)
+- ✅ Virtuella maskiner
+- ✅ Video/media lagring
+- ✅ Enterprise servers
+- ❌ Om du behöver krympa partition
+
+## btrfs (B-tree Filesystem)
+
+### Egenskaper
+- **Copy-on-Write (CoW)** - ändringar skrivs till ny plats
+- **Snapshots** - omedelbar backup
+- **Komprimering** inbyggt
+- **RAID** inbyggt
+- **Subvolumes** för flexibel organisation
+
+### Kommandon
+```bash
+# Skapa btrfs
+sudo mkfs.btrfs /dev/sdb1
+
+# Med label och komprimering
+sudo mkfs.btrfs -L mydisk /dev/sdb1
+sudo mount -o compress=zstd /dev/sdb1 /mnt/data
+
+# Skapa subvolume
+sudo btrfs subvolume create /mnt/data/home
+
+# Lista subvolumes
+sudo btrfs subvolume list /mnt/data
+
+# Skapa snapshot
+sudo btrfs subvolume snapshot /mnt/data /mnt/data/snapshot-$(date +%Y%m%d)
+
+# Visa användning
+sudo btrfs filesystem usage /mnt/data
+
+# Komprimering för befintliga filer
+sudo btrfs filesystem defragment -r -czstd /mnt/data
+```
+
+### När välja btrfs
+- ✅ Om du behöver snapshots
+- ✅ NAS och backup-system
+- ✅ Utvecklingsmiljöer (snabb rollback)
+- ✅ När diskutrymme är kritiskt (komprimering)
+- ❌ Databaser med hög skrivlast
+- ⚠️ RAID 5/6 fortfarande "experimentellt"
+
+## Jämförelse: Praktiska tester
+
+```bash
+# Skapa testfiler
+dd if=/dev/zero of=testfile bs=1M count=1000
+
+# ext4 - snabbast för små filer
+time cp /home/user/*.txt /mnt/ext4/
+
+# xfs - snabbast för stora filer
+time cp /home/user/bigvideo.mkv /mnt/xfs/
+
+# btrfs - CoW kan vara långsammare för databaser
+# Men snapshots är gratis!
+```
+
+## Välja Filesystem
+
+```
+┌─────────────────────────────────────────────────┐
+│                   Vad behöver du?               │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  Generellt / Root partition → ext4             │
+│                                                 │
+│  Databas / Stora filer → xfs                    │
+│                                                 │
+│  Snapshots / Backup → btrfs                     │
+│                                                 │
+│  Container storage → xfs eller btrfs            │
+│                                                 │
+│  Boot partition → ext4 (alltid)                 │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+## Praktiska exempel
+
+### Docker med btrfs
+```bash
+# Docker kan använda btrfs driver
+sudo systemctl stop docker
+sudo rm -rf /var/lib/docker
+sudo mkfs.btrfs /dev/sdb1
+sudo mount /dev/sdb1 /var/lib/docker
+sudo systemctl start docker
+```
+
+### Database på xfs
+```bash
+# PostgreSQL data på xfs
+sudo mkfs.xfs /dev/sdb1
+sudo mount /dev/sdb1 /var/lib/postgresql
+sudo chown postgres:postgres /var/lib/postgresql
+```
+
+## Övning
+
+```bash
+# 1. Lista nuvarande filsystem
+df -T
+
+# 2. Identifiera filsystemtyp
+lsblk -f
+
+# 3. Visa detaljer
+sudo dumpe2fs /dev/sda1 | head -30  # ext4
+xfs_info /dev/sda2                   # xfs
+sudo btrfs filesystem show           # btrfs
+```
+
+## Sammanfattning
+- **ext4**: Default, stabil, bra för det mesta
+- **xfs**: Stora filer, databaser, enterprise
+- **btrfs**: Snapshots, komprimering, flexibelt
+
+Välj baserat på behov, inte hype!
+
+## Nästa steg
+- Utforska LVM för flexibel volymhantering
+- Lär dig ZFS för avancerade behov
+- Förstå filesystem-tuning
+"""
+            },
+            {
+                "title": "SCP and SFTP File Transfer",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 45,
+                "content": """# SCP och SFTP: Säker filöverföring
+
+## Varför detta är viktigt
+SCP och SFTP är standardmetoder för att överföra filer säkert över nätverk. De använder SSH för kryptering och autentisering.
+
+## Vad du kommer lära dig
+- SCP för snabb filkopiering
+- SFTP för interaktiv överföring
+- rsync för smarta synkroniseringar
+- Automatisering och scripting
+
+## SCP (Secure Copy)
+
+### Grundläggande syntax
+```bash
+scp [options] source destination
+```
+
+### Kopiera lokalt → remote
+```bash
+# En fil
+scp file.txt user@server:/path/
+
+# Flera filer
+scp file1.txt file2.txt user@server:/path/
+
+# Med annan port
+scp -P 2222 file.txt user@server:/path/
+
+# Hela katalog
+scp -r folder/ user@server:/path/
+```
+
+### Kopiera remote → lokalt
+```bash
+# En fil
+scp user@server:/path/file.txt .
+
+# Hela katalog
+scp -r user@server:/path/folder/ .
+```
+
+### Kopiera remote → remote
+```bash
+scp user1@server1:/path/file.txt user2@server2:/path/
+```
+
+### Vanliga flaggor
+| Flagga | Beskrivning |
+|--------|-------------|
+| -r | Rekursiv (kopiera kataloger) |
+| -P port | Annan SSH-port |
+| -i key | Specifik SSH-nyckel |
+| -p | Bevara timestamps |
+| -C | Komprimering |
+| -q | Tyst läge |
+| -v | Verbose |
+
+### Praktiska exempel
+```bash
+# Deploy kod till server
+scp -r ./dist/ deployer@prod-server:/var/www/app/
+
+# Hämta loggar
+scp admin@server:/var/log/nginx/*.log ./logs/
+
+# Med SSH-nyckel
+scp -i ~/.ssh/prod_key app.tar.gz deploy@server:/opt/
+```
+
+## SFTP (SSH File Transfer Protocol)
+
+### Interaktiv session
+```bash
+# Anslut
+sftp user@server
+
+# Vanliga kommandon
+sftp> ls              # Lista remote filer
+sftp> lls             # Lista lokala filer
+sftp> pwd             # Remote working directory
+sftp> lpwd            # Local working directory
+sftp> cd /var/log     # Byt remote katalog
+sftp> lcd ~/downloads # Byt lokal katalog
+sftp> get file.txt    # Ladda ner
+sftp> put file.txt    # Ladda upp
+sftp> mget *.log      # Ladda ner flera
+sftp> mput *.txt      # Ladda upp flera
+sftp> mkdir newdir    # Skapa remote katalog
+sftp> rm file.txt     # Ta bort remote fil
+sftp> exit            # Avsluta
+```
+
+### Batch-läge
+```bash
+# Kör kommandon från fil
+sftp -b commands.txt user@server
+
+# commands.txt:
+cd /var/log
+get *.log
+exit
+```
+
+## rsync (Rekommenderat för stora överföringar)
+
+rsync är smartare än scp - den kopierar bara ändringar!
+
+### Grundläggande syntax
+```bash
+rsync [options] source destination
+```
+
+### Vanligaste användning
+```bash
+# Lokal kopia
+rsync -av source/ destination/
+
+# Till remote
+rsync -avz source/ user@server:/path/
+
+# Från remote
+rsync -avz user@server:/path/ destination/
+
+# Med progress
+rsync -avz --progress source/ user@server:/path/
+
+# Delete filer som inte finns i source
+rsync -avz --delete source/ user@server:/path/
+```
+
+### Viktiga flaggor
+| Flagga | Beskrivning |
+|--------|-------------|
+| -a | Archive (bevarar allt) |
+| -v | Verbose |
+| -z | Komprimering |
+| --progress | Visa progress |
+| --delete | Ta bort extra filer på destination |
+| -n | Dry run (visa vad som skulle hända) |
+| --exclude | Exkludera filer/mappar |
+
+### rsync vs scp
+
+| Aspekt | scp | rsync |
+|--------|-----|-------|
+| Inkrementell | Nej | Ja |
+| Resume | Nej | Ja (--partial) |
+| Delete option | Nej | Ja |
+| Bandwidth limit | Nej | Ja (-bwlimit) |
+| Exclude patterns | Nej | Ja |
+
+## Automatisering
+
+### SSH config för enklare syntax
+```bash
+# ~/.ssh/config
+Host prod
+    HostName 192.168.1.100
+    User deployer
+    IdentityFile ~/.ssh/prod_key
+    Port 22
+
+# Nu kan du:
+scp file.txt prod:/path/
+sftp prod
+rsync -avz folder/ prod:/path/
+```
+
+### Script för backup
+```bash
+#!/bin/bash
+# backup.sh
+
+REMOTE="backup@server:/backups/$(hostname)"
+DATE=$(date +%Y%m%d)
+
+rsync -avz --delete \
+    --exclude='*.log' \
+    --exclude='node_modules' \
+    /var/www/ \
+    ${REMOTE}/www-${DATE}/
+
+echo "Backup completed"
+```
+
+## Säkerhet
+
+```bash
+# Använd SSH-nycklar, inte lösenord
+ssh-keygen -t ed25519
+
+# Begränsa till specifikt kommando (på server)
+# ~/.ssh/authorized_keys:
+# command="rsync --server..." ssh-ed25519 AAAA...
+
+# Rate limit med --bwlimit (KB/s)
+rsync -avz --bwlimit=1000 large_file.tar.gz server:/path/
+```
+
+## Felsökning
+
+```bash
+# Verbose mode för debugging
+scp -v file.txt user@server:/path/
+
+# Kontrollera SSH-anslutning först
+ssh user@server "echo ok"
+
+# Verifiera permissions
+ssh user@server "ls -la /path/"
+
+# Test med dry-run
+rsync -avzn --delete source/ server:/path/
+```
+
+## Övning
+
+```bash
+# 1. Skapa testfil
+echo "Test content" > /tmp/testfile.txt
+mkdir -p /tmp/testfolder
+echo "File 1" > /tmp/testfolder/file1.txt
+echo "File 2" > /tmp/testfolder/file2.txt
+
+# 2. Kopiera till remote (ersätt med din server)
+scp /tmp/testfile.txt user@server:/tmp/
+
+# 3. Kopiera katalog
+scp -r /tmp/testfolder/ user@server:/tmp/
+
+# 4. Interaktiv SFTP
+sftp user@server
+# > ls /tmp/
+# > exit
+
+# 5. rsync sync
+rsync -avz /tmp/testfolder/ user@server:/tmp/testfolder/
+```
+
+## Sammanfattning
+- **scp**: Enkel, snabb, för enstaka filer
+- **sftp**: Interaktiv, bra för browsing
+- **rsync**: Smart, inkrementell, bäst för backups
+
+Använd rsync när det är möjligt - det är alltid minst lika bra som scp, ofta bättre.
+
+## Nästa steg
+- Automatisera med cron jobs
+- Utforska rclone för cloud storage
+- Lär dig om ssh multiplexing för snabbhet
+"""
+            },
+            {
+                "title": "Process Forking and Subprocesses",
+                "difficulty": "hard",
+                "estimated_minutes": 25,
+                "xp_reward": 50,
+                "content": """# Process Forking och Subprocesses
+
+## Varför detta är viktigt
+Att förstå hur processer skapas och ärver egenskaper är grundläggande för att debugga zombie-processer, orphan-processer, och förstå hur applikationer som Apache och Nginx hanterar förfrågningar.
+
+## Vad du kommer lära dig
+- Hur fork() skapar nya processer
+- Parent-child relationer
+- Zombie och orphan processer
+- Process hierarki
+
+## Process Skapande: fork()
+
+När en process skapar en annan process kallas det fork:
+
+```
+┌─────────────┐
+│   Parent    │
+│   PID=100   │
+└──────┬──────┘
+       │ fork()
+       ▼
+┌──────────────────┐
+│     Child        │
+│   PID=101        │
+│   PPID=100       │
+└──────────────────┘
+```
+
+### Vad händer vid fork?
+1. Kernel kopierar parent-processens minne
+2. Child får nytt PID
+3. Child får PPID (parent PID) = parents PID
+4. Båda fortsätter köra från fork-punkten
+
+## Se Process-hierarki
+
+```bash
+# pstree visar trädet
+pstree
+
+# Med PIDs
+pstree -p
+
+# För specifik process
+pstree -p 1234
+
+# Visa endast en användares processer
+pstree -u www-data
+```
+
+### Exempel på output
+```
+systemd(1)─┬─sshd(500)───sshd(1000)───bash(1001)───vim(1002)
+           ├─nginx(600)─┬─nginx(601)
+           │            ├─nginx(602)
+           │            └─nginx(603)
+           └─postgres(700)─┬─postgres(701)
+                           ├─postgres(702)
+                           └─postgres(703)
+```
+
+## Parent-Child Relationer
+
+```bash
+# Se PPID (parent PID)
+ps -o pid,ppid,cmd
+
+# Hitta parent för en process
+ps -o ppid= -p 1234
+
+# Lista alla barn till en process
+pgrep -P 1234
+```
+
+## Zombie Processer
+
+En **zombie** är en process som har avslutats men vars parent inte har läst exit-status.
+
+```bash
+# Identifiera zombies
+ps aux | grep -w Z
+
+# Eller
+ps -eo stat,pid,ppid,cmd | grep -w Z
+```
+
+### Varför zombies uppstår
+```
+1. Child avslutas (exit)
+2. Kernel behåller exit-status i processtabellen
+3. Parent ska köra wait() för att läsa status
+4. Om parent inte gör wait() → zombie!
+```
+
+### Lösa zombie-problem
+```bash
+# Du kan inte döda en zombie direkt (redan död!)
+kill -9 1234  # Funkar inte!
+
+# Döda parent istället → init tar över → städar
+kill -TERM $(ps -o ppid= -p 1234)
+```
+
+## Orphan Processer
+
+En **orphan** är en process vars parent har dött.
+
+```bash
+# När parent dör:
+# - Child blir orphan
+# - init (PID 1) adopterar child
+# - PPID ändras till 1
+```
+
+### Skapa orphan (demo)
+```bash
+# Starta process i bakgrund och avsluta shell
+bash -c 'sleep 100 & echo $!; exit'
+
+# sleep-processen blir orphan, PPID=1
+```
+
+## Daemon-processer
+
+Daemons är avsiktliga orphans som körs i bakgrunden.
+
+```bash
+# Traditionellt "double fork":
+# 1. Parent forkar
+# 2. Child forkar igen
+# 3. Första child avslutas
+# 4. Andra child (daemon) har PPID=1
+
+# Moderna systemd-tjänster behöver inte detta
+```
+
+## Signaler och Processer
+
+```bash
+# SIGCHLD skickas till parent när child avslutas
+# Parent bör fånga denna och köra wait()
+
+# Se signaler
+kill -l
+
+# Vanliga:
+# SIGTERM (15) - Snäll avslutning
+# SIGKILL (9)  - Tvingad avslutning
+# SIGHUP (1)   - Hangup (ofta: reload config)
+# SIGCHLD (17) - Child status ändrad
+```
+
+## Praktiska exempel
+
+### Webserver-modell (Apache prefork)
+```
+Apache Parent (PID 100)
+├── Worker (PID 101) ← Hanterar request 1
+├── Worker (PID 102) ← Hanterar request 2
+├── Worker (PID 103) ← Hanterar request 3
+└── Worker (PID 104) ← Väntar på request
+```
+
+### Container-modell
+```bash
+# Container: PID namespace isolation
+# Inne i container: process har PID 1
+# Utanför container: samma process har t.ex. PID 12345
+```
+
+## Felsökning
+
+```bash
+# Räkna zombies
+ps aux | awk '$8 ~ /Z/ {count++} END {print count+0}'
+
+# Hitta parent som skapar zombies
+ps -eo ppid,stat | awk '$2 ~ /Z/ {print $1}' | sort | uniq -c
+
+# Övervaka processträd i realtid
+watch -n 1 'pstree -p | head -30'
+```
+
+## Övning
+
+```bash
+# 1. Se ditt shells processträd
+pstree -sp $$
+
+# 2. Skapa child och se relationen
+bash -c 'echo "Child PID: $$, Parent: $PPID"; sleep 5' &
+ps -o pid,ppid,cmd | grep sleep
+
+# 3. Identifiera zombies (om några finns)
+ps aux | grep -w Z
+
+# 4. Se alla nginx workers
+pstree -p $(pgrep -o nginx) 2>/dev/null || echo "nginx not running"
+```
+
+## Sammanfattning
+- fork() skapar en kopia av parent-processen
+- Zombies: avslutade barn vars parent ej läst exit-status
+- Orphans: barn vars parent dött (adopteras av init)
+- pstree är ditt bästa verktyg för att förstå hierarkin
+
+## Nästa steg
+- Lär dig om cgroups och namespaces
+- Förstå hur containers isolerar processer
+- Studera systemd och process supervision
+"""
+            },
+            {
+                "title": "Package Repositories Configuration",
+                "difficulty": "medium",
+                "estimated_minutes": 25,
+                "xp_reward": 45,
+                "content": """# Package Repositories Configuration
+
+## Varför detta är viktigt
+Pakethanterare hämtar mjukvara från repositories. Att förstå hur man lägger till, tar bort och prioriterar repos är kritiskt för att installera rätt version av mjukvara.
+
+## Vad du kommer lära dig
+- APT repositories (Debian/Ubuntu)
+- YUM/DNF repositories (RHEL/CentOS/Fedora)
+- Lägga till tredjepartsrepos säkert
+- GPG-nycklar och verifiering
+
+## APT Repositories (Debian/Ubuntu)
+
+### Repository-format
+```
+deb [options] URL distribution component1 component2 ...
+deb-src [options] URL distribution component1 component2 ...
+```
+
+### Exempel
+```
+deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu jammy-security main restricted
+```
+
+### Komponenter förklarade
+| Komponent | Innehåll |
+|-----------|----------|
+| main | Officiellt supporterad free software |
+| restricted | Stödd men inte helt fri |
+| universe | Community-maintained |
+| multiverse | Non-free software |
+
+### Konfigurationsfiler
+```bash
+# Huvudfil
+/etc/apt/sources.list
+
+# Extra repos (rekommenderat för tredjepartsrepos)
+/etc/apt/sources.list.d/*.list
+```
+
+### Hantera repositories
+
+```bash
+# Lista aktiva repos
+cat /etc/apt/sources.list
+ls /etc/apt/sources.list.d/
+
+# Lägg till PPA (Ubuntu)
+sudo add-apt-repository ppa:user/ppa-name
+
+# Ta bort PPA
+sudo add-apt-repository --remove ppa:user/ppa-name
+
+# Lägg till repo manuellt
+echo "deb https://example.com/repo stable main" | sudo tee /etc/apt/sources.list.d/example.list
+
+# Uppdatera paketlista
+sudo apt update
+```
+
+### GPG-nycklar
+
+```bash
+# Moderna metoden (signed-by)
+curl -fsSL https://example.com/gpgkey | sudo gpg --dearmor -o /etc/apt/keyrings/example.gpg
+
+# I .list filen:
+echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/repo stable main" | sudo tee /etc/apt/sources.list.d/example.list
+
+# Äldre metoden (deprecated)
+curl -fsSL https://example.com/gpgkey | sudo apt-key add -
+```
+
+### Praktiskt exempel: Docker repo
+
+```bash
+# 1. Installera dependencies
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+
+# 2. Lägg till GPG-nyckel
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# 3. Lägg till repo
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 4. Installera
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+## YUM/DNF Repositories (RHEL/CentOS/Fedora)
+
+### Repository-filer
+```bash
+# Repos ligger i
+/etc/yum.repos.d/*.repo
+
+# Exempel på .repo fil
+cat /etc/yum.repos.d/example.repo
+```
+
+### Repo-format
+```ini
+[example-repo]
+name=Example Repository
+baseurl=https://example.com/repo/$releasever/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://example.com/RPM-GPG-KEY-example
+```
+
+### Hantera repos
+
+```bash
+# Lista alla repos
+yum repolist all
+dnf repolist all
+
+# Lista aktiverade repos
+yum repolist enabled
+
+# Aktivera/inaktivera repo
+sudo yum-config-manager --enable repo-name
+sudo yum-config-manager --disable repo-name
+
+# Lägg till EPEL (Extra Packages)
+sudo dnf install epel-release
+
+# Lägg till repo manuellt
+sudo yum-config-manager --add-repo https://example.com/example.repo
+```
+
+### Praktiskt exempel: Kubernetes repo
+
+```bash
+# /etc/yum.repos.d/kubernetes.repo
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key
+EOF
+
+sudo dnf install kubelet kubeadm kubectl
+```
+
+## Prioritering av repos
+
+### APT (pinning)
+```bash
+# /etc/apt/preferences.d/docker
+Package: docker-ce
+Pin: origin download.docker.com
+Pin-Priority: 1001
+```
+
+### YUM/DNF
+```ini
+# I .repo filen
+[example-repo]
+priority=10  # Lägre = högre prioritet (1-99)
+```
+
+## Felsökning
+
+```bash
+# APT: Verifiera repo
+apt-cache policy package-name
+
+# Se vilken repo ett paket kommer från
+apt-cache show package-name | grep -E "^(Package|Version|Filename)"
+
+# YUM: Se repo för paket
+yum info package-name
+
+# Rensa cache
+sudo apt clean
+sudo dnf clean all
+
+# Verifiera GPG-nycklar
+apt-key list  # Deprecated men funkar
+gpg --show-keys /etc/apt/keyrings/docker.gpg
+```
+
+## Säkerhet
+
+```bash
+# Verifiera alltid GPG-nycklar
+# Använd HTTPS för repos
+# Undvik inofficiella repos i produktion
+# Pin versioner för kritiska paket
+```
+
+## Övning
+
+```bash
+# 1. Lista alla repos
+cat /etc/apt/sources.list
+ls -la /etc/apt/sources.list.d/
+
+# 2. Se policy för ett paket
+apt-cache policy nginx
+
+# 3. Se vilka paket som kommer från tredjepartsrepos
+apt list --installed 2>/dev/null | head -20
+
+# 4. Lägg till och ta bort testrepository
+echo "# Test repo" | sudo tee /etc/apt/sources.list.d/test.list
+sudo rm /etc/apt/sources.list.d/test.list
+```
+
+## Sammanfattning
+- APT: /etc/apt/sources.list och sources.list.d/
+- YUM/DNF: /etc/yum.repos.d/*.repo
+- Använd alltid GPG-signerade repos
+- Modern metod: signed-by i APT, gpgkey i YUM
+
+## Nästa steg
+- Skapa egen APT/YUM repository
+- Lär dig om apt-mirror för lokal spegel
+- Förstå repository proxies (Nexus, Artifactory)
+"""
+            },
+            {
+                "title": "Snap Package Manager",
+                "difficulty": "easy",
+                "estimated_minutes": 15,
+                "xp_reward": 30,
+                "content": """# Snap Package Manager
+
+## Varför detta är viktigt
+Snap är Canonicals universella paketformat. Det används för att distribuera applikationer oberoende av Linux-distribution, med automatiska uppdateringar och isolering.
+
+## Vad du kommer lära dig
+- Installera och hantera snaps
+- Förstå snap-arkitekturen
+- Konfigurera snap-permissions
+
+## Vad är Snap?
+
+```
+┌─────────────────────────────────────────┐
+│               Snap Package               │
+├─────────────────────────────────────────┤
+│  Application                            │
+│  Dependencies                           │
+│  Runtime libraries                      │
+│  → Allt i ett isolerat paket            │
+└─────────────────────────────────────────┘
+```
+
+### Fördelar
+- ✅ Samma paket fungerar på alla distros
+- ✅ Automatiska uppdateringar
+- ✅ Sandboxed (isolerad)
+- ✅ Rollback till tidigare version
+- ❌ Större filstorlek
+- ❌ Långsammare start (ibland)
+
+## Grundläggande kommandon
+
+```bash
+# Sök efter snaps
+snap find "text editor"
+
+# Installera snap
+sudo snap install package-name
+
+# Installera specifik version
+sudo snap install package-name --channel=edge
+
+# Lista installerade
+snap list
+
+# Uppdatera alla
+sudo snap refresh
+
+# Uppdatera specifik
+sudo snap refresh package-name
+
+# Ta bort
+sudo snap remove package-name
+```
+
+## Channels (versionskanaler)
+
+```bash
+# Kanaler: stable, candidate, beta, edge
+# Stable = produktionsredo
+# Edge = senaste development
+
+# Installera från specifik kanal
+sudo snap install package-name --channel=beta
+
+# Byt kanal
+sudo snap switch --channel=stable package-name
+sudo snap refresh package-name
+```
+
+## Snap-info
+
+```bash
+# Visa information
+snap info package-name
+
+# Visa anslutningar (permissions)
+snap connections package-name
+
+# Se alla tillgängliga versioner
+snap info package-name | grep -A20 "channels:"
+```
+
+## Permissions (Interfaces)
+
+Snaps är sandboxed och behöver explicit tillåtelse för resurser.
+
+```bash
+# Lista tillgängliga interfaces
+snap interfaces
+
+# Anslut interface (ge permission)
+sudo snap connect package-name:home
+
+# Koppla bort
+sudo snap disconnect package-name:home
+
+# Vanliga interfaces:
+# - home: Åtkomst till $HOME
+# - removable-media: USB-enheter
+# - network: Nätverksåtkomst
+# - audio-playback: Ljud
+```
+
+## Hantera uppdateringar
+
+```bash
+# Pausa uppdateringar
+sudo snap refresh --hold package-name
+
+# Aktivera uppdateringar igen
+sudo snap refresh --unhold package-name
+
+# Schemalägg uppdateringar
+sudo snap set system refresh.timer=sat,06:00
+
+# Se uppdateringsschema
+snap refresh --time
+```
+
+## Rollback
+
+```bash
+# Se revisioner
+snap list --all package-name
+
+# Återgå till tidigare version
+sudo snap revert package-name
+```
+
+## Snap vs APT
+
+| Aspekt | snap | apt |
+|--------|------|-----|
+| Uppdateringar | Automatiska | Manuella |
+| Isolering | Sandboxed | System-wide |
+| Storlek | Större | Mindre |
+| Startid | Långsammare | Snabbare |
+| Dependencies | Inbyggda | Delade |
+
+## Vanliga snaps för DevOps
+
+```bash
+# Docker (alternativ till apt)
+sudo snap install docker
+
+# Kubernetes tools
+sudo snap install kubectl --classic
+sudo snap install helm --classic
+
+# Code editors
+sudo snap install code --classic
+sudo snap install sublime-text --classic
+
+# Utilities
+sudo snap install jq
+sudo snap install yq
+```
+
+## Classic Confinement
+
+```bash
+# --classic ger full systemåtkomst
+# Krävs för editors, CLI-tools som behöver skriva överallt
+sudo snap install kubectl --classic
+```
+
+## Felsökning
+
+```bash
+# Snap services status
+snap services
+
+# Snap logs
+snap logs package-name
+
+# Se vart snaps lagras
+ls /snap/
+
+# Rensa gammal revision
+sudo snap set system refresh.retain=2
+```
+
+## Övning
+
+```bash
+# 1. Sök efter snaps
+snap find "devops"
+
+# 2. Installera och testa
+sudo snap install hello-world
+hello-world
+
+# 3. Se info och permissions
+snap info hello-world
+snap connections hello-world
+
+# 4. Ta bort
+sudo snap remove hello-world
+```
+
+## Sammanfattning
+- Snap: universella paket med automatiska uppdateringar
+- Sandboxed: explicit tillåtelse för resurser
+- Använd --classic för dev tools
+- Rollback tillgängligt för alla snaps
+
+## Nästa steg
+- Utforska Flatpak som alternativ
+- Lär dig bygga egna snaps
+- Förstå AppArmor-profiler för snaps
+"""
+            },
+            {
+                "title": "RAID Configuration",
+                "difficulty": "hard",
+                "estimated_minutes": 35,
+                "xp_reward": 60,
+                "content": """# RAID Configuration
+
+## Varför detta är viktigt
+RAID (Redundant Array of Independent Disks) ger redundans och/eller prestanda genom att kombinera flera diskar. Kritiskt för att förstå lagring i datacenter och enterprise-miljöer.
+
+## Vad du kommer lära dig
+- Olika RAID-nivåer och deras användning
+- Software RAID med mdadm
+- Övervaka och underhålla RAID
+
+## RAID-nivåer översikt
+
+```
+RAID 0 (Stripe)
+┌─────┐ ┌─────┐
+│ A1  │ │ A2  │  → Data delas över diskar
+│ A3  │ │ A4  │  → Snabbt, ingen redundans
+└─────┘ └─────┘  → En disk död = allt borta
+
+RAID 1 (Mirror)
+┌─────┐ ┌─────┐
+│ A1  │ │ A1  │  → Identiska kopior
+│ A2  │ │ A2  │  → 50% kapacitet, full redundans
+└─────┘ └─────┘  → En disk kan gå sönder
+
+RAID 5 (Stripe + Parity)
+┌─────┐ ┌─────┐ ┌─────┐
+│ A1  │ │ A2  │ │ Ap  │  → Data + paritet
+│ B1  │ │ Bp  │ │ B2  │  → N-1 kapacitet
+│ Cp  │ │ C1  │ │ C2  │  → Tolererar 1 diskfel
+└─────┘ └─────┘ └─────┘
+
+RAID 6 (Stripe + Dual Parity)
+→ Som RAID 5 men tolererar 2 diskfel
+→ N-2 kapacitet
+
+RAID 10 (1+0, Mirror + Stripe)
+┌───────────┐ ┌───────────┐
+│ ┌───┬───┐ │ │ ┌───┬───┐ │
+│ │A1 │A1 │ │ │ │A2 │A2 │ │  → Mirror + stripe
+│ └───┴───┘ │ │ └───┴───┘ │  → Bäst prestanda + redundans
+└───────────┘ └───────────┘  → 50% kapacitet
+```
+
+## Jämförelse
+
+| RAID | Min diskar | Kapacitet | Redundans | Prestanda | Användning |
+|------|-----------|-----------|-----------|-----------|------------|
+| 0 | 2 | 100% | Ingen | Snabbast | Scratch, temp |
+| 1 | 2 | 50% | 1 disk | Bra läs | OS, boot |
+| 5 | 3 | N-1 | 1 disk | Bra | General storage |
+| 6 | 4 | N-2 | 2 diskar | Ok | Kritisk data |
+| 10 | 4 | 50% | 1 per mirror | Bäst | Databaser |
+
+## mdadm: Software RAID
+
+### Installation
+```bash
+# Debian/Ubuntu
+sudo apt install mdadm
+
+# RHEL/CentOS
+sudo dnf install mdadm
+```
+
+### Skapa RAID
+
+```bash
+# RAID 1 (mirror) med 2 diskar
+sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+
+# RAID 5 med 3 diskar
+sudo mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd
+
+# RAID 10 med 4 diskar
+sudo mdadm --create /dev/md0 --level=10 --raid-devices=4 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+```
+
+### Spara konfiguration
+```bash
+# Viktigt! Annars hittas inte RAID vid reboot
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
+sudo update-initramfs -u  # Debian/Ubuntu
+```
+
+### Skapa filesystem på RAID
+```bash
+# Formatera
+sudo mkfs.ext4 /dev/md0
+
+# Montera
+sudo mkdir /mnt/raid
+sudo mount /dev/md0 /mnt/raid
+
+# Permanent montering
+echo '/dev/md0 /mnt/raid ext4 defaults 0 2' | sudo tee -a /etc/fstab
+```
+
+## Övervaka RAID
+
+```bash
+# Status
+sudo mdadm --detail /dev/md0
+
+# Kortfattad status
+cat /proc/mdstat
+
+# Alla RAID-enheter
+sudo mdadm --examine --scan
+
+# Kontinuerlig övervakning
+watch -n 5 cat /proc/mdstat
+```
+
+## Hantera diskfel
+
+```bash
+# Markera disk som defekt
+sudo mdadm /dev/md0 --fail /dev/sdc
+
+# Ta bort defekt disk
+sudo mdadm /dev/md0 --remove /dev/sdc
+
+# Lägg till ny disk
+sudo mdadm /dev/md0 --add /dev/sdd
+
+# Se rebuild-progress
+cat /proc/mdstat
+```
+
+## Hot Spare
+
+```bash
+# Skapa RAID med spare
+sudo mdadm --create /dev/md0 --level=5 --raid-devices=3 --spare-devices=1 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+# Lägg till spare till befintlig RAID
+sudo mdadm /dev/md0 --add /dev/sdf
+```
+
+## Stoppa/ta bort RAID
+
+```bash
+# Unmount först
+sudo umount /mnt/raid
+
+# Stoppa RAID
+sudo mdadm --stop /dev/md0
+
+# Ta bort superblock från diskar
+sudo mdadm --zero-superblock /dev/sdb /dev/sdc
+```
+
+## Best Practices
+
+1. **Backup ändå** - RAID ersätter inte backup
+2. **Övervaka** - Sätt upp alerting för RAID-status
+3. **Test återställning** - Simulera diskfel regelbundet
+4. **Samma disktyp** - Använd identiska diskar
+5. **UPS** - Strömavbrott under rebuild = katastrof
+
+## Praktiskt exempel: File Server
+
+```bash
+# 1. Skapa RAID 5 med 4 diskar
+sudo mdadm --create /dev/md0 --level=5 --raid-devices=4 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+# 2. Vänta på initial sync
+watch cat /proc/mdstat
+
+# 3. Formatera med xfs (bra för stora filer)
+sudo mkfs.xfs /dev/md0
+
+# 4. Montera
+sudo mkdir /mnt/storage
+sudo mount /dev/md0 /mnt/storage
+
+# 5. Spara config
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
+echo '/dev/md0 /mnt/storage xfs defaults 0 2' | sudo tee -a /etc/fstab
+```
+
+## Felsökning
+
+```bash
+# RAID inte hittat efter reboot?
+sudo mdadm --assemble --scan
+
+# Hitta RAID-komponenter
+sudo mdadm --examine /dev/sd[b-e]
+
+# Rebuild stuck?
+# Öka rebuild-hastighet
+echo 200000 | sudo tee /proc/sys/dev/raid/speed_limit_min
+```
+
+## Övning (i VM!)
+
+```bash
+# 1. Skapa 3 virtuella diskar (i VM settings)
+
+# 2. Verifiera diskar
+lsblk
+
+# 3. Skapa RAID 1 (i VM för test!)
+# sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+
+# 4. Kontrollera status
+# cat /proc/mdstat
+```
+
+## Sammanfattning
+- RAID 1: Mirror, bra för OS/boot
+- RAID 5: Balans kapacitet/redundans
+- RAID 10: Bäst prestanda för databaser
+- RAID ersätter INTE backup!
+
+## Nästa steg
+- Utforska hardware RAID (MegaRAID, etc)
+- Lär dig ZFS RAID-Z
+- Förstå distributed storage (Ceph, GlusterFS)
+"""
+            },
+            {
+                "title": "Network Bonding and Teaming",
+                "difficulty": "hard",
+                "estimated_minutes": 30,
+                "xp_reward": 55,
+                "content": """# Network Bonding och Teaming
+
+## Varför detta är viktigt
+Network bonding kombinerar flera nätverksgränssnitt för redundans och/eller ökad bandbredd. Kritiskt för servrar som behöver hög tillgänglighet.
+
+## Vad du kommer lära dig
+- Olika bonding-lägen
+- Konfigurera bonding med systemd-networkd
+- Teaming som modernt alternativ
+
+## Vad är Bonding?
+
+```
+┌─────────────┐
+│   Server    │
+├─────────────┤
+│   bond0     │  ← Virtuellt interface
+├──────┬──────┤
+│ eth0 │ eth1 │  ← Fysiska interface
+└──────┴──────┘
+       │   │
+       └───┴───→ Switch(ar)
+```
+
+## Bonding Modes
+
+| Mode | Namn | Beskrivning | Kräver switch-config |
+|------|------|-------------|---------------------|
+| 0 | balance-rr | Round-robin, all ports | Nej (men farligt) |
+| 1 | active-backup | En aktiv, andra backup | Nej |
+| 2 | balance-xor | XOR-hash för port | Ja (same group) |
+| 3 | broadcast | Skickar på alla ports | Ja |
+| 4 | 802.3ad | LACP, dynamisk aggregation | Ja (LACP) |
+| 5 | balance-tlb | Adaptive transmit load | Nej |
+| 6 | balance-alb | Adaptive load (rx+tx) | Nej |
+
+### Vanligaste
+
+```
+Mode 1 (active-backup)
+→ Enklast, ingen switch-config
+→ Bara redundans, ingen extra bandbredd
+
+Mode 4 (802.3ad LACP)
+→ Kräver switch som stödjer LACP
+→ Ger redundans + aggregerad bandbredd
+```
+
+## Konfigurera med systemd-networkd
+
+### 1. Skapa bonding-enhet
+
+```bash
+# /etc/systemd/network/10-bond0.netdev
+sudo tee /etc/systemd/network/10-bond0.netdev << EOF
+[NetDev]
+Name=bond0
+Kind=bond
+
+[Bond]
+Mode=802.3ad
+TransmitHashPolicy=layer3+4
+MIIMonitorSec=100ms
+LACPTransmitRate=fast
+EOF
+```
+
+### 2. Konfigurera bond0 interface
+
+```bash
+# /etc/systemd/network/20-bond0.network
+sudo tee /etc/systemd/network/20-bond0.network << EOF
+[Match]
+Name=bond0
+
+[Network]
+DHCP=yes
+# Eller statisk:
+# Address=192.168.1.10/24
+# Gateway=192.168.1.1
+# DNS=8.8.8.8
+EOF
+```
+
+### 3. Lägg till fysiska interface
+
+```bash
+# /etc/systemd/network/30-eth0.network
+sudo tee /etc/systemd/network/30-eth0.network << EOF
+[Match]
+Name=eth0
+
+[Network]
+Bond=bond0
+EOF
+
+# /etc/systemd/network/30-eth1.network
+sudo tee /etc/systemd/network/30-eth1.network << EOF
+[Match]
+Name=eth1
+
+[Network]
+Bond=bond0
+EOF
+```
+
+### 4. Aktivera
+
+```bash
+sudo systemctl restart systemd-networkd
+```
+
+## Konfigurera med nmcli (NetworkManager)
+
+```bash
+# Skapa bond
+sudo nmcli con add type bond con-name bond0 ifname bond0 bond.options "mode=802.3ad,miimon=100"
+
+# Lägg till slaves
+sudo nmcli con add type ethernet con-name bond0-slave1 ifname eth0 master bond0
+sudo nmcli con add type ethernet con-name bond0-slave2 ifname eth1 master bond0
+
+# Konfigurera IP
+sudo nmcli con mod bond0 ipv4.addresses 192.168.1.10/24
+sudo nmcli con mod bond0 ipv4.gateway 192.168.1.1
+sudo nmcli con mod bond0 ipv4.method manual
+
+# Aktivera
+sudo nmcli con up bond0
+```
+
+## Övervaka bonding
+
+```bash
+# Status
+cat /proc/net/bonding/bond0
+
+# Kort status
+ip link show bond0
+
+# Se slaves
+cat /sys/class/net/bond0/bonding/slaves
+
+# Se aktiv slave (mode 1)
+cat /sys/class/net/bond0/bonding/active_slave
+
+# MII status
+cat /sys/class/net/bond0/bonding/mii_status
+```
+
+## Teaming (modernare alternativ)
+
+Teaming är nyare och flexiblare än bonding.
+
+### Runners (motsvarar bonding modes)
+
+| Runner | Beskrivning |
+|--------|-------------|
+| roundrobin | Round-robin |
+| activebackup | Failover |
+| loadbalance | Load balancing |
+| lacp | 802.3ad LACP |
+
+### Konfigurera team
+
+```bash
+# Skapa team
+sudo nmcli con add type team con-name team0 ifname team0 config '{"runner":{"name":"activebackup"}}'
+
+# Lägg till ports
+sudo nmcli con add type ethernet con-name team0-port1 ifname eth0 master team0
+sudo nmcli con add type ethernet con-name team0-port2 ifname eth1 master team0
+
+# Konfigurera IP
+sudo nmcli con mod team0 ipv4.addresses 192.168.1.10/24
+sudo nmcli con mod team0 ipv4.method manual
+
+# Aktivera
+sudo nmcli con up team0
+```
+
+### Team status
+
+```bash
+# teamdctl kommando
+teamdctl team0 state
+
+# JSON format
+teamdctl team0 state dump
+```
+
+## Felsökning
+
+```bash
+# Kontrollera att kernel-modul är laddad
+lsmod | grep bonding
+
+# Ladda manuellt
+sudo modprobe bonding
+
+# Se bonding events
+dmesg | grep bond
+
+# Testa failover (mode 1)
+sudo ip link set eth0 down
+cat /proc/net/bonding/bond0  # Se att eth1 är aktiv
+sudo ip link set eth0 up
+```
+
+## Best Practices
+
+1. **Same switch** för mode 1 (active-backup) om möjligt
+2. **Different switches** för riktig redundans
+3. **LACP (mode 4)** för bäst prestanda + redundans
+4. **Test failover** före produktion
+5. **Monitorera** - sätt upp alerting för slave-status
+
+## Praktiskt exempel: Högpresterande server
+
+```bash
+# LACP bonding för web-server
+
+# 1. Skapa bond med LACP
+sudo nmcli con add type bond con-name bond0 ifname bond0 \
+  bond.options "mode=802.3ad,miimon=100,lacp_rate=fast,xmit_hash_policy=layer3+4"
+
+# 2. Lägg till 2 10GbE-interface
+sudo nmcli con add type ethernet con-name bond0-p1 ifname enp1s0f0 master bond0
+sudo nmcli con add type ethernet con-name bond0-p2 ifname enp1s0f1 master bond0
+
+# 3. Statisk IP
+sudo nmcli con mod bond0 ipv4.addresses 10.0.1.10/24
+sudo nmcli con mod bond0 ipv4.gateway 10.0.1.1
+sudo nmcli con mod bond0 ipv4.dns "10.0.1.1"
+sudo nmcli con mod bond0 ipv4.method manual
+
+# 4. Aktivera
+sudo nmcli con up bond0
+
+# 5. Verifiera
+cat /proc/net/bonding/bond0
+```
+
+## Övning
+
+```bash
+# 1. Kontrollera kernel-modul
+lsmod | grep bonding
+
+# 2. Se befintliga interface
+ip link show
+
+# 3. Om du har 2 interface (t.ex. i VM):
+# sudo nmcli con add type bond con-name bond0 ifname bond0 bond.options "mode=active-backup,miimon=100"
+# sudo nmcli con show
+
+# 4. Se bonding-dokumentation
+modinfo bonding
+```
+
+## Sammanfattning
+- Mode 1 (active-backup): Enklast, ingen switch-config
+- Mode 4 (LACP): Bäst prestanda, kräver switch-stöd
+- Teaming: Modernare alternativ till bonding
+- Testa failover innan produktion!
+
+## Nästa steg
+- Utforska VLAN på bonding
+- Lär dig SR-IOV för virtualisering
+- Förstå OVS (Open vSwitch) för SDN
+"""
+            },
         ],
         "labs": [
             {"title": "Filesystem Exploration Challenge", "slug": "lab-2-1-filesystem", "hours": 3.0},
