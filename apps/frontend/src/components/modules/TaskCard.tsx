@@ -13,6 +13,7 @@
  * - Prominent 20px medium weight title
  * - Clean meta-row with time, XP, difficulty
  * - Primary accent Start button
+ * - Bookmark/Star button (PROMPT 4)
  *
  * @phase D.4 - Modules UI (Redesigned)
  */
@@ -34,6 +35,7 @@ import {
     HelpCircle
 } from "lucide-react"
 import designTokens from "@/lib/design-tokens"
+import { BookmarkButton } from "./BookmarkButton"
 
 /* ============================================================================
    TYPES
@@ -63,6 +65,9 @@ export interface TaskCardProps {
     onClick?: (id: string) => void
     isLoading?: boolean
     className?: string
+    // Bookmark props (PROMPT 4)
+    isBookmarked?: boolean
+    onToggleBookmark?: (taskId: string) => Promise<boolean>
 }
 
 /* ============================================================================
@@ -172,7 +177,9 @@ export function TaskCard({
     onToggleComplete,
     onClick,
     isLoading = false,
-    className
+    className,
+    isBookmarked = false,
+    onToggleBookmark
 }: TaskCardProps) {
     const [isHovered, setIsHovered] = useState(false)
     const config = typeConfig[type]
@@ -227,8 +234,18 @@ export function TaskCard({
                         </span>
                     </div>
 
-                    {/* Status / Type Badge */}
+                    {/* Status / Type Badge + Bookmark */}
                     <div className="flex items-center gap-2">
+                        {/* Bookmark Button */}
+                        {onToggleBookmark && (
+                            <BookmarkButton
+                                taskId={id}
+                                isBookmarked={isBookmarked}
+                                onToggle={onToggleBookmark}
+                                size="sm"
+                            />
+                        )}
+                        
                         {isComplete && (
                             <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />

@@ -27,7 +27,7 @@ import { useState, useEffect, useCallback } from "react"
 export type OperatingSystem = "macos" | "windows" | "linux" | null
 
 // Linux distribution types
-export type LinuxDistro = 
+export type LinuxDistro =
     | "ubuntu"      // RECOMMENDED - Best for beginners, most tutorials
     | "debian"      // Stable, similar to Ubuntu
     | "fedora"      // Cutting edge, Red Hat family
@@ -94,7 +94,7 @@ export const OS_OPTIONS = {
     macos: {
         name: "macOS",
         icon: "🍎",
-        description: "Apple Silicon (M1/M2/M3) eller Intel Mac",
+        description: "Apple Silicon (M1/M2/M3) / Intel",
         packageManager: "Homebrew",
     },
     windows: {
@@ -136,11 +136,11 @@ export function usePlatform(): UsePlatformReturn {
         try {
             const storedOS = localStorage.getItem(OS_STORAGE_KEY)
             const storedDistro = localStorage.getItem(DISTRO_STORAGE_KEY)
-            
+
             if (storedOS === "macos" || storedOS === "windows" || storedOS === "linux") {
                 setOSState(storedOS)
             }
-            
+
             if (storedDistro && ["ubuntu", "debian", "fedora", "arch", "centos"].includes(storedDistro)) {
                 setDistroState(storedDistro as LinuxDistro)
             }
@@ -258,7 +258,7 @@ export function useOperatingSystem() {
 
 /**
  * Get OS-specific content from a task using HTML comment tags
- * 
+ *
  * Supported tags:
  * <!-- OS:macos --> ... <!-- /OS:macos -->
  * <!-- OS:windows --> ... <!-- /OS:windows -->
@@ -343,11 +343,11 @@ export function getInstallCommand(
     if (os === "macos") {
         return `brew install ${packageName}`
     }
-    
+
     if (os === "windows") {
         return `winget install ${packageName}`
     }
-    
+
     if (os === "linux") {
         switch (distro) {
             case "ubuntu":
@@ -362,6 +362,6 @@ export function getInstallCommand(
                 return `sudo apt install -y ${packageName}` // Default to apt
         }
     }
-    
+
     return `# Install ${packageName} using your package manager`
 }

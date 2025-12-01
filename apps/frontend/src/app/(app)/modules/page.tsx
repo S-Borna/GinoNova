@@ -458,7 +458,7 @@ export default function ModulesPage() {
         <PageLayout maxWidth="wide" background="gray">
             <AnimatePresence>
                 {showModules && (
-                    <motion.div 
+                    <motion.div
                         className="space-y-8"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
