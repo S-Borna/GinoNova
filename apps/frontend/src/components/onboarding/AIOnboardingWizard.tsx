@@ -641,8 +641,8 @@ export function AIOnboardingWizard({
                             i === step
                                 ? "w-8 bg-indigo-500"
                                 : i < step
-                                ? "w-4 bg-indigo-500/50"
-                                : "w-4 bg-white/20"
+                                    ? "w-4 bg-indigo-500/50"
+                                    : "w-4 bg-white/20"
                         )}
                     />
                 ))}

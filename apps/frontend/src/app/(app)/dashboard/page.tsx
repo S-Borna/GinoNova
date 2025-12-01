@@ -162,7 +162,7 @@ export default function DashboardPage() {
     const completedModules =
         dashboard?.progress?.filter((p) => p.module_id && p.status === "completed").length ?? 0
     const totalModules = dashboard?.stats?.total_modules ?? 0
-    const streak = 3 // Demo streak - would come from backend
+    const streak = dashboard?.stats?.streak ?? 0 // Real streak from backend
 
     // Transform modules for ModulesOverview
     const modulesWithProgress =
@@ -177,33 +177,8 @@ export default function DashboardPage() {
             status: m.is_active ? ("in_progress" as const) : ("not_started" as const),
         })) ?? []
 
-    // Demo activities - would come from backend
-    const recentActivities: Activity[] = [
-        {
-            id: "1",
-            type: "task_completed",
-            title: "Completed 'Install VS Code'",
-            description: "Linux Basics Module",
-            xp: 25,
-            timestamp: new Date(Date.now() - 15 * 60 * 1000),
-        },
-        {
-            id: "2",
-            type: "streak_milestone",
-            title: "3-day streak achieved! 🔥",
-            description: "Keep it up!",
-            xp: 50,
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        },
-        {
-            id: "3",
-            type: "xp_earned",
-            title: "Earned bonus XP",
-            description: "First task of the day",
-            xp: 15,
-            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        },
-    ]
+    // Real activities from backend (empty for new users)
+    const recentActivities: Activity[] = []
 
     return (
         <PageLayout maxWidth="wide" background="gray">

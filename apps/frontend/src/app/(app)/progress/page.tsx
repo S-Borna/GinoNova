@@ -32,41 +32,39 @@ import {
 } from "lucide-react"
 
 /* ============================================================================
-   MOCK DATA
+   DEFAULT DATA - Shows real values (0 for new users)
    ============================================================================ */
 
-const MOCK_STATS = {
-    totalXP: 2450,
-    level: 7,
-    streak: 14,
-    totalHours: 42,
-    tasksCompleted: 78,
-    modulesCompleted: 6,
-    achievementsUnlocked: 12,
+const DEFAULT_STATS = {
+    totalXP: 0,
+    level: 1,
+    streak: 0,
+    totalHours: 0,
+    tasksCompleted: 0,
+    modulesCompleted: 0,
+    achievementsUnlocked: 0,
 }
 
-const MOCK_ACHIEVEMENTS = [
-    { id: "1", name: "First Steps", description: "Complete your first task", icon: "🚀", unlocked: true },
-    { id: "2", name: "Week Warrior", description: "7-day study streak", icon: "🔥", unlocked: true },
-    { id: "3", name: "Linux Basics", description: "Complete Linux fundamentals", icon: "🐧", unlocked: true },
+const ACHIEVEMENTS = [
+    { id: "1", name: "First Steps", description: "Complete your first task", icon: "🚀", unlocked: false },
+    { id: "2", name: "Week Warrior", description: "7-day study streak", icon: "🔥", unlocked: false },
+    { id: "3", name: "Linux Basics", description: "Complete Linux fundamentals", icon: "🐧", unlocked: false },
     { id: "4", name: "Docker Pro", description: "Master containerization", icon: "🐳", unlocked: false },
     { id: "5", name: "Month Master", description: "30-day study streak", icon: "👑", unlocked: false },
     { id: "6", name: "K8s Captain", description: "Complete Kubernetes track", icon: "⚙️", unlocked: false },
 ]
 
-// Generate mock heatmap data for last 12 weeks
+// Generate empty heatmap for new users
 const generateHeatmapData = () => {
     const data: { date: string; count: number }[] = []
     const today = new Date()
     for (let i = 83; i >= 0; i--) {
         const date = new Date(today)
         date.setDate(date.getDate() - i)
-        // Random activity level, more recent = higher probability
-        const probability = Math.max(0.3, 1 - i / 100)
-        const count = Math.random() < probability ? Math.floor(Math.random() * 5) : 0
+        // Start with empty heatmap for new users
         data.push({
             date: date.toISOString().split("T")[0],
-            count,
+            count: 0,
         })
     }
     return data
@@ -215,7 +213,7 @@ function TrackProgressCard({ track }: { track: TrackSummary }) {
    ACHIEVEMENTS SECTION
    ============================================================================ */
 
-function Achievements({ achievements }: { achievements: typeof MOCK_ACHIEVEMENTS }) {
+function Achievements({ achievements }: { achievements: typeof ACHIEVEMENTS }) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center gap-2 mb-4">
@@ -286,7 +284,7 @@ export default function ProgressPage() {
                             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30">
                                 <Zap className="w-5 h-5 text-indigo-500" />
                                 <span className="font-semibold text-indigo-700 dark:text-indigo-400">
-                                    Level {MOCK_STATS.level}
+                                    Level {DEFAULT_STATS.level}
                                 </span>
                             </div>
                         </div>
@@ -299,25 +297,25 @@ export default function ProgressPage() {
                         <StatCard
                             icon={<Trophy className="w-5 h-5 text-amber-500" />}
                             label="Total XP"
-                            value={MOCK_STATS.totalXP.toLocaleString()}
+                            value={DEFAULT_STATS.totalXP.toLocaleString()}
                             color="bg-amber-100 dark:bg-amber-900/30"
                         />
                         <StatCard
                             icon={<Flame className="w-5 h-5 text-orange-500" />}
                             label="Day Streak"
-                            value={MOCK_STATS.streak}
+                            value={DEFAULT_STATS.streak}
                             color="bg-orange-100 dark:bg-orange-900/30"
                         />
                         <StatCard
                             icon={<Clock className="w-5 h-5 text-blue-500" />}
                             label="Hours Learned"
-                            value={MOCK_STATS.totalHours}
+                            value={DEFAULT_STATS.totalHours}
                             color="bg-blue-100 dark:bg-blue-900/30"
                         />
                         <StatCard
                             icon={<CheckCircle2 className="w-5 h-5 text-emerald-500" />}
                             label="Tasks Done"
-                            value={MOCK_STATS.tasksCompleted}
+                            value={DEFAULT_STATS.tasksCompleted}
                             color="bg-emerald-100 dark:bg-emerald-900/30"
                         />
                     </div>
@@ -377,7 +375,7 @@ export default function ProgressPage() {
 
                         {/* Right Column - Achievements */}
                         <div>
-                            <Achievements achievements={MOCK_ACHIEVEMENTS} />
+                            <Achievements achievements={ACHIEVEMENTS} />
                         </div>
                     </div>
                 </Section>
