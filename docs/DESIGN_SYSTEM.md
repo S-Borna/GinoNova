@@ -1,6 +1,6 @@
 # 🎨 DevOpsHub Design System
 
-> **"Learn like a pro, feel like home"**  
+> **"Learn like a pro, feel like home"**
 > A premium, gamified learning platform with Apple-inspired polish
 
 <div align="center">
@@ -36,6 +36,7 @@
 DevOpsHub's design follows three core principles:
 
 ### 1. **Premium Dark Mode First**
+
 Deep, rich backgrounds that feel luxurious and reduce eye strain during long study sessions.
 
 ```
@@ -50,9 +51,11 @@ Background Hierarchy:
 ```
 
 ### 2. **Gamification That Motivates**
+
 Every interaction feels rewarding. XP gains glow gold, streaks burn orange, progress shines mint green.
 
 ### 3. **Apple-Inspired Polish**
+
 Subtle animations, generous spacing, and attention to micro-interactions that feel native and premium.
 
 ---
@@ -60,6 +63,7 @@ Subtle animations, generous spacing, and attention to micro-interactions that fe
 ## 🛠 Tech Stack
 
 ### Core Framework
+
 | Technology | Version | Purpose |
 |------------|---------|---------|
 | **Next.js** | 15.1.8 | React framework with App Router |
@@ -67,6 +71,7 @@ Subtle animations, generous spacing, and attention to micro-interactions that fe
 | **TypeScript** | Latest | Type safety |
 
 ### Styling & Animation
+
 | Technology | Version | Purpose |
 |------------|---------|---------|
 | **Tailwind CSS** | 4.1.17 | Utility-first CSS |
@@ -75,6 +80,7 @@ Subtle animations, generous spacing, and attention to micro-interactions that fe
 | **tw-animate-css** | 1.4.0 | CSS animation classes |
 
 ### UI Components
+
 | Technology | Purpose |
 |------------|---------|
 | **Radix UI** | Headless accessible components |
@@ -83,6 +89,7 @@ Subtle animations, generous spacing, and attention to micro-interactions that fe
 | **clsx + tailwind-merge** | Class name utilities |
 
 ### Additional Libraries
+
 | Technology | Purpose |
 |------------|---------|
 | **canvas-confetti** | Celebration animations |
@@ -217,6 +224,7 @@ className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 
 ### What is Glassmorphism?
 
 A design style featuring:
+
 - Semi-transparent backgrounds
 - Blur effects (backdrop-filter)
 - Subtle borders
@@ -268,7 +276,7 @@ A design style featuring:
 >
     {/* Inner glow effect */}
     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-    
+
     {/* Content */}
     <div className="relative z-10 p-6">
         {children}
@@ -323,8 +331,8 @@ const containerVariants = {
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-        opacity: 1, 
+    visible: {
+        opacity: 1,
         y: 0,
         transition: { type: "spring", stiffness: 100 }
     }
@@ -347,7 +355,7 @@ const itemVariants = {
 
 ```tsx
 <motion.div
-    whileHover={{ 
+    whileHover={{
         y: -4,
         boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
     }}
@@ -360,15 +368,15 @@ const itemVariants = {
 #### 3. Animated Sparkles
 
 ```tsx
-<motion.div 
+<motion.div
     className="absolute top-8 right-20 text-purple-400/60"
-    animate={{ 
-        rotate: 360, 
-        scale: [1, 1.2, 1] 
+    animate={{
+        rotate: 360,
+        scale: [1, 1.2, 1]
     }}
-    transition={{ 
-        duration: 4, 
-        repeat: Infinity 
+    transition={{
+        duration: 4,
+        repeat: Infinity
     }}
 >
     <Sparkles className="w-6 h-6" />
@@ -431,16 +439,16 @@ function PremiumHero({ title, subtitle }: HeroProps) {
             {/* Ambient glow effects */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/15 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
-            
+
             {/* Floating sparkles */}
-            <motion.div 
+            <motion.div
                 className="absolute top-8 right-20 text-purple-400/60"
                 animate={{ rotate: 360, scale: [1, 1.2, 1] }}
                 transition={{ duration: 4, repeat: Infinity }}
             >
                 <Sparkles className="w-6 h-6" />
             </motion.div>
-            
+
             {/* Content */}
             <div className="relative">
                 <h1 className="text-4xl font-black bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
@@ -458,12 +466,12 @@ function PremiumHero({ title, subtitle }: HeroProps) {
 Stat cards display key metrics with color-coded glows.
 
 ```tsx
-function PremiumStatCard({ 
-    icon: Icon, 
-    value, 
-    label, 
+function PremiumStatCard({
+    icon: Icon,
+    value,
+    label,
     color,
-    glowColor 
+    glowColor
 }: StatCardProps) {
     const colorStyles = {
         gold: "from-amber-500/20 to-amber-600/10 border-amber-500/30 text-amber-400",
@@ -474,7 +482,7 @@ function PremiumStatCard({
 
     return (
         <motion.div
-            whileHover={{ 
+            whileHover={{
                 scale: 1.02,
                 boxShadow: `0 0 30px ${glowColor}`
             }}
@@ -516,7 +524,7 @@ function PremiumXPRing({ currentXP, xpToNext, level }: XPRingProps) {
         <div className="relative">
             {/* Glow backdrop */}
             <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-xl animate-pulse" />
-            
+
             <svg className="w-32 h-32 -rotate-90">
                 <defs>
                     <linearGradient id="xp-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -525,7 +533,7 @@ function PremiumXPRing({ currentXP, xpToNext, level }: XPRingProps) {
                         <stop offset="100%" stopColor="#FCD34D" />
                     </linearGradient>
                 </defs>
-                
+
                 {/* Background track */}
                 <circle
                     cx="64" cy="64" r="54"
@@ -533,7 +541,7 @@ function PremiumXPRing({ currentXP, xpToNext, level }: XPRingProps) {
                     stroke="rgba(255,255,255,0.1)"
                     strokeWidth="8"
                 />
-                
+
                 {/* Progress arc */}
                 <circle
                     cx="64" cy="64" r="54"
@@ -546,7 +554,7 @@ function PremiumXPRing({ currentXP, xpToNext, level }: XPRingProps) {
                     className="transition-all duration-1000"
                 />
             </svg>
-            
+
             {/* Center content */}
             <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
@@ -596,7 +604,7 @@ function PlatformCard({ os, isSelected, onClick }: PlatformCardProps) {
                 "bg-gradient-to-r blur-sm",
                 cardConfig[os].accent
             )} />
-            
+
             {/* Animated glow ring */}
             <motion.div
                 className="absolute -inset-[1px] rounded-3xl"
@@ -609,7 +617,7 @@ function PlatformCard({ os, isSelected, onClick }: PlatformCardProps) {
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
             />
-            
+
             {/* Main card */}
             <div className={cn(
                 "absolute inset-0 rounded-3xl",
@@ -620,7 +628,7 @@ function PlatformCard({ os, isSelected, onClick }: PlatformCardProps) {
             )}>
                 {/* Glassmorphism overlay */}
                 <div className="absolute inset-0 rounded-3xl bg-white/5 backdrop-blur-sm" />
-                
+
                 {/* Content */}
             </div>
         </motion.button>
@@ -704,10 +712,10 @@ interface PremiumCardProps {
     glowColor?: "purple" | "gold" | "mint" | "orange"
 }
 
-export function PremiumCard({ 
-    children, 
+export function PremiumCard({
+    children,
     className,
-    glowColor = "purple" 
+    glowColor = "purple"
 }: PremiumCardProps) {
     const glowStyles = {
         purple: "hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]",
@@ -741,16 +749,16 @@ export function PremiumCard({
         >
             {/* Subtle inner gradient on hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             {/* Floating sparkle decoration */}
-            <motion.div 
+            <motion.div
                 className="absolute top-4 right-4 text-purple-400/30 opacity-0 group-hover:opacity-100 transition-opacity"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             >
                 <Sparkles className="w-4 h-4" />
             </motion.div>
-            
+
             {/* Content */}
             <div className="relative z-10 p-6">
                 {children}
@@ -882,16 +890,19 @@ When creating new components, ensure:
 ## 📚 Resources
 
 ### Design Inspiration
+
 - [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
 - [Vercel Design](https://vercel.com/design)
 - [Linear App](https://linear.app)
 
 ### Documentation
+
 - [Tailwind CSS v4](https://tailwindcss.com/docs)
 - [Framer Motion](https://www.framer.com/motion/)
 - [Radix UI](https://www.radix-ui.com/)
 
 ### Tools
+
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) — VS Code extension
 - [Realtime Colors](https://www.realtimecolors.com/) — Color palette generator
 - [Cubic Bezier](https://cubic-bezier.com/) — Easing curve visualizer
