@@ -733,4 +733,358 @@ KUBERNETES_SKILLSMAP_BLOCK_2 = [
     NODE_08_VOLUMES_STORAGE,
 ]
 
-# Block 3-5 kommer i nästa commits
+
+# =============================================================================
+# BLOCK 3: STATEFULSETS & WORKLOADS (Noder 9-12)
+# =============================================================================
+
+NODE_09_STATEFULSETS = {
+    "node_id": 9,
+    "title": "StatefulSets",
+    "slug": "statefulsets",
+    "estimated_minutes": 55,
+    "xp_reward": 155,
+    "prerequisites": [8],
+    "content": '''
+# StatefulSets
+
+Stateful applikationer med stabil identitet.
+
+## StatefulSet YAML
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  serviceName: postgres
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+```
+
+## Headless Service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  clusterIP: None  # Headless
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+```
+
+## Pod Naming
+
+```bash
+# Stabil ordning
+postgres-0
+postgres-1
+postgres-2
+
+# DNS
+postgres-0.postgres.default.svc.cluster.local
+```
+
+## Deployment vs StatefulSet
+
+| Aspekt | Deployment | StatefulSet |
+|--------|------------|-------------|
+| Pod-namn | Random | Ordnad (0,1,2) |
+| Storage | Delad | Per-pod PVC |
+| Scaling | Parallell | Sekventiell |
+| Updates | Rolling | Ordered |
+
+**Nästa steg:** Node 10 - Jobs & CronJobs
+''',
+}
+
+NODE_10_JOBS_CRONJOBS = {
+    "node_id": 10,
+    "title": "Jobs & CronJobs",
+    "slug": "jobs-cronjobs",
+    "estimated_minutes": 45,
+    "xp_reward": 130,
+    "prerequisites": [9],
+    "content": '''
+# Jobs & CronJobs
+
+Batch och schemalagda uppgifter.
+
+## Job
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backup
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: backup
+          image: backup-tool
+          command: ["./backup.sh"]
+```
+
+## CronJob
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-backup
+spec:
+  schedule: "0 2 * * *"  # Varje dag kl 02:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: backup-tool
+```
+
+## Job Patterns
+
+```yaml
+# Parallel job
+spec:
+  completions: 10
+  parallelism: 3  # 3 pods samtidigt
+
+# Work queue
+spec:
+  completions: null
+  parallelism: 3
+```
+
+## Hantera Jobs
+
+```bash
+# Lista
+kubectl get jobs
+kubectl get cronjobs
+
+# Manuell trigger
+kubectl create job --from=cronjob/daily-backup manual-backup
+
+# Ta bort
+kubectl delete job backup
+```
+
+| Cron | Betydelse |
+|------|-----------|
+| 0 * * * * | Varje timme |
+| 0 0 * * * | Varje dag |
+| 0 0 * * 0 | Varje söndag |
+| */15 * * * * | Var 15:e minut |
+
+**Nästa steg:** Node 11 - DaemonSets
+''',
+}
+
+NODE_11_DAEMONSETS = {
+    "node_id": 11,
+    "title": "DaemonSets",
+    "slug": "daemonsets",
+    "estimated_minutes": 40,
+    "xp_reward": 120,
+    "prerequisites": [10],
+    "content": '''
+# DaemonSets
+
+En pod per node.
+
+## DaemonSet YAML
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+spec:
+  selector:
+    matchLabels:
+      app: fluentd
+  template:
+    metadata:
+      labels:
+        app: fluentd
+    spec:
+      containers:
+        - name: fluentd
+          image: fluentd
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log
+```
+
+## Användningsområden
+
+| Use Case | Exempel |
+|----------|---------|
+| Logging | Fluentd, Filebeat |
+| Monitoring | Node Exporter |
+| Networking | CNI plugins |
+| Storage | CSI drivers |
+
+## Node Selector
+
+```yaml
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node-type: worker
+```
+
+## Tolerations
+
+```yaml
+spec:
+  template:
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+```
+
+```bash
+# Lista DaemonSets
+kubectl get ds
+
+# Status
+kubectl describe ds fluentd
+```
+
+**Nästa steg:** Node 12 - RBAC
+''',
+}
+
+NODE_12_RBAC = {
+    "node_id": 12,
+    "title": "RBAC",
+    "slug": "rbac",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [11],
+    "content": '''
+# RBAC - Role-Based Access Control
+
+Behörighetsstyrning i Kubernetes.
+
+## ServiceAccount
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+```
+
+## Role (Namespace-scope)
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+```
+
+## RoleBinding
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+subjects:
+  - kind: ServiceAccount
+    name: app-sa
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+## ClusterRole (Cluster-wide)
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secret-reader
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+```
+
+## Pod med ServiceAccount
+
+```yaml
+spec:
+  serviceAccountName: app-sa
+  containers:
+    - name: app
+      image: myapp
+```
+
+| Resurs | Scope |
+|--------|-------|
+| Role | Namespace |
+| ClusterRole | Cluster |
+| RoleBinding | Namespace |
+| ClusterRoleBinding | Cluster |
+
+**Nästa steg:** Node 13 - Helm Basics
+''',
+}
+
+KUBERNETES_SKILLSMAP_BLOCK_3 = [
+    NODE_09_STATEFULSETS,
+    NODE_10_JOBS_CRONJOBS,
+    NODE_11_DAEMONSETS,
+    NODE_12_RBAC,
+]
+
+# Block 4-5 kommer i nästa commits
