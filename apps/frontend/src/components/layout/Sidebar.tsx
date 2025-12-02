@@ -200,22 +200,17 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                         "hover:opacity-80"
                     )}
                 >
-                    {/* Integrated DevOpsHub Logo - D styled like the icon */}
+                    {/* DevOpsHub Logo - Full word in badge */}
                     {!collapsed ? (
-                        <span className="text-lg font-bold tracking-tight">
-                            <span className={cn(
-                                "inline-flex items-center justify-center",
-                                "w-7 h-7 mr-1 rounded-md",
-                                "bg-gradient-to-br from-purple-500 to-purple-700",
-                                "shadow-[0_0_15px_rgba(139,92,246,0.4)]",
-                                "text-white text-sm"
-                            )}>
-                                D
+                        <div className={cn(
+                            "flex items-center px-3 py-1.5 rounded-lg",
+                            "bg-gradient-to-r from-purple-600 to-purple-500",
+                            "shadow-[0_0_20px_rgba(139,92,246,0.4)]"
+                        )}>
+                            <span className="text-base font-bold text-white tracking-tight">
+                                DevOpsHub
                             </span>
-                            <span className="bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent">
-                                evOpsHub
-                            </span>
-                        </span>
+                        </div>
                     ) : (
                         /* Collapsed: Only show D icon */
                         <div className={cn(

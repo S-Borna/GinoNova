@@ -20,6 +20,7 @@ import { Sidebar } from "@/components/layout/Sidebar"
 import { TopBar } from "@/components/layout/TopBar"
 import { MobileNav } from "@/components/layout/MobileNav"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { RightSidebar } from "@/components/modules/RightSidebar"
 
 /* ============================================================================
    HOOKS
@@ -130,6 +131,7 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                 className={cn(
                     "min-h-screen transition-all duration-300",
                     isTablet && (effectiveCollapsed ? "pl-[72px]" : "pl-[240px]"),
+                    isDesktop && "pr-[280px]", // Space for right sidebar on desktop
                     isMobile && "pb-20" // Space for mobile nav
                 )}
             >
@@ -147,6 +149,17 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                     <div className="animate-fade-in">{children}</div>
                 </main>
             </div>
+
+            {/* Right Sidebar - Bookmarks & Reminders (desktop only) */}
+            {isDesktop && (
+                <aside className={cn(
+                    "fixed right-0 top-0 z-30 h-screen w-[280px]",
+                    "bg-zinc-950/95 backdrop-blur-xl",
+                    "border-l border-zinc-800/60"
+                )}>
+                    <RightSidebar />
+                </aside>
+            )}
 
             {/* Mobile navigation - shown only on mobile */}
             {isMobile && <MobileNav />}

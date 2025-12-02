@@ -397,113 +397,113 @@ export function DallasOrb() {
                                     }}
                                     className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
                                 >
-                                {/* Header */}
-                                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-                                            <span className="text-xl">🐺</span>
+                                    {/* Header */}
+                                    <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                                                <span className="text-xl">🐺</span>
+                                            </div>
+                                            <div>
+                                                <h2 className="font-semibold text-white">Dallas</h2>
+                                                <p className="text-xs text-gray-400 flex items-center gap-1">
+                                                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                                    Your DevOps AI Guide
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h2 className="font-semibold text-white">Dallas</h2>
-                                            <p className="text-xs text-gray-400 flex items-center gap-1">
-                                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                                Your DevOps AI Guide
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={() => setIsOpen(false)}
-                                        className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </button>
-                                </div>
-
-                                {/* Messages */}
-                                <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ minHeight: "200px" }}>
-                                    {messages.map((message) => (
-                                        <ChatMessage key={message.id} message={message} />
-                                    ))}
-                                    {isLoading && <TypingIndicator />}
-                                    <div ref={messagesEndRef} />
-                                </div>
-
-                                {/* Quick Prompts */}
-                                {messages.length <= 2 && (
-                                    <div className="px-6 pb-2">
-                                        <p className="text-xs text-gray-400 mb-2">Quick actions:</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {QUICK_PROMPTS.map((item) => (
-                                                <button
-                                                    key={item.label}
-                                                    onClick={() => handleQuickPrompt(item.prompt)}
-                                                    className={cn(
-                                                        "px-3 py-1.5 text-xs rounded-full",
-                                                        "bg-gray-100 dark:bg-gray-800",
-                                                        "text-gray-600 dark:text-gray-300",
-                                                        "hover:bg-blue-50 dark:hover:bg-blue-900/20",
-                                                        "hover:text-blue-600 dark:hover:text-blue-400",
-                                                        "border border-gray-200 dark:border-gray-700",
-                                                        "transition-all duration-200"
-                                                    )}
-                                                >
-                                                    <Sparkles className="w-3 h-3 inline mr-1.5" />
-                                                    {item.label}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Input */}
-                                <div className={cn(
-                                    "p-4 border-t border-gray-100 dark:border-gray-800",
-                                    "bg-gray-50 dark:bg-gray-900"
-                                )}>
-                                    <form
-                                        onSubmit={(e) => {
-                                            e.preventDefault()
-                                            handleSend()
-                                        }}
-                                        className="flex gap-3"
-                                    >
-                                        <input
-                                            ref={inputRef}
-                                            value={input}
-                                            onChange={(e) => setInput(e.target.value)}
-                                            placeholder="Ask Dallas anything..."
-                                            className={cn(
-                                                "flex-1 px-4 py-3 rounded-xl",
-                                                "bg-white dark:bg-gray-800",
-                                                "border border-gray-200 dark:border-gray-700",
-                                                "text-gray-900 dark:text-white",
-                                                "placeholder:text-gray-400",
-                                                "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
-                                                "transition-shadow"
-                                            )}
-                                            disabled={isLoading}
-                                        />
                                         <button
-                                            type="submit"
-                                            disabled={!input.trim() || isLoading}
-                                            className={cn(
-                                                "px-4 py-3 rounded-xl",
-                                                "bg-gradient-to-r from-blue-500 to-indigo-500",
-                                                "text-white font-medium",
-                                                "shadow-lg shadow-blue-500/25",
-                                                "hover:shadow-xl hover:shadow-blue-500/30",
-                                                "disabled:opacity-50 disabled:cursor-not-allowed",
-                                                "transition-all duration-200"
-                                            )}
+                                            onClick={() => setIsOpen(false)}
+                                            className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
                                         >
-                                            {isLoading ? (
-                                                <Loader2 className="w-5 h-5 animate-spin" />
-                                            ) : (
-                                                <Send className="w-5 h-5" />
-                                            )}
+                                            <X className="w-5 h-5" />
                                         </button>
-                                    </form>
-                                </div>
+                                    </div>
+
+                                    {/* Messages */}
+                                    <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ minHeight: "200px" }}>
+                                        {messages.map((message) => (
+                                            <ChatMessage key={message.id} message={message} />
+                                        ))}
+                                        {isLoading && <TypingIndicator />}
+                                        <div ref={messagesEndRef} />
+                                    </div>
+
+                                    {/* Quick Prompts */}
+                                    {messages.length <= 2 && (
+                                        <div className="px-6 pb-2">
+                                            <p className="text-xs text-gray-400 mb-2">Quick actions:</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {QUICK_PROMPTS.map((item) => (
+                                                    <button
+                                                        key={item.label}
+                                                        onClick={() => handleQuickPrompt(item.prompt)}
+                                                        className={cn(
+                                                            "px-3 py-1.5 text-xs rounded-full",
+                                                            "bg-gray-100 dark:bg-gray-800",
+                                                            "text-gray-600 dark:text-gray-300",
+                                                            "hover:bg-blue-50 dark:hover:bg-blue-900/20",
+                                                            "hover:text-blue-600 dark:hover:text-blue-400",
+                                                            "border border-gray-200 dark:border-gray-700",
+                                                            "transition-all duration-200"
+                                                        )}
+                                                    >
+                                                        <Sparkles className="w-3 h-3 inline mr-1.5" />
+                                                        {item.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Input */}
+                                    <div className={cn(
+                                        "p-4 border-t border-gray-100 dark:border-gray-800",
+                                        "bg-gray-50 dark:bg-gray-900"
+                                    )}>
+                                        <form
+                                            onSubmit={(e) => {
+                                                e.preventDefault()
+                                                handleSend()
+                                            }}
+                                            className="flex gap-3"
+                                        >
+                                            <input
+                                                ref={inputRef}
+                                                value={input}
+                                                onChange={(e) => setInput(e.target.value)}
+                                                placeholder="Ask Dallas anything..."
+                                                className={cn(
+                                                    "flex-1 px-4 py-3 rounded-xl",
+                                                    "bg-white dark:bg-gray-800",
+                                                    "border border-gray-200 dark:border-gray-700",
+                                                    "text-gray-900 dark:text-white",
+                                                    "placeholder:text-gray-400",
+                                                    "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                                    "transition-shadow"
+                                                )}
+                                                disabled={isLoading}
+                                            />
+                                            <button
+                                                type="submit"
+                                                disabled={!input.trim() || isLoading}
+                                                className={cn(
+                                                    "px-4 py-3 rounded-xl",
+                                                    "bg-gradient-to-r from-blue-500 to-indigo-500",
+                                                    "text-white font-medium",
+                                                    "shadow-lg shadow-blue-500/25",
+                                                    "hover:shadow-xl hover:shadow-blue-500/30",
+                                                    "disabled:opacity-50 disabled:cursor-not-allowed",
+                                                    "transition-all duration-200"
+                                                )}
+                                            >
+                                                {isLoading ? (
+                                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                                ) : (
+                                                    <Send className="w-5 h-5" />
+                                                )}
+                                            </button>
+                                        </form>
+                                    </div>
                                 </motion.div>
                             </div>
                         </>
