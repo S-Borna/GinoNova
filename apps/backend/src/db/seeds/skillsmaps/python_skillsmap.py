@@ -4550,6 +4550,1815 @@ PYTHON_SKILLSMAP_NODES.extend([
 
 
 # =============================================================================
+# NODE 15: LOGGING
+# =============================================================================
+
+NODE_15_LOGGING: Dict[str, Any] = {
+    "id": "python_logging",
+    "title": "Logging & Debugging",
+    "description": "Professionell logging for production-redo scripts",
+    "icon": "📝",
+    "difficulty": 3,
+    "estimated_time_minutes": 35,
+    "prerequisites": ["python_file_io", "python_error_handling"],
+    "skills_taught": [
+        "logging module basics",
+        "Log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
+        "Formatters och handlers",
+        "File och console logging",
+        "Structured logging",
+        "Log rotation"
+    ],
+    "real_world_context": "Print() ar for amatorer. Professionella DevOps-scripts anvander logging for traceability och debugging i produktion.",
+    "content": '''
+# Logging & Debugging - Professionell Logging
+
+## Varfor Logging?
+
+`print()` forsvinner nar scriptet ar klart. Logging:
+- Sparas till fil
+- Har tidsstamplar
+- Har severity levels
+- Kan filtreras
+- Gar att skicka till centrala system (ELK, CloudWatch)
+
+---
+
+## 1. Basic Logging
+
+```python
+import logging
+
+# Konfigurera basic logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+logger = logging.getLogger(__name__)
+
+# Anvand olika levels
+logger.debug("Debug info - for development")
+logger.info("Server started on port 8080")
+logger.warning("Disk space running low")
+logger.error("Failed to connect to database")
+logger.critical("System is shutting down!")
+```
+
+---
+
+## 2. Log Levels
+
+| Level | Varde | Anvandning |
+|-------|-------|------------|
+| DEBUG | 10 | Detaljerad info for debugging |
+| INFO | 20 | Bekraftar att saker fungerar |
+| WARNING | 30 | Nagot ovantatt men ej kritiskt |
+| ERROR | 40 | Allvarligt fel, funktion misslyckades |
+| CRITICAL | 50 | Mycket allvarligt, program kan inte fortsatta |
+
+```python
+# Satt level - allt under ignoreras
+logging.basicConfig(level=logging.WARNING)
+
+logger.debug("Syns inte")
+logger.info("Syns inte")
+logger.warning("Syns!")
+```
+
+---
+
+## 3. Logga till Fil
+
+```python
+import logging
+from logging.handlers import RotatingFileHandler
+
+
+def setup_logger(name: str, log_file: str = "app.log"):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    # Console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_format = logging.Formatter('%(levelname)s - %(message)s')
+    console_handler.setFormatter(console_format)
+
+    # File handler med rotation
+    file_handler = RotatingFileHandler(
+        log_file,
+        maxBytes=10_000_000,  # 10MB
+        backupCount=5
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_format = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    file_handler.setFormatter(file_format)
+
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+
+    return logger
+
+
+# Anvandning
+logger = setup_logger("myapp")
+logger.info("Application started")
+```
+
+---
+
+## 4. Structured Logging (JSON)
+
+```python
+import logging
+import json
+from datetime import datetime
+
+
+class JSONFormatter(logging.Formatter):
+    def format(self, record):
+        log_record = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+            "module": record.module,
+            "function": record.funcName,
+            "line": record.lineno
+        }
+
+        if record.exc_info:
+            log_record["exception"] = self.formatException(record.exc_info)
+
+        return json.dumps(log_record)
+
+
+# Anvandning
+handler = logging.StreamHandler()
+handler.setFormatter(JSONFormatter())
+logger = logging.getLogger("json_logger")
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
+logger.info("User logged in", extra={"user_id": 123})
+# {"timestamp": "2024-01-15T10:30:00", "level": "INFO", ...}
+```
+
+---
+
+## 5. Praktisk DevOps Logger
+
+```python
+import logging
+import sys
+from pathlib import Path
+
+
+def get_devops_logger(
+    name: str = "devops",
+    log_dir: str = "/var/log/devops"
+) -> logging.Logger:
+    """
+    Production-ready logger for DevOps scripts.
+    """
+    logger = logging.getLogger(name)
+
+    if logger.handlers:
+        return logger  # Already configured
+
+    logger.setLevel(logging.DEBUG)
+
+    # Ensure log directory exists
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
+
+    # Console: INFO and above
+    console = logging.StreamHandler(sys.stdout)
+    console.setLevel(logging.INFO)
+    console.setFormatter(logging.Formatter(
+        '[%(levelname)s] %(message)s'
+    ))
+
+    # File: All levels
+    from logging.handlers import TimedRotatingFileHandler
+    file_handler = TimedRotatingFileHandler(
+        f"{log_dir}/{name}.log",
+        when="midnight",
+        interval=1,
+        backupCount=30
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s | %(levelname)-8s | %(name)s | %(message)s'
+    ))
+
+    logger.addHandler(console)
+    logger.addHandler(file_handler)
+
+    return logger
+
+
+# Anvandning
+log = get_devops_logger("deploy")
+log.info("Starting deployment...")
+log.debug("Config loaded: %s", config)
+log.error("Deployment failed: %s", error)
+```
+
+---
+
+## 6. Exception Logging
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+def risky_operation():
+    try:
+        result = 10 / 0
+    except Exception:
+        # exc_info=True inkluderar full traceback
+        logger.exception("Operation failed")
+        raise
+
+
+# Eller manuellt
+try:
+    risky_operation()
+except Exception as e:
+    logger.error("Error: %s", e, exc_info=True)
+```
+
+---
+
+## Sammanfattning
+
+| Koncept | Anvandning |
+|---------|------------|
+| `logging.basicConfig()` | Snabb setup |
+| `logger.info()` | Normal info |
+| `logger.exception()` | Fel med traceback |
+| `RotatingFileHandler` | Auto-rotation |
+| `JSONFormatter` | Structured logs |
+'''
+}
+
+
+# =============================================================================
+# NODE 16: TESTING WITH PYTEST
+# =============================================================================
+
+NODE_16_TESTING: Dict[str, Any] = {
+    "id": "python_testing",
+    "title": "Testing with pytest",
+    "description": "Skriv och kor tester for din kod",
+    "icon": "🧪",
+    "difficulty": 3,
+    "estimated_time_minutes": 45,
+    "prerequisites": ["python_functions", "python_oop_basics"],
+    "skills_taught": [
+        "pytest basics",
+        "Test functions och assertions",
+        "Fixtures",
+        "Parametrized tests",
+        "Mocking",
+        "Test coverage"
+    ],
+    "real_world_context": "Tester ar inte optional i DevOps. CI/CD pipelines kor tester automatiskt. Ingen merge utan grona tester.",
+    "content": '''
+# Testing with pytest
+
+## Varfor Testa?
+
+- Fanga buggar INNAN produktion
+- Dokumenterar hur kod ska fungera
+- Mojliggor refactoring utan radsla
+- CI/CD krav - inga tester = ingen deploy
+
+---
+
+## 1. Installation
+
+```bash
+pip install pytest pytest-cov
+```
+
+---
+
+## 2. Din Forsta Test
+
+```python
+# test_calculator.py
+
+def add(a, b):
+    return a + b
+
+def test_add():
+    assert add(2, 3) == 5
+
+def test_add_negative():
+    assert add(-1, 1) == 0
+
+def test_add_floats():
+    assert add(0.1, 0.2) == pytest.approx(0.3)
+```
+
+Kor tester:
+```bash
+pytest test_calculator.py -v
+```
+
+---
+
+## 3. Assertions
+
+```python
+import pytest
+
+def test_assertions():
+    # Equality
+    assert 1 + 1 == 2
+
+    # Boolean
+    assert True
+    assert not False
+
+    # Membership
+    assert "a" in "abc"
+    assert 1 in [1, 2, 3]
+
+    # Type
+    assert isinstance([], list)
+
+    # Exceptions
+    with pytest.raises(ValueError):
+        int("not a number")
+
+    with pytest.raises(ZeroDivisionError):
+        1 / 0
+```
+
+---
+
+## 4. Fixtures - Setup och Teardown
+
+```python
+import pytest
+
+
+@pytest.fixture
+def sample_server():
+    """Create a sample server for tests."""
+    return {
+        "hostname": "web-01",
+        "ip": "192.168.1.10",
+        "port": 80,
+        "status": "running"
+    }
+
+
+@pytest.fixture
+def server_list():
+    """Create multiple servers."""
+    return [
+        {"hostname": "web-01", "status": "running"},
+        {"hostname": "web-02", "status": "stopped"},
+        {"hostname": "db-01", "status": "running"},
+    ]
+
+
+def test_server_hostname(sample_server):
+    assert sample_server["hostname"] == "web-01"
+
+
+def test_running_servers(server_list):
+    running = [s for s in server_list if s["status"] == "running"]
+    assert len(running) == 2
+```
+
+---
+
+## 5. Fixture med Cleanup
+
+```python
+import pytest
+from pathlib import Path
+
+
+@pytest.fixture
+def temp_config_file(tmp_path):
+    """Create temporary config file."""
+    config_file = tmp_path / "config.yaml"
+    config_file.write_text("port: 8080\\ndebug: true")
+    yield config_file
+    # Cleanup sker automatiskt med tmp_path
+
+
+@pytest.fixture
+def database_connection():
+    """Setup and teardown database."""
+    # Setup
+    conn = create_connection()
+    conn.execute("CREATE TABLE test (id INT)")
+
+    yield conn
+
+    # Teardown
+    conn.execute("DROP TABLE test")
+    conn.close()
+```
+
+---
+
+## 6. Parametrized Tests
+
+```python
+import pytest
+
+
+def is_valid_port(port: int) -> bool:
+    return 1 <= port <= 65535
+
+
+@pytest.mark.parametrize("port,expected", [
+    (80, True),
+    (443, True),
+    (8080, True),
+    (0, False),
+    (-1, False),
+    (65536, False),
+    (65535, True),
+])
+def test_is_valid_port(port, expected):
+    assert is_valid_port(port) == expected
+
+
+@pytest.mark.parametrize("hostname", [
+    "web-01",
+    "db-primary",
+    "cache-node-1",
+])
+def test_hostname_format(hostname):
+    assert "-" in hostname
+    assert hostname.islower() or hostname[0].isalpha()
+```
+
+---
+
+## 7. Mocking
+
+```python
+from unittest.mock import Mock, patch, MagicMock
+
+
+def get_server_status(hostname: str) -> str:
+    # Anropar extern API
+    import requests
+    response = requests.get(f"http://api/servers/{hostname}")
+    return response.json()["status"]
+
+
+def test_get_server_status_mock():
+    with patch('requests.get') as mock_get:
+        # Konfigurera mock
+        mock_get.return_value.json.return_value = {"status": "running"}
+
+        # Test
+        status = get_server_status("web-01")
+
+        assert status == "running"
+        mock_get.assert_called_once_with("http://api/servers/web-01")
+
+
+@patch('os.environ.get')
+def test_config_from_env(mock_env):
+    mock_env.return_value = "production"
+
+    from myapp import get_environment
+    assert get_environment() == "production"
+```
+
+---
+
+## 8. Test Organization
+
+```
+tests/
+    __init__.py
+    conftest.py          # Shared fixtures
+    test_servers.py
+    test_deployments.py
+    integration/
+        test_api.py
+```
+
+```python
+# conftest.py - Shared fixtures
+import pytest
+
+@pytest.fixture(scope="session")
+def api_client():
+    """Shared across all tests in session."""
+    return APIClient()
+
+@pytest.fixture(scope="module")
+def database():
+    """Shared across tests in same module."""
+    return Database()
+```
+
+---
+
+## 9. Running Tests
+
+```bash
+# Alla tester
+pytest
+
+# Verbose output
+pytest -v
+
+# Specifik fil
+pytest tests/test_servers.py
+
+# Specifik test
+pytest tests/test_servers.py::test_server_status
+
+# Med coverage
+pytest --cov=myapp --cov-report=html
+
+# Stoppa vid forsta fel
+pytest -x
+
+# Kör senast failade
+pytest --lf
+```
+
+---
+
+## Sammanfattning
+
+| Koncept | Syntax |
+|---------|--------|
+| Test function | `def test_name():` |
+| Assert | `assert x == y` |
+| Fixture | `@pytest.fixture` |
+| Parametrize | `@pytest.mark.parametrize` |
+| Mock | `@patch('module.func')` |
+| Exception | `pytest.raises(Error)` |
+'''
+}
+
+
+# =============================================================================
+# NODE 17: ASYNC PYTHON
+# =============================================================================
+
+NODE_17_ASYNC: Dict[str, Any] = {
+    "id": "python_async",
+    "title": "Async Python",
+    "description": "Asynkron programmering med asyncio",
+    "icon": "⚡",
+    "difficulty": 4,
+    "estimated_time_minutes": 50,
+    "prerequisites": ["python_functions", "python_http_apis"],
+    "skills_taught": [
+        "async/await syntax",
+        "asyncio basics",
+        "Concurrent HTTP requests",
+        "async context managers",
+        "Task management",
+        "aiohttp for async HTTP"
+    ],
+    "real_world_context": "Nar du behover gora 100 API-anrop ar sync alldeles for langsamt. Async later dig gora dem parallellt.",
+    "content": '''
+# Async Python - Parallell Execution
+
+## Varfor Async?
+
+Sync (vanlig) kod vantar pa varje operation:
+- API call 1: 500ms
+- API call 2: 500ms
+- API call 3: 500ms
+- Total: 1500ms
+
+Async kor parallellt:
+- Alla 3 calls samtidigt: ~500ms total!
+
+---
+
+## 1. Grundlaggande Syntax
+
+```python
+import asyncio
+
+
+# Definiera async function
+async def fetch_data():
+    print("Fetching...")
+    await asyncio.sleep(1)  # Simulera IO
+    print("Done!")
+    return {"data": "value"}
+
+
+# Kör async function
+async def main():
+    result = await fetch_data()
+    print(result)
+
+
+# Entry point
+asyncio.run(main())
+```
+
+---
+
+## 2. Parallel Execution
+
+```python
+import asyncio
+
+
+async def check_server(hostname: str) -> dict:
+    print(f"Checking {hostname}...")
+    await asyncio.sleep(1)  # Simulera nätverksanrop
+    return {"hostname": hostname, "status": "running"}
+
+
+async def main():
+    # Sekventiellt (långsamt)
+    result1 = await check_server("web-01")
+    result2 = await check_server("web-02")
+    # Total: 2 sekunder
+
+    # Parallellt (snabbt!)
+    results = await asyncio.gather(
+        check_server("web-01"),
+        check_server("web-02"),
+        check_server("web-03"),
+    )
+    # Total: ~1 sekund
+    print(results)
+
+
+asyncio.run(main())
+```
+
+---
+
+## 3. aiohttp - Async HTTP
+
+```python
+import asyncio
+import aiohttp
+
+
+async def fetch_url(session, url: str) -> dict:
+    async with session.get(url) as response:
+        return {
+            "url": url,
+            "status": response.status,
+            "data": await response.text()
+        }
+
+
+async def fetch_all_urls(urls: list) -> list:
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_url(session, url) for url in urls]
+        results = await asyncio.gather(*tasks)
+        return results
+
+
+async def main():
+    urls = [
+        "https://api.github.com",
+        "https://httpbin.org/get",
+        "https://jsonplaceholder.typicode.com/posts/1"
+    ]
+
+    results = await fetch_all_urls(urls)
+    for result in results:
+        print(f"{result['url']}: {result['status']}")
+
+
+asyncio.run(main())
+```
+
+---
+
+## 4. Async Context Managers
+
+```python
+import asyncio
+import aiofiles
+
+
+async def read_file_async(path: str) -> str:
+    async with aiofiles.open(path, 'r') as f:
+        content = await f.read()
+    return content
+
+
+async def write_file_async(path: str, content: str):
+    async with aiofiles.open(path, 'w') as f:
+        await f.write(content)
+
+
+async def main():
+    await write_file_async("test.txt", "Hello Async!")
+    content = await read_file_async("test.txt")
+    print(content)
+```
+
+---
+
+## 5. Task Management
+
+```python
+import asyncio
+
+
+async def long_running_task(name: str, duration: int):
+    print(f"Task {name} starting...")
+    await asyncio.sleep(duration)
+    print(f"Task {name} completed!")
+    return f"Result from {name}"
+
+
+async def main():
+    # Skapa tasks
+    task1 = asyncio.create_task(long_running_task("A", 2))
+    task2 = asyncio.create_task(long_running_task("B", 1))
+
+    # Vänta på båda
+    results = await asyncio.gather(task1, task2)
+    print(results)
+
+    # Med timeout
+    try:
+        result = await asyncio.wait_for(
+            long_running_task("C", 5),
+            timeout=2.0
+        )
+    except asyncio.TimeoutError:
+        print("Task timed out!")
+
+
+asyncio.run(main())
+```
+
+---
+
+## 6. Praktiskt Exempel: Parallel Server Check
+
+```python
+import asyncio
+import aiohttp
+from dataclasses import dataclass
+from typing import List
+
+
+@dataclass
+class ServerStatus:
+    hostname: str
+    url: str
+    status: str
+    response_time_ms: float
+
+
+async def check_server(
+    session: aiohttp.ClientSession,
+    hostname: str,
+    url: str
+) -> ServerStatus:
+    import time
+    start = time.time()
+
+    try:
+        async with session.get(url, timeout=aiohttp.ClientTimeout(total=5)) as resp:
+            elapsed = (time.time() - start) * 1000
+            status = "healthy" if resp.status == 200 else "unhealthy"
+            return ServerStatus(hostname, url, status, elapsed)
+    except Exception as e:
+        elapsed = (time.time() - start) * 1000
+        return ServerStatus(hostname, url, f"error: {e}", elapsed)
+
+
+async def check_all_servers(servers: List[dict]) -> List[ServerStatus]:
+    async with aiohttp.ClientSession() as session:
+        tasks = [
+            check_server(session, s["hostname"], s["url"])
+            for s in servers
+        ]
+        return await asyncio.gather(*tasks)
+
+
+async def main():
+    servers = [
+        {"hostname": "web-01", "url": "https://google.com"},
+        {"hostname": "web-02", "url": "https://github.com"},
+        {"hostname": "api-01", "url": "https://api.github.com"},
+    ]
+
+    print("Checking servers...")
+    results = await check_all_servers(servers)
+
+    for r in results:
+        print(f"{r.hostname}: {r.status} ({r.response_time_ms:.0f}ms)")
+
+
+asyncio.run(main())
+```
+
+---
+
+## Sammanfattning
+
+| Koncept | Syntax |
+|---------|--------|
+| Async function | `async def func():` |
+| Await | `await async_func()` |
+| Run | `asyncio.run(main())` |
+| Parallel | `asyncio.gather(*tasks)` |
+| Timeout | `asyncio.wait_for(coro, timeout=5)` |
+| HTTP | `aiohttp.ClientSession()` |
+'''
+}
+
+
+# =============================================================================
+# NODE 18: DECORATORS
+# =============================================================================
+
+NODE_18_DECORATORS: Dict[str, Any] = {
+    "id": "python_decorators",
+    "title": "Decorators",
+    "description": "Funktions- och klassdecorators",
+    "icon": "🎀",
+    "difficulty": 4,
+    "estimated_time_minutes": 40,
+    "prerequisites": ["python_functions", "python_oop_basics"],
+    "skills_taught": [
+        "Function decorators",
+        "Decorators med argument",
+        "Class decorators",
+        "functools.wraps",
+        "Praktiska decorators (retry, timer, cache)"
+    ],
+    "real_world_context": "Decorators ar Python-magi som later dig lägga till funktionalitet utan att ändra kod. @retry, @cache, @authenticate - kraftfulla patterns.",
+    "content": '''
+# Decorators - Python Magi
+
+## Vad ar en Decorator?
+
+En decorator ar en funktion som tar en funktion och returnerar en ny funktion med extra funktionalitet.
+
+```python
+@my_decorator
+def my_function():
+    pass
+
+# Ar samma som:
+my_function = my_decorator(my_function)
+```
+
+---
+
+## 1. Enkel Decorator
+
+```python
+from functools import wraps
+
+
+def log_call(func):
+    """Logga varje funktionsanrop."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"Calling {func.__name__}...")
+        result = func(*args, **kwargs)
+        print(f"{func.__name__} returned {result}")
+        return result
+    return wrapper
+
+
+@log_call
+def add(a, b):
+    return a + b
+
+
+add(2, 3)
+# Calling add...
+# add returned 5
+```
+
+---
+
+## 2. Timer Decorator
+
+```python
+import time
+from functools import wraps
+
+
+def timer(func):
+    """Mät exekveringstid."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        elapsed = time.time() - start
+        print(f"{func.__name__} took {elapsed:.3f}s")
+        return result
+    return wrapper
+
+
+@timer
+def slow_function():
+    time.sleep(1)
+    return "done"
+
+
+slow_function()
+# slow_function took 1.001s
+```
+
+---
+
+## 3. Retry Decorator
+
+```python
+import time
+from functools import wraps
+
+
+def retry(max_attempts: int = 3, delay: float = 1.0):
+    """Retry decorator med konfigurerbart antal försök."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    print(f"Attempt {attempt} failed: {e}")
+                    if attempt < max_attempts:
+                        time.sleep(delay)
+            raise last_exception
+        return wrapper
+    return decorator
+
+
+@retry(max_attempts=5, delay=2.0)
+def unreliable_api_call():
+    import random
+    if random.random() < 0.7:
+        raise ConnectionError("API timeout")
+    return {"status": "ok"}
+
+
+result = unreliable_api_call()
+```
+
+---
+
+## 4. Cache Decorator
+
+```python
+from functools import wraps, lru_cache
+
+
+def simple_cache(func):
+    """Enkel memoization cache."""
+    cache = {}
+
+    @wraps(func)
+    def wrapper(*args):
+        if args in cache:
+            print(f"Cache hit for {args}")
+            return cache[args]
+        result = func(*args)
+        cache[args] = result
+        return result
+    return wrapper
+
+
+@simple_cache
+def expensive_calculation(n):
+    print(f"Calculating for {n}...")
+    return n ** 2
+
+
+expensive_calculation(5)  # Calculating...
+expensive_calculation(5)  # Cache hit!
+
+
+# Eller anvand inbyggda lru_cache
+@lru_cache(maxsize=128)
+def fibonacci(n):
+    if n < 2:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+```
+
+---
+
+## 5. Authentication Decorator
+
+```python
+from functools import wraps
+
+
+def require_auth(func):
+    """Kräv autentisering."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Simulera auth check
+        user = kwargs.get('user') or (args[0] if args else None)
+        if not user or not user.get('authenticated'):
+            raise PermissionError("Authentication required")
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def require_role(role: str):
+    """Kräv specifik roll."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            user = kwargs.get('user') or (args[0] if args else None)
+            if not user or role not in user.get('roles', []):
+                raise PermissionError(f"Role '{role}' required")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
+@require_auth
+@require_role("admin")
+def delete_server(user, server_id):
+    return f"Server {server_id} deleted by {user['name']}"
+
+
+admin_user = {"name": "admin", "authenticated": True, "roles": ["admin"]}
+delete_server(admin_user, "web-01")
+```
+
+---
+
+## 6. Class-based Decorator
+
+```python
+class CountCalls:
+    """Räkna antal anrop."""
+
+    def __init__(self, func):
+        self.func = func
+        self.count = 0
+
+    def __call__(self, *args, **kwargs):
+        self.count += 1
+        print(f"{self.func.__name__} called {self.count} times")
+        return self.func(*args, **kwargs)
+
+
+@CountCalls
+def say_hello(name):
+    return f"Hello, {name}!"
+
+
+say_hello("Alice")  # say_hello called 1 times
+say_hello("Bob")    # say_hello called 2 times
+```
+
+---
+
+## 7. Praktiskt: Rate Limiter
+
+```python
+import time
+from functools import wraps
+from collections import defaultdict
+
+
+def rate_limit(calls: int, period: float):
+    """Begränsa antal anrop per tidsperiod."""
+    call_times = defaultdict(list)
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            now = time.time()
+            key = func.__name__
+
+            # Ta bort gamla anrop
+            call_times[key] = [
+                t for t in call_times[key]
+                if now - t < period
+            ]
+
+            if len(call_times[key]) >= calls:
+                wait = period - (now - call_times[key][0])
+                raise Exception(f"Rate limited. Wait {wait:.1f}s")
+
+            call_times[key].append(now)
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
+@rate_limit(calls=3, period=10.0)
+def api_call():
+    return "API response"
+
+
+for i in range(5):
+    try:
+        print(api_call())
+    except Exception as e:
+        print(e)
+```
+
+---
+
+## Sammanfattning
+
+| Pattern | Användning |
+|---------|------------|
+| `@timer` | Mät tid |
+| `@retry(n)` | Retry vid fel |
+| `@lru_cache` | Cacha resultat |
+| `@require_auth` | Kräv login |
+| `@rate_limit` | Begränsa anrop |
+'''
+}
+
+
+# =============================================================================
+# NODE 19: TYPE HINTS
+# =============================================================================
+
+NODE_19_TYPE_HINTS: Dict[str, Any] = {
+    "id": "python_type_hints",
+    "title": "Type Hints & Mypy",
+    "description": "Statisk typning i Python",
+    "icon": "🏷️",
+    "difficulty": 3,
+    "estimated_time_minutes": 35,
+    "prerequisites": ["python_functions", "python_oop_basics"],
+    "skills_taught": [
+        "Basic type hints",
+        "typing module",
+        "Generic types",
+        "Optional och Union",
+        "TypedDict",
+        "Mypy for type checking"
+    ],
+    "real_world_context": "Type hints gor din kod sjalvdokumenterande och fangar buggar innan runtime. Stora projekt kraver det.",
+    "content": '''
+# Type Hints & Mypy
+
+## Varfor Type Hints?
+
+- Dokumentation i koden
+- IDE autocomplete
+- Fanga buggar fore runtime
+- Refactoring-sakerhet
+
+---
+
+## 1. Basic Type Hints
+
+```python
+# Variabler
+name: str = "DevOps"
+port: int = 8080
+is_active: bool = True
+cpu_usage: float = 75.5
+
+
+# Funktioner
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+
+def process() -> None:
+    print("Processing...")
+```
+
+---
+
+## 2. Collections
+
+```python
+from typing import List, Dict, Set, Tuple
+
+
+# List av strings
+servers: List[str] = ["web-01", "web-02"]
+
+# Dict med string keys och int values
+ports: Dict[str, int] = {"http": 80, "https": 443}
+
+# Set av integers
+unique_ids: Set[int] = {1, 2, 3}
+
+# Tuple (fixed length)
+coordinate: Tuple[float, float] = (10.5, 20.3)
+
+# Tuple med variabel langd
+args: Tuple[int, ...] = (1, 2, 3, 4, 5)
+
+
+# Python 3.9+ kan anvanda built-in types direkt:
+servers: list[str] = ["web-01", "web-02"]
+ports: dict[str, int] = {"http": 80}
+```
+
+---
+
+## 3. Optional och Union
+
+```python
+from typing import Optional, Union
+
+
+# Optional - kan vara None
+def find_server(name: str) -> Optional[dict]:
+    servers = {"web-01": {"ip": "10.0.0.1"}}
+    return servers.get(name)  # Returnerar dict eller None
+
+
+# Union - flera mojliga typer
+def parse_port(value: Union[str, int]) -> int:
+    if isinstance(value, str):
+        return int(value)
+    return value
+
+
+# Python 3.10+ syntax:
+def parse_port(value: str | int) -> int:
+    ...
+
+
+def find_server(name: str) -> dict | None:
+    ...
+```
+
+---
+
+## 4. Type Aliases
+
+```python
+from typing import Dict, List, TypeAlias
+
+
+# Skapa alias for komplexa typer
+ServerConfig: TypeAlias = Dict[str, Union[str, int, bool]]
+ServerList: TypeAlias = List[ServerConfig]
+
+
+def get_servers() -> ServerList:
+    return [
+        {"hostname": "web-01", "port": 80, "ssl": True},
+        {"hostname": "web-02", "port": 80, "ssl": False},
+    ]
+
+
+def update_server(config: ServerConfig) -> bool:
+    # ...
+    return True
+```
+
+---
+
+## 5. TypedDict
+
+```python
+from typing import TypedDict, Required, NotRequired
+
+
+class ServerConfig(TypedDict):
+    hostname: str
+    ip: str
+    port: int
+    ssl: NotRequired[bool]  # Optional field
+
+
+class DeploymentConfig(TypedDict, total=False):
+    # Alla falt ar optional med total=False
+    environment: str
+    replicas: int
+    image: str
+
+
+def deploy(config: DeploymentConfig) -> None:
+    env = config.get("environment", "production")
+    replicas = config.get("replicas", 1)
+    print(f"Deploying to {env} with {replicas} replicas")
+
+
+# Anvandning
+server: ServerConfig = {
+    "hostname": "web-01",
+    "ip": "10.0.0.1",
+    "port": 80
+}
+```
+
+---
+
+## 6. Callable
+
+```python
+from typing import Callable
+
+
+# Funktion som tar en funktion
+def retry(
+    func: Callable[..., str],
+    attempts: int = 3
+) -> str:
+    for _ in range(attempts):
+        try:
+            return func()
+        except Exception:
+            pass
+    raise RuntimeError("All retries failed")
+
+
+# Specifik signatur
+Handler = Callable[[str, int], bool]
+
+
+def register_handler(name: str, handler: Handler) -> None:
+    # handler tar (str, int) och returnerar bool
+    pass
+```
+
+---
+
+## 7. Generics
+
+```python
+from typing import TypeVar, Generic, List
+
+
+T = TypeVar('T')
+
+
+class Stack(Generic[T]):
+    def __init__(self) -> None:
+        self._items: List[T] = []
+
+    def push(self, item: T) -> None:
+        self._items.append(item)
+
+    def pop(self) -> T:
+        return self._items.pop()
+
+    def peek(self) -> T:
+        return self._items[-1]
+
+
+# Anvandning
+int_stack: Stack[int] = Stack()
+int_stack.push(1)
+int_stack.push(2)
+
+str_stack: Stack[str] = Stack()
+str_stack.push("hello")
+```
+
+---
+
+## 8. Mypy - Type Checker
+
+```bash
+# Installation
+pip install mypy
+
+# Kor type check
+mypy script.py
+
+# Strict mode
+mypy --strict script.py
+
+# Ignorera specifika errors
+mypy --ignore-missing-imports script.py
+```
+
+```python
+# mypy.ini eller pyproject.toml
+[mypy]
+python_version = 3.11
+warn_return_any = True
+warn_unused_ignores = True
+disallow_untyped_defs = True
+```
+
+---
+
+## 9. Praktiskt Exempel
+
+```python
+from typing import TypedDict, Optional, List
+from dataclasses import dataclass
+
+
+class ServerSpec(TypedDict):
+    hostname: str
+    ip: str
+    port: int
+    tags: List[str]
+
+
+@dataclass
+class HealthCheck:
+    server: str
+    status: str
+    response_time_ms: float
+    error: Optional[str] = None
+
+
+def check_servers(
+    servers: List[ServerSpec],
+    timeout: float = 5.0
+) -> List[HealthCheck]:
+    results: List[HealthCheck] = []
+
+    for server in servers:
+        # Type-safe access
+        hostname: str = server["hostname"]
+        ip: str = server["ip"]
+
+        result = HealthCheck(
+            server=hostname,
+            status="healthy",
+            response_time_ms=100.0
+        )
+        results.append(result)
+
+    return results
+```
+
+---
+
+## Sammanfattning
+
+| Type | Syntax |
+|------|--------|
+| Basic | `x: int = 5` |
+| List | `List[str]` eller `list[str]` |
+| Dict | `Dict[str, int]` |
+| Optional | `Optional[str]` eller `str \\| None` |
+| Union | `Union[str, int]` eller `str \\| int` |
+| TypedDict | `class Config(TypedDict):` |
+| Generic | `class Box(Generic[T]):` |
+'''
+}
+
+
+# =============================================================================
+# NODE 20: PACKAGING & DISTRIBUTION
+# =============================================================================
+
+NODE_20_PACKAGING: Dict[str, Any] = {
+    "id": "python_packaging",
+    "title": "Packaging & Distribution",
+    "description": "Skapa och distribuera Python-paket",
+    "icon": "📦",
+    "difficulty": 4,
+    "estimated_time_minutes": 45,
+    "prerequisites": ["python_venv", "python_cli_tools"],
+    "skills_taught": [
+        "pyproject.toml",
+        "Package structure",
+        "Entry points",
+        "Build och publish",
+        "Poetry vs pip",
+        "Private PyPI"
+    ],
+    "real_world_context": "Dela dina DevOps-verktyg med teamet eller varlden. Gor dem pip-installerbara.",
+    "content": '''
+# Packaging & Distribution
+
+## Varfor Paketera?
+
+- Dela kod med teamet
+- Versionhantering
+- `pip install` dina verktyg
+- Reproducerbar setup
+
+---
+
+## 1. Package Structure
+
+```
+my-devops-tool/
+├── pyproject.toml          # Modern config (ersätter setup.py)
+├── README.md
+├── LICENSE
+├── src/
+│   └── devops_tool/
+│       ├── __init__.py
+│       ├── cli.py
+│       ├── utils.py
+│       └── config.py
+└── tests/
+    ├── __init__.py
+    └── test_utils.py
+```
+
+---
+
+## 2. pyproject.toml
+
+```toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "devops-tool"
+version = "1.0.0"
+description = "DevOps automation toolkit"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "Your Name", email = "you@example.com" }
+]
+keywords = ["devops", "automation", "cli"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    "click>=8.0",
+    "requests>=2.28",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "mypy>=1.0",
+    "black>=23.0",
+]
+
+[project.scripts]
+devops-tool = "devops_tool.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/you/devops-tool"
+Documentation = "https://devops-tool.readthedocs.io"
+```
+
+---
+
+## 3. Package Code
+
+```python
+# src/devops_tool/__init__.py
+"""DevOps automation toolkit."""
+
+__version__ = "1.0.0"
+
+from .utils import check_server, deploy
+from .config import load_config
+
+__all__ = ["check_server", "deploy", "load_config", "__version__"]
+```
+
+```python
+# src/devops_tool/cli.py
+import click
+from . import check_server, __version__
+
+
+@click.group()
+@click.version_option(__version__)
+def main():
+    """DevOps automation CLI."""
+    pass
+
+
+@main.command()
+@click.argument("hostname")
+def check(hostname: str):
+    """Check server health."""
+    result = check_server(hostname)
+    click.echo(f"Status: {result['status']}")
+
+
+@main.command()
+@click.argument("environment")
+@click.option("--dry-run", is_flag=True)
+def deploy(environment: str, dry_run: bool):
+    """Deploy to environment."""
+    if dry_run:
+        click.echo(f"Would deploy to {environment}")
+    else:
+        click.echo(f"Deploying to {environment}...")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 4. Build Package
+
+```bash
+# Installera build tools
+pip install build twine
+
+# Bygg package
+python -m build
+
+# Resultat:
+# dist/
+#   devops_tool-1.0.0-py3-none-any.whl
+#   devops_tool-1.0.0.tar.gz
+```
+
+---
+
+## 5. Install Locally
+
+```bash
+# Editable install (for development)
+pip install -e .
+
+# Med dev dependencies
+pip install -e ".[dev]"
+
+# Nu kan du anvanda:
+devops-tool --version
+devops-tool check web-01
+```
+
+---
+
+## 6. Publish to PyPI
+
+```bash
+# Skapa konto pa pypi.org och testpypi.org
+
+# Test upload forst
+twine upload --repository testpypi dist/*
+
+# Riktigt upload
+twine upload dist/*
+
+# Nu kan alla installera:
+pip install devops-tool
+```
+
+---
+
+## 7. Poetry Alternative
+
+```bash
+# Installera Poetry
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Skapa nytt projekt
+poetry new my-tool
+cd my-tool
+
+# Lagg till dependencies
+poetry add click requests
+poetry add --group dev pytest mypy
+
+# Bygg
+poetry build
+
+# Publicera
+poetry publish
+```
+
+```toml
+# pyproject.toml med Poetry
+[tool.poetry]
+name = "my-tool"
+version = "1.0.0"
+description = "My awesome tool"
+authors = ["You <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+
+[tool.poetry.scripts]
+my-tool = "my_tool.cli:main"
+```
+
+---
+
+## 8. Private PyPI
+
+```bash
+# Enkelt: Anvand devpi
+pip install devpi-server devpi-client
+
+# Starta server
+devpi-server --start --init
+
+# Skapa user och index
+devpi use http://localhost:3141
+devpi user -c myuser password=secret
+devpi login myuser
+devpi index -c dev
+
+# Upload till privat index
+devpi upload dist/*
+
+# Installera fran privat
+pip install --index-url http://localhost:3141/myuser/dev devops-tool
+```
+
+---
+
+## 9. GitHub Release
+
+```yaml
+# .github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build
+        run: |
+          pip install build
+          python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+```
+
+---
+
+## Sammanfattning
+
+| Steg | Kommando |
+|------|----------|
+| Build | `python -m build` |
+| Local install | `pip install -e .` |
+| Publish | `twine upload dist/*` |
+| Poetry build | `poetry build` |
+| Poetry publish | `poetry publish` |
+'''
+}
+
+
+# =============================================================================
+# ADD FINAL NODES TO COLLECTION
+# =============================================================================
+
+PYTHON_SKILLSMAP_NODES.extend([
+    NODE_15_LOGGING,
+    NODE_16_TESTING,
+    NODE_17_ASYNC,
+    NODE_18_DECORATORS,
+    NODE_19_TYPE_HINTS,
+    NODE_20_PACKAGING,
+])
+
+
+# =============================================================================
 # HELPER FUNCTION
 # =============================================================================
 
