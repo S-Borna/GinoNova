@@ -193,10 +193,14 @@ const SEARCH_DATA: SearchResult[] = [
     { id: "t4", type: "module", title: "AWS", description: "Cloud fundamentals", url: "/modules", icon: "☁️" },
     { id: "t5", type: "module", title: "Python", description: "Scripting & automation", url: "/modules", icon: "🐍" },
     { id: "t6", type: "module", title: "CI/CD", description: "Pipelines & automation", url: "/modules", icon: "🚀" },
-    // SkillMaps - point to skillpath board
-    { id: "s1", type: "skillmap", title: "Python SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🐍" },
+    // SkillMaps - point to skillpath board (7 complete, 136 nodes total)
+    { id: "s1", type: "skillmap", title: "Python SkillMap", description: "21 nodes • Complete path", url: "/skillpath-board", icon: "🐍" },
     { id: "s2", type: "skillmap", title: "Linux SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🐧" },
-    { id: "s3", type: "skillmap", title: "Docker SkillMap", description: "Coming soon", url: "/skillpath-board", icon: "🐳" },
+    { id: "s3", type: "skillmap", title: "Docker SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🐳" },
+    { id: "s4", type: "skillmap", title: "Kubernetes SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "☸️" },
+    { id: "s5", type: "skillmap", title: "CI/CD SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🚀" },
+    { id: "s6", type: "skillmap", title: "Git & GitHub SkillMap", description: "15 nodes • Complete path", url: "/skillpath-board", icon: "📦" },
+    { id: "s7", type: "skillmap", title: "Terraform SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🏗️" },
 ]
 
 function SearchBar() {
