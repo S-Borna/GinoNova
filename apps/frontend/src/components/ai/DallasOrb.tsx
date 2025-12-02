@@ -11,7 +11,7 @@
  * - Dallas-inspired mystical orb (grey/white/silver with blue magic)
  * - Ambient breathing glow animation
  * - Positioned under user name in top-right
- * - Opens into elegant centered modal
+ * - Opens into elegant centered modal (PORTAL to body)
  * - Enterprise-grade micro-interactions
  *
  * Color Palette:
@@ -24,6 +24,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from "react"
+import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { X, Send, Loader2, Sparkles } from "lucide-react"
@@ -74,7 +75,7 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
         e.stopPropagation()
         onClick()
     }
-    
+
     return (
         <motion.button
             onClick={handleClick}
@@ -246,9 +247,15 @@ export function DallasOrb() {
     const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE])
     const [input, setInput] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const [mounted, setMounted] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
     const pathname = usePathname()
+
+    // Mount check for portal
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     // Auto-scroll to bottom
     useEffect(() => {
@@ -338,138 +345,161 @@ export function DallasOrb() {
             {/* The Orb - positioned in header */}
             <MagicOrb isActive={isOpen} onClick={() => setIsOpen(true)} />
 
-            {/* Modal Overlay */}
-            <AnimatePresence>
-                {isOpen && (
-                    <>
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsOpen(false)}
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999]"
-                        />
+            {/* Modal Overlay - PORTAL to body for proper stacking */}
+            {mounted && createPortal(
+                <AnimatePresence>
+                    {isOpen && (
+                        <>
+                            {/* Backdrop - full screen overlay */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setIsOpen(false)}
+                                style={{
+                                    position: "fixed",
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                    backdropFilter: "blur(4px)",
+                                    zIndex: 99999,
+                                }}
+                            />
 
-                        {/* Modal - PERFECTLY CENTERED */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="fixed z-[10000] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg h-[70%] max-h-[500px] bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
-                        >
-                            {/* Header */}
-                            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-                                        <span className="text-xl">🐺</span>
+                            {/* Modal - PERFECTLY CENTERED */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                                style={{
+                                    position: "fixed",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    width: "90%",
+                                    maxWidth: "32rem",
+                                    height: "70%",
+                                    maxHeight: "500px",
+                                    zIndex: 100000,
+                                }}
+                                className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
+                            >
+                                {/* Header */}
+                                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                                            <span className="text-xl">🐺</span>
+                                        </div>
+                                        <div>
+                                            <h2 className="font-semibold text-white">Dallas</h2>
+                                            <p className="text-xs text-gray-400 flex items-center gap-1">
+                                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                                Your DevOps AI Guide
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h2 className="font-semibold text-white">Dallas</h2>
-                                        <p className="text-xs text-gray-400 flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                            Your DevOps AI Guide
-                                        </p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setIsOpen(false)}
-                                    className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            {/* Messages */}
-                            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                                {messages.map((message) => (
-                                    <ChatMessage key={message.id} message={message} />
-                                ))}
-                                {isLoading && <TypingIndicator />}
-                                <div ref={messagesEndRef} />
-                            </div>
-
-                            {/* Quick Prompts */}
-                            {messages.length <= 2 && (
-                                <div className="px-6 pb-2">
-                                    <p className="text-xs text-gray-400 mb-2">Quick actions:</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {QUICK_PROMPTS.map((item) => (
-                                            <button
-                                                key={item.label}
-                                                onClick={() => handleQuickPrompt(item.prompt)}
-                                                className={cn(
-                                                    "px-3 py-1.5 text-xs rounded-full",
-                                                    "bg-gray-100 dark:bg-gray-800",
-                                                    "text-gray-600 dark:text-gray-300",
-                                                    "hover:bg-blue-50 dark:hover:bg-blue-900/20",
-                                                    "hover:text-blue-600 dark:hover:text-blue-400",
-                                                    "border border-gray-200 dark:border-gray-700",
-                                                    "transition-all duration-200"
-                                                )}
-                                            >
-                                                <Sparkles className="w-3 h-3 inline mr-1.5" />
-                                                {item.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Input */}
-                            <div className={cn(
-                                "p-4 border-t border-gray-100 dark:border-gray-800",
-                                "bg-gray-50 dark:bg-gray-900"
-                            )}>
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault()
-                                        handleSend()
-                                    }}
-                                    className="flex gap-3"
-                                >
-                                    <input
-                                        ref={inputRef}
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        placeholder="Ask Dallas anything..."
-                                        className={cn(
-                                            "flex-1 px-4 py-3 rounded-xl",
-                                            "bg-white dark:bg-gray-800",
-                                            "border border-gray-200 dark:border-gray-700",
-                                            "text-gray-900 dark:text-white",
-                                            "placeholder:text-gray-400",
-                                            "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
-                                            "transition-shadow"
-                                        )}
-                                        disabled={isLoading}
-                                    />
                                     <button
-                                        type="submit"
-                                        disabled={!input.trim() || isLoading}
-                                        className={cn(
-                                            "px-4 py-3 rounded-xl",
-                                            "bg-gradient-to-r from-blue-500 to-indigo-500",
-                                            "text-white font-medium",
-                                            "shadow-lg shadow-blue-500/25",
-                                            "hover:shadow-xl hover:shadow-blue-500/30",
-                                            "disabled:opacity-50 disabled:cursor-not-allowed",
-                                            "transition-all duration-200"
-                                        )}
+                                        onClick={() => setIsOpen(false)}
+                                        className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
                                     >
-                                        {isLoading ? (
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                        ) : (
-                                            <Send className="w-5 h-5" />
-                                        )}
+                                        <X className="w-5 h-5" />
                                     </button>
-                                </form>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                                </div>
+
+                                {/* Messages */}
+                                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                                    {messages.map((message) => (
+                                        <ChatMessage key={message.id} message={message} />
+                                    ))}
+                                    {isLoading && <TypingIndicator />}
+                                    <div ref={messagesEndRef} />
+                                </div>
+
+                                {/* Quick Prompts */}
+                                {messages.length <= 2 && (
+                                    <div className="px-6 pb-2">
+                                        <p className="text-xs text-gray-400 mb-2">Quick actions:</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {QUICK_PROMPTS.map((item) => (
+                                                <button
+                                                    key={item.label}
+                                                    onClick={() => handleQuickPrompt(item.prompt)}
+                                                    className={cn(
+                                                        "px-3 py-1.5 text-xs rounded-full",
+                                                        "bg-gray-100 dark:bg-gray-800",
+                                                        "text-gray-600 dark:text-gray-300",
+                                                        "hover:bg-blue-50 dark:hover:bg-blue-900/20",
+                                                        "hover:text-blue-600 dark:hover:text-blue-400",
+                                                        "border border-gray-200 dark:border-gray-700",
+                                                        "transition-all duration-200"
+                                                    )}
+                                                >
+                                                    <Sparkles className="w-3 h-3 inline mr-1.5" />
+                                                    {item.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Input */}
+                                <div className={cn(
+                                    "p-4 border-t border-gray-100 dark:border-gray-800",
+                                    "bg-gray-50 dark:bg-gray-900"
+                                )}>
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault()
+                                            handleSend()
+                                        }}
+                                        className="flex gap-3"
+                                    >
+                                        <input
+                                            ref={inputRef}
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            placeholder="Ask Dallas anything..."
+                                            className={cn(
+                                                "flex-1 px-4 py-3 rounded-xl",
+                                                "bg-white dark:bg-gray-800",
+                                                "border border-gray-200 dark:border-gray-700",
+                                                "text-gray-900 dark:text-white",
+                                                "placeholder:text-gray-400",
+                                                "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                                "transition-shadow"
+                                            )}
+                                            disabled={isLoading}
+                                        />
+                                        <button
+                                            type="submit"
+                                            disabled={!input.trim() || isLoading}
+                                            className={cn(
+                                                "px-4 py-3 rounded-xl",
+                                                "bg-gradient-to-r from-blue-500 to-indigo-500",
+                                                "text-white font-medium",
+                                                "shadow-lg shadow-blue-500/25",
+                                                "hover:shadow-xl hover:shadow-blue-500/30",
+                                                "disabled:opacity-50 disabled:cursor-not-allowed",
+                                                "transition-all duration-200"
+                                            )}
+                                        >
+                                            {isLoading ? (
+                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                            ) : (
+                                                <Send className="w-5 h-5" />
+                                            )}
+                                        </button>
+                                    </form>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </>
     )
 }
