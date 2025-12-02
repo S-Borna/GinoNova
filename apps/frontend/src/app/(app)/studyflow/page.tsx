@@ -2,236 +2,640 @@
 
 /**
  * ============================================================================
- * STUDYFLOW PAGE — Focused Study Mode Experience
+ * MAGNETEN — Personal Learning Compass (formerly Studyflow)
  * ============================================================================
  *
- * Features:
- * - Pre-session setup (mode, task, goals)
- * - Active session with timer and controls
- * - Session complete celebration
- * - Session history
- * - Calming, focused design
+ * Premium Upgrade Phase 2 - Complete Transformation
  *
- * @phase A.3 - App Shell & Routing
- * @design D.5 - Studyflow UI
- * @design PHASE 2 — Design System Application Layer
+ * Features:
+ * - 🐺 Dallas AI Wizard with 40 smart predefined questions
+ * - 📅 Schedule & Reminders management
+ * - 💡 Personalized learning recommendations
+ * - 🔥 Streak tracking and motivation
+ * - ⏰ Quick actions for navigation
+ *
+ * @phase Premium Upgrade Phase 2
+ * @design Magneten - Learning Compass
  */
 
 import * as React from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { PageLayout, Section, Block, Headline } from "@saas/ui"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
+import { useAuth } from "@/components/auth"
 import {
-    SessionSetup,
-    ActiveSession,
-    SessionComplete,
-    SessionHistory,
-    StreakDisplay,
-    type SessionConfig,
-    type SessionSummary,
-    type SessionRecord,
-} from "@/components/studyflow"
+    Compass,
+    Sparkles,
+    Calendar,
+    Bell,
+    Clock,
+    Target,
+    Flame,
+    ChevronRight,
+    Plus,
+    X,
+    Send,
+    BookOpen,
+    Zap,
+    TrendingUp,
+    CheckCircle2,
+    Star,
+    MessageCircle,
+    Timer,
+} from "lucide-react"
+
+/* ============================================================================
+   DALLAS WIZARD - 40 Smart Questions with Keyword Matching
+   ============================================================================ */
+
+const DALLAS_QUESTIONS = [
+    // Career & Goals
+    { keywords: ["jobb", "karriär", "anställning", "arbete"], question: "Vad är ditt karriärmål inom DevOps? Siktar du på en specifik roll?", category: "career" },
+    { keywords: ["certifiering", "cert", "aws", "azure", "gcp"], question: "Siktar du på någon specifik certifiering? AWS, Azure eller GCP kanske?", category: "career" },
+    { keywords: ["lön", "pengar", "betalt"], question: "Vilken typ av DevOps-roller har du sett som mest intressanta karriärmässigt?", category: "career" },
+    { keywords: ["junior", "senior", "erfaren"], question: "Var befinner du dig i din DevOps-resa - nybörjare, mellannivå eller avancerad?", category: "career" },
+
+    // Learning Style
+    { keywords: ["nybörjare", "börja", "start", "ny"], question: "Vad lockar dig mest med DevOps - automation, infrastruktur eller CI/CD?", category: "learning" },
+    { keywords: ["svårt", "problem", "fastnat", "hjälp"], question: "Vilket område känner du dig mest osäker på? Vi kan fokusera där!", category: "learning" },
+    { keywords: ["tips", "råd", "förslag"], question: "Föredrar du att lära genom hands-on labbar eller konceptuell förståelse först?", category: "learning" },
+    { keywords: ["tid", "schema", "planera"], question: "Hur mycket tid kan du lägga på lärande per vecka?", category: "learning" },
+
+    // Technology Focus
+    { keywords: ["kubernetes", "k8s", "container", "docker"], question: "Hur bekväm är du med containers? Har du kört Docker lokalt?", category: "tech" },
+    { keywords: ["linux", "bash", "terminal", "cli"], question: "Hur stark är din Linux/bash-kunskap på en skala 1-10?", category: "tech" },
+    { keywords: ["git", "github", "version"], question: "Använder du Git dagligen? Behöver du öva på branching strategies?", category: "tech" },
+    { keywords: ["python", "programmering", "kod", "script"], question: "Vill du fokusera på scripting/automation med Python?", category: "tech" },
+    { keywords: ["terraform", "ansible", "iac", "infrastruktur"], question: "Har du erfarenhet av Infrastructure as Code (Terraform, Ansible)?", category: "tech" },
+    { keywords: ["ci", "cd", "pipeline", "jenkins", "github actions"], question: "Vilka CI/CD-verktyg är du mest intresserad av att lära dig?", category: "tech" },
+    { keywords: ["cloud", "moln", "aws", "azure", "gcp"], question: "Vilken cloud-plattform använder ditt team eller vill du lära dig?", category: "tech" },
+    { keywords: ["monitoring", "logging", "observability"], question: "Vill du dyka djupare i monitoring och observability?", category: "tech" },
+
+    // Projects & Practice
+    { keywords: ["projekt", "bygga", "skapa", "praktik"], question: "Har du några egna projekt du vill bygga för att öva?", category: "practice" },
+    { keywords: ["labb", "övning", "hands-on"], question: "Föredrar du strukturerade labbar eller fria utforskningsprojekt?", category: "practice" },
+    { keywords: ["portfolio", "cv", "visa"], question: "Bygger du en portfolio? Jag kan föreslå imponerande projekt!", category: "practice" },
+
+    // Motivation
+    { keywords: ["motivera", "inspiration", "trött", "ork"], question: "Vad motiverar dig mest - lösa problem, bygga saker eller lära nytt?", category: "motivation" },
+    { keywords: ["mål", "dröm", "vision"], question: "Var ser du dig själv om 1 år? Vilken roll vill du ha?", category: "motivation" },
+    { keywords: ["streak", "serie", "dagligen"], question: "Hur viktigt är det för dig att hålla en daglig streak?", category: "motivation" },
+
+    // General Discovery
+    { keywords: ["rekommendera", "vad", "nästa", "börja"], question: "Baserat på dina mål, vill du att jag rekommenderar en studieplan?", category: "general" },
+    { keywords: ["snabb", "effektiv", "fokus"], question: "Vill du ha en intensiv 4-veckors plan eller föredrar du ett lugnare tempo?", category: "general" },
+    { keywords: ["hej", "hallå", "tjena", "hi"], question: "Hej! 👋 Jag är Dallas, din DevOps-guide. Vad vill du lära dig idag?", category: "greeting" },
+    { keywords: ["tack", "thanks", "bra"], question: "Kul att höra! Finns det något annat jag kan hjälpa dig med?", category: "gratitude" },
+
+    // Fallback questions for conversation flow
+    { keywords: ["ja", "yes", "absolut", "självklart"], question: "Perfekt! Ska vi börja med det direkt eller planera in det i ditt schema?", category: "followup" },
+    { keywords: ["nej", "no", "inte", "vet inte"], question: "Ingen fara! Låt oss utforska vad som passar dig bäst. Vad intresserar dig mest?", category: "followup" },
+    { keywords: ["mer", "berätta", "förklara"], question: "Självklart! Vilket specifikt område vill du veta mer om?", category: "followup" },
+    { keywords: ["okej", "ok", "förstår", "bra"], question: "Vill du att jag hjälper dig sätta upp ett schema för att nå dina mål?", category: "followup" },
+];
+
+const DEFAULT_QUESTIONS = [
+    "Vad vill du fokusera på idag?",
+    "Hur kan jag hjälpa dig med din DevOps-resa?",
+    "Finns det något specifikt du vill lära dig?",
+    "Vill du att jag rekommenderar nästa steg?",
+];
+
+function findMatchingQuestion(input: string): string {
+    const lowerInput = input.toLowerCase();
+
+    for (const q of DALLAS_QUESTIONS) {
+        if (q.keywords.some(keyword => lowerInput.includes(keyword))) {
+            return q.question;
+        }
+    }
+
+    return DEFAULT_QUESTIONS[Math.floor(Math.random() * DEFAULT_QUESTIONS.length)];
+}
 
 /* ============================================================================
    TYPES
    ============================================================================ */
 
-type SessionState = "setup" | "active" | "complete"
+interface ChatMessage {
+    id: string;
+    role: "user" | "dallas";
+    content: string;
+    timestamp: Date;
+}
+
+interface Reminder {
+    id: string;
+    title: string;
+    module?: string;
+    time: string;
+    day: string;
+    isActive: boolean;
+}
+
+interface Recommendation {
+    id: string;
+    title: string;
+    module: string;
+    reason: string;
+    xp: number;
+    difficulty: "easy" | "medium" | "hard";
+}
 
 /* ============================================================================
-   MOCK DATA
+   DALLAS CHAT COMPONENT
    ============================================================================ */
 
-const MOCK_SESSIONS: SessionRecord[] = [
-    {
-        id: "1",
-        date: new Date(),
-        durationMinutes: 25,
-        tasksCompleted: 1,
-        xpEarned: 75,
-        mode: "pomodoro",
-    },
-    {
-        id: "2",
-        date: new Date(Date.now() - 86400000), // Yesterday
-        durationMinutes: 50,
-        tasksCompleted: 2,
-        xpEarned: 150,
-        mode: "deep-focus",
-    },
-    {
-        id: "3",
-        date: new Date(Date.now() - 86400000 * 2), // 2 days ago
-        durationMinutes: 30,
-        tasksCompleted: 1,
-        xpEarned: 80,
-        mode: "custom",
-    },
-]
+function DallasChat() {
+    const { user } = useAuth();
+    const [messages, setMessages] = useState<ChatMessage[]>([
+        {
+            id: "welcome",
+            role: "dallas",
+            content: `Hej ${user?.full_name?.split(" ")[0] || "där"}! 🐺 Jag är Dallas, din personliga DevOps-guide. Hur kan jag hjälpa dig idag?`,
+            timestamp: new Date(),
+        },
+    ]);
+    const [input, setInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-const MOCK_TASKS = [
-    {
-        id: "1",
-        title: "Install Docker",
-        moduleId: "m9",
-        moduleTitle: "Module 09 · Containers",
-        isRecommended: true,
-    },
-    {
-        id: "2",
-        title: "Write Dockerfile",
-        moduleId: "m9",
-        moduleTitle: "Module 09 · Containers",
-    },
-    {
-        id: "3",
-        title: "Docker Compose Basics",
-        moduleId: "m9",
-        moduleTitle: "Module 09 · Containers",
-    },
-    {
-        id: "4",
-        title: "Linux File Permissions",
-        moduleId: "m3",
-        moduleTitle: "Module 03 · Linux Basics",
-    },
-]
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
-/* ============================================================================
-   STUDYFLOW PAGE
-   ============================================================================ */
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
-export default function StudyflowPage() {
-    const router = useRouter()
-    const searchParams = useSearchParams()
+    const handleSend = async () => {
+        if (!input.trim()) return;
 
-    // Check for module/task from URL params (from module detail page)
-    const moduleSlug = searchParams?.get("module") ?? null
-    const taskId = searchParams?.get("task") ?? null
+        const userMessage: ChatMessage = {
+            id: `user-${Date.now()}`,
+            role: "user",
+            content: input,
+            timestamp: new Date(),
+        };
 
-    // Session state
-    const [sessionState, setSessionState] = React.useState<SessionState>("setup")
-    const [sessionConfig, setSessionConfig] = React.useState<SessionConfig | null>(null)
-    const [sessionSummary, setSessionSummary] = React.useState<SessionSummary | null>(null)
-    const [sessions, setSessions] = React.useState<SessionRecord[]>(MOCK_SESSIONS)
-    const [tasksCompletedInSession, setTasksCompletedInSession] = React.useState(0)
+        setMessages(prev => [...prev, userMessage]);
+        setInput("");
+        setIsTyping(true);
 
-    // Handle start session
-    const handleStartSession = (config: SessionConfig) => {
-        setSessionConfig(config)
-        setTasksCompletedInSession(0)
-        setSessionState("active")
-    }
+        // Simulate Dallas thinking
+        await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
 
-    // Handle end session
-    const handleEndSession = () => {
-        // Create summary
-        const summary: SessionSummary = {
-            totalFocusMinutes: sessionConfig?.workMinutes || 25,
-            tasksCompleted: tasksCompletedInSession,
-            xpEarned: tasksCompletedInSession * 50 + 25, // Base 25 XP + 50 per task
-            streakDays: 7,
-            isNewRecord: false,
+        const dallasResponse: ChatMessage = {
+            id: `dallas-${Date.now()}`,
+            role: "dallas",
+            content: findMatchingQuestion(input),
+            timestamp: new Date(),
+        };
+
+        setIsTyping(false);
+        setMessages(prev => [...prev, dallasResponse]);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
         }
-        setSessionSummary(summary)
-        setSessionState("complete")
-
-        // Add to history
-        if (sessionConfig) {
-            const newSession: SessionRecord = {
-                id: Date.now().toString(),
-                date: new Date(),
-                durationMinutes: sessionConfig.workMinutes,
-                tasksCompleted: tasksCompletedInSession,
-                xpEarned: summary.xpEarned,
-                mode: sessionConfig.mode,
-            }
-            setSessions((prev) => [newSession, ...prev])
-        }
-    }
-
-    // Handle task completion
-    const handleCompleteTask = () => {
-        setTasksCompletedInSession((prev) => prev + 1)
-    }
-
-    // Handle start another session
-    const handleStartAnother = () => {
-        setSessionConfig(null)
-        setSessionSummary(null)
-        setSessionState("setup")
-    }
-
-    // Handle view progress
-    const handleViewProgress = () => {
-        router.push("/progress")
-    }
-
-    // Handle close complete modal
-    const handleCloseComplete = () => {
-        setSessionConfig(null)
-        setSessionSummary(null)
-        setSessionState("setup")
-    }
-
-    // Log URL params for future integration
-    React.useEffect(() => {
-        if (moduleSlug && taskId) {
-            console.log("Starting studyflow for:", { moduleSlug, taskId })
-        }
-    }, [moduleSlug, taskId])
+    };
 
     return (
-        <PageLayout maxWidth="wide" background="subtle">
-            {/* Pre-Session Setup */}
-            {sessionState === "setup" && (
-                <Section>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Main Setup Area */}
-                        <div className="lg:col-span-2">
-                            <SessionSetup
-                                onStartSession={handleStartSession}
-                                availableTasks={MOCK_TASKS}
-                            />
-                        </div>
+        <div className={cn(
+            "rounded-2xl overflow-hidden",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border border-zinc-800/60"
+        )}>
+            {/* Header */}
+            <div className={cn(
+                "flex items-center gap-3 px-4 py-4",
+                "border-b border-zinc-800/60",
+                "bg-gradient-to-r from-purple-900/20 to-blue-900/20"
+            )}>
+                {/* Dallas Avatar */}
+                <div className={cn(
+                    "w-10 h-10 rounded-xl flex items-center justify-center",
+                    "bg-gradient-to-br from-purple-500 to-blue-600",
+                    "shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                )}>
+                    <span className="text-xl">🐺</span>
+                </div>
+                <div>
+                    <h3 className="font-semibold text-zinc-100">Dallas</h3>
+                    <p className="text-xs text-zinc-400">Din DevOps-guide</p>
+                </div>
+                <div className="ml-auto flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs text-emerald-400">Online</span>
+                </div>
+            </div>
 
-                        {/* Sidebar */}
-                        <div className="space-y-6">
-                            {/* Streak Display */}
-                            <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6">
-                                <Headline level={3} className="mb-4">
-                                    Your Streak
-                                </Headline>
-                                <StreakDisplay streak={7} />
-                            </Block>
-
-                            {/* Recent Sessions */}
-                            <SessionHistory sessions={sessions} maxDisplay={5} />
+            {/* Messages */}
+            <div className="h-64 overflow-y-auto p-4 space-y-4">
+                {messages.map(msg => (
+                    <div
+                        key={msg.id}
+                        className={cn(
+                            "flex gap-3",
+                            msg.role === "user" && "flex-row-reverse"
+                        )}
+                    >
+                        {msg.role === "dallas" && (
+                            <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                                <span className="text-sm">🐺</span>
+                            </div>
+                        )}
+                        <div className={cn(
+                            "max-w-[80%] rounded-xl px-4 py-2.5",
+                            msg.role === "dallas"
+                                ? "bg-zinc-800/50 text-zinc-200"
+                                : "bg-purple-600/30 text-zinc-100"
+                        )}>
+                            <p className="text-sm">{msg.content}</p>
                         </div>
                     </div>
-                </Section>
-            )}
+                ))}
 
-            {/* Active Session */}
-            {sessionState === "active" && sessionConfig && (
-                <Section>
-                    <ActiveSession
-                        config={sessionConfig}
-                        onEndSession={handleEndSession}
-                        onCompleteTask={handleCompleteTask}
+                {isTyping && (
+                    <div className="flex gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                            <span className="text-sm">🐺</span>
+                        </div>
+                        <div className="bg-zinc-800/50 rounded-xl px-4 py-3">
+                            <div className="flex gap-1">
+                                <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                                <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                                <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input */}
+            <div className="p-4 border-t border-zinc-800/60">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Skriv till Dallas..."
+                        className={cn(
+                            "flex-1 px-4 py-2.5 rounded-xl",
+                            "bg-zinc-800/50 border border-zinc-700/50",
+                            "text-zinc-100 placeholder:text-zinc-500",
+                            "focus:outline-none focus:border-purple-500/50",
+                            "transition-colors"
+                        )}
                     />
-                </Section>
-            )}
+                    <button
+                        onClick={handleSend}
+                        disabled={!input.trim()}
+                        className={cn(
+                            "p-2.5 rounded-xl transition-all",
+                            input.trim()
+                                ? "bg-purple-600 hover:bg-purple-500 text-white"
+                                : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                        )}
+                    >
+                        <Send className="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
-            {/* Session Complete Modal */}
-            {sessionSummary && (
-                <SessionComplete
-                    isOpen={sessionState === "complete"}
-                    summary={sessionSummary}
-                    onStartAnother={handleStartAnother}
-                    onViewProgress={handleViewProgress}
-                    onClose={handleCloseComplete}
-                />
-            )}
-        </PageLayout>
-    )
+/* ============================================================================
+   SCHEDULE & REMINDERS
+   ============================================================================ */
+
+function ScheduleSection() {
+    const [reminders, setReminders] = useState<Reminder[]>([
+        { id: "1", title: "Docker Task 3", module: "Containers", time: "08:00", day: "Mån", isActive: true },
+        { id: "2", title: "K8s Intro", module: "Kubernetes", time: "17:00", day: "Ons", isActive: true },
+        { id: "3", title: "Quiz Review", module: "Linux", time: "10:00", day: "Fre", isActive: false },
+    ]);
+
+    const toggleReminder = (id: string) => {
+        setReminders(prev =>
+            prev.map(r => r.id === id ? { ...r, isActive: !r.isActive } : r)
+        );
+    };
+
+    const deleteReminder = (id: string) => {
+        setReminders(prev => prev.filter(r => r.id !== id));
+    };
+
+    return (
+        <div className={cn(
+            "rounded-2xl overflow-hidden",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border border-zinc-800/60"
+        )}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-800/60">
+                <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-emerald-400" />
+                    <h3 className="font-semibold text-zinc-100">Ditt Schema</h3>
+                </div>
+                <button
+                    className={cn(
+                        "flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm",
+                        "bg-emerald-500/20 text-emerald-400",
+                        "hover:bg-emerald-500/30 transition-colors"
+                    )}
+                >
+                    <Plus className="w-4 h-4" />
+                    Lägg till
+                </button>
+            </div>
+
+            {/* Reminders List */}
+            <div className="p-4 space-y-3 max-h-64 overflow-y-auto">
+                {reminders.length === 0 ? (
+                    <div className="text-center py-6">
+                        <Bell className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+                        <p className="text-sm text-zinc-400">Inga påminnelser ännu</p>
+                        <p className="text-xs text-zinc-500 mt-1">Lägg till din första påminnelse</p>
+                    </div>
+                ) : (
+                    reminders.map(reminder => (
+                        <div
+                            key={reminder.id}
+                            className={cn(
+                                "flex items-center gap-3 p-3 rounded-xl",
+                                "bg-zinc-800/40 border border-zinc-700/30",
+                                "group transition-all",
+                                reminder.isActive && "border-emerald-500/30"
+                            )}
+                        >
+                            <button
+                                onClick={() => toggleReminder(reminder.id)}
+                                className={cn(
+                                    "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                                    "transition-colors",
+                                    reminder.isActive
+                                        ? "bg-emerald-500/20 text-emerald-400"
+                                        : "bg-zinc-700/50 text-zinc-500"
+                                )}
+                            >
+                                <Bell className="w-4 h-4" />
+                            </button>
+                            <div className="flex-1 min-w-0">
+                                <p className={cn(
+                                    "text-sm font-medium truncate",
+                                    reminder.isActive ? "text-zinc-200" : "text-zinc-500"
+                                )}>
+                                    {reminder.title}
+                                </p>
+                                <p className="text-xs text-zinc-500">
+                                    {reminder.module} • {reminder.day} {reminder.time}
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => deleteReminder(reminder.id)}
+                                className="p-1.5 rounded-lg text-zinc-600 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
+
+/* ============================================================================
+   RECOMMENDATIONS
+   ============================================================================ */
+
+function RecommendationsSection() {
+    const router = useRouter();
+    const recommendations: Recommendation[] = [
+        { id: "1", title: "Docker Compose Basics", module: "Containers", reason: "Nästa logiska steg efter Docker intro", xp: 35, difficulty: "medium" },
+        { id: "2", title: "Linux File Permissions", module: "Linux Mastery", reason: "Viktigt för serverhantering", xp: 25, difficulty: "easy" },
+        { id: "3", title: "Git Branching Strategies", module: "Git & GitHub", reason: "Baserat på din progress", xp: 40, difficulty: "medium" },
+    ];
+
+    const difficultyColors = {
+        easy: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+        medium: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+        hard: "bg-red-500/20 text-red-400 border-red-500/30",
+    };
+
+    return (
+        <div className={cn(
+            "rounded-2xl overflow-hidden",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border border-zinc-800/60"
+        )}>
+            {/* Header */}
+            <div className="flex items-center gap-2 px-4 py-4 border-b border-zinc-800/60">
+                <Sparkles className="w-5 h-5 text-purple-400" />
+                <h3 className="font-semibold text-zinc-100">Rekommenderat för dig</h3>
+            </div>
+
+            {/* Recommendations */}
+            <div className="p-4 space-y-3">
+                {recommendations.map((rec, index) => (
+                    <div
+                        key={rec.id}
+                        onClick={() => router.push("/modules")}
+                        className={cn(
+                            "flex items-start gap-3 p-3 rounded-xl",
+                            "bg-zinc-800/40 border border-zinc-700/30",
+                            "hover:border-purple-500/30 hover:bg-zinc-800/60",
+                            "transition-all cursor-pointer group"
+                        )}
+                    >
+                        <div className={cn(
+                            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                            "bg-purple-500/20 text-purple-400"
+                        )}>
+                            {index + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                                <p className="text-sm font-medium text-zinc-200 group-hover:text-purple-300">
+                                    {rec.title}
+                                </p>
+                                <span className={cn(
+                                    "px-1.5 py-0.5 text-[10px] rounded border",
+                                    difficultyColors[rec.difficulty]
+                                )}>
+                                    {rec.difficulty}
+                                </span>
+                            </div>
+                            <p className="text-xs text-zinc-500 mb-2">{rec.module}</p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-zinc-400 italic">&quot;{rec.reason}&quot;</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-1 text-amber-400 shrink-0">
+                            <Zap className="w-3.5 h-3.5" />
+                            <span className="text-sm font-medium">+{rec.xp}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+/* ============================================================================
+   STREAK & STATS CARD
+   ============================================================================ */
+
+function StatsCard() {
+    const streak = 7;
+    const totalXP = 1250;
+    const tasksThisWeek = 12;
+
+    return (
+        <div className={cn(
+            "rounded-2xl overflow-hidden",
+            "bg-gradient-to-br from-orange-900/20 via-zinc-900/80 to-zinc-900/80",
+            "border border-orange-500/20",
+            "shadow-[0_0_30px_rgba(249,115,22,0.1)]"
+        )}>
+            {/* Streak Display */}
+            <div className="p-6 text-center">
+                <div className={cn(
+                    "w-20 h-20 mx-auto mb-4 rounded-2xl",
+                    "bg-gradient-to-br from-orange-500 to-red-600",
+                    "flex items-center justify-center",
+                    "shadow-[0_0_30px_rgba(249,115,22,0.4)]",
+                    "animate-pulse"
+                )}>
+                    <Flame className="w-10 h-10 text-white" />
+                </div>
+                <p className="text-4xl font-bold text-orange-400 mb-1">{streak}</p>
+                <p className="text-sm text-zinc-400">dagars streak 🔥</p>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-px bg-zinc-800/50">
+                <div className="p-4 bg-zinc-900/80 text-center">
+                    <p className="text-2xl font-bold text-amber-400">{totalXP.toLocaleString()}</p>
+                    <p className="text-xs text-zinc-500">Total XP</p>
+                </div>
+                <div className="p-4 bg-zinc-900/80 text-center">
+                    <p className="text-2xl font-bold text-emerald-400">{tasksThisWeek}</p>
+                    <p className="text-xs text-zinc-500">Tasks denna vecka</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ============================================================================
+   QUICK ACTIONS
+   ============================================================================ */
+
+function QuickActions() {
+    const router = useRouter();
+
+    const actions = [
+        { icon: BookOpen, label: "Fortsätt lära", href: "/modules", color: "from-purple-500 to-purple-600" },
+        { icon: Target, label: "Se progress", href: "/progress", color: "from-emerald-500 to-emerald-600" },
+        { icon: Timer, label: "Fokusläge", href: "/dashboard", color: "from-blue-500 to-blue-600" },
+    ];
+
+    return (
+        <div className="grid grid-cols-3 gap-3">
+            {actions.map((action, i) => (
+                <button
+                    key={i}
+                    onClick={() => router.push(action.href)}
+                    className={cn(
+                        "flex flex-col items-center gap-2 p-4 rounded-xl",
+                        "bg-zinc-800/40 border border-zinc-700/30",
+                        "hover:border-purple-500/30",
+                        "transition-all group"
+                    )}
+                >
+                    <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center",
+                        `bg-gradient-to-br ${action.color}`,
+                        "group-hover:shadow-lg group-hover:scale-105 transition-all"
+                    )}>
+                        <action.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs text-zinc-400 group-hover:text-zinc-200">{action.label}</span>
+                </button>
+            ))}
+        </div>
+    );
+}
+
+/* ============================================================================
+   MAIN PAGE
+   ============================================================================ */
+
+export default function MagnetenPage() {
+    const { user } = useAuth();
+    const userName = user?.full_name?.split(" ")[0] || "Learner";
+
+    return (
+        <div className="min-h-screen bg-zinc-950">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+                {/* Hero Header */}
+                <div className={cn(
+                    "relative overflow-hidden rounded-2xl",
+                    "bg-gradient-to-br from-zinc-900 via-purple-950/30 to-zinc-900",
+                    "border border-purple-500/20",
+                    "p-8"
+                )}>
+                    {/* Background effects */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl translate-y-1/2" />
+
+                    <div className="relative flex items-center gap-4">
+                        <div className={cn(
+                            "w-14 h-14 rounded-2xl flex items-center justify-center",
+                            "bg-gradient-to-br from-purple-500 to-blue-600",
+                            "shadow-[0_0_30px_rgba(139,92,246,0.4)]"
+                        )}>
+                            <Compass className="w-7 h-7 text-white" />
+                        </div>
+                        <div>
+                            <h1 className={cn(
+                                "text-2xl md:text-3xl font-bold",
+                                "bg-gradient-to-r from-zinc-100 via-purple-200 to-zinc-100 bg-clip-text text-transparent"
+                            )}>
+                                Välkommen till Magneten, {userName}!
+                            </h1>
+                            <p className="text-zinc-400 mt-1">
+                                Din personliga lärandekompass • Planera, fokusera, uppnå
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Grid */}
+                <div className="grid lg:grid-cols-3 gap-6">
+                    {/* Left Column - Dallas & Recommendations */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <DallasChat />
+                        <RecommendationsSection />
+                    </div>
+
+                    {/* Right Column - Stats & Schedule */}
+                    <div className="space-y-6">
+                        <StatsCard />
+                        <QuickActions />
+                        <ScheduleSection />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

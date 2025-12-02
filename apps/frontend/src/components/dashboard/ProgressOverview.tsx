@@ -4,7 +4,7 @@
  * ============================================================================
  * PROGRESS OVERVIEW - Premium Polish Edition ✨
  * ============================================================================
- * 
+ *
  * Bootcamp progress visualization with:
  * - Animated progress ring with Chill Mint glow
  * - Satisfying milestone celebrations
@@ -33,19 +33,19 @@ interface ProgressOverviewProps {
 // ============================================================================
 
 function getProgressColor(percentage: number): { bg: string; glow: string } {
-    if (percentage >= 80) return { 
+    if (percentage >= 80) return {
         bg: "bg-gradient-to-r from-emerald-500 to-emerald-400",
         glow: "shadow-[0_0_12px_rgba(34,211,172,0.5)]"
     }
-    if (percentage >= 50) return { 
+    if (percentage >= 50) return {
         bg: "bg-gradient-to-r from-purple-500 to-purple-400",
         glow: "shadow-[0_0_12px_rgba(139,92,246,0.4)]"
     }
-    if (percentage >= 25) return { 
+    if (percentage >= 25) return {
         bg: "bg-gradient-to-r from-amber-500 to-amber-400",
         glow: "shadow-[0_0_12px_rgba(245,158,11,0.4)]"
     }
-    return { 
+    return {
         bg: "bg-zinc-600",
         glow: ""
     }
@@ -100,7 +100,7 @@ export function ProgressOverview({
                             "absolute inset-0 rounded-full blur-xl opacity-30",
                             overallProgress >= 50 ? "bg-emerald-500" : "bg-purple-500"
                         )} />
-                        
+
                         {/* Background circle */}
                         <svg className="w-full h-full -rotate-90 relative" viewBox="0 0 36 36">
                             {/* Track */}
@@ -131,7 +131,7 @@ export function ProgressOverview({
                                 </linearGradient>
                             </defs>
                         </svg>
-                        
+
                         {/* Center text */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
                             <span className={cn(

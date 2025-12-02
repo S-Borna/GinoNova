@@ -138,7 +138,7 @@ export function StreakBadge({
                     streakInfo.color,
                     currentStreak >= 3 && "animate-pulse"
                 )} />
-                
+
                 {/* Fire particles for hot streaks */}
                 {currentStreak >= 7 && (
                     <>
@@ -214,7 +214,7 @@ export function StreakCard({
             <div className={cn(
                 "absolute inset-0 opacity-20",
                 "bg-gradient-to-br",
-                currentStreak >= 7 
+                currentStreak >= 7
                     ? "from-orange-500/30 via-transparent to-amber-500/20"
                     : "from-zinc-700/30 via-transparent to-zinc-800/20"
             )} />

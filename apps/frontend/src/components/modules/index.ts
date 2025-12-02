@@ -14,3 +14,6 @@ export { ModuleCompleteModal } from "./ModuleCompleteModal"
 // PROMPT 4: Bookmark System
 export { BookmarkButton } from "./BookmarkButton"
 export { BookmarkSidebar } from "./BookmarkSidebar"
+
+// Premium Upgrade Phase 2: Combined Right Sidebar
+export { RightSidebar } from "./RightSidebar"
