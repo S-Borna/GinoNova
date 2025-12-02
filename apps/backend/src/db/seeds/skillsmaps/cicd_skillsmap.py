@@ -2839,4 +2839,393 @@ CICD_SKILLSMAP_BLOCK_3 = [
     NODE_15_JENKINS_SHARED_LIBS,
 ]
 
-# Block 4: ArgoCD & GitOps (Noder 16-20) - kommer sist
+
+# =============================================================================
+# BLOCK 4: ARGOCD & GITOPS (Noder 16-20)
+# =============================================================================
+
+NODE_16_ARGOCD_FUNDAMENTALS = {
+    "node_id": 16,
+    "title": "ArgoCD Fundamentals",
+    "slug": "argocd-fundamentals",
+    "estimated_minutes": 60,
+    "xp_reward": 155,
+    "prerequisites": [1],
+    "content": '''
+# ArgoCD Fundamentals
+
+ArgoCD är en GitOps CD-tool för Kubernetes.
+
+## Installation
+
+```bash
+# Skapa namespace
+kubectl create namespace argocd
+
+# Installera ArgoCD
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# Hämta admin password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+# Port-forward UI
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+## Application CRD
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/org/repo.git
+    targetRevision: HEAD
+    path: k8s/
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Application | En deployad app |
+| Project | Grupp av appar |
+| Sync | Uppdatera till Git-state |
+| Prune | Ta bort extra resurser |
+| SelfHeal | Återställ manuella ändringar |
+
+**Nästa steg:** Node 17 - GitOps Principer
+''',
+}
+
+NODE_17_GITOPS_PRINCIPLES = {
+    "node_id": 17,
+    "title": "GitOps Principer",
+    "slug": "gitops-principles",
+    "estimated_minutes": 50,
+    "xp_reward": 140,
+    "prerequisites": [16],
+    "content": '''
+# GitOps Principer
+
+Git som single source of truth.
+
+## Kärnprinciper
+
+1. **Deklarativ** - Allt definierat som kod
+2. **Versionerad** - Git-historik = audit trail
+3. **Automatisk** - Pull-baserad sync
+4. **Observerbar** - Drift detection
+
+## Repo-struktur
+
+```
+gitops-repo/
+├── apps/
+│   ├── frontend/
+│   │   ├── base/
+│   │   │   ├── deployment.yaml
+│   │   │   ├── service.yaml
+│   │   │   └── kustomization.yaml
+│   │   └── overlays/
+│   │       ├── staging/
+│   │       └── production/
+│   └── backend/
+├── infrastructure/
+│   ├── monitoring/
+│   └── ingress/
+└── argocd/
+    └── applications.yaml
+```
+
+## App of Apps Pattern
+
+```yaml
+# argocd/applications.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  source:
+    repoURL: https://github.com/org/gitops.git
+    path: apps/
+  destination:
+    server: https://kubernetes.default.svc
+```
+
+## Pull vs Push
+
+| Push-based | Pull-based (GitOps) |
+|------------|---------------------|
+| CI pushar till cluster | Agent pullar från Git |
+| Credentials i CI | Credentials i cluster |
+| Svårt att audita | Git = audit log |
+
+**Nästa steg:** Node 18 - CD Best Practices
+''',
+}
+
+NODE_18_CD_BEST_PRACTICES = {
+    "node_id": 18,
+    "title": "CD Best Practices",
+    "slug": "cd-best-practices",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [17],
+    "content": '''
+# CD Best Practices
+
+## Deployment Strategies
+
+### Rolling Update
+```yaml
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+```
+
+### Blue-Green
+```yaml
+# Byt service selector
+kubectl patch service myapp -p '{"spec":{"selector":{"version":"green"}}}'
+```
+
+### Canary
+```yaml
+# 10% trafik till canary
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+spec:
+  http:
+  - route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 90
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 10
+```
+
+## Rollback
+
+```bash
+# ArgoCD
+argocd app rollback my-app 1
+
+# Kubectl
+kubectl rollout undo deployment/myapp
+
+# Git revert (GitOps way)
+git revert HEAD && git push
+```
+
+## Feature Flags
+
+```python
+if feature_flags.is_enabled("new_checkout"):
+    return new_checkout()
+else:
+    return old_checkout()
+```
+
+**Nästa steg:** Node 19 - Pipeline Security
+''',
+}
+
+NODE_19_PIPELINE_SECURITY = {
+    "node_id": 19,
+    "title": "Pipeline Security",
+    "slug": "pipeline-security",
+    "estimated_minutes": 60,
+    "xp_reward": 160,
+    "prerequisites": [18],
+    "content": '''
+# Pipeline Security
+
+## Secret Management
+
+```yaml
+# External Secrets Operator
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: db-credentials
+spec:
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: db-secret
+  data:
+    - secretKey: password
+      remoteRef:
+        key: database/prod
+        property: password
+```
+
+## SAST i Pipeline
+
+```yaml
+# GitHub Actions
+- name: Run Semgrep
+  uses: returntocorp/semgrep-action@v1
+  with:
+    config: p/owasp-top-ten
+```
+
+## Container Scanning
+
+```yaml
+- name: Trivy scan
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: myapp:${{ github.sha }}
+    severity: 'CRITICAL,HIGH'
+    exit-code: '1'
+```
+
+## Supply Chain Security
+
+```yaml
+# Sigstore/Cosign
+- name: Sign image
+  run: |
+    cosign sign --key cosign.key $IMAGE
+
+# Verify before deploy
+cosign verify --key cosign.pub $IMAGE
+```
+
+| Verktyg | Syfte |
+|---------|-------|
+| Semgrep | SAST |
+| Trivy | Container scanning |
+| Snyk | Dependency scanning |
+| Cosign | Image signing |
+
+**Nästa steg:** Node 20 - CI/CD at Scale
+''',
+}
+
+NODE_20_CICD_AT_SCALE = {
+    "node_id": 20,
+    "title": "CI/CD at Scale",
+    "slug": "cicd-at-scale",
+    "estimated_minutes": 65,
+    "xp_reward": 175,
+    "prerequisites": [19],
+    "content": '''
+# CI/CD at Scale
+
+## Monorepo Strategies
+
+```yaml
+# Affected-based builds (Nx)
+- name: Build affected
+  run: npx nx affected --target=build --base=origin/main
+
+# Path-based triggers
+on:
+  push:
+    paths:
+      - 'packages/api/**'
+```
+
+## Self-hosted Runners at Scale
+
+```yaml
+# GitHub Actions Runner Controller
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: runners
+spec:
+  replicas: 5
+  template:
+    spec:
+      repository: org/repo
+      labels:
+        - self-hosted
+        - linux
+```
+
+## Pipeline Caching
+
+```yaml
+# Distributed cache
+- uses: actions/cache@v3
+  with:
+    path: ~/.npm
+    key: npm-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: npm-
+```
+
+## Metrics & Observability
+
+```yaml
+# DORA Metrics
+- Deployment Frequency
+- Lead Time for Changes
+- Mean Time to Recover
+- Change Failure Rate
+```
+
+## Multi-Cluster GitOps
+
+```yaml
+# ApplicationSet
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: my-app
+spec:
+  generators:
+    - clusters: {}
+  template:
+    spec:
+      source:
+        repoURL: https://github.com/org/app.git
+        path: k8s/
+      destination:
+        server: '{{server}}'
+```
+
+**🎉 Grattis! Du har slutfört CI/CD Mastery SkillsMap!**
+''',
+}
+
+CICD_SKILLSMAP_BLOCK_4 = [
+    NODE_16_ARGOCD_FUNDAMENTALS,
+    NODE_17_GITOPS_PRINCIPLES,
+    NODE_18_CD_BEST_PRACTICES,
+    NODE_19_PIPELINE_SECURITY,
+    NODE_20_CICD_AT_SCALE,
+]
+
+
+# =============================================================================
+# FULL EXPORT
+# =============================================================================
+
+CICD_SKILLSMAP_ALL_NODES = (
+    CICD_SKILLSMAP_BLOCK_1 +
+    CICD_SKILLSMAP_BLOCK_2 +
+    CICD_SKILLSMAP_BLOCK_3 +
+    CICD_SKILLSMAP_BLOCK_4
+)
