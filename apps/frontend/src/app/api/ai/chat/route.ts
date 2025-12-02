@@ -63,12 +63,112 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Development fallback responses
+ * Development fallback responses - includes Help Center FAQ knowledge
  */
 function getFallbackResponse(message: string): string {
     const lowerMessage = message.toLowerCase()
 
-    if (lowerMessage.includes("linux") || lowerMessage.includes("terminal")) {
+    // === HELP CENTER FAQ KNOWLEDGE ===
+    
+    // Getting Started
+    if (lowerMessage.includes("start") || lowerMessage.includes("börja") || lowerMessage.includes("begin")) {
+        return `Great question about getting started! 🚀
+
+Here's how to begin your DevOps journey:
+
+1. **Head to Modules** - Pick a track that matches your goals
+2. **Start from the beginning** - Each module builds on previous knowledge
+3. **Complete tasks** - Earn XP and track your progress
+4. **Keep your streak** - Learn daily for bonus rewards!
+
+Check out the Linux or Docker modules if you're just starting out. What area interests you most?`
+    }
+
+    if (lowerMessage.includes("xp") || lowerMessage.includes("points") || lowerMessage.includes("poäng")) {
+        return `XP (Experience Points) are your progress currency! 🏆
+
+**How to earn XP:**
+- Complete tasks (varies by difficulty)
+- Maintain daily streaks
+- Achieve milestones
+- Finish modules
+
+Different tasks award different XP - harder tasks = more XP! Your total XP shows on your profile. Keep learning to level up! 💪`
+    }
+
+    if (lowerMessage.includes("streak") || lowerMessage.includes("serie") || lowerMessage.includes("daily")) {
+        return `Streaks track your consistency! 🔥
+
+**How it works:**
+- Complete at least 1 task per day
+- Your streak counts consecutive days
+- Longer streaks = special badges + bonus XP
+
+Miss a day? Your streak resets to 0. But don't worry - just start again! Consistency beats perfection.`
+    }
+
+    // Features
+    if (lowerMessage.includes("bookmark") || lowerMessage.includes("bokmärk") || lowerMessage.includes("star") || lowerMessage.includes("spara")) {
+        return `Bookmarks help you save tasks for later! ⭐
+
+**How to use:**
+- Click the star icon on any task
+- Bookmarked tasks appear in the right sidebar
+- Perfect for tasks you want to revisit
+
+Pro tip: Use bookmarks to build a study playlist of topics you find challenging!`
+    }
+
+    if (lowerMessage.includes("skillpath") || lowerMessage.includes("skill path") || lowerMessage.includes("board") || lowerMessage.includes("map")) {
+        return `The SkillPath Board is your visual learning map! 🗺️
+
+**What it shows:**
+- How different DevOps technologies connect
+- Your progress through skill trees
+- Recommended next steps
+- Dependencies between skills
+
+Think of it as your GPS for the DevOps landscape. Each node is a skill you can master!`
+    }
+
+    if (lowerMessage.includes("dallas") || lowerMessage.includes("ai") || lowerMessage.includes("help") || lowerMessage.includes("hjälp")) {
+        return `I'm Dallas, your AI DevOps guide! 🐺
+
+**I can help with:**
+- Explaining concepts
+- Giving hints when you're stuck
+- Recommending what to learn next
+- Answering questions about the platform
+
+Just ask me anything about DevOps - Linux, Docker, Kubernetes, CI/CD, cloud, and more!`
+    }
+
+    // Account
+    if (lowerMessage.includes("password") || lowerMessage.includes("lösenord") || lowerMessage.includes("security")) {
+        return `For security settings: 🔒
+
+Go to **Settings → Security** to:
+- Change your password
+- Update security preferences
+
+You'll need your current password to make changes. Keep your credentials safe!`
+    }
+
+    if (lowerMessage.includes("delete") || lowerMessage.includes("account") || lowerMessage.includes("radera") || lowerMessage.includes("konto")) {
+        return `About your account: 👤
+
+You can delete your account from **Settings → Danger Zone**.
+
+⚠️ **Warning:** This is irreversible and will permanently delete:
+- All your progress
+- XP and achievements
+- Bookmarks and history
+
+Make sure you really want to do this before proceeding!`
+    }
+
+    // Technical topics
+    if (lowerMessage.includes("linux") || lowerMessage.includes("terminal") || lowerMessage.includes("bash")) {
         return `Great question about Linux! 🐧
 
 Here's a quick tip: The terminal is your best friend in DevOps. Start with these essentials:
@@ -84,10 +184,10 @@ cd /path/to/directory
 cat filename.txt
 \`\`\`
 
-Check out the Linux SkillsMap for a deep dive! Want me to explain any specific command?`
+Check out the Linux module for a deep dive! Want me to explain any specific command?`
     }
 
-    if (lowerMessage.includes("docker")) {
+    if (lowerMessage.includes("docker") || lowerMessage.includes("container")) {
         return `Docker is essential for modern DevOps! 🐳
 
 Here's a quick overview:
@@ -103,7 +203,7 @@ docker ps
 docker logs myapp
 \`\`\`
 
-The Docker SkillsMap covers everything from basics to advanced production patterns. What specific aspect would you like to explore?`
+The Docker module covers everything from basics to production patterns. What specific aspect would you like to explore?`
     }
 
     if (lowerMessage.includes("kubernetes") || lowerMessage.includes("k8s")) {
@@ -128,18 +228,7 @@ spec:
 What would you like to learn about Kubernetes?`
     }
 
-    if (lowerMessage.includes("help") || lowerMessage.includes("hint")) {
-        return `I'm here to help! 🧙‍♂️
-
-Here's what I can do:
-- **Explain concepts**: Ask me about any DevOps topic
-- **Give hints**: If you're stuck on a task, I'll guide you
-- **Suggest next steps**: Based on your progress
-
-What are you working on right now?`
-    }
-
-    if (lowerMessage.includes("next") || lowerMessage.includes("what should")) {
+    if (lowerMessage.includes("next") || lowerMessage.includes("nästa") || lowerMessage.includes("what should") || lowerMessage.includes("recommend")) {
         return `Based on a typical learning path, here's what I'd recommend:
 
 1. **Linux Fundamentals** - Master the terminal first
@@ -152,6 +241,21 @@ What are you working on right now?`
 Where are you in your journey? I can give more specific recommendations!`
     }
 
+    // Greetings
+    if (lowerMessage.includes("hej") || lowerMessage.includes("hello") || lowerMessage.includes("hi ") || lowerMessage.includes("tjena")) {
+        return `Hey! 👋 I'm Dallas, your DevOps guide.
+
+I can help you with:
+- Linux commands and concepts
+- Docker containerization
+- Kubernetes orchestration
+- AWS cloud services
+- CI/CD pipelines
+- And much more!
+
+What would you like to learn about today?`
+    }
+
     // Default response
     return `Hey! 👋 I'm your DevOps Wizard.
 
@@ -161,7 +265,7 @@ I can help you with:
 - Kubernetes orchestration
 - AWS cloud services
 - CI/CD pipelines
-- And much more!
+- Platform questions (XP, streaks, bookmarks)
 
 What would you like to learn about today?`
 }

@@ -615,10 +615,10 @@ export default function MagnetenPage() {
                                 "text-2xl md:text-3xl font-bold",
                                 "bg-gradient-to-r from-zinc-100 via-purple-200 to-zinc-100 bg-clip-text text-transparent"
                             )}>
-                                Välkommen till Magneten, {userName}!
+                                Ta en egen pulsmätning, {userName}!
                             </h1>
                             <p className="text-zinc-400 mt-1">
-                                Din personliga lärandekompass • Planera, fokusera, uppnå
+                                Planera din DevOps-resa, sätt upp mål och följ din progress
                             </p>
                         </div>
                     </div>
