@@ -73,57 +73,66 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
         <motion.button
             onClick={onClick}
             className="relative group"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Open Dallas AI Assistant"
         >
-            {/* Outer glow rings - very subtle breathing */}
+            {/* Ambient glow ring - breathing animation */}
             <motion.div
-                className="absolute inset-0 rounded-full"
+                className="absolute -inset-2 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 blur-md group-hover:from-cyan-400/40 group-hover:via-blue-400/40 group-hover:to-purple-400/40 transition-all duration-300"
                 animate={{
-                    boxShadow: [
-                        "0 0 4px 1px rgba(59, 130, 246, 0.08)",
-                        "0 0 8px 2px rgba(59, 130, 246, 0.12)",
-                        "0 0 4px 1px rgba(59, 130, 246, 0.08)",
-                    ],
+                    opacity: [0.4, 0.7, 0.4],
+                    scale: [1, 1.05, 1],
                 }}
                 transition={{
-                    duration: 5,
+                    duration: 3,
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
             />
 
-            {/* Secondary pulse ring - disabled for subtlety */}
-            {/* Removed to reduce glow intensity */}
+            {/* Secondary glow pulse - visible on hover */}
+            <motion.div
+                className="absolute -inset-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                animate={{
+                    boxShadow: [
+                        "0 0 15px 5px rgba(59, 130, 246, 0.3)",
+                        "0 0 25px 10px rgba(139, 92, 246, 0.4)",
+                        "0 0 15px 5px rgba(59, 130, 246, 0.3)",
+                    ],
+                }}
+                transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            />
 
             {/* Main orb */}
             <div className={cn(
                 "relative w-10 h-10 rounded-full",
-                "bg-gradient-to-br from-gray-100 via-white to-gray-200",
-                "dark:from-gray-700 dark:via-gray-600 dark:to-gray-800",
-                "shadow-md",
-                "border border-gray-200/50 dark:border-gray-600/50",
+                "bg-gradient-to-br from-gray-700 via-gray-600 to-gray-800",
+                "shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40",
+                "border border-gray-500/30 group-hover:border-blue-400/50",
                 "flex items-center justify-center",
-                "overflow-hidden"
+                "overflow-hidden",
+                "transition-all duration-300"
             )}>
-                {/* Inner magical glow - very subtle */}
+                {/* Inner magical glow */}
                 <motion.div
-                    className="absolute inset-1 rounded-full bg-gradient-to-br from-blue-400/10 to-indigo-500/10"
+                    className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 via-blue-500/20 to-purple-500/20 group-hover:from-cyan-400/40 group-hover:via-blue-500/40 group-hover:to-purple-500/40 transition-all duration-300"
                     animate={{
-                        opacity: [0.2, 0.3, 0.2],
+                        opacity: [0.3, 0.6, 0.3],
                     }}
                     transition={{
-                        duration: 4,
+                        duration: 2.5,
                         repeat: Infinity,
                         ease: "easeInOut",
                     }}
                 />
 
-                {/* Wolf emoji */}
-                <span className="text-xl relative z-10">🐺</span>
-
-                {/* Sparkle effects - removed for cleaner look */}
+                {/* Wolf emoji with glow effect */}
+                <span className="text-xl relative z-10 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] group-hover:drop-shadow-[0_0_12px_rgba(139,92,246,0.8)] transition-all duration-300">🐺</span>
             </div>
 
             {/* Hover tooltip */}
