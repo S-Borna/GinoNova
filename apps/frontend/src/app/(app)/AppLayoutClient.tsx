@@ -15,7 +15,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { AuthProvider, useAuth } from "@/components/auth"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { TopBar } from "@/components/layout/TopBar"
 import { MobileNav } from "@/components/layout/MobileNav"
@@ -91,10 +91,14 @@ function LoadingScreen() {
 function AppLayoutInner({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth()
     const router = useRouter()
+    const pathname = usePathname()
     const { collapsed, toggle } = useSidebarState()
     const isDesktop = useMediaQuery("(min-width: 1024px)")
     const isTablet = useMediaQuery("(min-width: 768px)")
     const isMobile = !isTablet
+
+    // Only show RightSidebar on task pages (modules/[id]/tasks/[taskId])
+    const showRightSidebar = isDesktop && pathname?.includes("/modules/") && pathname?.includes("/tasks/")
 
     // Redirect to login if not authenticated
     React.useEffect(() => {
@@ -131,7 +135,7 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                 className={cn(
                     "min-h-screen transition-all duration-300",
                     isTablet && (effectiveCollapsed ? "pl-[72px]" : "pl-[240px]"),
-                    isDesktop && "pr-[280px]", // Space for right sidebar on desktop
+                    showRightSidebar && "pr-[280px]", // Space for right sidebar only on task pages
                     isMobile && "pb-20" // Space for mobile nav
                 )}
             >
@@ -150,8 +154,8 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                 </main>
             </div>
 
-            {/* Right Sidebar - Bookmarks & Reminders (desktop only) */}
-            {isDesktop && (
+            {/* Right Sidebar - Bookmarks & Reminders (only on task pages) */}
+            {showRightSidebar && (
                 <aside className={cn(
                     "fixed right-0 top-0 z-30 h-screen w-[280px]",
                     "bg-zinc-950/95 backdrop-blur-xl",
