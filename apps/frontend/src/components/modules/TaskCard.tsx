@@ -32,7 +32,9 @@ import {
     Layers,
     Rocket,
     Trophy,
-    HelpCircle
+    HelpCircle,
+    Bell,
+    Star
 } from "lucide-react"
 import designTokens from "@/lib/design-tokens"
 import { BookmarkButton } from "./BookmarkButton"
@@ -68,6 +70,8 @@ export interface TaskCardProps {
     // Bookmark props (PROMPT 4)
     isBookmarked?: boolean
     onToggleBookmark?: (taskId: string) => Promise<boolean>
+    // Reminder badge
+    hasReminder?: boolean
 }
 
 /* ============================================================================
@@ -179,7 +183,8 @@ export function TaskCard({
     isLoading = false,
     className,
     isBookmarked = false,
-    onToggleBookmark
+    onToggleBookmark,
+    hasReminder = false
 }: TaskCardProps) {
     const [isHovered, setIsHovered] = useState(false)
     const config = typeConfig[type]
@@ -234,8 +239,24 @@ export function TaskCard({
                         </span>
                     </div>
 
-                    {/* Status / Type Badge + Bookmark */}
+                    {/* Status / Type Badge + Badges + Bookmark */}
                     <div className="flex items-center gap-2">
+                        {/* Bookmark Badge (if bookmarked but no toggle function) */}
+                        {isBookmarked && !onToggleBookmark && (
+                            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
+                                <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                                <span className="text-[10px] font-medium text-amber-400">Sparad</span>
+                            </div>
+                        )}
+                        
+                        {/* Reminder Badge */}
+                        {hasReminder && (
+                            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                                <Bell className="w-3 h-3 text-emerald-400" />
+                                <span className="text-[10px] font-medium text-emerald-400">Påminnelse</span>
+                            </div>
+                        )}
+                        
                         {/* Bookmark Button */}
                         {onToggleBookmark && (
                             <BookmarkButton
