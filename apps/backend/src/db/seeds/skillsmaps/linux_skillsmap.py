@@ -5784,7 +5784,825 @@ Du kan nu arkivera och komprimera. Nästa node: **Cron & Scheduling** — automa
 }
 
 
-# Update the nodes list again
+# =============================================================================
+# NODE 17: CRON & SCHEDULING
+# =============================================================================
+
+NODE_17_CRON = {
+    "node_id": 17,
+    "title": "Cron & Scheduling",
+    "slug": "cron-scheduling",
+    "difficulty": "intermediate",
+    "estimated_minutes": 45,
+    "xp_reward": 75,
+    "topics_covered": [
+        "cron", "crontab", "at", "batch", "anacron",
+        "systemd timers", "scheduling patterns"
+    ],
+    "content": '''# Cron & Scheduling
+
+## Varför detta är kritiskt
+
+> "Automation utan scheduling är manuellt arbete. Backups, logrotation, deployments — allt körs på schema. Cron är DevOps-hjärtat."
+
+---
+
+## Crontab Grunderna
+
+### Syntax
+
+```
+┌───────────── minute (0-59)
+│ ┌───────────── hour (0-23)
+│ │ ┌───────────── day of month (1-31)
+│ │ │ ┌───────────── month (1-12)
+│ │ │ │ ┌───────────── day of week (0-6, 0=Sunday)
+│ │ │ │ │
+* * * * * command
+```
+
+### Hantera crontab
+
+```bash
+# Redigera din crontab
+crontab -e
+
+# Lista din crontab
+crontab -l
+
+# Ta bort alla jobb
+crontab -r
+
+# Redigera annan användares (root)
+sudo crontab -u nginx -e
+```
+
+---
+
+## Vanliga Mönster
+
+```bash
+# Varje minut
+* * * * * /script.sh
+
+# Varje timme
+0 * * * * /script.sh
+
+# Varje dag kl 03:00
+0 3 * * * /backup.sh
+
+# Måndag-fredag kl 09:00
+0 9 * * 1-5 /report.sh
+
+# Första i varje månad
+0 0 1 * * /monthly.sh
+
+# Var 5:e minut
+*/5 * * * * /check.sh
+
+# Var 2:a timme
+0 */2 * * * /script.sh
+```
+
+### Specialuttryck
+
+```bash
+@reboot    # Vid start
+@yearly    # 0 0 1 1 *
+@monthly   # 0 0 1 * *
+@weekly    # 0 0 * * 0
+@daily     # 0 0 * * *
+@hourly    # 0 * * * *
+```
+
+---
+
+## System Cron Directories
+
+```bash
+/etc/cron.d/        # Systemjobb
+/etc/cron.hourly/   # Körs varje timme
+/etc/cron.daily/    # Körs varje dag
+/etc/cron.weekly/   # Körs varje vecka
+/etc/cron.monthly/  # Körs varje månad
+```
+
+---
+
+## Praktiskt Exempel
+
+```bash
+# Backup varje natt kl 02:00
+0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+
+# SSL-cert renewal måndag kl 03:00
+0 3 * * 1 certbot renew --quiet
+
+# Disk cleanup söndag kl 04:00
+0 4 * * 0 find /tmp -mtime +7 -delete
+```
+
+---
+
+## Systemd Timers (Modernt Alternativ)
+
+```bash
+# Lista timers
+systemctl list-timers
+
+# Skapa timer: /etc/systemd/system/backup.timer
+[Unit]
+Description=Daily backup timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
+# Aktivera
+sudo systemctl enable --now backup.timer
+```
+
+---
+
+## Sammanfattning
+
+| Mönster | Betydelse |
+|---------|-----------|
+| `* * * * *` | Varje minut |
+| `0 * * * *` | Varje timme |
+| `0 3 * * *` | Kl 03:00 dagligen |
+| `*/5 * * * *` | Var 5:e minut |
+| `0 0 * * 0` | Söndagar |
+
+---
+
+## Nästa Steg
+
+Du kan nu schemalägga uppgifter. Nästa node: **Log Management** — övervaka och analysera loggar.
+'''
+}
+
+
+# =============================================================================
+# NODE 18: LOG MANAGEMENT
+# =============================================================================
+
+NODE_18_LOG_MANAGEMENT = {
+    "node_id": 18,
+    "title": "Log Management & Analysis",
+    "slug": "log-management",
+    "difficulty": "intermediate",
+    "estimated_minutes": 50,
+    "xp_reward": 80,
+    "topics_covered": [
+        "journalctl", "syslog", "rsyslog", "logrotate",
+        "log analysis", "dmesg", "last", "wtmp"
+    ],
+    "content": '''# Log Management & Analysis
+
+## Varför detta är kritiskt
+
+> "Loggar är sanningen. När något går fel är loggen ditt vittne. Utan logghantering flyger du blint."
+
+---
+
+## Viktiga Logfiler
+
+```bash
+/var/log/syslog       # Generell systemlogg (Debian/Ubuntu)
+/var/log/messages     # Generell systemlogg (RHEL/CentOS)
+/var/log/auth.log     # Autentisering (Debian/Ubuntu)
+/var/log/secure       # Autentisering (RHEL/CentOS)
+/var/log/kern.log     # Kernel-meddelanden
+/var/log/dmesg        # Boot-meddelanden
+/var/log/nginx/       # Nginx-loggar
+/var/log/apache2/     # Apache-loggar
+```
+
+---
+
+## journalctl (Systemd)
+
+```bash
+# Alla loggar
+journalctl
+
+# Senaste 100 rader
+journalctl -n 100
+
+# Följ live
+journalctl -f
+
+# Specifik enhet
+journalctl -u nginx.service
+
+# Sedan idag
+journalctl --since today
+
+# Tidsintervall
+journalctl --since "2024-01-01" --until "2024-01-02"
+
+# Senaste timmen
+journalctl --since "1 hour ago"
+
+# Kernel-meddelanden
+journalctl -k
+
+# Felmeddelanden
+journalctl -p err
+
+# JSON-output
+journalctl -o json-pretty
+```
+
+---
+
+## Klassisk Logganalys
+
+```bash
+# Visa slutet av logg
+tail -f /var/log/syslog
+
+# Sök i loggar
+grep "error" /var/log/syslog
+grep -i "failed" /var/log/auth.log
+
+# Räkna förekomster
+grep -c "404" /var/log/nginx/access.log
+
+# Unika IP-adresser
+awk '{print $1}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head
+
+# Topp 10 sökvägar
+awk '{print $7}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head
+```
+
+---
+
+## dmesg - Kernel Loggar
+
+```bash
+# Alla kernel-meddelanden
+dmesg
+
+# Följ nya meddelanden
+dmesg -w
+
+# Med tidsstämplar
+dmesg -T
+
+# Fel och varningar
+dmesg -l err,warn
+
+# USB-enheter
+dmesg | grep -i usb
+```
+
+---
+
+## Logrotate
+
+Konfiguration: `/etc/logrotate.d/`
+
+```bash
+# Exempel: /etc/logrotate.d/nginx
+/var/log/nginx/*.log {
+    daily           # Rotera dagligen
+    rotate 14       # Behåll 14 filer
+    compress        # Komprimera
+    delaycompress   # Vänta en cykel
+    missingok       # OK om saknas
+    notifempty      # Skippa tomma
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        systemctl reload nginx > /dev/null 2>&1 || true
+    endscript
+}
+```
+
+```bash
+# Testa config
+sudo logrotate -d /etc/logrotate.conf
+
+# Tvinga rotation
+sudo logrotate -f /etc/logrotate.d/nginx
+```
+
+---
+
+## Inloggningshistorik
+
+```bash
+# Senaste inloggningar
+last
+
+# Misslyckade försök
+lastb
+
+# Vem är inloggad
+who
+w
+
+# Användares senaste login
+lastlog
+```
+
+---
+
+## Sammanfattning
+
+| Kommando | Funktion |
+|----------|----------|
+| `journalctl -u service` | Service-loggar |
+| `journalctl -f` | Följ live |
+| `tail -f` | Följ fil |
+| `dmesg -T` | Kernel med tid |
+| `last` | Inloggningshistorik |
+| `logrotate` | Hantera loggfiler |
+
+---
+
+## Nästa Steg
+
+Du kan nu analysera loggar. Nästa node: **Performance Monitoring** — övervaka systemet.
+'''
+}
+
+
+# =============================================================================
+# NODE 19: PERFORMANCE MONITORING
+# =============================================================================
+
+NODE_19_PERFORMANCE = {
+    "node_id": 19,
+    "title": "Performance Monitoring",
+    "slug": "performance-monitoring",
+    "difficulty": "advanced",
+    "estimated_minutes": 55,
+    "xp_reward": 90,
+    "topics_covered": [
+        "top", "htop", "vmstat", "iostat", "sar",
+        "free", "uptime", "mpstat", "pidstat", "perf"
+    ],
+    "content": '''# Performance Monitoring
+
+## Varför detta är kritiskt
+
+> "Performance är UX. En långsam server är en dålig server. Du måste kunna identifiera flaskhalsar — CPU, minne, disk, nätverk."
+
+---
+
+## Snabb Överblick
+
+### uptime
+
+```bash
+$ uptime
+ 14:30:01 up 45 days, 3:22, 2 users, load average: 0.52, 0.58, 0.59
+#                                                   1m   5m   15m
+
+# Load average:
+# < CPU-kärnor = OK
+# > CPU-kärnor = Överbelastat
+```
+
+### top / htop
+
+```bash
+# top - grundläggande
+top
+
+# htop - bättre UI
+htop
+
+# Viktiga kolumner:
+# %CPU - CPU-användning
+# %MEM - Minnesanvändning
+# TIME+ - Total CPU-tid
+# COMMAND - Processnamn
+
+# top shortcuts:
+# P - Sortera på CPU
+# M - Sortera på minne
+# k - Döda process
+# q - Avsluta
+```
+
+---
+
+## CPU-analys
+
+### mpstat
+
+```bash
+# CPU-statistik per kärna
+mpstat -P ALL 1
+
+# Förklaring:
+# %usr  - User-mode
+# %sys  - Kernel-mode
+# %iowait - Väntar på I/O
+# %idle - Ledig
+```
+
+### vmstat
+
+```bash
+# Snapshot var 2:a sekund
+vmstat 2
+
+# Output förklaring:
+# procs: r=runnable, b=blocked
+# memory: swpd, free, buff, cache
+# swap: si=swap in, so=swap out
+# io: bi=blocks in, bo=blocks out
+# system: in=interrupts, cs=context switches
+# cpu: us, sy, id, wa, st
+```
+
+---
+
+## Minnesanalys
+
+### free
+
+```bash
+$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          15Gi        8.2Gi       1.2Gi       512Mi       5.8Gi       6.5Gi
+Swap:          4Gi        0.0Gi       4.0Gi
+
+# Viktigt: Titta på "available", inte "free"
+# buff/cache kan frigöras vid behov
+```
+
+### Minnesläckor
+
+```bash
+# Topp minnesanvändare
+ps aux --sort=-%mem | head
+
+# Specifik process
+pmap -x <PID>
+
+# Detaljerad
+cat /proc/<PID>/status | grep -i mem
+```
+
+---
+
+## Diskanalys
+
+### iostat
+
+```bash
+# Disk I/O statistik
+iostat -xz 1
+
+# Viktiga kolumner:
+# r/s, w/s - Reads/writes per sekund
+# rkB/s, wkB/s - KB per sekund
+# await - Genomsnittlig väntetid (ms)
+# %util - Disk-användning
+```
+
+### iotop
+
+```bash
+# Disk I/O per process
+sudo iotop
+
+# Bara aktiva processer
+sudo iotop -o
+```
+
+---
+
+## Nätverksanalys
+
+```bash
+# Nätverksstatistik
+sar -n DEV 1
+
+# Bandbredd per interface
+nload
+
+# Anslutningar per state
+ss -s
+
+# Topp bandbredd per process
+nethogs
+```
+
+---
+
+## sar - Historisk Data
+
+```bash
+# CPU senaste timmen
+sar -u
+
+# Minne
+sar -r
+
+# Disk I/O
+sar -d
+
+# Nätverk
+sar -n DEV
+
+# Specifik tid
+sar -u -s 10:00:00 -e 12:00:00
+```
+
+---
+
+## Sammanfattning
+
+| Resurs | Verktyg |
+|--------|---------|
+| CPU | top, htop, mpstat |
+| Minne | free, vmstat, pmap |
+| Disk | iostat, iotop |
+| Nätverk | sar, nload, nethogs |
+| Historik | sar |
+
+---
+
+## Nästa Steg
+
+Du kan nu övervaka prestanda. Nästa node: **Troubleshooting** — felsökning av problem.
+'''
+}
+
+
+# =============================================================================
+# NODE 20: TROUBLESHOOTING
+# =============================================================================
+
+NODE_20_TROUBLESHOOTING = {
+    "node_id": 20,
+    "title": "Linux Troubleshooting",
+    "slug": "troubleshooting",
+    "difficulty": "advanced",
+    "estimated_minutes": 60,
+    "xp_reward": 100,
+    "topics_covered": [
+        "systematic debugging", "strace", "lsof", "netstat",
+        "common issues", "recovery", "emergency mode"
+    ],
+    "content": '''# Linux Troubleshooting
+
+## Varför detta är kritiskt
+
+> "Production går ner. Du har 5 minuter att fixa det. Panik hjälper inte — systematisk felsökning gör det. Detta är din troubleshooting-verktygslåda."
+
+---
+
+## Systematisk Approach
+
+```
+1. IDENTIFY  → Vad är symptomen?
+2. REPRODUCE → Kan du återskapa?
+3. ISOLATE   → Var är problemet?
+4. ANALYZE   → Varför händer det?
+5. FIX       → Åtgärda
+6. VERIFY    → Bekräfta fix
+7. DOCUMENT  → Skriv ner
+```
+
+---
+
+## Vanliga Problem & Lösningar
+
+### "Disk Full"
+
+```bash
+# Kolla diskutrymme
+df -h
+
+# Hitta stora filer
+du -sh /* 2>/dev/null | sort -rh | head
+
+# Hitta stora filer
+find / -type f -size +100M 2>/dev/null
+
+# Rensa loggar
+journalctl --vacuum-size=500M
+truncate -s 0 /var/log/syslog.1
+
+# Hitta raderade filer som fortfarande används
+lsof | grep deleted
+```
+
+### "Out of Memory"
+
+```bash
+# Kolla minne
+free -h
+
+# OOM-killed processer
+dmesg | grep -i "killed process"
+journalctl -k | grep -i oom
+
+# Topp minnesanvändare
+ps aux --sort=-%mem | head -10
+
+# Rensa cache (försiktigt!)
+sync; echo 3 > /proc/sys/vm/drop_caches
+```
+
+### "Can't Connect"
+
+```bash
+# Kolla om tjänsten kör
+systemctl status nginx
+
+# Kolla lyssnande portar
+ss -tlnp | grep :80
+
+# Kolla firewall
+sudo iptables -L -n
+sudo ufw status
+
+# DNS-problem
+dig example.com
+nslookup example.com
+
+# Testa anslutning
+curl -v http://localhost
+telnet localhost 80
+nc -zv localhost 80
+```
+
+### "Process Hangs"
+
+```bash
+# Hitta hängande process
+ps aux | grep -i <process>
+
+# Vad gör den?
+strace -p <PID>
+
+# Öppna filer
+lsof -p <PID>
+
+# Döda
+kill <PID>
+kill -9 <PID>  # Tvinga
+
+# Alla av en typ
+pkill -9 nginx
+```
+
+---
+
+## Kraftfulla Verktyg
+
+### strace - Systemanrop
+
+```bash
+# Spåra process
+strace -p <PID>
+
+# Starta med trace
+strace -f ./script.sh
+
+# Bara nätverksanrop
+strace -e network ./app
+
+# Med tidsstämplar
+strace -t -p <PID>
+```
+
+### lsof - Öppna filer
+
+```bash
+# Allt som en process har öppet
+lsof -p <PID>
+
+# Vem använder en port?
+lsof -i :80
+
+# Vem använder en fil?
+lsof /var/log/syslog
+
+# Raderade men öppna filer
+lsof +L1
+```
+
+### tcpdump - Nätverkstrafik
+
+```bash
+# All trafik på interface
+sudo tcpdump -i eth0
+
+# Specifik port
+sudo tcpdump -i any port 443
+
+# Spara till fil
+sudo tcpdump -i eth0 -w capture.pcap
+```
+
+---
+
+## Boot-problem
+
+### GRUB Recovery
+
+```bash
+# I GRUB-menyn, tryck 'e' för att redigera
+
+# Lägg till i linux-raden:
+init=/bin/bash
+
+# Eller för single user:
+single
+# eller
+1
+```
+
+### Emergency Mode
+
+```bash
+# Systemd emergency
+systemctl emergency
+
+# Rescue mode
+systemctl rescue
+
+# Från GRUB: lägg till
+systemd.unit=emergency.target
+```
+
+### Filsystem-problem
+
+```bash
+# Kolla filsystem (unmounted)
+fsck /dev/sda1
+
+# Tvinga check vid boot
+touch /forcefsck
+# eller
+shutdown -rF now
+```
+
+---
+
+## Checklista vid Problem
+
+```
+□ Kolla loggar: journalctl -xe
+□ Kolla disk: df -h
+□ Kolla minne: free -h
+□ Kolla CPU: top/htop
+□ Kolla nätverk: ss -tlnp
+□ Kolla processer: ps aux
+□ Kolla senaste ändringar: last, history
+□ Kolla firewall: iptables -L
+□ Kolla DNS: dig/nslookup
+□ Kolla tjänster: systemctl status
+```
+
+---
+
+## Sammanfattning
+
+| Problem | Första kommando |
+|---------|-----------------|
+| Disk full | `df -h` |
+| Minne slut | `free -h` |
+| Kan inte ansluta | `ss -tlnp` |
+| Process hänger | `strace -p PID` |
+| Boot-problem | GRUB recovery |
+
+---
+
+## Grattis! 🎉
+
+Du har slutfört **Linux Mastery SkillsMap**!
+
+Du kan nu:
+- Hantera processer och tjänster
+- Navigera och manipulera filer
+- Konfigurera användare och behörigheter
+- Övervaka och felsöka system
+- Automatisera med cron
+- Analysera loggar och prestanda
+
+**Nästa steg:** Docker SkillsMap → Containerisering
+'''
+}
+
+
+# =============================================================================
+# COMPLETE NODES LIST
+# =============================================================================
+
 LINUX_SKILLSMAP_NODES = [
     NODE_01_PROCESS_MANAGEMENT,
     NODE_02_FILE_SYSTEM_NAVIGATION,
@@ -5802,8 +6620,10 @@ LINUX_SKILLSMAP_NODES = [
     NODE_14_FIREWALL,
     NODE_15_SSH,
     NODE_16_ARCHIVING,
-    # NODE_17_CRON (to be added)
-    # ... up to NODE_20
+    NODE_17_CRON,
+    NODE_18_LOG_MANAGEMENT,
+    NODE_19_PERFORMANCE,
+    NODE_20_TROUBLESHOOTING,
 ]
 
 

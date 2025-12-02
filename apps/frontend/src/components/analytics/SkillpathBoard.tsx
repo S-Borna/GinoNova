@@ -6,7 +6,7 @@
  * ============================================================================
  *
  * A clean, insightful view of your DevOps learning journey.
- * 
+ *
  * Features:
  * - XP Progress over time
  * - Activity heatmap (GitHub-style)
@@ -92,16 +92,16 @@ const MOCK_DATA: SkillpathData = {
 function generateMockActivity(): DayActivity[] {
     const days: DayActivity[] = []
     const now = new Date()
-    
+
     for (let i = 83; i >= 0; i--) {
         const date = new Date(now)
         date.setDate(date.getDate() - i)
-        
+
         // Random activity (some days more active than others)
         const isActive = Math.random() > 0.4
         const xp = isActive ? Math.floor(Math.random() * 150) + 25 : 0
         const tasks = isActive ? Math.floor(Math.random() * 4) + 1 : 0
-        
+
         days.push({
             date: date.toISOString().split('T')[0],
             xp,
@@ -115,13 +115,13 @@ function generateMockActivity(): DayActivity[] {
    STAT CARD COMPONENT
    ============================================================================ */
 
-function StatCard({ 
-    icon: Icon, 
-    label, 
-    value, 
+function StatCard({
+    icon: Icon,
+    label,
+    value,
     subtext,
     color = "blue"
-}: { 
+}: {
     icon: React.ElementType
     label: string
     value: string | number
@@ -287,7 +287,7 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
                     >
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                                <div 
+                                <div
                                     className="w-2 h-2 rounded-full"
                                     style={{ backgroundColor: module.color }}
                                 />
@@ -304,7 +304,7 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
                                 </span>
                             </div>
                         </div>
-                        
+
                         {/* Progress bar */}
                         <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
                             <motion.div
@@ -333,14 +333,14 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
    XP LEVEL PROGRESS
    ============================================================================ */
 
-function XPLevelProgress({ 
-    level, 
-    totalXP, 
-    xpToNext 
-}: { 
+function XPLevelProgress({
+    level,
+    totalXP,
+    xpToNext
+}: {
     level: number
     totalXP: number
-    xpToNext: number 
+    xpToNext: number
 }) {
     const xpForCurrentLevel = 1000 // XP needed per level
     const currentLevelXP = totalXP % xpForCurrentLevel
@@ -389,7 +389,7 @@ function XPLevelProgress({
                             {xpToNext} XP to Level {level + 1}
                         </span>
                     </div>
-                    
+
                     {/* XP progress bar */}
                     <div className="h-3 bg-neutral-800 rounded-full overflow-hidden">
                         <motion.div
@@ -399,7 +399,7 @@ function XPLevelProgress({
                             className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full"
                         />
                     </div>
-                    
+
                     <p className="text-xs text-neutral-500 mt-2">
                         {Math.round(progressPercent)}% to next level
                     </p>
@@ -447,8 +447,8 @@ function Milestones() {
                         key={idx}
                         className={cn(
                             "flex items-center gap-2 px-3 py-2 rounded-xl",
-                            m.earned 
-                                ? "bg-neutral-800" 
+                            m.earned
+                                ? "bg-neutral-800"
                                 : "bg-neutral-800/30 opacity-50",
                             "transition-all"
                         )}

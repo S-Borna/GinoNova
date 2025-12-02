@@ -26,7 +26,7 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { X, Send, Loader2, Sparkles, Wand2 } from "lucide-react"
+import { X, Send, Loader2, Sparkles } from "lucide-react"
 import { usePathname } from "next/navigation"
 
 /* ============================================================================
@@ -120,8 +120,8 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
                     }}
                 />
 
-                {/* Wizard icon */}
-                <Wand2 className="w-5 h-5 text-gray-600 dark:text-gray-300 relative z-10" />
+                {/* Wolf emoji */}
+                <span className="text-xl relative z-10">🐺</span>
 
                 {/* Sparkle effects - removed for cleaner look */}
             </div>
@@ -167,7 +167,7 @@ function ChatMessage({ message }: { message: Message }) {
                     "flex items-center justify-center",
                     "shadow-md shadow-blue-500/10"
                 )}>
-                    <Wand2 className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                    <span className="text-sm">🐺</span>
                 </div>
             )}
             <div
@@ -201,7 +201,7 @@ function TypingIndicator() {
                 "dark:from-gray-600 dark:to-gray-700",
                 "flex items-center justify-center"
             )}>
-                <Wand2 className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                <span className="text-sm">🐺</span>
             </div>
             <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1.5">
                 {[0, 1, 2].map((i) => (
@@ -365,10 +365,10 @@ export function DallasOrb() {
                                         "shadow-inner"
                                     )}>
                                         <motion.div
-                                            animate={{ rotate: [0, 5, -5, 0] }}
+                                            animate={{ scale: [1, 1.1, 1] }}
                                             transition={{ duration: 2, repeat: Infinity }}
                                         >
-                                            <Wand2 className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                            <span className="text-xl">🐺</span>
                                         </motion.div>
                                     </div>
                                     <div>

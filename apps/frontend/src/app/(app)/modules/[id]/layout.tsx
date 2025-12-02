@@ -236,8 +236,8 @@ function TaskSidebar({
                       >
                         <Star
                           className={`w-3.5 h-3.5 transition-colors ${bookmarked
-                              ? 'fill-amber-400 text-amber-400'
-                              : 'text-gray-500 hover:text-amber-400'
+                            ? 'fill-amber-400 text-amber-400'
+                            : 'text-gray-500 hover:text-amber-400'
                             }`}
                         />
                       </button>
@@ -442,27 +442,16 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
       />
 
       {/* Main Content */}
-      <main className="flex-1 min-w-0">
+      <main className="flex-1 min-w-0 lg:mr-72">
         {children}
       </main>
 
-      {/* ⭐ Bookmark Sidebar (Right Side) */}
-      <aside className={`
-        fixed lg:sticky top-0 right-0 h-screen w-72
-        bg-gray-900 border-l border-gray-800
-        transform transition-transform duration-300 ease-in-out
-        z-50 lg:z-auto
-        ${bookmarkSidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+      {/* ⭐ Bookmark Sidebar (Right Side) - Desktop */}
+      <aside className="
         hidden lg:flex lg:flex-col
-      `}>
-        {/* Mobile close button */}
-        <button
-          onClick={() => setBookmarkSidebarOpen(false)}
-          className="lg:hidden absolute top-4 left-4 p-1 rounded hover:bg-gray-800"
-        >
-          <X className="w-5 h-5 text-gray-400" />
-        </button>
-
+        fixed top-0 right-0 h-screen w-72
+        bg-gray-900/95 backdrop-blur-sm border-l border-gray-800
+      ">
         <BookmarkSidebar className="flex-1" />
       </aside>
 
