@@ -28,6 +28,7 @@ import {
     HelpCircle,
     ChevronLeft,
     ChevronRight,
+    LayoutDashboard,
     type LucideIcon
 } from "lucide-react"
 
@@ -55,6 +56,7 @@ const mainNavItems: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: Home },
     { label: "Modules", href: "/modules", icon: BookOpen },
     { label: "Studyflow", href: "/studyflow", icon: Clock },
+    { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Progress", href: "/progress", icon: BarChart3 },
     { label: "Profile", href: "/profile", icon: User },
 ]
