@@ -411,7 +411,8 @@ export default function ModulesPage() {
     }
 
     // Show platform selector if not yet selected
-    if (!hasSelected) {
+    // TEMP: Force show for testing - change back to: if (!hasSelected)
+    if (true) {
         return (
             <PageLayout maxWidth="wide" background="gray">
                 <div className="min-h-[70vh] flex items-center justify-center py-12">
