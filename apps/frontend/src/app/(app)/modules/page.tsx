@@ -217,7 +217,7 @@ function Header({
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4" />
 
             {/* Animated sparkles */}
-            <motion.div 
+            <motion.div
                 className="absolute top-6 right-16 text-purple-400/50"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}

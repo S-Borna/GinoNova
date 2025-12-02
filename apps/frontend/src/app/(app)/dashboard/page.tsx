@@ -6,7 +6,7 @@
  * ============================================================================
  *
  * The MOTHERSHIP - Command Center for DevOps Learning
- * 
+ *
  * Design Philosophy:
  * - Premium glow effects matching Progress/Studyflow
  * - Chill Mint (#22D3AC) for success/progress
@@ -30,12 +30,12 @@ import { PageLayout, Section } from "@saas/ui"
 
 // UI Components
 import { Button } from "@/components/ui/button"
-import { 
-    RefreshCw, 
-    Zap, 
-    Flame, 
-    BookOpen, 
-    Target, 
+import {
+    RefreshCw,
+    Zap,
+    Flame,
+    BookOpen,
+    Target,
     Trophy,
     Sparkles,
     Star,
@@ -91,21 +91,21 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
             <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
 
             {/* Animated sparkles */}
-            <motion.div 
+            <motion.div
                 className="absolute top-8 right-20 text-purple-400/60"
                 animate={{ rotate: 360, scale: [1, 1.2, 1] }}
                 transition={{ duration: 4, repeat: Infinity }}
             >
                 <Sparkles className="w-6 h-6" />
             </motion.div>
-            <motion.div 
+            <motion.div
                 className="absolute bottom-12 right-40 text-emerald-400/40"
                 animate={{ rotate: -360, scale: [1, 1.3, 1] }}
                 transition={{ duration: 5, repeat: Infinity, delay: 1 }}
             >
                 <Star className="w-5 h-5" />
             </motion.div>
-            <motion.div 
+            <motion.div
                 className="absolute top-1/2 right-16 text-amber-400/30"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -115,7 +115,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
 
             <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div>
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
@@ -132,7 +132,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                             Command Center
                         </span>
                     </motion.div>
-                    
+
                     <motion.h1
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -144,7 +144,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                     >
                         Welcome back, {userName}! 🚀
                     </motion.h1>
-                    
+
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -156,7 +156,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                 </div>
 
                 {/* Stats badges */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 }}
@@ -434,7 +434,7 @@ function XPProgressRing({ currentXP, xpToNextLevel, level }: { currentXP: number
                             </linearGradient>
                         </defs>
                     </svg>
-                    
+
                     {/* Center content */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <span className="text-2xl font-bold text-amber-400">{currentXP}</span>
@@ -550,7 +550,7 @@ export default function DashboardPage() {
             ) : (
                 <div className="space-y-8">
                     {/* Premium Hero */}
-                    <PremiumHero 
+                    <PremiumHero
                         userName={userName}
                         level={levelInfo.level}
                         streak={streak}
