@@ -315,11 +315,11 @@ on:                            # TRIGGERS - nar ska workflow koras?
 jobs:                          # JOBS - vad ska goras?
   build:
     runs-on: ubuntu-latest     # RUNNER - var kors det?
-    
+
     steps:                     # STEPS - steg-for-steg
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Run tests
         run: npm test
 ```
@@ -432,10 +432,10 @@ jobs:
 jobs:
   linux:
     runs-on: ubuntu-latest      # eller ubuntu-22.04, ubuntu-20.04
-  
+
   macos:
     runs-on: macos-latest       # eller macos-13, macos-12
-  
+
   windows:
     runs-on: windows-latest     # eller windows-2022, windows-2019
 ```
@@ -476,20 +476,20 @@ on:
 jobs:
   hello:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Hello World
         run: echo "Hello from GitHub Actions!"
-      
+
       - name: Show repository info
         run: |
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
-      
+
       - name: List files
         run: ls -la
 ```
@@ -604,7 +604,7 @@ jobs:
     runs-on: ubuntu-latest
     env:                       # Bara i DETTA job
       DATABASE_URL: postgresql://localhost/test
-    
+
     steps:
       - run: echo $DATABASE_URL
 ```
@@ -816,7 +816,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
-    
+
     steps:
       - name: Show environment
         run: |
@@ -882,26 +882,26 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'           # Automatisk npm cache!
-      
+
       - name: Install dependencies
         run: npm ci              # ci ar snabbare an install
-      
+
       - name: Run linter
         run: npm run lint
-      
+
       - name: Run tests
         run: npm test
-      
+
       - name: Build
         run: npm run build
 ```
@@ -924,28 +924,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: 'pip'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov flake8
-      
+
       - name: Lint with flake8
         run: flake8 src/ --max-line-length=100
-      
+
       - name: Run tests with coverage
         run: pytest --cov=src --cov-report=xml
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -966,7 +966,7 @@ jobs:
       matrix:
         node-version: [18, 20, 22]
         # Skapar 3 parallella jobs!
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -1170,20 +1170,20 @@ jobs:
     strategy:
       matrix:
         node: [18, 20]
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
-      
+
       - run: npm ci
       - run: npm run lint
       - run: npm test
       - run: npm run build
-      
+
       - uses: actions/upload-artifact@v4
         if: matrix.node == 20  # Bara fran en version
         with:
@@ -1248,23 +1248,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-north-1
-      
+
       - name: Build
         run: npm run build
-      
+
       - name: Deploy to S3
         run: aws s3 sync dist/ s3://${{ secrets.S3_BUCKET }} --delete
-      
+
       - name: Invalidate CloudFront
         run: |
           aws cloudfront create-invalidation \
@@ -1286,7 +1286,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
@@ -1311,7 +1311,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
@@ -1339,19 +1339,19 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -1393,22 +1393,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Configure kubectl
         uses: azure/k8s-set-context@v3
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
-      
+
       - name: Update image tag
         run: |
           sed -i "s|IMAGE_TAG|${{ github.sha }}|g" k8s/deployment.yaml
-      
+
       - name: Deploy
         run: kubectl apply -f k8s/
-      
+
       - name: Wait for rollout
         run: kubectl rollout status deployment/myapp -n production
 ```
@@ -1436,7 +1436,7 @@ jobs:
     steps:
       - name: Deploy to green
         run: kubectl apply -f k8s/green/
-      
+
       - name: Health check
         run: |
           for i in {1..30}; do
@@ -1446,7 +1446,7 @@ jobs:
             fi
             sleep 2
           done
-      
+
       - name: Switch traffic
         run: |
           kubectl patch service myapp \
@@ -1466,7 +1466,7 @@ jobs:
   run: |
     # Vanta och analysera error rates
     sleep 300
-    
+
 - name: Promote or rollback
   run: |
     if [ "$ERROR_RATE" -lt "1" ]; then
@@ -1534,11 +1534,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production
-    
+
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      
+
       # Lagg till din deployment step har
 ```
 
@@ -1619,19 +1619,19 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
           cache: 'npm'
-      
+
       - run: npm ci
         env:
           NPM_TOKEN: ${{ secrets.npm-token }}
-      
+
       - run: npm test
       - run: npm run build
 ```
@@ -1676,10 +1676,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       artifact: ${{ steps.upload.outputs.artifact-name }}
-    
+
     steps:
       - run: npm run build
-      
+
       - id: upload
         uses: actions/upload-artifact@v4
         with:
@@ -1693,7 +1693,7 @@ jobs:
 jobs:
   build:
     uses: ./.github/workflows/reusable-build.yml
-  
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -1728,11 +1728,11 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'npm'
-    
+
     - name: Install dependencies
       run: npm ci
       shell: bash
-    
+
     - name: Verify installation
       run: npm list --depth=0
       shell: bash
@@ -1746,12 +1746,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup project
         uses: ./.github/actions/setup-project
         with:
           node-version: '20'
-      
+
       - run: npm test
 ```
 
@@ -2233,4 +2233,288 @@ CICD_SKILLSMAP_BLOCK_1 = [
     NODE_07_GITHUB_ACTIONS_ADVANCED,
 ]
 
-# Block 2 och 3 kommer i nasta fil
+
+# =============================================================================
+# BLOCK 2: GITLAB CI (Noder 8-11)
+# =============================================================================
+
+NODE_08_GITLAB_CI_BASICS = {
+    "node_id": 8,
+    "title": "GitLab CI Grunderna",
+    "slug": "gitlab-ci-basics",
+    "estimated_minutes": 60,
+    "xp_reward": 150,
+    "prerequisites": [1],
+    "content": '''
+# GitLab CI Grunderna
+
+GitLab CI/CD är inbyggt i GitLab och kräver ingen extern setup.
+
+## .gitlab-ci.yml Struktur
+
+```yaml
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_ENV: production
+
+build-job:
+  stage: build
+  image: node:18
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+test-job:
+  stage: test
+  script:
+    - npm test
+  coverage: '/Coverage: (\\d+)%/'
+
+deploy-job:
+  stage: deploy
+  script:
+    - ./deploy.sh
+  only:
+    - main
+  environment:
+    name: production
+```
+
+## Viktiga Koncept
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| stages | Ordning på pipeline-steg |
+| image | Docker image för job |
+| artifacts | Filer mellan stages |
+| only/except | När job körs |
+| environment | Deploy-miljö |
+
+**Nästa steg:** Node 9 - GitLab CI Runners
+''',
+}
+
+NODE_09_GITLAB_CI_RUNNERS = {
+    "node_id": 9,
+    "title": "GitLab CI Runners",
+    "slug": "gitlab-ci-runners",
+    "estimated_minutes": 55,
+    "xp_reward": 140,
+    "prerequisites": [8],
+    "content": '''
+# GitLab CI Runners
+
+Runners exekverar dina CI/CD jobs.
+
+## Runner-typer
+
+```yaml
+# Shared runners (GitLab.com)
+job:
+  tags: []  # Använder shared runners
+
+# Specifik runner
+job:
+  tags:
+    - docker
+    - linux
+
+# Self-hosted runner
+job:
+  tags:
+    - self-hosted
+    - gpu
+```
+
+## Runner Registration
+
+```bash
+# Installera runner
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+sudo apt install gitlab-runner
+
+# Registrera runner
+sudo gitlab-runner register \\
+  --url https://gitlab.com/ \\
+  --registration-token $TOKEN \\
+  --executor docker \\
+  --docker-image alpine:latest
+```
+
+## Executor-typer
+
+| Executor | Användning |
+|----------|-----------|
+| shell | Lokalt på runner |
+| docker | Container per job |
+| kubernetes | K8s pods |
+| docker+machine | Auto-scaling |
+
+**Nästa steg:** Node 10 - GitLab CI Advanced
+''',
+}
+
+NODE_10_GITLAB_CI_ADVANCED = {
+    "node_id": 10,
+    "title": "GitLab CI Advanced",
+    "slug": "gitlab-ci-advanced",
+    "estimated_minutes": 65,
+    "xp_reward": 160,
+    "prerequisites": [9],
+    "content": '''
+# GitLab CI Advanced Features
+
+## Parent-Child Pipelines
+
+```yaml
+# .gitlab-ci.yml
+stages:
+  - triggers
+
+trigger-backend:
+  stage: triggers
+  trigger:
+    include: backend/.gitlab-ci.yml
+    strategy: depend
+
+trigger-frontend:
+  stage: triggers
+  trigger:
+    include: frontend/.gitlab-ci.yml
+```
+
+## Dynamic Child Pipelines
+
+```yaml
+generate-config:
+  stage: build
+  script:
+    - python generate_pipeline.py > child.yml
+  artifacts:
+    paths:
+      - child.yml
+
+child-pipeline:
+  stage: test
+  trigger:
+    include:
+      - artifact: child.yml
+        job: generate-config
+```
+
+## Rules (Ersätter only/except)
+
+```yaml
+job:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+    - when: never
+```
+
+## Cache & Artifacts
+
+```yaml
+build:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
+```
+
+**Nästa steg:** Node 11 - GitLab CI Security
+''',
+}
+
+NODE_11_GITLAB_CI_SECURITY = {
+    "node_id": 11,
+    "title": "GitLab CI Security",
+    "slug": "gitlab-ci-security",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [10],
+    "content": '''
+# GitLab CI Security Features
+
+## Secret Management
+
+```yaml
+deploy:
+  script:
+    - echo $DB_PASSWORD  # Maskerad i logs
+  variables:
+    DB_PASSWORD: $DB_PASSWORD  # Från CI/CD Settings
+```
+
+## Protected Variables
+
+```yaml
+# Endast på protected branches
+production-deploy:
+  script:
+    - deploy --key=$PROD_KEY
+  only:
+    - main
+  variables:
+    PROD_KEY: $PROD_KEY  # Protected variable
+```
+
+## Security Scanning
+
+```yaml
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+sast:
+  stage: test
+
+dependency_scanning:
+  stage: test
+```
+
+## Container Scanning
+
+```yaml
+include:
+  - template: Security/Container-Scanning.gitlab-ci.yml
+
+container_scanning:
+  variables:
+    CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+```
+
+| Scan | Hittar |
+|------|--------|
+| SAST | Kodfel |
+| DAST | Runtime-sårbarheter |
+| Dependency | Paket-CVE:er |
+| Container | Image-sårbarheter |
+
+**Nästa steg:** Node 12 - Jenkins Fundamentals
+''',
+}
+
+CICD_SKILLSMAP_BLOCK_2 = [
+    NODE_08_GITLAB_CI_BASICS,
+    NODE_09_GITLAB_CI_RUNNERS,
+    NODE_10_GITLAB_CI_ADVANCED,
+    NODE_11_GITLAB_CI_SECURITY,
+]
+
+# Block 3: Jenkins (Noder 12-15) - kommer härnäst
+# Block 4: ArgoCD & GitOps (Noder 16-20) - kommer sist
