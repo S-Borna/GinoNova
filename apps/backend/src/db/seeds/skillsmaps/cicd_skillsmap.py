@@ -2516,5 +2516,327 @@ CICD_SKILLSMAP_BLOCK_2 = [
     NODE_11_GITLAB_CI_SECURITY,
 ]
 
-# Block 3: Jenkins (Noder 12-15) - kommer härnäst
+
+# =============================================================================
+# BLOCK 3: JENKINS (Noder 12-15)
+# =============================================================================
+
+NODE_12_JENKINS_FUNDAMENTALS = {
+    "node_id": 12,
+    "title": "Jenkins Fundamentals",
+    "slug": "jenkins-fundamentals",
+    "estimated_minutes": 60,
+    "xp_reward": 150,
+    "prerequisites": [1],
+    "content": '''
+# Jenkins Fundamentals
+
+Jenkins är den mest använda open-source CI/CD servern.
+
+## Installation
+
+```bash
+# Docker (rekommenderat)
+docker run -d -p 8080:8080 -p 50000:50000 \\
+  -v jenkins_home:/var/jenkins_home \\
+  jenkins/jenkins:lts
+
+# Hämta initial admin password
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+## Grundläggande Koncept
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Job | En bygguppgift |
+| Build | En körning av job |
+| Workspace | Jobbets arbetskatalog |
+| Node/Agent | Maskin som kör builds |
+| Plugin | Utökar funktionalitet |
+
+## Freestyle Job
+
+1. New Item → Freestyle project
+2. Source Code Management → Git
+3. Build Triggers → Poll SCM
+4. Build Steps → Execute shell
+
+```bash
+# Build step exempel
+npm install
+npm test
+npm run build
+```
+
+**Nästa steg:** Node 13 - Jenkinsfile Pipeline
+''',
+}
+
+NODE_13_JENKINSFILE_PIPELINE = {
+    "node_id": 13,
+    "title": "Jenkinsfile Pipeline",
+    "slug": "jenkinsfile-pipeline",
+    "estimated_minutes": 65,
+    "xp_reward": 160,
+    "prerequisites": [12],
+    "content": '''
+# Jenkinsfile Pipeline
+
+Pipeline as Code med Jenkinsfile.
+
+## Declarative Pipeline
+
+```groovy
+// Jenkinsfile
+pipeline {
+    agent any
+
+    environment {
+        NODE_ENV = 'production'
+        DOCKER_IMAGE = "myapp:${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/org/repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm ci'
+                sh 'npm run build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test'
+            }
+            post {
+                always {
+                    junit 'reports/*.xml'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh './deploy.sh'
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend message: "Build succeeded!"
+        }
+        failure {
+            slackSend message: "Build failed!"
+        }
+    }
+}
+```
+
+## Parallel Stages
+
+```groovy
+stage('Tests') {
+    parallel {
+        stage('Unit') {
+            steps { sh 'npm run test:unit' }
+        }
+        stage('Integration') {
+            steps { sh 'npm run test:integration' }
+        }
+    }
+}
+```
+
+**Nästa steg:** Node 14 - Jenkins Agents
+''',
+}
+
+NODE_14_JENKINS_AGENTS = {
+    "node_id": 14,
+    "title": "Jenkins Agents",
+    "slug": "jenkins-agents",
+    "estimated_minutes": 55,
+    "xp_reward": 140,
+    "prerequisites": [13],
+    "content": '''
+# Jenkins Agents
+
+Distribuera builds över flera maskiner.
+
+## Agent-typer
+
+```groovy
+// Specifik agent
+pipeline {
+    agent {
+        label 'linux && docker'
+    }
+}
+
+// Docker agent
+pipeline {
+    agent {
+        docker {
+            image 'node:18'
+            args '-v /tmp:/tmp'
+        }
+    }
+}
+
+// Kubernetes agent
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: node
+    image: node:18
+    command: ['sleep', 'infinity']
+"""
+        }
+    }
+}
+```
+
+## Stage-specifik Agent
+
+```groovy
+pipeline {
+    agent none
+    stages {
+        stage('Build') {
+            agent { docker { image 'node:18' } }
+            steps { sh 'npm run build' }
+        }
+        stage('Deploy') {
+            agent { label 'production' }
+            steps { sh './deploy.sh' }
+        }
+    }
+}
+```
+
+| Agent | Användning |
+|-------|-----------|
+| any | Vilken som helst |
+| none | Ingen default |
+| label | Specifik node |
+| docker | Container |
+| kubernetes | K8s pod |
+
+**Nästa steg:** Node 15 - Jenkins Shared Libraries
+''',
+}
+
+NODE_15_JENKINS_SHARED_LIBS = {
+    "node_id": 15,
+    "title": "Jenkins Shared Libraries",
+    "slug": "jenkins-shared-libraries",
+    "estimated_minutes": 60,
+    "xp_reward": 155,
+    "prerequisites": [14],
+    "content": '''
+# Jenkins Shared Libraries
+
+Återanvändbar pipeline-kod.
+
+## Struktur
+
+```
+shared-library/
+├── vars/
+│   ├── buildApp.groovy      # Global funktioner
+│   └── deployToK8s.groovy
+├── src/
+│   └── org/company/
+│       └── Utils.groovy     # Klasser
+└── resources/
+    └── templates/           # Statiska filer
+```
+
+## Global Function (vars/)
+
+```groovy
+// vars/buildApp.groovy
+def call(Map config = [:]) {
+    pipeline {
+        agent any
+        stages {
+            stage('Build') {
+                steps {
+                    sh "npm ci"
+                    sh "npm run build"
+                }
+            }
+            stage('Test') {
+                steps {
+                    sh "npm test"
+                }
+            }
+        }
+    }
+}
+```
+
+## Användning i Jenkinsfile
+
+```groovy
+@Library('my-shared-library') _
+
+buildApp()
+
+// Med parametrar
+@Library('my-shared-library') _
+
+buildApp(
+    nodeVersion: '18',
+    skipTests: false
+)
+```
+
+## Utility Class
+
+```groovy
+// src/org/company/Docker.groovy
+package org.company
+
+class Docker {
+    def script
+    Docker(script) { this.script = script }
+
+    def build(String image) {
+        script.sh "docker build -t ${image} ."
+    }
+}
+
+// Användning i Jenkinsfile
+def docker = new org.company.Docker(this)
+docker.build('myapp:latest')
+```
+
+**Nästa steg:** Node 16 - ArgoCD Fundamentals
+''',
+}
+
+CICD_SKILLSMAP_BLOCK_3 = [
+    NODE_12_JENKINS_FUNDAMENTALS,
+    NODE_13_JENKINSFILE_PIPELINE,
+    NODE_14_JENKINS_AGENTS,
+    NODE_15_JENKINS_SHARED_LIBS,
+]
+
 # Block 4: ArgoCD & GitOps (Noder 16-20) - kommer sist
