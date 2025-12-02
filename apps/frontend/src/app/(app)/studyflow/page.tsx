@@ -10,6 +10,7 @@
  * Features:
  * - 🐺 Dallas AI Wizard with 40 smart predefined questions
  * - 📅 Schedule & Reminders management
+ * - ⭐ Bookmarked Tasks (Gold Cards - synced from sidebar)
  * - 💡 Personalized learning recommendations
  * - 🔥 Streak tracking and motivation
  * - ⏰ Quick actions for navigation
@@ -21,8 +22,10 @@
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
+import { useBookmarks } from "@/hooks/useBookmarks"
 import {
     Compass,
     Sparkles,
@@ -42,6 +45,9 @@ import {
     Star,
     MessageCircle,
     Timer,
+    Hash,
+    ExternalLink,
+    BookmarkX,
 } from "lucide-react"
 
 /* ============================================================================
@@ -581,6 +587,114 @@ function QuickActions() {
 }
 
 /* ============================================================================
+   BOOKMARKED TASKS — Gold Cards (Synced from Sidebar)
+   ============================================================================ */
+
+function BookmarkedTasksSection() {
+    const { bookmarks, loading, count } = useBookmarks();
+
+    return (
+        <div className={cn(
+            "rounded-2xl overflow-hidden",
+            "bg-gradient-to-br from-amber-900/10 via-zinc-900/80 to-zinc-900/80",
+            "border border-amber-500/20",
+            "shadow-[0_0_20px_rgba(251,191,36,0.05)]"
+        )}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-4 border-b border-amber-500/20">
+                <div className="flex items-center gap-2">
+                    <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                    <h3 className="font-semibold text-zinc-100">Mina Sparade Tasks</h3>
+                    {count > 0 && (
+                        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300">
+                            {count}
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            {/* Bookmarks */}
+            <div className="p-3 max-h-64 overflow-y-auto">
+                {loading ? (
+                    <div className="space-y-2">
+                        {[1, 2].map(i => (
+                            <div key={i} className="animate-pulse p-3 rounded-xl bg-zinc-800/30">
+                                <div className="h-4 bg-zinc-700 rounded w-1/4 mb-2" />
+                                <div className="h-5 bg-zinc-700 rounded w-3/4" />
+                            </div>
+                        ))}
+                    </div>
+                ) : count === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-6 text-center">
+                        <div className={cn(
+                            "w-12 h-12 rounded-xl flex items-center justify-center mb-3",
+                            "bg-zinc-800/50 border border-zinc-700/50"
+                        )}>
+                            <BookmarkX className="w-6 h-6 text-zinc-500" />
+                        </div>
+                        <p className="text-sm font-medium text-zinc-400">
+                            Inga sparade tasks
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1">
+                            ⭐ Stjärnmarkera tasks i modulerna
+                        </p>
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        {bookmarks.slice(0, 4).map((bookmark, index) => (
+                            <Link
+                                key={bookmark.id}
+                                href={`/modules/${bookmark.module_slug}/tasks/${bookmark.task_id}`}
+                                className={cn(
+                                    "group block p-3 rounded-xl",
+                                    "bg-gradient-to-br from-amber-500/10 to-amber-600/5",
+                                    "border border-amber-500/30",
+                                    "hover:border-amber-400/50",
+                                    "hover:shadow-[0_0_20px_rgba(251,191,36,0.15)]",
+                                    "transition-all duration-300"
+                                )}
+                            >
+                                {/* Task number badge */}
+                                <div className="flex items-center justify-between mb-1">
+                                    <span className={cn(
+                                        "flex items-center gap-0.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider",
+                                        "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                                    )}>
+                                        <Hash className="w-2.5 h-2.5" />
+                                        Task {index + 1}
+                                    </span>
+                                    <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                                </div>
+
+                                {/* Task title - Gold */}
+                                <p className="text-sm font-semibold text-amber-200 truncate group-hover:text-white">
+                                    {bookmark.task_title}
+                                </p>
+
+                                {/* Module name */}
+                                <p className="text-xs text-zinc-400 truncate flex items-center gap-1 mt-0.5">
+                                    <Zap className="w-3 h-3" />
+                                    {bookmark.module_name}
+                                </p>
+                            </Link>
+                        ))}
+
+                        {count > 4 && (
+                            <Link
+                                href="/modules"
+                                className="block text-center text-xs text-amber-400 hover:text-amber-300 py-2"
+                            >
+                                +{count - 4} mer i Quick Access →
+                            </Link>
+                        )}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+/* ============================================================================
    MAIN PAGE
    ============================================================================ */
 
@@ -632,9 +746,10 @@ export default function MagnetenPage() {
                         <RecommendationsSection />
                     </div>
 
-                    {/* Right Column - Stats & Schedule */}
+                    {/* Right Column - Stats, Bookmarks & Schedule */}
                     <div className="space-y-6">
                         <StatsCard />
+                        <BookmarkedTasksSection />
                         <QuickActions />
                         <ScheduleSection />
                     </div>

@@ -2,16 +2,17 @@
 
 /**
  * ============================================================================
- * RIGHT SIDEBAR — Premium Combined Bookmarks & Task Reminders
+ * RIGHT SIDEBAR — Premium Quick Access Panel
  * ============================================================================
  *
- * Premium Polish Phase 2
+ * Premium Polish Phase 2 — UPDATED
  *
  * Features:
- * - ⭐ Bookmarks section (existing functionality)
- * - ⏰ Task Reminders section (skipped tasks bubble up)
- * - Premium glow effects and animations
- * - Collapsible sections
+ * - ⭐ Bookmarks displayed as GOLD-MARKED CARDS with task number & module
+ * - ⏰ Task Reminders for skipped tasks
+ * - Combined "My Tasks" view (bookmarks + reminders in same card style)
+ * - Premium glow effects
+ * - Visible in Studyflow too
  *
  * @phase Premium Upgrade Phase 2
  */
@@ -33,6 +34,8 @@ import {
     Bell,
     CheckCircle2,
     Sparkles,
+    Zap,
+    Hash,
 } from 'lucide-react';
 
 /* ============================================================================
@@ -43,6 +46,7 @@ interface TaskReminder {
     id: string;
     task_id: string;
     task_title: string;
+    task_order?: number;
     module_id: string;
     module_slug: string;
     module_name: string;
@@ -60,7 +64,6 @@ interface RightSidebarProps {
    ============================================================================ */
 
 const getMockReminders = (): TaskReminder[] => {
-    // Empty for now - reminders will come from API when tasks are skipped
     return [];
 };
 
@@ -123,13 +126,115 @@ function SectionHeader({
 }
 
 /* ============================================================================
-   BOOKMARKS SECTION
+   GOLD TASK CARD — Premium Bookmark Card Display
+   ============================================================================ */
+
+interface GoldTaskCardProps {
+    taskId: string;
+    taskTitle: string;
+    taskOrder?: number;
+    moduleSlug: string;
+    moduleName: string;
+    type: 'bookmark' | 'reminder';
+    daysAgo?: number;
+}
+
+function GoldTaskCard({
+    taskId,
+    taskTitle,
+    taskOrder,
+    moduleSlug,
+    moduleName,
+    type,
+    daysAgo,
+}: GoldTaskCardProps) {
+    const isBookmark = type === 'bookmark';
+
+    return (
+        <Link
+            href={`/modules/${moduleSlug}/tasks/${taskId}`}
+            className={cn(
+                "group block px-3 py-3 mx-2 mb-2 rounded-xl",
+                "transition-all duration-300",
+                // Gold styling for bookmarks
+                isBookmark && [
+                    "bg-gradient-to-br from-amber-500/10 to-amber-600/5",
+                    "border border-amber-500/30",
+                    "hover:border-amber-400/50",
+                    "hover:shadow-[0_0_20px_rgba(251,191,36,0.15)]",
+                ],
+                // Orange styling for reminders
+                !isBookmark && [
+                    "bg-gradient-to-br from-orange-500/10 to-orange-600/5",
+                    "border border-orange-500/30",
+                    "hover:border-orange-400/50",
+                    "hover:shadow-[0_0_20px_rgba(249,115,22,0.15)]",
+                ]
+            )}
+        >
+            {/* Top row: Task number badge + Star/Bell icon */}
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                    {/* Task number with gold styling */}
+                    {taskOrder && (
+                        <span className={cn(
+                            "flex items-center gap-0.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider",
+                            isBookmark
+                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                                : "bg-orange-500/20 text-orange-300 border border-orange-500/30"
+                        )}>
+                            <Hash className="w-2.5 h-2.5" />
+                            Task {taskOrder}
+                        </span>
+                    )}
+                </div>
+
+                {/* Icon indicator */}
+                {isBookmark ? (
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]" />
+                ) : (
+                    <Bell className="w-4 h-4 text-orange-400" />
+                )}
+            </div>
+
+            {/* Task title - Gold highlighted */}
+            <p className={cn(
+                "text-sm font-semibold truncate mb-1",
+                "group-hover:text-white transition-colors",
+                isBookmark ? "text-amber-200" : "text-orange-200"
+            )}>
+                {taskTitle}
+            </p>
+
+            {/* Module name */}
+            <p className="text-xs text-zinc-400 truncate flex items-center gap-1">
+                <Zap className="w-3 h-3" />
+                {moduleName}
+                {daysAgo !== undefined && (
+                    <span className="ml-auto text-orange-400/70">
+                        {daysAgo}d ago
+                    </span>
+                )}
+            </p>
+
+            {/* Hover indicator */}
+            <div className={cn(
+                "absolute right-3 top-1/2 -translate-y-1/2",
+                "opacity-0 group-hover:opacity-100 transition-opacity"
+            )}>
+                <ExternalLink className="w-4 h-4 text-zinc-400" />
+            </div>
+        </Link>
+    );
+}
+
+/* ============================================================================
+   BOOKMARKS SECTION — Now with Gold Cards
    ============================================================================ */
 
 function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
     const {
         bookmarks,
-        groupedByModule,
         loading,
         error,
         clearAll,
@@ -137,24 +242,11 @@ function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
         refresh
     } = useBookmarks();
 
-    const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
     const [clearing, setClearing] = useState(false);
     const [sectionExpanded, setSectionExpanded] = useState(true);
 
-    const toggleModule = (moduleSlug: string) => {
-        setExpandedModules(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(moduleSlug)) {
-                newSet.delete(moduleSlug);
-            } else {
-                newSet.add(moduleSlug);
-            }
-            return newSet;
-        });
-    };
-
     const handleClearAll = async () => {
-        if (!confirm('Remove all bookmarks? This cannot be undone.')) return;
+        if (!confirm('Ta bort alla bokmärken? Detta kan inte ångras.')) return;
         setClearing(true);
         try {
             await clearAll();
@@ -171,9 +263,9 @@ function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
                     className={cn(
                         "relative p-2 rounded-xl transition-all duration-300",
                         "hover:bg-amber-500/10",
-                        count > 0 && "shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                        count > 0 && "shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                     )}
-                    title={`${count} bookmarked tasks`}
+                    title={`${count} sparade tasks`}
                 >
                     <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
                     {count > 0 && (
@@ -185,8 +277,6 @@ function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
             </div>
         );
     }
-
-    const moduleGroups = Object.values(groupedByModule);
 
     return (
         <div>
@@ -201,42 +291,43 @@ function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
             />
 
             {sectionExpanded && (
-                <div className="max-h-64 overflow-y-auto">
+                <div className="max-h-80 overflow-y-auto py-2">
                     {loading ? (
                         <div className="p-4 space-y-3">
                             {[1, 2, 3].map(i => (
-                                <div key={i} className="animate-pulse">
-                                    <div className="h-4 bg-zinc-800 rounded w-3/4 mb-2" />
-                                    <div className="h-3 bg-zinc-800/50 rounded w-1/2" />
+                                <div key={i} className="animate-pulse mx-2 p-3 rounded-xl bg-zinc-800/30">
+                                    <div className="h-4 bg-zinc-700 rounded w-1/3 mb-2" />
+                                    <div className="h-5 bg-zinc-700 rounded w-3/4 mb-1" />
+                                    <div className="h-3 bg-zinc-800 rounded w-1/2" />
                                 </div>
                             ))}
                         </div>
                     ) : error ? (
                         <div className="p-4 text-sm text-red-400">
-                            Failed to load bookmarks
+                            Kunde inte ladda bokmärken
                             <button onClick={refresh} className="ml-2 text-purple-400 hover:underline">
-                                Retry
+                                Försök igen
                             </button>
                         </div>
                     ) : count === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
+                        <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
                             <div className={cn(
-                                "w-12 h-12 rounded-xl flex items-center justify-center mb-3",
+                                "w-14 h-14 rounded-xl flex items-center justify-center mb-3",
                                 "bg-zinc-800/50 border border-zinc-700/50"
                             )}>
-                                <BookmarkX className="w-6 h-6 text-zinc-500" />
+                                <BookmarkX className="w-7 h-7 text-zinc-500" />
                             </div>
                             <p className="text-sm font-medium text-zinc-400">
-                                No bookmarks yet
+                                Inga bokmärken än
                             </p>
                             <p className="text-xs text-zinc-500 mt-1">
-                                Star tasks for quick access
+                                Stjärnmarkera tasks för snabb åtkomst
                             </p>
                         </div>
                     ) : (
-                        <div className="py-2">
+                        <>
                             {/* Clear All Button */}
-                            <div className="px-4 pb-2">
+                            <div className="px-4 pb-2 flex justify-end">
                                 <button
                                     onClick={handleClearAll}
                                     disabled={clearing}
@@ -250,60 +341,23 @@ function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
                                     ) : (
                                         <Trash2 className="w-3 h-3" />
                                     )}
-                                    Clear all
+                                    Rensa alla
                                 </button>
                             </div>
 
-                            {moduleGroups.map(group => {
-                                const isExpanded = expandedModules.has(group.module_slug);
-
-                                return (
-                                    <div key={group.module_slug} className="mb-1">
-                                        <button
-                                            onClick={() => toggleModule(group.module_slug)}
-                                            className={cn(
-                                                'w-full flex items-center gap-2 px-4 py-2',
-                                                'text-left text-sm font-medium',
-                                                'text-zinc-300',
-                                                'hover:bg-zinc-800/50',
-                                                'transition-colors'
-                                            )}
-                                        >
-                                            {isExpanded ? (
-                                                <ChevronDown className="w-3.5 h-3.5 text-zinc-500" />
-                                            ) : (
-                                                <ChevronRight className="w-3.5 h-3.5 text-zinc-500" />
-                                            )}
-                                            <span className="flex-1 truncate">{group.module_name}</span>
-                                            <span className="text-xs text-zinc-500">
-                                                {group.tasks.length}
-                                            </span>
-                                        </button>
-
-                                        {isExpanded && (
-                                            <div className="ml-6 border-l border-zinc-800">
-                                                {group.tasks.map(bookmark => (
-                                                    <Link
-                                                        key={bookmark.id}
-                                                        href={`/modules/${bookmark.module_slug}/${bookmark.task_id}`}
-                                                        className={cn(
-                                                            'group flex items-center gap-2 px-3 py-2',
-                                                            'text-sm text-zinc-400',
-                                                            'hover:bg-zinc-800/50 hover:text-zinc-200',
-                                                            'transition-colors'
-                                                        )}
-                                                    >
-                                                        <Star className="w-3 h-3 text-amber-400 fill-amber-400 flex-shrink-0" />
-                                                        <span className="flex-1 truncate">{bookmark.task_title}</span>
-                                                        <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
+                            {/* Gold Task Cards - flat list for immediate visibility */}
+                            {bookmarks.map((bookmark, index) => (
+                                <GoldTaskCard
+                                    key={bookmark.id}
+                                    taskId={bookmark.task_id}
+                                    taskTitle={bookmark.task_title}
+                                    taskOrder={index + 1} // Will be replaced with actual order when available
+                                    moduleSlug={bookmark.module_slug}
+                                    moduleName={bookmark.module_name}
+                                    type="bookmark"
+                                />
+                            ))}
+                        </>
                     )}
                 </div>
             )}
@@ -312,7 +366,7 @@ function BookmarksSection({ collapsed }: { collapsed?: boolean }) {
 }
 
 /* ============================================================================
-   TASK REMINDERS SECTION
+   TASK REMINDERS SECTION — Now with Orange Cards
    ============================================================================ */
 
 function TaskRemindersSection({ collapsed }: { collapsed?: boolean }) {
@@ -321,7 +375,6 @@ function TaskRemindersSection({ collapsed }: { collapsed?: boolean }) {
     const [sectionExpanded, setSectionExpanded] = useState(true);
 
     useEffect(() => {
-        // Simulate loading
         setTimeout(() => {
             setReminders(getMockReminders());
             setLoading(false);
@@ -338,9 +391,9 @@ function TaskRemindersSection({ collapsed }: { collapsed?: boolean }) {
                     className={cn(
                         "relative p-2 rounded-xl transition-all duration-300",
                         "hover:bg-orange-500/10",
-                        count > 0 && "shadow-[0_0_15px_rgba(249,115,22,0.2)]"
+                        count > 0 && "shadow-[0_0_15px_rgba(249,115,22,0.3)]"
                     )}
-                    title={`${count} task reminders`}
+                    title={`${count} påminnelser`}
                 >
                     <Clock className="w-5 h-5 text-orange-400" />
                     {count > 0 && (
@@ -366,68 +419,52 @@ function TaskRemindersSection({ collapsed }: { collapsed?: boolean }) {
             />
 
             {sectionExpanded && (
-                <div className="max-h-64 overflow-y-auto">
+                <div className="max-h-64 overflow-y-auto py-2">
                     {loading ? (
                         <div className="p-4 space-y-3">
                             {[1, 2].map(i => (
-                                <div key={i} className="animate-pulse">
-                                    <div className="h-4 bg-zinc-800 rounded w-3/4 mb-2" />
-                                    <div className="h-3 bg-zinc-800/50 rounded w-1/2" />
+                                <div key={i} className="animate-pulse mx-2 p-3 rounded-xl bg-zinc-800/30">
+                                    <div className="h-4 bg-zinc-700 rounded w-1/3 mb-2" />
+                                    <div className="h-5 bg-zinc-700 rounded w-3/4" />
                                 </div>
                             ))}
                         </div>
                     ) : count === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
+                        <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
                             <div className={cn(
-                                "w-12 h-12 rounded-xl flex items-center justify-center mb-3",
+                                "w-14 h-14 rounded-xl flex items-center justify-center mb-3",
                                 "bg-emerald-500/10 border border-emerald-500/20"
                             )}>
-                                <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                                <CheckCircle2 className="w-7 h-7 text-emerald-400" />
                             </div>
                             <p className="text-sm font-medium text-zinc-400">
-                                All caught up! 🎉
+                                Allt klart! 🎉
                             </p>
                             <p className="text-xs text-zinc-500 mt-1">
-                                Skipped tasks will appear here
+                                Överhoppade tasks visas här
                             </p>
                         </div>
                     ) : (
-                        <div className="py-2 space-y-1">
+                        <>
                             {reminders.slice(0, 5).map(reminder => (
-                                <Link
+                                <GoldTaskCard
                                     key={reminder.id}
-                                    href={`/modules/${reminder.module_slug}/${reminder.task_id}`}
-                                    className={cn(
-                                        "group flex items-start gap-3 px-4 py-3 mx-2 rounded-xl",
-                                        "bg-zinc-800/30 border border-zinc-700/30",
-                                        "hover:bg-orange-500/10 hover:border-orange-500/20",
-                                        "transition-all duration-300"
-                                    )}
-                                >
-                                    <div className={cn(
-                                        "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                                        "bg-orange-500/20"
-                                    )}>
-                                        <AlertCircle className="w-4 h-4 text-orange-400" />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-zinc-200 truncate group-hover:text-orange-300">
-                                            {reminder.task_title}
-                                        </p>
-                                        <p className="text-xs text-zinc-500 mt-0.5">
-                                            {reminder.module_name} • Skipped {reminder.days_ago}d ago
-                                        </p>
-                                    </div>
-                                    <Bell className="w-4 h-4 text-zinc-600 group-hover:text-orange-400 shrink-0 mt-0.5" />
-                                </Link>
+                                    taskId={reminder.task_id}
+                                    taskTitle={reminder.task_title}
+                                    taskOrder={reminder.task_order}
+                                    moduleSlug={reminder.module_slug}
+                                    moduleName={reminder.module_name}
+                                    type="reminder"
+                                    daysAgo={reminder.days_ago}
+                                />
                             ))}
 
                             {count > 5 && (
                                 <p className="text-xs text-zinc-500 text-center py-2">
-                                    +{count - 5} more reminders
+                                    +{count - 5} fler påminnelser
                                 </p>
                             )}
-                        </div>
+                        </>
                     )}
                 </div>
             )}
@@ -477,7 +514,7 @@ export function RightSidebar({ className, collapsed = false }: RightSidebarProps
                 "border-t border-zinc-800/60",
                 "text-xs text-zinc-500 text-center"
             )}>
-                💡 Star tasks & complete all to keep this clean
+                💡 Stjärnmarkera tasks & slutför alla för en ren lista
             </div>
         </div>
     );
