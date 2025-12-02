@@ -1410,4 +1410,362 @@ DOCKER_SKILLSMAP_BLOCK_4 = [
     NODE_16_HEALTHCHECKS,
 ]
 
-# Block 5 kommer i nästa commit
+
+# =============================================================================
+# BLOCK 5: SWARM & PRODUCTION (Noder 17-20)
+# =============================================================================
+
+NODE_17_DOCKER_SWARM = {
+    "node_id": 17,
+    "title": "Docker Swarm Basics",
+    "slug": "docker-swarm-basics",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [16],
+    "content": '''
+# Docker Swarm Basics
+
+Native Docker orchestration.
+
+## Initiera Swarm
+
+```bash
+# Skapa swarm
+docker swarm init
+
+# Join token för workers
+docker swarm join-token worker
+
+# Join token för managers
+docker swarm join-token manager
+
+# Lista nodes
+docker node ls
+```
+
+## Services
+
+```bash
+# Skapa service
+docker service create \\
+  --name web \\
+  --replicas 3 \\
+  -p 80:80 \\
+  nginx
+
+# Lista services
+docker service ls
+
+# Skala
+docker service scale web=5
+
+# Uppdatera
+docker service update --image nginx:latest web
+```
+
+## Stack Deploy
+
+```yaml
+# docker-stack.yml
+version: '3.8'
+services:
+  web:
+    image: nginx
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "80:80"
+```
+
+```bash
+# Deploy stack
+docker stack deploy -c docker-stack.yml myapp
+
+# Lista stacks
+docker stack ls
+
+# Stack services
+docker stack services myapp
+```
+
+**Nästa steg:** Node 18 - Production Patterns
+''',
+}
+
+NODE_18_PRODUCTION_PATTERNS = {
+    "node_id": 18,
+    "title": "Production Patterns",
+    "slug": "production-patterns",
+    "estimated_minutes": 60,
+    "xp_reward": 160,
+    "prerequisites": [17],
+    "content": '''
+# Docker Production Patterns
+
+Best practices för produktion.
+
+## Logging
+
+```bash
+# JSON logging driver
+docker run --log-driver json-file \\
+  --log-opt max-size=10m \\
+  --log-opt max-file=3 \\
+  myapp
+
+# Compose logging
+services:
+  app:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+```
+
+## Restart Policies
+
+```bash
+docker run --restart=always myapp
+
+# Policies:
+# no           - Aldrig
+# on-failure   - Vid exit code != 0
+# always       - Alltid
+# unless-stopped - Alltid utom manuellt stoppad
+```
+
+## Resource Constraints
+
+```yaml
+services:
+  app:
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+```
+
+## Rolling Updates
+
+```yaml
+services:
+  app:
+    deploy:
+      update_config:
+        parallelism: 2
+        delay: 10s
+        failure_action: rollback
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+```
+
+## Graceful Shutdown
+
+```dockerfile
+# Dockerfile
+STOPSIGNAL SIGTERM
+
+# docker-compose.yml
+services:
+  app:
+    stop_grace_period: 30s
+```
+
+**Nästa steg:** Node 19 - Docker Monitoring
+''',
+}
+
+NODE_19_DOCKER_MONITORING = {
+    "node_id": 19,
+    "title": "Docker Monitoring",
+    "slug": "docker-monitoring",
+    "estimated_minutes": 50,
+    "xp_reward": 145,
+    "prerequisites": [18],
+    "content": '''
+# Docker Monitoring
+
+Övervaka containers i produktion.
+
+## cAdvisor
+
+```bash
+docker run -d \\
+  --name cadvisor \\
+  -p 8080:8080 \\
+  -v /:/rootfs:ro \\
+  -v /var/run:/var/run:ro \\
+  -v /sys:/sys:ro \\
+  -v /var/lib/docker/:/var/lib/docker:ro \\
+  gcr.io/cadvisor/cadvisor
+```
+
+## Prometheus + Docker
+
+```yaml
+# prometheus.yml
+scrape_configs:
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['host.docker.internal:9323']
+
+# docker-compose.yml
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+```
+
+## Docker Daemon Metrics
+
+```json
+// /etc/docker/daemon.json
+{
+  "metrics-addr": "0.0.0.0:9323",
+  "experimental": true
+}
+```
+
+## Grafana Dashboard
+
+```yaml
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+```
+
+| Metric | Beskrivning |
+|--------|-------------|
+| container_cpu_usage | CPU användning |
+| container_memory_usage | Minne |
+| container_network_receive | Nätverkstrafik |
+| container_fs_usage | Diskutrymme |
+
+**Nästa steg:** Node 20 - Docker at Scale
+''',
+}
+
+NODE_20_DOCKER_AT_SCALE = {
+    "node_id": 20,
+    "title": "Docker at Scale",
+    "slug": "docker-at-scale",
+    "estimated_minutes": 55,
+    "xp_reward": 170,
+    "prerequisites": [19],
+    "content": '''
+# Docker at Scale
+
+Enterprise Docker patterns.
+
+## Overlay Networks
+
+```bash
+# Multi-host networking
+docker network create \\
+  --driver overlay \\
+  --attachable \\
+  myoverlay
+```
+
+## Service Discovery
+
+```yaml
+services:
+  api:
+    deploy:
+      replicas: 3
+    networks:
+      - backend
+
+  nginx:
+    image: nginx
+    configs:
+      - source: nginx_conf
+        target: /etc/nginx/nginx.conf
+
+configs:
+  nginx_conf:
+    file: ./nginx.conf
+```
+
+## Secrets at Scale
+
+```bash
+# Skapa secret
+echo "supersecret" | docker secret create db_password -
+
+# Använd i service
+docker service create \\
+  --name db \\
+  --secret db_password \\
+  postgres
+```
+
+## Build Farm
+
+```bash
+# Skapa buildx builder
+docker buildx create --name mybuilder --use
+
+# Multi-platform build
+docker buildx build \\
+  --platform linux/amd64,linux/arm64 \\
+  --push \\
+  -t myapp:latest .
+```
+
+## Enterprise Checklist
+
+| Område | Implementation |
+|--------|----------------|
+| HA Registry | Harbor/ECR |
+| Logging | ELK/Loki |
+| Monitoring | Prometheus+Grafana |
+| Security | Trivy scanning |
+| Orchestration | Kubernetes/Swarm |
+| Backup | Volume snapshots |
+
+**🎉 Grattis! Du har slutfört Docker Mastery SkillsMap!**
+''',
+}
+
+DOCKER_SKILLSMAP_BLOCK_5 = [
+    NODE_17_DOCKER_SWARM,
+    NODE_18_PRODUCTION_PATTERNS,
+    NODE_19_DOCKER_MONITORING,
+    NODE_20_DOCKER_AT_SCALE,
+]
+
+
+# =============================================================================
+# FULL EXPORT
+# =============================================================================
+
+DOCKER_SKILLSMAP_ALL_NODES = (
+    DOCKER_SKILLSMAP_BLOCK_1 +
+    DOCKER_SKILLSMAP_BLOCK_2 +
+    DOCKER_SKILLSMAP_BLOCK_3 +
+    DOCKER_SKILLSMAP_BLOCK_4 +
+    DOCKER_SKILLSMAP_BLOCK_5
+)
