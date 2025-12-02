@@ -69,7 +69,7 @@ function getFallbackResponse(message: string): string {
     const lowerMessage = message.toLowerCase()
 
     // === HELP CENTER FAQ KNOWLEDGE ===
-    
+
     // Getting Started
     if (lowerMessage.includes("start") || lowerMessage.includes("börja") || lowerMessage.includes("begin")) {
         return `Great question about getting started! 🚀
