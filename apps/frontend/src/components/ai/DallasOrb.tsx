@@ -335,49 +335,23 @@ export function DallasOrb() {
                             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
                         />
 
-                        {/* Modal */}
+                        {/* Modal - PERFECTLY CENTERED */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className={cn(
-                                "fixed z-50",
-                                "top-20 left-4 right-4 bottom-4",
-                                "sm:top-auto sm:bottom-auto sm:left-1/2 sm:right-auto",
-                                "sm:-translate-x-1/2 sm:top-1/2 sm:-translate-y-1/2",
-                                "sm:w-[90vw] sm:max-w-lg sm:h-[70vh] sm:max-h-[500px]",
-                                "bg-white dark:bg-gray-900",
-                                "rounded-2xl shadow-2xl",
-                                "border border-gray-200 dark:border-gray-800",
-                                "flex flex-col overflow-hidden"
-                            )}
+                            className="fixed z-50 inset-0 m-auto w-[90%] max-w-lg h-[70%] max-h-[500px] bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
                         >
                             {/* Header */}
-                            <div className={cn(
-                                "flex items-center justify-between px-6 py-4",
-                                "border-b border-gray-100 dark:border-gray-800",
-                                "bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-800"
-                            )}>
+                            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
                                 <div className="flex items-center gap-3">
-                                    <div className={cn(
-                                        "w-10 h-10 rounded-full",
-                                        "bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800",
-                                        "flex items-center justify-center",
-                                        "shadow-inner"
-                                    )}>
-                                        <motion.div
-                                            animate={{ scale: [1, 1.1, 1] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                        >
-                                            <span className="text-xl">🐺</span>
-                                        </motion.div>
+                                    <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                                        <span className="text-xl">🐺</span>
                                     </div>
                                     <div>
-                                        <h2 className="font-semibold text-gray-900 dark:text-white">
-                                            Dallas
-                                        </h2>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                        <h2 className="font-semibold text-white">Dallas</h2>
+                                        <p className="text-xs text-gray-400 flex items-center gap-1">
                                             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                                             Your DevOps AI Guide
                                         </p>
@@ -385,12 +359,7 @@ export function DallasOrb() {
                                 </div>
                                 <button
                                     onClick={() => setIsOpen(false)}
-                                    className={cn(
-                                        "p-2 rounded-xl",
-                                        "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300",
-                                        "hover:bg-gray-100 dark:hover:bg-gray-800",
-                                        "transition-colors"
-                                    )}
+                                    className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
