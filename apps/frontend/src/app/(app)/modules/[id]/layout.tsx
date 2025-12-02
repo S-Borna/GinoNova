@@ -2,7 +2,7 @@
 
 /**
  * ============================================================================
- * MODULE LAYOUT — Sidebar Navigation for Tasks
+ * MODULE LAYOUT — Sidebar Navigation for Tasks + Bookmark System
  * ============================================================================
  *
  * Features:
@@ -11,6 +11,8 @@
  * - Current task highlighting
  * - Collapsible on mobile
  * - Module header with progress
+ * - ⭐ Bookmark sidebar for saved tasks (PROMPT 4)
+ * - ⭐ Star button on each task to bookmark
  *
  * @phase FAS 2.1 - Task layout with sidebar navigation
  * @location apps/frontend/src/app/(app)/modules/[id]/layout.tsx
@@ -30,8 +32,12 @@ import {
   FolderKanban,
   Clock,
   Menu,
-  X
+  X,
+  Star,
+  Bookmark
 } from "lucide-react"
+import { useBookmarks } from "@/hooks/useBookmarks"
+import { BookmarkSidebar } from "@/components/modules/BookmarkSidebar"
 
 /* ============================================================================
    TYPES
@@ -79,12 +85,16 @@ function TaskSidebar({
   module,
   currentPath,
   isOpen,
-  onClose
+  onClose,
+  isBookmarked,
+  toggleBookmark
 }: {
   module: Module | null
   currentPath: string
   isOpen: boolean
   onClose: () => void
+  isBookmarked: (taskId: string) => boolean
+  toggleBookmark: (taskId: string) => Promise<boolean>
 }) {
   if (!module) return null
 
@@ -168,9 +178,10 @@ function TaskSidebar({
                 tasks.map((task, index) => {
                   const taskPath = `/modules/${module.slug}/tasks/${task.id}`
                   const isActive = currentPath === taskPath
+                  const bookmarked = isBookmarked(task.id)
 
                   return (
-                    <li key={task.id}>
+                    <li key={task.id} className="group relative">
                       <Link
                         href={taskPath}
                         onClick={onClose}
@@ -204,6 +215,32 @@ function TaskSidebar({
                           +{task.xp_reward}
                         </span>
                       </Link>
+
+                      {/* ⭐ Bookmark Star Button */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          toggleBookmark(task.id)
+                        }}
+                        className={`
+                          absolute right-2 top-1/2 -translate-y-1/2
+                          p-1 rounded transition-all duration-200
+                          ${bookmarked
+                            ? 'opacity-100'
+                            : 'opacity-0 group-hover:opacity-100'
+                          }
+                          hover:bg-gray-700
+                        `}
+                        title={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                      >
+                        <Star
+                          className={`w-3.5 h-3.5 transition-colors ${bookmarked
+                              ? 'fill-amber-400 text-amber-400'
+                              : 'text-gray-500 hover:text-amber-400'
+                            }`}
+                        />
+                      </button>
                     </li>
                   )
                 })
@@ -313,6 +350,10 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
   const [module, setModule] = useState<Module | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [bookmarkSidebarOpen, setBookmarkSidebarOpen] = useState(false)
+
+  // ⭐ Bookmark hook for task starring
+  const { isBookmarked, toggleBookmark, count: bookmarkCount } = useBookmarks()
 
   // Fetch module data and tasks
   useEffect(() => {
@@ -377,18 +418,85 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
         <Menu className="w-6 h-6 text-white" />
       </button>
 
-      {/* Sidebar */}
+      {/* ⭐ Mobile Bookmark Button */}
+      <button
+        onClick={() => setBookmarkSidebarOpen(!bookmarkSidebarOpen)}
+        className="fixed bottom-4 right-4 z-50 lg:hidden p-3 bg-amber-500 rounded-full shadow-lg"
+      >
+        <Star className={`w-6 h-6 text-white ${bookmarkCount > 0 ? 'fill-white' : ''}`} />
+        {bookmarkCount > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 text-[10px] font-bold bg-white text-amber-600 rounded-full flex items-center justify-center">
+            {bookmarkCount > 9 ? '9+' : bookmarkCount}
+          </span>
+        )}
+      </button>
+
+      {/* Task Sidebar */}
       <TaskSidebar
         module={module}
         currentPath={pathname || ''}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        isBookmarked={isBookmarked}
+        toggleBookmark={toggleBookmark}
       />
 
       {/* Main Content */}
       <main className="flex-1 min-w-0">
         {children}
       </main>
+
+      {/* ⭐ Bookmark Sidebar (Right Side) */}
+      <aside className={`
+        fixed lg:sticky top-0 right-0 h-screen w-72
+        bg-gray-900 border-l border-gray-800
+        transform transition-transform duration-300 ease-in-out
+        z-50 lg:z-auto
+        ${bookmarkSidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+        hidden lg:flex lg:flex-col
+      `}>
+        {/* Mobile close button */}
+        <button
+          onClick={() => setBookmarkSidebarOpen(false)}
+          className="lg:hidden absolute top-4 left-4 p-1 rounded hover:bg-gray-800"
+        >
+          <X className="w-5 h-5 text-gray-400" />
+        </button>
+
+        <BookmarkSidebar className="flex-1" />
+      </aside>
+
+      {/* Mobile Bookmark Overlay */}
+      {bookmarkSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setBookmarkSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Bookmark Sidebar */}
+      <aside className={`
+        fixed top-0 right-0 h-screen w-72
+        bg-gray-900 border-l border-gray-800
+        transform transition-transform duration-300 ease-in-out
+        z-50 lg:hidden
+        ${bookmarkSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
+        flex flex-col
+      `}>
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+            <span className="text-sm font-semibold text-white">Bookmarks</span>
+          </div>
+          <button
+            onClick={() => setBookmarkSidebarOpen(false)}
+            className="p-1 rounded hover:bg-gray-800"
+          >
+            <X className="w-5 h-5 text-gray-400" />
+          </button>
+        </div>
+        <BookmarkSidebar className="flex-1" />
+      </aside>
     </div>
   )
 }
