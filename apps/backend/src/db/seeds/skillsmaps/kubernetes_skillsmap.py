@@ -1087,4 +1087,377 @@ KUBERNETES_SKILLSMAP_BLOCK_3 = [
     NODE_12_RBAC,
 ]
 
-# Block 4-5 kommer i nästa commits
+
+# =============================================================================
+# BLOCK 4: HELM & NETWORKING (Noder 13-16)
+# =============================================================================
+
+NODE_13_HELM_BASICS = {
+    "node_id": 13,
+    "title": "Helm Basics",
+    "slug": "helm-basics",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [4],
+    "content": '''
+# Helm Basics
+
+Kubernetes package manager.
+
+## Installation
+
+```bash
+# macOS
+brew install helm
+
+# Linux
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# Verifiera
+helm version
+```
+
+## Grundläggande Kommandon
+
+```bash
+# Lägg till repo
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+# Sök charts
+helm search repo nginx
+helm search hub postgresql
+
+# Installera
+helm install my-nginx bitnami/nginx
+
+# Lista releases
+helm list
+
+# Avinstallera
+helm uninstall my-nginx
+```
+
+## Anpassa Installation
+
+```bash
+# Se tillgängliga values
+helm show values bitnami/nginx
+
+# Installera med values
+helm install my-nginx bitnami/nginx \\
+  --set replicaCount=3 \\
+  --set service.type=LoadBalancer
+
+# Med values-fil
+helm install my-nginx bitnami/nginx -f values.yaml
+```
+
+## values.yaml
+
+```yaml
+replicaCount: 3
+image:
+  repository: nginx
+  tag: "1.24"
+service:
+  type: LoadBalancer
+  port: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+```
+
+**Nästa steg:** Node 14 - Helm Charts
+''',
+}
+
+NODE_14_HELM_CHARTS = {
+    "node_id": 14,
+    "title": "Helm Charts",
+    "slug": "helm-charts",
+    "estimated_minutes": 60,
+    "xp_reward": 160,
+    "prerequisites": [13],
+    "content": '''
+# Skapa Helm Charts
+
+Bygg egna charts.
+
+## Skapa Chart
+
+```bash
+helm create myapp
+
+myapp/
+├── Chart.yaml
+├── values.yaml
+├── templates/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   ├── _helpers.tpl
+│   └── NOTES.txt
+└── charts/
+```
+
+## Chart.yaml
+
+```yaml
+apiVersion: v2
+name: myapp
+description: My application
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+dependencies:
+  - name: postgresql
+    version: "12.x.x"
+    repository: https://charts.bitnami.com/bitnami
+```
+
+## Templates
+
+```yaml
+# templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "myapp.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+```
+
+## Utveckla & Testa
+
+```bash
+# Lint
+helm lint myapp/
+
+# Dry-run
+helm install myapp ./myapp --dry-run --debug
+
+# Template output
+helm template myapp ./myapp
+
+# Installera lokalt
+helm install myapp ./myapp
+```
+
+## Uppgradera
+
+```bash
+# Uppgradera release
+helm upgrade myapp ./myapp
+
+# Rollback
+helm rollback myapp 1
+helm history myapp
+```
+
+**Nästa steg:** Node 15 - Network Policies
+''',
+}
+
+NODE_15_NETWORK_POLICIES = {
+    "node_id": 15,
+    "title": "Network Policies",
+    "slug": "network-policies",
+    "estimated_minutes": 50,
+    "xp_reward": 145,
+    "prerequisites": [5],
+    "content": '''
+# Network Policies
+
+Nätverkssegmentering i K8s.
+
+## Default Deny
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+```
+
+## Allow Specific Traffic
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 8080
+```
+
+## Egress Policy
+
+```yaml
+spec:
+  podSelector:
+    matchLabels:
+      app: api
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: database
+      ports:
+        - port: 5432
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+```
+
+## Namespace Selector
+
+```yaml
+ingress:
+  - from:
+      - namespaceSelector:
+          matchLabels:
+            env: production
+        podSelector:
+          matchLabels:
+            app: frontend
+```
+
+| Policy | Effekt |
+|--------|--------|
+| podSelector: {} | Alla pods |
+| Ingress deny | Ingen inkommande |
+| Egress deny | Ingen utgående |
+
+**Nästa steg:** Node 16 - HPA & VPA
+''',
+}
+
+NODE_16_HPA_VPA = {
+    "node_id": 16,
+    "title": "HPA & VPA",
+    "slug": "hpa-vpa",
+    "estimated_minutes": 50,
+    "xp_reward": 145,
+    "prerequisites": [4],
+    "content": '''
+# HPA & VPA
+
+Auto-scaling i Kubernetes.
+
+## Horizontal Pod Autoscaler
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+```
+
+## Metrics Server
+
+```bash
+# Installera
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# Verifiera
+kubectl top nodes
+kubectl top pods
+```
+
+## kubectl HPA
+
+```bash
+# Skapa HPA
+kubectl autoscale deployment myapp --min=2 --max=10 --cpu-percent=70
+
+# Status
+kubectl get hpa
+kubectl describe hpa myapp
+```
+
+## VPA (Vertical Pod Autoscaler)
+
+```yaml
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: myapp
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp
+  updatePolicy:
+    updateMode: "Auto"
+```
+
+| Scaling | HPA | VPA |
+|---------|-----|-----|
+| Vad | Antal pods | Pod resources |
+| När | CPU/Memory threshold | Resource recommendations |
+| Best for | Stateless | Stateful |
+
+**Nästa steg:** Node 17 - Pod Disruption Budgets
+''',
+}
+
+KUBERNETES_SKILLSMAP_BLOCK_4 = [
+    NODE_13_HELM_BASICS,
+    NODE_14_HELM_CHARTS,
+    NODE_15_NETWORK_POLICIES,
+    NODE_16_HPA_VPA,
+]
+
+# Block 5 kommer i nästa commit
