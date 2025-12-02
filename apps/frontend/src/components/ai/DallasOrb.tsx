@@ -77,56 +77,44 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
             whileTap={{ scale: 0.95 }}
             aria-label="Open Dallas AI Assistant"
         >
-            {/* Outer glow rings - breathing animation */}
+            {/* Outer glow rings - very subtle breathing */}
             <motion.div
                 className="absolute inset-0 rounded-full"
                 animate={{
                     boxShadow: [
-                        "0 0 10px 2px rgba(59, 130, 246, 0.15), 0 0 20px 5px rgba(147, 197, 253, 0.1)",
-                        "0 0 15px 4px rgba(59, 130, 246, 0.2), 0 0 30px 8px rgba(147, 197, 253, 0.15)",
-                        "0 0 10px 2px rgba(59, 130, 246, 0.15), 0 0 20px 5px rgba(147, 197, 253, 0.1)",
+                        "0 0 4px 1px rgba(59, 130, 246, 0.08)",
+                        "0 0 8px 2px rgba(59, 130, 246, 0.12)",
+                        "0 0 4px 1px rgba(59, 130, 246, 0.08)",
                     ],
                 }}
                 transition={{
-                    duration: 4,
+                    duration: 5,
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
             />
 
-            {/* Secondary pulse ring */}
-            <motion.div
-                className="absolute -inset-2 rounded-full border border-blue-400/20"
-                animate={{
-                    scale: [1, 1.15, 1],
-                    opacity: [0.3, 0, 0.3],
-                }}
-                transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                }}
-            />
+            {/* Secondary pulse ring - disabled for subtlety */}
+            {/* Removed to reduce glow intensity */}
 
             {/* Main orb */}
             <div className={cn(
                 "relative w-10 h-10 rounded-full",
                 "bg-gradient-to-br from-gray-100 via-white to-gray-200",
                 "dark:from-gray-700 dark:via-gray-600 dark:to-gray-800",
-                "shadow-lg shadow-blue-500/20",
+                "shadow-md",
                 "border border-gray-200/50 dark:border-gray-600/50",
                 "flex items-center justify-center",
                 "overflow-hidden"
             )}>
-                {/* Inner magical glow */}
+                {/* Inner magical glow - very subtle */}
                 <motion.div
-                    className="absolute inset-1 rounded-full bg-gradient-to-br from-blue-400/25 to-indigo-500/25"
+                    className="absolute inset-1 rounded-full bg-gradient-to-br from-blue-400/10 to-indigo-500/10"
                     animate={{
-                        opacity: [0.3, 0.5, 0.3],
-                        scale: [0.85, 1, 0.85],
+                        opacity: [0.2, 0.3, 0.2],
                     }}
                     transition={{
-                        duration: 2.5,
+                        duration: 4,
                         repeat: Infinity,
                         ease: "easeInOut",
                     }}
@@ -135,31 +123,7 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
                 {/* Wizard icon */}
                 <Wand2 className="w-5 h-5 text-gray-600 dark:text-gray-300 relative z-10" />
 
-                {/* Sparkle effects - subtle */}
-                <motion.div
-                    className="absolute top-1 right-1 w-1 h-1 bg-blue-400/70 rounded-full"
-                    animate={{
-                        opacity: [0, 0.7, 0],
-                        scale: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: 0.5,
-                    }}
-                />
-                <motion.div
-                    className="absolute bottom-2 left-1.5 w-0.5 h-0.5 bg-indigo-300/60 rounded-full"
-                    animate={{
-                        opacity: [0, 0.6, 0],
-                        scale: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: 1.2,
-                    }}
-                />
+                {/* Sparkle effects - removed for cleaner look */}
             </div>
 
             {/* Hover tooltip */}
