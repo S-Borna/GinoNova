@@ -368,25 +368,35 @@ export function DallasOrb() {
                                 }}
                             />
 
-                            {/* Modal - PERFECTLY CENTERED */}
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            {/* Modal - PERFECTLY CENTERED with wrapper for transform */}
+                            <div
                                 style={{
                                     position: "fixed",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    width: "90%",
-                                    maxWidth: "32rem",
-                                    height: "70%",
-                                    maxHeight: "500px",
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
                                     zIndex: 100000,
+                                    pointerEvents: "none",
                                 }}
-                                className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
                             >
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                                    style={{
+                                        width: "90%",
+                                        maxWidth: "480px",
+                                        height: "auto",
+                                        maxHeight: "70vh",
+                                        pointerEvents: "auto",
+                                    }}
+                                    className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
+                                >
                                 {/* Header */}
                                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
                                     <div className="flex items-center gap-3">
@@ -410,7 +420,7 @@ export function DallasOrb() {
                                 </div>
 
                                 {/* Messages */}
-                                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                                <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ minHeight: "200px" }}>
                                     {messages.map((message) => (
                                         <ChatMessage key={message.id} message={message} />
                                     ))}
@@ -494,7 +504,8 @@ export function DallasOrb() {
                                         </button>
                                     </form>
                                 </div>
-                            </motion.div>
+                                </motion.div>
+                            </div>
                         </>
                     )}
                 </AnimatePresence>,

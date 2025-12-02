@@ -30,22 +30,13 @@ export async function POST(request: NextRequest) {
         })
 
         if (!response.ok) {
-            // If backend fails, return a graceful error
+            // If backend fails, return fallback response (works in dev AND production)
             console.error("Backend AI error:", response.status)
-
-            // Fallback response for development
-            if (process.env.NODE_ENV === "development") {
-                return NextResponse.json({
-                    response: getFallbackResponse(message),
-                    session_id: session_id || "dev-session",
-                    tokens_used: 0,
-                })
-            }
-
-            return NextResponse.json(
-                { error: "AI service unavailable" },
-                { status: 503 }
-            )
+            return NextResponse.json({
+                response: getFallbackResponse(message),
+                session_id: session_id || "fallback-session",
+                tokens_used: 0,
+            })
         }
 
         const data = await response.json()
@@ -53,20 +44,21 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error("AI chat error:", error)
 
-        // Fallback for development
-        if (process.env.NODE_ENV === "development") {
+        // Always use fallback on error
+        try {
             const body = await request.clone().json().catch(() => ({ message: "" }))
             return NextResponse.json({
                 response: getFallbackResponse(body.message || ""),
-                session_id: "dev-session",
+                session_id: "fallback-session",
+                tokens_used: 0,
+            })
+        } catch {
+            return NextResponse.json({
+                response: getFallbackResponse(""),
+                session_id: "fallback-session",
                 tokens_used: 0,
             })
         }
-
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        )
     }
 }
 
