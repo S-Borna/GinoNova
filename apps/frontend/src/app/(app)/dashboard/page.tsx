@@ -162,7 +162,7 @@ export default function DashboardPage() {
     const completedModules =
         dashboard?.progress?.filter((p) => p.module_id && p.status === "completed").length ?? 0
     const totalModules = dashboard?.stats?.total_modules ?? 0
-    const streak = dashboard?.stats?.streak ?? 0 // Real streak from backend
+    const streak = 0 // Will be fetched from user progress later
 
     // Transform modules for ModulesOverview
     const modulesWithProgress =
