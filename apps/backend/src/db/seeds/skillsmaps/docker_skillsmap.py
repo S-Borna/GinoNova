@@ -342,4 +342,378 @@ DOCKER_SKILLSMAP_BLOCK_1 = [
     NODE_04_CONTAINER_LIFECYCLE,
 ]
 
-# Block 2-5 kommer i nästa commits
+
+# =============================================================================
+# BLOCK 2: VOLUMES & NETWORKING (Noder 5-8)
+# =============================================================================
+
+NODE_05_DOCKER_VOLUMES = {
+    "node_id": 5,
+    "title": "Docker Volumes",
+    "slug": "docker-volumes",
+    "estimated_minutes": 50,
+    "xp_reward": 135,
+    "prerequisites": [4],
+    "content": '''
+# Docker Volumes
+
+Persistent data i Docker.
+
+## Volume-typer
+
+```bash
+# Named volume (rekommenderat)
+docker volume create mydata
+docker run -v mydata:/app/data nginx
+
+# Bind mount (host path)
+docker run -v /host/path:/container/path nginx
+docker run -v $(pwd):/app nginx
+
+# tmpfs (in-memory)
+docker run --tmpfs /tmp nginx
+```
+
+## Volume Kommandon
+
+```bash
+# Lista volumes
+docker volume ls
+
+# Inspektera
+docker volume inspect mydata
+
+# Ta bort
+docker volume rm mydata
+
+# Ta bort oanvända
+docker volume prune
+```
+
+## Praktiskt Exempel
+
+```bash
+# PostgreSQL med persistent data
+docker run -d \\
+  --name postgres \\
+  -v pgdata:/var/lib/postgresql/data \\
+  -e POSTGRES_PASSWORD=secret \\
+  postgres:15
+
+# Backup volume
+docker run --rm \\
+  -v pgdata:/data \\
+  -v $(pwd):/backup \\
+  alpine tar czf /backup/pgdata.tar.gz /data
+```
+
+## Read-only Mounts
+
+```bash
+# Read-only
+docker run -v myconfig:/etc/config:ro nginx
+
+# Read-write (default)
+docker run -v mydata:/data:rw nginx
+```
+
+**Nästa steg:** Node 6 - Docker Networking
+''',
+}
+
+NODE_06_DOCKER_NETWORKING = {
+    "node_id": 6,
+    "title": "Docker Networking",
+    "slug": "docker-networking",
+    "estimated_minutes": 55,
+    "xp_reward": 145,
+    "prerequisites": [5],
+    "content": '''
+# Docker Networking
+
+Container-kommunikation.
+
+## Network Drivers
+
+| Driver | Användning |
+|--------|-----------|
+| bridge | Default, isolerat nätverk |
+| host | Delad med host |
+| none | Ingen nätverksåtkomst |
+| overlay | Multi-host (Swarm) |
+
+## Network Kommandon
+
+```bash
+# Lista nätverk
+docker network ls
+
+# Skapa nätverk
+docker network create mynet
+
+# Inspektera
+docker network inspect mynet
+
+# Koppla container
+docker network connect mynet myapp
+docker network disconnect mynet myapp
+```
+
+## Container DNS
+
+```bash
+# Containers på samma nätverk kan nå varandra via namn
+docker network create app-net
+
+docker run -d --name db --network app-net postgres
+docker run -d --name api --network app-net myapi
+
+# Inuti api-container:
+# postgres://db:5432/mydb  # "db" resolvas automatiskt
+```
+
+## Port Mapping
+
+```bash
+# Publicera port
+docker run -p 8080:80 nginx      # host:container
+docker run -p 80 nginx           # Random host port
+docker run -P nginx              # Alla EXPOSE:ade portar
+
+# Bind till specifik IP
+docker run -p 127.0.0.1:8080:80 nginx
+```
+
+## Praktiskt Exempel
+
+```bash
+# Frontend + Backend + DB
+docker network create myapp
+
+docker run -d --name db \\
+  --network myapp \\
+  -e POSTGRES_PASSWORD=secret \\
+  postgres
+
+docker run -d --name api \\
+  --network myapp \\
+  -e DATABASE_URL=postgres://db:5432 \\
+  myapi
+
+docker run -d --name web \\
+  --network myapp \\
+  -p 80:80 \\
+  -e API_URL=http://api:3000 \\
+  myfrontend
+```
+
+**Nästa steg:** Node 7 - Docker Compose Basics
+''',
+}
+
+NODE_07_COMPOSE_BASICS = {
+    "node_id": 7,
+    "title": "Docker Compose Basics",
+    "slug": "compose-basics",
+    "estimated_minutes": 60,
+    "xp_reward": 155,
+    "prerequisites": [6],
+    "content": '''
+# Docker Compose Basics
+
+Multi-container applikationer.
+
+## docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  web:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://db:5432/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=secret
+
+volumes:
+  pgdata:
+```
+
+## Compose Kommandon
+
+```bash
+# Starta alla services
+docker compose up
+docker compose up -d          # Detached
+
+# Stoppa
+docker compose down
+docker compose down -v        # + ta bort volumes
+
+# Bygg om images
+docker compose build
+docker compose up --build
+
+# Logs
+docker compose logs
+docker compose logs -f api
+
+# Skala services
+docker compose up -d --scale api=3
+```
+
+## Service Kommandon
+
+```bash
+# Kör kommando i service
+docker compose exec api bash
+docker compose exec db psql -U postgres
+
+# Starta enskild service
+docker compose up -d db
+
+# Restart
+docker compose restart api
+```
+
+**Nästa steg:** Node 8 - Docker Compose Advanced
+''',
+}
+
+NODE_08_COMPOSE_ADVANCED = {
+    "node_id": 8,
+    "title": "Docker Compose Advanced",
+    "slug": "compose-advanced",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [7],
+    "content": '''
+# Docker Compose Advanced
+
+Avancerade Compose-features.
+
+## Miljövariabler
+
+```yaml
+# .env fil
+services:
+  api:
+    environment:
+      - DB_HOST=${DB_HOST:-localhost}
+    env_file:
+      - .env
+      - .env.local
+```
+
+## Health Checks
+
+```yaml
+services:
+  api:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  db:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+```
+
+## Depends On med Condition
+
+```yaml
+services:
+  api:
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+```
+
+## Profiles
+
+```yaml
+services:
+  web:
+    profiles: ["frontend"]
+  
+  api:
+    profiles: ["backend", "full"]
+  
+  debug:
+    profiles: ["debug"]
+    image: busybox
+
+# docker compose --profile backend up
+```
+
+## Override Files
+
+```yaml
+# docker-compose.yml (base)
+services:
+  api:
+    image: myapi:latest
+
+# docker-compose.override.yml (dev - auto-loaded)
+services:
+  api:
+    build: .
+    volumes:
+      - ./src:/app/src
+
+# docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+```
+
+## Networks & Aliases
+
+```yaml
+services:
+  api:
+    networks:
+      frontend:
+        aliases:
+          - backend-api
+      backend:
+
+networks:
+  frontend:
+  backend:
+    internal: true  # Ingen extern åtkomst
+```
+
+**Nästa steg:** Node 9 - Dockerfile Best Practices
+''',
+}
+
+DOCKER_SKILLSMAP_BLOCK_2 = [
+    NODE_05_DOCKER_VOLUMES,
+    NODE_06_DOCKER_NETWORKING,
+    NODE_07_COMPOSE_BASICS,
+    NODE_08_COMPOSE_ADVANCED,
+]
+
+# Block 3-5 kommer i nästa commits
