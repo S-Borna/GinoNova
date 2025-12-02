@@ -343,10 +343,11 @@ export function DallasOrb() {
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
                             className={cn(
                                 "fixed z-50",
-                                "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-                                "w-[90vw] max-w-lg h-[80vh] max-h-[600px]",
+                                "inset-4 sm:inset-auto",
+                                "sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2",
+                                "sm:w-[90vw] sm:max-w-lg sm:h-[80vh] sm:max-h-[600px]",
                                 "bg-white dark:bg-gray-900",
-                                "rounded-3xl shadow-2xl",
+                                "rounded-2xl sm:rounded-3xl shadow-2xl",
                                 "border border-gray-200 dark:border-gray-800",
                                 "flex flex-col overflow-hidden"
                             )}
