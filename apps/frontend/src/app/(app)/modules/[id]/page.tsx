@@ -7,7 +7,8 @@
  *
  * Features:
  * - Module header with progress
- * - Tasks list with completion status
+ * - Tasks list with completion status (using TaskCard!)
+ * - Bookmark and reminder badges
  * - Continue learning button
  * - Prerequisites display
  *
@@ -22,6 +23,8 @@ import { PageLayout, Section, Block, Headline, Subtext, cn } from "@saas/ui"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { ProgressBar } from "@/components/ui/progress-bar"
+import { TaskCard, TaskCardStatus, TaskType } from "@/components/modules/TaskCard"
+import { useBookmarks } from "@/hooks/useBookmarks"
 import { getModule, ModulePublic } from "@/lib/modules"
 import { getTasksForModule, TaskPublic } from "@/lib/tasks"
 import {
@@ -50,6 +53,8 @@ interface TaskUI {
     isLocked: boolean
     estimatedMinutes: number
     xpReward: number
+    type: TaskType
+    difficulty: number
 }
 
 interface ModuleDetailUI {
@@ -179,109 +184,6 @@ function LockedState({ module }: { module: ModuleDetailUI }) {
 }
 
 /* ============================================================================
-   TASK ITEM
-   ============================================================================ */
-
-interface TaskItemProps {
-    task: TaskUI
-    moduleId: string
-    onStart: (taskId: string) => void
-}
-
-function TaskItem({ task, moduleId, onStart }: TaskItemProps) {
-    return (
-        <Link
-            href={`/modules/${moduleId}/tasks/${task.id}`}
-            className={cn(
-                "group relative rounded-xl p-4 transition-all duration-200 block",
-                "border border-neutral-200/50 dark:border-neutral-700/50",
-                task.isLocked
-                    ? "bg-neutral-50 dark:bg-neutral-800/30 opacity-60 pointer-events-none"
-                    : task.isCompleted
-                        ? "bg-emerald-50/50 dark:bg-emerald-900/10 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                        : "bg-white dark:bg-neutral-800/50 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-            )}
-        >
-            <div className="flex items-start gap-4">
-                {/* Status icon */}
-                <div
-                    className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
-                        task.isLocked
-                            ? "bg-neutral-200 dark:bg-neutral-700"
-                            : task.isCompleted
-                                ? "bg-emerald-100 dark:bg-emerald-900/30"
-                                : "bg-indigo-100 dark:bg-indigo-900/30"
-                    )}
-                >
-                    {task.isLocked ? (
-                        <Lock className="w-5 h-5 text-neutral-400" />
-                    ) : task.isCompleted ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    ) : (
-                        <Circle className="w-5 h-5 text-indigo-500" />
-                    )}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-medium text-neutral-400">
-                            Task {task.order}
-                        </span>
-                        {task.isCompleted && (
-                            <span className="text-xs text-success-500 font-medium">Completed</span>
-                        )}
-                    </div>
-                    <h3
-                        className={cn(
-                            "font-semibold mb-1",
-                            task.isLocked
-                                ? "text-neutral-400 dark:text-neutral-500"
-                                : "text-neutral-900 dark:text-white"
-                        )}
-                    >
-                        {task.title}
-                    </h3>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1">
-                        {task.description}
-                    </p>
-
-                    {/* Meta */}
-                    <div className="flex items-center gap-4 mt-2">
-                        <span className="flex items-center gap-1 text-xs text-neutral-400">
-                            <Clock className="w-3.5 h-3.5" />
-                            {task.estimatedMinutes} min
-                        </span>
-                        <span className="flex items-center gap-1 text-xs text-indigo-500 font-medium">
-                            +{task.xpReward} XP
-                        </span>
-                    </div>
-                </div>
-
-                {/* Action - show on non-completed tasks */}
-                {!task.isLocked && !task.isCompleted && (
-                    <Button
-                        size="sm"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            onStart(task.id)
-                        }}
-                        className={cn(
-                            "rounded-xl shrink-0",
-                            "opacity-0 group-hover:opacity-100 transition-opacity"
-                        )}
-                    >
-                        <Play className="w-4 h-4 mr-1" />
-                        Start
-                    </Button>
-                )}
-            </div>
-        </Link>
-    )
-}
-
-/* ============================================================================
    MODULE DETAIL PAGE
    ============================================================================ */
 
@@ -289,6 +191,7 @@ export default function ModuleDetailPage() {
     const params = useParams()
     const router = useRouter()
     const moduleId = params?.id as string
+    const { isBookmarked, toggleBookmark } = useBookmarks()
 
     const [module, setModule] = useState<ModuleDetailUI | null>(null)
     const [loading, setLoading] = useState(true)
@@ -311,6 +214,21 @@ export default function ModuleDetailPage() {
 
             // Fetch tasks for this module
             const tasksResult = await getTasksForModule(moduleId)
+            
+            // Map difficulty string to number
+            const difficultyMap: Record<string, number> = {
+                "easy": 1,
+                "medium": 3,
+                "hard": 5
+            }
+            
+            // Map task_tier to TaskType
+            const tierToType: Record<string, TaskType> = {
+                "standard": "foundation",
+                "advanced": "practice",
+                "deep_dive": "deepening"
+            }
+            
             const tasks: TaskUI[] = tasksResult.ok
                 ? tasksResult.data.map((t, index) => ({
                     id: t.id,
@@ -321,6 +239,8 @@ export default function ModuleDetailPage() {
                     isLocked: false, // TODO: Implement prerequisites logic
                     estimatedMinutes: t.estimated_minutes || 15,
                     xpReward: t.xp_reward || 25,
+                    type: tierToType[t.task_tier] || "foundation",
+                    difficulty: difficultyMap[t.difficulty] || 3,
                 }))
                 : []
 
@@ -459,10 +379,32 @@ export default function ModuleDetailPage() {
                         <Headline level={2} className="mb-4">
                             Tasks
                         </Headline>
-                        <div className="space-y-3">
-                            {module.tasks.map((task) => (
-                                <TaskItem key={task.id} task={task} moduleId={module.id} onStart={handleStartTask} />
-                            ))}
+                        <div className="space-y-4">
+                            {module.tasks.map((task) => {
+                                const taskStatus: TaskCardStatus = task.isCompleted
+                                    ? "complete"
+                                    : task.isLocked
+                                        ? "not_started"
+                                        : "not_started"
+
+                                return (
+                                    <TaskCard
+                                        key={task.id}
+                                        id={task.id}
+                                        orderIndex={task.order}
+                                        title={task.title}
+                                        description={task.description}
+                                        type={task.type}
+                                        difficulty={task.difficulty}
+                                        xpReward={task.xpReward}
+                                        estimatedMinutes={task.estimatedMinutes}
+                                        status={taskStatus}
+                                        onClick={handleStartTask}
+                                        isBookmarked={isBookmarked(task.id)}
+                                        onToggleBookmark={toggleBookmark}
+                                    />
+                                )
+                            })}
                         </div>
                     </Section>
                 </div>
