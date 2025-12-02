@@ -1460,4 +1460,351 @@ KUBERNETES_SKILLSMAP_BLOCK_4 = [
     NODE_16_HPA_VPA,
 ]
 
-# Block 5 kommer i nästa commit
+
+# =============================================================================
+# BLOCK 5: PRODUCTION & MONITORING (Noder 17-20)
+# =============================================================================
+
+NODE_17_PDB = {
+    "node_id": 17,
+    "title": "Pod Disruption Budgets",
+    "slug": "pdb",
+    "estimated_minutes": 40,
+    "xp_reward": 130,
+    "prerequisites": [4],
+    "content": '''
+# Pod Disruption Budgets
+
+Garantera tillgänglighet vid underhåll.
+
+## PDB YAML
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myapp-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: myapp
+```
+
+## Alternativ: maxUnavailable
+
+```yaml
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: myapp
+```
+
+## Procent
+
+```yaml
+spec:
+  minAvailable: 50%
+  selector:
+    matchLabels:
+      app: myapp
+```
+
+## Hantera
+
+```bash
+# Lista
+kubectl get pdb
+
+# Status
+kubectl describe pdb myapp-pdb
+
+# Drain node (respekterar PDB)
+kubectl drain node1 --ignore-daemonsets
+```
+
+| Setting | Betydelse |
+|---------|-----------|
+| minAvailable: 2 | Minst 2 pods |
+| maxUnavailable: 1 | Max 1 pod nere |
+| minAvailable: 50% | Minst halva |
+
+**Nästa steg:** Node 18 - Probes
+''',
+}
+
+NODE_18_PROBES = {
+    "node_id": 18,
+    "title": "Liveness & Readiness Probes",
+    "slug": "probes",
+    "estimated_minutes": 50,
+    "xp_reward": 145,
+    "prerequisites": [3],
+    "content": '''
+# Liveness & Readiness Probes
+
+Hälsokontroller för pods.
+
+## Liveness Probe
+
+```yaml
+spec:
+  containers:
+    - name: app
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 15
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 3
+```
+
+## Readiness Probe
+
+```yaml
+spec:
+  containers:
+    - name: app
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 5
+```
+
+## Startup Probe
+
+```yaml
+spec:
+  containers:
+    - name: app
+      startupProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        failureThreshold: 30
+        periodSeconds: 10
+```
+
+## Probe-typer
+
+```yaml
+# HTTP
+httpGet:
+  path: /health
+  port: 8080
+
+# TCP
+tcpSocket:
+  port: 5432
+
+# Command
+exec:
+  command:
+    - cat
+    - /tmp/healthy
+```
+
+| Probe | Syfte | Fail Action |
+|-------|-------|-------------|
+| Liveness | Är alive? | Restart |
+| Readiness | Redo för trafik? | Remove from LB |
+| Startup | Startad? | Block other probes |
+
+**Nästa steg:** Node 19 - Logging & Monitoring
+''',
+}
+
+NODE_19_LOGGING_MONITORING = {
+    "node_id": 19,
+    "title": "Logging & Monitoring",
+    "slug": "logging-monitoring",
+    "estimated_minutes": 55,
+    "xp_reward": 155,
+    "prerequisites": [18],
+    "content": '''
+# Logging & Monitoring
+
+Observability i Kubernetes.
+
+## Prometheus Stack
+
+```bash
+# Installera med Helm
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+helm install prometheus prometheus-community/kube-prometheus-stack \\
+  --namespace monitoring \\
+  --create-namespace
+```
+
+## ServiceMonitor
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 15s
+```
+
+## Loki för Logs
+
+```bash
+helm install loki grafana/loki-stack \\
+  --namespace logging \\
+  --create-namespace \\
+  --set grafana.enabled=true
+```
+
+## kubectl logs
+
+```bash
+# Pod logs
+kubectl logs mypod
+kubectl logs -f mypod          # Follow
+kubectl logs mypod --previous  # Crashed container
+
+# Multi-container
+kubectl logs mypod -c sidecar
+
+# Label selector
+kubectl logs -l app=myapp
+```
+
+## Grafana Dashboards
+
+```yaml
+# ConfigMap för dashboard
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard
+  labels:
+    grafana_dashboard: "1"
+data:
+  dashboard.json: |
+    { ... }
+```
+
+| Stack | Komponent |
+|-------|-----------|
+| Metrics | Prometheus |
+| Logs | Loki/ELK |
+| Visualization | Grafana |
+| Tracing | Jaeger/Zipkin |
+
+**Nästa steg:** Node 20 - Production Best Practices
+''',
+}
+
+NODE_20_PRODUCTION_BEST_PRACTICES = {
+    "node_id": 20,
+    "title": "Production Best Practices",
+    "slug": "production-best-practices",
+    "estimated_minutes": 60,
+    "xp_reward": 175,
+    "prerequisites": [19],
+    "content": '''
+# Kubernetes Production Best Practices
+
+## Resource Management
+
+```yaml
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+```
+
+## Security Context
+
+```yaml
+spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 2000
+  containers:
+    - name: app
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+```
+
+## Pod Anti-Affinity
+
+```yaml
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: myapp
+          topologyKey: kubernetes.io/hostname
+```
+
+## Priority Classes
+
+```yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+```
+
+## Checklist
+
+| Område | Best Practice |
+|--------|---------------|
+| Resources | Alltid requests/limits |
+| Replicas | Minst 2 för HA |
+| Probes | Liveness + Readiness |
+| PDB | Skydda vid drain |
+| Anti-affinity | Sprid över nodes |
+| Security | Non-root, read-only |
+| Secrets | Extern secret mgmt |
+| Monitoring | Prometheus + Grafana |
+| Logging | Centralized logging |
+| Backup | etcd + PV snapshots |
+
+**🎉 Grattis! Du har slutfört Kubernetes Mastery SkillsMap!**
+''',
+}
+
+KUBERNETES_SKILLSMAP_BLOCK_5 = [
+    NODE_17_PDB,
+    NODE_18_PROBES,
+    NODE_19_LOGGING_MONITORING,
+    NODE_20_PRODUCTION_BEST_PRACTICES,
+]
+
+
+# =============================================================================
+# FULL EXPORT
+# =============================================================================
+
+KUBERNETES_SKILLSMAP_ALL_NODES = (
+    KUBERNETES_SKILLSMAP_BLOCK_1 +
+    KUBERNETES_SKILLSMAP_BLOCK_2 +
+    KUBERNETES_SKILLSMAP_BLOCK_3 +
+    KUBERNETES_SKILLSMAP_BLOCK_4 +
+    KUBERNETES_SKILLSMAP_BLOCK_5
+)
