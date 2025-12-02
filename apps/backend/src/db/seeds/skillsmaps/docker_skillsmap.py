@@ -716,4 +716,348 @@ DOCKER_SKILLSMAP_BLOCK_2 = [
     NODE_08_COMPOSE_ADVANCED,
 ]
 
-# Block 3-5 kommer i nästa commits
+
+# =============================================================================
+# BLOCK 3: BEST PRACTICES & MULTI-STAGE (Noder 9-12)
+# =============================================================================
+
+NODE_09_DOCKERFILE_BEST_PRACTICES = {
+    "node_id": 9,
+    "title": "Dockerfile Best Practices",
+    "slug": "dockerfile-best-practices",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [3],
+    "content": '''
+# Dockerfile Best Practices
+
+Optimera dina Docker images.
+
+## Layer Caching
+
+```dockerfile
+# ❌ Dåligt - cache invalideras varje gång
+COPY . .
+RUN pip install -r requirements.txt
+
+# ✅ Bra - dependencies cachas separat
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+```
+
+## Minimera Layers
+
+```dockerfile
+# ❌ Flera layers
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt-get install -y git
+
+# ✅ En layer + cleanup
+RUN apt-get update && \\
+    apt-get install -y --no-install-recommends curl git && \\
+    rm -rf /var/lib/apt/lists/*
+```
+
+## Använd .dockerignore
+
+```dockerignore
+# .dockerignore
+.git
+node_modules
+__pycache__
+*.pyc
+.env
+.venv
+Dockerfile
+docker-compose.yml
+README.md
+tests/
+```
+
+## Specifika Base Images
+
+```dockerfile
+# ❌ Undvik latest
+FROM python:latest
+
+# ✅ Specifik version
+FROM python:3.11.4-slim-bookworm
+```
+
+## Non-root User
+
+```dockerfile
+# Skapa user
+RUN useradd --create-home appuser
+USER appuser
+WORKDIR /home/appuser/app
+```
+
+| Tip | Varför |
+|-----|--------|
+| Små base images | Mindre attack surface |
+| Specifika tags | Reproducerbarhet |
+| Layer order | Bättre caching |
+| .dockerignore | Snabbare builds |
+
+**Nästa steg:** Node 10 - Multi-stage Builds
+''',
+}
+
+NODE_10_MULTISTAGE_BUILDS = {
+    "node_id": 10,
+    "title": "Multi-stage Builds",
+    "slug": "multistage-builds",
+    "estimated_minutes": 60,
+    "xp_reward": 160,
+    "prerequisites": [9],
+    "content": '''
+# Multi-stage Builds
+
+Mindre production images.
+
+## Grundläggande Multi-stage
+
+```dockerfile
+# Stage 1: Build
+FROM node:18 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Stage 2: Production
+FROM node:18-alpine AS production
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+```
+
+## Python Exempel
+
+```dockerfile
+# Build stage
+FROM python:3.11 AS builder
+WORKDIR /app
+RUN pip install poetry
+COPY pyproject.toml poetry.lock ./
+RUN poetry export -f requirements.txt -o requirements.txt
+RUN pip wheel --no-cache-dir -w /wheels -r requirements.txt
+
+# Production stage
+FROM python:3.11-slim
+WORKDIR /app
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache /wheels/*
+COPY src/ ./src/
+CMD ["python", "-m", "src.main"]
+```
+
+## Go Scratch Image
+
+```dockerfile
+FROM golang:1.21 AS builder
+WORKDIR /app
+COPY . .
+RUN CGO_ENABLED=0 go build -o /app/server
+
+FROM scratch
+COPY --from=builder /app/server /server
+ENTRYPOINT ["/server"]
+# Resultat: ~10MB image!
+```
+
+## Bygg Specifik Stage
+
+```bash
+# Bygg endast builder stage
+docker build --target builder -t myapp:builder .
+
+# Bygg production
+docker build --target production -t myapp:prod .
+```
+
+**Nästa steg:** Node 11 - Docker Security
+''',
+}
+
+NODE_11_DOCKER_SECURITY = {
+    "node_id": 11,
+    "title": "Docker Security",
+    "slug": "docker-security",
+    "estimated_minutes": 55,
+    "xp_reward": 155,
+    "prerequisites": [10],
+    "content": '''
+# Docker Security
+
+Säkra dina containers.
+
+## Non-root Containers
+
+```dockerfile
+FROM python:3.11-slim
+
+# Skapa non-root user
+RUN groupadd -r appgroup && \\
+    useradd -r -g appgroup appuser
+
+WORKDIR /app
+COPY --chown=appuser:appgroup . .
+
+USER appuser
+CMD ["python", "app.py"]
+```
+
+## Read-only Filesystem
+
+```bash
+docker run --read-only \\
+  --tmpfs /tmp \\
+  --tmpfs /var/run \\
+  myapp
+```
+
+## Resource Limits
+
+```bash
+docker run \\
+  --memory=512m \\
+  --memory-swap=512m \\
+  --cpus=1.5 \\
+  --pids-limit=100 \\
+  myapp
+```
+
+## Security Scanning
+
+```bash
+# Trivy scan
+docker run aquasec/trivy image myapp:latest
+
+# Docker Scout
+docker scout cves myapp:latest
+
+# Snyk
+snyk container test myapp:latest
+```
+
+## Secrets Management
+
+```yaml
+# docker-compose.yml
+services:
+  api:
+    secrets:
+      - db_password
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+```
+
+## Security Checklist
+
+| Check | Kommando/Åtgärd |
+|-------|-----------------|
+| Non-root | USER i Dockerfile |
+| No secrets | Använd secrets/env |
+| Scan images | trivy/scout |
+| Limit resources | --memory/--cpus |
+| Minimal base | alpine/distroless |
+
+**Nästa steg:** Node 12 - Docker Registry
+''',
+}
+
+NODE_12_DOCKER_REGISTRY = {
+    "node_id": 12,
+    "title": "Docker Registry",
+    "slug": "docker-registry",
+    "estimated_minutes": 50,
+    "xp_reward": 140,
+    "prerequisites": [11],
+    "content": '''
+# Docker Registry
+
+Lagra och distribuera images.
+
+## Docker Hub
+
+```bash
+# Logga in
+docker login
+
+# Tagga för push
+docker tag myapp:v1 username/myapp:v1
+
+# Push
+docker push username/myapp:v1
+
+# Pull
+docker pull username/myapp:v1
+```
+
+## Private Registry
+
+```bash
+# Kör lokal registry
+docker run -d -p 5000:5000 --name registry registry:2
+
+# Push till lokal
+docker tag myapp localhost:5000/myapp:v1
+docker push localhost:5000/myapp:v1
+```
+
+## Cloud Registries
+
+```bash
+# AWS ECR
+aws ecr get-login-password | docker login --username AWS --password-stdin 123456.dkr.ecr.eu-west-1.amazonaws.com
+docker push 123456.dkr.ecr.eu-west-1.amazonaws.com/myapp:v1
+
+# Google GCR
+gcloud auth configure-docker
+docker push gcr.io/project-id/myapp:v1
+
+# Azure ACR
+az acr login --name myregistry
+docker push myregistry.azurecr.io/myapp:v1
+```
+
+## GitHub Container Registry
+
+```bash
+# Login
+echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+
+# Push
+docker tag myapp ghcr.io/username/myapp:v1
+docker push ghcr.io/username/myapp:v1
+```
+
+| Registry | URL |
+|----------|-----|
+| Docker Hub | docker.io |
+| GitHub | ghcr.io |
+| AWS ECR | *.dkr.ecr.*.amazonaws.com |
+| Google | gcr.io |
+| Azure | *.azurecr.io |
+
+**Nästa steg:** Node 13 - Docker in CI/CD
+''',
+}
+
+DOCKER_SKILLSMAP_BLOCK_3 = [
+    NODE_09_DOCKERFILE_BEST_PRACTICES,
+    NODE_10_MULTISTAGE_BUILDS,
+    NODE_11_DOCKER_SECURITY,
+    NODE_12_DOCKER_REGISTRY,
+]
+
+# Block 4-5 kommer i nästa commits
