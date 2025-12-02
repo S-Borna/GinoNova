@@ -10,7 +10,7 @@
  * - Submit button
  * - Correct/incorrect feedback with EPIC confetti celebration
  * - 1 retry on wrong answer
- * - Gandalf wizard step-in on 2nd failure
+ * - Dallas wizard step-in on 2nd failure
  * - Explanation after answering
  * - XP bonus display
  * - Disabled state after answering
@@ -136,16 +136,16 @@ function ConfettiExplosion({ onComplete }: { onComplete: () => void }) {
 }
 
 /* ============================================================================
-   GANDALF WIZARD HELPER - Steps in after 2nd wrong answer
+   DALLAS HELPER - Steps in after 2nd wrong answer
    ============================================================================ */
 
-const GANDALF_QUOTES = [
-    "Even the wisest cannot see all ends...",
-    "All we have to decide is what to do with the knowledge given to us.",
-    "There is more in you of good than you know.",
+const DALLAS_QUOTES = [
+    "Mistakes are proof that you're trying. Let's learn together!",
+    "Every expert was once a beginner. You've got this!",
+    "The only real failure is giving up. Let's break this down.",
 ]
 
-function GandalfHelper({
+function DallasHelper({
     explanation,
     correctAnswer,
     onDismiss
@@ -154,7 +154,7 @@ function GandalfHelper({
     correctAnswer: string
     onDismiss: () => void
 }) {
-    const [quote] = useState(() => GANDALF_QUOTES[Math.floor(Math.random() * GANDALF_QUOTES.length)])
+    const [quote] = useState(() => DALLAS_QUOTES[Math.floor(Math.random() * DALLAS_QUOTES.length)])
 
     return (
         <motion.div
@@ -168,9 +168,9 @@ function GandalfHelper({
             <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 blur-xl" />
 
             <div className="relative rounded-xl border border-blue-500/30 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-5">
-                {/* Header with Gandalf orb */}
+                {/* Header with Dallas orb */}
                 <div className="flex items-start gap-4">
-                    {/* Gandalf Orb */}
+                    {/* Dallas Orb */}
                     <div className="relative flex-shrink-0">
                         <motion.div
                             animate={{
@@ -208,7 +208,7 @@ function GandalfHelper({
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
                             <span className="text-lg font-semibold bg-gradient-to-r from-gray-200 to-white bg-clip-text text-transparent">
-                                Gandalf the Wise
+                                Dallas
                             </span>
                             <span className="text-xs text-blue-400 font-medium px-2 py-0.5 bg-blue-500/10 rounded-full">
                                 Learning Guide
@@ -300,7 +300,7 @@ export function QuizBlock({
     const [isCorrect, setIsCorrect] = useState(answered?.isCorrect ?? false)
     const [attemptCount, setAttemptCount] = useState(0)
     const [showConfetti, setShowConfetti] = useState(false)
-    const [showGandalf, setShowGandalf] = useState(false)
+    const [showDallas, setShowDallas] = useState(false)
     const [canRetry, setCanRetry] = useState(false)
     const [shakeWrong, setShakeWrong] = useState(false)
 
@@ -337,10 +337,10 @@ export function QuizBlock({
                 setCanRetry(true)
                 setSelectedOption(null)
             } else {
-                // Second wrong - Gandalf steps in
+                // Second wrong - Dallas steps in
                 setHasSubmitted(true)
                 setCanRetry(false)
-                setShowGandalf(true)
+                setShowDallas(true)
                 onAnswer(blockId, selectedOption)
             }
         }
@@ -351,8 +351,8 @@ export function QuizBlock({
         setSelectedOption(null)
     }
 
-    const handleGandalfDismiss = () => {
-        setShowGandalf(false)
+    const handleDallasDismiss = () => {
+        setShowDallas(false)
     }
 
     return (
@@ -452,7 +452,7 @@ export function QuizBlock({
                 <div className="space-y-2">
                     {options.map((option, index) => {
                         const isSelected = selectedOption === index
-                        const showResult = hasSubmitted && !showGandalf
+                        const showResult = hasSubmitted && !showDallas
 
                         return (
                             <motion.label
@@ -548,19 +548,19 @@ export function QuizBlock({
                     </motion.button>
                 )}
 
-                {/* 🧙‍♂️ Gandalf Wizard Helper */}
+                {/* 🧙‍♂️ Dallas Wizard Helper */}
                 <AnimatePresence>
-                    {showGandalf && (
-                        <GandalfHelper
+                    {showDallas && (
+                        <DallasHelper
                             explanation={explanation}
                             correctAnswer={correctAnswerText}
-                            onDismiss={handleGandalfDismiss}
+                            onDismiss={handleDallasDismiss}
                         />
                     )}
                 </AnimatePresence>
 
-                {/* Normal Explanation (only show if correct or after Gandalf dismissed) */}
-                {hasSubmitted && isCorrect && !showGandalf && (
+                {/* Normal Explanation (only show if correct or after Dallas dismissed) */}
+                {hasSubmitted && isCorrect && !showDallas && (
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}

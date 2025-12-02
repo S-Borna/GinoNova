@@ -2,20 +2,20 @@
 
 /**
  * ============================================================================
- * GANDALF ORB - Enterprise Level 5 AI Assistant
+ * DALLAS ORB - Enterprise Level 5 AI Assistant
  * ============================================================================
  *
- * "A wizard is never late, nor is he early. He arrives precisely when he means to."
+ * "Knowledge is power. I'm here to empower your DevOps journey."
  *
  * Design Philosophy:
- * - Gandalf-inspired mystical orb (grey/white/silver with blue magic)
+ * - Dallas-inspired mystical orb (grey/white/silver with blue magic)
  * - Ambient breathing glow animation
  * - Positioned under user name in top-right
  * - Opens into elegant centered modal
  * - Enterprise-grade micro-interactions
  *
- * NO YELLOW - Classic Gandalf colors:
- * - Grey robes (#6B7280, #9CA3AF)
+ * Color Palette:
+ * - Grey (#6B7280, #9CA3AF)
  * - White light (#F9FAFB, #FFFFFF)
  * - Blue magic (#3B82F6, #60A5FA)
  * - Silver accents (#E5E7EB)
@@ -41,20 +41,20 @@ interface Message {
 }
 
 /* ============================================================================
-   GANDALF QUOTES
+   DALLAS QUOTES
    ============================================================================ */
 
-const GANDALF_GREETINGS = [
-    "A wizard is never late... I arrive precisely when you need guidance. 🧙‍♂️",
-    "You shall not pass... without learning something new today! 🧙‍♂️",
-    "Even the smallest learner can change the course of their future. 🧙‍♂️",
-    "All we have to decide is what to do with the time given us. How may I help? 🧙‍♂️",
+const DALLAS_GREETINGS = [
+    "Ready to level up? I'm Dallas, your DevOps guide. Let's build something great! 🚀",
+    "Knowledge is power. What would you like to learn today? 💡",
+    "Every expert was once a beginner. Let's continue your journey! 🎯",
+    "The best time to learn was yesterday. The second best time is now. How can I help? ⚡",
 ]
 
 const WELCOME_MESSAGE: Message = {
     id: "welcome",
     role: "assistant",
-    content: GANDALF_GREETINGS[Math.floor(Math.random() * GANDALF_GREETINGS.length)],
+    content: DALLAS_GREETINGS[Math.floor(Math.random() * DALLAS_GREETINGS.length)],
     timestamp: new Date(),
 }
 
@@ -65,7 +65,7 @@ const QUICK_PROMPTS = [
 ]
 
 /* ============================================================================
-   ANIMATED ORB COMPONENT - The Gandalf Crystal
+   ANIMATED ORB COMPONENT - The Dallas Crystal
    ============================================================================ */
 
 function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => void }) {
@@ -75,7 +75,7 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
             className="relative group"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            aria-label="Open Gandalf AI Assistant"
+            aria-label="Open Dallas AI Assistant"
         >
             {/* Outer glow rings - breathing animation */}
             <motion.div
@@ -173,7 +173,7 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
                 "transition-opacity duration-200",
                 "pointer-events-none"
             )}>
-                Gandalf
+                Dallas
             </div>
         </motion.button>
     )
@@ -258,10 +258,10 @@ function TypingIndicator() {
 }
 
 /* ============================================================================
-   MAIN GANDALF ORB COMPONENT
+   MAIN DALLAS ORB COMPONENT
    ============================================================================ */
 
-export function GandalfOrb() {
+export function DallasOrb() {
     const [isOpen, setIsOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE])
     const [input, setInput] = useState("")
@@ -339,7 +339,7 @@ export function GandalfOrb() {
             const fallbackMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 role: "assistant",
-                content: "Even wizards need a moment to gather their thoughts. Please try again. 🧙‍♂️",
+                content: "Even the best systems need a moment. Let me try again for you! 🔄",
                 timestamp: new Date(),
             }
             setMessages((prev) => [...prev, fallbackMessage])
@@ -409,11 +409,11 @@ export function GandalfOrb() {
                                     </div>
                                     <div>
                                         <h2 className="font-semibold text-gray-900 dark:text-white">
-                                            Gandalf
+                                            Dallas
                                         </h2>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                            Your DevOps Wizard
+                                            Your DevOps AI Guide
                                         </p>
                                     </div>
                                 </div>
@@ -482,7 +482,7 @@ export function GandalfOrb() {
                                         ref={inputRef}
                                         value={input}
                                         onChange={(e) => setInput(e.target.value)}
-                                        placeholder="Ask the wizard..."
+                                        placeholder="Ask Dallas anything..."
                                         className={cn(
                                             "flex-1 px-4 py-3 rounded-xl",
                                             "bg-white dark:bg-gray-800",
@@ -523,4 +523,4 @@ export function GandalfOrb() {
     )
 }
 
-export default GandalfOrb
+export default DallasOrb

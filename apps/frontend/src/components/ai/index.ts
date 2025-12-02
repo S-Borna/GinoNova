@@ -3,6 +3,6 @@
  * @phase ENTERPRISE-LEVEL-5
  */
 
-// Gandalf - Enterprise Level 5 AI Orb
-export { GandalfOrb } from "./GandalfOrb"
-export { default as GandalfOrbDefault } from "./GandalfOrb"
+// Dallas - Enterprise Level 5 AI Orb
+export { DallasOrb } from "./DallasOrb"
+export { default as DallasOrbDefault } from "./DallasOrb"

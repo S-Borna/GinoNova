@@ -7,7 +7,7 @@
  *
  * Design Philosophy:
  * - Premium glassmorphism with subtle animations
- * - Gandalf AI Orb integrated under user area
+ * - Dallas AI Orb integrated under user area
  * - Command palette ready (⌘K)
  * - Enterprise-grade polish
  *
@@ -21,7 +21,7 @@ import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
-import { GandalfOrb } from "@/components/ai/GandalfOrb"
+import { DallasOrb } from "@/components/ai/DallasOrb"
 import {
     Bell,
     Search,
@@ -282,8 +282,8 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                 {/* Right side */}
                 <div className="flex items-center gap-3">
-                    {/* Gandalf AI Orb */}
-                    <GandalfOrb />
+                    {/* Dallas AI Orb */}
+                    <DallasOrb />
 
                     <NotificationBell />
                     <UserDropdown />
