@@ -1060,4 +1060,354 @@ DOCKER_SKILLSMAP_BLOCK_3 = [
     NODE_12_DOCKER_REGISTRY,
 ]
 
-# Block 4-5 kommer i nästa commits
+
+# =============================================================================
+# BLOCK 4: CI/CD & DEBUGGING (Noder 13-16)
+# =============================================================================
+
+NODE_13_DOCKER_IN_CICD = {
+    "node_id": 13,
+    "title": "Docker in CI/CD",
+    "slug": "docker-in-cicd",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [12],
+    "content": '''
+# Docker in CI/CD
+
+Automatisera Docker builds.
+
+## GitHub Actions
+
+```yaml
+name: Build and Push
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+```
+
+## GitLab CI
+
+```yaml
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+```
+
+## Layer Caching i CI
+
+```yaml
+# GitHub Actions med cache
+- uses: docker/build-push-action@v5
+  with:
+    cache-from: type=registry,ref=ghcr.io/org/app:cache
+    cache-to: type=registry,ref=ghcr.io/org/app:cache,mode=max
+```
+
+**Nästa steg:** Node 14 - Docker Debugging
+''',
+}
+
+NODE_14_DOCKER_DEBUGGING = {
+    "node_id": 14,
+    "title": "Docker Debugging",
+    "slug": "docker-debugging",
+    "estimated_minutes": 50,
+    "xp_reward": 140,
+    "prerequisites": [13],
+    "content": '''
+# Docker Debugging
+
+Felsök containers effektivt.
+
+## Container Inspection
+
+```bash
+# Full inspect
+docker inspect myapp
+
+# Specifika fält
+docker inspect -f '{{.State.Status}}' myapp
+docker inspect -f '{{.NetworkSettings.IPAddress}}' myapp
+docker inspect -f '{{json .Config.Env}}' myapp | jq
+```
+
+## Logs
+
+```bash
+# Se logs
+docker logs myapp
+docker logs -f myapp              # Follow
+docker logs --tail 100 myapp      # Senaste 100
+docker logs --since 1h myapp      # Senaste timmen
+docker logs -t myapp              # Med timestamps
+```
+
+## Exec in Container
+
+```bash
+# Shell access
+docker exec -it myapp bash
+docker exec -it myapp sh          # Om ingen bash
+
+# Kör kommando
+docker exec myapp cat /etc/hosts
+docker exec myapp env
+docker exec myapp ps aux
+```
+
+## Debug Stopped Container
+
+```bash
+# Skapa image från stoppad container
+docker commit dead_container debug_image
+
+# Starta med override
+docker run -it --entrypoint bash debug_image
+```
+
+## Container Events
+
+```bash
+# Realtid events
+docker events
+
+# Filtrera
+docker events --filter container=myapp
+docker events --filter event=die
+```
+
+## Resource Monitoring
+
+```bash
+# Live stats
+docker stats
+docker stats myapp
+
+# Top processes
+docker top myapp
+```
+
+| Verktyg | Användning |
+|---------|-----------|
+| inspect | Metadata/config |
+| logs | Application output |
+| exec | Kör kommandon |
+| events | Lifecycle events |
+| stats | Resource usage |
+
+**Nästa steg:** Node 15 - Docker Build Optimization
+''',
+}
+
+NODE_15_BUILD_OPTIMIZATION = {
+    "node_id": 15,
+    "title": "Build Optimization",
+    "slug": "build-optimization",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [14],
+    "content": '''
+# Docker Build Optimization
+
+Snabbare och mindre builds.
+
+## BuildKit
+
+```bash
+# Aktivera BuildKit
+export DOCKER_BUILDKIT=1
+
+# Eller i docker build
+docker buildx build -t myapp .
+```
+
+## Parallel Builds
+
+```dockerfile
+# Parallella stages med BuildKit
+FROM node:18 AS frontend
+WORKDIR /frontend
+COPY frontend/ .
+RUN npm ci && npm run build
+
+FROM python:3.11 AS backend
+WORKDIR /backend
+COPY backend/ .
+RUN pip install -r requirements.txt
+
+FROM nginx:alpine
+COPY --from=frontend /frontend/dist /usr/share/nginx/html
+COPY --from=backend /backend /app
+```
+
+## Cache Mounts
+
+```dockerfile
+# Cache pip downloads
+RUN --mount=type=cache,target=/root/.cache/pip \\
+    pip install -r requirements.txt
+
+# Cache npm
+RUN --mount=type=cache,target=/root/.npm \\
+    npm ci
+```
+
+## Secret Mounts
+
+```dockerfile
+# Säker secret hantering
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \\
+    npm ci
+
+# Build med secret
+docker build --secret id=npmrc,src=.npmrc .
+```
+
+## Image Size Tips
+
+```bash
+# Jämför image storlekar
+docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
+
+# Analysera layers
+docker history myapp:latest
+dive myapp:latest  # Interaktivt verktyg
+```
+
+| Optimering | Effekt |
+|------------|--------|
+| Multi-stage | Mindre prod image |
+| Cache mounts | Snabbare rebuilds |
+| Alpine/slim | Mindre base |
+| .dockerignore | Snabbare context |
+
+**Nästa steg:** Node 16 - Docker Healthchecks
+''',
+}
+
+NODE_16_HEALTHCHECKS = {
+    "node_id": 16,
+    "title": "Docker Healthchecks",
+    "slug": "docker-healthchecks",
+    "estimated_minutes": 45,
+    "xp_reward": 130,
+    "prerequisites": [15],
+    "content": '''
+# Docker Healthchecks
+
+Automatisk hälsokontroll.
+
+## Dockerfile HEALTHCHECK
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY . .
+RUN npm ci
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=5s \\
+  CMD curl -f http://localhost:3000/health || exit 1
+
+CMD ["node", "server.js"]
+```
+
+## Health Status
+
+```bash
+# Se health status
+docker ps
+# CONTAINER   STATUS
+# abc123      Up 2m (healthy)
+
+# Detaljerad health info
+docker inspect --format='{{json .State.Health}}' myapp | jq
+```
+
+## Compose Healthcheck
+
+```yaml
+services:
+  api:
+    build: .
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  db:
+    image: postgres:15
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+```
+
+## Wait for Dependencies
+
+```yaml
+services:
+  api:
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+```
+
+## Healthcheck Patterns
+
+| Service | Test Command |
+|---------|--------------|
+| HTTP API | curl -f http://localhost/health |
+| PostgreSQL | pg_isready -U user |
+| Redis | redis-cli ping |
+| MySQL | mysqladmin ping |
+
+**Nästa steg:** Node 17 - Docker Swarm Basics
+''',
+}
+
+DOCKER_SKILLSMAP_BLOCK_4 = [
+    NODE_13_DOCKER_IN_CICD,
+    NODE_14_DOCKER_DEBUGGING,
+    NODE_15_BUILD_OPTIMIZATION,
+    NODE_16_HEALTHCHECKS,
+]
+
+# Block 5 kommer i nästa commit
