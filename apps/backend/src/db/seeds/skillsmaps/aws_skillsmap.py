@@ -2795,9 +2795,9 @@ Event → Lambda Function → Response
 def lambda_handler(event, context):
     # event - input data
     # context - runtime info
-    
+
     name = event.get('name', 'World')
-    
+
     return {
         'statusCode': 200,
         'body': f'Hello, {name}!'
@@ -2877,32 +2877,32 @@ def lambda_handler(event, context):
     if event['httpMethod'] == 'POST':
         body = json.loads(event['body'])
         long_url = body['url']
-        
+
         # Generate short code
         short_code = hashlib.md5(long_url.encode()).hexdigest()[:6]
-        
+
         # Store mapping
         table.put_item(Item={
             'short_code': short_code,
             'long_url': long_url
         })
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps({'short_url': f'https://short.ly/{short_code}'})
         }
-    
+
     elif event['httpMethod'] == 'GET':
         short_code = event['pathParameters']['code']
-        
+
         response = table.get_item(Key={'short_code': short_code})
-        
+
         if 'Item' in response:
             return {
                 'statusCode': 301,
                 'headers': {'Location': response['Item']['long_url']}
             }
-        
+
         return {'statusCode': 404, 'body': 'Not found'}
 ```
 """,
@@ -3797,7 +3797,7 @@ def publish_order_event(order_id: str, event_type: str, data: dict):
         'event_type': event_type,
         'data': data
     }
-    
+
     sns.publish(
         TopicArn=TOPIC_ARN,
         Message=json.dumps(message),
@@ -3823,14 +3823,14 @@ def process_orders():
             MaxNumberOfMessages=10,
             WaitTimeSeconds=20
         )
-        
+
         for message in response.get('Messages', []):
             body = json.loads(message['Body'])
             order_data = json.loads(body['Message'])
-            
+
             print(f"Processing order: {order_data['order_id']}")
             # ... process order ...
-            
+
             sqs.delete_message(
                 QueueUrl=QUEUE_URL,
                 ReceiptHandle=message['ReceiptHandle']
@@ -3972,7 +3972,7 @@ def get_secret(secret_name: str) -> dict:
 # Usage in app
 def get_database_connection():
     creds = get_secret('prod/myapp/database')
-    
+
     return psycopg2.connect(
         host=creds['host'],
         port=creds['port'],
@@ -4822,14 +4822,14 @@ ce = boto3.client('ce')
 def get_monthly_costs():
     end = datetime.now().strftime('%Y-%m-%d')
     start = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-    
+
     response = ce.get_cost_and_usage(
         TimePeriod={'Start': start, 'End': end},
         Granularity='MONTHLY',
         Metrics=['UnblendedCost'],
         GroupBy=[{'Type': 'DIMENSION', 'Key': 'SERVICE'}]
     )
-    
+
     print("=== Cost by Service (Last 30 Days) ===")
     for group in response['ResultsByTime'][0]['Groups']:
         service = group['Keys'][0]
@@ -4839,7 +4839,7 @@ def get_monthly_costs():
 
 def get_recommendations():
     response = ce.get_rightsizing_recommendation(Service='EC2')
-    
+
     print("\\n=== Rightsizing Recommendations ===")
     for rec in response.get('RightsizingRecommendations', [])[:5]:
         instance = rec['CurrentInstance']['InstanceName']

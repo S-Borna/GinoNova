@@ -1,32 +1,48 @@
 /**
  * DevOpsHub Design Tokens
- * Phase D.1: Apple-Inspired Design System Foundation
+ * Premium Polish Update - "Learn like a pro, feel like home"
  *
  * Philosophy:
- * - Clean, minimal, sophisticated (Apple)
- * - Energetic, vibrant accents (Stripe)
- * - Trustworthy, professional (Linear)
+ * - Rich, deep backgrounds for premium feel
+ * - Purple/Violet signature color
+ * - Gamification that feels rewarding
  */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
     /* ============================================================================
-     PRIMARY COLORS — Energetic Purple/Indigo
+     PREMIUM BACKGROUNDS — Rich, deep darks
      ============================================================================ */
-    --primary-50: #eef2ff;
-    --primary-100: #e0e7ff;
-    --primary-200: #c7d2fe;
-    --primary-300: #a5b4fc;
-    --primary-400: #818cf8;
-    --primary-500: #6366f1;
-    --primary-600: #4f46e5;
-    --primary-700: #4338ca;
-    --primary-800: #3730a3;
-    --primary-900: #312e81;
-    --primary-950: #1e1b4b;
+    --bg-deep: #0a0a0f;
+    --bg-primary: #0f0f17;
+    --bg-secondary: #12121c;
+    --bg-tertiary: #141420;
+    --bg-elevated: #1a1a28;
+    --bg-card: #12121c;
 
-    /* Primary Gradient */
-    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    --primary-gradient-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    /* ============================================================================
+     PRIMARY COLORS — Purple/Violet Signature
+     ============================================================================ */
+    --primary-50: #faf5ff;
+    --primary-100: #f3e8ff;
+    --primary-200: #e9d5ff;
+    --primary-300: #d8b4fe;
+    --primary-400: #c084fc;
+    --primary-500: #a855f7;
+    --primary-600: #9333ea;
+    --primary-700: #7e22ce;
+    --primary-800: #6b21a8;
+    --primary-900: #581c87;
+    --primary-950: #3b0764;
+
+    /* Primary Gradient - Purple */
+    --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
+    --primary-gradient-hover: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);
+    --primary-gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.8) 0%, rgba(168, 85, 247, 0.6) 100%);
+
+    /* Card gradient */
+    --card-gradient: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
 
     /* ============================================================================
      ACCENT COLORS — Vibrant, Purposeful
@@ -35,34 +51,37 @@
     --accent-success: #22c55e;
     --accent-success-light: #4ade80;
     --accent-success-dark: #16a34a;
-    --accent-success-bg: rgba(34, 197, 94, 0.1);
+    --accent-success-bg: rgba(34, 197, 94, 0.15);
+    --accent-success-glow: rgba(34, 197, 94, 0.25);
 
-    /* Warning - Streaks, energy */
-    --accent-warning: #f59e0b;
-    --accent-warning-light: #fbbf24;
-    --accent-warning-dark: #d97706;
-    --accent-warning-bg: rgba(245, 158, 11, 0.1);
+    /* Warning/Streak - Streaks, energy, fire */
+    --accent-warning: #f97316;
+    --accent-warning-light: #fb923c;
+    --accent-warning-dark: #ea580c;
+    --accent-warning-bg: rgba(249, 115, 22, 0.15);
+    --accent-warning-glow: rgba(249, 115, 22, 0.25);
+
+    /* XP/Gold - Rewards, gains */
+    --accent-xp: #fbbf24;
+    --accent-xp-light: #fcd34d;
+    --accent-xp-dark: #f59e0b;
+    --accent-xp-bg: rgba(251, 191, 36, 0.15);
+    --accent-xp-glow: rgba(251, 191, 36, 0.25);
 
     /* Info - Focus mode, studyflow */
     --accent-info: #06b6d4;
     --accent-info-light: #22d3ee;
     --accent-info-dark: #0891b2;
-    --accent-info-bg: rgba(6, 182, 212, 0.1);
-
-    /* XP - Rewards, gains */
-    --accent-xp: #f97316;
-    --accent-xp-light: #fb923c;
-    --accent-xp-dark: #ea580c;
-    --accent-xp-bg: rgba(249, 115, 22, 0.1);
+    --accent-info-bg: rgba(6, 182, 212, 0.15);
 
     /* Error/Danger */
     --accent-error: #ef4444;
     --accent-error-light: #f87171;
     --accent-error-dark: #dc2626;
-    --accent-error-bg: rgba(239, 68, 68, 0.1);
+    --accent-error-bg: rgba(239, 68, 68, 0.15);
 
     /* ============================================================================
-     NEUTRALS — Sophisticated Grays
+     NEUTRALS — Zinc Scale for Premium
      ============================================================================ */
     --neutral-0: #ffffff;
     --neutral-50: #fafafa;
@@ -78,45 +97,50 @@
     --neutral-950: #09090b;
 
     /* ============================================================================
-     SEMANTIC COLORS
+     TEXT HIERARCHY
      ============================================================================ */
-    --bg-primary: var(--neutral-0);
-    --bg-secondary: var(--neutral-50);
-    --bg-tertiary: var(--neutral-100);
-    --bg-elevated: var(--neutral-0);
-    --bg-sunken: var(--neutral-100);
-
-    --text-primary: var(--neutral-900);
-    --text-secondary: var(--neutral-600);
-    --text-tertiary: var(--neutral-500);
-    --text-muted: var(--neutral-400);
-    --text-inverted: var(--neutral-0);
-
-    --border-default: var(--neutral-200);
-    --border-subtle: var(--neutral-100);
-    --border-strong: var(--neutral-300);
+    --text-primary: #f8fafc;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #71717a;
+    --text-muted: #52525b;
+    --text-inverted: #0a0a0f;
 
     /* ============================================================================
-     SHADOWS — Soft, Layered
+     BORDERS
      ============================================================================ */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.12);
-    --shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.15);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-purple: rgba(168, 85, 247, 0.3);
+    --border-purple-strong: rgba(168, 85, 247, 0.5);
+
+    /* ============================================================================
+     SHADOWS — Premium Glows
+     ============================================================================ */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+    --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.7);
+
+    /* Card Shadows */
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.4);
 
     /* Glow Shadows */
-    --shadow-glow-primary: 0 0 20px rgba(99, 102, 241, 0.25);
-    --shadow-glow-primary-intense: 0 0 30px rgba(99, 102, 241, 0.4);
+    --shadow-glow-purple: 0 0 20px rgba(168, 85, 247, 0.2);
+    --shadow-glow-purple-strong: 0 0 30px rgba(168, 85, 247, 0.35);
+    --shadow-glow-purple-intense: 0 0 40px rgba(168, 85, 247, 0.5);
+    --shadow-glow-gold: 0 0 15px rgba(251, 191, 36, 0.25);
+    --shadow-glow-fire: 0 0 15px rgba(249, 115, 22, 0.25);
     --shadow-glow-success: 0 0 20px rgba(34, 197, 94, 0.25);
-    --shadow-glow-warning: 0 0 20px rgba(249, 115, 22, 0.25);
     --shadow-glow-info: 0 0 20px rgba(6, 182, 212, 0.25);
     --shadow-glow-error: 0 0 20px rgba(239, 68, 68, 0.25);
 
     /* Inset Shadows */
-    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    --shadow-inner-lg: inset 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-inner-lg: inset 0 4px 8px rgba(0, 0, 0, 0.4);
 
     /* ============================================================================
      RADIUS — Generous, Modern
@@ -267,76 +291,50 @@
 }
 
 /* ============================================================================
-   DARK MODE
+   DARK MODE - Premium Polish (Default)
    ============================================================================ */
-@media (prefers-color-scheme: dark) {
-    :root:not(.light) {
-        --bg-primary: var(--neutral-900);
-        --bg-secondary: var(--neutral-800);
-        --bg-tertiary: var(--neutral-700);
-        --bg-elevated: var(--neutral-800);
-        --bg-sunken: var(--neutral-950);
 
-        --text-primary: var(--neutral-50);
-        --text-secondary: var(--neutral-300);
-        --text-tertiary: var(--neutral-400);
-        --text-muted: var(--neutral-500);
-        --text-inverted: var(--neutral-900);
+/* Always use dark premium backgrounds */
+.dark,
+:root {
+    /* Premium Deep Backgrounds */
+    --bg-deep: #0a0a0f;
+    --bg-primary: #0f0f17;
+    --bg-secondary: #12121c;
+    --bg-tertiary: #141420;
+    --bg-elevated: #1a1a28;
+    --bg-card: #12121c;
+    --bg-sunken: #08080c;
 
-        --border-default: var(--neutral-700);
-        --border-subtle: var(--neutral-800);
-        --border-strong: var(--neutral-600);
+    /* Text Hierarchy */
+    --text-primary: #f8fafc;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #71717a;
+    --text-muted: #52525b;
+    --text-inverted: #0a0a0f;
 
-        /* Adjusted shadows for dark mode */
-        --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-        --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
-        --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.6);
+    /* Premium Borders */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-purple: rgba(168, 85, 247, 0.3);
 
-        /* Brighter glows for dark mode */
-        --shadow-glow-primary: 0 0 25px rgba(129, 140, 248, 0.35);
-        --shadow-glow-primary-intense: 0 0 40px rgba(129, 140, 248, 0.5);
-
-        --glass-bg: rgba(39, 39, 42, 0.8);
-        --glass-border: rgba(255, 255, 255, 0.1);
-
-        /* Slightly lighter primary for dark mode */
-        --primary-500: #818cf8;
-        --primary-600: #6366f1;
-    }
-}
-
-/* Manual dark mode class */
-.dark {
-    --bg-primary: var(--neutral-900);
-    --bg-secondary: var(--neutral-800);
-    --bg-tertiary: var(--neutral-700);
-    --bg-elevated: var(--neutral-800);
-    --bg-sunken: var(--neutral-950);
-
-    --text-primary: var(--neutral-50);
-    --text-secondary: var(--neutral-300);
-    --text-tertiary: var(--neutral-400);
-    --text-muted: var(--neutral-500);
-    --text-inverted: var(--neutral-900);
-
-    --border-default: var(--neutral-700);
-    --border-subtle: var(--neutral-800);
-    --border-strong: var(--neutral-600);
-
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    /* Premium Shadows */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
 
-    --shadow-glow-primary: 0 0 25px rgba(129, 140, 248, 0.35);
-    --shadow-glow-primary-intense: 0 0 40px rgba(129, 140, 248, 0.5);
+    /* Purple Glows */
+    --shadow-glow-primary: 0 0 20px rgba(168, 85, 247, 0.2);
+    --shadow-glow-primary-intense: 0 0 40px rgba(168, 85, 247, 0.4);
 
-    --glass-bg: rgba(39, 39, 42, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    /* Glass Effect */
+    --glass-bg: rgba(15, 15, 23, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.08);
 
-    --primary-500: #818cf8;
-    --primary-600: #6366f1;
+    /* Primary Purple */
+    --primary-500: #a855f7;
+    --primary-600: #9333ea;
 }
