@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
 import { PlatformSelector, PlatformBadge } from "@/components/onboarding"
-import { BookOpen, Trophy, RefreshCw, AlertCircle, Settings2 } from "lucide-react"
+import { BookOpen, Trophy, RefreshCw, AlertCircle, Settings2, Sparkles } from "lucide-react"
 
 // @saas/ui Design System
 import { PageLayout, Section, Block, Headline, Subtext } from "@saas/ui"
@@ -182,7 +182,7 @@ function EmptyState() {
 }
 
 /* ============================================================================
-   HEADER COMPONENT
+   PREMIUM HEADER COMPONENT
    ============================================================================ */
 
 interface HeaderProps {
@@ -200,74 +200,132 @@ function Header({
     overallProgress,
     onRefresh,
     isRefreshing,
-    onChangePlatform,
 }: HeaderProps) {
     return (
-        <div className="mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                        Learning Path
-                    </h1>
-                    <p className="text-gray-500 dark:text-neutral-400 mt-2">
-                        {totalModules} modules • {completedModules} completed
-                    </p>
-                </div>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={cn(
+                "relative overflow-hidden rounded-3xl mb-8",
+                "bg-gradient-to-br from-zinc-900 via-purple-950/30 to-zinc-900",
+                "border border-purple-500/20",
+                "p-8"
+            )}
+        >
+            {/* Ambient glow effects */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/15 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4" />
 
-                <div className="flex items-center gap-3">
-                    {/* Platform Badge */}
-                    <PlatformBadge />
+            {/* Animated sparkles */}
+            <motion.div 
+                className="absolute top-6 right-16 text-purple-400/50"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+                <Sparkles className="w-5 h-5" />
+            </motion.div>
 
-                    {/* Trophy badge */}
-                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
-                        <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                        <span className="font-semibold text-amber-700 dark:text-amber-400">
-                            {completedModules}/{totalModules}
-                        </span>
+            <div className="relative">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                    <div>
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className={cn(
+                                "p-2 rounded-xl",
+                                "bg-gradient-to-br from-purple-500/20 to-purple-600/10",
+                                "border border-purple-500/30"
+                            )}>
+                                <BookOpen className="w-5 h-5 text-purple-400" />
+                            </div>
+                            <span className="text-purple-400 font-semibold text-sm uppercase tracking-wider">
+                                Learning Path
+                            </span>
+                        </div>
+                        <h1 className={cn(
+                            "text-3xl md:text-4xl font-black mb-2",
+                            "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                        )}>
+                            Your DevOps Journey
+                        </h1>
+                        <p className="text-zinc-400">
+                            {totalModules} modules • {completedModules} completed
+                        </p>
                     </div>
 
-                    {/* Refresh button */}
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={onRefresh}
-                        disabled={isRefreshing}
-                        className="rounded-xl"
-                    >
-                        <RefreshCw className={cn("w-4 h-4", isRefreshing && "animate-spin")} />
-                    </Button>
-                </div>
-            </div>
+                    <div className="flex items-center gap-3">
+                        {/* Platform Badge */}
+                        <PlatformBadge />
 
-            {/* Overall progress card */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6">
-                <div className="flex items-center justify-between text-sm mb-3">
-                    <span className="text-gray-600 dark:text-neutral-400">Overall Progress</span>
-                    <span className={cn(
-                        "font-semibold",
-                        overallProgress === 100 ? "text-emerald-600" : "text-indigo-600"
-                    )}>
-                        {overallProgress}%
-                    </span>
+                        {/* Trophy badge with glow */}
+                        <div className={cn(
+                            "flex items-center gap-2 px-4 py-3 rounded-xl",
+                            "bg-gradient-to-br from-amber-600/20 to-amber-500/10",
+                            "border border-amber-500/30",
+                            "shadow-[0_0_25px_rgba(245,158,11,0.15)]"
+                        )}>
+                            <div className={cn(
+                                "w-8 h-8 rounded-lg",
+                                "bg-gradient-to-br from-amber-500 to-orange-600",
+                                "flex items-center justify-center"
+                            )}>
+                                <Trophy className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="font-bold text-amber-400">
+                                {completedModules}/{totalModules}
+                            </span>
+                        </div>
+
+                        {/* Refresh button */}
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={onRefresh}
+                            disabled={isRefreshing}
+                            className="rounded-xl text-zinc-400 hover:text-white hover:bg-white/10"
+                        >
+                            <RefreshCw className={cn("w-4 h-4", isRefreshing && "animate-spin")} />
+                        </Button>
+                    </div>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-3">
-                    <div
-                        className={cn(
-                            "h-3 rounded-full transition-all duration-500",
-                            overallProgress === 100
-                                ? "bg-gradient-to-r from-emerald-500 to-teal-500"
-                                : "bg-gradient-to-r from-indigo-500 to-purple-600"
-                        )}
-                        style={{ width: `${overallProgress}%` }}
-                    />
+
+                {/* Overall progress bar with glow */}
+                <div className={cn(
+                    "mt-6 p-5 rounded-2xl",
+                    "bg-gradient-to-br from-zinc-800/80 to-zinc-900/80",
+                    "border border-zinc-700/50"
+                )}>
+                    <div className="flex items-center justify-between text-sm mb-3">
+                        <span className="text-zinc-400 font-medium">Overall Progress</span>
+                        <span className={cn(
+                            "font-bold text-lg",
+                            overallProgress === 100 ? "text-emerald-400" : "text-purple-400"
+                        )}>
+                            {overallProgress}%
+                        </span>
+                    </div>
+                    <div className="relative w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${overallProgress}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className={cn(
+                                "h-full rounded-full",
+                                overallProgress === 100
+                                    ? "bg-gradient-to-r from-emerald-500 to-teal-400"
+                                    : "bg-gradient-to-r from-purple-600 to-purple-400",
+                                overallProgress === 100
+                                    ? "shadow-[0_0_20px_rgba(16,185,129,0.5)]"
+                                    : "shadow-[0_0_20px_rgba(139,92,246,0.5)]"
+                            )}
+                        />
+                    </div>
+                    <p className="text-sm text-zinc-500 mt-3">
+                        {overallProgress === 100
+                            ? "🎉 Amazing! You've completed all modules!"
+                            : `Keep crushing it! ${totalModules - completedModules} modules to go 🚀`}
+                    </p>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-neutral-400 mt-3">
-                    {overallProgress === 100
-                        ? "🎉 Congratulations! You've completed all modules!"
-                        : `Keep going! ${totalModules - completedModules} modules remaining.`}
-                </p>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
