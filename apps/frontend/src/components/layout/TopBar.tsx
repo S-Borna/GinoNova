@@ -179,21 +179,24 @@ interface SearchResult {
 
 // Mock search data - will be replaced with real API
 const SEARCH_DATA: SearchResult[] = [
-    // Modules
-    { id: "m1", type: "module", title: "Linux Fundamentals", description: "Master the command line", url: "/modules/linux-fundamentals", icon: "🐧" },
-    { id: "m2", type: "module", title: "Docker Essentials", description: "Containerization basics", url: "/modules/docker-essentials", icon: "🐳" },
-    { id: "m3", type: "module", title: "Kubernetes in Action", description: "Container orchestration", url: "/modules/kubernetes", icon: "☸️" },
-    { id: "m4", type: "module", title: "AWS Cloud Practitioner", description: "Cloud fundamentals", url: "/modules/aws-cloud", icon: "☁️" },
-    { id: "m5", type: "module", title: "CI/CD Pipelines", description: "Automate your deployments", url: "/modules/cicd", icon: "🚀" },
-    { id: "m6", type: "module", title: "Infrastructure as Code", description: "Terraform & Ansible", url: "/modules/iac", icon: "📦" },
-    // SkillMaps
-    { id: "s1", type: "skillmap", title: "Python SkillMap", description: "20 nodes • Complete path", url: "/skillmaps/python", icon: "🐍" },
-    { id: "s2", type: "skillmap", title: "Linux SkillMap", description: "20 nodes • Complete path", url: "/skillmaps/linux", icon: "🐧" },
-    { id: "s3", type: "skillmap", title: "Docker SkillMap", description: "Coming soon", url: "/skillmaps/docker", icon: "🐳" },
-    // Learning Paths
-    { id: "p1", type: "path", title: "DevOps Engineer Path", description: "Full career track", url: "/paths/devops-engineer", icon: "🛤️" },
-    { id: "p2", type: "path", title: "Cloud Architect Path", description: "AWS, Azure, GCP", url: "/paths/cloud-architect", icon: "🏗️" },
-    { id: "p3", type: "path", title: "SRE Path", description: "Site Reliability Engineering", url: "/paths/sre", icon: "⚙️" },
+    // Main pages - these routes exist
+    { id: "p1", type: "path", title: "Dashboard", description: "Your learning overview", url: "/dashboard", icon: "📊" },
+    { id: "p2", type: "path", title: "All Modules", description: "Browse all learning modules", url: "/modules", icon: "📚" },
+    { id: "p3", type: "path", title: "SkillPath Board", description: "Visual skill progression", url: "/skillpath-board", icon: "🗺️" },
+    { id: "p4", type: "path", title: "Study Flow", description: "Focus mode learning", url: "/studyflow", icon: "🎯" },
+    { id: "p5", type: "path", title: "Progress Tracker", description: "Track your achievements", url: "/progress", icon: "📈" },
+    { id: "p6", type: "path", title: "Profile Settings", description: "Manage your account", url: "/profile", icon: "👤" },
+    // Topics to search for in modules
+    { id: "t1", type: "module", title: "Linux", description: "Command line & system admin", url: "/modules", icon: "🐧" },
+    { id: "t2", type: "module", title: "Docker", description: "Containerization basics", url: "/modules", icon: "🐳" },
+    { id: "t3", type: "module", title: "Kubernetes", description: "Container orchestration", url: "/modules", icon: "☸️" },
+    { id: "t4", type: "module", title: "AWS", description: "Cloud fundamentals", url: "/modules", icon: "☁️" },
+    { id: "t5", type: "module", title: "Python", description: "Scripting & automation", url: "/modules", icon: "🐍" },
+    { id: "t6", type: "module", title: "CI/CD", description: "Pipelines & automation", url: "/modules", icon: "🚀" },
+    // SkillMaps - point to skillpath board
+    { id: "s1", type: "skillmap", title: "Python SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🐍" },
+    { id: "s2", type: "skillmap", title: "Linux SkillMap", description: "20 nodes • Complete path", url: "/skillpath-board", icon: "🐧" },
+    { id: "s3", type: "skillmap", title: "Docker SkillMap", description: "Coming soon", url: "/skillpath-board", icon: "🐳" },
 ]
 
 function SearchBar() {
