@@ -359,4 +359,378 @@ KUBERNETES_SKILLSMAP_BLOCK_1 = [
     NODE_04_DEPLOYMENTS,
 ]
 
-# Block 2-5 kommer i nästa commits
+
+# =============================================================================
+# BLOCK 2: SERVICES & NETWORKING (Noder 5-8)
+# =============================================================================
+
+NODE_05_SERVICES = {
+    "node_id": 5,
+    "title": "Services",
+    "slug": "services",
+    "estimated_minutes": 55,
+    "xp_reward": 145,
+    "prerequisites": [4],
+    "content": '''
+# Kubernetes Services
+
+Stabil nätverksendpoint för pods.
+
+## Service Types
+
+```yaml
+# ClusterIP (default) - Intern åtkomst
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+```
+
+## NodePort
+
+```yaml
+# NodePort - Extern via node IP
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080
+  type: NodePort
+```
+
+## LoadBalancer
+
+```yaml
+# LoadBalancer - Cloud LB
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
+```
+
+## Service DNS
+
+```bash
+# DNS format
+<service>.<namespace>.svc.cluster.local
+
+# Exempel
+myapp.default.svc.cluster.local
+myapp.default    # Kortform
+myapp            # Samma namespace
+```
+
+| Type | Åtkomst |
+|------|---------|
+| ClusterIP | Endast internt |
+| NodePort | nodeIP:nodePort |
+| LoadBalancer | Extern IP |
+| ExternalName | DNS alias |
+
+**Nästa steg:** Node 6 - Ingress
+''',
+}
+
+NODE_06_INGRESS = {
+    "node_id": 6,
+    "title": "Ingress",
+    "slug": "ingress",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [5],
+    "content": '''
+# Ingress
+
+HTTP/S routing till services.
+
+## Ingress Controller
+
+```bash
+# Installera NGINX Ingress
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+# Verifiera
+kubectl get pods -n ingress-nginx
+```
+
+## Basic Ingress
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp
+spec:
+  rules:
+    - host: myapp.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myapp
+                port:
+                  number: 80
+```
+
+## Path-based Routing
+
+```yaml
+spec:
+  rules:
+    - host: api.example.com
+      http:
+        paths:
+          - path: /api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: api-v1
+                port:
+                  number: 80
+          - path: /api/v2
+            pathType: Prefix
+            backend:
+              service:
+                name: api-v2
+                port:
+                  number: 80
+```
+
+## TLS
+
+```yaml
+spec:
+  tls:
+    - hosts:
+        - myapp.example.com
+      secretName: myapp-tls
+  rules:
+    - host: myapp.example.com
+```
+
+```bash
+# Skapa TLS secret
+kubectl create secret tls myapp-tls \\
+  --cert=tls.crt \\
+  --key=tls.key
+```
+
+**Nästa steg:** Node 7 - ConfigMaps & Secrets
+''',
+}
+
+NODE_07_CONFIGMAPS_SECRETS = {
+    "node_id": 7,
+    "title": "ConfigMaps & Secrets",
+    "slug": "configmaps-secrets",
+    "estimated_minutes": 50,
+    "xp_reward": 140,
+    "prerequisites": [6],
+    "content": '''
+# ConfigMaps & Secrets
+
+Konfigurations- och hemlighetshantering.
+
+## ConfigMap
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DATABASE_HOST: postgres
+  LOG_LEVEL: info
+  config.json: |
+    {"feature": true}
+```
+
+```bash
+# Skapa från fil
+kubectl create configmap app-config --from-file=config.json
+
+# Från literals
+kubectl create configmap app-config --from-literal=LOG_LEVEL=debug
+```
+
+## Secrets
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+data:
+  password: cGFzc3dvcmQxMjM=  # base64
+stringData:
+  username: admin  # Klartext (konverteras)
+```
+
+```bash
+# Skapa secret
+kubectl create secret generic db-secret \\
+  --from-literal=password=secret123
+```
+
+## Använda i Pod
+
+```yaml
+spec:
+  containers:
+    - name: app
+      env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: LOG_LEVEL
+      envFrom:
+        - configMapRef:
+            name: app-config
+      volumeMounts:
+        - name: config
+          mountPath: /etc/config
+  volumes:
+    - name: config
+      configMap:
+        name: app-config
+```
+
+**Nästa steg:** Node 8 - Volumes & Storage
+''',
+}
+
+NODE_08_VOLUMES_STORAGE = {
+    "node_id": 8,
+    "title": "Volumes & Storage",
+    "slug": "volumes-storage",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [7],
+    "content": '''
+# Kubernetes Volumes & Storage
+
+Persistent data i K8s.
+
+## EmptyDir
+
+```yaml
+spec:
+  containers:
+    - name: app
+      volumeMounts:
+        - name: cache
+          mountPath: /cache
+  volumes:
+    - name: cache
+      emptyDir: {}
+```
+
+## PersistentVolume & Claim
+
+```yaml
+# PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-data
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /data
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+```
+
+## Använda PVC
+
+```yaml
+spec:
+  containers:
+    - name: app
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: app-data
+```
+
+## StorageClass
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp3
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+```
+
+| Access Mode | Beskrivning |
+|-------------|-------------|
+| ReadWriteOnce | En node r/w |
+| ReadOnlyMany | Flera nodes ro |
+| ReadWriteMany | Flera nodes r/w |
+
+**Nästa steg:** Node 9 - StatefulSets
+''',
+}
+
+KUBERNETES_SKILLSMAP_BLOCK_2 = [
+    NODE_05_SERVICES,
+    NODE_06_INGRESS,
+    NODE_07_CONFIGMAPS_SECRETS,
+    NODE_08_VOLUMES_STORAGE,
+]
+
+# Block 3-5 kommer i nästa commits
