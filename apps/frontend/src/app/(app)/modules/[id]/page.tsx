@@ -214,21 +214,21 @@ export default function ModuleDetailPage() {
 
             // Fetch tasks for this module
             const tasksResult = await getTasksForModule(moduleId)
-            
+
             // Map difficulty string to number
             const difficultyMap: Record<string, number> = {
                 "easy": 1,
                 "medium": 3,
                 "hard": 5
             }
-            
+
             // Map task_tier to TaskType
             const tierToType: Record<string, TaskType> = {
                 "standard": "foundation",
                 "advanced": "practice",
                 "deep_dive": "deepening"
             }
-            
+
             const tasks: TaskUI[] = tasksResult.ok
                 ? tasksResult.data.map((t, index) => ({
                     id: t.id,
