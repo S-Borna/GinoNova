@@ -195,27 +195,38 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 <Link
                     href="/dashboard"
                     className={cn(
-                        "flex items-center gap-2",
+                        "flex items-center",
                         "transition-all duration-300",
                         "hover:opacity-80"
                     )}
                 >
-                    {/* Logo with glow */}
-                    <div className={cn(
-                        "w-8 h-8 rounded-lg",
-                        "bg-gradient-to-br from-purple-500 to-purple-700",
-                        "flex items-center justify-center",
-                        "shadow-[0_0_20px_rgba(139,92,246,0.4)]",
-                        "text-white font-bold text-sm"
-                    )}>
-                        D
-                    </div>
-
-                    {/* Logo text */}
-                    {!collapsed && (
-                        <span className="text-lg font-bold bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent">
-                            DevOpsHub
+                    {/* Integrated DevOpsHub Logo - D styled like the icon */}
+                    {!collapsed ? (
+                        <span className="text-lg font-bold tracking-tight">
+                            <span className={cn(
+                                "inline-flex items-center justify-center",
+                                "w-7 h-7 mr-1 rounded-md",
+                                "bg-gradient-to-br from-purple-500 to-purple-700",
+                                "shadow-[0_0_15px_rgba(139,92,246,0.4)]",
+                                "text-white text-sm"
+                            )}>
+                                D
+                            </span>
+                            <span className="bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                                evOpsHub
+                            </span>
                         </span>
+                    ) : (
+                        /* Collapsed: Only show D icon */
+                        <div className={cn(
+                            "w-8 h-8 rounded-lg",
+                            "bg-gradient-to-br from-purple-500 to-purple-700",
+                            "flex items-center justify-center",
+                            "shadow-[0_0_20px_rgba(139,92,246,0.4)]",
+                            "text-white font-bold text-sm"
+                        )}>
+                            D
+                        </div>
                     )}
                 </Link>
             </div>

@@ -2,21 +2,23 @@
 
 /**
  * ============================================================================
- * PROGRESS PAGE — Learning Progress Overview
+ * PROGRESS PAGE — Premium Polish Edition ✨
  * ============================================================================
  *
- * Features:
- * - Overall progress visualization
- * - Track-by-track breakdown
- * - Stats and achievements
- * - Activity heatmap
+ * Design Philosophy:
+ * - GLOW and ENERGY - "LET'S GO" feeling
+ * - Chill Mint (#22D3AC) for success/progress
+ * - Focus Purple (#8B5CF6) for primary accent
+ * - XP Gold (#F59E0B) for achievements
+ * - Fire Orange (#F97316) for streaks
+ * - Celebration animations and micro-interactions
  *
  * @phase A.3 - App Shell & Routing
- * @design PHASE 2 — Design System Application Layer
+ * @design Premium Polish Phase 2
  */
 
 import { useState, useEffect } from "react"
-import { PageLayout, Section, Block, Headline, Subtext, InfoBanner, SuccessBanner, cn } from "@saas/ui"
+import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { getMockTracks, type TrackSummary } from "@/lib/api/tracks"
 import {
@@ -29,10 +31,13 @@ import {
     Calendar,
     BookOpen,
     Zap,
+    Sparkles,
+    Star,
+    Rocket,
 } from "lucide-react"
 
 /* ============================================================================
-   DEFAULT DATA - Shows real values (0 for new users)
+   DEFAULT DATA
    ============================================================================ */
 
 const DEFAULT_STATS = {
@@ -54,14 +59,12 @@ const ACHIEVEMENTS = [
     { id: "6", name: "K8s Captain", description: "Complete Kubernetes track", icon: "⚙️", unlocked: false },
 ]
 
-// Generate empty heatmap for new users
 const generateHeatmapData = () => {
     const data: { date: string; count: number }[] = []
     const today = new Date()
     for (let i = 83; i >= 0; i--) {
         const date = new Date(today)
         date.setDate(date.getDate() - i)
-        // Start with empty heatmap for new users
         data.push({
             date: date.toISOString().split("T")[0],
             count: 0,
@@ -71,31 +74,68 @@ const generateHeatmapData = () => {
 }
 
 /* ============================================================================
-   STAT CARD
+   HERO HEADER - Premium with Glow
    ============================================================================ */
 
-interface StatCardProps {
-    icon: React.ReactNode
-    label: string
-    value: string | number
-    color: string
-}
-
-function StatCard({ icon, label, value, color }: StatCardProps) {
+function ProgressHero({ level, userName }: { level: number; userName: string }) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
-            <div className="flex items-center gap-3">
-                <div
-                    className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center",
-                        color
-                    )}
-                >
-                    {icon}
-                </div>
+        <div className={cn(
+            "relative overflow-hidden rounded-2xl",
+            "bg-gradient-to-br from-zinc-900 via-purple-950/30 to-zinc-900",
+            "border border-purple-500/20",
+            "p-8 md:p-10"
+        )}>
+            {/* Background glow effects */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl translate-y-1/2" />
+
+            {/* Animated sparkles */}
+            <div className="absolute top-8 right-16 text-purple-400/50 animate-pulse">
+                <Sparkles className="w-6 h-6" />
+            </div>
+            <div className="absolute bottom-8 right-32 text-emerald-400/40 animate-pulse" style={{ animationDelay: "500ms" }}>
+                <Star className="w-4 h-4" />
+            </div>
+
+            <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">{value}</p>
+                    <div className="flex items-center gap-3 mb-2">
+                        <Rocket className="w-6 h-6 text-purple-400" />
+                        <span className="text-purple-400 font-medium text-sm uppercase tracking-wider">
+                            Your Journey
+                        </span>
+                    </div>
+                    <h1 className={cn(
+                        "text-3xl md:text-4xl font-bold mb-3",
+                        "bg-gradient-to-r from-zinc-100 via-purple-200 to-zinc-100 bg-clip-text text-transparent"
+                    )}>
+                        Keep Going, {userName}! 🔥
+                    </h1>
+                    <p className="text-zinc-400 text-lg">
+                        Track your DevOps learning journey and celebrate every win
+                    </p>
+                </div>
+
+                {/* Level Badge with Glow */}
+                <div className={cn(
+                    "flex items-center gap-4 px-6 py-4 rounded-2xl",
+                    "bg-gradient-to-r from-purple-600/20 to-purple-500/10",
+                    "border border-purple-500/30",
+                    "shadow-[0_0_30px_rgba(139,92,246,0.2)]"
+                )}>
+                    <div className={cn(
+                        "w-14 h-14 rounded-xl",
+                        "bg-gradient-to-br from-purple-500 to-purple-700",
+                        "flex items-center justify-center",
+                        "shadow-[0_0_25px_rgba(139,92,246,0.5)]",
+                        "animate-pulse"
+                    )}>
+                        <Zap className="w-7 h-7 text-white" />
+                    </div>
+                    <div>
+                        <p className="text-zinc-400 text-sm">Current Level</p>
+                        <p className="text-2xl font-bold text-purple-400">Level {level}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,31 +143,266 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
 }
 
 /* ============================================================================
-   ACTIVITY HEATMAP
+   STAT CARD - Premium with Glow
+   ============================================================================ */
+
+interface StatCardProps {
+    icon: React.ReactNode
+    label: string
+    value: string | number
+    color: "gold" | "fire" | "blue" | "mint"
+    glow?: boolean
+}
+
+const colorStyles = {
+    gold: {
+        border: "border-amber-500/30",
+        text: "text-amber-400",
+        glow: "shadow-[0_0_20px_rgba(245,158,11,0.3)]",
+        iconBg: "bg-amber-500/20",
+    },
+    fire: {
+        border: "border-orange-500/30",
+        text: "text-orange-400",
+        glow: "shadow-[0_0_20px_rgba(249,115,22,0.3)]",
+        iconBg: "bg-orange-500/20",
+    },
+    blue: {
+        border: "border-blue-500/30",
+        text: "text-blue-400",
+        glow: "shadow-[0_0_20px_rgba(59,130,246,0.3)]",
+        iconBg: "bg-blue-500/20",
+    },
+    mint: {
+        border: "border-emerald-500/30",
+        text: "text-emerald-400",
+        glow: "shadow-[0_0_20px_rgba(34,211,172,0.3)]",
+        iconBg: "bg-emerald-500/20",
+    },
+}
+
+function StatCard({ icon, label, value, color, glow = false }: StatCardProps) {
+    const styles = colorStyles[color]
+
+    return (
+        <div className={cn(
+            "relative rounded-2xl p-5",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border", styles.border,
+            "transition-all duration-300",
+            "hover:scale-[1.02]",
+            glow && styles.glow,
+            "group"
+        )}>
+            {/* Hover glow effect */}
+            <div className={cn(
+                "absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+                styles.glow
+            )} />
+
+            <div className="relative flex items-center gap-4">
+                <div className={cn(
+                    "w-12 h-12 rounded-xl flex items-center justify-center",
+                    styles.iconBg
+                )}>
+                    {icon}
+                </div>
+                <div>
+                    <p className="text-zinc-500 text-sm font-medium">{label}</p>
+                    <p className={cn("text-2xl font-bold", styles.text)}>{value}</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   OVERALL PROGRESS - Premium Ring
+   ============================================================================ */
+
+function OverallProgressRing({ progress, userName }: { progress: number; userName: string }) {
+    const circumference = 2 * Math.PI * 60
+    const offset = circumference - (progress / 100) * circumference
+
+    return (
+        <div className={cn(
+            "rounded-2xl p-6",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border border-zinc-800/60"
+        )}>
+            <div className="flex items-center gap-2 mb-6">
+                <Target className="w-5 h-5 text-purple-400" />
+                <h3 className="text-lg font-semibold text-zinc-100">Overall Progress</h3>
+            </div>
+
+            <div className="flex flex-col items-center">
+                {/* Animated Ring */}
+                <div className="relative w-40 h-40 mb-6">
+                    {/* Glow effect */}
+                    <div className={cn(
+                        "absolute inset-4 rounded-full blur-xl",
+                        progress > 50 ? "bg-emerald-500/30" : "bg-purple-500/30"
+                    )} />
+
+                    <svg className="w-full h-full -rotate-90 relative" viewBox="0 0 128 128">
+                        {/* Background track */}
+                        <circle
+                            cx="64"
+                            cy="64"
+                            r="60"
+                            fill="none"
+                            stroke="rgba(63, 63, 70, 0.5)"
+                            strokeWidth="8"
+                        />
+                        {/* Progress arc */}
+                        <circle
+                            cx="64"
+                            cy="64"
+                            r="60"
+                            fill="none"
+                            stroke="url(#progressGradientPremium)"
+                            strokeWidth="8"
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={offset}
+                            className="transition-all duration-1000 ease-out"
+                            style={{
+                                filter: "drop-shadow(0 0 8px rgba(34, 211, 172, 0.5))"
+                            }}
+                        />
+                        <defs>
+                            <linearGradient id="progressGradientPremium" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#8B5CF6" />
+                                <stop offset="50%" stopColor="#22D3AC" />
+                                <stop offset="100%" stopColor="#8B5CF6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                    {/* Center content */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className={cn(
+                            "text-4xl font-bold",
+                            "bg-gradient-to-r from-purple-400 to-emerald-400 bg-clip-text text-transparent"
+                        )}>
+                            {progress}%
+                        </span>
+                        <span className="text-zinc-500 text-sm font-medium">Complete</span>
+                    </div>
+                </div>
+
+                {/* Motivation message */}
+                <div className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-xl",
+                    "bg-emerald-500/10 border border-emerald-500/20"
+                )}>
+                    <TrendingUp className="w-4 h-4 text-emerald-400" />
+                    <span className="text-emerald-400 text-sm font-medium">
+                        {progress === 0
+                            ? `Start your journey, ${userName}!`
+                            : progress < 25
+                                ? "Great start! Keep going! 🚀"
+                                : progress < 50
+                                    ? "You're doing amazing! 💪"
+                                    : progress < 75
+                                        ? "Over halfway there! 🔥"
+                                        : "Almost there! Finish strong! 🏆"
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   TRACK PROGRESS CARD - Premium
+   ============================================================================ */
+
+function TrackProgressCard({ track }: { track: TrackSummary }) {
+    return (
+        <div className={cn(
+            "flex items-center gap-4 p-4 rounded-xl",
+            "bg-zinc-800/40 border border-zinc-700/30",
+            "hover:border-purple-500/30 hover:bg-zinc-800/60",
+            "transition-all duration-300",
+            "group"
+        )}>
+            {/* Icon with glow */}
+            <div
+                className={cn(
+                    "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
+                    "transition-all duration-300",
+                    "group-hover:shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+                )}
+                style={{ backgroundColor: `${track.color}20` }}
+            >
+                <BookOpen className="w-6 h-6" style={{ color: track.color }} />
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-zinc-100 mb-1 group-hover:text-purple-300 transition-colors">
+                    {track.title}
+                </h4>
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="text-sm text-zinc-500">
+                        {track.completedModules}/{track.totalModules} modules
+                    </span>
+                </div>
+                {/* Progress Bar with glow */}
+                <div className="h-2 bg-zinc-700/50 rounded-full overflow-hidden">
+                    <div
+                        className={cn(
+                            "h-full rounded-full transition-all duration-700 ease-out",
+                            track.progress > 0 && "shadow-[0_0_10px_rgba(34,211,172,0.4)]"
+                        )}
+                        style={{
+                            width: `${track.progress}%`,
+                            background: `linear-gradient(90deg, ${track.color}, ${track.color}cc)`
+                        }}
+                    />
+                </div>
+            </div>
+
+            {/* Progress percentage */}
+            <div
+                className="text-lg font-bold shrink-0 transition-all duration-300"
+                style={{ color: track.color }}
+            >
+                {track.progress}%
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   ACTIVITY HEATMAP - Premium
    ============================================================================ */
 
 function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) {
     const getColor = (count: number) => {
-        if (count === 0) return "bg-gray-100 dark:bg-gray-800"
-        if (count === 1) return "bg-indigo-200 dark:bg-indigo-900/50"
-        if (count === 2) return "bg-indigo-300 dark:bg-indigo-800"
-        if (count === 3) return "bg-indigo-400 dark:bg-indigo-700"
-        return "bg-indigo-500 dark:bg-indigo-600"
+        if (count === 0) return "bg-zinc-800/50"
+        if (count === 1) return "bg-purple-900/60"
+        if (count === 2) return "bg-purple-700/70"
+        if (count === 3) return "bg-purple-500/80"
+        return "bg-emerald-500/90 shadow-[0_0_6px_rgba(34,211,172,0.5)]"
     }
 
-    // Group by weeks (7 days each)
     const weeks: { date: string; count: number }[][] = []
     for (let i = 0; i < data.length; i += 7) {
         weeks.push(data.slice(i, i + 7))
     }
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div className={cn(
+            "rounded-2xl p-6",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border border-zinc-800/60"
+        )}>
             <div className="flex items-center gap-2 mb-4">
-                <Calendar className="w-5 h-5 text-indigo-500" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Activity
-                </h3>
+                <Calendar className="w-5 h-5 text-purple-400" />
+                <h3 className="text-lg font-semibold text-zinc-100">Activity</h3>
             </div>
             <div className="flex gap-1">
                 {weeks.map((week, weekIndex) => (
@@ -136,7 +411,8 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
                             <div
                                 key={dayIndex}
                                 className={cn(
-                                    "w-3 h-3 rounded-sm",
+                                    "w-3 h-3 rounded-sm transition-all duration-200",
+                                    "hover:scale-125",
                                     getColor(day.count)
                                 )}
                                 title={`${day.date}: ${day.count} activities`}
@@ -145,7 +421,7 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
                     </div>
                 ))}
             </div>
-            <div className="flex items-center justify-end gap-2 mt-3 text-xs text-gray-500">
+            <div className="flex items-center justify-end gap-2 mt-4 text-xs text-zinc-500">
                 <span>Less</span>
                 <div className="flex gap-1">
                     {[0, 1, 2, 3, 4].map((level) => (
@@ -162,82 +438,59 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
 }
 
 /* ============================================================================
-   TRACK PROGRESS CARD
-   ============================================================================ */
-
-function TrackProgressCard({ track }: { track: TrackSummary }) {
-    return (
-        <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
-            {/* Icon */}
-            <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: `${track.color}20` }}
-            >
-                <BookOpen className="w-6 h-6" style={{ color: track.color }} />
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                    {track.title}
-                </h4>
-                <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {track.completedModules}/{track.totalModules} modules
-                    </span>
-                </div>
-                {/* Progress Bar */}
-                <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
-                    <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                            width: `${track.progress}%`,
-                            backgroundColor: track.color
-                        }}
-                    />
-                </div>
-            </div>
-
-            {/* Progress percentage */}
-            <div
-                className="text-lg font-bold shrink-0"
-                style={{ color: track.color }}
-            >
-                {track.progress}%
-            </div>
-        </div>
-    )
-}
-
-/* ============================================================================
-   ACHIEVEMENTS SECTION
+   ACHIEVEMENTS - Premium with Unlock Animation
    ============================================================================ */
 
 function Achievements({ achievements }: { achievements: typeof ACHIEVEMENTS }) {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div className={cn(
+            "rounded-2xl p-6",
+            "bg-zinc-900/80 backdrop-blur-sm",
+            "border border-zinc-800/60"
+        )}>
             <div className="flex items-center gap-2 mb-4">
-                <Trophy className="w-5 h-5 text-amber-500" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Achievements
-                </h3>
+                <Trophy className="w-5 h-5 text-amber-400" />
+                <h3 className="text-lg font-semibold text-zinc-100">Achievements</h3>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {achievements.map((achievement) => (
                     <div
                         key={achievement.id}
                         className={cn(
-                            "flex flex-col items-center p-3 rounded-xl text-center transition-all",
+                            "relative flex flex-col items-center p-4 rounded-xl text-center",
+                            "transition-all duration-300",
                             achievement.unlocked
-                                ? "bg-amber-50 dark:bg-amber-900/20"
-                                : "bg-gray-100 dark:bg-gray-700 opacity-50 grayscale"
+                                ? [
+                                    "bg-gradient-to-br from-amber-500/20 to-amber-600/10",
+                                    "border border-amber-500/30",
+                                    "shadow-[0_0_20px_rgba(245,158,11,0.2)]",
+                                    "hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]",
+                                ]
+                                : [
+                                    "bg-zinc-800/40 border border-zinc-700/30",
+                                    "opacity-60 grayscale",
+                                    "hover:opacity-80 hover:grayscale-0",
+                                ]
                         )}
                     >
-                        <span className="text-2xl mb-1">{achievement.icon}</span>
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        {/* Unlock glow */}
+                        {achievement.unlocked && (
+                            <div className="absolute inset-0 rounded-xl bg-amber-500/5 animate-pulse" />
+                        )}
+
+                        <span className={cn(
+                            "text-3xl mb-2 transition-transform duration-300",
+                            achievement.unlocked && "animate-bounce"
+                        )}>
+                            {achievement.icon}
+                        </span>
+                        <span className={cn(
+                            "text-sm font-medium mb-1",
+                            achievement.unlocked ? "text-amber-300" : "text-zinc-400"
+                        )}>
                             {achievement.name}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-zinc-500">
                             {achievement.description}
                         </span>
                     </div>
@@ -248,7 +501,7 @@ function Achievements({ achievements }: { achievements: typeof ACHIEVEMENTS }) {
 }
 
 /* ============================================================================
-   PROGRESS PAGE
+   MAIN PROGRESS PAGE
    ============================================================================ */
 
 export default function ProgressPage() {
@@ -257,7 +510,6 @@ export default function ProgressPage() {
     const [heatmapData, setHeatmapData] = useState<{ date: string; count: number }[]>([])
 
     useEffect(() => {
-        // Load mock data
         setTracks(getMockTracks())
         setHeatmapData(generateHeatmapData())
     }, [])
@@ -266,120 +518,79 @@ export default function ProgressPage() {
         ? Math.round(tracks.reduce((sum, t) => sum + t.progress, 0) / tracks.length)
         : 0
 
+    const userName = user?.full_name?.split(" ")[0] || "Learner"
+
     return (
-        <PageLayout maxWidth="wide" background="subtle">
-            <div className="space-y-8">
-                {/* Header */}
-                <Section>
-                    <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <Headline level={1}>
-                                    Your Progress
-                                </Headline>
-                                <Subtext>
-                                    Track your DevOps learning journey
-                                </Subtext>
-                            </div>
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30">
-                                <Zap className="w-5 h-5 text-indigo-500" />
-                                <span className="font-semibold text-indigo-700 dark:text-indigo-400">
-                                    Level {DEFAULT_STATS.level}
-                                </span>
-                            </div>
-                        </div>
-                    </Block>
-                </Section>
+        <div className="min-h-screen bg-zinc-950">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+                {/* Hero Header */}
+                <ProgressHero level={DEFAULT_STATS.level} userName={userName} />
 
                 {/* Stats Grid */}
-                <Section>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <StatCard
-                            icon={<Trophy className="w-5 h-5 text-amber-500" />}
-                            label="Total XP"
-                            value={DEFAULT_STATS.totalXP.toLocaleString()}
-                            color="bg-amber-100 dark:bg-amber-900/30"
-                        />
-                        <StatCard
-                            icon={<Flame className="w-5 h-5 text-orange-500" />}
-                            label="Day Streak"
-                            value={DEFAULT_STATS.streak}
-                            color="bg-orange-100 dark:bg-orange-900/30"
-                        />
-                        <StatCard
-                            icon={<Clock className="w-5 h-5 text-blue-500" />}
-                            label="Hours Learned"
-                            value={DEFAULT_STATS.totalHours}
-                            color="bg-blue-100 dark:bg-blue-900/30"
-                        />
-                        <StatCard
-                            icon={<CheckCircle2 className="w-5 h-5 text-emerald-500" />}
-                            label="Tasks Done"
-                            value={DEFAULT_STATS.tasksCompleted}
-                            color="bg-emerald-100 dark:bg-emerald-900/30"
-                        />
-                    </div>
-                </Section>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <StatCard
+                        icon={<Trophy className="w-6 h-6 text-amber-400" />}
+                        label="Total XP"
+                        value={DEFAULT_STATS.totalXP.toLocaleString()}
+                        color="gold"
+                        glow={DEFAULT_STATS.totalXP > 0}
+                    />
+                    <StatCard
+                        icon={<Flame className="w-6 h-6 text-orange-400" />}
+                        label="Day Streak"
+                        value={DEFAULT_STATS.streak}
+                        color="fire"
+                        glow={DEFAULT_STATS.streak > 0}
+                    />
+                    <StatCard
+                        icon={<Clock className="w-6 h-6 text-blue-400" />}
+                        label="Hours Learned"
+                        value={DEFAULT_STATS.totalHours}
+                        color="blue"
+                    />
+                    <StatCard
+                        icon={<CheckCircle2 className="w-6 h-6 text-emerald-400" />}
+                        label="Tasks Done"
+                        value={DEFAULT_STATS.tasksCompleted}
+                        color="mint"
+                        glow={DEFAULT_STATS.tasksCompleted > 0}
+                    />
+                </div>
 
                 {/* Main Grid */}
-                <Section>
-                    <div className="grid lg:grid-cols-3 gap-6">
-                        {/* Left Column - Tracks & Activity */}
-                        <div className="lg:col-span-2 space-y-6">
-                            {/* Overall Progress */}
-                            <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <Target className="w-5 h-5 text-indigo-500" />
-                                        <Headline level={3}>
-                                            Overall Progress
-                                        </Headline>
-                                    </div>
-                                    <span className="text-2xl font-bold text-indigo-500">
-                                        {overallProgress}%
-                                    </span>
-                                </div>
-                                {/* Progress Bar */}
-                                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
-                                    <div
-                                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
-                                        style={{ width: `${overallProgress}%` }}
-                                    />
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-500">
-                                    <TrendingUp className="w-4 h-4 text-emerald-500" />
-                                    <span>
-                                        You&apos;re making great progress! Keep it up, {user?.full_name?.split(" ")[0] || "learner"}!
-                                    </span>
-                                </div>
-                            </Block>
+                <div className="grid lg:grid-cols-3 gap-6">
+                    {/* Left Column */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Overall Progress Ring */}
+                        <OverallProgressRing progress={overallProgress} userName={userName} />
 
-                            {/* Tracks Progress */}
-                            <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <BookOpen className="w-5 h-5 text-indigo-500" />
-                                    <Headline level={3}>
-                                        Track Progress
-                                    </Headline>
-                                </div>
-                                <div className="space-y-3">
-                                    {tracks.map((track) => (
-                                        <TrackProgressCard key={track.id} track={track} />
-                                    ))}
-                                </div>
-                            </Block>
-
-                            {/* Activity Heatmap */}
-                            <ActivityHeatmap data={heatmapData} />
+                        {/* Track Progress */}
+                        <div className={cn(
+                            "rounded-2xl p-6",
+                            "bg-zinc-900/80 backdrop-blur-sm",
+                            "border border-zinc-800/60"
+                        )}>
+                            <div className="flex items-center gap-2 mb-4">
+                                <BookOpen className="w-5 h-5 text-purple-400" />
+                                <h3 className="text-lg font-semibold text-zinc-100">Track Progress</h3>
+                            </div>
+                            <div className="space-y-3">
+                                {tracks.map((track) => (
+                                    <TrackProgressCard key={track.id} track={track} />
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Right Column - Achievements */}
-                        <div>
-                            <Achievements achievements={ACHIEVEMENTS} />
-                        </div>
+                        {/* Activity Heatmap */}
+                        <ActivityHeatmap data={heatmapData} />
                     </div>
-                </Section>
+
+                    {/* Right Column */}
+                    <div>
+                        <Achievements achievements={ACHIEVEMENTS} />
+                    </div>
+                </div>
             </div>
-        </PageLayout>
+        </div>
     )
 }
