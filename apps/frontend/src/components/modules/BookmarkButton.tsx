@@ -2,13 +2,14 @@
 
 /**
  * BookmarkButton — PROMPT 4: Sidebar Bookmark System
- * 
+ *
  * Star button that toggles bookmark state for a task.
  * Features:
  * - Visual star icon (filled when bookmarked)
  * - Optimistic update with animation
  * - Accessible tooltip
  * - Loading state
+ * - CRITICAL: Does NOT affect parent card appearance
  */
 
 import { useState, useCallback } from 'react';
@@ -48,8 +49,10 @@ export function BookmarkButton({
   const displayBookmarked = optimisticState !== null ? optimisticState : isBookmarked;
 
   const handleClick = useCallback(async (e: React.MouseEvent) => {
+    // CRITICAL: Stop event from bubbling to card
     e.preventDefault();
     e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
 
     if (loading) return;
 
@@ -73,30 +76,38 @@ export function BookmarkButton({
     }
   }, [loading, displayBookmarked, onToggle, taskId]);
 
+  // Prevent mousedown from triggering card interactions
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <button
       type="button"
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
       disabled={loading}
-      aria-label={displayBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+      aria-label={displayBookmarked ? 'Ta bort bokmärke' : 'Lägg till bokmärke'}
       aria-pressed={displayBookmarked}
-      title={displayBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'}
+      title={displayBookmarked ? 'Ta bort från Quick Access' : 'Lägg till i Quick Access'}
       className={cn(
-        'relative rounded-lg transition-all duration-200',
-        'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+        'relative rounded-lg transition-all duration-200 z-10',
+        'hover:bg-amber-500/10 dark:hover:bg-amber-500/20',
         'focus:outline-none focus:ring-2 focus:ring-amber-500/50',
         'active:scale-95',
         buttonSizeClasses[size],
         loading && 'cursor-wait',
+        // Gold glow when bookmarked
+        displayBookmarked && 'shadow-[0_0_10px_rgba(251,191,36,0.3)]',
         className
       )}
     >
       {loading ? (
-        <Loader2 
+        <Loader2
           className={cn(
             sizeClasses[size],
             'animate-spin text-amber-500'
-          )} 
+          )}
         />
       ) : (
         <Star
@@ -104,7 +115,7 @@ export function BookmarkButton({
             sizeClasses[size],
             'transition-all duration-200',
             displayBookmarked
-              ? 'fill-amber-400 text-amber-400 scale-110'
+              ? 'fill-amber-400 text-amber-400 scale-110 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]'
               : 'fill-transparent text-neutral-400 hover:text-amber-400',
             // Pop animation when bookmarking
             optimisticState === true && 'animate-[pop_0.3s_ease-out]'
