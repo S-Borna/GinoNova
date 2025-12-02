@@ -2,16 +2,16 @@
 
 /**
  * ============================================================================
- * TOP BAR - Enterprise Level 5 Header
+ * TOP BAR - Premium Header Navigation
  * ============================================================================
  *
  * Design Philosophy:
- * - Premium glassmorphism with subtle animations
- * - Gandalf AI Orb integrated under user area
- * - Command palette ready (⌘K)
- * - Enterprise-grade polish
+ * - Clean, minimal header with essential controls
+ * - Breadcrumbs for navigation context
+ * - User menu with dropdown
+ * - Notifications bell with badge
  *
- * @phase ENTERPRISE-LEVEL-5
+ * @phase D.3 - Navigation + Layout
  */
 
 import * as React from "react"
@@ -21,7 +21,6 @@ import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
-import { GandalfOrb } from "@/components/ai/GandalfOrb"
 import {
     Bell,
     Search,
@@ -31,8 +30,7 @@ import {
     Moon,
     Sun,
     ChevronDown,
-    Menu,
-    Command
+    Menu
 } from "lucide-react"
 
 /* ============================================================================
@@ -281,10 +279,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center gap-3">
-                    {/* Gandalf AI Orb */}
-                    <GandalfOrb />
-
+                <div className="flex items-center gap-2">
                     <NotificationBell />
                     <UserDropdown />
                 </div>
