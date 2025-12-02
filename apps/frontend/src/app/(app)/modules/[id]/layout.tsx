@@ -418,18 +418,18 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
         <Menu className="w-6 h-6 text-white" />
       </button>
 
-      {/* ⭐ Mobile Bookmark Button */}
-      <button
-        onClick={() => setBookmarkSidebarOpen(!bookmarkSidebarOpen)}
-        className="fixed bottom-4 right-4 z-50 lg:hidden p-3 bg-amber-500 rounded-full shadow-lg"
-      >
-        <Star className={`w-6 h-6 text-white ${bookmarkCount > 0 ? 'fill-white' : ''}`} />
-        {bookmarkCount > 0 && (
+      {/* ⭐ Mobile Bookmark Button - only visible on mobile */}
+      {bookmarkCount > 0 && (
+        <button
+          onClick={() => setBookmarkSidebarOpen(!bookmarkSidebarOpen)}
+          className="fixed bottom-4 right-4 z-50 lg:hidden p-3 bg-amber-500 rounded-full shadow-lg"
+        >
+          <Star className="w-6 h-6 text-white fill-white" />
           <span className="absolute -top-1 -right-1 w-5 h-5 text-[10px] font-bold bg-white text-amber-600 rounded-full flex items-center justify-center">
             {bookmarkCount > 9 ? '9+' : bookmarkCount}
           </span>
-        )}
-      </button>
+        </button>
+      )}
 
       {/* Task Sidebar */}
       <TaskSidebar
@@ -441,19 +441,13 @@ export default function ModuleLayout({ children }: ModuleLayoutProps) {
         toggleBookmark={toggleBookmark}
       />
 
-      {/* Main Content */}
-      <main className="flex-1 min-w-0 lg:mr-72">
+      {/* Main Content - FULL WIDTH, no sidebar margin */}
+      <main className="flex-1 min-w-0">
         {children}
       </main>
 
-      {/* ⭐ Bookmark Sidebar (Right Side) - Desktop */}
-      <aside className="
-        hidden lg:flex lg:flex-col
-        fixed top-0 right-0 h-screen w-72
-        bg-gray-900/95 backdrop-blur-sm border-l border-gray-800
-      ">
-        <BookmarkSidebar className="flex-1" />
-      </aside>
+      {/* ⭐ Bookmark Sidebar ONLY on mobile when opened */}
+      {/* Desktop users access bookmarks via /bookmarks page or profile */}
 
       {/* Mobile Bookmark Overlay */}
       {bookmarkSidebarOpen && (
