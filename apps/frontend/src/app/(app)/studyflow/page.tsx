@@ -84,7 +84,7 @@ const DALLAS_QUESTIONS = [
     // General Discovery
     { keywords: ["rekommendera", "vad", "nästa", "börja"], question: "Baserat på dina mål, vill du att jag rekommenderar en studieplan?", category: "general" },
     { keywords: ["snabb", "effektiv", "fokus"], question: "Vill du ha en intensiv 4-veckors plan eller föredrar du ett lugnare tempo?", category: "general" },
-    { keywords: ["hej", "hallå", "tjena", "hi"], question: "Hej! 👋 Jag är Dallas, din DevOps-guide. Vad vill du lära dig idag?", category: "greeting" },
+    { keywords: ["hej", "hallå", "tjena", "hi"], question: "Hej! Jag är Dallas, din DevOps-guide. Vad vill du lära dig idag?", category: "greeting" },
     { keywords: ["tack", "thanks", "bra"], question: "Kul att höra! Finns det något annat jag kan hjälpa dig med?", category: "gratitude" },
 
     // Fallback questions for conversation flow
@@ -152,7 +152,7 @@ function DallasChat() {
         {
             id: "welcome",
             role: "dallas",
-            content: `Hej ${user?.full_name?.split(" ")[0] || "där"}! 🐺 Jag är Dallas, din personliga DevOps-guide. Hur kan jag hjälpa dig idag?`,
+            content: `Hej ${user?.full_name?.split(" ")[0] || "där"}! Jag är Dallas, din personliga DevOps-guide. Hur kan jag hjälpa dig idag?`,
             timestamp: new Date(),
         },
     ]);
@@ -317,6 +317,7 @@ function DallasChat() {
    ============================================================================ */
 
 function ScheduleSection() {
+    const router = useRouter();
     const [reminders, setReminders] = useState<Reminder[]>([
         { id: "1", title: "Docker Task 3", module: "Containers", time: "08:00", day: "Mån", isActive: true },
         { id: "2", title: "K8s Intro", module: "Kubernetes", time: "17:00", day: "Ons", isActive: true },
@@ -333,6 +334,10 @@ function ScheduleSection() {
         setReminders(prev => prev.filter(r => r.id !== id));
     };
 
+    const handleReminderClick = () => {
+        router.push("/modules");
+    };
+
     return (
         <div className={cn(
             "rounded-2xl overflow-hidden",
@@ -345,16 +350,7 @@ function ScheduleSection() {
                     <Calendar className="w-5 h-5 text-emerald-400" />
                     <h3 className="font-semibold text-zinc-100">Ditt Schema</h3>
                 </div>
-                <button
-                    className={cn(
-                        "flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm",
-                        "bg-emerald-500/20 text-emerald-400",
-                        "hover:bg-emerald-500/30 transition-colors"
-                    )}
-                >
-                    <Plus className="w-4 h-4" />
-                    Lägg till
-                </button>
+                <span className="text-xs text-zinc-500">Klicka för att gå till task</span>
             </div>
 
             {/* Reminders List */}
@@ -363,21 +359,25 @@ function ScheduleSection() {
                     <div className="text-center py-6">
                         <Bell className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
                         <p className="text-sm text-zinc-400">Inga påminnelser ännu</p>
-                        <p className="text-xs text-zinc-500 mt-1">Lägg till din första påminnelse</p>
+                        <p className="text-xs text-zinc-500 mt-1">Bokmärk tasks för att lägga till här</p>
                     </div>
                 ) : (
                     reminders.map(reminder => (
                         <div
                             key={reminder.id}
+                            onClick={handleReminderClick}
                             className={cn(
-                                "flex items-center gap-3 p-3 rounded-xl",
+                                "flex items-center gap-3 p-3 rounded-xl cursor-pointer",
                                 "bg-zinc-800/40 border border-zinc-700/30",
-                                "group transition-all",
+                                "group transition-all hover:border-emerald-500/30 hover:bg-zinc-800/60",
                                 reminder.isActive && "border-emerald-500/30"
                             )}
                         >
                             <button
-                                onClick={() => toggleReminder(reminder.id)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleReminder(reminder.id);
+                                }}
                                 className={cn(
                                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
                                     "transition-colors",
@@ -390,7 +390,7 @@ function ScheduleSection() {
                             </button>
                             <div className="flex-1 min-w-0">
                                 <p className={cn(
-                                    "text-sm font-medium truncate",
+                                    "text-sm font-medium truncate group-hover:text-emerald-300",
                                     reminder.isActive ? "text-zinc-200" : "text-zinc-500"
                                 )}>
                                     {reminder.title}
@@ -399,8 +399,12 @@ function ScheduleSection() {
                                     {reminder.module} • {reminder.day} {reminder.time}
                                 </p>
                             </div>
+                            <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transition-colors" />
                             <button
-                                onClick={() => deleteReminder(reminder.id)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteReminder(reminder.id);
+                                }}
                                 className="p-1.5 rounded-lg text-zinc-600 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
                             >
                                 <X className="w-4 h-4" />
