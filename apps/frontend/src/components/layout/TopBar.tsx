@@ -22,7 +22,6 @@ import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
 import { DallasOrb } from "@/components/ai/DallasOrb"
 import {
-    Bell,
     Search,
     Settings,
     LogOut,
@@ -163,64 +162,245 @@ function UserDropdown() {
     )
 }
 
+
+
 /* ============================================================================
-   NOTIFICATION BELL
+   SEARCH BAR - Global Search with Command Palette
    ============================================================================ */
 
-function NotificationBell() {
-    const [hasUnread] = React.useState(true) // Placeholder
-
-    return (
-        <button
-            className={cn(
-                "relative p-2 rounded-xl",
-                "text-neutral-600 dark:text-neutral-400",
-                "hover:bg-neutral-100 dark:hover:bg-neutral-800",
-                "transition-colors duration-150"
-            )}
-            aria-label="Notifications"
-        >
-            <Bell className="h-5 w-5" />
-            {hasUnread && (
-                <span className={cn(
-                    "absolute top-1.5 right-1.5 w-2 h-2",
-                    "bg-red-500 rounded-full",
-                    "ring-2 ring-white dark:ring-neutral-900"
-                )} />
-            )}
-        </button>
-    )
+interface SearchResult {
+    id: string
+    type: "module" | "skillmap" | "path" | "lesson"
+    title: string
+    description?: string
+    url: string
+    icon: string
 }
 
-/* ============================================================================
-   SEARCH BAR (Placeholder)
-   ============================================================================ */
+// Mock search data - will be replaced with real API
+const SEARCH_DATA: SearchResult[] = [
+    // Modules
+    { id: "m1", type: "module", title: "Linux Fundamentals", description: "Master the command line", url: "/modules/linux-fundamentals", icon: "🐧" },
+    { id: "m2", type: "module", title: "Docker Essentials", description: "Containerization basics", url: "/modules/docker-essentials", icon: "🐳" },
+    { id: "m3", type: "module", title: "Kubernetes in Action", description: "Container orchestration", url: "/modules/kubernetes", icon: "☸️" },
+    { id: "m4", type: "module", title: "AWS Cloud Practitioner", description: "Cloud fundamentals", url: "/modules/aws-cloud", icon: "☁️" },
+    { id: "m5", type: "module", title: "CI/CD Pipelines", description: "Automate your deployments", url: "/modules/cicd", icon: "🚀" },
+    { id: "m6", type: "module", title: "Infrastructure as Code", description: "Terraform & Ansible", url: "/modules/iac", icon: "📦" },
+    // SkillMaps
+    { id: "s1", type: "skillmap", title: "Python SkillMap", description: "20 nodes • Complete path", url: "/skillmaps/python", icon: "🐍" },
+    { id: "s2", type: "skillmap", title: "Linux SkillMap", description: "20 nodes • Complete path", url: "/skillmaps/linux", icon: "🐧" },
+    { id: "s3", type: "skillmap", title: "Docker SkillMap", description: "Coming soon", url: "/skillmaps/docker", icon: "🐳" },
+    // Learning Paths
+    { id: "p1", type: "path", title: "DevOps Engineer Path", description: "Full career track", url: "/paths/devops-engineer", icon: "🛤️" },
+    { id: "p2", type: "path", title: "Cloud Architect Path", description: "AWS, Azure, GCP", url: "/paths/cloud-architect", icon: "🏗️" },
+    { id: "p3", type: "path", title: "SRE Path", description: "Site Reliability Engineering", url: "/paths/sre", icon: "⚙️" },
+]
 
 function SearchBar() {
+    const [isOpen, setIsOpen] = React.useState(false)
+    const [query, setQuery] = React.useState("")
+    const [results, setResults] = React.useState<SearchResult[]>([])
+    const inputRef = React.useRef<HTMLInputElement>(null)
+    const router = useRouter()
+
+    // Filter results based on query
+    React.useEffect(() => {
+        if (query.trim()) {
+            const filtered = SEARCH_DATA.filter(item =>
+                item.title.toLowerCase().includes(query.toLowerCase()) ||
+                item.description?.toLowerCase().includes(query.toLowerCase())
+            )
+            setResults(filtered)
+        } else {
+            setResults([])
+        }
+    }, [query])
+
+    // Keyboard shortcut ⌘K
+    React.useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault()
+                setIsOpen(true)
+                setTimeout(() => inputRef.current?.focus(), 100)
+            }
+            if (e.key === "Escape") {
+                setIsOpen(false)
+                setQuery("")
+            }
+        }
+        document.addEventListener("keydown", handleKeyDown)
+        return () => document.removeEventListener("keydown", handleKeyDown)
+    }, [])
+
+    const handleSelect = (result: SearchResult) => {
+        router.push(result.url)
+        setIsOpen(false)
+        setQuery("")
+    }
+
+    const groupedResults = {
+        module: results.filter(r => r.type === "module"),
+        skillmap: results.filter(r => r.type === "skillmap"),
+        path: results.filter(r => r.type === "path"),
+    }
+
     return (
-        <div className={cn(
-            "hidden lg:flex items-center gap-2 px-3 py-2",
-            "bg-neutral-100 dark:bg-neutral-800/50",
-            "rounded-xl border border-transparent",
-            "focus-within:border-primary-300 dark:focus-within:border-primary-700",
-            "focus-within:bg-white dark:focus-within:bg-neutral-800",
-            "transition-all duration-200"
-        )}>
-            <Search className="h-4 w-4 text-neutral-400" />
-            <input
-                type="text"
-                placeholder="Search..."
+        <>
+            {/* Search trigger button */}
+            <button
+                onClick={() => {
+                    setIsOpen(true)
+                    setTimeout(() => inputRef.current?.focus(), 100)
+                }}
                 className={cn(
-                    "w-48 bg-transparent text-sm",
-                    "text-neutral-900 dark:text-white",
-                    "placeholder:text-neutral-400",
-                    "focus:outline-none"
+                    "flex items-center gap-2 px-3 py-2",
+                    "bg-neutral-100 dark:bg-neutral-800/50",
+                    "rounded-xl border border-transparent",
+                    "hover:border-neutral-300 dark:hover:border-neutral-600",
+                    "transition-all duration-200",
+                    "cursor-pointer"
                 )}
-            />
-            <kbd className="hidden xl:inline-flex h-5 items-center gap-1 rounded border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-1.5 font-mono text-[10px] text-neutral-500">
-                ⌘K
-            </kbd>
-        </div>
+            >
+                <Search className="h-4 w-4 text-neutral-400" />
+                <span className="hidden md:block text-sm text-neutral-400 w-32">Search...</span>
+                <kbd className="hidden xl:inline-flex h-5 items-center gap-1 rounded border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-1.5 font-mono text-[10px] text-neutral-500">
+                    ⌘K
+                </kbd>
+            </button>
+
+            {/* Search modal */}
+            {isOpen && (
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+                        onClick={() => {
+                            setIsOpen(false)
+                            setQuery("")
+                        }}
+                    />
+
+                    {/* Modal */}
+                    <div className={cn(
+                        "fixed left-1/2 top-[20%] -translate-x-1/2 z-50",
+                        "w-[90vw] max-w-xl",
+                        "bg-white dark:bg-neutral-900",
+                        "rounded-2xl shadow-2xl",
+                        "border border-neutral-200 dark:border-neutral-700",
+                        "overflow-hidden"
+                    )}>
+                        {/* Search input */}
+                        <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
+                            <Search className="h-5 w-5 text-neutral-400" />
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                placeholder="Search modules, skillmaps, paths..."
+                                className={cn(
+                                    "flex-1 bg-transparent text-base",
+                                    "text-neutral-900 dark:text-white",
+                                    "placeholder:text-neutral-400",
+                                    "focus:outline-none"
+                                )}
+                            />
+                            <kbd className="text-xs text-neutral-400 px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded">
+                                ESC
+                            </kbd>
+                        </div>
+
+                        {/* Results */}
+                        <div className="max-h-[50vh] overflow-y-auto">
+                            {query && results.length === 0 && (
+                                <div className="px-4 py-8 text-center text-neutral-500">
+                                    No results found for &quot;{query}&quot;
+                                </div>
+                            )}
+
+                            {!query && (
+                                <div className="px-4 py-4">
+                                    <p className="text-xs text-neutral-400 uppercase tracking-wide mb-3">Quick Links</p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {SEARCH_DATA.slice(0, 6).map(item => (
+                                            <button
+                                                key={item.id}
+                                                onClick={() => handleSelect(item)}
+                                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left"
+                                            >
+                                                <span>{item.icon}</span>
+                                                <span className="text-sm text-neutral-700 dark:text-neutral-300 truncate">{item.title}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Modules */}
+                            {groupedResults.module.length > 0 && (
+                                <div className="px-2 py-2">
+                                    <p className="text-xs text-neutral-400 uppercase tracking-wide px-2 mb-1">Modules</p>
+                                    {groupedResults.module.map(result => (
+                                        <button
+                                            key={result.id}
+                                            onClick={() => handleSelect(result)}
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                        >
+                                            <span className="text-xl">{result.icon}</span>
+                                            <div className="text-left">
+                                                <p className="text-sm font-medium text-neutral-900 dark:text-white">{result.title}</p>
+                                                <p className="text-xs text-neutral-500">{result.description}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* SkillMaps */}
+                            {groupedResults.skillmap.length > 0 && (
+                                <div className="px-2 py-2">
+                                    <p className="text-xs text-neutral-400 uppercase tracking-wide px-2 mb-1">SkillMaps</p>
+                                    {groupedResults.skillmap.map(result => (
+                                        <button
+                                            key={result.id}
+                                            onClick={() => handleSelect(result)}
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                        >
+                                            <span className="text-xl">{result.icon}</span>
+                                            <div className="text-left">
+                                                <p className="text-sm font-medium text-neutral-900 dark:text-white">{result.title}</p>
+                                                <p className="text-xs text-neutral-500">{result.description}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Paths */}
+                            {groupedResults.path.length > 0 && (
+                                <div className="px-2 py-2">
+                                    <p className="text-xs text-neutral-400 uppercase tracking-wide px-2 mb-1">Learning Paths</p>
+                                    {groupedResults.path.map(result => (
+                                        <button
+                                            key={result.id}
+                                            onClick={() => handleSelect(result)}
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                        >
+                                            <span className="text-xl">{result.icon}</span>
+                                            <div className="text-left">
+                                                <p className="text-sm font-medium text-neutral-900 dark:text-white">{result.title}</p>
+                                                <p className="text-xs text-neutral-500">{result.description}</p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </>
+            )}
+        </>
     )
 }
 
@@ -260,12 +440,16 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center gap-3">
-                    {/* Dallas AI Orb */}
-                    <DallasOrb />
+                <div className="flex items-center gap-4">
+                    {/* Dallas AI Orb - larger */}
+                    <div className="scale-125">
+                        <DallasOrb />
+                    </div>
 
-                    <NotificationBell />
-                    <UserDropdown />
+                    {/* User dropdown - larger */}
+                    <div className="scale-110">
+                        <UserDropdown />
+                    </div>
                 </div>
             </div>
         </header>
