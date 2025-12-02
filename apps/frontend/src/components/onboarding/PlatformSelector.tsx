@@ -94,7 +94,7 @@ interface OSCardProps {
 
 function PremiumOSCard({ osKey, isSelected, onClick, disabled, index }: OSCardProps) {
     const [isHovered, setIsHovered] = useState(false)
-    
+
     if (!osKey) return null
 
     const config = OS_OPTIONS[osKey]

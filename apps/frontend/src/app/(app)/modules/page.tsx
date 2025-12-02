@@ -433,7 +433,7 @@ export default function ModulesPage() {
     if (error) {
         return (
             <PageLayout maxWidth="wide" background="gray">
-                <ErrorState error={error} onRetry={handleRefresh} />
+                <ErrorState error={error ?? "Ett fel uppstod"} onRetry={handleRefresh} />
             </PageLayout>
         )
     }
