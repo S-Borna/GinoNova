@@ -248,7 +248,7 @@ export function TaskCard({
                                 <span className="text-[10px] font-medium text-amber-400">Sparad</span>
                             </div>
                         )}
-                        
+
                         {/* Reminder Badge */}
                         {hasReminder && (
                             <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
@@ -256,7 +256,7 @@ export function TaskCard({
                                 <span className="text-[10px] font-medium text-emerald-400">Påminnelse</span>
                             </div>
                         )}
-                        
+
                         {/* Bookmark Button */}
                         {onToggleBookmark && (
                             <BookmarkButton
@@ -266,7 +266,7 @@ export function TaskCard({
                                 size="sm"
                             />
                         )}
-                        
+
                         {isComplete && (
                             <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />

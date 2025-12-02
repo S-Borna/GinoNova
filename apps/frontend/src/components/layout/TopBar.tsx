@@ -448,16 +448,12 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center gap-4">
-                    {/* Dallas AI Orb - larger */}
-                    <div className="scale-125">
-                        <DallasOrb />
-                    </div>
+                <div className="flex items-center gap-3">
+                    {/* Dallas AI Orb - NO wrapper, direct component */}
+                    <DallasOrb />
 
-                    {/* User dropdown - larger */}
-                    <div className="scale-110">
-                        <UserDropdown />
-                    </div>
+                    {/* User dropdown */}
+                    <UserDropdown />
                 </div>
             </div>
         </header>

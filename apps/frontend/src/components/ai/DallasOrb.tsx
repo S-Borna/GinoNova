@@ -69,13 +69,20 @@ const QUICK_PROMPTS = [
    ============================================================================ */
 
 function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => void }) {
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onClick()
+    }
+    
     return (
         <motion.button
-            onClick={onClick}
-            className="relative group"
+            onClick={handleClick}
+            className="relative group z-50"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Open Dallas AI Assistant"
+            type="button"
         >
             {/* Ambient glow ring - breathing animation */}
             <motion.div
@@ -341,7 +348,7 @@ export function DallasOrb() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsOpen(false)}
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999]"
                         />
 
                         {/* Modal - PERFECTLY CENTERED */}
@@ -350,7 +357,7 @@ export function DallasOrb() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="fixed z-50 inset-0 m-auto w-[90%] max-w-lg h-[70%] max-h-[500px] bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
+                            className="fixed z-[10000] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg h-[70%] max-h-[500px] bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden"
                         >
                             {/* Header */}
                             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-700 bg-gray-800/50">
