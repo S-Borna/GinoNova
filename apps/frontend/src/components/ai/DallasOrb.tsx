@@ -82,13 +82,13 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
                 className="absolute inset-0 rounded-full"
                 animate={{
                     boxShadow: [
-                        "0 0 20px 5px rgba(59, 130, 246, 0.3), 0 0 40px 10px rgba(147, 197, 253, 0.2)",
-                        "0 0 30px 8px rgba(59, 130, 246, 0.4), 0 0 60px 15px rgba(147, 197, 253, 0.3)",
-                        "0 0 20px 5px rgba(59, 130, 246, 0.3), 0 0 40px 10px rgba(147, 197, 253, 0.2)",
+                        "0 0 10px 2px rgba(59, 130, 246, 0.15), 0 0 20px 5px rgba(147, 197, 253, 0.1)",
+                        "0 0 15px 4px rgba(59, 130, 246, 0.2), 0 0 30px 8px rgba(147, 197, 253, 0.15)",
+                        "0 0 10px 2px rgba(59, 130, 246, 0.15), 0 0 20px 5px rgba(147, 197, 253, 0.1)",
                     ],
                 }}
                 transition={{
-                    duration: 3,
+                    duration: 4,
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
@@ -96,13 +96,13 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
 
             {/* Secondary pulse ring */}
             <motion.div
-                className="absolute -inset-2 rounded-full border border-blue-400/30"
+                className="absolute -inset-2 rounded-full border border-blue-400/20"
                 animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 0, 0.5],
+                    scale: [1, 1.15, 1],
+                    opacity: [0.3, 0, 0.3],
                 }}
                 transition={{
-                    duration: 2.5,
+                    duration: 3,
                     repeat: Infinity,
                     ease: "easeOut",
                 }}
@@ -120,13 +120,13 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
             )}>
                 {/* Inner magical glow */}
                 <motion.div
-                    className="absolute inset-1 rounded-full bg-gradient-to-br from-blue-400/40 to-indigo-500/40"
+                    className="absolute inset-1 rounded-full bg-gradient-to-br from-blue-400/25 to-indigo-500/25"
                     animate={{
-                        opacity: [0.4, 0.7, 0.4],
-                        scale: [0.8, 1, 0.8],
+                        opacity: [0.3, 0.5, 0.3],
+                        scale: [0.85, 1, 0.85],
                     }}
                     transition={{
-                        duration: 2,
+                        duration: 2.5,
                         repeat: Infinity,
                         ease: "easeInOut",
                     }}
@@ -135,29 +135,29 @@ function MagicOrb({ isActive, onClick }: { isActive: boolean; onClick: () => voi
                 {/* Wizard icon */}
                 <Wand2 className="w-5 h-5 text-gray-600 dark:text-gray-300 relative z-10" />
 
-                {/* Sparkle effects */}
+                {/* Sparkle effects - subtle */}
                 <motion.div
-                    className="absolute top-1 right-1 w-1.5 h-1.5 bg-blue-400 rounded-full"
+                    className="absolute top-1 right-1 w-1 h-1 bg-blue-400/70 rounded-full"
                     animate={{
-                        opacity: [0, 1, 0],
+                        opacity: [0, 0.7, 0],
                         scale: [0.5, 1, 0.5],
                     }}
                     transition={{
-                        duration: 1.5,
+                        duration: 2,
                         repeat: Infinity,
                         delay: 0.5,
                     }}
                 />
                 <motion.div
-                    className="absolute bottom-2 left-1.5 w-1 h-1 bg-indigo-300 rounded-full"
+                    className="absolute bottom-2 left-1.5 w-0.5 h-0.5 bg-indigo-300/60 rounded-full"
                     animate={{
-                        opacity: [0, 1, 0],
+                        opacity: [0, 0.6, 0],
                         scale: [0.5, 1, 0.5],
                     }}
                     transition={{
-                        duration: 1.5,
+                        duration: 2,
                         repeat: Infinity,
-                        delay: 1,
+                        delay: 1.2,
                     }}
                 />
             </div>
