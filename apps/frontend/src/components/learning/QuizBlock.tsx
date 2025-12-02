@@ -216,14 +216,14 @@ function GandalfHelper({
                         </div>
 
                         <p className="text-sm text-gray-400 italic mb-3">
-                            "{quote}"
+                            &ldquo;{quote}&rdquo;
                         </p>
 
                         {/* Learner Card */}
                         <div className="bg-slate-800/80 rounded-lg p-4 border border-slate-700/50">
                             <div className="flex items-center gap-2 mb-2">
                                 <BookOpen className="w-4 h-4 text-blue-400" />
-                                <span className="text-sm font-medium text-blue-300">Let's read the learner card together</span>
+                                <span className="text-sm font-medium text-blue-300">Let&apos;s read the learner card together</span>
                             </div>
 
                             <div className="space-y-3">
