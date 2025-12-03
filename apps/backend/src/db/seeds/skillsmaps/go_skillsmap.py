@@ -2403,7 +2403,7 @@ Scale your tools:
 ```go
 func workerPool(jobs <-chan Job, results chan<- Result, workers int) {
     var wg sync.WaitGroup
-    
+
     for i := 0; i < workers; i++ {
         wg.Add(1)
         go func() {
@@ -2413,7 +2413,7 @@ func workerPool(jobs <-chan Job, results chan<- Result, workers int) {
             }
         }()
     }
-    
+
     wg.Wait()
     close(results)
 }
@@ -2435,7 +2435,7 @@ func fanOut(input <-chan int, n int) []<-chan int {
 func fanIn(inputs ...<-chan int) <-chan int {
     out := make(chan int)
     var wg sync.WaitGroup
-    
+
     for _, in := range inputs {
         wg.Add(1)
         go func(ch <-chan int) {
@@ -2445,12 +2445,12 @@ func fanIn(inputs ...<-chan int) <-chan int {
             }
         }(in)
     }
-    
+
     go func() {
         wg.Wait()
         close(out)
     }()
-    
+
     return out
 }
 ```
@@ -2463,7 +2463,7 @@ func fanIn(inputs ...<-chan int) <-chan int {
 func rateLimited(requests <-chan Request) {
     limiter := time.NewTicker(100 * time.Millisecond)
     defer limiter.Stop()
-    
+
     for req := range requests {
         <-limiter.C  // Wait for tick
         go process(req)
@@ -2568,11 +2568,11 @@ func deploy(ctx context.Context, name string) error {
     if ctx.Err() != nil {
         return ctx.Err()
     }
-    
+
     // Make HTTP request with context
     req, _ := http.NewRequestWithContext(ctx, "POST", url, body)
     resp, err := client.Do(req)
-    
+
     // Long operation with context
     for {
         select {
@@ -2610,7 +2610,7 @@ if id, ok := ctx.Value(requestIDKey).(string); ok {
 ```go
 func handler(w http.ResponseWriter, r *http.Request) {
     ctx := r.Context()
-    
+
     result, err := fetchData(ctx)
     if err == context.Canceled {
         return  // Client disconnected
@@ -2834,20 +2834,20 @@ import (
 )
 
 func main() {
-    config, err := clientcmd.BuildConfigFromFlags("", 
+    config, err := clientcmd.BuildConfigFromFlags("",
         os.Getenv("HOME")+"/.kube/config")
     if err != nil {
         log.Fatal(err)
     }
-    
+
     client, err := kubernetes.NewForConfig(config)
     if err != nil {
         log.Fatal(err)
     }
-    
+
     pods, err := client.CoreV1().Pods("default").
         List(context.TODO(), metav1.ListOptions{})
-    
+
     for _, pod := range pods.Items {
         fmt.Printf("%s: %s\\n", pod.Name, pod.Status.Phase)
     }
@@ -2866,12 +2866,12 @@ import (
 
 func listContainers() {
     cli, _ := client.NewClientWithOpts(client.FromEnv)
-    
+
     containers, _ := cli.ContainerList(
         context.Background(),
         types.ContainerListOptions{},
     )
-    
+
     for _, c := range containers {
         fmt.Printf("%s: %s\\n", c.Names[0], c.State)
     }
@@ -2891,7 +2891,7 @@ type HealthChecker struct {
 func (h *HealthChecker) CheckAll(ctx context.Context) []Result {
     results := make(chan Result, len(h.targets))
     var wg sync.WaitGroup
-    
+
     for _, target := range h.targets {
         wg.Add(1)
         go func(url string) {
@@ -2899,10 +2899,10 @@ func (h *HealthChecker) CheckAll(ctx context.Context) []Result {
             results <- h.check(ctx, url)
         }(target)
     }
-    
+
     wg.Wait()
     close(results)
-    
+
     var all []Result
     for r := range results {
         all = append(all, r)
@@ -3007,16 +3007,16 @@ var deployCmd = &cobra.Command{
     Short: "Deploy a service",
     RunE: func(cmd *cobra.Command, args []string) error {
         ctx, cancel := context.WithTimeout(
-            context.Background(), 
+            context.Background(),
             timeout,
         )
         defer cancel()
-        
+
         client, err := k8s.NewClient(kubeconfig)
         if err != nil {
             return err
         }
-        
+
         return client.Deploy(ctx, &types.DeployRequest{
             Service:   args[0],
             Namespace: namespace,
