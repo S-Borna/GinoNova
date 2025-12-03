@@ -11,27 +11,45 @@
 
 import NextAuth from "next-auth"
 import type { NextAuthOptions } from "next-auth"
+import type { Provider } from "next-auth/providers/index"
 import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from "next-auth/providers/github"
 import DiscordProvider from "next-auth/providers/discord"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
-const authOptions: NextAuthOptions = {
-    providers: [
+// Only include providers that have valid credentials
+const providers: Provider[] = []
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    providers.push(
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID || "",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-        }),
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        })
+    )
+}
+
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    providers.push(
         GitHubProvider({
-            clientId: process.env.GITHUB_CLIENT_ID || "",
-            clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-        }),
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        })
+    )
+}
+
+if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
+    providers.push(
         DiscordProvider({
-            clientId: process.env.DISCORD_CLIENT_ID || "",
-            clientSecret: process.env.DISCORD_CLIENT_SECRET || "",
-        }),
-    ],
+            clientId: process.env.DISCORD_CLIENT_ID,
+            clientSecret: process.env.DISCORD_CLIENT_SECRET,
+        })
+    )
+}
+
+const authOptions: NextAuthOptions = {
+    providers,
     callbacks: {
         async signIn({ user, account, profile }) {
             // Allow sign in and handle user creation in jwt callback
