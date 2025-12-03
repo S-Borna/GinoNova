@@ -423,7 +423,7 @@ ${node.description}
 
 ## Översikt
 
-I denna lektion lär du dig om **${node.title.toLowerCase()}** inom ${skillTitle}. 
+I denna lektion lär du dig om **${node.title.toLowerCase()}** inom ${skillTitle}.
 Detta är en ${node.difficulty === 'easy' ? 'grundläggande' : node.difficulty === 'medium' ? 'mellansvår' : 'avancerad'} lektion som tar ungefär ${node.estimatedMinutes} minuter att slutföra.
 
 ## Lärandemål
@@ -438,16 +438,16 @@ Efter denna lektion kommer du att:
 
 ### Introduktion
 
-${node.type === 'concept' ? 
-    'Denna lektion fokuserar på teoretiska koncept som är viktiga att förstå innan du börjar praktisera.' :
-    node.type === 'practice' ?
-    'Denna lektion är praktiskt orienterad. Du kommer att utföra övningar för att befästa dina kunskaper.' :
-    node.type === 'quiz' ?
-    'Denna lektion testar dina kunskaper genom frågor och övningar.' :
-    node.type === 'challenge' ?
-    'Detta är en utmaning som testar dina färdigheter på en djupare nivå.' :
-    'Denna lektion kombinerar teori och praktik.'
-}
+${node.type === 'concept' ?
+            'Denna lektion fokuserar på teoretiska koncept som är viktiga att förstå innan du börjar praktisera.' :
+            node.type === 'practice' ?
+                'Denna lektion är praktiskt orienterad. Du kommer att utföra övningar för att befästa dina kunskaper.' :
+                node.type === 'quiz' ?
+                    'Denna lektion testar dina kunskaper genom frågor och övningar.' :
+                    node.type === 'challenge' ?
+                        'Detta är en utmaning som testar dina färdigheter på en djupare nivå.' :
+                        'Denna lektion kombinerar teori och praktik.'
+        }
 
 ### Nyckelkoncept
 
@@ -464,7 +464,7 @@ echo "Övning: ${node.title}"
 
 ## Sammanfattning
 
-Du har nu lärt dig grunderna i **${node.title}**. 
+Du har nu lärt dig grunderna i **${node.title}**.
 Fortsätt till nästa lektion för att bygga vidare på dessa kunskaper.
 
 ---
@@ -563,7 +563,7 @@ export default function SkillsMapNodeDetailPage() {
         try {
             // TODO: Replace with actual API call
             await new Promise(resolve => setTimeout(resolve, 300))
-            
+
             const skillsmapData = getMockSkillsMap(slug)
             if (!skillsmapData) {
                 setError("Denna SkillsMap finns inte")
@@ -603,11 +603,11 @@ export default function SkillsMapNodeDetailPage() {
     const handleMarkComplete = async () => {
         setCompleting(true)
         await new Promise((resolve) => setTimeout(resolve, 500))
-        
+
         // Save completion to localStorage
         const completedKey = `skillsmap_${slug}_${nodeId}_completed`
         localStorage.setItem(completedKey, 'true')
-        
+
         setIsCompleted(true)
         setCompleting(false)
     }
@@ -705,10 +705,10 @@ export default function SkillsMapNodeDetailPage() {
                                             "px-2 py-0.5 rounded text-xs font-medium",
                                             "bg-purple-900/50 text-purple-400"
                                         )}>
-                                            {node.type === "concept" ? "Koncept" : 
-                                             node.type === "practice" ? "Praktik" :
-                                             node.type === "quiz" ? "Quiz" :
-                                             node.type === "challenge" ? "Utmaning" : "Projekt"}
+                                            {node.type === "concept" ? "Koncept" :
+                                                node.type === "practice" ? "Praktik" :
+                                                    node.type === "quiz" ? "Quiz" :
+                                                        node.type === "challenge" ? "Utmaning" : "Projekt"}
                                         </span>
                                     </div>
                                 </div>
