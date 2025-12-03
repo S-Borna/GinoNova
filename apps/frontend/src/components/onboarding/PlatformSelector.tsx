@@ -447,38 +447,36 @@ export function PlatformSelector({ onComplete, className }: PlatformSelectorProp
     const [step, setStep] = useState<"os" | "distro" | "complete">("os")
     const [showComplete, setShowComplete] = useState(false)
 
+    // Initialize step based on persisted state (only on mount)
     useEffect(() => {
         if (hasSelected) {
+            // User already selected platform before - show complete directly
             setStep("complete")
             setShowComplete(true)
-        } else if (os === "linux") {
-            setStep("distro")
-        } else if (os) {
-            setStep("complete")
-            setShowComplete(true)
-        } else {
-            setStep("os")
         }
-    }, [os, distro, hasSelected])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []) // Only run on mount
 
     const handleOSSelect = (selectedOS: OperatingSystem) => {
         setOS(selectedOS)
         if (selectedOS === "linux") {
             setStep("distro")
         } else {
+            // Show complete screen after animation
+            setStep("complete")
             setTimeout(() => {
                 setShowComplete(true)
-                onComplete?.()
-            }, 500)
+            }, 300)
         }
     }
 
     const handleDistroSelect = (selectedDistro: LinuxDistro) => {
         setDistro(selectedDistro)
+        // Show complete screen after animation
+        setStep("complete")
         setTimeout(() => {
             setShowComplete(true)
-            onComplete?.()
-        }, 500)
+        }, 300)
     }
 
     const handleReset = () => {
