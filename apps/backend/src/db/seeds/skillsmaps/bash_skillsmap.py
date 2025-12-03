@@ -4042,7 +4042,7 @@ log() {
     local level=$1; shift
     local msg="$*"
     local ts=$(date '+%Y-%m-%d %H:%M:%S')
-    
+
     echo "[$ts] [$level] $msg" | tee -a "$LOG_FILE" >&2
 }
 
@@ -4064,9 +4064,9 @@ die() {
 
 load_config() {
     local config_file="${1:?Config file required}"
-    
+
     [[ -f "$config_file" ]] || die "Config not found: $config_file"
-    
+
     # Validate and source
     bash -n "$config_file" || die "Invalid config syntax"
     source "$config_file"
@@ -4225,13 +4225,13 @@ trap cleanup EXIT
 deploy_server() {
     local server=$1
     log_info "Deploying to $server..."
-    
+
     # Remove from load balancer
     lb_remove "$server"
-    
+
     # Wait for connections to drain
     sleep 10
-    
+
     # Deploy
     ssh "${DEPLOY_USER}@${server}" << 'EOF'
         cd /opt/app
@@ -4240,26 +4240,26 @@ deploy_server() {
         ./scripts/install-deps.sh
         sudo systemctl restart app
 EOF
-    
+
     # Health check
     retry 5 check_health "$server" || return 1
-    
+
     # Return to load balancer
     lb_add "$server"
-    
+
     DEPLOYED_SERVERS+=("$server")
     log_info "Deployed to $server successfully"
 }
 
 main() {
     local version="${1:?Version required}"
-    
+
     log_info "Starting deployment of $version"
-    
+
     for server in "${SERVERS[@]}"; do
         deploy_server "$server" || die "Failed to deploy to $server"
     done
-    
+
     log_info "Deployment complete!"
 }
 
@@ -4280,13 +4280,13 @@ readonly DATE=$(date +%Y-%m-%d)
 
 analyze_logs() {
     local log_file=$1
-    
+
     echo "=== Analysis: $log_file ==="
-    
+
     # Error summary
     echo "Errors by type:"
     grep -oE 'ERROR: [^:]+' "$log_file" 2>/dev/null | sort | uniq -c | sort -rn | head -10
-    
+
     # Response times
     echo -e "\\nResponse time stats:"
     grep -oE 'duration=[0-9]+ms' "$log_file" 2>/dev/null | \\
@@ -4294,7 +4294,7 @@ analyze_logs() {
         awk '{sum+=$1; if($1>max)max=$1; count++} END {
             if(count>0) printf "Count: %d, Avg: %.0fms, Max: %dms\\n", count, sum/count, max
         }'
-    
+
     # Top endpoints
     echo -e "\\nTop endpoints:"
     grep -oE 'GET|POST|PUT|DELETE [^ ]+' "$log_file" 2>/dev/null | \\
@@ -4306,14 +4306,14 @@ main() {
         echo "Log Analysis Report - $DATE"
         echo "================================"
         echo
-        
+
         for log_file in "$LOG_DIR"/*.log; do
             [[ -f "$log_file" ]] || continue
             analyze_logs "$log_file"
             echo
         done
     } > "$OUTPUT"
-    
+
     echo "Report saved to $OUTPUT"
 }
 
@@ -4341,18 +4341,18 @@ log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
 create_backup() {
     log "Creating backup..."
-    
+
     tar -czf "$BACKUP_PATH" "${SOURCES[@]}" 2>/dev/null || {
         log "Warning: Some files could not be backed up"
     }
-    
+
     local size=$(du -h "$BACKUP_PATH" | cut -f1)
     log "Backup created: $BACKUP_NAME ($size)"
 }
 
 upload_to_s3() {
     log "Uploading to S3..."
-    
+
     if aws s3 cp "$BACKUP_PATH" "${S3_BUCKET}/${BACKUP_NAME}" --quiet; then
         log "Upload complete"
     else
@@ -4363,14 +4363,14 @@ upload_to_s3() {
 
 cleanup_old() {
     log "Cleaning backups older than $RETENTION_DAYS days..."
-    
+
     find "$BACKUP_DIR" -name "backup_*.tar.gz" -mtime +"$RETENTION_DAYS" -delete
-    
+
     aws s3 ls "$S3_BUCKET/" | while read -r line; do
         local date_str=$(echo "$line" | awk '{print $1}')
         local file=$(echo "$line" | awk '{print $4}')
         local file_age=$(( ($(date +%s) - $(date -d "$date_str" +%s)) / 86400 ))
-        
+
         if [[ $file_age -gt $RETENTION_DAYS ]]; then
             log "Deleting old backup: $file"
             aws s3 rm "${S3_BUCKET}/${file}" --quiet
@@ -4380,11 +4380,11 @@ cleanup_old() {
 
 main() {
     mkdir -p "$BACKUP_DIR"
-    
+
     create_backup
     upload_to_s3
     cleanup_old
-    
+
     log "Backup complete!"
 }
 
@@ -4421,7 +4421,7 @@ check_command() {
 check_service() {
     local name=$1
     local check=$2
-    
+
     if [[ "$check" == http* ]]; then
         check_http "$check"
     else
@@ -4433,9 +4433,9 @@ alert() {
     local service=$1
     local status=$2
     local msg="[$status] Service: $service at $(date)"
-    
+
     echo "$msg"
-    
+
     [[ -n "$SLACK_WEBHOOK" ]] && curl -sf -X POST \\
         -H 'Content-type: application/json' \\
         -d "{\\"text\\": \\"$msg\\"}" \\
@@ -4444,7 +4444,7 @@ alert() {
 
 monitor() {
     declare -A previous_status
-    
+
     while true; do
         for service in "${!SERVICES[@]}"; do
             if check_service "$service" "${SERVICES[$service]}"; then
@@ -4457,7 +4457,7 @@ monitor() {
                 previous_status[$service]="DOWN"
             fi
         done
-        
+
         sleep "$CHECK_INTERVAL"
     done
 }
