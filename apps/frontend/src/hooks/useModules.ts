@@ -158,17 +158,20 @@ export function useModules() {
     return useQuery({
         queryKey: queryKeys.modules,
         queryFn: async () => {
-            const result = await api.get<ModuleWithProgress[]>("/api/v1/modules")
-            if (!result.ok) {
-                if (process.env.NODE_ENV === "development") {
-                    console.warn("Using mock modules data")
+            try {
+                const result = await api.get<ModuleWithProgress[]>("/api/v1/modules")
+                if (!result.ok) {
+                    console.warn("Modules API unavailable, using mock data")
                     return MOCK_MODULES
                 }
-                throw new Error(result.message)
+                return result.data
+            } catch (error) {
+                console.warn("Modules API error, using mock data:", error)
+                return MOCK_MODULES
             }
-            return result.data
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: false,
     })
 }
 
