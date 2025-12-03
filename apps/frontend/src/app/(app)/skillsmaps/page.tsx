@@ -345,7 +345,7 @@ export default function SkillsMapsPage() {
     const [skillsmaps, setSkillsmaps] = useState<SkillsMapCardProps[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const [showContent, setShowContent] = useState(false)
+    const [showSelector, setShowSelector] = useState(false)
 
     const fetchSkillsMaps = async () => {
         setLoading(true)
@@ -367,17 +367,23 @@ export default function SkillsMapsPage() {
         fetchSkillsMaps()
     }, [])
 
-    // Handle platform selection complete
-    const handlePlatformComplete = () => {
-        setShowContent(true)
-    }
-
-    // Show content immediately if platform already selected
+    // Determine if we need to show the selector
     useEffect(() => {
-        if (hasSelected && !platformLoading) {
-            setShowContent(true)
+        if (!platformLoading && !hasSelected) {
+            setShowSelector(true)
+        } else {
+            setShowSelector(false)
         }
     }, [hasSelected, platformLoading])
+
+    // Handle platform selection complete - this triggers a re-render
+    // because usePlatform() will update hasSelected
+    const handlePlatformComplete = () => {
+        // Force a small delay to let localStorage update propagate
+        setTimeout(() => {
+            setShowSelector(false)
+        }, 100)
+    }
 
     // Platform loading
     if (platformLoading) {
@@ -389,7 +395,7 @@ export default function SkillsMapsPage() {
     }
 
     // Show platform selector if not yet selected
-    if (!hasSelected) {
+    if (showSelector || !hasSelected) {
         return (
             <PageLayout maxWidth="wide" background="gray">
                 <div className="min-h-[70vh] flex items-center justify-center py-12">
@@ -418,17 +424,15 @@ export default function SkillsMapsPage() {
     return (
         <PageLayout maxWidth="wide" background="gray">
             <AnimatePresence>
-                {showContent && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <Section spacing="none">
-                            <SkillsMapSelector skillsmaps={skillsmaps} />
-                        </Section>
-                    </motion.div>
-                )}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Section spacing="none">
+                        <SkillsMapSelector skillsmaps={skillsmaps} />
+                    </Section>
+                </motion.div>
             </AnimatePresence>
         </PageLayout>
     )
