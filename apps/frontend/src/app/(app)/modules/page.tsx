@@ -628,6 +628,7 @@ export default function ModulesPage() {
 
     // Handle platform selection complete - trigger wave animation
     const handlePlatformComplete = () => {
+        console.log("[Modules] Platform complete, showing modules")
         setShowModules(true)
     }
 
@@ -647,8 +648,8 @@ export default function ModulesPage() {
         )
     }
 
-    // Show platform selector if not yet selected
-    if (!hasSelected) {
+    // Show platform selector if not yet selected AND not showing modules
+    if (!showModules && !hasSelected) {
         return (
             <PageLayout maxWidth="wide" background="gray">
                 <div className="min-h-[70vh] flex items-center justify-center py-12">
