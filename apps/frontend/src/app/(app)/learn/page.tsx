@@ -247,9 +247,9 @@ function PillCard({
                         )}
                         animate={{ opacity: isHovered ? 1 : 0.7 }}
                     >
-                        <span className="text-2xl mr-2">"</span>
+                        <span className="text-2xl mr-2">&ldquo;</span>
                         {morpheusQuote}
-                        <span className="text-2xl ml-1">"</span>
+                        <span className="text-2xl ml-1">&rdquo;</span>
                         <p className={cn("mt-2 text-xs font-semibold not-italic", c.text)}>
                             — Morpheus
                         </p>
@@ -419,7 +419,7 @@ export default function LearnPage() {
                                     transition={{ delay: 0.5 }}
                                     className="text-lg text-zinc-400 max-w-2xl mx-auto mb-3"
                                 >
-                                    "This is your last chance. After this, there is no turning back..."
+                                    &ldquo;This is your last chance. After this, there is no turning back...&rdquo;
                                 </motion.p>
 
                                 {/* Rabbit hole tagline */}
@@ -503,7 +503,7 @@ export default function LearnPage() {
                                 className="text-center mt-12 space-y-2"
                             >
                                 <p className="text-zinc-500 text-sm">
-                                    🐇 "Remember, all I'm offering is the truth. Nothing more."
+                                    🐇 &ldquo;Remember, all I&apos;m offering is the truth. Nothing more.&rdquo;
                                 </p>
                                 <p className="text-zinc-600 text-xs">
                                     Du kan alltid byta väg via sidomenyn
