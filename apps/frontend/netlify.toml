@@ -1,6 +1,6 @@
 [build]
   base = "apps/frontend"
-  command = "cd ../.. && npm ci && npm run build --workspace frontend"
+  command = "cd ../.. && npm ci && cd apps/frontend && ln -sf ../../node_modules node_modules && cd ../.. && npm run build --workspace frontend"
   publish = ".next"
 
 [build.environment]
