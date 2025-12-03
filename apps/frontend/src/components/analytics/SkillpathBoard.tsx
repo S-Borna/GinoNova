@@ -680,7 +680,7 @@ export function SkillpathBoard() {
 
         // PRIORITY: Use LIVE modules from API if available!
         let moduleProgress: ModuleProgress[] = []
-        
+
         if (modulesData && Array.isArray(modulesData) && modulesData.length > 0) {
             // Use LIVE module data from backend - this is the ROOT FIX!
             moduleProgress = modulesData.map((mod) => ({
