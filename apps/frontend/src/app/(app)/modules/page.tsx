@@ -80,6 +80,181 @@ function getModuleIcon(name: string): string {
 }
 
 /* ============================================================================
+   MOCK MODULES DATA — Fallback when backend is unavailable
+   ============================================================================ */
+
+const MOCK_MODULES: EnhancedModule[] = [
+    {
+        id: "m1",
+        name: "DevOps Foundations",
+        slug: "devops-foundations",
+        description: "Introduktion till DevOps-kultur, principer och practices. Lär dig grunderna i continuous integration och delivery.",
+        order_index: 1,
+        orderIndex: 1,
+        difficulty: "beginner",
+        estimated_hours: 4,
+        estimatedHours: 4,
+        prerequisites: [],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "🚀",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 8,
+        status: "not_started",
+    },
+    {
+        id: "m2",
+        name: "Linux Fundamentals",
+        slug: "linux-fundamentals",
+        description: "Behärska Linux från kommandoraden. Filhantering, permissions, processhantering och shell scripting.",
+        order_index: 2,
+        orderIndex: 2,
+        difficulty: "beginner",
+        estimated_hours: 8,
+        estimatedHours: 8,
+        prerequisites: ["m1"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "🐧",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 12,
+        status: "not_started",
+    },
+    {
+        id: "m3",
+        name: "Git & Version Control",
+        slug: "git-version-control",
+        description: "Versionskontroll med Git. Branches, merging, rebasing och samarbete med GitHub/GitLab.",
+        order_index: 3,
+        orderIndex: 3,
+        difficulty: "beginner",
+        estimated_hours: 6,
+        estimatedHours: 6,
+        prerequisites: ["m2"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "🔀",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 10,
+        status: "not_started",
+    },
+    {
+        id: "m4",
+        name: "Docker Containers",
+        slug: "docker-containers",
+        description: "Containerisering med Docker. Images, containers, networking, volumes och Docker Compose.",
+        order_index: 4,
+        orderIndex: 4,
+        difficulty: "intermediate",
+        estimated_hours: 10,
+        estimatedHours: 10,
+        prerequisites: ["m3"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "🐳",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 15,
+        status: "not_started",
+    },
+    {
+        id: "m5",
+        name: "CI/CD Pipelines",
+        slug: "cicd-pipelines",
+        description: "Bygg automatiserade pipelines med GitHub Actions, Jenkins och GitLab CI. Test, build och deploy.",
+        order_index: 5,
+        orderIndex: 5,
+        difficulty: "intermediate",
+        estimated_hours: 8,
+        estimatedHours: 8,
+        prerequisites: ["m4"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "🚀",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 12,
+        status: "not_started",
+    },
+    {
+        id: "m6",
+        name: "Cloud Fundamentals (AWS)",
+        slug: "cloud-aws",
+        description: "Amazon Web Services grunderna. EC2, S3, IAM, VPC och grundläggande arkitektur.",
+        order_index: 6,
+        orderIndex: 6,
+        difficulty: "intermediate",
+        estimated_hours: 12,
+        estimatedHours: 12,
+        prerequisites: ["m5"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "☁️",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 16,
+        status: "not_started",
+    },
+    {
+        id: "m7",
+        name: "Infrastructure as Code",
+        slug: "infrastructure-as-code",
+        description: "Terraform och Ansible för att automatisera infrastruktur. Provisioning, konfiguration och state management.",
+        order_index: 7,
+        orderIndex: 7,
+        difficulty: "advanced",
+        estimated_hours: 10,
+        estimatedHours: 10,
+        prerequisites: ["m6"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "🏗️",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 14,
+        status: "not_started",
+    },
+    {
+        id: "m8",
+        name: "Kubernetes Orchestration",
+        slug: "kubernetes-orchestration",
+        description: "Container orchestration med Kubernetes. Pods, deployments, services, ingress och Helm.",
+        order_index: 8,
+        orderIndex: 8,
+        difficulty: "advanced",
+        estimated_hours: 14,
+        estimatedHours: 14,
+        prerequisites: ["m7"],
+        is_active: true,
+        track_id: "bootcamp",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "☸️",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 18,
+        status: "not_started",
+    },
+]
+
+/* ============================================================================
    SKELETON COMPONENTS
    ============================================================================ */
 
@@ -352,7 +527,7 @@ export default function ModulesPage() {
 
         try {
             const result = await getModules()
-            if (result.ok) {
+            if (result.ok && result.data.length > 0) {
                 // Fetch user progress if logged in
                 let userProgress: ProgressPublic[] = []
                 if (user?.id) {
@@ -422,10 +597,14 @@ export default function ModulesPage() {
 
                 setModules(modulesWithTasks)
             } else {
-                setError(result.message)
+                // Fallback to mock data when backend unavailable
+                console.log("[Modules] Using mock data - backend unavailable or empty")
+                setModules(MOCK_MODULES)
             }
         } catch {
-            setError("Failed to load modules. Please try again.")
+            // Fallback to mock data on error
+            console.log("[Modules] Using mock data - fetch error")
+            setModules(MOCK_MODULES)
         } finally {
             setLoading(false)
             setRefreshing(false)
