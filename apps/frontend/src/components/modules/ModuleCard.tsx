@@ -2,19 +2,21 @@
 
 /**
  * ============================================================================
- * MODULE CARD — Apple-Inspired Design (D.4)
+ * MODULE CARD — Premium SkillsMaps-Style Design
  * ============================================================================
  *
- * Beautiful module card with:
- * - Glass card styling with gradient border on hover
- * - Module number badge
- * - Progress bar with percentage
- * - Status indicators
- * - Smooth hover animations
+ * Features:
+ * - Glassmorphism card with colored glow
+ * - Framer Motion hover animations
+ * - Progress bar with glow effect
+ * - XP indicators in amber
+ * - Matches SkillsMaps NodeCard design
  *
- * @phase D.4 - Modules UI
+ * @phase DESIGN-UNIFICATION
  */
 
+import { useState } from "react"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import {
@@ -23,6 +25,10 @@ import {
     PlayCircle,
     CheckCircle2,
     ChevronRight,
+    Clock,
+    BookOpen,
+    Zap,
+    Sparkles,
 } from "lucide-react"
 
 /* ============================================================================
@@ -44,6 +50,29 @@ export interface ModuleCardProps {
     estimatedHours?: number
     prerequisiteModule?: string // Name of prerequisite if locked
     className?: string
+    color?: string // Module color for glow effect
+}
+
+/* ============================================================================
+   MODULE COLORS
+   ============================================================================ */
+
+const moduleColors: Record<string, string> = {
+    "environment-tooling-setup": "#6366f1",
+    "linux-mastery": "#FCC624",
+    "shell-scripting-automation": "#4EAA25",
+    "git-collaborative-workflows": "#F05032",
+    "python-for-devops": "#3776AB",
+    "aws-core-services": "#FF9900",
+    "infrastructure-as-code-terraform": "#7B42BC",
+    "serverless-architecture": "#FF6B35",
+    "networking-security": "#00D4AA",
+    "docker-fundamentals": "#2496ED",
+    "docker-advanced-production": "#066DA5",
+    "kubernetes-core": "#326CE5",
+    "kubernetes-advanced-gitops": "#1D4ED8",
+    "observability-monitoring": "#E6522C",
+    "sre-devsecops-capstone": "#10B981",
 }
 
 /* ============================================================================
@@ -103,113 +132,191 @@ export function ModuleCard({
     status,
     estimatedHours,
     prerequisiteModule,
-    className
+    className,
+    color,
 }: ModuleCardProps) {
+    const [isHovered, setIsHovered] = useState(false)
     const config = statusConfig[status]
     const StatusIcon = config.icon
     const isLocked = status === "locked"
+    const isComplete = status === "complete"
+
+    // Get module color based on title or use provided color
+    const moduleColor = color || Object.entries(moduleColors).find(([key]) => 
+        title.toLowerCase().includes(key.split("-")[0])
+    )?.[1] || "#6366f1"
 
     const cardContent = (
-        <div
+        <motion.div
             className={cn(
-                "bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 transition-all duration-200",
-                !isLocked && "hover:shadow-md hover:-translate-y-0.5 cursor-pointer",
-                isLocked && "opacity-70 cursor-not-allowed",
+                "group relative",
+                "rounded-2xl",
+                "bg-zinc-900/80 backdrop-blur-sm",
+                "border border-zinc-800/80",
+                "transition-all duration-300",
+                isHovered && !isLocked && "border-zinc-700/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)]",
+                isLocked && "opacity-60 cursor-not-allowed",
+                !isLocked && "cursor-pointer",
                 className
             )}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            whileHover={!isLocked ? { y: -4 } : {}}
+            transition={{ duration: 0.2 }}
         >
-            {/* Top row: Icon + Title + Status */}
-            <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    {/* Module icon */}
-                    <span className="text-2xl">{isLocked ? "🔒" : icon}</span>
-                    <div>
-                        <h3 className={cn(
-                            "font-semibold",
-                            isLocked
-                                ? "text-gray-400 dark:text-neutral-500"
-                                : "text-gray-900 dark:text-white"
+            {/* Colored glow on hover */}
+            {!isLocked && (
+                <div
+                    className={cn(
+                        "absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300",
+                        isHovered && "opacity-100"
+                    )}
+                    style={{
+                        boxShadow: `0 0 40px ${moduleColor}20`,
+                    }}
+                />
+            )}
+
+            {/* Complete sparkle */}
+            {isComplete && (
+                <motion.div
+                    className="absolute top-4 right-4 text-emerald-400"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                >
+                    <Sparkles className="w-5 h-5" />
+                </motion.div>
+            )}
+
+            <div className="relative p-6">
+                {/* Top row: Icon + Module number + Status */}
+                <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                        {/* Module icon container */}
+                        <motion.div
+                            className={cn(
+                                "w-14 h-14 rounded-xl flex items-center justify-center",
+                                "bg-gradient-to-br from-white/10 to-white/5",
+                                "border border-white/10"
+                            )}
+                            style={{ boxShadow: isHovered && !isLocked ? `0 0 30px ${moduleColor}30` : undefined }}
+                            animate={isHovered && !isLocked ? { scale: 1.05 } : { scale: 1 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <span className="text-3xl">{isLocked ? "🔒" : icon}</span>
+                        </motion.div>
+                        <div>
+                            <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                                Modul {orderIndex}
+                            </span>
+                            <h3 className={cn(
+                                "font-bold text-lg leading-tight",
+                                isLocked ? "text-zinc-500" : "text-white"
+                            )}>
+                                {title}
+                            </h3>
+                        </div>
+                    </div>
+
+                    {/* Status badge */}
+                    <span className={cn(
+                        "px-2.5 py-1 text-xs font-medium rounded-full",
+                        status === "complete" && "bg-emerald-500/20 text-emerald-300",
+                        status === "in_progress" && "bg-purple-500/20 text-purple-300",
+                        status === "not_started" && "bg-zinc-700 text-zinc-400",
+                        status === "locked" && "bg-zinc-800 text-zinc-500"
+                    )}>
+                        {status === "complete" ? "Klar" : 
+                         status === "in_progress" ? "Pågår" :
+                         status === "locked" ? "Låst" : "Starta"}
+                    </span>
+                </div>
+
+                {/* Description */}
+                {description && (
+                    <p className={cn(
+                        "text-sm line-clamp-2 mb-4",
+                        isLocked ? "text-zinc-600" : "text-zinc-400"
+                    )}>
+                        {description}
+                    </p>
+                )}
+
+                {/* Meta row */}
+                <div className="flex items-center gap-4 mb-4 text-sm">
+                    <span className="flex items-center gap-1.5 text-zinc-500">
+                        <BookOpen className="w-4 h-4" />
+                        {totalTasks} tasks
+                    </span>
+                    {estimatedHours && (
+                        <span className="flex items-center gap-1.5 text-zinc-500">
+                            <Clock className="w-4 h-4" />
+                            ~{estimatedHours}h
+                        </span>
+                    )}
+                    <span className={cn(
+                        "flex items-center gap-1.5 font-medium",
+                        isComplete ? "text-emerald-400" : "text-purple-400"
+                    )}>
+                        <CheckCircle2 className="w-4 h-4" />
+                        {tasksCompleted}/{totalTasks}
+                    </span>
+                </div>
+
+                {/* Progress bar with glow */}
+                <div className="mb-4">
+                    <div className="flex items-center justify-between text-xs mb-2">
+                        <span className="text-zinc-500">Progress</span>
+                        <span className={cn(
+                            "font-bold",
+                            isComplete ? "text-emerald-400" : "text-purple-400"
                         )}>
-                            {title}
-                        </h3>
-                        <p className="text-sm text-gray-500 dark:text-neutral-400">
-                            {tasksCompleted} / {totalTasks} tasks
-                        </p>
+                            {progress}%
+                        </span>
+                    </div>
+                    <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full rounded-full"
+                            style={{
+                                background: isComplete
+                                    ? "linear-gradient(90deg, #10b981, #14b8a6)"
+                                    : `linear-gradient(90deg, ${moduleColor}, ${moduleColor}cc)`,
+                                boxShadow: isComplete
+                                    ? "0 0 10px rgba(16, 185, 129, 0.5)"
+                                    : `0 0 10px ${moduleColor}50`,
+                            }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                        />
                     </div>
                 </div>
 
-                {/* Status badge */}
-                <span className={cn(
-                    "px-2.5 py-1 text-xs font-medium rounded-full",
-                    status === "complete" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-                    status === "in_progress" && "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400",
-                    status === "not_started" && "bg-gray-100 text-gray-600 dark:bg-neutral-700 dark:text-neutral-400",
-                    status === "locked" && "bg-gray-100 text-gray-400 dark:bg-neutral-700 dark:text-neutral-500"
-                )}>
-                    {config.label}
-                </span>
-            </div>
-
-            {/* Description */}
-            {description && (
-                <p className={cn(
-                    "text-sm line-clamp-2 mb-4",
-                    isLocked
-                        ? "text-gray-400 dark:text-neutral-500"
-                        : "text-gray-600 dark:text-neutral-400"
-                )}>
-                    {description}
-                </p>
-            )}
-
-            {/* Progress bar */}
-            <div className="mb-4">
-                <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2">
-                    <div
+                {/* Action button / Locked message */}
+                {isLocked ? (
+                    <div className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-zinc-800/50 text-zinc-500 text-sm border border-zinc-700/50">
+                        <Lock className="w-4 h-4" />
+                        <span>Slutför {prerequisiteModule || "föregående"} först</span>
+                    </div>
+                ) : (
+                    <motion.button
                         className={cn(
-                            "h-2 rounded-full transition-all duration-500",
-                            status === "complete"
-                                ? "bg-gradient-to-r from-emerald-500 to-teal-500"
-                                : "bg-gradient-to-r from-indigo-500 to-purple-500"
+                            "w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium transition-all duration-200",
+                            isComplete
+                                ? "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                                : status === "in_progress"
+                                    ? "bg-white text-zinc-900 hover:bg-zinc-100"
+                                    : "bg-white text-zinc-900 hover:bg-zinc-100"
                         )}
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
-                <div className="flex justify-between text-xs mt-1.5">
-                    <span className="text-gray-500 dark:text-neutral-400">
-                        {estimatedHours && `~${estimatedHours}h`}
-                    </span>
-                    <span className={cn(
-                        "font-medium",
-                        status === "complete" ? "text-emerald-600" : "text-indigo-600"
-                    )}>
-                        {progress}%
-                    </span>
-                </div>
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        <span>{isComplete ? "Granska" : status === "in_progress" ? "Fortsätt" : "Börja"}</span>
+                        <ChevronRight className="w-4 h-4" />
+                    </motion.button>
+                )}
             </div>
-
-            {/* Action button / Locked message */}
-            {isLocked ? (
-                <div className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gray-100 dark:bg-neutral-700 text-gray-400 text-sm">
-                    <Lock className="w-4 h-4" />
-                    <span>Complete {prerequisiteModule || "previous"} first</span>
-                </div>
-            ) : (
-                <button
-                    className={cn(
-                        "w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-medium transition-all duration-200",
-                        status === "complete"
-                            ? "bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-600"
-                            : status === "in_progress"
-                                ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:shadow-lg"
-                                : "bg-indigo-500 text-white hover:bg-indigo-600"
-                    )}
-                >
-                    <span>{config.buttonText}</span>
-                    <ChevronRight className="w-4 h-4" />
-                </button>
-            )}
-        </div>
+        </motion.div>
     )
 
     // Wrap in link if not locked
