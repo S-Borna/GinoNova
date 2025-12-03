@@ -2,26 +2,25 @@
 
 /**
  * ============================================================================
- * TASK DETAIL PAGE — Individual Task/Lesson View
+ * TASK DETAIL PAGE — Premium SkillsMaps-Style Design
  * ============================================================================
  *
  * Features:
- * - Enhanced lesson content with progress tracking
+ * - Glassmorphism header with colored glow
+ * - Framer Motion animations
  * - Interactive content blocks (quiz, terminal, checkpoint)
  * - Progress tracking with read progress bar
  * - Mark as complete button
  * - Navigation to next task
- * - Related "fördjupning" tasks (v4 optional deep-dive content)
+ * - Premium design matching SkillsMaps
  *
- * @phase C.2 - Task Content Display
- * @phase ILE - Interactive Learning Engine
- * @phase 4.0 - Task Tier System with Related Tasks
- * @phase 4.1 - Enhanced Learning Experience
+ * @phase DESIGN-UNIFICATION
  */
 
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import {
     PageLayout,
     Section,
@@ -50,7 +49,86 @@ import {
     Zap,
     Play,
     Sparkles,
+    ChevronRight,
+    Code2,
+    Layers,
+    Rocket,
+    Trophy,
+    HelpCircle,
 } from "lucide-react"
+
+/* ============================================================================
+   MODULE COLORS
+   ============================================================================ */
+
+const moduleColors: Record<string, { color: string; icon: string }> = {
+    "environment-tooling-setup": { color: "#6366f1", icon: "🛠️" },
+    "linux-mastery": { color: "#FCC624", icon: "🐧" },
+    "shell-scripting-automation": { color: "#4EAA25", icon: "💻" },
+    "git-collaborative-workflows": { color: "#F05032", icon: "🔀" },
+    "python-for-devops": { color: "#3776AB", icon: "🐍" },
+    "aws-core-services": { color: "#FF9900", icon: "☁️" },
+    "infrastructure-as-code-terraform": { color: "#7B42BC", icon: "🏗️" },
+    "serverless-architecture": { color: "#FF6B35", icon: "⚡" },
+    "networking-security": { color: "#00D4AA", icon: "🔐" },
+    "docker-fundamentals": { color: "#2496ED", icon: "🐳" },
+    "docker-advanced-production": { color: "#066DA5", icon: "🐋" },
+    "kubernetes-core": { color: "#326CE5", icon: "☸️" },
+    "kubernetes-advanced-gitops": { color: "#1D4ED8", icon: "🚀" },
+    "observability-monitoring": { color: "#E6522C", icon: "📊" },
+    "sre-devsecops-capstone": { color: "#10B981", icon: "🎯" },
+}
+
+/* ============================================================================
+   TYPE CONFIG
+   ============================================================================ */
+
+const typeConfig: Record<string, {
+    label: string
+    emoji: string
+    colorClass: string
+    bgClass: string
+}> = {
+    concept: { label: "Koncept", emoji: "📚", colorClass: "text-blue-400", bgClass: "bg-blue-500/20" },
+    practice: { label: "Praktik", emoji: "💻", colorClass: "text-emerald-400", bgClass: "bg-emerald-500/20" },
+    deep_dive: { label: "Fördjupning", emoji: "🔍", colorClass: "text-violet-400", bgClass: "bg-violet-500/20" },
+    project: { label: "Projekt", emoji: "🚀", colorClass: "text-orange-400", bgClass: "bg-orange-500/20" },
+    challenge: { label: "Utmaning", emoji: "🏆", colorClass: "text-rose-400", bgClass: "bg-rose-500/20" },
+    quiz: { label: "Quiz", emoji: "❓", colorClass: "text-cyan-400", bgClass: "bg-cyan-500/20" },
+    standard: { label: "Standard", emoji: "📝", colorClass: "text-zinc-400", bgClass: "bg-zinc-500/20" },
+    advanced: { label: "Avancerad", emoji: "⚡", colorClass: "text-purple-400", bgClass: "bg-purple-500/20" },
+}
+
+/* ============================================================================
+   DIFFICULTY CONFIG
+   ============================================================================ */
+
+const difficultyConfig: Record<string, { level: number; label: string; color: string }> = {
+    easy: { level: 1, label: "Lätt", color: "bg-green-400" },
+    medium: { level: 2, label: "Medium", color: "bg-yellow-400" },
+    hard: { level: 3, label: "Svår", color: "bg-orange-400" },
+    expert: { level: 4, label: "Expert", color: "bg-red-400" },
+}
+
+function DifficultyDots({ difficulty }: { difficulty: string }) {
+    const config = difficultyConfig[difficulty] || difficultyConfig.medium
+    return (
+        <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
+                {Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className={cn(
+                            "w-1.5 h-1.5 rounded-full transition-all",
+                            i < config.level ? config.color : "bg-zinc-700"
+                        )}
+                    />
+                ))}
+            </div>
+            <span className="text-xs text-zinc-500">{config.label}</span>
+        </div>
+    )
+}
 
 /* ============================================================================
    SKELETON
@@ -59,13 +137,8 @@ import {
 function TaskDetailSkeleton() {
     return (
         <div className="space-y-6 animate-pulse">
-            <div className="h-8 w-48 rounded bg-neutral-200 dark:bg-neutral-800" />
-            <div className="h-64 rounded-2xl bg-neutral-200 dark:bg-neutral-800" />
-            <div className="space-y-3">
-                <div className="h-4 w-full rounded bg-neutral-200 dark:bg-neutral-800" />
-                <div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-neutral-800" />
-                <div className="h-4 w-5/6 rounded bg-neutral-200 dark:bg-neutral-800" />
-            </div>
+            <div className="h-48 rounded-3xl bg-zinc-800/50" />
+            <div className="h-96 rounded-2xl bg-zinc-800/50" />
         </div>
     )
 }
@@ -76,38 +149,33 @@ function TaskDetailSkeleton() {
 
 function ErrorState({ error, onRetry, moduleId }: { error: string; onRetry: () => void; moduleId: string }) {
     return (
-        <GlassCard
-            variant="default"
-            padding="xl"
-            radius="xl"
-            className="max-w-md mx-auto text-center"
-        >
-            <div
-                className={cn(
-                    "w-16 h-16 rounded-full mx-auto mb-4",
-                    "bg-red-100 dark:bg-red-900/30",
-                    "flex items-center justify-center"
-                )}
-            >
-                <AlertCircle className="w-8 h-8 text-red-500" />
+        <div className={cn(
+            "max-w-md mx-auto text-center p-8 rounded-2xl",
+            "bg-zinc-900/80 border border-zinc-800"
+        )}>
+            <div className={cn(
+                "w-16 h-16 mx-auto mb-4 rounded-full",
+                "bg-red-500/20 flex items-center justify-center"
+            )}>
+                <AlertCircle className="w-8 h-8 text-red-400" />
             </div>
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                Task Not Found
+            <h2 className="text-xl font-semibold text-white mb-2">
+                Task hittades inte
             </h2>
-            <p className="text-neutral-600 dark:text-neutral-400 mb-6">{error}</p>
+            <p className="text-zinc-400 mb-6">{error}</p>
             <div className="flex gap-3 justify-center">
                 <Link href={`/modules/${moduleId}`}>
                     <Button variant="outline" className="rounded-xl">
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Module
+                        Tillbaka
                     </Button>
                 </Link>
                 <Button onClick={onRetry} className="rounded-xl">
                     <RefreshCw className="w-4 h-4 mr-2" />
-                    Try Again
+                    Försök igen
                 </Button>
             </div>
-        </GlassCard>
+        </div>
     )
 }
 
@@ -336,20 +404,24 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
 *💡 Tip: Take notes as you learn to help retain information better.*
 `
 
+    // Get module color for styling
+    const moduleConfig = module ? moduleColors[module.slug] : { color: "#6366f1", icon: "📚" }
+    const taskType = (task as any)?.task_tier || "standard"
+    const taskTypeConfig = typeConfig[taskType] || typeConfig.standard
+
     return (
-        <PageLayout maxWidth="standard" background="subtle">
+        <PageLayout maxWidth="standard" background="gray">
             {/* Back button */}
             <Link
                 href={`/modules/${moduleId}`}
                 className={cn(
                     "inline-flex items-center gap-2 text-sm mb-6",
-                    "text-neutral-500 hover:text-neutral-900",
-                    "dark:text-neutral-400 dark:hover:text-white",
+                    "text-zinc-500 hover:text-white",
                     "transition-colors"
                 )}
             >
                 <ArrowLeft className="w-4 h-4" />
-                Back to {module?.name || "Module"}
+                Tillbaka till {module?.name || "Module"}
             </Link>
 
             {loading ? (
@@ -357,103 +429,157 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
             ) : error ? (
                 <ErrorState error={error} onRetry={fetchData} moduleId={moduleId} />
             ) : task ? (
-                <div className="space-y-8">
-                    {/* Task Header */}
-                    <Section>
-                        <Block className="w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
-                            <div className="w-full">
-                                {/* Task info */}
-                                <div className="w-full">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-xs font-medium text-neutral-400">
-                                            Task {task.order_index}
-                                        </span>
-                                        {isCompleted && (
-                                            <span className="inline-flex items-center gap-1 text-xs text-emerald-500 font-medium">
-                                                <CheckCircle2 className="w-3.5 h-3.5" />
-                                                Completed
-                                            </span>
-                                        )}
-                                    </div>
-                                    <Headline level={1} className="mb-2">
-                                        {task.title}
-                                    </Headline>
-                                    {task.description && (
-                                        <Subtext className="mb-4">
-                                            {task.description}
-                                        </Subtext>
-                                    )}
+                <motion.div 
+                    className="space-y-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                >
+                    {/* Task Header - Premium Style */}
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={cn(
+                            "relative overflow-hidden rounded-3xl",
+                            "bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950",
+                            "border border-white/10",
+                            "p-8"
+                        )}
+                    >
+                        {/* Colored glow based on module color */}
+                        <div
+                            className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full blur-[120px] opacity-20"
+                            style={{ backgroundColor: moduleConfig.color }}
+                        />
 
-                                    {/* Meta */}
-                                    <div className="flex flex-wrap items-center gap-4">
-                                        <span className="flex items-center gap-1.5 text-sm text-neutral-500">
-                                            <Clock className="w-4 h-4" />
-                                            {task.estimated_minutes} min
+                        {/* Completed sparkle */}
+                        {isCompleted && (
+                            <motion.div
+                                className="absolute top-6 right-6 text-emerald-400"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            >
+                                <Sparkles className="w-6 h-6" />
+                            </motion.div>
+                        )}
+
+                        <div className="relative flex flex-col md:flex-row md:items-start gap-6">
+                            {/* Task Type Icon */}
+                            <motion.div
+                                className={cn(
+                                    "w-20 h-20 rounded-2xl flex items-center justify-center shrink-0",
+                                    "bg-gradient-to-br from-white/10 to-white/5",
+                                    "border border-white/10"
+                                )}
+                                style={{ boxShadow: `0 0 40px ${moduleConfig.color}30` }}
+                                whileHover={{ scale: 1.05 }}
+                            >
+                                <span className="text-5xl">{taskTypeConfig.emoji}</span>
+                            </motion.div>
+
+                            {/* Content */}
+                            <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                                        Task {task.order_index}
+                                    </span>
+                                    <span className={cn(
+                                        "px-2.5 py-1 rounded-full text-xs font-medium",
+                                        taskTypeConfig.bgClass,
+                                        taskTypeConfig.colorClass
+                                    )}>
+                                        {taskTypeConfig.label}
+                                    </span>
+                                    {isCompleted && (
+                                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20">
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                            <span className="text-xs font-medium text-emerald-300">Klar</span>
                                         </span>
-                                        <span className="flex items-center gap-1.5 text-sm text-indigo-500 font-medium">
-                                            <Zap className="w-4 h-4" />
-                                            +{task.xp_reward} XP
-                                        </span>
-                                        <span className={cn(
-                                            "px-2 py-0.5 rounded text-xs font-medium",
-                                            task.difficulty === "easy" && "bg-emerald-100 text-emerald-700",
-                                            task.difficulty === "medium" && "bg-amber-100 text-amber-700",
-                                            task.difficulty === "hard" && "bg-red-100 text-red-700",
-                                        )}>
-                                            {task.difficulty}
-                                        </span>
-                                    </div>
+                                    )}
+                                </div>
+
+                                <h1 className={cn(
+                                    "text-2xl md:text-3xl font-black mb-2",
+                                    "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+                                )}>
+                                    {task.title}
+                                </h1>
+
+                                {task.description && (
+                                    <p className="text-zinc-400 mb-4 max-w-2xl">
+                                        {task.description}
+                                    </p>
+                                )}
+
+                                {/* Meta row */}
+                                <div className="flex flex-wrap items-center gap-4 text-sm">
+                                    <span className="flex items-center gap-1.5 text-zinc-400">
+                                        <Clock className="w-4 h-4" />
+                                        {task.estimated_minutes} min
+                                    </span>
+                                    <span className="flex items-center gap-1.5 text-amber-400 font-medium">
+                                        <Zap className="w-4 h-4" />
+                                        +{task.xp_reward} XP
+                                    </span>
+                                    <DifficultyDots difficulty={task.difficulty} />
                                 </div>
                             </div>
-                        </Block>
-                    </Section>
+                        </div>
+                    </motion.div>
 
-                    {/* Lesson Content */}
-                    <Section>
-                        <Block className="w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
-                            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-700">
-                                {hasContentBlocks ? (
-                                    <Play className="w-5 h-5 text-indigo-500" />
-                                ) : (
-                                    <BookOpen className="w-5 h-5 text-indigo-500" />
-                                )}
-                                <Headline level={2}>
-                                    {hasContentBlocks ? "Interactive Lesson" : "Lesson Content"}
-                                </Headline>
-                                {hasContentBlocks && taskProgress && (
-                                    <span className="ml-auto text-sm text-neutral-500">
-                                        {taskProgress.progress_percent || 0}% complete
-                                    </span>
-                                )}
-                            </div>
-
+                    {/* Lesson Content - Premium Style */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className={cn(
+                            "relative overflow-hidden rounded-2xl",
+                            "bg-zinc-900/80 backdrop-blur-sm",
+                            "border border-zinc-800/80",
+                            "p-6 md:p-8"
+                        )}
+                    >
+                        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-zinc-800">
                             {hasContentBlocks ? (
-                                <ContentBlockRenderer
-                                    blocks={(task as any).content_blocks}
-                                    taskId={taskId}
-                                    progress={taskProgress}
-                                    onBlockComplete={handleBlockComplete}
-                                    onQuizAnswer={handleQuizAnswer}
-                                    onTerminalCommand={handleTerminalCommand}
-                                />
+                                <Play className="w-5 h-5 text-purple-400" />
                             ) : (
-                                <LessonContent
-                                    content={filteredContent || placeholderContent}
-                                    title={task.title}
-                                    estimatedMinutes={task.estimated_minutes}
-                                />
+                                <BookOpen className="w-5 h-5 text-purple-400" />
                             )}
+                            <Headline level={2} className="text-white">
+                                {hasContentBlocks ? "Interaktiv Lektion" : "Lektionsinnehåll"}
+                            </Headline>
+                            {hasContentBlocks && taskProgress && (
+                                <span className="ml-auto text-sm text-zinc-500">
+                                    {taskProgress.progress_percent || 0}% klart
+                                </span>
+                            )}
+                        </div>
 
-                            {/* Related Tasks / Fördjupning */}
-                            {relatedTasks.length > 0 && (
-                                <RelatedTasks
-                                    tasks={relatedTasks}
-                                    moduleId={moduleId}
-                                    className="mt-8"
-                                />
-                            )}
-                        </Block>
-                    </Section>
+                        {hasContentBlocks ? (
+                            <ContentBlockRenderer
+                                blocks={(task as any).content_blocks}
+                                taskId={taskId}
+                                progress={taskProgress}
+                                onBlockComplete={handleBlockComplete}
+                                onQuizAnswer={handleQuizAnswer}
+                                onTerminalCommand={handleTerminalCommand}
+                            />
+                        ) : (
+                            <LessonContent
+                                content={filteredContent || placeholderContent}
+                                title={task.title}
+                                estimatedMinutes={task.estimated_minutes}
+                            />
+                        )}
+
+                        {/* Related Tasks / Fördjupning */}
+                        {relatedTasks.length > 0 && (
+                            <RelatedTasks
+                                tasks={relatedTasks}
+                                moduleId={moduleId}
+                                className="mt-8"
+                            />
+                        )}
+                    </motion.div>
 
                     {/* Actions - Using TaskFooter from @saas/ui */}
                     <TaskFooter
@@ -465,7 +591,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                         isCompleted={isCompleted}
                         isLoading={completing}
                     />
-                </div>
+                </motion.div>
             ) : null}
         </PageLayout>
     )
