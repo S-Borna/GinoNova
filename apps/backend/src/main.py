@@ -15,6 +15,8 @@ from .db.seeds.bootcamp_v3_data import get_bootcamp_summary
 # Import ILE content for interactive tasks
 from .db.seeds.ile_sample_content import SAMPLE_PERMISSIONS_TASK
 from .db.seeds.module_01_linux_content import MODULE_01_TASKS
+# Import skillsmaps v3 modules
+from .db.seeds.modules_v3 import ALL_V3_MODULES
 
 configure_logging()
 logger = logging.getLogger(__name__)
@@ -163,6 +165,98 @@ def auto_seed_if_empty():
         f"{tasks_created} tasks, {labs_created} labs, {projects_created} projects"
     )
 
+    # Now seed skillsmaps modules
+    seed_skillsmaps_modules(track_id_map)
+
+
+def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
+    """
+    Seed the converted skillsmaps modules.
+    These are 14 additional modules with 438 tasks.
+    """
+    from .db.module_repository import create_module, list_modules
+    from .db.task_repository import create_task
+    from .db.track_repository import get_track_by_slug
+    from .schemas.module import ModuleCreate
+    from .schemas.task import TaskCreate
+
+    # Check if skillsmaps are already seeded
+    existing_modules = list_modules()
+    skillsmap_slugs = [m["slug"] for m in ALL_V3_MODULES]
+    existing_slugs = [m.slug for m in existing_modules]
+
+    # Count how many skillsmaps are already seeded
+    already_seeded = sum(1 for slug in skillsmap_slugs if slug in existing_slugs)
+    if already_seeded >= len(ALL_V3_MODULES):
+        logger.info(f"✅ Skillsmaps already seeded: {already_seeded} modules found")
+        return
+
+    logger.info(f"🌱 Auto-seeding Skillsmaps v3.0 modules ({len(ALL_V3_MODULES)} modules, 438 tasks)...")
+
+    modules_created = 0
+    tasks_created = 0
+
+    for module_data in ALL_V3_MODULES:
+        # Skip if already exists
+        if module_data["slug"] in existing_slugs:
+            continue
+
+        # Get track ID - try from map first, then lookup
+        track_id = None
+        track_slug = module_data.get("track_slug")
+        if track_id_map and track_slug in track_id_map:
+            track_id = track_id_map[track_slug]
+        elif track_slug:
+            track = get_track_by_slug(track_slug)
+            if track:
+                track_id = track.id
+
+        # Offset order_index to avoid conflicts with bootcamp modules
+        # Skillsmaps order_index starts at 100, but schema allows max 20
+        # So we use: 20 + position in ALL_V3_MODULES list
+        order_offset = 16  # Start after bootcamp modules (15 modules)
+        adjusted_order = order_offset + modules_created
+
+        # Create the module
+        module = create_module(ModuleCreate(
+            track_id=track_id,
+            name=module_data["name"],
+            slug=module_data["slug"],
+            description=module_data.get("description"),
+            order_index=adjusted_order,
+            difficulty=module_data.get("difficulty", "intermediate"),
+            estimated_hours=module_data.get("estimated_hours", 10.0),
+            prerequisites=module_data.get("prerequisites", []),
+        ))
+        modules_created += 1
+
+        # Create tasks for this module
+        for idx, task_data in enumerate(module_data.get("tasks", [])):
+            difficulty = task_data.get("difficulty", "medium")
+            # Map 'expert' to 'hard' as schema only allows easy/medium/hard
+            if difficulty == "expert":
+                difficulty = "hard"
+            elif difficulty not in ("easy", "medium", "hard"):
+                difficulty = "medium"
+            estimated_minutes = task_data.get("estimated_minutes") or {"easy": 10, "medium": 15, "hard": 25}.get(difficulty, 15)
+            xp_reward = task_data.get("xp_reward") or {"easy": 20, "medium": 30, "hard": 50}.get(difficulty, 30)
+
+            create_task(TaskCreate(
+                module_id=module.id,
+                title=task_data["title"],
+                description=task_data.get("description"),
+                content=task_data.get("content"),
+                content_blocks=task_data.get("content_blocks"),
+                requirements=task_data.get("requirements"),
+                order_index=idx + 1,
+                difficulty=difficulty,
+                estimated_minutes=estimated_minutes,
+                xp_reward=xp_reward,
+            ))
+            tasks_created += 1
+
+    logger.info(f"✅ Seeded Skillsmaps v3.0: {modules_created} modules, {tasks_created} tasks")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -246,12 +340,17 @@ def health():
         "modules_count": 0
     }
 
+    # Always count modules (works for both PostgreSQL and in-memory)
+    try:
+        modules = list_modules()
+        status["modules_count"] = len(modules)
+    except Exception:
+        pass
+
     # Check PostgreSQL
     if is_db_configured():
         try:
-            modules = list_modules()
             status["postgresql"] = "connected"
-            status["modules_count"] = len(modules)
         except Exception as e:
             status["postgresql"] = f"error: {str(e)[:50]}"
 
