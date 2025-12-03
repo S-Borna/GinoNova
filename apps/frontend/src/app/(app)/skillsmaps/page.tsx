@@ -345,7 +345,8 @@ export default function SkillsMapsPage() {
     const [skillsmaps, setSkillsmaps] = useState<SkillsMapCardProps[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const [showSelector, setShowSelector] = useState(false)
+    // Track if user explicitly completed the platform selection
+    const [platformComplete, setPlatformComplete] = useState(false)
 
     const fetchSkillsMaps = async () => {
         setLoading(true)
@@ -367,23 +368,27 @@ export default function SkillsMapsPage() {
         fetchSkillsMaps()
     }, [])
 
-    // Determine if we need to show the selector
+    // If platform was already selected on page load, mark as complete
     useEffect(() => {
-        if (!platformLoading && !hasSelected) {
-            setShowSelector(true)
-        } else {
-            setShowSelector(false)
+        if (!platformLoading && hasSelected) {
+            setPlatformComplete(true)
         }
     }, [hasSelected, platformLoading])
 
-    // Handle platform selection complete - this triggers a re-render
-    // because usePlatform() will update hasSelected
+    // Handle platform selection complete
     const handlePlatformComplete = () => {
-        // Force a small delay to let localStorage update propagate
-        setTimeout(() => {
-            setShowSelector(false)
-        }, 100)
+        console.log("[SkillsMaps] Platform selection complete, showing content")
+        setPlatformComplete(true)
     }
+
+    // Determine if we should show SkillsMaps content
+    // hasSelected is from localStorage (persisted), platformComplete is from user action this session
+    const shouldShowContent = platformComplete || hasSelected
+
+    // Debug logging
+    useEffect(() => {
+        console.log("[SkillsMaps] State:", { platformLoading, hasSelected, platformComplete, shouldShowContent })
+    }, [platformLoading, hasSelected, platformComplete, shouldShowContent])
 
     // Platform loading
     if (platformLoading) {
@@ -394,8 +399,8 @@ export default function SkillsMapsPage() {
         )
     }
 
-    // Show platform selector if not yet selected
-    if (showSelector || !hasSelected) {
+    // Show platform selector if not yet completed
+    if (!shouldShowContent) {
         return (
             <PageLayout maxWidth="wide" background="gray">
                 <div className="min-h-[70vh] flex items-center justify-center py-12">
