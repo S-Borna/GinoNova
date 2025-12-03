@@ -360,10 +360,10 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                 <div className="space-y-8">
                     {/* Task Header */}
                     <Section>
-                        <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
-                            <div className="flex flex-col md:flex-row md:items-start gap-4">
+                        <Block className="w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
+                            <div className="w-full">
                                 {/* Task info */}
-                                <div className="flex-1">
+                                <div className="w-full">
                                     <div className="flex items-center gap-2 mb-2">
                                         <span className="text-xs font-medium text-neutral-400">
                                             Task {task.order_index}
@@ -410,7 +410,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
 
                     {/* Lesson Content */}
                     <Section>
-                        <Block className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
+                        <Block className="w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/50 dark:border-neutral-700/50 shadow-lg p-6 md:p-8">
                             <div className="flex items-center gap-2 mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-700">
                                 {hasContentBlocks ? (
                                     <Play className="w-5 h-5 text-indigo-500" />
