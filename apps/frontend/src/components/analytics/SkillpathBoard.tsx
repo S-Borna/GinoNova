@@ -658,77 +658,71 @@ export function SkillpathBoard() {
 
     // Transform API data to component format
     const data: SkillpathData = useMemo(() => {
-        if (!progressData) {
-            // Return empty state while loading
-            return {
-                totalXP: 0,
-                currentLevel: 1,
-                xpToNextLevel: 1000,
-                currentStreak: 0,
-                longestStreak: 0,
-                totalTimeMinutes: 0,
-                modulesStarted: 0,
-                modulesCompleted: 0,
-                tasksCompleted: 0,
-                activityHistory: [],
-                moduleProgress: [],
-            }
+        // Use progress data for XP/streak stats (mock is fine for demo)
+        const progress = progressData || {
+            total_xp: 0,
+            level: 1,
+            xp_to_next_level: 1000,
+            tasks_completed: 0,
+            modules_completed: 0,
+            streak: 0,
+            tracks: [],
         }
 
         // Calculate XP per level (1000 XP per level)
         const XP_PER_LEVEL = 1000
-        const currentLevel = progressData.level || Math.floor(progressData.total_xp / XP_PER_LEVEL) + 1
-        const xpInCurrentLevel = progressData.total_xp % XP_PER_LEVEL
-        const xpToNextLevel = progressData.xp_to_next_level || (XP_PER_LEVEL - xpInCurrentLevel)
+        const currentLevel = progress.level || Math.floor(progress.total_xp / XP_PER_LEVEL) + 1
+        const xpInCurrentLevel = progress.total_xp % XP_PER_LEVEL
+        const xpToNextLevel = progress.xp_to_next_level || (XP_PER_LEVEL - xpInCurrentLevel)
 
         // Estimate time: ~5 min per task on average
-        const estimatedTimeMinutes = progressData.tasks_completed * 5
+        const estimatedTimeMinutes = progress.tasks_completed * 5
 
-        // Build module progress from tracks data
-        const moduleProgress: ModuleProgress[] = (progressData.tracks || []).map(track => ({
-            name: track.track_name,
-            slug: track.track_id,
-            progress: track.progress,
-            tasksCompleted: track.modules_completed,
-            totalTasks: track.total_modules,
-            color: getModuleColor(track.track_id),
-        }))
-
-        // If we have modules data, enrich the progress
-        if (modulesData && Array.isArray(modulesData)) {
-            // Add any modules that aren't in tracks yet
-            modulesData.forEach((mod) => {
-                if (!moduleProgress.find(mp => mp.slug === mod.slug)) {
-                    moduleProgress.push({
-                        name: mod.name,
-                        slug: mod.slug,
-                        progress: mod.progress || 0,
-                        tasksCompleted: mod.tasks_completed || 0,
-                        totalTasks: mod.total_tasks || 10,
-                        color: getModuleColor(mod.slug),
-                    })
-                }
-            })
+        // PRIORITY: Use LIVE modules from API if available!
+        let moduleProgress: ModuleProgress[] = []
+        
+        if (modulesData && Array.isArray(modulesData) && modulesData.length > 0) {
+            // Use LIVE module data from backend - this is the ROOT FIX!
+            moduleProgress = modulesData.map((mod) => ({
+                name: mod.name,
+                slug: mod.slug,
+                progress: mod.progress || 0,
+                tasksCompleted: mod.tasks_completed || 0,
+                totalTasks: mod.total_tasks || 10,
+                color: getModuleColor(mod.slug),
+            }))
+            console.log(`✅ SkillpathBoard: Loaded ${modulesData.length} LIVE modules from API`)
+        } else {
+            // Fallback to tracks from progress data
+            moduleProgress = (progress.tracks || []).map(track => ({
+                name: track.track_name,
+                slug: track.track_id,
+                progress: track.progress,
+                tasksCompleted: track.modules_completed,
+                totalTasks: track.total_modules,
+                color: getModuleColor(track.track_id),
+            }))
+            console.warn("⚠️ SkillpathBoard: Using mock/track data - API not available")
         }
 
         // Generate activity history based on real data
         const activityHistory = generateActivityFromProgress(
-            progressData.tasks_completed,
-            progressData.total_xp
+            progress.tasks_completed,
+            progress.total_xp
         )
 
         return {
-            totalXP: progressData.total_xp,
+            totalXP: progress.total_xp,
             currentLevel,
             xpToNextLevel,
-            currentStreak: progressData.streak || 0,
-            longestStreak: progressData.streak || 0, // API doesn't track longest yet
+            currentStreak: progress.streak || 0,
+            longestStreak: progress.streak || 0, // API doesn't track longest yet
             totalTimeMinutes: estimatedTimeMinutes,
             modulesStarted: moduleProgress.filter(m => m.progress > 0).length,
-            modulesCompleted: progressData.modules_completed,
-            tasksCompleted: progressData.tasks_completed,
+            modulesCompleted: progress.modules_completed,
+            tasksCompleted: progress.tasks_completed,
             activityHistory,
-            moduleProgress: moduleProgress.filter(m => m.progress > 0).slice(0, 6), // Show top 6 active
+            moduleProgress: moduleProgress.slice(0, 8), // Show up to 8 modules
         }
     }, [progressData, modulesData])
 
