@@ -13,10 +13,13 @@
  * - Pulsing glow effects
  * - Premium micro-interactions
  *
+ * After selection, redirects to /learn for path selection.
+ *
  * @phase PREMIUM-DELUXE-POLISH
  */
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -46,6 +49,7 @@ import {
 
 interface PlatformSelectorProps {
     onComplete?: () => void
+    redirectTo?: string // Where to redirect after selection, defaults to /learn
     className?: string
 }
 
@@ -442,16 +446,28 @@ function PremiumHelpSection() {
    MAIN COMPONENT - PREMIUM DELUXE
    ============================================================================ */
 
-export function PlatformSelector({ onComplete, className }: PlatformSelectorProps) {
+export function PlatformSelector({ onComplete, redirectTo = "/learn", className }: PlatformSelectorProps) {
+    const router = useRouter()
     const { os, distro, setOS, setDistro, hasSelected, clearSelection } = usePlatform()
     const [step, setStep] = useState<"os" | "distro" | "complete">("os")
     const [showComplete, setShowComplete] = useState(false)
 
-    // If already selected on mount, call onComplete immediately
+    // Handle navigation after selection
+    const handleSelectionComplete = () => {
+        console.log("[PlatformSelector] Selection complete, navigating to:", redirectTo)
+        // If onComplete callback is provided, call it
+        if (onComplete) {
+            onComplete()
+        }
+        // Navigate to the path selector (or specified redirect)
+        router.push(redirectTo)
+    }
+
+    // If already selected on mount, navigate away
     useEffect(() => {
         if (hasSelected) {
-            console.log("[PlatformSelector] Already selected, calling onComplete")
-            onComplete?.()
+            console.log("[PlatformSelector] Already selected, navigating to:", redirectTo)
+            router.push(redirectTo)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []) // Only on mount
@@ -462,11 +478,10 @@ export function PlatformSelector({ onComplete, className }: PlatformSelectorProp
         if (selectedOS === "linux") {
             setStep("distro")
         } else {
-            // Go directly to content - no confirmation step
-            // Use setTimeout to ensure state is saved before calling onComplete
+            // Go directly to path selection - no confirmation step
+            // Use setTimeout to ensure state is saved before navigating
             setTimeout(() => {
-                console.log("[PlatformSelector] Calling onComplete after OS select")
-                onComplete?.()
+                handleSelectionComplete()
             }, 100)
         }
     }
@@ -474,10 +489,9 @@ export function PlatformSelector({ onComplete, className }: PlatformSelectorProp
     const handleDistroSelect = (selectedDistro: LinuxDistro) => {
         console.log("[PlatformSelector] Distro selected:", selectedDistro)
         setDistro(selectedDistro)
-        // Go directly to content - no confirmation step
+        // Go directly to path selection - no confirmation step
         setTimeout(() => {
-            console.log("[PlatformSelector] Calling onComplete after distro select")
-            onComplete?.()
+            handleSelectionComplete()
         }, 100)
     }
 

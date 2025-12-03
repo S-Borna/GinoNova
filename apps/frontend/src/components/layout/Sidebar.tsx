@@ -30,6 +30,8 @@ import {
     ChevronLeft,
     ChevronRight,
     LayoutDashboard,
+    Map,
+    GraduationCap,
     type LucideIcon
 } from "lucide-react"
 
@@ -55,7 +57,9 @@ interface SidebarProps {
 
 const mainNavItems: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: Home },
-    { label: "Modules", href: "/modules", icon: BookOpen },
+    { label: "Välj lärstig", href: "/learn", icon: GraduationCap },
+    { label: "Bootcamp", href: "/modules", icon: BookOpen },
+    { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
     { label: "Studyflow", href: "/studyflow", icon: Clock },
     { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Progress", href: "/progress", icon: BarChart3 },
