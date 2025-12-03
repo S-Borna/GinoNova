@@ -1,5 +1,13 @@
-# Build configuration moved to root netlify.toml
-# This file is kept for redirects only
+[build]
+  command = "cd ../.. && npm ci && npm run build --workspace=frontend"
+  publish = ".next"
+
+[build.environment]
+  NEXT_PUBLIC_API_URL = "https://saas-project-production-31f8.up.railway.app"
+  NPM_FLAGS = "--include=optional"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[redirects]]
   from = "/api/*"
