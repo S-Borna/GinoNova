@@ -677,55 +677,55 @@ export default function ModulesPage() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                 >
-                        {/* Header */}
-                        <Section spacing="none">
-                            <motion.div
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1, duration: 0.4 }}
-                            >
-                                <Header
-                                    totalModules={totalModules}
-                                    completedModules={completedModules}
-                                    overallProgress={overallProgress}
-                                    onRefresh={handleRefresh}
-                                    isRefreshing={refreshing}
-                                />
-                            </motion.div>
-                        </Section>
+                    {/* Header */}
+                    <Section spacing="none">
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1, duration: 0.4 }}
+                        >
+                            <Header
+                                totalModules={totalModules}
+                                completedModules={completedModules}
+                                overallProgress={overallProgress}
+                                onRefresh={handleRefresh}
+                                isRefreshing={refreshing}
+                            />
+                        </motion.div>
+                    </Section>
 
-                        {/* Modules grid with wave animation */}
-                        <Section spacing="none">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {modules.map((module, index) => (
-                                    <motion.div
-                                        key={module.id}
-                                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 100,
-                                            damping: 15,
-                                            delay: 0.2 + index * 0.08, // Wave effect
-                                        }}
-                                    >
-                                        <ModuleCard
-                                            id={module.id}
-                                            orderIndex={module.orderIndex}
-                                            title={module.name}
-                                            description={module.description || "No description available"}
-                                            icon={module.icon}
-                                            progress={module.progress}
-                                            tasksCompleted={module.tasksCompleted}
-                                            totalTasks={module.totalTasks}
-                                            status={module.status}
-                                            estimatedHours={module.estimatedHours}
-                                            prerequisiteModule={module.prerequisiteModule}
-                                        />
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </Section>
+                    {/* Modules grid with wave animation */}
+                    <Section spacing="none">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {modules.map((module, index) => (
+                                <motion.div
+                                    key={module.id}
+                                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 100,
+                                        damping: 15,
+                                        delay: 0.2 + index * 0.08, // Wave effect
+                                    }}
+                                >
+                                    <ModuleCard
+                                        id={module.id}
+                                        orderIndex={module.orderIndex}
+                                        title={module.name}
+                                        description={module.description || "No description available"}
+                                        icon={module.icon}
+                                        progress={module.progress}
+                                        tasksCompleted={module.tasksCompleted}
+                                        totalTasks={module.totalTasks}
+                                        status={module.status}
+                                        estimatedHours={module.estimatedHours}
+                                        prerequisiteModule={module.prerequisiteModule}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+                    </Section>
                 </motion.div>
             </AnimatePresence>
         </PageLayout>
