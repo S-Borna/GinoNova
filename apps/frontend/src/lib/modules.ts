@@ -105,11 +105,17 @@ export async function getModules(): Promise<ApiResult<ModulePublic[]>> {
 }
 
 /**
- * Get a single module by ID
+ * Get a single module by ID (UUID or slug)
  */
-export async function getModule(id: string): Promise<ApiResult<ModulePublic>> {
+export async function getModule(idOrSlug: string): Promise<ApiResult<ModulePublic>> {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/modules/${id}`, {
+        // Determine if it's a UUID or a slug
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug)
+        const endpoint = isUUID
+            ? `${API_BASE_URL}/api/modules/${idOrSlug}`
+            : `${API_BASE_URL}/api/modules/slug/${idOrSlug}`
+
+        const res = await fetch(endpoint, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
