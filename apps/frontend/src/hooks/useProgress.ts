@@ -122,13 +122,25 @@ export function useProgress() {
         queryKey: queryKeys.progress,
         queryFn: async () => {
             try {
-                const result = await api.get<UserProgress>("/api/v1/progress")
-                if (!result.ok) {
+                // Direct fetch to backend - CORRECT URL without /v1/
+                const response = await fetch("http://localhost:8000/api/progress/me")
+                if (!response.ok) {
                     // In development, use mock data silently
                     console.warn("Progress API unavailable, using mock data")
                     return MOCK_USER_PROGRESS
                 }
-                return result.data
+                const data = await response.json()
+                // Transform to match expected interface
+                return {
+                    overall_progress: data.overall_progress || 0,
+                    total_xp: data.total_xp || 0,
+                    level: data.level || 1,
+                    xp_to_next_level: data.xp_to_next_level || 1000,
+                    tasks_completed: data.tasks_completed || 0,
+                    modules_completed: data.modules_completed || 0,
+                    streak: data.streak || 0,
+                    tracks: data.tracks || [],
+                } as UserProgress
             } catch (error) {
                 // Network error or API not available - use mock data
                 console.warn("Progress API error, using mock data:", error)

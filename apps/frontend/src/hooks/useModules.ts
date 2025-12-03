@@ -159,12 +159,30 @@ export function useModules() {
         queryKey: queryKeys.modules,
         queryFn: async () => {
             try {
-                const result = await api.get<ModuleWithProgress[]>("/api/v1/modules")
-                if (!result.ok) {
+                // Direct fetch to backend - CORRECT URL without /v1/
+                const response = await fetch("http://localhost:8000/api/modules/")
+                if (!response.ok) {
                     console.warn("Modules API unavailable, using mock data")
                     return MOCK_MODULES
                 }
-                return result.data
+                const data = await response.json()
+                // Transform backend data to match expected interface
+                return data.map((mod: Record<string, unknown>) => ({
+                    id: mod.id,
+                    slug: mod.slug,
+                    name: mod.name,
+                    description: mod.description || "",
+                    order: mod.order || 0,
+                    is_active: mod.is_active !== false,
+                    created_at: mod.created_at || new Date().toISOString(),
+                    progress: mod.progress || 0,
+                    tasks_completed: mod.tasks_completed || 0,
+                    total_tasks: mod.total_tasks || mod.task_count || 0,
+                    labs_completed: 0,
+                    total_labs: 0,
+                    is_locked: false,
+                    estimated_hours: mod.estimated_hours || 2,
+                })) as ModuleWithProgress[]
             } catch (error) {
                 console.warn("Modules API error, using mock data:", error)
                 return MOCK_MODULES
