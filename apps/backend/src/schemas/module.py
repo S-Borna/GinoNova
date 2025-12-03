@@ -32,8 +32,8 @@ class ModuleBase(BaseModel):
     order_index: int = Field(
         default=1,
         ge=1,
-        le=20,
-        description="Module number/order (1-20)"
+        le=50,
+        description="Module number/order (1-50)"
     )
     difficulty: Literal["beginner", "intermediate", "advanced", "expert"] = Field(
         default="intermediate",
@@ -84,7 +84,7 @@ class ModuleCreate(BaseModel):
         max_length=500,
         description="Optional module description (max 500 characters)"
     )
-    order_index: int = Field(default=1, ge=1, le=20)
+    order_index: int = Field(default=1, ge=1, le=50)
     difficulty: Literal["beginner", "intermediate", "advanced", "expert"] = "intermediate"
     estimated_hours: float = Field(default=10.0, ge=1.0, le=50.0)
     prerequisites: list[str] = Field(default_factory=list)
@@ -121,7 +121,7 @@ class ModuleUpdate(BaseModel):
         max_length=500,
         description="Optional module description (max 500 characters)"
     )
-    order_index: Optional[int] = Field(None, ge=1, le=20)
+    order_index: Optional[int] = Field(None, ge=1, le=50)
     difficulty: Optional[Literal["beginner", "intermediate", "advanced", "expert"]] = None
     estimated_hours: Optional[float] = Field(None, ge=1.0, le=50.0)
     prerequisites: Optional[list[str]] = None

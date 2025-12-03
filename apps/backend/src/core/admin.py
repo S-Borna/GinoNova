@@ -12,6 +12,7 @@ from ..schemas.user import UserPublic
 # Admin emails - in production, use database roles
 ADMIN_EMAILS = [
     "said.ebadi@hotmail.com",
+    "admin@devopshub.se",
 ]
 
 
