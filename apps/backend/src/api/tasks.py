@@ -2,11 +2,12 @@
 Tasks Router - API endpoints for task management
 Phase 3.0: Tasks Foundation
 Phase v4.0: Added related tasks (fördjupning) endpoint
+Phase v4.1: Added module_id query parameter support
 """
 from uuid import UUID
-from typing import List
+from typing import List, Optional
 
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, Query
 
 from ..schemas.task import TaskCreate, TaskUpdate, TaskPublic, TaskWithRelated
 from ..services.task_service import task_service
@@ -14,7 +15,7 @@ from ..services.task_service import task_service
 tasks_router = APIRouter()
 
 # Phase version header
-PHASE_VERSION = "4.0"
+PHASE_VERSION = "4.1"
 
 
 def add_phase_header(response: Response) -> None:
@@ -34,13 +35,22 @@ def tasks_status(response: Response):
 
 
 @tasks_router.get("/", response_model=list[TaskPublic])
-def list_tasks(response: Response):
+def list_tasks(
+    response: Response,
+    module_id: Optional[UUID] = Query(None, description="Filter tasks by module UUID"),
+):
     """
-    List all tasks.
+    List tasks, optionally filtered by module.
 
-    Returns list of all tasks in the system.
+    Args:
+        module_id: Optional UUID to filter tasks by module
+
+    Returns:
+        List of all tasks, or tasks for the specified module
     """
     add_phase_header(response)
+    if module_id:
+        return task_service.list_tasks_for_module(module_id)
     return task_service.list_tasks()
 
 
