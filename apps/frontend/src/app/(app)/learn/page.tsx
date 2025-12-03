@@ -263,7 +263,7 @@ export default function LearnPage() {
             {/* Path Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
                 <PathCard
-                    title="Bootcamp v3.0"
+                    title="Camp DevOps"
                     subtitle="Strukturerad inlärning"
                     description="En komplett, guidad resa genom DevOps. Perfekt för nybörjare som vill ha en tydlig väg från start till mål. 4 specialiserade tracks, 15 moduler, 384 praktiska tasks."
                     emoji="🎓"
