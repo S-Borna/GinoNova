@@ -17,6 +17,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { getModules, ModulePublic } from "@/lib/modules"
 import { getTasksForModule, TaskPublic } from "@/lib/tasks"
@@ -26,7 +27,7 @@ import { usePlatform, LINUX_DISTROS } from "@/hooks/useOperatingSystem"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
-import { PlatformSelector, PlatformBadge } from "@/components/onboarding"
+import { PlatformBadge } from "@/components/onboarding"
 import { BookOpen, Trophy, RefreshCw, AlertCircle, Settings2, Sparkles } from "lucide-react"
 
 // @saas/ui Design System
@@ -509,13 +510,13 @@ function Header({
    ============================================================================ */
 
 export default function ModulesPage() {
+    const router = useRouter()
     const { user } = useAuth()
     const { hasSelected, isLoading: platformLoading, os, distro } = usePlatform()
     const [modules, setModules] = useState<EnhancedModule[]>([])
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const [showModules, setShowModules] = useState(false)
 
     const fetchModules = async (isRefresh = false) => {
         if (isRefresh) {
@@ -626,35 +627,19 @@ export default function ModulesPage() {
     const overallProgress =
         totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0
 
-    // Handle platform selection complete - trigger wave animation
-    const handlePlatformComplete = () => {
-        console.log("[Modules] Platform complete, showing modules")
-        setShowModules(true)
-    }
-
-    // Show modules immediately if platform already selected
+    // Redirect to /learn if OS not selected
     useEffect(() => {
-        if (hasSelected && !platformLoading) {
-            setShowModules(true)
+        if (!platformLoading && !hasSelected) {
+            console.log("[Modules] No OS selected, redirecting to /learn")
+            router.push("/learn")
         }
-    }, [hasSelected, platformLoading])
+    }, [platformLoading, hasSelected, router])
 
-    // Platform selection loading
-    if (platformLoading) {
+    // Platform selection loading or redirecting
+    if (platformLoading || !hasSelected) {
         return (
             <PageLayout maxWidth="wide" background="gray">
                 <PageSkeleton />
-            </PageLayout>
-        )
-    }
-
-    // Show platform selector if not yet selected AND not showing modules
-    if (!showModules && !hasSelected) {
-        return (
-            <PageLayout maxWidth="wide" background="gray">
-                <div className="min-h-[70vh] flex items-center justify-center py-12">
-                    <PlatformSelector onComplete={handlePlatformComplete} />
-                </div>
             </PageLayout>
         )
     }
@@ -686,13 +671,12 @@ export default function ModulesPage() {
     return (
         <PageLayout maxWidth="wide" background="gray">
             <AnimatePresence>
-                {showModules && (
-                    <motion.div
-                        className="space-y-8"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                    >
+                <motion.div
+                    className="space-y-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                >
                         {/* Header */}
                         <Section spacing="none">
                             <motion.div
@@ -742,8 +726,7 @@ export default function ModulesPage() {
                                 ))}
                             </div>
                         </Section>
-                    </motion.div>
-                )}
+                </motion.div>
             </AnimatePresence>
         </PageLayout>
     )

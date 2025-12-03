@@ -15,10 +15,10 @@
  */
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { PageLayout, Section } from "@saas/ui"
 import { usePlatform } from "@/hooks/useOperatingSystem"
-import { PlatformSelector } from "@/components/onboarding"
 import { SkillsMapSelector, SkillsMapCardProps } from "@/components/skillsmaps"
 import { RefreshCw, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -341,12 +341,11 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
    ============================================================================ */
 
 export default function SkillsMapsPage() {
+    const router = useRouter()
     const { hasSelected, isLoading: platformLoading } = usePlatform()
     const [skillsmaps, setSkillsmaps] = useState<SkillsMapCardProps[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    // Track if user explicitly completed the platform selection
-    const [platformComplete, setPlatformComplete] = useState(false)
 
     const fetchSkillsMaps = async () => {
         setLoading(true)
@@ -368,44 +367,19 @@ export default function SkillsMapsPage() {
         fetchSkillsMaps()
     }, [])
 
-    // If platform was already selected on page load, mark as complete
+    // Redirect to /learn if OS not selected
     useEffect(() => {
-        if (!platformLoading && hasSelected) {
-            setPlatformComplete(true)
+        if (!platformLoading && !hasSelected) {
+            console.log("[SkillsMaps] No OS selected, redirecting to /learn")
+            router.push("/learn")
         }
-    }, [hasSelected, platformLoading])
+    }, [platformLoading, hasSelected, router])
 
-    // Handle platform selection complete
-    const handlePlatformComplete = () => {
-        console.log("[SkillsMaps] Platform selection complete, showing content")
-        setPlatformComplete(true)
-    }
-
-    // Determine if we should show SkillsMaps content
-    // hasSelected is from localStorage (persisted), platformComplete is from user action this session
-    const shouldShowContent = platformComplete || hasSelected
-
-    // Debug logging
-    useEffect(() => {
-        console.log("[SkillsMaps] State:", { platformLoading, hasSelected, platformComplete, shouldShowContent })
-    }, [platformLoading, hasSelected, platformComplete, shouldShowContent])
-
-    // Platform loading
-    if (platformLoading) {
+    // Platform loading or redirecting
+    if (platformLoading || !hasSelected) {
         return (
             <PageLayout maxWidth="wide" background="gray">
                 <PageSkeleton />
-            </PageLayout>
-        )
-    }
-
-    // Show platform selector if not yet completed
-    if (!shouldShowContent) {
-        return (
-            <PageLayout maxWidth="wide" background="gray">
-                <div className="min-h-[70vh] flex items-center justify-center py-12">
-                    <PlatformSelector onComplete={handlePlatformComplete} />
-                </div>
             </PageLayout>
         )
     }
