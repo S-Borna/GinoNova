@@ -97,8 +97,8 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     const isTablet = useMediaQuery("(min-width: 768px)")
     const isMobile = !isTablet
 
-    // Only show RightSidebar on task pages (modules/[id]/tasks/[taskId])
-    const showRightSidebar = isDesktop && pathname?.includes("/modules/") && pathname?.includes("/tasks/")
+    // Show RightSidebar on ALL module pages (both listing and individual tasks)
+    const showRightSidebar = isDesktop && pathname?.includes("/modules/")
 
     // Redirect to login if not authenticated
     React.useEffect(() => {
@@ -154,7 +154,7 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                 </main>
             </div>
 
-            {/* Right Sidebar - Bookmarks & Reminders (only on task pages) */}
+            {/* Right Sidebar - Bookmarks (on all module pages) */}
             {showRightSidebar && (
                 <aside className={cn(
                     "fixed right-0 top-0 z-30 h-screen w-[280px]",
