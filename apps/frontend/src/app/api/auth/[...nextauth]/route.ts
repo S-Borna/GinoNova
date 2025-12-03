@@ -16,7 +16,8 @@ import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from "next-auth/providers/github"
 import DiscordProvider from "next-auth/providers/discord"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// Use server-side env var (without NEXT_PUBLIC_ prefix works on server)
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "https://saas-project-production-31f8.up.railway.app"
 
 // Only include providers that have valid credentials
 const providers: Provider[] = []
@@ -51,11 +52,11 @@ if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
 const authOptions: NextAuthOptions = {
     providers,
     callbacks: {
-        async signIn({ user, account, profile }) {
+        async signIn({ user, account }) {
             // Allow sign in and handle user creation in jwt callback
             return true
         },
-        async jwt({ token, user, account, profile }) {
+        async jwt({ token, user, account }) {
             // On initial sign in, register/login with backend
             if (account && user) {
                 try {
@@ -101,6 +102,13 @@ const authOptions: NextAuthOptions = {
                 }
             }
             return session
+        },
+        async redirect({ url, baseUrl }) {
+            // After sign in, redirect to dashboard
+            if (url.startsWith(baseUrl)) {
+                return `${baseUrl}/dashboard`
+            }
+            return baseUrl + "/dashboard"
         },
     },
     pages: {
