@@ -107,7 +107,7 @@ export function Navbar() {
                                 <Terminal className="w-5 h-5 text-white" />
                             </div>
                             <span className="text-lg font-bold text-white">
-                                My DOE Hub
+                                Said&apos;s DevOps Hub
                             </span>
                         </Link>
 
@@ -230,7 +230,7 @@ export function Navbar() {
                                             <Terminal className="w-5 h-5 text-white" />
                                         </div>
                                         <span className="text-lg font-bold text-white">
-                                            My DOE Hub
+                                            Said&apos;s DevOps Hub
                                         </span>
                                     </Link>
                                     <button

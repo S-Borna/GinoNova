@@ -1,10 +1,13 @@
 """
 Auth Router - Authentication endpoints
 Phase 1.4: Register, Login with JWT, standardized errors, rate-limit placeholders
+Phase OAuth: Google, GitHub, Discord OAuth support
 """
 from fastapi import APIRouter, HTTPException, status
+from uuid import uuid4
+from datetime import datetime
 
-from ..schemas.user import UserCreate, UserLogin, UserPublic, TokenResponse
+from ..schemas.user import UserCreate, UserLogin, UserPublic, TokenResponse, OAuthRequest, OAuthTokenResponse
 from ..services.user_service import user_service
 from ..core.jwt import create_access_token
 from ..core.deps import CurrentUser
@@ -195,3 +198,156 @@ def dev_reset_password(data: DevPasswordReset):
         raise HTTPException(status_code=500, detail="Failed to update password")
 
     return {"success": True, "message": f"Password reset for {data.email}"}
+
+
+# === OAUTH ENDPOINTS ===
+
+@auth_router.post("/oauth", response_model=OAuthTokenResponse)
+def oauth_login(oauth_data: OAuthRequest):
+    """
+    OAuth login/register endpoint.
+
+    Called by NextAuth.js after successful OAuth authentication.
+    Creates a new user if email doesn't exist, or logs in existing user.
+
+    - **email**: User's email from OAuth provider
+    - **name**: User's name from OAuth provider
+    - **provider**: OAuth provider (google, github, discord)
+    - **provider_id**: Unique ID from OAuth provider
+    - **avatar**: Optional avatar URL
+
+    Returns JWT access token and user data.
+    """
+    from ..db import user_repository
+    from ..db.database import is_db_configured, get_db_context
+    from ..schemas.user import UserInDB
+
+    try:
+        # Check if user already exists
+        existing_user = user_repository.get_user_by_email(oauth_data.email)
+
+        if existing_user:
+            # User exists - update OAuth info if needed and return token
+            if is_db_configured():
+                from ..db.models import User as UserModel
+                with get_db_context() as db:
+                    user = db.query(UserModel).filter(UserModel.email == oauth_data.email.lower().strip()).first()
+                    if user:
+                        # Update OAuth provider info if not set
+                        if not user.oauth_provider:
+                            user.oauth_provider = oauth_data.provider
+                            user.oauth_provider_id = oauth_data.provider_id
+                        # Update avatar if provided and not already set
+                        if oauth_data.avatar and not user.avatar_url:
+                            user.avatar_url = oauth_data.avatar
+                        db.flush()
+                        db.refresh(user)
+
+            access_token = create_access_token(
+                user_id=existing_user.id,
+                email=existing_user.email,
+                role="admin" if existing_user.is_admin else "user"
+            )
+
+            return OAuthTokenResponse(
+                access_token=access_token,
+                token_type="bearer",
+                user=UserPublic(
+                    id=existing_user.id,
+                    email=existing_user.email,
+                    full_name=existing_user.full_name,
+                    is_active=existing_user.is_active,
+                    is_admin=existing_user.is_admin,
+                    created_at=existing_user.created_at,
+                    updated_at=existing_user.updated_at,
+                )
+            )
+
+        # Create new OAuth user
+        now = datetime.utcnow()
+        new_user_id = uuid4()
+
+        if is_db_configured():
+            from ..db.models import User as UserModel
+            with get_db_context() as db:
+                db_user = UserModel(
+                    id=new_user_id,
+                    email=oauth_data.email.lower().strip(),
+                    hashed_password=None,  # No password for OAuth users
+                    full_name=oauth_data.name,
+                    oauth_provider=oauth_data.provider,
+                    oauth_provider_id=oauth_data.provider_id,
+                    avatar_url=oauth_data.avatar,
+                    is_active=True,
+                    is_admin=False,
+                    created_at=now,
+                    updated_at=now,
+                )
+                db.add(db_user)
+                db.flush()
+                db.refresh(db_user)
+
+                access_token = create_access_token(
+                    user_id=db_user.id,
+                    email=db_user.email,
+                    role="user"
+                )
+
+                return OAuthTokenResponse(
+                    access_token=access_token,
+                    token_type="bearer",
+                    user=UserPublic(
+                        id=db_user.id,
+                        email=db_user.email,
+                        full_name=db_user.full_name,
+                        is_active=db_user.is_active,
+                        is_admin=db_user.is_admin,
+                        created_at=db_user.created_at,
+                        updated_at=db_user.updated_at,
+                    )
+                )
+        else:
+            # Fallback for in-memory storage
+            new_user = UserInDB(
+                id=new_user_id,
+                email=oauth_data.email.lower().strip(),
+                password_hash="",  # Empty for OAuth users
+                full_name=oauth_data.name,
+                is_active=True,
+                is_admin=False,
+                created_at=now,
+                updated_at=now,
+            )
+
+            # Store in memory
+            from ..db.memory import USERS
+            USERS[new_user.email] = new_user
+
+            access_token = create_access_token(
+                user_id=new_user.id,
+                email=new_user.email,
+                role="user"
+            )
+
+            return OAuthTokenResponse(
+                access_token=access_token,
+                token_type="bearer",
+                user=UserPublic(
+                    id=new_user.id,
+                    email=new_user.email,
+                    full_name=new_user.full_name,
+                    is_active=new_user.is_active,
+                    is_admin=new_user.is_admin,
+                    created_at=new_user.created_at,
+                    updated_at=new_user.updated_at,
+                )
+            )
+
+    except Exception as e:
+        import traceback
+        print(f"OAuth error: {type(e).__name__}: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"OAuth authentication failed: {str(e)}"
+        )

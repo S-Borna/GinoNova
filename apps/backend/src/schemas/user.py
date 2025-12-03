@@ -96,7 +96,29 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
+class OAuthTokenResponse(BaseModel):
+    """Schema for OAuth token response with user data"""
+    access_token: str
+    token_type: str = "bearer"
+    user: UserPublic
+
+
 class AuthResponse(BaseModel):
     """Schema for auth response with user data"""
     user: UserPublic
     message: str
+
+
+class OAuthRequest(BaseModel):
+    """Schema for OAuth login/register request"""
+    email: EmailStr
+    name: Optional[str] = None
+    provider: str = Field(..., description="OAuth provider: google, github, discord")
+    provider_id: str = Field(..., description="Unique ID from OAuth provider")
+    avatar: Optional[str] = None
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, v: str) -> str:
+        """Normalize email to lowercase"""
+        return v.lower().strip()

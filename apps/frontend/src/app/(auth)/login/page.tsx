@@ -88,15 +88,15 @@ export default function LoginPage() {
                         <Terminal className="w-5 h-5 text-white" />
                     </div>
                     <span className="text-xl font-bold text-neutral-900 dark:text-white">
-                        My DOE Hub
+                        Said&apos;s DevOps Hub
                     </span>
                 </div>
 
                 <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white">
                     Welcome back
                 </h1>
-                <p className="mt-2 text-neutral-600 dark:text-neutral-400">
-                    Sign in to continue your learning journey
+                <p className="mt-3 text-base italic text-neutral-500 dark:text-neutral-400 font-light tracking-wide border-l-2 border-primary-500/50 pl-4">
+                    &ldquo;You take the blue pill, the story ends. You take the red pill, you stay in DevOps Wonderland.&rdquo;
                 </p>
             </div>
 

@@ -96,7 +96,7 @@ export function Footer() {
                                 <Terminal className="w-5 h-5 text-white" />
                             </div>
                             <span className="text-xl font-bold text-white">
-                                My DOE Hub
+                                Said&apos;s DevOps Hub
                             </span>
                         </Link>
 
