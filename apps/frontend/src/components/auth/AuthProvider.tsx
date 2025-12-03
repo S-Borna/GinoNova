@@ -3,6 +3,7 @@
 /**
  * AuthContext Provider
  * Phase 1.4: React context with error clearing on route change
+ * Phase OAuth: Integration with NextAuth for social login
  */
 
 import {
@@ -14,6 +15,7 @@ import {
     ReactNode,
 } from "react"
 import { usePathname } from "next/navigation"
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react"
 import {
     UserPublic,
     login as authLogin,
@@ -21,6 +23,7 @@ import {
     getMe,
     logout as authLogout,
     getToken,
+    storeToken,
     normalizeEmail,
 } from "@/lib/auth"
 
@@ -47,14 +50,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [error, setError] = useState<string | null>(null)
     const pathname = usePathname()
 
+    // NextAuth session for OAuth
+    const { data: session, status: sessionStatus } = useSession()
+
     // Clear error on route change
     useEffect(() => {
         setError(null)
     }, [pathname])
 
-    // Load user on mount if token exists
+    // Handle OAuth session from NextAuth
     useEffect(() => {
-        const loadUser = async () => {
+        const handleOAuthSession = async () => {
+            if (sessionStatus === "loading") return
+
+            // If we have a NextAuth session with backend token, use it
+            if (session?.accessToken && session?.backendUser) {
+                storeToken(session.accessToken)
+                setUser({
+                    id: session.backendUser.id as unknown as `${string}-${string}-${string}-${string}-${string}`,
+                    email: session.backendUser.email,
+                    full_name: session.backendUser.full_name,
+                    is_active: true,
+                    is_admin: session.backendUser.is_admin,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                } as UserPublic)
+                setLoading(false)
+                return
+            }
+
+            // Otherwise, check for existing JWT token
             const token = getToken()
             if (!token) {
                 setLoading(false)
@@ -72,8 +97,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             }
         }
 
-        loadUser()
-    }, [])
+        handleOAuthSession()
+    }, [session, sessionStatus])
 
     const clearError = useCallback(() => {
         setError(null)
@@ -128,11 +153,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         []
     )
 
-    const logout = useCallback(() => {
+    const logout = useCallback(async () => {
+        // Clear local auth
         authLogout()
         setUser(null)
         setError(null)
-    }, [])
+
+        // Also sign out of NextAuth if using OAuth
+        if (session) {
+            await nextAuthSignOut({ redirect: false })
+        }
+    }, [session])
 
     return (
         <AuthContext.Provider

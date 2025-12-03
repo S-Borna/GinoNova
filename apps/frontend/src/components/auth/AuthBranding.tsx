@@ -127,7 +127,7 @@ export function AuthBranding({ className }: AuthBrandingProps) {
                     <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
                         <Terminal className="w-6 h-6" />
                     </div>
-                    <span className="text-2xl font-bold">My DOE Hub</span>
+                    <span className="text-2xl font-bold">Said&apos;s DevOps Hub</span>
                 </motion.div>
             </div>
 
