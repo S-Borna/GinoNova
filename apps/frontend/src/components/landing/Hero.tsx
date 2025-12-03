@@ -437,7 +437,7 @@ export function Hero() {
                     {/* AI Intelligence badge */}
                     <div className="flex items-center justify-center gap-2 mb-4">
                         <motion.div
-                            animate={{ 
+                            animate={{
                                 boxShadow: [
                                     "0 0 20px rgba(99,102,241,0.5)",
                                     "0 0 40px rgba(139,92,246,0.7)",

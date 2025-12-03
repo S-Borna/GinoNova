@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from uuid import UUID
 import math
 
-from ..db.module_repository import create_module, clear_modules, list_modules
+from ..db.module_repository import create_module, clear_modules, list_modules, get_module_by_slug
 from ..db.task_repository import create_task, clear_tasks, list_tasks
 from ..db.track_repository import create_track, clear_tracks, list_tracks, get_track_by_slug
 from ..db.lab_repository import create_lab, clear_labs, list_labs
@@ -26,6 +26,11 @@ from ..db.seeds.bootcamp_v3_data import (
     get_tracks,
     get_modules,
     get_bootcamp_summary,
+)
+from ..db.seeds.modules_v3 import (
+    get_all_modules as get_v3_modules,
+    get_module_count as get_v3_module_count,
+    get_total_tasks as get_v3_total_tasks,
 )
 from ..schemas.module import ModuleCreate
 from ..schemas.task import TaskCreate
@@ -747,6 +752,139 @@ def seed_bootcamp_v4(
             status_code=500,
             detail=f"Failed to seed v4 content: {str(e)}"
         )
+
+
+class SeedSkillsmapsResponse(BaseModel):
+    """Response for skillsmaps seeding"""
+    success: bool
+    message: str
+    tracks_created: int = 0
+    modules_created: int = 0
+    tasks_created: int = 0
+    total_hours: float = 0
+
+
+@admin_router.post("/seed-skillsmaps", response_model=SeedSkillsmapsResponse)
+def seed_skillsmaps_v3(
+    response: Response,
+    current_user: CurrentUser,
+    add_track: bool = True,
+) -> SeedSkillsmapsResponse:
+    """
+    Seed all converted Skillsmaps modules (v3 format).
+
+    This adds 14 modules with 438 tasks covering:
+    - AWS, Terraform (Cloud & Infrastructure)
+    - Docker, Kubernetes (Containers & Orchestration)
+    - Linux, Bash, Git, Python (Foundation)
+    - CI/CD (Platform Engineering)
+    - Go, JavaScript, TypeScript, Node.js, MLOps (Advanced Specialty)
+
+    Args:
+        add_track: If True, creates "Advanced Specialty" track for new modules
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    try:
+        # Get existing tracks
+        existing_tracks = {t.slug: t.id for t in list_tracks()}
+        track_id_map = dict(existing_tracks)
+        tracks_created = 0
+
+        # Add Advanced Specialty track if needed
+        if add_track and "advanced-specialty" not in existing_tracks:
+            new_track = create_track(TrackCreate(
+                name="Advanced Specialty",
+                slug="advanced-specialty",
+                description="Specialized skills for senior DevOps engineers: Go, MLOps, System Design, and more",
+                color="#10b981",  # Emerald
+                icon="🎯",
+                order_index=5,
+            ))
+            track_id_map["advanced-specialty"] = new_track.id
+            tracks_created += 1
+
+        # Seed all v3 modules
+        modules_created = 0
+        tasks_created = 0
+        total_hours = 0
+
+        for module_data in get_v3_modules():
+            # Get track ID (use advanced-specialty as fallback)
+            track_slug = module_data.get("track_slug", "advanced-specialty")
+            track_id = track_id_map.get(track_slug) or track_id_map.get("advanced-specialty")
+
+            # Check if module already exists
+            existing = get_module_by_slug(module_data["slug"])
+            if existing:
+                continue  # Skip existing modules
+
+            # Create module
+            module = create_module(ModuleCreate(
+                track_id=track_id,
+                name=module_data["name"],
+                slug=module_data["slug"],
+                description=module_data.get("description", ""),
+                order_index=module_data.get("order_index", 100 + modules_created),
+                difficulty=module_data.get("difficulty", "intermediate"),
+                estimated_hours=module_data.get("estimated_hours", 10.0),
+                prerequisites=module_data.get("prerequisites", []),
+            ))
+            modules_created += 1
+            total_hours += module_data.get("estimated_hours", 10.0)
+
+            # Create tasks for this module
+            for idx, task_data in enumerate(module_data.get("tasks", [])):
+                create_task(TaskCreate(
+                    module_id=module.id,
+                    title=task_data["title"],
+                    description=task_data.get("description"),
+                    content=task_data.get("content", ""),
+                    order_index=idx + 1,
+                    difficulty=task_data.get("difficulty", "medium"),
+                    estimated_minutes=task_data.get("estimated_minutes", 30),
+                    xp_reward=task_data.get("xp_reward", 50),
+                ))
+                tasks_created += 1
+
+        return SeedSkillsmapsResponse(
+            success=True,
+            message=f"Seeded {modules_created} modules with {tasks_created} tasks",
+            tracks_created=tracks_created,
+            modules_created=modules_created,
+            tasks_created=tasks_created,
+            total_hours=total_hours,
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to seed skillsmaps: {str(e)}"
+        )
+
+
+@admin_router.get("/skillsmaps-status")
+def get_skillsmaps_status(response: Response) -> dict:
+    """
+    Get status of available skillsmaps modules.
+    """
+    add_phase_header(response)
+
+    return {
+        "available_modules": get_v3_module_count(),
+        "available_tasks": get_v3_total_tasks(),
+        "modules": [
+            {
+                "name": m["name"],
+                "slug": m["slug"],
+                "tasks": len(m["tasks"]),
+                "track": m["track_slug"],
+                "hours": m.get("estimated_hours", 10),
+            }
+            for m in get_v3_modules()
+        ]
+    }
 
 
 @admin_router.get("/seed-status", response_model=SeedStatusResponse)
