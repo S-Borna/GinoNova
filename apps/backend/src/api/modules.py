@@ -42,6 +42,24 @@ def list_modules(response: Response):
     return module_service.list_modules()
 
 
+@modules_router.get("/slug/{slug}", response_model=ModulePublic)
+def get_module_by_slug(slug: str, response: Response):
+    """
+    Get a specific module by slug.
+
+    Args:
+        slug: Slug of the module to retrieve (e.g., 'linux-mastery')
+
+    Returns:
+        ModulePublic object
+
+    Raises:
+        404: If module not found
+    """
+    add_phase_header(response)
+    return module_service.get_module_by_slug(slug)
+
+
 @modules_router.get("/{module_id}", response_model=ModulePublic)
 def get_module(module_id: UUID, response: Response):
     """

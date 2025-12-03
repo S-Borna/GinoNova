@@ -142,11 +142,17 @@ export async function getTasks(): Promise<ApiResult<TaskPublic[]>> {
 }
 
 /**
- * Get all tasks for a specific module
+ * Get all tasks for a specific module (supports UUID or slug)
  */
-export async function getTasksForModule(moduleId: string): Promise<ApiResult<TaskPublic[]>> {
+export async function getTasksForModule(moduleIdOrSlug: string): Promise<ApiResult<TaskPublic[]>> {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/tasks/module/${moduleId}`, {
+        // Determine if it's a UUID or a slug
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(moduleIdOrSlug)
+        const endpoint = isUUID
+            ? `${API_BASE_URL}/api/tasks/module/${moduleIdOrSlug}`
+            : `${API_BASE_URL}/api/tasks/module/slug/${moduleIdOrSlug}`
+
+        const res = await fetch(endpoint, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

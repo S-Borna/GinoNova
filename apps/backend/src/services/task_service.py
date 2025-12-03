@@ -108,6 +108,29 @@ class TaskService:
             for t in sorted(tasks, key=lambda x: x.order_index)
         ]
 
+    def list_tasks_for_module_slug(self, module_slug: str) -> list[TaskPublic]:
+        """
+        List all tasks for a module identified by slug.
+
+        Args:
+            module_slug: The slug of the module (e.g., 'linux-mastery')
+
+        Returns:
+            List of TaskPublic objects
+
+        Raises:
+            HTTPException 404: If module not found
+        """
+        module = module_repository.get_module_by_slug(module_slug)
+        if not module:
+            raise_not_found(f"Module with slug '{module_slug}' not found")
+
+        tasks = task_repository.list_tasks_by_module(module.id)
+        return [
+            self._to_task_public(t)
+            for t in sorted(tasks, key=lambda x: x.order_index)
+        ]
+
     def create_task(self, data: TaskCreate) -> TaskPublic:
         """
         Create a new task.

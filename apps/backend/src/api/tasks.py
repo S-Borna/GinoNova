@@ -44,6 +44,24 @@ def list_tasks(response: Response):
     return task_service.list_tasks()
 
 
+@tasks_router.get("/module/slug/{module_slug}", response_model=list[TaskPublic])
+def list_tasks_by_module_slug(module_slug: str, response: Response):
+    """
+    List all tasks for a module identified by slug.
+
+    Args:
+        module_slug: Slug of the module (e.g., 'linux-mastery')
+
+    Returns:
+        List of TaskPublic objects belonging to the module
+
+    Raises:
+        404: If module not found
+    """
+    add_phase_header(response)
+    return task_service.list_tasks_for_module_slug(module_slug)
+
+
 @tasks_router.get("/module/{module_id}", response_model=list[TaskPublic])
 def list_tasks_by_module(module_id: UUID, response: Response):
     """

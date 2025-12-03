@@ -49,6 +49,38 @@ class ModuleService:
             updated_at=module.updated_at,
         )
 
+    def get_module_by_slug(self, slug: str) -> ModulePublic:
+        """
+        Get a module by its slug.
+
+        Args:
+            slug: The slug of the module to retrieve
+
+        Returns:
+            ModulePublic object
+
+        Raises:
+            HTTPException 404: If module not found
+        """
+        module = module_repository.get_module_by_slug(slug)
+        if not module:
+            raise_not_found(f"Module with slug '{slug}' not found")
+
+        return ModulePublic(
+            id=module.id,
+            name=module.name,
+            slug=getattr(module, 'slug', module.name.lower().replace(' ', '-')),
+            description=module.description,
+            order_index=getattr(module, 'order_index', 1),
+            difficulty=getattr(module, 'difficulty', 'intermediate'),
+            estimated_hours=getattr(module, 'estimated_hours', 10.0),
+            prerequisites=getattr(module, 'prerequisites', []),
+            is_active=module.is_active,
+            track_id=getattr(module, 'track_id', None),
+            created_at=module.created_at,
+            updated_at=module.updated_at,
+        )
+
     def list_modules(self) -> list[ModulePublic]:
         """
         List all modules.
