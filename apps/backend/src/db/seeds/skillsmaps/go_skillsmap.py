@@ -48,7 +48,7 @@ GO_NODE_01_INTRODUCTION = {
 
 Go powers modern DevOps infrastructure:
 - **Docker** — Container runtime
-- **Kubernetes** — Container orchestration  
+- **Kubernetes** — Container orchestration
 - **Terraform** — Infrastructure as Code
 - **Prometheus** — Monitoring
 - **Grafana Loki** — Log aggregation
@@ -186,22 +186,22 @@ func main() {
     var name string = "DevOps"
     var port int = 8080
     var enabled bool = true
-    
+
     // Type inference
     var message = "Hello"  // string inferred
-    
+
     // Short declaration (most common)
     host := "localhost"
     timeout := 30
-    
+
     // Multiple variables
     var x, y int = 10, 20
     a, b := "hello", "world"
-    
+
     // Constants
     const maxRetries = 3
     const apiVersion = "v1"
-    
+
     fmt.Printf("Server: %s:%d\\n", host, port)
 }
 ```
@@ -567,7 +567,7 @@ func readFile(path string) error {
         return err
     }
     defer f.Close()  // Runs at end
-    
+
     // Read file...
     return nil
 }
@@ -1158,10 +1158,10 @@ Concurrency is essential for:
 // Start a goroutine
 func main() {
     go sayHello()  // Runs concurrently
-    
+
     // Main continues
     fmt.Println("Main running")
-    
+
     // Wait (crude way)
     time.Sleep(time.Second)
 }
@@ -1197,9 +1197,9 @@ import "sync"
 
 func main() {
     var wg sync.WaitGroup
-    
+
     services := []string{"api", "web", "worker"}
-    
+
     for _, svc := range services {
         wg.Add(1)
         go func(name string) {
@@ -1207,7 +1207,7 @@ func main() {
             deploy(name)
         }(svc)
     }
-    
+
     wg.Wait()  // Wait for all
     fmt.Println("All deployed!")
 }
@@ -1226,7 +1226,7 @@ func deploy(name string) {
 // Process items concurrently
 func processAll(items []string) {
     var wg sync.WaitGroup
-    
+
     for _, item := range items {
         wg.Add(1)
         go func(i string) {
@@ -1234,7 +1234,7 @@ func processAll(items []string) {
             process(i)
         }(item)
     }
-    
+
     wg.Wait()
 }
 ```
@@ -1355,7 +1355,7 @@ ch <- 4  // Blocks! Buffer full
 ```go
 func main() {
     ch := make(chan string)
-    
+
     go func() {
         pods := []string{"pod-1", "pod-2", "pod-3"}
         for _, p := range pods {
@@ -1363,7 +1363,7 @@ func main() {
         }
         close(ch)  // Signal done
     }()
-    
+
     // Range receives until closed
     for pod := range ch {
         fmt.Println("Received:", pod)
@@ -1379,17 +1379,17 @@ func main() {
 func main() {
     ch1 := make(chan string)
     ch2 := make(chan string)
-    
+
     go func() {
         time.Sleep(time.Second)
         ch1 <- "one"
     }()
-    
+
     go func() {
         time.Sleep(2 * time.Second)
         ch2 <- "two"
     }()
-    
+
     // Wait for first result
     select {
     case msg := <-ch1:
@@ -1598,7 +1598,1509 @@ Create a project with:
 
 
 # ============================================================================
-# SKILLSMAP DEFINITION (Block 1 only)
+# BLOCK 11: TESTING (Node 11)
+# ============================================================================
+
+GO_NODE_11_TESTING = {
+    "id": "go-11-testing",
+    "title": "Testing",
+    "description": "Write tests with Go's built-in testing package",
+    "content": """
+# Testing
+
+> *"Go has testing built-in—no external frameworks needed."*
+
+---
+
+## 🎯 Why This Matters
+
+Tests ensure reliability:
+- Catch bugs early
+- Safe refactoring
+- Documentation through tests
+
+---
+
+## 💡 Basic Tests
+
+```go
+// math.go
+package math
+
+func Add(a, b int) int {
+    return a + b
+}
+
+// math_test.go
+package math
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+    result := Add(2, 3)
+    if result != 5 {
+        t.Errorf("Add(2,3) = %d; want 5", result)
+    }
+}
+```
+
+```bash
+go test ./...
+go test -v ./...
+go test -cover ./...
+```
+
+---
+
+## 🔧 Table-Driven Tests
+
+```go
+func TestAdd(t *testing.T) {
+    tests := []struct {
+        name     string
+        a, b     int
+        expected int
+    }{
+        {"positive", 2, 3, 5},
+        {"negative", -1, -2, -3},
+        {"zero", 0, 0, 0},
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            got := Add(tt.a, tt.b)
+            if got != tt.expected {
+                t.Errorf("got %d, want %d", got, tt.expected)
+            }
+        })
+    }
+}
+```
+
+---
+
+## 🎯 Test Helpers
+
+```go
+func TestDeploy(t *testing.T) {
+    // Skip in short mode
+    if testing.Short() {
+        t.Skip("skipping integration test")
+    }
+
+    // Cleanup
+    t.Cleanup(func() {
+        cleanupResources()
+    })
+
+    // Parallel tests
+    t.Parallel()
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Use testify
+```go
+import "github.com/stretchr/testify/assert"
+
+func TestAdd(t *testing.T) {
+    assert.Equal(t, 5, Add(2, 3))
+}
+```
+
+### 2. Run Specific Test
+```bash
+go test -run TestAdd ./...
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+Write tests for a deploy function:
+1. Table-driven tests
+2. Test error cases
+3. Run with coverage
+
+---
+
+## 📚 Resources
+
+- [Go Testing](https://go.dev/doc/tutorial/add-a-test)
+""",
+    "xp_reward": 200,
+    "estimated_time": "35 minutes",
+    "difficulty": "intermediate",
+    "order_index": 11,
+    "tags": ["go", "testing", "unit-tests", "tdd"],
+}
+
+
+# ============================================================================
+# BLOCK 12: HTTP (Node 12)
+# ============================================================================
+
+GO_NODE_12_HTTP = {
+    "id": "go-12-http",
+    "title": "HTTP Servers & Clients",
+    "description": "Build HTTP APIs and clients in Go",
+    "content": """
+# HTTP Servers & Clients
+
+> *"Go's net/http is production-ready out of the box."*
+
+---
+
+## 🎯 Why This Matters
+
+HTTP is everywhere:
+- REST APIs
+- Health checks
+- Webhooks
+- Metrics endpoints
+
+---
+
+## 💡 HTTP Server
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "net/http"
+)
+
+func main() {
+    http.HandleFunc("/health", healthHandler)
+    http.HandleFunc("/api/pods", podsHandler)
+
+    http.ListenAndServe(":8080", nil)
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("OK"))
+}
+
+func podsHandler(w http.ResponseWriter, r *http.Request) {
+    pods := []string{"pod-1", "pod-2"}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(pods)
+}
+```
+
+---
+
+## 🔧 HTTP Client
+
+```go
+import (
+    "io"
+    "net/http"
+    "time"
+)
+
+// Create client with timeout
+client := &http.Client{
+    Timeout: 10 * time.Second,
+}
+
+// GET request
+resp, err := client.Get("http://api.example.com/pods")
+if err != nil {
+    log.Fatal(err)
+}
+defer resp.Body.Close()
+
+body, _ := io.ReadAll(resp.Body)
+fmt.Println(string(body))
+
+// POST request
+data := bytes.NewBuffer([]byte(`{"name":"nginx"}`))
+resp, err := client.Post(
+    "http://api.example.com/pods",
+    "application/json",
+    data,
+)
+```
+
+---
+
+## 🎯 Middleware
+
+```go
+func loggingMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        log.Printf("%s %s", r.Method, r.URL.Path)
+        next.ServeHTTP(w, r)
+    })
+}
+
+func main() {
+    mux := http.NewServeMux()
+    mux.HandleFunc("/api/", apiHandler)
+
+    handler := loggingMiddleware(mux)
+    http.ListenAndServe(":8080", handler)
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Always Set Timeouts
+```go
+server := &http.Server{
+    Addr:         ":8080",
+    ReadTimeout:  5 * time.Second,
+    WriteTimeout: 10 * time.Second,
+}
+```
+
+### 2. Graceful Shutdown
+```go
+go server.ListenAndServe()
+<-quit
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+defer cancel()
+server.Shutdown(ctx)
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+Build a simple API:
+1. /health endpoint
+2. /api/services GET
+3. /api/deploy POST
+
+---
+
+## 📚 Resources
+
+- [Go HTTP](https://pkg.go.dev/net/http)
+""",
+    "xp_reward": 200,
+    "estimated_time": "35 minutes",
+    "difficulty": "intermediate",
+    "order_index": 12,
+    "tags": ["go", "http", "api", "server"],
+}
+
+
+# ============================================================================
+# BLOCK 13: JSON (Node 13)
+# ============================================================================
+
+GO_NODE_13_JSON = {
+    "id": "go-13-json",
+    "title": "JSON & YAML",
+    "description": "Parse and generate JSON/YAML in Go",
+    "content": """
+# JSON & YAML
+
+> *"JSON tags on structs make serialization effortless."*
+
+---
+
+## 🎯 Why This Matters
+
+Config and API data:
+- Kubernetes manifests
+- API responses
+- Configuration files
+
+---
+
+## 💡 JSON Encoding
+
+```go
+import "encoding/json"
+
+type Pod struct {
+    Name      string `json:"name"`
+    Namespace string `json:"namespace"`
+    Replicas  int    `json:"replicas,omitempty"`
+}
+
+// Struct to JSON
+pod := Pod{Name: "nginx", Namespace: "default"}
+data, err := json.Marshal(pod)
+// {"name":"nginx","namespace":"default"}
+
+// Pretty print
+data, _ := json.MarshalIndent(pod, "", "  ")
+```
+
+---
+
+## 🔧 JSON Decoding
+
+```go
+jsonStr := `{"name":"nginx","namespace":"default"}`
+
+var pod Pod
+err := json.Unmarshal([]byte(jsonStr), &pod)
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(pod.Name)  // nginx
+
+// From reader
+decoder := json.NewDecoder(r.Body)
+err := decoder.Decode(&pod)
+```
+
+---
+
+## 🎯 YAML (with gopkg.in/yaml.v3)
+
+```go
+import "gopkg.in/yaml.v3"
+
+type Deployment struct {
+    APIVersion string `yaml:"apiVersion"`
+    Kind       string `yaml:"kind"`
+    Metadata   struct {
+        Name string `yaml:"name"`
+    } `yaml:"metadata"`
+}
+
+// Parse YAML
+yamlStr := `
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+`
+
+var dep Deployment
+yaml.Unmarshal([]byte(yamlStr), &dep)
+
+// Generate YAML
+data, _ := yaml.Marshal(dep)
+```
+
+---
+
+## 🔧 Dynamic JSON
+
+```go
+// Unknown structure
+var data map[string]interface{}
+json.Unmarshal(jsonBytes, &data)
+
+// Access dynamically
+name := data["name"].(string)
+
+// json.RawMessage for delayed parsing
+type Response struct {
+    Type string          `json:"type"`
+    Data json.RawMessage `json:"data"`
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Use omitempty
+```go
+type Config struct {
+    Host    string `json:"host"`
+    Port    int    `json:"port,omitempty"`
+    Timeout int    `json:"timeout,omitempty"`
+}
+```
+
+### 2. Custom Marshal
+```go
+func (t Time) MarshalJSON() ([]byte, error) {
+    return []byte(t.Format(`"2006-01-02"`)), nil
+}
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+1. Parse a K8s deployment YAML
+2. Modify replicas
+3. Output as JSON
+
+---
+
+## 📚 Resources
+
+- [Go JSON](https://go.dev/blog/json)
+""",
+    "xp_reward": 175,
+    "estimated_time": "30 minutes",
+    "difficulty": "intermediate",
+    "order_index": 13,
+    "tags": ["go", "json", "yaml", "serialization"],
+}
+
+
+# ============================================================================
+# BLOCK 14: CLI TOOLS (Node 14)
+# ============================================================================
+
+GO_NODE_14_CLI = {
+    "id": "go-14-cli",
+    "title": "CLI Tools",
+    "description": "Build command-line tools with Cobra",
+    "content": """
+# CLI Tools
+
+> *"kubectl, docker, terraform—all built with Go CLI frameworks."*
+
+---
+
+## 🎯 Why This Matters
+
+CLI tools are DevOps bread and butter:
+- Automation scripts
+- Developer tools
+- Admin utilities
+
+---
+
+## 💡 Basic CLI with Cobra
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/spf13/cobra"
+)
+
+var rootCmd = &cobra.Command{
+    Use:   "devops",
+    Short: "DevOps CLI tool",
+}
+
+var deployCmd = &cobra.Command{
+    Use:   "deploy [service]",
+    Short: "Deploy a service",
+    Args:  cobra.ExactArgs(1),
+    Run: func(cmd *cobra.Command, args []string) {
+        env, _ := cmd.Flags().GetString("env")
+        fmt.Printf("Deploying %s to %s\\n", args[0], env)
+    },
+}
+
+func init() {
+    deployCmd.Flags().StringP("env", "e", "dev", "Environment")
+    rootCmd.AddCommand(deployCmd)
+}
+
+func main() {
+    rootCmd.Execute()
+}
+```
+
+```bash
+./devops deploy api --env prod
+```
+
+---
+
+## 🔧 Subcommands
+
+```go
+// devops get pods
+// devops get services
+
+var getCmd = &cobra.Command{
+    Use:   "get",
+    Short: "Get resources",
+}
+
+var getPodsCmd = &cobra.Command{
+    Use:   "pods",
+    Short: "Get pods",
+    Run: func(cmd *cobra.Command, args []string) {
+        // List pods
+    },
+}
+
+func init() {
+    getCmd.AddCommand(getPodsCmd)
+    rootCmd.AddCommand(getCmd)
+}
+```
+
+---
+
+## 🎯 Flags & Config
+
+```go
+var cfgFile string
+
+func init() {
+    // Persistent flags (all commands)
+    rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file")
+
+    // Local flags (this command only)
+    deployCmd.Flags().IntP("replicas", "r", 1, "Number of replicas")
+
+    // Required flag
+    deployCmd.MarkFlagRequired("env")
+}
+```
+
+---
+
+## 🔧 Output Formatting
+
+```go
+import "github.com/olekukonko/tablewriter"
+
+func printTable(pods []Pod) {
+    table := tablewriter.NewWriter(os.Stdout)
+    table.SetHeader([]string{"Name", "Status", "Age"})
+
+    for _, p := range pods {
+        table.Append([]string{p.Name, p.Status, p.Age})
+    }
+
+    table.Render()
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Use Viper for Config
+```go
+import "github.com/spf13/viper"
+
+viper.SetConfigName("config")
+viper.AddConfigPath(".")
+viper.ReadInConfig()
+host := viper.GetString("host")
+```
+
+### 2. Add Completion
+```go
+rootCmd.AddCommand(completionCmd)
+// ./devops completion bash
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+Build a CLI with:
+1. deploy <service>
+2. status <service>
+3. logs <service> --tail
+
+---
+
+## 📚 Resources
+
+- [Cobra](https://github.com/spf13/cobra)
+""",
+    "xp_reward": 225,
+    "estimated_time": "40 minutes",
+    "difficulty": "intermediate",
+    "order_index": 14,
+    "tags": ["go", "cli", "cobra", "tools"],
+}
+
+
+# ============================================================================
+# BLOCK 15: FILES (Node 15)
+# ============================================================================
+
+GO_NODE_15_FILES = {
+    "id": "go-15-files",
+    "title": "File Operations",
+    "description": "Read, write, and manipulate files in Go",
+    "content": """
+# File Operations
+
+> *"Go makes file I/O simple and safe with defer."*
+
+---
+
+## 🎯 Why This Matters
+
+File operations are core to DevOps:
+- Config files
+- Log processing
+- Data transformation
+
+---
+
+## 💡 Reading Files
+
+```go
+import (
+    "os"
+    "io"
+    "bufio"
+)
+
+// Read entire file
+data, err := os.ReadFile("config.yaml")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(string(data))
+
+// Read line by line
+file, _ := os.Open("logs.txt")
+defer file.Close()
+
+scanner := bufio.NewScanner(file)
+for scanner.Scan() {
+    fmt.Println(scanner.Text())
+}
+```
+
+---
+
+## 🔧 Writing Files
+
+```go
+// Write entire file
+content := []byte("apiVersion: v1")
+err := os.WriteFile("output.yaml", content, 0644)
+
+// Write with file handle
+file, err := os.Create("output.txt")
+if err != nil {
+    log.Fatal(err)
+}
+defer file.Close()
+
+file.WriteString("Hello\\n")
+file.Write([]byte("World"))
+```
+
+---
+
+## 🎯 File Info & Directories
+
+```go
+// Check if exists
+if _, err := os.Stat("config.yaml"); os.IsNotExist(err) {
+    fmt.Println("File not found")
+}
+
+// Create directory
+os.MkdirAll("output/logs", 0755)
+
+// List directory
+entries, _ := os.ReadDir(".")
+for _, e := range entries {
+    fmt.Println(e.Name())
+}
+
+// Walk directory tree
+filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+    if !info.IsDir() && strings.HasSuffix(path, ".yaml") {
+        fmt.Println(path)
+    }
+    return nil
+})
+```
+
+---
+
+## 🔧 Temp Files
+
+```go
+// Create temp file
+tmpFile, err := os.CreateTemp("", "deploy-*.yaml")
+if err != nil {
+    log.Fatal(err)
+}
+defer os.Remove(tmpFile.Name())
+
+tmpFile.WriteString("content")
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Always Use defer
+```go
+f, err := os.Open(path)
+if err != nil {
+    return err
+}
+defer f.Close()  // Always runs
+```
+
+### 2. Check Errors
+```go
+if err := os.WriteFile(path, data, 0644); err != nil {
+    return fmt.Errorf("write %s: %w", path, err)
+}
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+1. Read all YAML files in a directory
+2. Modify a field
+3. Write to new files
+
+---
+
+## 📚 Resources
+
+- [Go os package](https://pkg.go.dev/os)
+""",
+    "xp_reward": 175,
+    "estimated_time": "30 minutes",
+    "difficulty": "intermediate",
+    "order_index": 15,
+    "tags": ["go", "files", "io", "filesystem"],
+}
+
+
+# ============================================================================
+# BLOCK 16: CONCURRENCY PATTERNS (Node 16)
+# ============================================================================
+
+GO_NODE_16_CONCURRENCY = {
+    "id": "go-16-concurrency-patterns",
+    "title": "Concurrency Patterns",
+    "description": "Master advanced concurrency patterns in Go",
+    "content": """
+# Concurrency Patterns
+
+> *"Worker pools, fan-out/fan-in—Go makes concurrency patterns elegant."*
+
+---
+
+## 🎯 Why This Matters
+
+Scale your tools:
+- Parallel deployments
+- Concurrent health checks
+- Batch processing
+
+---
+
+## 💡 Worker Pool
+
+```go
+func workerPool(jobs <-chan Job, results chan<- Result, workers int) {
+    var wg sync.WaitGroup
+    
+    for i := 0; i < workers; i++ {
+        wg.Add(1)
+        go func() {
+            defer wg.Done()
+            for job := range jobs {
+                results <- process(job)
+            }
+        }()
+    }
+    
+    wg.Wait()
+    close(results)
+}
+```
+
+---
+
+## 🔧 Fan-Out/Fan-In
+
+```go
+func fanOut(input <-chan int, n int) []<-chan int {
+    outputs := make([]<-chan int, n)
+    for i := 0; i < n; i++ {
+        outputs[i] = worker(input)
+    }
+    return outputs
+}
+
+func fanIn(inputs ...<-chan int) <-chan int {
+    out := make(chan int)
+    var wg sync.WaitGroup
+    
+    for _, in := range inputs {
+        wg.Add(1)
+        go func(ch <-chan int) {
+            defer wg.Done()
+            for v := range ch {
+                out <- v
+            }
+        }(in)
+    }
+    
+    go func() {
+        wg.Wait()
+        close(out)
+    }()
+    
+    return out
+}
+```
+
+---
+
+## 🎯 Rate Limiting
+
+```go
+func rateLimited(requests <-chan Request) {
+    limiter := time.NewTicker(100 * time.Millisecond)
+    defer limiter.Stop()
+    
+    for req := range requests {
+        <-limiter.C  // Wait for tick
+        go process(req)
+    }
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Use errgroup
+```go
+import "golang.org/x/sync/errgroup"
+
+g, ctx := errgroup.WithContext(ctx)
+for _, svc := range services {
+    svc := svc
+    g.Go(func() error {
+        return deploy(ctx, svc)
+    })
+}
+return g.Wait()
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+Create a parallel deployer:
+1. Worker pool for deployments
+2. Rate limiting
+3. Collect results
+
+---
+
+## 📚 Resources
+
+- [Go Concurrency Patterns](https://go.dev/blog/pipelines)
+""",
+    "xp_reward": 250,
+    "estimated_time": "45 minutes",
+    "difficulty": "advanced",
+    "order_index": 16,
+    "tags": ["go", "concurrency", "patterns", "goroutines"],
+}
+
+
+# ============================================================================
+# BLOCK 17: CONTEXT (Node 17)
+# ============================================================================
+
+GO_NODE_17_CONTEXT = {
+    "id": "go-17-context",
+    "title": "Context",
+    "description": "Manage timeouts and cancellation with context",
+    "content": """
+# Context
+
+> *"Context carries deadlines and cancellation signals across API boundaries."*
+
+---
+
+## 🎯 Why This Matters
+
+Context enables:
+- Timeout propagation
+- Request cancellation
+- Graceful shutdown
+
+---
+
+## 💡 Basic Context
+
+```go
+import "context"
+
+// With timeout
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+defer cancel()
+
+// With cancel
+ctx, cancel := context.WithCancel(context.Background())
+defer cancel()
+
+// Check if done
+select {
+case <-ctx.Done():
+    return ctx.Err()
+default:
+    // Continue work
+}
+```
+
+---
+
+## 🔧 Using Context
+
+```go
+func deploy(ctx context.Context, name string) error {
+    // Check if cancelled
+    if ctx.Err() != nil {
+        return ctx.Err()
+    }
+    
+    // Make HTTP request with context
+    req, _ := http.NewRequestWithContext(ctx, "POST", url, body)
+    resp, err := client.Do(req)
+    
+    // Long operation with context
+    for {
+        select {
+        case <-ctx.Done():
+            return ctx.Err()
+        default:
+            // Do work
+        }
+    }
+}
+```
+
+---
+
+## 🎯 Context Values
+
+```go
+// Define key type
+type ctxKey string
+const requestIDKey ctxKey = "requestID"
+
+// Set value
+ctx := context.WithValue(ctx, requestIDKey, "abc123")
+
+// Get value
+if id, ok := ctx.Value(requestIDKey).(string); ok {
+    log.Printf("Request ID: %s", id)
+}
+```
+
+---
+
+## 🔧 HTTP with Context
+
+```go
+func handler(w http.ResponseWriter, r *http.Request) {
+    ctx := r.Context()
+    
+    result, err := fetchData(ctx)
+    if err == context.Canceled {
+        return  // Client disconnected
+    }
+    if err == context.DeadlineExceeded {
+        http.Error(w, "Timeout", 504)
+        return
+    }
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Always Pass Context First
+```go
+func DoWork(ctx context.Context, args ...any) error
+```
+
+### 2. Don't Store in Structs
+```go
+// Pass through function calls instead
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+1. Create a deployer with timeout
+2. Cancel on SIGINT
+3. Propagate context to workers
+
+---
+
+## 📚 Resources
+
+- [Go Context](https://pkg.go.dev/context)
+""",
+    "xp_reward": 200,
+    "estimated_time": "35 minutes",
+    "difficulty": "intermediate",
+    "order_index": 17,
+    "tags": ["go", "context", "timeout", "cancellation"],
+}
+
+
+# ============================================================================
+# BLOCK 18: GO MODULES (Node 18)
+# ============================================================================
+
+GO_NODE_18_MODULES = {
+    "id": "go-18-modules",
+    "title": "Go Modules Deep Dive",
+    "description": "Master Go module management and dependency handling",
+    "content": """
+# Go Modules Deep Dive
+
+> *"go.mod is your project's DNA—manage it carefully."*
+
+---
+
+## 🎯 Why This Matters
+
+Professional Go projects need:
+- Reproducible builds
+- Version control
+- Dependency management
+
+---
+
+## 💡 go.mod Basics
+
+```go
+// go.mod
+module github.com/myorg/devops-tool
+
+go 1.21
+
+require (
+    github.com/spf13/cobra v1.7.0
+    github.com/spf13/viper v1.16.0
+    k8s.io/client-go v0.28.0
+)
+
+require (
+    // Indirect dependencies
+    github.com/inconshreveable/mousetrap v1.1.0 // indirect
+)
+```
+
+---
+
+## 🔧 Module Commands
+
+```bash
+# Initialize
+go mod init github.com/user/project
+
+# Add dependency
+go get github.com/spf13/cobra@latest
+go get github.com/spf13/cobra@v1.7.0
+
+# Update all
+go get -u ./...
+
+# Clean up
+go mod tidy
+
+# Download
+go mod download
+
+# Verify
+go mod verify
+
+# Why is this here?
+go mod why -m k8s.io/api
+```
+
+---
+
+## 🎯 Version Selection
+
+```bash
+# Get specific version
+go get github.com/pkg@v1.2.3
+
+# Get latest
+go get github.com/pkg@latest
+
+# Get from branch
+go get github.com/pkg@main
+
+# Get from commit
+go get github.com/pkg@abc123
+```
+
+---
+
+## 🔧 Vendoring
+
+```bash
+# Create vendor directory
+go mod vendor
+
+# Build with vendor
+go build -mod=vendor ./...
+
+# Verify vendor
+go mod verify
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Use go.sum
+```bash
+# Always commit go.sum
+git add go.mod go.sum
+```
+
+### 2. Replace for Local Dev
+```go
+// go.mod
+replace github.com/myorg/shared => ../shared
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+1. Create a new module
+2. Add 3 dependencies
+3. Create and test vendor
+
+---
+
+## 📚 Resources
+
+- [Go Modules Ref](https://go.dev/ref/mod)
+""",
+    "xp_reward": 175,
+    "estimated_time": "30 minutes",
+    "difficulty": "intermediate",
+    "order_index": 18,
+    "tags": ["go", "modules", "dependencies", "versioning"],
+}
+
+
+# ============================================================================
+# BLOCK 19: DEVOPS TOOLS (Node 19)
+# ============================================================================
+
+GO_NODE_19_DEVOPS = {
+    "id": "go-19-devops-tools",
+    "title": "Building DevOps Tools",
+    "description": "Create production-ready DevOps utilities in Go",
+    "content": """
+# Building DevOps Tools
+
+> *"Go is THE language for DevOps tooling. Docker, K8s, Terraform—all Go."*
+
+---
+
+## 🎯 Why This Matters
+
+Build tools like the pros:
+- Single binary distribution
+- Cross-platform
+- High performance
+
+---
+
+## 💡 K8s Client Example
+
+```go
+import (
+    "k8s.io/client-go/kubernetes"
+    "k8s.io/client-go/tools/clientcmd"
+)
+
+func main() {
+    config, err := clientcmd.BuildConfigFromFlags("", 
+        os.Getenv("HOME")+"/.kube/config")
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    client, err := kubernetes.NewForConfig(config)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    pods, err := client.CoreV1().Pods("default").
+        List(context.TODO(), metav1.ListOptions{})
+    
+    for _, pod := range pods.Items {
+        fmt.Printf("%s: %s\\n", pod.Name, pod.Status.Phase)
+    }
+}
+```
+
+---
+
+## 🔧 Docker Client
+
+```go
+import (
+    "github.com/docker/docker/client"
+    "github.com/docker/docker/api/types"
+)
+
+func listContainers() {
+    cli, _ := client.NewClientWithOpts(client.FromEnv)
+    
+    containers, _ := cli.ContainerList(
+        context.Background(),
+        types.ContainerListOptions{},
+    )
+    
+    for _, c := range containers {
+        fmt.Printf("%s: %s\\n", c.Names[0], c.State)
+    }
+}
+```
+
+---
+
+## 🎯 Health Check Service
+
+```go
+type HealthChecker struct {
+    targets []string
+    client  *http.Client
+}
+
+func (h *HealthChecker) CheckAll(ctx context.Context) []Result {
+    results := make(chan Result, len(h.targets))
+    var wg sync.WaitGroup
+    
+    for _, target := range h.targets {
+        wg.Add(1)
+        go func(url string) {
+            defer wg.Done()
+            results <- h.check(ctx, url)
+        }(target)
+    }
+    
+    wg.Wait()
+    close(results)
+    
+    var all []Result
+    for r := range results {
+        all = append(all, r)
+    }
+    return all
+}
+```
+
+---
+
+## 🔥 Pro Tips
+
+### 1. Cross-Compile
+```bash
+GOOS=linux GOARCH=amd64 go build -o tool-linux
+GOOS=darwin GOARCH=arm64 go build -o tool-mac
+```
+
+### 2. Embed Version
+```bash
+go build -ldflags "-X main.version=1.0.0"
+```
+
+---
+
+## 🛠️ Hands-on Exercise
+
+Build a health checker:
+1. Check multiple URLs
+2. Concurrent checks
+3. JSON output
+
+---
+
+## 📚 Resources
+
+- [client-go](https://github.com/kubernetes/client-go)
+""",
+    "xp_reward": 250,
+    "estimated_time": "45 minutes",
+    "difficulty": "advanced",
+    "order_index": 19,
+    "tags": ["go", "devops", "kubernetes", "docker"],
+}
+
+
+# ============================================================================
+# BLOCK 20: CAPSTONE (Node 20)
+# ============================================================================
+
+GO_NODE_20_CAPSTONE = {
+    "id": "go-20-capstone",
+    "title": "Go DevOps Capstone",
+    "description": "Build a complete DevOps automation tool in Go",
+    "content": """
+# Go DevOps Capstone
+
+> *"Combine everything you've learned into a production-ready tool."*
+
+---
+
+## 🎯 Project Overview
+
+Build **DevOps Commander** - a CLI tool that:
+- Deploys services to Kubernetes
+- Monitors health endpoints
+- Manages configuration
+
+---
+
+## 💡 Project Structure
+
+```
+devops-cmd/
+├── cmd/
+│   └── root.go
+│   └── deploy.go
+│   └── status.go
+├── internal/
+│   ├── k8s/
+│   │   └── client.go
+│   ├── health/
+│   │   └── checker.go
+│   └── config/
+│       └── loader.go
+├── pkg/
+│   └── types/
+│       └── types.go
+├── main.go
+├── go.mod
+└── Makefile
+```
+
+---
+
+## 🔧 Core Implementation
+
+```go
+// cmd/deploy.go
+var deployCmd = &cobra.Command{
+    Use:   "deploy [service]",
+    Short: "Deploy a service",
+    RunE: func(cmd *cobra.Command, args []string) error {
+        ctx, cancel := context.WithTimeout(
+            context.Background(), 
+            timeout,
+        )
+        defer cancel()
+        
+        client, err := k8s.NewClient(kubeconfig)
+        if err != nil {
+            return err
+        }
+        
+        return client.Deploy(ctx, &types.DeployRequest{
+            Service:   args[0],
+            Namespace: namespace,
+            Replicas:  replicas,
+            Image:     image,
+        })
+    },
+}
+```
+
+---
+
+## 🎯 Requirements
+
+### 1. CLI Commands
+- `deploy <service>` - Deploy with options
+- `status [service]` - Show status
+- `health` - Check all endpoints
+
+### 2. Features
+- Context with timeout
+- Graceful shutdown (SIGINT)
+- JSON/table output formats
+- Config file support
+
+### 3. Code Quality
+- Unit tests (80%+ coverage)
+- Error handling
+- Logging with levels
+
+---
+
+## 🔧 Makefile
+
+```makefile
+.PHONY: build test lint
+
+build:
+	go build -ldflags "-X main.version=$(VERSION)" -o bin/devops-cmd
+
+test:
+	go test -v -cover ./...
+
+lint:
+	golangci-lint run
+
+release:
+	GOOS=linux GOARCH=amd64 go build -o bin/devops-cmd-linux
+	GOOS=darwin GOARCH=arm64 go build -o bin/devops-cmd-darwin
+```
+
+---
+
+## 🔥 Success Criteria
+
+- [ ] All commands work
+- [ ] Tests pass with 80%+ coverage
+- [ ] Cross-compiles successfully
+- [ ] Config file support
+- [ ] Graceful shutdown
+
+---
+
+## 🏆 Congratulations!
+
+You've mastered Go for DevOps:
+- Concurrency patterns
+- CLI development
+- K8s/Docker integration
+- Professional project structure
+
+**You're ready to build production tools!**
+""",
+    "xp_reward": 300,
+    "estimated_time": "90 minutes",
+    "difficulty": "advanced",
+    "order_index": 20,
+    "tags": ["go", "capstone", "project", "devops"],
+}
+
+
+# ============================================================================
+# SKILLSMAP DEFINITION (Complete - All 20 Blocks)
+# ============================================================================
 # ============================================================================
 
 def get_go_skillsmap() -> dict[str, Any]:
@@ -1625,7 +3127,16 @@ def get_go_skillsmap() -> dict[str, Any]:
             GO_NODE_08_GOROUTINES,
             GO_NODE_09_CHANNELS,
             GO_NODE_10_PACKAGES,
-            # Blocks 11-20: Coming next
+            GO_NODE_11_TESTING,
+            GO_NODE_12_HTTP,
+            GO_NODE_13_JSON,
+            GO_NODE_14_CLI,
+            GO_NODE_15_FILES,
+            GO_NODE_16_CONCURRENCY,
+            GO_NODE_17_CONTEXT,
+            GO_NODE_18_MODULES,
+            GO_NODE_19_DEVOPS,
+            GO_NODE_20_CAPSTONE,
         ],
     }
 
