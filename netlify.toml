@@ -1,5 +1,4 @@
 [build]
-  base = "."
   command = "npm ci && npm run build --workspace=frontend"
   publish = "apps/frontend/.next"
 
