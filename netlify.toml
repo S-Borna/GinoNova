@@ -1,0 +1,16 @@
+[build]
+  base = "."
+  command = "npm ci && npm run build --workspace=frontend"
+  publish = "apps/frontend/.next"
+
+[build.environment]
+  NEXT_PUBLIC_API_URL = "https://saas-project-production-31f8.up.railway.app"
+  NPM_FLAGS = "--include=optional"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
