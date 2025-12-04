@@ -25,6 +25,28 @@ MODULE_JAVASCRIPT = {
                 "content": r"""
 # JavaScript Introduction & Setup
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"JavaScript runs the web. And increasingly, the server, mobile, and everything in between."*
 
 ---
@@ -228,6 +250,28 @@ npx prettier --write .
                 "xp_reward": 175,
                 "content": r"""
 # Variables & Data Types
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Understanding types in JavaScript means understanding why things sometimes go hilariously wrong."*
 
@@ -465,6 +509,28 @@ Create functions that:
                 "xp_reward": 175,
                 "content": r"""
 # Operators & Expressions
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"JavaScript operators are intuitive... until they're not."*
 
@@ -706,6 +772,28 @@ Create a function that:
                 "xp_reward": 175,
                 "content": r"""
 # Conditionals — if, switch, and Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Code that can't make decisions is just a calculator."*
 
@@ -951,6 +1039,28 @@ Create a simple router that:
                 "xp_reward": 200,
                 "content": r"""
 # Loops — Iteration Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Modern JavaScript prefers functional iteration, but knowing all forms makes you versatile."*
 
@@ -1205,6 +1315,28 @@ Process log entries to:
                 "xp_reward": 225,
                 "content": r"""
 # Functions — Declaration to Arrow
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Functions are first-class citizens in JavaScript. Treat them like the VIPs they are."*
 
@@ -1476,6 +1608,28 @@ Create:
                 "content": r"""
 # Arrays — The Swiss Army Knife
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"Arrays are the workhorse of JavaScript data manipulation."*
 
 ---
@@ -1713,6 +1867,28 @@ Build functions:
                 "xp_reward": 225,
                 "content": r"""
 # Objects — Key-Value Mastery
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"In JavaScript, almost everything is an object. Understanding them is non-negotiable."*
 
@@ -1958,6 +2134,28 @@ Create functions:
                 "content": r"""
 # Destructuring & Spread
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"Destructuring makes your code shorter and more expressive. Master it."*
 
 ---
@@ -2191,6 +2389,28 @@ Create a function that:
                 "xp_reward": 225,
                 "content": r"""
 # ES6+ Modern Features
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Modern JavaScript isn't just syntactic sugar — it's a productivity revolution."*
 
@@ -2477,6 +2697,28 @@ Build with:
                 "xp_reward": 225,
                 "content": r"""
 # Classes — OOP in JavaScript
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Classes are syntactic sugar over prototypes — delicious, productive sugar."*
 
@@ -2780,6 +3022,28 @@ Create classes:
                 "content": r"""
 # Modules — import & export
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"Modules turn spaghetti code into a well-organized library."*
 
 ---
@@ -3047,6 +3311,28 @@ Create:
                 "content": r"""
 # Callbacks & the Event Loop
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"JavaScript is single-threaded but never blocking. Understanding the event loop is understanding JavaScript."*
 
 ---
@@ -3281,6 +3567,28 @@ Create functions:
                 "xp_reward": 250,
                 "content": r"""
 # Promises — Better Async
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Promises don't eliminate async complexity — they make it manageable."*
 
@@ -3552,6 +3860,28 @@ Build a Promise-based:
                 "xp_reward": 250,
                 "content": r"""
 # Async/Await — Clean Async Code
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Async/await is the best thing to happen to JavaScript since functions."*
 
@@ -3861,6 +4191,28 @@ Build async functions:
                 "xp_reward": 200,
                 "content": r"""
 # Error Handling & Debugging
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Production code isn't code that works—it's code that fails gracefully."*
 
@@ -4211,6 +4563,28 @@ Build a function that:
                 "xp_reward": 200,
                 "content": r"""
 # JSON & Data Manipulation
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"In DevOps, JSON is the lingua franca—configs, APIs, logs, everything speaks JSON."*
 
@@ -4594,6 +4968,28 @@ Build a ConfigManager class that:
                 "xp_reward": 250,
                 "content": r"""
 # Fetch API & HTTP Requests
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"APIs connect everything. Master HTTP requests and you control the flow of data."*
 
@@ -5041,6 +5437,28 @@ Build a client that:
                 "xp_reward": 250,
                 "content": r"""
 # Node.js Fundamentals
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Node.js brought JavaScript to the server. Now it powers your entire infrastructure."*
 
@@ -5501,6 +5919,28 @@ Build a CLI tool that:
                 "xp_reward": 500,
                 "content": r"""
 # JavaScript DevOps Capstone
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"You've learned the pieces. Now let's build something real."*
 
@@ -6006,6 +6446,8 @@ You now have production-ready skills:
 - [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
 - [JavaScript Info](https://javascript.info/)
 - [You Don't Know JS](https://github.com/getify/You-Dont-Know-JS)
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
     ],

@@ -2535,6 +2535,28 @@ aws logs describe-log-groups --query 'logGroups[].logGroupName'
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Vad om du kunde köra kod utan att tänka på servrar överhuvudtaget?
 
 AWS Lambda är **serverless computing** - du betalar bara för exekveringstiden!
@@ -2684,6 +2706,28 @@ def lambda_handler(event, context):
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Klicka-och-skapa i AWS Console? Det är för amatörer!
 
 **CloudFormation** = Infrastructure as Code för AWS. Versionera, återskapa, automatisera!
@@ -2891,6 +2935,28 @@ Kör: `aws cloudformation create-stack --stack-name web-app --template-body file
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Din webbsida laddar på 3 sekunder? Det är en EVIGHET på internet!
 
 **CloudFront** = AWS CDN. Cacha content nära användarna, ladda på millisekunder.
@@ -3029,6 +3095,28 @@ curl -I https://d1234567890.cloudfront.net/
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 En server down = site down? Nej tack!
 
 **Elastic Load Balancing** = Automatisk lastbalansering och high availability.
@@ -3190,6 +3278,28 @@ curl http://ALB-DNS/api/health
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Behöver du en databas som skalar från 0 till miljoner requests/sekund?
 
 **DynamoDB** = Fullt managed NoSQL. Single-digit millisecond latency. Oändlig skalbarhet.
@@ -3361,6 +3471,28 @@ aws dynamodb create-table \
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Tight coupling mellan services? Det är en tidsbomd!
 
 **SNS + SQS** = Messaging backbone. Decoupla allt, skala oberoende.
@@ -3543,6 +3675,28 @@ def process_orders():
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Hardcodade passwords i kod? 😱 Det är en säkerhetskatastrof!
 
 **Secrets Manager** = Centraliserad, krypterad secrets-hantering med automatisk rotation.
@@ -3706,6 +3860,28 @@ aws secretsmanager get-secret-value \
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Docker på din laptop är nice. Men hur kör du 100 containers i produktion?
 
 **ECS** = AWS container orchestration. Kör Docker containers utan att hantera servrar.
@@ -3902,6 +4078,28 @@ aws ecs describe-services --cluster demo-cluster --services demo-service
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Kubernetes är kraftfullt men komplext. Vem vill hantera control plane?
 
 **EKS** = AWS-managed Kubernetes. Du fokuserar på workloads, AWS sköter cluster.
@@ -4101,6 +4299,28 @@ curl http://$(kubectl get svc demo-api -o jsonpath='{.status.loadBalancer.ingres
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 "Det händer inte oss" - sa alla som blev hackade.
 
 AWS Security är DITT ansvar (Shared Responsibility Model). Lär dig göra det rätt!
@@ -4281,6 +4501,8 @@ aws securityhub get-findings --filters '{
     "SeverityLabel": [{"Value": "CRITICAL", "Comparison": "EQUALS"}]
 }'
 ```
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -4290,6 +4512,28 @@ aws securityhub get-findings --filters '{
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 AWS-fakturan gick genom taket? Du är inte ensam.
 
 **Cost Optimization** = Rätt resurser, rätt storlek, rätt pricing. Spara 30-70%!
@@ -4476,6 +4720,8 @@ if __name__ == '__main__':
     get_monthly_costs()
     get_recommendations()
 ```
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -4485,6 +4731,28 @@ if __name__ == '__main__':
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Kunskaper utan bevis? Certifieringar öppnar dörrar!
 
 **AWS Certifications** = Branscherkända bevis på expertis. Bra för karriär OCH lärande.
@@ -4650,6 +4918,8 @@ Skapa din certifieringsplan:
 ```
 
 Boka certifieringstillfälle i förväg för att skapa deadline! 🎯
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -7170,6 +7440,28 @@ aws logs describe-log-groups --query 'logGroups[].logGroupName'
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Vad om du kunde köra kod utan att tänka på servrar överhuvudtaget?
 
 AWS Lambda är **serverless computing** - du betalar bara för exekveringstiden!
@@ -7319,6 +7611,28 @@ def lambda_handler(event, context):
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Klicka-och-skapa i AWS Console? Det är för amatörer!
 
 **CloudFormation** = Infrastructure as Code för AWS. Versionera, återskapa, automatisera!
@@ -7526,6 +7840,28 @@ Kör: `aws cloudformation create-stack --stack-name web-app --template-body file
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Din webbsida laddar på 3 sekunder? Det är en EVIGHET på internet!
 
 **CloudFront** = AWS CDN. Cacha content nära användarna, ladda på millisekunder.
@@ -7664,6 +8000,28 @@ curl -I https://d1234567890.cloudfront.net/
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 En server down = site down? Nej tack!
 
 **Elastic Load Balancing** = Automatisk lastbalansering och high availability.
@@ -7825,6 +8183,28 @@ curl http://ALB-DNS/api/health
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Behöver du en databas som skalar från 0 till miljoner requests/sekund?
 
 **DynamoDB** = Fullt managed NoSQL. Single-digit millisecond latency. Oändlig skalbarhet.
@@ -7996,6 +8376,28 @@ aws dynamodb create-table \
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Tight coupling mellan services? Det är en tidsbomd!
 
 **SNS + SQS** = Messaging backbone. Decoupla allt, skala oberoende.
@@ -8178,6 +8580,28 @@ def process_orders():
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Hardcodade passwords i kod? 😱 Det är en säkerhetskatastrof!
 
 **Secrets Manager** = Centraliserad, krypterad secrets-hantering med automatisk rotation.
@@ -8341,6 +8765,28 @@ aws secretsmanager get-secret-value \
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Docker på din laptop är nice. Men hur kör du 100 containers i produktion?
 
 **ECS** = AWS container orchestration. Kör Docker containers utan att hantera servrar.
@@ -8537,6 +8983,28 @@ aws ecs describe-services --cluster demo-cluster --services demo-service
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Kubernetes är kraftfullt men komplext. Vem vill hantera control plane?
 
 **EKS** = AWS-managed Kubernetes. Du fokuserar på workloads, AWS sköter cluster.
@@ -8736,6 +9204,28 @@ curl http://$(kubectl get svc demo-api -o jsonpath='{.status.loadBalancer.ingres
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 "Det händer inte oss" - sa alla som blev hackade.
 
 AWS Security är DITT ansvar (Shared Responsibility Model). Lär dig göra det rätt!
@@ -8916,6 +9406,8 @@ aws securityhub get-findings --filters '{
     "SeverityLabel": [{"Value": "CRITICAL", "Comparison": "EQUALS"}]
 }'
 ```
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -8925,6 +9417,28 @@ aws securityhub get-findings --filters '{
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 AWS-fakturan gick genom taket? Du är inte ensam.
 
 **Cost Optimization** = Rätt resurser, rätt storlek, rätt pricing. Spara 30-70%!
@@ -9111,6 +9625,8 @@ if __name__ == '__main__':
     get_monthly_costs()
     get_recommendations()
 ```
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -9120,6 +9636,28 @@ if __name__ == '__main__':
                 "xp_reward": 50,
                 "content": r"""
 # 🎯 Hook
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 Kunskaper utan bevis? Certifieringar öppnar dörrar!
 
 **AWS Certifications** = Branscherkända bevis på expertis. Bra för karriär OCH lärande.
@@ -9285,6 +9823,8 @@ Skapa din certifieringsplan:
 ```
 
 Boka certifieringstillfälle i förväg för att skapa deadline! 🎯
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {

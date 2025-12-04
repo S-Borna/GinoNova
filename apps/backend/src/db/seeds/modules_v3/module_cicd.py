@@ -800,6 +800,28 @@ jobs:
                 "xp_reward": 75,
                 "content": r"""# GitHub Actions: Build & Test
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 ## CI Pipeline i Praktiken
 
 > "En bra CI-pipeline ar snabb, palitlig och ger tydlig feedback."
@@ -1155,6 +1177,28 @@ jobs:
                 "xp_reward": 80,
                 "content": r"""# GitHub Actions: Deployment
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 ## Deployment Automation
 
 > "The best deployment is the one you don't have to think about."
@@ -1497,6 +1541,28 @@ jobs:
                 "xp_reward": 70,
                 "content": r"""# GitHub Actions: Reusable Workflows
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 ## DRY Principle i CI/CD
 
 > "Copy-paste ar teknisk skuld. Reusable workflows ar investering."
@@ -1811,6 +1877,28 @@ jobs:
                 "estimated_minutes": 70,
                 "xp_reward": 90,
                 "content": r"""# GitHub Actions: Advanced Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Avancerade Tekniker
 
@@ -2131,6 +2219,28 @@ permissions:
                 "content": r"""
 # GitLab CI Grunderna
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 GitLab CI/CD är inbyggt i GitLab och kräver ingen extern setup.
 
 ## .gitlab-ci.yml Struktur
@@ -2181,6 +2291,8 @@ deploy-job:
 | environment | Deploy-miljö |
 
 **Nästa steg:** Node 9 - GitLab CI Runners
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -2190,6 +2302,28 @@ deploy-job:
                 "xp_reward": 140,
                 "content": r"""
 # GitLab CI Runners
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Runners exekverar dina CI/CD jobs.
 
@@ -2238,6 +2372,8 @@ sudo gitlab-runner register \
 | docker+machine | Auto-scaling |
 
 **Nästa steg:** Node 10 - GitLab CI Advanced
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2247,6 +2383,28 @@ sudo gitlab-runner register \
                 "xp_reward": 160,
                 "content": r"""
 # GitLab CI Advanced Features
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Parent-Child Pipelines
 
@@ -2313,6 +2471,8 @@ build:
 ```
 
 **Nästa steg:** Node 11 - GitLab CI Security
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -2322,6 +2482,28 @@ build:
                 "xp_reward": 150,
                 "content": r"""
 # GitLab CI Security Features
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Secret Management
 
@@ -2380,6 +2562,8 @@ container_scanning:
 | Container | Image-sårbarheter |
 
 **Nästa steg:** Node 12 - Jenkins Fundamentals
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -2389,6 +2573,28 @@ container_scanning:
                 "xp_reward": 150,
                 "content": r"""
 # Jenkins Fundamentals
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Jenkins är den mest använda open-source CI/CD servern.
 
@@ -2429,6 +2635,8 @@ npm run build
 ```
 
 **Nästa steg:** Node 13 - Jenkinsfile Pipeline
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2438,6 +2646,28 @@ npm run build
                 "xp_reward": 160,
                 "content": r"""
 # Jenkinsfile Pipeline
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Pipeline as Code med Jenkinsfile.
 
@@ -2515,6 +2745,8 @@ stage('Tests') {
 ```
 
 **Nästa steg:** Node 14 - Jenkins Agents
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2524,6 +2756,28 @@ stage('Tests') {
                 "xp_reward": 140,
                 "content": r"""
 # Jenkins Agents
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Distribuera builds över flera maskiner.
 
@@ -2592,6 +2846,8 @@ pipeline {
 | kubernetes | K8s pod |
 
 **Nästa steg:** Node 15 - Jenkins Shared Libraries
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -2601,6 +2857,28 @@ pipeline {
                 "xp_reward": 155,
                 "content": r"""
 # Jenkins Shared Libraries
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Återanvändbar pipeline-kod.
 
@@ -2679,6 +2957,8 @@ docker.build('myapp:latest')
 ```
 
 **Nästa steg:** Node 16 - ArgoCD Fundamentals
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2688,6 +2968,28 @@ docker.build('myapp:latest')
                 "xp_reward": 155,
                 "content": r"""
 # ArgoCD Fundamentals
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ArgoCD är en GitOps CD-tool för Kubernetes.
 
@@ -2739,6 +3041,8 @@ spec:
 | SelfHeal | Återställ manuella ändringar |
 
 **Nästa steg:** Node 17 - GitOps Principer
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2748,6 +3052,28 @@ spec:
                 "xp_reward": 140,
                 "content": r"""
 # GitOps Principer
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Git som single source of truth.
 
@@ -2805,6 +3131,8 @@ spec:
 | Svårt att audita | Git = audit log |
 
 **Nästa steg:** Node 18 - CD Best Practices
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -2814,6 +3142,28 @@ spec:
                 "xp_reward": 150,
                 "content": r"""
 # CD Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Deployment Strategies
 
@@ -2874,6 +3224,8 @@ else:
 ```
 
 **Nästa steg:** Node 19 - Pipeline Security
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -2883,6 +3235,28 @@ else:
                 "xp_reward": 160,
                 "content": r"""
 # Pipeline Security
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Secret Management
 
@@ -2946,6 +3320,8 @@ cosign verify --key cosign.pub $IMAGE
 | Cosign | Image signing |
 
 **Nästa steg:** Node 20 - CI/CD at Scale
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2955,6 +3331,28 @@ cosign verify --key cosign.pub $IMAGE
                 "xp_reward": 175,
                 "content": r"""
 # CI/CD at Scale
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Monorepo Strategies
 
@@ -3030,6 +3428,8 @@ spec:
 ```
 
 **🎉 Grattis! Du har slutfört CI/CD Mastery SkillsMap!**
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -3815,6 +4215,28 @@ jobs:
                 "xp_reward": 75,
                 "content": r"""# GitHub Actions: Build & Test
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 ## CI Pipeline i Praktiken
 
 > "En bra CI-pipeline ar snabb, palitlig och ger tydlig feedback."
@@ -4170,6 +4592,28 @@ jobs:
                 "xp_reward": 80,
                 "content": r"""# GitHub Actions: Deployment
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 ## Deployment Automation
 
 > "The best deployment is the one you don't have to think about."
@@ -4512,6 +4956,28 @@ jobs:
                 "xp_reward": 70,
                 "content": r"""# GitHub Actions: Reusable Workflows
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 ## DRY Principle i CI/CD
 
 > "Copy-paste ar teknisk skuld. Reusable workflows ar investering."
@@ -4826,6 +5292,28 @@ jobs:
                 "estimated_minutes": 70,
                 "xp_reward": 90,
                 "content": r"""# GitHub Actions: Advanced Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Avancerade Tekniker
 
@@ -5146,6 +5634,28 @@ permissions:
                 "content": r"""
 # GitLab CI Grunderna
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 GitLab CI/CD är inbyggt i GitLab och kräver ingen extern setup.
 
 ## .gitlab-ci.yml Struktur
@@ -5196,6 +5706,8 @@ deploy-job:
 | environment | Deploy-miljö |
 
 **Nästa steg:** Node 9 - GitLab CI Runners
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5205,6 +5717,28 @@ deploy-job:
                 "xp_reward": 140,
                 "content": r"""
 # GitLab CI Runners
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Runners exekverar dina CI/CD jobs.
 
@@ -5253,6 +5787,8 @@ sudo gitlab-runner register \
 | docker+machine | Auto-scaling |
 
 **Nästa steg:** Node 10 - GitLab CI Advanced
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -5262,6 +5798,28 @@ sudo gitlab-runner register \
                 "xp_reward": 160,
                 "content": r"""
 # GitLab CI Advanced Features
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Parent-Child Pipelines
 
@@ -5328,6 +5886,8 @@ build:
 ```
 
 **Nästa steg:** Node 11 - GitLab CI Security
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -5337,6 +5897,28 @@ build:
                 "xp_reward": 150,
                 "content": r"""
 # GitLab CI Security Features
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Secret Management
 
@@ -5395,6 +5977,8 @@ container_scanning:
 | Container | Image-sårbarheter |
 
 **Nästa steg:** Node 12 - Jenkins Fundamentals
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -5404,6 +5988,28 @@ container_scanning:
                 "xp_reward": 150,
                 "content": r"""
 # Jenkins Fundamentals
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Jenkins är den mest använda open-source CI/CD servern.
 
@@ -5444,6 +6050,8 @@ npm run build
 ```
 
 **Nästa steg:** Node 13 - Jenkinsfile Pipeline
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -5453,6 +6061,28 @@ npm run build
                 "xp_reward": 160,
                 "content": r"""
 # Jenkinsfile Pipeline
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Pipeline as Code med Jenkinsfile.
 
@@ -5530,6 +6160,8 @@ stage('Tests') {
 ```
 
 **Nästa steg:** Node 14 - Jenkins Agents
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5539,6 +6171,28 @@ stage('Tests') {
                 "xp_reward": 140,
                 "content": r"""
 # Jenkins Agents
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Distribuera builds över flera maskiner.
 
@@ -5607,6 +6261,8 @@ pipeline {
 | kubernetes | K8s pod |
 
 **Nästa steg:** Node 15 - Jenkins Shared Libraries
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -5616,6 +6272,28 @@ pipeline {
                 "xp_reward": 155,
                 "content": r"""
 # Jenkins Shared Libraries
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Återanvändbar pipeline-kod.
 
@@ -5694,6 +6372,8 @@ docker.build('myapp:latest')
 ```
 
 **Nästa steg:** Node 16 - ArgoCD Fundamentals
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -5703,6 +6383,28 @@ docker.build('myapp:latest')
                 "xp_reward": 155,
                 "content": r"""
 # ArgoCD Fundamentals
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ArgoCD är en GitOps CD-tool för Kubernetes.
 
@@ -5754,6 +6456,8 @@ spec:
 | SelfHeal | Återställ manuella ändringar |
 
 **Nästa steg:** Node 17 - GitOps Principer
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -5763,6 +6467,28 @@ spec:
                 "xp_reward": 140,
                 "content": r"""
 # GitOps Principer
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Git som single source of truth.
 
@@ -5820,6 +6546,8 @@ spec:
 | Svårt att audita | Git = audit log |
 
 **Nästa steg:** Node 18 - CD Best Practices
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -5829,6 +6557,28 @@ spec:
                 "xp_reward": 150,
                 "content": r"""
 # CD Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Deployment Strategies
 
@@ -5889,6 +6639,8 @@ else:
 ```
 
 **Nästa steg:** Node 19 - Pipeline Security
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -5898,6 +6650,28 @@ else:
                 "xp_reward": 160,
                 "content": r"""
 # Pipeline Security
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Secret Management
 
@@ -5961,6 +6735,8 @@ cosign verify --key cosign.pub $IMAGE
 | Cosign | Image signing |
 
 **Nästa steg:** Node 20 - CI/CD at Scale
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -5970,6 +6746,28 @@ cosign verify --key cosign.pub $IMAGE
                 "xp_reward": 175,
                 "content": r"""
 # CI/CD at Scale
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Monorepo Strategies
 
@@ -6045,6 +6843,8 @@ spec:
 ```
 
 **🎉 Grattis! Du har slutfört CI/CD Mastery SkillsMap!**
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
     ],

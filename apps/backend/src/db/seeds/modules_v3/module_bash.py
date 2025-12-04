@@ -25,6 +25,28 @@ MODULE_BASH = {
                 "content": r"""
 # Bash Introduction & Script Execution
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"The shell is your gateway to Unix power. Master it, and you control the machine."*
 
 ---
@@ -244,6 +266,28 @@ main "$@"
                 "xp_reward": 175,
                 "content": r"""
 # Variables & Quoting Mastery
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"In Bash, quoting isn't optional — it's the difference between a working script and a catastrophe."*
 
@@ -500,6 +544,28 @@ DB_PORT=5432
                 "xp_reward": 200,
                 "content": r"""
 # Control Structures — Conditionals
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Code that can't make decisions is just a list of commands. Conditionals give your scripts intelligence."*
 
@@ -827,6 +893,28 @@ Create a script that checks:
                 "xp_reward": 200,
                 "content": r"""
 # Loops — Iteration Mastery
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Automation is repetition without fatigue. Loops are your tireless workers."*
 
@@ -1190,6 +1278,28 @@ Create a script that:
                 "xp_reward": 200,
                 "content": r"""
 # Functions — Modular Scripting
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"A 1000-line script is a nightmare. 50 well-named functions are a toolkit."*
 
@@ -1561,6 +1671,28 @@ log_fatal "Critical failure"  # Exits script
                 "content": r"""
 # Input/Output Redirection
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"In Unix, everything is a file — including your input and output streams."*
 
 ---
@@ -1705,6 +1837,28 @@ Create a log analyzer that:
                 "content": r"""
 # Here Documents & Here Strings
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"When echo isn't enough, here documents let you embed entire files in your scripts."*
 
 ---
@@ -1836,6 +1990,28 @@ All using here documents with variable substitution.
                 "content": r"""
 # String Manipulation
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"Bash string operations eliminate the need for sed and awk in 80% of cases."*
 
 ---
@@ -1956,6 +2132,8 @@ Create functions for:
 2. `dirname` replacement
 3. Extension changer
 4. Slug generator (lowercase, replace spaces with dashes)
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1965,6 +2143,28 @@ Create functions for:
                 "xp_reward": 200,
                 "content": r"""
 # Arrays — Indexed & Associative
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"When you need more than one value, arrays are your friend."*
 
@@ -2122,6 +2322,28 @@ Build a server inventory system:
                 "content": r"""
 # Regular Expressions in Bash
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"Regex is the Swiss Army knife of text processing. Master it once, use it everywhere."*
 
 ---
@@ -2268,6 +2490,28 @@ Create a log parser that:
                 "xp_reward": 225,
                 "content": r"""
 # Error Handling & Exit Codes
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"A script that ignores errors is a time bomb waiting to explode."*
 
@@ -2459,6 +2703,28 @@ Create a deployment script with:
                 "content": r"""
 # Debugging Bash Scripts
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"The best debugger is a clear head and well-placed echo statements... but bash has better tools."*
 
 ---
@@ -2647,6 +2913,28 @@ Create a debug toolkit:
                 "xp_reward": 200,
                 "content": r"""
 # Script Arguments & getopts
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"A script without argument handling is a script you'll rewrite next week."*
 
@@ -2915,6 +3203,28 @@ Build a `backup.sh` script:
                 "content": r"""
 # Signals & Traps
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"A professional script doesn't just crash — it cleans up after itself."*
 
 ---
@@ -3101,6 +3411,28 @@ Create a daemon script:
                 "content": r"""
 # Process Substitution
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"Pipes are great. Process substitution is pipes on steroids."*
 
 ---
@@ -3247,6 +3579,28 @@ Build a log analyzer:
                 "xp_reward": 200,
                 "content": r"""
 # Cron & Scheduling
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"The best automation runs while you sleep."*
 
@@ -3427,6 +3781,28 @@ Set up automated maintenance:
                 "content": r"""
 # Security Best Practices
 
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
+
 > *"A script with root access is a loaded gun. Handle with care."*
 
 ---
@@ -3606,6 +3982,28 @@ Audit and fix this script:
                 "xp_reward": 225,
                 "content": r"""
 # Performance Optimization
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"Bash isn't fast, but smart Bash is fast enough."*
 
@@ -3801,6 +4199,28 @@ Optimize a log processor:
                 "xp_reward": 225,
                 "content": r"""
 # Script Organization & Libraries
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"A well-organized script is a maintainable script."*
 
@@ -4057,6 +4477,28 @@ Build a script toolkit:
                 "xp_reward": 300,
                 "content": r"""
 # Real-World Automation Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 > *"This is where everything comes together. Welcome to production."*
 

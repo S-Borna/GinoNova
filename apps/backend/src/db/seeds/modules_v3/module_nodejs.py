@@ -178,6 +178,8 @@ process.exit(1);  // Error
 | npm | Pakethanterare |
 
 **Nästa steg:** Node 2 - Modules
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -187,6 +189,28 @@ process.exit(1);  // Error
                 "xp_reward": 125,
                 "content": r"""
 # Modules: CommonJS & ESM
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Organisera kod i återanvändbara moduler.
 
@@ -354,6 +378,8 @@ require('/abs/path');    // Absolut sökväg
 | ESM | .mjs/.js | import | export |
 
 **Nästa steg:** Node 3 - npm
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -363,6 +389,28 @@ require('/abs/path');    // Absolut sökväg
                 "xp_reward": 140,
                 "content": r"""
 # npm & Package Management
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Node Package Manager.
 
@@ -564,6 +612,8 @@ npx eslint .
 | npx | Köra paket |
 
 **Nästa steg:** Node 4 - Error Handling
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -573,6 +623,28 @@ npx eslint .
                 "xp_reward": 130,
                 "content": r"""
 # Error Handling
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hantera fel korrekt i Node.js.
 
@@ -789,6 +861,8 @@ app.get('/users/:id', asyncHandler(async (req, res) => {
 | Uncaught | process.on('uncaughtException') |
 
 **Nästa steg:** Node 5 - Event Loop
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -798,6 +872,28 @@ app.get('/users/:id', asyncHandler(async (req, res) => {
                 "xp_reward": 160,
                 "content": r"""
 # Event Loop
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hjärtat av Node.js async-modell.
 
@@ -1002,6 +1098,8 @@ blocked((time, stack) => {
 | I/O callbacks | Poll | Poll phase |
 
 **Nästa steg:** Node 6 - Async/Await
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -1011,6 +1109,28 @@ blocked((time, stack) => {
                 "xp_reward": 145,
                 "content": r"""
 # Promises & Async/Await
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Modern asynkron programmering.
 
@@ -1246,6 +1366,8 @@ const data = await readFile('file.txt');
 | Promise.any | First success wins |
 
 **Nästa steg:** Node 7 - Event Emitter
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -1255,6 +1377,28 @@ const data = await readFile('file.txt');
                 "xp_reward": 130,
                 "content": r"""
 # Event Emitter
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Event-driven arkitektur i Node.js.
 
@@ -1483,6 +1627,8 @@ emitter.prependOnceListener('event', handler);
 | removeAllListeners() | Ta bort alla |
 
 **Nästa steg:** Node 8 - Streams
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1729,6 +1875,8 @@ buf1.copy(copied);
 | Duplex | pipe() | Sockets |
 
 **Nästa steg:** Node 9 - HTTP Server
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -1738,6 +1886,28 @@ buf1.copy(copied);
                 "xp_reward": 145,
                 "content": r"""
 # HTTP Server
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Skapa web servers med Node.js.
 
@@ -1931,6 +2101,8 @@ process.on('SIGTERM', () => {
 | res.end() | Avsluta response |
 
 **Nästa steg:** Node 10 - Express.js
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -1940,6 +2112,28 @@ process.on('SIGTERM', () => {
                 "xp_reward": 170,
                 "content": r"""
 # Express.js Framework
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Det populäraste Node.js web framework.
 
@@ -2171,6 +2365,8 @@ app.use(compression());
 | compression | Gzip responses |
 
 **Nästa steg:** Node 11 - REST API Design
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2180,6 +2376,28 @@ app.use(compression());
                 "xp_reward": 155,
                 "content": r"""
 # REST API Design
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Bygg professionella APIs.
 
@@ -2436,6 +2654,8 @@ const versionMiddleware = (req, res, next) => {
 | 500 | Server Error |
 
 **Nästa steg:** Node 12 - Database Integration
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2445,6 +2665,28 @@ const versionMiddleware = (req, res, next) => {
                 "xp_reward": 170,
                 "content": r"""
 # Database Integration
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Anslut Node.js till databaser.
 
@@ -2692,6 +2934,8 @@ const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
 | MySQL | mysql2, Prisma | Relational data |
 
 **Nästa steg:** Node 13 - Authentication & Security
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2701,6 +2945,28 @@ const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
                 "xp_reward": 180,
                 "content": r"""
 # Authentication & Security
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Säker autentisering i Node.js.
 
@@ -3002,6 +3268,8 @@ app.delete('/users/:id',
 | Rate limiting | express-rate-limit |
 
 **Nästa steg:** Node 14 - File Handling
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -3011,6 +3279,28 @@ app.delete('/users/:id',
                 "xp_reward": 145,
                 "content": r"""
 # File Handling
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Läs, skriv och hantera filer i Node.js.
 
@@ -3243,6 +3533,8 @@ path.normalize('/foo/bar//baz/');      // /foo/bar/baz
 | Stats | statSync | stat |
 
 **Nästa steg:** Node 15 - WebSockets
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -3252,6 +3544,28 @@ path.normalize('/foo/bar//baz/');      // /foo/bar/baz
                 "xp_reward": 160,
                 "content": r"""
 # WebSockets
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Real-time kommunikation med WebSockets.
 
@@ -3511,6 +3825,8 @@ io.on('connection', (socket) => {
 | Broadcasting | Manual | Built-in |
 
 **Nästa steg:** Node 16 - Worker Threads
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -3520,6 +3836,28 @@ io.on('connection', (socket) => {
                 "xp_reward": 155,
                 "content": r"""
 # Worker Threads
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Parallell körning för CPU-intensiva uppgifter.
 
@@ -3767,6 +4105,8 @@ Inte bra för:
 | Atomics | Thread-safe operations |
 
 **Nästa steg:** Node 17 - Testing
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -3776,6 +4116,28 @@ Inte bra för:
                 "xp_reward": 170,
                 "content": r"""
 # Testing
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Testa Node.js applikationer effektivt.
 
@@ -4070,6 +4432,8 @@ expect(() => fn()).toThrow('message');
 | E2E | Playwright | Testa hela flöden |
 
 **Nästa steg:** Node 18 - Security
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -4079,6 +4443,28 @@ expect(() => fn()).toThrow('message');
                 "xp_reward": 165,
                 "content": r"""
 # Security Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Säkra Node.js applikationer.
 
@@ -4324,6 +4710,8 @@ Dependencies:
 | Secrets Exposure | Environment variables |
 
 **Nästa steg:** Node 19 - Deployment
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -4333,6 +4721,28 @@ Dependencies:
                 "xp_reward": 160,
                 "content": r"""
 # Deployment
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Deploya Node.js applikationer till produktion.
 
@@ -4596,6 +5006,8 @@ app.get('/health', async (req, res) => {
 | Vercel | Serverless API |
 
 **Nästa steg:** Node 20 - Monitoring & Logging
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -4605,6 +5017,28 @@ app.get('/health', async (req, res) => {
                 "xp_reward": 165,
                 "content": r"""
 # Monitoring & Logging
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Övervaka och felsök Node.js applikationer.
 
@@ -4881,6 +5315,8 @@ Fortsätt med:
 - GraphQL APIs
 - Serverless Functions
 - Real-time Applications
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
     ],

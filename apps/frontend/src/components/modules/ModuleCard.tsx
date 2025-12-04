@@ -142,7 +142,7 @@ export function ModuleCard({
     const isComplete = status === "complete"
 
     // Get module color based on title or use provided color
-    const moduleColor = color || Object.entries(moduleColors).find(([key]) => 
+    const moduleColor = color || Object.entries(moduleColors).find(([key]) =>
         title.toLowerCase().includes(key.split("-")[0])
     )?.[1] || "#6366f1"
 
@@ -226,9 +226,9 @@ export function ModuleCard({
                         status === "not_started" && "bg-zinc-700 text-zinc-400",
                         status === "locked" && "bg-zinc-800 text-zinc-500"
                     )}>
-                        {status === "complete" ? "Klar" : 
-                         status === "in_progress" ? "Pågår" :
-                         status === "locked" ? "Låst" : "Starta"}
+                        {status === "complete" ? "Klar" :
+                            status === "in_progress" ? "Pågår" :
+                                status === "locked" ? "Låst" : "Starta"}
                     </span>
                 </div>
 

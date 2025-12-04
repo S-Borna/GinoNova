@@ -89,6 +89,8 @@ terraform destroy   # Ta bort allt
 ```
 
 **Nästa steg:** Node 2 - HCL Syntax
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -98,6 +100,28 @@ terraform destroy   # Ta bort allt
                 "xp_reward": 120,
                 "content": r"""
 # HCL Syntax
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 HashiCorp Configuration Language.
 
@@ -178,6 +202,8 @@ data.aws_ami.ubuntu.id
 | Local | local.name |
 
 **Nästa steg:** Node 3 - Variables & Outputs
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -187,6 +213,28 @@ data.aws_ami.ubuntu.id
                 "xp_reward": 130,
                 "content": r"""
 # Variables & Outputs
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Parametrisera din Terraform-kod.
 
@@ -269,6 +317,8 @@ terraform output instance_ids
 ```
 
 **Nästa steg:** Node 4 - State Management
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -278,6 +328,28 @@ terraform output instance_ids
                 "xp_reward": 145,
                 "content": r"""
 # State Management
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Terraform state spårar infrastruktur.
 
@@ -346,6 +418,8 @@ resource "aws_dynamodb_table" "terraform_locks" {
 | Terraform Cloud | Ja |
 
 **Nästa steg:** Node 5 - Resources & Data Sources
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -355,6 +429,28 @@ resource "aws_dynamodb_table" "terraform_locks" {
                 "xp_reward": 145,
                 "content": r"""
 # Resources & Data Sources
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Skapa och läs infrastruktur.
 
@@ -428,6 +524,8 @@ resource "aws_instance" "web" {
 ```
 
 **Nästa steg:** Node 6 - Providers
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -437,6 +535,28 @@ resource "aws_instance" "web" {
                 "xp_reward": 130,
                 "content": r"""
 # Terraform Providers
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Providers kopplar till cloud APIs.
 
@@ -513,6 +633,8 @@ terraform {
 | >= 2.0, < 3.0 | Range |
 
 **Nästa steg:** Node 7 - Count & For_each
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -522,6 +644,28 @@ terraform {
                 "xp_reward": 140,
                 "content": r"""
 # Count & For_each
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Skapa flera resurser.
 
@@ -599,6 +743,8 @@ resource "aws_iam_user" "users" {
 | for_each | Map/Set av resurser |
 
 **Nästa steg:** Node 8 - Expressions
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -608,6 +754,28 @@ resource "aws_iam_user" "users" {
                 "xp_reward": 150,
                 "content": r"""
 # Expressions & Functions
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Dynamisk HCL.
 
@@ -677,6 +845,8 @@ resource "aws_security_group" "web" {
 ```
 
 **Nästa steg:** Node 9 - Modules Basics
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -686,6 +856,28 @@ resource "aws_security_group" "web" {
                 "xp_reward": 150,
                 "content": r"""
 # Terraform Modules
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Återanvändbar infrastrukturkod.
 
@@ -760,6 +952,8 @@ resource "aws_instance" "web" {
 ```
 
 **Nästa steg:** Node 10 - Module Sources
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -769,6 +963,28 @@ resource "aws_instance" "web" {
                 "xp_reward": 130,
                 "content": r"""
 # Module Sources
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hämta modules från olika källor.
 
@@ -835,6 +1051,8 @@ module "vpc" {
 | S3/GCS | Enterprise |
 
 **Nästa steg:** Node 11 - Module Patterns
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -844,6 +1062,28 @@ module "vpc" {
                 "xp_reward": 155,
                 "content": r"""
 # Module Design Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Best practices för modules.
 
@@ -918,6 +1158,8 @@ output "db_password" {
 | Facade | Förenkla interface |
 
 **Nästa steg:** Node 12 - Workspaces
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -927,6 +1169,28 @@ output "db_password" {
                 "xp_reward": 130,
                 "content": r"""
 # Terraform Workspaces
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hantera flera miljöer.
 
@@ -995,6 +1259,8 @@ environments/
 | Directory | Isolerad state | Mer boilerplate |
 
 **Nästa steg:** Node 13 - AWS Resources
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -1004,6 +1270,28 @@ environments/
                 "xp_reward": 160,
                 "content": r"""
 # AWS med Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Vanliga AWS-resurser.
 
@@ -1077,6 +1365,8 @@ resource "aws_db_instance" "postgres" {
 ```
 
 **Nästa steg:** Node 14 - EKS & Containers
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -1086,6 +1376,28 @@ resource "aws_db_instance" "postgres" {
                 "xp_reward": 155,
                 "content": r"""
 # EKS med Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Kubernetes på AWS.
 
@@ -1163,6 +1475,8 @@ resource "aws_ecs_task_definition" "app" {
 | Fargate | Serverless containers |
 
 **Nästa steg:** Node 15 - S3 & IAM
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -1172,6 +1486,28 @@ resource "aws_ecs_task_definition" "app" {
                 "xp_reward": 145,
                 "content": r"""
 # S3 & IAM med Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Storage och access management.
 
@@ -1251,6 +1587,8 @@ resource "aws_iam_policy" "s3_read" {
 ```
 
 **Nästa steg:** Node 16 - Multi-Cloud
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -1260,6 +1598,28 @@ resource "aws_iam_policy" "s3_read" {
                 "xp_reward": 150,
                 "content": r"""
 # Multi-Cloud Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hantera flera clouds.
 
@@ -1341,6 +1701,8 @@ module "gcp_ml" {
 | K8s | hashicorp/kubernetes |
 
 **Nästa steg:** Node 17 - Testing
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -1350,6 +1712,28 @@ module "gcp_ml" {
                 "xp_reward": 155,
                 "content": r"""
 # Terraform Testing
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Testa din infrastrukturkod.
 
@@ -1419,6 +1803,8 @@ terraform test
 ```
 
 **Nästa steg:** Node 18 - CI/CD Integration
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -1428,6 +1814,28 @@ terraform test
                 "xp_reward": 155,
                 "content": r"""
 # Terraform CI/CD
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Automatisera Terraform.
 
@@ -1513,6 +1921,8 @@ apply:
 | Terraform Cloud | Managed |
 
 **Nästa steg:** Node 19 - Security
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1522,6 +1932,28 @@ apply:
                 "xp_reward": 150,
                 "content": r"""
 # Terraform Security
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Säker infrastrukturkod.
 
@@ -1604,6 +2036,8 @@ terraform {
 | Sentinel | Enterprise policies |
 
 **Nästa steg:** Node 20 - Best Practices
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1613,6 +2047,28 @@ terraform {
                 "xp_reward": 175,
                 "content": r"""
 # Terraform Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Produktion-redo Terraform.
 
@@ -1693,6 +2149,8 @@ terraform apply -lock-timeout=5m
 | Document | README per module |
 
 **Grattis! Du har slutfört Terraform Mastery SkillsMap!**
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -1767,6 +2225,8 @@ terraform destroy   # Ta bort allt
 ```
 
 **Nästa steg:** Node 2 - HCL Syntax
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1776,6 +2236,28 @@ terraform destroy   # Ta bort allt
                 "xp_reward": 120,
                 "content": r"""
 # HCL Syntax
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 HashiCorp Configuration Language.
 
@@ -1856,6 +2338,8 @@ data.aws_ami.ubuntu.id
 | Local | local.name |
 
 **Nästa steg:** Node 3 - Variables & Outputs
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -1865,6 +2349,28 @@ data.aws_ami.ubuntu.id
                 "xp_reward": 130,
                 "content": r"""
 # Variables & Outputs
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Parametrisera din Terraform-kod.
 
@@ -1947,6 +2453,8 @@ terraform output instance_ids
 ```
 
 **Nästa steg:** Node 4 - State Management
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -1956,6 +2464,28 @@ terraform output instance_ids
                 "xp_reward": 145,
                 "content": r"""
 # State Management
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Terraform state spårar infrastruktur.
 
@@ -2024,6 +2554,8 @@ resource "aws_dynamodb_table" "terraform_locks" {
 | Terraform Cloud | Ja |
 
 **Nästa steg:** Node 5 - Resources & Data Sources
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -2033,6 +2565,28 @@ resource "aws_dynamodb_table" "terraform_locks" {
                 "xp_reward": 145,
                 "content": r"""
 # Resources & Data Sources
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Skapa och läs infrastruktur.
 
@@ -2106,6 +2660,8 @@ resource "aws_instance" "web" {
 ```
 
 **Nästa steg:** Node 6 - Providers
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -2115,6 +2671,28 @@ resource "aws_instance" "web" {
                 "xp_reward": 130,
                 "content": r"""
 # Terraform Providers
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Providers kopplar till cloud APIs.
 
@@ -2191,6 +2769,8 @@ terraform {
 | >= 2.0, < 3.0 | Range |
 
 **Nästa steg:** Node 7 - Count & For_each
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -2200,6 +2780,28 @@ terraform {
                 "xp_reward": 140,
                 "content": r"""
 # Count & For_each
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Skapa flera resurser.
 
@@ -2277,6 +2879,8 @@ resource "aws_iam_user" "users" {
 | for_each | Map/Set av resurser |
 
 **Nästa steg:** Node 8 - Expressions
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2286,6 +2890,28 @@ resource "aws_iam_user" "users" {
                 "xp_reward": 150,
                 "content": r"""
 # Expressions & Functions
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Dynamisk HCL.
 
@@ -2355,6 +2981,8 @@ resource "aws_security_group" "web" {
 ```
 
 **Nästa steg:** Node 9 - Modules Basics
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2364,6 +2992,28 @@ resource "aws_security_group" "web" {
                 "xp_reward": 150,
                 "content": r"""
 # Terraform Modules
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Återanvändbar infrastrukturkod.
 
@@ -2438,6 +3088,8 @@ resource "aws_instance" "web" {
 ```
 
 **Nästa steg:** Node 10 - Module Sources
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2447,6 +3099,28 @@ resource "aws_instance" "web" {
                 "xp_reward": 130,
                 "content": r"""
 # Module Sources
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hämta modules från olika källor.
 
@@ -2513,6 +3187,8 @@ module "vpc" {
 | S3/GCS | Enterprise |
 
 **Nästa steg:** Node 11 - Module Patterns
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -2522,6 +3198,28 @@ module "vpc" {
                 "xp_reward": 155,
                 "content": r"""
 # Module Design Patterns
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Best practices för modules.
 
@@ -2596,6 +3294,8 @@ output "db_password" {
 | Facade | Förenkla interface |
 
 **Nästa steg:** Node 12 - Workspaces
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2605,6 +3305,28 @@ output "db_password" {
                 "xp_reward": 130,
                 "content": r"""
 # Terraform Workspaces
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hantera flera miljöer.
 
@@ -2673,6 +3395,8 @@ environments/
 | Directory | Isolerad state | Mer boilerplate |
 
 **Nästa steg:** Node 13 - AWS Resources
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2682,6 +3406,28 @@ environments/
                 "xp_reward": 160,
                 "content": r"""
 # AWS med Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Vanliga AWS-resurser.
 
@@ -2755,6 +3501,8 @@ resource "aws_db_instance" "postgres" {
 ```
 
 **Nästa steg:** Node 14 - EKS & Containers
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -2764,6 +3512,28 @@ resource "aws_db_instance" "postgres" {
                 "xp_reward": 155,
                 "content": r"""
 # EKS med Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Kubernetes på AWS.
 
@@ -2841,6 +3611,8 @@ resource "aws_ecs_task_definition" "app" {
 | Fargate | Serverless containers |
 
 **Nästa steg:** Node 15 - S3 & IAM
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -2850,6 +3622,28 @@ resource "aws_ecs_task_definition" "app" {
                 "xp_reward": 145,
                 "content": r"""
 # S3 & IAM med Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Storage och access management.
 
@@ -2929,6 +3723,8 @@ resource "aws_iam_policy" "s3_read" {
 ```
 
 **Nästa steg:** Node 16 - Multi-Cloud
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2938,6 +3734,28 @@ resource "aws_iam_policy" "s3_read" {
                 "xp_reward": 150,
                 "content": r"""
 # Multi-Cloud Terraform
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Hantera flera clouds.
 
@@ -3019,6 +3837,8 @@ module "gcp_ml" {
 | K8s | hashicorp/kubernetes |
 
 **Nästa steg:** Node 17 - Testing
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -3028,6 +3848,28 @@ module "gcp_ml" {
                 "xp_reward": 155,
                 "content": r"""
 # Terraform Testing
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Testa din infrastrukturkod.
 
@@ -3097,6 +3939,8 @@ terraform test
 ```
 
 **Nästa steg:** Node 18 - CI/CD Integration
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -3106,6 +3950,28 @@ terraform test
                 "xp_reward": 155,
                 "content": r"""
 # Terraform CI/CD
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Automatisera Terraform.
 
@@ -3191,6 +4057,8 @@ apply:
 | Terraform Cloud | Managed |
 
 **Nästa steg:** Node 19 - Security
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -3200,6 +4068,28 @@ apply:
                 "xp_reward": 150,
                 "content": r"""
 # Terraform Security
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Säker infrastrukturkod.
 
@@ -3282,6 +4172,8 @@ terraform {
 | Sentinel | Enterprise policies |
 
 **Nästa steg:** Node 20 - Best Practices
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -3291,6 +4183,28 @@ terraform {
                 "xp_reward": 175,
                 "content": r"""
 # Terraform Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Produktion-redo Terraform.
 
@@ -3371,6 +4285,8 @@ terraform apply -lock-timeout=5m
 | Document | README per module |
 
 **Grattis! Du har slutfört Terraform Mastery SkillsMap!**
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
     ],

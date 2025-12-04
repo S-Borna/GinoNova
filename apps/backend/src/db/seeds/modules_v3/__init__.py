@@ -5,40 +5,50 @@ Bootcamp v3 Modules - Auto-converted from Skillsmaps
 Contains all DevOps learning modules in bootcamp_v3 format.
 Each module has tasks with full pedagogical content.
 
-Total: 14 modules, 280+ tasks
+Total: 18 modules, 360+ tasks (ALL PREMIUM V3)
 """
 
 # Import all converted modules
 from .module_aws import MODULE_AWS_DEVOPS
 from .module_bash import MODULE_BASH
 from .module_cicd import MODULE_CICD_MASTERY
-from .module_docker import MODULE_DOCKER_MASTERY
-from .module_git import MODULE_GIT_GITHUB_MASTERY
-from .module_go import MODULE_GO
+from .docker import MODULE_DOCKER_MASTERY  # Premium upgraded version
+from .git import MODULE_GIT_GITHUB_MASTERY  # Premium upgraded version
+from .go import MODULE_GO_MASTERY  # Premium upgraded version
 from .module_javascript import MODULE_JAVASCRIPT
-from .module_kubernetes import MODULE_KUBERNETES_MASTERY
+from .kubernetes import MODULE_KUBERNETES_MASTERY  # Premium upgraded version
 from .module_linux import MODULE_LINUX_MASTERY
 from .module_mlops import MODULE_MLOPS
 from .module_nodejs import MODULE_NODEJS
 from .module_python import MODULE_PYTHON_DEVOPS
-from .module_terraform import MODULE_TERRAFORM_MASTERY
+from .terraform import MODULE_TERRAFORM_MASTERY  # Premium upgraded version
 from .module_typescript import MODULE_TYPESCRIPT
 
+# NEW V3 PREMIUM MODULES
+from .ansible import MODULE_ANSIBLE_MASTERY
+from .sql import MODULE_SQL_MASTERY
+from .system_design import MODULE_SYSTEM_DESIGN
+from .prompt_engineering import MODULE_PROMPT_ENGINEERING
 
-# All modules list
+
+# All modules list (18 TOTAL)
 ALL_V3_MODULES = [
     MODULE_AWS_DEVOPS,
+    MODULE_ANSIBLE_MASTERY,  # NEW
     MODULE_BASH,
     MODULE_CICD_MASTERY,
     MODULE_DOCKER_MASTERY,
     MODULE_GIT_GITHUB_MASTERY,
-    MODULE_GO,
+    MODULE_GO_MASTERY,
     MODULE_JAVASCRIPT,
     MODULE_KUBERNETES_MASTERY,
     MODULE_LINUX_MASTERY,
     MODULE_MLOPS,
     MODULE_NODEJS,
+    MODULE_PROMPT_ENGINEERING,  # NEW
     MODULE_PYTHON_DEVOPS,
+    MODULE_SQL_MASTERY,  # NEW
+    MODULE_SYSTEM_DESIGN,  # NEW
     MODULE_TERRAFORM_MASTERY,
     MODULE_TYPESCRIPT,
 ]
