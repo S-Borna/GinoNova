@@ -393,22 +393,22 @@ function TaskCard({
     return (
         <motion.div
             className={cn(
-                "group relative",
+                "group relative h-full",
                 "rounded-2xl",
                 "bg-zinc-900/80 backdrop-blur-sm",
                 "border border-zinc-800/80",
                 "transition-all duration-300",
-                isHovered && "border-zinc-700/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)]",
-                isComplete && "opacity-80",
+                isHovered && "border-zinc-700/80 shadow-[0_8px_30px_rgba(0,0,0,0.4)]",
+                isComplete && "opacity-75",
                 "cursor-pointer"
             )}
             onClick={() => onClick(task.id)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            whileHover={{ y: -2 }}
+            whileHover={{ y: -4, scale: 1.02 }}
             transition={{ duration: 0.2 }}
         >
-            <div className="p-5">
+            <div className="p-5 flex flex-col h-full">
                 {/* Top Row: Icon + Type Badge + Bookmark */}
                 <div className="flex items-start justify-between mb-4">
                     {/* Icon container */}
@@ -483,15 +483,17 @@ function TaskCard({
                     {task.title}
                 </h3>
 
-                {/* Description */}
-                {task.description && (
-                    <p className="mt-2 text-sm text-zinc-500 line-clamp-2">
-                        {task.description}
-                    </p>
-                )}
+                {/* Description - flex-grow to push meta to bottom */}
+                <div className="flex-grow">
+                    {task.description && (
+                        <p className="mt-2 text-sm text-zinc-500 line-clamp-3">
+                            {task.description}
+                        </p>
+                    )}
+                </div>
 
-                {/* Meta row */}
-                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-zinc-800">
+                {/* Meta row - always at bottom */}
+                <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-zinc-800">
                     {/* Time */}
                     <div className="flex items-center gap-1.5 text-zinc-500">
                         <Clock className="w-3.5 h-3.5" />
@@ -603,9 +605,9 @@ export default function ModuleDetailPage() {
             const moduleData = moduleResult.data
             const tasksResult = await getTasksForModule(moduleId)
 
-            const moduleConfig = moduleColors[moduleData.slug] || { 
-                color: "#6366f1", 
-                icon: "📚" 
+            const moduleConfig = moduleColors[moduleData.slug] || {
+                color: "#6366f1",
+                icon: "📚"
             }
 
             const tierToType: Record<string, TaskUI["type"]> = {
@@ -728,18 +730,18 @@ export default function ModuleDetailPage() {
                         </motion.div>
                     )}
 
-                    {/* Tasks list */}
+                    {/* Tasks grid */}
                     <Section>
-                        <Headline level={2} className="mb-4 text-white">
+                        <Headline level={2} className="mb-6 text-white">
                             Tasks
                         </Headline>
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                             {module.tasks.map((task, index) => (
                                 <motion.div
                                     key={task.id}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 + index * 0.05 }}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 + index * 0.03 }}
                                 >
                                     <TaskCard
                                         task={task}
