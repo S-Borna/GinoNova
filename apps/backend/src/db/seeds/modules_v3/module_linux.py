@@ -2732,6 +2732,8 @@ vim /tmp/replace.txt
 ## Nästa Steg
 
 Du kan nu redigera filer på vilken server som helst. Nästa node: **I/O Redirection** — dirigera dataflöden med pipes och redirects.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -3105,6 +3107,8 @@ cat /tmp/xargs_test/*.txt
 ## Nästa Steg
 
 Du behärskar nu dataflöden i Linux. Nästa node: **User Management** — hantera användare och grupper.
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -3458,6 +3462,8 @@ sudo -u limited_user sudo systemctl restart ssh   # Ska INTE funka
 ## Nästa Steg
 
 Du kan nu hantera användare och grupper. Nästa node: **Package Management** — installera och uppdatera programvara.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -3714,6 +3720,8 @@ sudo apt upgrade -y
 ## Nästa Steg
 
 Du kan nu installera programvara. Nästa node: **Service Management** — hantera systemtjänster med systemd.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -4006,6 +4014,8 @@ sudo rm -rf /opt/mytest
 ## Nästa Steg
 
 Du kan nu hantera tjänster. Nästa node: **Disk & Storage** — partitioner, mount och LVM.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -4327,6 +4337,8 @@ sudo find /var/log -name "*.log" -mtime +30 -delete
 ## Nästa Steg
 
 Du kan nu hantera disk och storage. Nästa node: **Networking Basics** — IP, interfaces och routing.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -4617,6 +4629,8 @@ ss -tulnp
 ## Nästa Steg
 
 Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** — fördjupning i DNS.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -4853,6 +4867,8 @@ dig example.com
 ## Nästa Steg
 
 Du förstår nu DNS. Nästa node: **Firewall** — kontrollera nätverkstrafik.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5098,6 +5114,8 @@ sudo ufw status
 ## Nästa Steg
 
 Du kan nu konfigurera brandväggar. Nästa node: **SSH & Remote Access** — säker fjärråtkomst.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5360,6 +5378,8 @@ sudo systemctl restart sshd
 ## Nästa Steg
 
 Du behärskar nu SSH. Nästa node: **Archiving & Compression** — tar, gzip och backup.
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -5534,6 +5554,8 @@ tar -xzvf release-1.2.3.tar.gz -C /var/www/app/
 ## Nästa Steg
 
 Du kan nu arkivera och komprimera. Nästa node: **Cron & Scheduling** — automatisera uppgifter.
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -5684,6 +5706,8 @@ sudo systemctl enable --now backup.timer
 ## Nästa Steg
 
 Du kan nu schemalägga uppgifter. Nästa node: **Log Management** — övervaka och analysera loggar.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -5859,6 +5883,8 @@ lastlog
 ## Nästa Steg
 
 Du kan nu analysera loggar. Nästa node: **Performance Monitoring** — övervaka systemet.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -6054,6 +6080,8 @@ sar -u -s 10:00:00 -e 12:00:00
 ## Nästa Steg
 
 Du kan nu övervaka prestanda. Nästa node: **Troubleshooting** — felsökning av problem.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -6301,6 +6329,8 @@ Du kan nu:
 - Analysera loggar och prestanda
 
 **Nästa steg:** Docker SkillsMap → Containerisering
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -9018,6 +9048,8 @@ vim /tmp/replace.txt
 ## Nästa Steg
 
 Du kan nu redigera filer på vilken server som helst. Nästa node: **I/O Redirection** — dirigera dataflöden med pipes och redirects.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -9391,6 +9423,8 @@ cat /tmp/xargs_test/*.txt
 ## Nästa Steg
 
 Du behärskar nu dataflöden i Linux. Nästa node: **User Management** — hantera användare och grupper.
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -9744,6 +9778,8 @@ sudo -u limited_user sudo systemctl restart ssh   # Ska INTE funka
 ## Nästa Steg
 
 Du kan nu hantera användare och grupper. Nästa node: **Package Management** — installera och uppdatera programvara.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -10000,6 +10036,8 @@ sudo apt upgrade -y
 ## Nästa Steg
 
 Du kan nu installera programvara. Nästa node: **Service Management** — hantera systemtjänster med systemd.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -10292,6 +10330,8 @@ sudo rm -rf /opt/mytest
 ## Nästa Steg
 
 Du kan nu hantera tjänster. Nästa node: **Disk & Storage** — partitioner, mount och LVM.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -10613,6 +10653,8 @@ sudo find /var/log -name "*.log" -mtime +30 -delete
 ## Nästa Steg
 
 Du kan nu hantera disk och storage. Nästa node: **Networking Basics** — IP, interfaces och routing.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -10903,6 +10945,8 @@ ss -tulnp
 ## Nästa Steg
 
 Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** — fördjupning i DNS.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -11139,6 +11183,8 @@ dig example.com
 ## Nästa Steg
 
 Du förstår nu DNS. Nästa node: **Firewall** — kontrollera nätverkstrafik.
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -11384,6 +11430,8 @@ sudo ufw status
 ## Nästa Steg
 
 Du kan nu konfigurera brandväggar. Nästa node: **SSH & Remote Access** — säker fjärråtkomst.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -11646,6 +11694,8 @@ sudo systemctl restart sshd
 ## Nästa Steg
 
 Du behärskar nu SSH. Nästa node: **Archiving & Compression** — tar, gzip och backup.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -11820,6 +11870,8 @@ tar -xzvf release-1.2.3.tar.gz -C /var/www/app/
 ## Nästa Steg
 
 Du kan nu arkivera och komprimera. Nästa node: **Cron & Scheduling** — automatisera uppgifter.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -11970,6 +12022,8 @@ sudo systemctl enable --now backup.timer
 ## Nästa Steg
 
 Du kan nu schemalägga uppgifter. Nästa node: **Log Management** — övervaka och analysera loggar.
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -12145,6 +12199,8 @@ lastlog
 ## Nästa Steg
 
 Du kan nu analysera loggar. Nästa node: **Performance Monitoring** — övervaka systemet.
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -12340,6 +12396,8 @@ sar -u -s 10:00:00 -e 12:00:00
 ## Nästa Steg
 
 Du kan nu övervaka prestanda. Nästa node: **Troubleshooting** — felsökning av problem.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -12587,6 +12645,8 @@ Du kan nu:
 - Analysera loggar och prestanda
 
 **Nästa steg:** Docker SkillsMap → Containerisering
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
     ],

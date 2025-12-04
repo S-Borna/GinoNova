@@ -429,7 +429,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
             ) : error ? (
                 <ErrorState error={error} onRetry={fetchData} moduleId={moduleId} />
             ) : task ? (
-                <motion.div 
+                <motion.div
                     className="space-y-8"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

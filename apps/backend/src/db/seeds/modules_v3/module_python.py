@@ -246,6 +246,8 @@ print(f"Free: {free_memory_gb} GB")
 ## Nasta Steg
 
 Du har nu grunderna. Nasta node: **Collections** - listor, dictionaries och sets.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -502,6 +504,8 @@ hostname, ip, port = get_server_info()
 ## Nasta Steg
 
 Du kan nu hantera data i collections. Nasta node: **Control Flow** - if, loops och logik.
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -746,6 +750,8 @@ for server in servers:
 | `break` | Avbryt loop |
 | `continue` | Nasta iteration |
 | `enumerate()` | Index + varde |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -958,6 +964,8 @@ print(result)
 | Return | `return value` |
 | Lambda | `lambda x: x * 2` |
 | Type hints | `def func(x: int) -> str:` |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -1144,6 +1152,8 @@ log_message("Connection received")
 | Append | `open(f, "a").write()` |
 | Path exists | `Path(f).exists()` |
 | Read with pathlib | `Path(f).read_text()` |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -1283,6 +1293,8 @@ except ConnectionError:
 | `except Type as e` | Specifikt fel |
 | `finally` | Kors alltid |
 | `raise` | Kasta fel |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1760,6 +1772,8 @@ class ServiceMesh:
 | `@classmethod` | Metod pa klassen |
 | `@staticmethod` | Statisk funktion |
 | `@dataclass` | Modern OOP shorthand |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -1769,6 +1783,28 @@ class ServiceMesh:
                 "xp_reward": 50,
                 "content": r"""
 # OS & System Interaction
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. pathlib - Modern Path Handling
 
@@ -2087,6 +2123,8 @@ print(f"Working directory: {work_dir}")
 | `shutil.copy/move` | File operations |
 | `shutil.rmtree` | Remove directory tree |
 | `platform` | System information |
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -2096,6 +2134,28 @@ print(f"Working directory: {work_dir}")
                 "xp_reward": 50,
                 "content": r"""
 # Subprocess & Shell Commands
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. subprocess.run() - Basics
 
@@ -2467,6 +2527,8 @@ asyncio.run(run_multiple_commands())
 | `timeout=N` | Max tid i sekunder |
 | `shell=True` | Kor via shell (farligt!) |
 | `input="data"` | Skicka till stdin |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2476,6 +2538,28 @@ asyncio.run(run_multiple_commands())
                 "xp_reward": 50,
                 "content": r"""
 # JSON & YAML - DevOps Data Formats
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. JSON Basics
 
@@ -2842,6 +2926,8 @@ print(f"Groups: {list(inv['groups'].keys())}")
 | `yaml.dump()` | pyyaml | Dict till YAML |
 | `yaml.safe_load()` | pyyaml | YAML till dict |
 | `yaml.safe_load_all()` | pyyaml | Multi-doc YAML |
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2851,6 +2937,28 @@ print(f"Groups: {list(inv['groups'].keys())}")
                 "xp_reward": 50,
                 "content": r"""
 # HTTP & APIs med Python
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Installera: `pip install requests`
 
@@ -3210,6 +3318,8 @@ data = fetch_data("https://api.example.com/data")
 | `response.json()` | Parsa JSON response |
 | `response.raise_for_status()` | Kasta exception pa fel |
 | `requests.Session()` | Bevara state mellan requests |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -3219,6 +3329,28 @@ data = fetch_data("https://api.example.com/data")
                 "xp_reward": 50,
                 "content": r"""
 # Virtual Environments
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. Varfor Virtual Environments?
 
@@ -3475,6 +3607,8 @@ python -m venv .venv
 | `pip install -r requirements.txt` | Installera deps |
 | `pip freeze > requirements.txt` | Exportera deps |
 | `deactivate` | Avaktivera venv |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -3484,6 +3618,28 @@ python -m venv .venv
                 "xp_reward": 50,
                 "content": r"""
 # CLI Tools med Python
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. argparse Basics
 
@@ -3894,6 +4050,8 @@ if __name__ == "__main__":
 | Colors | Manual | `click.secho()` |
 | Confirmation | Manual | `click.confirm()` |
 | Progress | Manual | `click.progressbar()` |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -3903,6 +4061,28 @@ if __name__ == "__main__":
                 "xp_reward": 50,
                 "content": r"""
 # Regex & Text Processing
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. Regex Basics
 
@@ -4292,6 +4472,8 @@ for entry in process_logs(logs):
 | `re.compile()` | Kompilera for performance |
 | `match.group()` | Hamta capture group |
 | `match.groupdict()` | Hamta named groups |
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -4532,6 +4714,8 @@ except Exception as e:
 | `logger.exception()` | Fel med traceback |
 | `RotatingFileHandler` | Auto-rotation |
 | `JSONFormatter` | Structured logs |
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -4820,6 +5004,8 @@ pytest --lf
 | Parametrize | `@pytest.mark.parametrize` |
 | Mock | `@patch('module.func')` |
 | Exception | `pytest.raises(Error)` |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5078,6 +5264,8 @@ asyncio.run(main())
 | Parallel | `asyncio.gather(*tasks)` |
 | Timeout | `asyncio.wait_for(coro, timeout=5)` |
 | HTTP | `aiohttp.ClientSession()` |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -5087,6 +5275,28 @@ asyncio.run(main())
                 "xp_reward": 50,
                 "content": r"""
 # Decorators - Python Magi
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Vad ar en Decorator?
 
@@ -5370,6 +5580,8 @@ for i in range(5):
 | `@lru_cache` | Cacha resultat |
 | `@require_auth` | Kräv login |
 | `@rate_limit` | Begränsa anrop |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5681,6 +5893,8 @@ def check_servers(
 | Union | `Union[str, int]` eller `str \| int` |
 | TypedDict | `class Config(TypedDict):` |
 | Generic | `class Box(Generic[T]):` |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -5980,6 +6194,8 @@ jobs:
 | Publish | `twine upload dist/*` |
 | Poetry build | `poetry build` |
 | Poetry publish | `poetry publish` |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -6211,6 +6427,8 @@ print(f"Free: {free_memory_gb} GB")
 ## Nasta Steg
 
 Du har nu grunderna. Nasta node: **Collections** - listor, dictionaries och sets.
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -6467,6 +6685,8 @@ hostname, ip, port = get_server_info()
 ## Nasta Steg
 
 Du kan nu hantera data i collections. Nasta node: **Control Flow** - if, loops och logik.
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -6711,6 +6931,8 @@ for server in servers:
 | `break` | Avbryt loop |
 | `continue` | Nasta iteration |
 | `enumerate()` | Index + varde |
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -6923,6 +7145,8 @@ print(result)
 | Return | `return value` |
 | Lambda | `lambda x: x * 2` |
 | Type hints | `def func(x: int) -> str:` |
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -7109,6 +7333,8 @@ log_message("Connection received")
 | Append | `open(f, "a").write()` |
 | Path exists | `Path(f).exists()` |
 | Read with pathlib | `Path(f).read_text()` |
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -7248,6 +7474,8 @@ except ConnectionError:
 | `except Type as e` | Specifikt fel |
 | `finally` | Kors alltid |
 | `raise` | Kasta fel |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -7725,6 +7953,8 @@ class ServiceMesh:
 | `@classmethod` | Metod pa klassen |
 | `@staticmethod` | Statisk funktion |
 | `@dataclass` | Modern OOP shorthand |
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -7734,6 +7964,28 @@ class ServiceMesh:
                 "xp_reward": 50,
                 "content": r"""
 # OS & System Interaction
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. pathlib - Modern Path Handling
 
@@ -8052,6 +8304,8 @@ print(f"Working directory: {work_dir}")
 | `shutil.copy/move` | File operations |
 | `shutil.rmtree` | Remove directory tree |
 | `platform` | System information |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -8061,6 +8315,28 @@ print(f"Working directory: {work_dir}")
                 "xp_reward": 50,
                 "content": r"""
 # Subprocess & Shell Commands
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. subprocess.run() - Basics
 
@@ -8432,6 +8708,8 @@ asyncio.run(run_multiple_commands())
 | `timeout=N` | Max tid i sekunder |
 | `shell=True` | Kor via shell (farligt!) |
 | `input="data"` | Skicka till stdin |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -8441,6 +8719,28 @@ asyncio.run(run_multiple_commands())
                 "xp_reward": 50,
                 "content": r"""
 # JSON & YAML - DevOps Data Formats
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. JSON Basics
 
@@ -8807,6 +9107,8 @@ print(f"Groups: {list(inv['groups'].keys())}")
 | `yaml.dump()` | pyyaml | Dict till YAML |
 | `yaml.safe_load()` | pyyaml | YAML till dict |
 | `yaml.safe_load_all()` | pyyaml | Multi-doc YAML |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -8816,6 +9118,28 @@ print(f"Groups: {list(inv['groups'].keys())}")
                 "xp_reward": 50,
                 "content": r"""
 # HTTP & APIs med Python
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 Installera: `pip install requests`
 
@@ -9175,6 +9499,8 @@ data = fetch_data("https://api.example.com/data")
 | `response.json()` | Parsa JSON response |
 | `response.raise_for_status()` | Kasta exception pa fel |
 | `requests.Session()` | Bevara state mellan requests |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -9184,6 +9510,28 @@ data = fetch_data("https://api.example.com/data")
                 "xp_reward": 50,
                 "content": r"""
 # Virtual Environments
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. Varfor Virtual Environments?
 
@@ -9440,6 +9788,8 @@ python -m venv .venv
 | `pip install -r requirements.txt` | Installera deps |
 | `pip freeze > requirements.txt` | Exportera deps |
 | `deactivate` | Avaktivera venv |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -9449,6 +9799,28 @@ python -m venv .venv
                 "xp_reward": 50,
                 "content": r"""
 # CLI Tools med Python
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. argparse Basics
 
@@ -9859,6 +10231,8 @@ if __name__ == "__main__":
 | Colors | Manual | `click.secho()` |
 | Confirmation | Manual | `click.confirm()` |
 | Progress | Manual | `click.progressbar()` |
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -9868,6 +10242,28 @@ if __name__ == "__main__":
                 "xp_reward": 50,
                 "content": r"""
 # Regex & Text Processing
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## 1. Regex Basics
 
@@ -10257,6 +10653,8 @@ for entry in process_logs(logs):
 | `re.compile()` | Kompilera for performance |
 | `match.group()` | Hamta capture group |
 | `match.groupdict()` | Hamta named groups |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -10497,6 +10895,8 @@ except Exception as e:
 | `logger.exception()` | Fel med traceback |
 | `RotatingFileHandler` | Auto-rotation |
 | `JSONFormatter` | Structured logs |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -10785,6 +11185,8 @@ pytest --lf
 | Parametrize | `@pytest.mark.parametrize` |
 | Mock | `@patch('module.func')` |
 | Exception | `pytest.raises(Error)` |
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -11043,6 +11445,8 @@ asyncio.run(main())
 | Parallel | `asyncio.gather(*tasks)` |
 | Timeout | `asyncio.wait_for(coro, timeout=5)` |
 | HTTP | `aiohttp.ClientSession()` |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -11052,6 +11456,28 @@ asyncio.run(main())
                 "xp_reward": 50,
                 "content": r"""
 # Decorators - Python Magi
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Vad ar en Decorator?
 
@@ -11335,6 +11761,8 @@ for i in range(5):
 | `@lru_cache` | Cacha resultat |
 | `@require_auth` | Kräv login |
 | `@rate_limit` | Begränsa anrop |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -11646,6 +12074,8 @@ def check_servers(
 | Union | `Union[str, int]` eller `str \| int` |
 | TypedDict | `class Config(TypedDict):` |
 | Generic | `class Box(Generic[T]):` |
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -11945,6 +12375,8 @@ jobs:
 | Publish | `twine upload dist/*` |
 | Poetry build | `poetry build` |
 | Poetry publish | `poetry publish` |
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
     ],

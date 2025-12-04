@@ -952,13 +952,13 @@ class QuestionAnswering(dspy.Signature):
 # TypeChat approach (Microsoft)
 from typechat import create_json_translator
 
-schema = '''
+schema = """
 interface SentimentResult {
     sentiment: "positive" | "negative" | "neutral";
     confidence: number;  // 0-1
     keywords: string[];
 }
-'''
+"""
 
 translator = create_json_translator(schema)
 result = translator.translate("Amazing product, love it!")

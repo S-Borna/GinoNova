@@ -162,6 +162,8 @@ I denna SkillsMap kommer du lära dig:
 2. **ML Fundamentals** - Träning och experiment tracking
 3. **MLOps Core** - CI/CD och orchestration
 4. **Production** - Monitoring och scaling
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -170,6 +172,28 @@ I denna SkillsMap kommer du lära dig:
                 "estimated_minutes": 35,
                 "xp_reward": 75,
                 "content": r"""# Python for Machine Learning
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Förutsättningar
 
@@ -413,6 +437,8 @@ Med solid Python-grund går vi vidare till:
 - Git och versionshantering för ML
 - Cloud computing för ML-workloads
 - Containerisering av ML-modeller
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -699,6 +725,8 @@ git merge experiment/xgboost
 Med versionshantering på plats går vi vidare till:
 - Cloud computing för ML
 - Containerisering av modeller
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -935,6 +963,8 @@ def check_and_shutdown_idle_endpoints():
 Med cloud-grunderna på plats går vi vidare till:
 - Data Engineering för ML
 - Containerisering av ML-workloads
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -943,6 +973,28 @@ Med cloud-grunderna på plats går vi vidare till:
                 "estimated_minutes": 40,
                 "xp_reward": 100,
                 "content": r"""# Data Pipelines for ML
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Data Pipeline Architecture
 
@@ -1250,6 +1302,8 @@ FROM user_stats
 3. **Testing** - Unit tests för transformations
 4. **Documentation** - Beskriv data lineage
 5. **Alerting** - Notifiera vid failures
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -1503,6 +1557,8 @@ realtime_user_stats = StreamFeatureView(
 3. **Versioning** - Versionera feature definitions
 4. **Monitoring** - Tracka feature freshness och null rates
 5. **Testing** - Validera feature distributions
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1511,6 +1567,28 @@ realtime_user_stats = StreamFeatureView(
                 "estimated_minutes": 30,
                 "xp_reward": 75,
                 "content": r"""# Data Lakes & Warehouses for ML
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Data Lake vs Data Warehouse
 
@@ -1710,6 +1788,8 @@ data/
     ├── validation/
     └── test/
 ```
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -1718,6 +1798,28 @@ data/
                 "estimated_minutes": 30,
                 "xp_reward": 75,
                 "content": r"""# Data Ingestion Architecture
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Ingestion Patterns
 
@@ -1958,6 +2060,8 @@ def validate_ingested_data(df: pd.DataFrame) -> bool:
 
     return True
 ```
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -1966,6 +2070,28 @@ def validate_ingested_data(df: pd.DataFrame) -> bool:
                 "estimated_minutes": 35,
                 "xp_reward": 100,
                 "content": r"""# ML Training Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Reproducibility
 
@@ -2290,6 +2416,8 @@ def train_distributed():
 
 # Launch: torchrun --nproc_per_node=4 train.py
 ```
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -2542,6 +2670,8 @@ mlflow.register_model(
 3. **Nested runs** för hyperparameter tuning
 4. **Artifacts** för plots, feature importance, etc.
 5. **Automatisera** - integrera i CI/CD
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2550,6 +2680,28 @@ mlflow.register_model(
                 "estimated_minutes": 30,
                 "xp_reward": 100,
                 "content": r"""# Model Registry
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Vad är en Model Registry?
 
@@ -2769,6 +2921,8 @@ PATCH: Fixes
   - Minor retraining
   - Documentation updates
 ```
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -2777,6 +2931,28 @@ PATCH: Fixes
                 "estimated_minutes": 35,
                 "xp_reward": 100,
                 "content": r"""# Hyperparameter Tuning
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Tuning Strategier
 
@@ -3008,6 +3184,8 @@ best_hp = tuner.get_best_hyperparameters(num_trials=1)[0]
 3. **Early stopping/Pruning** - spara tid
 4. **Reproducerbarhet** - sätt seeds
 5. **Track allt** - logga till MLflow/W&B
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -3016,6 +3194,28 @@ best_hp = tuner.get_best_hyperparameters(num_trials=1)[0]
                 "estimated_minutes": 40,
                 "xp_reward": 110,
                 "content": r"""# CI/CD for Machine Learning
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## ML CI/CD vs Traditional CI/CD
 
@@ -3370,6 +3570,8 @@ class TestModelIntegrity:
 3. **Canary deployments** - gradvis utrullning
 4. **Rollback capability** - snabb återställning
 5. **Comprehensive testing** - unit, integration, model tests
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -3378,6 +3580,28 @@ class TestModelIntegrity:
                 "estimated_minutes": 40,
                 "xp_reward": 110,
                 "content": r"""# ML Pipeline Orchestration
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Orchestration Tools
 
@@ -3736,6 +3960,8 @@ compiler.Compiler().compile(
 3. **Monitoring** - alerts och dashboards
 4. **Parameterization** - konfigurerbara pipelines
 5. **Testing** - unit tester för tasks
+
+> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
 """
             },
             {
@@ -3744,6 +3970,28 @@ compiler.Compiler().compile(
                 "estimated_minutes": 40,
                 "xp_reward": 110,
                 "content": r"""# Model Serving & Inference
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Serving Patterns
 
@@ -4054,6 +4302,8 @@ async def predict(request: TransactionRequest):
 
     return {"prediction": result, "model_version": model_version}
 ```
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -4062,6 +4312,28 @@ async def predict(request: TransactionRequest):
                 "estimated_minutes": 35,
                 "xp_reward": 100,
                 "content": r"""# ML Containerization
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Training Container
 
@@ -4346,6 +4618,8 @@ spec:
 4. **Non-root user** - säkerhet
 5. **Health checks** - container orchestration
 6. **Resource limits** - förutsägbart beteende
+
+> 💡 **Pro Tip:** Lär dig läsa loggfiler effektivt - de berättar alltid vad som gick fel.
 """
             },
             {
@@ -4682,6 +4956,8 @@ class AlertManager:
 3. **Alert tuning** - avoid alert fatigue
 4. **Dashboards** - visualize trends
 5. **Runbooks** - documented response procedures
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
             {
@@ -4690,6 +4966,28 @@ class AlertManager:
                 "estimated_minutes": 35,
                 "xp_reward": 100,
                 "content": r"""# Feature Stores
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## Vad är en Feature Store?
 
@@ -4981,6 +5279,8 @@ class FeatureEngineer:
 3. **Feature documentation** - metadata och linage
 4. **Feature sharing** - återanvänd mellan modeller
 5. **Monitoring** - feature drift detection
+
+> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
 """
             },
             {
@@ -4989,6 +5289,28 @@ class FeatureEngineer:
                 "estimated_minutes": 30,
                 "xp_reward": 100,
                 "content": r"""# AutoML & Neural Architecture Search
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## AutoML Landscape
 
@@ -5243,6 +5565,8 @@ print(feature_matrix.head())
 3. **Interpretability** - förstå vad AutoML väljer
 4. **Production readiness** - validera edge cases
 5. **Cost awareness** - cloud AutoML kan bli dyrt
+
+> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
             },
             {
@@ -5251,6 +5575,28 @@ print(feature_matrix.head())
                 "estimated_minutes": 40,
                 "xp_reward": 120,
                 "content": r"""# Production MLOps Best Practices
+
+## Varför detta är viktigt
+
+> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DEVOPS CONTINUOUS FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Vad du kommer lära dig
+
+- ✅ Förstå kärnkoncepten på djupet
+- ✅ Tillämpa kunskapen praktiskt
+- ✅ Undvika vanliga misstag
+- ✅ Bygga robusta lösningar
+
+---
+
 
 ## MLOps Maturity Model
 
@@ -5601,6 +5947,8 @@ Production MLOps =
 ```
 
 Grattis! Du har slutfört MLOps SkillsMap! 🎉
+
+> 💡 **Pro Tip:** Automatisera allt du gör mer än två gånger. Din framtida jag kommer tacka dig.
 """
             },
     ],

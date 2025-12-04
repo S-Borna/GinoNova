@@ -864,6 +864,114 @@ def seed_skillsmaps_v3(
         )
 
 
+def seed_skillsmaps_v3_internal(db=None) -> dict:
+    """
+    Internal seed function for startup script (no auth required).
+    
+    This is called by start.sh to ensure modules/tasks exist after deploy.
+    Idempotent - safe to run multiple times.
+    
+    Returns:
+        dict with seed results
+    """
+    from ..db.track_repository import list_tracks, create_track
+    from ..db.module_repository import get_module_by_slug, create_module
+    from ..db.task_repository import create_task
+    from ..models.track import TrackCreate
+    from ..models.module import ModuleCreate
+    from ..models.task import TaskCreate
+    
+    try:
+        # Get existing tracks
+        existing_tracks = {t.slug: t.id for t in list_tracks()}
+        track_id_map = dict(existing_tracks)
+        tracks_created = 0
+
+        # Add tracks if needed
+        track_configs = [
+            ("foundation", "Foundation", "Core DevOps fundamentals", "#3b82f6", "🏗️", 1),
+            ("containers-orchestration", "Containers & Orchestration", "Docker & Kubernetes mastery", "#8b5cf6", "🐳", 2),
+            ("cloud-infrastructure", "Cloud & Infrastructure", "AWS, Terraform, and cloud architecture", "#f59e0b", "☁️", 3),
+            ("platform-engineering", "Platform Engineering", "CI/CD, GitOps, and developer platforms", "#10b981", "⚙️", 4),
+            ("advanced-specialty", "Advanced Specialty", "Specialized skills for senior engineers", "#ec4899", "🎯", 5),
+        ]
+        
+        for slug, name, desc, color, icon, order in track_configs:
+            if slug not in existing_tracks:
+                try:
+                    new_track = create_track(TrackCreate(
+                        name=name,
+                        slug=slug,
+                        description=desc,
+                        color=color,
+                        icon=icon,
+                        order_index=order,
+                    ))
+                    track_id_map[slug] = new_track.id
+                    tracks_created += 1
+                except Exception:
+                    pass  # Track might already exist
+
+        # Seed all v3 modules
+        modules_created = 0
+        tasks_created = 0
+        total_hours = 0
+
+        for module_data in get_v3_modules():
+            # Get track ID
+            track_slug = module_data.get("track_slug", "advanced-specialty")
+            track_id = track_id_map.get(track_slug) or track_id_map.get("foundation")
+
+            # Check if module already exists
+            existing = get_module_by_slug(module_data["slug"])
+            if existing:
+                continue  # Skip existing modules (idempotent)
+
+            # Create module
+            module = create_module(ModuleCreate(
+                track_id=track_id,
+                name=module_data["name"],
+                slug=module_data["slug"],
+                description=module_data.get("description", ""),
+                order_index=module_data.get("order_index", 100 + modules_created),
+                difficulty=module_data.get("difficulty", "intermediate"),
+                estimated_hours=module_data.get("estimated_hours", 10.0),
+                prerequisites=module_data.get("prerequisites", []),
+            ))
+            modules_created += 1
+            total_hours += module_data.get("estimated_hours", 10.0)
+
+            # Create tasks for this module
+            for idx, task_data in enumerate(module_data.get("tasks", [])):
+                create_task(TaskCreate(
+                    module_id=module.id,
+                    title=task_data["title"],
+                    description=task_data.get("description"),
+                    content=task_data.get("content", ""),
+                    order_index=idx + 1,
+                    difficulty=task_data.get("difficulty", "medium"),
+                    estimated_minutes=task_data.get("estimated_minutes", 30),
+                    xp_reward=task_data.get("xp_reward", 50),
+                ))
+                tasks_created += 1
+
+        return {
+            "success": True,
+            "message": f"Seeded {modules_created} modules with {tasks_created} tasks",
+            "tracks_created": tracks_created,
+            "modules_created": modules_created,
+            "tasks_created": tasks_created,
+            "total_hours": total_hours,
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Seed error: {str(e)}",
+            "error": str(e),
+        }
+
+
 @admin_router.get("/skillsmaps-status")
 def get_skillsmaps_status(response: Response) -> dict:
     """
