@@ -285,7 +285,7 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
                         "bg-gradient-to-br from-white/10 to-white/5",
                         "border border-white/10"
                     )}
-                    style={{ boxShadow: \`0 0 40px \${module.color}30\` }}
+                    style={{ boxShadow: `0 0 40px ${module.color}30` }}
                     whileHover={{ scale: 1.05 }}
                 >
                     <span className="text-5xl">{module.icon}</span>
@@ -343,11 +343,11 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
                                 style={{
                                     background: isComplete
                                         ? "linear-gradient(90deg, #10b981, #14b8a6)"
-                                        : \`linear-gradient(90deg, \${module.color}, \${module.color}cc)\`,
-                                    boxShadow: \`0 0 15px \${isComplete ? "#10b981" : module.color}50\`,
+                                        : `linear-gradient(90deg, ${module.color}, ${module.color}cc)`,
+                                    boxShadow: `0 0 15px ${isComplete ? "#10b981" : module.color}50`,
                                 }}
                                 initial={{ width: 0 }}
-                                animate={{ width: \`\${progress}%\` }}
+                                animate={{ width: `${progress}%` }}
                                 transition={{ duration: 1, ease: "easeOut" }}
                             />
                         </div>
@@ -665,7 +665,7 @@ export default function ModuleDetailPage() {
     }, [moduleId])
 
     const handleTaskClick = (taskId: string) => {
-        router.push(\`/modules/\${moduleId}/tasks/\${taskId}\`)
+        router.push(`/modules/${moduleId}/tasks/${taskId}`)
     }
 
     const nextTask = module?.tasks.find(t => t.status !== "complete")

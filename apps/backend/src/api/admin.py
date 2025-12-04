@@ -867,10 +867,10 @@ def seed_skillsmaps_v3(
 def seed_skillsmaps_v3_internal(db=None) -> dict:
     """
     Internal seed function for startup script (no auth required).
-    
+
     This is called by start.sh to ensure modules/tasks exist after deploy.
     Idempotent - safe to run multiple times.
-    
+
     Returns:
         dict with seed results
     """
@@ -880,7 +880,7 @@ def seed_skillsmaps_v3_internal(db=None) -> dict:
     from ..models.track import TrackCreate
     from ..models.module import ModuleCreate
     from ..models.task import TaskCreate
-    
+
     try:
         # Get existing tracks
         existing_tracks = {t.slug: t.id for t in list_tracks()}
@@ -895,7 +895,7 @@ def seed_skillsmaps_v3_internal(db=None) -> dict:
             ("platform-engineering", "Platform Engineering", "CI/CD, GitOps, and developer platforms", "#10b981", "⚙️", 4),
             ("advanced-specialty", "Advanced Specialty", "Specialized skills for senior engineers", "#ec4899", "🎯", 5),
         ]
-        
+
         for slug, name, desc, color, icon, order in track_configs:
             if slug not in existing_tracks:
                 try:
