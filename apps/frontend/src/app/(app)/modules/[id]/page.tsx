@@ -664,6 +664,7 @@ export default function ModuleDetailPage() {
 
     useEffect(() => {
         fetchModule()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [moduleId])
 
     const handleTaskClick = (taskId: string) => {
