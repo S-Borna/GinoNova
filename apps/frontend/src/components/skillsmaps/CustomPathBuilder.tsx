@@ -660,12 +660,16 @@ export function CustomPathBuilder({
                         </AnimatePresence>
                     </div>
 
-                    {/* Footer */}
-                    <div className="p-6 border-t border-zinc-800 flex items-center justify-between">
+                    {/* Footer - Always visible at bottom */}
+                    <div className={cn(
+                        "sticky bottom-0 p-6 border-t border-zinc-800",
+                        "bg-zinc-950/95 backdrop-blur-sm",
+                        "flex items-center justify-between"
+                    )}>
                         <Button
                             variant="outline"
                             onClick={() => step > 0 ? setStep(step - 1) : onClose()}
-                            className="rounded-xl"
+                            className="rounded-xl border-zinc-700 hover:bg-zinc-800"
                         >
                             <ChevronLeft className="w-4 h-4 mr-2" />
                             {step > 0 ? "Tillbaka" : "Avbryt"}
@@ -682,27 +686,29 @@ export function CustomPathBuilder({
                                     onClick={() => setStep(step + 1)}
                                     disabled={!canProceed}
                                     className={cn(
-                                        "rounded-xl px-6 py-2",
+                                        "rounded-xl px-8 py-3 text-base font-semibold",
                                         "bg-gradient-to-r from-purple-600 to-indigo-600",
                                         "hover:from-purple-500 hover:to-indigo-500",
+                                        "shadow-lg shadow-purple-500/25",
                                         "disabled:opacity-50 disabled:cursor-not-allowed"
                                     )}
                                 >
                                     {step === 0 ? `Gå vidare (${selectedModules.length})` : "Nästa"}
-                                    <ChevronRight className="w-4 h-4 ml-2" />
+                                    <ChevronRight className="w-5 h-5 ml-2" />
                                 </Button>
                             ) : (
                                 <Button
                                     onClick={handleSave}
                                     disabled={!canProceed}
                                     className={cn(
-                                        "rounded-xl px-6 py-2",
+                                        "rounded-xl px-8 py-3 text-base font-semibold",
                                         "bg-gradient-to-r from-emerald-600 to-teal-600",
                                         "hover:from-emerald-500 hover:to-teal-500",
+                                        "shadow-lg shadow-emerald-500/25",
                                         "disabled:opacity-50 disabled:cursor-not-allowed"
                                     )}
                                 >
-                                    <Save className="w-4 h-4 mr-2" />
+                                    <Save className="w-5 h-5 mr-2" />
                                     Spara SkillsMap
                                 </Button>
                             )}
