@@ -2,20 +2,20 @@
 
 /**
  * ============================================================================
- * SKILLSMAP NODE DETAIL PAGE — Individual Node/Lesson View
+ * SKILLSMAP NODE DETAIL PAGE — REAL API DATA, NO MOCK DATA
  * ============================================================================
  *
  * Features:
- * - Enhanced lesson content with progress tracking
+ * - Real lesson content from backend API
  * - Interactive content blocks (quiz, terminal, checkpoint)
  * - Progress tracking with read progress bar
  * - Mark as complete button
  * - Navigation to next node
  *
- * @phase SKILLSMAPS-INTEGRATION
+ * @phase SKILLSMAPS-API-INTEGRATION
  */
 
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import {
@@ -30,9 +30,14 @@ import {
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/components/auth"
-import { getToken } from "@/lib/auth"
 import { LessonContent } from "@/components/learning"
 import { usePlatform, filterContentByPlatform } from "@/hooks/useOperatingSystem"
+import {
+    getSkillsMap,
+    getNode,
+    markNodeComplete,
+    isNodeComplete,
+} from "@/lib/skillsmaps"
 import {
     ArrowLeft,
     CheckCircle2,
@@ -41,12 +46,10 @@ import {
     RefreshCw,
     AlertCircle,
     Zap,
-    Play,
-    Sparkles,
 } from "lucide-react"
 
 /* ============================================================================
-   TYPES
+   TYPES — Using types from skillsmaps lib
    ============================================================================ */
 
 type NodeType = "concept" | "practice" | "quiz" | "challenge" | "project"
@@ -79,400 +82,6 @@ interface SkillsMapDetailUI {
     estimatedHours: number
     difficulty: "beginner" | "intermediate" | "advanced" | "expert"
     nodes: SkillsMapNode[]
-}
-
-/* ============================================================================
-   MOCK DATA — Will be replaced with API
-   ============================================================================ */
-
-function getMockSkillsMap(slug: string): SkillsMapDetailUI | null {
-    // Generate 20 nodes for any SkillsMap
-    const generateNodes = (prefix: string, baseColor: string): SkillsMapNode[] => {
-        const nodeTemplates = [
-            // Block 1: Fundamentals (1-4)
-            { title: "Introduktion", desc: "Grundläggande koncept och varför det är viktigt", type: "concept" as NodeType, diff: "easy" as const },
-            { title: "Installation & Setup", desc: "Installera och konfigurera din utvecklingsmiljö", type: "practice" as NodeType, diff: "easy" as const },
-            { title: "Första stegen", desc: "Dina första kommandon och grundläggande användning", type: "practice" as NodeType, diff: "easy" as const },
-            { title: "Grundläggande struktur", desc: "Förstå den underliggande arkitekturen", type: "concept" as NodeType, diff: "easy" as const },
-            // Block 2: Core Concepts (5-8)
-            { title: "Konfiguration", desc: "Konfigurera och anpassa efter dina behov", type: "practice" as NodeType, diff: "medium" as const },
-            { title: "Arbetsflöden", desc: "Best practices för dagligt arbete", type: "concept" as NodeType, diff: "medium" as const },
-            { title: "Felsökning", desc: "Debugging och problemlösning", type: "practice" as NodeType, diff: "medium" as const },
-            { title: "Optimering", desc: "Förbättra prestanda och effektivitet", type: "concept" as NodeType, diff: "medium" as const },
-            // Block 3: Intermediate (9-12)
-            { title: "Avancerade kommandon", desc: "Kraftfulla tekniker för erfarna användare", type: "practice" as NodeType, diff: "medium" as const },
-            { title: "Automation", desc: "Automatisera repetitiva uppgifter", type: "practice" as NodeType, diff: "medium" as const },
-            { title: "Integration", desc: "Integrera med andra verktyg och system", type: "concept" as NodeType, diff: "medium" as const },
-            { title: "Säkerhet", desc: "Säkerhetsaspekter och best practices", type: "concept" as NodeType, diff: "medium" as const },
-            // Block 4: Advanced (13-16)
-            { title: "Skalning", desc: "Hantera större system och team", type: "concept" as NodeType, diff: "hard" as const },
-            { title: "Produktionsmiljö", desc: "Förbereda för produktion", type: "practice" as NodeType, diff: "hard" as const },
-            { title: "Monitoring", desc: "Övervakning och observability", type: "practice" as NodeType, diff: "hard" as const },
-            { title: "CI/CD Integration", desc: "Integrera i continuous delivery pipelines", type: "practice" as NodeType, diff: "hard" as const },
-            // Block 5: Expert (17-20)
-            { title: "Enterprise patterns", desc: "Mönster för stora organisationer", type: "concept" as NodeType, diff: "hard" as const },
-            { title: "Avancerad felsökning", desc: "Komplexa debugging-scenarion", type: "challenge" as NodeType, diff: "hard" as const },
-            { title: "Performance tuning", desc: "Avancerad prestandaoptimering", type: "challenge" as NodeType, diff: "hard" as const },
-            { title: "Certifieringsförberedelse", desc: "Sammanfattning och certifieringsguide", type: "quiz" as NodeType, diff: "hard" as const },
-        ]
-
-        return nodeTemplates.map((template, index) => ({
-            id: `${prefix}${index + 1}`,
-            orderIndex: index + 1,
-            title: template.title,
-            description: template.desc,
-            type: template.type,
-            difficulty: template.diff,
-            xpReward: template.diff === "easy" ? 75 : template.diff === "medium" ? 100 : 150,
-            estimatedMinutes: template.diff === "easy" ? 20 : template.diff === "medium" ? 30 : 45,
-            status: "not_started" as NodeStatus,
-        }))
-    }
-
-    const mockData: Record<string, SkillsMapDetailUI> = {
-        python: {
-            id: "1",
-            slug: "python",
-            title: "Python for DevOps",
-            description: "Lär dig Python från grunden med fokus på automation, scripting och DevOps-verktyg",
-            icon: "🐍",
-            color: "#3776AB",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 25,
-            difficulty: "beginner",
-            nodes: generateNodes("py", "#3776AB"),
-        },
-        linux: {
-            id: "2",
-            slug: "linux",
-            title: "Linux Mastery",
-            description: "Behärska Linux från kommandoraden till systemadministration och säkerhet",
-            icon: "🐧",
-            color: "#FCC624",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 30,
-            difficulty: "beginner",
-            nodes: generateNodes("lx", "#FCC624"),
-        },
-        docker: {
-            id: "3",
-            slug: "docker",
-            title: "Docker",
-            description: "Containerisering från grunderna till produktion med Docker och Docker Compose",
-            icon: "🐳",
-            color: "#2496ED",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 20,
-            difficulty: "intermediate",
-            nodes: generateNodes("dk", "#2496ED"),
-        },
-        kubernetes: {
-            id: "4",
-            slug: "kubernetes",
-            title: "Kubernetes",
-            description: "Orkestrering av containers i skala med Kubernetes, Helm och GitOps",
-            icon: "☸️",
-            color: "#326CE5",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2500,
-            estimatedHours: 35,
-            difficulty: "advanced",
-            nodes: generateNodes("k8s", "#326CE5"),
-        },
-        terraform: {
-            id: "5",
-            slug: "terraform",
-            title: "Terraform",
-            description: "Infrastructure as Code med Terraform för AWS, Azure och GCP",
-            icon: "🏗️",
-            color: "#7B42BC",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2200,
-            estimatedHours: 25,
-            difficulty: "intermediate",
-            nodes: generateNodes("tf", "#7B42BC"),
-        },
-        aws: {
-            id: "6",
-            slug: "aws",
-            title: "AWS",
-            description: "Amazon Web Services från EC2 till serverless med fokus på best practices",
-            icon: "☁️",
-            color: "#FF9900",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2400,
-            estimatedHours: 40,
-            difficulty: "intermediate",
-            nodes: generateNodes("aws", "#FF9900"),
-        },
-        git: {
-            id: "7",
-            slug: "git",
-            title: "Git & GitHub",
-            description: "Versionskontroll, branching strategier och samarbete med Git och GitHub",
-            icon: "🔀",
-            color: "#F05032",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 1500,
-            estimatedHours: 12,
-            difficulty: "beginner",
-            nodes: generateNodes("git", "#F05032"),
-        },
-        cicd: {
-            id: "8",
-            slug: "cicd",
-            title: "CI/CD Pipelines",
-            description: "Bygg robusta CI/CD pipelines med GitHub Actions, Jenkins och GitLab CI",
-            icon: "🚀",
-            color: "#2088FF",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 22,
-            difficulty: "intermediate",
-            nodes: generateNodes("cicd", "#2088FF"),
-        },
-        bash: {
-            id: "9",
-            slug: "bash",
-            title: "Shell/Bash Scripting",
-            description: "Automatisera allt med Bash scripting, sed, awk och kraftfulla one-liners",
-            icon: "💻",
-            color: "#4EAA25",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 1800,
-            estimatedHours: 18,
-            difficulty: "beginner",
-            nodes: generateNodes("sh", "#4EAA25"),
-        },
-        javascript: {
-            id: "10",
-            slug: "javascript",
-            title: "JavaScript",
-            description: "Modern JavaScript från ES6+ till Node.js för fullstack utveckling",
-            icon: "📜",
-            color: "#F7DF1E",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 28,
-            difficulty: "beginner",
-            nodes: generateNodes("js", "#F7DF1E"),
-        },
-        typescript: {
-            id: "11",
-            slug: "typescript",
-            title: "TypeScript",
-            description: "Typsäker JavaScript med TypeScript för robusta applikationer",
-            icon: "🔷",
-            color: "#3178C6",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 22,
-            difficulty: "intermediate",
-            nodes: generateNodes("ts", "#3178C6"),
-        },
-        go: {
-            id: "12",
-            slug: "go",
-            title: "Go",
-            description: "Systemsprogrammering och cloud-native utveckling med Go",
-            icon: "🔵",
-            color: "#00ADD8",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2200,
-            estimatedHours: 30,
-            difficulty: "intermediate",
-            nodes: generateNodes("go", "#00ADD8"),
-        },
-        ansible: {
-            id: "13",
-            slug: "ansible",
-            title: "Ansible",
-            description: "Konfigurationshantering och automation med Ansible playbooks och roles",
-            icon: "⚙️",
-            color: "#EE0000",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 20,
-            difficulty: "intermediate",
-            nodes: generateNodes("ans", "#EE0000"),
-        },
-        sql: {
-            id: "14",
-            slug: "sql",
-            title: "SQL",
-            description: "Databashantering från grundläggande queries till avancerad optimering",
-            icon: "🗃️",
-            color: "#336791",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 24,
-            difficulty: "beginner",
-            nodes: generateNodes("sql", "#336791"),
-        },
-        system_design: {
-            id: "15",
-            slug: "system_design",
-            title: "System Design",
-            description: "Designa skalbara system från mikrotjänster till distributed systems",
-            icon: "🏛️",
-            color: "#6366F1",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2800,
-            estimatedHours: 35,
-            difficulty: "advanced",
-            nodes: generateNodes("sd", "#6366F1"),
-        },
-        nodejs: {
-            id: "16",
-            slug: "nodejs",
-            title: "Node.js",
-            description: "Backend-utveckling med Node.js, Express och moderna API-mönster",
-            icon: "💚",
-            color: "#339933",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 26,
-            difficulty: "intermediate",
-            nodes: generateNodes("node", "#339933"),
-        },
-        prompt_engineering: {
-            id: "17",
-            slug: "prompt_engineering",
-            title: "Prompt Engineering",
-            description: "Behärska konsten att kommunicera effektivt med AI-modeller",
-            icon: "🧠",
-            color: "#EC4899",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2000,
-            estimatedHours: 15,
-            difficulty: "beginner",
-            nodes: generateNodes("pe", "#EC4899"),
-        },
-        mlops: {
-            id: "18",
-            slug: "mlops",
-            title: "MLOps",
-            description: "Machine Learning Operations för produktion - modellträning till deployment",
-            icon: "🤖",
-            color: "#FF6B6B",
-            totalNodes: 20,
-            completedNodes: 0,
-            totalXP: 2400,
-            estimatedHours: 30,
-            difficulty: "advanced",
-            nodes: generateNodes("ml", "#FF6B6B"),
-        },
-    }
-
-    return mockData[slug] || null
-}
-
-/* ============================================================================
-   NODE CONTENT GENERATOR
-   ============================================================================ */
-
-function generateNodeContent(slug: string, node: SkillsMapNode): string {
-    const skillsMapTitles: Record<string, string> = {
-        python: "Python for DevOps",
-        linux: "Linux Mastery",
-        docker: "Docker",
-        kubernetes: "Kubernetes",
-        terraform: "Terraform",
-        aws: "AWS",
-        git: "Git & GitHub",
-        cicd: "CI/CD Pipelines",
-        bash: "Shell/Bash Scripting",
-        javascript: "JavaScript",
-        typescript: "TypeScript",
-        go: "Go",
-        ansible: "Ansible",
-        sql: "SQL",
-        system_design: "System Design",
-        nodejs: "Node.js",
-        prompt_engineering: "Prompt Engineering",
-        mlops: "MLOps",
-    }
-
-    const skillTitle = skillsMapTitles[slug] || slug
-
-    return `# ${node.title}
-
-${node.description}
-
----
-
-## Översikt
-
-I denna lektion lär du dig om **${node.title.toLowerCase()}** inom ${skillTitle}.
-Detta är en ${node.difficulty === 'easy' ? 'grundläggande' : node.difficulty === 'medium' ? 'mellansvår' : 'avancerad'} lektion som tar ungefär ${node.estimatedMinutes} minuter att slutföra.
-
-## Lärandemål
-
-Efter denna lektion kommer du att:
-
-- Förstå grunderna i ${node.title.toLowerCase()}
-- Kunna tillämpa koncepten praktiskt
-- Ha färdigheter att gå vidare till nästa steg
-
-## Huvudinnehåll
-
-### Introduktion
-
-${node.type === 'concept' ?
-            'Denna lektion fokuserar på teoretiska koncept som är viktiga att förstå innan du börjar praktisera.' :
-            node.type === 'practice' ?
-                'Denna lektion är praktiskt orienterad. Du kommer att utföra övningar för att befästa dina kunskaper.' :
-                node.type === 'quiz' ?
-                    'Denna lektion testar dina kunskaper genom frågor och övningar.' :
-                    node.type === 'challenge' ?
-                        'Detta är en utmaning som testar dina färdigheter på en djupare nivå.' :
-                        'Denna lektion kombinerar teori och praktik.'
-        }
-
-### Nyckelkoncept
-
-1. **Grundläggande förståelse** - Vad innebär ${node.title.toLowerCase()}?
-2. **Praktisk tillämpning** - Hur används detta i verkliga scenarion?
-3. **Best practices** - Vilka är de bästa metoderna?
-
-### Exempel
-
-\`\`\`bash
-# Exempelkommando för ${skillTitle}
-echo "Övning: ${node.title}"
-\`\`\`
-
-## Sammanfattning
-
-Du har nu lärt dig grunderna i **${node.title}**.
-Fortsätt till nästa lektion för att bygga vidare på dessa kunskaper.
-
----
-
-💡 **Tips:** Öva regelbundet för att befästa dina kunskaper!
-
-🏆 **Belöning:** ${node.xpReward} XP vid slutförande
-`
 }
 
 /* ============================================================================
@@ -553,42 +162,41 @@ export default function SkillsMapNodeDetailPage() {
     const [completing, setCompleting] = useState(false)
     const [isCompleted, setIsCompleted] = useState(false)
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-    const token = getToken()
-
     const fetchData = useCallback(async () => {
         setLoading(true)
         setError(null)
 
         try {
-            // TODO: Replace with actual API call
-            await new Promise(resolve => setTimeout(resolve, 300))
-
-            const skillsmapData = getMockSkillsMap(slug)
-            if (!skillsmapData) {
-                setError("Denna SkillsMap finns inte")
+            // REAL API CALL - NO MOCK DATA
+            const skillsmapResult = await getSkillsMap(slug)
+            if (!skillsmapResult.ok) {
+                setError(skillsmapResult.message)
                 return
             }
 
+            const skillsmapData = skillsmapResult.data
+
+            // Find the node in the skillsmap
             const nodeData = skillsmapData.nodes.find(n => n.id === nodeId)
             if (!nodeData) {
-                setError("Denna nod finns inte")
-                return
+                // Try fetching node directly
+                const nodeResult = await getNode(nodeId)
+                if (!nodeResult.ok) {
+                    setError("Denna nod finns inte")
+                    return
+                }
+                setNode(nodeResult.data)
+            } else {
+                setNode(nodeData)
             }
 
-            // Add generated content to node
-            const nodeWithContent = {
-                ...nodeData,
-                content: generateNodeContent(slug, nodeData)
-            }
+            setSkillsmap({
+                ...skillsmapData,
+                nodes: skillsmapData.nodes as any,
+            })
 
-            setSkillsmap(skillsmapData)
-            setNode(nodeWithContent)
-
-            // Check completion status from localStorage
-            const completedKey = `skillsmap_${slug}_${nodeId}_completed`
-            const wasCompleted = localStorage.getItem(completedKey) === 'true'
-            setIsCompleted(wasCompleted)
+            // Check completion status
+            setIsCompleted(isNodeComplete(slug, nodeId))
         } catch (err) {
             setError(err instanceof Error ? err.message : "Ett fel uppstod")
         } finally {
@@ -602,11 +210,10 @@ export default function SkillsMapNodeDetailPage() {
 
     const handleMarkComplete = async () => {
         setCompleting(true)
-        await new Promise((resolve) => setTimeout(resolve, 500))
+        await new Promise((resolve) => setTimeout(resolve, 300))
 
-        // Save completion to localStorage
-        const completedKey = `skillsmap_${slug}_${nodeId}_completed`
-        localStorage.setItem(completedKey, 'true')
+        // Mark node complete using skillsmaps lib
+        markNodeComplete(slug, nodeId)
 
         setIsCompleted(true)
         setCompleting(false)
