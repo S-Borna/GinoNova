@@ -363,7 +363,17 @@ export function CustomPathBuilder({
         onClose()
     }
 
-    const canProceed = step === 0 ? selectedModules.length > 0 : pathName.trim().length > 0
+    // Can proceed logic per step:
+    // Step 0: Need at least 1 module selected
+    // Step 1: Need at least 1 module (for reordering)
+    // Step 2: Need a name for the path
+    const canProceed = useMemo(() => {
+        if (step === 0) return selectedModules.length > 0
+        if (step === 1) return selectedModules.length > 0
+        if (step === 2) return pathName.trim().length > 0
+        return false
+    }, [step, selectedModules.length, pathName])
+
     const totalSteps = 3
 
     if (!isOpen) return null
@@ -662,18 +672,23 @@ export function CustomPathBuilder({
                         </Button>
 
                         <div className="flex items-center gap-3">
+                            {step === 0 && selectedModules.length === 0 && (
+                                <span className="text-sm text-zinc-500">
+                                    Välj minst en modul för att fortsätta
+                                </span>
+                            )}
                             {step < totalSteps - 1 ? (
                                 <Button
                                     onClick={() => setStep(step + 1)}
                                     disabled={!canProceed}
                                     className={cn(
-                                        "rounded-xl",
+                                        "rounded-xl px-6 py-2",
                                         "bg-gradient-to-r from-purple-600 to-indigo-600",
                                         "hover:from-purple-500 hover:to-indigo-500",
                                         "disabled:opacity-50 disabled:cursor-not-allowed"
                                     )}
                                 >
-                                    Nästa
+                                    {step === 0 ? `Gå vidare (${selectedModules.length})` : "Nästa"}
                                     <ChevronRight className="w-4 h-4 ml-2" />
                                 </Button>
                             ) : (
@@ -681,7 +696,7 @@ export function CustomPathBuilder({
                                     onClick={handleSave}
                                     disabled={!canProceed}
                                     className={cn(
-                                        "rounded-xl",
+                                        "rounded-xl px-6 py-2",
                                         "bg-gradient-to-r from-emerald-600 to-teal-600",
                                         "hover:from-emerald-500 hover:to-teal-500",
                                         "disabled:opacity-50 disabled:cursor-not-allowed"
