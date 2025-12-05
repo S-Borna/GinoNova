@@ -9,20 +9,18 @@ NODE_01_SQL_INTRO = {
     "estimated_minutes": 45,
     "xp_reward": 100,
     "prerequisites": [],
-    "content": '''
-# SQL Introduktion
+    "content": '''# 🗃️ SQL Introduktion
 
-Structured Query Language för databaser.
+## Varför detta är kritiskt
+> "SQL är språket som talar till all data. Som DevOps hanterar du databaser dagligen - migrations, backups, monitoring, debugging. Utan SQL är du blind."
 
-## Varför SQL?
+## Vad du kommer lära dig
+- ✅ SQL syntax och grundläggande queries
+- ✅ PostgreSQL installation och setup
+- ✅ DDL, DML, DCL och TCL kategorier
+- ✅ Första tabeller och CRUD operations
 
-| Funktion | Fördel |
-|----------|--------|
-| Universellt | Alla relationsdatabaser |
-| Deklarativt | Beskriv VAD, inte HUR |
-| Kraftfullt | Komplexa queries |
-| Standard | ANSI SQL |
-| DevOps | Migrations, backups, monitoring |
+---
 
 ## Databaser
 
@@ -32,7 +30,6 @@ Structured Query Language för databaser.
 | MySQL | Webb, WordPress |
 | SQLite | Embedded, lokal |
 | SQL Server | Microsoft stack |
-| Oracle | Enterprise legacy |
 
 ## Installation (PostgreSQL)
 
@@ -101,10 +98,18 @@ NODE_02_DATA_TYPES = {
     "estimated_minutes": 50,
     "xp_reward": 120,
     "prerequisites": [1],
-    "content": '''
-# SQL Data Types
+    "content": '''# 📊 SQL Data Types
 
-Rätt datatyp för rätt data.
+## Varför detta är viktigt
+> "Rätt datatyp = rätt prestanda och dataintegritet. Fel val kan kosta dig TB i lagring eller millisekunder i query-tid."
+
+## Vad du kommer lära dig
+- ✅ Numeriska typer (INTEGER, DECIMAL, etc.)
+- ✅ Text och binära typer
+- ✅ Datum och tid
+- ✅ Speciella typer (JSON, ARRAY, UUID)
+
+---
 
 ## Numeriska
 
@@ -233,10 +238,18 @@ NODE_03_DDL_CREATE = {
     "estimated_minutes": 55,
     "xp_reward": 130,
     "prerequisites": [2],
-    "content": '''
-# CREATE & ALTER
+    "content": '''# 🏗️ CREATE & ALTER - DDL
 
-Definiera databasstruktur.
+## Varför detta är kritiskt
+> "Databasschema är fundamentet för din applikation. Ett dåligt schema = dålig prestanda och buggar för evigt."
+
+## Vad du kommer lära dig
+- ✅ CREATE TABLE med constraints
+- ✅ Primary keys och foreign keys
+- ✅ ALTER TABLE för schema changes
+- ✅ Indexes för prestanda
+
+---
 
 ## CREATE TABLE
 
@@ -384,10 +397,18 @@ NODE_04_DML_BASICS = {
     "estimated_minutes": 50,
     "xp_reward": 125,
     "prerequisites": [3],
-    "content": '''
-# INSERT, UPDATE, DELETE
+    "content": '''# ✏️ INSERT, UPDATE, DELETE - DML
 
-Manipulera data.
+## Varför detta är viktigt
+> "CRUD operations är bröd och smör i databashantering. Men UPDATE och DELETE utan WHERE kan förstöra hela din databas på sekunder."
+
+## Vad du kommer lära dig
+- ✅ INSERT med RETURNING
+- ✅ UPDATE med säker WHERE
+- ✅ DELETE och TRUNCATE
+- ✅ UPSERT (ON CONFLICT)
+
+---
 
 ## INSERT
 

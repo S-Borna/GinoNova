@@ -9,10 +9,18 @@ NODE_17_DB_DESIGN = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [3],
-    "content": '''
-# Database Design
+    "content": '''# 🏛️ Database Design
 
-Principles för bra schema design.
+## Varför detta är kritiskt
+> "Ett dåligt schema kan inte fixas med index. Database design är grunden - gör det rätt från början eller lev med teknisk skuld för evigt."
+
+## Vad du kommer lära dig
+- ✅ Normalisering (1NF, 2NF, 3NF)
+- ✅ Relationships (1:1, 1:N, M:N)
+- ✅ Naming conventions
+- ✅ Denormalisering för performance
+
+---
 
 ## Normalization
 
@@ -203,10 +211,18 @@ NODE_18_MIGRATIONS = {
     "estimated_minutes": 50,
     "xp_reward": 145,
     "prerequisites": [17],
-    "content": '''
-# Migrations
+    "content": '''# 🔄 Migrations
 
-Versioned schema changes.
+## Varför detta är kritiskt
+> "Ingen ändrar schemat manuellt i prod. Migrations är den enda vägen - versionshanterad, granskad, och rollback-redo."
+
+## Vad du kommer lära dig
+- ✅ Migration tools (Alembic, Flyway, golang-migrate)
+- ✅ Safe vs dangerous operations
+- ✅ Expand-Contract pattern
+- ✅ Zero-downtime schema changes
+
+---
 
 ## Migration Basics
 
@@ -377,10 +393,18 @@ NODE_19_BACKUP = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [18],
-    "content": '''
-# Backup & Recovery
+    "content": '''# 💾 Backup & Recovery
 
-Skydda din data.
+## Varför detta är kritiskt
+> "Backups du aldrig testat är inte backups - de är falsk trygghet. En dag kommer du behöva dem, och då är det för sent att upptäcka att de inte fungerar."
+
+## Vad du kommer lära dig
+- ✅ pg_dump/pg_restore
+- ✅ Physical vs Logical backups
+- ✅ Point-in-Time Recovery (PITR)
+- ✅ Cloud backup strategies
+
+---
 
 ## Backup Types
 
@@ -562,10 +586,18 @@ NODE_20_MONITORING = {
     "estimated_minutes": 55,
     "xp_reward": 160,
     "prerequisites": [14, 19],
-    "content": '''
-# Monitoring & Best Practices
+    "content": '''# 📊 Monitoring & Best Practices
 
-Production-ready SQL.
+## Varför detta är kritiskt
+> "En databas utan monitoring är som att köra bil med ögonbindel. Du märker problemen först när du kraschar - och då är det redan för sent."
+
+## Vad du kommer lära dig
+- ✅ Key PostgreSQL metrics
+- ✅ pg_stat_statements analysis
+- ✅ Connection pooling
+- ✅ Production checklist
+
+---
 
 ## Key Metrics
 

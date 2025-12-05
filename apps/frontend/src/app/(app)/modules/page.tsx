@@ -46,6 +46,8 @@ interface EnhancedModule extends ModulePublic {
     status: ModuleStatus
     estimatedHours: number
     prerequisiteModule?: string
+    tags?: string[]
+    xp?: number
 }
 
 /* ============================================================================
@@ -105,6 +107,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 8,
         status: "not_started",
+        tags: ["Culture", "CI/CD", "Basics"],
+        xp: 400,
     },
     {
         id: "m2",
@@ -126,6 +130,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 12,
         status: "not_started",
+        tags: ["CLI", "System Admin", "Shell"],
+        xp: 800,
     },
     {
         id: "m3",
@@ -147,6 +153,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 10,
         status: "not_started",
+        tags: ["Version Control", "GitHub", "Collaboration"],
+        xp: 600,
     },
     {
         id: "m4",
@@ -168,6 +176,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 15,
         status: "not_started",
+        tags: ["Containers", "DevOps", "Microservices"],
+        xp: 1000,
     },
     {
         id: "m5",
@@ -189,6 +199,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 12,
         status: "not_started",
+        tags: ["Pipelines", "Automation", "Deploy"],
+        xp: 800,
     },
     {
         id: "m6",
@@ -210,6 +222,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 16,
         status: "not_started",
+        tags: ["Cloud", "AWS", "Infrastructure"],
+        xp: 1200,
     },
     {
         id: "m7",
@@ -231,6 +245,8 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 14,
         status: "not_started",
+        tags: ["IaC", "Terraform", "Ansible"],
+        xp: 1000,
     },
     {
         id: "m8",
@@ -252,40 +268,52 @@ const MOCK_MODULES: EnhancedModule[] = [
         tasksCompleted: 0,
         totalTasks: 18,
         status: "not_started",
+        tags: ["K8s", "Orchestration", "Helm"],
+        xp: 1400,
     },
 ]
 
 /* ============================================================================
-   SKELETON COMPONENTS
+   SKELETON COMPONENTS — Matches SkillsMapCard Design
    ============================================================================ */
 
 function ModuleCardSkeleton() {
     return (
-        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6 animate-pulse">
-            {/* Top row */}
+        <div className="bg-gradient-to-br from-zinc-900/90 via-zinc-900/95 to-zinc-950/90 rounded-2xl border border-white/[0.08] p-6 animate-pulse">
+            {/* Top row: Icon + Status */}
             <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gray-200 dark:bg-neutral-700" />
-                    <div>
-                        <div className="h-5 w-32 rounded bg-gray-200 dark:bg-neutral-700 mb-1" />
-                        <div className="h-4 w-20 rounded bg-gray-200 dark:bg-neutral-700" />
-                    </div>
-                </div>
-                <div className="w-20 h-6 rounded-full bg-gray-200 dark:bg-neutral-700" />
+                <div className="w-14 h-14 rounded-xl bg-zinc-800" />
+                <div className="w-24 h-7 rounded-full bg-zinc-800" />
             </div>
+            {/* Title */}
+            <div className="h-6 w-3/4 rounded bg-zinc-800 mb-2" />
             {/* Description */}
             <div className="space-y-2 mb-4">
-                <div className="h-4 w-full rounded bg-gray-200 dark:bg-neutral-700" />
-                <div className="h-4 w-2/3 rounded bg-gray-200 dark:bg-neutral-700" />
+                <div className="h-4 w-full rounded bg-zinc-800" />
+                <div className="h-4 w-2/3 rounded bg-zinc-800" />
+            </div>
+            {/* Tags */}
+            <div className="flex gap-2 mb-4">
+                <div className="h-5 w-16 rounded bg-zinc-800" />
+                <div className="h-5 w-20 rounded bg-zinc-800" />
+                <div className="h-5 w-14 rounded bg-zinc-800" />
             </div>
             {/* Progress */}
-            <div className="h-2 w-full mb-2 rounded bg-gray-200 dark:bg-neutral-700" />
-            <div className="flex justify-between mb-4">
-                <div className="h-4 w-12 rounded bg-gray-200 dark:bg-neutral-700" />
-                <div className="h-4 w-8 rounded bg-gray-200 dark:bg-neutral-700" />
+            <div className="mb-4">
+                <div className="flex justify-between mb-2">
+                    <div className="h-3 w-20 rounded bg-zinc-800" />
+                    <div className="h-3 w-10 rounded bg-zinc-800" />
+                </div>
+                <div className="h-2 w-full rounded-full bg-zinc-800" />
+            </div>
+            {/* Meta row */}
+            <div className="flex gap-4 mb-4">
+                <div className="h-4 w-16 rounded bg-zinc-800" />
+                <div className="h-4 w-12 rounded bg-zinc-800" />
+                <div className="h-4 w-16 rounded bg-zinc-800" />
             </div>
             {/* Button */}
-            <div className="h-10 w-full rounded-xl bg-gray-200 dark:bg-neutral-700" />
+            <div className="h-12 w-full rounded-xl bg-zinc-800" />
         </div>
     )
 }
@@ -294,12 +322,19 @@ function PageSkeleton() {
     return (
         <div className="space-y-8">
             {/* Header skeleton */}
-            <div className="mb-8">
-                <div className="h-8 w-48 rounded bg-gray-200 dark:bg-neutral-700 mb-2" />
-                <div className="h-5 w-32 rounded bg-gray-200 dark:bg-neutral-700 mb-6" />
-                <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-100 dark:border-neutral-700 p-6">
-                    <div className="h-4 w-full mb-3 rounded bg-gray-200 dark:bg-neutral-700" />
-                    <div className="h-3 w-full rounded bg-gray-200 dark:bg-neutral-700" />
+            <div className="rounded-3xl bg-gradient-to-br from-zinc-900 via-purple-950/30 to-zinc-900 border border-purple-500/20 p-8">
+                <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-zinc-800" />
+                    <div className="h-4 w-24 rounded bg-zinc-800" />
+                </div>
+                <div className="h-10 w-64 rounded bg-zinc-800 mb-2" />
+                <div className="h-5 w-40 rounded bg-zinc-800 mb-6" />
+                <div className="bg-zinc-800/50 rounded-2xl p-5">
+                    <div className="flex justify-between mb-3">
+                        <div className="h-4 w-28 rounded bg-zinc-700" />
+                        <div className="h-5 w-12 rounded bg-zinc-700" />
+                    </div>
+                    <div className="h-3 w-full rounded-full bg-zinc-700" />
                 </div>
             </div>
             {/* Grid skeleton */}
@@ -721,6 +756,9 @@ export default function ModulesPage() {
                                         status={module.status}
                                         estimatedHours={module.estimatedHours}
                                         prerequisiteModule={module.prerequisiteModule}
+                                        tags={module.tags}
+                                        xp={module.xp}
+                                        difficulty={module.difficulty as "beginner" | "intermediate" | "advanced" | "expert"}
                                     />
                                 </motion.div>
                             ))}

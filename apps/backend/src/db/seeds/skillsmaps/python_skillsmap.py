@@ -43,15 +43,49 @@ NODE_01_PYTHON_BASICS = {
         "variables", "data types", "strings", "numbers",
         "booleans", "type conversion", "print", "input"
     ],
-    "content": r"""# Python Fundamentals
+    "content": r"""# 🐍 Python Fundamentals
 
-## Varfor Python for DevOps?
+## Varför detta är viktigt
 
-> "Python is the Swiss Army knife of DevOps. Ansible is Python. AWS Lambda loves Python. Kubernetes operators use Python. It's readable, powerful, and everywhere."
+Som DevOps-ingenjör är Python ditt viktigaste verktyg. Ansible är skrivet i Python. AWS Lambda älskar Python. Kubernetes operators använder Python. Terraform providers byggs med Python. Det är läsbart, kraftfullt och finns överallt i DevOps-världen.
+
+## Vad du kommer lära dig
+
+- Förstå Pythons grundläggande syntax och datatyper
+- Konfigurera Python-miljöer för DevOps-arbete
+- Implementera variabler, strings och numbers korrekt
+- Behärska type conversion och namnkonventioner
 
 ---
 
-## Installation & Setup
+## 📚 Varför Python för DevOps?
+
+> "Python is the Swiss Army knife of DevOps. Ansible is Python. AWS Lambda loves Python. Kubernetes operators use Python. It's readable, powerful, and everywhere."
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                    PYTHON I DEVOPS-EKOSYSTEMET                         │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐       │
+│   │ Ansible  │    │   AWS    │    │ Kubernetes│   │ Terraform│       │
+│   │  YAML+   │    │  Lambda  │    │ Operators │   │ Providers│       │
+│   │ Python   │    │  Python  │    │  Python   │   │  Python  │       │
+│   └────┬─────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘       │
+│        │               │               │               │              │
+│        └───────────────┴───────┬───────┴───────────────┘              │
+│                                │                                       │
+│                    ┌───────────▼───────────┐                          │
+│                    │      PYTHON CORE      │                          │
+│                    │   (Your Foundation)   │                          │
+│                    └───────────────────────┘                          │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Installation & Setup
 
 ```bash
 # Kolla version
@@ -264,9 +298,71 @@ print(f"Free: {free_memory_gb} GB")
 
 ---
 
-## Nasta Steg
+## ✅ Praktisk Övning
 
-Du har nu grunderna. Nasta node: **Collections** - listor, dictionaries och sets.
+### Uppgift
+Skapa ett script som definierar serverinformation och beräknar resursanvändning.
+
+### Steg-för-steg
+
+1. Skapa en fil `server_info.py`:
+```python
+# server_info.py
+hostname = "prod-web-01"
+ip_address = "192.168.1.100"
+port = 443
+is_https = True
+total_memory_gb = 16
+used_memory_gb = 12.5
+```
+
+2. Lägg till beräkningar:
+```python
+free_memory_gb = total_memory_gb - used_memory_gb
+usage_percent = (used_memory_gb / total_memory_gb) * 100
+```
+
+3. Skriv ut formaterad output:
+```python
+print(f"Server: {hostname}")
+print(f"Address: {ip_address}:{port}")
+print(f"Memory Usage: {usage_percent:.1f}%")
+```
+
+### Verifiera
+Kör scriptet:
+```bash
+python3 server_info.py
+```
+
+Du bör se:
+```
+Server: prod-web-01
+Address: 192.168.1.100:443
+Memory Usage: 78.1%
+```
+
+### Vanliga problem
+
+**Problem:** `SyntaxError: invalid syntax`
+**Lösning:** Kontrollera att alla parenteser och citattecken är korrekt stängda.
+
+**Problem:** `NameError: name 'x' is not defined`
+**Lösning:** Du använder en variabel innan den deklarerats.
+
+---
+
+## 🎯 Sammanfattning
+
+I denna task har du lärt dig:
+- ✅ Pythons grundläggande datatyper: strings, integers, floats, booleans
+- ✅ Hur man deklarerar variabler utan typangivelse
+- ✅ f-strings för formaterad output
+- ✅ Type conversion mellan olika datatyper
+- ✅ Python-namnkonventioner (snake_case)
+
+### Nästa steg
+I nästa task lär du dig om **Collections** - listor, dictionaries och sets för att hantera flera datapunkter.
 """
 }
 
@@ -286,15 +382,22 @@ NODE_02_COLLECTIONS = {
         "lists", "dictionaries", "sets", "tuples",
         "indexing", "slicing", "methods", "comprehensions"
     ],
-    "content": r"""# Collections: Lists, Dicts, Sets
+    "content": r"""# 🗂️ Collections: Lists, Dicts, Sets
 
-## Varfor detta ar kritiskt
+## Varför detta är viktigt
 
-> "DevOps handlar om att hantera MANGA saker - servrar, containers, configs. Collections ar hur du organiserar dem i Python."
+Som DevOps-ingenjör hanterar du ständigt MÅNGA saker - servrar, containers, configs, användare. Collections är hur du organiserar och manipulerar dem effektivt i Python.
+
+## Vad du kommer lära dig
+
+- Förstå skillnaden mellan lists, dicts, sets och tuples
+- Implementera indexering och slicing för dataåtkomst
+- Använda list/dict comprehensions för effektiv kod
+- Välja rätt collection-typ för olika användningsfall
 
 ---
 
-## Lists (Listor)
+## 📚 Lists (Listor)
 
 Ordnade, andringsbara samlingar.
 
@@ -554,15 +657,22 @@ NODE_03_CONTROL_FLOW = {
         "if", "elif", "else", "for", "while",
         "break", "continue", "pass", "match"
     ],
-    "content": r"""# Control Flow: If, Loops, Logic
+    "content": r"""# 🔄 Control Flow: If, Loops, Logic
 
-## Varfor detta ar kritiskt
+## Varför detta är viktigt
 
-> "Automation ar logik. IF server ar nere, THEN starta om. FOR varje container, kolla status. Control flow ar hjarnan i dina scripts."
+Som DevOps-ingenjör är automation logik. IF server är nere, THEN starta om. FOR varje container, kolla status. Control flow är hjärnan i dina scripts och avgör hur dina automationer beter sig.
+
+## Vad du kommer lära dig
+
+- Förstå if/elif/else för villkorlig logik
+- Implementera for- och while-loopar för iteration
+- Använda break, continue och pass för loop-kontroll
+- Kombinera logiska operatorer för komplexa villkor
 
 ---
 
-## If-satser
+## 📚 If-satser
 
 ```python
 cpu_usage = 85
@@ -781,16 +891,26 @@ for server in servers:
 
 ---
 
-## Sammanfattning
+## 🎯 Sammanfattning
 
-| Syntax | Anvandning |
+I denna task har du lärt dig:
+- ✅ If/elif/else för villkorlig logik
+- ✅ For-loopar för iteration över collections
+- ✅ While-loopar för villkorsbaserad iteration
+- ✅ Break och continue för loop-kontroll
+- ✅ Enumerate för index + värde
+
+| Syntax | Användning |
 |--------|------------|
 | `if/elif/else` | Villkor |
 | `for x in list` | Iteration |
 | `while condition` | Loop tills False |
 | `break` | Avbryt loop |
-| `continue` | Nasta iteration |
-| `enumerate()` | Index + varde |
+| `continue` | Nästa iteration |
+| `enumerate()` | Index + värde |
+
+### Nästa steg
+I nästa task lär du dig om **Functions** - hur du strukturerar återanvändbar kod.
 """
 }
 
@@ -810,15 +930,22 @@ NODE_04_FUNCTIONS = {
         "def", "arguments", "return", "default values",
         "*args", "**kwargs", "lambda", "docstrings"
     ],
-    "content": r"""# Functions & Arguments
+    "content": r"""# 🔧 Functions & Arguments
 
-## Varfor detta ar kritiskt
+## Varför detta är viktigt
 
-> "DRY - Don't Repeat Yourself. Funktioner ar hur du skriver kod en gang och anvander overallt. En bra deploy-funktion kan anvandas for alla dina projekt."
+Som DevOps-ingenjör följer du DRY-principen (Don't Repeat Yourself). Funktioner låter dig skriva kod en gång och använda den överallt. En bra deploy-funktion kan användas för alla dina projekt.
+
+## Vad du kommer lära dig
+
+- Förstå funktionsdefinitioner och anrop
+- Implementera olika argument-typer (*args, **kwargs)
+- Använda return-värden och default-parametrar
+- Skriva docstrings för dokumentation
 
 ---
 
-## Grundlaggande Funktioner
+## 📚 Grundläggande Funktioner
 
 ```python
 # Definiera funktion
@@ -1034,17 +1161,24 @@ NODE_05_FILE_IO = {
         "open", "read", "write", "with statement",
         "pathlib", "file modes", "binary files"
     ],
-    "content": r"""# File I/O Operations
+    "content": r"""# 📁 File I/O Operations
 
-## Varfor detta ar kritiskt
+## Varför detta är viktigt
 
-> "DevOps = filer. Config files, log files, YAML, JSON, scripts. Du maste kunna lasa, skriva och manipulera filer effektivt."
+Som DevOps-ingenjör jobbar du ständigt med filer: config files, log files, YAML, JSON, scripts. Du måste kunna läsa, skriva och manipulera filer effektivt för att automatisera konfigurationshantering.
+
+## Vad du kommer lära dig
+
+- Förstå filläsning och -skrivning med open()
+- Implementera with-statement för säker filhantering
+- Använda pathlib för modern path-hantering
+- Hantera olika filformat och binärfiler
 
 ---
 
-## Lasa Filer
+## 📚 Läsa Filer
 
-### Grundlaggande
+### Grundläggande
 
 ```python
 # Oppna och las
@@ -1232,15 +1366,22 @@ NODE_06_ERROR_HANDLING = {
         "try", "except", "finally", "raise",
         "custom exceptions", "exception types"
     ],
-    "content": r"""# Error Handling & Exceptions
+    "content": r"""# ⚠️ Error Handling & Exceptions
 
-## Varfor detta ar kritiskt
+## Varför detta är viktigt
 
-> "I produktion gar saker fel. Natverk timeout. Filer saknas. Servers svarar inte. Din kod maste hantera det gracefullt istallet for att krascha."
+I produktion går saker fel - nätverk timeout, filer saknas, servrar svarar inte. Din kod måste hantera det gracefullt istället för att krascha och ta ner hela systemet.
+
+## Vad du kommer lära dig
+
+- Förstå try/except/finally för felhantering
+- Implementera specifika exception-typer
+- Skapa egna custom exceptions
+- Använda raise för att propagera fel
 
 ---
 
-## Try / Except
+## 📚 Try / Except
 
 ```python
 try:
@@ -1402,20 +1543,22 @@ NODE_07_OOP_BASICS: Dict[str, Any] = {
         "Property decorators"
     ],
     "real_world_context": "Som DevOps bygger du Ansible-liknande inventory-klasser, boto3-wrappers och API-clients som återanvändbara objekt.",
-    "content": """
-# OOP Basics - Objektorienterad Python for DevOps
+    "content": """# 🏛️ OOP Basics - Objektorienterad Python för DevOps
 
-## Varfor OOP i DevOps?
+## Varför detta är viktigt
 
-Classes hjalper dig bygga:
-- Återanvändbara AWS/Azure/GCP clients
-- Server inventory management
-- Configuration builders
-- Custom Ansible modules
+Som DevOps-ingenjör behöver du bygga återanvändbara komponenter: AWS/Azure/GCP clients, server inventory management, configuration builders. OOP ger dig strukturen för att skapa maintainable kod.
+
+## Vad du kommer lära dig
+
+- Förstå classes och objects i Python
+- Implementera __init__ constructor och attributes
+- Använda inheritance och super() för kodåteranvändning
+- Skapa property decorators och magic methods
 
 ---
 
-## 1. Din Forsta Klass
+## 📚 Din Första Klass
 
 ```python
 class Server:
@@ -1896,12 +2039,24 @@ NODE_08_OS_SYSTEM: Dict[str, Any] = {
         "shutil for file operations"
     ],
     "real_world_context": "Varje DevOps-script behover hantera paths, environment variables och systeminfo. Detta ar karnkunskap.",
-    "content": """
-# OS & System Interaction
+    "content": """# 🖥️ OS & System Interaction
 
-## 1. pathlib - Modern Path Handling
+## Varför detta är viktigt
 
-`pathlib` ar det moderna sattet att hantera filepaths:
+Varje DevOps-script behöver hantera paths, environment variables och systeminformation. Detta är kärnkunskap för all automation och scripting.
+
+## Vad du kommer lära dig
+
+- Förstå os-modulen för systeminteraktion
+- Implementera pathlib för modern path-hantering
+- Använda environment variables säkert
+- Hämta systeminformation programmatiskt
+
+---
+
+## 📚 pathlib - Modern Path Handling
+
+`pathlib` är det moderna sättet att hantera filepaths:
 
 ```python
 from pathlib import Path
@@ -2241,10 +2396,22 @@ NODE_09_SUBPROCESS: Dict[str, Any] = {
         "Security best practices"
     ],
     "real_world_context": "Som DevOps kör du konstant shell commands: git, docker, kubectl, terraform. subprocess är bryggan mellan Python och shell.",
-    "content": """
-# Subprocess & Shell Commands
+    "content": """# ⚡ Subprocess & Shell Commands
 
-## 1. subprocess.run() - Basics
+## Varför detta är viktigt
+
+Som DevOps-ingenjör kör du konstant shell commands: git, docker, kubectl, terraform. subprocess är bryggan mellan Python och shell - det låter dig automatisera allt.
+
+## Vad du kommer lära dig
+
+- Förstå subprocess.run() för shell-kommandon
+- Implementera input/output-hantering
+- Använda timeout och error handling
+- Följa security best practices
+
+---
+
+## 📚 subprocess.run() - Basics
 
 ```python
 import subprocess
@@ -2638,10 +2805,22 @@ NODE_10_JSON_YAML: Dict[str, Any] = {
         "Schema validation"
     ],
     "real_world_context": "JSON och YAML är överallt i DevOps: Kubernetes manifests, Ansible playbooks, Terraform configs, API responses.",
-    "content": """
-# JSON & YAML - DevOps Data Formats
+    "content": """# 📋 JSON & YAML - DevOps Data Formats
 
-## 1. JSON Basics
+## Varför detta är viktigt
+
+JSON och YAML är överallt i DevOps: Kubernetes manifests, Ansible playbooks, Terraform configs, API responses. Du måste kunna läsa, skriva och manipulera dessa format effektivt.
+
+## Vad du kommer lära dig
+
+- Förstå JSON parsing och serialization
+- Implementera YAML-hantering med PyYAML
+- Hantera nested data structures
+- Validera config-filer
+
+---
+
+## 📚 JSON Basics
 
 ```python
 import json
@@ -3040,8 +3219,22 @@ NODE_11_HTTP_APIS: Dict[str, Any] = {
         "API wrappers"
     ],
     "real_world_context": "APIs är livsnerven i DevOps: GitHub API, AWS API, Slack webhooks, PagerDuty, monitoring endpoints.",
-    "content": """
-# HTTP & APIs med Python
+    "content": """# 🌐 HTTP & APIs med Python
+
+## Varför detta är viktigt
+
+APIs är livsnerven i DevOps: GitHub API, AWS API, Slack webhooks, PagerDuty, monitoring endpoints. Du behöver kunna kommunicera med alla dessa tjänster programmatiskt.
+
+## Vad du kommer lära dig
+
+- Förstå requests library för HTTP
+- Implementera GET, POST, PUT, DELETE
+- Hantera authentication och sessions
+- Bygga API wrappers
+
+---
+
+## 📚 Installation
 
 Installera: `pip install requests`
 
@@ -3425,19 +3618,22 @@ NODE_12_VENV: Dict[str, Any] = {
         "Multiple Python versions"
     ],
     "real_world_context": "Varje Python-projekt behöver isolerade dependencies. venv är grundläggande för reproduzerbara builds.",
-    "content": """
-# Virtual Environments
+    "content": """# 📦 Virtual Environments
 
-## 1. Varfor Virtual Environments?
+## Varför detta är viktigt
 
-- **Isolering**: Varje projekt har egna dependencies
-- **Versionskontroll**: Olika projekt kan anvanda olika versioner
-- **Reproducerbarhet**: Samma environment pa alla maskiner
-- **Sakerhet**: Undvik systemwide package conflicts
+Varje Python-projekt behöver isolerade dependencies. venv är grundläggande för reproduzerbara builds och förhindrar "works on my machine"-problem.
+
+## Vad du kommer lära dig
+
+- Förstå varför virtual environments behövs
+- Skapa och aktivera venv korrekt
+- Hantera requirements.txt
+- Använda pip freeze och pip install
 
 ---
 
-## 2. Skapa och Anvand venv
+## 📚 Skapa och Använda venv
 
 ```bash
 # Skapa virtual environment
@@ -3708,10 +3904,22 @@ NODE_13_CLI_TOOLS: Dict[str, Any] = {
         "Exit codes"
     ],
     "real_world_context": "Varje DevOps-verktyg ar en CLI: kubectl, docker, terraform. Lär dig bygga professionella CLI-verktyg.",
-    "content": """
-# CLI Tools med Python
+    "content": """# 🖥️ CLI Tools med Python
 
-## 1. argparse Basics
+## Varför detta är viktigt
+
+Varje DevOps-verktyg är en CLI: kubectl, docker, terraform. Att kunna bygga professionella CLI-verktyg låter dig automatisera och standardisera arbetsflöden i ditt team.
+
+## Vad du kommer lära dig
+
+- Förstå argparse för argument-parsing
+- Implementera subcommands som kubectl/git
+- Använda Click framework för avancerade CLI
+- Hantera exit codes korrekt
+
+---
+
+## 📚 argparse Basics
 
 ```python
 import argparse
@@ -4145,10 +4353,22 @@ NODE_14_REGEX: Dict[str, Any] = {
         "Log parsing"
     ],
     "real_world_context": "Regex är essentiellt för log-parsning, config-manipulation och validering i DevOps.",
-    "content": """
-# Regex & Text Processing
+    "content": """# 🔍 Regex & Text Processing
 
-## 1. Regex Basics
+## Varför detta är viktigt
+
+Regex är essentiellt för log-parsning, config-manipulation och validering i DevOps. Du behöver kunna extrahera data från loggar, validera input och transformera text.
+
+## Vad du kommer lära dig
+
+- Förstå regex syntax och patterns
+- Implementera re-modulen för sökning
+- Använda groups och captures
+- Parsa loggar och extrahera data
+
+---
+
+## 📚 Regex Basics
 
 ```python
 import re
@@ -4570,21 +4790,22 @@ NODE_15_LOGGING: Dict[str, Any] = {
         "Log rotation"
     ],
     "real_world_context": "Print() ar for amatorer. Professionella DevOps-scripts anvander logging for traceability och debugging i produktion.",
-    "content": '''
-# Logging & Debugging - Professionell Logging
+    "content": '''# 📝 Logging & Debugging - Professionell Logging
 
-## Varfor Logging?
+## Varför detta är viktigt
 
-`print()` forsvinner nar scriptet ar klart. Logging:
-- Sparas till fil
-- Har tidsstamplar
-- Har severity levels
-- Kan filtreras
-- Gar att skicka till centrala system (ELK, CloudWatch)
+print() är för amatörer. Professionella DevOps-scripts använder logging för traceability och debugging i produktion. Utan ordentlig logging är felsökning en mardröm.
+
+## Vad du kommer lära dig
+
+- Förstå logging module och levels
+- Implementera formatters och handlers
+- Konfigurera file och console logging
+- Använda structured logging för ELK/CloudWatch
 
 ---
 
-## 1. Basic Logging
+## 📚 Basic Logging
 
 ```python
 import logging
@@ -4828,14 +5049,25 @@ NODE_16_TESTING: Dict[str, Any] = {
         "Test coverage"
     ],
     "real_world_context": "Tester ar inte optional i DevOps. CI/CD pipelines kor tester automatiskt. Ingen merge utan grona tester.",
-    "content": '''
-# Testing with pytest
+    "content": '''# 🧪 Testing med pytest - Professionell Testning
 
-## Varfor Testa?
+## Varför detta är kritiskt
+> "Ingen seriös DevOps-pipeline accepterar kod utan tester. pytest är Python-världens teststandard - automatiska tester är skillnaden mellan 'det fungerade på min maskin' och produktionsredo kod."
 
-- Fanga buggar INNAN produktion
+## Vad du kommer lära dig
+- ✅ pytest basics och test discovery
+- ✅ Assertions och fixtures
+- ✅ Parametrized tests för edge cases
+- ✅ Mocking och patching
+- ✅ Test coverage mätning
+
+---
+
+## Varför Testa?
+
+- Fånga buggar INNAN produktion
 - Dokumenterar hur kod ska fungera
-- Mojliggor refactoring utan radsla
+- Möjliggör refactoring utan rädsla
 - CI/CD krav - inga tester = ingen deploy
 
 ---
@@ -5134,23 +5366,34 @@ NODE_17_ASYNC: Dict[str, Any] = {
         "aiohttp for async HTTP"
     ],
     "real_world_context": "Nar du behover gora 100 API-anrop ar sync alldeles for langsamt. Async later dig gora dem parallellt.",
-    "content": '''
-# Async Python - Parallell Execution
+    "content": '''# ⚡ Async Python - Parallell Execution
 
-## Varfor Async?
+## Varför detta är viktigt
+> "När du behöver göra 100 API-anrop, hämta data från flera microservices, eller hantera tusentals samtidiga connections - async är skillnaden mellan sekunder och minuter. Det är grundläggande för moderna Python-backends."
 
-Sync (vanlig) kod vantar pa varje operation:
+## Vad du kommer lära dig
+- ✅ async/await syntax och coroutines
+- ✅ asyncio event loop
+- ✅ Concurrent HTTP med aiohttp
+- ✅ Task management och gather
+- ✅ Async context managers
+
+---
+
+## Varför Async?
+
+Sync (vanlig) kod väntar på varje operation:
 - API call 1: 500ms
 - API call 2: 500ms
 - API call 3: 500ms
 - Total: 1500ms
 
-Async kor parallellt:
+Async kör parallellt:
 - Alla 3 calls samtidigt: ~500ms total!
 
 ---
 
-## 1. Grundlaggande Syntax
+## 1. Grundläggande Syntax
 
 ```python
 import asyncio
@@ -5409,19 +5652,30 @@ NODE_18_DECORATORS: Dict[str, Any] = {
         "Praktiska decorators (retry, timer, cache)"
     ],
     "real_world_context": "Decorators ar Python-magi som later dig lägga till funktionalitet utan att ändra kod. @retry, @cache, @authenticate - kraftfulla patterns.",
-    "content": '''
-# Decorators - Python Magi
+    "content": '''# 🎀 Decorators - Python Magi
 
-## Vad ar en Decorator?
+## Varför detta är viktigt
+> "Decorators är meta-programmering som låter dig modifiera funktioners beteende utan att röra originalkoden. @retry för resiliens, @cache för prestanda, @authenticate för säkerhet - de bästa Python-kodbaserna använder decorators överallt."
 
-En decorator ar en funktion som tar en funktion och returnerar en ny funktion med extra funktionalitet.
+## Vad du kommer lära dig
+- ✅ Function decorators grunderna
+- ✅ Decorators med argument
+- ✅ functools.wraps för metadata
+- ✅ Praktiska decorators (retry, timer, cache)
+- ✅ Class decorators och metaklasser
+
+---
+
+## Vad är en Decorator?
+
+En decorator är en funktion som tar en funktion och returnerar en ny funktion med extra funktionalitet.
 
 ```python
 @my_decorator
 def my_function():
     pass
 
-# Ar samma som:
+# Är samma som:
 my_function = my_decorator(my_function)
 ```
 
@@ -5719,15 +5973,26 @@ NODE_19_TYPE_HINTS: Dict[str, Any] = {
         "Mypy for type checking"
     ],
     "real_world_context": "Type hints gor din kod sjalvdokumenterande och fangar buggar innan runtime. Stora projekt kraver det.",
-    "content": '''
-# Type Hints & Mypy
+    "content": '''# 🏷️ Type Hints & Mypy - Statisk Typning
 
-## Varfor Type Hints?
+## Varför detta är viktigt
+> "I stora Python-projekt är type hints inte optional - de fångar buggar INNAN runtime, ger IDE superkrafter med autocomplete, och gör koden självdokumenterande. Mypy i CI/CD garanterar typkorrekthet."
+
+## Vad du kommer lära dig
+- ✅ Basic type hints för variabler och funktioner
+- ✅ typing module (List, Dict, Optional, Union)
+- ✅ Generic types och TypeVar
+- ✅ TypedDict och dataclasses
+- ✅ Mypy för statisk analys i CI/CD
+
+---
+
+## Varför Type Hints?
 
 - Dokumentation i koden
 - IDE autocomplete
-- Fanga buggar fore runtime
-- Refactoring-sakerhet
+- Fånga buggar före runtime
+- Refactoring-säkerhet
 
 ---
 
@@ -6048,10 +6313,21 @@ NODE_20_PACKAGING: Dict[str, Any] = {
         "Private PyPI"
     ],
     "real_world_context": "Dela dina DevOps-verktyg med teamet eller varlden. Gor dem pip-installerbara.",
-    "content": '''
-# Packaging & Distribution
+    "content": '''# 📦 Packaging & Distribution - Dela Dina Verktyg
 
-## Varfor Paketera?
+## Varför detta är viktigt
+> "De bästa DevOps-teamen bygger återanvändbara verktyg. Med proper packaging kan alla i teamet `pip install your-tool` och få samma funktionalitet. Private PyPI låter er dela internt utan att publicera till världen."
+
+## Vad du kommer lära dig
+- ✅ pyproject.toml - modern packaging
+- ✅ Package structure och namespace
+- ✅ Entry points för CLI-verktyg
+- ✅ Build, publish och versioning
+- ✅ Poetry vs pip och private PyPI
+
+---
+
+## Varför Paketera?
 
 - Dela kod med teamet
 - Versionhantering

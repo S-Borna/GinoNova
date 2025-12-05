@@ -9,10 +9,18 @@ NODE_13_INDEXING = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [5],
-    "content": '''
-# Indexing
+    "content": '''# 📇 Indexing
 
-Snabba upp queries.
+## Varför detta är kritiskt
+> "Rätt index = 1000x snabbare queries. Fel index = slöseri med disk och CPU. Index är konsten att balansera läs- och skrivprestanda."
+
+## Vad du kommer lära dig
+- ✅ B-tree, Hash, GIN, GiST indexes
+- ✅ Composite index ordning
+- ✅ Partial och expression indexes
+- ✅ Index maintenance
+
+---
 
 ## Index Basics
 
@@ -166,10 +174,18 @@ NODE_14_EXPLAIN = {
     "estimated_minutes": 60,
     "xp_reward": 170,
     "prerequisites": [13],
-    "content": '''
-# Query Optimization & EXPLAIN
+    "content": '''# 🔬 Query Optimization & EXPLAIN
 
-Förstå och förbättra query performance.
+## Varför detta är kritiskt
+> "EXPLAIN är ditt röntgenverktyg för queries. Utan det gissar du bara varför något är långsamt."
+
+## Vad du kommer lära dig
+- ✅ EXPLAIN och EXPLAIN ANALYZE
+- ✅ Läsa query plans
+- ✅ Seq Scan vs Index Scan
+- ✅ Common performance pitfalls
+
+---
 
 ## EXPLAIN Basics
 
@@ -324,10 +340,18 @@ NODE_15_PARTITIONING = {
     "estimated_minutes": 50,
     "xp_reward": 150,
     "prerequisites": [14],
-    "content": '''
-# Partitioning
+    "content": '''# 📂 Partitioning
 
-Dela upp stora tabeller.
+## Varför detta är viktigt
+> "Miljarder rader? Partitioning delar upp tabeller så queries bara scannar relevant data. Partition pruning = massiva prestandavinster."
+
+## Vad du kommer lära dig
+- ✅ Range, List och Hash partitioning
+- ✅ Partition pruning
+- ✅ Automatic partition creation
+- ✅ Archiving och maintenance
+
+---
 
 ## Why Partition?
 
@@ -481,10 +505,18 @@ NODE_16_JSON = {
     "estimated_minutes": 50,
     "xp_reward": 145,
     "prerequisites": [2],
-    "content": '''
-# JSON & JSONB
+    "content": '''# 📋 JSON & JSONB
 
-Semi-strukturerad data i SQL.
+## Varför detta är viktigt
+> "JSONB kombinerar flexibilitet från NoSQL med SQL:s power. Perfekt för semi-strukturerad data, metadata, och API responses."
+
+## Vad du kommer lära dig
+- ✅ JSON vs JSONB skillnader
+- ✅ Operatorer (->, ->>, @>, ?)
+- ✅ GIN indexering för JSONB
+- ✅ JSONB aggregation
+
+---
 
 ## JSON vs JSONB
 

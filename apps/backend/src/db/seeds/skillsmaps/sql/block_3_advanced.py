@@ -9,10 +9,18 @@ NODE_09_CTE_WINDOW = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [8],
-    "content": '''
-# CTEs & Window Functions
+    "content": '''# 🪟 CTEs & Window Functions
 
-Kraftfulla query-tekniker.
+## Varför detta är kritiskt
+> "CTEs gör komplexa queries läsbara. Window functions ger dig analytics - ranking, running totals, moving averages - utan GROUP BY."
+
+## Vad du kommer lära dig
+- ✅ CTEs för modulära queries
+- ✅ Recursive CTEs för hierarkier
+- ✅ ROW_NUMBER, RANK, DENSE_RANK
+- ✅ LAG, LEAD, SUM OVER
+
+---
 
 ## Common Table Expressions (CTE)
 
@@ -216,10 +224,18 @@ NODE_10_VIEWS = {
     "estimated_minutes": 45,
     "xp_reward": 130,
     "prerequisites": [5],
-    "content": '''
-# Views & Materialized Views
+    "content": '''# 👁️ Views & Materialized Views
 
-Virtuella och cachade tabeller.
+## Varför detta är viktigt
+> "Views är named queries som förenklar komplexa joins. Materialized views cachar resultat för snabba queries."
+
+## Vad du kommer lära dig
+- ✅ Regular views för abstraktion
+- ✅ Materialized views för caching
+- ✅ REFRESH och indexing
+- ✅ Performance trade-offs
+
+---
 
 ## Regular Views
 
@@ -375,10 +391,18 @@ NODE_11_TRANSACTIONS = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [4],
-    "content": '''
-# Transactions & Locking
+    "content": '''# 🔒 Transactions & Locking
 
-ACID och concurrency control.
+## Varför detta är kritiskt
+> "Utan transaktioner kan dina databasoperationer lämna data i inkonsistent tillstånd. ACID garanterar dataintegritet."
+
+## Vad du kommer lära dig
+- ✅ ACID properties
+- ✅ BEGIN, COMMIT, ROLLBACK
+- ✅ Isolation levels
+- ✅ Deadlocks och locking strategies
+
+---
 
 ## ACID
 
@@ -553,10 +577,18 @@ NODE_12_STORED_PROCS = {
     "estimated_minutes": 55,
     "xp_reward": 150,
     "prerequisites": [11],
-    "content": '''
-# Stored Procedures & Functions
+    "content": '''# ⚙️ Stored Procedures & Functions
 
-Server-side logic.
+## Varför detta är viktigt
+> "Server-side logic minskar nätverksrundturer och centraliserar affärslogik. Triggers automatiserar databasoperationer."
+
+## Vad du kommer lära dig
+- ✅ Functions med PL/pgSQL
+- ✅ Procedures för side effects
+- ✅ Triggers för automatisering
+- ✅ Security med SECURITY DEFINER
+
+---
 
 ## Functions
 

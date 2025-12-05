@@ -43,19 +43,26 @@ NODE_01_AWS_INTRO = {
         "cloud computing", "AWS regions", "availability zones",
         "account setup", "root user", "billing alerts", "free tier"
     ],
-    "content": r'''# AWS Introduction & Account Setup
+    "content": r'''# ☁️ AWS Introduction & Account Setup
 
-## Varfor AWS for DevOps?
+## Varför detta är kritiskt
+> "AWS är inte bara 'molnet' - det är 200+ tjänster som låter dig bygga allt från en enkel webbsida till Netflix-skala infrastruktur. Som DevOps Engineer måste du kunna AWS."
 
-> "AWS ar inte bara 'molnet' - det ar 200+ tjanster som later dig bygga allt fran en enkel webbsida till Netflix-skala infrastruktur. Som DevOps Engineer maste du kunna AWS."
+## Vad du kommer lära dig
+- ✅ Cloud computing fundamentals
+- ✅ AWS regioner och availability zones
+- ✅ Account setup och säkerhet
+- ✅ Billing alerts och free tier
 
-AWS dominerar molnmarknaden med ~32% market share. Nastan varje DevOps-jobb kraver AWS-kunskap.
+---
+
+AWS dominerar molnmarknaden med ~32% market share. Nästan varje DevOps-jobb kräver AWS-kunskap.
 
 ---
 
 ## Cloud Computing Basics
 
-### Vad ar Cloud Computing?
+### Vad är Cloud Computing?
 
 ```
 TRADITIONELLT (On-Premise)          CLOUD (AWS)
@@ -331,13 +338,20 @@ NODE_02_IAM = {
         "IAM users", "IAM groups", "IAM roles", "IAM policies",
         "least privilege", "policy types", "service roles"
     ],
-    "content": r'''# IAM - Identity & Access Management
+    "content": r'''# 🔐 IAM - Identity & Access Management
 
-## Varfor IAM ar Kritiskt
+## Varför detta är kritiskt
+> "IAM är grindvakten till ditt AWS-rike. En felkonfigurerad policy kan antingen låsa ute alla eller ge en hackare nycklarna till kungariket."
 
-> "IAM ar grindvakten till ditt AWS-rike. En felkonfigurerad policy kan antingen lasa ute alla eller ge en hackare nycklarna till kungariket."
+## Vad du kommer lära dig
+- ✅ Users, groups och roles
+- ✅ Policy-typer och JSON-struktur
+- ✅ Least privilege principen
+- ✅ Service roles för EC2, Lambda, etc.
 
-IAM ar gratis men det viktigaste du konfigurerar i AWS.
+---
+
+IAM är gratis men det viktigaste du konfigurerar i AWS.
 
 ---
 
@@ -716,13 +730,20 @@ NODE_03_VPC = {
         "VPC", "subnets", "route tables", "internet gateway",
         "NAT gateway", "security groups", "NACLs", "CIDR"
     ],
-    "content": r'''# VPC - Virtual Private Cloud
+    "content": r'''# 🌐 VPC - Virtual Private Cloud
 
-## Varfor VPC ar Fundamentalt
+## Varför detta är kritiskt
+> "VPC är ditt privata nätverk i molnet. Utan förståelse för VPC kan du inte bygga säker, skalbar infrastruktur i AWS."
 
-> "VPC ar ditt privata natverk i molnet. Utan forstaelse for VPC kan du inte bygga saker, skalbar infrastruktur i AWS."
+## Vad du kommer lära dig
+- ✅ VPC, subnets och CIDR notation
+- ✅ Public vs private subnets
+- ✅ Internet Gateway och NAT Gateway
+- ✅ Security Groups och NACLs
 
-Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subnets, routing och brandvaggar.
+---
+
+Tänk på VPC som ditt eget datacenter i AWS - du bestämmer vilka IP-ranges, subnets, routing och brandväggar.
 
 ---
 
@@ -1115,13 +1136,20 @@ NODE_04_EC2 = {
         "EC2 instances", "AMIs", "instance types", "key pairs",
         "user data", "EBS volumes", "elastic IPs", "placement groups"
     ],
-    "content": r'''# EC2 - Elastic Compute Cloud
+    "content": r'''# 💻 EC2 - Elastic Compute Cloud
 
-## Varfor EC2 ar Fundamentalt
+## Varför detta är kritiskt
+> "EC2 är AWS:s bröd och smör - virtuella servrar on demand. Förstår du EC2, förstår du cloud computing."
 
-> "EC2 ar AWS:s brød och smoør - virtuella servrar pa demand. Forstar du EC2, forstar du cloud computing."
+## Vad du kommer lära dig
+- ✅ Instance types och AMIs
+- ✅ Key pairs och SSH access
+- ✅ User data scripts
+- ✅ EBS volumes och elastic IPs
 
-Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
+---
+
+Med EC2 kan du starta en server på sekunder och betala per timme (eller sekund).
 
 ---
 
@@ -1570,13 +1598,20 @@ NODE_05_S3 = {
         "S3 buckets", "objects", "storage classes", "versioning",
         "lifecycle policies", "encryption", "access control", "static hosting"
     ],
-    "content": r'''# S3 - Simple Storage Service
+    "content": r'''# 📦 S3 - Simple Storage Service
 
-## Varfor S3 ar Overallt
+## Varför detta är kritiskt
+> "S3 är inte bara storage - det är fundamentet för AWS. Lambda kod lagras i S3. CloudFormation templates. Application logs. Backups. Allt."
 
-> "S3 ar inte bara storage - det ar fundamentet for AWS. Lambda kod lagras i S3. CloudFormation templates. Application logs. Backups. Allt."
+## Vad du kommer lära dig
+- ✅ Buckets, objects och keys
+- ✅ Storage classes och lifecycle policies
+- ✅ Versioning och encryption
+- ✅ Static website hosting
 
-S3 ar designat for 99.999999999% (11 9:or) durability. Du forlorar 1 objekt av 10 miljarder pa 10,000 ar.
+---
+
+S3 är designat för 99.999999999% (11 9:or) durability. Du förlorar 1 objekt av 10 miljarder på 10,000 år.
 
 ---
 
@@ -1904,13 +1939,20 @@ NODE_06_RDS = {
         "RDS engines", "instance classes", "multi-AZ", "read replicas",
         "backups", "snapshots", "parameter groups", "security"
     ],
-    "content": r'''# RDS - Relational Database Service
+    "content": r'''# 🗄️ RDS - Relational Database Service
 
-## Varfor RDS istallet for EC2 + Database?
+## Varför detta är viktigt
+> "Du VILL inte hantera database-servrar. Patching, backups, failover, replication - låt AWS göra det."
 
-> "Du VILL inte hantera database-servrar. Patching, backups, failover, replication - lat AWS gora det."
+## Vad du kommer lära dig
+- ✅ RDS engines (MySQL, PostgreSQL, etc.)
+- ✅ Multi-AZ för high availability
+- ✅ Read replicas för skalning
+- ✅ Backups, snapshots och security
 
-RDS ar managed database - du fokuserar pa schema och queries, AWS skoter resten.
+---
+
+RDS är managed database - du fokuserar på schema och queries, AWS sköter resten.
 
 ---
 
@@ -2169,13 +2211,20 @@ NODE_07_ROUTE53 = {
         "hosted zones", "record types", "routing policies",
         "health checks", "domain registration", "DNS resolution"
     ],
-    "content": r'''# Route53 - DNS Service
+    "content": r'''# 🌍 Route53 - DNS Service
 
-## Varfor Route53?
+## Varför detta är kritiskt
+> "Route53 är mer än DNS - det är global traffic management. Health checks, failover, geo-routing, latency-based routing."
 
-> "Route53 ar mer an DNS - det ar global traffic management. Health checks, failover, geo-routing, latency-based routing."
+## Vad du kommer lära dig
+- ✅ Hosted zones och record types
+- ✅ Routing policies (simple, weighted, latency)
+- ✅ Health checks och failover
+- ✅ Domain registration
 
-Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
+---
+
+Namn kommer från TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 ---
 
@@ -2448,13 +2497,20 @@ NODE_08_CLOUDWATCH = {
         "metrics", "alarms", "logs", "log groups", "log insights",
         "dashboards", "events", "custom metrics"
     ],
-    "content": r'''# CloudWatch - Monitoring & Logging
+    "content": r'''# 📊 CloudWatch - Monitoring & Logging
 
-## Varfor CloudWatch ar Essential
+## Varför detta är kritiskt
+> "Du kan inte fixa det du inte kan se. CloudWatch är dina ögon och öron i AWS."
 
-> "Du kan inte fixa det du inte kan se. CloudWatch ar dina ogon och oron i AWS."
+## Vad du kommer lära dig
+- ✅ Metrics och custom metrics
+- ✅ Alarms och notifications
+- ✅ Log groups och Log Insights
+- ✅ Dashboards och events
 
-CloudWatch ar centralen for all monitoring, logging och alerting i AWS.
+---
+
+CloudWatch är centralen för all monitoring, logging och alerting i AWS.
 
 ---
 
@@ -2763,23 +2819,20 @@ AWS_SKILLSMAP_NODES_BLOCK_3 = [
         "id": "aws-9",
         "title": "AWS Lambda",
         "description": "Serverless compute - kör kod utan servrar",
-        "content": """
-# 🎯 Hook
-Vad om du kunde köra kod utan att tänka på servrar överhuvudtaget?
+        "content": """# ⚡ AWS Lambda - Serverless Compute
 
-AWS Lambda är **serverless computing** - du betalar bara för exekveringstiden!
+## Varför detta är kritiskt
+> "Lambda är framtiden för cloud computing - kör kod utan att tänka på servrar. Du betalar bara för exekveringstiden!"
+
+## Vad du kommer lära dig
+- ✅ Function-as-a-Service (FaaS) koncept
+- ✅ Event-driven arkitektur
+- ✅ Lambda handlers och contexts
+- ✅ Triggers (API Gateway, S3, DynamoDB)
 
 ---
 
-## 📚 Koncept
-
-### Vad är Lambda?
-- **Function-as-a-Service (FaaS)** - kör funktioner on-demand
-- **Event-driven** - triggas av händelser
-- **Auto-scaling** - från 0 till tusentals parallella körningar
-- **Pay-per-use** - betala per millisekund
-
-### Lambda Execution Model:
+## Lambda Execution Model:
 ```
 Event → Lambda Function → Response
   ↓
@@ -2925,21 +2978,18 @@ def lambda_handler(event, context):
         "id": "aws-10",
         "title": "CloudFormation",
         "description": "Infrastructure as Code - definiera AWS i YAML/JSON",
-        "content": """
-# 🎯 Hook
-Klicka-och-skapa i AWS Console? Det är för amatörer!
+        "content": """# 📋 CloudFormation - Infrastructure as Code
 
-**CloudFormation** = Infrastructure as Code för AWS. Versionera, återskapa, automatisera!
+## Varför detta är kritiskt
+> "Klicka-och-skapa i AWS Console? Det är för amatörer! CloudFormation låter dig versionera, återskapa och automatisera all infrastruktur."
+
+## Vad du kommer lära dig
+- ✅ Templates i YAML/JSON
+- ✅ Stacks och stack lifecycle
+- ✅ Parameters, mappings och outputs
+- ✅ Drift detection och rollbacks
 
 ---
-
-## 📚 Koncept
-
-### Vad är CloudFormation?
-- **Deklarativ IaC** - beskriv VAD, inte HUR
-- **Stacks** - samling av resurser som hanteras tillsammans
-- **Templates** - YAML/JSON-filer som beskriver infrastruktur
-- **Drift Detection** - upptäck manuella ändringar
 
 ### CloudFormation Stack Lifecycle:
 ```
@@ -3145,21 +3195,18 @@ Kör: `aws cloudformation create-stack --stack-name web-app --template-body file
         "id": "aws-11",
         "title": "CloudFront",
         "description": "Global CDN - snabba upp content delivery världen över",
-        "content": """
-# 🎯 Hook
-Din webbsida laddar på 3 sekunder? Det är en EVIGHET på internet!
+        "content": """# 🌐 CloudFront - Global CDN
 
-**CloudFront** = AWS CDN. Cacha content nära användarna, ladda på millisekunder.
+## Varför detta är kritiskt
+> "Din webbsida laddar på 3 sekunder? Det är en EVIGHET på internet! CloudFront cachar content nära användarna, laddar på millisekunder."
+
+## Vad du kommer lära dig
+- ✅ CDN koncept och edge locations
+- ✅ Distributions och origins
+- ✅ Cache policies och invalidation
+- ✅ SSL/TLS och WAF integration
 
 ---
-
-## 📚 Koncept
-
-### Vad är CloudFront?
-- **CDN (Content Delivery Network)** - distribuerar content globalt
-- **Edge Locations** - 450+ PoPs världen över
-- **Caching** - minska load på origin
-- **Security** - DDoS-skydd, SSL/TLS, WAF-integration
 
 ### CloudFront Architecture:
 ```
@@ -3296,15 +3343,18 @@ curl -I https://d1234567890.cloudfront.net/
         "id": "aws-12",
         "title": "Elastic Load Balancing",
         "description": "Lastbalansering - distribuera trafik över flera targets",
-        "content": """
-# 🎯 Hook
-En server down = site down? Nej tack!
+        "content": """# ⚖️ Elastic Load Balancing
 
-**Elastic Load Balancing** = Automatisk lastbalansering och high availability.
+## Varför detta är kritiskt
+> "En server down = site down? Nej tack! Load balancing ger dig high availability och automatisk failover."
+
+## Vad du kommer lära dig
+- ✅ ALB, NLB och GLB skillnader
+- ✅ Target groups och health checks
+- ✅ Listeners och routing rules
+- ✅ SSL termination
 
 ---
-
-## 📚 Koncept
 
 ### ELB-typer:
 
@@ -3477,21 +3527,18 @@ AWS_SKILLSMAP_NODES_BLOCK_4 = [
         "id": "aws-13",
         "title": "DynamoDB",
         "description": "NoSQL-databas - millisekund-latens i vilken skala som helst",
-        "content": """
-# 🎯 Hook
-Behöver du en databas som skalar från 0 till miljoner requests/sekund?
+        "content": """# 🗃️ DynamoDB - NoSQL at Scale
 
-**DynamoDB** = Fullt managed NoSQL. Single-digit millisecond latency. Oändlig skalbarhet.
+## Varför detta är kritiskt
+> "Behöver du en databas som skalar från 0 till miljoner requests/sekund? DynamoDB ger single-digit millisecond latency i vilken skala som helst."
+
+## Vad du kommer lära dig
+- ✅ Partition keys och sort keys
+- ✅ On-demand vs provisioned capacity
+- ✅ GSI och LSI indexes
+- ✅ DynamoDB Streams
 
 ---
-
-## 📚 Koncept
-
-### Vad är DynamoDB?
-- **Key-Value & Document DB** - flexibel datamodell
-- **Serverless** - ingen server att hantera
-- **Auto-scaling** - on-demand eller provisioned capacity
-- **Global Tables** - multi-region replication
 
 ### Data Model:
 ```
@@ -3661,25 +3708,18 @@ aws dynamodb create-table \\
         "id": "aws-14",
         "title": "SNS & SQS",
         "description": "Messaging - pub/sub och message queues för decoupling",
-        "content": """
-# 🎯 Hook
-Tight coupling mellan services? Det är en tidsbomd!
+        "content": """# 📬 SNS & SQS - Messaging & Queues
 
-**SNS + SQS** = Messaging backbone. Decoupla allt, skala oberoende.
+## Varför detta är kritiskt
+> "Tight coupling mellan services? Det är en tidsbomd! SNS + SQS ger dig messaging backbone för decoupling och skalning."
+
+## Vad du kommer lära dig
+- ✅ SNS pub/sub och topics
+- ✅ SQS queues och visibility timeout
+- ✅ Fan-out pattern
+- ✅ Dead-letter queues
 
 ---
-
-## 📚 Koncept
-
-### SNS (Simple Notification Service):
-- **Pub/Sub** - 1 publisher → many subscribers
-- **Push-based** - meddelanden skickas direkt
-- **Fan-out** - ett meddelande till många endpoints
-
-### SQS (Simple Queue Service):
-- **Message Queue** - 1 producer → 1 consumer (per message)
-- **Pull-based** - consumers pollar för meddelanden
-- **Buffering** - hantera traffic spikes
 
 ### SNS vs SQS:
 ```
@@ -3856,21 +3896,18 @@ def process_orders():
         "id": "aws-15",
         "title": "Secrets Manager",
         "description": "Secrets management - säker hantering av känslig data",
-        "content": """
-# 🎯 Hook
-Hardcodade passwords i kod? 😱 Det är en säkerhetskatastrof!
+        "content": """# 🔑 Secrets Manager - Secure Credentials
 
-**Secrets Manager** = Centraliserad, krypterad secrets-hantering med automatisk rotation.
+## Varför detta är kritiskt
+> "Hardcodade passwords i kod? 😱 Det är en säkerhetskatastrof! Secrets Manager ger dig centraliserad, krypterad secrets-hantering med automatisk rotation."
+
+## Vad du kommer lära dig
+- ✅ Secret storage och encryption
+- ✅ IAM-baserad access control
+- ✅ Automatic rotation
+- ✅ Secrets Manager vs Parameter Store
 
 ---
-
-## 📚 Koncept
-
-### Vad är Secrets Manager?
-- **Secure Storage** - AES-256 kryptering
-- **Access Control** - IAM-baserad åtkomst
-- **Automatic Rotation** - Rotera credentials automatiskt
-- **Audit** - CloudTrail logging av all access
 
 ### Secret Types:
 ```
@@ -4032,15 +4069,18 @@ aws secretsmanager get-secret-value \\
         "id": "aws-16",
         "title": "ECS (Elastic Container Service)",
         "description": "Container orchestration - kör Docker containers i AWS",
-        "content": """
-# 🎯 Hook
-Docker på din laptop är nice. Men hur kör du 100 containers i produktion?
+        "content": """# 🐳 ECS - Container Orchestration
 
-**ECS** = AWS container orchestration. Kör Docker containers utan att hantera servrar.
+## Varför detta är kritiskt
+> "Docker på din laptop är nice. Men hur kör du 100 containers i produktion? ECS låter dig köra Docker containers utan att hantera servrar."
+
+## Vad du kommer lära dig
+- ✅ ECS vs EKS vs Fargate
+- ✅ Task definitions och services
+- ✅ ECR för container images
+- ✅ Load balancing och auto-scaling
 
 ---
-
-## 📚 Koncept
 
 ### ECS Launch Types:
 
@@ -4248,15 +4288,18 @@ AWS_SKILLSMAP_NODES_BLOCK_5 = [
         "id": "aws-17",
         "title": "EKS (Elastic Kubernetes Service)",
         "description": "Managed Kubernetes - enterprise container orchestration",
-        "content": """
-# 🎯 Hook
-Kubernetes är kraftfullt men komplext. Vem vill hantera control plane?
+        "content": """# ☸️ EKS - Managed Kubernetes
 
-**EKS** = AWS-managed Kubernetes. Du fokuserar på workloads, AWS sköter cluster.
+## Varför detta är kritiskt
+> "Kubernetes är kraftfullt men komplext. Vem vill hantera control plane? EKS ger dig AWS-managed Kubernetes så du kan fokusera på workloads."
+
+## Vad du kommer lära dig
+- ✅ EKS arkitektur och node groups
+- ✅ Managed vs self-managed nodes
+- ✅ EKS + Fargate
+- ✅ eksctl och cluster management
 
 ---
-
-## 📚 Koncept
 
 ### EKS Architecture:
 ```
@@ -4460,15 +4503,18 @@ curl http://$(kubectl get svc demo-api -o jsonpath='{.status.loadBalancer.ingres
         "id": "aws-18",
         "title": "AWS Security Best Practices",
         "description": "Säkerhet - defense in depth för AWS-miljöer",
-        "content": """
-# 🎯 Hook
-"Det händer inte oss" - sa alla som blev hackade.
+        "content": """# 🛡️ AWS Security Best Practices
 
-AWS Security är DITT ansvar (Shared Responsibility Model). Lär dig göra det rätt!
+## Varför detta är kritiskt
+> "'Det händer inte oss' - sa alla som blev hackade. AWS Security är DITT ansvar (Shared Responsibility Model). Lär dig göra det rätt!"
+
+## Vad du kommer lära dig
+- ✅ Shared Responsibility Model
+- ✅ IAM best practices och MFA
+- ✅ GuardDuty, CloudTrail, Config
+- ✅ Encryption och key management
 
 ---
-
-## 📚 Koncept
 
 ### Shared Responsibility Model:
 ```
@@ -4480,13 +4526,6 @@ AWS ansvarar för:          Du ansvarar för:
                            ├── Encryption
                            └── Application security
 ```
-
-### Security Pillars:
-1. **Identity & Access** - IAM, MFA, least privilege
-2. **Detection** - CloudTrail, GuardDuty, Config
-3. **Infrastructure Protection** - VPC, Security Groups, WAF
-4. **Data Protection** - Encryption, key management
-5. **Incident Response** - Automation, forensics
 
 ### Defense in Depth:
 ```
@@ -4662,21 +4701,18 @@ aws securityhub get-findings --filters '{
         "id": "aws-19",
         "title": "AWS Cost Optimization",
         "description": "Kostnadsoptimering - få mer värde för pengarna",
-        "content": """
-# 🎯 Hook
-AWS-fakturan gick genom taket? Du är inte ensam.
+        "content": """# 💰 AWS Cost Optimization
 
-**Cost Optimization** = Rätt resurser, rätt storlek, rätt pricing. Spara 30-70%!
+## Varför detta är viktigt
+> "AWS-fakturan gick genom taket? Du är inte ensam. Rätt resurser, rätt storlek, rätt pricing kan spara 30-70%!"
+
+## Vad du kommer lära dig
+- ✅ Right-sizing och resource optimization
+- ✅ Pricing models (Reserved, Spot, Savings Plans)
+- ✅ Cost Explorer och budgets
+- ✅ Tagging strategy
 
 ---
-
-## 📚 Koncept
-
-### Cost Optimization Pillars:
-1. **Right-sizing** - Matcha kapacitet med behov
-2. **Pricing models** - On-Demand, Reserved, Spot, Savings Plans
-3. **Architecture** - Serverless, managed services
-4. **Visibility** - Tagga allt, analysera kostnader
 
 ### Pricing Models:
 | Model | Discount | Commitment | Use Case |
@@ -4870,15 +4906,18 @@ if __name__ == '__main__':
         "id": "aws-20",
         "title": "AWS Certification Path",
         "description": "Certifieringsvägen - validera dina AWS-kunskaper",
-        "content": """
-# 🎯 Hook
-Kunskaper utan bevis? Certifieringar öppnar dörrar!
+        "content": """# 🏆 AWS Certification Path
 
-**AWS Certifications** = Branscherkända bevis på expertis. Bra för karriär OCH lärande.
+## Varför detta är viktigt
+> "Kunskaper utan bevis? Certifieringar öppnar dörrar! AWS Certifications är branscherkända bevis på expertis."
+
+## Vad du kommer lära dig
+- ✅ Certifieringsnivåer och paths
+- ✅ DevOps Engineer Professional fokus
+- ✅ Studiestrategier och resurser
+- ✅ Hands-on lab recommendations
 
 ---
-
-## 📚 Certifieringsöversikt
 
 ### Foundational (ingen förkunskap):
 ```
@@ -4895,9 +4934,6 @@ Kunskaper utan bevis? Certifieringar öppnar dörrar!
 ┌────────────────────┬────────────────────┬────────────────────┐
 │ Solutions Architect│   Developer        │   SysOps Admin     │
 │   Associate        │   Associate        │   Associate        │
-│                    │                    │                    │
-│ Arkitektur &       │ Utveckling &       │ Drift &            │
-│ Design patterns    │ CI/CD, Lambda      │ Övervakning        │
 └────────────────────┴────────────────────┴────────────────────┘
 ```
 
@@ -4905,20 +4941,7 @@ Kunskaper utan bevis? Certifieringar öppnar dörrar!
 ```
 ┌────────────────────────────┬────────────────────────────┐
 │ Solutions Architect Pro    │   DevOps Engineer Pro      │
-│                            │                            │
-│ Komplexa multi-tier        │ CI/CD, Automation          │
-│ Enterprise arkitektur      │ IaC, Monitoring            │
 └────────────────────────────┴────────────────────────────┘
-```
-
-### Specialty:
-```
-- Advanced Networking
-- Security
-- Machine Learning
-- Database
-- Data Analytics
-- SAP on AWS
 ```
 
 ---

@@ -9,10 +9,18 @@ NODE_01_INTRO = {
     "estimated_minutes": 45,
     "xp_reward": 120,
     "prerequisites": [],
-    "content": '''
-# Introduction to System Design
+    "content": '''# 🏗️ Introduction to System Design
 
-Vad är System Design och varför är det viktigt?
+## Varför detta är kritiskt
+> "En junior kodar features. En senior designar system. System Design är skillnaden mellan 'det funkar' och 'det skalar till miljoner användare'."
+
+## Vad du kommer lära dig
+- ✅ System Design-processen
+- ✅ Functional vs Non-Functional Requirements
+- ✅ Back-of-the-envelope estimation
+- ✅ Latency numbers alla DevOps-ingenjörer måste känna till
+
+---
 
 ## Vad är System Design?
 
@@ -176,10 +184,18 @@ NODE_02_PERFORMANCE = {
     "estimated_minutes": 50,
     "xp_reward": 140,
     "prerequisites": [1],
-    "content": '''
-# Performance vs Scalability
+    "content": '''# ⚡ Performance vs Scalability
 
-Två relaterade men olika koncept.
+## Varför detta är kritiskt
+> "Performance utan scalability = en demo. Scalability utan performance = en långsam app. Du behöver båda för produktion."
+
+## Vad du kommer lära dig
+- ✅ Latency vs Throughput
+- ✅ Vertical vs Horizontal Scaling
+- ✅ Amdahl's Law
+- ✅ Performance testing strategier
+
+---
 
 ## Definitioner
 
@@ -362,10 +378,18 @@ NODE_03_AVAILABILITY = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [2],
-    "content": '''
-# Availability & Consistency
+    "content": '''# 🔄 Availability & Consistency
 
-Trade-offs i distribuerade system.
+## Varför detta är kritiskt
+> "99.9% uptime låter bra tills du inser att det är 8.7 timmar nere per år. För en bank är det katastrofalt. Förstå dina krav."
+
+## Vad du kommer lära dig
+- ✅ Availability "nines" (99.9%, 99.99%)
+- ✅ Failover patterns (Active-Passive, Active-Active)
+- ✅ Consistency models
+- ✅ CAP Theorem basics
+
+---
 
 ## Availability (Tillgänglighet)
 
@@ -548,10 +572,18 @@ NODE_04_CAP = {
     "estimated_minutes": 50,
     "xp_reward": 145,
     "prerequisites": [3],
-    "content": '''
-# CAP & PACELC Deep Dive
+    "content": '''# 🎯 CAP & PACELC Deep Dive
 
-Förstå trade-offs i distribuerade system.
+## Varför detta är kritiskt
+> "Varje arkitekturbeslut är en trade-off. CAP och PACELC tvingar dig att förstå vad du offrar - innan produktionen avslöjar det åt dig."
+
+## Vad du kommer lära dig
+- ✅ CP vs AP systems
+- ✅ PACELC theorem
+- ✅ Consistency levels
+- ✅ Conflict resolution strategier
+
+---
 
 ## CAP Theorem Visualiserat
 

@@ -1,6 +1,6 @@
 """
 Docker Mastery - Bootcamp v3 Format
-Auto-converted from skillsmap format.
+Linux Mastery Standard - Premium Content
 
 Track: containers-orchestration
 Tasks: 40
@@ -18,457 +18,2079 @@ MODULE_DOCKER_MASTERY = {
     "prerequisites": ['linux-fundamentals'],
     "tasks": [
             {
-                "title": "Docker Introduktion",
+                "title": "Docker Introduktion & Arkitektur",
                 "difficulty": "easy",
-                "estimated_minutes": 45,
+                "estimated_minutes": 60,
                 "xp_reward": 100,
-                "content": r"""
-# Docker Introduktion
+                "content": r"""# 🐳 Docker Introduktion & Arkitektur
 
-Containers revolutionerade hur vi bygger och deployar applikationer.
+## Varför detta är kritiskt
 
-## Varför Docker?
+> "Containers changed everything. Before Docker, 'it works on my machine' was the most dreaded phrase in software. Today, if you can't containerize your application, you can't deploy it reliably. Period."
 
-| Problem | Docker-lösning |
-|---------|----------------|
-| "Works on my machine" | Identisk miljö överallt |
-| Tunga VMs | Lättvikts-containers |
-| Dependency hell | Isolerade beroenden |
-| Långsam deploy | Sekunder att starta |
+Tänk dig: Du har byggt en perfekt applikation på din laptop. Den fungerar felfritt. Så pushar du till produktion och... ingenting fungerar. Olika Python-version. Saknade bibliotek. Fel konfiguration. Du tillbringar natten med att felsöka.
+
+**Med Docker hade deployen tagit 30 sekunder.**
+
+---
+
+## Vad är Docker egentligen?
+
+Docker är en **containeriseringsplattform** som paketerar din applikation med ALLA dess beroenden i en isolerad enhet som kallas **container**.
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         DOCKER ARKITEKTUR                           │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐          │
+│   │  Container  │     │  Container  │     │  Container  │          │
+│   │   (nginx)   │     │  (python)   │     │  (postgres) │          │
+│   │  Port 80    │     │  Port 8000  │     │  Port 5432  │          │
+│   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘          │
+│          │                   │                   │                  │
+│   ┌──────┴───────────────────┴───────────────────┴──────┐          │
+│   │                   DOCKER ENGINE                      │          │
+│   │   ┌─────────┐  ┌─────────┐  ┌─────────┐             │          │
+│   │   │ Images  │  │Networks │  │ Volumes │             │          │
+│   │   └─────────┘  └─────────┘  └─────────┘             │          │
+│   └─────────────────────────────────────────────────────┘          │
+│                              │                                      │
+│   ┌──────────────────────────┴──────────────────────────┐          │
+│   │                    HOST KERNEL                       │          │
+│   │        (Linux / Windows with WSL2 / macOS VM)        │          │
+│   └─────────────────────────────────────────────────────┘          │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Container vs Virtual Machine
+
+```
+┌─────────────── VIRTUAL MACHINES ───────────────┐  ┌──────────── CONTAINERS ────────────┐
+│                                                │  │                                    │
+│  ┌──────┐  ┌──────┐  ┌──────┐                 │  │  ┌──────┐  ┌──────┐  ┌──────┐      │
+│  │ App  │  │ App  │  │ App  │                 │  │  │ App  │  │ App  │  │ App  │      │
+│  ├──────┤  ├──────┤  ├──────┤                 │  │  ├──────┤  ├──────┤  ├──────┤      │
+│  │ Bins │  │ Bins │  │ Bins │                 │  │  │ Bins │  │ Bins │  │ Bins │      │
+│  │ Libs │  │ Libs │  │ Libs │                 │  │  │ Libs │  │ Libs │  │ Libs │      │
+│  ├──────┤  ├──────┤  ├──────┤                 │  │  └──┬───┘  └──┬───┘  └──┬───┘      │
+│  │Guest │  │Guest │  │Guest │  (Heavyweight)  │  │     └─────────┼─────────┘          │
+│  │  OS  │  │  OS  │  │  OS  │                 │  │         ┌─────┴─────┐              │
+│  └──┬───┘  └──┬───┘  └──┬───┘                 │  │         │  Docker   │ (Lightweight)│
+│     └─────────┼─────────┘                     │  │         │  Engine   │              │
+│         ┌─────┴─────┐                         │  │         └─────┬─────┘              │
+│         │Hypervisor │                         │  │               │                    │
+│         └─────┬─────┘                         │  │         ┌─────┴─────┐              │
+│         ┌─────┴─────┐                         │  │         │  Host OS  │              │
+│         │  Host OS  │                         │  │         └───────────┘              │
+│         └───────────┘                         │  │                                    │
+│                                                │  │                                    │
+│  Startup: Minutes | Size: GBs | Isolation: Full│  │  Startup: Seconds | Size: MBs     │
+└────────────────────────────────────────────────┘  └────────────────────────────────────┘
+```
+
+| Aspekt | Virtual Machine | Container |
+|--------|-----------------|-----------|
+| **Starttid** | Minuter | Sekunder |
+| **Storlek** | Gigabytes | Megabytes |
+| **RAM-overhead** | Hög (eget OS) | Minimal |
+| **Isolering** | Full (hypervisor) | Process-nivå |
+| **Portabilitet** | Begränsad | Mycket hög |
+| **Densitet** | ~10-20 per host | ~100-1000 per host |
+
+---
+
+## Docker-komponenter
+
+### 1. Docker Daemon (dockerd)
+
+Bakgrundsprocessen som hanterar containers, images, networks och volumes.
+
+```bash
+# Kontrollera daemon status
+sudo systemctl status docker
+
+# Docker daemon logs
+sudo journalctl -u docker.service -f
+```
+
+### 2. Docker CLI
+
+Kommandoradsverktyget du interagerar med.
+
+```bash
+# CLI pratar med daemon via socket
+ls -la /var/run/docker.sock
+```
+
+### 3. Docker Registry
+
+Där images lagras (Docker Hub, ECR, GCR, etc.)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        REGISTRY FLOW                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   Developer          Docker Hub           Production            │
+│       │                  │                    │                 │
+│       │  docker push     │                    │                 │
+│       │ ───────────────▶ │                    │                 │
+│       │                  │   docker pull      │                 │
+│       │                  │ ◀───────────────── │                 │
+│       │                  │                    │                 │
+│   myapp:v1.0          myapp:v1.0          myapp:v1.0           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Installation
 
+### macOS
+
 ```bash
-# macOS
+# Via Homebrew
 brew install --cask docker
 
-# Ubuntu
-curl -fsSL https://get.docker.com | sh
-sudo usermod -aG docker $USER
+# Starta Docker Desktop
+open -a Docker
 
 # Verifiera
 docker --version
 docker run hello-world
 ```
 
-## Grundläggande Kommandon
+### Ubuntu/Debian
 
 ```bash
-# Kör container
-docker run nginx
+# Avinstallera gamla versioner
+sudo apt-get remove docker docker-engine docker.io containerd runc
 
-# Lista containers
-docker ps        # Körande
-docker ps -a     # Alla
+# Installera beroenden
+sudo apt-get update
+sudo apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
 
-# Stoppa/ta bort
-docker stop <id>
-docker rm <id>
+# Lägg till Dockers GPG-nyckel
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# Lägg till repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Installera Docker
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Kör utan sudo (logout/login krävs)
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Verifiera
+docker run hello-world
 ```
 
-## Container vs VM
+### Windows (WSL2)
 
+```powershell
+# 1. Aktivera WSL2
+wsl --install
+
+# 2. Ladda ner Docker Desktop
+# https://www.docker.com/products/docker-desktop
+
+# 3. I Docker Desktop Settings:
+# - Enable WSL2 integration
+# - Select your WSL distro
 ```
-┌─────────────────────────────────────┐
-│           Containers                │
-├─────────┬─────────┬─────────────────┤
-│  App A  │  App B  │     App C       │
-├─────────┴─────────┴─────────────────┤
-│           Docker Engine             │
-├─────────────────────────────────────┤
-│           Host OS (Linux)           │
-└─────────────────────────────────────┘
-```
-
-**Nästa steg:** Node 2 - Docker Images
-
-> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
-"""
-            },
-            {
-                "title": "Docker Images",
-                "difficulty": "easy",
-                "estimated_minutes": 50,
-                "xp_reward": 120,
-                "content": r"""
-# Docker Images
-
-## Varför detta är viktigt
-
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
 
 ---
 
+## Dina första Docker-kommandon
 
-Images är blueprints för containers.
-
-## Image Kommandon
-
-```bash
-# Sök images
-docker search python
-
-# Ladda ner image
-docker pull python:3.11-slim
-
-# Lista images
-docker images
-
-# Ta bort image
-docker rmi python:3.11
-
-# Image info
-docker inspect python:3.11
-```
-
-## Image Naming
-
-```
-registry/repository:tag
-
-docker.io/library/python:3.11-slim
-└──────┘ └──────┘ └────┘ └────────┘
-registry  org     image    tag
-```
-
-## Layers
+### Kör din första container
 
 ```bash
-# Se layers
-docker history python:3.11-slim
+# Kör hello-world (verifierar installation)
+docker run hello-world
 
-# Varje instruktion = ny layer
-FROM python:3.11-slim     # Layer 1
-COPY . /app               # Layer 2
-RUN pip install           # Layer 3
+# Vad hände?
+# 1. Docker letade efter image lokalt (hittade inte)
+# 2. Laddade ner från Docker Hub
+# 3. Skapade container från image
+# 4. Körde container
+# 5. Container avslutades (programmet körde klart)
 ```
 
-## Taggar
+### Kör en interaktiv container
 
 ```bash
-# Tagga image
-docker tag myapp:latest myapp:v1.0.0
-docker tag myapp:latest registry.com/myapp:v1.0.0
+# Starta Ubuntu interaktivt
+docker run -it ubuntu bash
 
-# Push till registry
-docker push registry.com/myapp:v1.0.0
+# Inuti containern:
+cat /etc/os-release
+apt update
+apt install -y curl
+curl --version
+exit
+
+# Containern stoppas när du exiterar
 ```
 
-| Tag | Användning |
-|-----|-----------|
-| latest | Default (undvik i prod) |
-| v1.0.0 | Semantisk version |
-| sha-abc123 | Git commit |
-| slim/alpine | Mindre variant |
+### Kör en bakgrundscontainer
 
-**Nästa steg:** Node 3 - Dockerfile Basics
+```bash
+# Nginx webserver i bakgrunden
+docker run -d -p 8080:80 --name my-nginx nginx
 
-> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
+# Förklaring:
+# -d         = detached (bakgrund)
+# -p 8080:80 = port mapping (host:container)
+# --name     = ge containern ett namn
+# nginx      = image att köra
+
+# Besök http://localhost:8080
+
+# Se körande containers
+docker ps
+
+# Se loggar
+docker logs my-nginx
+
+# Stoppa
+docker stop my-nginx
+
+# Ta bort
+docker rm my-nginx
+```
+
+---
+
+## Docker CLI Cheat Sheet
+
+### Container-kommandon
+
+```bash
+# Hantera containers
+docker run [options] IMAGE      # Skapa och starta
+docker start CONTAINER          # Starta stoppad
+docker stop CONTAINER           # Snäll stopp (SIGTERM)
+docker kill CONTAINER           # Tvinga stopp (SIGKILL)
+docker restart CONTAINER        # Omstart
+docker rm CONTAINER             # Ta bort
+docker rm -f CONTAINER          # Force remove (även körande)
+
+# Inspektera containers
+docker ps                       # Lista körande
+docker ps -a                    # Lista alla
+docker logs CONTAINER           # Visa loggar
+docker logs -f CONTAINER        # Följ loggar
+docker inspect CONTAINER        # Detaljerad info
+docker stats                    # Live resursanvändning
+docker top CONTAINER            # Processer i container
+
+# Interagera med containers
+docker exec -it CONTAINER bash  # Öppna shell
+docker attach CONTAINER         # Attach till process
+docker cp FILE CONTAINER:PATH   # Kopiera filer
+```
+
+### Image-kommandon
+
+```bash
+docker images                   # Lista images
+docker pull IMAGE               # Ladda ner
+docker push IMAGE               # Ladda upp
+docker build -t NAME .          # Bygg image
+docker rmi IMAGE                # Ta bort image
+docker tag SOURCE TARGET        # Tagga image
+docker history IMAGE            # Visa layers
+```
+
+---
+
+## Praktisk Övning
+
+### Övning 1: Utforska containers
+
+```bash
+# 1. Kör nginx och mappa port
+docker run -d -p 8080:80 --name web nginx
+
+# 2. Verifiera att den körs
+docker ps
+
+# 3. Öppna webbläsare: http://localhost:8080
+
+# 4. Se loggar när du refreshar sidan
+docker logs -f web
+
+# 5. Gå in i containern
+docker exec -it web bash
+ls /usr/share/nginx/html/
+cat /etc/nginx/nginx.conf
+exit
+
+# 6. Städa upp
+docker stop web && docker rm web
+```
+
+### Övning 2: Resursövervakning
+
+```bash
+# 1. Starta några containers
+docker run -d --name c1 nginx
+docker run -d --name c2 redis
+docker run -d --name c3 postgres -e POSTGRES_PASSWORD=secret
+
+# 2. Övervaka resurser
+docker stats
+
+# 3. Inspektera en container
+docker inspect c1 | grep -A 10 "NetworkSettings"
+
+# 4. Städa upp
+docker stop c1 c2 c3
+docker rm c1 c2 c3
+```
+
+---
+
+## Vanliga misstag att undvika
+
+| Misstag | Problem | Lösning |
+|---------|---------|---------|
+| `docker run` utan `-d` | Terminal blockeras | Använd `-d` för bakgrund |
+| Glömmer `--rm` | Containers ackumuleras | `docker run --rm` för temp |
+| Kör som root i container | Säkerhetsrisk | Skapa non-root user |
+| Ignorerar logs | Svårt att felsöka | `docker logs -f` regelbundet |
+| Hårdkodar portar | Port-konflikter | Använd `-p` dynamiskt |
+
+---
+
+## Sammanfattning
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Container** | Isolerad process med egna filer |
+| **Image** | Blueprint för container |
+| **Docker Engine** | Runtime som kör containers |
+| **Registry** | Lagring för images |
+| **Dockerfile** | Recept för att bygga image |
+
+---
+
+## Nästa Steg
+
+Du har nu grunderna i Docker! Nästa task: **Docker Images Deep Dive** — lär dig hur images byggs, lagras och optimeras.
+
+> 💡 **Pro Tip:** Kör `docker system prune` regelbundet för att rensa oanvända resurser. Ditt diskutrymme kommer tacka dig!
 """
             },
             {
-                "title": "Dockerfile Basics",
+                "title": "Docker Images Deep Dive",
                 "difficulty": "easy",
                 "estimated_minutes": 55,
-                "xp_reward": 140,
-                "content": r"""
-# Dockerfile Basics
+                "xp_reward": 120,
+                "content": r"""# 📦 Docker Images Deep Dive
 
-## Varför detta är viktigt
+## Varför detta är kritiskt
 
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+> "An image is not just a file — it's a precisely layered, content-addressable filesystem that represents your entire application stack. Understanding images is understanding how Docker actually works under the hood."
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
+Tänk dig: Din CI/CD-pipeline bygger samma image varje gång. Varje build tar 10 minuter. Men om du förstår hur layers fungerar kan samma build ta 30 sekunder. Det är skillnaden mellan frustration och flow.
 
 ---
 
+## Vad är en Docker Image?
 
-Dockerfile definierar hur en image byggs.
+En image är en **read-only mall** som innehåller:
+- Operativsystem (eller delar av det)
+- Application runtime (Python, Node, Java, etc.)
+- Din applikationskod
+- Alla beroenden
+- Konfiguration
 
-## Grundläggande Dockerfile
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        IMAGE ANATOMY                                │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  Layer 5: CMD ["python", "app.py"]          (metadata)      │  │
+│   ├─────────────────────────────────────────────────────────────┤  │
+│   │  Layer 4: COPY . /app                       (your code)     │  │
+│   ├─────────────────────────────────────────────────────────────┤  │
+│   │  Layer 3: RUN pip install -r requirements   (dependencies)  │  │
+│   ├─────────────────────────────────────────────────────────────┤  │
+│   │  Layer 2: COPY requirements.txt             (dep file)      │  │
+│   ├─────────────────────────────────────────────────────────────┤  │
+│   │  Layer 1: FROM python:3.11-slim             (base image)    │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                              │                                      │
+│                              ▼                                      │
+│                    Content-Addressable                              │
+│                    (SHA256 hash per layer)                          │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Image Naming Convention
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     IMAGE REFERENCE FORMAT                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   docker.io / library / python : 3.11-slim                          │
+│   ────────   ───────   ──────   ─────────                           │
+│   registry   namespace  repo     tag                                │
+│                                                                     │
+│   Exempel:                                                          │
+│   ─────────────────────────────────────────────────────────────     │
+│   nginx                    → docker.io/library/nginx:latest         │
+│   python:3.11              → docker.io/library/python:3.11          │
+│   myuser/myapp:v1          → docker.io/myuser/myapp:v1              │
+│   gcr.io/project/app:prod  → gcr.io/project/app:prod                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Tagging Best Practices
+
+| Tag Style | Exempel | Användning |
+|-----------|---------|------------|
+| **latest** | `myapp:latest` | ⚠️ Undvik i produktion! |
+| **Semantic** | `myapp:1.2.3` | ✅ Rekommenderat |
+| **Git SHA** | `myapp:abc123f` | ✅ Spårbart till commit |
+| **Date** | `myapp:2024-01-15` | ✅ Tidsstämplat |
+| **Environment** | `myapp:prod` | ⚠️ Överskrivs ofta |
+
+**Varför undvika `latest`?**
+```bash
+# Dag 1: Deploy
+kubectl set image deployment/app app=myapp:latest
+# Fungerar! Image är v1.0.0
+
+# Dag 2: Någon pushar v1.1.0 som "latest"
+
+# Dag 3: Pod restarts, pulls "latest"
+# Nu kör du v1.1.0 utan att veta det!
+```
+
+---
+
+## Layer-systemet
+
+### Hur layers fungerar
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                       LAYER SHARING                                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Image A              Image B              Image C                 │
+│   ┌───────────┐       ┌───────────┐        ┌───────────┐           │
+│   │ Your App  │       │  API App  │        │ Worker    │           │
+│   ├───────────┤       ├───────────┤        ├───────────┤           │
+│   │ Flask     │       │ FastAPI   │        │ Celery    │           │
+│   ├───────────┴───────┴───────────┴────────┴───────────┤           │
+│   │              Python 3.11                           │ ◀─ DELAD! │
+│   ├────────────────────────────────────────────────────┤           │
+│   │              Debian Slim                           │ ◀─ DELAD! │
+│   └────────────────────────────────────────────────────┘           │
+│                                                                     │
+│   Disk: Delade layers lagras ENDAST EN GÅNG!                       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Inspektera layers
+
+```bash
+# Se image layers
+docker history python:3.11-slim
+
+# Output:
+# IMAGE          CREATED       SIZE      COMMAND
+# abc123         2 days ago    5.5MB     CMD ["python3"]
+# def456         2 days ago    0B        EXPOSE 8000
+# ghi789         2 days ago    45.3MB    RUN pip install...
+# jkl012         2 days ago    125MB     FROM debian:slim
+
+# Detaljerad layer-info
+docker inspect python:3.11-slim | jq '.[0].RootFS.Layers'
+```
+
+### Layer Caching
 
 ```dockerfile
-# Base image
+# ❌ DÅLIGT - Bryter cache vid varje kodändring
+FROM python:3.11-slim
+COPY . /app                      # Ändras ofta → alla efterföljande layers rebuilds
+RUN pip install -r requirements.txt
+
+# ✅ BRA - Maximerar cache
+FROM python:3.11-slim
+COPY requirements.txt /app/      # Ändras sällan
+RUN pip install -r requirements.txt  # Cachas!
+COPY . /app                      # Bara denna layer rebuilds
+```
+
+---
+
+## Image-kommandon
+
+### Hämta images
+
+```bash
+# Pull från Docker Hub
+docker pull nginx
+docker pull nginx:1.25
+docker pull nginx:1.25-alpine
+
+# Pull från andra registries
+docker pull gcr.io/google-containers/nginx
+docker pull ghcr.io/username/app:v1
+
+# Pull alla taggar (sällan nödvändigt)
+docker pull -a nginx
+```
+
+### Lista images
+
+```bash
+# Lista alla images
+docker images
+
+# Med mer detaljer
+docker images --no-trunc
+
+# Filtrera
+docker images --filter "dangling=true"
+docker images --filter "reference=nginx*"
+
+# Formattera output
+docker images --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
+
+# Bara IDs (bra för scripting)
+docker images -q
+```
+
+### Ta bort images
+
+```bash
+# Ta bort specifik image
+docker rmi nginx:1.25
+
+# Force remove (även om container finns)
+docker rmi -f nginx:1.25
+
+# Ta bort alla oanvända images
+docker image prune
+
+# Ta bort ALLT (images, containers, volumes, networks)
+docker system prune -a
+
+# Ta bort images äldre än 24h
+docker image prune -a --filter "until=24h"
+```
+
+### Tagga images
+
+```bash
+# Tagga lokal image
+docker tag myapp:latest myapp:v1.0.0
+
+# Tagga för push till registry
+docker tag myapp:v1 registry.example.com/team/myapp:v1
+docker tag myapp:v1 ghcr.io/myorg/myapp:v1
+docker tag myapp:v1 123456789.dkr.ecr.eu-west-1.amazonaws.com/myapp:v1
+
+# En image kan ha MÅNGA taggar (samma layer-data)
+docker tag myapp:v1 myapp:latest
+docker tag myapp:v1 myapp:stable
+```
+
+---
+
+## Push och Pull
+
+### Docker Hub
+
+```bash
+# Logga in
+docker login
+
+# Push
+docker push myuser/myapp:v1
+
+# Private repo (kräver plan)
+docker push myuser/private-app:v1
+```
+
+### AWS ECR
+
+```bash
+# Få login-token
+aws ecr get-login-password --region eu-west-1 | \
+    docker login --username AWS --password-stdin \
+    123456789.dkr.ecr.eu-west-1.amazonaws.com
+
+# Push
+docker push 123456789.dkr.ecr.eu-west-1.amazonaws.com/myapp:v1
+```
+
+### GitHub Container Registry
+
+```bash
+# Logga in med PAT
+echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+
+# Push
+docker push ghcr.io/myorg/myapp:v1
+```
+
+---
+
+## Image Inspection
+
+```bash
+# Grundläggande info
+docker inspect nginx:latest
+
+# Specifik information med jq
+docker inspect nginx | jq '.[0].Config.Env'
+docker inspect nginx | jq '.[0].Config.ExposedPorts'
+docker inspect nginx | jq '.[0].Config.Cmd'
+
+# Image digest (för immutable deploys)
+docker inspect --format='{{.RepoDigests}}' nginx
+
+# Storlek
+docker images nginx --format "{{.Size}}"
+```
+
+---
+
+## Praktiska Övningar
+
+### Övning 1: Layer-analys
+
+```bash
+# 1. Pull en image
+docker pull python:3.11-slim
+
+# 2. Analysera layers
+docker history python:3.11-slim
+
+# 3. Jämför med alpine
+docker pull python:3.11-alpine
+docker history python:3.11-alpine
+
+# 4. Jämför storlekar
+docker images python --format "{{.Tag}}: {{.Size}}"
+```
+
+### Övning 2: Tagging Workflow
+
+```bash
+# 1. Pull base image
+docker pull nginx:1.25
+
+# 2. Skapa taggar för olika miljöer
+docker tag nginx:1.25 myregistry/nginx:1.25
+docker tag nginx:1.25 myregistry/nginx:prod
+docker tag nginx:1.25 myregistry/nginx:latest
+
+# 3. Lista och se att alla pekar på samma image ID
+docker images myregistry/nginx
+
+# 4. Städa upp
+docker rmi myregistry/nginx:1.25 myregistry/nginx:prod myregistry/nginx:latest
+```
+
+---
+
+## Vanliga misstag
+
+| Misstag | Konsekvens | Lösning |
+|---------|------------|---------|
+| Använda `latest` | Oförutsägbara deploys | Specifika versioner |
+| Stora base images | Långsam pull/push | Använd `-slim` eller `-alpine` |
+| Ignorera layer-order | Långsamma builds | Sällan-ändrade först |
+| Inte rensa gamla images | Disk full | `docker image prune` |
+
+---
+
+## Sammanfattning
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker pull` | Hämta image |
+| `docker images` | Lista images |
+| `docker rmi` | Ta bort image |
+| `docker tag` | Skapa ny tag |
+| `docker push` | Ladda upp till registry |
+| `docker inspect` | Visa metadata |
+| `docker history` | Visa layers |
+
+---
+
+## Nästa Steg
+
+Du förstår nu hur images fungerar! Nästa task: **Dockerfile Mastery** — bygg dina egna professionella images.
+
+> 💡 **Pro Tip:** Kör `docker images | grep "<none>"` regelbundet. "Dangling images" tar plats utan att användas!
+"""
+            },
+            {
+                "title": "Dockerfile Mastery",
+                "difficulty": "medium",
+                "estimated_minutes": 65,
+                "xp_reward": 150,
+                "content": r"""# 🏗️ Dockerfile Mastery
+
+## Varför detta är kritiskt
+
+> "A Dockerfile is not just build instructions — it's a contract between your code and your infrastructure. A well-crafted Dockerfile means fast builds, small images, and secure deployments. A poorly written one means wasted hours and security vulnerabilities."
+
+En dålig Dockerfile kan göra din 50MB-app till en 2GB-image. Den kan exponera secrets i layer-historiken. Den kan ta 20 minuter att bygga istället för 20 sekunder.
+
+**Att skriva en bra Dockerfile är en konst. Låt oss behärska den.**
+
+---
+
+## Dockerfile-instruktioner
+
+### FROM — Basimage
+
+```dockerfile
+# Alltid första instruktionen
 FROM python:3.11-slim
 
-# Metadata
-LABEL maintainer="dev@example.com"
+# Med specifik digest (immutable)
+FROM python@sha256:abc123...
 
-# Arbetskatalog
+# Multi-stage (mer om detta senare)
+FROM node:18 AS builder
+FROM nginx:alpine AS production
+```
+
+**Val av base image:**
+
+| Image Type | Storlek | Användning |
+|------------|---------|------------|
+| `ubuntu:22.04` | ~77MB | Full distro, debugging |
+| `python:3.11` | ~900MB | Allt inkluderat |
+| `python:3.11-slim` | ~150MB | ✅ Rekommenderat |
+| `python:3.11-alpine` | ~50MB | Minst, men kompatibilitetsproblem |
+| `distroless` | ~20MB | Endast runtime, mest säkert |
+
+### WORKDIR — Arbetskatalog
+
+```dockerfile
+# Skapa och sätt arbetskatalog
 WORKDIR /app
 
-# Kopiera filer
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Alla efterföljande kommandon utgår från /app
+COPY . .         # Kopierar till /app
+RUN pwd          # Output: /app
+```
 
-COPY . .
+### COPY vs ADD
+
+```dockerfile
+# COPY — enkel kopiering (REKOMMENDERAS)
+COPY package.json .
+COPY src/ ./src/
+
+# ADD — kan mer, men använd sällan
+ADD https://example.com/file.tar.gz /tmp/     # Laddar ner URL
+ADD archive.tar.gz /app/                       # Extraherar automatiskt
+
+# ✅ Best practice: Använd COPY, explicit ADD för tar/URL
+```
+
+### RUN — Bygg-kommandon
+
+```dockerfile
+# ❌ DÅLIGT - Många layers
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt-get install -y git
+RUN apt-get clean
+
+# ✅ BRA - En layer, rensar cache
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+### ENV — Miljövariabler
+
+```dockerfile
+# Sätt miljövariabler
+ENV NODE_ENV=production
+ENV APP_PORT=8000
+
+# Flera på en rad
+ENV NODE_ENV=production APP_PORT=8000
+
+# Använd i efterföljande kommandon
+RUN echo "Port is $APP_PORT"
+```
+
+### ARG — Build-time variabler
+
+```dockerfile
+# Definiera build argument
+ARG VERSION=latest
+ARG BUILD_DATE
+
+# Använd med docker build --build-arg
+# docker build --build-arg VERSION=1.2.3 .
+
+# Kombinera med ENV för runtime
+ARG VERSION
+ENV APP_VERSION=$VERSION
+```
+
+### EXPOSE — Dokumentera portar
+
+```dockerfile
+# Dokumentera vilka portar containern lyssnar på
+EXPOSE 8000
+EXPOSE 443/tcp
+EXPOSE 8125/udp
+
+# OBS: Detta ÖPPNAR inte porten!
+# Du måste fortfarande använda -p vid docker run
+```
+
+### CMD vs ENTRYPOINT
+
+```dockerfile
+# CMD — Default kommando (kan överskrivas)
+CMD ["python", "app.py"]
+# docker run myapp               → python app.py
+# docker run myapp python test.py → python test.py (CMD överskrivet)
+
+# ENTRYPOINT — Fast kommando
+ENTRYPOINT ["python"]
+CMD ["app.py"]
+# docker run myapp               → python app.py
+# docker run myapp test.py       → python test.py (argument till ENTRYPOINT)
+
+# Shell form vs Exec form
+CMD python app.py               # Shell form (kör via /bin/sh -c)
+CMD ["python", "app.py"]        # Exec form (kör direkt) ✅
+```
+
+---
+
+## Komplett Dockerfile-exempel
+
+### Python Web Application
+
+```dockerfile
+# ============================================
+# PRODUKTIONS-DOCKERFILE FÖR PYTHON APP
+# ============================================
+
+# Stage 1: Base
+FROM python:3.11-slim AS base
+
+# Förhindra Python att skriva .pyc och buffra output
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# Stage 2: Builder
+FROM base AS builder
+
+# Installera build-beroenden
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Installera Python-beroenden
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
+
+# Stage 3: Production
+FROM base AS production
+
+# Skapa non-root user
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid appgroup --shell /bin/bash appuser
+
+# Kopiera installerade packages från builder
+COPY --from=builder /root/.local /home/appuser/.local
+ENV PATH=/home/appuser/.local/bin:$PATH
+
+# Kopiera applikationskod
+COPY --chown=appuser:appgroup . .
+
+# Byt till non-root user
+USER appuser
 
 # Exponera port
 EXPOSE 8000
 
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
 # Startkommando
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "app:app"]
 ```
 
-## Bygga Image
+### Node.js Application
+
+```dockerfile
+# ============================================
+# MULTI-STAGE DOCKERFILE FÖR NODE.JS
+# ============================================
+
+# Stage 1: Dependencies
+FROM node:18-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Stage 2: Builder
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Stage 3: Production
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Skapa non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Kopiera nödvändiga filer
+COPY --from=builder /app/dist ./dist
+COPY --from=deps /app/node_modules ./node_modules
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["node", "dist/index.js"]
+```
+
+---
+
+## .dockerignore
 
 ```bash
-# Bygg image
+# .dockerignore - Exkludera från build context
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Development
+.git/
+.gitignore
+*.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment
+.env
+.env.local
+*.env
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Tests
+tests/
+__tests__/
+coverage/
+.pytest_cache/
+```
+
+---
+
+## Build-optimering
+
+### Layer Caching Strategy
+
+```dockerfile
+# ❌ DÅLIGT - Cache invalideras vid varje kodändring
+FROM node:18
+COPY . .                    # Kodändring → allt nedan rebuilds
+RUN npm install
+RUN npm run build
+
+# ✅ BRA - Maximerar cache
+FROM node:18
+COPY package*.json ./       # Ändras sällan
+RUN npm install             # Cachas om package.json inte ändrats
+COPY . .                    # Bara detta rebuilds vid kodändring
+RUN npm run build
+```
+
+### Multi-stage Builds
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    MULTI-STAGE BUILD FLOW                           │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌──────────────────┐                                              │
+│   │   Stage: deps    │   npm ci --only=production                   │
+│   │   1.2 GB         │   (production dependencies)                  │
+│   └────────┬─────────┘                                              │
+│            │                                                        │
+│   ┌────────▼─────────┐                                              │
+│   │  Stage: builder  │   npm ci && npm run build                    │
+│   │   2.5 GB         │   (all deps + build)                         │
+│   └────────┬─────────┘                                              │
+│            │                                                        │
+│            │  COPY --from=builder /app/dist                         │
+│            │  COPY --from=deps /app/node_modules                    │
+│            ▼                                                        │
+│   ┌──────────────────┐                                              │
+│   │ Stage: production│   Final image                                │
+│   │   150 MB         │   (only runtime files)                       │
+│   └──────────────────┘                                              │
+│                                                                     │
+│   Resultat: 2.5 GB build → 150 MB production image                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Bygga images
+
+```bash
+# Grundläggande build
 docker build -t myapp:v1 .
 
 # Med annan Dockerfile
 docker build -f Dockerfile.prod -t myapp:prod .
 
-# No cache
+# Build för specifik platform
+docker build --platform linux/amd64 -t myapp:v1 .
+
+# Build-args
+docker build \
+    --build-arg VERSION=1.2.3 \
+    --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
+    -t myapp:v1 .
+
+# No cache (fullständig rebuild)
 docker build --no-cache -t myapp:v1 .
+
+# Visa alla layers under build
+docker build --progress=plain -t myapp:v1 .
 ```
-
-## Viktiga Instruktioner
-
-| Instruktion | Syfte |
-|-------------|-------|
-| FROM | Base image |
-| WORKDIR | Sätt arbetskatalog |
-| COPY | Kopiera filer |
-| RUN | Kör kommando (build-time) |
-| CMD | Default kommando (runtime) |
-| ENTRYPOINT | Fast startpunkt |
-| EXPOSE | Dokumentera port |
-| ENV | Miljövariabler |
-
-## RUN vs CMD vs ENTRYPOINT
-
-```dockerfile
-# RUN - körs vid build
-RUN apt-get update && apt-get install -y curl
-
-# CMD - default kommando (kan överskrivas)
-CMD ["python", "app.py"]
-
-# ENTRYPOINT - fast kommando
-ENTRYPOINT ["python"]
-CMD ["app.py"]  # Argument till ENTRYPOINT
-```
-
-**Nästa steg:** Node 4 - Container Lifecycle
-
-> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
-"""
-            },
-            {
-                "title": "Container Lifecycle",
-                "difficulty": "easy",
-                "estimated_minutes": 50,
-                "xp_reward": 130,
-                "content": r"""
-# Container Lifecycle
-
-## Varför detta är viktigt
-
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
 
 ---
 
+## Praktisk Övning
 
-Förstå containers livscykel.
-
-## Lifecycle States
-
-```
-Created → Running → Paused → Stopped → Removed
-```
-
-## Hantera Containers
+### Övning: Bygg en optimerad image
 
 ```bash
-# Skapa utan starta
+# 1. Skapa projekt
+mkdir dockerfile-lab && cd dockerfile-lab
+
+# 2. Skapa en enkel Python-app
+cat > app.py << 'EOF'
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return "Hello from Docker!"
+
+@app.route('/health')
+def health():
+    return "OK"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
+EOF
+
+cat > requirements.txt << 'EOF'
+flask==3.0.0
+gunicorn==21.2.0
+EOF
+
+# 3. Skapa Dockerfile
+cat > Dockerfile << 'EOF'
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN groupadd --gid 1000 app && \
+    useradd --uid 1000 --gid app app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --chown=app:app . .
+
+USER app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
+EOF
+
+# 4. Bygg och kör
+docker build -t myapp:v1 .
+docker run -d -p 8000:8000 --name myapp myapp:v1
+
+# 5. Testa
+curl http://localhost:8000
+curl http://localhost:8000/health
+
+# 6. Se image-storlek
+docker images myapp
+
+# 7. Städa
+docker stop myapp && docker rm myapp
+```
+
+---
+
+## Sammanfattning
+
+| Instruktion | Syfte |
+|-------------|-------|
+| `FROM` | Base image |
+| `WORKDIR` | Sätt arbetskatalog |
+| `COPY` | Kopiera filer |
+| `RUN` | Kör kommando vid build |
+| `ENV` | Sätt miljövariabler |
+| `ARG` | Build-time variabler |
+| `EXPOSE` | Dokumentera portar |
+| `CMD` | Default runtime-kommando |
+| `ENTRYPOINT` | Fast runtime-kommando |
+| `USER` | Byt användare |
+| `HEALTHCHECK` | Hälsokontroll |
+
+---
+
+## Nästa Steg
+
+Du kan nu skriva professionella Dockerfiles! Nästa task: **Container Lifecycle & Management** — hantera containers som ett proffs.
+
+> 💡 **Pro Tip:** Kör alltid `docker scan myapp:v1` efter build för att hitta säkerhetsproblem i din image!
+"""
+            },
+            {
+                "title": "Container Lifecycle & Management",
+                "difficulty": "medium",
+                "estimated_minutes": 55,
+                "xp_reward": 140,
+                "content": r"""# 🔄 Container Lifecycle & Management
+
+## Varför detta är kritiskt
+
+> "Containers are ephemeral by design — they're meant to be created, destroyed, and recreated. Understanding the lifecycle is understanding how to build resilient systems. A container that can't handle graceful shutdown will corrupt data. A container that doesn't clean up will exhaust resources."
+
+I produktion kan en container starta om tusentals gånger. Varje gång måste den:
+1. Starta snabbt
+2. Vara redo att ta emot trafik
+3. Avsluta gracefully utan dataförlust
+
+**Låt oss förstå varje fas.**
+
+---
+
+## Container States
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     CONTAINER LIFECYCLE                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   docker create                                                     │
+│        │                                                            │
+│        ▼                                                            │
+│   ┌─────────┐    docker start    ┌─────────┐                       │
+│   │ CREATED │ ─────────────────▶ │ RUNNING │                       │
+│   └─────────┘                    └────┬────┘                       │
+│                                       │                             │
+│                          docker pause │ docker unpause              │
+│                                       ▼                             │
+│                                  ┌─────────┐                        │
+│                                  │ PAUSED  │                        │
+│                                  └────┬────┘                        │
+│                                       │                             │
+│                           docker stop │ docker kill                 │
+│                                       ▼                             │
+│   ┌─────────┐                   ┌─────────┐                        │
+│   │ REMOVED │ ◀──── docker rm ──│ STOPPED │                        │
+│   └─────────┘                   └─────────┘                        │
+│                                       │                             │
+│                                       │ docker start                │
+│                                       └────────────▶ RUNNING        │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+| State | Beskrivning | Resursanvändning |
+|-------|-------------|------------------|
+| **Created** | Container skapad men ej startad | Minimal (endast metadata) |
+| **Running** | Process körs aktivt | CPU + RAM + Network |
+| **Paused** | Frozen, process pausad | RAM (fryst i minnet) |
+| **Stopped** | Process avslutad, data kvar | Disk (filesystem kvar) |
+| **Removed** | Borttagen, allt rensat | Ingen |
+
+---
+
+## Skapa och starta containers
+
+### docker run (skapa + starta)
+
+```bash
+# Enklaste form
+docker run nginx
+
+# Med alla vanliga flaggor
+docker run \
+    -d \                          # Detached (bakgrund)
+    --name webserver \            # Namnge containern
+    -p 8080:80 \                  # Port mapping
+    -e NGINX_HOST=example.com \   # Miljövariabel
+    -v /data:/usr/share/nginx/html \ # Volume mount
+    --restart unless-stopped \    # Restart policy
+    --memory 512m \               # Minnesgräns
+    --cpus 0.5 \                  # CPU-gräns
+    nginx:1.25
+```
+
+### docker create + start (separat)
+
+```bash
+# Skapa utan att starta
 docker create --name myapp nginx
 
-# Starta
+# Starta senare
 docker start myapp
 
-# Pausa/återuppta
-docker pause myapp
-docker unpause myapp
+# Användbart för:
+# - Förbereda containers före lansering
+# - Scripting och automation
+# - Debugga startup-problem
+```
 
-# Stoppa (graceful)
+### Auto-remove containers
+
+```bash
+# Ta bort när den avslutas (bra för engångsjobb)
+docker run --rm alpine echo "Hello and goodbye!"
+
+# Containern finns inte längre
+docker ps -a | grep alpine  # Tom!
+```
+
+---
+
+## Hantera körande containers
+
+### Exec — Kör kommandon inuti container
+
+```bash
+# Öppna shell i körande container
+docker exec -it myapp bash
+
+# Kör enstaka kommando
+docker exec myapp ls -la /app
+docker exec myapp cat /etc/nginx/nginx.conf
+
+# Som annan användare
+docker exec -u root myapp apt-get update
+
+# Med miljövariabler
+docker exec -e DEBUG=true myapp python script.py
+```
+
+### Attach vs Exec
+
+```bash
+# Attach - Koppla till HUVUDPROCESSEN (PID 1)
+docker attach myapp
+# Ctrl+C skickar signal till containern!
+# Ctrl+P Ctrl+Q för att detacha utan att stoppa
+
+# Exec - Startar NY process
+docker exec -it myapp bash
+# Ctrl+C avslutar bara bash, inte containern
+```
+
+### Kopiera filer
+
+```bash
+# Kopiera TILL container
+docker cp local_file.txt myapp:/app/
+
+# Kopiera FRÅN container
+docker cp myapp:/app/config.yaml ./
+
+# Kopiera hela katalog
+docker cp myapp:/var/log/nginx ./nginx-logs/
+```
+
+---
+
+## Stoppa containers
+
+### Graceful shutdown (SIGTERM)
+
+```bash
+# Skickar SIGTERM, väntar 10s, sen SIGKILL
 docker stop myapp
 
-# Döda (force)
+# Ändra timeout (vänta längre)
+docker stop -t 30 myapp
+
+# Vad händer?
+# 1. Docker skickar SIGTERM till PID 1
+# 2. Applikationen har 10s att städa upp
+# 3. Om den inte avslutat: SIGKILL (tvingad)
+```
+
+### Force kill (SIGKILL)
+
+```bash
+# Omedelbar död (ingen cleanup)
 docker kill myapp
 
-# Ta bort
-docker rm myapp
-
-# Starta och ta bort automatiskt
-docker run --rm nginx
+# Skicka annan signal
+docker kill -s SIGHUP myapp   # Reload config
+docker kill -s SIGUSR1 myapp  # Custom signal
 ```
 
-## Interaktiva Containers
+### Hantera SIGTERM i din app
 
-```bash
-# Interaktiv terminal
-docker run -it ubuntu bash
+```python
+# Python exempel - graceful shutdown
+import signal
+import sys
 
-# Attach till körande container
-docker attach myapp
+def shutdown_handler(signum, frame):
+    print("Received shutdown signal, cleaning up...")
+    # Stäng databaskopplingar
+    # Slutför pågående requests
+    # Spara state
+    sys.exit(0)
 
-# Exec kommando i container
-docker exec -it myapp bash
-docker exec myapp ls -la /app
+signal.signal(signal.SIGTERM, shutdown_handler)
 ```
 
-## Logs & Stats
+```javascript
+// Node.js exempel
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+});
+```
+
+---
+
+## Restart Policies
 
 ```bash
-# Se logs
+# Starta aldrig om automatiskt (default)
+docker run --restart no nginx
+
+# Starta om vid krasch (ej manuell stop)
+docker run --restart on-failure nginx
+
+# Max antal omstarter vid krasch
+docker run --restart on-failure:5 nginx
+
+# Alltid starta om (även efter reboot)
+docker run --restart always nginx
+
+# Alltid, utom vid manuell stop
+docker run --restart unless-stopped nginx
+```
+
+| Policy | Krasch | Manuell stop | Docker restart | Användning |
+|--------|--------|--------------|----------------|------------|
+| `no` | ❌ | - | ❌ | Engångsjobb |
+| `on-failure` | ✅ | ❌ | ❌ | Dev/test |
+| `always` | ✅ | ✅ | ✅ | Produktion |
+| `unless-stopped` | ✅ | ❌ | ✅ | ✅ Rekommenderat |
+
+---
+
+## Monitoring & Logging
+
+### Logs
+
+```bash
+# Visa alla logs
 docker logs myapp
-docker logs -f myapp        # Follow
+
+# Följ logs i realtid
+docker logs -f myapp
+
+# Senaste N rader
 docker logs --tail 100 myapp
 
-# Resource usage
-docker stats
-docker stats myapp
+# Med timestamps
+docker logs -t myapp
 
-# Inspect container
-docker inspect myapp
+# Sedan tidpunkt
+docker logs --since 2024-01-15 myapp
+docker logs --since 10m myapp
+
+# Kombinera
+docker logs -f --tail 50 --since 5m myapp
 ```
 
-## Cleanup
+### Stats (resursanvändning)
+
+```bash
+# Live stats för alla containers
+docker stats
+
+# Specifik container
+docker stats myapp
+
+# Utan stream (en gång)
+docker stats --no-stream
+
+# Formattera output
+docker stats --format "{{.Name}}: {{.CPUPerc}} CPU, {{.MemUsage}}"
+```
+
+### Inspect (detaljerad info)
+
+```bash
+# All metadata
+docker inspect myapp
+
+# Specifik info med Go template
+docker inspect --format '{{.State.Status}}' myapp
+docker inspect --format '{{.NetworkSettings.IPAddress}}' myapp
+docker inspect --format '{{json .Config.Env}}' myapp | jq
+
+# Healthcheck status
+docker inspect --format '{{.State.Health.Status}}' myapp
+```
+
+---
+
+## Healthchecks
+
+```dockerfile
+# I Dockerfile
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+```
+
+```bash
+# Vid docker run
+docker run -d \
+    --health-cmd="curl -f http://localhost:8000/health || exit 1" \
+    --health-interval=30s \
+    --health-timeout=10s \
+    --health-retries=3 \
+    myapp
+
+# Kontrollera status
+docker inspect --format '{{.State.Health.Status}}' myapp
+# Möjliga värden: starting, healthy, unhealthy
+```
+
+---
+
+## Cleanup & Maintenance
 
 ```bash
 # Ta bort stoppade containers
 docker container prune
 
-# Ta bort oanvända images
-docker image prune
+# Ta bort specifik container
+docker rm myapp
 
-# Ta bort allt oanvänt
-docker system prune -a
+# Force remove (även körande)
+docker rm -f myapp
+
+# Ta bort alla stoppade
+docker rm $(docker ps -aq --filter status=exited)
+
+# System-wide cleanup
+docker system prune          # Containers, networks, dangling images
+docker system prune -a       # + alla oanvända images
+docker system prune -a --volumes  # + volumes (VARNING: data försvinner!)
+
+# Se diskutrymme
+docker system df
 ```
-
-**Nästa steg:** Node 5 - Docker Volumes
-
-> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
-"""
-            },
-            {
-                "title": "Docker Volumes",
-                "difficulty": "easy",
-                "estimated_minutes": 50,
-                "xp_reward": 135,
-                "content": r"""
-# Docker Volumes
-
-## Varför detta är viktigt
-
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
 
 ---
 
+## Praktiska Övningar
 
-Persistent data i Docker.
-
-## Volume-typer
+### Övning 1: Lifecycle exploration
 
 ```bash
-# Named volume (rekommenderat)
-docker volume create mydata
-docker run -v mydata:/app/data nginx
+# 1. Skapa container utan att starta
+docker create --name lifecycle-test nginx
 
-# Bind mount (host path)
-docker run -v /host/path:/container/path nginx
-docker run -v $(pwd):/app nginx
+# 2. Se status
+docker ps -a | grep lifecycle-test
 
-# tmpfs (in-memory)
-docker run --tmpfs /tmp nginx
+# 3. Starta
+docker start lifecycle-test
+
+# 4. Pausa och kontrollera
+docker pause lifecycle-test
+docker ps | grep lifecycle-test  # Status: paused
+
+# 5. Unpause
+docker unpause lifecycle-test
+
+# 6. Graceful stop
+docker stop lifecycle-test
+
+# 7. Starta igen
+docker start lifecycle-test
+
+# 8. Force kill
+docker kill lifecycle-test
+
+# 9. Ta bort
+docker rm lifecycle-test
 ```
 
-## Volume Kommandon
+### Övning 2: Graceful shutdown test
 
 ```bash
+# Skapa en container som loggar SIGTERM
+docker run -d --name signal-test alpine sh -c '
+trap "echo SIGTERM received; exit 0" TERM
+while true; do echo "Running..."; sleep 1; done
+'
+
+# Följ logs
+docker logs -f signal-test &
+
+# Stoppa gracefully
+docker stop signal-test
+
+# Se att SIGTERM loggades
+```
+
+---
+
+## Sammanfattning
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker run` | Skapa + starta |
+| `docker create` | Endast skapa |
+| `docker start/stop` | Starta/stoppa |
+| `docker pause/unpause` | Pausa/återuppta |
+| `docker kill` | Tvångs-stopp |
+| `docker rm` | Ta bort |
+| `docker exec` | Kör kommando i container |
+| `docker logs` | Visa loggar |
+| `docker stats` | Resursanvändning |
+| `docker inspect` | Detaljerad info |
+
+---
+
+## Nästa Steg
+
+Du förstår nu container-livscykeln! Nästa task: **Docker Volumes** — persistent data som överlever containers.
+
+> 💡 **Pro Tip:** Sätt alltid `--restart unless-stopped` på produktions-containers. Det sparar dig från 3 AM-samtal!
+"""
+            },
+            {
+                "title": "Docker Volumes & Persistent Data",
+                "difficulty": "medium",
+                "estimated_minutes": 60,
+                "xp_reward": 145,
+                "content": r"""# 💾 Docker Volumes & Persistent Data
+
+## Varför detta är kritiskt
+
+> "Containers are ephemeral — when they die, so does everything inside them. Your database data, uploaded files, application state — gone. Volumes are the bridge between container ephemerality and data persistence. Get this wrong, and you'll lose production data."
+
+Tänk dig: Du kör PostgreSQL i Docker. Allt fungerar. Så restarts Docker daemon. Databasen startar om. All data är borta. Två år av kunddata. Raderat.
+
+**Volumes hade förhindrat detta. Låt oss aldrig göra det misstaget.**
+
+---
+
+## Förstå Container Storage
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     CONTAINER STORAGE LAYERS                        │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │           CONTAINER LAYER (Read-Write)                      │  │
+│   │   • Alla ändringar skrivs här                               │  │
+│   │   • FÖRSVINNER när containern tas bort                      │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                              │                                      │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │           IMAGE LAYERS (Read-Only)                          │  │
+│   │   Layer 3: Application code                                 │  │
+│   │   Layer 2: Dependencies                                     │  │
+│   │   Layer 1: Base OS                                          │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   PROBLEM: Container layer är INTE persistent!                      │
+│                                                                     │
+│   LÖSNING: VOLUMES                                                  │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  Container          ◀─────────────▶  Volume (på host)       │  │
+│   │  /var/lib/data              /var/lib/docker/volumes/mydata  │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   Volume-data ÖVERLEVER container-borttagning!                      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Tre sätt att hantera data
+
+### 1. Named Volumes (Rekommenderat)
+
+```bash
+# Skapa en named volume
+docker volume create mydata
+
+# Använd i container
+docker run -d \
+    --name db \
+    -v mydata:/var/lib/postgresql/data \
+    postgres:15
+
+# Docker hanterar storage location
+# Typically: /var/lib/docker/volumes/mydata/_data
+```
+
+**Fördelar:**
+- Docker hanterar platsen
+- Enkelt att backup/restore
+- Fungerar på alla plattformar
+- Kan delas mellan containers
+
+### 2. Bind Mounts (Host paths)
+
+```bash
+# Mount specifik host-katalog
+docker run -d \
+    -v /home/user/data:/app/data \
+    myapp
+
+# Mount current directory (development)
+docker run -d \
+    -v $(pwd):/app \
+    -v $(pwd)/node_modules:/app/node_modules \  # Exclude node_modules
+    node:18
+
+# Read-only mount
+docker run -d \
+    -v /host/config:/app/config:ro \
+    myapp
+```
+
+**Fördelar:**
+- Full kontroll över platsen
+- Enkelt för development
+- Direkt access till filer
+
+**Nackdelar:**
+- Plattformsspecifikt
+- Permission-problem vanliga
+- Sämre portabilitet
+
+### 3. tmpfs Mounts (In-memory)
+
+```bash
+# Temporär data i RAM (försvinner vid restart)
+docker run -d \
+    --tmpfs /tmp:rw,size=100m \
+    myapp
+
+# Användningsfall:
+# - Temporära filer
+# - Session data
+# - Caches som ska vara snabba
+# - Känslig data som inte ska skrivas till disk
+```
+
+---
+
+## Volume-kommandon
+
+### Skapa och hantera
+
+```bash
+# Skapa volume
+docker volume create mydata
+
 # Lista volumes
 docker volume ls
 
-# Inspektera
+# Detaljerad info
 docker volume inspect mydata
 
-# Ta bort
+# Output:
+# [
+#     {
+#         "CreatedAt": "2024-01-15T10:30:00Z",
+#         "Driver": "local",
+#         "Labels": {},
+#         "Mountpoint": "/var/lib/docker/volumes/mydata/_data",
+#         "Name": "mydata",
+#         "Options": {},
+#         "Scope": "local"
+#     }
+# ]
+
+# Ta bort volume (måste vara oanvänd)
 docker volume rm mydata
 
-# Ta bort oanvända
+# Ta bort alla oanvända volumes
 docker volume prune
+
+# Force remove (även om den används)
+docker volume rm -f mydata  # VARNING: Dataförlust!
 ```
 
-## Praktiskt Exempel
+### Mount syntax (nyare --mount vs äldre -v)
 
 ```bash
-# PostgreSQL med persistent data
-docker run -d \
-  --name postgres \
-  -v pgdata:/var/lib/postgresql/data \
-  -e POSTGRES_PASSWORD=secret \
-  postgres:15
+# Gammal syntax (-v)
+docker run -v mydata:/app/data nginx
+docker run -v /host/path:/container/path nginx
 
-# Backup volume
+# Ny syntax (--mount) - mer explicit
+docker run \
+    --mount type=volume,source=mydata,target=/app/data \
+    nginx
+
+docker run \
+    --mount type=bind,source=/host/path,target=/container/path,readonly \
+    nginx
+
+# --mount fördelar:
+# - Mer explicit och läsbar
+# - Bättre felmeddelanden
+# - Stödjer alla options
+```
+
+---
+
+## Praktiska scenarier
+
+### Databas med persistent data
+
+```bash
+# PostgreSQL
+docker run -d \
+    --name postgres \
+    -v pgdata:/var/lib/postgresql/data \
+    -e POSTGRES_PASSWORD=secret \
+    -e POSTGRES_DB=myapp \
+    -p 5432:5432 \
+    postgres:15
+
+# MySQL
+docker run -d \
+    --name mysql \
+    -v mysql-data:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=secret \
+    -p 3306:3306 \
+    mysql:8
+
+# MongoDB
+docker run -d \
+    --name mongo \
+    -v mongo-data:/data/db \
+    -p 27017:27017 \
+    mongo:6
+```
+
+### Development med live reload
+
+```bash
+# Node.js development
+docker run -d \
+    --name node-dev \
+    -v $(pwd):/app \
+    -v /app/node_modules \        # Anonymous volume för node_modules
+    -p 3000:3000 \
+    -w /app \
+    node:18 npm run dev
+
+# Python development
+docker run -d \
+    --name python-dev \
+    -v $(pwd):/app \
+    -p 8000:8000 \
+    -w /app \
+    python:3.11 python -m flask run --reload
+```
+
+### Dela data mellan containers
+
+```bash
+# Skapa shared volume
+docker volume create shared-data
+
+# Container 1: Writer
+docker run -d \
+    --name writer \
+    -v shared-data:/data \
+    alpine sh -c 'while true; do date >> /data/log.txt; sleep 5; done'
+
+# Container 2: Reader
+docker run -d \
+    --name reader \
+    -v shared-data:/data:ro \
+    alpine tail -f /data/log.txt
+```
+
+---
+
+## Backup och Restore
+
+### Backup volume
+
+```bash
+# Backup till tar-fil
+docker run --rm \
+    -v mydata:/source:ro \
+    -v $(pwd):/backup \
+    alpine tar czf /backup/mydata-backup.tar.gz -C /source .
+
+# Med tidsstämpel
+docker run --rm \
+    -v pgdata:/source:ro \
+    -v $(pwd):/backup \
+    alpine tar czf /backup/pgdata-$(date +%Y%m%d-%H%M%S).tar.gz -C /source .
+```
+
+### Restore volume
+
+```bash
+# Skapa ny volume
+docker volume create restored-data
+
+# Restore från backup
+docker run --rm \
+    -v restored-data:/target \
+    -v $(pwd):/backup:ro \
+    alpine tar xzf /backup/mydata-backup.tar.gz -C /target
+```
+
+### PostgreSQL-specifik backup
+
+```bash
+# Dump databas
+docker exec postgres pg_dump -U postgres mydb > backup.sql
+
+# Restore databas
+docker exec -i postgres psql -U postgres mydb < backup.sql
+```
+
+---
+
+## Permission-problem (vanligt!)
+
+```bash
+# Problem: Container körs som annan användare
+docker run -v $(pwd):/app alpine ls -la /app
+# drwxr-xr-x  user  user  (host user)
+
+# Container körs som root → kan skriva
+# Men filer skapas som root på host!
+
+# Lösning 1: Matcha UID
+docker run \
+    --user $(id -u):$(id -g) \
+    -v $(pwd):/app \
+    myapp
+
+# Lösning 2: I Dockerfile
+RUN useradd -u 1000 appuser
+USER appuser
+
+# Lösning 3: Ändra permissions
+docker run -v $(pwd):/app alpine chmod -R 777 /app  # Osäkert men fungerar
+```
+
+---
+
+## Volume Drivers (avancerat)
+
+```bash
+# Default: local driver
+docker volume create --driver local mydata
+
+# NFS mount
+docker volume create \
+    --driver local \
+    --opt type=nfs \
+    --opt o=addr=192.168.1.1,rw \
+    --opt device=:/path/to/dir \
+    nfs-data
+
+# Cloud storage (kräver plugin)
+docker plugin install rexray/ebs
+docker volume create --driver rexray/ebs --opt size=100 ebs-data
+```
+
+---
+
+## Praktiska Övningar
+
+### Övning 1: Persistent database
+
+```bash
+# 1. Starta postgres utan volume
+docker run -d --name pg-temp \
+    -e POSTGRES_PASSWORD=secret \
+    postgres:15
+
+# 2. Skapa data
+docker exec -it pg-temp psql -U postgres -c "CREATE DATABASE testdb;"
+docker exec -it pg-temp psql -U postgres testdb -c "CREATE TABLE users (id serial, name text);"
+docker exec -it pg-temp psql -U postgres testdb -c "INSERT INTO users (name) VALUES ('Alice');"
+
+# 3. Ta bort containern
+docker rm -f pg-temp
+
+# 4. Starta igen - data är BORTA!
+docker run -d --name pg-temp -e POSTGRES_PASSWORD=secret postgres:15
+docker exec -it pg-temp psql -U postgres -c "\l"  # Ingen testdb!
+
+# 5. Gör rätt med volume
+docker rm -f pg-temp
+docker volume create pgdata
+docker run -d --name pg-persistent \
+    -v pgdata:/var/lib/postgresql/data \
+    -e POSTGRES_PASSWORD=secret \
+    postgres:15
+
+# 6. Skapa data igen
+docker exec -it pg-persistent psql -U postgres -c "CREATE DATABASE testdb;"
+docker exec -it pg-persistent psql -U postgres testdb -c "CREATE TABLE users (id serial, name text);"
+docker exec -it pg-persistent psql -U postgres testdb -c "INSERT INTO users (name) VALUES ('Bob');"
+
+# 7. Ta bort och återskapa
+docker rm -f pg-persistent
+docker run -d --name pg-persistent \
+    -v pgdata:/var/lib/postgresql/data \
+    -e POSTGRES_PASSWORD=secret \
+    postgres:15
+
+# 8. Data finns kvar!
+docker exec -it pg-persistent psql -U postgres testdb -c "SELECT * FROM users;"
+
+# 9. Städa upp
+docker rm -f pg-persistent
+docker volume rm pgdata
+```
+
+---
+
+## Sammanfattning
+
+| Typ | Användning | Persistens |
+|-----|------------|------------|
+| **Named Volume** | Databaser, app-data | ✅ Persistent |
+| **Bind Mount** | Development, config | ✅ På host |
+| **tmpfs** | Temp files, secrets | ❌ I minnet |
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker volume create` | Skapa volume |
+| `docker volume ls` | Lista volumes |
+| `docker volume inspect` | Visa detaljer |
+| `docker volume rm` | Ta bort volume |
+| `docker volume prune` | Rensa oanvända |
+| `-v name:/path` | Mount volume |
+| `--mount type=...` | Explicit mount |
+
+---
+
+## Nästa Steg
+
+Du behärskar nu Docker volumes! Nästa task: **Docker Networking** — låt containers prata med varandra.
+
+> 💡 **Pro Tip:** Kör ALDRIG `docker volume prune` i produktion utan att dubbelkolla. En felaktig prune kan radera kritisk data!
+"""
+            },# Backup volume
 docker run --rm \
   -v pgdata:/data \
   -v $(pwd):/backup \

@@ -9,10 +9,18 @@ NODE_17_RATE_LIMITING = {
     "estimated_minutes": 45,
     "xp_reward": 130,
     "prerequisites": [16],
-    "content": '''
-# Rate Limiting & Throttling
+    "content": '''# 🚦 Rate Limiting & Throttling
 
-Skydda ditt system från överbelastning.
+## Varför detta är kritiskt
+> "Utan rate limiting är du en DDoS-attack bort från bankrutt. Skydda dina resurser, respektera dina kostnader, ge alla rättvis tillgång."
+
+## Vad du kommer lära dig
+- ✅ Rate limiting algorithms (Token Bucket, Sliding Window)
+- ✅ Distributed rate limiting med Redis
+- ✅ Graceful degradation
+- ✅ Response headers och best practices
+
+---
 
 ## Varför Rate Limiting?
 
@@ -237,10 +245,18 @@ NODE_18_OBSERVABILITY = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [14],
-    "content": '''
-# Observability
+    "content": '''# 👁️ Observability: Logs, Metrics, Traces
 
-Förstå vad som händer i ditt system.
+## Varför detta är kritiskt
+> "Om du inte kan mäta det, kan du inte fixa det. Observability är skillnaden mellan 'något är fel' och 'request X failade i service Y på grund av Z'."
+
+## Vad du kommer lära dig
+- ✅ Three Pillars: Logs, Metrics, Traces
+- ✅ Structured logging
+- ✅ Prometheus metrics
+- ✅ Distributed tracing med OpenTelemetry
+
+---
 
 ## Three Pillars of Observability
 
@@ -495,10 +511,18 @@ NODE_19_PATTERNS = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [14, 12],
-    "content": '''
-# System Design Patterns
+    "content": '''# 🧱 System Design Patterns
 
-Återanvändbara lösningar på vanliga problem.
+## Varför detta är kritiskt
+> "Återuppfinn inte hjulet. CQRS, Event Sourcing, Strangler Fig - dessa patterns löser problem som tusentals ingenjörer redan kämpat med."
+
+## Vad du kommer lära dig
+- ✅ CQRS (Command Query Responsibility Segregation)
+- ✅ Event Sourcing
+- ✅ Strangler Fig för legacy migration
+- ✅ Bulkhead och Sidecar patterns
+
+---
 
 ## CQRS (Command Query Responsibility Segregation)
 
@@ -749,10 +773,18 @@ NODE_20_CASE_STUDIES = {
     "estimated_minutes": 60,
     "xp_reward": 170,
     "prerequisites": [19],
-    "content": '''
-# Case Studies
+    "content": '''# 📚 Case Studies
 
-Design populära system.
+## Varför detta är kritiskt
+> "Teori är bra. Praktik är bättre. Dessa case studies är vad som skiljer junior från senior - du har nu sett hur Twitter, WhatsApp och URL shorteners faktiskt byggs."
+
+## Vad du kommer lära dig
+- ✅ URL Shortener design
+- ✅ Twitter Timeline feed
+- ✅ Chat system (WhatsApp-stil)
+- ✅ System Design interview framework
+
+---
 
 ## URL Shortener (bit.ly)
 

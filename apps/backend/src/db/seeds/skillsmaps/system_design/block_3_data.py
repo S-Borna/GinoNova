@@ -9,10 +9,18 @@ NODE_09_DATABASES = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [3],
-    "content": '''
-# Database Types & Selection
+    "content": '''# 🗄️ Database Types & Selection
 
-Välj rätt databas för ditt use case.
+## Varför detta är kritiskt
+> "Fel databas = teknisk skuld från dag 1. PostgreSQL för allt? MongoDB för allt? Nej. Rätt verktyg för rätt jobb."
+
+## Vad du kommer lära dig
+- ✅ SQL vs NoSQL trade-offs
+- ✅ NoSQL categories (Key-Value, Document, Wide Column, Graph)
+- ✅ Database selection matrix
+- ✅ Polyglot persistence
+
+---
 
 ## SQL vs NoSQL
 
@@ -190,10 +198,18 @@ NODE_10_REPLICATION = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [9],
-    "content": '''
-# Database Replication
+    "content": '''# 🔄 Database Replication
 
-Kopiera data för tillgänglighet och prestanda.
+## Varför detta är kritiskt
+> "En databas utan replicas är en tickande bomb. Hårddiskar dör, datacenters brinner - replikering är din livförsäkring."
+
+## Vad du kommer lära dig
+- ✅ Master-Slave vs Master-Master
+- ✅ Synchronous vs Asynchronous replication
+- ✅ Replication lag hantering
+- ✅ Failover strategier
+
+---
 
 ## Varför Replikera?
 
@@ -419,10 +435,18 @@ NODE_11_SHARDING = {
     "estimated_minutes": 60,
     "xp_reward": 170,
     "prerequisites": [10],
-    "content": '''
-# Database Sharding
+    "content": '''# 🔀 Database Sharding
 
-Horisontell partitionering över servrar.
+## Varför detta är kritiskt
+> "100 miljoner rader i en tabell? Vertikal skalning tar slut. Sharding är din enda väg framåt - men gör det fel och du har kaos."
+
+## Vad du kommer lära dig
+- ✅ Sharding strategies (Range, Hash, Directory)
+- ✅ Consistent hashing
+- ✅ Shard key selection
+- ✅ Cross-shard query patterns
+
+---
 
 ## Vad är Sharding?
 
@@ -629,10 +653,18 @@ NODE_12_CACHING = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [9],
-    "content": '''
-# Caching Strategies
+    "content": '''# ⚡ Caching Strategies
 
-Snabba upp med temporär lagring.
+## Varför detta är kritiskt
+> "Databasen är långsam. RAM är snabb. Caching är skillnaden mellan 500ms och 5ms - och mellan arg användare och glad användare."
+
+## Vad du kommer lära dig
+- ✅ Caching patterns (Cache-Aside, Write-Through, Write-Behind)
+- ✅ Cache invalidation strategier
+- ✅ Cache stampede prevention
+- ✅ Redis vs Memcached
+
+---
 
 ## Cache Layers
 
