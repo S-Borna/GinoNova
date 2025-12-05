@@ -191,13 +191,17 @@ function CustomPathModuleCard({
 export default function CustomPathPage() {
     const params = useParams()
     const router = useRouter()
-    const pathId = params.pathId as string
+    const pathId = params?.pathId as string | undefined
 
     const [path, setPath] = useState<CustomPath | null>(null)
     const [loading, setLoading] = useState(true)
 
     // Load custom path
     useEffect(() => {
+        if (!pathId) {
+            setLoading(false)
+            return
+        }
         const paths = getCustomPaths()
         const found = paths.find((p) => p.id === pathId)
         setPath(found || null)
