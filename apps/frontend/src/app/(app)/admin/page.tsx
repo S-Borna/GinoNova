@@ -462,36 +462,60 @@ export default function AdminCommandCenter() {
     const fetchData = useCallback(async () => {
         try {
             const token = getToken()
+            
+            if (!token) {
+                setError("Du måste vara inloggad för att se admin-panelen")
+                setLoading(false)
+                return
+            }
 
             // Fetch users
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
             })
 
             if (!usersRes.ok) {
+                if (usersRes.status === 401) {
+                    setError("Sessionen har gått ut. Vänligen logga in igen.")
+                    return
+                }
                 if (usersRes.status === 403) {
                     router.push("/dashboard")
                     return
                 }
-                throw new Error("Failed to fetch users")
+                const errorData = await usersRes.json().catch(() => ({}))
+                throw new Error(errorData.detail || `API-fel: ${usersRes.status}`)
             }
 
             const usersData: AdminUsersResponse = await usersRes.json()
             setUsers(usersData.users)
 
             // Fetch stats
-            const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+            try {
+                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                })
 
-            if (statsRes.ok) {
-                const statsData: SystemStats = await statsRes.json()
-                setStats(statsData)
+                if (statsRes.ok) {
+                    const statsData: SystemStats = await statsRes.json()
+                    setStats(statsData)
+                }
+            } catch (statsErr) {
+                console.warn("Could not fetch stats:", statsErr)
+                // Don't fail if stats endpoint doesn't exist
             }
 
+            setError(null)
             setLastRefresh(new Date())
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Ett fel uppstod")
+            console.error("Admin fetch error:", err)
+            setError(err instanceof Error ? err.message : "Ett fel uppstod vid hämtning av data")
         } finally {
             setLoading(false)
         }
@@ -551,15 +575,38 @@ export default function AdminCommandCenter() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-                <div className="text-center">
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center max-w-md"
+                >
                     <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                     <h1 className="text-2xl font-bold text-white mb-2">Fel</h1>
-                    <p className="text-zinc-400 mb-4">{error}</p>
-                    <Button onClick={() => { setError(null); fetchData(); }}>
-                        Försök igen
-                    </Button>
-                </div>
+                    <p className="text-zinc-400 mb-6">{error}</p>
+                    
+                    <div className="space-y-3">
+                        <Button 
+                            onClick={() => { setError(null); setLoading(true); fetchData(); }}
+                            className="w-full bg-purple-600 hover:bg-purple-500"
+                        >
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Försök igen
+                        </Button>
+                        
+                        <Button 
+                            variant="outline"
+                            onClick={() => router.push("/dashboard")}
+                            className="w-full border-zinc-700"
+                        >
+                            Tillbaka till Dashboard
+                        </Button>
+                    </div>
+                    
+                    <p className="mt-6 text-xs text-zinc-600">
+                        API: {API_BASE_URL}
+                    </p>
+                </motion.div>
             </div>
         )
     }
