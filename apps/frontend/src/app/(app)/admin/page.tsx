@@ -368,7 +368,7 @@ function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => vo
                 {/* Details */}
                 <div className="p-6 border-t border-zinc-800 space-y-4">
                     <h3 className="font-semibold text-white mb-3">Detaljer</h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                             <span className="text-zinc-500">Registrerad:</span>
@@ -462,12 +462,12 @@ export default function AdminCommandCenter() {
     const fetchData = useCallback(async () => {
         try {
             const token = getToken()
-            
+
             // Fetch users
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
-            
+
             if (!usersRes.ok) {
                 if (usersRes.status === 403) {
                     router.push("/dashboard")
@@ -483,7 +483,7 @@ export default function AdminCommandCenter() {
             const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
-            
+
             if (statsRes.ok) {
                 const statsData: SystemStats = await statsRes.json()
                 setStats(statsData)

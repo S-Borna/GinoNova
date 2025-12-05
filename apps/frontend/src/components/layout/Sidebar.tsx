@@ -180,7 +180,7 @@ function NavItemComponent({ item, isActive, collapsed }: NavItemProps) {
 export function Sidebar({ collapsed = false, onToggleCollapse, className }: SidebarProps) {
     const pathname = usePathname()
     const { user } = useAuth()
-    
+
     // Check if user is admin
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
