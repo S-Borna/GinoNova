@@ -14,7 +14,19 @@
   to = "/api/:splat"
   status = 200
 
-[[redirects]]
-  from = "/api/*"
-  to = "/api/:splat"
-  status = 200
+# 🛡️ SECURITY HEADERS
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent clickjacking
+    X-Frame-Options = "DENY"
+    # Prevent MIME type sniffing
+    X-Content-Type-Options = "nosniff"
+    # Enable XSS filter
+    X-XSS-Protection = "1; mode=block"
+    # Control referrer information
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Permissions policy (disable unnecessary APIs)
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    # Content Security Policy
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://saas-project-production-31f8.up.railway.app https://*.netlify.app; frame-ancestors 'none';"
