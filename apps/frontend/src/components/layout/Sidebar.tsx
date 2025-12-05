@@ -71,7 +71,6 @@ const mainNavItems: NavItem[] = [
     { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
     { label: "Studyflow", href: "/studyflow", icon: Clock },
     { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
-    { label: "Progress", href: "/progress", icon: BarChart3 },
     { label: "Profile", href: "/profile", icon: User },
     { label: "Admin", href: "/admin", icon: Shield, adminOnly: true },
 ]
