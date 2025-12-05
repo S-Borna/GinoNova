@@ -68,7 +68,7 @@ function CustomPathCard({
             {/* Custom badge */}
             <div className="absolute top-4 left-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
                 <Star className="w-3 h-3 text-amber-400 fill-current" />
-                <span className="text-xs font-medium text-amber-300">Egen lärstig</span>
+                <span className="text-xs font-medium text-amber-300">Egen SkillsMap</span>
             </div>
 
             {/* Menu button */}
@@ -183,7 +183,7 @@ function CustomPathCard({
 
                 {/* Action */}
                 <button
-                    onClick={() => router.push(`/skillsmaps/${path.modules[0]?.slug || ""}`)}
+                    onClick={() => router.push(`/skillsmaps/custom/${path.id}`)}
                     className={cn(
                         "w-full flex items-center justify-center gap-2",
                         "px-4 py-3 rounded-xl",
@@ -194,7 +194,7 @@ function CustomPathCard({
                     )}
                 >
                     <Rocket className="w-4 h-4" />
-                    Fortsätt lärstigen
+                    Öppna SkillsMap
                     <ChevronRight className="w-4 h-4" />
                 </button>
             </div>
@@ -235,8 +235,8 @@ export function CustomPathsSection({
                     <Star className="w-5 h-5 text-amber-400" />
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold text-white">Mina lärstigar</h2>
-                    <p className="text-sm text-zinc-500">{paths.length} egen{paths.length > 1 ? "a" : ""} lärstig{paths.length > 1 ? "ar" : ""}</p>
+                    <h2 className="text-xl font-bold text-white">Mina SkillsMaps</h2>
+                    <p className="text-sm text-zinc-500">{paths.length} egen{paths.length > 1 ? "a" : ""} SkillsMap{paths.length > 1 ? "s" : ""}</p>
                 </div>
             </div>
 
