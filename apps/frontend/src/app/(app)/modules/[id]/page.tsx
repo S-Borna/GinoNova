@@ -147,6 +147,7 @@ const moduleColors: Record<string, { color: string; icon: string }> = {
     "infrastructure-as-code-terraform": { color: "#7B42BC", icon: "🏗️" },
     "serverless-architecture": { color: "#FF6B35", icon: "⚡" },
     "networking-security": { color: "#00D4AA", icon: "🔐" },
+    "docker-mastery": { color: "#2496ED", icon: "🐳" },
     "docker-fundamentals": { color: "#2496ED", icon: "🐳" },
     "docker-advanced-production": { color: "#066DA5", icon: "🐋" },
     "kubernetes-core": { color: "#326CE5", icon: "☸️" },

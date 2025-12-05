@@ -97,8 +97,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     const isTablet = useMediaQuery("(min-width: 768px)")
     const isMobile = !isTablet
 
-    // Show RightSidebar on ALL module pages (both listing and individual tasks)
-    const showRightSidebar = isDesktop && pathname?.includes("/modules/")
+    // RightSidebar disabled for modules - Camp DevOps uses clean full-width layout
+    // const showRightSidebar = isDesktop && pathname?.includes("/modules/")
+    const showRightSidebar = false
 
     // Redirect to login if not authenticated
     React.useEffect(() => {
