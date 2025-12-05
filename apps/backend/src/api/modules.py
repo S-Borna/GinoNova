@@ -31,6 +31,7 @@ def modules_status(response: Response):
     }
 
 
+@modules_router.get("", response_model=list[ModulePublic])
 @modules_router.get("/", response_model=list[ModulePublic])
 def list_modules(response: Response):
     """

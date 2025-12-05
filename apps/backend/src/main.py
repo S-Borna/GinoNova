@@ -292,7 +292,12 @@ async def lifespan(app: FastAPI):
     logger.info("👋 Shutting down DevOps Hub Backend...")
 
 
-app = FastAPI(title="saas-backend", version=settings.PROJECT_VERSION, lifespan=lifespan)
+app = FastAPI(
+    title="saas-backend",
+    version=settings.PROJECT_VERSION,
+    lifespan=lifespan,
+    redirect_slashes=False  # Prevent 307 redirects for trailing slashes
+)
 
 # CORS: Allow all origins in development, specific origins in production
 # Note: allow_credentials=True requires specific origins, not "*"
