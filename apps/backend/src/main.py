@@ -328,7 +328,7 @@ app.add_middleware(
 from .api.middleware.rate_limit import RateLimitMiddleware
 from .api.middleware.error_handler import ErrorHandlerMiddleware
 
-app.add_middleware(RateLimitMiddleware, requests_per_minute=100)
+app.add_middleware(RateLimitMiddleware, requests_per_minute=300)
 app.add_middleware(ErrorHandlerMiddleware)
 
 @app.get("/health")
