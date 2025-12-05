@@ -188,7 +188,7 @@ export async function getSkillsMap(slug: string): Promise<ApiResult<SkillsMapDet
             return { ok: false, status: moduleRes.status, message: error.detail || "SkillsMap not found" }
         }
 
-        const module = await moduleRes.json()
+        const moduleData = await moduleRes.json()
 
         // Fetch tasks for this module
         const tasksRes = await fetch(`${API_BASE_URL}/api/tasks/module/slug/${slug}`, {
@@ -223,17 +223,17 @@ export async function getSkillsMap(slug: string): Promise<ApiResult<SkillsMapDet
         const totalXP = nodes.reduce((sum, n) => sum + n.xpReward, 0)
 
         const skillsmap: SkillsMapDetail = {
-            id: module.id,
-            slug: module.slug,
-            title: module.name,
-            description: module.description || "",
+            id: moduleData.id,
+            slug: moduleData.slug,
+            title: moduleData.name,
+            description: moduleData.description || "",
             icon: meta.icon,
             color: meta.color,
             totalNodes: nodes.length,
             completedNodes: 0, // Will be updated with user progress
             totalXP,
-            estimatedHours: module.estimated_hours || Math.ceil(nodes.length * 0.5),
-            difficulty: module.difficulty || "intermediate",
+            estimatedHours: moduleData.estimated_hours || Math.ceil(nodes.length * 0.5),
+            difficulty: moduleData.difficulty || "intermediate",
             nodes,
         }
 
