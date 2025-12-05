@@ -10,6 +10,7 @@
  * - Chill Mint (#22D3AC) glow on active items
  * - Subtle hover animations
  * - Glassmorphism with deep backgrounds
+ * - Admin link only visible to admin users
  *
  * @phase D.3 - Navigation + Layout
  * @polish Premium Polish v1.0
@@ -19,6 +20,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/components/auth/AuthProvider"
 import {
     Home,
     BookOpen,
@@ -32,8 +34,15 @@ import {
     LayoutDashboard,
     Map,
     GraduationCap,
+    Shield,
     type LucideIcon
 } from "lucide-react"
+
+/* ============================================================================
+   CONSTANTS
+   ============================================================================ */
+
+const ADMIN_EMAIL = "said.ebadi@hotmail.com"
 
 /* ============================================================================
    TYPES
@@ -43,6 +52,7 @@ interface NavItem {
     label: string
     href: string
     icon: LucideIcon
+    adminOnly?: boolean
 }
 
 interface SidebarProps {
@@ -63,6 +73,7 @@ const mainNavItems: NavItem[] = [
     { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Progress", href: "/progress", icon: BarChart3 },
     { label: "Profile", href: "/profile", icon: User },
+    { label: "Admin", href: "/admin", icon: Shield, adminOnly: true },
 ]
 
 const bottomNavItems: NavItem[] = [
@@ -168,6 +179,10 @@ function NavItemComponent({ item, isActive, collapsed }: NavItemProps) {
 
 export function Sidebar({ collapsed = false, onToggleCollapse, className }: SidebarProps) {
     const pathname = usePathname()
+    const { user } = useAuth()
+    
+    // Check if user is admin
+    const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
     const isActive = (href: string) => {
         if (!pathname) return false
@@ -176,6 +191,9 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
         }
         return pathname.startsWith(href)
     }
+
+    // Filter nav items based on admin status
+    const visibleNavItems = mainNavItems.filter(item => !item.adminOnly || isAdmin)
 
     return (
         <aside className={cn(
@@ -231,7 +249,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
 
             {/* Main Navigation */}
             <nav className="relative flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
-                {mainNavItems.map((item) => (
+                {visibleNavItems.map((item) => (
                     <NavItemComponent
                         key={item.href}
                         item={item}
