@@ -195,9 +195,9 @@ function SelectorHeader({
                                 "text-3xl md:text-4xl font-black",
                                 "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
                             )}>
-                                Välj din lärstig
+                                Dina SkillsMaps
                             </h1>
-                            
+
                             {/* CREATE CUSTOM PATH BUTTON */}
                             <motion.button
                                 onClick={onCreatePath}
@@ -213,7 +213,7 @@ function SelectorHeader({
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <Plus className="w-4 h-4" />
-                                Skapa egen lärstig
+                                Skapa egen SkillsMap
                             </motion.button>
                         </div>
                         <p className="text-zinc-400 mt-2">
