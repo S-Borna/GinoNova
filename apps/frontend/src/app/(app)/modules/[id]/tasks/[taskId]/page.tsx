@@ -71,6 +71,7 @@ const moduleColors: Record<string, { color: string; icon: string }> = {
     "infrastructure-as-code-terraform": { color: "#7B42BC", icon: "🏗️" },
     "serverless-architecture": { color: "#FF6B35", icon: "⚡" },
     "networking-security": { color: "#00D4AA", icon: "🔐" },
+    "docker-mastery": { color: "#2496ED", icon: "🐳" },
     "docker-fundamentals": { color: "#2496ED", icon: "🐳" },
     "docker-advanced-production": { color: "#066DA5", icon: "🐋" },
     "kubernetes-core": { color: "#326CE5", icon: "☸️" },
@@ -404,8 +405,9 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
 *💡 Tip: Take notes as you learn to help retain information better.*
 `
 
-    // Get module color for styling
-    const moduleConfig = module ? moduleColors[module.slug] : { color: "#6366f1", icon: "📚" }
+    // Get module color for styling - with proper fallback
+    const defaultModuleConfig = { color: "#6366f1", icon: "📚" }
+    const moduleConfig = module ? (moduleColors[module.slug] || defaultModuleConfig) : defaultModuleConfig
     const taskType = (task as any)?.task_tier || "standard"
     const taskTypeConfig = typeConfig[taskType] || typeConfig.standard
 
