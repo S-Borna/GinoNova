@@ -59,6 +59,71 @@ Denna manual beskriver den tekniska processen för att skapa nya SkillsMaps.
 
 ---
 
+## 🚀 QUICK START CHECKLIST (Opus Reference)
+
+> **Denna sektion är primärt för AI-assistenten att snabbt förstå processen.**
+
+```
+┌────────────────────────────────────────────────────────────────────────────────┐
+│                     SKILLSMAPS CREATION FLOW                                   │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  1️⃣  HÄMTA ROADMAP                                                             │
+│      └─ roadmap.sh/{slug} → Identifiera ~97 topics → Kondensera till 20 nodes │
+│                                                                                │
+│  2️⃣  SKAPA SKILLSMAP KATALOG                                                   │
+│      └─ apps/backend/src/db/seeds/skillsmaps/{slug}/                          │
+│         ├─ __init__.py          (metadata + block imports)                    │
+│         ├─ block_01_*.py        (nodes 1-2, ~15K chars each)                  │
+│         ├─ block_02_*.py        (nodes 3-4)                                   │
+│         └─ ... block_10_*.py    (nodes 19-20)                                 │
+│                                                                                │
+│  3️⃣  SKAPA MODULE WRAPPER                                                      │
+│      └─ apps/backend/src/db/seeds/modules_v3/{slug}.py                        │
+│         from ..skillsmaps.{slug} import ALL_NODES, SKILLSMAP_METADATA         │
+│         MODULE_{SLUG} = { "tasks": convert_nodes(...), ... }                  │
+│                                                                                │
+│  4️⃣  REGISTRERA I modules_v3/__init__.py                                       │
+│      from .{slug} import MODULE_{SLUG}                                        │
+│      ALL_V3_MODULES = [..., MODULE_{SLUG}]                                    │
+│                                                                                │
+│  5️⃣  LÄGG TILL FRONTEND METADATA                                               │
+│      └─ apps/frontend/src/lib/skillsmaps.ts                                   │
+│         "{slug}": { icon: "🤖", color: "#7C3AED", tags: [...] }               │
+│                                                                                │
+│  6️⃣  VALIDERA                                                                  │
+│      python3 -c "from src.db.seeds.skillsmaps.{slug} import ALL_NODES; \      │
+│                  print(len(ALL_NODES))"  # Ska vara 20                        │
+│                                                                                │
+│  7️⃣  COMMIT & PUSH                                                             │
+│      git add -A && git commit -m "feat(skillsmaps): Add {Name} - 20 nodes"   │
+│      git push                                                                 │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Filreferenser (för snabb lookup)
+
+| Fil | Sökväg | Syfte |
+|-----|--------|-------|
+| **Skillsmaps katalog** | `apps/backend/src/db/seeds/skillsmaps/` | Block-filer per skillsmap |
+| **Module wrappers** | `apps/backend/src/db/seeds/modules_v3/` | Konvertering till V3 format |
+| **Registrering** | `apps/backend/src/db/seeds/modules_v3/__init__.py` | ALL_V3_MODULES lista |
+| **Frontend metadata** | `apps/frontend/src/lib/skillsmaps.ts` | SKILLSMAP_METADATA object |
+| **Exempelmall** | `skillsmaps/mlops/__init__.py` | Bästa referens för struktur |
+
+### Block-storlek rekommendation
+
+| Antal noder | Blocks | Noder per block |
+|-------------|--------|-----------------|
+| 20 | 5 | 4 |
+| 20 | 10 | 2 |
+| 20 | 20 | 1 |
+
+> **Rekommenderat:** 10 blocks × 2 noder = ~15-18K chars/fil (hanterbara filer)
+
+---
+
 ## 🚨 KRITISK REGEL: ALDRIG MER MOCK DATA
 
 Alla SkillsMaps **MÅSTE** byggas via backend-first approach:
