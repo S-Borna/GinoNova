@@ -143,8 +143,12 @@ export async function getSkillsMaps(): Promise<ApiResult<SkillsMapCard[]>> {
 
         const modules = await res.json()
 
+        // Exclude deprecated modules (replaced by *-mastery versions)
+        const excludedSlugs = ["docker-fundamentals", "docker-advanced-production"]
+        const filteredModules = modules.filter((m: any) => !excludedSlugs.includes(m.slug))
+
         // Transform modules to SkillsMapCard format
-        const skillsmaps: SkillsMapCard[] = modules.map((m: any) => {
+        const skillsmaps: SkillsMapCard[] = filteredModules.map((m: any) => {
             const meta = getMetaForSlug(m.slug)
             const totalXP = m.estimated_hours ? Math.round(m.estimated_hours * 100) : 2000
 
