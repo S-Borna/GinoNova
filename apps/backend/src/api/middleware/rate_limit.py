@@ -23,6 +23,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             "/health",
             "/.well-known/health",
             "/api/health",
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/refresh",
+            "/api/auth/google",
+            "/api/auth/github",
+            "/api/auth/discord",
         }
 
     async def dispatch(self, request: Request, call_next) -> Response:
