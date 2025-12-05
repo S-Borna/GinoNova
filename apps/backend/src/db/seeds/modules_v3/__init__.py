@@ -29,10 +29,12 @@ from .ansible import MODULE_ANSIBLE_MASTERY
 from .sql import MODULE_SQL_MASTERY
 from .system_design import MODULE_SYSTEM_DESIGN
 from .prompt_engineering import MODULE_PROMPT_ENGINEERING
+from .ai_agents import MODULE_AI_AGENTS
 
 
-# All modules list (18 TOTAL)
+# All modules list (19 TOTAL)
 ALL_V3_MODULES = [
+    MODULE_AI_AGENTS,  # NEW
     MODULE_AWS_DEVOPS,
     MODULE_ANSIBLE_MASTERY,  # NEW
     MODULE_BASH,
