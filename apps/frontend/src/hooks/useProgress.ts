@@ -67,47 +67,18 @@ export interface TaskCompletionResponse {
 }
 
 /* ============================================================================
-   MOCK DATA
+   EMPTY DEFAULT DATA — No more fake mock data!
    ============================================================================ */
 
-const MOCK_USER_PROGRESS: UserProgress = {
-    overall_progress: 28,
-    total_xp: 2450,
-    level: 7,
-    xp_to_next_level: 350,
-    tasks_completed: 78,
-    modules_completed: 6,
-    streak: 14,
-    tracks: [
-        {
-            track_id: "linux",
-            track_name: "Linux Fundamentals",
-            progress: 65,
-            modules_completed: 4,
-            total_modules: 6,
-        },
-        {
-            track_id: "docker",
-            track_name: "Docker & Containers",
-            progress: 20,
-            modules_completed: 1,
-            total_modules: 5,
-        },
-        {
-            track_id: "kubernetes",
-            track_name: "Kubernetes",
-            progress: 0,
-            modules_completed: 0,
-            total_modules: 6,
-        },
-        {
-            track_id: "cicd",
-            track_name: "CI/CD Pipelines",
-            progress: 0,
-            modules_completed: 0,
-            total_modules: 5,
-        },
-    ],
+const EMPTY_USER_PROGRESS: UserProgress = {
+    overall_progress: 0,
+    total_xp: 0,
+    level: 1,
+    xp_to_next_level: 1000,
+    tasks_completed: 0,
+    modules_completed: 0,
+    streak: 0,
+    tracks: [],
 }
 
 /* ============================================================================
@@ -125,9 +96,9 @@ export function useProgress() {
                 // Direct fetch to backend - CORRECT URL without /v1/
                 const response = await fetch("http://localhost:8000/api/progress/me")
                 if (!response.ok) {
-                    // In development, use mock data silently
-                    console.warn("Progress API unavailable, using mock data")
-                    return MOCK_USER_PROGRESS
+                    // API unavailable - return empty progress (NOT mock data!)
+                    console.warn("Progress API unavailable, showing empty progress")
+                    return EMPTY_USER_PROGRESS
                 }
                 const data = await response.json()
                 // Transform to match expected interface
@@ -142,14 +113,14 @@ export function useProgress() {
                     tracks: data.tracks || [],
                 } as UserProgress
             } catch (error) {
-                // Network error or API not available - use mock data
-                console.warn("Progress API error, using mock data:", error)
-                return MOCK_USER_PROGRESS
+                // Network error or API not available - show empty state
+                console.warn("Progress API error, showing empty progress:", error)
+                return EMPTY_USER_PROGRESS
             }
         },
         staleTime: 1000 * 60, // 1 minute
         refetchOnWindowFocus: true,
-        retry: false, // Don't retry - just use mock data
+        retry: false, // Don't retry - just use empty data
     })
 }
 

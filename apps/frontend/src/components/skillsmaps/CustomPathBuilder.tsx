@@ -489,6 +489,28 @@ export function CustomPathBuilder({
                                             ))}
                                         </div>
                                     )}
+
+                                    {/* Sticky Next Button for Step 0 */}
+                                    {selectedModules.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="sticky bottom-0 mt-6 p-4 -mx-6 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent"
+                                        >
+                                            <Button
+                                                onClick={() => setStep(1)}
+                                                className={cn(
+                                                    "w-full rounded-xl py-6 text-lg font-semibold",
+                                                    "bg-gradient-to-r from-purple-600 to-indigo-600",
+                                                    "hover:from-purple-500 hover:to-indigo-500",
+                                                    "shadow-lg shadow-purple-500/25"
+                                                )}
+                                            >
+                                                Gå vidare med {selectedModules.length} moduler
+                                                <ChevronRight className="w-5 h-5 ml-2" />
+                                            </Button>
+                                        </motion.div>
+                                    )}
                                 </motion.div>
                             )}
 
