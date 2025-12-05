@@ -404,7 +404,7 @@ export function CustomPathBuilder({
                                 </div>
                                 <div>
                                     <h2 className="text-xl font-bold text-white">
-                                        {existingPath ? "Redigera lärstig" : "Skapa egen lärstig"}
+                                        {existingPath ? "Redigera SkillsMap" : "Skapa egen SkillsMap"}
                                     </h2>
                                     <p className="text-sm text-zinc-500">
                                         Bygg din personliga inlärningsresa
@@ -440,7 +440,7 @@ export function CustomPathBuilder({
                                         Välj moduler
                                     </h3>
                                     <p className="text-zinc-400 text-sm mb-6">
-                                        Välj de SkillsMaps du vill inkludera i din lärstig. Du kan välja från alla tillgängliga kunskapsstigar.
+                                        Välj de moduler du vill inkludera i din SkillsMap. Du kan välja från alla tillgängliga kunskapsstigar.
                                     </p>
 
                                     {/* Search */}
@@ -547,10 +547,10 @@ export function CustomPathBuilder({
                                     exit={{ opacity: 0, x: -20 }}
                                 >
                                     <h3 className="text-lg font-semibold text-white mb-4">
-                                        Namnge din lärstig
+                                        Namnge din SkillsMap
                                     </h3>
                                     <p className="text-zinc-400 text-sm mb-6">
-                                        Ge din lärstig ett unikt namn och beskrivning.
+                                        Ge din SkillsMap ett unikt namn och beskrivning.
                                     </p>
 
                                     <div className="space-y-4">
@@ -562,7 +562,7 @@ export function CustomPathBuilder({
                                                 type="text"
                                                 value={pathName}
                                                 onChange={(e) => setPathName(e.target.value)}
-                                                placeholder="T.ex. 'Min DevOps Journey'"
+                                                placeholder="T.ex. 'Min DevOps SkillsMap'"
                                                 className={cn(
                                                     "w-full px-4 py-3 rounded-xl",
                                                     "bg-zinc-900 border border-zinc-800",
@@ -579,7 +579,7 @@ export function CustomPathBuilder({
                                             <textarea
                                                 value={pathDescription}
                                                 onChange={(e) => setPathDescription(e.target.value)}
-                                                placeholder="Beskriv din lärstig..."
+                                                placeholder="Beskriv din SkillsMap..."
                                                 rows={3}
                                                 className={cn(
                                                     "w-full px-4 py-3 rounded-xl",
@@ -666,7 +666,7 @@ export function CustomPathBuilder({
                                     )}
                                 >
                                     <Save className="w-4 h-4 mr-2" />
-                                    Spara lärstig
+                                    Spara SkillsMap
                                 </Button>
                             )}
                         </div>
