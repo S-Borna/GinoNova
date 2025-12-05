@@ -112,19 +112,12 @@ def list_all_users(
 
     Supports pagination, search, and filtering.
     """
-    import logging
-    logger = logging.getLogger(__name__)
+    add_phase_header(response)
+    require_admin(current_user)
 
-    try:
-        add_phase_header(response)
-        require_admin(current_user)
-        logger.info(f"[Admin] Listing users for admin: {current_user.email}")
-
-        users = user_repository.list_users()
-        logger.info(f"[Admin] Found {len(users)} users")
-
-        all_modules = list_modules()
-        all_tasks = list_tasks()
+    users = user_repository.list_users()
+    all_modules = list_modules()
+    all_tasks = list_tasks()
 
     now = datetime.utcnow()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -214,9 +207,6 @@ def list_all_users(
         per_page=per_page,
         total_pages=total_pages,
     )
-    except Exception as e:
-        logger.error(f"[Admin] Error listing users: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
 
 
 @admin_router.get("/users/{user_id}", response_model=AdminUserDetail)
