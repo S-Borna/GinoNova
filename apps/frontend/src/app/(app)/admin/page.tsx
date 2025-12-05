@@ -463,6 +463,9 @@ export default function AdminCommandCenter() {
         try {
             const token = getToken()
 
+            console.log("[Admin] API_BASE_URL:", API_BASE_URL)
+            console.log("[Admin] Token exists:", !!token)
+
             if (!token) {
                 setError("Du måste vara inloggad för att se admin-panelen")
                 setLoading(false)
@@ -470,6 +473,7 @@ export default function AdminCommandCenter() {
             }
 
             // Fetch users
+            console.log("[Admin] Fetching users from:", `${API_BASE_URL}/api/admin/users`)
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -515,7 +519,9 @@ export default function AdminCommandCenter() {
             setLastRefresh(new Date())
         } catch (err) {
             console.error("Admin fetch error:", err)
-            setError(err instanceof Error ? err.message : "Ett fel uppstod vid hämtning av data")
+            const errorMsg = err instanceof Error ? err.message : "Ett fel uppstod vid hämtning av data"
+            console.error("[Admin] Full error:", errorMsg, "API URL:", API_BASE_URL)
+            setError(errorMsg)
         } finally {
             setLoading(false)
         }
