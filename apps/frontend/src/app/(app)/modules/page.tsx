@@ -591,7 +591,20 @@ export default function ModulesPage() {
 
                 // Fetch tasks for each module to get accurate counts
                 const modulesWithTasks = await Promise.all(
-                    result.data.map(async (mod, index) => {
+                    result.data
+                        // FILTER: Camp DevOps only shows hardcore DevOps modules
+                        .filter(mod => {
+                            const slug = mod.slug?.toLowerCase() || ""
+                            const name = mod.name?.toLowerCase() || ""
+                            const devopsKeywords = [
+                                "linux", "docker", "kubernetes", "k8s", "cicd", "ci-cd", "ci/cd",
+                                "terraform", "ansible", "aws", "cloud", "git", "shell", "bash",
+                                "monitoring", "observability", "security", "networking", "iac",
+                                "infrastructure", "devops", "container", "orchestration"
+                            ]
+                            return devopsKeywords.some(kw => slug.includes(kw) || name.includes(kw))
+                        })
+                        .map(async (mod, index) => {
                         // Get tasks for this module
                         const tasksResult = await getTasksForModule(mod.id)
                         const tasks: TaskPublic[] = tasksResult.ok ? tasksResult.data : []
