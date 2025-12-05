@@ -212,8 +212,8 @@ export default function CustomPathPage() {
             const localProgress = getLocalProgress(mod.slug)
             const completedNodes = localProgress.completedNodes.length
             const totalNodes = mod.totalNodes
-            const progress = totalNodes > 0 
-                ? Math.round((completedNodes / totalNodes) * 100) 
+            const progress = totalNodes > 0
+                ? Math.round((completedNodes / totalNodes) * 100)
                 : 0
 
             return {
