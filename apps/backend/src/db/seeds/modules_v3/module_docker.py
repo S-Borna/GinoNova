@@ -5258,7 +5258,7 @@ Du kan nu lagra och distribuera images professionellt! Nästa task: **Docker in 
 
 > "Manual Docker builds are inconsistent and error-prone. CI/CD automation ensures every commit builds the same way, every security scan runs, and every deployment is reproducible. This is the foundation of reliable software delivery."
 
-Scenario: Din kollega bygger imagen på sin Mac. Du bygger på Linux. Produktionsservern kraschar. Ingen kan reproducera exakt vad som deployades. 
+Scenario: Din kollega bygger imagen på sin Mac. Du bygger på Linux. Produktionsservern kraschar. Ingen kan reproducera exakt vad som deployades.
 
 **CI/CD löser detta: samma build, varje gång, automatiskt.**
 
@@ -5623,18 +5623,18 @@ deploy-production:
 tags: |
   # On push to main: main, sha-abc123
   type=ref,event=branch
-  
+
   # On PR: pr-42
   type=ref,event=pr
-  
+
   # On tag v1.2.3: 1.2.3, 1.2, 1, latest
   type=semver,pattern={{version}}
   type=semver,pattern={{major}}.{{minor}}
   type=semver,pattern={{major}}
-  
+
   # Always: sha-abc123
   type=sha,prefix=
-  
+
   # Date: 20240115
   type=raw,value={{date 'YYYYMMDD'}}
 ```
@@ -6164,318 +6164,1500 @@ Du är nu en Docker debugging expert! Nästa task: **Build Optimization** — g�
             },
             {
                 "title": "Build Optimization",
-                "difficulty": "medium",
-                "estimated_minutes": 55,
-                "xp_reward": 150,
-                "content": r"""
-# Docker Build Optimization
+                "difficulty": "hard",
+                "estimated_minutes": 75,
+                "xp_reward": 185,
+                "content": r"""# ⚡ Docker Build Optimization
 
-## Varför detta är viktigt
+## Varför detta är kritiskt
 
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+> "Every minute your CI/CD pipeline spends building is a minute your team waits. A 10-minute build that happens 50 times a day wastes 8+ hours daily. Optimization isn't premature — it's essential."
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+Din pipeline tar 15 minuter. Du pushar 10 gånger om dagen. Det är 2.5 timmar väntan. Varje dag. För varje utvecklare.
 
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
+**Låt oss få ner det till under 2 minuter.**
 
 ---
 
+## Build Performance Overview
 
-Snabbare och mindre builds.
-
-## BuildKit
-
-```bash
-# Aktivera BuildKit
-export DOCKER_BUILDKIT=1
-
-# Eller i docker build
-docker buildx build -t myapp .
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    BUILD OPTIMIZATION LAYERS                        │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  BUILDKIT ENGINE                                             │  │
+│   │  ┌──────────────────┐  ┌──────────────────┐                 │  │
+│   │  │ Parallel builds  │  │ Efficient cache  │                 │  │
+│   │  │ Secret mounts    │  │ Inline cache     │                 │  │
+│   │  └──────────────────┘  └──────────────────┘                 │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                              │                                      │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  LAYER OPTIMIZATION                                          │  │
+│   │  • Order by change frequency                                │  │
+│   │  • Minimize layer count                                     │  │
+│   │  • Use cache mounts                                         │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                              │                                      │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  BUILD CONTEXT                                               │  │
+│   │  • Minimal .dockerignore                                    │  │
+│   │  • Targeted COPY commands                                   │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                              │                                      │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  MULTI-STAGE                                                 │  │
+│   │  • Separate build/runtime                                   │  │
+│   │  • Parallel independent stages                              │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   Before: 15 minutes  →  After: 90 seconds                         │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-## Parallel Builds
+---
+
+## 1. Enable BuildKit
+
+```bash
+# Method 1: Environment variable
+export DOCKER_BUILDKIT=1
+docker build -t myapp .
+
+# Method 2: Docker buildx (recommended)
+docker buildx build -t myapp .
+
+# Method 3: Docker daemon config
+# /etc/docker/daemon.json
+{
+  "features": {
+    "buildkit": true
+  }
+}
+
+# Verify BuildKit is active
+docker buildx version
+```
+
+### BuildKit Benefits
+
+| Feature | Benefit |
+|---------|---------|
+| Parallel execution | Stages byggs parallellt |
+| Better caching | Smart layer cache |
+| Secret mounts | Säker credential-hantering |
+| SSH mounts | Private repo access |
+| Cache mounts | Persistent package cache |
+| Progress output | Bättre build visibility |
+
+---
+
+## 2. Parallel Multi-stage Builds
 
 ```dockerfile
-# Parallella stages med BuildKit
-FROM node:18 AS frontend
+# syntax=docker/dockerfile:1.4
+
+# ============================================
+# Stage: Frontend (byggd parallellt med backend)
+# ============================================
+FROM node:18-alpine AS frontend
 WORKDIR /frontend
+COPY frontend/package*.json ./
+RUN npm ci
 COPY frontend/ .
-RUN npm ci && npm run build
+RUN npm run build
 
-FROM python:3.11 AS backend
+# ============================================
+# Stage: Backend (byggd parallellt med frontend)
+# ============================================
+FROM python:3.11-slim AS backend
 WORKDIR /backend
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
-RUN pip install -r requirements.txt
 
-FROM nginx:alpine
+# ============================================
+# Stage: Test (väntar på backend)
+# ============================================
+FROM backend AS test
+RUN pip install pytest
+RUN pytest tests/
+
+# ============================================
+# Stage: Production (väntar på frontend + backend)
+# ============================================
+FROM nginx:alpine AS production
 COPY --from=frontend /frontend/dist /usr/share/nginx/html
 COPY --from=backend /backend /app
 ```
 
-## Cache Mounts
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    PARALLEL BUILD FLOW                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Utan parallellism:                                                │
+│   [frontend 3m] → [backend 4m] → [production 30s] = 7.5 min        │
+│                                                                     │
+│   Med BuildKit parallellism:                                        │
+│   [frontend 3m]  ─┐                                                 │
+│                    ├── [production 30s] = 4.5 min                  │
+│   [backend 4m]  ──┘                                                 │
+│                                                                     │
+│   Tidsbesparing: 40%!                                               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 3. Cache Mounts (Game Changer!)
+
+### Package Manager Cache
 
 ```dockerfile
-# Cache pip downloads
+# syntax=docker/dockerfile:1.4
+
+# Python: Cache pip downloads
+FROM python:3.11-slim
+WORKDIR /app
+
+COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 
-# Cache npm
+COPY . .
+
+# Node.js: Cache npm
+FROM node:18-alpine
+WORKDIR /app
+
+COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm \
     npm ci
+
+COPY . .
+
+# Go: Cache modules
+FROM golang:1.21-alpine
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
+
+COPY . .
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    go build -o /app/server .
 ```
 
-## Secret Mounts
+### APT Cache
 
 ```dockerfile
-# Säker secret hantering
+# Cache apt packages
+FROM ubuntu:22.04
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y python3 python3-pip
+```
+
+---
+
+## 4. Secret Mounts (Secure & Fast)
+
+```dockerfile
+# syntax=docker/dockerfile:1.4
+
+FROM node:18-alpine
+WORKDIR /app
+
+# Mount npm token during build only
+COPY package*.json ./
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
     npm ci
 
-# Build med secret
-docker build --secret id=npmrc,src=.npmrc .
-```
+COPY . .
 
-## Image Size Tips
+# Secret finns INTE i final image!
+```
 
 ```bash
-# Jämför image storlekar
-docker images --format "table {{.Repository}}:{{.Tag}}	{{.Size}}"
+# Build med secret
+docker buildx build \
+    --secret id=npmrc,src=$HOME/.npmrc \
+    -t myapp .
 
-# Analysera layers
-docker history myapp:latest
-dive myapp:latest  # Interaktivt verktyg
+# GitHub Actions
+- name: Build with secrets
+  uses: docker/build-push-action@v5
+  with:
+    secrets: |
+      npmrc=${{ secrets.NPM_TOKEN }}
 ```
 
-| Optimering | Effekt |
-|------------|--------|
-| Multi-stage | Mindre prod image |
-| Cache mounts | Snabbare rebuilds |
-| Alpine/slim | Mindre base |
-| .dockerignore | Snabbare context |
+### SSH Mount för private repos
 
-**Nästa steg:** Node 16 - Docker Healthchecks
+```dockerfile
+# syntax=docker/dockerfile:1.4
 
-> 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
+FROM python:3.11-slim
+
+# Mount SSH socket för git clone
+RUN --mount=type=ssh \
+    pip install git+ssh://git@github.com/org/private-repo.git
+```
+
+```bash
+# Build med SSH
+docker buildx build \
+    --ssh default=$SSH_AUTH_SOCK \
+    -t myapp .
+```
+
+---
+
+## 5. Optimize Layer Order
+
+```dockerfile
+# ❌ DÅLIGT: Dependencies installeras om vid varje kodändring
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .                           # Alla filer → invaliderar cache
+RUN pip install -r requirements.txt  # Körs varje gång!
+
+# ✅ BRA: Dependencies cachas
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .            # Ändras sällan
+RUN pip install -r requirements.txt  # CACHAD!
+COPY . .                           # Endast detta körs vid kodändring
+```
+
+### Layer Order Rules
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    OPTIMAL LAYER ORDER                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   1. Base image                    (Ändras nästan aldrig)          │
+│   2. System packages               (Ändras sällan)                  │
+│   3. Package manager files         (package.json, requirements.txt) │
+│   4. Package install               (Cachad om #3 inte ändrats)     │
+│   5. Build tools/configs           (Ändras sällan)                 │
+│   6. Source code                   (Ändras ofta)                   │
+│   7. Build command                 (Beror på #6)                   │
+│                                                                     │
+│   Regel: Saker som ändras ofta SIST!                                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. .dockerignore Optimization
+
+```dockerignore
+# .dockerignore
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies (will be installed in container)
+node_modules
+__pycache__
+*.pyc
+.venv
+venv/
+
+# IDE & Editor
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Tests (if not needed in image)
+tests/
+__tests__/
+*.test.js
+*.spec.ts
+coverage/
+.pytest_cache/
+
+# Build artifacts
+dist/
+build/
+*.log
+*.tmp
+
+# Environment
+.env*
+!.env.example
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+Jenkinsfile
+```
+
+### Mät kontextstorleken
+
+```bash
+# Se vad som skickas till Docker daemon
+docker build --no-cache -t test . 2>&1 | grep "Sending build context"
+# Sending build context to Docker daemon  2.048GB  ← För stort!
+
+# Med bra .dockerignore:
+# Sending build context to Docker daemon  5.12MB   ← Bättre!
+```
+
+---
+
+## 7. Registry Cache (CI/CD)
+
+```yaml
+# GitHub Actions
+- name: Build and push
+  uses: docker/build-push-action@v5
+  with:
+    context: .
+    push: true
+    tags: ghcr.io/org/app:latest
+    cache-from: type=registry,ref=ghcr.io/org/app:cache
+    cache-to: type=registry,ref=ghcr.io/org/app:cache,mode=max
+
+# GitLab CI
+build:
+  script:
+    - docker build
+        --cache-from $CI_REGISTRY_IMAGE:cache
+        --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+        --tag $CI_REGISTRY_IMAGE:cache
+        .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:cache
+```
+
+---
+
+## 8. Analyze Build Performance
+
+```bash
+# Visa detaljerad build progress
+docker buildx build --progress=plain -t myapp .
+
+# Se layer storlekar
+docker history myapp
+
+# Interaktiv analys med Dive
+docker run --rm -it \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    wagoodman/dive myapp
+
+# Build timing
+time docker buildx build -t myapp .
+```
+
+---
+
+## Optimization Checklist
+
+| Optimization | Impact | Effort |
+|--------------|--------|--------|
+| Enable BuildKit | 🔥🔥🔥 | Low |
+| Cache mounts | 🔥🔥🔥 | Low |
+| Layer order | 🔥🔥🔥 | Medium |
+| .dockerignore | 🔥🔥 | Low |
+| Multi-stage parallel | 🔥🔥 | Medium |
+| Registry cache | 🔥🔥 | Medium |
+| Alpine/slim base | 🔥 | Low |
+
+---
+
+## Praktiska Övningar
+
+### Övning 1: Cache mounts
+
+```dockerfile
+# Skapa Dockerfile med cache mounts
+cat > Dockerfile << 'EOF'
+# syntax=docker/dockerfile:1.4
+FROM python:3.11-slim
+WORKDIR /app
+
+COPY requirements.txt .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+COPY . .
+CMD ["python", "app.py"]
+EOF
+
+# Build twice - second should be instant
+time docker buildx build -t test1 .
+time docker buildx build -t test2 .
+```
+
+### Övning 2: Compare build times
+
+```bash
+# Without optimization
+time docker build -f Dockerfile.bad -t bad .
+
+# With optimization
+time docker buildx build -f Dockerfile.good -t good .
+
+# Compare
+echo "Difference: ${((bad_time - good_time))} seconds saved!"
+```
+
+---
+
+## Sammanfattning
+
+| Technique | Command/Config |
+|-----------|----------------|
+| BuildKit | `DOCKER_BUILDKIT=1` |
+| Cache mount | `RUN --mount=type=cache` |
+| Secret mount | `RUN --mount=type=secret` |
+| Registry cache | `cache-from/cache-to` |
+| Parallel stages | Named stages + buildx |
+| Build analysis | `dive`, `docker history` |
+
+---
+
+## Nästa Steg
+
+Du bygger nu blixtsnabba images! Nästa task: **Docker Healthchecks** — automatisk hälsokontroll för dina containers.
+
+> 💡 **Pro Tip:** Mät alltid före och efter optimering. "Jag tror det blev snabbare" räcker inte — visa siffrorna!
 """
             },
             {
                 "title": "Docker Healthchecks",
                 "difficulty": "medium",
-                "estimated_minutes": 45,
-                "xp_reward": 130,
-                "content": r"""
-# Docker Healthchecks
+                "estimated_minutes": 65,
+                "xp_reward": 165,
+                "content": r"""# ❤️ Docker Healthchecks
 
-## Varför detta är viktigt
+## Varför detta är kritiskt
 
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+> "A running container is not necessarily a healthy container. Your app might be up but unable to connect to the database. Or stuck in an infinite loop. Or out of memory. Healthchecks catch these issues before your users do."
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+Scenario: Din container kör. `docker ps` visar "Up 2 hours". Men API:t returnerar 500 errors. Load balancern skickar fortfarande trafik dit. Users är frustrerade.
 
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
+**Med healthchecks: Docker vet när din app är broken, och agerar automatiskt.**
 
 ---
 
+## Healthcheck Arkitektur
 
-Automatisk hälsokontroll.
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DOCKER HEALTHCHECK FLOW                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Container Start                                                   │
+│        │                                                            │
+│        ▼                                                            │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  STATUS: starting                                            │  │
+│   │  (Under start_period - healthchecks körs men ignoreras)     │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│        │                                                            │
+│        ▼  After start_period                                        │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  HEALTHCHECK LOOP                                            │  │
+│   │  ┌──────────────────────────────────────────────────────┐   │  │
+│   │  │  interval: 30s                                        │   │  │
+│   │  │  timeout: 10s                                         │   │  │
+│   │  │  retries: 3                                           │   │  │
+│   │  └──────────────────────────────────────────────────────┘   │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│        │                              │                             │
+│        ▼                              ▼                             │
+│   ┌────────────┐               ┌────────────┐                      │
+│   │  HEALTHY   │               │ UNHEALTHY  │                      │
+│   │ exit 0     │               │ exit 1     │                      │
+│   │            │               │ (retries   │                      │
+│   │ Container  │               │  exceeded) │                      │
+│   │ stays up   │               │            │                      │
+│   └────────────┘               │ Actions:   │                      │
+│                                │ • Log      │                      │
+│                                │ • Restart  │                      │
+│                                │ • Remove   │                      │
+│                                └────────────┘                      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Dockerfile HEALTHCHECK
+
+### Grundläggande syntax
+
+```dockerfile
+HEALTHCHECK [OPTIONS] CMD command
+
+# Options:
+# --interval=30s      Tid mellan checks (default 30s)
+# --timeout=30s       Max tid för check att slutföra (default 30s)
+# --start-period=0s   Grace period vid startup (default 0s)
+# --retries=3         Antal misslyckanden innan unhealthy (default 3)
+
+# Exit codes:
+# 0 = healthy
+# 1 = unhealthy
+# 2 = reserved (använd inte)
+```
+
+### HTTP API Healthcheck
 
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
 RUN npm ci
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=5s \
-  CMD curl -f http://localhost:3000/health || exit 1
+COPY . .
 
+# Healthcheck för HTTP API
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=40s \
+    CMD curl -f http://localhost:3000/health || exit 1
+
+EXPOSE 3000
 CMD ["node", "server.js"]
 ```
 
-## Health Status
+### Python/Flask Healthcheck
 
-```bash
-# Se health status
-docker ps
-# CONTAINER   STATUS
-# abc123      Up 2m (healthy)
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
 
-# Detaljerad health info
-docker inspect --format='{{json .State.Health}}' myapp | jq
+RUN pip install flask gunicorn
+
+COPY . .
+
+# Utan curl (ofta inte installerat)
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=30s \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
 ```
 
-## Compose Healthcheck
+### Disable Healthcheck
+
+```dockerfile
+# Disable inherited healthcheck
+HEALTHCHECK NONE
+```
+
+---
+
+## Healthcheck Patterns per Service
+
+### Web Servers / APIs
+
+```dockerfile
+# Nginx
+HEALTHCHECK CMD curl -f http://localhost/ || exit 1
+
+# Express.js
+HEALTHCHECK CMD curl -f http://localhost:3000/health || exit 1
+
+# FastAPI
+HEALTHCHECK CMD curl -f http://localhost:8000/health || exit 1
+
+# Flask
+HEALTHCHECK CMD curl -f http://localhost:5000/health || exit 1
+```
+
+### Databases
+
+```dockerfile
+# PostgreSQL
+HEALTHCHECK CMD pg_isready -U postgres || exit 1
+
+# MySQL
+HEALTHCHECK CMD mysqladmin ping -h localhost || exit 1
+
+# MongoDB
+HEALTHCHECK CMD mongosh --eval "db.adminCommand('ping')" || exit 1
+
+# Redis
+HEALTHCHECK CMD redis-cli ping || exit 1
+```
+
+### Message Queues
+
+```dockerfile
+# RabbitMQ
+HEALTHCHECK CMD rabbitmq-diagnostics -q ping || exit 1
+
+# Kafka (via kafka-topics)
+HEALTHCHECK CMD kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1
+```
+
+---
+
+## Docker Compose Healthchecks
+
+### Full Example
 
 ```yaml
+version: '3.8'
+
 services:
+  # API med HTTP healthcheck
   api:
-    build: .
+    build: ./backend
+    ports:
+      - "8000:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  db:
-    image: postgres:15
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-```
-
-## Wait for Dependencies
-
-```yaml
-services:
-  api:
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
+
+  # PostgreSQL
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Worker (beroende av API)
+  worker:
+    build: ./worker
+    depends_on:
+      api:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
 ```
 
-## Healthcheck Patterns
+### Service Dependencies
 
-| Service | Test Command |
-|---------|--------------|
-| HTTP API | curl -f http://localhost/health |
-| PostgreSQL | pg_isready -U user |
-| Redis | redis-cli ping |
-| MySQL | mysqladmin ping |
+```yaml
+services:
+  api:
+    depends_on:
+      # Vänta tills healthy
+      db:
+        condition: service_healthy
 
-**Nästa steg:** Node 17 - Docker Swarm Basics
+      # Vänta bara på start
+      redis:
+        condition: service_started
 
-> 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
+      # Vänta tills färdig (one-shot container)
+      migrations:
+        condition: service_completed_successfully
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    STARTUP ORDER WITH HEALTHCHECKS                  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Timeline:                                                         │
+│   0s    5s   10s   15s   20s   25s   30s   35s   40s               │
+│   │─────│─────│─────│─────│─────│─────│─────│─────│                │
+│   │                                                                 │
+│   │ [db starts]                                                     │
+│   │     [db healthy ✓]                                              │
+│   │         [redis starts]                                          │
+│   │             [redis healthy ✓]                                   │
+│   │                 [api starts]                                    │
+│   │                         [api start_period]                      │
+│   │                                     [api healthy ✓]             │
+│   │                                         [worker starts]         │
+│   │                                                                 │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Monitoring Health Status
+
+### Via Docker CLI
+
+```bash
+# Se health status i ps
+docker ps
+# CONTAINER ID   STATUS
+# abc123         Up 2 hours (healthy)
+# def456         Up 5 min (unhealthy)
+
+# Detaljerad health info
+docker inspect myapp --format='{{json .State.Health}}' | jq
+
+# Output:
+# {
+#   "Status": "healthy",
+#   "FailingStreak": 0,
+#   "Log": [
+#     {
+#       "Start": "2024-01-15T10:00:00.000000000Z",
+#       "End": "2024-01-15T10:00:00.500000000Z",
+#       "ExitCode": 0,
+#       "Output": "OK"
+#     }
+#   ]
+# }
+
+# Endast status
+docker inspect myapp --format='{{.State.Health.Status}}'
+
+# Health log
+docker inspect myapp --format='{{json .State.Health.Log}}' | jq
+```
+
+### Via Events
+
+```bash
+# Se health events
+docker events --filter event=health_status
+
+# Output:
+# container health_status: healthy abc123 (name=api)
+# container health_status: unhealthy def456 (name=db)
+```
+
+---
+
+## Application Health Endpoints
+
+### Express.js
+
+```javascript
+// /health endpoint
+app.get('/health', async (req, res) => {
+  try {
+    // Check database
+    await db.query('SELECT 1');
+
+    // Check Redis
+    await redis.ping();
+
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      checks: {
+        database: 'ok',
+        redis: 'ok'
+      }
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      error: error.message
+    });
+  }
+});
+```
+
+### FastAPI
+
+```python
+from fastapi import FastAPI, Response
+import asyncpg
+import aioredis
+
+app = FastAPI()
+
+@app.get("/health")
+async def health_check():
+    checks = {}
+    healthy = True
+
+    # Check database
+    try:
+        conn = await asyncpg.connect(DATABASE_URL)
+        await conn.execute("SELECT 1")
+        await conn.close()
+        checks["database"] = "ok"
+    except Exception as e:
+        checks["database"] = str(e)
+        healthy = False
+
+    # Check Redis
+    try:
+        redis = aioredis.from_url(REDIS_URL)
+        await redis.ping()
+        await redis.close()
+        checks["redis"] = "ok"
+    except Exception as e:
+        checks["redis"] = str(e)
+        healthy = False
+
+    status_code = 200 if healthy else 503
+    return Response(
+        content=json.dumps({
+            "status": "healthy" if healthy else "unhealthy",
+            "checks": checks
+        }),
+        status_code=status_code,
+        media_type="application/json"
+    )
+```
+
+---
+
+## Healthcheck Best Practices
+
+| Do | Don't |
+|----|----|
+| ✅ Check actual functionality | ❌ Just return 200 OK |
+| ✅ Check critical dependencies | ❌ Check non-critical services |
+| ✅ Fast checks (< 5s) | ❌ Heavy/slow operations |
+| ✅ Meaningful start_period | ❌ Skip start_period |
+| ✅ Log health failures | ❌ Silent failures |
+| ✅ Return useful error info | ❌ Generic errors |
+
+---
+
+## Praktiska Övningar
+
+### Övning 1: Basic healthcheck
+
+```bash
+# Skapa Dockerfile med healthcheck
+cat > Dockerfile << 'EOF'
+FROM nginx:alpine
+
+RUN apk add --no-cache curl
+
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+EOF
+
+docker build -t healthy-nginx .
+docker run -d --name test healthy-nginx
+
+# Watch health status
+watch -n 2 'docker ps --format "table {{.Names}}\t{{.Status}}"'
+
+# Stop nginx to make unhealthy
+docker exec test nginx -s stop
+
+# Watch it go unhealthy
+```
+
+### Övning 2: Compose med dependencies
+
+```bash
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      retries: 10
+
+  api:
+    image: nginx:alpine
+    depends_on:
+      db:
+        condition: service_healthy
+EOF
+
+docker compose up
+
+# Observer att api väntar på db healthy!
+```
+
+---
+
+## Sammanfattning
+
+| Parameter | Rekommendation | Beskrivning |
+|-----------|---------------|-------------|
+| `interval` | 30s | Tid mellan checks |
+| `timeout` | 10s | Max tid per check |
+| `retries` | 3 | Misslyckanden före unhealthy |
+| `start_period` | 30-60s | Grace period vid startup |
+
+---
+
+## Nästa Steg
+
+Du vet nu hur du säkerställer container-hälsa! Nästa task: **Docker Swarm Basics** — container orchestration med inbyggd Docker.
+
+> 💡 **Pro Tip:** Dina healthchecks ska testa vad som är kritiskt för din app. Om API:t inte kan nå databasen — det är unhealthy, oavsett om HTTP-servern svarar!
 """
             },
             {
                 "title": "Docker Swarm Basics",
-                "difficulty": "medium",
-                "estimated_minutes": 55,
-                "xp_reward": 150,
-                "content": r"""
-# Docker Swarm Basics
+                "difficulty": "hard",
+                "estimated_minutes": 80,
+                "xp_reward": 190,
+                "content": r"""# 🐝 Docker Swarm Basics
 
-## Varför detta är viktigt
+## Varför detta är kritiskt
 
-> **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
+> "Single-host Docker is great for development. But production needs high availability, load balancing, and rolling updates. Docker Swarm is Docker's built-in orchestration — no external tools needed."
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+Du har en app på en server. Servern går ner. App down. Users arg. Med Swarm: din app körs på flera noder. En nod går ner? Swarm omfördelar automatiskt.
 
-### Vad du kommer lära dig
-
-- ✅ Förstå kärnkoncepten på djupet
-- ✅ Tillämpa kunskapen praktiskt
-- ✅ Undvika vanliga misstag
-- ✅ Bygga robusta lösningar
+**Detta är container orchestration — och det är inbyggt i Docker.**
 
 ---
 
+## Swarm Arkitektur
 
-Native Docker orchestration.
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DOCKER SWARM ARKITEKTUR                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│                        SWARM CLUSTER                                │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │                                                              │  │
+│   │   MANAGER NODES (Odd number: 1, 3, 5)                       │  │
+│   │   ┌────────────┐  ┌────────────┐  ┌────────────┐           │  │
+│   │   │  Manager1  │  │  Manager2  │  │  Manager3  │           │  │
+│   │   │  (Leader)  │  │ (Reachable)│  │ (Reachable)│           │  │
+│   │   │            │  │            │  │            │           │  │
+│   │   │  Raft      │◀─│──Consensus─│─▶│            │           │  │
+│   │   │  Leader    │  │            │  │            │           │  │
+│   │   └────────────┘  └────────────┘  └────────────┘           │  │
+│   │         │                │               │                  │  │
+│   │         └────────────────┼───────────────┘                  │  │
+│   │                          │                                  │  │
+│   │                    Scheduling                               │  │
+│   │                          │                                  │  │
+│   │   WORKER NODES                                              │  │
+│   │   ┌────────────┐  ┌────────────┐  ┌────────────┐           │  │
+│   │   │  Worker1   │  │  Worker2   │  │  Worker3   │           │  │
+│   │   │ ┌────────┐ │  │ ┌────────┐ │  │ ┌────────┐ │           │  │
+│   │   │ │Task 1  │ │  │ │Task 2  │ │  │ │Task 3  │ │           │  │
+│   │   │ │(nginx) │ │  │ │(nginx) │ │  │ │(nginx) │ │           │  │
+│   │   │ └────────┘ │  │ └────────┘ │  │ └────────┘ │           │  │
+│   │   │ ┌────────┐ │  │ ┌────────┐ │  │            │           │  │
+│   │   │ │Task 4  │ │  │ │Task 5  │ │  │            │           │  │
+│   │   │ │(api)   │ │  │ │(api)   │ │  │            │           │  │
+│   │   │ └────────┘ │  │ └────────┘ │  │            │           │  │
+│   │   └────────────┘  └────────────┘  └────────────┘           │  │
+│   │                                                              │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   Key concepts:                                                     │
+│   • Service: Desired state (3 replicas of nginx)                   │
+│   • Task: One container instance running                           │
+│   • Node: A Docker host in the swarm                               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Initiera Swarm
 
+### Single-node Swarm (Development)
+
 ```bash
-# Skapa swarm
+# Initiera swarm på denna maskin
 docker swarm init
 
-# Join token för workers
-docker swarm join-token worker
+# Output:
+# Swarm initialized: current node (abc123) is now a manager.
+#
+# To add a worker to this swarm, run:
+#     docker swarm join --token SWMTKN-xxx 192.168.1.10:2377
 
-# Join token för managers
+# Verify
+docker node ls
+# ID          HOSTNAME     STATUS  AVAILABILITY  MANAGER STATUS
+# abc123 *    my-machine   Ready   Active        Leader
+```
+
+### Multi-node Swarm (Production)
+
+```bash
+# På Manager 1 (första)
+docker swarm init --advertise-addr 10.0.0.1
+
+# Hämta join-tokens
+docker swarm join-token worker
 docker swarm join-token manager
 
-# Lista nodes
+# På Worker nodes
+docker swarm join --token SWMTKN-worker-xxx 10.0.0.1:2377
+
+# På andra Manager nodes
+docker swarm join --token SWMTKN-manager-xxx 10.0.0.1:2377
+
+# Verify cluster
 docker node ls
+# ID          HOSTNAME   STATUS  AVAILABILITY  MANAGER STATUS
+# abc123 *    manager1   Ready   Active        Leader
+# def456      manager2   Ready   Active        Reachable
+# ghi789      manager3   Ready   Active        Reachable
+# jkl012      worker1    Ready   Active
+# mno345      worker2    Ready   Active
 ```
+
+### Manager High Availability
+
+| Managers | Tolerar failures |
+|----------|-----------------|
+| 1 | 0 |
+| 3 | 1 |
+| 5 | 2 |
+| 7 | 3 |
+
+> **Best Practice:** Använd 3 eller 5 managers. Aldrig jämnt antal!
+
+---
 
 ## Services
 
-```bash
-# Skapa service
-docker service create \
-  --name web \
-  --replicas 3 \
-  -p 80:80 \
-  nginx
+### Skapa Service
 
+```bash
+# Basic service
+docker service create --name web nginx
+
+# Med replicas
+docker service create \
+    --name api \
+    --replicas 3 \
+    -p 8000:8000 \
+    myapp/api:v1
+
+# Med environment
+docker service create \
+    --name api \
+    --replicas 3 \
+    -e DATABASE_URL=postgres://db:5432/app \
+    -e REDIS_URL=redis://redis:6379 \
+    myapp/api:v1
+
+# Med constraints
+docker service create \
+    --name api \
+    --replicas 3 \
+    --constraint 'node.role == worker' \
+    --constraint 'node.labels.env == production' \
+    myapp/api:v1
+```
+
+### Service Management
+
+```bash
 # Lista services
 docker service ls
 
-# Skala
-docker service scale web=5
+# Detaljerad info
+docker service inspect api
 
-# Uppdatera
-docker service update --image nginx:latest web
+# Se tasks (containers)
+docker service ps api
+
+# Logs
+docker service logs api
+docker service logs -f api  # Follow
+
+# Skala
+docker service scale api=5
+
+# Uppdatera image
+docker service update --image myapp/api:v2 api
+
+# Ta bort
+docker service rm api
 ```
 
-## Stack Deploy
+---
+
+## Stack Deploy (Compose för Swarm)
+
+### docker-stack.yml
 
 ```yaml
 # docker-stack.yml
 version: '3.8'
+
 services:
+  # Web frontend
   web:
-    image: nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
     deploy:
       replicas: 3
       update_config:
         parallelism: 1
         delay: 10s
+        order: start-first
       restart_policy:
         condition: on-failure
-    ports:
-      - "80:80"
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.role == worker
+    networks:
+      - frontend
+
+  # API backend
+  api:
+    image: myapp/api:v1
+    environment:
+      - DATABASE_URL=postgres://user:secret@db:5432/app
+      - REDIS_URL=redis://redis:6379
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      update_config:
+        parallelism: 2
+        delay: 10s
+        failure_action: rollback
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - db
+      - redis
+
+  # Database
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.db == true
+    networks:
+      - backend
+    secrets:
+      - db_password
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    deploy:
+      replicas: 1
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  postgres-data:
+
+secrets:
+  db_password:
+    external: true
 ```
 
+### Deploy och Manage Stack
+
 ```bash
+# Skapa secret
+echo "supersecretpassword" | docker secret create db_password -
+
 # Deploy stack
 docker stack deploy -c docker-stack.yml myapp
 
 # Lista stacks
 docker stack ls
 
-# Stack services
+# Services i stack
 docker stack services myapp
+
+# Tasks per service
+docker stack ps myapp
+
+# Ta bort stack
+docker stack rm myapp
 ```
 
-**Nästa steg:** Node 18 - Production Patterns
+---
 
-> 💡 **Pro Tip:** Commita ofta, pusha dagligen. Små commits är lättare att granska och rollbacka.
+## Rolling Updates
+
+```yaml
+services:
+  api:
+    deploy:
+      update_config:
+        # Uppdatera 2 tasks i taget
+        parallelism: 2
+
+        # Vänta 10s mellan batches
+        delay: 10s
+
+        # Vid failure: rollback automatiskt
+        failure_action: rollback
+
+        # Starta ny INNAN stoppa gammal
+        order: start-first
+
+        # Monitor 5s efter start
+        monitor: 5s
+
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+```
+
+```bash
+# Uppdatera image
+docker service update \
+    --image myapp/api:v2 \
+    --update-parallelism 2 \
+    --update-delay 10s \
+    api
+
+# Se rollout status
+docker service ps api
+
+# Manuell rollback
+docker service rollback api
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    ROLLING UPDATE FLOW                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Before: 5 replicas v1                                             │
+│   [v1] [v1] [v1] [v1] [v1]                                         │
+│                                                                     │
+│   Step 1: Start 2 new (parallelism: 2)                             │
+│   [v1] [v1] [v1] [v2] [v2]                                         │
+│                                                                     │
+│   Step 2: Delay 10s, then continue                                 │
+│   [v1] [v1] [v2] [v2] [v2]                                         │
+│                                                                     │
+│   Step 3: Finish                                                    │
+│   [v2] [v2] [v2] [v2] [v2]                                         │
+│                                                                     │
+│   Total time: ~30 seconds with zero downtime!                       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Swarm Networking
+
+```yaml
+services:
+  api:
+    networks:
+      - frontend    # Nåbar från web
+      - backend     # Nåbar till db
+
+networks:
+  frontend:
+    driver: overlay
+
+  backend:
+    driver: overlay
+    internal: true  # Ingen extern åtkomst
+    attachable: true  # Standalone containers kan joina
+```
+
+### Ingress Load Balancing
+
+```bash
+# Alla noder kan ta emot trafik på port 80
+# Swarm routar till rätt container automatiskt
+
+# Publish mode: ingress (default)
+docker service create -p 80:80 nginx
+
+# Publish mode: host (direkt till nod)
+docker service create -p mode=host,target=80,published=80 nginx
+```
+
+---
+
+## Secrets Management
+
+```bash
+# Skapa secret
+echo "mypassword" | docker secret create db_password -
+
+# Från fil
+docker secret create ssl_cert /path/to/cert.pem
+
+# Lista secrets
+docker secret ls
+
+# Använd i service
+docker service create \
+    --name api \
+    --secret db_password \
+    myapp/api
+```
+
+```yaml
+# I stack
+services:
+  api:
+    secrets:
+      - db_password
+      - source: api_key
+        target: /run/secrets/api_key
+        mode: 0400
+
+secrets:
+  db_password:
+    external: true  # Redan skapad
+  api_key:
+    file: ./api_key.txt  # Från fil vid deploy
+```
+
+---
+
+## Praktiska Övningar
+
+### Övning 1: Single-node Swarm
+
+```bash
+# Initiera
+docker swarm init
+
+# Deploy nginx service
+docker service create \
+    --name web \
+    --replicas 3 \
+    -p 80:80 \
+    nginx
+
+# Verify
+docker service ls
+docker service ps web
+curl localhost
+
+# Scale
+docker service scale web=5
+docker service ps web
+
+# Cleanup
+docker service rm web
+docker swarm leave --force
+```
+
+### Övning 2: Stack deploy
+
+```bash
+# Skapa stack file
+cat > app-stack.yml << 'EOF'
+version: '3.8'
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 5s
+EOF
+
+docker swarm init
+docker stack deploy -c app-stack.yml myapp
+docker stack services myapp
+docker stack ps myapp
+
+# Update
+docker service update --image nginx:latest myapp_web
+
+docker stack rm myapp
+docker swarm leave --force
+```
+
+---
+
+## Sammanfattning
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker swarm init` | Initiera swarm |
+| `docker node ls` | Lista noder |
+| `docker service create` | Skapa service |
+| `docker service scale` | Skala replicas |
+| `docker service update` | Uppdatera service |
+| `docker stack deploy` | Deploy stack |
+| `docker secret create` | Skapa secret |
+
+---
+
+## Nästa Steg
+
+Du kan nu orchestrera containers med Swarm! Nästa task: **Production Patterns** — best practices för Docker i produktion.
+
+> 💡 **Pro Tip:** Swarm är perfekt för enklare orchestration. För mer avancerade behov (auto-scaling, advanced networking), överväg Kubernetes!
 """
             },
             {
