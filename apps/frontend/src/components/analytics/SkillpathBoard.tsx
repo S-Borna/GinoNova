@@ -652,7 +652,7 @@ export function SkillpathBoard() {
     const { data: progressData, isLoading: progressLoading, error: progressError, refetch } = useProgress()
     const { data: modulesData, isLoading: modulesLoading } = useModules()
     const { user } = useAuth()
-    
+
     // Get user's first name for personalized greeting
     const firstName = user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'DevOps Pro'
 
@@ -770,7 +770,7 @@ export function SkillpathBoard() {
                 {/* Background glow effects */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px]" />
-                
+
                 <div className="relative p-8">
                     {/* Badge */}
                     <div className="flex items-center gap-2 mb-4">
@@ -779,18 +779,18 @@ export function SkillpathBoard() {
                             Your Journey
                         </span>
                     </div>
-                    
+
                     {/* Title */}
                     <h1 className="text-3xl lg:text-4xl font-bold text-white mb-3 flex items-center gap-3">
                         Keep Going, {firstName}!
                         <span className="text-3xl">🔥</span>
                     </h1>
-                    
+
                     {/* Subtitle */}
                     <p className="text-zinc-400 text-lg max-w-xl">
                         Track your DevOps learning journey and celebrate every win
                     </p>
-                    
+
                     {/* Refresh button - positioned top right */}
                     <Button
                         onClick={() => refetch()}
