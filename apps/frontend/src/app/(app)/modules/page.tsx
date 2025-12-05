@@ -596,6 +596,11 @@ export default function ModulesPage() {
                         .filter(mod => {
                             const slug = mod.slug?.toLowerCase() || ""
                             const name = mod.name?.toLowerCase() || ""
+
+                            // Exclude old Docker modules (replaced by docker-mastery)
+                            const excludedSlugs = ["docker-fundamentals", "docker-advanced-production"]
+                            if (excludedSlugs.includes(slug)) return false
+
                             const devopsKeywords = [
                                 "linux", "docker", "kubernetes", "k8s", "cicd", "ci-cd", "ci/cd",
                                 "terraform", "ansible", "aws", "cloud", "git", "shell", "bash",
@@ -605,43 +610,43 @@ export default function ModulesPage() {
                             return devopsKeywords.some(kw => slug.includes(kw) || name.includes(kw))
                         })
                         .map(async (mod, index) => {
-                        // Get tasks for this module
-                        const tasksResult = await getTasksForModule(mod.id)
-                        const tasks: TaskPublic[] = tasksResult.ok ? tasksResult.data : []
-                        const totalTasks = tasks.length
+                            // Get tasks for this module
+                            const tasksResult = await getTasksForModule(mod.id)
+                            const tasks: TaskPublic[] = tasksResult.ok ? tasksResult.data : []
+                            const totalTasks = tasks.length
 
-                        // Count completed tasks from progress data
-                        const completedTasks = tasks.filter(t => {
-                            const taskProgress = taskProgressMap.get(t.id)
-                            return taskProgress?.status === "completed"
-                        }).length
+                            // Count completed tasks from progress data
+                            const completedTasks = tasks.filter(t => {
+                                const taskProgress = taskProgressMap.get(t.id)
+                                return taskProgress?.status === "completed"
+                            }).length
 
-                        // Calculate progress percentage
-                        const progressPercent = totalTasks > 0
-                            ? Math.round((completedTasks / totalTasks) * 100)
-                            : 0
+                            // Calculate progress percentage
+                            const progressPercent = totalTasks > 0
+                                ? Math.round((completedTasks / totalTasks) * 100)
+                                : 0
 
-                        // Determine status - NO LOCKING, all modules open!
-                        let status: ModuleStatus = "not_started"
-                        if (progressPercent === 100) {
-                            status = "complete"
-                        } else if (progressPercent > 0) {
-                            status = "in_progress"
-                        }
-                        // All modules are accessible - no prerequisites blocking
+                            // Determine status - NO LOCKING, all modules open!
+                            let status: ModuleStatus = "not_started"
+                            if (progressPercent === 100) {
+                                status = "complete"
+                            } else if (progressPercent > 0) {
+                                status = "in_progress"
+                            }
+                            // All modules are accessible - no prerequisites blocking
 
-                        return {
-                            ...mod,
-                            orderIndex: mod.order_index || index + 1,
-                            icon: getModuleIcon(mod.name),
-                            progress: progressPercent,
-                            tasksCompleted: completedTasks,
-                            totalTasks,
-                            status,
-                            estimatedHours: mod.estimated_hours || 4 + index * 2,
-                            prerequisiteModule: mod.prerequisites?.[0],
-                        } as EnhancedModule
-                    })
+                            return {
+                                ...mod,
+                                orderIndex: mod.order_index || index + 1,
+                                icon: getModuleIcon(mod.name),
+                                progress: progressPercent,
+                                tasksCompleted: completedTasks,
+                                totalTasks,
+                                status,
+                                estimatedHours: mod.estimated_hours || 4 + index * 2,
+                                prerequisiteModule: mod.prerequisites?.[0],
+                            } as EnhancedModule
+                        })
                 )
 
                 setModules(modulesWithTasks)
