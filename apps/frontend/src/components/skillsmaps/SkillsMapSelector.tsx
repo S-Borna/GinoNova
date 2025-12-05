@@ -15,10 +15,12 @@
  * @phase SKILLSMAPS-INTEGRATION
  */
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { SkillsMapCard, SkillsMapCardProps } from "./SkillsMapCard"
+import { CustomPathBuilder, getCustomPaths, CustomPath } from "./CustomPathBuilder"
+import { CustomPathsSection } from "./CustomPathsSection"
 import {
     Search,
     Filter,
@@ -33,6 +35,8 @@ import {
     Database,
     Shield,
     Rocket,
+    Plus,
+    Wand2,
 } from "lucide-react"
 
 /* ============================================================================
@@ -146,11 +150,13 @@ function SelectorHeader({
     completedMaps,
     searchQuery,
     onSearchChange,
+    onCreatePath,
 }: {
     totalMaps: number
     completedMaps: number
     searchQuery: string
     onSearchChange: (query: string) => void
+    onCreatePath: () => void
 }) {
     const progress = totalMaps > 0 ? Math.round((completedMaps / totalMaps) * 100) : 0
 
@@ -184,13 +190,33 @@ function SelectorHeader({
                                 SkillsMaps
                             </span>
                         </div>
-                        <h1 className={cn(
-                            "text-3xl md:text-4xl font-black mb-2",
-                            "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
-                        )}>
-                            Välj din lärstig
-                        </h1>
-                        <p className="text-zinc-400">
+                        <div className="flex items-center gap-4 flex-wrap">
+                            <h1 className={cn(
+                                "text-3xl md:text-4xl font-black",
+                                "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                            )}>
+                                Välj din lärstig
+                            </h1>
+                            
+                            {/* CREATE CUSTOM PATH BUTTON */}
+                            <motion.button
+                                onClick={onCreatePath}
+                                className={cn(
+                                    "flex items-center gap-2 px-4 py-2 rounded-xl",
+                                    "bg-gradient-to-r from-amber-500/20 to-orange-500/20",
+                                    "border border-amber-500/30",
+                                    "text-amber-300 text-sm font-medium",
+                                    "hover:from-amber-500/30 hover:to-orange-500/30",
+                                    "transition-all duration-300"
+                                )}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <Plus className="w-4 h-4" />
+                                Skapa egen lärstig
+                            </motion.button>
+                        </div>
+                        <p className="text-zinc-400 mt-2">
                             {totalMaps} kunskapsstigar • {completedMaps} klara
                         </p>
                     </div>
@@ -305,6 +331,32 @@ export function SkillsMapSelector({
 }: SkillsMapSelectorProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [activeCategory, setActiveCategory] = useState<SkillsMapCategory>("all")
+    const [showPathBuilder, setShowPathBuilder] = useState(false)
+    const [editingPath, setEditingPath] = useState<CustomPath | undefined>(undefined)
+    const [customPaths, setCustomPaths] = useState<CustomPath[]>([])
+
+    // Load custom paths from localStorage
+    useEffect(() => {
+        setCustomPaths(getCustomPaths())
+    }, [])
+
+    const refreshCustomPaths = () => {
+        setCustomPaths(getCustomPaths())
+    }
+
+    const handleEditPath = (path: CustomPath) => {
+        setEditingPath(path)
+        setShowPathBuilder(true)
+    }
+
+    const handleCreatePath = () => {
+        setEditingPath(undefined)
+        setShowPathBuilder(true)
+    }
+
+    const handleSavePath = (path: CustomPath) => {
+        refreshCustomPaths()
+    }
 
     // Calculate category counts
     const categoryCounts = useMemo(() => {
@@ -360,6 +412,14 @@ export function SkillsMapSelector({
                 completedMaps={completedMaps}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
+                onCreatePath={handleCreatePath}
+            />
+
+            {/* Custom Paths Section */}
+            <CustomPathsSection
+                paths={customPaths}
+                onEdit={handleEditPath}
+                onRefresh={refreshCustomPaths}
             />
 
             <CategoryTabs
@@ -410,6 +470,17 @@ export function SkillsMapSelector({
                     </p>
                 </motion.div>
             )}
+
+            {/* Custom Path Builder Modal */}
+            <CustomPathBuilder
+                isOpen={showPathBuilder}
+                onClose={() => {
+                    setShowPathBuilder(false)
+                    setEditingPath(undefined)
+                }}
+                onSave={handleSavePath}
+                existingPath={editingPath}
+            />
         </div>
     )
 }
