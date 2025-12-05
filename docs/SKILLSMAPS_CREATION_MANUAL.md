@@ -718,7 +718,7 @@ CREATE TABLE modules (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Tasks table  
+-- Tasks table
 CREATE TABLE tasks (
     id UUID PRIMARY KEY,
     module_id UUID REFERENCES modules(id),
