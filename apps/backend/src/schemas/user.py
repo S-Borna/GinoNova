@@ -66,7 +66,7 @@ class UserPublic(UserBase):
 
 class UserInDB(UserPublic):
     """Schema for user data stored in database (includes hashed password)"""
-    password_hash: str
+    password_hash: Optional[str] = None  # Optional for OAuth users
 
 
 def create_user_in_db(
