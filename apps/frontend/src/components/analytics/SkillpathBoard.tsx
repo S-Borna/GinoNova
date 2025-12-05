@@ -23,6 +23,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useProgress } from "@/hooks/useProgress"
 import { useModules } from "@/hooks/useModules"
+import { useAuth } from "@/components/auth/AuthProvider"
 import {
     TrendingUp,
     Flame,
@@ -36,7 +37,8 @@ import {
     Trophy,
     Loader2,
     AlertCircle,
-    RefreshCw
+    RefreshCw,
+    Rocket
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -649,6 +651,10 @@ export function SkillpathBoard() {
     // Fetch live progress data
     const { data: progressData, isLoading: progressLoading, error: progressError, refetch } = useProgress()
     const { data: modulesData, isLoading: modulesLoading } = useModules()
+    const { user } = useAuth()
+    
+    // Get user's first name for personalized greeting
+    const firstName = user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'DevOps Pro'
 
     const formatTime = (minutes: number): string => {
         const hours = Math.floor(minutes / 60)
@@ -751,29 +757,48 @@ export function SkillpathBoard() {
 
     return (
         <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
-            {/* Header */}
+            {/* YOUR JOURNEY Header Card */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
+                className={cn(
+                    "relative overflow-hidden rounded-2xl mb-8",
+                    "bg-gradient-to-r from-zinc-900 via-zinc-900/95 to-purple-950/30",
+                    "border border-zinc-800/60"
+                )}
             >
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white mb-2">
-                            Skillpath Board
-                        </h1>
-                        <p className="text-neutral-400">
-                            Din DevOps-resa i realtid
-                        </p>
+                {/* Background glow effects */}
+                <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px]" />
+                
+                <div className="relative p-8">
+                    {/* Badge */}
+                    <div className="flex items-center gap-2 mb-4">
+                        <Rocket className="w-5 h-5 text-purple-400" />
+                        <span className="text-sm font-semibold text-purple-400 tracking-wide uppercase">
+                            Your Journey
+                        </span>
                     </div>
+                    
+                    {/* Title */}
+                    <h1 className="text-3xl lg:text-4xl font-bold text-white mb-3 flex items-center gap-3">
+                        Keep Going, {firstName}!
+                        <span className="text-3xl">🔥</span>
+                    </h1>
+                    
+                    {/* Subtitle */}
+                    <p className="text-zinc-400 text-lg max-w-xl">
+                        Track your DevOps learning journey and celebrate every win
+                    </p>
+                    
+                    {/* Refresh button - positioned top right */}
                     <Button
                         onClick={() => refetch()}
                         variant="ghost"
                         size="sm"
-                        className="text-neutral-400 hover:text-white"
+                        className="absolute top-6 right-6 text-zinc-500 hover:text-white"
                     >
-                        <RefreshCw className="w-4 h-4 mr-2" />
-                        Uppdatera
+                        <RefreshCw className="w-4 h-4" />
                     </Button>
                 </div>
             </motion.div>
