@@ -658,8 +658,16 @@ export function SkillpathBoard() {
 
     // Transform API data to component format
     const data: SkillpathData = useMemo(() => {
-        // Use progress data for XP/streak stats (mock is fine for demo)
-        const progress = progressData || {
+        // Use REAL progress data only - no mock fallback for stats!
+        const progress = progressData ? {
+            total_xp: progressData.total_xp ?? 0,
+            level: progressData.level ?? 1,
+            xp_to_next_level: progressData.xp_to_next_level ?? 1000,
+            tasks_completed: progressData.tasks_completed ?? 0,
+            modules_completed: progressData.modules_completed ?? 0,
+            streak: progressData.streak ?? 0,
+            tracks: progressData.tracks ?? [],
+        } : {
             total_xp: 0,
             level: 1,
             xp_to_next_level: 1000,
