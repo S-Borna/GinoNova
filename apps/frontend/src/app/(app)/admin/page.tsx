@@ -462,7 +462,7 @@ export default function AdminCommandCenter() {
     const fetchData = useCallback(async () => {
         try {
             const token = getToken()
-            
+
             if (!token) {
                 setError("Du måste vara inloggad för att se admin-panelen")
                 setLoading(false)
@@ -471,7 +471,7 @@ export default function AdminCommandCenter() {
 
             // Fetch users
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, {
-                headers: { 
+                headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
@@ -496,7 +496,7 @@ export default function AdminCommandCenter() {
             // Fetch stats
             try {
                 const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
-                    headers: { 
+                    headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json"
                     },
@@ -576,7 +576,7 @@ export default function AdminCommandCenter() {
     if (error) {
         return (
             <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6">
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center max-w-md"
@@ -584,17 +584,17 @@ export default function AdminCommandCenter() {
                     <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                     <h1 className="text-2xl font-bold text-white mb-2">Fel</h1>
                     <p className="text-zinc-400 mb-6">{error}</p>
-                    
+
                     <div className="space-y-3">
-                        <Button 
+                        <Button
                             onClick={() => { setError(null); setLoading(true); fetchData(); }}
                             className="w-full bg-purple-600 hover:bg-purple-500"
                         >
                             <RefreshCw className="w-4 h-4 mr-2" />
                             Försök igen
                         </Button>
-                        
-                        <Button 
+
+                        <Button
                             variant="outline"
                             onClick={() => router.push("/dashboard")}
                             className="w-full border-zinc-700"
@@ -602,7 +602,7 @@ export default function AdminCommandCenter() {
                             Tillbaka till Dashboard
                         </Button>
                     </div>
-                    
+
                     <p className="mt-6 text-xs text-zinc-600">
                         API: {API_BASE_URL}
                     </p>
