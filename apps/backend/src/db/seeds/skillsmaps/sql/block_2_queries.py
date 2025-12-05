@@ -9,10 +9,18 @@ NODE_05_SELECT_BASICS = {
     "estimated_minutes": 55,
     "xp_reward": 140,
     "prerequisites": [4],
-    "content": '''
-# SELECT Basics
+    "content": '''# 🔍 SELECT Basics
 
-Hämta data från databasen.
+## Varför detta är kritiskt
+> "SELECT är det vanligaste SQL-kommandot. Att kunna skriva effektiva queries är skillnaden mellan millisekunder och minuter."
+
+## Vad du kommer lära dig
+- ✅ SELECT med kolumner och alias
+- ✅ WHERE med operatorer och patterns
+- ✅ AND, OR, NOT logik
+- ✅ ORDER BY och LIMIT
+
+---
 
 ## Grundläggande SELECT
 
@@ -181,10 +189,18 @@ NODE_06_JOINS = {
     "estimated_minutes": 60,
     "xp_reward": 155,
     "prerequisites": [5],
-    "content": '''
-# SQL JOINs
+    "content": '''# 🔗 SQL JOINs
 
-Kombinera data från flera tabeller.
+## Varför detta är kritiskt
+> "Relationsdatabaser är designade för JOINs. Utan JOINs har du bara spreadsheets. Med JOINs har du kraftfull datarelation."
+
+## Vad du kommer lära dig
+- ✅ INNER JOIN - matchande rader
+- ✅ LEFT/RIGHT JOIN - inkludera alla från en sida
+- ✅ FULL OUTER JOIN - allt från båda
+- ✅ JOIN performance considerations
+
+---
 
 ## Setup Exempel
 
@@ -343,10 +359,18 @@ NODE_07_AGGREGATIONS = {
     "estimated_minutes": 55,
     "xp_reward": 150,
     "prerequisites": [6],
-    "content": '''
-# Aggregations & GROUP BY
+    "content": '''# 📊 Aggregations & GROUP BY
 
-Summera och gruppera data.
+## Varför detta är viktigt
+> "Aggregations ger dig insikter - hur många servrar per region? Genomsnittlig responstid? Max CPU-användning? Data blir information."
+
+## Vad du kommer lära dig
+- ✅ COUNT, SUM, AVG, MIN, MAX
+- ✅ GROUP BY för kategorisering
+- ✅ HAVING för filter på aggregat
+- ✅ STRING_AGG och ARRAY_AGG
+
+---
 
 ## Aggregate Functions
 
@@ -507,10 +531,18 @@ NODE_08_SUBQUERIES = {
     "estimated_minutes": 55,
     "xp_reward": 150,
     "prerequisites": [7],
-    "content": '''
-# Subqueries
+    "content": '''# 🎯 Subqueries
 
-Nästlade queries.
+## Varför detta är viktigt
+> "Subqueries låter dig bygga komplexa queries steg för steg. EXISTS för performance, CTEs för läsbarhet."
+
+## Vad du kommer lära dig
+- ✅ Scalar subqueries
+- ✅ IN och EXISTS
+- ✅ Correlated subqueries
+- ✅ CTEs (Common Table Expressions)
+
+---
 
 ## Scalar Subquery
 

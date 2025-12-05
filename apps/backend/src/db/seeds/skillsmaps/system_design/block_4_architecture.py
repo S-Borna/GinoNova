@@ -9,10 +9,18 @@ NODE_13_QUEUES = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [8],
-    "content": '''
-# Message Queues & Event Streaming
+    "content": '''# 📨 Message Queues & Event Streaming
 
-Asynkron kommunikation mellan services.
+## Varför detta är kritiskt
+> "Synkrona anrop = dominoeffekt av failures. En queue mellan services = resilience. Det är skillnaden mellan 'allt är nere' och 'vi processar i kö'."
+
+## Vad du kommer lära dig
+- ✅ Queue vs Pub/Sub patterns
+- ✅ Kafka, RabbitMQ, SQS jämförelse
+- ✅ Delivery guarantees (At-least-once, Exactly-once)
+- ✅ Idempotency och backpressure
+
+---
 
 ## Varför Message Queues?
 
@@ -238,10 +246,18 @@ NODE_14_MICROSERVICES = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [13],
-    "content": '''
-# Microservices Architecture
+    "content": '''# 🧩 Microservices Architecture
 
-Små, oberoende, deployable services.
+## Varför detta är kritiskt
+> "Monolither skalas inte i organisationer. Microservices låter team arbeta oberoende - men komplexiteten flyttas bara, den försvinner inte."
+
+## Vad du kommer lära dig
+- ✅ Monolith vs Microservices trade-offs
+- ✅ Service discovery
+- ✅ Circuit breaker pattern
+- ✅ Saga pattern för distribuerade transaktioner
+
+---
 
 ## Monolith vs Microservices
 
@@ -474,10 +490,18 @@ NODE_15_API_DESIGN = {
     "estimated_minutes": 55,
     "xp_reward": 150,
     "prerequisites": [8],
-    "content": '''
-# API Design
+    "content": '''# 🔌 API Design
 
-Designa bra APIs.
+## Varför detta är kritiskt
+> "Ett dåligt API är som en dålig kontrakt - det skapar konflikter i åratal. Designa rätt från början, dokumentera allt."
+
+## Vad du kommer lära dig
+- ✅ REST principles och best practices
+- ✅ HTTP status codes
+- ✅ Pagination och rate limiting
+- ✅ REST vs GraphQL vs gRPC
+
+---
 
 ## REST Principles
 
@@ -727,10 +751,18 @@ NODE_16_SECURITY = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [15],
-    "content": '''
-# Security Design
+    "content": '''# 🔒 Security Design
 
-Säkra ditt system.
+## Varför detta är kritiskt
+> "Säkerhet är inte en feature - det är en grundförutsättning. Ett intrång kan döda ett företag. Defense in depth är din enda strategi."
+
+## Vad du kommer lära dig
+- ✅ Defense in depth
+- ✅ Authentication (JWT, OAuth 2.0)
+- ✅ Authorization (RBAC, ABAC)
+- ✅ OWASP Top 10 och hur du undviker dem
+
+---
 
 ## Defense in Depth
 

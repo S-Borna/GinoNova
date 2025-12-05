@@ -44,22 +44,20 @@ NODE_01_CICD_FUNDAMENTALS = {
         "pipeline concepts", "build automation", "test automation",
         "deployment strategies", "feedback loops"
     ],
-    "content": r'''# CI/CD Fundamentals
+    "content": r'''# 🚀 CI/CD Fundamentals - Pipeline Grunder
 
-## Varfor CI/CD ar Kritiskt
-
+## Varför detta är kritiskt
 > "Without CI/CD, you're deploying with fear. With CI/CD, you're deploying with confidence."
 
-Forestall dig: Det ar fredag eftermiddag. En kritisk buggfix maste ut i produktion.
-Utan CI/CD: Manuell build, manuella tester, manuell deploy. Stress. Risk for fel.
-Med CI/CD: `git push` → Automatisk pipeline → Deploy pa minuter. Lugnt och sakert.
+Föreställ dig: Det är fredag eftermiddag. En kritisk buggfix måste ut i produktion.
+Utan CI/CD: Manuell build, manuella tester, manuell deploy. Stress. Risk för fel.
+Med CI/CD: `git push` → Automatisk pipeline → Deploy på minuter. Lugnt och säkert.
 
-## Vad du kommer lara dig
-
-- Skillnaden mellan CI, CD och CD (ja, det finns tva CD:n)
-- Pipeline-koncept och stages
-- Varfor automation ar nyckeln
-- Vanliga verktyg och deras anvandning
+## Vad du kommer lära dig
+- ✅ Skillnaden mellan CI, CD och CD (ja, det finns två CD:n)
+- ✅ Pipeline-koncept och stages
+- ✅ Varför automation är nyckeln
+- ✅ Vanliga verktyg och deras användning
 
 ---
 
@@ -270,17 +268,24 @@ NODE_02_GITHUB_ACTIONS_BASICS = {
         "workflows", "jobs", "steps", "runners",
         "triggers", "events", "yaml syntax", "first workflow"
     ],
-    "content": r'''# GitHub Actions Grunderna
+    "content": r'''# 🔄 GitHub Actions Grunderna
 
-## Varfor GitHub Actions?
+## Varför detta är viktigt
+> "GitHub Actions är det enklaste sättet att komma igång med CI/CD - det är redan där du har din kod."
 
-> "GitHub Actions ar det enklaste sattet att komma igang med CI/CD - det ar redan dar du har din kod."
+## Vad du kommer lära dig
+- ✅ Workflow-filer och YAML-syntax
+- ✅ Jobs, steps och runners
+- ✅ Triggers och events
+- ✅ Din första automatiska pipeline
 
-GitHub Actions ar:
+---
+
+GitHub Actions är:
 - Integrerat i GitHub (ingen extern setup)
-- Gratis for publika repos
-- 2000 gratis minuter/manad for privata repos
-- Enorm marketplace med fardiga actions
+- Gratis för publika repos
+- 2000 gratis minuter/månad för privata repos
+- Enorm marketplace med färdiga actions
 
 ---
 
@@ -567,14 +572,21 @@ NODE_03_GITHUB_ACTIONS_ENV_SECRETS = {
         "environment variables", "secrets", "contexts",
         "environment protection", "GITHUB_TOKEN", "encrypted secrets"
     ],
-    "content": r'''# GitHub Actions: Environment & Secrets
+    "content": r'''# 🔐 GitHub Actions: Environment & Secrets
 
-## Varfor Secrets?
+## Varför detta är kritiskt
+> "Never, EVER, commit credentials to git. GitHub Actions secrets är din vän."
 
-> "Never, EVER, commit credentials to git. GitHub Actions secrets ar din vän."
+## Vad du kommer lära dig
+- ✅ Environment variables på olika nivåer
+- ✅ Secrets - krypterad lagring
+- ✅ GITHUB_TOKEN och automatisk autentisering
+- ✅ Environment protection rules
 
-Credentials i kod = sarbarhetsrisk
-Secrets i GitHub = krypterat, savert, auditat
+---
+
+Credentials i kod = säkerhetsrisk
+Secrets i GitHub = krypterat, säkert, auditat
 
 ---
 
@@ -856,13 +868,21 @@ NODE_04_GITHUB_ACTIONS_BUILD_TEST = {
         "build workflows", "test automation", "matrix builds",
         "caching", "artifacts", "test reporting"
     ],
-    "content": r'''# GitHub Actions: Build & Test
+    "content": r'''# 🛠️ GitHub Actions: Build & Test
 
-## CI Pipeline i Praktiken
+## Varför detta är kritiskt
+> "En bra CI-pipeline är snabb, pålitlig och ger tydlig feedback."
 
-> "En bra CI-pipeline ar snabb, palitlig och ger tydlig feedback."
+## Vad du kommer lära dig
+- ✅ Build workflows för Node.js, Python, Docker
+- ✅ Automatisk testexekvering
+- ✅ Matrix builds för multi-version testing
+- ✅ Caching för snabbare builds
+- ✅ Artifacts och test reporting
 
-Build + Test ar hjartat av CI. Lat oss bygga en riktig pipeline.
+---
+
+Build + Test är hjärtat av CI. Låt oss bygga en riktig pipeline.
 
 ---
 
@@ -1223,13 +1243,21 @@ NODE_05_GITHUB_ACTIONS_DEPLOYMENT = {
         "deployment workflows", "environments", "cloud deploys",
         "Docker builds", "Kubernetes deploys", "rollback strategies"
     ],
-    "content": r'''# GitHub Actions: Deployment
+    "content": r'''# 🚀 GitHub Actions: Deployment
 
-## Deployment Automation
-
+## Varför detta är kritiskt
 > "The best deployment is the one you don't have to think about."
 
-Fran git push till live produktion - automatiskt.
+## Vad du kommer lära dig
+- ✅ Deployment workflows och environments
+- ✅ Cloud deploys (AWS, Azure, GCP)
+- ✅ Docker builds och registry push
+- ✅ Kubernetes deploys
+- ✅ Rollback strategies
+
+---
+
+Från git push till live produktion - automatiskt.
 
 ---
 
@@ -1577,13 +1605,20 @@ NODE_06_GITHUB_ACTIONS_REUSABLE = {
         "reusable workflows", "composite actions", "workflow_call",
         "inputs", "outputs", "organization workflows"
     ],
-    "content": r'''# GitHub Actions: Reusable Workflows
+    "content": r'''# ♻️ GitHub Actions: Reusable Workflows
 
-## DRY Principle i CI/CD
+## Varför detta är viktigt
+> "Copy-paste är teknisk skuld. Reusable workflows är investering."
 
-> "Copy-paste ar teknisk skuld. Reusable workflows ar investering."
+## Vad du kommer lära dig
+- ✅ Reusable workflows med workflow_call
+- ✅ Composite actions
+- ✅ Inputs och outputs
+- ✅ Organization-wide workflows
 
-Istallet for att kopiera samma workflow till 50 repos - skapa en gang, anvand overallt.
+---
+
+Istället för att kopiera samma workflow till 50 repos - skapa en gång, använd överallt.
 
 ---
 
@@ -1904,11 +1939,17 @@ NODE_07_GITHUB_ACTIONS_ADVANCED = {
         "concurrency", "dynamic matrices", "self-hosted runners",
         "workflow optimization", "debugging", "security hardening"
     ],
-    "content": r'''# GitHub Actions: Advanced Patterns
+    "content": r'''# ⚡ GitHub Actions: Advanced Patterns
 
-## Avancerade Tekniker
-
+## Varför detta är kritiskt
 > "Mastering GitHub Actions means knowing when to use its power - and when not to."
+
+## Vad du kommer lära dig
+- ✅ Concurrency control och cancel-in-progress
+- ✅ Dynamic matrices
+- ✅ Self-hosted runners
+- ✅ Workflow optimization och debugging
+- ✅ Security hardening
 
 ---
 
@@ -2245,10 +2286,18 @@ NODE_08_GITLAB_CI_BASICS = {
     "estimated_minutes": 60,
     "xp_reward": 150,
     "prerequisites": [1],
-    "content": '''
-# GitLab CI Grunderna
+    "content": '''# 🦊 GitLab CI Grunderna
 
-GitLab CI/CD är inbyggt i GitLab och kräver ingen extern setup.
+## Varför detta är viktigt
+> "GitLab CI/CD är inbyggt i GitLab och kräver ingen extern setup - allt du behöver för en komplett DevOps-plattform på ett ställe."
+
+## Vad du kommer lära dig
+- ✅ .gitlab-ci.yml grundläggande syntax
+- ✅ Stages, jobs och pipelines
+- ✅ Variables och caching
+- ✅ Artifacts och reports
+
+---
 
 ## .gitlab-ci.yml Struktur
 
@@ -2308,10 +2357,18 @@ NODE_09_GITLAB_CI_RUNNERS = {
     "estimated_minutes": 55,
     "xp_reward": 140,
     "prerequisites": [8],
-    "content": '''
-# GitLab CI Runners
+    "content": '''# 🏃 GitLab CI Runners
 
-Runners exekverar dina CI/CD jobs.
+## Varför detta är kritiskt
+> "Runners är arbetshästarna i GitLab CI - de exekverar dina pipelines. Egna runners ger dig kontroll, hastighet och säkerhet."
+
+## Vad du kommer lära dig
+- ✅ Shared vs specific runners
+- ✅ Runner registration och tags
+- ✅ Docker executor och caching
+- ✅ Self-hosted runners för säkerhet
+
+---
 
 ## Runner-typer
 
@@ -2368,8 +2425,18 @@ NODE_10_GITLAB_CI_ADVANCED = {
     "estimated_minutes": 65,
     "xp_reward": 160,
     "prerequisites": [9],
-    "content": '''
-# GitLab CI Advanced Features
+    "content": '''# ⚡ GitLab CI Advanced Features
+
+## Varför detta är viktigt
+> "Advanced GitLab CI features låter dig bygga komplexa pipelines som skalar med ditt team och projekt."
+
+## Vad du kommer lära dig
+- ✅ Parent-child pipelines
+- ✅ Multi-project pipelines
+- ✅ Dynamic pipelines med rules
+- ✅ Includes och extends
+
+---
 
 ## Parent-Child Pipelines
 
@@ -2446,8 +2513,18 @@ NODE_11_GITLAB_CI_SECURITY = {
     "estimated_minutes": 55,
     "xp_reward": 150,
     "prerequisites": [10],
-    "content": '''
-# GitLab CI Security Features
+    "content": '''# 🔒 GitLab CI Security Features
+
+## Varför detta är kritiskt
+> "CI/CD pipelines har tillgång till dina mest känsliga credentials. Säkerhet är inte optional."
+
+## Vad du kommer lära dig
+- ✅ Secret management och protected variables
+- ✅ Security scanning (SAST, DAST, dependencies)
+- ✅ Container scanning
+- ✅ Compliance och audit trails
+
+---
 
 ## Secret Management
 
@@ -2528,10 +2605,18 @@ NODE_12_JENKINS_FUNDAMENTALS = {
     "estimated_minutes": 60,
     "xp_reward": 150,
     "prerequisites": [1],
-    "content": '''
-# Jenkins Fundamentals
+    "content": '''# 🏗️ Jenkins Fundamentals
 
-Jenkins är den mest använda open-source CI/CD servern.
+## Varför detta är viktigt
+> "Jenkins är den mest använda open-source CI/CD servern - att kunna Jenkins är ett grundkrav för DevOps."
+
+## Vad du kommer lära dig
+- ✅ Jenkins installation och setup
+- ✅ Jobs, builds och workspace
+- ✅ Nodes/agents och plugins
+- ✅ Freestyle vs Pipeline jobs
+
+---
 
 ## Installation
 
@@ -2580,10 +2665,18 @@ NODE_13_JENKINSFILE_PIPELINE = {
     "estimated_minutes": 65,
     "xp_reward": 160,
     "prerequisites": [12],
-    "content": '''
-# Jenkinsfile Pipeline
+    "content": '''# 📜 Jenkinsfile Pipeline
 
-Pipeline as Code med Jenkinsfile.
+## Varför detta är kritiskt
+> "Pipeline as Code med Jenkinsfile - versionskontrollerade, repeterbara, granskningsbara pipelines."
+
+## Vad du kommer lära dig
+- ✅ Declarative vs Scripted pipeline
+- ✅ Stages, steps och environment
+- ✅ Post-actions och notifications
+- ✅ When-conditions och parallella stages
+
+---
 
 ## Declarative Pipeline
 
@@ -2669,10 +2762,18 @@ NODE_14_JENKINS_AGENTS = {
     "estimated_minutes": 55,
     "xp_reward": 140,
     "prerequisites": [13],
-    "content": '''
-# Jenkins Agents
+    "content": '''# 🤖 Jenkins Agents
 
-Distribuera builds över flera maskiner.
+## Varför detta är viktigt
+> "Agents låter dig skala Jenkins horisontellt - distribuera builds över flera maskiner för hastighet och isolation."
+
+## Vad du kommer lära dig
+- ✅ Agent labels och selektorer
+- ✅ Docker och Kubernetes agents
+- ✅ SSH och JNLP agents
+- ✅ Agent pools och load balancing
+
+---
 
 ## Agent-typer
 
@@ -2749,10 +2850,18 @@ NODE_15_JENKINS_SHARED_LIBS = {
     "estimated_minutes": 60,
     "xp_reward": 155,
     "prerequisites": [14],
-    "content": '''
-# Jenkins Shared Libraries
+    "content": '''# 📚 Jenkins Shared Libraries
 
-Återanvändbar pipeline-kod.
+## Varför detta är kritiskt
+> "DRY för CI/CD - shared libraries låter dig skriva pipeline-logik en gång och använda överallt."
+
+## Vad du kommer lära dig
+- ✅ Library struktur (vars, src, resources)
+- ✅ Global functions i vars/
+- ✅ Classes i src/
+- ✅ Library loading och versioning
+
+---
 
 ## Struktur
 
@@ -2851,10 +2960,18 @@ NODE_16_ARGOCD_FUNDAMENTALS = {
     "estimated_minutes": 60,
     "xp_reward": 155,
     "prerequisites": [1],
-    "content": '''
-# ArgoCD Fundamentals
+    "content": '''# 🐙 ArgoCD Fundamentals
 
-ArgoCD är en GitOps CD-tool för Kubernetes.
+## Varför detta är kritiskt
+> "ArgoCD är GitOps för Kubernetes - Git blir din source of truth för allt som körs i klustret."
+
+## Vad du kommer lära dig
+- ✅ ArgoCD installation och UI
+- ✅ Application CRD
+- ✅ Sync policies och strategies
+- ✅ Health checks och rollbacks
+
+---
 
 ## Installation
 
@@ -2914,10 +3031,18 @@ NODE_17_GITOPS_PRINCIPLES = {
     "estimated_minutes": 50,
     "xp_reward": 140,
     "prerequisites": [16],
-    "content": '''
-# GitOps Principer
+    "content": '''# 📖 GitOps Principer
 
-Git som single source of truth.
+## Varför detta är kritiskt
+> "GitOps är framtiden för Kubernetes - Git blir din single source of truth för all infrastruktur och applikationer."
+
+## Vad du kommer lära dig
+- ✅ GitOps kärnprinciper
+- ✅ Pull-baserad vs push-baserad deployment
+- ✅ Repo-strukturer och environments
+- ✅ App of Apps pattern
+
+---
 
 ## Kärnprinciper
 
@@ -2983,8 +3108,18 @@ NODE_18_CD_BEST_PRACTICES = {
     "estimated_minutes": 55,
     "xp_reward": 150,
     "prerequisites": [17],
-    "content": '''
-# CD Best Practices
+    "content": '''# 🎯 CD Best Practices
+
+## Varför detta är viktigt
+> "Rätt deployment strategy kan vara skillnaden mellan en sömlös release och ett totalt avbrott."
+
+## Vad du kommer lära dig
+- ✅ Rolling updates och konfiguration
+- ✅ Blue-green deployments
+- ✅ Canary releases med traffic splitting
+- ✅ Rollback strategies
+
+---
 
 ## Deployment Strategies
 
@@ -3055,8 +3190,18 @@ NODE_19_PIPELINE_SECURITY = {
     "estimated_minutes": 60,
     "xp_reward": 160,
     "prerequisites": [18],
-    "content": '''
-# Pipeline Security
+    "content": '''# 🔐 Pipeline Security
+
+## Varför detta är kritiskt
+> "CI/CD pipelines har tillgång till produktion, credentials, och source code - de är ett högt prioriterat mål för angripare."
+
+## Vad du kommer lära dig
+- ✅ Secret management med Vault/ESO
+- ✅ SAST och DAST i pipelines
+- ✅ Container och dependency scanning
+- ✅ Signed commits och attestations
+
+---
 
 ## Secret Management
 
@@ -3130,8 +3275,18 @@ NODE_20_CICD_AT_SCALE = {
     "estimated_minutes": 65,
     "xp_reward": 175,
     "prerequisites": [19],
-    "content": '''
-# CI/CD at Scale
+    "content": '''# 📈 CI/CD at Scale
+
+## Varför detta är kritiskt
+> "En CI/CD setup för 5 utvecklare fungerar inte för 500. At scale kräver monorepo-strategier, caching, och distribuerad exekvering."
+
+## Vad du kommer lära dig
+- ✅ Monorepo build strategies (Nx, Turborepo)
+- ✅ Self-hosted runners at scale
+- ✅ Caching och artifact management
+- ✅ Metrics och observability
+
+---
 
 ## Monorepo Strategies
 

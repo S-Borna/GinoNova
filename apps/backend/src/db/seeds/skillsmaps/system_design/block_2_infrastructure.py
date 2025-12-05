@@ -9,10 +9,18 @@ NODE_05_LOAD_BALANCING = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [2],
-    "content": '''
-# Load Balancing
+    "content": '''# ⚖️ Load Balancing
 
-Distribuera trafik över flera servrar.
+## Varför detta är kritiskt
+> "En server är en single point of failure. En load balancer är skillnaden mellan 'sajten är nere' och 'en server dog, ingen märkte'."
+
+## Vad du kommer lära dig
+- ✅ Load balancing algorithms (Round Robin, Least Connections)
+- ✅ Layer 4 vs Layer 7
+- ✅ Health checks
+- ✅ Session persistence strategier
+
+---
 
 ## Vad är Load Balancing?
 
@@ -231,10 +239,18 @@ NODE_06_CDN = {
     "estimated_minutes": 45,
     "xp_reward": 130,
     "prerequisites": [5],
-    "content": '''
-# Content Delivery Networks (CDN)
+    "content": '''# 🌍 Content Delivery Networks (CDN)
 
-Distribuera content geografiskt.
+## Varför detta är kritiskt
+> "300ms latency från Sydney till Stockholm dödar UX. En CDN-edge 5ms bort räddar den. Fysikens lagar gäller även för bytes."
+
+## Vad du kommer lära dig
+- ✅ Push vs Pull CDN
+- ✅ Cache headers och invalidering
+- ✅ Edge computing
+- ✅ CDN providers jämförelse
+
+---
 
 ## Vad är en CDN?
 
@@ -439,10 +455,18 @@ NODE_07_DNS = {
     "estimated_minutes": 45,
     "xp_reward": 130,
     "prerequisites": [1],
-    "content": '''
-# Domain Name System (DNS)
+    "content": '''# 📡 Domain Name System (DNS)
 
-Internets telefonbok.
+## Varför detta är kritiskt
+> "DNS är internets telefonbok - och ofta det första som går sönder. Förstår du inte DNS, förstår du inte varför 'det funkar inte'."
+
+## Vad du kommer lära dig
+- ✅ DNS resolution flow
+- ✅ Record types (A, CNAME, MX, TXT)
+- ✅ TTL strategier
+- ✅ DNS för high availability
+
+---
 
 ## DNS Resolution
 
@@ -644,10 +668,18 @@ NODE_08_PROXY = {
     "estimated_minutes": 50,
     "xp_reward": 145,
     "prerequisites": [5],
-    "content": '''
-# Reverse Proxy & API Gateway
+    "content": '''# 🚪 Reverse Proxy & API Gateway
 
-Frontdörr till dina services.
+## Varför detta är kritiskt
+> "Exponera aldrig dina backend-servrar direkt. En reverse proxy är din frontdörr - SSL, caching, rate limiting, allt på ett ställe."
+
+## Vad du kommer lära dig
+- ✅ Forward vs Reverse Proxy
+- ✅ SSL termination
+- ✅ API Gateway features
+- ✅ Service Mesh vs API Gateway
+
+---
 
 ## Forward vs Reverse Proxy
 
