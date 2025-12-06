@@ -35,7 +35,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { getToken } from "@/lib/auth";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Hardcode API URL to ensure it works
+const API_BASE_URL = "https://saas-project-production-31f8.up.railway.app";
 
 interface Module {
   slug: string;
