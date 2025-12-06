@@ -321,9 +321,10 @@ export function ContentBlockRenderer({
                                 options={shuffledOptions}
                                 explanation={block.explanation}
                                 xpBonus={block.xp_bonus}
-                                answered={quizAnswer !== null && quizAnswer !== undefined
-                                    ? shuffleIndexMap.indexOf(quizAnswer)
-                                    : quizAnswer}
+                                answered={quizAnswer ? {
+                                    selectedOption: shuffleIndexMap.indexOf(quizAnswer.selectedOption),
+                                    isCorrect: quizAnswer.isCorrect
+                                } : undefined}
                                 onAnswer={async (_, optionIndex) => {
                                     // Map back to original index when storing answer
                                     const originalIndex = shuffleIndexMap[optionIndex]
