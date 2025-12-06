@@ -26,6 +26,52 @@ from .block_3_storage import BLOCK_3_NODES
 from .block_4_devops import BLOCK_4_NODES
 from .block_5_security import BLOCK_5_NODES
 
+# Import V2 nodes
+from .block_1_v2 import AZURE_NODE_1_INTRO_V2
+from .block_1_node2_v2 import AZURE_NODE_2_V2
+from .block_1_node3_v2 import AZURE_NODE_3_V2
+from .block_1_node4_v2 import AZURE_NODE_4_V2
+from .block_2_node5_v2 import AZURE_NODE_5_V2
+from .block_2_node6_v2 import AZURE_NODE_6_V2
+from .block_2_node7_v2 import AZURE_NODE_7_V2
+from .block_2_node8_v2 import AZURE_NODE_8_V2
+from .block_3_node9_v2 import AZURE_NODE_9_V2
+from .block_3_node10_v2 import AZURE_NODE_10_SQL_V2
+from .block_3_node11_v2 import AZURE_NODE_11_COSMOS_V2
+from .block_3_node12_v2 import AZURE_NODE_12_REDIS_V2
+from .block_4_node13_v2 import AZURE_NODE_13_DEVOPS_V2
+from .block_4_node14_v2 import AZURE_NODE_14_ACR_V2
+from .block_4_node15_v2 import AZURE_NODE_15_BICEP_V2
+from .block_4_node16_v2 import AZURE_NODE_16_PIPELINES_V2
+from .block_5_node17_v2 import AZURE_NODE_17_ENTRA_V2
+from .block_5_node18_v2 import AZURE_NODE_18_KEYVAULT_V2
+from .block_5_node19_v2 import AZURE_NODE_19_DEFENDER_V2
+from .block_5_node20_v2 import AZURE_NODE_20_GOVERNANCE_V2
+
+# V2 nodes list
+ALL_AZURE_V2_NODES = [
+    AZURE_NODE_1_INTRO_V2,
+    AZURE_NODE_2_V2,
+    AZURE_NODE_3_V2,
+    AZURE_NODE_4_V2,
+    AZURE_NODE_5_V2,
+    AZURE_NODE_6_V2,
+    AZURE_NODE_7_V2,
+    AZURE_NODE_8_V2,
+    AZURE_NODE_9_V2,
+    AZURE_NODE_10_SQL_V2,
+    AZURE_NODE_11_COSMOS_V2,
+    AZURE_NODE_12_REDIS_V2,
+    AZURE_NODE_13_DEVOPS_V2,
+    AZURE_NODE_14_ACR_V2,
+    AZURE_NODE_15_BICEP_V2,
+    AZURE_NODE_16_PIPELINES_V2,
+    AZURE_NODE_17_ENTRA_V2,
+    AZURE_NODE_18_KEYVAULT_V2,
+    AZURE_NODE_19_DEFENDER_V2,
+    AZURE_NODE_20_GOVERNANCE_V2,
+]
+
 # SkillsMap metadata
 SKILLSMAP_METADATA: dict[str, Any] = {
     "slug": "azure-mastery",

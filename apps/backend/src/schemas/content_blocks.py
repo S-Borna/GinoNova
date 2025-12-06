@@ -208,10 +208,10 @@ class ChallengeBlock(BaseModel):
 
 # Union of all block types (updated with new V2 blocks)
 ContentBlock = Union[
-    TextBlock, 
-    CodeBlock, 
-    TerminalBlock, 
-    QuizBlock, 
+    TextBlock,
+    CodeBlock,
+    TerminalBlock,
+    QuizBlock,
     CheckpointBlock,
     FlashcardBlock,
     IntroBlock,

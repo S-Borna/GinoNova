@@ -17,7 +17,7 @@ AZURE_NODE_2_RESOURCES_V2 = {
     "difficulty": "beginner",
     "estimated_minutes": 30,
     "xp_reward": 100,
-    
+
     # Tidsfördelning per sektion (minuter)
     "estimated_time_per_section": {
         "intro": 2,

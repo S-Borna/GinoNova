@@ -4,7 +4,7 @@
  * ============================================================================
  * SIMULATED TERMINAL - Interactive terminal practice
  * ============================================================================
- * 
+ *
  * A simulated terminal that:
  * - Accepts predefined commands
  * - Shows expected output
@@ -15,9 +15,9 @@
 
 import { useState, useRef, useEffect } from "react"
 import { cn } from "@saas/ui"
-import { 
-    Terminal, 
-    CheckCircle2, 
+import {
+    Terminal,
+    CheckCircle2,
     XCircle,
     Lightbulb,
     RotateCcw,
@@ -75,7 +75,7 @@ export function SimulatedTerminal({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        
+
         if (!input.trim()) return
 
         const trimmedInput = input.trim()
@@ -87,8 +87,8 @@ export function SimulatedTerminal({
         // Check if command matches (case-insensitive, flexible whitespace)
         const normalizedInput = trimmedInput.replace(/\s+/g, ' ').toLowerCase()
         const normalizedExpected = expectedCommand.replace(/\s+/g, ' ').toLowerCase()
-        
-        const isCorrect = normalizedInput === normalizedExpected || 
+
+        const isCorrect = normalizedInput === normalizedExpected ||
             trimmedInput === expectedCommand ||
             // Allow minor variations
             normalizedInput.includes(normalizedExpected.split(' ').slice(0, 3).join(' '))
@@ -96,21 +96,21 @@ export function SimulatedTerminal({
         if (isCorrect) {
             // Show expected output
             if (currentExercise.expectedOutput) {
-                setHistory(prev => [...prev, { 
-                    type: "output", 
-                    content: currentExercise.expectedOutput 
+                setHistory(prev => [...prev, {
+                    type: "output",
+                    content: currentExercise.expectedOutput
                 }])
             }
-            
+
             // Mark step as completed
             const newCompleted = [...completed]
             newCompleted[currentStep] = true
             setCompleted(newCompleted)
 
             // Success message
-            setHistory(prev => [...prev, { 
-                type: "success", 
-                content: `✅ Korrekt! ${currentExercise.explanation}` 
+            setHistory(prev => [...prev, {
+                type: "success",
+                content: `✅ Korrekt! ${currentExercise.explanation}`
             }])
 
             // Move to next step after delay
@@ -120,18 +120,18 @@ export function SimulatedTerminal({
                     setShowHint(false)
                 } else {
                     // All done
-                    setHistory(prev => [...prev, { 
-                        type: "success", 
-                        content: "🎉 Alla övningar slutförda!" 
+                    setHistory(prev => [...prev, {
+                        type: "success",
+                        content: "🎉 Alla övningar slutförda!"
                     }])
                     onComplete?.()
                 }
             }, 1500)
         } else {
             // Wrong command
-            setHistory(prev => [...prev, { 
-                type: "error", 
-                content: `❌ Inte riktigt. Försök igen eller visa ledtråd.` 
+            setHistory(prev => [...prev, {
+                type: "error",
+                content: `❌ Inte riktigt. Försök igen eller visa ledtråd.`
             }])
         }
 
@@ -150,9 +150,9 @@ export function SimulatedTerminal({
         setShowHint(true)
         // Show first few characters of command
         const hint = currentExercise.command.substring(0, Math.min(20, currentExercise.command.length))
-        setHistory(prev => [...prev, { 
-            type: "output", 
-            content: `💡 Ledtråd: Kommandot börjar med "${hint}..."` 
+        setHistory(prev => [...prev, {
+            type: "output",
+            content: `💡 Ledtråd: Kommandot börjar med "${hint}..."`
         }])
     }
 
@@ -192,8 +192,8 @@ export function SimulatedTerminal({
                         className={cn(
                             "h-2 flex-1 rounded-full transition-colors",
                             completed[index] ? "bg-emerald-500" :
-                            index === currentStep ? "bg-purple-500" :
-                            "bg-zinc-700"
+                                index === currentStep ? "bg-purple-500" :
+                                    "bg-zinc-700"
                         )}
                     />
                 ))}
@@ -229,12 +229,12 @@ export function SimulatedTerminal({
                 </div>
 
                 {/* Terminal content */}
-                <div 
+                <div
                     ref={terminalRef}
                     className="p-4 h-64 overflow-y-auto"
                 >
                     {history.map((line, index) => (
-                        <div 
+                        <div
                             key={index}
                             className={cn(
                                 "mb-1 whitespace-pre-wrap",

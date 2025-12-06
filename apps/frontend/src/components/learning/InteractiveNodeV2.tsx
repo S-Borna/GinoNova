@@ -4,24 +4,24 @@
  * ============================================================================
  * INTERACTIVE NODE V2 - Full node rendering with all 5 sections
  * ============================================================================
- * 
+ *
  * Renders a complete learning node with:
  * 1. Intro - Learning objectives
  * 2. Concepts - Structured explanations
  * 3. Practice - Simulated terminal
  * 4. Quiz - Flashcards + multiple choice
  * 5. Challenge - Practical application
- * 
+ *
  * Progress is tracked per section with XP distributed across activities.
  */
 
 import { useState, useCallback } from "react"
 import { cn } from "@saas/ui"
-import { 
-    Target, 
-    BookOpen, 
-    Terminal, 
-    HelpCircle, 
+import {
+    Target,
+    BookOpen,
+    Terminal,
+    HelpCircle,
     Trophy,
     CheckCircle2,
     ChevronRight,
@@ -275,7 +275,7 @@ export function InteractiveNodeV2({ data, onComplete }: InteractiveNodeProps) {
 
                 {/* Progress Bar */}
                 <div className="mt-3 h-1.5 bg-zinc-700 rounded-full overflow-hidden">
-                    <div 
+                    <div
                         className="h-full bg-gradient-to-r from-purple-500 to-emerald-500 transition-all duration-500"
                         style={{ width: `${totalProgress}%` }}
                     />

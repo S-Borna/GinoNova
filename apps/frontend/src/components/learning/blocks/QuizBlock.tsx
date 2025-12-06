@@ -4,7 +4,7 @@
  * ============================================================================
  * QUIZ BLOCK - Flashcards + Multiple Choice Questions
  * ============================================================================
- * 
+ *
  * Features:
  * - Flashcard deck with flip animation
  * - Multiple choice questions
@@ -14,9 +14,9 @@
 
 import { useState, useMemo } from "react"
 import { cn } from "@saas/ui"
-import { 
+import {
     HelpCircle,
-    CheckCircle2, 
+    CheckCircle2,
     XCircle,
     RotateCcw,
     ChevronLeft,
@@ -104,14 +104,14 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
 
             {/* Progress bar */}
             <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
-                <div 
+                <div
                     className="h-full bg-amber-500 transition-all duration-300"
                     style={{ width: `${progress}%` }}
                 />
             </div>
 
             {/* Card */}
-            <div 
+            <div
                 onClick={() => setIsFlipped(!isFlipped)}
                 className={cn(
                     "relative h-48 cursor-pointer perspective-1000",
@@ -125,7 +125,7 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
                 }}
             >
                 {/* Front */}
-                <div 
+                <div
                     className={cn(
                         "absolute inset-0 backface-hidden",
                         "bg-gradient-to-br from-amber-900/30 to-amber-800/20",
@@ -147,7 +147,7 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
                 </div>
 
                 {/* Back */}
-                <div 
+                <div
                     className={cn(
                         "absolute inset-0 backface-hidden",
                         "bg-gradient-to-br from-emerald-900/30 to-emerald-800/20",
@@ -155,7 +155,7 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
                         "flex items-center justify-center p-6",
                         "text-center"
                     )}
-                    style={{ 
+                    style={{
                         backfaceVisibility: "hidden",
                         transform: "rotateY(180deg)"
                     }}
@@ -180,7 +180,7 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
                     <ChevronLeft className="w-4 h-4 mr-1" />
                     Föregående
                 </Button>
-                
+
                 <span className="text-sm text-zinc-400">
                     {currentIndex + 1} / {shuffledCards.length}
                 </span>
@@ -225,11 +225,11 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
    MULTIPLE CHOICE COMPONENT
    ============================================================================ */
 
-function MultipleChoice({ 
-    questions, 
+function MultipleChoice({
+    questions,
     passingScore = 80,
-    onComplete 
-}: { 
+    onComplete
+}: {
     questions: MultipleChoiceQuestion[]
     passingScore: number
     onComplete?: (passed: boolean, score: number) => void
@@ -252,7 +252,7 @@ function MultipleChoice({
 
     const handleSubmit = () => {
         if (selectedOption === null) return
-        
+
         const isCorrect = selectedOption === currentQuestion.correctAnswer
         setAnswers([...answers, { selected: selectedOption, correct: isCorrect }])
         setShowResult(true)
@@ -281,7 +281,7 @@ function MultipleChoice({
         return (
             <div className={cn(
                 "rounded-xl p-8 text-center",
-                passed 
+                passed
                     ? "bg-emerald-900/20 border border-emerald-500/30"
                     : "bg-red-900/20 border border-red-500/30"
             )}>
@@ -296,17 +296,17 @@ function MultipleChoice({
                         <XCircle className="w-10 h-10 text-red-400" />
                     )}
                 </div>
-                
+
                 <h4 className="text-2xl font-bold text-white mb-2">
                     {passed ? "Bra jobbat!" : "Försök igen"}
                 </h4>
-                
+
                 <p className="text-3xl font-bold mb-2">
                     <span className={passed ? "text-emerald-400" : "text-red-400"}>
                         {scorePercent}%
                     </span>
                 </p>
-                
+
                 <p className="text-zinc-400 mb-6">
                     {score} av {questions.length} rätt
                     {!passed && ` (${passingScore}% krävs för att klara)`}
@@ -333,7 +333,7 @@ function MultipleChoice({
                     {score} rätt hittills
                 </span>
             </div>
-            
+
             <div className="flex gap-1">
                 {questions.map((_, index) => (
                     <div
@@ -367,9 +367,9 @@ function MultipleChoice({
                     {currentQuestion.options.map((option, index) => {
                         const isSelected = selectedOption === index
                         const isCorrect = index === currentQuestion.correctAnswer
-                        
+
                         let optionStyle = "bg-zinc-700/50 border-zinc-600 hover:border-purple-500"
-                        
+
                         if (showResult) {
                             if (isCorrect) {
                                 optionStyle = "bg-emerald-900/30 border-emerald-500"
@@ -514,7 +514,7 @@ export function QuizBlock({
             {activeTab === "flashcards" && flashcards && flashcards.length > 0 ? (
                 <FlashcardDeck cards={flashcards} />
             ) : (
-                <MultipleChoice 
+                <MultipleChoice
                     questions={questions}
                     passingScore={passingScore}
                     onComplete={onComplete}

@@ -4,7 +4,7 @@
  * ============================================================================
  * CONCEPT BLOCK - Structured concept explanation
  * ============================================================================
- * 
+ *
  * Displays a single concept with:
  * - Title
  * - Explanation (markdown)
@@ -17,8 +17,8 @@ import { useState } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { cn } from "@saas/ui"
-import { 
-    Lightbulb, 
+import {
+    Lightbulb,
     AlertTriangle,
     ChevronDown,
     ChevronRight,
