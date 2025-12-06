@@ -63,7 +63,7 @@ import { useState } from 'react';
 function Counter() {
   // useState returnerar [värde, setterFunktion]
   const [count, setCount] = useState(0);  // 0 är initial value
-  
+
   return (
     <div>
       <p>Count: {count}</p>
@@ -82,20 +82,20 @@ När ny state beror på föregående state, använd functional update:
 ```tsx
 function Counter() {
   const [count, setCount] = useState(0);
-  
+
   // ❌ Problem: Om du klickar snabbt kanske inte alla klick räknas
   const incrementBad = () => setCount(count + 1);
-  
+
   // ✅ Lösning: Functional update garanterar senaste värde
   const incrementGood = () => setCount(prev => prev + 1);
-  
+
   // Användbart för batch-operationer
   const addThree = () => {
     setCount(prev => prev + 1);
     setCount(prev => prev + 1);
     setCount(prev => prev + 1);
   };
-  
+
   return (
     <button onClick={addThree}>Add 3 (count: {count})</button>
   );
@@ -123,17 +123,17 @@ function UserSettings() {
       notifications: true
     }
   });
-  
+
   // ❌ FEL: Mutera aldrig state direkt
   const badUpdate = () => {
     user.name = 'New Name';  // Detta triggar INTE re-render!
   };
-  
+
   // ✅ RÄTT: Skapa nytt objekt med spread
   const updateName = (name: string) => {
     setUser({ ...user, name });
   };
-  
+
   // Uppdatera nested property
   const toggleNotifications = () => {
     setUser({
@@ -144,7 +144,7 @@ function UserSettings() {
       }
     });
   };
-  
+
   return (
     <form>
       <input
@@ -175,7 +175,7 @@ interface Task {
 
 function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  
+
   // ADD - Lägg till i slutet
   const addTask = (title: string) => {
     const newTask: Task = {
@@ -185,12 +185,12 @@ function TaskList() {
     };
     setTasks([...tasks, newTask]);  // Spread + new item
   };
-  
+
   // REMOVE - Filtrera bort
   const removeTask = (id: string) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
-  
+
   // UPDATE - Map och uppdatera specifik
   const toggleTask = (id: string) => {
     setTasks(tasks.map(task =>
@@ -199,14 +199,14 @@ function TaskList() {
         : task
     ));
   };
-  
+
   // REORDER - Sortera
   const sortByCompleted = () => {
-    setTasks([...tasks].sort((a, b) => 
+    setTasks([...tasks].sort((a, b) =>
       Number(a.completed) - Number(b.completed)
     ));
   };
-  
+
   return (
     <ul>
       {tasks.map(task => (
@@ -237,7 +237,7 @@ function Form() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [age, setAge] = useState(0);
-  
+
   // Fördel: Enkelt att uppdatera individuellt
   // Nackdel: Många useState-calls
 }
@@ -249,11 +249,11 @@ function Form() {
     email: '',
     age: 0
   });
-  
+
   const updateField = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
-  
+
   // Fördel: All relaterad data tillsammans
   // Nackdel: Måste alltid spread'a
 }
@@ -283,12 +283,12 @@ const [items, setItems] = useState(() => {
 ```tsx
 function Counter() {
   const [count, setCount] = useState(0);
-  
+
   const handleClick = () => {
     setCount(count + 1);
     console.log(count);  // Fortfarande 0! State uppdateras inte synkront
   };
-  
+
   // State är nytt nästa render, inte direkt efter setCount
 }
 ```
@@ -298,16 +298,16 @@ function Counter() {
 ```tsx
 function Timer() {
   const [count, setCount] = useState(0);
-  
+
   useEffect(() => {
     const id = setInterval(() => {
       // ❌ count är alltid 0 (stale closure)
       setCount(count + 1);
     }, 1000);
-    
+
     return () => clearInterval(id);
   }, []);  // Tom dependency array = count fångas vid mount
-  
+
   // ✅ Lösning: Functional update
   useEffect(() => {
     const id = setInterval(() => {
@@ -337,7 +337,7 @@ interface CartItem extends Product {
 
 function ShoppingCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
-  
+
   const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
@@ -351,11 +351,11 @@ function ShoppingCart() {
       return [...prev, { ...product, quantity: 1 }];
     });
   };
-  
+
   const removeFromCart = (productId: string) => {
     setCart(prev => prev.filter(item => item.id !== productId));
   };
-  
+
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
@@ -367,12 +367,12 @@ function ShoppingCart() {
       )
     );
   };
-  
+
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  
+
   return (
     <div>
       <h2>Shopping Cart</h2>
@@ -473,7 +473,7 @@ function Component() {
   useEffect(() => {
     // Din side effect-kod här
     console.log('Effect körs');
-    
+
     // Cleanup function (valfri)
     return () => {
       console.log('Cleanup körs');
@@ -520,25 +520,25 @@ function UserProfile({ userId }: { userId: string }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     // Reset state när userId ändras
     setLoading(true);
     setError(null);
-    
+
     // AbortController för att kunna avbryta fetch
     const controller = new AbortController();
-    
+
     async function fetchUser() {
       try {
         const response = await fetch(`/api/users/${userId}`, {
           signal: controller.signal
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch user');
         }
-        
+
         const data = await response.json();
         setUser(data);
       } catch (err) {
@@ -549,17 +549,17 @@ function UserProfile({ userId }: { userId: string }) {
         setLoading(false);
       }
     }
-    
+
     fetchUser();
-    
+
     // Cleanup: Avbryt pågående request om userId ändras
     return () => controller.abort();
   }, [userId]);
-  
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>User not found</div>;
-  
+
   return (
     <div>
       <h1>{user.name}</h1>
@@ -577,7 +577,7 @@ function WindowSize() {
     width: window.innerWidth,
     height: window.innerHeight
   });
-  
+
   useEffect(() => {
     function handleResize() {
       setSize({
@@ -585,16 +585,16 @@ function WindowSize() {
         height: window.innerHeight
       });
     }
-    
+
     // Lägg till listener
     window.addEventListener('resize', handleResize);
-    
+
     // CLEANUP: Ta bort listener vid unmount
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);  // Tom array = körs bara vid mount/unmount
-  
+
   return <p>Window: {size.width} x {size.height}</p>;
 }
 ```
@@ -604,24 +604,24 @@ function WindowSize() {
 ```tsx
 function LiveStatus({ serverId }: { serverId: string }) {
   const [status, setStatus] = useState<'online' | 'offline'>('offline');
-  
+
   useEffect(() => {
     // Skapa WebSocket-anslutning
     const ws = new WebSocket(`wss://api.example.com/status/${serverId}`);
-    
+
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setStatus(data.status);
     };
-    
+
     ws.onerror = () => setStatus('offline');
-    
+
     // CLEANUP: Stäng anslutning
     return () => {
       ws.close();
     };
   }, [serverId]);
-  
+
   return (
     <span className={status === 'online' ? 'green' : 'red'}>
       Server: {status}
@@ -642,11 +642,11 @@ function useLocalStorage<T>(key: string, initialValue: T) {
     const saved = localStorage.getItem(key);
     return saved ? JSON.parse(saved) : initialValue;
   });
-  
+
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
-  
+
   return [value, setValue] as const;
 }
 
@@ -664,7 +664,7 @@ function useDocumentTitle(title: string) {
   useEffect(() => {
     const previousTitle = document.title;
     document.title = title;
-    
+
     return () => {
       document.title = previousTitle;
     };
@@ -688,7 +688,7 @@ function ProfilePage({ user }: { user: User }) {
 // ❌ INFINITE LOOP!
 function Bad() {
   const [data, setData] = useState([]);
-  
+
   useEffect(() => {
     fetch('/api/data')
       .then(res => res.json())
@@ -699,7 +699,7 @@ function Bad() {
 // ✅ RÄTT
 function Good() {
   const [data, setData] = useState([]);
-  
+
   useEffect(() => {
     fetch('/api/data')
       .then(res => res.json())
@@ -737,7 +737,7 @@ useEffect(() => {
   const id = setInterval(() => {
     setCount(c => c + 1);
   }, 1000);
-  
+
   return () => clearInterval(id);
 }, []);
 ```
@@ -751,15 +751,15 @@ Bygg en real-time search med debouncing:
 ```tsx
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
-    
+
     return () => clearTimeout(timer);
   }, [value, delay]);
-  
+
   return debouncedValue;
 }
 
@@ -767,19 +767,19 @@ function Search() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  
+
   // Debounce search query med 300ms delay
   const debouncedQuery = useDebounce(query, 300);
-  
+
   useEffect(() => {
     if (!debouncedQuery) {
       setResults([]);
       return;
     }
-    
+
     const controller = new AbortController();
     setLoading(true);
-    
+
     fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`, {
       signal: controller.signal
     })
@@ -787,10 +787,10 @@ function Search() {
       .then(setResults)
       .catch(() => {})
       .finally(() => setLoading(false));
-    
+
     return () => controller.abort();
   }, [debouncedQuery]);
-  
+
   return (
     <div>
       <input
@@ -878,12 +878,12 @@ Formulär finns överallt - login, registrering, checkout, settings. Att hantera
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Login:', { email, password });
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -910,7 +910,7 @@ function LoginForm() {
 function LoginFormUncontrolled() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Login:', {
@@ -918,7 +918,7 @@ function LoginFormUncontrolled() {
       password: passwordRef.current?.value
     });
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -962,26 +962,26 @@ function RegistrationForm() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    
+
     if (!formData.email.includes('@')) {
       newErrors.email = 'Valid email is required';
     }
-    
+
     if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleChange = (field: keyof FormData) => (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -991,12 +991,12 @@ function RegistrationForm() {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
-    
+
     setIsSubmitting(true);
     try {
       await registerUser(formData);
@@ -1007,7 +1007,7 @@ function RegistrationForm() {
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -1018,7 +1018,7 @@ function RegistrationForm() {
         />
         {errors.name && <span className="error">{errors.name}</span>}
       </div>
-      
+
       <div>
         <input
           type="email"
@@ -1028,7 +1028,7 @@ function RegistrationForm() {
         />
         {errors.email && <span className="error">{errors.email}</span>}
       </div>
-      
+
       <div>
         <input
           type="password"
@@ -1038,7 +1038,7 @@ function RegistrationForm() {
         />
         {errors.password && <span className="error">{errors.password}</span>}
       </div>
-      
+
       <button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Registering...' : 'Register'}
       </button>
@@ -1073,28 +1073,28 @@ function RegistrationForm() {
   } = useForm<FormData>({
     resolver: zodResolver(schema)
   });
-  
+
   const onSubmit = async (data: FormData) => {
     await registerUser(data);
   };
-  
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <input {...register('name')} placeholder="Name" />
         {errors.name && <span>{errors.name.message}</span>}
       </div>
-      
+
       <div>
         <input {...register('email')} type="email" placeholder="Email" />
         {errors.email && <span>{errors.email.message}</span>}
       </div>
-      
+
       <div>
         <input {...register('password')} type="password" placeholder="Password" />
         {errors.password && <span>{errors.password.message}</span>}
       </div>
-      
+
       <button type="submit" disabled={isSubmitting}>
         Register
       </button>
@@ -1129,8 +1129,8 @@ const handleSubmit = (e: React.FormEvent) => {
 <input type="checkbox" value={isChecked} />
 
 // ✅ RÄTT - checked för boolean inputs
-<input 
-  type="checkbox" 
+<input
+  type="checkbox"
   checked={isChecked}
   onChange={(e) => setIsChecked(e.target.checked)}
 />
@@ -1155,7 +1155,7 @@ const contactSchema = z.object({
 type ContactForm = z.infer<typeof contactSchema>;
 
 function ContactPage() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = 
+  const { register, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<ContactForm>({
       resolver: zodResolver(contactSchema),
       defaultValues: {
@@ -1164,7 +1164,7 @@ function ContactPage() {
         subscribe: false,
       }
     });
-  
+
   const onSubmit = async (data: ContactForm) => {
     await fetch('/api/contact', {
       method: 'POST',
@@ -1172,28 +1172,28 @@ function ContactPage() {
     });
     alert('Message sent!');
   };
-  
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input {...register('name')} error={errors.name?.message} label="Name" />
       <Input {...register('email')} error={errors.email?.message} label="Email" type="email" />
-      
+
       <Select {...register('subject')} label="Subject">
         <option value="support">Support</option>
         <option value="sales">Sales</option>
         <option value="general">General</option>
       </Select>
-      
+
       <Textarea {...register('message')} error={errors.message?.message} label="Message" />
-      
+
       <RadioGroup {...register('priority')} label="Priority">
         <Radio value="low">Low</Radio>
         <Radio value="medium">Medium</Radio>
         <Radio value="high">High</Radio>
       </RadioGroup>
-      
+
       <Checkbox {...register('subscribe')} label="Subscribe to newsletter" />
-      
+
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Sending...' : 'Send Message'}
       </Button>
@@ -1260,18 +1260,18 @@ En custom hook är en funktion som:
 // Custom hook
 function useCounter(initialValue = 0) {
   const [count, setCount] = useState(initialValue);
-  
+
   const increment = () => setCount(c => c + 1);
   const decrement = () => setCount(c => c - 1);
   const reset = () => setCount(initialValue);
-  
+
   return { count, increment, decrement, reset };
 }
 
 // Användning
 function Counter() {
   const { count, increment, decrement, reset } = useCounter(10);
-  
+
   return (
     <div>
       <p>{count}</p>
@@ -1295,11 +1295,11 @@ function useLocalStorage<T>(key: string, initialValue: T) {
       return initialValue;
     }
   });
-  
+
   const setValue = (value: T | ((val: T) => T)) => {
     try {
-      const valueToStore = value instanceof Function 
-        ? value(storedValue) 
+      const valueToStore = value instanceof Function
+        ? value(storedValue)
         : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
@@ -1307,7 +1307,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
       console.error('Error saving to localStorage:', error);
     }
   };
-  
+
   return [storedValue, setValue] as const;
 }
 
@@ -1315,7 +1315,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 function Settings() {
   const [theme, setTheme] = useLocalStorage('theme', 'light');
   const [language, setLanguage] = useLocalStorage('language', 'en');
-  
+
   return (
     <div>
       <select value={theme} onChange={e => setTheme(e.target.value)}>
@@ -1341,11 +1341,11 @@ function useFetch<T>(url: string): UseFetchResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Fetch failed');
@@ -1357,21 +1357,21 @@ function useFetch<T>(url: string): UseFetchResult<T> {
       setLoading(false);
     }
   }, [url]);
-  
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  
+
   return { data, loading, error, refetch: fetchData };
 }
 
 // Användning
 function UserList() {
   const { data: users, loading, error, refetch } = useFetch<User[]>('/api/users');
-  
+
   if (loading) return <Spinner />;
   if (error) return <Error message={error.message} onRetry={refetch} />;
-  
+
   return (
     <ul>
       {users?.map(user => <li key={user.id}>{user.name}</li>)}
@@ -1385,12 +1385,12 @@ function UserList() {
 ```tsx
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedValue(value), delay);
     return () => clearTimeout(timer);
   }, [value, delay]);
-  
+
   return debouncedValue;
 }
 
@@ -1398,11 +1398,11 @@ function useDebounce<T>(value: T, delay: number): T {
 function SearchBox() {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 300);
-  
+
   const { data: results } = useFetch<Result[]>(
     `/api/search?q=${debouncedQuery}`
   );
-  
+
   return (
     <div>
       <input value={query} onChange={e => setQuery(e.target.value)} />
@@ -1417,24 +1417,24 @@ function SearchBox() {
 ```tsx
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
-  
+
   useEffect(() => {
     const media = window.matchMedia(query);
     setMatches(media.matches);
-    
+
     const listener = (e: MediaQueryListEvent) => setMatches(e.matches);
     media.addEventListener('change', listener);
-    
+
     return () => media.removeEventListener('change', listener);
   }, [query]);
-  
+
   return matches;
 }
 
 // Användning
 function ResponsiveNav() {
   const isMobile = useMediaQuery('(max-width: 768px)');
-  
+
   return isMobile ? <MobileMenu /> : <DesktopNav />;
 }
 ```
@@ -1453,10 +1453,10 @@ function useOnClickOutside(
       }
       handler();
     };
-    
+
     document.addEventListener('mousedown', listener);
     document.addEventListener('touchstart', listener);
-    
+
     return () => {
       document.removeEventListener('mousedown', listener);
       document.removeEventListener('touchstart', listener);
@@ -1468,9 +1468,9 @@ function useOnClickOutside(
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useOnClickOutside(ref, () => setIsOpen(false));
-  
+
   return (
     <div ref={ref}>
       <button onClick={() => setIsOpen(true)}>Open</button>
@@ -1525,32 +1525,32 @@ Bygg ett useToggle hook-bibliotek:
 // hooks/useToggle.ts
 function useToggle(initialValue = false) {
   const [value, setValue] = useState(initialValue);
-  
+
   const toggle = useCallback(() => setValue(v => !v), []);
   const setTrue = useCallback(() => setValue(true), []);
   const setFalse = useCallback(() => setValue(false), []);
-  
+
   return { value, toggle, setTrue, setFalse };
 }
 
 // hooks/useBoolean.ts (utökad version)
 function useBoolean(initialValue = false) {
   const [value, setValue] = useState(initialValue);
-  
+
   const callbacks = useMemo(() => ({
     toggle: () => setValue(v => !v),
     on: () => setValue(true),
     off: () => setValue(false),
     set: setValue,
   }), []);
-  
+
   return [value, callbacks] as const;
 }
 
 // Användning
 function Modal() {
   const [isOpen, { on: open, off: close }] = useBoolean(false);
-  
+
   return (
     <>
       <button onClick={open}>Open Modal</button>

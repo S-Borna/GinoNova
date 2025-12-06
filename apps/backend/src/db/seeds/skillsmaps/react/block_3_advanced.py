@@ -52,11 +52,11 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 // 2. Create Provider component
 function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  
+
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
-  
+
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
@@ -76,7 +76,7 @@ function useTheme() {
 // 4. Use in components
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  
+
   return (
     <button onClick={toggleTheme}>
       Current: {theme} (Click to toggle)
@@ -118,22 +118,22 @@ const AuthContext = createContext<AuthContextType | null>(null);
 function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Check session on mount
   useEffect(() => {
     checkAuth().then(setUser).finally(() => setIsLoading(false));
   }, []);
-  
+
   const login = async (email: string, password: string) => {
     const user = await loginAPI(email, password);
     setUser(user);
   };
-  
+
   const logout = () => {
     logoutAPI();
     setUser(null);
   };
-  
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -158,10 +158,10 @@ function useAuth() {
 // Protected Route component
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   if (isLoading) return <LoadingSpinner />;
   if (!isAuthenticated) return <Navigate to="/login" />;
-  
+
   return <>{children}</>;
 }
 ```
@@ -206,7 +206,7 @@ function App() {
 function BadProvider({ children }) {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState('light');
-  
+
   // Nytt objekt varje render = alla consumers re-renderas
   return (
     <AppContext.Provider value={{ user, setUser, theme, setTheme }}>
@@ -219,12 +219,12 @@ function BadProvider({ children }) {
 function GoodProvider({ children }) {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState('light');
-  
+
   const value = useMemo(
     () => ({ user, setUser, theme, setTheme }),
     [user, theme]
   );
-  
+
   return (
     <AppContext.Provider value={value}>
       {children}
@@ -303,7 +303,7 @@ interface State {
   step: number;
 }
 
-type Action = 
+type Action =
   | { type: 'increment' }
   | { type: 'decrement' }
   | { type: 'reset' }
@@ -331,7 +331,7 @@ function Counter() {
     count: 0,
     step: 1
   });
-  
+
   return (
     <div>
       <p>Count: {state.count}</p>
@@ -341,9 +341,9 @@ function Counter() {
       <input
         type="number"
         value={state.step}
-        onChange={(e) => dispatch({ 
-          type: 'setStep', 
-          payload: Number(e.target.value) 
+        onChange={(e) => dispatch({
+          type: 'setStep',
+          payload: Number(e.target.value)
         })}
       />
     </div>
@@ -382,7 +382,7 @@ function todoReducer(state: TodoState, action: TodoAction): TodoState {
           { id: crypto.randomUUID(), text: action.payload, completed: false }
         ]
       };
-    
+
     case 'TOGGLE_TODO':
       return {
         ...state,
@@ -392,22 +392,22 @@ function todoReducer(state: TodoState, action: TodoAction): TodoState {
             : todo
         )
       };
-    
+
     case 'DELETE_TODO':
       return {
         ...state,
         todos: state.todos.filter(todo => todo.id !== action.payload)
       };
-    
+
     case 'SET_FILTER':
       return { ...state, filter: action.payload };
-    
+
     case 'CLEAR_COMPLETED':
       return {
         ...state,
         todos: state.todos.filter(todo => !todo.completed)
       };
-    
+
     default:
       return state;
   }
@@ -418,28 +418,28 @@ function TodoApp() {
     todos: [],
     filter: 'all'
   });
-  
+
   const filteredTodos = state.todos.filter(todo => {
     if (state.filter === 'active') return !todo.completed;
     if (state.filter === 'completed') return todo.completed;
     return true;
   });
-  
+
   return (
     <div>
       <AddTodoForm onAdd={(text) => dispatch({ type: 'ADD_TODO', payload: text })} />
-      
+
       <FilterButtons
         current={state.filter}
         onChange={(filter) => dispatch({ type: 'SET_FILTER', payload: filter })}
       />
-      
+
       <TodoList
         todos={filteredTodos}
         onToggle={(id) => dispatch({ type: 'TOGGLE_TODO', payload: id })}
         onDelete={(id) => dispatch({ type: 'DELETE_TODO', payload: id })}
       />
-      
+
       <button onClick={() => dispatch({ type: 'CLEAR_COMPLETED' })}>
         Clear completed
       </button>
@@ -461,7 +461,7 @@ const TodoContext = createContext<{
 
 function TodoProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(todoReducer, initialState);
-  
+
   return (
     <TodoContext.Provider value={{ state, dispatch }}>
       {children}
@@ -565,18 +565,18 @@ Cacha dyra beräkningar:
 ```tsx
 function Dashboard({ users, filter }: { users: User[]; filter: string }) {
   // ❌ Beräknas varje render
-  const filteredUsers = users.filter(u => 
+  const filteredUsers = users.filter(u =>
     u.name.toLowerCase().includes(filter.toLowerCase())
   );
-  
+
   // ✅ Cacha resultat, beräkna bara när dependencies ändras
   const filteredUsers = useMemo(() => {
     console.log('Filtering users...');
-    return users.filter(u => 
+    return users.filter(u =>
       u.name.toLowerCase().includes(filter.toLowerCase())
     );
   }, [users, filter]);
-  
+
   return <UserList users={filteredUsers} />;
 }
 ```
@@ -588,17 +588,17 @@ Cacha funktioner (viktigt för memo'd children):
 ```tsx
 function Parent() {
   const [count, setCount] = useState(0);
-  
+
   // ❌ Ny funktion varje render → Child re-renderas
   const handleClick = () => {
     console.log('clicked');
   };
-  
+
   // ✅ Samma funktionsreferens mellan renders
   const handleClick = useCallback(() => {
     console.log('clicked');
   }, []);
-  
+
   return (
     <>
       <p>Count: {count}</p>
@@ -656,13 +656,13 @@ const AdminPanel = lazy(() => import('./AdminPanel'));
 
 function App() {
   const { isAdmin } = useAuth();
-  
+
   return (
     <div>
       <Suspense fallback={<ChartSkeleton />}>
         <HeavyChart />
       </Suspense>
-      
+
       {isAdmin && (
         <Suspense fallback={<Loading />}>
           <AdminPanel />
@@ -740,7 +740,7 @@ const TabsContext = createContext<TabsContextType | null>(null);
 
 function Tabs({ defaultValue, children }: { defaultValue: string; children: ReactNode }) {
   const [activeTab, setActiveTab] = useState(defaultValue);
-  
+
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
       <div className="tabs">{children}</div>
@@ -754,7 +754,7 @@ Tabs.List = function TabsList({ children }: { children: ReactNode }) {
 
 Tabs.Trigger = function TabsTrigger({ value, children }: { value: string; children: ReactNode }) {
   const { activeTab, setActiveTab } = useContext(TabsContext)!;
-  
+
   return (
     <button
       className={activeTab === value ? 'active' : ''}
@@ -767,7 +767,7 @@ Tabs.Trigger = function TabsTrigger({ value, children }: { value: string; childr
 
 Tabs.Content = function TabsContent({ value, children }: { value: string; children: ReactNode }) {
   const { activeTab } = useContext(TabsContext)!;
-  
+
   if (activeTab !== value) return null;
   return <div className="tabs-content">{children}</div>;
 };
@@ -791,21 +791,21 @@ interface MouseTrackerProps {
 
 function MouseTracker({ render }: MouseTrackerProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  
+
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
-    
+
     window.addEventListener('mousemove', handleMove);
     return () => window.removeEventListener('mousemove', handleMove);
   }, []);
-  
+
   return <>{render(position)}</>;
 }
 
 // Användning
-<MouseTracker 
+<MouseTracker
   render={({ x, y }) => (
     <div>Mouse: {x}, {y}</div>
   )}
@@ -824,10 +824,10 @@ function withAuth<P extends object>(
 ) {
   return function WithAuthComponent(props: P) {
     const { isAuthenticated, isLoading } = useAuth();
-    
+
     if (isLoading) return <LoadingSpinner />;
     if (!isAuthenticated) return <Navigate to="/login" />;
-    
+
     return <WrappedComponent {...props} />;
   };
 }
@@ -864,7 +864,7 @@ function Modal({ children, onClose }: { children: ReactNode; onClose: () => void
 // Användning
 function App() {
   const [showModal, setShowModal] = useState(false);
-  
+
   return (
     <div>
       <button onClick={() => setShowModal(true)}>Open</button>
