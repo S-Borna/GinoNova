@@ -29,6 +29,7 @@ from .block_5_security import BLOCK_5_NODES
 # SkillsMap metadata
 SKILLSMAP_METADATA: dict[str, Any] = {
     "slug": "azure-mastery",
+    "name": "Azure Cloud Mastery",
     "title": "Azure Cloud Mastery",
     "description": "Komplett guide till Microsoft Azure - från fundamentals till avancerade tjänster",
     "icon": "☁️",

@@ -6,6 +6,7 @@ Complete .NET mastery from C# basics to cloud deployment
 # Module info for registration (self-contained, no imports needed)
 MODULE_INFO = {
     "slug": "dotnet-mastery",
+    "name": "C# & .NET Mastery",
     "title": "C# & .NET Mastery",
     "description": "Komplett guide till C# och .NET-utveckling - från syntax till cloud deployment",
     "icon": "🟣",
