@@ -4,7 +4,7 @@
  * ============================================================================
  * INTRO BLOCK - Learning objectives and overview
  * ============================================================================
- * 
+ *
  * Displays the intro section with:
  * - Attention-grabbing headline
  * - Hook (why this matters)
@@ -14,12 +14,12 @@
  */
 
 import { cn } from "@saas/ui"
-import { 
-    Target, 
-    Clock, 
+import {
+    Target,
+    Clock,
     CheckCircle2,
     AlertCircle,
-    Lightbulb 
+    Lightbulb
 } from "lucide-react"
 
 interface IntroBlockProps {
@@ -68,7 +68,7 @@ export function IntroBlock({
                 </div>
                 <ul className="space-y-3">
                     {learningObjectives.map((objective, index) => (
-                        <li 
+                        <li
                             key={index}
                             className="flex items-start gap-3"
                         >
@@ -93,7 +93,7 @@ export function IntroBlock({
                     </div>
                     <ul className="space-y-2">
                         {prerequisites.map((prereq, index) => (
-                            <li 
+                            <li
                                 key={index}
                                 className="flex items-start gap-3"
                             >

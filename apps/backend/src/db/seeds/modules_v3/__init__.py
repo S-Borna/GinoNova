@@ -46,13 +46,18 @@ MODULE_AZURE_MASTERY = {
     "tasks": AZURE_NODES,
 }
 
+# V2 MODULES (with content_blocks for ILE)
+from .module_linux_v2 import MODULE_LINUX_MASTERY_V2
+from .module_azure_v2 import MODULE_AZURE_MASTERY_V2
 
-# All modules list (22 TOTAL)
+
+# All modules list (22 TOTAL + 2 V2 = 24)
 ALL_V3_MODULES = [
     MODULE_AI_AGENTS,  # NEW
     MODULE_AWS_DEVOPS,
     MODULE_ANSIBLE_MASTERY,  # NEW
     MODULE_AZURE_MASTERY,  # NEW - Azure Cloud
+    MODULE_AZURE_MASTERY_V2,  # V2 with content_blocks
     MODULE_BASH,
     MODULE_CICD_MASTERY,
     MODULE_DOCKER_MASTERY,
@@ -62,6 +67,7 @@ ALL_V3_MODULES = [
     MODULE_JAVASCRIPT,
     MODULE_KUBERNETES_MASTERY,
     MODULE_LINUX_MASTERY,
+    MODULE_LINUX_MASTERY_V2,  # V2 with content_blocks
     MODULE_MLOPS,
     MODULE_NODEJS,
     MODULE_PROMPT_ENGINEERING,  # NEW

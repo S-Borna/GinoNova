@@ -4,7 +4,7 @@
  * ============================================================================
  * CHALLENGE BLOCK - End-of-node practical challenge
  * ============================================================================
- * 
+ *
  * Features:
  * - Real-world scenario description
  * - Requirements checklist
@@ -15,8 +15,8 @@
 
 import { useState } from "react"
 import { cn } from "@saas/ui"
-import { 
-    Trophy, 
+import {
+    Trophy,
     Target,
     CheckCircle2,
     Lightbulb,
@@ -120,7 +120,7 @@ export function ChallengeBlock({
                     </span>
                 </div>
                 <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
-                    <div 
+                    <div
                         className={cn(
                             "h-full transition-all duration-300",
                             allRequirementsMet ? "bg-emerald-500" : "bg-amber-500"
@@ -212,7 +212,7 @@ export function ChallengeBlock({
                     {showHints && (
                         <div className="p-4 pt-0 space-y-3">
                             {hints.slice(0, revealedHints).map((hint, index) => (
-                                <div 
+                                <div
                                     key={index}
                                     className={cn(
                                         "bg-amber-900/20 border border-amber-500/30",

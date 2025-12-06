@@ -24,6 +24,38 @@ import { CheckpointBlock } from "./CheckpointBlock"
 import { TerminalEmulator, TerminalCommand } from "@/components/content/TerminalEmulator"
 
 /* ============================================================================
+   UTILITY: Seeded Random Shuffle (Deterministic per quiz)
+   ============================================================================ */
+
+/**
+ * Shuffles an array deterministically based on a seed string.
+ * This ensures the same quiz always shows the same order on each render,
+ * but different quizzes get different orders.
+ */
+function seededShuffle<T>(array: T[], seed: string): T[] {
+    // Simple hash function for seed
+    let hash = 0
+    for (let i = 0; i < seed.length; i++) {
+        const char = seed.charCodeAt(i)
+        hash = ((hash << 5) - hash) + char
+        hash = hash & hash // Convert to 32bit integer
+    }
+    
+    // Fisher-Yates shuffle with seeded random
+    const result = [...array]
+    let currentSeed = Math.abs(hash)
+    
+    for (let i = result.length - 1; i > 0; i--) {
+        // Simple LCG random generator
+        currentSeed = (currentSeed * 1103515245 + 12345) & 0x7fffffff
+        const j = currentSeed % (i + 1)
+        ;[result[i], result[j]] = [result[j], result[i]]
+    }
+    
+    return result
+}
+
+/* ============================================================================
    TYPES
    ============================================================================ */
 
@@ -263,22 +295,39 @@ export function ContentBlockRenderer({
                     case "quiz":
                         const quizAnswer = getQuizAnswer(index)
                         // Map snake_case from backend to camelCase for frontend
-                        const mappedOptions = block.options.map((opt: any) => ({
+                        // Include original index for tracking correct answer after shuffle
+                        const mappedOptions = block.options.map((opt: any, optIdx: number) => ({
                             text: opt.text,
                             isCorrect: opt.is_correct ?? opt.isCorrect ?? false,
-                            feedback: opt.feedback
+                            feedback: opt.feedback,
+                            originalIndex: optIdx
                         }))
+                        
+                        // Shuffle options deterministically using quiz question as seed
+                        // This ensures same order on re-render but different per quiz
+                        const shuffledOptions = seededShuffle(
+                            mappedOptions, 
+                            block.question + (block.id || `quiz-${index}`)
+                        )
+                        
+                        // Map shuffled index back to original index for answer tracking
+                        const shuffleIndexMap = shuffledOptions.map((opt: any) => opt.originalIndex)
+                        
                         return (
                             <QuizBlock
                                 key={key}
                                 blockId={block.id || `quiz-${index}`}
                                 question={block.question}
-                                options={mappedOptions}
+                                options={shuffledOptions}
                                 explanation={block.explanation}
                                 xpBonus={block.xp_bonus}
-                                answered={quizAnswer}
+                                answered={quizAnswer !== null && quizAnswer !== undefined 
+                                    ? shuffleIndexMap.indexOf(quizAnswer) 
+                                    : quizAnswer}
                                 onAnswer={async (_, optionIndex) => {
-                                    await onQuizAnswer(index, optionIndex)
+                                    // Map back to original index when storing answer
+                                    const originalIndex = shuffleIndexMap[optionIndex]
+                                    await onQuizAnswer(index, originalIndex)
                                 }}
                             />
                         )
