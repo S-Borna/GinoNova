@@ -1,5 +1,6 @@
 FROM python:3.11-slim
 
+# Build version to invalidate cache: 2025-12-06-v2
 WORKDIR /app
 
 # Install Poetry
