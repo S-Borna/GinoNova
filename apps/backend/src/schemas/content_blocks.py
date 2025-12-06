@@ -19,7 +19,10 @@ from pydantic import BaseModel, Field
 # CONTENT BLOCK TYPES
 # ==============================================================================
 
-BlockType = Literal["text", "code", "terminal", "quiz", "checkpoint"]
+BlockType = Literal[
+    "text", "code", "terminal", "quiz", "checkpoint",
+    "flashcard", "intro", "concept", "practice", "challenge"
+]
 
 
 class TextBlock(BaseModel):
@@ -115,8 +118,107 @@ class CheckpointBlock(BaseModel):
         from_attributes = True
 
 
-# Union of all block types
-ContentBlock = Union[TextBlock, CodeBlock, TerminalBlock, QuizBlock, CheckpointBlock]
+# ==============================================================================
+# NEW V2 BLOCKS - Interactive Learning
+# ==============================================================================
+
+class Flashcard(BaseModel):
+    """Single flashcard for memorization"""
+    term: str = Field(..., description="Front of card - the term/concept")
+    definition: str = Field(..., description="Back of card - the definition/explanation")
+
+    class Config:
+        from_attributes = True
+
+
+class FlashcardBlock(BaseModel):
+    """Flashcard deck for memorization practice"""
+    type: Literal["flashcard"] = "flashcard"
+    title: str = Field(default="Flashcards", description="Title for the flashcard section")
+    cards: List[Flashcard] = Field(..., min_length=1, description="List of flashcards")
+    shuffle: bool = Field(default=True, description="Whether to shuffle cards")
+
+    class Config:
+        from_attributes = True
+
+
+class IntroBlock(BaseModel):
+    """Introduction block with learning objectives"""
+    type: Literal["intro"] = "intro"
+    headline: str = Field(..., description="Attention-grabbing headline")
+    hook: str = Field(..., description="Why this matters - motivational text")
+    learning_objectives: List[str] = Field(..., min_length=1, description="What user will learn")
+    prerequisites: Optional[List[str]] = Field(None, description="What user should know first")
+    estimated_minutes: int = Field(default=30, description="Estimated time for entire node")
+
+    class Config:
+        from_attributes = True
+
+
+class ConceptBlock(BaseModel):
+    """Single concept explanation with diagram and tips"""
+    type: Literal["concept"] = "concept"
+    title: str = Field(..., description="Concept title")
+    explanation: str = Field(..., description="Markdown explanation")
+    diagram: Optional[str] = Field(None, description="ASCII/text diagram")
+    pro_tip: Optional[str] = Field(None, description="Pro tip for this concept")
+    common_mistake: Optional[str] = Field(None, description="Common mistake to avoid")
+
+    class Config:
+        from_attributes = True
+
+
+class PracticeStep(BaseModel):
+    """Single practice step in a terminal exercise"""
+    step: int = Field(..., description="Step number")
+    title: str = Field(..., description="Step title")
+    instruction: str = Field(..., description="What user should do")
+    command: str = Field(..., description="Command to type")
+    expected_output: str = Field(default="", description="Expected output")
+    explanation: str = Field(..., description="Why this command works")
+
+    class Config:
+        from_attributes = True
+
+
+class PracticeBlock(BaseModel):
+    """Interactive practice section with simulated terminal"""
+    type: Literal["practice"] = "practice"
+    description: str = Field(..., description="Overview of the practice session")
+    exercises: List[PracticeStep] = Field(..., min_length=1, description="Steps to complete")
+
+    class Config:
+        from_attributes = True
+
+
+class ChallengeBlock(BaseModel):
+    """End-of-node challenge that combines all concepts"""
+    type: Literal["challenge"] = "challenge"
+    title: str = Field(..., description="Challenge title")
+    scenario: str = Field(..., description="Real-world scenario description")
+    requirements: List[str] = Field(..., min_length=1, description="What user must do")
+    hints: Optional[List[str]] = Field(None, description="Progressive hints")
+    solution: Optional[str] = Field(None, description="Solution code/commands (hidden until revealed)")
+    validation_commands: Optional[List[str]] = Field(None, description="Commands to verify completion")
+    xp_bonus: int = Field(default=20, description="Bonus XP for completing challenge")
+
+    class Config:
+        from_attributes = True
+
+
+# Union of all block types (updated with new V2 blocks)
+ContentBlock = Union[
+    TextBlock, 
+    CodeBlock, 
+    TerminalBlock, 
+    QuizBlock, 
+    CheckpointBlock,
+    FlashcardBlock,
+    IntroBlock,
+    ConceptBlock,
+    PracticeBlock,
+    ChallengeBlock
+]
 
 
 # ==============================================================================
