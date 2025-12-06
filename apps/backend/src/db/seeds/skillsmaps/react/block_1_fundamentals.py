@@ -241,7 +241,7 @@ npm run dev -- --port 3001
    ```tsx
    function App() {
      const features = ['CI/CD', 'Docker', 'Kubernetes', 'Terraform'];
-     
+
      return (
        <div className="dashboard">
          <h1>DevOps Dashboard 🛠️</h1>
@@ -251,7 +251,7 @@ npm run dev -- --port 3001
        </div>
      );
    }
-   
+
    export default App;
    ```
 
@@ -325,7 +325,7 @@ Du kan använda JavaScript-uttryck inom `{}`:
 function Greeting() {
   const name = "DevOps Engineer";
   const time = new Date().getHours();
-  
+
   return (
     <div>
       <h1>Hello, {name}!</h1>
@@ -349,9 +349,9 @@ function StyledButton() {
       onClick={() => alert('Hi')}  // inte "onclick"
       disabled={false}
       tabIndex={0}
-      style={{ 
+      style={{
         backgroundColor: 'blue',   // CSS i JS = camelCase
-        fontSize: '16px' 
+        fontSize: '16px'
       }}
     >
       Click me
@@ -449,7 +449,7 @@ interface ButtonProps {
 
 function Button({ variant, size, ...rest }: ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button 
+    <button
       className={`btn btn-${variant} btn-${size}`}
       {...rest}  // Spread alla andra props (onClick, disabled, etc.)
     />
@@ -545,18 +545,18 @@ interface User {
 function ProfileCard({ user }: { user: User }) {
   return (
     <article className="profile-card">
-      <img 
-        src={user.avatar} 
+      <img
+        src={user.avatar}
         alt={`${user.name}'s avatar`}
         className="avatar"
       />
       <h2>{user.name}</h2>
       <p className="role">{user.role}</p>
-      
+
       {user.isOnline && (
         <span className="status online">● Online</span>
       )}
-      
+
       <h3>Skills</h3>
       <ul className="skills">
         {user.skills.map(skill => (
@@ -756,9 +756,9 @@ function TeamPage({ members }: { members: User[] }) {
 
 ```tsx
 // Presentation component (dumb) - bara UI
-function TaskItem({ task, onToggle }: { 
-  task: Task; 
-  onToggle: (id: string) => void 
+function TaskItem({ task, onToggle }: {
+  task: Task;
+  onToggle: (id: string) => void
 }) {
   return (
     <li onClick={() => onToggle(task.id)}>
@@ -770,17 +770,17 @@ function TaskItem({ task, onToggle }: {
 // Container component (smart) - logik och data
 function TaskListContainer() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  
+
   useEffect(() => {
     fetchTasks().then(setTasks);
   }, []);
-  
+
   const handleToggle = (id: string) => {
-    setTasks(tasks.map(t => 
+    setTasks(tasks.map(t =>
       t.id === id ? { ...t, completed: !t.completed } : t
     ));
   };
-  
+
   return (
     <ul>
       {tasks.map(task => (
@@ -1051,10 +1051,10 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-function Button({ 
-  label, 
+function Button({
+  label,
   variant = 'primary',  // Default value
-  size = 'md' 
+  size = 'md'
 }: ButtonProps) {
   return (
     <button className={`btn btn-${variant} btn-${size}`}>
@@ -1081,12 +1081,12 @@ interface SearchProps {
 
 function SearchInput({ onSearch, placeholder = "Search..." }: SearchProps) {
   const [value, setValue] = useState('');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(value);  // Anropa parent's funktion
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -1105,7 +1105,7 @@ function App() {
     console.log('Searching for:', query);
     // Gör API-anrop etc.
   };
-  
+
   return <SearchInput onSearch={handleSearch} />;
 }
 ```
@@ -1126,7 +1126,7 @@ function DataFetcher<T>({ url, render }: DataFetcherProps<T>) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  
+
   useEffect(() => {
     fetch(url)
       .then(res => res.json())
@@ -1134,12 +1134,12 @@ function DataFetcher<T>({ url, render }: DataFetcherProps<T>) {
       .catch(setError)
       .finally(() => setLoading(false));
   }, [url]);
-  
+
   return <>{render(data, loading, error)}</>;
 }
 
 // Användning
-<DataFetcher<User[]> 
+<DataFetcher<User[]>
   url="/api/users"
   render={(users, loading, error) => {
     if (loading) return <Spinner />;
@@ -1168,7 +1168,7 @@ function Input({ label, error, ...inputProps }: InputProps) {
 }
 
 // Alla standard input-attribut fungerar
-<Input 
+<Input
   label="Email"
   type="email"
   required
@@ -1241,14 +1241,14 @@ function Alert({ type, title, message, onDismiss, children }: AlertProps) {
     error: '❌',
     info: 'ℹ️'
   };
-  
+
   const colors = {
     success: 'bg-green-100 border-green-500',
     warning: 'bg-yellow-100 border-yellow-500',
     error: 'bg-red-100 border-red-500',
     info: 'bg-blue-100 border-blue-500'
   };
-  
+
   return (
     <div className={`alert ${colors[type]}`} role="alert">
       <span className="alert-icon">{icons[type]}</span>
@@ -1267,8 +1267,8 @@ function Alert({ type, title, message, onDismiss, children }: AlertProps) {
 }
 
 // Användning
-<Alert 
-  type="success" 
+<Alert
+  type="success"
   title="Deployment Complete!"
   message="Version 2.3.1 is now live"
   onDismiss={() => setShowAlert(false)}

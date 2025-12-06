@@ -117,9 +117,9 @@ describe('Button', () => {
   it('calls onClick when clicked', async () => {
     const handleClick = vi.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     await userEvent.click(screen.getByRole('button'));
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
@@ -144,11 +144,11 @@ describe('LoginForm', () => {
   it('submits with email and password', async () => {
     const handleSubmit = vi.fn();
     render(<LoginForm onSubmit={handleSubmit} />);
-    
+
     await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com');
     await userEvent.type(screen.getByLabelText(/password/i), 'password123');
     await userEvent.click(screen.getByRole('button', { name: /submit/i }));
-    
+
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
         email: 'test@example.com',
@@ -159,10 +159,10 @@ describe('LoginForm', () => {
 
   it('shows validation error for invalid email', async () => {
     render(<LoginForm onSubmit={() => {}} />);
-    
+
     await userEvent.type(screen.getByLabelText(/email/i), 'invalid');
     await userEvent.click(screen.getByRole('button', { name: /submit/i }));
-    
+
     expect(await screen.findByText(/invalid email/i)).toBeInTheDocument();
   });
 });
@@ -187,7 +187,7 @@ afterEach(() => {
 
 it('fetches and displays users', async () => {
   render(<UserList />);
-  
+
   expect(await screen.findByText('John')).toBeInTheDocument();
 });
 
@@ -288,8 +288,8 @@ export const useStore = create<AppState>()(
       user: null,
       theme: 'light',
       setUser: (user) => set({ user }),
-      toggleTheme: () => set((state) => ({ 
-        theme: state.theme === 'light' ? 'dark' : 'light' 
+      toggleTheme: () => set((state) => ({
+        theme: state.theme === 'light' ? 'dark' : 'light'
       })),
     }),
     {
@@ -302,7 +302,7 @@ export const useStore = create<AppState>()(
 function Profile() {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
-  
+
   return <div>{user?.name}</div>;
 }
 
@@ -344,7 +344,7 @@ export const themeAtom = atomWithStorage('theme', 'light');
 function Counter() {
   const [count, setCount] = useAtom(countAtom);
   const doubleCount = useAtomValue(doubleCountAtom);
-  
+
   return (
     <div>
       <p>Count: {count}</p>
@@ -413,11 +413,11 @@ export const store = configureStore({
 function Profile() {
   const user = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(fetchUser('123'));
   }, []);
-  
+
   return <div>{user?.name}</div>;
 }
 ```
@@ -792,7 +792,7 @@ export default async function DashboardPage() {
   const stats = await getStats();
   const servers = await getServers();
   const deployments = await getRecentDeployments();
-  
+
   return (
     <div className="space-y-6">
       <h1>Dashboard</h1>

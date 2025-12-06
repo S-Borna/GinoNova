@@ -266,7 +266,7 @@ async function getUsers() {
 
 export default async function UsersPage() {
   const users = await getUsers();  // Direkt async!
-  
+
   return (
     <div>
       <h1>Users</h1>
@@ -290,7 +290,7 @@ import { useState } from 'react';
 
 export function Counter() {
   const [count, setCount] = useState(0);  // hooks fungerar här
-  
+
   return (
     <div>
       <p>Count: {count}</p>
@@ -315,7 +315,7 @@ async function getData() {
 
 export default async function Dashboard() {
   const stats = await getData();  // Server
-  
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -448,7 +448,7 @@ import { db } from '@/lib/db';
 export default async function UsersPage() {
   // Direkt databas-query i Server Component!
   const users = await db.user.findMany();
-  
+
   return (
     <ul>
       {users.map(user => (
@@ -475,11 +475,11 @@ import { revalidatePath } from 'next/cache';
 export async function createPost(formData: FormData) {
   const title = formData.get('title') as string;
   const content = formData.get('content') as string;
-  
+
   await db.post.create({
     data: { title, content }
   });
-  
+
   revalidatePath('/posts');  // Uppdatera cache
 }
 
@@ -516,7 +516,7 @@ function SubmitButton() {
 
 export default function NewPostForm() {
   const [state, action] = useFormState(createPost, { error: null });
-  
+
   return (
     <form action={action}>
       {state.error && <p className="error">{state.error}</p>}
@@ -644,7 +644,7 @@ interface Props {
 export default function DocsPage({ params }: Props) {
   // /docs/getting-started → slug = ['getting-started']
   // /docs/api/users → slug = ['api', 'users']
-  
+
   return <h1>Docs: {params.slug.join('/')}</h1>;
 }
 ```
@@ -664,12 +664,12 @@ export function Navigation() {
       <Link href="/">Home</Link>
       <Link href="/about">About</Link>
       <Link href="/blog/hello-world">Blog Post</Link>
-      
+
       {/* Prefetch disabled */}
       <Link href="/heavy-page" prefetch={false}>
         Heavy Page
       </Link>
-      
+
       {/* Replace history */}
       <Link href="/new-page" replace>
         Replace Current
@@ -690,13 +690,13 @@ export function SearchForm() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  
+
   const handleSearch = (query: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('q', query);
     router.push(`${pathname}?${params.toString()}`);
   };
-  
+
   return (
     <input
       defaultValue={searchParams.get('q') ?? ''}
@@ -713,11 +713,11 @@ import { redirect } from 'next/navigation';
 
 export default async function ProtectedPage() {
   const session = await getSession();
-  
+
   if (!session) {
     redirect('/login');  // Server-side redirect
   }
-  
+
   return <div>Protected content</div>;
 }
 ```
@@ -734,15 +734,15 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   // Auth check
   const token = request.cookies.get('token');
-  
+
   if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-  
+
   // Add headers
   const response = NextResponse.next();
   response.headers.set('x-custom-header', 'my-value');
-  
+
   return response;
 }
 
