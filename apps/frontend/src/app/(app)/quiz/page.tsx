@@ -85,14 +85,14 @@ export default function QuizPage() {
     const init = async () => {
       const token = getToken();
       console.log("Quiz init - token:", token ? "EXISTS" : "NULL");
-      
+
       if (!token) {
         console.log("No token, skipping API calls");
         setHasAccess(false);
         setAccessMessage("Please log in to access the quiz");
         return;
       }
-      
+
       // Fetch both in parallel
       try {
         const [accessRes, modulesRes] = await Promise.all([
@@ -103,10 +103,10 @@ export default function QuizPage() {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
-        
+
         console.log("Access status:", accessRes.status);
         console.log("Modules status:", modulesRes.status);
-        
+
         if (accessRes.ok) {
           const accessData = await accessRes.json();
           console.log("Access data:", accessData);
@@ -116,7 +116,7 @@ export default function QuizPage() {
           setHasAccess(false);
           setAccessMessage("Could not verify access");
         }
-        
+
         if (modulesRes.ok) {
           const modulesData = await modulesRes.json();
           console.log("Modules data:", modulesData);
