@@ -405,7 +405,7 @@ export default function QuizPage() {
                 </Card>
               ) : (
                 <div className="space-y-4">
-                  <Card 
+                  <Card
                     onClick={handleFlipCard}
                     className="bg-neutral-900/50 border-neutral-800 min-h-[300px] flex items-center justify-center cursor-pointer hover:border-purple-500/50 transition-colors"
                   >
