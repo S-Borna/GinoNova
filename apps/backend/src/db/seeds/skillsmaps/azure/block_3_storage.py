@@ -984,18 +984,18 @@ r.delete("user:123")
 
 def get_user(user_id: str):
     cache_key = f"user:{user_id}"
-    
+
     # 1. Kolla cache först
     cached = r.get(cache_key)
     if cached:
         return json.loads(cached)
-    
+
     # 2. Cache miss → hämta från databas
     user = db.query_user(user_id)
-    
+
     # 3. Spara i cache (1 timme TTL)
     r.setex(cache_key, 3600, json.dumps(user))
-    
+
     return user
 
 # ========================================
@@ -1005,20 +1005,20 @@ def get_user(user_id: str):
 def create_session(user_id: str) -> str:
     session_id = str(uuid.uuid4())
     session_data = {"user_id": user_id, "created": datetime.utcnow().isoformat()}
-    
+
     # Session expires efter 24 timmar
     r.setex(f"session:{session_id}", 86400, json.dumps(session_data))
-    
+
     return session_id
 
 def validate_session(session_id: str):
     session_data = r.get(f"session:{session_id}")
     if not session_data:
         return None
-    
+
     # Förnya TTL vid access
     r.expire(f"session:{session_id}", 86400)
-    
+
     return json.loads(session_data)
 ```
 
@@ -1047,15 +1047,15 @@ rank = r.zrevrank("leaderboard:daily", "player2")  # 2 (0-indexed)
 
 def check_rate_limit(user_id: str, max_requests: int = 100, window_seconds: int = 60):
     key = f"ratelimit:{user_id}"
-    
+
     current = r.incr(key)
     if current == 1:
         r.expire(key, window_seconds)
-    
+
     if current > max_requests:
         ttl = r.ttl(key)
         raise RateLimitExceeded(f"Too many requests. Try again in {ttl} seconds.")
-    
+
     return True
 
 # ========================================
@@ -1120,11 +1120,11 @@ def get_popular_item(item_id):
 def get_popular_item_safe(item_id):
     cache_key = f"item:{item_id}"
     lock_key = f"lock:item:{item_id}"
-    
+
     cached = r.get(cache_key)
     if cached:
         return json.loads(cached)
-    
+
     # Försök ta lock
     if r.setnx(lock_key, "1"):
         r.expire(lock_key, 10)  # Lock timeout

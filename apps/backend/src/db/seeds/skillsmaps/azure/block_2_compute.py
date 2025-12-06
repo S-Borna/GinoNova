@@ -641,7 +641,7 @@ az functionapp create \\
 // HttpTrigger/index.js
 module.exports = async function (context, req) {
     const name = req.query.name || req.body?.name || 'World';
-    
+
     context.res = {
         status: 200,
         body: { message: `Hello, ${name}!` }
@@ -677,7 +677,7 @@ import logging
 def main(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.warning('Timer is running late!')
-    
+
     logging.info('Timer trigger executed!')
     # Din logik här - cleanup, rapporter, etc.
 
@@ -705,10 +705,10 @@ import io
 def main(inputblob: func.InputStream, outputblob: func.Out[bytes]) -> None:
     # Läs bild
     image = Image.open(inputblob)
-    
+
     # Resize
     thumbnail = image.resize((150, 150))
-    
+
     # Spara som output
     buffer = io.BytesIO()
     thumbnail.save(buffer, format='JPEG')
