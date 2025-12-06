@@ -31,3 +31,7 @@ export { ContentBlockRenderer } from "./ContentBlockRenderer"
 export type { ContentBlockRendererProps } from "./ContentBlockRenderer"
 
 export { LessonContent } from "./LessonContent"
+
+// V2 Interactive Learning Components
+export { InteractiveNodeV2 } from "./InteractiveNodeV2"
+export * from "./blocks"
