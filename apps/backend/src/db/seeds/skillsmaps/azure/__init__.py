@@ -34,7 +34,7 @@ SKILLSMAP_METADATA: dict[str, Any] = {
     "description": "Komplett guide till Microsoft Azure - från fundamentals till avancerade tjänster",
     "icon": "☁️",
     "color": "#0078D4",
-    "difficulty": "beginner-to-advanced",
+    "difficulty": "intermediate",
     "estimated_hours": 25,
     "prerequisites": ["linux-mastery"],
     "track_slug": "cloud",

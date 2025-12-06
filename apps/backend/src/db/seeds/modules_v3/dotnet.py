@@ -13,7 +13,7 @@ MODULE_INFO = {
     "color": "#512BD4",
     "node_count": 20,
     "estimated_hours": 20,
-    "difficulty": "beginner-to-advanced",
+    "difficulty": "intermediate",
     "track_slug": "backend",
     "prerequisites": [],
     "tasks": [],  # Will be populated dynamically if needed

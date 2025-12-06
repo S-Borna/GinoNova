@@ -964,7 +964,7 @@ pool:
 
 variables:
   nodeVersion: '18.x'
-  
+
 stages:
   - stage: Build
     displayName: 'Build & Test'
@@ -976,19 +976,19 @@ stages:
             inputs:
               versionSpec: $(nodeVersion)
             displayName: 'Install Node.js'
-          
+
           - script: |
               npm ci
               npm run build
               npm test
             displayName: 'Install, Build, Test'
-          
+
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/test-results.xml'
             displayName: 'Publish Test Results'
-          
+
           - task: PublishBuildArtifacts@1
             inputs:
               pathtoPublish: 'dist'
@@ -1031,10 +1031,10 @@ stages:
               tags: |
                 $(Build.BuildId)
                 latest
-          
+
           - publish: 'k8s'
             artifact: 'manifests'
-  
+
   # ========================================
   # STAGE 2: DEPLOY TO DEV
   # ========================================
@@ -1054,7 +1054,7 @@ stages:
               steps:
                 - download: current
                   artifact: manifests
-                
+
                 - task: KubernetesManifest@0
                   inputs:
                     action: 'deploy'
@@ -1062,7 +1062,7 @@ stages:
                     namespace: 'default'
                     manifests: '$(Pipeline.Workspace)/manifests/*.yaml'
                     containers: '$(dockerRegistry)/myapp:$(Build.BuildId)'
-  
+
   # ========================================
   # STAGE 3: DEPLOY TO PROD
   # ========================================
@@ -1082,7 +1082,7 @@ stages:
               steps:
                 - download: current
                   artifact: manifests
-                
+
                 - task: KubernetesManifest@0
                   inputs:
                     action: 'deploy'
@@ -1124,13 +1124,13 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: ${{ parameters.nodeVersion }}
-  
+
   - script: npm ci
     displayName: 'Install dependencies'
-  
+
   - script: npm run build
     displayName: 'Build'
-  
+
   - script: npm test
     displayName: 'Test'
 
@@ -1162,7 +1162,7 @@ steps:
       npm run migrate
     env:
       DATABASE_URL: $(DB_CONNECTION_STRING)
-      
+
 # Key Vault integration
 variables:
   - group: 'kv-secrets'  # Linked to Azure Key Vault
@@ -1193,7 +1193,7 @@ stages:
         steps:
           - script: npm ci && npm test
           - script: npm run lint
-          
+
       - job: SecurityScan
         steps:
           - task: CredScan@2
@@ -1212,7 +1212,7 @@ trigger:
   branches:
     include:
       - main  # Inte 'master' om du bytt namn
-  
+
 # Path filters kan blockera
 paths:
   include:
