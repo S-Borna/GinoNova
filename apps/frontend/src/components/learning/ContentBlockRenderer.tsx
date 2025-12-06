@@ -40,18 +40,18 @@ function seededShuffle<T>(array: T[], seed: string): T[] {
         hash = ((hash << 5) - hash) + char
         hash = hash & hash // Convert to 32bit integer
     }
-    
+
     // Fisher-Yates shuffle with seeded random
     const result = [...array]
     let currentSeed = Math.abs(hash)
-    
+
     for (let i = result.length - 1; i > 0; i--) {
         // Simple LCG random generator
         currentSeed = (currentSeed * 1103515245 + 12345) & 0x7fffffff
         const j = currentSeed % (i + 1)
-        ;[result[i], result[j]] = [result[j], result[i]]
+            ;[result[i], result[j]] = [result[j], result[i]]
     }
-    
+
     return result
 }
 
@@ -302,17 +302,17 @@ export function ContentBlockRenderer({
                             feedback: opt.feedback,
                             originalIndex: optIdx
                         }))
-                        
+
                         // Shuffle options deterministically using quiz question as seed
                         // This ensures same order on re-render but different per quiz
                         const shuffledOptions = seededShuffle(
-                            mappedOptions, 
+                            mappedOptions,
                             block.question + (block.id || `quiz-${index}`)
                         )
-                        
+
                         // Map shuffled index back to original index for answer tracking
                         const shuffleIndexMap = shuffledOptions.map((opt: any) => opt.originalIndex)
-                        
+
                         return (
                             <QuizBlock
                                 key={key}
@@ -321,8 +321,8 @@ export function ContentBlockRenderer({
                                 options={shuffledOptions}
                                 explanation={block.explanation}
                                 xpBonus={block.xp_bonus}
-                                answered={quizAnswer !== null && quizAnswer !== undefined 
-                                    ? shuffleIndexMap.indexOf(quizAnswer) 
+                                answered={quizAnswer !== null && quizAnswer !== undefined
+                                    ? shuffleIndexMap.indexOf(quizAnswer)
                                     : quizAnswer}
                                 onAnswer={async (_, optionIndex) => {
                                     // Map back to original index when storing answer

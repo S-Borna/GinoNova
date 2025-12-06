@@ -13,7 +13,7 @@ def convert_v2_section_to_blocks(section: dict) -> list[dict]:
     blocks = []
     section_type = section.get("type")
     content = section.get("content", {})
-    
+
     if section_type == "intro":
         blocks.extend(_convert_intro(content))
     elif section_type == "concepts":
@@ -24,28 +24,28 @@ def convert_v2_section_to_blocks(section: dict) -> list[dict]:
         blocks.extend(_convert_quiz(content))
     elif section_type == "challenge":
         blocks.extend(_convert_challenge(content))
-    
+
     return blocks
 
 
 def _convert_intro(content: dict) -> list[dict]:
     """Convert intro section to content blocks."""
     blocks = []
-    
+
     # Headline as header
     if content.get("headline"):
         blocks.append({
             "type": "text",
             "content": f"# {content['headline']}"
         })
-    
+
     # Hook as engaging text
     if content.get("hook"):
         blocks.append({
             "type": "text",
             "content": f"> 💡 {content['hook']}"
         })
-    
+
     # Learning objectives
     if content.get("learning_objectives"):
         objectives = "\n".join([f"- {obj}" for obj in content["learning_objectives"]])
@@ -53,7 +53,7 @@ def _convert_intro(content: dict) -> list[dict]:
             "type": "text",
             "content": f"## 🎯 Vad du kommer lära dig\n\n{objectives}"
         })
-    
+
     # Prerequisites
     if content.get("prerequisites"):
         prereqs = ", ".join(content["prerequisites"])
@@ -61,7 +61,7 @@ def _convert_intro(content: dict) -> list[dict]:
             "type": "text",
             "content": f"**Förkunskaper:** {prereqs}"
         })
-    
+
     # Estimated time and XP
     time_xp = []
     if content.get("estimated_time"):
@@ -73,14 +73,14 @@ def _convert_intro(content: dict) -> list[dict]:
             "type": "text",
             "content": " | ".join(time_xp)
         })
-    
+
     return blocks
 
 
 def _convert_concepts(content: dict) -> list[dict]:
     """Convert concepts section to content blocks."""
     blocks = []
-    
+
     concepts = content.get("concepts", [])
     for concept in concepts:
         # Title
@@ -89,14 +89,14 @@ def _convert_concepts(content: dict) -> list[dict]:
                 "type": "text",
                 "content": f"## {concept['title']}"
             })
-        
+
         # Explanation
         if concept.get("explanation"):
             blocks.append({
                 "type": "text",
                 "content": concept["explanation"]
             })
-        
+
         # Diagram (as code block)
         if concept.get("diagram"):
             blocks.append({
@@ -105,48 +105,48 @@ def _convert_concepts(content: dict) -> list[dict]:
                 "code": concept["diagram"],
                 "filename": "diagram"
             })
-        
+
         # Pro tip
         if concept.get("pro_tip"):
             blocks.append({
                 "type": "text",
                 "content": f"💡 **Pro tip:** {concept['pro_tip']}"
             })
-        
+
         # Common mistake
         if concept.get("common_mistake"):
             blocks.append({
                 "type": "text",
                 "content": f"⚠️ **Vanligt misstag:** {concept['common_mistake']}"
             })
-    
+
     return blocks
 
 
 def _convert_practice(content: dict) -> list[dict]:
     """Convert practice section to content blocks with terminal exercises."""
     blocks = []
-    
+
     blocks.append({
         "type": "text",
         "content": "## 🛠️ Praktiska Övningar"
     })
-    
+
     exercises = content.get("exercises", [])
     for i, exercise in enumerate(exercises, 1):
         # Task description
         task = exercise.get("task", f"Övning {i}")
         instruction = exercise.get("instruction", "")
-        
+
         blocks.append({
             "type": "text",
             "content": f"### Övning {i}: {task}\n\n{instruction}"
         })
-        
+
         # Terminal block for the exercise
         expected_cmd = exercise.get("expected_command", "")
         hint = exercise.get("hint", "")
-        
+
         blocks.append({
             "type": "terminal",
             "title": task,
@@ -155,21 +155,21 @@ def _convert_practice(content: dict) -> list[dict]:
             "hint": hint,
             "allow_any_command": True
         })
-    
+
     return blocks
 
 
 def _convert_quiz(content: dict) -> list[dict]:
     """Convert quiz section to content blocks with randomized answers."""
     blocks = []
-    
+
     blocks.append({
         "type": "text",
         "content": "## 📝 Kunskapstest"
     })
-    
+
     questions = content.get("questions", {})
-    
+
     # Flashcards as text blocks
     flashcards = questions.get("flashcards", [])
     if flashcards:
@@ -182,7 +182,7 @@ def _convert_quiz(content: dict) -> list[dict]:
                 "type": "text",
                 "content": f"**Q:** {card.get('front', '')}\n\n**A:** {card.get('back', '')}"
             })
-    
+
     # Multiple choice as quiz blocks with RANDOMIZED options
     mc_questions = questions.get("multiple_choice", [])
     for mc in mc_questions:
@@ -190,7 +190,7 @@ def _convert_quiz(content: dict) -> list[dict]:
         options = mc.get("options", [])
         correct_idx = mc.get("correct", 0)
         explanation = mc.get("explanation", "")
-        
+
         # Create options with correct flag
         quiz_options = []
         for i, opt in enumerate(options):
@@ -199,10 +199,10 @@ def _convert_quiz(content: dict) -> list[dict]:
                 "is_correct": i == correct_idx,
                 "feedback": explanation if i == correct_idx else ""
             })
-        
+
         # RANDOMIZE options order
         random.shuffle(quiz_options)
-        
+
         blocks.append({
             "type": "quiz",
             "question": question,
@@ -210,26 +210,26 @@ def _convert_quiz(content: dict) -> list[dict]:
             "explanation": explanation,
             "xp_bonus": 10
         })
-    
+
     return blocks
 
 
 def _convert_challenge(content: dict) -> list[dict]:
     """Convert challenge section to content blocks."""
     blocks = []
-    
+
     blocks.append({
         "type": "text",
         "content": "## 🏆 Challenge"
     })
-    
+
     # Scenario
     if content.get("scenario"):
         blocks.append({
             "type": "text",
             "content": f"**Scenario:** {content['scenario']}"
         })
-    
+
     # Requirements
     if content.get("requirements"):
         reqs = "\n".join([f"- [ ] {req}" for req in content["requirements"]])
@@ -237,7 +237,7 @@ def _convert_challenge(content: dict) -> list[dict]:
             "type": "text",
             "content": f"### Krav\n\n{reqs}"
         })
-    
+
     # Hints (collapsible)
     if content.get("hints"):
         hints = "\n".join([f"- {hint}" for hint in content["hints"]])
@@ -245,7 +245,7 @@ def _convert_challenge(content: dict) -> list[dict]:
             "type": "text",
             "content": f"<details>\n<summary>💡 Tips</summary>\n\n{hints}\n</details>"
         })
-    
+
     # Terminal for challenge
     blocks.append({
         "type": "terminal",
@@ -253,24 +253,24 @@ def _convert_challenge(content: dict) -> list[dict]:
         "description": "Lös challengen i terminalen",
         "allow_any_command": True
     })
-    
+
     # Solution (hidden)
     if content.get("solution"):
         blocks.append({
             "type": "text",
             "content": f"<details>\n<summary>📖 Lösning</summary>\n\n```bash\n{content['solution']}\n```\n</details>"
         })
-    
+
     return blocks
 
 
 def convert_v2_node_to_task(node: dict) -> dict:
     """Convert a full V2 node to task format with content_blocks."""
     content_blocks = []
-    
+
     for section in node.get("sections", []):
         content_blocks.extend(convert_v2_section_to_blocks(section))
-    
+
     return {
         "title": node.get("title", ""),
         "slug": node.get("slug", ""),
