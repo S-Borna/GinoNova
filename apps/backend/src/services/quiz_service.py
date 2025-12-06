@@ -80,16 +80,23 @@ def generate_quiz(
       "explanation": "Why this answer is correct"
     }
   ]
-}"""
+}
+
+IMPORTANT: The correct answer should be randomly distributed across A, B, C, D - do NOT always make A the correct answer. Vary the position of the correct answer for each question."""
 
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
 
+    # Add unique seed for variation
+    import random
+    random_seed = random.randint(1000, 9999)
+
     prompt = f"""You are a DevOps expert creating {difficulty}-level quiz content for the module "{module_title}".
+Session ID: {random_seed} (use this to ensure unique questions each time)
 
 Based on this content:
 {content[:4000]}
 
-Generate exactly {count} {quiz_type} questions.{focus_text}
+Generate exactly {count} UNIQUE and DIFFERENT {quiz_type} questions.{focus_text}
 
 {format_instruction}
 
@@ -105,8 +112,9 @@ Important:
                 {"role": "system", "content": "You are a DevOps training expert. Return only valid JSON."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
-            max_tokens=2000
+            temperature=0.9,
+            max_tokens=2000,
+            seed=random_seed
         )
 
         result_text = response.choices[0].message.content.strip()
