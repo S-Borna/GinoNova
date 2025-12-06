@@ -156,7 +156,7 @@ async def get_available_modules(
 ):
     """Get list of modules available for quiz generation."""
     from src.db.module_repository import list_modules
-    
+
     modules = list_modules()
 
     return {

@@ -262,12 +262,18 @@ export function ContentBlockRenderer({
 
                     case "quiz":
                         const quizAnswer = getQuizAnswer(index)
+                        // Map snake_case from backend to camelCase for frontend
+                        const mappedOptions = block.options.map((opt: any) => ({
+                            text: opt.text,
+                            isCorrect: opt.is_correct ?? opt.isCorrect ?? false,
+                            feedback: opt.feedback
+                        }))
                         return (
                             <QuizBlock
                                 key={key}
                                 blockId={block.id || `quiz-${index}`}
                                 question={block.question}
-                                options={block.options}
+                                options={mappedOptions}
                                 explanation={block.explanation}
                                 xpBonus={block.xp_bonus}
                                 answered={quizAnswer}
