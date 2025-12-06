@@ -31,8 +31,11 @@ from .system_design import MODULE_SYSTEM_DESIGN
 from .prompt_engineering import MODULE_PROMPT_ENGINEERING
 from .ai_agents import MODULE_AI_AGENTS
 
+# FRONTEND MODULES
+from .react_nextjs import MODULE_REACT_NEXTJS
 
-# All modules list (19 TOTAL)
+
+# All modules list (20 TOTAL)
 ALL_V3_MODULES = [
     MODULE_AI_AGENTS,  # NEW
     MODULE_AWS_DEVOPS,
@@ -49,6 +52,7 @@ ALL_V3_MODULES = [
     MODULE_NODEJS,
     MODULE_PROMPT_ENGINEERING,  # NEW
     MODULE_PYTHON_DEVOPS,
+    MODULE_REACT_NEXTJS,  # NEW - Frontend
     MODULE_SQL_MASTERY,  # NEW
     MODULE_SYSTEM_DESIGN,  # NEW
     MODULE_TERRAFORM_MASTERY,
