@@ -325,12 +325,10 @@ app.add_middleware(
 )
 
 # Phase 29: Production Hardening Middleware
-from .api.middleware.rate_limit import RateLimitMiddleware
-# ErrorHandlerMiddleware removed - causes issues with BaseHTTPMiddleware exception handling
-# Using FastAPI's built-in exception handlers instead
-
-app.add_middleware(RateLimitMiddleware, requests_per_minute=300)
-# app.add_middleware(ErrorHandlerMiddleware)  # DISABLED - breaks HTTPException propagation
+# TEMPORARILY DISABLED - Rate limiting was blocking legitimate users
+# from .api.middleware.rate_limit import RateLimitMiddleware
+# app.add_middleware(RateLimitMiddleware, requests_per_minute=300)
+# TODO: Re-enable with proper Redis key expiration and higher limits
 
 @app.get("/health")
 def health():
