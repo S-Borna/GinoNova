@@ -480,11 +480,6 @@ export default function QuizPage() {
               </div>
             )}
 
-            {/* DEBUG: Show module count */}
-            <div className="p-2 bg-blue-500/20 text-blue-300 text-xs rounded">
-              DEBUG: {modules.length} modules loaded
-            </div>
-
             <div className="space-y-2">
               <label className="text-sm text-neutral-400">Select Module ({modules.length} available)</label>
               <Select value={selectedModule} onValueChange={setSelectedModule}>
