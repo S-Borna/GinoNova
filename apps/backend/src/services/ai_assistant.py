@@ -1,13 +1,15 @@
 """
 AI Assistant Service - Phase 16
-Dallas FAQ-baserat system - svarar endast med plattformens innehåll.
+Dallas DYNAMISK FAQ - läser automatiskt från ALL_V3_MODULES.
 GPT används INTE för att undvika kostnader och hålla svar relevanta.
+
+Version 2.0: Dynamisk - uppdateras automatiskt med nya moduler!
 """
 import os
 from typing import Optional, List
 import logging
 
-from .dallas_faq import get_dallas_response
+from .dallas_dynamic import get_dallas_response
 
 logger = logging.getLogger(__name__)
 
