@@ -2,7 +2,7 @@
 Error Handler Middleware - Phase 29
 Global exception handling with structured error responses.
 """
-from fastapi import Request
+from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 import logging
@@ -21,6 +21,10 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:
             return await call_next(request)
+        except HTTPException:
+            # Re-raise HTTPExceptions so FastAPI handles them properly
+            # This includes 401, 403, 404, 429, etc.
+            raise
         except Exception as e:
             # Generate unique request ID for tracking
             request_id = str(uuid.uuid4())[:8]

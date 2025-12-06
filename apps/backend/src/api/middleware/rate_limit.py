@@ -26,6 +26,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             "/api/auth/login",
             "/api/auth/register",
             "/api/auth/refresh",
+            "/api/auth/me",
+            "/api/auth/status",
             "/api/auth/google",
             "/api/auth/github",
             "/api/auth/discord",
