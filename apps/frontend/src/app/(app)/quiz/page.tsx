@@ -105,17 +105,24 @@ export default function QuizPage() {
   const fetchModules = async () => {
     try {
       const token = getToken();
+      console.log("Fetching modules with token:", token ? "EXISTS" : "NULL");
+      console.log("API URL:", API_BASE_URL);
       const res = await fetch(`${API_BASE_URL}/api/quiz/modules`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("Modules response status:", res.status);
       if (res.ok) {
         const data = await res.json();
+        console.log("Modules data:", data);
         setModules(data.modules || []);
+      } else {
+        const errData = await res.json();
+        console.error("Modules error:", errData);
       }
-    } catch {
-      console.error("Failed to fetch modules");
+    } catch (err) {
+      console.error("Failed to fetch modules:", err);
     }
   };
 
@@ -341,14 +348,14 @@ export default function QuizPage() {
                           onClick={() => !showResult && handleMCQAnswer(letter)}
                           disabled={showResult}
                           className={`w-full p-4 rounded-lg text-left transition-all ${showResult
-                              ? isCorrect
-                                ? "bg-green-500/20 border-green-500"
-                                : isSelected
-                                  ? "bg-red-500/20 border-red-500"
-                                  : "bg-neutral-800/50 border-neutral-700"
+                            ? isCorrect
+                              ? "bg-green-500/20 border-green-500"
                               : isSelected
-                                ? "bg-purple-500/20 border-purple-500"
-                                : "bg-neutral-800/50 border-neutral-700 hover:bg-neutral-800"
+                                ? "bg-red-500/20 border-red-500"
+                                : "bg-neutral-800/50 border-neutral-700"
+                            : isSelected
+                              ? "bg-purple-500/20 border-purple-500"
+                              : "bg-neutral-800/50 border-neutral-700 hover:bg-neutral-800"
                             } border`}
                         >
                           <div className="flex items-center gap-3">
