@@ -129,37 +129,30 @@ Important:
         return None
 
 
-def get_module_content_for_quiz(db, module_slug: str) -> Optional[str]:
+def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     """
     Get module content suitable for quiz generation.
+    Uses in-memory module_repository.
 
     Args:
-        db: Database session
         module_slug: Module slug to get content for
 
     Returns:
         Combined content string or None
     """
-    from src.db.models import Module, Task
+    from src.db.module_repository import get_module_by_slug
 
-    module = db.query(Module).filter(Module.slug == module_slug).first()
+    module = get_module_by_slug(module_slug)
     if not module:
         return None
 
-    # Get tasks for this module
-    tasks = db.query(Task).filter(Task.module_id == module.id).limit(20).all()
-
-    # Build content string
+    # Build content string from module data
     content_parts = [
-        f"Module: {module.title}",
-        f"Description: {module.description or 'N/A'}",
+        f"Module: {module.name}",
+        f"Description: {getattr(module, 'description', 'DevOps learning module')}",
         "",
-        "Tasks:"
+        f"This module covers {module.name} concepts and practices.",
+        "Key topics include configuration, best practices, troubleshooting, and real-world applications."
     ]
-
-    for task in tasks:
-        content_parts.append(f"- {task.title}: {task.description or 'N/A'}")
-        if task.content:
-            content_parts.append(f"  Content: {task.content[:500]}")
 
     return "\n".join(content_parts)

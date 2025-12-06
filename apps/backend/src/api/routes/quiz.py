@@ -5,12 +5,10 @@ Only accessible by specific users (premium feature).
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, Field
 from typing import Literal, Optional, List
-from sqlalchemy.orm import Session
 from datetime import datetime
 
 from src.core.deps import get_current_user
 from src.schemas.user import UserPublic
-from src.db.database import get_db
 
 router = APIRouter(prefix="/quiz", tags=["quiz"])
 
@@ -85,8 +83,7 @@ async def check_access(
 @router.post("/generate", response_model=QuizResponse)
 async def generate_quiz(
     request: QuizGenerateRequest,
-    current_user: UserPublic = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: UserPublic = Depends(get_current_user)
 ):
     """
     Generate AI-powered quiz questions for a module.
@@ -104,21 +101,25 @@ async def generate_quiz(
             detail="AI Quiz Generator is a premium feature. Coming soon!"
         )
 
-    # Import service here to avoid circular imports
-    from src.services.quiz_service import generate_quiz as gen_quiz, get_module_content_for_quiz
+    # Import service and repository
+    from src.services.quiz_service import generate_quiz as gen_quiz
+    from src.db.module_repository import get_module_by_slug
 
-    # Get module content
-    content = get_module_content_for_quiz(db, request.module_slug)
-    if not content:
+    # Get module from in-memory repository
+    module = get_module_by_slug(request.module_slug)
+    if not module:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Module '{request.module_slug}' not found"
         )
 
-    # Get module title
-    from src.db.models import Module
-    module = db.query(Module).filter(Module.slug == request.module_slug).first()
-    module_title = module.title if module else request.module_slug
+    # Build content from module data
+    module_title = module.name
+    content = f"""Module: {module.name}
+Description: {getattr(module, 'description', 'DevOps learning module')}
+
+This module covers {module.name} concepts and practices in DevOps.
+Topics include configuration, best practices, troubleshooting, and real-world applications."""
 
     # Generate quiz
     result = gen_quiz(
