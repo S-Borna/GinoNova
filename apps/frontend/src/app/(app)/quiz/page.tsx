@@ -404,12 +404,11 @@ export default function QuizPage() {
                   </CardContent>
                 </Card>
               ) : (
-                <div
-                  onClick={handleFlipCard}
-                  className="cursor-pointer perspective-1000"
-                >
-                  <Card className={`bg-neutral-900/50 border-neutral-800 min-h-[300px] flex items-center justify-center transition-transform duration-500 ${quiz.flipped[quiz.currentIndex] ? "rotate-y-180" : ""
-                    }`}>
+                <div className="space-y-4">
+                  <Card 
+                    onClick={handleFlipCard}
+                    className="bg-neutral-900/50 border-neutral-800 min-h-[300px] flex items-center justify-center cursor-pointer hover:border-purple-500/50 transition-colors"
+                  >
                     <CardContent className="text-center p-8">
                       {!quiz.flipped[quiz.currentIndex] ? (
                         <div>
@@ -426,16 +425,17 @@ export default function QuizPage() {
                         </div>
                       ) : (
                         <div>
-                          <Badge className="mb-4" variant="secondary">Back</Badge>
+                          <Badge className="mb-4 bg-green-600">Back</Badge>
                           <p className="text-xl text-white">
                             {(currentQuestion as FlashcardQuestion).back}
                           </p>
+                          <p className="text-neutral-500 mt-6 text-sm">Click to flip back</p>
                         </div>
                       )}
                     </CardContent>
                   </Card>
 
-                  <Button onClick={(e) => { e.stopPropagation(); nextQuestion(); }} className="w-full mt-4">
+                  <Button onClick={(e) => { e.stopPropagation(); nextQuestion(); }} className="w-full bg-gradient-to-r from-purple-600 to-pink-600">
                     {quiz.currentIndex < quiz.questions.length - 1 ? (
                       <>Next Card <ChevronRight className="w-4 h-4 ml-2" /></>
                     ) : (
