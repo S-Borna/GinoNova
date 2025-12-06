@@ -151,22 +151,20 @@ async def generate_quiz(
 
 @router.get("/modules")
 async def get_available_modules(
-    current_user: UserPublic = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: UserPublic = Depends(get_current_user)
 ):
     """Get list of modules available for quiz generation."""
-    from src.db.models import Module
-
-    modules = db.query(Module).order_by(Module.order_index).all()
+    from src.db.module_repository import list_modules
+    
+    modules = list_modules()
 
     return {
         "modules": [
             {
-                "slug": m.slug,
-                "title": m.title,
-                "description": m.description
+                "slug": getattr(m, 'slug', m.name.lower().replace(' ', '-')),
+                "title": m.name,
+                "description": getattr(m, 'description', f"Module: {m.name}")
             }
             for m in modules
         ]
     }
-# Railway rebuild Sat Dec  6 17:54:49 CET 2025
