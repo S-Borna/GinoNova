@@ -113,6 +113,8 @@ const SKILLSMAP_METADATA: Record<string, SkillsMapMeta> = {
     "react-nextjs": { icon: "⚛️", color: "#61DAFB", tags: ["React", "Next.js", "Frontend", "Fullstack"] },
     // LANGUAGE MODULES
     "dotnet-mastery": { icon: "🟣", color: "#512BD4", tags: ["C#", ".NET", "ASP.NET", "Backend"] },
+    // CLOUD MODULES
+    "azure-mastery": { icon: "☁️", color: "#0078D4", tags: ["Azure", "Cloud", "DevOps", "Microsoft"] },
 }
 
 // Default metadata for unknown modules

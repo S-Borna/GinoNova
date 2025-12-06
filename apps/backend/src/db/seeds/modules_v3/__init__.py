@@ -37,12 +37,22 @@ from .react_nextjs import MODULE_REACT_NEXTJS
 # LANGUAGE MODULES
 from .dotnet import MODULE_INFO as MODULE_DOTNET_MASTERY
 
+# CLOUD MODULES
+from .azure import SKILLSMAP_METADATA as MODULE_AZURE_INFO, ALL_NODES as AZURE_NODES
 
-# All modules list (21 TOTAL)
+# Construct Azure module info
+MODULE_AZURE_MASTERY = {
+    **MODULE_AZURE_INFO,
+    "tasks": AZURE_NODES,
+}
+
+
+# All modules list (22 TOTAL)
 ALL_V3_MODULES = [
     MODULE_AI_AGENTS,  # NEW
     MODULE_AWS_DEVOPS,
     MODULE_ANSIBLE_MASTERY,  # NEW
+    MODULE_AZURE_MASTERY,  # NEW - Azure Cloud
     MODULE_BASH,
     MODULE_CICD_MASTERY,
     MODULE_DOCKER_MASTERY,
