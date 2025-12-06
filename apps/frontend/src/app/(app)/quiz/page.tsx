@@ -82,49 +82,61 @@ export default function QuizPage() {
 
   // Check access on mount
   useEffect(() => {
-    checkAccess();
-    fetchModules();
+    const init = async () => {
+      const token = getToken();
+      console.log("Quiz init - token:", token ? "EXISTS" : "NULL");
+      
+      if (!token) {
+        console.log("No token, skipping API calls");
+        setHasAccess(false);
+        setAccessMessage("Please log in to access the quiz");
+        return;
+      }
+      
+      // Fetch both in parallel
+      try {
+        const [accessRes, modulesRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/api/quiz/access`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_BASE_URL}/api/quiz/modules`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+        
+        console.log("Access status:", accessRes.status);
+        console.log("Modules status:", modulesRes.status);
+        
+        if (accessRes.ok) {
+          const accessData = await accessRes.json();
+          console.log("Access data:", accessData);
+          setHasAccess(accessData.has_access);
+          setAccessMessage(accessData.message);
+        } else {
+          setHasAccess(false);
+          setAccessMessage("Could not verify access");
+        }
+        
+        if (modulesRes.ok) {
+          const modulesData = await modulesRes.json();
+          console.log("Modules data:", modulesData);
+          setModules(modulesData.modules || []);
+        }
+      } catch (err) {
+        console.error("Init error:", err);
+        setHasAccess(false);
+        setAccessMessage("Connection error");
+      }
+    };
+    init();
   }, []);
 
   const checkAccess = async () => {
-    try {
-      const token = getToken();
-      const res = await fetch(`${API_BASE_URL}/api/quiz/access`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      setHasAccess(data.has_access);
-      setAccessMessage(data.message);
-    } catch {
-      setHasAccess(false);
-      setAccessMessage("Could not verify access");
-    }
+    // Now handled in init
   };
 
   const fetchModules = async () => {
-    try {
-      const token = getToken();
-      console.log("Fetching modules with token:", token ? "EXISTS" : "NULL");
-      console.log("API URL:", API_BASE_URL);
-      const res = await fetch(`${API_BASE_URL}/api/quiz/modules`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Modules response status:", res.status);
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Modules data:", data);
-        setModules(data.modules || []);
-      } else {
-        const errData = await res.json();
-        console.error("Modules error:", errData);
-      }
-    } catch (err) {
-      console.error("Failed to fetch modules:", err);
-    }
+    // Now handled in init
   };
 
   const generateQuiz = async () => {
