@@ -326,10 +326,11 @@ app.add_middleware(
 
 # Phase 29: Production Hardening Middleware
 from .api.middleware.rate_limit import RateLimitMiddleware
-from .api.middleware.error_handler import ErrorHandlerMiddleware
+# ErrorHandlerMiddleware removed - causes issues with BaseHTTPMiddleware exception handling
+# Using FastAPI's built-in exception handlers instead
 
 app.add_middleware(RateLimitMiddleware, requests_per_minute=300)
-app.add_middleware(ErrorHandlerMiddleware)
+# app.add_middleware(ErrorHandlerMiddleware)  # DISABLED - breaks HTTPException propagation
 
 @app.get("/health")
 def health():
