@@ -35,6 +35,7 @@ import {
     Map,
     GraduationCap,
     Shield,
+    Brain,
     type LucideIcon
 } from "lucide-react"
 
@@ -70,6 +71,7 @@ const mainNavItems: NavItem[] = [
     { label: "Camp DevOps", href: "/modules", icon: BookOpen },
     { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
     { label: "Studyflow", href: "/studyflow", icon: Clock },
+    { label: "AI Quiz", href: "/quiz", icon: Brain },
     { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Profile", href: "/profile", icon: User },
     { label: "Admin", href: "/admin", icon: Shield, adminOnly: true },
