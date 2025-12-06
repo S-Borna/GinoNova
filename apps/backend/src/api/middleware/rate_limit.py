@@ -59,9 +59,17 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         if not allowed:
             logger.warning(f"Rate limit exceeded for {identifier}")
-            raise HTTPException(
-                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail="Rate limit exceeded. Please wait before making more requests."
+            # Return Response directly instead of raising HTTPException
+            # BaseHTTPMiddleware has issues with exception propagation
+            return Response(
+                content='{"detail":"Rate limit exceeded. Please wait before making more requests."}',
+                status_code=429,
+                media_type="application/json",
+                headers={
+                    "X-RateLimit-Limit": str(self.rpm),
+                    "X-RateLimit-Remaining": "0",
+                    "Retry-After": "60"
+                }
             )
 
         # Continue with request
