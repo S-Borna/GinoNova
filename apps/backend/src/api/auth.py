@@ -3,6 +3,7 @@ Auth Router - Authentication endpoints
 Phase 1.4: Register, Login with JWT, standardized errors, rate-limit placeholders
 Phase OAuth: Google, GitHub, Discord OAuth support
 """
+import os
 from fastapi import APIRouter, HTTPException, status
 from uuid import uuid4
 from datetime import datetime
@@ -19,6 +20,23 @@ from ..core.exceptions import (
 )
 
 auth_router = APIRouter()
+
+# === LOCKDOWN MODE ===
+# Set LOCKDOWN_MODE=true to block all auth except allowed emails
+LOCKDOWN_MODE = os.getenv("LOCKDOWN_MODE", "false").lower() == "true"
+ALLOWED_EMAILS = [
+    email.strip().lower()
+    for email in os.getenv("ALLOWED_EMAILS", "").split(",")
+    if email.strip()
+]
+
+def check_lockdown(email: str):
+    """Block access if lockdown mode is enabled and email is not allowed."""
+    if LOCKDOWN_MODE and email.lower() not in ALLOWED_EMAILS:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Systemet är tillfälligt stängt för underhåll. Försök igen senare."
+        )
 
 
 # === RATE LIMIT PLACEHOLDERS ===
@@ -48,7 +66,11 @@ def register(user_data: UserCreate):
     Raises:
         409 Conflict: If email already exists
         422 Validation Error: If password/email invalid
+        503 Service Unavailable: If lockdown mode is enabled
     """
+    # Check lockdown mode - block new registrations except allowed emails
+    check_lockdown(user_data.email)
+
     # TODO: Add rate limit - limiter.limit("5/minute")
     try:
         user = user_service.create_user(user_data)
@@ -86,7 +108,11 @@ def login(login_data: UserLogin):
 
     Raises:
         401 Unauthorized: If email/password is incorrect
+        503 Service Unavailable: If lockdown mode is enabled
     """
+    # Check lockdown mode - block logins except allowed emails
+    check_lockdown(login_data.email)
+
     # TODO: Add rate limit - limiter.limit("10/minute")
     try:
         user = user_service.authenticate_user(login_data)
@@ -217,7 +243,13 @@ def oauth_login(oauth_data: OAuthRequest):
     - **avatar**: Optional avatar URL
 
     Returns JWT access token and user data.
+
+    Raises:
+        503 Service Unavailable: If lockdown mode is enabled
     """
+    # Check lockdown mode - block OAuth logins except allowed emails
+    check_lockdown(oauth_data.email)
+
     from ..db import user_repository
     from ..db.database import is_db_configured, get_db_context
     from ..schemas.user import UserInDB
