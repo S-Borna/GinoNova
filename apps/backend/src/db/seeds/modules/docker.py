@@ -23,3301 +23,1139 @@ MODULE = {
     "color": "#2496ED",
     "tasks": [
         {
-            "title": "Docker Fundamentals",
-            "slug": "docker-fundamentals",
+            "title": "Docker Fundamentals & Architecture",
+            "slug": "docker-fundamentals-architecture",
             "difficulty": "easy",
             "estimated_minutes": 45,
             "xp_reward": 75,
-            "content": """# Docker Fundamentals
+            "content": """# Docker Fundamentals & Architecture
 
-## ⚡ Snabbinstallation (2 minuter)
+## Varför behöver du kunna detta?
 
-Innan vi börjar behöver du Docker installerat. Välj ditt operativsystem:
+Som DevOps-ingenjör kommer du använda Docker dagligen. Du måste förstå:
 
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🍎 macOS / 🪟 Windows
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1. Gå till: https://docker.com/products/docker-desktop
-# 2. Ladda ner Docker Desktop
-# 3. Installera och starta
-# 4. Klart!
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐧 Linux (Ubuntu/Debian)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-sudo apt update
-sudo apt install docker.io -y
-sudo systemctl start docker
-sudo systemctl enable docker
-
-# Kör Docker utan sudo (valfritt men rekommenderat)
-sudo usermod -aG docker $USER
-# Logga ut och in igen för att ändringen ska gälla
-```
-
-**Verifiera installationen:**
-
-```bash
-docker --version
-# Förväntad output: Docker version 24.x.x eller liknande
-
-docker run hello-world
-# Om du ser "Hello from Docker!" är allt klart! ✅
-```
+- **Vad containers faktiskt är** så du kan felsöka när saker går fel
+- **Hur Docker-arkitekturen fungerar** så du vet var problem kan uppstå
+- **Skillnaden mellan containers och VMs** så du kan välja rätt verktyg
 
 ---
 
-## 🎯 Varför Docker är viktigt för DevOps
+## Så fungerar Docker
 
-Docker är ett av de viktigaste verktygen i modern DevOps. Här är varför:
-
-| Problem utan Docker | Lösning med Docker |
-|--------------------|--------------------|
-| "Det fungerade på min dator!" | Samma container körs identiskt överallt |
-| Deployment tar timmar | Containers startar på sekunder |
-| Varje server konfigureras manuellt | Allt är paketerat i imagen |
-| Resursslöseri med VMs | Containers delar OS-kärnan |
-| Svårt att skala | Starta fler containers direkt |
-| Beroendekonflikter | Varje app isolerad i sin container |
+Tänk på Docker som en **standardiserad fraktcontainer** för mjukvara. Precis som fraktcontainrar revolutionerade sjöfarten genom att standardisera hur gods transporteras, revolutionerar Docker hur mjukvara levereras.
 
 ---
 
-## 🐳 Vad är Docker egentligen?
-
-Docker låter dig paketera en applikation tillsammans med **allt den behöver** - kod, runtime, bibliotek, systemverktyg och inställningar - i en portabel enhet som kallas **container**.
-
-Tänk på det som en **standardiserad fraktcontainer** för mjukvara. Precis som fraktcontainrar revolutionerade sjöfarten genom att standardisera transport, revolutionerar Docker hur mjukvara levereras.
+## Container vs Virtual Machine
 
 ```bash
-# En container innehåller:
-┌─────────────────────────────────────┐
-│  🔹 Din applikationskod             │
-│  🔹 Runtime (Node, Python, etc)     │
-│  🔹 Systembibliotek                 │
-│  🔹 Konfigurationsfiler             │
-│  🔹 Miljövariabler                  │
-└─────────────────────────────────────┘
-# Allt paketerat → fungerar överallt!
-```
-
----
-
-## 📦 Containers vs Virtual Machines
-
-Det är viktigt att förstå skillnaden mellan containers och virtual machines (VMs):
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# VIRTUAL MACHINE
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Virtual Machine (VM)
 ┌─────────────────────────────────────┐
 │           Din App                    │
 ├─────────────────────────────────────┤
-│      Helt eget OS (Guest OS)         │  ← 1-10 GB bara för OS!
+│        Guest OS (hela!)              │  # 1-10 GB
 ├─────────────────────────────────────┤
 │         Hypervisor                   │
 ├─────────────────────────────────────┤
 │          Host OS                     │
-├─────────────────────────────────────┤
-│         Hardware                     │
 └─────────────────────────────────────┘
-# Starttid: 1-5 minuter
-# RAM per VM: 1-4 GB minimum
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# CONTAINER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Container
 ┌─────────────────────────────────────┐
 │           Din App                    │
 ├─────────────────────────────────────┤
-│        Docker Engine                 │  ← MB istället för GB!
+│     Container Runtime (Docker)       │  # MB istället för GB
 ├─────────────────────────────────────┤
 │          Host OS                     │
-├─────────────────────────────────────┤
-│         Hardware                     │
 └─────────────────────────────────────┘
-# Starttid: 1-2 sekunder
-# RAM per container: 50-200 MB
 ```
 
-**Nyckelpunkt:** Containers delar host-systemets OS-kärna. Det är därför de är så snabba och lätta!
-
-**Praktiskt exempel:**
-
-```bash
-# Du behöver köra 3 webbservrar:
-
-# Med VMs:
-# - 3 separata operativsystem
-# - Totalt: ~6-8 GB RAM
-# - Starttid: 5-10 minuter
-
-# Med Docker:
-# - 3 containers, delad OS-kärna
-# - Totalt: ~200 MB RAM
-# - Starttid: 3-5 sekunder
-```
+**Containers delar Host OS kernel** - det är därför de är så snabba och lätta!
 
 ---
 
-## 🏗️ Docker-arkitekturen
-
-Docker består av flera komponenter som samarbetar:
+## Docker-arkitekturen
 
 ```bash
 ┌──────────────────────────────────────────────────────────┐
-│                  📱 DOCKER CLIENT                         │
-│              (kommandoradsverktyget 'docker')            │
-│                                                          │
-│   docker run, docker build, docker pull, docker ps...    │
+│                     Docker Client                         │
+│                    (docker CLI)                           │
 └─────────────────────────┬────────────────────────────────┘
-                          │
-                          │ REST API (kommunikation)
+                          │ REST API
                           ▼
 ┌──────────────────────────────────────────────────────────┐
-│                  ⚙️ DOCKER DAEMON                         │
-│                    (dockerd)                              │
-│                                                          │
-│   Bakgrundsprocess som gör allt jobb:                    │
-│   - Hanterar images                                       │
-│   - Skapar/kör containers                                │
-│   - Hanterar nätverk och volymer                         │
-└─────────────────────────┬────────────────────────────────┘
+│                    Docker Daemon                          │
+│                     (dockerd)                             │
+├──────────────────────────────────────────────────────────┤
+│  Images  │  Containers  │  Networks  │  Volumes          │
+└──────────────────────────────────────────────────────────┘
                           │
                           ▼
 ┌──────────────────────────────────────────────────────────┐
-│               📦 CONTAINER RUNTIME                        │
-│                  (containerd)                             │
-│                                                          │
-│   Lågnivå-hantering av containers                        │
+│                   Container Runtime                       │
+│                    (containerd)                           │
 └──────────────────────────────────────────────────────────┘
 ```
 
-**Förklaring av komponenterna:**
-
-| Komponent | Vad den gör |
-|-----------|-------------|
-| **Docker Client** | CLI-verktyget du skriver kommandon i |
-| **Docker Daemon** | Bakgrundsprocess som gör allt arbete |
-| **Docker Images** | Read-only mallar för containers |
-| **Docker Containers** | Körande instanser av images |
-| **Docker Hub** | Publik registry för images (som GitHub för kod) |
-
 ---
 
-## 🌐 Docker Hub - Appbutiken för containers
-
-Docker Hub är världens största registry för Docker images. Tänk på det som en **appbutik för containers**:
+## Grundläggande kommandon
 
 ```bash
-# Docker Hub innehåller tusentals färdiga images:
-# ┌─────────────────────────────────────────────────┐
-# │  nginx        - Webbserver                      │
-# │  postgres     - PostgreSQL databas              │
-# │  redis        - Cache och meddelandehantering   │
-# │  node         - Node.js runtime                 │
-# │  python       - Python runtime                  │
-# │  mysql        - MySQL databas                   │
-# │  mongo        - MongoDB databas                 │
-# │  ubuntu       - Ubuntu basimage                 │
-# └─────────────────────────────────────────────────┘
+# Kolla att Docker är installerat och kör
+docker version              # Visar client och server version
+docker info                 # Detaljerad info om Docker-installation
 
-# Sök efter images
-docker search nginx
-# Visar alla nginx-relaterade images
+# Kör din första container
+docker run hello-world      # Laddar ner image och kör container
 
-# Ladda ner en image
-docker pull nginx
-# Hämtar officiella nginx-imagen
+# Lista containers
+docker ps                   # Visar körande containers
+docker ps -a                # Visar ALLA containers (även stoppade)
 
-# Ladda upp din egen image
-docker push dittnamn/din-image
-# Publicerar till Docker Hub (kräver konto)
+# Lista images
+docker images               # Visar alla lokala images
 ```
 
 ---
 
-## 🖥️ Docker på olika plattformar
-
-Docker fungerar på alla operativsystem, men bäst på Linux:
-
-| Plattform | Hur Docker körs | Prestanda |
-|-----------|-----------------|-----------|
-| **Linux** | Direkt på systemet (native) | ⭐⭐⭐⭐⭐ Bäst |
-| **macOS** | Via Docker Desktop (liten Linux VM) | ⭐⭐⭐⭐ Bra |
-| **Windows** | Via Docker Desktop (WSL2/Hyper-V) | ⭐⭐⭐⭐ Bra |
-
----
-
-## 🔧 Grundläggande Docker-kommandon
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📊 INFORMATION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-docker --version          # Visar Docker-versionen
-docker info               # Detaljerad systeminfo
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📦 IMAGES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-docker images             # Lista alla lokala images
-docker pull nginx         # Ladda ner nginx-image
-docker rmi nginx          # Ta bort en image
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐳 CONTAINERS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-docker ps                 # Lista körande containers
-docker ps -a              # Lista ALLA containers (även stoppade)
-docker run nginx          # Skapa och starta en container
-docker stop <id>          # Stoppa en container
-docker rm <id>            # Ta bort en container
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 💡 HJÄLP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-docker run --help         # Hjälp för specifikt kommando
-docker --help             # Lista alla kommandon
-```
-
----
-
-## 🔄 Vad händer när du kör "docker run"?
+## Vad händer när du kör "docker run"?
 
 ```bash
 docker run nginx
 ```
 
-Bakom kulisserna händer detta:
-
-```bash
-# Steg 1: Docker Client → Docker Daemon
-#         "Hej, jag vill köra nginx!"
-
-# Steg 2: Daemon kollar lokalt
-#         "Finns nginx-image på denna dator?"
-
-# Steg 3: Om nej → Ladda ner från Docker Hub
-#         "Hämtar nginx:latest från registry..."
-
-# Steg 4: Skapa container
-#         "Skapar isolerad miljö med filsystem, nätverk..."
-
-# Steg 5: Starta container
-#         "Nginx körs nu i containern!"
-```
-
-**Så `docker run` = pull + create + start i ett kommando!**
+1. **Docker Client** skickar kommandot till Docker Daemon
+2. **Daemon** kollar om `nginx` image finns lokalt
+3. Om inte → laddar ner från **Docker Hub**
+4. **Daemon** skapar en container från imagen
+5. **Daemon** allokerar filsystem, nätverk, etc.
+6. **Daemon** startar containern
 
 ---
 
-## 🚀 Varför Docker i DevOps-arbetet?
+## Key Takeaways
 
-| Traditionellt problem | Docker-lösning |
-|----------------------|----------------|
-| "Det fungerade på min dator" | Samma image körs överallt |
-| Komplexa installationssteg | `docker run` - en rad |
-| Konfigurationskaos | Allt i Dockerfile, versionshanterat |
-| Långsam deployment | Sekunder istället för timmar |
-| Resurshungriga VMs | Lätta containers |
-| Svårt att rulla tillbaka | Byt till tidigare image-tag |
-
-```bash
-# Före Docker (deployment):
-# 1. SSH till server
-# 2. Installera dependencies (kan ta timmar)
-# 3. Konfigurera miljön
-# 4. Starta applikationen
-# 5. Hoppas inget går fel...
-
-# Med Docker:
-docker pull min-app:v1.2.3
-docker run -d min-app:v1.2.3
-# Klart på sekunder! ✅
-```
-
----
-
-## ✅ Sammanfattning
-
-| Begrepp | Förklaring |
-|---------|------------|
-| **Docker** | Plattform för att bygga och köra containers |
-| **Container** | Isolerad miljö med app + dependencies |
-| **Image** | Read-only mall för att skapa containers |
-| **Docker Hub** | Registry för att dela images |
-| **Docker Daemon** | Bakgrundsprocess som hanterar allt |
-| **Docker Client** | CLI-verktyget du använder |
-
-**Nästa steg:** Nu när du förstår grunderna ska vi dyka djupare i Docker Images!
+- Docker containers är **inte VMs** - de delar host OS kernel
+- **Docker Client** pratar med **Docker Daemon** via REST API
+- **Images** är read-only templates, **Containers** är körande instanser
+- `docker run` = pull + create + start i ett kommando
 """,
         },
         {
-            "title": "SSH & Remote Access",
-            "slug": "ssh-remote-access",
-            "difficulty": "easy",
-            "estimated_minutes": 50,
-            "xp_reward": 80,
-            "content": """# SSH & Remote Access
-
-## 🎯 Varför SSH är kritiskt för DevOps
-
-SSH är standardverktyget för att hantera servrar. Som DevOps-ingenjör använder du det dagligen för:
-
-| Användningsområde | Beskrivning |
-|-------------------|-------------|
-| **Remote server access** | Logga in på servrar över nätverket |
-| **Säker filöverföring** | Kopiera filer med SCP och RSYNC |
-| **Tunneling** | Skapa säkra kanaler för annan trafik |
-| **Remote commands** | Kör kommandon på servrar utan att logga in |
-| **Automation** | Skript som hanterar många servrar |
-| **Production management** | Hantera produktionsmiljöer säkert |
-
----
-
-## ⚡ Snabbinstallation
-
-SSH-klienten är oftast förinstallerad. Verifiera:
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔍 KONTROLLERA OM SSH FINNS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -V
-# Förväntad output: OpenSSH_8.x eller liknande
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐧 LINUX - Installera om det saknas
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-sudo apt update && sudo apt install openssh-client -y
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🍎 macOS / 🪟 Windows
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SSH är förinstallerat på macOS
-# Windows 10/11: SSH finns i PowerShell eller använd Git Bash
-```
-
----
-
-## 🔌 Grundläggande anslutning
-
-SSH (Secure Shell) skapar en krypterad anslutning till en fjärrdator. Allt du skriver och ser är skyddat från avlyssning.
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📡 BASIC CONNECTION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh user@hostname
-# ssh        = kommandot
-# user       = användarnamnet på fjärrdatorn
-# @          = separator
-# hostname   = servernamn eller IP-adress
-# Exempel: ssh alice@server.example.com
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔢 MED SPECIFIK PORT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -p 2222 user@hostname
-# -p 2222    = anslut till port 2222 istället för standard (22)
-# Vissa servrar använder annan port för ökad säkerhet
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 MED IP-ADRESS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh user@192.168.1.100
-# Använd IP-adress direkt när du inte har DNS
-# Användbart i lokala nätverk eller vid felsökning
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚡ KÖR KOMMANDO REMOTE (utan interaktiv session)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh user@hostname "ls -la"
-# Kör kommandot, visa output, stäng anslutningen
-# Perfekt för automation och skript!
-
-ssh user@hostname "df -h && free -m"
-# Kör flera kommandon med &&
-```
-
----
-
-## 🔍 Verbose-läge för felsökning
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐛 DEBUG-NIVÅER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -v user@hostname      # Verbose - grundläggande debug-info
-ssh -vv user@hostname     # Mer detaljerat
-ssh -vvv user@hostname    # Maximalt detaljerat - visar ALLT
-
-# Användbart när anslutningen misslyckas
-# Visar vilka nycklar som testas, vilka algoritmer som används, etc.
-```
-
----
-
-## 🚪 Avsluta SSH-session
-
-```bash
-exit        # Skriv exit
-logout      # Eller logout
-# Ctrl+D    # Eller tangentbordsgenväg
-```
-
----
-
-## 🔑 SSH-nycklar (säkrare än lösenord)
-
-SSH-nycklar fungerar som ett nyckelpar - en **privat** (hemlig) och en **publik** (kan delas). Det är mycket säkrare än lösenord!
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔐 GENERERA NYCKLAR - ED25519 (rekommenderat)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh-keygen -t ed25519 -a 100 -C "din@email.com"
-# -t ed25519  = nyckeltyp (modern och säker)
-# -a 100      = antal krypteringsrundor (mer = säkrare)
-# -C          = kommentar (hjälper identifiera nyckeln)
-
-# Du får frågor:
-# 1. Var ska nyckeln sparas? (Enter för default: ~/.ssh/id_ed25519)
-# 2. Passphrase? (REKOMMENDERAS - extra säkerhet för nyckeln)
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔐 ALTERNATIV: RSA (om ED25519 inte stöds)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh-keygen -t rsa -b 4096 -a 100 -C "din@email.com"
-# -t rsa      = RSA-nyckel (äldre men fungerar överallt)
-# -b 4096     = 4096 bitar (minimum för säkerhet idag)
-```
-
-**Varför nycklar är bättre än lösenord:**
-- Även om någon får din publika nyckel kan de inte logga in
-- Längre och mer slumpmässiga än lösenord
-- Kan inte gissas med brute-force
-- Kan skyddas med passphrase
-
----
-
-## 📁 Nyckelfiler och rättigheter
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📂 VAR NYCKLARNA SPARAS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-~/.ssh/id_ed25519       # Privat nyckel (HEMLIG!)
-~/.ssh/id_ed25519.pub   # Publik nyckel (kan delas)
-~/.ssh/id_rsa           # Privat RSA-nyckel
-~/.ssh/id_rsa.pub       # Publik RSA-nyckel
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔒 KRITISKA RÄTTIGHETER (SSH vägrar annars!)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-chmod 700 ~/.ssh              # Bara du kan läsa mappen
-chmod 600 ~/.ssh/id_ed25519   # Bara du kan läsa privata nyckeln
-chmod 644 ~/.ssh/id_ed25519.pub  # Alla kan läsa publika nyckeln
-chmod 600 ~/.ssh/authorized_keys  # Serverns lista med tillåtna nycklar
-```
-
----
-
-## 📤 Kopiera publik nyckel till server
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✨ METOD 1: ssh-copy-id (enklast!)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh-copy-id user@hostname
-# Kopierar din publika nyckel automatiskt till servern
-# Du loggar in med lösenord EN gång, sedan fungerar nyckeln
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📋 METOD 2: Manuellt med pipe
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-cat ~/.ssh/id_ed25519.pub | ssh user@hostname "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✂️ METOD 3: Kopiera och klistra
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-cat ~/.ssh/id_ed25519.pub   # Visa din publika nyckel
-# Kopiera outputen, logga in på servern, och:
-mkdir -p ~/.ssh
-echo "KLISTRA-NYCKELN-HÄR" >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-```
-
----
-
-## ⚙️ SSH Config (spara tid!)
-
-Skapa `~/.ssh/config` för att slippa skriva långa kommandon:
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📝 EXEMPEL: ~/.ssh/config
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Host production
-    HostName 192.168.1.100
-    User deploy
-    Port 2222
-    IdentityFile ~/.ssh/id_ed25519
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
-
-Host staging
-    HostName staging.example.com
-    User admin
-    IdentityFile ~/.ssh/staging_key
-
-Host *
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
-```
-
-**Nu kan du ansluta med:**
-
-```bash
-ssh production    # Istället för: ssh -p 2222 deploy@192.168.1.100
-ssh staging       # Istället för: ssh admin@staging.example.com
-```
-
-**Vanliga config-optioner:**
-
-| Option | Beskrivning |
-|--------|-------------|
-| `HostName` | Serveradress (IP eller domän) |
-| `User` | Användarnamn |
-| `Port` | SSH-port |
-| `IdentityFile` | Vilken nyckel som ska användas |
-| `ServerAliveInterval` | Skicka keep-alive var X:e sekund |
-| `ServerAliveCountMax` | Max antal missade keep-alive |
-
----
-
-## 🚇 Port Forwarding (tunnlar)
-
-Port forwarding skapar "hemliga tunnlar" genom SSH - perfekt för att nå tjänster som inte är direkt tillgängliga.
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📥 LOCAL PORT FORWARDING (-L)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -L 8080:localhost:3000 user@server
-# Din lokala port 8080 → tunnlas till → serverns localhost:3000
-# Öppna localhost:8080 i webbläsaren → ser serverns app på port 3000
-
-# Praktiskt exempel: Nå databas som bara lyssnar lokalt
-ssh -L 5432:localhost:5432 user@dbserver
-# Nu kan du ansluta till localhost:5432 och nå databasen!
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📤 REMOTE PORT FORWARDING (-R)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -R 8080:localhost:3000 user@server
-# Serverns port 8080 → tunnlas till → din lokala port 3000
-# Användbart: Visa lokal utveckling via servern
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 DYNAMIC PORT FORWARDING (-D) - SOCKS Proxy
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -D 1080 user@server
-# Skapar SOCKS-proxy på localhost:1080
-# All trafik genom proxyn går via SSH-tunneln
-# Konfigurera webbläsaren att använda localhost:1080
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 BAKGRUNDSTUNNEL
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -f -N -L 5432:localhost:5432 user@dbserver
-# -f = kör i bakgrunden
-# -N = kör inget kommando (bara tunneln)
-```
-
----
-
-## 📦 SCP - Kopiera filer säkert
-
-SCP (Secure Copy) kopierar filer över SSH - enkelt och krypterat.
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⬆️ KOPIERA TILL SERVER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-scp file.txt user@hostname:/path/to/destination
-# Kopierar file.txt till servern
-
-scp -r directory/ user@hostname:/path/
-# -r = recursive, kopierar hela mappen med innehåll
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⬇️ KOPIERA FRÅN SERVER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-scp user@hostname:/path/to/file.txt ./
-# Kopierar fil från servern till nuvarande mapp
-
-scp user@hostname:/home/user/data.txt ~/Downloads/
-# Kopierar till specifik mapp
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔢 MED ANNAN PORT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-scp -P 2222 file.txt user@hostname:/path/
-# OBS: Stort -P för SCP, litet -p för SSH!
-```
-
----
-
-## 🔄 RSYNC över SSH
-
-RSYNC är smartare än SCP - synkar bara det som ändrats.
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔁 SYNKA FILER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-rsync -avz -e ssh local/ user@hostname:/remote/
-# -a = archive (behåll permissions, timestamps, etc)
-# -v = verbose (visa vad som händer)
-# -z = compress (snabbare över nätverket)
-# -e ssh = använd SSH för transport
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚫 EXKLUDERA FILER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-rsync -avz --exclude '*.log' --exclude 'node_modules' -e ssh local/ user@hostname:/remote/
-```
-
----
-
-## 🔐 SSH Agent (hantera nycklar)
-
-SSH Agent håller dina nycklar i minnet så du slipper ange passphrase varje gång.
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚀 STARTA OCH ANVÄND AGENT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-eval $(ssh-agent)       # Starta agenten
-ssh-add ~/.ssh/id_ed25519  # Lägg till nyckel (ange passphrase en gång)
-ssh-add -l              # Lista laddade nycklar
-ssh-add -d ~/.ssh/id_ed25519  # Ta bort specifik nyckel
-ssh-add -D              # Ta bort alla nycklar
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 AGENT FORWARDING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -A user@hostname    # Vidarebefordra din agent till servern
-# Nu kan du SSH vidare från servern med dina lokala nycklar!
-
-# Eller i config:
-Host server
-    ForwardAgent yes
-```
-
----
-
-## 🛡️ Säkerhetstips
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✅ BEST PRACTICES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1. Använd starka nycklar
-ssh-keygen -t ed25519 -a 100
-
-# 2. Skydda privata nyckeln
-chmod 600 ~/.ssh/id_ed25519
-
-# 3. Använd passphrase på nyckeln
-
-# 4. Rotera nycklar regelbundet
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔐 KNOWN HOSTS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ~/.ssh/known_hosts sparar serverns fingeravtryck
-# Skyddar mot man-in-the-middle attacker
-
-ssh-keygen -R hostname  # Ta bort gammal host-key
-ssh-keyscan hostname    # Hämta serverns host-key
-```
-
----
-
-## 🔧 Felsökning
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ❌ CONNECTION REFUSED
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-systemctl status sshd           # Kör SSH-servern?
-ss -tlnp | grep :22            # Lyssnar den på port 22?
-sudo ufw status | grep 22       # Blockerar brandväggen?
-sudo journalctl -u sshd -n 50   # Vad säger loggarna?
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚫 PERMISSION DENIED
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ls -la ~/.ssh/                  # Rätt permissions?
-ls -la ~/.ssh/authorized_keys   # Finns filen? Rätt permissions?
-ssh -vvv user@hostname          # Detaljerad debug-info
-sudo tail -f /var/log/auth.log  # Serverloggar
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐌 LÅNGSAM ANSLUTNING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -o GSSAPIAuthentication=no user@hostname
-
-# Eller permanent i ~/.ssh/config:
-Host *
-    GSSAPIAuthentication no
-    UseDNS no
-```
-
----
-
-## 🚀 Produktionsmönster
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📦 AUTOMATISERAD DEPLOY
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#!/bin/bash
-SERVER="user@production"
-APP_DIR="/opt/myapp"
-
-# Synka filer
-rsync -avz --exclude 'node_modules' -e ssh ./ $SERVER:$APP_DIR/
-
-# Kör deploy-kommando
-ssh $SERVER "cd $APP_DIR && ./deploy.sh"
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📊 ÖVERVAKA FLERA SERVRAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#!/bin/bash
-SERVERS=("server1" "server2" "server3")
-
-for server in "${SERVERS[@]}"; do
-    if ssh -o ConnectTimeout=5 "$server" "systemctl is-active nginx" &>/dev/null; then
-        echo "✓ $server: nginx running"
-    else
-        echo "✗ $server: nginx down"
-    fi
-done
-```
-
----
-
-## ✅ Sammanfattning
-
-| Kommando | Beskrivning |
-|----------|-------------|
-| `ssh user@hostname` | Anslut till server |
-| `ssh -p PORT` | Använd specifik port |
-| `ssh-keygen` | Generera nycklar |
-| `ssh-copy-id` | Kopiera publik nyckel till server |
-| `~/.ssh/config` | Klientkonfiguration |
-| `-L` | Local port forwarding |
-| `-R` | Remote port forwarding |
-| `-D` | Dynamic forwarding (SOCKS) |
-| `scp` | Säker filkopiering |
-| `rsync -e ssh` | Synka över SSH |
-| `ssh-agent` | Hantera nycklar i minnet |
-
-**Kom ihåg:**
-- 🔒 Skydda privata nycklar (chmod 600)
-- 🔑 Använd ED25519 eller RSA 4096
-- ⚙️ Använd SSH config för bekvämlighet
-- 🧪 Testa anslutningar innan du automatiserar
-""",
-        },
-        {
-            "title": "IP-adresser: Privat vs Publik",
-            "slug": "ip-addresses-private-public",
+            "title": "Docker Images Deep Dive",
+            "slug": "docker-images-deep-dive",
             "difficulty": "easy",
             "estimated_minutes": 45,
             "xp_reward": 75,
-            "content": """# IP-adresser: Privat vs Publik
+            "content": """# Docker Images Deep Dive
 
-## 🎯 Varför IP-kunskap är kritiskt för DevOps
+## Varför behöver du kunna detta?
 
-IP-adresser är grunden för all nätverkskommunikation. Som DevOps-ingenjör använder du dem för:
+Images är grunden för allt i Docker. Du måste förstå:
 
-| Användningsområde | Beskrivning |
-|-------------------|-------------|
-| **Cloud infrastructure** | Konfigurera VPC, subnets, routing |
-| **Security** | Brandväggsregler, access control |
-| **Troubleshooting** | Felsöka nätverksproblem |
-| **Load balancing** | Distribuera trafik mellan servrar |
-| **Container networking** | Docker och Kubernetes nätverk |
-| **Firewall rules** | Tillåta/blockera specifika adresser |
+- **Hur images byggs upp** så du kan optimera storlek och build-tid
+- **Layers och caching** så du inte slösar tid på onödiga rebuilds
+- **Tagging-strategier** så du kan hantera versioner i produktion
 
 ---
 
-## 📊 IP-adress Grunderna
+## Vad är en Docker Image?
 
-### IPv4 Format
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📐 IPv4 STRUKTUR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# IPv4 = 32 bitar = 4 bytes
-# Format: xxx.xxx.xxx.xxx (dotted decimal)
-# Range: 0.0.0.0 till 255.255.255.255
-# Totalt: ~4,3 miljarder adresser
-
-# Exempel:
-192.168.1.100
-│   │   │  │
-│   │   │  └── Host (0-255)
-│   │   └── Subnet (0-255)
-│   └── Subnet (0-255)
-└── Network (0-255)
-```
-
-### IPv6 Format
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📐 IPv6 STRUKTUR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# IPv6 = 128 bitar = 16 bytes
-# Format: xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx
-# Totalt: ~340 undecillion adresser (praktiskt taget oändligt)
-
-# Exempel:
-2001:0db8:85a3:0000:0000:8a2e:0370:7334
-
-# Förkortad form (ta bort ledande nollor, :: för sekvens av nollor):
-2001:db8:85a3::8a2e:370:7334
-```
+Tänk på en image som en **snapshot av ett filsystem** plus metadata om hur containern ska köras. Det är som en mall eller recept - du kan skapa hur många containers som helst från samma image.
 
 ---
 
-## 🏠 Privata IP-adresser
-
-Privata IP-adresser är som **"interna telefonnummer"** på ett företag - de fungerar bara inom ditt lokala nätverk och kan inte nås direkt från internet. De är gratis att använda och kan återanvändas i olika nätverk.
-
-### RFC 1918 - Privata IP-områden
-
-RFC 1918 definierar tre områden med privata IP-adresser som alla kan använda fritt:
+## Image Layers
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🏢 CLASS A: 10.0.0.0/8 (Stora organisationer)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Range: 10.0.0.0 - 10.255.255.255
-# Antal adresser: 16,777,216 (över 16 miljoner!)
-# /8 betyder: de första 8 bitarna är fixerade (10.x.x.x)
-
-# Användning: Stora företag, molnleverantörer (AWS, Azure, GCP)
-# Exempel: 10.0.0.1, 10.1.2.3, 10.255.255.254
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🏬 CLASS B: 172.16.0.0/12 (Medelstora organisationer)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Range: 172.16.0.0 - 172.31.255.255
-# Antal adresser: 1,048,576 (över en miljon)
-# /12 betyder: de första 12 bitarna är fixerade (172.16-31.x.x)
-
-# Användning: Medelstora företag, avancerade hemnätverk
-# Exempel: 172.16.0.1, 172.20.5.10, 172.31.255.254
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🏠 CLASS C: 192.168.0.0/16 (Hem och små kontor)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Range: 192.168.0.0 - 192.168.255.255
-# Antal adresser: 65,536 (över 65 tusen)
-# /16 betyder: de första 16 bitarna är fixerade (192.168.x.x)
-
-# Användning: Hemrouter (standard!), små kontor
-# Exempel: 192.168.1.1 (router), 192.168.1.100 (dator)
+# Varje instruktion i Dockerfile skapar ett layer
+┌─────────────────────────────────────┐
+│  Layer 4: COPY app.py              │  ← Ditt app-lager
+├─────────────────────────────────────┤
+│  Layer 3: RUN pip install flask     │  ← Dependencies
+├─────────────────────────────────────┤
+│  Layer 2: RUN apt-get update        │  ← System packages
+├─────────────────────────────────────┤
+│  Layer 1: FROM python:3.11          │  ← Base image
+└─────────────────────────────────────┘
 ```
 
-### Sammanfattning privata områden
+**Varje layer är immutable** - ändrar du något skapas ett nytt layer ovanpå.
 
-| Klass | CIDR | Range | Antal adresser | Användning |
-|-------|------|-------|----------------|------------|
-| A | 10.0.0.0/8 | 10.0.0.0 - 10.255.255.255 | 16,777,216 | Stora företag, cloud |
-| B | 172.16.0.0/12 | 172.16.0.0 - 172.31.255.255 | 1,048,576 | Medelstora företag |
-| C | 192.168.0.0/16 | 192.168.0.0 - 192.168.255.255 | 65,536 | Hem, små kontor |
+---
 
-### Egenskaper för privata IP
+## Arbeta med Images
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✅ FÖRDELAR MED PRIVATA IP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ❌ Inte routbara på internet - fungerar bara lokalt
-# ♻️ Återanvändbara - samma IP kan finnas i olika nätverk
-# 🔒 Säkrare - inte direkt synliga från internet
-# 💰 Gratis - ingen registrering behövs
-# ⚠️ Kräver NAT för att nå internet
-```
+# Ladda ner en image
+docker pull nginx                    # Senaste versionen (latest)
+docker pull nginx:1.25               # Specifik version
+docker pull nginx:1.25-alpine        # Alpine-variant (mindre)
 
-### Vanliga privata adresser
+# Lista lokala images
+docker images                        # Alla images
+docker images nginx                  # Filtrera på namn
 
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 LOCALHOST (loopback - alltid din egen dator)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-127.0.0.1       # IPv4 localhost
-::1             # IPv6 localhost
+# Inspektera en image
+docker inspect nginx                 # All metadata som JSON
+docker history nginx                 # Visa alla layers
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚪 VANLIGA GATEWAY-ADRESSER (routern)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-192.168.1.1     # Vanligast för hemrouter
-192.168.0.1     # Alternativ
-10.0.0.1        # Företagsmiljö
-172.16.0.1      # Företagsmiljö
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐳 DOCKER & KUBERNETES DEFAULT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-172.17.0.0/16   # Docker bridge network
-10.96.0.0/12    # Kubernetes service CIDR
-10.244.0.0/16   # Kubernetes pod CIDR (Flannel)
+# Ta bort images
+docker rmi nginx                     # Ta bort specifik image
+docker image prune                   # Ta bort oanvända images
+docker image prune -a                # Ta bort ALLA oanvända
 ```
 
 ---
 
-## 🌐 Publika IP-adresser
-
-Publika IP-adresser är **globalt unika** och kan nås från var som helst på internet.
-
-### Egenskaper för publika IP
+## Image Tagging
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌍 PUBLIKA IP EGENSKAPER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✅ Globalt unika - varje IP finns bara en gång i världen
-# 🌐 Routbara på internet - kan nås varifrån som helst
-# 📝 Registrerade - tilldelas av ISP:er eller cloud providers
-# 💰 Kostar pengar - särskilt statiska IP:er
-```
+# Format: registry/repository:tag
+docker.io/library/nginx:1.25
+│         │       │     │
+│         │       │     └── Tag (version)
+│         │       └── Repository (image-namn)
+│         └── Namespace (user/org)
+└── Registry (docker.io är default)
 
-### Statisk vs Dynamisk IP
+# Tagga en image
+docker tag nginx:latest myregistry.com/nginx:v1.0
+docker tag nginx:latest nginx:production
 
-| Typ | Beskrivning | Kostnad | Användning |
-|-----|-------------|---------|------------|
-| **Statisk** | Ändras aldrig | Extra avgift | Servrar, VPN, DNS |
-| **Dynamisk** | Ändras periodiskt | Ingår ofta | Heminternet, mobil |
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📌 STATISK IP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Exempel: 203.0.113.42
-# - Ändras aldrig
-# - Perfekt för servrar
-# - Kostar oftast extra
-# - Behövs för: DNS, VPN-endpoints, viktiga tjänster
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 DYNAMISK IP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Ändras vid router-restart eller periodiskt
-# - Ingår i internetabonnemang
-# - Vanligt för hemmanvändare
-# - Kan vara problem om du behöver fast adress
+# Pusha till registry
+docker push myregistry.com/nginx:v1.0
 ```
 
 ---
 
-## 🔄 NAT - Network Address Translation
-
-NAT är som en **"receptionist"** - när någon ringer utifrån ser de bara kontorets huvudnummer (publik IP), men receptionisten vet vilken intern telefon (privat IP) samtalet ska till.
-
-### Hur NAT fungerar
+## Layer Caching
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 NAT VISUALISERAT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Docker cachar layers för snabbare builds
+# Om inget ändrats → använd cached layer
 
-# Privat nätverk          NAT Router          Internet
-# ┌─────────────────┐    ┌───────────┐    ┌─────────────────┐
-# │ 192.168.1.10    │───▶│           │───▶│                 │
-# │ 192.168.1.11    │───▶│ 203.0.113.1 ───▶│   google.com    │
-# │ 192.168.1.12    │───▶│           │───▶│                 │
-# └─────────────────┘    └───────────┘    └─────────────────┘
-#   (Privata IPs)         (Publik IP)      (Internet)
+# DÅLIGT - cache invalideras vid varje kodändring
+FROM python:3.11
+COPY . /app                    # ← Ändras ofta → allt efter invalideras
+RUN pip install -r requirements.txt
 
-# Alla enheter delar EN publik IP!
-# Routern översätter mellan privat ↔ publik
-```
-
-### NAT-processen steg för steg
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⬆️ UTGÅENDE TRAFIK (privat → internet)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1. Din dator (192.168.1.10) vill besöka google.com
-# 2. Routern ändrar "från-adressen" till 203.0.113.1 (publik IP)
-# 3. Routern kommer ihåg: "detta paket kom från 192.168.1.10"
-# 4. Paketet skickas ut med publik IP
-# 5. När svaret kommer → routern vet att skicka till 192.168.1.10
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⬇️ INKOMMANDE TRAFIK (internet → privat)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1. Någon från internet försöker nå 203.0.113.1
-# 2. Routern måste veta vilken intern dator som ska få paketet
-# 3. Kräver: port forwarding ELLER att intern dator initierat först
-```
-
-### Fördelar med NAT
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✅ NAT FÖRDELAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 💰 Sparar IP-adresser - många enheter delar en publik IP
-# 🔒 Ökar säkerhet - interna datorer är inte direkt synliga
-# 🎛️ Enkelt att hantera - bara routern behöver publik IP
-```
-
-### NAT-typer
-
-| Typ | Riktning | Användning |
-|-----|----------|------------|
-| **SNAT** (Source NAT) | Privat → Publik | Utgående anslutningar |
-| **DNAT** (Destination NAT) | Publik → Privat | Port forwarding, load balancing |
-
----
-
-## ☁️ Cloud Provider IP-konfiguration
-
-### AWS
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟠 AWS IP-KONFIGURATION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Privata IPs
-# - VPC default: 10.0.0.0/16
-# - EC2 instances får automatiskt privat IP
-# - Endast åtkomlig inom VPC
-
-# Publika IPs
-# - Elastic IP (statisk, reserverad)
-# - Auto-assigned public IP (dynamisk)
-# - Internet Gateway krävs för internet-åtkomst
-```
-
-### Azure
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔵 AZURE IP-KONFIGURATION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Privata IPs
-# - VNet default: 10.0.0.0/16
-# - VM får automatiskt privat IP
-# - Endast åtkomlig inom VNet
-
-# Publika IPs
-# - Public IP resource (statisk/dynamisk)
-# - Load Balancer IP
-# - Application Gateway IP
-```
-
-### GCP
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟢 GCP IP-KONFIGURATION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Privata IPs
-# - VPC default: 10.128.0.0/9
-# - VM får automatiskt privat IP
-# - Endast åtkomlig inom VPC
-
-# Publika IPs
-# - Static external IP
-# - Ephemeral external IP (försvinner vid stop)
-# - Load balancer IP
+# BRA - dependencies cachas separat
+FROM python:3.11
+COPY requirements.txt /app/    # ← Ändras sällan
+RUN pip install -r requirements.txt  # ← Cachas!
+COPY . /app                    # ← Bara detta körs om vid kodändring
 ```
 
 ---
 
-## 🔍 Kontrollera IP-adresser
-
-### Linux-kommandon
+## Image-storlek
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📋 VISA ALLA IP-ADRESSER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ip addr show              # Moderna Linux
-ifconfig                  # Äldre kommando
+# Jämför storlekar
+docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔢 FILTRERA PÅ IP-VERSION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ip -4 addr show           # Endast IPv4
-ip -6 addr show           # Endast IPv6
+# Typiska storlekar:
+# python:3.11          ~1 GB
+# python:3.11-slim     ~150 MB
+# python:3.11-alpine   ~50 MB
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔌 SPECIFIKT NÄTVERKSKORT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ip addr show eth0         # Visa specifik interface
-ip addr show ens33        # VMware interface
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 HITTA DIN PUBLIKA IP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-curl ifconfig.me          # Enklast
-curl ipinfo.io/ip         # Alternativ
-curl icanhazip.com        # Alternativ
-curl ipecho.net/plain     # Alternativ
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚦 KOLLA ROUTING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ip route                  # Visa routing-tabell
-ip route get 8.8.8.8      # Vilken route används till Google DNS?
+# Alpine är minst men kan ha kompatibilitetsproblem
+# Slim är en bra kompromiss
 ```
 
 ---
 
-## ⚙️ Konfigurera statisk IP (Linux)
+## Key Takeaways
 
-```yaml
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📝 UBUNTU NETPLAN (/etc/netplan/50-cloud-init.yaml)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-network:
-  version: 2
-  ethernets:
-    eth0:
-      addresses:
-        - 192.168.1.100/24      # Statisk IP + subnet mask
-      routes:
-        - to: default
-          via: 192.168.1.1      # Gateway (routern)
-      nameservers:
-        addresses:
-          - 8.8.8.8             # Google DNS
-          - 8.8.4.4             # Google DNS backup
-
-# Applicera: sudo netplan apply
-```
-
----
-
-## 🛡️ Säkerhetsöverväganden
-
-### Privata IP - säkrare men inte immun
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔒 PRIVATA IP SÄKERHET
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ✅ Inte direkt åtkomliga från internet
-# ✅ Kräver VPN eller port forwarding
-# ✅ Bra för interna tjänster
-
-# ⚠️ MEN - behöver fortfarande brandvägg!
-# - Defense in depth
-# - Interna hot existerar också
-```
-
-### Publika IP - extra försiktighet krävs
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚠️ PUBLIK IP SÄKERHET
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ❗ Direkt åtkomlig från hela internet
-# ❗ Konstant under attack (bots, scanners)
-# ❗ Behöver starka brandväggsregler
-
-# 🛡️ Skydda med:
-# - Security groups (cloud)
-# - iptables/ufw (Linux)
-# - Minimera öppna portar
-# - Regelbundna uppdateringar
-```
-
----
-
-## ✨ Best Practices
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1️⃣ ANVÄND PRIVATA IP FÖR INTERNA TJÄNSTER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DB_HOST=10.0.1.50       # Databas på privat IP
-CACHE_HOST=10.0.1.51    # Redis på privat IP
-APP_HOST=10.0.1.100     # App-server på privat IP
-
-# Endast exponera vad som behövs!
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 2️⃣ ANVÄND LOAD BALANCER FÖR PUBLIK ÅTKOMST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ❌ Exponera INTE servrar direkt
-# ✅ Använd load balancer med publik IP
-# ✅ Servrar stannar på privata IPs
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 3️⃣ RESERVERA STATISKA IP FÖR KRITISKA TJÄNSTER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - DNS-servrar
-# - VPN-endpoints
-# - Tjänster som behöver brandväggsregler
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 4️⃣ DOKUMENTERA IP-ANVÄNDNING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Håll koll på vilka IP:er som används
-# - Undvik konflikter
-# - Använd IP Address Management (IPAM) verktyg
-```
-
----
-
-## ✅ Sammanfattning
-
-| Koncept | Beskrivning |
-|---------|-------------|
-| **Privata IP** | 10.x.x.x, 172.16-31.x.x, 192.168.x.x |
-| **Publika IP** | Globalt unika, routbara på internet |
-| **NAT** | Översätter privat ↔ publik |
-| **Statisk IP** | Ändras aldrig, kostar extra |
-| **Dynamisk IP** | Ändras periodiskt, ofta gratis |
-| **Localhost** | 127.0.0.1 (alltid din egen dator) |
-
-**Kom ihåg:**
-- 🏠 Använd privata IP:er för interna tjänster
-- 🌐 Använd publika IP:er bara när nödvändigt
-- 🔒 Skydda alltid publika tjänster med brandvägg
-- 📝 Dokumentera din IP-plan
-- 🎯 Load balancer framför servrar, inte direkt exponering
+- Images består av **read-only layers** stackade på varandra
+- **Layer caching** sparar tid - ordna Dockerfile smart
+- Använd **specifika tags** i produktion, aldrig `latest`
+- **Slim/Alpine** varianter sparar diskutrymme och minskar attack-yta
 """,
         },
         {
-            "title": "Portar och Tjänster",
-            "slug": "ports-and-services",
+            "title": "Container Lifecycle Management",
+            "slug": "container-lifecycle-management",
             "difficulty": "easy",
-            "estimated_minutes": 45,
-            "xp_reward": 75,
-            "content": """# Portar och Tjänster
+            "estimated_minutes": 40,
+            "xp_reward": 70,
+            "content": """# Container Lifecycle Management
 
-## 🎯 Varför portar är essentiellt för DevOps
+## Varför behöver du kunna detta?
 
-Port-kunskap är kritiskt för:
+Containers har en livscykel precis som processer. Du måste förstå:
 
-| Användningsområde | Beskrivning |
-|-------------------|-------------|
-| **Service configuration** | Konfigurera vilka portar tjänster använder |
-| **Security** | Brandväggsregler, begränsa åtkomst |
-| **Troubleshooting** | Felsöka anslutningsproblem |
-| **Load balancing** | Distribuera trafik till rätt portar |
-| **Container networking** | Docker port mapping |
-| **Service discovery** | Hitta tjänster i nätverk |
+- **Hur du startar och stoppar** containers korrekt
+- **Skillnaden mellan stop och kill** för graceful shutdown
+- **Hur du felsöker** containers som beter sig konstigt
 
 ---
 
-## 📊 Port Grunderna
-
-### Vad är en port?
-
-En port är som ett **"rumnummer"** på ett hotell - IP-adressen är hotellet (datorn), och porten är vilket rum (programmet) du vill nå.
+## Container States
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔢 PORT BASICS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Port = Communication endpoint
-# En "endpoint" - en specifik plats där kommunikation sker
-# Tänk på det som en dörr som program kan öppna
-
-# Range: 0 - 65535 (16-bit nummer)
-# 2^16 = 65536 möjliga portar
-# Mer än tillräckligt för alla program
-
-# IP-adress + Port = Socket
-# Identifierar EXAKT vilket program på vilken dator
-# Tänk: "Hotell 192.168.1.100, rum 80"
-
-# Exempel:
-192.168.1.100:80
-│             │
-│             └── Port 80 (webbserver)
-└── IP-adress (vilken dator)
+┌─────────┐     docker create     ┌─────────┐
+│         │ ──────────────────▶   │ Created │
+│  Image  │                       └────┬────┘
+│         │                            │ docker start
+└─────────┘                            ▼
+                                 ┌─────────┐
+              docker run ──────▶ │ Running │ ◀─── docker restart
+                                 └────┬────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    │ docker stop     │ docker kill     │ exit/crash
+                    ▼                 ▼                 ▼
+              ┌─────────┐       ┌─────────┐       ┌─────────┐
+              │ Exited  │       │ Exited  │       │ Exited  │
+              │ (0)     │       │ (137)   │       │ (1)     │
+              └─────────┘       └─────────┘       └─────────┘
 ```
 
 ---
 
-## 📋 Port-områden
-
-Portar är uppdelade i tre kategorier:
-
-### Well-known Ports (0 - 1023)
+## Starta Containers
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔒 SYSTEM PORTS (0-1023)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚡ Reserverade för systemtjänster
-# 🔐 Kräver root/admin för att öppna
-# 📌 Standardiserade användningar
+# Kör container i förgrunden
+docker run nginx                 # Blockerar terminalen
 
-# Vanliga:
-22    # SSH - Secure Shell
-80    # HTTP - Web (okrypterad)
-443   # HTTPS - Web (krypterad)
-53    # DNS - Domain Name System
-25    # SMTP - Mail
-```
+# Kör i bakgrunden (detached)
+docker run -d nginx              # Returnerar container ID
 
-### Registered Ports (1024 - 49151)
+# Kör med namn
+docker run -d --name webserver nginx
 
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📝 REGISTERED PORTS (1024-49151)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📋 Registrerade hos IANA
-# 🔓 Kräver inte root
-# 🎯 Vanliga applikationer
+# Kör och ta bort när den stoppar
+docker run --rm nginx            # Perfekt för engångsjobb
 
-# Vanliga:
-3306   # MySQL
-5432   # PostgreSQL
-27017  # MongoDB
-6379   # Redis
-8080   # Alternativ HTTP
-```
-
-### Dynamic/Private Ports (49152 - 65535)
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 EPHEMERAL PORTS (49152-65535)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⏱️ Tillfälliga (ephemeral)
-# 🎲 Tilldelas automatiskt av OS
-# 📤 Används för utgående anslutningar
-
-# När du besöker google.com:
-# - Din dator använder t.ex. port 52431 (tillfällig)
-# - Ansluter till google.com:443
-# - Svaret kommer tillbaka till din port 52431
-```
-
-### Sammanfattning port-områden
-
-| Kategori | Range | Beskrivning | Root krävs |
-|----------|-------|-------------|------------|
-| **Well-known** | 0-1023 | Systemtjänster | ✅ Ja |
-| **Registered** | 1024-49151 | Applikationer | ❌ Nej |
-| **Dynamic** | 49152-65535 | Tillfälliga | ❌ Nej |
-
----
-
-## 🌐 Vanliga portar att känna till
-
-### Web Services
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 HTTP / HTTPS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-80     # HTTP - okrypterad webbtrafik
-443    # HTTPS - krypterad webbtrafik
-8080   # Alternativ HTTP (ofta för appar)
-8443   # Alternativ HTTPS
-8000   # Utvecklingsservrar (Django, etc)
-3000   # Node.js/React dev server
-
-# Exempel-URLer:
-# http://example.com      → port 80 (implicit)
-# https://example.com     → port 443 (implicit)
-# http://localhost:8080   → port 8080 (explicit)
-```
-
-### Databaser
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🗄️ DATABASER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-3306   # MySQL / MariaDB
-5432   # PostgreSQL
-27017  # MongoDB
-6379   # Redis
-9200   # Elasticsearch (HTTP API)
-9300   # Elasticsearch (transport)
-```
-
-### Remote Access
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔐 FJÄRRÅTKOMST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-22     # SSH (standard)
-2222   # SSH (alternativ, för säkerhet)
-3389   # RDP - Remote Desktop (Windows)
-5900   # VNC
-```
-
-### E-post
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📧 E-POST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-25     # SMTP (ofta blockerad av ISP)
-587    # SMTP med TLS (submission)
-465    # SMTP över SSL
-143    # IMAP
-993    # IMAP över SSL
-110    # POP3
-995    # POP3 över SSL
-```
-
-### DNS
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌍 DNS
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-53     # DNS (både UDP och TCP)
+# Kör interaktivt
+docker run -it ubuntu bash       # -i = interactive, -t = tty
 ```
 
 ---
 
-## 🔍 Kontrollera portar
-
-### Lista lyssnande portar
+## Hantera körande containers
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📋 VISA LYSSNANDE PORTAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Lista körande containers
+docker ps
 
-# Med ss (modern, rekommenderas)
-ss -tlnp                 # TCP lyssnande portar
-ss -ulnp                 # UDP lyssnande portar
-ss -tlnp | grep :80      # Specifik port
+# Följ loggar
+docker logs webserver            # Visa loggar
+docker logs -f webserver         # Följ i realtid (tail -f)
+docker logs --tail 100 webserver # Senaste 100 rader
 
-# Med netstat (äldre)
-netstat -tlnp            # TCP lyssnande portar
-netstat -ulnp            # UDP lyssnande portar
+# Kör kommandon i körande container
+docker exec webserver ls /etc    # Kör kommando
+docker exec -it webserver bash   # Öppna shell
 
-# Med lsof
-lsof -i :80              # Vad använder port 80?
-lsof -i -P -n | grep LISTEN
-```
-
-### Testa port-anslutning
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🧪 TESTA PORTAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Med telnet
-telnet hostname 80
-telnet 192.168.1.100 3306
-
-# Med netcat (nc) - snabbast!
-nc -zv hostname 80           # TCP
-nc -zv 192.168.1.100 3306    # TCP
-nc -zv -u hostname 53        # UDP
-
-# Med curl
-curl http://hostname:80
-curl -v telnet://hostname:3306
-
-# Med nmap (port scanning)
-nmap -p 80,443,22 hostname       # Specifika portar
-nmap -p 1-1000 hostname          # Port range
-```
-
-### Snabbkoll om port är öppen
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚡ SNABBTEST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# One-liner
-timeout 1 bash -c "</dev/tcp/hostname/80" && echo "Open" || echo "Closed"
-
-# Funktion för återanvändning
-check_port() {
-    local host=$1
-    local port=$2
-    timeout 1 bash -c "</dev/tcp/$host/$port" 2>/dev/null
-    if [ $? -eq 0 ]; then
-        echo "✅ Port $port is OPEN on $host"
-    else
-        echo "❌ Port $port is CLOSED on $host"
-    fi
-}
-
-# Användning:
-check_port google.com 80
-check_port localhost 5432
+# Inspektera container
+docker inspect webserver         # All metadata
+docker stats                     # CPU, minne, nätverk live
+docker top webserver             # Processer i containern
 ```
 
 ---
 
-## 🚇 Port Forwarding
-
-### SSH Local Port Forwarding
+## Stoppa Containers
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📥 LOCAL PORT FORWARDING (-L)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -L 8080:localhost:80 user@remote-server
-# Din lokala port 8080 → remote serverns localhost:80
+# Graceful stop (skickar SIGTERM, väntar 10s, sen SIGKILL)
+docker stop webserver
 
-ssh -L 3306:db-server:3306 user@jump-host
-# Din lokala port 3306 → db-server:3306 (via jump-host)
+# Forcerad stop (SIGKILL direkt)
+docker kill webserver
 
-# Användning: Nå databaser bakom brandvägg
-```
+# Stoppa med timeout
+docker stop -t 30 webserver      # Vänta 30 sekunder
 
-### SSH Remote Port Forwarding
+# Starta om
+docker restart webserver
 
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📤 REMOTE PORT FORWARDING (-R)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ssh -R 8080:localhost:80 user@remote-server
-# Remote serverns port 8080 → din lokala port 80
-
-# Användning: Exponera lokal utveckling via server
-```
-
-### Docker Port Mapping
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐳 DOCKER PORT MAPPING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-docker run -p 8080:80 nginx
-#          │     │
-#          │     └── Container port (nginx lyssnar)
-#          └── Host port (du ansluter till)
-
-# Flera portar
-docker run -p 8080:80 -p 8443:443 nginx
-
-# Exponera alla portar
-docker run -P nginx     # Random host-portar
-
-# Visa port mappings
-docker port container_name
+# Pausa/återuppta (fryser processer)
+docker pause webserver
+docker unpause webserver
 ```
 
 ---
 
-## 🔥 Brandvägg och portar
-
-### UFW (Ubuntu)
+## Ta bort Containers
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🛡️ UFW BRANDVÄGG
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Ta bort stoppad container
+docker rm webserver
 
-# Tillåt port
-sudo ufw allow 80
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
+# Forcera borttagning av körande container
+docker rm -f webserver
 
-# Tillåt port-range
-sudo ufw allow 8000:9000/tcp
+# Ta bort alla stoppade containers
+docker container prune
 
-# Blockera port
-sudo ufw deny 3306
-
-# Visa status
-sudo ufw status
-sudo ufw status numbered
-```
-
-### firewalld (RHEL/CentOS)
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔥 FIREWALLD
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Tillåt port
-sudo firewall-cmd --add-port=80/tcp --permanent
-sudo firewall-cmd --reload
-
-# Tillåt tjänst
-sudo firewall-cmd --add-service=http --permanent
-sudo firewall-cmd --reload
-
-# Lista portar
-sudo firewall-cmd --list-ports
-```
-
-### iptables
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚙️ IPTABLES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Tillåt port
-sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-
-# Spara regler
-sudo iptables-save > /etc/iptables/rules.v4
+# Ta bort alla containers (körande och stoppade)
+docker rm -f $(docker ps -aq)
 ```
 
 ---
 
-## ☁️ Cloud Security Groups
-
-### AWS
+## Exit Codes
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟠 AWS SECURITY GROUP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Vanliga exit codes:
+# 0   = Success (normal exit)
+# 1   = General error
+# 137 = SIGKILL (docker kill eller OOM)
+# 143 = SIGTERM (docker stop)
 
-# Inbound rule:
-# Type: HTTP
-# Protocol: TCP
-# Port: 80
-# Source: 0.0.0.0/0 (hela internet)
+# Kolla exit code
+docker inspect webserver --format='{{.State.ExitCode}}'
 
-# Outbound rule:
-# Type: All traffic
-# Protocol: All
-# Port: All
-# Destination: 0.0.0.0/0
-```
-
-### Azure NSG
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔵 AZURE NSG
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Inbound rule:
-# Name: Allow-HTTP
-# Priority: 1000
-# Source: Any
-# Destination: Any
-# Protocol: TCP
-# Port: 80
-# Action: Allow
+# Kolla varför container stoppade
+docker inspect webserver --format='{{.State.OOMKilled}}'
 ```
 
 ---
 
-## 🔧 Hantera port-konflikter
-
-### Hitta process som använder port
+## Felsökning
 
 ```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔍 HITTA PROCESS PÅ PORT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Container startar inte? Kolla loggar
+docker logs container_name
 
-# Med lsof
-sudo lsof -i :80
-sudo lsof -i :3306
+# Container crashar direkt? Kör interaktivt
+docker run -it image_name sh
 
-# Med ss
-sudo ss -tlnp | grep :80
-
-# Med fuser
-sudo fuser 80/tcp
-```
-
-### Döda process på port
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚠️ DÖDA PROCESS PÅ PORT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Hitta PID
-PID=$(sudo lsof -t -i:80)
-
-# Döda processen
-sudo kill $PID          # Graceful
-sudo kill -9 $PID       # Force kill
-
-# One-liner
-sudo kill $(sudo lsof -t -i:80)
+# Kolla events
+docker events                    # Realtids-events
+docker events --since 1h         # Senaste timmen
 ```
 
 ---
 
-## ✨ Best Practices
+## Key Takeaways
 
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1️⃣ ANVÄND ICKE-STANDARD PORTAR FÖR SÄKERHET
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Ändra SSH-port i /etc/ssh/sshd_config:
-Port 2222
-
-# Minskar automatiserade attacker
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 2️⃣ DOKUMENTERA PORT-ANVÄNDNING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Håll lista på:
-# - Vilka portar som används
-# - Vilka tjänster som använder dem
-# - Varför de behövs
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 3️⃣ MINIMERA ÖPPNA PORTAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Öppna bara nödvändiga portar
-# - Stäng oanvända portar
-# - Använd brandvägg
-# - Principle of least privilege
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 4️⃣ ANVÄND LOAD BALANCER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Exponera inte alla servrar direkt
-# - Load balancer på standard-portar
-# - Backend-servrar på privata IP:er
-```
-
----
-
-## ✅ Sammanfattning
-
-| Port-typ | Range | Beskrivning |
-|----------|-------|-------------|
-| **Well-known** | 0-1023 | Systemtjänster (root krävs) |
-| **Registered** | 1024-49151 | Vanliga applikationer |
-| **Dynamic** | 49152-65535 | Tillfälliga/ephemeral |
-
-| Vanliga portar | Tjänst |
-|---------------|--------|
-| 22 | SSH |
-| 80 | HTTP |
-| 443 | HTTPS |
-| 3306 | MySQL |
-| 5432 | PostgreSQL |
-| 6379 | Redis |
-| 27017 | MongoDB |
-
-| Kommando | Användning |
-|----------|------------|
-| `ss -tlnp` | Lista lyssnande portar |
-| `nc -zv host port` | Testa port |
-| `lsof -i :port` | Vad använder porten? |
-| `sudo ufw allow port` | Öppna port i brandvägg |
-
-**Kom ihåg:**
-- 🔒 Minimera öppna portar
-- 📝 Dokumentera port-användning
-- 🛡️ Använd brandvägg alltid
-- 🔍 `ss -tlnp` och `nc -zv` är dina vänner
+- Använd `docker stop` för **graceful shutdown** (SIGTERM)
+- Använd `docker kill` bara när stop inte fungerar
+- `--rm` flaggan är perfekt för **engångscontainers**
+- **Exit codes** berättar varför containern stoppade
 """,
         },
         {
-            "title": "Hosts och Hostnames",
-            "slug": "hosts-and-hostnames",
-            "difficulty": "easy",
-            "estimated_minutes": 45,
-            "xp_reward": 75,
-            "content": """# Hosts och Hostnames
-
-## 🎯 Varför host-kunskap är kritiskt för DevOps
-
-Host-kunskap är essentiellt för:
-
-| Användningsområde | Beskrivning |
-|-------------------|-------------|
-| **Service discovery** | Hitta tjänster i nätverket |
-| **DNS configuration** | Konfigurera namnupplösning |
-| **Load balancing** | Distribuera trafik till rätt servrar |
-| **Container orchestration** | Docker, Kubernetes networking |
-| **Troubleshooting** | Felsöka nätverksproblem |
-| **Service communication** | Tjänster som pratar med varandra |
-
----
-
-## 🖥️ Vad är en Host?
-
-### Host Definition
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🖥️ HOST = VALFRI ENHET PÅ ETT NÄTVERK
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Exempel på hosts:
-# - Datorer
-# - Servrar
-# - Routrar
-# - Skrivare
-# - IoT-enheter
-# - Containers
-# - Virtuella maskiner
-```
-
-### Host Identification
-
-Varje host kan identifieras på flera sätt - tänk på det som olika "namn" för samma enhet:
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔍 OLIKA SÄTT ATT IDENTIFIERA EN HOST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 1. IP-adress (192.168.1.100)
-#    → "Gatadressen" - unik nummeradress på nätverket
-#    → Vad datorer använder för att hitta varandra
-
-# 2. Hostname (server.example.com)
-#    → "Människovänligt namn" - lättare att komma ihåg
-#    → DNS konverterar hostname → IP-adress
-
-# 3. MAC-adress (00:1a:2b:3c:4d:5e)
-#    → "Serienumret" - unikt för varje nätverkskort
-#    → Hårdvarunivå, ändras inte
-
-# Analogi:
-# IP-adress    = Gatadressen
-# Hostname     = Namnet på huset
-# MAC-adress   = Serienumret på dörrlåset
-```
-
----
-
-## 🏷️ Hostnames
-
-### Hostname-typer
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📛 SHORT HOSTNAME
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-hostname
-# Output: server1
-
-# Bara maskinens namn, utan domän
-# Användbart inom samma domän
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 FQDN (Fully Qualified Domain Name)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-hostname -f
-# Output: server1.example.com
-
-# Fullständigt namn = hostname + domän
-# Unikt över hela internet!
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🏢 DOMAIN NAME
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-hostname -d
-# Output: example.com
-
-# Bara domändelen
-# Flera hosts kan tillhöra samma domän
-```
-
-### Sätta hostname
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚙️ ÄNDRA HOSTNAME (Linux systemd)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Sätt short hostname
-sudo hostnamectl set-hostname server1
-
-# Sätt FQDN
-sudo hostnamectl set-hostname server1.example.com
-
-# Verifiera
-hostnamectl
-
-# Alternativ metod (äldre)
-sudo hostname server1
-echo "server1" | sudo tee /etc/hostname
-```
-
----
-
-## 📁 /etc/hosts-filen
-
-`/etc/hosts` är en lokal "telefonbok" som mappar hostnames till IP-adresser. Den kontrolleras **FÖRE** DNS!
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📖 FORMAT: IP_address   hostname   aliases
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Loopback (alltid med)
-127.0.0.1       localhost
-127.0.0.1       localhost.localdomain
-::1             localhost6
-
-# Egna mappningar
-192.168.1.100   server1.example.com server1
-192.168.1.101   db.example.com db
-10.0.0.50       api.internal api
-
-# Visa innehåll
-cat /etc/hosts
-
-# Testa
-ping server1
-ping db.example.com
-```
-
-### Viktigt om /etc/hosts
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚠️ /etc/hosts KONTROLLERAS FÖRE DNS!
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Om hostname finns i /etc/hosts:
-# → Den IP:n används direkt
-# → DNS tillfrågas INTE
-
-# Användningsområden:
-# ✅ Lokal utveckling
-# ✅ Snabbare åtkomst till vanliga servrar
-# ✅ Temporära overrides
-# ❌ Inte för produktion i stor skala (använd DNS)
-```
-
----
-
-## 🌐 DNS-upplösning
-
-### Hur DNS fungerar
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 DNS-PROCESSEN STEG FÖR STEG
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 1. Program begär: server1.example.com
-#    ↓
-# 2. System kollar /etc/hosts FÖRST
-#    ↓
-# 3. Om inte hittad → frågar DNS-server
-#    ↓
-# 4. DNS-server returnerar IP-adress
-#    ↓
-# 5. Program ansluter till IP:n
-
-# Analogi: DNS är som en telefonbok
-# Du slår upp namnet (hostname) för att hitta numret (IP)
-# Sedan ringer du numret!
-```
-
-### DNS Lookup-kommandon
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔍 DNS LOOKUP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Med host (enklast)
-host server1.example.com
-host 192.168.1.100              # Reverse lookup
-
-# Med nslookup
-nslookup server1.example.com
-nslookup 192.168.1.100
-
-# Med dig (mest detaljerat)
-dig server1.example.com
-dig +short server1.example.com  # Bara IP:n
-dig @8.8.8.8 server1.example.com  # Använd specifik DNS
-
-# Med getent (kontrollerar /etc/hosts också)
-getent hosts server1.example.com
-```
-
-### DNS-konfiguration
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚙️ /etc/resolv.conf
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# DNS-servrar
-nameserver 8.8.8.8       # Google DNS
-nameserver 8.8.4.4       # Google DNS backup
-nameserver 1.1.1.1       # Cloudflare DNS
-
-# Sökdomäner (så du kan skriva "server1" istället för "server1.example.com")
-search example.com internal.local
-
-# Visa
-cat /etc/resolv.conf
-
-# Systemd
-systemd-resolve --status
-```
-
----
-
-## 🔌 Nätverksinterface
-
-### Interface-namn
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔌 INTERFACE-NAMNKONVENTIONER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Traditionellt
-eth0, eth1    # Ethernet
-wlan0         # Wireless
-lo            # Loopback (127.0.0.1)
-
-# Systemd (predictable naming)
-enp3s0        # Ethernet PCI
-wlp2s0        # Wireless PCI
-ens33         # VMware ethernet
-```
-
-### Visa interface-info
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📋 VISA INTERFACE OCH IP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Lista interfaces
-ip link show
-ifconfig                # Äldre
-
-# Visa IP-adresser
-ip addr show
-ip -4 addr show         # Bara IPv4
-
-# Visa routing
-ip route show
-route -n
-```
-
----
-
-## 🏢 Host-typer
-
-### Server Hosts
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🖥️ SERVRAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-web.example.com     → 192.168.1.10    # Webbserver
-db.example.com      → 192.168.1.20    # Databas
-api.example.com     → 192.168.1.30    # API-server
-```
-
-### Nätverksenheter
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 NÄTVERKSENHETER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-gateway.example.com → 192.168.1.1     # Router/Gateway
-switch1.example.com                    # Switch
-fw.example.com                         # Brandvägg
-```
-
----
-
-## 🔎 Service Discovery
-
-### Statisk konfiguration
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📌 STATISK CONFIG
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Hårdkodad i config
-DB_HOST=db.example.com
-API_HOST=api.example.com
-
-# /etc/hosts
-192.168.1.20 db.example.com
-192.168.1.30 api.example.com
-```
-
-### DNS-baserad discovery
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 DNS-BASERAD DISCOVERY
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Flera A-records för load balancing
-api.example.com → 192.168.1.30
-api.example.com → 192.168.1.31
-api.example.com → 192.168.1.32
-# DNS roterar mellan dessa (round-robin)
-```
-
----
-
-## 🐳 Container Hosts
-
-### Docker
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🐳 DOCKER HOSTNAMES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Sätt container hostname
-docker run --hostname mycontainer nginx
-
-# Network alias
-docker run --network-alias db mysql
-
-# Custom network (containers kan nå varandra via namn)
-docker network create mynetwork
-docker run --network mynetwork --name db mysql
-docker run --network mynetwork --name app nginx
-# app kan nå db via "db"
-```
-
-### Kubernetes
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ☸️ KUBERNETES SERVICE NAMES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Service name = hostname
-# Service: database
-
-# Kort form (samma namespace)
-database
-
-# Full FQDN
-database.default.svc.cluster.local
-```
-
----
-
-## ☁️ Cloud Hosts
-
-### AWS
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟠 AWS HOSTNAMES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Privat DNS
-ip-192-168-1-100.ec2.internal
-
-# Publik DNS
-ec2-1-2-3-4.compute-1.amazonaws.com
-```
-
-### Azure / GCP
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔵 AZURE
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-vmname.region.cloudapp.azure.com
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟢 GCP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-instance-name.zone.c.project-id.internal
-```
-
----
-
-## 🧪 Testa host-anslutning
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📡 PING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ping server1.example.com          # Ping hostname
-ping 192.168.1.100                # Ping IP
-ping -c 4 server1.example.com     # Bara 4 paket
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔀 TRACEROUTE
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-traceroute server1.example.com    # Visa vägen
-tracepath server1.example.com     # Alternativ
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔌 TESTA PORT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-telnet server1.example.com 80     # Testa port 80
-nc -zv server1.example.com 80     # Netcat
-```
-
----
-
-## ✨ Best Practices
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1️⃣ ANVÄND BESKRIVANDE HOSTNAMES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# ✅ BRA
-web-prod-01.example.com
-db-prod-01.example.com
-api-staging-01.example.com
-
-# ❌ DÅLIGT
-server1
-host1
-machine1
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 2️⃣ NAMNKONVENTION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Format: {service}-{environment}-{number}.{domain}
-# web-prod-01.example.com
-# db-staging-02.example.com
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 3️⃣ ANVÄND DNS I PRODUKTION
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# /etc/hosts bara för lokal utveckling
-# DNS för allt annat
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 4️⃣ DOKUMENTERA HOST-MAPPNINGAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Hostname → IP-mappningar
-# - Syfte med varje host
-# - Vilka tjänster som körs
-```
-
----
-
-## ✅ Sammanfattning
-
-| Koncept | Beskrivning |
-|---------|-------------|
-| **Host** | Valfri enhet på nätverket |
-| **Hostname** | Människovänligt namn för host |
-| **FQDN** | Fullständigt kvalificerat domännamn |
-| **DNS** | Översätter hostname → IP |
-| **/etc/hosts** | Lokal namnupplösning (före DNS) |
-| **Service discovery** | Hitta tjänster via namn |
-
-| Kommando | Användning |
-|----------|------------|
-| `hostname` | Visa/sätt hostname |
-| `hostname -f` | Visa FQDN |
-| `cat /etc/hosts` | Visa lokala mappningar |
-| `dig hostname` | DNS lookup |
-| `host hostname` | Enkel DNS lookup |
-| `ping hostname` | Testa anslutning |
-
-**Kom ihåg:**
-- 🏷️ Använd beskrivande hostnames
-- 📁 /etc/hosts kontrolleras före DNS
-- 🌐 Använd DNS i produktion
-- 📝 Dokumentera alla host-mappningar
-- 🧪 `ping` och `dig` är dina vänner
-""",
-        },
-        {
-            "title": "Dataöverföring: Bytes och Bandwidth",
-            "slug": "data-transfer-bytes-bandwidth",
-            "difficulty": "easy",
-            "estimated_minutes": 45,
-            "xp_reward": 75,
-            "content": """# Dataöverföring: Bytes och Bandwidth
-
-## 🎯 Varför data transfer-kunskap är essentiellt för DevOps
-
-Data transfer-kunskap är kritiskt för:
-
-| Användningsområde | Beskrivning |
-|-------------------|-------------|
-| **Performance optimization** | Optimera överföringshastigheter |
-| **Capacity planning** | Planera nätverkskapacitet |
-| **Troubleshooting** | Felsöka långsamma nätverk |
-| **Cost optimization** | Minimera cloud-kostnader (egress) |
-| **Monitoring** | Övervaka bandwidth-användning |
-| **Bandwidth management** | Hantera nätverksresurser |
-
----
-
-## 📊 Dataenheter: Bits vs Bytes
-
-### Den kritiska skillnaden
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔢 BIT (liten b) = HASTIGHET
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Bit (b) = Minsta enheten (0 eller 1)
-# Används för: HASTIGHET (data rates, bandwidth)
-# Exempel: 100 Mbps = 100 megabit per sekund
-
-# Detta är vad du ser när du mäter internet-hastighet
-# ISP:er annonserar i bits: "100 Mbps internet"
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📦 BYTE (stor B) = STORLEK
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Byte (B) = 8 bits
-# Används för: STORLEK (filstorlekar, lagring)
-# Exempel: 100 MB = 100 megabyte
-
-# Detta är vad du ser för filstorlekar
-# "1 GB fil" = 1 gigabyte
-```
-
-### ⚠️ Viktigt: 1 Byte = 8 bits
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 KONVERTERING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 1 Byte = 8 bits
-# Så: 100 Mbps (bits) = 12.5 MBps (bytes)
-#     100 ÷ 8 = 12.5
-
-# DÄRFÖR kan din "100 Mbps" internet
-# INTE överföra 100 MB per sekund!
-# Den kan överföra 12.5 MB per sekund
-
-# Detta är en av de vanligaste förvirringarna i nätverk!
-```
-
-### Sammanfattning bits vs bytes
-
-| Enhet | Symbol | Användning | Exempel |
-|-------|--------|------------|---------|
-| **Bit** | b (liten) | Hastighet | 100 M**b**ps |
-| **Byte** | B (stor) | Storlek | 100 M**B** fil |
-| **Konvertering** | | 1 Byte = 8 bits | |
-
----
-
-## 📐 Datastorleksenheter
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📦 STORLEK (Bytes)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Bit (b)       = 1 bit
-# Byte (B)      = 8 bits
-# Kilobyte (KB) = 1,024 bytes (2^10)
-# Megabyte (MB) = 1,024 KB = ~1 miljon bytes
-# Gigabyte (GB) = 1,024 MB = ~1 miljard bytes
-# Terabyte (TB) = 1,024 GB
-
-# OBS: Ibland används 1,000 istället för 1,024 (decimal vs binär)
-```
-
----
-
-## ⚡ Datahastighetsenheter
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚀 HASTIGHET (bits per sekund)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# bps  = bits per second
-# Kbps = Kilobits per second (1,000 bps)
-# Mbps = Megabits per second (1,000,000 bps)
-# Gbps = Gigabits per second (1,000,000,000 bps)
-
-# Alternativt (bytes):
-# Bps  = Bytes per second
-# KBps = Kilobytes per second
-# MBps = Megabytes per second
-```
-
----
-
-## 📶 Bandwidth
-
-### Vad är Bandwidth?
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📶 BANDWIDTH = MAXIMAL KAPACITET
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Bandwidth är den MAXIMALA dataöverföringshastigheten
-# Tänk på det som "vägens bredd"
-# - Bredare väg = mer trafik kan passera
-# - 100 Mbps = max 100 megabit per sekund
-
-# ⚠️ OBS: Bandwidth är kapacitet, inte "hastighet"!
-# Du kan ha hög bandwidth men fortfarande hög latency
-```
-
-### Analogi: Motorvägen
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🛣️ MOTORVÄGSANALOGI
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Bandwidth = Antal filer på vägen
-# - 4-filig motorväg kan hantera mer trafik än 2-filig
-# - Men bilarna kör inte nödvändigtvis SNABBARE
-
-# Latency = Hur lång tid att köra sträckan
-# - Även på 4-filig väg tar det tid att nå destinationen
-# - Hög bandwidth ≠ låg latency!
-```
-
-### Vanliga bandwidths
-
-| Miljö | Bandwidth | Användning |
-|-------|-----------|------------|
-| **Hem (basic)** | 10 Mbps | Surfning, e-post |
-| **Hem (standard)** | 50-100 Mbps | Streaming, gaming |
-| **Hem (snabbt)** | 1 Gbps | Fiber, flera användare |
-| **Datacenter** | 1-10 Gbps | Standard server |
-| **Enterprise** | 10-100 Gbps | Hög prestanda |
-
----
-
-## 🆚 Bandwidth vs Latency
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📊 SKILLNADEN
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Bandwidth = HUR MYCKET data per sekund
-# Latency   = HUR LÅNG TID innan data anländer
-
-# Hög bandwidth + hög latency:
-# - Kan överföra mycket data
-# - Men tar tid att starta
-# - Exempel: Satellit-internet
-
-# Låg bandwidth + låg latency:
-# - Snabb respons
-# - Men begränsad throughput
-# - Exempel: Äldre modem med bra ping
-```
-
----
-
-## 🧮 Beräkna överföringstid
-
-### Formeln
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📐 FORMEL
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Tid = Storlek / Hastighet
-
-# VIKTIGT: Båda måste vara i samma enhet!
-# Storlek i bits, hastighet i bits per sekund
-```
-
-### Praktiska exempel
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📝 EXEMPEL 1: 1 GB fil över 100 Mbps
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Steg 1: Konvertera storlek till bits
-# 1 GB = 1,000 MB = 8,000 Mbits (1 byte = 8 bits)
-
-# Steg 2: Beräkna tid
-# Tid = 8,000 Mbits / 100 Mbps = 80 sekunder
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📝 EXEMPEL 2: 10 GB fil över 1 Gbps
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 10 GB = 80,000 Mbits = 80 Gbits
-# Tid = 80 Gbits / 1 Gbps = 80 sekunder
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📝 EXEMPEL 3: 100 MB fil över 10 Mbps
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 100 MB = 800 Mbits
-# Tid = 800 Mbits / 10 Mbps = 80 sekunder
-```
-
-### Snabbreferens
-
-| Filstorlek | 10 Mbps | 100 Mbps | 1 Gbps |
-|------------|---------|----------|--------|
-| 100 MB | 80 sek | 8 sek | 0.8 sek |
-| 1 GB | 13 min | 80 sek | 8 sek |
-| 10 GB | 2.2 tim | 13 min | 80 sek |
-
----
-
-## 📈 Throughput (faktisk hastighet)
-
-### Teoretisk vs faktisk
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📊 VERKLIG PRESTANDA
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# 100 Mbps anslutning:
-# - Teoretiskt: 100 Mbps
-# - Faktiskt:   ~90-95 Mbps (90-95%)
-
-# Varför? OVERHEAD:
-# - Protocol headers (TCP/IP ~40 bytes/paket)
-# - Error correction
-# - Retransmissions (förlorade paket)
-# - Network congestion (trängsel)
-
-# ✅ 90-95% av teoretisk bandwidth är NORMALT!
-```
-
----
-
-## 🔍 Mäta nätverksprestanda
-
-### Hastighetstest
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🧪 HASTIGHETSTEST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Med speedtest-cli
-speedtest-cli
-speedtest-cli --simple
-
-# Med curl (download speed)
-curl -o /dev/null -s -w "%{speed_download}\\n" http://speedtest.example.com/file
-
-# Med wget
-wget --progress=bar:force http://speedtest.example.com/file
-```
-
-### Throughput-test med iperf3
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔬 IPERF3 (professionellt verktyg)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Server (mottagare)
-iperf3 -s
-
-# Client (sändare)
-iperf3 -c server-ip
-iperf3 -c server-ip -t 60     # 60 sekunder
-iperf3 -c server-ip -P 4      # 4 parallella strömmar
-```
-
-### Övervakningsverktyg
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 📊 MONITORING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# iftop (realtid per interface)
-sudo iftop -i eth0
-
-# nethogs (per process)
-sudo nethogs
-
-# vnstat (statistik över tid)
-vnstat -i eth0
-vnstat -h         # Per timme
-vnstat -d         # Per dag
-
-# Nätverksstatistik
-ip -s link show eth0
-cat /proc/net/dev
-```
-
----
-
-## ☁️ Cloud Data Transfer-kostnader
-
-### AWS
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟠 AWS KOSTNADER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Data UT (egress) - KOSTAR PENGAR
-# - Första 100 GB/månad: Gratis (vissa regioner)
-# - Efter: ~$0.09 per GB
-
-# Data IN (ingress) - GRATIS
-# Samma region - GRATIS
-# Cross-region - KOSTAR
-```
-
-### Azure / GCP
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔵 AZURE
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Data UT: Första 5 GB/månad gratis, sedan varierande
-# Data IN: Gratis
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🟢 GCP
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Data UT: Första 1 TB/månad gratis, sedan varierande
-# Data IN: Gratis
-```
-
----
-
-## 🚀 Optimera dataöverföring
-
-### Komprimering
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🗜️ KOMPRIMERA FÖRE ÖVERFÖRING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Komprimera och överför
-tar -czf archive.tar.gz files/
-scp archive.tar.gz user@server:/path/
-
-# rsync med komprimering
-rsync -avz file user@server:/path/
-#      -z = compress
-```
-
-### Delta-överföring (bara ändringar)
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🔄 ÖVERFÖR BARA ÄNDRINGAR
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# rsync skickar bara det som ändrats
-rsync -av source/ dest/
-
-# Inkrementella backups
-tar --listed-incremental=snapshot.file -czf backup.tar.gz files/
-```
-
-### Caching och CDN
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🌐 CDN FÖR STATISKT INNEHÅLL
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# Fördelar:
-# - Cache vid edge locations (nära användarna)
-# - Minskar load på origin server
-# - Minskar egress-kostnader
-# - Snabbare för användarna
-```
-
----
-
-## ✨ Best Practices
-
-```bash
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1️⃣ ÖVERVAKA BANDWIDTH-ANVÄNDNING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Tracka användning över tid
-# - Identifiera toppar
-# - Planera kapacitet
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 2️⃣ OPTIMERA DATAÖVERFÖRING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Använd komprimering
-# - Aktivera caching
-# - Använd CDN för statiskt innehåll
-# - Minimera onödig dataöverföring
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 3️⃣ FÖRSTÅ CLOUD-KOSTNADER
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Data UT (egress) kostar pengar
-# - Minimera egress
-# - Använd samma region när möjligt
-# - Cache vid edge
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 4️⃣ SÄTT UPP LARM
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# - Larma vid hög bandwidth
-# - Larma vid ovanliga mönster
-# - Övervaka kostnader
-```
-
----
-
-## ✅ Sammanfattning
-
-| Koncept | Beskrivning |
-|---------|-------------|
-| **Bit (b)** | Minsta enhet, används för hastighet |
-| **Byte (B)** | 8 bits, används för storlek |
-| **1 Byte** | = 8 bits (kritiskt att komma ihåg!) |
-| **Bandwidth** | Maximal överföringshastighet (Mbps) |
-| **Throughput** | Faktisk överföringshastighet |
-| **Latency** | Fördröjning (ej samma som bandwidth) |
-
-| Verktyg | Användning |
-|---------|------------|
-| `speedtest-cli` | Testa internet-hastighet |
-| `iperf3` | Professionellt throughput-test |
-| `iftop` | Realtids bandwidth per interface |
-| `vnstat` | Statistik över tid |
-| `nethogs` | Bandwidth per process |
-
-**Kom ihåg:**
-- 📊 **bits** (liten b) = hastighet, **Bytes** (stor B) = storlek
-- 🔢 100 Mbps ≠ 100 MB/s (dividera med 8!)
-- 📉 Förvänta dig 90-95% av teoretisk bandwidth
-- 💰 Cloud egress kostar pengar - optimera!
-- 🗜️ Komprimera data före överföring
-""",
-        },
-        {
-            "title": "Subnetting och CIDR",
-            "slug": "subnetting-and-cidr",
+            "title": "Dockerfile Mastery",
+            "slug": "dockerfile-mastery",
             "difficulty": "medium",
             "estimated_minutes": 50,
             "xp_reward": 85,
-            "content": """# Subnetting och CIDR
+            "content": """# Dockerfile Mastery
 
-## Varfor subnetting-kunskap ar kritiskt for DevOps
+## Varför behöver du kunna detta?
 
-Subnetting ar grundlaggande for:
+Dockerfile är receptet för dina images. Du måste kunna:
 
-| Anvandningsomrade | Beskrivning |
-|-------------------|-------------|
-| **Cloud VPC design** | Planera natverksarkitektur i AWS/Azure/GCP |
-| **Network segmentation** | Dela upp natverk i logiska delar |
-| **Security isolation** | Isolera kansliga system |
-| **IP address planning** | Effektiv anvandning av IP-adresser |
-| **Container networking** | Docker och Kubernetes subnets |
-| **Multi-tenant architectures** | Separera kunder/miljoer |
+- **Skriva effektiva Dockerfiles** som bygger snabbt
+- **Optimera för storlek och säkerhet**
+- **Förstå varje instruktion** så du kan felsöka build-problem
 
 ---
 
-## IP-adressens struktur
+## Dockerfile Struktur
 
-### IPv4-adress uppdelning
-
-En IPv4-adress bestar av tva delar: natvverksdelen (vilket natverk) och varddelen (vilken specifik dator).
-
-```bash
-# ==============================================================
-# IP-ADRESS UPPDELNING
-# ==============================================================
-
-192.168.1.100
-
-# 192.168.1 = Natvverksdelen (Network portion)
-# - Identifierar vilket natverk datorn tillhor
-# - Tank pa det som "gatan"
-# - Alla datorer med 192.168.1.x ar pa samma natverk
-# - Bestams av subnet masken (t.ex. /24)
-
-# 100 = Varddelen (Host portion)
-# - Identifierar den specifika datorn
-# - Tank pa det som "husnumret"
-# - Kan variera fran 1 till 254 (0 och 255 ar reserverade)
-
-# Totalt: 32 bitar
-# - 4 bytes (4 x 8 = 32 bitar)
-# - ~4.3 miljarder mojliga adresser
+```dockerfile
+# Kommentar
+INSTRUKTION argument
 ```
 
-### Subnet Mask
+Docker läser Dockerfile uppifrån och ner. Varje instruktion skapar ett nytt layer.
 
-Subnet mask definierar vilka bitar som ar natvverksdelen vs varddelen:
+---
 
-```bash
-# ==============================================================
-# SUBNET MASK EXEMPEL
-# ==============================================================
+## De viktigaste instruktionerna
 
-# 255.255.255.0 = /24
-#   Network:    192.168.1.0
-#   Hosts:      192.168.1.1 - 192.168.1.254
-#   Broadcast:  192.168.1.255
-#   Anvandbara: 254 adresser
+```dockerfile
+# FROM - Välj base image (MÅSTE vara först)
+FROM python:3.11-slim
 
-# 255.255.0.0 = /16
-#   Network:    192.168.0.0
-#   Hosts:      192.168.0.1 - 192.168.255.254
-#   Anvandbara: 65,534 adresser
+# WORKDIR - Sätt arbetskatalog (skapar om den inte finns)
+WORKDIR /app
+
+# COPY - Kopiera filer från host till image
+COPY requirements.txt .
+COPY src/ ./src/
+
+# RUN - Kör kommandon under build
+RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install -y curl
+
+# ENV - Sätt miljövariabler
+ENV PYTHONUNBUFFERED=1
+ENV APP_ENV=production
+
+# EXPOSE - Dokumentera vilken port appen lyssnar på
+EXPOSE 8000
+
+# CMD - Default-kommando när container startar
+CMD ["python", "app.py"]
 ```
 
 ---
 
-## CIDR-notation
+## COPY vs ADD
 
-### Vad ar CIDR?
+```dockerfile
+# COPY - Enkel kopiering (rekommenderas)
+COPY app.py /app/
+COPY . /app/
 
-CIDR (Classless Inter-Domain Routing) ar ett kompakt satt att beskriva IP-adress och natmask.
+# ADD - Kan mer men undvik om möjligt
+ADD https://example.com/file.tar.gz /app/  # Laddar ner URL
+ADD archive.tar.gz /app/                    # Auto-extraherar
 
-```bash
-# ==============================================================
-# CIDR FORMAT
-# ==============================================================
-
-# Format: IP_address/prefix_length
-
-# Exempel:
-192.168.1.0/24
-# - 192.168.1.0 = Natverkets adress
-# - /24 = De forsta 24 bitarna ar natvverksdelen
-# - Ger 256 adresser (254 anvandbara)
-
-10.0.0.0/8
-# - 10.0.0.0 = Natverkets adress
-# - /8 = De forsta 8 bitarna ar natvverksdelen
-# - Ger over 16 miljoner adresser
-
-172.16.0.0/12
-# - 172.16.0.0 = Natverkets adress
-# - /12 = De forsta 12 bitarna ar natvverksdelen
-# - Ger over en miljon adresser
-```
-
-### CIDR prefix-langder
-
-| Prefix | Subnet Mask | Antal adresser | Anvandbara |
-|--------|-------------|----------------|------------|
-| /8 | 255.0.0.0 | 16,777,216 | 16,777,214 |
-| /16 | 255.255.0.0 | 65,536 | 65,534 |
-| /24 | 255.255.255.0 | 256 | 254 |
-| /25 | 255.255.255.128 | 128 | 126 |
-| /26 | 255.255.255.192 | 64 | 62 |
-| /27 | 255.255.255.224 | 32 | 30 |
-| /28 | 255.255.255.240 | 16 | 14 |
-| /32 | 255.255.255.255 | 1 | 1 (host route) |
-
-**/24 ar vanligast for subnets**
-
----
-
-## Vanliga CIDR-block
-
-```bash
-# ==============================================================
-# PRIVATA RANGES (RFC 1918)
-# ==============================================================
-
-10.0.0.0/8          # 10.0.0.0 - 10.255.255.255 (Class A)
-172.16.0.0/12       # 172.16.0.0 - 172.31.255.255 (Class B)
-192.168.0.0/16      # 192.168.0.0 - 192.168.255.255 (Class C)
-
-# ==============================================================
-# SPECIELLA RANGES
-# ==============================================================
-
-127.0.0.0/8         # Loopback (localhost)
-169.254.0.0/16      # Link-local (auto-assigned)
-0.0.0.0/0           # Default route (alla adresser)
+# Använd COPY om du inte behöver ADD:s extra funktioner
 ```
 
 ---
 
-## Subnetting grunderna
+## CMD vs ENTRYPOINT
 
-### Varfor subnetta?
+```dockerfile
+# CMD - Kan överskrivas vid docker run
+CMD ["python", "app.py"]
+# docker run myimage              → python app.py
+# docker run myimage python test.py → python test.py (CMD ignoreras)
 
-```bash
-# ==============================================================
-# FORDELAR MED SUBNETTING
-# ==============================================================
+# ENTRYPOINT - Körs alltid, CMD blir argument
+ENTRYPOINT ["python"]
+CMD ["app.py"]
+# docker run myimage              → python app.py
+# docker run myimage test.py      → python test.py
 
-# 1. Network segmentation
-#    - Dela upp stora natverk i mindre delar
-
-# 2. Security isolation
-#    - Separera kansliga system (databaser, admin)
-
-# 3. Better organization
-#    - Logisk uppdelning per avdelning/funktion
-
-# 4. Reduced broadcast domains
-#    - Minskar broadcast-trafik
-
-# 5. Efficient IP usage
-#    - Anvand bara de adresser du behover
-```
-
-### Subnet-berakning
-
-```bash
-# ==============================================================
-# EXEMPEL: DELA UPP 192.168.1.0/24
-# ==============================================================
-
-# /24 subnet (original)
-# Network:    192.168.1.0
-# Netmask:    255.255.255.0
-# Hosts:      192.168.1.1 - 192.168.1.254
-# Broadcast:  192.168.1.255
-# Anvandbara: 254 hosts
-
-# /25 subnet (delat i 2)
-# Subnet 1:   192.168.1.0/25   (192.168.1.1 - 192.168.1.126)
-# Subnet 2:   192.168.1.128/25 (192.168.1.129 - 192.168.1.254)
-# Anvandbara: 126 hosts per subnet
-
-# /26 subnet (delat i 4)
-# Subnet 1:   192.168.1.0/26   (192.168.1.1 - 192.168.1.62)
-# Subnet 2:   192.168.1.64/26  (192.168.1.65 - 192.168.1.126)
-# Subnet 3:   192.168.1.128/26 (192.168.1.129 - 192.168.1.190)
-# Subnet 4:   192.168.1.192/26 (192.168.1.193 - 192.168.1.254)
-# Anvandbara: 62 hosts per subnet
-```
-
-### Subnetting-verktyg
-
-```bash
-# ==============================================================
-# VERKTYG FOR SUBNET-BERAKNING
-# ==============================================================
-
-# Med ipcalc
-ipcalc 192.168.1.0/24
-ipcalc 192.168.1.0/25
-ipcalc 192.168.1.0/26
-
-# Med sipcalc
-sipcalc 192.168.1.0/24
-
-# Online-kalkylatorer:
-# - subnet-calculator.com
-# - ipaddressguide.com
+# Kombinera för flexibilitet
+ENTRYPOINT ["python", "manage.py"]
+CMD ["runserver"]
+# docker run myimage              → python manage.py runserver
+# docker run myimage migrate      → python manage.py migrate
 ```
 
 ---
 
-## VPC Subnetting i Cloud
+## Optimerad Dockerfile
 
-### AWS VPC Exempel
+```dockerfile
+# 1. Välj minimal base image
+FROM python:3.11-slim
 
-```bash
-# ==============================================================
-# AWS VPC DESIGN
-# ==============================================================
+# 2. Sätt miljövariabler tidigt
+ENV PYTHONUNBUFFERED=1 \\
+    PYTHONDONTWRITEBYTECODE=1 \\
+    PIP_NO_CACHE_DIR=1
 
-# VPC: 10.0.0.0/16 (65,536 adresser)
+# 3. Skapa non-root user
+RUN useradd --create-home appuser
 
-# Subnets:
-10.0.1.0/24    # Public subnet (AZ-a)  - Load balancers
-10.0.2.0/24    # Private subnet (AZ-a) - App servers
-10.0.3.0/24    # Public subnet (AZ-b)  - Load balancers
-10.0.4.0/24    # Private subnet (AZ-b) - App servers
-10.0.5.0/24    # Database subnet (AZ-a)
-10.0.6.0/24    # Database subnet (AZ-b)
+# 4. Sätt arbetskatalog
+WORKDIR /app
 
-# Varfor flera AZ?
-# - High availability
-# - Fault tolerance
-```
+# 5. Kopiera dependencies först (layer caching!)
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-### Azure VNet Exempel
+# 6. Kopiera applikationskod
+COPY --chown=appuser:appuser . .
 
-```bash
-# ==============================================================
-# AZURE VNET DESIGN
-# ==============================================================
+# 7. Byt till non-root user
+USER appuser
 
-# VNet: 10.0.0.0/16
+# 8. Dokumentera port
+EXPOSE 8000
 
-# Subnets:
-10.0.1.0/24    # Frontend
-10.0.2.0/24    # Backend
-10.0.3.0/24    # Database
-10.0.4.0/24    # Gateway subnet
-```
+# 9. Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s \\
+    CMD curl -f http://localhost:8000/health || exit 1
 
-### GCP VPC Exempel
-
-```bash
-# ==============================================================
-# GCP VPC DESIGN
-# ==============================================================
-
-# VPC: 10.0.0.0/16
-
-# Subnets (per region):
-10.0.1.0/24    # us-east1
-10.0.2.0/24    # us-west1
-10.0.3.0/24    # eu-west1
+# 10. Startkommando
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
 ```
 
 ---
 
-## Subnet-typer
+## Multi-stage Builds
 
-### Public Subnet
+```dockerfile
+# Stage 1: Build
+FROM node:18 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
-```bash
-# ==============================================================
-# PUBLIC SUBNET
-# ==============================================================
+# Stage 2: Production
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-# Egenskaper:
-# - Har Internet Gateway
-# - Kan na internet direkt
-# - For: Load balancers, NAT gateways, bastion hosts
-
-# Exempel:
-10.0.1.0/24    # Public subnet
-
-# Route table:
-# Destination     Target
-# 10.0.0.0/16     local
-# 0.0.0.0/0       igw-12345 (Internet Gateway)
-```
-
-### Private Subnet
-
-```bash
-# ==============================================================
-# PRIVATE SUBNET
-# ==============================================================
-
-# Egenskaper:
-# - Ingen direkt internet-atkomst
-# - Behover NAT Gateway for utgaende trafik
-# - For: Application servers, internal services
-
-# Exempel:
-10.0.2.0/24    # Private subnet
-
-# Route table:
-# Destination     Target
-# 10.0.0.0/16     local
-# 0.0.0.0/0       nat-12345 (NAT Gateway)
-```
-
-### Database Subnet
-
-```bash
-# ==============================================================
-# DATABASE SUBNET
-# ==============================================================
-
-# Egenskaper:
-# - Helt isolerat
-# - Ingen internet-atkomst (ingen default route)
-# - Endast atkomlig fran application subnets
-# - For: Databaser, cache, interna tjanster
-
-# Exempel:
-10.0.5.0/24    # Database subnet
-
-# Route table:
-# Destination     Target
-# 10.0.0.0/16     local
-# (ingen 0.0.0.0/0 route!)
+# Resultat: Bara nginx + statiska filer, inte Node.js!
 ```
 
 ---
 
-## Route Tables
-
-### Route Table grunderna
+## .dockerignore
 
 ```bash
-# ==============================================================
-# ROUTE TABLE KONCEPT
-# ==============================================================
-
-# Varje subnet har en route table
-# Definierar var trafik ska skickas
-
-# Default route (0.0.0.0/0):
-# - Public subnet:  -> Internet Gateway
-# - Private subnet: -> NAT Gateway
-# - Database:       -> Ingen (isolerat)
-
-# Local route (alltid med):
-# - VPC CIDR -> local (intern VPC-trafik)
-```
-
-### Exempel Route Tables
-
-```bash
-# ==============================================================
-# PUBLIC SUBNET ROUTE TABLE
-# ==============================================================
-# Destination      Target
-# 10.0.0.0/16      local         (VPC internt)
-# 0.0.0.0/0        igw-12345     (Internet)
-
-# ==============================================================
-# PRIVATE SUBNET ROUTE TABLE
-# ==============================================================
-# Destination      Target
-# 10.0.0.0/16      local         (VPC internt)
-# 0.0.0.0/0        nat-12345     (NAT for utgaende)
-
-# ==============================================================
-# DATABASE SUBNET ROUTE TABLE
-# ==============================================================
-# Destination      Target
-# 10.0.0.0/16      local         (VPC internt endast)
+# .dockerignore - exkludera från COPY/ADD
+node_modules
+.git
+.env
+*.log
+__pycache__
+.pytest_cache
+Dockerfile
+docker-compose.yml
 ```
 
 ---
 
-## Subnet Sizing
+## Key Takeaways
 
-### Planera subnets
+- **Ordning spelar roll** - sätt saker som ändras sällan först (caching)
+- **Multi-stage builds** minskar image-storlek dramatiskt
+- Kör alltid som **non-root user** i produktion
+- Använd **.dockerignore** för snabbare builds
+""",
+        },
+        {
+            "title": "Docker Networking",
+            "slug": "docker-networking",
+            "difficulty": "medium",
+            "estimated_minutes": 50,
+            "xp_reward": 85,
+            "content": """# Docker Networking
 
-```bash
-# ==============================================================
-# PLANERINGS-OVERVAGANDEN
-# ==============================================================
+## Varför behöver du kunna detta?
 
-# 1. Antal hosts som behovs
-# 2. Framtida tillvaxt
-# 3. Reserverade IP:er
+Containers behöver prata med varandra och omvärlden. Du måste förstå:
 
-# AWS reserverar 5 IP:er per subnet:
-# - .0   Network address
-# - .1   VPC router
-# - .2   DNS
-# - .3   Future use
-# - .255 Broadcast
-
-# Sa ett /24 subnet har 251 anvandbara (256 - 5)
-```
-
-### Vanliga storlekar
-
-| CIDR | Totalt | Anvandbara (AWS) | Bra for |
-|------|--------|------------------|---------|
-| /28 | 16 | 11 | Sma subnets, point-to-point |
-| /27 | 32 | 27 | Sma tjanster |
-| /26 | 64 | 59 | Medelstora tjanster |
-| /24 | 256 | 251 | Standard, de flesta subnets |
-| /23 | 512 | 507 | Stora subnets |
-| /22 | 1024 | 1019 | Mycket stora subnets |
+- **Olika network drivers** och när du använder vilken
+- **Hur containers hittar varandra** via DNS
+- **Port mapping** för att exponera tjänster
 
 ---
 
-## Best Practices
+## Network Drivers
 
 ```bash
-# ==============================================================
-# 1. PLANERA FOR TILLVAXT
-# ==============================================================
-# - Anvand inte hela VPC for ett subnet
-# - Lamna rum for expansion
-# - Anvand /24 for de flesta subnets
+# Bridge (default) - containers på samma host
+docker network create mynetwork
 
-# ==============================================================
-# 2. SEGMENTERA PER FUNKTION
-# ==============================================================
-# Separata subnets for:
-# - Public-facing services
-# - Application servers
-# - Databases
-# - Management/admin
+# Host - container delar hosts nätverk (ingen isolation)
+docker run --network host nginx
 
-# ==============================================================
-# 3. ANVAND KONSEKVENT STORLEK
-# ==============================================================
-# - Samma subnet-storlek nar mojligt
-# - Gor hantering enklare
-# - Forenklar routing
+# None - ingen nätverksåtkomst
+docker run --network none alpine
 
-# ==============================================================
-# 4. DOKUMENTERA SUBNET-ANVANDNING
-# ==============================================================
-# Dokumentera:
-# - Subnet syfte
-# - IP-ranges
-# - Route tables
-# - Security groups
+# Overlay - containers över flera hosts (Swarm/Kubernetes)
+docker network create -d overlay myoverlay
 ```
 
 ---
 
-## Sammanfattning
+## Bridge Network (Default)
 
-| Koncept | Beskrivning |
-|---------|-------------|
-| **CIDR** | IP_address/prefix_length format |
-| **/24** | Vanligaste subnet-storleken (256 adresser) |
-| **Subnet mask** | Definierar network vs host bits |
-| **Public subnet** | Har Internet Gateway |
-| **Private subnet** | Behover NAT for internet |
-| **Route table** | Styr var trafik gar |
+```bash
+# Skapa ett nätverk
+docker network create backend-net
 
-| CIDR | Adresser | Typisk anvandning |
-|------|----------|-------------------|
-| /8 | 16M | Stora organisationer |
-| /16 | 65K | VPC/VNet |
-| /24 | 256 | Standard subnet |
-| /26 | 64 | Mindre subnet |
-| /32 | 1 | Host route |
+# Starta containers i nätverket
+docker run -d --name db --network backend-net postgres
+docker run -d --name api --network backend-net myapi
 
-**Kom ihag:**
-- Planera for tillvaxt - anvand inte hela VPC direkt
-- Segmentera per funktion (public/private/database)
-- Dokumentera alla subnets och deras syfte
-- /24 ar standard for de flesta subnets
-- AWS reserverar 5 IP:er per subnet
+# Nu kan api nå db via hostname "db"
+# Inuti api-containern: ping db → fungerar!
+
+# Lista nätverk
+docker network ls
+
+# Inspektera nätverk
+docker network inspect backend-net
+```
+
+---
+
+## Container DNS
+
+```bash
+# Docker har inbyggd DNS för containers i samma nätverk
+# Hostname = container name
+
+# Exempel: api behöver nå databas
+docker run -d --name postgres --network mynet postgres
+docker run -d --name api --network mynet \\
+    -e DATABASE_URL=postgresql://postgres:5432/db \\
+    myapi
+
+# Inuti api: "postgres" resolvas automatiskt till rätt IP
+```
+
+---
+
+## Port Mapping
+
+```bash
+# Exponera port till host
+docker run -p 8080:80 nginx
+#          │    │
+#          │    └── Container port (nginx lyssnar på 80)
+#          └── Host port (du når via localhost:8080)
+
+# Exponera till specifik IP
+docker run -p 127.0.0.1:8080:80 nginx  # Bara localhost
+
+# Random host port
+docker run -p 80 nginx                  # Docker väljer port
+docker port container_name              # Se vilken port
+
+# Flera portar
+docker run -p 80:80 -p 443:443 nginx
+```
+
+---
+
+## Praktiskt exempel
+
+```bash
+# Scenario: Web app + databas
+
+# 1. Skapa nätverk
+docker network create webapp-net
+
+# 2. Starta databas (ingen port exponerad utåt!)
+docker run -d \\
+    --name db \\
+    --network webapp-net \\
+    -e POSTGRES_PASSWORD=secret \\
+    postgres
+
+# 3. Starta app som pratar med db internt
+docker run -d \\
+    --name webapp \\
+    --network webapp-net \\
+    -e DATABASE_HOST=db \\
+    -p 8080:8000 \\
+    mywebapp
+
+# Resultat:
+# - webapp nåbar på localhost:8080
+# - db INTE nåbar utifrån (säkrare!)
+# - webapp kan nå db via hostname "db"
+```
+
+---
+
+## Network Troubleshooting
+
+```bash
+# Se vilka nätverk en container är i
+docker inspect container_name --format='{{.NetworkSettings.Networks}}'
+
+# Se alla containers i ett nätverk
+docker network inspect mynet --format='{{range .Containers}}{{.Name}} {{end}}'
+
+# Testa connectivity från container
+docker exec webapp ping db
+docker exec webapp curl http://api:8000/health
+
+# Se nätverksstatistik
+docker stats --format "table {{.Name}}\t{{.NetIO}}"
+```
+
+---
+
+## Koppla container till flera nätverk
+
+```bash
+# Container kan vara i flera nätverk
+docker network connect frontend-net webapp
+docker network connect backend-net webapp
+
+# Nu kan webapp prata med båda nätverken
+
+# Koppla bort
+docker network disconnect frontend-net webapp
+```
+
+---
+
+## Key Takeaways
+
+- Använd **user-defined bridge networks** för isolation
+- Containers i samma nätverk kan nå varandra via **hostname**
+- **Exponera bara nödvändiga portar** till host
+- `-p 127.0.0.1:8080:80` begränsar till localhost
+""",
+        },
+        {
+            "title": "Docker Volumes & Persistence",
+            "slug": "docker-volumes-persistence",
+            "difficulty": "medium",
+            "estimated_minutes": 45,
+            "xp_reward": 80,
+            "content": """# Docker Volumes & Persistence
+
+## Varför behöver du kunna detta?
+
+Containers är ephemeral - data försvinner när de tas bort. Du måste förstå:
+
+- **Hur du persisterar data** som databaser och uploads
+- **Skillnaden mellan volumes och bind mounts**
+- **Backup och restore** av container-data
+
+---
+
+## Problemet utan volumes
+
+```bash
+# Starta databas
+docker run -d --name db postgres
+
+# Skriv data...
+# Stoppa och ta bort
+docker rm -f db
+
+# All data är BORTA! 💥
+```
+
+---
+
+## Tre sätt att persistera data
+
+```bash
+# 1. Volumes (Docker-managed) - REKOMMENDERAS
+docker run -v mydata:/var/lib/postgresql/data postgres
+
+# 2. Bind mounts (host path)
+docker run -v /host/path:/container/path postgres
+
+# 3. tmpfs (RAM-disk, försvinner vid stopp)
+docker run --tmpfs /tmp postgres
+```
+
+---
+
+## Volumes (Docker-managed)
+
+```bash
+# Skapa volume
+docker volume create dbdata
+
+# Använd volume
+docker run -d \\
+    --name postgres \\
+    -v dbdata:/var/lib/postgresql/data \\
+    postgres
+
+# Lista volumes
+docker volume ls
+
+# Inspektera volume
+docker volume inspect dbdata
+
+# Ta bort volume
+docker volume rm dbdata
+
+# Ta bort oanvända volumes
+docker volume prune
+```
+
+---
+
+## Bind Mounts
+
+```bash
+# Montera host-katalog i container
+docker run -v $(pwd)/app:/app myimage
+
+# Read-only mount
+docker run -v $(pwd)/config:/etc/app/config:ro myimage
+
+# Användningsområden:
+# - Utveckling (live reload)
+# - Konfig-filer
+# - Loggar du vill nå från host
+```
+
+---
+
+## Volumes vs Bind Mounts
+
+```bash
+# Volumes
+# ✅ Docker hanterar lagring
+# ✅ Fungerar på alla plattformar
+# ✅ Kan backas upp med docker-kommandon
+# ✅ Kan delas mellan containers
+
+# Bind mounts
+# ✅ Du kontrollerar exakt var data sparas
+# ✅ Bra för utveckling (hot reload)
+# ❌ Beroende av host path
+# ❌ Permissions kan bli krångligt
+```
+
+---
+
+## Praktiskt exempel: Databas
+
+```bash
+# Skapa persistent PostgreSQL
+docker volume create pgdata
+
+docker run -d \\
+    --name postgres \\
+    -v pgdata:/var/lib/postgresql/data \\
+    -e POSTGRES_PASSWORD=secret \\
+    postgres
+
+# Data överlever container restart/removal
+docker rm -f postgres
+docker run -d --name postgres -v pgdata:/var/lib/postgresql/data postgres
+# Data finns kvar! ✅
+```
+
+---
+
+## Backup och Restore
+
+```bash
+# Backup volume till tar-fil
+docker run --rm \\
+    -v pgdata:/source:ro \\
+    -v $(pwd):/backup \\
+    alpine tar czf /backup/pgdata-backup.tar.gz -C /source .
+
+# Restore från backup
+docker run --rm \\
+    -v pgdata:/target \\
+    -v $(pwd):/backup \\
+    alpine tar xzf /backup/pgdata-backup.tar.gz -C /target
+```
+
+---
+
+## Key Takeaways
+
+- Använd **volumes för produktionsdata** (databaser, uploads)
+- Använd **bind mounts för utveckling** (kod, config)
+- Data i volumes **överlever** container removal
+- **Backup regelbundet** - volumes är inte automatiskt säkrade
+""",
+        },
+        {
+            "title": "Docker Compose Fundamentals",
+            "slug": "docker-compose-fundamentals",
+            "difficulty": "medium",
+            "estimated_minutes": 50,
+            "xp_reward": 85,
+            "content": """# Docker Compose Fundamentals
+
+## Varför behöver du kunna detta?
+
+Att köra `docker run` med 10 flaggor för flera containers är opraktiskt. Du behöver:
+
+- **Definiera hela stacken** i en fil
+- **Starta allt med ett kommando**
+- **Versionshantera infrastrukturen** som kod
+
+---
+
+## Vad är Docker Compose?
+
+Docker Compose låter dig definiera multi-container applikationer i en YAML-fil. Istället för:
+
+```bash
+docker network create mynet
+docker run -d --name db --network mynet -v dbdata:/data postgres
+docker run -d --name api --network mynet -p 8080:8000 -e DB_HOST=db myapi
+```
+
+Skriver du:
+
+```yaml
+# docker-compose.yml
+services:
+  db:
+    image: postgres
+    volumes:
+      - dbdata:/data
+  api:
+    image: myapi
+    ports:
+      - "8080:8000"
+    environment:
+      - DB_HOST=db
+
+volumes:
+  dbdata:
+```
+
+---
+
+## Grundläggande struktur
+
+```yaml
+# docker-compose.yml
+version: "3.8"  # Compose file version (optional i nya versioner)
+
+services:       # Containers att köra
+  service1:
+    image: ...
+  service2:
+    build: ...
+
+volumes:        # Named volumes
+  data:
+
+networks:       # Custom networks
+  frontend:
+  backend:
+```
+
+---
+
+## Service-konfiguration
+
+```yaml
+services:
+  webapp:
+    # Välj image ELLER build
+    image: nginx:alpine
+    # ELLER
+    build: ./app
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+
+    # Port mapping
+    ports:
+      - "8080:80"
+      - "443:443"
+
+    # Miljövariabler
+    environment:
+      - NODE_ENV=production
+      - API_KEY=secret
+    env_file:
+      - .env
+
+    # Volumes
+    volumes:
+      - ./app:/app          # Bind mount
+      - data:/var/lib/data  # Named volume
+
+    # Dependencies
+    depends_on:
+      - db
+      - redis
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+```
+
+---
+
+## Grundläggande kommandon
+
+```bash
+# Starta alla services
+docker compose up
+
+# Starta i bakgrunden
+docker compose up -d
+
+# Stoppa alla services
+docker compose down
+
+# Stoppa och ta bort volumes
+docker compose down -v
+
+# Se status
+docker compose ps
+
+# Se loggar
+docker compose logs
+docker compose logs -f webapp  # Följ specifik service
+
+# Bygg om images
+docker compose build
+docker compose up --build  # Build + start
+```
+
+---
+
+## Komplett exempel
+
+```yaml
+# docker-compose.yml
+services:
+  # Frontend
+  web:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+
+  # Backend API
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:secret@db:5432/app
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./backend:/app  # Hot reload i utveckling
+
+  # Database
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Ingen port exponerad - bara intern access
+
+  # Cache
+  redis:
+    image: redis:alpine
+
+volumes:
+  pgdata:
+```
+
+---
+
+## Key Takeaways
+
+- **En fil = hela stacken** - lätt att versionshantera
+- Services i samma compose-fil får **automatiskt nätverk**
+- Använd **depends_on** för start-ordning
+- `docker compose down -v` tar bort **allt** inkl volumes
 """,
         },
         {
