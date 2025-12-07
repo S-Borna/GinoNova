@@ -222,19 +222,19 @@ function DallasChat({ userName }: { userName: string }) {
 
 function WeeklySessionCard() {
     const { weeklyTotalSeconds, todaySeconds, currentSessionSeconds, formatTimeShort, weekHistory } = useSessionTimer()
-    
+
     // Beräkna dagarna i veckan
     const weekDays = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"]
     const today = new Date()
     const currentDay = today.getDay() === 0 ? 6 : today.getDay() - 1 // Måndag = 0
-    
+
     return (
         <div className="bg-zinc-900/60 border border-emerald-500/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
                 <Clock className="w-5 h-5 text-emerald-400" />
                 <h2 className="text-lg font-semibold">Veckans studietid</h2>
             </div>
-            
+
             {/* Total tid denna vecka */}
             <div className="text-center mb-6">
                 <p className="text-4xl font-bold text-emerald-400 font-mono">
@@ -242,7 +242,7 @@ function WeeklySessionCard() {
                 </p>
                 <p className="text-sm text-zinc-500 mt-1">denna vecka</p>
             </div>
-            
+
             {/* Dagars aktivitet */}
             <div className="flex justify-between gap-1 mb-4">
                 {weekDays.map((day, i) => (
@@ -260,7 +260,7 @@ function WeeklySessionCard() {
                     </div>
                 ))}
             </div>
-            
+
             {/* Idag och session */}
             <div className="grid grid-cols-2 gap-3 pt-4 border-t border-zinc-800">
                 <div className="text-center">
@@ -282,7 +282,7 @@ function WeeklySessionCard() {
 
 function FavoritesCard() {
     const { favorites, removeFavorite } = useFavorites()
-    
+
     return (
         <div className="bg-zinc-900/60 border border-amber-500/30 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">

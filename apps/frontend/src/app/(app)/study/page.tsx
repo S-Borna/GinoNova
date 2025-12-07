@@ -74,11 +74,11 @@ export default function StudyPage() {
     const [modules, setModules] = useState<StudyModule[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    
+
     // Kombinera-läge
     const [combineMode, setCombineMode] = useState(false)
     const [selectedModules, setSelectedModules] = useState<Set<string>>(new Set())
-    
+
     // Svårighetsgrad
     const [selectedDifficulties, setSelectedDifficulties] = useState<Set<string>>(new Set(["easy", "medium", "hard"]))
     const [randomize, setRandomize] = useState(true)
@@ -103,11 +103,11 @@ export default function StudyPage() {
 
     function toggleModule(slug: string) {
         if (!combineMode) {
-            // Normal mode - gå direkt till modul
-            router.push(`/study/${slug}/flashcards?shuffle=true`)
+            // Normal mode - gå till session setup med en modul
+            router.push(`/study/session?modules=${slug}`)
             return
         }
-        
+
         // Combine mode - toggle selection
         setSelectedModules(prev => {
             const newSet = new Set(prev)
@@ -132,21 +132,12 @@ export default function StudyPage() {
         })
     }
 
-    function startCombinedStudy(type: "flashcards" | "quiz") {
+    function startCombinedStudy() {
         if (selectedModules.size === 0) return
-        
+
         const modulesParam = Array.from(selectedModules).join(",")
-        const diffParam = Array.from(selectedDifficulties).join(",")
-        const shuffleParam = randomize ? "&shuffle=true" : ""
-        
-        // Om bara en modul, gå till vanliga sidan
-        if (selectedModules.size === 1) {
-            const slug = Array.from(selectedModules)[0]
-            router.push(`/study/${slug}/${type}?difficulties=${diffParam}${shuffleParam}`)
-        } else {
-            // Flera moduler - kombinerad vy
-            router.push(`/study/combined/${type}?modules=${modulesParam}&difficulties=${diffParam}${shuffleParam}`)
-        }
+        // Gå till session setup med valda moduler
+        router.push(`/study/session?modules=${modulesParam}`)
     }
 
     function exitCombineMode() {
@@ -219,7 +210,7 @@ export default function StudyPage() {
                                             Preview
                                         </span>
                                     </div>
-                                    
+
                                     {/* Mini Flashcard Preview */}
                                     <div className="mb-4">
                                         <div className={cn(
@@ -263,7 +254,7 @@ export default function StudyPage() {
                                             Preview
                                         </span>
                                     </div>
-                                    
+
                                     {/* Mini Quiz Preview */}
                                     <div className="mb-4 space-y-2">
                                         <p className="text-sm text-zinc-200 mb-3">
@@ -271,12 +262,12 @@ export default function StudyPage() {
                                         </p>
                                         <div className="space-y-1.5">
                                             {["ls -la", "cd ..", "pwd", "cat file"].map((opt, i) => (
-                                                <div 
+                                                <div
                                                     key={i}
                                                     className={cn(
                                                         "flex items-center gap-2 p-2 rounded-lg text-xs",
-                                                        i === 0 
-                                                            ? "bg-emerald-500/20 border border-emerald-500/30" 
+                                                        i === 0
+                                                            ? "bg-emerald-500/20 border border-emerald-500/30"
                                                             : "bg-zinc-800/50 border border-zinc-700/50"
                                                     )}
                                                 >
@@ -314,7 +305,7 @@ export default function StudyPage() {
                             ============================================================ */}
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg font-semibold text-zinc-300">Välj modul</h2>
-                            
+
                             {!combineMode ? (
                                 <button
                                     onClick={() => setCombineMode(true)}
@@ -355,7 +346,7 @@ export default function StudyPage() {
                                 <p className="text-sm text-zinc-400 mb-4">
                                     Markera de moduler du vill kombinera, välj svårighetsgrad och klicka Klar.
                                 </p>
-                                
+
                                 {/* Svårighetsgrad */}
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {[
@@ -399,30 +390,18 @@ export default function StudyPage() {
                                                 ({selectedStats.flashcards} flashcards, {selectedStats.quiz} quiz)
                                             </span>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => startCombinedStudy("flashcards")}
-                                                className={cn(
-                                                    "flex items-center gap-2 px-4 py-2 rounded-lg",
-                                                    "bg-purple-600 hover:bg-purple-500",
-                                                    "text-sm font-medium transition-all"
-                                                )}
-                                            >
-                                                <BookOpen className="w-4 h-4" />
-                                                Flashcards
-                                            </button>
-                                            <button
-                                                onClick={() => startCombinedStudy("quiz")}
-                                                className={cn(
-                                                    "flex items-center gap-2 px-4 py-2 rounded-lg",
-                                                    "bg-blue-600 hover:bg-blue-500",
-                                                    "text-sm font-medium transition-all"
-                                                )}
-                                            >
-                                                <Brain className="w-4 h-4" />
-                                                Quiz
-                                            </button>
-                                        </div>
+                                        <button
+                                            onClick={() => startCombinedStudy()}
+                                            className={cn(
+                                                "flex items-center gap-2 px-6 py-2 rounded-lg",
+                                                "bg-gradient-to-r from-purple-600 to-blue-600",
+                                                "hover:from-purple-500 hover:to-blue-500",
+                                                "text-sm font-medium transition-all"
+                                            )}
+                                        >
+                                            Konfigurera övning
+                                            <ArrowRight className="w-4 h-4" />
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -434,7 +413,7 @@ export default function StudyPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {modules.map(module => {
                                 const isSelected = selectedModules.has(module.slug)
-                                
+
                                 return (
                                     <button
                                         key={module.slug}
@@ -459,7 +438,7 @@ export default function StudyPage() {
                                             )}
                                             <div className={cn(
                                                 "w-12 h-12 rounded-lg flex items-center justify-center shrink-0",
-                                                isSelected 
+                                                isSelected
                                                     ? "bg-purple-500/30 text-purple-300"
                                                     : "bg-purple-500/20 text-purple-400"
                                             )}>
@@ -468,8 +447,8 @@ export default function StudyPage() {
                                             <div className="flex-1 min-w-0">
                                                 <h3 className={cn(
                                                     "font-semibold text-lg mb-1 transition-colors truncate",
-                                                    isSelected 
-                                                        ? "text-purple-300" 
+                                                    isSelected
+                                                        ? "text-purple-300"
                                                         : "group-hover:text-purple-300"
                                                 )}>
                                                     {module.title}
@@ -483,7 +462,7 @@ export default function StudyPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         {/* Normal mode: visa pil */}
                                         {!combineMode && (
                                             <div className="flex justify-end mt-4">

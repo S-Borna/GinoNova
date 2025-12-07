@@ -758,6 +758,108 @@ export default function AdminCommandCenter() {
                 </div>
             )}
 
+            {/* Admin Tools Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8"
+            >
+                <div className="flex items-center gap-2 mb-4">
+                    <Shield className="w-5 h-5 text-amber-400" />
+                    <h2 className="text-lg font-semibold text-white">Admin Verktyg</h2>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Link href="/admin/permissions" prefetch={false}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={cn(
+                                "p-4 rounded-xl cursor-pointer",
+                                "bg-zinc-900/80 border border-zinc-800",
+                                "hover:border-purple-500/50 hover:bg-zinc-800/50",
+                                "transition-all duration-200"
+                            )}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-purple-500/20">
+                                    <Shield className="w-5 h-5 text-purple-400" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-white text-sm">Rättigheter</p>
+                                    <p className="text-xs text-zinc-500">Feature access</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </Link>
+                    <Link href="/admin/users" prefetch={false}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={cn(
+                                "p-4 rounded-xl cursor-pointer",
+                                "bg-zinc-900/80 border border-zinc-800",
+                                "hover:border-indigo-500/50 hover:bg-zinc-800/50",
+                                "transition-all duration-200"
+                            )}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-indigo-500/20">
+                                    <Users className="w-5 h-5 text-indigo-400" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-white text-sm">Användare</p>
+                                    <p className="text-xs text-zinc-500">Hantera alla</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </Link>
+                    <Link href="/admin/content" prefetch={false}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={cn(
+                                "p-4 rounded-xl cursor-pointer",
+                                "bg-zinc-900/80 border border-zinc-800",
+                                "hover:border-emerald-500/50 hover:bg-zinc-800/50",
+                                "transition-all duration-200"
+                            )}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-emerald-500/20">
+                                    <BookOpen className="w-5 h-5 text-emerald-400" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-white text-sm">Innehåll</p>
+                                    <p className="text-xs text-zinc-500">Moduler & kurser</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </Link>
+                    <Link href="/admin/analytics" prefetch={false}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={cn(
+                                "p-4 rounded-xl cursor-pointer",
+                                "bg-zinc-900/80 border border-zinc-800",
+                                "hover:border-amber-500/50 hover:bg-zinc-800/50",
+                                "transition-all duration-200"
+                            )}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-amber-500/20">
+                                    <BarChart3 className="w-5 h-5 text-amber-400" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-white text-sm">Analytics</p>
+                                    <p className="text-xs text-zinc-500">Statistik</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </Link>
+                </div>
+            </motion.div>
+
             {/* Users Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}

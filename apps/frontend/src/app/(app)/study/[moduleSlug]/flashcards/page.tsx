@@ -36,11 +36,11 @@ export default function FlashcardsPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
-    
+
     // Star modal
     const [showStarModal, setShowStarModal] = useState(false)
     const [starName, setStarName] = useState("")
-    
+
     // Favorites hook
     const { addFavorite, removeFavorite, isFavorite, getFavoriteId } = useFavorites()
 
@@ -127,7 +127,7 @@ export default function FlashcardsPage() {
     const currentCard = flashcards[currentIndex]
     const progress = ((currentIndex + 1) / flashcards.length) * 100
     const isCurrentFavorite = currentCard ? isFavorite(moduleSlug, currentCard.front, "flashcard") : false
-    
+
     function handleStarClick() {
         if (isCurrentFavorite) {
             const favId = getFavoriteId(moduleSlug, currentCard.front, "flashcard")
@@ -137,7 +137,7 @@ export default function FlashcardsPage() {
             setStarName("")
         }
     }
-    
+
     function handleSaveStar() {
         if (!starName.trim()) return
         addFavorite({
@@ -290,7 +290,7 @@ export default function FlashcardsPage() {
                     )}
                 </div>
             </div>
-            
+
             {/* Star Modal */}
             {showStarModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
