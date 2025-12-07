@@ -72,7 +72,7 @@ function StudySessionSetup() {
 
             try {
                 setLoading(true)
-                
+
                 // Parallella anrop istället för sekventiella
                 const promises = selectedModules.map(async (slug) => {
                     const res = await fetch(`${API_BASE_URL}/api/study/modules/${slug}`)
@@ -153,7 +153,7 @@ function StudySessionSetup() {
                         <div className="h-4 w-24 bg-zinc-800 rounded mb-4 animate-pulse" />
                         <div className="h-8 w-64 bg-zinc-800 rounded animate-pulse" />
                     </div>
-                    
+
                     {/* Skeleton cards */}
                     <div className="space-y-6">
                         <div className="h-32 bg-zinc-900/50 rounded-2xl border border-zinc-800 animate-pulse" />

@@ -193,109 +193,28 @@ export default function StudyPage() {
                 {!loading && (
                     <>
                         {/* ============================================================
-                            REKLAM-KORT (Döda preview-kort)
+                            ENKEL INFO-RAD
                             ============================================================ */}
-                        <div className="mb-8">
-                            <h2 className="text-lg font-semibold mb-4 text-zinc-300">Öva på olika sätt</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Flashcard Preview (DÖD) */}
-                                <div className={cn(
-                                    "relative overflow-hidden rounded-2xl",
-                                    "bg-gradient-to-br from-purple-600/20 to-purple-900/20",
-                                    "border border-purple-500/30 p-6",
-                                    "opacity-90"
-                                )}>
-                                    <div className="absolute top-3 right-3">
-                                        <span className="text-xs bg-purple-500/30 text-purple-300 px-2 py-1 rounded-full">
-                                            Preview
-                                        </span>
-                                    </div>
-
-                                    {/* Mini Flashcard Preview */}
-                                    <div className="mb-4">
-                                        <div className={cn(
-                                            "w-full aspect-[3/2] rounded-xl p-4",
-                                            "bg-gradient-to-br from-purple-500/30 to-purple-700/30",
-                                            "border border-purple-400/20",
-                                            "flex flex-col items-center justify-center"
-                                        )}>
-                                            <p className="text-xs text-purple-300 mb-2">Fråga</p>
-                                            <p className="text-sm text-center text-zinc-200">
-                                                Vad gör kommandot `chmod 755`?
-                                            </p>
-                                            <p className="text-xs text-zinc-500 mt-3">
-                                                Klicka för att vända
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                                            <BookOpen className="w-5 h-5 text-purple-400" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">Flashcards</h3>
-                                            <p className="text-xs text-zinc-500">
-                                                {totalStats.flashcards} kort tillgängliga
-                                            </p>
-                                        </div>
-                                    </div>
+                        <div className="mb-8 grid grid-cols-2 gap-4">
+                            {/* Flashcards */}
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                                <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                    <BookOpen className="w-5 h-5 text-purple-400" />
                                 </div>
+                                <div>
+                                    <h3 className="font-medium text-sm">Flashcards</h3>
+                                    <p className="text-xs text-zinc-500">{totalStats.flashcards} kort</p>
+                                </div>
+                            </div>
 
-                                {/* Quiz Preview (DÖD) */}
-                                <div className={cn(
-                                    "relative overflow-hidden rounded-2xl",
-                                    "bg-gradient-to-br from-blue-600/20 to-blue-900/20",
-                                    "border border-blue-500/30 p-6",
-                                    "opacity-90"
-                                )}>
-                                    <div className="absolute top-3 right-3">
-                                        <span className="text-xs bg-blue-500/30 text-blue-300 px-2 py-1 rounded-full">
-                                            Preview
-                                        </span>
-                                    </div>
-
-                                    {/* Mini Quiz Preview */}
-                                    <div className="mb-4 space-y-2">
-                                        <p className="text-sm text-zinc-200 mb-3">
-                                            Vilket kommando listar filer?
-                                        </p>
-                                        <div className="space-y-1.5">
-                                            {["ls -la", "cd ..", "pwd", "cat file"].map((opt, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={cn(
-                                                        "flex items-center gap-2 p-2 rounded-lg text-xs",
-                                                        i === 0
-                                                            ? "bg-emerald-500/20 border border-emerald-500/30"
-                                                            : "bg-zinc-800/50 border border-zinc-700/50"
-                                                    )}
-                                                >
-                                                    <span className={cn(
-                                                        "w-5 h-5 rounded-full flex items-center justify-center text-xs",
-                                                        i === 0 ? "bg-emerald-500 text-white" : "bg-zinc-700 text-zinc-400"
-                                                    )}>
-                                                        {String.fromCharCode(65 + i)}
-                                                    </span>
-                                                    <span className={i === 0 ? "text-emerald-300" : "text-zinc-400"}>
-                                                        {opt}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                                            <Brain className="w-5 h-5 text-blue-400" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">Multiple Choice Quiz</h3>
-                                            <p className="text-xs text-zinc-500">
-                                                {totalStats.quiz} frågor tillgängliga
-                                            </p>
-                                        </div>
-                                    </div>
+                            {/* Quiz */}
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                    <Brain className="w-5 h-5 text-blue-400" />
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-sm">Quiz</h3>
+                                    <p className="text-xs text-zinc-500">{totalStats.quiz} frågor</p>
                                 </div>
                             </div>
                         </div>
