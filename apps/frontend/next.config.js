@@ -15,47 +15,55 @@ module.exports = {
         removeConsole: process.env.NODE_ENV === 'production',
     },
 
-    // 📦 OPTIMIZATION: Reduce number of JS chunks for cleaner network tab
+    // 📦 AGGRESSIVE OPTIMIZATION: Maximum bundling for minimal network requests
     experimental: {
-        // Combine more code into fewer chunks
         optimizePackageImports: [
             'lucide-react',
-            '@radix-ui/react-icons',
+            '@radix-ui/react-icons', 
             'framer-motion',
             'date-fns',
+            '@hookform/resolvers',
+            'react-hook-form',
+            'zod',
+            'clsx',
+            'tailwind-merge',
         ],
     },
 
-    // Bundle analyzer (optional - run with ANALYZE=true npm run build)
     webpack: (config, { isServer }) => {
         if (!isServer) {
-            // Minimize chunk splitting for cleaner network requests
+            // AGGRESSIVE: Bundle everything into minimal chunks
             config.optimization.splitChunks = {
                 chunks: 'all',
-                minSize: 50000, // 50kb minimum before splitting
-                maxInitialRequests: 10, // Max 10 initial requests
-                maxAsyncRequests: 10,
+                minSize: 0,
+                maxInitialRequests: 3, // Only 3 JS files max!
+                maxAsyncRequests: 3,
                 cacheGroups: {
                     default: false,
                     vendors: false,
-                    // Bundle all vendor code together
+                    defaultVendors: false,
+                    // ONE file for all vendor code
                     vendor: {
                         name: 'vendor',
+                        test: /[\\/]node_modules[\\/]/,
                         chunks: 'all',
-                        test: /node_modules/,
                         priority: 20,
-                    },
-                    // Bundle common code
-                    common: {
-                        name: 'common',
-                        minChunks: 2,
-                        chunks: 'all',
-                        priority: 10,
-                        reuseExistingChunk: true,
                         enforce: true,
+                    },
+                    // ONE file for all app code
+                    app: {
+                        name: 'app',
+                        test: /[\\/]src[\\/]/,
+                        chunks: 'all', 
+                        priority: 10,
+                        enforce: true,
+                        minChunks: 1,
                     },
                 },
             };
+            
+            // Disable runtime chunk splitting
+            config.optimization.runtimeChunk = false;
         }
         return config;
     },
