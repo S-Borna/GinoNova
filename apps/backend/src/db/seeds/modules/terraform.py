@@ -23,29 +23,31 @@ MODULE = {
             "content": """
 # Introduction to Terraform
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Manuell infrastruktur är:
+## Varfor viktigt for DevOps?
 
-- Långsam att sätta upp
-- Svår att replikera
-- Omöjlig att versionshantera
-- Källa till mänskliga fel
+| Problem utan IaC | Konsekvens |
+|-----------------|------------|
+| Manuell infrastruktur | Timmar att satta upp, felbelagt |
+| Ingen versionshantering | Vet inte vad som andrades eller nar |
+| Svar att replikera | Staging ≠ Production = buggar |
+| Dokumentation ur synk | README sager en sak, verkligheten en annan |
 
-Terraform löser allt detta genom Infrastructure as Code.
+Terraform loser allt detta genom Infrastructure as Code. Du beskriver onskat tillstand i kod, Terraform gor verkligheten. Deklarativt, versionshanterat, replikerbart.
 
----
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   .tf fil   │────▶│   terraform │────▶│    Cloud    │
+│   (onskat)  │     │   plan/apply│     │   (verklig) │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                   │                   │
+       ▼                   ▼                   ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ Git version │     │ State file  │     │ EC2, S3,    │
+│ control     │     │ (mapping)   │     │ VPC, RDS... │
+└─────────────┘     └─────────────┘     └─────────────┘
 
-## Så fungerar det
-
-Terraform är ett deklarativt verktyg:
-
-1. Du beskriver önskat tillstånd i `.tf`-filer
-2. Terraform planerar ändringar
-3. Terraform applicerar ändringar
-4. State sparas för framtida referens
-
-HashiCorp Configuration Language (HCL) är syntaxen.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -153,11 +155,21 @@ Providers ecosystem | Limited             | SDKs
 
 ## Key Takeaways
 
-1. Terraform är deklarativt - beskriv önskat tillstånd
-2. `terraform init` → `plan` → `apply` är standard workflow
-3. State-filen är kritisk - den mappar config till verklig infrastruktur
-4. HCL är domänspecifikt språk för infrastruktur
-5. Providers ger stöd för olika cloud-plattformar
+| Koncept | Detalj |
+|---------|--------|
+| Deklarativt | Beskriv onskat tillstand, Terraform gor resten |
+| Workflow | init -> plan -> apply ar standard |
+| State-fil | Kritisk - mappar config till verklig infrastruktur |
+| HCL | HashiCorp Configuration Language for infra |
+| Providers | Plugins for AWS, Azure, GCP, Kubernetes mm |
+
+## Kom ihag
+
+- terraform init laddar providers och satter upp backend
+- terraform plan visar EXAKT vad som kommer andras
+- ALDRIG editera state-filen manuellt
+- terraform destroy tar bort ALLT - var forsiktig
+- Version-locka providers for reproducerbarhet
 """,
         },
         {
@@ -167,27 +179,33 @@ Providers ecosystem | Limited             | SDKs
             "content": """
 # HCL Syntax & Basics
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-HCL (HashiCorp Configuration Language) är Terraforms språk:
+## Varfor viktigt for DevOps?
 
-- Läsbart för både människor och maskiner
-- Designat för infrastruktur
-- Stöd för variabler och funktioner
-- Strikt men flexibelt
+| Problem utan HCL-kunskap | Konsekvens |
+|-------------------------|------------|
+| Gissar pa syntax | Standig trial-and-error debugging |
+| Fel variabeltyper | Runtime-fel vid terraform apply |
+| Hardkodade varden | Samma config funkar inte i staging vs prod |
+| Ingen kod-atervanvandning | Copy-paste helvete |
 
-Förstå syntax = skriv effektiv Terraform-kod.
+HCL ar Terraforms sprak - designat for infrastruktur, lasbart for manniskor och maskiner. Forsta syntax = skriv effektiv, underhallbar Terraform-kod.
 
----
+┌─────────────────────────────────────────────────────────┐
+│                    HCL BUILDING BLOCKS                   │
+├─────────────────────────────────────────────────────────┤
+│  terraform { }    - Global konfiguration                │
+│  provider "x" { } - Plugin-konfiguration                │
+│  resource "x" { } - Skapar infrastruktur                │
+│  variable "x" { } - Input-varden                        │
+│  output "x" { }   - Exporterar varden                   │
+│  locals { }       - Lokala varden                       │
+│  data "x" { }     - Laser extern data                   │
+│  module "x" { }   - Ateranvander kod                    │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-HCL bygger på:
-
-- **Blocks** - Containers för konfiguration
-- **Arguments** - Key-value par inom blocks
-- **Expressions** - Värden och beräkningar
-- **Comments** - Dokumentation
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -430,11 +448,21 @@ output "instance_dns" {
 
 ## Key Takeaways
 
-1. Blocks är grundenheten: `type "label" { ... }`
-2. Variabler har typer: string, number, bool, list, map, object
-3. `${}` för interpolation i strängar
-4. Conditional: `condition ? true_val : false_val`
-5. Referera via `resource_type.name.attribute`
+| Koncept | Detalj |
+|---------|--------|
+| Blocks | Grundenheten: type "label" { ... } |
+| Datatyper | string, number, bool, list, map, object |
+| Interpolation | ${} for att blanda variabler i strangar |
+| Conditional | condition ? true_val : false_val |
+| Referenser | resource_type.name.attribute |
+
+## Kom ihag
+
+- variable "x" {} definierar input, var.x anvander det
+- locals {} for beraknade varden som ateranvands
+- output {} exponerar varden efter apply
+- sensitive = true doljer varden i terminal output
+- object() for komplexa typer med flera falt
 """,
         },
         {
@@ -444,24 +472,31 @@ output "instance_dns" {
             "content": """
 # Providers & Resources
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Providers är Terraforms plugins för olika plattformar:
+## Varfor viktigt for DevOps?
 
-- AWS, Azure, GCP
-- Kubernetes, Docker
-- GitHub, Datadog, PagerDuty
+| Problem utan provider-kunskap | Konsekvens |
+|------------------------------|------------|
+| Fel provider-version | Breaking changes, inkompabilitet |
+| Hardkodade credentials | Sakerhetsrisk, fungerar inte i CI/CD |
+| En provider per projekt | Multi-cloud, multi-region omojligt |
+| Ingen version-locking | "Worked yesterday" syndrom |
 
-Resources är de faktiska objekten du skapar.
+Providers ar Terraforms plugins - de oversatter HCL till API-anrop. AWS, Azure, GCP, Kubernetes, GitHub - allt via providers. Resources ar objekten du skapar via providers.
 
----
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   .tf fil   │────▶│  Provider   │────▶│  Cloud API  │
+│  resource   │     │  (plugin)   │     │  (AWS etc)  │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                   │                   │
+       ▼                   ▼                   ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ aws_instance│     │ hashicorp/  │     │  EC2 API    │
+│ aws_s3...   │     │   aws       │     │  S3 API     │
+└─────────────┘     └─────────────┘     └─────────────┘
 
-## Så fungerar det
-
-**Provider** = plugin som förstår ett API
-**Resource** = objekt som skapas via provider
-
-Terraform Registry innehåller 3000+ providers.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -730,11 +765,21 @@ resource "aws_instance" "web" {
 
 ## Key Takeaways
 
-1. Provider definierar vilken plattform (AWS, Azure, GCP)
-2. Resource skapar faktisk infrastruktur
-3. `alias` för multipla providers av samma typ
-4. Data sources läser existerande resurser
-5. `terraform init` laddar ner providers
+| Koncept | Detalj |
+|---------|--------|
+| Provider | Definierar plattform - AWS, Azure, GCP, K8s |
+| Resource | Skapar faktisk infrastruktur via provider |
+| Alias | Multipla providers av samma typ (regioner, konton) |
+| Data source | Laser existerande resurser utan att skapa |
+| terraform init | Laddar ner providers fran registry |
+
+## Kom ihag
+
+- version = "~> 5.0" betyder >= 5.0.0, < 6.0.0
+- Credentials via environment variabler, aldrig i kod
+- default_tags appliceras pa alla resurser automatiskt
+- Data sources ger read-only access till existerande resurser
+- Terraform Registry har 3000+ providers
 """,
         },
         {
@@ -744,27 +789,34 @@ resource "aws_instance" "web" {
             "content": """
 # State Management
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform state är kritiskt:
+## Varfor viktigt for DevOps?
 
-- Mappar config till verkliga resurser
-- Spårar metadata och beroenden
-- Möjliggör planering och drift detection
-- Källa till sanning för infrastruktur
+| Problem utan state-forstaelse | Konsekvens |
+|------------------------------|------------|
+| Local state i team | Konflikter, dataforlust, inkonsistent infra |
+| Ingen state locking | Parallella apply = korrupt state |
+| State i Git | Secrets i klartext, versionskaos |
+| Forlorad state-fil | Terraform kan inte hantera existerande resurser |
 
-Felhantering av state = förlorad infrastruktur.
+State ar Terraforms hjarna - den mappar din kod till verklig infrastruktur. Utan state vet Terraform inte vad som finns. Remote state med locking ar obligatoriskt for team.
 
----
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   .tf kod   │────▶│  State fil  │◀───▶│   Verklig   │
+│  (onskat)   │     │  (mapping)  │     │   infra     │
+└─────────────┘     └─────────────┘     └─────────────┘
+                          │
+                          ▼
+              ┌───────────────────────┐
+              │  terraform.tfstate    │
+              │  - resource IDs       │
+              │  - attributes         │
+              │  - dependencies       │
+              │  - metadata           │
+              └───────────────────────┘
 
-## Så fungerar det
-
-State lagras i JSON-format:
-
-- **Local state** - `terraform.tfstate` (default)
-- **Remote state** - S3, Azure Blob, GCS, Terraform Cloud
-
-Remote state är standard för team.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -977,11 +1029,21 @@ resource "aws_instance" "web" {
 
 ## Key Takeaways
 
-1. State mappar config till verkliga resurser
-2. Remote state med S3/Azure för team
-3. DynamoDB/locking förhindrar parallella ändringar
-4. `terraform state mv/rm/import` för state-manipulation
-5. Workspaces för multipla environments
+| Koncept | Detalj |
+|---------|--------|
+| State-fil | Mappar config till verkliga resurser via ID |
+| Remote state | S3, Azure Blob, GCS - obligatoriskt for team |
+| State locking | DynamoDB forhindrar parallella apply |
+| terraform state | mv, rm, import for state-manipulation |
+| Workspaces | Separata state-filer for miljoseparation |
+
+## Kom ihag
+
+- ALDRIG editera terraform.tfstate manuellt
+- Remote backend med locking fran dag 1 i team
+- terraform state list visar alla hanterade resurser
+- terraform import tar in existerande resurser i state
+- Backup av state ar kritiskt - aktivera versioning pa S3
 """,
         },
         {
@@ -991,25 +1053,34 @@ resource "aws_instance" "web" {
             "content": """
 # Variables & Outputs
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Hårdkodade värden är:
+## Varfor viktigt for DevOps?
 
-- Omöjliga att återanvända
-- Svåra att ändra per miljö
-- Säkerhetsrisk (secrets i kod)
+| Problem utan variabler | Konsekvens |
+|-----------------------|------------|
+| Hardkodade varden | Copy-paste for varje miljo |
+| Secrets i kod | Sakerhetskatastrof vid Git push |
+| Ingen flexibilitet | Samma config funkar inte overallt |
+| Ingen output | Manuellt kopiera IPs, ARNs etc. |
 
-Variables och outputs gör Terraform flexibelt och återanvändbart.
+Variables ar input, outputs ar export. Med dem blir samma Terraform-kod anvandbar i dev, staging och prod. Secrets hanteras sakert via sensitive-flaggan.
 
----
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Variables  │────▶│  Terraform  │────▶│   Outputs   │
+│   (input)   │     │    kod      │     │  (export)   │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                                       │
+       ▼                                       ▼
+┌─────────────┐                         ┌─────────────┐
+│ -var        │                         │ terraform   │
+│ -var-file   │                         │ output      │
+│ TF_VAR_     │                         │ (query)     │
+│ terraform.  │                         │             │
+│   tfvars    │                         │             │
+└─────────────┘                         └─────────────┘
 
-## Så fungerar det
-
-- **Variables** - Input till din konfiguration
-- **Locals** - Beräknade/transformerade värden
-- **Outputs** - Exporterade värden
-
-Variables kan sättas via CLI, filer eller miljövariabler.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -1280,11 +1351,21 @@ terraform apply -var-file="prod.tfvars"
 
 ## Key Takeaways
 
-1. Variables för input, locals för beräkningar, outputs för export
-2. `sensitive = true` döljer värden i logs
-3. Sätt variabler via -var, .tfvars eller TF_VAR_
-4. Remote state data source för cross-project referens
-5. Separata .tfvars-filer per miljö
+| Koncept | Detalj |
+|---------|--------|
+| Variables | Input med type, default, validation, sensitive |
+| Locals | Beraknade varden som ateranvands i config |
+| Outputs | Exporterade varden efter apply |
+| .tfvars | Variabelvarden per miljo (dev.tfvars, prod.tfvars) |
+| Remote state | Data source for cross-project referens |
+
+## Kom ihag
+
+- sensitive = true doljer varden i logs OCH plan output
+- TF_VAR_namn satter variabel via environment
+- validation block validerar input innan apply
+- terraform output -json for att hamta sensitive varden
+- Separata .tfvars per miljo ar best practice
 """,
         },
         {
@@ -1294,19 +1375,34 @@ terraform apply -var-file="prod.tfvars"
             "content": """
 # Resource Dependencies
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Infrastruktur har beroenden:
+## Varfor viktigt for DevOps?
 
-- EC2 behöver VPC och Subnet
-- RDS behöver Security Group
-- Lambda behöver IAM Role
+| Problem utan beroendeforstaelse | Konsekvens |
+|--------------------------------|------------|
+| Fel skapningsordning | EC2 fore subnet = krasch |
+| Osynliga beroenden | Uppdateringar gar sonder |
+| Cykler i dependencies | Terraform kan inte planera |
+| Race conditions | Timing-fel vid parallel skapning |
 
-Terraform måste skapa i rätt ordning.
+Infrastruktur har beroenden - EC2 behover VPC, Lambda behover IAM Role. Terraform bygger automatiskt en dependency graph och skapar i ratt ordning. Men ibland behover du explicit kontroll.
 
----
+┌─────────────┐
+│     VPC     │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│   Subnet    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│  Instance   │────▶│ Sec Group   │
+└─────────────┘     └─────────────┘
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Terraform analyserar beroenden:
 
@@ -1592,11 +1688,21 @@ resource "aws_instance" "web" {
 
 ## Key Takeaways
 
-1. Implicita beroenden via referenser (rekommenderas)
-2. `depends_on` för icke-refererade beroenden
-3. `lifecycle` kontrollerar create/update/delete-beteende
-4. Undvik cirkulära beroenden med separata resurser
-5. Timeouts för långsamma operationer
+| Koncept | Detalj |
+|---------|--------|
+| Implicita beroenden | Via referenser - Terraform bygger graph automatiskt |
+| depends_on | Explicit beroende nar ingen referens finns |
+| lifecycle | Kontrollerar create_before_destroy, prevent_destroy |
+| Cirkulara beroenden | Undvik med separata resurser (ex: security_group_rule) |
+| Timeouts | create, update, delete for langsamma operationer |
+
+## Kom ihag
+
+- Terraform bygger dependency graph automatiskt fran referenser
+- depends_on ar sallan nodvandigt - anvand bara vid dolda beroenden
+- create_before_destroy for zero-downtime updates
+- prevent_destroy skyddar kritiska resurser fran oavsiktlig radering
+- terraform graph visualiserar dependencies (output till Graphviz)
 """,
         },
         {
@@ -1606,27 +1712,32 @@ resource "aws_instance" "web" {
             "content": """
 # Terraform Modules
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Duplicerad Terraform-kod är:
+## Varfor viktigt for DevOps?
 
-- Svår att underhålla
-- Inkonsekvent mellan miljöer
-- Källa till buggar
+| Problem utan modules | Konsekvens |
+|---------------------|------------|
+| Duplicerad kod | Copy-paste for varje miljo och projekt |
+| Inkonsistens | Staging ser inte ut som production |
+| Svart att uppdatera | Andra pa 10 stallen istallet for 1 |
+| Ingen standardisering | Varje team gor olika |
 
-Modules är återanvändbara komponenter.
+Modules ar Terraforms funktion for kod-atervanvandning. Skapa en VPC-modul en gang, anvand den i alla projekt. Community modules sparar hundratals timmar.
 
----
+┌─────────────────────────────────────────────────────────┐
+│                  MODULE ECOSYSTEM                        │
+├─────────────────────────────────────────────────────────┤
+│  Root Module          Child Modules         Registry    │
+│  ┌──────────┐         ┌──────────┐         ┌─────────┐ │
+│  │ main.tf  │ ──────▶ │ modules/ │ ──────▶ │ Public  │ │
+│  │ (caller) │         │  vpc/    │         │ modules │ │
+│  └──────────┘         │  ec2/    │         └─────────┘ │
+│                       │  rds/    │                      │
+│                       └──────────┘                      │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-En module är en katalog med .tf-filer:
-
-- **Root module** - Huvudkatalogen
-- **Child modules** - Återanvändbara komponenter
-- **Published modules** - Från Terraform Registry
-
-Modules tar input (variables) och ger output (outputs).
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -1939,11 +2050,21 @@ module "rds" {
 
 ## Key Takeaways
 
-1. Modules = återanvändbara Terraform-komponenter
-2. Standard-struktur: main.tf, variables.tf, outputs.tf
-3. `source` kan vara lokal, GitHub, Registry, S3
-4. Använd versioning för published modules
-5. Terraform Registry har 3000+ färdiga modules
+| Koncept | Detalj |
+|---------|--------|
+| Module | Ateranvandbar Terraform-komponent med input/output |
+| Standard-struktur | main.tf, variables.tf, outputs.tf, versions.tf |
+| Source | Lokal path, GitHub, Registry, S3 - alla fungerar |
+| Versioning | ALLTID version-locka published modules |
+| Registry | 3000+ fardiga modules sparar hundratals timmar |
+
+## Kom ihag
+
+- terraform init laddar ner modules fran source
+- module.namn.output_namn refererar till module outputs
+- Lokala modules: source = "./modules/vpc"
+- GitHub modules: source = "github.com/org/repo?ref=v1.0"
+- terraform init -upgrade uppdaterar modules
 """,
         },
         {
@@ -1953,24 +2074,32 @@ module "rds" {
             "content": """
 # Count & For Each
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Duplicera resurser manuellt är:
+## Varfor viktigt for DevOps?
 
-- Tidskrävande
-- Felbenäget
-- Svårt att underhålla
+| Problem utan iteration | Konsekvens |
+|-----------------------|------------|
+| Manuell duplicering | Copy-paste for varje instans |
+| Hardkodade antal | Maste andra kod for att skala |
+| Svart att underhalla | 20 likadana resurser att updatera |
+| Ingen dynamik | Kan inte anpassa per item |
 
-`count` och `for_each` skapar multipla resurser dynamiskt.
+count och for_each skapar multipla resurser dynamiskt. Istallet for 10 resource-blocks, ett block med count = 10. for_each ar generellt battre - stabilare vid andringar.
 
----
+┌─────────────────────────────────────────────────────────┐
+│              COUNT vs FOR_EACH                           │
+├─────────────────────────────────────────────────────────┤
+│  count = 3                    for_each = toset([...])   │
+│  ┌───────────────────┐        ┌───────────────────┐     │
+│  │ resource[0]       │        │ resource["a"]     │     │
+│  │ resource[1]       │        │ resource["b"]     │     │
+│  │ resource[2]       │        │ resource["c"]     │     │
+│  └───────────────────┘        └───────────────────┘     │
+│  Index-baserat (fragilt)      Nyckel-baserat (stabilt)  │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-- **count** - Skapa N kopior (indexbaserat)
-- **for_each** - Iterera över map/set (nyckelbaserat)
-
-`for_each` är generellt bättre - stabilare vid ändringar.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -2248,11 +2377,21 @@ resource "aws_security_group" "web" {
 
 ## Key Takeaways
 
-1. `count` för antal kopior, `for_each` för unika resurser
-2. `each.key` och `each.value` i for_each
-3. `for_each` är stabilare vid ändringar
-4. `dynamic` blocks för nested iteration
-5. For expressions för list/map transformationer
+| Koncept | Detalj |
+|---------|--------|
+| count | For antal kopior - index-baserat (fragilt) |
+| for_each | For unika resurser - nyckel-baserat (stabilt) |
+| each.key/value | Accessor i for_each iteration |
+| dynamic blocks | For nested iteration i resource blocks |
+| for expressions | List/map transformation i locals |
+
+## Kom ihag
+
+- for_each ar nastan alltid battre an count - stabilare
+- count = 0 for conditional resource creation
+- toset() konverterar lista till set for for_each
+- flatten() for att platta ut nested lists
+- dynamic blocks for variabelt antal ingress/egress rules
 """,
         },
         {
@@ -2262,13 +2401,30 @@ resource "aws_security_group" "web" {
             "content": """
 # Data Sources
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Du behöver ofta referera till:
+## Varfor viktigt for DevOps?
 
-- Existerande infrastruktur
-- AMI IDs som uppdateras
-- Availability zones
+| Problem utan data sources | Konsekvens |
+|--------------------------|------------|
+| Hardkodade AMI IDs | Gammal AMI, sakerhetsproblem |
+| Manuell lookup | Kolla console, kopiera, klistra |
+| Ingen dynamik | Availability zones, account ID |
+| Isolerade projekt | Kan inte lasa fran annat state |
+
+Data sources laser existerande infrastruktur och extern data. Du hardkodar inte AMI IDs - du laser senaste Ubuntu automatiskt. Du hardkodar inte AZs - du laser tillgangliga dynamiskt.
+
+┌─────────────────────────────────────────────────────────┐
+│                   DATA SOURCES                           │
+├─────────────────────────────────────────────────────────┤
+│  data "aws_ami" { }       → Senaste Ubuntu AMI         │
+│  data "aws_vpc" { }       → Existerande VPC            │
+│  data "aws_caller_id" { } → Account ID, ARN            │
+│  data "aws_region" { }    → Current region             │
+│  data "terraform_remote_state" { } → Annat projekt     │
+└─────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Account information
 
 Data sources läser utan att skapa.
@@ -2568,11 +2724,21 @@ resource "aws_instance" "app" {
 
 ## Key Takeaways
 
-1. Data sources läser utan att skapa
-2. `aws_ami` för att hitta senaste image
-3. `aws_iam_policy_document` bättre än JSON-strängar
-4. `templatefile()` för dynamiska scripts
-5. `terraform_remote_state` för cross-project data
+| Koncept | Detalj |
+|---------|--------|
+| Data sources | Laser utan att skapa - read-only |
+| aws_ami | Hitta senaste image med filter dynamiskt |
+| aws_iam_policy_document | Battre an JSON-strangar for policies |
+| templatefile() | Dynamiska scripts med variabler |
+| terraform_remote_state | Lasa outputs fran annat Terraform-projekt |
+
+## Kom ihag
+
+- most_recent = true for att fa senaste matchande AMI
+- data "aws_caller_identity" {} ger account ID utan hardkodning
+- data "aws_region" {} ger current region dynamiskt
+- external data source kor scripts och laser JSON output
+- Data sources uppdateras vid varje plan/apply
 """,
         },
         {
@@ -2582,32 +2748,33 @@ resource "aws_instance" "app" {
             "content": """
 # Functions & Expressions
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform har 100+ inbyggda funktioner:
+## Varfor viktigt for DevOps?
 
-- Strängtransformation
-- Matematiska operationer
-- Collection-manipulation
-- Filläsning
+| Problem utan funktioner | Konsekvens |
+|------------------------|------------|
+| Manuella transformationer | Rakna ut subnet CIDR manuellt |
+| Ingen dynamik | Hardkodade strangar overallt |
+| Svart att lasa | Komplicerad logik i resources |
+| Duplicerad logik | Samma berakning pa flera stallen |
 
-Funktioner gör konfigurationen dynamisk och kraftfull.
+Terraform har 100+ inbyggda funktioner for strangar, listor, maps, filer, natverk. Istallet for att hardkoda cidrsubnet(vpc_cidr, 8, 1), berakna den dynamiskt.
 
----
+┌─────────────────────────────────────────────────────────┐
+│                  FUNCTION CATEGORIES                     │
+├─────────────────────────────────────────────────────────┤
+│  String   │ upper, lower, format, split, join, regex   │
+│  Numeric  │ min, max, ceil, floor, abs, parseint       │
+│  List     │ length, element, concat, flatten, sort     │
+│  Map      │ lookup, keys, values, merge, zipmap        │
+│  File     │ file, templatefile, filebase64             │
+│  Network  │ cidrsubnet, cidrhost, cidrnetmask          │
+│  Encoding │ base64encode, jsonencode, yamlencode       │
+│  Hash     │ md5, sha256, uuid                          │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Funktioner anropas med `function_name(arg1, arg2, ...)`.
-
-Testa i `terraform console`:
-
-```bash
-terraform console
-> upper("hello")
-"HELLO"
-> length([1, 2, 3])
-3
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -2913,11 +3080,21 @@ locals {
 
 ## Key Takeaways
 
-1. `terraform console` för att testa funktioner
-2. `merge()` för att kombinera maps
-3. `try()` för säker access till nested values
-4. `cidrsubnet()` för dynamiska IP-beräkningar
-5. `templatefile()` för dynamiska konfigurationsfiler
+| Koncept | Detalj |
+|---------|--------|
+| terraform console | REPL for att testa funktioner interaktivt |
+| merge() | Kombinera maps, senare varden overskriver |
+| try() | Saker access till nested values utan fel |
+| cidrsubnet() | Dynamiska IP-berakningar fran VPC CIDR |
+| templatefile() | Dynamiska konfigurationsfiler med variabler |
+
+## Kom ihag
+
+- lookup(map, key, default) for saker map-access
+- coalesce() returnerar forsta icke-null varde
+- flatten() plattar ut nested lists
+- jsonencode()/yamlencode() for strukturerad output
+- regex() matchar monster, regexall() ger alla matchningar
 """,
         },
         {
@@ -2927,26 +3104,34 @@ locals {
             "content": """
 # Terraform Workspaces
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Multipla environments kräver:
+## Varfor viktigt for DevOps?
 
-- Separata state-filer
-- Olika konfigurationer
-- Isolering mellan miljöer
+| Problem utan miljoseparation | Konsekvens |
+|-----------------------------|------------|
+| Samma state for alla miljor | Dev-andringar paverkar prod |
+| Manuell kopiering | Copy-paste mellan miljoer |
+| Ingen isolering | En miss tar ner allt |
+| Svar att testa | Kan inte testa infra-andringar sakert |
 
-Workspaces eller katalogstruktur löser detta.
+Workspaces ger separata state-filer for samma kod. Dev, staging, prod - samma Terraform, olika infrastruktur. Alternativet ar katalogstruktur med separata mappar.
 
----
+┌─────────────────────────────────────────────────────────┐
+│              WORKSPACE vs DIRECTORY                      │
+├─────────────────────────────────────────────────────────┤
+│  Workspaces:              Directory Structure:          │
+│  ┌──────────────┐         ┌──────────────┐             │
+│  │ Same .tf     │         │ environments/│             │
+│  │ files        │         │   dev/       │             │
+│  │              │         │   staging/   │             │
+│  │ Different    │         │   prod/      │             │
+│  │ state files  │         │ modules/     │             │
+│  └──────────────┘         └──────────────┘             │
+│  Enkelt, samma kod        Explicit, full kontroll      │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Två strategier:
-
-1. **Workspaces** - Samma kod, olika state
-2. **Directory structure** - Separata kataloger per miljö
-
-Båda har för- och nackdelar.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -3224,11 +3409,21 @@ remote_state {
 
 ## Key Takeaways
 
-1. Workspaces = samma kod, olika state
-2. Directory structure = explicit separation per miljö
-3. `terraform.workspace` för workspace-specifik logik
-4. Workspaces bra för liknande miljöer
-5. Directory structure rekommenderas för prod vs non-prod
+| Koncept | Detalj |
+|---------|--------|
+| Workspaces | Samma kod, olika state-filer |
+| Directory structure | Separata mappar per miljo - explicit |
+| terraform.workspace | Inbyggd variabel for aktuell workspace |
+| Workspaces bast for | Liknande miljoer (dev, staging) |
+| Directory bast for | Prod vs non-prod med olika config |
+
+## Kom ihag
+
+- terraform workspace select NAMN byter aktivt workspace
+- terraform workspace new NAMN skapar nytt workspace
+- terraform.workspace ger aktuellt workspace-namn i kod
+- Workspaces andrar state path automatiskt
+- Terragrunt forenklar multi-environment ytterligare
 """,
         },
         {
@@ -3238,25 +3433,30 @@ remote_state {
             "content": """
 # Import & Migration
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Existerande infrastruktur måste:
+## Varfor viktigt for DevOps?
 
-- Importeras till Terraform
-- Migreras mellan states
-- Refaktoreras utan downtime
+| Problem utan import/migration | Konsekvens |
+|------------------------------|------------|
+| Existerande infra utan IaC | Terraform ser inte manuellt skapad infra |
+| Refaktorering | Rename = destroy + create = downtime |
+| State korruption | Manuell recovery utan state manipulation |
+| Modul-uppdelning | Kan inte flytta resurser mellan states |
 
-Import och state-manipulation är kritiska verktyg.
+Import tar in existerande infrastruktur i Terraform state. State manipulation (mv, rm) mojliggor refaktorering utan att destroya resurser. Kritiskt for migrering till IaC.
 
----
+┌─────────────────────────────────────────────────────────┐
+│                   IMPORT WORKFLOW                        │
+├─────────────────────────────────────────────────────────┤
+│  1. Skriv resource block i .tf          (tom kropp)    │
+│  2. terraform import <address> <id>     (populerar)    │
+│  3. terraform plan                      (diff)         │
+│  4. Justera .tf for att matcha          (no changes)   │
+│  5. terraform apply                     (verify)       │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-**Import** - Lägg till existerande resurs i state
-**State mv** - Flytta/rename resurser
-**State rm** - Ta bort från state (inte cloud)
-
-Resursen måste finnas i .tf-filerna.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -3561,11 +3761,21 @@ terraform workspace delete import-test
 
 ## Key Takeaways
 
-1. `terraform import` för existerande resurser
-2. Import blocks (1.5+) för deklarativ import
-3. `-generate-config-out` genererar .tf-filer
-4. `moved` blocks för refaktorering utan state-kommandon
-5. Backup state före migration!
+| Koncept | Detalj |
+|---------|--------|
+| terraform import | Tar in existerande resurs i state |
+| Import blocks (1.5+) | Deklarativ import direkt i .tf-filer |
+| -generate-config-out | Genererar .tf-filer fran importerad resurs |
+| moved blocks | Refaktorering utan state-kommandon |
+| State backup | KRITISKT - alltid backup fore migration |
+
+## Kom ihag
+
+- terraform import kraver att resource block finns i .tf forst
+- terraform plan efter import ska visa "No changes"
+- terraform state mv for rename utan destroy/create
+- terraform state rm tar bort fran state, INTE fran cloud
+- moved {} i kod ar battre an terraform state mv
 """,
         },
         {
@@ -3575,28 +3785,31 @@ terraform workspace delete import-test
             "content": """
 # Terraform in CI/CD
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Manuell Terraform-körning är:
+## Varfor viktigt for DevOps?
 
-- Riskabelt (vem körde vad?)
-- Inkonsekvent
-- Svårt att granska
-- Omöjligt att skala
+| Problem utan CI/CD | Konsekvens |
+|-------------------|------------|
+| Manuell korning | Vem korde vad? Nar? Varfor? |
+| Ingen granskning | Misstag gar direkt till prod |
+| Inkonsistent process | Olika personer gor olika |
+| Ingen audit trail | Compliance-problem |
 
-CI/CD ger kontroll, spårbarhet och automation.
+CI/CD for Terraform ger kontroll, sparbarhet och automation. Plan i PR, Apply efter merge. Allt loggas, allt granskas, allt ar repeterbart.
 
----
+┌─────────────────────────────────────────────────────────┐
+│               TERRAFORM CI/CD PIPELINE                   │
+├─────────────────────────────────────────────────────────┤
+│  PR Created ─▶ fmt ─▶ validate ─▶ plan ─▶ Comment      │
+│                                            │            │
+│  PR Merged ─▶ plan ─▶ apply ─▶ notify                  │
+│                         │                               │
+│                    Protected by                         │
+│                    approval gates                       │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Standard CI/CD-pipeline:
-
-1. **Format check** - `terraform fmt -check`
-2. **Validate** - `terraform validate`
-3. **Plan** - `terraform plan`
-4. **Review** - Manuell granskning
-5. **Apply** - `terraform apply`
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -3926,11 +4139,21 @@ terraform {
 
 ## Key Takeaways
 
-1. CI/CD ger spårbarhet och granskning
-2. Plan i PR, Apply vid merge till main
-3. OIDC eliminerar behovet av statiska credentials
-4. Spara plan som artifact mellan jobs
-5. Schemalagd drift detection för produktion
+| Koncept | Detalj |
+|---------|--------|
+| CI/CD | Ger sparbarhet, granskning och automation |
+| Plan i PR | Visa andringar innan merge - review |
+| Apply vid merge | Endast efter godkand PR till main |
+| OIDC | Eliminerar statiska credentials i CI/CD |
+| Drift detection | Schemalagd kontroll av config vs verklighet |
+
+## Kom ihag
+
+- terraform fmt -check i CI for konsistent formatering
+- terraform validate fangar syntax-fel tidigt
+- Spara plan som artifact for exakt reproducerbarhet
+- ALDRIG terraform apply -auto-approve i PR-pipeline
+- Terraform Cloud ger gratis remote state och collaboration
 """,
         },
         {
@@ -3940,27 +4163,30 @@ terraform {
             "content": """
 # Security Best Practices
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform hanterar kritisk infrastruktur:
+## Varfor viktigt for DevOps?
 
-- Secrets i state
-- IAM-policies
-- Nätverkskonfiguration
-- Kryptering
+| Sakerhetsproblem | Konsekvens |
+|------------------|------------|
+| Secrets i state | State-fil laser = alla secrets exponerade |
+| Over-privileged IAM | Komprometterad pipeline = full AWS access |
+| Okrypterad state | Data breach vid S3 misconfiguration |
+| Ingen policy validation | Osaker infra deployeras direkt |
 
-Säkerhetsfel kan vara katastrofala.
+Terraform hanterar kritisk infrastruktur - IAM, natverk, databaser. Sakerhet maste byggas in fran start, inte laggas till efterat. Defense in depth med kryptering, least privilege och policy as code.
 
----
+┌─────────────────────────────────────────────────────────┐
+│               SECURITY LAYERS                            │
+├─────────────────────────────────────────────────────────┤
+│  1. State Security    │ Krypterat, begransad access    │
+│  2. Secrets Mgmt      │ Aldrig i kod, externa stores   │
+│  3. Least Privilege   │ Minimal IAM for varje resurs   │
+│  4. Policy as Code    │ Sentinel, OPA, tfsec           │
+│  5. Audit Logging     │ CloudTrail, state versioning   │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Säkerhet i lager:
-
-1. **State security** - Kryptera och begränsa access
-2. **Secrets management** - Aldrig i kod
-3. **Least privilege** - Minimal IAM
-4. **Policy as Code** - Automatisk validering
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4290,11 +4516,21 @@ resource "aws_flow_log" "main" {
 
 ## Key Takeaways
 
-1. Kryptera state med KMS
-2. Secrets i Secrets Manager, inte i kod
-3. Least privilege IAM-policies
-4. `sensitive = true` för känsliga outputs
-5. Policy as Code med Sentinel/OPA
+| Koncept | Detalj |
+|---------|--------|
+| State encryption | KMS-kryptering for state i S3 |
+| Secrets Manager | Secrets i extern store, aldrig i kod |
+| Least privilege | Minimal IAM for varje resurs och pipeline |
+| sensitive = true | Doljer varden i plan och output |
+| Policy as Code | Sentinel, OPA, tfsec for automatisk validering |
+
+## Kom ihag
+
+- S3 bucket for state: versioning + encryption + access logging
+- aws_iam_policy_document ar sakrare an hardkodad JSON
+- Checkov och tfsec skannar for sakerhetsproblem i CI
+- ALDRIG commit tfvars med secrets - anvand environment variabler
+- VPC Flow Logs for natverksovervakning
 """,
         },
         {
@@ -4304,27 +4540,34 @@ resource "aws_flow_log" "main" {
             "content": """
 # Testing Terraform
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Otestade Terraform-ändringar kan:
+## Varfor viktigt for DevOps?
 
-- Bryta produktion
-- Orsaka kostnadsspiraler
-- Skapa säkerhetshål
-- Ta timmar att felsöka
+| Problem utan testning | Konsekvens |
+|----------------------|------------|
+| Otestade andringar | Bryter produktion vid apply |
+| Ingen linting | Inkonsistent kod, dolda fel |
+| Ingen security scanning | Sarbarheter deployeras |
+| Saknar integration tests | Modules fungerar inte ihop |
 
-Tester fångar problem innan deploy.
+Tester fangar problem innan deploy. Static analysis ar gratis och snabbt. Integration tests verifierar mot verklig infrastruktur. Policy tests sakerstraller compliance.
 
----
+┌─────────────────────────────────────────────────────────┐
+│               TERRAFORM TEST PYRAMID                     │
+├─────────────────────────────────────────────────────────┤
+│                    ┌───────────┐                        │
+│                    │ E2E Tests │  Langsammast           │
+│                   ┌┴───────────┴┐                       │
+│                   │Integration  │  Verkliga resurser    │
+│                  ┌┴─────────────┴┐                      │
+│                  │  Unit Tests   │  Module-logik        │
+│                 ┌┴───────────────┴┐                     │
+│                 │  Static Analysis │  Snabbast          │
+│                 └─────────────────┘                     │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Flera testnivåer:
-
-1. **Static analysis** - Syntax, format, linting
-2. **Unit tests** - Module-logik
-3. **Integration tests** - Verkliga resurser
-4. **Policy tests** - Compliance
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4608,11 +4851,21 @@ run "contract_validation" {
 
 ## Key Takeaways
 
-1. `terraform fmt` och `validate` i varje pipeline
-2. TFLint och Checkov för linting och security
-3. Terratest för Go-baserade integrationstester
-4. Native `terraform test` (1.6+) för HCL-tester
-5. Infracost för kostnadsprediction
+| Koncept | Detalj |
+|---------|--------|
+| terraform fmt/validate | Gratis statisk analys i varje pipeline |
+| TFLint | Linter for best practices och provider-regler |
+| Checkov/tfsec | Security scanning for sarbarheter |
+| Terratest | Go-baserade integrationstester mot verklig infra |
+| terraform test (1.6+) | Native HCL-baserade tester |
+
+## Kom ihag
+
+- Statisk analys ar snabb och ska koras vid varje commit
+- Integrationstester skapar verkliga resurser - dyrt men vardefullt
+- Infracost visar kostnadspaverkan innan apply
+- terraform test kraver tests/ katalog med .tftest.hcl filer
+- Contract testing validerar module input/output kontrakt
 """,
         },
         {
@@ -4622,27 +4875,37 @@ run "contract_validation" {
             "content": '''
 # Remote State & Backends
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Lokal state fungerar för lärande, men i verkligheten:
+## Varfor viktigt for DevOps?
 
-- Team behöver dela state
-- CI/CD måste läsa state
-- State måste vara säker och backup:ad
-- Locking förhindrar race conditions
+| Problem med lokal state | Konsekvens |
+|------------------------|------------|
+| Inte delbar | Team kan inte samarbeta |
+| Ingen backup | Forlorad state = forlorad kontroll |
+| Ingen locking | Parallella apply = korrupt state |
+| Ingen encryption | Secrets i klartext pa disk |
 
-Remote backends löser alla dessa problem.
+Remote backends (S3, GCS, Azure Blob) loser alla dessa problem. State sparas centralt, krypterat, med locking och versioning. Obligatoriskt for team och CI/CD.
 
----
+┌─────────────────────────────────────────────────────────┐
+│              REMOTE STATE ARCHITECTURE                   │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  Developer A ──┐                                        │
+│                │      ┌──────────┐      ┌───────────┐  │
+│  Developer B ──┼────▶ │ S3 State │ ────▶│ DynamoDB  │  │
+│                │      │ (central)│      │  (lock)   │  │
+│  CI/CD ────────┘      └──────────┘      └───────────┘  │
+│                              │                          │
+│                              ▼                          │
+│                       ┌──────────┐                      │
+│                       │   KMS    │                      │
+│                       │(encrypt) │                      │
+│                       └──────────┘                      │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-En backend bestämmer:
-
-1. Var state sparas (S3, GCS, Azure Blob, etc.)
-2. Hur state läses och skrivs
-3. Locking-mekanism
-4. Encryption at rest
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4897,11 +5160,21 @@ aws dynamodb get-item \
 
 ## Key Takeaways
 
-1. Remote backend är ett krav för team-arbete
-2. S3/GCS/Azure Blob med locking är standard
-3. Partial config håller secrets utanför kod
-4. State migration med `terraform init -migrate-state`
-5. Remote state data source för cross-project references
+| Koncept | Detalj |
+|---------|--------|
+| Remote backend | Krav for team - S3, GCS, Azure Blob |
+| State locking | DynamoDB/GCS forhindrar parallella andringar |
+| Partial config | -backend-config haller secrets utanfor kod |
+| State migration | terraform init -migrate-state flyttar state |
+| Remote state data | Cross-project references via data source |
+
+## Kom ihag
+
+- S3 bucket: aktivera versioning, encryption, access logging
+- DynamoDB table behovs for locking - skapa fore init
+- terraform force-unlock ENDAST vid stuck lock
+- backend.hcl for miljospecifika backend-varden
+- terraform state pull > backup.json for manuell backup
 ''',
         },
         {
@@ -4911,29 +5184,34 @@ aws dynamodb get-item \
             "content": '''
 # Terraform Cloud & Enterprise
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform Cloud (TFC) är HashiCorps managed platform:
+## Varfor viktigt for DevOps?
 
-- Gratis för små team
-- Remote execution och state
-- Policy as Code med Sentinel
-- VCS integration
-- Cost estimation inbyggt
+| Problem TFC loser | Fordel |
+|-------------------|--------|
+| DIY state management | Managed state med UI och versioning |
+| Egen CI/CD for TF | Remote execution med runs i TFC |
+| Team access control | RBAC och SSO integration |
+| Compliance | Policy as Code med Sentinel |
+| Module discovery | Private registry for interna modules |
 
-Enterprise-features krävs i stora organisationer.
+Terraform Cloud ar HashiCorps managed platform - gratis for sma team. Remote state, execution, VCS integration och policy enforcement i en tjanst. Enterprise lagger till SSO, audit logging och mer.
 
----
+┌─────────────────────────────────────────────────────────┐
+│              TERRAFORM CLOUD FEATURES                    │
+├─────────────────────────────────────────────────────────┤
+│  Free Tier          │ Plus/Enterprise                  │
+│  ─────────────────  │ ────────────────────────────────  │
+│  Remote state       │ SSO/SAML                         │
+│  Remote runs        │ Audit logging                    │
+│  VCS integration    │ Private networking               │
+│  5 users            │ Unlimited users                  │
+│  State versioning   │ Custom agents                    │
+│  Cost estimation    │ Sentinel policies                │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Terraform Cloud erbjuder:
-
-1. Remote state med UI
-2. Remote execution (runs i TFC)
-3. Team access och SSO
-4. Policy enforcement
-5. Private registry för modules
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -5202,11 +5480,21 @@ resource "tfe_team_access" "dev_team" {
 
 ## Key Takeaways
 
-1. Terraform Cloud är gratis för små team
-2. VCS-driven workflow för GitOps
-3. Sentinel policies för compliance
-4. Private registry för interna modules
-5. Agent pools för privat nätverk-access
+| Koncept | Detalj |
+|---------|--------|
+| Terraform Cloud | Gratis managed state, runs och VCS-integration |
+| VCS-driven workflow | Git push triggar plan, merge triggar apply |
+| Sentinel | Policy as Code for compliance enforcement |
+| Private registry | Interna modules med versioning |
+| Agent pools | Kor Terraform i privat natverk |
+
+## Kom ihag
+
+- terraform login authenticerar mot TFC
+- cloud {} block ersatter backend {} for TFC
+- Workspace settings: auto-apply, terraform version, VCS repo
+- Variable sets delar variabler mellan workspaces
+- Run triggers kopplar ihop beroende workspaces
 ''',
         },
         {
@@ -5216,27 +5504,30 @@ resource "tfe_team_access" "dev_team" {
             "content": '''
 # Advanced Module Patterns
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Moduler är återanvändbara komponenter:
+## Varfor viktigt for DevOps?
 
-- DRY-princip för infrastruktur
-- Standardiserade best practices
-- Enklare onboarding för nya teammedlemmar
-- Versionerade och testade
+| Problem utan patterns | Konsekvens |
+|----------------------|------------|
+| Monolitiska moduler | Svara att underhalla och testa |
+| Ingen standardisering | Varje team gor egna losningar |
+| Hardkodad konfiguration | Moduler funkar bara i ett use case |
+| Ingen composition | Copy-paste istallet for kombination |
 
-Avancerade patterns tar detta till nästa nivå.
+Avancerade module patterns tar atervanvandning till nasta niva. Composition kombinerar sma moduler. Factory pattern skapar manga resurser. Wrapper patterns forenklar komplexa interfaces.
 
----
+┌─────────────────────────────────────────────────────────┐
+│              ADVANCED MODULE PATTERNS                    │
+├─────────────────────────────────────────────────────────┤
+│  Composition    │ Sma moduler som kombineras            │
+│  Factory        │ for_each skapar manga instanser       │
+│  Wrapper        │ Forenklar komplex modul-interface     │
+│  Opinionated    │ Defaults for common use cases         │
+│  Configuration  │ Flexibel via complex types            │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Avancerade module patterns:
-
-1. Composition - kombinera små moduler
-2. Wrappers - förenkla komplexa moduler
-3. Factory pattern - skapa många resurser
-4. Configuration patterns - flexibel konfiguration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -5587,11 +5878,21 @@ variable "config" {
 
 ## Key Takeaways
 
-1. Composition - små moduler kombineras till större
-2. Factory pattern för att skapa många liknande resurser
-3. Wrapper modules förenklar komplexa upstream-moduler
-4. Optional features med count/for_each
-5. Configuration objects för strukturerad input
+| Koncept | Detalj |
+|---------|--------|
+| Composition | Sma moduler kombineras till storre |
+| Factory pattern | for_each skapar manga liknande resurser |
+| Wrapper modules | Forenklar komplexa upstream-moduler |
+| Optional features | count = var.enabled ? 1 : 0 |
+| Configuration objects | Strukturerad input med defaults |
+
+## Kom ihag
+
+- optional() i variable types for defaults (Terraform 1.3+)
+- Validering fangar fel tidigt med tydliga meddelanden
+- Sma fokuserade moduler ar lättare att testa
+- Outputs ska vara vad konsumenten behover, inte allt
+- README.md i varje modul ar obligatoriskt
 ''',
         },
         {
@@ -5601,27 +5902,36 @@ variable "config" {
             "content": '''
 # Multi-Cloud & Provider Patterns
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Multi-cloud är verklighet för många organisationer:
+## Varfor viktigt for DevOps?
 
-- Undvika vendor lock-in
-- Använda best-of-breed services
-- Redundans och disaster recovery
-- Compliance och data residency
+| Driver for multi-cloud | Verklighetsbild |
+|-----------------------|-----------------|
+| Vendor lock-in | Undvik beroende av en leverantor |
+| Best-of-breed | AWS for compute, GCP for ML, Azure for .NET |
+| Redundans | DR i annan cloud |
+| Compliance | Data residency krav per region/land |
 
-Terraform hanterar alla clouds med samma workflow.
+Terraform hanterar alla clouds med samma workflow. En state-fil kan innehalla resurser fran AWS, Azure och GCP. Samma HCL-syntax, samma plan/apply process.
 
----
+┌─────────────────────────────────────────────────────────┐
+│              MULTI-CLOUD ARCHITECTURE                    │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │               Terraform                          │    │
+│  └──────────┬──────────┬──────────┬───────────────┘    │
+│             │          │          │                     │
+│             ▼          ▼          ▼                     │
+│       ┌─────────┐ ┌─────────┐ ┌─────────┐              │
+│       │   AWS   │ │  Azure  │ │   GCP   │              │
+│       │provider │ │provider │ │provider │              │
+│       └─────────┘ └─────────┘ └─────────┘              │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
 
-## Så fungerar det
-
-Providers är plugins för olika plattformar:
-
-1. Varje provider konfigureras separat
-2. Alias används för flera av samma provider
-3. Resurser deklarerar vilken provider de använder
-4. State hanterar alla providers tillsammans
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -5983,11 +6293,20 @@ module "us_vpc" {
 
 ## Key Takeaways
 
-1. Terraform hanterar alla clouds med samma workflow
-2. Provider aliases för multi-region/account
-3. Abstrakta moduler döljer cloud-specifik implementation
-4. Cross-account med assume_role
-5. Provider passthrough för flexibla moduler
+| Koncept | Detalj |
+|---------|--------|
+| Samma workflow | Terraform hanterar alla clouds med identiskt arbetsflode |
+| Provider aliases | for multi-region och multi-account deployments |
+| Abstrakta moduler | Doljer cloud-specifik implementation bakom enhetligt interface |
+| Cross-account | Anvand assume_role for access mellan AWS-konton |
+| Provider passthrough | Gör moduler flexibla med explicit providers-block |
+
+## Kom ihag
+- Varje cloud har sin provider med egen konfiguration
+- Alias-pattern: `aws.eu`, `aws.us` for samma provider olika regioner
+- Abstraktionslager gor det enkelt att byta cloud senare
+- terraform_remote_state for cross-workspace data sharing
+- Version-låsa providers for reproducerbarhet
 ''',
         },
         {
@@ -5997,16 +6316,40 @@ module "us_vpc" {
             "content": '''
 # Drift Detection & Reconciliation
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Varfor viktigt for DevOps?
 
-Drift uppstår när:
+| Problem utan drift detection | Konsekvens |
+|------------------------------|------------|
+| Manuella konsolandringar upptacks inte | Konfiguration i kod stammer inte med verkligheten |
+| Ingen insyn i infrastrukturandringar | Sakerhetsproblem gar oupptackta |
+| State ur synk med verkligheten | Apply kan ge oforutsagbara resultat |
+| Ingen audit trail for andringar | Omojligt att spara vem/vad/nar |
 
-- Någon gör manuella ändringar i konsolen
-- Automatiserade processer modifierar resurser
-- Cloud provider gör ändringar (maintenance)
-- State och verklighet hamnar ur synk
-
-Drift kan orsaka säkerhetsproblem och oväntade beteenden.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    DRIFT LIVSCYKEL                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐     │
+│   │  Kod    │───>│  State  │───>│  Cloud  │───>│  Drift  │     │
+│   │ (.tf)   │    │ (.state)│    │(resurser)│   │(avvikelse)│   │
+│   └─────────┘    └─────────┘    └─────────┘    └─────────┘     │
+│        │                                             │          │
+│        └──────────── terraform plan ─────────────────┘          │
+│                           │                                     │
+│                     ┌─────┴─────┐                               │
+│                     │  Drift?   │                               │
+│                     └─────┬─────┘                               │
+│               ┌───────────┼───────────┐                         │
+│               v           v           v                         │
+│          ┌────────┐  ┌────────┐  ┌────────┐                     │
+│          │ Accept │  │ Reject │  │ Import │                     │
+│          │(refresh)│ │(apply) │  │(import)│                     │
+│          └────────┘  └────────┘  └────────┘                     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -6282,11 +6625,20 @@ resource "aws_cloudwatch_event_target" "sns" {
 
 ## Key Takeaways
 
-1. `terraform plan` är din drift-detektor
-2. Automatisera drift-detection i CI/CD
-3. `ignore_changes` för legitim extern hantering
-4. `prevent_destroy` för kritiska resurser
-5. Reconciliation: accept, reject, eller import
+| Koncept | Detalj |
+|---------|--------|
+| Drift-detektor | `terraform plan` visar avvikelser mellan kod och verklighet |
+| Automatisering | Schemalagd drift-detection i CI/CD var 6:e timme |
+| ignore_changes | Lifecycle-block for legitim extern hantering |
+| prevent_destroy | Skydda kritiska resurser fran oavsiktlig borttagning |
+| Reconciliation | Tre strategier: accept (refresh), reject (apply), import |
+
+## Kom ihag
+- Exit code 2 fran `terraform plan -detailed-exitcode` = drift detected
+- `terraform apply -refresh-only` accepterar drift och uppdaterar state
+- `ignore_changes` for attribut som andras av autoscaling/CI-CD
+- `prevent_destroy = true` ger error vid forsok att ta bort resurs
+- Kombinera deletion_protection (cloud) med prevent_destroy (Terraform)
 ''',
         },
     ],
