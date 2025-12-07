@@ -15,8 +15,8 @@ from .db.seeds.bootcamp_v3_data import get_bootcamp_summary
 # Import ILE content for interactive tasks
 from .db.seeds.ile_sample_content import SAMPLE_PERMISSIONS_TASK
 from .db.seeds.module_01_linux_content import MODULE_01_TASKS
-# Import skillsmaps v3 modules
-from .db.seeds.modules_v3 import ALL_V3_MODULES
+# Import skillsmaps modules from NEW clean structure
+from .db.seeds.modules import get_all_modules as get_skillsmap_modules
 
 configure_logging()
 logger = logging.getLogger(__name__)
@@ -174,7 +174,7 @@ def auto_seed_if_empty():
 def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
     """
     Seed the converted skillsmaps modules.
-    These are 14 additional modules with 438 tasks.
+    Uses NEW clean module structure from src/db/seeds/modules/
     """
     from .db.module_repository import create_module, list_modules
     from .db.task_repository import create_task
@@ -182,23 +182,26 @@ def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
     from .schemas.module import ModuleCreate
     from .schemas.task import TaskCreate
 
+    # Get modules from NEW clean structure
+    ALL_SKILLSMAP_MODULES = get_skillsmap_modules()
+
     # Check if skillsmaps are already seeded
     existing_modules = list_modules()
-    skillsmap_slugs = [m["slug"] for m in ALL_V3_MODULES]
+    skillsmap_slugs = [m["slug"] for m in ALL_SKILLSMAP_MODULES]
     existing_slugs = [m.slug for m in existing_modules]
 
     # Count how many skillsmaps are already seeded
     already_seeded = sum(1 for slug in skillsmap_slugs if slug in existing_slugs)
-    if already_seeded >= len(ALL_V3_MODULES):
+    if already_seeded >= len(ALL_SKILLSMAP_MODULES):
         logger.info(f"✅ Skillsmaps already seeded: {already_seeded} modules found")
         return
 
-    logger.info(f"🌱 Auto-seeding Skillsmaps v3.0 modules ({len(ALL_V3_MODULES)} modules, 438 tasks)...")
+    logger.info(f"🌱 Auto-seeding Skillsmaps modules ({len(ALL_SKILLSMAP_MODULES)} modules)...")
 
     modules_created = 0
     tasks_created = 0
 
-    for module_data in ALL_V3_MODULES:
+    for module_data in ALL_SKILLSMAP_MODULES:
         # Skip if already exists
         if module_data["slug"] in existing_slugs:
             continue
