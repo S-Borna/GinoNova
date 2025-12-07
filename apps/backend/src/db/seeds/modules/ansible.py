@@ -20,61 +20,72 @@ MODULE = {
             "title": "Introduction to Ansible",
             "slug": "introduction-to-ansible",
             "difficulty": "beginner",
-            "content": '''
-# Introduction to Ansible
+            "content": '''# Introduction to Ansible
 
-## Varför behöver du kunna detta?
+Ansible ar den ledande agentlosa automatiseringsplattformen for konfigurationshantering. Istallet for att manuellt SSH:a till servrar och kora kommandon, definierar du onskat tillstand i YAML-filer och lat Ansible gora jobbet.
 
-Manuell serverkonfiguration är:
-
-- Tidskrävande och felbenägen
-- Svår att replikera exakt
-- Omöjlig att versionskontrollera
-- Källa till konfigurationsdrift
-
-Ansible automatiserar allt detta med enkel YAML-syntax.
-
----
-
-## Så fungerar det
-
-Ansible är agentlöst:
-
-1. Kontrollnod har Ansible installerat
-2. Ansluter till målservrar via SSH
-3. Kör tasks definierade i playbooks
-4. Idempotent - säkert att köra om
-
-Ingen agent behövs på målservrar!
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Installation
 
+| Distribution | Kommando |
+|--------------|----------|
+| macOS | `brew install ansible` |
+| Ubuntu/Debian | `sudo apt install ansible -y` |
+| RHEL/CentOS | `sudo dnf install ansible -y` |
+| pip (alla) | `pip3 install ansible ansible-lint` |
+
 ```bash
-# macOS med Homebrew
-brew install ansible                 # Installera Ansible
-
-# Ubuntu/Debian
-sudo apt update                      # Uppdatera paketlista
-sudo apt install ansible -y          # Installera Ansible
-
-# Med pip (alla plattformar)
-pip3 install ansible                 # Installera via pip
-pip3 install ansible-lint            # Installera linter
-
 # Verifiera installation
-ansible --version                    # Visa version
-ansible-playbook --version           # Visa playbook version
+ansible --version                    # visa Ansible-version
+ansible-playbook --version           # visa playbook-version
+which ansible                        # visa installationssokväg
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Första inventory
+## Ansible Arkitektur
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ANSIBLE ARKITEKTUR                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ┌──────────────┐                                             │
+│   │ KONTROLLNOD  │  (Ansible installerat har)                  │
+│   │  - Playbooks │                                             │
+│   │  - Inventory │                                             │
+│   │  - Roles     │                                             │
+│   └──────┬───────┘                                             │
+│          │ SSH                                                  │
+│          │ (ingen agent!)                                       │
+│          ▼                                                      │
+│   ┌──────────────┬──────────────┬──────────────┐               │
+│   │   Server 1   │   Server 2   │   Server 3   │               │
+│   │  (managed)   │  (managed)   │  (managed)   │               │
+│   └──────────────┴──────────────┴──────────────┘               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Ansible vs Andra Verktyg
+
+| Egenskap | Ansible | Chef | Puppet | Salt |
+|----------|---------|------|--------|------|
+| Agent | Nej | Ja | Ja | Ja/Nej |
+| Sprak | YAML | Ruby | DSL | YAML |
+| Push/Pull | Push | Pull | Pull | Bada |
+| Inlarning | Enkel | Svar | Medel | Medel |
+| SSH | Ja | Nej | Nej | Valfri |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Inventory Grunderna
 
 ```ini
-# inventory.ini - Lista över servrar
-
+# inventory.ini - Lista over servrar
 [webservers]
 web1.example.com
 web2.example.com ansible_host=192.168.1.10
@@ -104,112 +115,130 @@ all:
     ansible_user: deploy
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ad-hoc kommandon
+## Ad-hoc Kommandon
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ansible all -m ping` | Testa anslutning till alla |
+| `ansible webservers -a "uptime"` | Kor kommando pa grupp |
+| `ansible all -m setup` | Samla fakta om servrar |
+| `ansible all -m copy -a "src=X dest=Y"` | Kopiera fil |
+| `ansible all -m apt -a "name=nginx" -b` | Installera paket |
 
 ```bash
-# Testa anslutning
-ansible all -i inventory.ini -m ping       # Ping alla servrar
-
-# Kör kommando
-ansible webservers -i inventory.ini -a "uptime"  # Kör uptime
-
-# Installera paket
-ansible webservers -i inventory.ini -m apt -a "name=nginx state=present" --become
-
-# Kopiera fil
-ansible all -i inventory.ini -m copy -a "src=/local/file dest=/remote/path"
-
-# Samla fakta
-ansible web1.example.com -i inventory.ini -m setup  # Alla fakta
-ansible web1.example.com -i inventory.ini -m setup -a "filter=ansible_distribution*"
+# Praktiska exempel
+ansible all -i inventory.ini -m ping           # testa SSH
+ansible webservers -i inventory.ini -a "df -h" # diskutrymme
+ansible all -m setup -a "filter=ansible_os*"   # OS-info
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Första playbook
+## Forsta Playbook
 
 ```yaml
-# playbook.yml - Installera och starta nginx
+# playbook.yml
 ---
-- name: Configure web servers          # Play-namn
-  hosts: webservers                    # Målgrupp från inventory
-  become: yes                          # Kör som root (sudo)
+- name: Configure web servers          # play-namn
+  hosts: webservers                    # malgrupp
+  become: yes                          # sudo
 
   tasks:
-    - name: Update apt cache           # Task-namn
+    - name: Update apt cache
       apt:
-        update_cache: yes              # apt update
-        cache_valid_time: 3600         # Cache giltig i 1 timme
+        update_cache: yes
+        cache_valid_time: 3600
 
     - name: Install nginx
       apt:
-        name: nginx                    # Paketnamn
-        state: present                 # Säkerställ installerat
+        name: nginx
+        state: present
 
     - name: Start nginx service
       service:
-        name: nginx                    # Tjänstnamn
-        state: started                 # Säkerställ startad
-        enabled: yes                   # Starta vid boot
+        name: nginx
+        state: started
+        enabled: yes
 ```
 
 ```bash
-# Kör playbook
+# Kor playbook
 ansible-playbook -i inventory.ini playbook.yml
 
 # Dry-run (check mode)
 ansible-playbook -i inventory.ini playbook.yml --check
 
-# Verbose output
-ansible-playbook -i inventory.ini playbook.yml -v   # Mer info
-ansible-playbook -i inventory.ini playbook.yml -vvv # Debug
+# Verbose
+ansible-playbook playbook.yml -v      # mer info
+ansible-playbook playbook.yml -vvv    # debug
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Ansible är agentlöst - kommunicerar via SSH
-2. Inventory definierar servrar och grupper
-3. Playbooks är YAML-filer med tasks
-4. Idempotent - säkert att köra flera gånger
-5. `--check` för dry-run innan apply
+| Koncept | Beskrivning |
+|---------|-------------|
+| Agentlost | Kommunicerar via SSH, ingen agent pa servrar |
+| Idempotent | Sakert att kora om, andrar bara vad som behovs |
+| YAML | Playbooks skrivs i lattlast YAML-syntax |
+| Inventory | Definerar servrar och grupper |
+| Check mode | --check for dry-run innan skarpt |
+
+**Kom ihag:**
+- Ansible kraver endast SSH-access och Python pa malet
+- Playbooks ar deklarativa - beskriv onskat tillstand
+- Ad-hoc for snabba engangsjobb, playbooks for repeterbart
+- Anvand -v/-vv/-vvv for felsökning
+- inventory.yml ar mer flexibelt an .ini-format
 ''',
         },
         {
             "title": "Inventory Management",
             "slug": "inventory-management",
             "difficulty": "beginner",
-            "content": '''
-# Inventory Management
+            "content": '''# Inventory Management
 
-## Varför behöver du kunna detta?
+Inventory ar Ansibles karta over din infrastruktur - vilka servrar finns, hur grupperas de, och vilka variabler galler. En valsstrukturerad inventory ar nyckeln till skalbar automation.
 
-Inventory är Ansibles karta över infrastrukturen:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Vilka servrar finns?
-- Hur grupperas de?
-- Vilka variabler gäller?
-- Hur når vi dem?
+## Inventory Typer
 
-Rätt inventory-struktur förenklar allt.
+| Typ | Format | Anvandning |
+|-----|--------|------------|
+| Static INI | `.ini` | Enkel, lattlast |
+| Static YAML | `.yml` | Mer flexibel, hierarkisk |
+| Dynamic | Python/Plugin | Cloud, auto-discovery |
+| Directory | Mapp-struktur | Stora miljoer |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Inventory Struktur
 
-Inventory kan vara:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    INVENTORY HIERARKI                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   all (implicit grupp)                                         │
+│    ├── production          (children-grupp)                    │
+│    │    ├── webservers                                         │
+│    │    │    ├── web1.example.com                              │
+│    │    │    └── web2.example.com                              │
+│    │    └── dbservers                                          │
+│    │         └── db1.example.com                               │
+│    └── staging                                                 │
+│         └── staging.example.com                                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-1. Statisk fil (INI eller YAML)
-2. Dynamisk (script eller plugin)
-3. Kombinationer av båda
-4. Flera inventory-källor
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Static inventory
+## Static INI Inventory
 
 ```ini
 # inventory/hosts.ini
@@ -218,15 +247,14 @@ Inventory kan vara:
 server1.example.com
 192.168.1.50
 
-# Grupper med hakparenteser
+# Grupper
 [webservers]
 web1.example.com
 web2.example.com
-web[3:5].example.com      # web3, web4, web5
+web[3:5].example.com          # web3, web4, web5
 
 [dbservers]
 db1.example.com
-db2.example.com
 
 # Gruppvariabler
 [webservers:vars]
@@ -244,9 +272,9 @@ ansible_user=deploy
 ansible_python_interpreter=/usr/bin/python3
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## YAML inventory
+## YAML Inventory (Rekommenderat)
 
 ```yaml
 # inventory/hosts.yml
@@ -271,9 +299,6 @@ all:
           hosts:
             db1.example.com:
               db_port: 5432
-            db2.example.com:
-              db_port: 5432
-              is_replica: true
 
     staging:
       hosts:
@@ -281,22 +306,20 @@ all:
           ansible_host: 10.0.0.50
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Directory layout
+## Directory Layout (Skalbar)
 
-```bash
-# Rekommenderad struktur
+```
 inventory/
 ├── production/
-│   ├── hosts.yml           # Production servrar
+│   ├── hosts.yml              # servrar
 │   ├── group_vars/
-│   │   ├── all.yml         # Alla production-servrar
-│   │   ├── webservers.yml  # Webserver-specifikt
-│   │   └── dbservers.yml   # Database-specifikt
+│   │   ├── all.yml            # alla prod-servrar
+│   │   ├── webservers.yml     # webserver-specifikt
+│   │   └── dbservers.yml      # db-specifikt
 │   └── host_vars/
-│       ├── web1.example.com.yml
-│       └── db1.example.com.yml
+│       └── web1.example.com.yml
 └── staging/
     ├── hosts.yml
     └── group_vars/
@@ -311,55 +334,9 @@ nginx_worker_connections: 1024
 ssl_certificate: /etc/ssl/certs/prod.crt
 ```
 
-```yaml
-# inventory/production/host_vars/web1.example.com.yml
----
-is_primary: true
-custom_config: specific_to_this_host
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Dynamic inventory
-
-```python
-#!/usr/bin/env python3
-# inventory/dynamic.py - Enkel dynamisk inventory
-
-import json
-
-inventory = {
-    "webservers": {
-        "hosts": ["web1.example.com", "web2.example.com"],
-        "vars": {
-            "http_port": 80
-        }
-    },
-    "dbservers": {
-        "hosts": ["db1.example.com"]
-    },
-    "_meta": {
-        "hostvars": {
-            "web1.example.com": {
-                "ansible_host": "192.168.1.10"
-            }
-        }
-    }
-}
-
-print(json.dumps(inventory))
-```
-
-```bash
-# Gör körbar och testa
-chmod +x inventory/dynamic.py
-./inventory/dynamic.py               # Visa JSON output
-ansible-inventory -i inventory/dynamic.py --list  # Verifiera
-```
-
----
-
-## AWS dynamic inventory
+## Dynamic Inventory (Cloud)
 
 ```yaml
 # inventory/aws_ec2.yml
@@ -367,7 +344,6 @@ ansible-inventory -i inventory/dynamic.py --list  # Verifiera
 plugin: amazon.aws.aws_ec2
 regions:
   - eu-north-1
-  - eu-west-1
 
 filters:
   tag:Environment:
@@ -380,117 +356,103 @@ keyed_groups:
   - key: placement.availability_zone
     prefix: az
 
-hostnames:
-  - private-ip-address
-  - tag:Name
-
 compose:
   ansible_host: private_ip_address
 ```
 
 ```bash
-# Installera AWS collection
+# Installera och testa
 ansible-galaxy collection install amazon.aws
-
-# Testa inventory
 ansible-inventory -i inventory/aws_ec2.yml --graph
-ansible-inventory -i inventory/aws_ec2.yml --list
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Inventory plugins
+## Inventory Kommandon
 
-```yaml
-# ansible.cfg - Aktivera plugins
-[inventory]
-enable_plugins = host_list, script, auto, yaml, ini, aws_ec2, azure_rm
-
-[defaults]
-inventory = ./inventory
-```
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ansible-inventory --list` | Lista alla hosts som JSON |
+| `ansible-inventory --graph` | Visa som trad-graf |
+| `ansible-inventory --host X` | Visa variabler for host |
+| `ansible all --list-hosts` | Lista hosts i grupp |
 
 ```bash
-# Lista tillgängliga plugins
-ansible-doc -t inventory -l
-
-# Dokumentation för specifik plugin
-ansible-doc -t inventory aws_ec2
-```
-
----
-
-## Inventory commands
-
-```bash
-# Lista alla hosts
-ansible-inventory -i inventory/ --list
-
-# Visa som graf
+# Praktiska exempel
 ansible-inventory -i inventory/ --graph
-
-# Visa specifik host
 ansible-inventory -i inventory/ --host web1.example.com
-
-# Kombinera flera inventory
-ansible-playbook -i inventory/production -i inventory/staging playbook.yml
+ansible webservers -i inventory/ --list-hosts
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Inventory kan vara statisk (INI/YAML) eller dynamisk
-2. group_vars/ och host_vars/ för strukturerade variabler
-3. Dynamisk inventory för cloud-miljöer
-4. `ansible-inventory --graph` för visualisering
-5. Flera inventory-källor kan kombineras
+| Koncept | Beskrivning |
+|---------|-------------|
+| INI vs YAML | YAML mer flexibelt, INI enklare |
+| group_vars | Variabler per grupp i egen fil |
+| host_vars | Variabler per host i egen fil |
+| Dynamic | Plugins for AWS, Azure, GCP |
+| --graph | Visualisera inventory-struktur |
+
+**Kom ihag:**
+- Anvand YAML-format for komplexa miljoer
+- group_vars/all.yml for gemensamma variabler
+- Dynamisk inventory for cloud-miljoer
+- Kombinera flera inventory med -i flagga
+- ansible-inventory --graph for att verifiera struktur
 ''',
         },
         {
             "title": "Playbook Fundamentals",
             "slug": "playbook-fundamentals",
             "difficulty": "beginner",
-            "content": '''
-# Playbook Fundamentals
+            "content": '''# Playbook Fundamentals
 
-## Varför behöver du kunna detta?
+Playbooks ar hjartat i Ansible - YAML-filer som definierar onskat tillstand for din infrastruktur. En playbook innehaller plays, som i sin tur innehaller tasks som utfor det faktiska arbetet.
 
-Playbooks är Ansibles hjärta:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Definierar önskat tillstånd
-- Dokumenterar infrastruktur som kod
-- Reproducerbara deployments
-- Versionskontrollerbara
+## Playbook Struktur
 
-Rätt playbookstruktur = underhållbar automation.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      PLAYBOOK ANATOMI                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   playbook.yml                                                 │
+│   ├── Play 1: "Configure webservers"                           │
+│   │    ├── hosts: webservers                                   │
+│   │    ├── vars: {...}                                         │
+│   │    ├── tasks:                                              │
+│   │    │    ├── Task 1: Install nginx                          │
+│   │    │    ├── Task 2: Copy config                            │
+│   │    │    └── Task 3: Start service                          │
+│   │    └── handlers:                                           │
+│   │         └── Restart nginx                                  │
+│   │                                                             │
+│   └── Play 2: "Configure dbservers"                            │
+│        ├── hosts: dbservers                                    │
+│        └── tasks: [...]                                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
-
-En playbook innehåller:
-
-1. **Plays** - målgrupp + tasks
-2. **Tasks** - individuella steg
-3. **Modules** - Ansibles byggblock
-4. **Handlers** - trigger-baserade tasks
-
----
-
-## Playbook struktur
+## Grundlaggande Playbook
 
 ```yaml
-# site.yml - Komplett playbook
+# site.yml
 ---
-# Play 1: Konfigurera webservrar
-- name: Configure web servers
-  hosts: webservers                    # Målgrupp
-  become: yes                          # Sudo
-  gather_facts: yes                    # Samla systeminfo
+- name: Configure web servers          # play-namn
+  hosts: webservers                    # malgrupp fran inventory
+  become: yes                          # kor som sudo
+  gather_facts: yes                    # samla systeminfo
 
   vars:
-    http_port: 80                      # Play-variabler
+    http_port: 80
     doc_root: /var/www/html
 
   tasks:
@@ -503,40 +465,41 @@ En playbook innehåller:
       template:
         src: nginx.conf.j2
         dest: /etc/nginx/nginx.conf
-      notify: Restart nginx            # Trigga handler
+      notify: Restart nginx            # trigga handler vid andring
 
   handlers:
     - name: Restart nginx
       service:
         name: nginx
         state: restarted
-
-# Play 2: Konfigurera databaser
-- name: Configure database servers
-  hosts: dbservers
-  become: yes
-
-  tasks:
-    - name: Install PostgreSQL
-      apt:
-        name: postgresql
-        state: present
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Task syntax
+## Task Syntax
+
+| Element | Beskrivning |
+|---------|-------------|
+| `name:` | Beskrivande namn (visas vid korning) |
+| `module:` | Ansible-modul att anvanda |
+| `when:` | Villkor for exekvering |
+| `loop:` | Iterera over lista |
+| `register:` | Spara output i variabel |
+| `notify:` | Trigga handler vid andring |
+| `ignore_errors:` | Fortsatt vid fel |
+| `changed_when:` | Anpassad changed-logik |
 
 ```yaml
 tasks:
-  # Enkel task
-  - name: Install package
+  # Task med villkor
+  - name: Install on Ubuntu only
     apt:
       name: nginx
       state: present
+    when: ansible_distribution == "Ubuntu"
 
   # Task med loop
-  - name: Install multiple packages
+  - name: Install packages
     apt:
       name: "{{ item }}"
       state: present
@@ -545,44 +508,39 @@ tasks:
       - curl
       - vim
 
-  # Task med villkor
-  - name: Install on Ubuntu only
-    apt:
-      name: ubuntu-specific-package
-      state: present
-    when: ansible_distribution == "Ubuntu"
-
   # Task med register
-  - name: Check if file exists
+  - name: Check file
     stat:
       path: /etc/myapp.conf
     register: config_file
 
-  - name: Create config if missing
+  - name: Create if missing
     template:
       src: myapp.conf.j2
       dest: /etc/myapp.conf
     when: not config_file.stat.exists
-
-  # Task med ignore_errors
-  - name: Try something that might fail
-    command: /opt/script.sh
-    ignore_errors: yes
-    register: script_result
-
-  # Task med changed_when
-  - name: Run command
-    command: /opt/update.sh
-    changed_when: "'Updated' in command_result.stdout"
-    register: command_result
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Handlers
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    HANDLER FLODE                                │
+│                                                                 │
+│   Task: Copy config ──► notify: Restart nginx                  │
+│                              │                                  │
+│                              ▼                                  │
+│   (Alla tasks kors forst)                                      │
+│                              │                                  │
+│                              ▼                                  │
+│   Handler: Restart nginx ──► Kors EN gang i slutet             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ```yaml
-# Handlers körs endast om notified
 handlers:
   - name: Restart nginx
     service:
@@ -594,83 +552,61 @@ handlers:
       name: nginx
       state: reloaded
 
-  - name: Restart multiple services
-    service:
-      name: "{{ item }}"
-      state: restarted
-    loop:
-      - nginx
-      - php-fpm
-
 tasks:
-  - name: Update nginx config
+  - name: Update config
     template:
       src: nginx.conf.j2
       dest: /etc/nginx/nginx.conf
-    notify:
-      - Restart nginx              # Triggar handler
-
-  - name: Update PHP config
-    template:
-      src: php.ini.j2
-      dest: /etc/php/8.1/fpm/php.ini
-    notify:
-      - Restart multiple services
+    notify: Restart nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Play options
+## Play Options
+
+| Option | Beskrivning |
+|--------|-------------|
+| `hosts:` | Malgrupp fran inventory |
+| `become: yes` | Kor som sudo |
+| `become_user:` | Vilken user att bli |
+| `gather_facts:` | Samla systeminfo (default: yes) |
+| `serial:` | Antal hosts at gangen |
+| `max_fail_percentage:` | Avbryt om X% failar |
+| `any_errors_fatal:` | Avbryt vid forsta fel |
 
 ```yaml
----
-- name: Configure servers
-  hosts: all
-  become: yes                          # Sudo för alla tasks
-  become_user: root                    # Vilken user
-  gather_facts: yes                    # Samla fakta (default: yes)
-  serial: 2                            # Kör på 2 hosts åt gången
-  max_fail_percentage: 25              # Avbryt om >25% failar
-  any_errors_fatal: true               # Avbryt vid första fel
-
-  environment:
-    http_proxy: http://proxy:8080
-
-  vars_files:
-    - vars/common.yml
-    - "vars/{{ env }}.yml"
+- name: Rolling deployment
+  hosts: webservers
+  become: yes
+  serial: 2                    # 2 hosts at gangen
+  max_fail_percentage: 25      # max 25% far faila
 
   pre_tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+    - name: Disable in LB
+      # ...
 
   roles:
-    - common
     - nginx
 
   tasks:
-    - name: Final configuration
-      debug:
-        msg: "All done!"
+    - name: Deploy app
+      # ...
 
   post_tasks:
-    - name: Cleanup
-      file:
-        path: /tmp/ansible_temp
-        state: absent
+    - name: Enable in LB
+      # ...
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Blocks och error handling
+## Block Error Handling
 
 ```yaml
 tasks:
-  - name: Handle errors gracefully
+  - name: Handle errors
     block:
-      - name: Attempt risky operation
-        command: /opt/risky_script.sh
+      - name: Risky operation
+        command: /opt/deploy.sh
 
       - name: Another risky task
         service:
@@ -678,67 +614,96 @@ tasks:
           state: started
 
     rescue:
-      - name: Run on failure
+      - name: On failure
         debug:
-          msg: "Something failed, running recovery"
+          msg: "Deploy failed, rolling back"
 
-      - name: Rollback changes
+      - name: Rollback
         command: /opt/rollback.sh
 
     always:
-      - name: Always run this
-        debug:
-          msg: "Cleanup regardless of success/failure"
+      - name: Cleanup
+        file:
+          path: /tmp/deploy_temp
+          state: absent
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kora Playbooks
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ansible-playbook site.yml` | Kor playbook |
+| `ansible-playbook site.yml --check` | Dry-run |
+| `ansible-playbook site.yml --diff` | Visa andringar |
+| `ansible-playbook site.yml -v` | Verbose |
+| `ansible-playbook site.yml --limit web1` | Begransat till host |
+| `ansible-playbook site.yml --tags deploy` | Endast taggade tasks |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Playbooks innehåller plays med tasks
-2. Tasks använder modules för att göra arbetet
-3. Handlers körs endast när de notifieras
-4. Blocks ger error handling med rescue/always
-5. `gather_facts` ger systeminfo för villkor
+| Koncept | Beskrivning |
+|---------|-------------|
+| Plays | Malgrupp + tasks tillsammans |
+| Tasks | Individuella steg med modules |
+| Handlers | Kors endast vid notify + i slutet |
+| Blocks | Error handling med rescue/always |
+| Serial | Rolling deployments |
+
+**Kom ihag:**
+- En playbook kan ha flera plays
+- Handlers kors bara om task faktiskt andrar nagot
+- Anvand --check for dry-run innan skarpt
+- block/rescue/always for felhantering
+- serial for sakra rolling deployments
 ''',
         },
         {
             "title": "Variables & Facts",
             "slug": "variables-facts",
             "difficulty": "beginner",
-            "content": '''
-# Variables & Facts
+            "content": '''# Variables & Facts
 
-## Varför behöver du kunna detta?
+Variabler gor dina playbooks dynamiska och ateranvandbara. Istallet for hardkodade varden kan samma playbook konfigurera utveckling, staging och produktion. Facts ar systeminfo som Ansible automatiskt samlar in fran varje host.
 
-Variabler gör playbooks flexibla:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Samma playbook för olika miljöer
-- Konfigurerbar utan kodändringar
-- Återanvändbar kod
-- Separation av data och logik
+## Variabel Prioritet (Lagst till Hogst)
 
-Facts ger automatisk systeminformation.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 VARIABEL PRECEDENS                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   1. Role defaults         (lagst)                             │
+│   2. Inventory group_vars                                      │
+│   3. Inventory host_vars                                       │
+│   4. Playbook vars                                             │
+│   5. Role vars                                                 │
+│   6. Block vars                                                │
+│   7. Task vars                                                 │
+│   8. Extra vars (-e)       (hogst)                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Definiera Variabler
 
-Variabelkällor (prioritetsordning, lägst till högst):
-
-1. Role defaults
-2. Inventory vars
-3. Playbook vars
-4. Role vars
-5. Extra vars (kommandorad)
-
----
-
-## Definiera variabler
+| Plats | Fil | Scope |
+|-------|-----|-------|
+| Playbook | `vars:` i playbook | Per play |
+| Vars file | `vars_files:` | Inkluderad fil |
+| Group vars | `group_vars/gruppnamn.yml` | Per grupp |
+| Host vars | `host_vars/hostname.yml` | Per host |
+| Extra vars | `-e "key=value"` | Korning |
 
 ```yaml
 # I playbook
----
 - name: Configure servers
   hosts: webservers
 
@@ -748,101 +713,67 @@ Variabelkällor (prioritetsordning, lägst till högst):
     packages:
       - nginx
       - curl
-    config:
-      max_connections: 100
-      timeout: 30
-
-  tasks:
-    - name: Install packages
-      apt:
-        name: "{{ packages }}"
-        state: present
-
-    - name: Show config
-      debug:
-        msg: "Port: {{ http_port }}, App: {{ app_name }}"
-```
-
-```yaml
-# I separat fil (vars/main.yml)
----
-http_port: 80
-app_name: myapp
-
-database:
-  host: localhost
-  port: 5432
-  name: myapp_db
-```
-
-```yaml
-# Inkludera i playbook
-- name: Configure servers
-  hosts: all
 
   vars_files:
     - vars/common.yml
-    - "vars/{{ env }}.yml"           # Dynamiskt baserat på env
+    - "vars/{{ env }}.yml"
+
+  tasks:
+    - name: Show config
+      debug:
+        msg: "Port: {{ http_port }}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Variabel precedens
+## Extra Vars (Kommandorad)
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `-e "var=value"` | Enkel variabel |
+| `-e '{"key": "val"}'` | JSON |
+| `-e "@vars.yml"` | Fran YAML-fil |
+| `-e "@vars.json"` | Fran JSON-fil |
 
 ```bash
-# Kommandoradsvariabler har högst prioritet
-ansible-playbook site.yml -e "http_port=8080"
-ansible-playbook site.yml --extra-vars "http_port=8080"
-ansible-playbook site.yml -e "@vars.json"  # Från JSON-fil
-ansible-playbook site.yml -e "@vars.yml"   # Från YAML-fil
+# Extra vars har hogst prioritet
+ansible-playbook site.yml -e "env=production"
+ansible-playbook site.yml -e "http_port=8080 debug=true"
+ansible-playbook site.yml -e "@secrets.yml"
 ```
 
-```yaml
-# Inventory-variabler
-# inventory/group_vars/webservers.yml
----
-http_port: 80
-nginx_workers: 4
-
-# inventory/host_vars/web1.example.com.yml
----
-is_primary: true
-http_port: 8080                        # Override för denna host
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Ansible Facts
 
+| Fact | Beskrivning |
+|------|-------------|
+| `ansible_distribution` | OS (Ubuntu, CentOS) |
+| `ansible_distribution_version` | OS version |
+| `ansible_os_family` | Debian, RedHat, etc |
+| `ansible_default_ipv4.address` | Primar IP |
+| `ansible_memtotal_mb` | Total RAM i MB |
+| `ansible_processor_cores` | CPU-karnor |
+| `ansible_hostname` | Hostname |
+
 ```yaml
-# Facts samlas automatiskt
-- name: Show facts
+- name: Use facts
   hosts: all
-  gather_facts: yes                    # Default: yes
+  gather_facts: yes
 
   tasks:
-    - name: Show OS
+    - name: Show OS info
       debug:
-        msg: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+        msg: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
 
-    - name: Show IP
-      debug:
-        msg: "IP: {{ ansible_default_ipv4.address }}"
-
-    - name: Show memory
-      debug:
-        msg: "Memory: {{ ansible_memtotal_mb }} MB"
-
-    - name: Conditional on OS
+    - name: Install on Debian
       apt:
         name: nginx
-        state: present
       when: ansible_os_family == "Debian"
 
-    - name: Conditional on OS (RedHat)
+    - name: Install on RedHat
       yum:
         name: nginx
-        state: present
       when: ansible_os_family == "RedHat"
 ```
 
@@ -852,433 +783,367 @@ ansible hostname -m setup
 
 # Filtrera facts
 ansible hostname -m setup -a "filter=ansible_distribution*"
-ansible hostname -m setup -a "filter=ansible_memory_mb"
 ```
 
----
-
-## Custom facts
-
-```bash
-# Skapa custom fact på målserver
-# /etc/ansible/facts.d/custom.fact
-```
-
-```ini
-[general]
-app_version=1.2.3
-environment=production
-
-[database]
-host=localhost
-port=5432
-```
-
-```yaml
-# Använd i playbook
-- name: Use custom facts
-  hosts: all
-
-  tasks:
-    - name: Show custom fact
-      debug:
-        msg: "App version: {{ ansible_local.custom.general.app_version }}"
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Register och set_fact
 
 ```yaml
 tasks:
-  # Register sparar task-output
-  - name: Get current date
+  # Register sparar task output
+  - name: Get date
     command: date +%Y-%m-%d
     register: current_date
     changed_when: false
 
-  - name: Show date
+  - name: Show result
     debug:
       msg: "Date: {{ current_date.stdout }}"
 
   # set_fact skapar nya variabler
-  - name: Set deployment date
+  - name: Create variable
     set_fact:
       deploy_date: "{{ current_date.stdout }}"
-      deploy_time: "{{ ansible_date_time.iso8601 }}"
+      deploy_env: "{{ 'prod' if env == 'production' else 'dev' }}"
 
   - name: Use new fact
     debug:
-      msg: "Deployed on {{ deploy_date }}"
-
-  # Kombinera facts
-  - name: Build connection string
-    set_fact:
-      db_connection: "postgresql://{{ db_user }}:{{ db_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}"
-
-  # Conditionally set fact
-  - name: Set environment-specific values
-    set_fact:
-      log_level: "{{ 'DEBUG' if env == 'development' else 'INFO' }}"
+      msg: "Deployed on {{ deploy_date }} to {{ deploy_env }}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Variabel filters
+## Jinja2 Filters
+
+| Filter | Exempel | Resultat |
+|--------|---------|----------|
+| `upper` | `{{ name \\| upper }}` | NAME |
+| `lower` | `{{ name \\| lower }}` | name |
+| `default` | `{{ x \\| default('val') }}` | fallback |
+| `first` | `{{ list \\| first }}` | forsta element |
+| `join` | `{{ list \\| join(',') }}` | a,b,c |
+| `to_json` | `{{ dict \\| to_json }}` | JSON-strang |
+| `basename` | `{{ path \\| basename }}` | filnamn |
 
 ```yaml
 tasks:
-  - name: String manipulation
+  - name: Filter examples
     debug:
       msg: |
-        Upper: {{ name | upper }}
-        Lower: {{ name | lower }}
-        Title: {{ name | title }}
         Default: {{ undefined_var | default('fallback') }}
-
-  - name: List operations
-    debug:
-      msg: |
-        First: {{ my_list | first }}
-        Last: {{ my_list | last }}
-        Length: {{ my_list | length }}
-        Joined: {{ my_list | join(', ') }}
-        Unique: {{ my_list | unique }}
-
-  - name: JSON/YAML
-    debug:
-      msg: |
-        To JSON: {{ my_dict | to_json }}
-        To YAML: {{ my_dict | to_yaml }}
-
-  - name: Path operations
-    debug:
-      msg: |
-        Basename: {{ '/path/to/file.txt' | basename }}
-        Dirname: {{ '/path/to/file.txt' | dirname }}
-        Expanduser: {{ '~/.ssh' | expanduser }}
+        Upper: {{ name | upper }}
+        Join: {{ packages | join(', ') }}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Custom Facts
+
+```ini
+# /etc/ansible/facts.d/custom.fact (pa malserver)
+[general]
+app_version=1.2.3
+environment=production
+```
+
+```yaml
+# Anvand i playbook
+- name: Use custom fact
+  debug:
+    msg: "Version: {{ ansible_local.custom.general.app_version }}"
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Variabler definieras på flera ställen med olika prioritet
-2. Extra vars (-e) har högst prioritet
-3. Facts samlas automatiskt med gather_facts
-4. set_fact skapar runtime-variabler
-5. Filters transformerar variabelvärden
+| Koncept | Beskrivning |
+|---------|-------------|
+| Precedens | Extra vars (-e) har hogst prioritet |
+| Facts | Automatisk systeminfo via gather_facts |
+| Register | Spara task-output i variabel |
+| set_fact | Skapa nya runtime-variabler |
+| Filters | Transformera varden med Jinja2 |
+
+**Kom ihag:**
+- Anvand group_vars/ for miljoseparation
+- Extra vars overridar allt annat
+- gather_facts: no for snabbare korning om ej behovs
+- register + when for villkorlig logik
+- default-filter undviker undefined errors
 ''',
         },
         {
             "title": "Modules & Plugins",
             "slug": "modules-plugins",
             "difficulty": "beginner",
-            "content": '''
-# Modules & Plugins
+            "content": '''# Modules & Plugins
 
-## Varför behöver du kunna detta?
+Modules ar Ansibles byggblock - over 3000 inbyggda modules som var och en gor en specifik uppgift. Alla modules ar idempotenta vilket betyder att de ar sakra att kora flera ganger utan oonskat resultat.
 
-Modules är Ansibles byggblock:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- 3000+ inbyggda modules
-- Varje module gör en specifik sak
-- Idempotent - säkra att köra om
-- Dokumenterade och testade
+## Module Kategorier
 
-Rätt module = rätt verktyg för jobbet.
+| Kategori | Exempel | Anvandning |
+|----------|---------|------------|
+| System | user, group, service | Anvandare, tjanster |
+| Files | copy, template, file | Filhantering |
+| Packaging | apt, yum, pip | Paketinstallation |
+| Cloud | aws_*, azure_*, gcp_* | Cloud-resurser |
+| Network | ios_*, nxos_* | Natverksutrustning |
+| Database | postgresql_*, mysql_* | Databashantering |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## System Modules
 
-Modules kategoriseras efter funktion:
-
-- **System** - användare, grupper, tjänster
-- **Files** - kopiera, template, permissions
-- **Packaging** - apt, yum, pip
-- **Cloud** - aws, azure, gcp
-- **Network** - routers, switches
-
----
-
-## Vanliga system-modules
+| Module | Beskrivning |
+|--------|-------------|
+| `user` | Hantera anvandare |
+| `group` | Hantera grupper |
+| `service` | Starta/stoppa tjanster |
+| `systemd` | Systemd-specifika operationer |
+| `cron` | Cron-jobb |
+| `authorized_key` | SSH-nycklar |
 
 ```yaml
 tasks:
-  # User management
   - name: Create user
     user:
-      name: deploy                     # Användarnamn
-      state: present                   # Skapa om inte finns
-      groups: sudo,www-data            # Gruppmedlemskap
-      shell: /bin/bash                 # Shell
-      create_home: yes                 # Skapa hemkatalog
-
-  - name: Add SSH key
-    authorized_key:
-      user: deploy
-      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      name: deploy
       state: present
+      groups: sudo,www-data
+      shell: /bin/bash
+      create_home: yes
 
-  # Group management
-  - name: Create group
-    group:
-      name: appgroup
-      state: present
-      gid: 1500
-
-  # Service management
-  - name: Ensure nginx is running
+  - name: Manage service
     service:
       name: nginx
-      state: started                   # started/stopped/restarted
-      enabled: yes                     # Start vid boot
-
-  # Systemd specifikt
-  - name: Manage systemd service
-    systemd:
-      name: myapp
       state: started
-      daemon_reload: yes               # Ladda om systemd config
+      enabled: yes
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## File modules
+## File Modules
+
+| Module | Beskrivning |
+|--------|-------------|
+| `copy` | Kopiera fil till remote |
+| `template` | Rendera Jinja2 template |
+| `file` | Skapa filer/kataloger/symlinks |
+| `lineinfile` | Andra rad i fil |
+| `blockinfile` | Lagg till block i fil |
+| `fetch` | Hamta fil fran remote |
 
 ```yaml
 tasks:
-  # Kopiera fil
   - name: Copy file
     copy:
-      src: files/config.txt            # Lokal fil
-      dest: /etc/myapp/config.txt      # Remote destination
+      src: files/config.txt
+      dest: /etc/myapp/config.txt
       owner: root
-      group: root
-      mode: '0644'                     # Permissions
+      mode: '0644'
 
-  # Skapa katalog
   - name: Create directory
     file:
       path: /var/www/myapp
       state: directory
-      owner: www-data
-      group: www-data
       mode: '0755'
 
-  # Skapa symlink
-  - name: Create symlink
-    file:
-      src: /var/www/myapp/current
-      dest: /var/www/html
-      state: link
-
-  # Ta bort fil
-  - name: Remove file
-    file:
-      path: /tmp/obsolete.txt
-      state: absent
-
-  # Template med Jinja2
-  - name: Deploy config from template
+  - name: Deploy template
     template:
-      src: templates/nginx.conf.j2
+      src: nginx.conf.j2
       dest: /etc/nginx/nginx.conf
-      owner: root
-      group: root
-      mode: '0644'
-      validate: nginx -t -c %s         # Validera innan apply
+      validate: nginx -t -c %s
     notify: Restart nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Package modules
+## Package Modules
+
+| Module | Distribution |
+|--------|--------------|
+| `apt` | Debian/Ubuntu |
+| `yum` | RHEL/CentOS 7 |
+| `dnf` | RHEL/CentOS 8+ |
+| `package` | Cross-platform |
+| `pip` | Python packages |
+| `npm` | Node.js packages |
 
 ```yaml
 tasks:
-  # APT (Debian/Ubuntu)
-  - name: Install package
+  # Debian/Ubuntu
+  - name: Install nginx
     apt:
       name: nginx
-      state: present                   # present/absent/latest
-      update_cache: yes                # apt update först
-
-  - name: Install multiple packages
-    apt:
-      name:
-        - nginx
-        - curl
-        - vim
       state: present
+      update_cache: yes
 
-  # YUM/DNF (RedHat/CentOS)
-  - name: Install with yum
-    yum:
-      name: httpd
-      state: present
-
-  # Package (cross-platform)
-  - name: Install generically
+  # Cross-platform
+  - name: Install git
     package:
       name: git
       state: present
 
-  # Pip (Python)
-  - name: Install Python package
+  # Python
+  - name: Install flask
     pip:
       name: flask
-      state: present
-      virtualenv: /opt/myapp/venv      # Optional venv
-
-  # NPM (Node.js)
-  - name: Install npm package
-    npm:
-      name: pm2
-      global: yes
-      state: present
+      virtualenv: /opt/venv
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Command modules
+## Command Modules
+
+| Module | Shell | Beskrivning |
+|--------|-------|-------------|
+| `command` | Nej | Sakrare, ingen shell |
+| `shell` | Ja | Stoder pipes, redirects |
+| `raw` | Nej | Direkt SSH, ingen Python |
+| `script` | - | Kor lokalt script remote |
 
 ```yaml
 tasks:
-  # Shell - kör via shell (stöder pipes, redirects)
-  - name: Run shell command
-    shell: cat /etc/passwd | grep deploy > /tmp/user.txt
-    args:
-      creates: /tmp/user.txt           # Skippa om filen finns
-
-  # Command - kör utan shell (säkrare)
+  # Command (sakrare)
   - name: Run command
-    command: /opt/script.sh --arg1 value
+    command: /opt/script.sh --arg value
     args:
-      chdir: /opt                      # Arbetskatalog
-      creates: /opt/output.txt         # Skippa om finns
-    register: script_result
-    changed_when: "'Changed' in script_result.stdout"
+      creates: /opt/done.txt
 
-  # Raw - direkt SSH (ingen Python på remote)
-  - name: Raw command
+  # Shell (stoder pipes)
+  - name: Run shell
+    shell: cat /etc/passwd | grep deploy
+    args:
+      creates: /tmp/output.txt
+
+  # Raw (ingen Python pa remote)
+  - name: Bootstrap Python
     raw: apt-get install -y python3
-    when: ansible_python_interpreter is not defined
-
-  # Script - kopiera och kör lokalt script
-  - name: Run local script on remote
-    script: scripts/setup.sh
-    args:
-      creates: /opt/setup_done
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Lookup plugins
+## Lookup Plugins
+
+| Plugin | Anvandning |
+|--------|------------|
+| `file` | Las filinnehall |
+| `env` | Miljovariabel |
+| `password` | Generera losenord |
+| `pipe` | Kor kommando |
+| `aws_ssm` | AWS SSM parameter |
 
 ```yaml
 tasks:
-  # Läs fil
-  - name: Read file content
+  - name: Read file
     debug:
       msg: "{{ lookup('file', '/etc/hostname') }}"
 
-  # Environment variable
-  - name: Get env var
+  - name: Get env
     debug:
-      msg: "Home: {{ lookup('env', 'HOME') }}"
+      msg: "{{ lookup('env', 'HOME') }}"
 
-  # Password generation
   - name: Generate password
     debug:
-      msg: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters,digits') }}"
-
-  # Read from URL
-  - name: Fetch URL
-    debug:
-      msg: "{{ lookup('url', 'https://api.example.com/config') }}"
-
-  # AWS SSM Parameter
-  - name: Get SSM parameter
-    debug:
-      msg: "{{ lookup('amazon.aws.aws_ssm', 'my-param', region='eu-north-1') }}"
+      msg: "{{ lookup('password', '/dev/null length=16') }}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Module dokumentation
+## Module Dokumentation
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ansible-doc -l` | Lista alla modules |
+| `ansible-doc apt` | Full dokumentation |
+| `ansible-doc -s apt` | Kort syntax |
+| `ansible-doc -t lookup -l` | Lista lookup plugins |
 
 ```bash
-# Lista alla modules
-ansible-doc -l                         # Alla modules
-ansible-doc -l | grep aws              # Filtrera
+# Hitta modules
+ansible-doc -l | grep aws
+ansible-doc -l | grep file
 
 # Visa dokumentation
-ansible-doc apt                        # Full dokumentation
-ansible-doc -s apt                     # Kort syntax-exempel
-
-# Lista plugins
-ansible-doc -t lookup -l               # Lookup plugins
-ansible-doc -t callback -l             # Callback plugins
-ansible-doc -t connection -l           # Connection plugins
+ansible-doc apt
+ansible-doc -s template
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Modules är idempotenta - säkra att köra om
-2. Använd rätt module för rätt jobb
-3. `state: present/absent` för att skapa/ta bort
-4. Lookup plugins för dynamiska värden
-5. `ansible-doc` för dokumentation
+| Koncept | Beskrivning |
+|---------|-------------|
+| Idempotent | Modules ar sakra att kora om |
+| state | present/absent/latest for tillstand |
+| validate | Validera config innan apply |
+| creates | Skippa task om fil finns |
+| ansible-doc | Inbyggd dokumentation |
+
+**Kom ihag:**
+- Anvand command over shell nar mojligt (sakrare)
+- template for dynamiska config-filer
+- validate-parameter for att undvika trasig config
+- Lookup plugins for dynamiska varden
+- ansible-doc for att lara dig nya modules
 ''',
         },
         {
             "title": "Templates & Jinja2",
             "slug": "templates-jinja2",
             "difficulty": "intermediate",
-            "content": '''
-# Templates & Jinja2
+            "content": '''# Templates & Jinja2
 
-## Varför behöver du kunna detta?
+Templates gor dina konfigurationsfiler dynamiska. Istallet for att ha olika config-filer for varje miljo, skapar du EN template som renderas med ratt variabler vid deployment. Jinja2 ar templating-motorn som driver detta.
 
-Templates gör konfiguration dynamisk:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Generera config-filer med variabler
-- Logik i templates (loopar, villkor)
-- Återanvändbar konfiguration
-- Miljöspecifika värden
+## Jinja2 Syntax Oversikt
 
-Jinja2 är Ansibles templating-motor.
+| Syntax | Anvandning |
+|--------|------------|
+| `{{ variabel }}` | Skriv ut variabel |
+| `{% if %}` | Villkor |
+| `{% for %}` | Loopar |
+| `{# kommentar #}` | Kommentar (renderas ej) |
+| `\\| filter` | Transformera varde |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Template Workflow
 
-1. Skapa `.j2` template-fil
-2. Använd `template` module i playbook
-3. Ansible renderar med variabler
-4. Resultat kopieras till destination
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TEMPLATE RENDERING                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   nginx.conf.j2          vars:                 nginx.conf       │
+│   ┌─────────────┐       http_port: 80         ┌─────────────┐  │
+│   │ listen      │  ──►  server: web1     ──►  │ listen 80;  │  │
+│   │ {{ port }}; │       env: prod             │ server web1 │  │
+│   └─────────────┘                             └─────────────┘  │
+│                                                                 │
+│       Template    +    Variabler    =    Renderad fil          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Grundläggande syntax
+## Grundlaggande Template
 
 ```jinja2
 {# templates/nginx.conf.j2 #}
-{# Detta är en Jinja2-kommentar #}
-
-# Nginx configuration for {{ app_name }}
-# Generated by Ansible - DO NOT EDIT MANUALLY
+# Generated by Ansible - DO NOT EDIT
 
 user {{ nginx_user | default('www-data') }};
 worker_processes {{ nginx_workers | default('auto') }};
-
-events {
-    worker_connections {{ worker_connections | default(1024) }};
-}
 
 http {
     server {
@@ -1294,27 +1159,21 @@ http {
 ```
 
 ```yaml
-# I playbook
-- name: Deploy nginx config
+# Anvand i playbook
+- name: Deploy config
   template:
-    src: templates/nginx.conf.j2
+    src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
   vars:
-    app_name: myapp
     http_port: 80
     server_name: example.com
-    doc_root: /var/www/html
-    backend_host: 127.0.0.1
-    backend_port: 8080
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Villkor i templates
+## Villkor (if/elif/else)
 
 ```jinja2
-{# templates/app.conf.j2 #}
-
 {% if environment == 'production' %}
 DEBUG = false
 LOG_LEVEL = WARNING
@@ -1326,271 +1185,184 @@ DEBUG = true
 LOG_LEVEL = DEBUG
 {% endif %}
 
-# Database configuration
+# Med is defined
 {% if db_replica is defined and db_replica %}
-DATABASE_URL = {{ db_primary_url }}
-DATABASE_REPLICA_URL = {{ db_replica_url }}
-{% else %}
-DATABASE_URL = {{ db_primary_url }}
+REPLICA_URL = {{ db_replica_url }}
 {% endif %}
 
-# Optional features
-{% if enable_cache | default(false) %}
-CACHE_BACKEND = redis
-CACHE_URL = {{ cache_url }}
-{% endif %}
+# Kortform
+STATUS = {{ 'enabled' if feature_on else 'disabled' }}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Loopar i templates
+## Loopar (for)
 
 ```jinja2
-{# templates/hosts.j2 #}
-# /etc/hosts - Generated by Ansible
-
-127.0.0.1   localhost
-::1         localhost
-
-# Application servers
-{% for host in app_servers %}
-{{ hostvars[host].ansible_host }}   {{ host }}
+# Enkel loop
+{% for server in app_servers %}
+server {{ server }};
 {% endfor %}
 
-# Database servers
-{% for host in groups['dbservers'] %}
-{{ hostvars[host].ansible_default_ipv4.address }}   {{ host }} {{ host.split('.')[0] }}
+# Med loop-variabler
+{% for item in items %}
+{{ loop.index }}. {{ item }}{% if not loop.last %},{% endif %}
+{% endfor %}
+
+# Loop over dict
+{% for key, value in config.items() %}
+{{ key }} = {{ value }}
 {% endfor %}
 ```
 
-```jinja2
-{# templates/vhosts.conf.j2 #}
-# Virtual hosts configuration
+| Loop-variabel | Beskrivning |
+|---------------|-------------|
+| `loop.index` | Iteration (1-indexed) |
+| `loop.index0` | Iteration (0-indexed) |
+| `loop.first` | True om forsta |
+| `loop.last` | True om sista |
+| `loop.length` | Total antal |
 
-{% for vhost in virtual_hosts %}
-<VirtualHost *:{{ vhost.port | default(80) }}>
-    ServerName {{ vhost.name }}
-    DocumentRoot {{ vhost.root }}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    {% if vhost.aliases is defined %}
-    {% for alias in vhost.aliases %}
-    ServerAlias {{ alias }}
-    {% endfor %}
-    {% endif %}
+## Vanliga Filters
 
-    {% if vhost.ssl | default(false) %}
-    SSLEngine on
-    SSLCertificateFile {{ vhost.ssl_cert }}
-    SSLCertificateKeyFile {{ vhost.ssl_key }}
-    {% endif %}
-</VirtualHost>
-
-{% endfor %}
-```
-
----
-
-## Filters i templates
+| Filter | Exempel | Resultat |
+|--------|---------|----------|
+| `default` | `{{ x \\| default('val') }}` | Fallback |
+| `upper` | `{{ name \\| upper }}` | UPPERCASE |
+| `lower` | `{{ name \\| lower }}` | lowercase |
+| `join` | `{{ list \\| join(',') }}` | a,b,c |
+| `to_json` | `{{ dict \\| to_json }}` | JSON |
+| `to_nice_yaml` | `{{ dict \\| to_nice_yaml }}` | YAML |
+| `replace` | `{{ s \\| replace(' ','-') }}` | Ersatt |
+| `regex_replace` | Regex-ersattning | Pattern |
 
 ```jinja2
-{# templates/config.j2 #}
-
-# String filters
-APP_NAME = {{ app_name | upper }}
-SLUG = {{ app_name | lower | replace(' ', '-') }}
-TRUNCATED = {{ description | truncate(50) }}
-
-# Default values
+# Praktiska exempel
 PORT = {{ port | default(8080) }}
-TIMEOUT = {{ timeout | default(30) }}
-
-# JSON/YAML output
-CONFIG_JSON = '{{ config_dict | to_json }}'
-CONFIG_YAML = |
-{{ config_dict | to_nice_yaml(indent=2) | indent(2) }}
-
-# List operations
-SERVERS = {{ server_list | join(',') }}
-FIRST = {{ items | first }}
-LAST = {{ items | last }}
-COUNT = {{ items | length }}
-
-# Math
-MEMORY_GB = {{ ansible_memtotal_mb / 1024 | round(1) }}
-WORKERS = {{ ansible_processor_vcpus | int * 2 }}
-
-# Conditional
-STATUS = {{ 'enabled' if feature_enabled else 'disabled' }}
+NAME = {{ app | upper }}
+SERVERS = {{ servers | join(', ') }}
+CONFIG = {{ settings | to_nice_yaml }}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Whitespace control
-
-```jinja2
-{# Utan kontroll - extra radbrytningar #}
-{% for item in items %}
-{{ item }}
-{% endfor %}
-
-{# Med whitespace control #}
-{% for item in items -%}
-{{ item }}
-{%- endfor %}
-
-{# Resultat: item1item2item3 (ingen whitespace) #}
-
-{# Bättre kontroll #}
-{% for item in items %}
-{{ item }}{% if not loop.last %},{% endif %}
-{% endfor %}
-
-{# Eller använd join filter #}
-{{ items | join(', ') }}
-```
-
----
-
-## Template validation
+## Template Validering
 
 ```yaml
 tasks:
-  - name: Deploy nginx config with validation
+  - name: Deploy nginx (med validering)
     template:
-      src: templates/nginx.conf.j2
+      src: nginx.conf.j2
       dest: /etc/nginx/nginx.conf
-      validate: nginx -t -c %s         # %s ersätts med temp-fil
+      validate: nginx -t -c %s       # %s = temp-fil
 
-  - name: Deploy sudoers with validation
+  - name: Deploy sudoers
     template:
-      src: templates/sudoers.j2
+      src: sudoers.j2
       dest: /etc/sudoers.d/app
       validate: visudo -cf %s
-
-  - name: Deploy Apache config
-    template:
-      src: templates/httpd.conf.j2
-      dest: /etc/httpd/conf/httpd.conf
-      validate: apachectl -t -f %s
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Template inheritance
+## Whitespace Control
 
 ```jinja2
-{# templates/base.conf.j2 #}
-# Base configuration
-{% block header %}
-# Default header
-{% endblock %}
+# Problem: extra radbrytningar
+{% for item in items %}
+{{ item }}
+{% endfor %}
 
-{% block main %}
-# Main content goes here
-{% endblock %}
+# Losning: - tar bort whitespace
+{%- for item in items -%}
+{{ item }}
+{%- endfor -%}
 
-{% block footer %}
-# Generated by Ansible
-{% endblock %}
+# Eller anvand join
+{{ items | join(', ') }}
 ```
 
-```jinja2
-{# templates/app.conf.j2 #}
-{% extends "base.conf.j2" %}
-
-{% block header %}
-# Application: {{ app_name }}
-# Environment: {{ environment }}
-{% endblock %}
-
-{% block main %}
-DATABASE_URL = {{ db_url }}
-REDIS_URL = {{ redis_url }}
-{% endblock %}
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Templates använder Jinja2-syntax
-2. `{{ variable }}` för värden
-3. `{% if/for %}` för logik
-4. Filters transformerar data
-5. `validate` säkerställer korrekt syntax
+| Koncept | Beskrivning |
+|---------|-------------|
+| {{ }} | Variabel-output |
+| {% %} | Logik (if, for) |
+| Filters | Transformera med \\| |
+| default | Undvik undefined errors |
+| validate | Testa config innan apply |
+
+**Kom ihag:**
+- Anvand default-filter for att undvika errors
+- validate-parameter for kritiska config-filer
+- {# kommentar #} renderas INTE i output
+- -% tar bort whitespace
+- loop.last for att undvika trailing comma
 ''',
         },
         {
             "title": "Roles",
             "slug": "roles",
             "difficulty": "intermediate",
-            "content": '''
-# Roles
+            "content": '''# Roles
 
-## Varför behöver du kunna detta?
+Roles ar satt att organisera Ansible-kod i ateranvandbara, testbara och delbara komponenter. Istallet for en stor playbook med all logik, bryter du ut funktionalitet i roller som nginx, postgresql, eller deploy - var och en med standardiserad katalogstruktur.
 
-Roles organiserar Ansible-kod:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Återanvändbar och delbar
-- Standardiserad struktur
-- Enkel att testa
-- Separat utveckling
+## Role Katalogstruktur
 
-En role = en specifik funktion (nginx, postgresql, etc.).
-
----
-
-## Så fungerar det
-
-En role har en definierad katalogstruktur:
-
-1. `tasks/` - huvudsakliga tasks
-2. `handlers/` - handlers
-3. `templates/` - Jinja2 templates
-4. `files/` - statiska filer
-5. `vars/` - variabler
-6. `defaults/` - default-värden
-
----
-
-## Role-struktur
-
-```bash
-# Skapa role med ansible-galaxy
-ansible-galaxy role init nginx
-
-# Resulterande struktur
+```
 roles/nginx/
-├── README.md
 ├── defaults/
-│   └── main.yml              # Default-variabler (lägst prioritet)
-├── files/
-│   └── ssl.crt               # Statiska filer
-├── handlers/
-│   └── main.yml              # Handlers
-├── meta/
-│   └── main.yml              # Role metadata och dependencies
+│   └── main.yml          # Default-variabler (lagst prio)
+├── vars/
+│   └── main.yml          # Role-variabler (hog prio)
 ├── tasks/
-│   └── main.yml              # Huvudsakliga tasks
+│   └── main.yml          # Huvudsakliga tasks
+├── handlers/
+│   └── main.yml          # Handlers
 ├── templates/
-│   └── nginx.conf.j2         # Jinja2 templates
-├── tests/
-│   ├── inventory
-│   └── test.yml
-└── vars/
-    └── main.yml              # Role-variabler (hög prioritet)
+│   └── nginx.conf.j2     # Jinja2 templates
+├── files/
+│   └── ssl.crt           # Statiska filer
+├── meta/
+│   └── main.yml          # Dependencies, metadata
+└── README.md
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa en role
+## Role Kataloger
+
+| Katalog | Syfte |
+|---------|-------|
+| `defaults/` | Default-variabler (kan overridas) |
+| `vars/` | Fasta variabler (hog prioritet) |
+| `tasks/` | Huvudlogiken |
+| `handlers/` | Handlers (restart, reload) |
+| `templates/` | Jinja2-templates |
+| `files/` | Statiska filer att kopiera |
+| `meta/` | Dependencies och metadata |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa en Role
+
+```bash
+# Skapa role-struktur
+ansible-galaxy role init nginx
+```
 
 ```yaml
 # roles/nginx/defaults/main.yml
 ---
 nginx_port: 80
 nginx_worker_processes: auto
-nginx_worker_connections: 1024
 nginx_sites: []
 ```
 
@@ -1601,37 +1373,15 @@ nginx_sites: []
   apt:
     name: nginx
     state: present
-    update_cache: yes
 
-- name: Create sites directory
-  file:
-    path: /etc/nginx/sites-available
-    state: directory
-    mode: '0755'
-
-- name: Deploy nginx config
+- name: Deploy config
   template:
     src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
     validate: nginx -t -c %s
   notify: Restart nginx
 
-- name: Deploy site configs
-  template:
-    src: site.conf.j2
-    dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
-  loop: "{{ nginx_sites }}"
-  notify: Reload nginx
-
-- name: Enable sites
-  file:
-    src: "/etc/nginx/sites-available/{{ item.name }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ item.name }}.conf"
-    state: link
-  loop: "{{ nginx_sites }}"
-  notify: Reload nginx
-
-- name: Ensure nginx is running
+- name: Ensure running
   service:
     name: nginx
     state: started
@@ -1652,19 +1402,19 @@ nginx_sites: []
     state: reloaded
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Använda roles
+## Anvanda Roles
 
 ```yaml
-# site.yml - Använd roles i playbook
+# site.yml
 ---
-- name: Configure web servers
+- name: Configure servers
   hosts: webservers
   become: yes
 
   roles:
-    # Enkel användning
+    # Enkel
     - nginx
 
     # Med variabler
@@ -1678,69 +1428,62 @@ nginx_sites: []
 
     # Med tags
     - role: nginx
-      tags:
-        - web
-        - nginx
+      tags: [web, nginx]
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## include_role vs roles
+
+| Metod | Nar |
+|-------|-----|
+| `roles:` | Statisk, kors fore tasks |
+| `include_role:` | Dynamisk, inuti tasks |
+| `import_role:` | Statisk, inuti tasks |
 
 ```yaml
-# Alternativ syntax med tasks
-- name: Configure servers
-  hosts: all
-  become: yes
-
-  tasks:
-    - name: Apply common role
-      include_role:
-        name: common
-
-    - name: Apply nginx role conditionally
-      include_role:
-        name: nginx
-      when: "'webservers' in group_names"
+tasks:
+  - name: Apply role dynamically
+    include_role:
+      name: nginx
+    when: setup_nginx | default(false)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Role dependencies
+## Role Dependencies
 
 ```yaml
 # roles/webapp/meta/main.yml
 ---
 dependencies:
   - role: common
-
   - role: nginx
     vars:
       nginx_port: 80
-
   - role: nodejs
     vars:
       nodejs_version: "18.x"
 ```
 
-```yaml
-# roles/common/meta/main.yml
----
-galaxy_info:
-  author: your_name
-  description: Common server setup
-  company: Your Company
-  license: MIT
-  min_ansible_version: "2.14"
-  platforms:
-    - name: Ubuntu
-      versions:
-        - jammy
-        - focal
-  galaxy_tags:
-    - system
-    - common
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  DEPENDENCY ORDNING                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   webapp (main role)                                           │
+│      │                                                          │
+│      ├──► common    (kors forst)                               │
+│      ├──► nginx     (kors andra)                               │
+│      ├──► nodejs    (kors tredje)                              │
+│      └──► webapp tasks (kors sist)                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Task includes
+## OS-specifika Tasks
 
 ```yaml
 # roles/nginx/tasks/main.yml
@@ -1750,79 +1493,38 @@ galaxy_info:
 
 - name: Include OS-specific tasks
   include_tasks: "{{ ansible_os_family | lower }}.yml"
-
-- name: Include common tasks
-  include_tasks: configure.yml
-
-- name: Include SSL tasks if enabled
-  include_tasks: ssl.yml
-  when: nginx_ssl_enabled | default(false)
 ```
 
 ```yaml
 # roles/nginx/tasks/debian.yml
----
 - name: Install nginx (Debian)
   apt:
     name: nginx
-    state: present
-```
 
-```yaml
 # roles/nginx/tasks/redhat.yml
----
 - name: Install nginx (RedHat)
   yum:
     name: nginx
-    state: present
 ```
 
----
-
-## Role testing
-
-```yaml
-# roles/nginx/tests/test.yml
----
-- name: Test nginx role
-  hosts: localhost
-  connection: local
-  become: yes
-
-  vars:
-    nginx_sites:
-      - name: test
-        server_name: test.local
-        root: /var/www/test
-
-  roles:
-    - nginx
-
-  post_tasks:
-    - name: Verify nginx is running
-      command: systemctl is-active nginx
-      changed_when: false
-
-    - name: Verify nginx config
-      command: nginx -t
-      changed_when: false
-```
-
-```bash
-# Kör test
-cd roles/nginx
-ansible-playbook tests/test.yml -i tests/inventory
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Roles organiserar kod i standardiserad struktur
-2. `defaults/` för överskrivbara standardvärden
-3. `include_tasks` för konditionell inkludering
-4. `meta/main.yml` för dependencies
-5. `ansible-galaxy role init` skapar struktur
+| Koncept | Beskrivning |
+|---------|-------------|
+| defaults/ | Overskrivbara standardvarden |
+| vars/ | Fasta role-variabler |
+| handlers/ | Kors vid notify |
+| meta/ | Dependencies pa andra roles |
+| include_tasks | OS-specifik logik |
+
+**Kom ihag:**
+- ansible-galaxy role init skapar strukturen
+- defaults/ for varden anvandare kan andra
+- vars/ for fasta role-installningar
+- meta/main.yml for dependencies
+- Testa roles separat innan anvandning
 ''',
         },
         {
@@ -1832,56 +1534,74 @@ ansible-playbook tests/test.yml -i tests/inventory
             "content": '''
 # Ansible Galaxy
 
-## Varför behöver du kunna detta?
+Ansible Galaxy ar det officiella paketsystemet for Ansible - en central hubb dar du hittar tusentals fardiga roles och collections skapade av communityn och foretag. Istallet for att skriva allt fran grunden kan du atervanda beprovat innehall och fokusera pa det som ar unikt for din infrastruktur.
 
-Ansible Galaxy är Ansibles pakethanterare:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Tusentals färdiga roles och collections
-- Dela dina egna roles
-- Versionerade beroenden
-- Spar utvecklingstid
+## Galaxy Koncept
 
-Återuppfinn inte hjulet - använd Galaxy.
+| Typ | Beskrivning | Exempel |
+|-----|-------------|---------|
+| Role | Enskilt atervandbart paket | geerlingguy.nginx |
+| Collection | Bundle av roles, modules, plugins | community.general |
+| FQCN | Fully Qualified Collection Name | amazon.aws.ec2_instance |
+| requirements.yml | Beroendefil | Versionshantering |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ANSIBLE GALAXY                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   galaxy.ansible.com                                           │
+│         │                                                       │
+│         ├──► Roles       (enskilda paket)                      │
+│         │      └── geerlingguy.nginx                           │
+│         │      └── geerlingguy.docker                          │
+│         │                                                       │
+│         └──► Collections (bundlade paket)                      │
+│                └── community.general                           │
+│                └── amazon.aws                                  │
+│                └── azure.azcollection                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Galaxy innehåller:
+## Galaxy Kommandon
 
-1. **Roles** - återanvändbara rollpaket
-2. **Collections** - bundlade roles, modules, plugins
-3. **CLI** - ansible-galaxy kommando
-
----
-
-## Söka och installera
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ansible-galaxy search nginx` | Sok efter roles |
+| `ansible-galaxy info ROLE` | Visa role-detaljer |
+| `ansible-galaxy install ROLE` | Installera role |
+| `ansible-galaxy collection install COL` | Installera collection |
+| `ansible-galaxy role list` | Lista installerade roles |
+| `ansible-galaxy collection list` | Lista collections |
 
 ```bash
-# Sök roles
+# Sok och installera roles
 ansible-galaxy search nginx
 ansible-galaxy search nginx --platforms Ubuntu
-
-# Visa role-info
 ansible-galaxy info geerlingguy.nginx
 
 # Installera role
 ansible-galaxy install geerlingguy.nginx
 ansible-galaxy install geerlingguy.nginx,3.1.0       # Specifik version
-ansible-galaxy install geerlingguy.nginx -p roles/   # Till specifik sökväg
+ansible-galaxy install geerlingguy.nginx -p roles/   # Till mapp
 
-# Installera collection
+# Installera collections
 ansible-galaxy collection install community.general
 ansible-galaxy collection install amazon.aws
 ansible-galaxy collection install azure.azcollection
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Requirements file
+## Requirements File
 
 ```yaml
-# requirements.yml - Definiera beroenden
+# requirements.yml - Definiera alla beroenden
 ---
 roles:
   - name: geerlingguy.nginx
@@ -1892,14 +1612,10 @@ roles:
 
   - name: geerlingguy.docker
 
-  # Från git
+  # Fran git
   - name: custom-role
     src: git+https://github.com/company/ansible-role.git
     version: v1.2.0
-
-  # Från tar.gz
-  - name: custom-role-tar
-    src: https://example.com/role.tar.gz
 
 collections:
   - name: community.general
@@ -1912,31 +1628,31 @@ collections:
 ```
 
 ```bash
-# Installera allt från requirements
+# Installera fran requirements.yml
 ansible-galaxy install -r requirements.yml
 ansible-galaxy collection install -r requirements.yml
 
 # Force reinstall
 ansible-galaxy install -r requirements.yml --force
 
-# Installera till specifik sökväg
+# Till specifik mapp
 ansible-galaxy install -r requirements.yml -p ./roles
 ansible-galaxy collection install -r requirements.yml -p ./collections
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Använda collections
+## Anvanda Collections
 
 ```yaml
-# playbook.yml - Använd collection modules
+# playbook.yml - Anvand collection modules
 ---
 - name: Deploy to AWS
   hosts: localhost
   connection: local
 
   collections:
-    - amazon.aws                       # Gör alla modules tillgängliga
+    - amazon.aws                       # Gor alla modules tillgangliga
 
   tasks:
     - name: Create S3 bucket
@@ -1944,7 +1660,7 @@ ansible-galaxy collection install -r requirements.yml -p ./collections
         name: my-bucket
         state: present
 
-    # Eller med FQCN (Fully Qualified Collection Name)
+    # Med FQCN (Fully Qualified Collection Name)
     - name: Create EC2 instance
       amazon.aws.ec2_instance:
         name: web-server
@@ -1952,30 +1668,32 @@ ansible-galaxy collection install -r requirements.yml -p ./collections
         image_id: ami-12345678
 ```
 
-```yaml
-# Alternativt i ansible.cfg
-[defaults]
-collections_paths = ./collections:~/.ansible/collections:/usr/share/ansible/collections
-```
+| Metod | Syntax | Fordel |
+|-------|--------|--------|
+| collections: | `s3_bucket:` | Kortare syntax |
+| FQCN | `amazon.aws.ec2_instance:` | Tydlig kalla |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa egen role för Galaxy
+## Skapa Egen Role
 
 ```bash
 # Initiera ny role
 ansible-galaxy role init my_company.webserver
+```
 
-# Struktur
+```
 my_company.webserver/
-├── README.md                         # Dokumentation
+├── README.md                  # Dokumentation
 ├── meta/
-│   └── main.yml                      # Galaxy metadata
+│   └── main.yml               # Galaxy metadata
 ├── defaults/
-│   └── main.yml
+│   └── main.yml               # Overskrivbara varden
 ├── tasks/
-│   └── main.yml
-└── ...
+│   └── main.yml               # Huvudlogik
+├── handlers/
+│   └── main.yml               # Handlers
+└── templates/                 # Jinja2-templates
 ```
 
 ```yaml
@@ -1986,7 +1704,6 @@ galaxy_info:
   namespace: my_company
   author: Your Name
   description: Configure webserver with nginx
-  company: My Company
   license: MIT
   min_ansible_version: "2.14"
 
@@ -1995,35 +1712,32 @@ galaxy_info:
       versions:
         - jammy
         - focal
-    - name: Debian
-      versions:
-        - bullseye
 
   galaxy_tags:
     - web
     - nginx
-    - proxy
 
 dependencies:
   - geerlingguy.nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa egen collection
+## Skapa Egen Collection
 
 ```bash
 # Skapa collection-struktur
 ansible-galaxy collection init my_company.infrastructure
+```
 
-# Struktur
+```
 my_company/infrastructure/
 ├── README.md
-├── galaxy.yml                        # Collection metadata
+├── galaxy.yml                 # Collection metadata
 ├── plugins/
-│   ├── modules/                      # Custom modules
-│   ├── lookup/                       # Custom lookup plugins
-│   └── filter/                       # Custom filter plugins
+│   ├── modules/               # Custom modules
+│   ├── lookup/                # Lookup plugins
+│   └── filter/                # Filter plugins
 ├── roles/
 │   ├── webserver/
 │   └── database/
@@ -2039,35 +1753,31 @@ version: 1.0.0
 readme: README.md
 authors:
   - Your Name <you@example.com>
-description: Infrastructure automation for My Company
+description: Infrastructure automation
 license:
   - MIT
-tags:
-  - infrastructure
-  - devops
 dependencies:
   community.general: ">=6.0.0"
-repository: https://github.com/my-company/ansible-infrastructure
 ```
 
 ```bash
-# Bygg collection
+# Bygg och publicera
 ansible-galaxy collection build
-
-# Publicera till Galaxy
-ansible-galaxy collection publish my_company-infrastructure-1.0.0.tar.gz --token YOUR_API_TOKEN
+ansible-galaxy collection publish my_company-infrastructure-1.0.0.tar.gz --token TOKEN
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Private Galaxy / Automation Hub
+## Private Galaxy
 
 ```bash
-# Använd privat Galaxy-server
-ansible-galaxy collection install my_collection \
+# Anvand privat Galaxy-server
+ansible-galaxy collection install my_collection \\
   --server https://galaxy.internal.company.com
+```
 
-# Konfigurera i ansible.cfg
+```ini
+# ansible.cfg
 [galaxy]
 server_list = private_galaxy, galaxy
 
@@ -2079,46 +1789,49 @@ token = YOUR_TOKEN
 url = https://galaxy.ansible.com/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Version management
+## Version Constraints
+
+| Syntax | Betydelse |
+|--------|-----------|
+| `"6.5.0"` | Exakt version |
+| `">=6.0.0"` | Minst version |
+| `">=6.0.0,<7.0.0"` | Range |
+| `"*"` | Senaste |
 
 ```yaml
-# requirements.yml - Version constraints
----
+# requirements.yml
 collections:
   - name: community.general
-    version: ">=6.0.0,<7.0.0"         # Range
+    version: ">=6.0.0,<7.0.0"
 
   - name: amazon.aws
-    version: "6.5.0"                  # Exakt version
-
-  - name: community.docker
-    version: "*"                      # Senaste
+    version: "6.5.0"
 
 roles:
   - name: geerlingguy.nginx
     version: ">=3.0.0"
 ```
 
-```bash
-# Lista installerade
-ansible-galaxy role list
-ansible-galaxy collection list
-
-# Visa installerad version
-ansible-galaxy collection list community.general
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Galaxy har tusentals färdiga roles och collections
-2. `requirements.yml` för versionerade beroenden
-3. Collections buntar roles, modules, plugins
-4. FQCN för tydlig module-referens
-5. Skapa och dela egna roles/collections
+| Koncept | Beskrivning |
+|---------|-------------|
+| Galaxy | Central hubb for roles/collections |
+| requirements.yml | Versionerade beroenden |
+| Collection | Bundle av roles, modules, plugins |
+| FQCN | Fully Qualified Collection Name |
+| ansible-galaxy | CLI for sokning/installation |
+
+**Kom ihag:**
+- Anvand Galaxy istallet for att skriva allt sjalv
+- requirements.yml for reproducerbarhet
+- FQCN ger tydlig module-kalla
+- Versionera alltid dina beroenden
+- Skapa egna roles for intern ateranvandning
 ''',
         },
         {
@@ -2128,29 +1841,39 @@ ansible-galaxy collection list community.general
             "content": '''
 # Conditionals & Loops
 
-## Varför behöver du kunna detta?
+Villkor och loopar ar kraftfulla konstruktioner som gor dina playbooks dynamiska och flexibla. Med when-satser kan du anpassa tasks efter OS, miljo eller variabelvarden. Loopar lat dig iterera over listor och dictionaries for att hantera multipla resurser elegant utan upprepning.
 
-Villkor och loopar gör playbooks flexibla:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Anpassa efter OS och miljö
-- Iterera över listor och dictionaries
-- Dynamiskt antal resurser
-- Conditional task execution
+## Villkors- och Loop-typer
 
-Kraftfulla konstruktioner för komplex automation.
+| Typ | Syfte | Exempel |
+|-----|-------|---------|
+| `when` | Kor task om villkor ar sant | `when: ansible_os_family == "Debian"` |
+| `loop` | Iterera over lista | `loop: [nginx, curl, vim]` |
+| `until` | Retry tills villkor | `until: result.status == 200` |
+| `loop_control` | Kontrollera loop-beteende | `index_var`, `label` |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              CONDITIONAL & LOOP FLOW                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   when: condition                                               │
+│      └──► TRUE  ──► Task kors                                  │
+│      └──► FALSE ──► Task skippas                               │
+│                                                                 │
+│   loop: [a, b, c]                                              │
+│      └──► item=a ──► Task kors                                 │
+│      └──► item=b ──► Task kors                                 │
+│      └──► item=c ──► Task kors                                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- `when` - kör task om villkor är sant
-- `loop` - iterera över lista
-- `with_*` - legacy loop-syntax
-- Kombinera för komplex logik
-
----
-
-## When conditionals
+## When Conditionals
 
 ```yaml
 tasks:
@@ -2158,14 +1881,12 @@ tasks:
   - name: Install on Ubuntu
     apt:
       name: nginx
-      state: present
     when: ansible_distribution == "Ubuntu"
 
   # Multiple conditions (AND)
   - name: Install on Ubuntu 22.04
     apt:
       name: nginx
-      state: present
     when:
       - ansible_distribution == "Ubuntu"
       - ansible_distribution_version == "22.04"
@@ -2174,10 +1895,9 @@ tasks:
   - name: Install on Debian family
     apt:
       name: nginx
-      state: present
     when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
-  # Använd facts
+  # Anvand facts
   - name: Configure for high memory
     template:
       src: high_memory.conf.j2
@@ -2197,9 +1917,18 @@ tasks:
     when: ssl_enabled | default(false) | bool
 ```
 
----
+| Operator | Beskrivning | Exempel |
+|----------|-------------|---------|
+| `==` | Lika med | `when: var == "value"` |
+| `!=` | Inte lika | `when: var != "value"` |
+| `>`, `<` | Storre/mindre | `when: count > 5` |
+| `in` | Innehaller | `when: "'error' in output"` |
+| `is defined` | Existerar | `when: var is defined` |
+| `and`, `or` | Logiska | `when: a and b` |
 
-## Register och conditionals
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Register och Conditionals
 
 ```yaml
 tasks:
@@ -2238,9 +1967,9 @@ tasks:
     when: "'1.0' in version_output.stdout"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Loop basics
+## Loop Basics
 
 ```yaml
 tasks:
@@ -2266,7 +1995,7 @@ tasks:
     loop_control:
       index_var: index
 
-  # Loop med label (för output)
+  # Loop med label (for output)
   - name: Create users with details
     user:
       name: "{{ item.name }}"
@@ -2278,9 +2007,16 @@ tasks:
       label: "{{ item.name }}"
 ```
 
----
+| loop_control | Beskrivning |
+|--------------|-------------|
+| `index_var` | Variabel for loop-index (0-baserat) |
+| `label` | Vad som visas i output |
+| `pause` | Sekunder mellan iterationer |
+| `extended` | Extra loop-info (first, last, etc) |
 
-## Dictionary loops
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Dictionary Loops
 
 ```yaml
 vars:
@@ -2293,65 +2029,44 @@ vars:
       shell: /bin/sh
 
 tasks:
-  # Loop över dict
+  # Loop over dict med dict2items
   - name: Create users from dict
     user:
       name: "{{ item.key }}"
       groups: "{{ item.value.groups }}"
       shell: "{{ item.value.shell }}"
     loop: "{{ users | dict2items }}"
-
-  # Nested dict
-  - name: Show user info
-    debug:
-      msg: "User {{ item.key }} has groups {{ item.value.groups }}"
-    loop: "{{ users | dict2items }}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Nested loops
+## Nested Loops
 
 ```yaml
 vars:
-  environments:
-    - dev
-    - staging
-    - prod
-  services:
-    - web
-    - api
-    - worker
+  environments: [dev, staging, prod]
+  services: [web, api, worker]
 
 tasks:
-  # Product (alla kombinationer)
+  # Product - alla kombinationer
   - name: Create service directories
     file:
       path: "/opt/{{ item.0 }}/{{ item.1 }}"
       state: directory
     loop: "{{ environments | product(services) | list }}"
+    # Skapar: dev/web, dev/api, dev/worker, staging/web, etc.
 
-  # Subelements
+  # Subelements - for nested lists
   - name: Create user SSH keys
     authorized_key:
       user: "{{ item.0.name }}"
       key: "{{ item.1 }}"
     loop: "{{ users | subelements('ssh_keys') }}"
-
-vars:
-  users:
-    - name: alice
-      ssh_keys:
-        - "ssh-rsa AAAA... alice@laptop"
-        - "ssh-rsa BBBB... alice@desktop"
-    - name: bob
-      ssh_keys:
-        - "ssh-rsa CCCC... bob@laptop"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Until loops
+## Until Loops (Retry)
 
 ```yaml
 tasks:
@@ -2363,17 +2078,10 @@ tasks:
     register: result
     until: result.status == 200
     retries: 30
-    delay: 10                          # Sekunder mellan försök
+    delay: 10                    # Sekunder mellan forsok
 
-  # Wait for file
-  - name: Wait for lock file to disappear
-    wait_for:
-      path: /var/lock/myapp.lock
-      state: absent
-    timeout: 300
-
-  # Custom condition
-  - name: Wait for deployment
+  # Wait for deployment
+  - name: Wait for replicas
     command: kubectl get deployment myapp -o jsonpath='{.status.availableReplicas}'
     register: replicas
     until: replicas.stdout | int >= 3
@@ -2381,9 +2089,15 @@ tasks:
     delay: 5
 ```
 
----
+| Parameter | Beskrivning | Default |
+|-----------|-------------|---------|
+| `until` | Villkor som maste vara sant | - |
+| `retries` | Max antal forsok | 3 |
+| `delay` | Sekunder mellan forsok | 5 |
 
-## Loop with conditionals
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Loop med Conditionals
 
 ```yaml
 tasks:
@@ -2391,7 +2105,6 @@ tasks:
   - name: Install only enabled services
     apt:
       name: "{{ item.name }}"
-      state: present
     loop: "{{ services }}"
     when: item.enabled | default(true)
 
@@ -2399,26 +2112,13 @@ tasks:
   - name: Create users except admin
     user:
       name: "{{ item }}"
-    loop:
-      - alice
-      - bob
-      - admin
+    loop: [alice, bob, admin]
     when: item != 'admin'
-
-  # Complex condition
-  - name: Configure production services
-    template:
-      src: "{{ item.template }}"
-      dest: "{{ item.dest }}"
-    loop: "{{ services }}"
-    when:
-      - item.environment == 'production'
-      - item.enabled | default(false)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Block conditionals
+## Block Conditionals
 
 ```yaml
 tasks:
@@ -2427,7 +2127,6 @@ tasks:
       - name: Install monitoring agent
         apt:
           name: datadog-agent
-          state: present
 
       - name: Configure monitoring
         template:
@@ -2441,15 +2140,24 @@ tasks:
     when: environment == 'production'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `when` för conditional execution
-2. `loop` ersätter gamla `with_*` syntax
-3. `loop_control` för index och labels
-4. `until` för retry-logik
-5. Kombinera conditionals och loops
+| Koncept | Beskrivning |
+|---------|-------------|
+| when | Conditional execution baserat pa villkor |
+| loop | Iterera over listor (ersatter with_*) |
+| loop_control | Index, label, pause for loops |
+| until | Retry-logik med retries/delay |
+| block + when | Applicera villkor pa flera tasks |
+
+**Kom ihag:**
+- when utvarderats for varje host separat
+- loop: med dict2items for dictionaries
+- Kombinera loop och when for filtrering
+- until ar perfekt for wait-scenarios
+- Block gor villkor pa grupper av tasks
 ''',
         },
         {
@@ -2459,31 +2167,42 @@ tasks:
             "content": '''
 # Error Handling
 
-## Varför behöver du kunna detta?
+Fel ar oundvikliga i distribuerade system - servrar kan vara otillgangliga, tjanster kan krascha, och kommandon kan misslyckas. Ansible erbjuder kraftfulla verktyg for att hantera dessa situationer graciost, fran att ignorera icke-kritiska fel till komplett rollback-logik med block/rescue/always.
 
-Fel händer - Ansible måste hantera dem:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Graceful degradation
-- Rollback vid misslyckande
-- Fortsätt trots icke-kritiska fel
-- Korrekt felrapportering
+## Felhanteringsverktyg
 
-Robust automation kräver felhantering.
+| Verktyg | Beskrivning | Anvandning |
+|---------|-------------|------------|
+| `ignore_errors` | Fortsatt vid fel | Icke-kritiska tasks |
+| `failed_when` | Custom failure-villkor | Specifik fellogik |
+| `changed_when` | Custom change-detection | Idempotens |
+| `block/rescue/always` | Try/catch/finally | Rollback-logik |
+| `any_errors_fatal` | Stoppa allt vid fel | Kritiska tasks |
+| `assert` | Validera forutsattningar | Pre-flight checks |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ERROR HANDLING FLOW                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   Task kors                                                     │
+│      │                                                          │
+│      ├── SUCCESS ──► Nasta task                                │
+│      │                                                          │
+│      └── FAILURE                                                │
+│             │                                                   │
+│             ├── ignore_errors: yes ──► Fortsatt               │
+│             ├── block/rescue ──► Kor rescue-tasks              │
+│             └── default ──► Stoppa playbook                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Ansible erbjuder:
-
-1. `ignore_errors` - fortsätt vid fel
-2. `failed_when` - custom failure condition
-3. `block/rescue/always` - try/catch/finally
-4. `any_errors_fatal` - stoppa allt vid fel
-
----
-
-## Ignore errors
+## ignore_errors
 
 ```yaml
 tasks:
@@ -2505,21 +2224,11 @@ tasks:
       src: optional.conf.j2
       dest: /etc/optional.conf
     when: optional_status.rc == 0
-
-  # Ignorera unreachable hosts
-  - name: Deploy to all hosts
-    hosts: all
-    ignore_unreachable: yes
-    tasks:
-      - name: Deploy app
-        copy:
-          src: app.tar.gz
-          dest: /opt/app.tar.gz
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Failed_when
+## failed_when och changed_when
 
 ```yaml
 tasks:
@@ -2534,31 +2243,9 @@ tasks:
   # Never fail
   - name: Check something
     command: /opt/check.sh
-    register: check_result
     failed_when: false
 
-  # Fail on specific output
-  - name: Verify configuration
-    command: /opt/verify.sh
-    register: verify_result
-    failed_when: "'ERROR' in verify_result.stdout"
-
-  # Complex condition
-  - name: Database migration
-    command: /opt/migrate.sh
-    register: migrate_result
-    failed_when: >
-      migrate_result.rc != 0 and
-      'Already migrated' not in migrate_result.stdout
-```
-
----
-
-## Changed_when
-
-```yaml
-tasks:
-  # Command som aldrig ändrar
+  # Command som aldrig andrar
   - name: Get current version
     command: cat /etc/version
     register: version
@@ -2569,23 +2256,18 @@ tasks:
     command: /opt/update-config.sh
     register: update_result
     changed_when: "'Updated' in update_result.stdout"
-
-  # Alltid changed
-  - name: Touch deploy marker
-    command: touch /var/deploy_timestamp
-    changed_when: true
-
-  # Complex condition
-  - name: Run migration
-    command: /opt/migrate.sh
-    register: migrate
-    changed_when: "'Applied' in migrate.stdout"
-    failed_when: "'ERROR' in migrate.stderr"
 ```
 
----
+| Direktiv | Varde | Effekt |
+|----------|-------|--------|
+| `failed_when: false` | Alltid | Misslyckas aldrig |
+| `failed_when: rc != 0` | Villkor | Custom fel-villkor |
+| `changed_when: false` | Alltid | Rapporterar aldrig changed |
+| `changed_when: "'x' in out"` | Villkor | Changed vid match |
 
-## Block/rescue/always
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## block/rescue/always
 
 ```yaml
 tasks:
@@ -2600,10 +2282,6 @@ tasks:
         unarchive:
           src: app-v2.tar.gz
           dest: /opt/myapp
-          remote_src: no
-
-      - name: Run migrations
-        command: /opt/myapp/migrate.sh
 
       - name: Start service
         service:
@@ -2623,14 +2301,6 @@ tasks:
           name: myapp
           state: started
 
-      - name: Send alert
-        uri:
-          url: https://alerts.example.com/webhook
-          method: POST
-          body_format: json
-          body:
-            message: "Deployment failed on {{ inventory_hostname }}"
-
     always:
       - name: Cleanup temp files
         file:
@@ -2640,15 +2310,21 @@ tasks:
       - name: Record deployment attempt
         lineinfile:
           path: /var/log/deployments.log
-          line: "{{ ansible_date_time.iso8601 }} - Deployment attempt completed"
+          line: "{{ ansible_date_time.iso8601 }} - Deployment completed"
 ```
 
----
+| Block | Beskrivning |
+|-------|-------------|
+| `block:` | Huvudsakliga tasks (try) |
+| `rescue:` | Kors om block misslyckas (catch) |
+| `always:` | Kors alltid (finally) |
 
-## Any_errors_fatal
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## any_errors_fatal
 
 ```yaml
-# Stoppa vid första fel
+# Stoppa vid forsta fel
 - name: Critical deployment
   hosts: webservers
   any_errors_fatal: true
@@ -2665,28 +2341,13 @@ tasks:
         dest: /opt/
 ```
 
-```yaml
-# Fail fast på specifika tasks
-- name: Mixed criticality
-  hosts: all
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  tasks:
-    - name: Critical check
-      command: /opt/critical-check.sh
-      any_errors_fatal: true
-
-    - name: Non-critical task
-      command: /opt/optional.sh
-      ignore_errors: yes
-```
-
----
-
-## Assert och fail
+## assert och fail
 
 ```yaml
 tasks:
-  # Assert conditions
+  # Validera forutsattningar
   - name: Verify prerequisites
     assert:
       that:
@@ -2696,60 +2357,53 @@ tasks:
       fail_msg: "Server does not meet minimum requirements"
       success_msg: "All prerequisites met"
 
-  # Conditional fail
+  # Villkorlig fail
   - name: Check environment
     fail:
       msg: "Cannot deploy to production on Friday!"
     when:
       - environment == 'production'
       - ansible_date_time.weekday == 'Friday'
-
-  # Fail with details
-  - name: Validate config
-    assert:
-      that:
-        - db_host is defined
-        - db_port | int > 0
-        - db_name | length > 0
-      fail_msg: |
-        Database configuration invalid:
-        - db_host: {{ db_host | default('NOT SET') }}
-        - db_port: {{ db_port | default('NOT SET') }}
-        - db_name: {{ db_name | default('NOT SET') }}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Max_fail_percentage
+## max_fail_percentage
 
 ```yaml
-# Tillåt viss andel failures
+# Tillat viss andel failures
 - name: Rolling update
   hosts: webservers
-  serial: 5                            # 5 hosts åt gången
-  max_fail_percentage: 20              # Max 20% får faila
+  serial: 5                     # 5 hosts at gangen
+  max_fail_percentage: 20       # Max 20% far faila
 
   tasks:
-    - name: Deploy
+    - name: Deploy and restart
       copy:
         src: app.tar.gz
         dest: /opt/app.tar.gz
-
-    - name: Restart
-      service:
-        name: myapp
-        state: restarted
+      notify: Restart app
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `ignore_errors` för icke-kritiska tasks
-2. `failed_when` för custom failure conditions
-3. `block/rescue/always` för strukturerad felhantering
-4. `any_errors_fatal` stoppar allt vid första fel
-5. `assert` validerar förutsättningar
+| Koncept | Beskrivning |
+|---------|-------------|
+| ignore_errors | Fortsatt vid icke-kritiska fel |
+| failed_when | Definiera egna failure-villkor |
+| changed_when | Kontrollera change-rapportering |
+| block/rescue/always | Strukturerad felhantering med rollback |
+| any_errors_fatal | Stoppa allt vid forsta fel |
+| assert | Validera prerequisites |
+
+**Kom ihag:**
+- Anvand ignore_errors sparsamt - doljer problem
+- block/rescue ar perfekt for deployment med rollback
+- always kors oavsett - bra for cleanup
+- assert i borjan validerar forutsattningar
+- max_fail_percentage for rolling updates
 ''',
         },
         {
@@ -2759,55 +2413,35 @@ tasks:
             "content": '''
 # Vault & Secrets
 
-## Varför behöver du kunna detta?
+Hemlig data som losenord, API-nycklar och certifikat maste skyddas - de far aldrig ligga i klartext i version control. Ansible Vault erbjuder AES256-kryptering som lat dig lagra kanslig data sakert medan den fortfarande ar anvandbar i dina playbooks.
 
-Secrets måste skyddas:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Lösenord
-- API-nycklar
-- Certifikat
-- Databaskredentialer
+## Vault Kommandon
 
-Ansible Vault krypterar känslig data.
-
----
-
-## Så fungerar det
-
-Ansible Vault:
-
-1. Krypterar filer med AES256
-2. Stöd för flera vault-lösenord
-3. Integrerat i playbook-körning
-4. Versionskontrollvänligt
-
----
-
-## Grundläggande vault
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ansible-vault create FILE` | Skapa ny krypterad fil |
+| `ansible-vault edit FILE` | Redigera krypterad fil |
+| `ansible-vault view FILE` | Visa innehall |
+| `ansible-vault encrypt FILE` | Kryptera befintlig fil |
+| `ansible-vault decrypt FILE` | Dekryptera fil |
+| `ansible-vault rekey FILE` | Andra losenord |
+| `ansible-vault encrypt_string` | Kryptera enskilt varde |
 
 ```bash
-# Skapa krypterad fil
+# Grundlaggande vault-operationer
 ansible-vault create secrets.yml
-
-# Redigera krypterad fil
 ansible-vault edit secrets.yml
-
-# Visa innehåll
 ansible-vault view secrets.yml
-
-# Kryptera befintlig fil
 ansible-vault encrypt vars/secrets.yml
-
-# Dekryptera fil
 ansible-vault decrypt vars/secrets.yml
-
-# Ändra lösenord
 ansible-vault rekey secrets.yml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Vault i playbook
+## Vault i Playbook
 
 ```yaml
 # vars/secrets.yml (krypterad)
@@ -2829,7 +2463,7 @@ ssl_private_key: |
 
   vars_files:
     - vars/common.yml
-    - vars/secrets.yml              # Krypterad fil
+    - vars/secrets.yml        # Krypterad fil
 
   tasks:
     - name: Configure database
@@ -2841,17 +2475,17 @@ ssl_private_key: |
 ```
 
 ```bash
-# Kör med vault password
+# Kor med vault password
 ansible-playbook playbook.yml --ask-vault-pass
 ansible-playbook playbook.yml --vault-password-file ~/.vault_pass
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Kryptera enskilda värden
+## Kryptera Enskilda Varden
 
 ```bash
-# Kryptera en sträng
+# Kryptera en strang
 ansible-vault encrypt_string 'supersecret' --name 'db_password'
 
 # Output:
@@ -2861,89 +2495,81 @@ ansible-vault encrypt_string 'supersecret' --name 'db_password'
 ```
 
 ```yaml
-# Använd i vars-fil (okrypterad fil med krypterat värde)
-# vars/main.yml
+# vars/main.yml - Okrypterad fil med krypterat varde
 ---
 app_name: myapp
 environment: production
 
-# Krypterat värde
+# Krypterat varde inline
 db_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61626364656667686970...
 
-# Okrypterade värden
+# Okrypterade varden
 db_host: localhost
 db_port: 5432
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Multipla vault-lösenord
+## Multipla Vault-losenord
 
 ```bash
-# Vault ID för olika miljöer
+# Vault ID for olika miljoer
 ansible-vault create --vault-id dev@prompt secrets_dev.yml
 ansible-vault create --vault-id prod@prompt secrets_prod.yml
 ansible-vault create --vault-id prod@/path/to/prod_pass secrets_prod.yml
 
-# Kör med multipla vault IDs
-ansible-playbook playbook.yml \
-  --vault-id dev@prompt \
+# Kor med multipla vault IDs
+ansible-playbook playbook.yml \\
+  --vault-id dev@prompt \\
   --vault-id prod@~/.vault_prod
 ```
 
-```yaml
-# Krypterade värden med vault ID
-db_password: !vault |
-          $ANSIBLE_VAULT;1.2;AES256;prod
-          61626364...
-```
+| Vault ID Source | Syntax | Beskrivning |
+|-----------------|--------|-------------|
+| Prompt | `dev@prompt` | Fraga efter losenord |
+| Fil | `prod@~/.vault_pass` | Las fran fil |
+| Script | `prod@./get_pass.py` | Kor script |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Vault password file
+## Vault Password File
 
 ```bash
 # Skapa password-fil
 echo 'mysecretpassword' > ~/.vault_pass
 chmod 600 ~/.vault_pass
+```
 
-# Konfigurera i ansible.cfg
+```ini
+# ansible.cfg
 [defaults]
 vault_password_file = ~/.vault_pass
 ```
 
 ```python
 #!/usr/bin/env python3
-# vault_pass_script.py - Hämta från extern källa
+# vault_pass_script.py - Hamta fran extern kalla
 import subprocess
-import sys
 
-# Hämta från 1Password
+# Hamta fran 1Password
 result = subprocess.run(
     ['op', 'read', 'op://Vault/AnsibleVault/password'],
-    capture_output=True,
-    text=True
+    capture_output=True, text=True
 )
 print(result.stdout.strip())
 ```
 
-```bash
-chmod +x vault_pass_script.py
-ansible-playbook playbook.yml --vault-password-file ./vault_pass_script.py
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Best Practices Struktur
+
 ```
-
----
-
-## Best practices struktur
-
-```bash
-# Separera krypterat från okrypterat
 group_vars/
 ├── all/
-│   ├── vars.yml              # Okrypterade variabler
-│   └── vault.yml             # Krypterade variabler
+│   ├── vars.yml         # Okrypterade variabler
+│   └── vault.yml        # Krypterade variabler
 ├── production/
 │   ├── vars.yml
 │   └── vault.yml
@@ -2953,62 +2579,62 @@ group_vars/
 ```
 
 ```yaml
-# group_vars/production/vars.yml (okrypterad)
----
-environment: production
-db_host: db.prod.example.com
-db_name: app_production
-log_level: WARNING
-```
-
-```yaml
 # group_vars/production/vault.yml (krypterad)
 ---
 vault_db_password: supersecret
 vault_api_key: abc123xyz
-vault_ssl_key: |
-  -----BEGIN PRIVATE KEY-----
-  ...
 ```
 
 ```yaml
-# Referera vault-variabler
-# group_vars/production/vars.yml
+# group_vars/production/vars.yml (okrypterad)
 ---
+environment: production
+db_host: db.prod.example.com
+# Referera vault-variabler
 db_password: "{{ vault_db_password }}"
 api_key: "{{ vault_api_key }}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## External secrets
+## Externa Secret Managers
+
+| Provider | Lookup Plugin |
+|----------|---------------|
+| HashiCorp Vault | `hashi_vault` |
+| AWS Secrets Manager | `amazon.aws.aws_secret` |
+| Azure Key Vault | `azure.azcollection.azure_keyvault_secret` |
 
 ```yaml
-# Hämta från HashiCorp Vault
-- name: Get secret from HashiCorp Vault
+# Hamta fran HashiCorp Vault
+- name: Get secret
   set_fact:
     db_password: "{{ lookup('hashi_vault', 'secret/data/myapp:db_password') }}"
 
-# Hämta från AWS Secrets Manager
-- name: Get secret from AWS
+# Hamta fran AWS Secrets Manager
+- name: Get AWS secret
   set_fact:
     db_password: "{{ lookup('amazon.aws.aws_secret', 'myapp/db_password') }}"
-
-# Hämta från Azure Key Vault
-- name: Get secret from Azure
-  set_fact:
-    db_password: "{{ lookup('azure.azcollection.azure_keyvault_secret', 'db-password', vault_url='https://myvault.vault.azure.net') }}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `ansible-vault` krypterar med AES256
-2. Kryptera hela filer eller enskilda värden
-3. Vault IDs för multipla lösenord
-4. Separera vault-variabler med `vault_` prefix
-5. Externa secret managers för enterprise
+| Koncept | Beskrivning |
+|---------|-------------|
+| ansible-vault | Krypterar med AES256 |
+| encrypt_string | Kryptera enskilda varden inline |
+| Vault IDs | Multipla losenord for olika miljoer |
+| vault_ prefix | Konvention for krypterade variabler |
+| External secrets | HashiCorp, AWS, Azure integration |
+
+**Kom ihag:**
+- Aldrig lagra secrets i klartext i git
+- Anvand vault_password_file i ansible.cfg
+- Separera vault.yml fran vars.yml
+- vault_ prefix gor det tydligt vad som ar krypterat
+- For enterprise: overväg externa secret managers
 ''',
         },
         {
@@ -3018,30 +2644,38 @@ api_key: "{{ vault_api_key }}"
             "content": '''
 # Ansible in CI/CD
 
-## Varför behöver du kunna detta?
+Att integrera Ansible i CI/CD-pipelines automatiserar hela deployment-processen - fran kodandring till produktion. Varje commit kan trigga linting, tester och deployment till ratt miljo, vilket ger snabbare leveranser och konsistenta deployments med full audit trail.
 
-Ansible i pipelines:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Automatisk deployment vid merge
-- Testning av playbooks
-- Consistent miljöer
-- Audit trail
+## CI/CD Pipeline Steg
 
-GitOps med Ansible.
+| Steg | Verktyg | Syfte |
+|------|---------|-------|
+| Lint | ansible-lint, yamllint | Kodkvalitet |
+| Syntax | --syntax-check | Validerering |
+| Test | Molecule | Integration testing |
+| Deploy Staging | ansible-playbook | Testa i staging |
+| Approve | Manual gate | Kvalitetssakring |
+| Deploy Prod | ansible-playbook | Produktion |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    CI/CD PIPELINE FLOW                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   Push/PR ──► Lint ──► Test ──► Deploy Staging                 │
+│                                      │                          │
+│                                      ▼                          │
+│                              Manual Approve                     │
+│                                      │                          │
+│                                      ▼                          │
+│                              Deploy Production                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
-
-CI/CD med Ansible:
-
-1. Lint och syntax-check
-2. Molecule testing
-3. Deploy till staging
-4. Approval gates
-5. Deploy till production
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitHub Actions
 
@@ -3060,15 +2694,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install ansible ansible-lint yamllint
+        run: pip install ansible ansible-lint yamllint
 
       - name: YAML Lint
         run: yamllint .
@@ -3077,23 +2708,15 @@ jobs:
         run: ansible-lint
 
       - name: Syntax check
-        run: |
-          ansible-playbook site.yml --syntax-check
+        run: ansible-playbook site.yml --syntax-check
 
   test:
     needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Install Molecule
-        run: |
-          pip install molecule molecule-docker ansible
+        run: pip install molecule molecule-docker ansible
 
       - name: Run Molecule tests
         run: |
@@ -3105,56 +2728,36 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment: staging
-
     steps:
       - uses: actions/checkout@v4
+      - run: pip install ansible
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Ansible
-        run: pip install ansible
-
-      - name: Setup SSH key
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to staging
-        run: |
-          ansible-playbook -i inventory/staging site.yml
+      - name: Deploy
+        run: ansible-playbook -i inventory/staging site.yml
         env:
-          ANSIBLE_VAULT_PASSWORD: ${{ secrets.VAULT_PASSWORD }}
+          ANSIBLE_VAULT_PASSWORD: ${{ secrets.VAULT_PASS }}
 
   deploy-production:
     needs: test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Ansible
-        run: pip install ansible
-
-      - name: Setup SSH
+      - run: pip install ansible
+      - name: Deploy
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Deploy to production
-        run: |
-          ansible-playbook -i inventory/production site.yml \
-            --vault-password-file <(echo "${{ secrets.VAULT_PASSWORD }}")
+          ansible-playbook -i inventory/production site.yml \\
+            --vault-password-file <(echo "${{ secrets.VAULT_PASS }}")
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitLab CI
 
@@ -3164,13 +2767,6 @@ stages:
   - lint
   - test
   - deploy
-
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-
-cache:
-  paths:
-    - .cache/pip/
 
 lint:
   stage: lint
@@ -3187,45 +2783,31 @@ molecule-test:
   services:
     - docker:dind
   before_script:
-    - apk add --no-cache python3 py3-pip
+    - apk add python3 py3-pip
     - pip install molecule molecule-docker ansible
   script:
-    - cd roles/webserver
-    - molecule test
+    - cd roles/webserver && molecule test
 
 deploy-staging:
   stage: deploy
-  image: python:3.11
-  environment:
-    name: staging
-  only:
-    - develop
-  before_script:
-    - pip install ansible
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
+  environment: staging
+  only: [develop]
   script:
+    - pip install ansible
     - ansible-playbook -i inventory/staging site.yml
-  variables:
-    ANSIBLE_HOST_KEY_CHECKING: "false"
 
 deploy-production:
   stage: deploy
-  image: python:3.11
-  environment:
-    name: production
-  only:
-    - main
-  when: manual                         # Manuell approve
+  environment: production
+  only: [main]
+  when: manual              # Manuell approve
   script:
-    - pip install ansible
     - ansible-playbook -i inventory/production site.yml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ansible-lint config
+## Ansible-lint Konfiguration
 
 ```yaml
 # .ansible-lint
@@ -3244,36 +2826,30 @@ skip_list:
 warn_list:
   - experimental
 
-enable_list:
-  - no-same-owner
-
-offline: false
-
 use_default_rules: true
 ```
 
----
+| Profile | Strikthet |
+|---------|----------|
+| min | Minimal |
+| basic | Grundlaggande |
+| moderate | Medelstark |
+| safety | Fokus pa sakerhet |
+| shared | For delade roles |
+| production | Strikt |
 
-## Molecule testing
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Molecule i CI/CD
 
 ```yaml
-# roles/webserver/molecule/default/molecule.yml
+# molecule/default/molecule.yml
 ---
-dependency:
-  name: galaxy
 driver:
   name: docker
 platforms:
   - name: ubuntu-22
     image: geerlingguy/docker-ubuntu2204-ansible
-    pre_build_image: true
-    privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    command: /lib/systemd/systemd
-
-  - name: debian-12
-    image: geerlingguy/docker-debian12-ansible
     pre_build_image: true
     privileged: true
     command: /lib/systemd/systemd
@@ -3284,60 +2860,23 @@ provisioner:
     converge: converge.yml
     verify: verify.yml
 
-verifier:
-  name: ansible
-
 scenario:
   test_sequence:
-    - dependency
     - lint
-    - cleanup
     - destroy
-    - syntax
     - create
-    - prepare
     - converge
     - idempotence
     - verify
-    - cleanup
     - destroy
 ```
 
-```yaml
-# molecule/default/converge.yml
----
-- name: Converge
-  hosts: all
-  become: yes
-
-  roles:
-    - webserver
-```
-
-```yaml
-# molecule/default/verify.yml
----
-- name: Verify
-  hosts: all
-  gather_facts: false
-
-  tasks:
-    - name: Check nginx is running
-      command: systemctl is-active nginx
-      changed_when: false
-
-    - name: Check nginx responds
-      uri:
-        url: http://localhost
-        status_code: 200
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## AWX / Ansible Tower
 
 ```yaml
-# AWX job template config (via API)
+# Skapa job template via API
 - name: Create job template
   awx.awx.job_template:
     name: "Deploy Web Application"
@@ -3350,27 +2889,35 @@ scenario:
       - "Vault Password"
     extra_vars:
       environment: production
-    ask_variables_on_launch: yes
 ```
 
 ```bash
-# Trigger AWX job från CI/CD
-curl -X POST \
-  -H "Authorization: Bearer $AWX_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"extra_vars": {"version": "1.2.3"}}' \
+# Trigger AWX job fran CI/CD
+curl -X POST \\
+  -H "Authorization: Bearer $AWX_TOKEN" \\
+  -d '{"extra_vars": {"version": "1.2.3"}}' \\
   "https://awx.example.com/api/v2/job_templates/123/launch/"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Lint och syntax-check i varje pipeline
-2. Molecule för integration testing
-3. Separata environments med approval gates
-4. Vault-lösenord som CI/CD secrets
-5. AWX/Tower för enterprise orchestration
+| Koncept | Beskrivning |
+|---------|-------------|
+| Lint | ansible-lint i varje pipeline |
+| Molecule | Testa roles i containers |
+| Environments | Staging fore production |
+| Manual gates | Approve innan prod-deploy |
+| Secrets | Vault-losenord som CI/CD secrets |
+| AWX/Tower | Enterprise orchestration |
+
+**Kom ihag:**
+- Lint och syntax-check pa varje commit
+- Molecule testar roles isolerat
+- Separata environments med approval gates
+- Vault-losenord som CI/CD secrets (aldrig i kod)
+- AWX/Tower for visuell orchestration
 ''',
         },
         {
@@ -3380,31 +2927,42 @@ curl -X POST \
             "content": '''
 # Dynamic Inventory
 
-## Varför behöver du kunna detta?
+I molnmiljoer ar infrastrukturen i konstant forandring - servrar skapas och tas bort, auto-scaling andrar antal instanser, och IP-adresser byts ut. Dynamic inventory loser detta genom att fraga cloud-APIs i realtid och alltid ge dig en aktuell bild av din infrastruktur.
 
-Cloud-infrastruktur är dynamisk:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Servrar skapas och tas bort
-- Auto-scaling ändrar antal instanser
-- IP-adresser ändras
-- Statisk inventory blir snabbt inaktuell
+## Dynamic Inventory Koncept
 
-Dynamisk inventory synkar automatiskt.
+| Koncept | Beskrivning |
+|---------|-------------|
+| Plugin | Inbyggd integration (AWS, Azure, GCP) |
+| Script | Custom inventory via Python/Bash |
+| keyed_groups | Automatiska grupper fran tags |
+| compose | Definiera host-variabler |
+| filters | Filtrera vilka hosts som inkluderas |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 DYNAMIC INVENTORY FLOW                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ansible-playbook -i aws_ec2.yml site.yml                     │
+│         │                                                       │
+│         ▼                                                       │
+│   Plugin fragar AWS API                                        │
+│         │                                                       │
+│         ▼                                                       │
+│   Returnerar JSON med hosts                                    │
+│         │                                                       │
+│         ▼                                                       │
+│   Ansible kor playbook mot aktuella hosts                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Dynamisk inventory:
-
-1. Plugin/script frågar cloud API
-2. Returnerar aktuell infrastruktur som JSON
-3. Ansible använder för targeting
-4. Realtidsdata vid varje körning
-
----
-
-## AWS EC2 plugin
+## AWS EC2 Plugin
 
 ```yaml
 # inventory/aws_ec2.yml
@@ -3415,70 +2973,51 @@ regions:
   - eu-north-1
   - eu-west-1
 
-# Filtrera instanser
 filters:
   instance-state-name: running
   tag:Environment:
     - production
     - staging
 
-# Skapa grupper baserat på tags
 keyed_groups:
   - key: tags.Environment
     prefix: env
-    separator: "_"
   - key: tags.Role
     prefix: role
   - key: placement.availability_zone
     prefix: az
-  - key: instance_type
-    prefix: type
 
-# Grupperingar
 groups:
   webservers: "'web' in tags.Role"
-  dbservers: "'db' in tags.Role"
   production: "tags.Environment == 'production'"
 
-# Host variabler
 compose:
   ansible_host: private_ip_address
   ansible_user: "'ubuntu'"
-  instance_id: instance_id
-  ec2_region: placement.region
 
-# Hostnames
 hostnames:
   - tag:Name
   - private-ip-address
-  - instance-id
 ```
 
 ```bash
-# Installera AWS collection
+# Installera och testa
 ansible-galaxy collection install amazon.aws
+export AWS_ACCESS_KEY_ID=AKIA...
+export AWS_SECRET_ACCESS_KEY=...
 
-# Konfigurera AWS credentials
-export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-
-# Testa inventory
 ansible-inventory -i inventory/aws_ec2.yml --graph
 ansible-inventory -i inventory/aws_ec2.yml --list
-
-# Använd i playbook
-ansible-playbook -i inventory/aws_ec2.yml site.yml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Azure plugin
+## Azure Plugin
 
 ```yaml
 # inventory/azure_rm.yml
 ---
 plugin: azure.azcollection.azure_rm
-
 auth_source: auto
 
 include_vm_resource_groups:
@@ -3490,12 +3029,6 @@ keyed_groups:
     prefix: env
   - key: tags.Role
     prefix: role
-  - key: location
-    prefix: location
-
-conditional_groups:
-  webservers: "'web' in tags.Role"
-  linux: "os_profile.system == 'Linux'"
 
 hostvar_expressions:
   ansible_host: private_ipv4_addresses[0]
@@ -3506,20 +3039,14 @@ exclude_host_filters:
 ```
 
 ```bash
-# Installera Azure collection
 ansible-galaxy collection install azure.azcollection
-pip install azure-identity azure-mgmt-compute azure-mgmt-network
-
-# Autentisera
 az login
-
-# Testa
 ansible-inventory -i inventory/azure_rm.yml --graph
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## GCP plugin
+## GCP Plugin
 
 ```yaml
 # inventory/gcp.yml
@@ -3531,7 +3058,6 @@ projects:
 
 regions:
   - europe-north1
-  - europe-west1
 
 filters:
   - status = RUNNING
@@ -3541,80 +3067,30 @@ keyed_groups:
     prefix: env
   - key: labels.role
     prefix: role
-  - key: zone
-    prefix: zone
-
-groups:
-  webservers: "'web' in labels.role"
 
 compose:
   ansible_host: networkInterfaces[0].networkIP
   ansible_user: "'ubuntu'"
-
-hostnames:
-  - name
-  - public_ip
-  - private_ip
 ```
 
 ```bash
-# Installera GCP collection
 ansible-galaxy collection install google.cloud
-
-# Autentisera
-export GCP_SERVICE_ACCOUNT_FILE=/path/to/service-account.json
-
-# Eller
-gcloud auth application-default login
-
+export GCP_SERVICE_ACCOUNT_FILE=/path/to/sa.json
 ansible-inventory -i inventory/gcp.yml --graph
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Kubernetes plugin
-
-```yaml
-# inventory/k8s.yml
----
-plugin: kubernetes.core.k8s
-
-connections:
-  - kubeconfig: ~/.kube/config
-    context: production
-
-namespaces:
-  - default
-  - production
-
-# Gruppera pods
-keyed_groups:
-  - key: labels.app
-    prefix: app
-  - key: labels.environment
-    prefix: env
-  - key: namespace
-    prefix: ns
-
-compose:
-  ansible_host: status.podIP
-  ansible_connection: "'kubectl'"
-```
-
----
-
-## Custom dynamic inventory
+## Custom Dynamic Inventory
 
 ```python
 #!/usr/bin/env python3
 # inventory/custom_inventory.py
-
 import json
 import argparse
 import requests
 
 def get_inventory():
-    # Hämta data från intern CMDB
     response = requests.get(
         'https://cmdb.internal/api/servers',
         headers={'Authorization': 'Bearer TOKEN'}
@@ -3622,46 +3098,21 @@ def get_inventory():
     servers = response.json()
 
     inventory = {
-        '_meta': {
-            'hostvars': {}
-        },
-        'all': {
-            'children': ['webservers', 'dbservers']
-        },
-        'webservers': {
-            'hosts': []
-        },
-        'dbservers': {
-            'hosts': []
-        }
+        '_meta': {'hostvars': {}},
+        'all': {'children': ['webservers', 'dbservers']},
+        'webservers': {'hosts': []},
+        'dbservers': {'hosts': []}
     }
 
     for server in servers:
         hostname = server['hostname']
-        role = server['role']
-
-        # Lägg till i rätt grupp
-        if role == 'web':
-            inventory['webservers']['hosts'].append(hostname)
-        elif role == 'db':
-            inventory['dbservers']['hosts'].append(hostname)
-
-        # Host-variabler
+        group = 'webservers' if server['role'] == 'web' else 'dbservers'
+        inventory[group]['hosts'].append(hostname)
         inventory['_meta']['hostvars'][hostname] = {
             'ansible_host': server['ip_address'],
-            'ansible_user': server.get('ssh_user', 'deploy'),
-            'server_id': server['id'],
-            'environment': server['environment']
+            'ansible_user': 'deploy'
         }
-
     return inventory
-
-def get_host(hostname):
-    # Hämta specifik host
-    response = requests.get(
-        f'https://cmdb.internal/api/servers/{hostname}'
-    )
-    return response.json()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -3671,36 +3122,29 @@ if __name__ == '__main__':
 
     if args.list:
         print(json.dumps(get_inventory(), indent=2))
-    elif args.host:
-        print(json.dumps(get_host(args.host), indent=2))
 ```
 
 ```bash
-# Gör körbar
 chmod +x inventory/custom_inventory.py
-
-# Testa
 ./inventory/custom_inventory.py --list
-./inventory/custom_inventory.py --host web1.example.com
-
-# Använd
 ansible-playbook -i inventory/custom_inventory.py site.yml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Kombinera inventory sources
+## Kombinera Inventory Sources
 
-```bash
-# Directory med flera sources
+```
 inventory/
-├── static_hosts.yml          # Statiska hosts
-├── aws_ec2.yml               # AWS EC2
-├── azure_rm.yml              # Azure VMs
+├── static_hosts.yml      # Statiska hosts
+├── aws_ec2.yml           # AWS EC2
+├── azure_rm.yml          # Azure VMs
 └── group_vars/
     └── all.yml
+```
 
-# Ansible läser alla filer
+```bash
+# Ansible laser alla filer i mappen
 ansible-playbook -i inventory/ site.yml
 ```
 
@@ -3710,15 +3154,24 @@ ansible-playbook -i inventory/ site.yml
 inventory = ./inventory
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Dynamic inventory synkar med cloud APIs
-2. `keyed_groups` skapar automatiska grupper
-3. `compose` definierar host-variabler
-4. Custom scripts för interna system
-5. Kombinera statisk och dynamisk inventory
+| Koncept | Beskrivning |
+|---------|-------------|
+| Dynamic inventory | Realtidsdata fran cloud APIs |
+| keyed_groups | Automatiska grupper fran tags/labels |
+| compose | Definiera ansible_host, ansible_user |
+| Custom scripts | Python for interna system |
+| Kombinera | Statisk + dynamisk i samma mapp |
+
+**Kom ihag:**
+- Plugins finns for AWS, Azure, GCP, K8s
+- keyed_groups skapar grupper automatiskt fran tags
+- compose satter host-variabler
+- Custom scripts maste stodja --list och --host
+- Kombinera flera sources i en inventory-mapp
 ''',
         },
         {
@@ -3728,91 +3181,92 @@ inventory = ./inventory
             "content": '''
 # Performance Tuning
 
-## Varför behöver du kunna detta?
+Nar du hanterar hundratals eller tusentals servrar blir prestanda kritiskt. En playbook som tar 30 minuter kan optimeras till 5 minuter med ratt installningar - forks, pipelining, fact caching och effektiva playbook-monster gor enorm skillnad.
 
-Ansible kan vara långsamt:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Hundratals servrar
-- Många tasks
-- Stora filer
-- SSH overhead
+## Optimeringsomraden
 
-Optimering gör stor skillnad.
+| Omrade | Teknik | Effekt |
+|--------|--------|--------|
+| Parallellism | forks | Fler hosts samtidigt |
+| SSH | pipelining | Minskar overhead |
+| Facts | caching | Undviker upprepning |
+| Tasks | async | Langvariga i bakgrund |
+| Strategy | free/mitogen | Snabbare exekvering |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              PERFORMANCE OPTIMIZATION                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   Default (forks=5)          Optimized (forks=50)              │
+│   ─────────────────          ────────────────────              │
+│   Host1 ──────►              Host1-50 ──────►                  │
+│   Host2 ──────►                   │                            │
+│   Host3 ──────►              Host51-100 ─────►                 │
+│   Host4 ──────►                                                │
+│   Host5 ──────►              2-7x snabbare med Mitogen         │
+│   (vantar...)                                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Prestandaoptimering:
-
-1. Parallellism (forks)
-2. Pipelining
-3. Caching
-4. Effektiva playbooks
-5. Mitogen acceleration
-
----
-
-## Grundläggande tuning
+## Grundlaggande Tuning
 
 ```ini
 # ansible.cfg
 [defaults]
-# Parallella anslutningar
-forks = 50                             # Default: 5
-
-# Snabbare SSH
-host_key_checking = False              # Skippa host key verify
-gathering = smart                      # Cache facts
-
-# Callback för timing
+forks = 50                    # Parallella anslutningar (default: 5)
+host_key_checking = False     # Skippa host key verify
+gathering = smart             # Cache facts
 callback_whitelist = profile_tasks, timer
 
 [ssh_connection]
-# SSH pipelining (stor skillnad!)
-pipelining = True
-
-# Multiplexing
-ssh_args = -o ControlMaster=auto -o ControlPersist=60s -o PreferSharedKey=yes
-
-# Snabbare transfer
+pipelining = True             # STOR skillnad!
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s
 transfer_method = piped
 ```
 
----
+| Installning | Default | Rekommenderat | Effekt |
+|-------------|---------|---------------|--------|
+| forks | 5 | 25-50 | Fler parallella hosts |
+| pipelining | False | True | 2x snabbare |
+| gathering | implicit | smart | Cache facts |
 
-## Fact caching
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Fact Caching
 
 ```ini
 # ansible.cfg
 [defaults]
-gathering = smart                      # Samla bara om cache saknas
-fact_caching = jsonfile                # Cache backend
+gathering = smart
+fact_caching = jsonfile
 fact_caching_connection = /tmp/ansible_facts_cache
-fact_caching_timeout = 86400           # 24 timmar
+fact_caching_timeout = 86400      # 24 timmar
 
-# Eller Redis
+# Eller Redis for team
 fact_caching = redis
 fact_caching_connection = localhost:6379:0
-fact_caching_prefix = ansible_facts_
 ```
 
 ```yaml
-# Manuellt kontrollera facts
-- name: Deploy without facts
+# Skippa facts om inte nodvandigt
+- name: Quick deployment
   hosts: webservers
-  gather_facts: no                     # Skippa om inte behövs
+  gather_facts: no
 
   tasks:
-    - name: Explicit fact gathering
-      setup:
-        gather_subset:
-          - network
-          - hardware
-      when: need_facts | default(false)
+    - name: Deploy app
+      copy:
+        src: app.tar.gz
+        dest: /opt/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Pipelining
 
@@ -3823,33 +3277,28 @@ pipelining = True
 ```
 
 ```bash
-# Kräver på målservrar:
-# /etc/sudoers måste ha:
+# Kraver pa malservrar (sudoers):
 # Defaults !requiretty
-
-# Eller för specifik user:
 # deploy ALL=(ALL) NOPASSWD: ALL
-# Defaults:deploy !requiretty
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Async tasks
+## Async Tasks
 
 ```yaml
 tasks:
-  # Kör asynkront (fire and forget)
+  # Kor asynkront
   - name: Long running task
     command: /opt/long-script.sh
-    async: 3600                        # Max runtime (sekunder)
-    poll: 0                            # Vänta inte på resultat
+    async: 3600              # Max runtime
+    poll: 0                  # Vanta inte
     register: long_task
 
-  # Fortsätt med annat
+  # Fortsatt med annat
   - name: Do other things
     apt:
       name: nginx
-      state: present
 
   # Kolla status senare
   - name: Check on long task
@@ -3861,146 +3310,114 @@ tasks:
     delay: 60
 ```
 
----
+| Parameter | Beskrivning |
+|-----------|-------------|
+| async | Max koretid i sekunder |
+| poll: 0 | Fire-and-forget |
+| async_status | Kolla jobb-status |
 
-## Free strategy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Strategy
 
 ```yaml
-# Default: linear (väntar på alla hosts per task)
-# Free: hosts kör så fort de kan
-
-- name: Deploy with free strategy
+# Free strategy - hosts vantar inte pa varandra
+- name: Deploy
   hosts: webservers
-  strategy: free                       # Vänta inte på långsamma hosts
+  strategy: free
 
   tasks:
-    - name: Install packages
-      apt:
+    - apt:
         name: nginx
-        state: present
 ```
 
----
+| Strategy | Beskrivning |
+|----------|-------------|
+| linear | Default, alla hosts per task |
+| free | Hosts kor sa fort de kan |
+| mitogen_linear | 2-7x snabbare |
 
-## Mitogen acceleration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-# Installera Mitogen
-pip install mitogen
-
-# Aktivera i ansible.cfg
-[defaults]
-strategy_plugins = /path/to/mitogen/ansible_mitogen/plugins/strategy
-strategy = mitogen_linear
-```
-
-```ini
-# ansible.cfg med Mitogen
-[defaults]
-strategy_plugins = ~/.local/lib/python3.11/site-packages/ansible_mitogen/plugins/strategy
-strategy = mitogen_linear
-
-# Mitogen-specifik config
-[mitogen]
-# Aktivera för specifika connections
-host_key_checking = False
-```
-
----
-
-## Playbook optimization
+## Playbook Optimering
 
 ```yaml
-# Samla tasks av samma typ
-tasks:
-  # INEFFEKTIVT - flera apt-calls
-  - apt: name=nginx state=present
-  - apt: name=curl state=present
-  - apt: name=vim state=present
+# INEFFEKTIVT - flera apt-anrop
+- apt: name=nginx state=present
+- apt: name=curl state=present
+- apt: name=vim state=present
 
-  # EFFEKTIVT - en apt-call
-  - name: Install all packages
-    apt:
-      name:
-        - nginx
-        - curl
-        - vim
-      state: present
-      update_cache: yes
+# EFFEKTIVT - ett anrop
+- name: Install packages
+  apt:
+    name: [nginx, curl, vim]
+    state: present
 ```
 
 ```yaml
-# Använd handlers istället för restart i varje task
+# Handlers - restart EN gang
 tasks:
-  - name: Update config 1
-    template: src=1.conf.j2 dest=/etc/app/1.conf
+  - template: src=1.conf.j2 dest=/etc/1.conf
     notify: Restart app
-
-  - name: Update config 2
-    template: src=2.conf.j2 dest=/etc/app/2.conf
+  - template: src=2.conf.j2 dest=/etc/2.conf
     notify: Restart app
 
 handlers:
   - name: Restart app
     service: name=app state=restarted
-    # Körs EN gång, inte två
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Serial och batch
+## Serial (Rolling Deploy)
 
 ```yaml
-# Rolling deployment
 - name: Rolling update
   hosts: webservers
-  serial: 5                            # 5 hosts åt gången
-  # eller
-  serial: "20%"                        # 20% åt gången
-  # eller
-  serial:
-    - 1                                # Först 1 (canary)
-    - 5                                # Sen 5
-    - "100%"                           # Sen resten
+  serial: 5              # 5 hosts at gangen
+  # serial: "20%"        # 20% at gangen
+  # serial: [1, 5, "100%"]  # Canary
 
   tasks:
-    - name: Deploy
-      include_tasks: deploy.yml
+    - include_tasks: deploy.yml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Profiling
 
-```bash
-# Aktivera profiling
-export ANSIBLE_CALLBACK_WHITELIST=profile_tasks
-
-# Eller i ansible.cfg
+```ini
+# ansible.cfg
 [defaults]
 callback_whitelist = profile_tasks, timer
-
-# Kör och se timing
-ansible-playbook site.yml
-
-# Output visar tid per task:
-# PLAY RECAP
-# Tuesday 05 December 2024  15:30:00 +0000 (0:00:02.123)
-# ===============================================
-# apt ------------------------------------------ 45.23s
-# template ------------------------------------- 12.45s
-# service -------------------------------------- 3.21s
 ```
 
----
+```
+# Output visar tid per task:
+apt ----------------------- 45.23s
+template ------------------ 12.45s
+service ------------------- 3.21s
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `forks` ökar parallellism
-2. `pipelining = True` minskar SSH overhead
-3. Fact caching undviker upprepade insamlingar
-4. `async` för långvariga tasks
-5. Mitogen kan ge 2-7x snabbare körning
+| Koncept | Beskrivning |
+|---------|-------------|
+| forks | Oka parallellism (25-50) |
+| pipelining | True minskar SSH overhead |
+| Fact caching | smart + jsonfile/redis |
+| async | Langvariga tasks i bakgrund |
+| Batching | Samla paket i en apt-task |
+| serial | Rolling deploy for sakerhet |
+
+**Kom ihag:**
+- forks=50 och pipelining=True forst
+- gather_facts: no om du inte behover facts
+- Batcha paketinstallationer
+- Anvand handlers istallet for multipla restarts
+- profile_tasks visar var tiden gar
 ''',
         },
         {
@@ -4010,79 +3427,81 @@ ansible-playbook site.yml
             "content": '''
 # Testing with Molecule
 
-## Varför behöver du kunna detta?
+Ansible-kod behover testas precis som all annan kod. Molecule ar standardverktyget for att testa Ansible roles - det skapar isolerade testmiljoer i Docker-containers, kor dina playbooks, verifierar resultatet och sakerstaller idempotens.
 
-Ansible-kod behöver testas:
-
-- Fånga buggar innan produktion
-- Säkerställ idempotens
-- Testa på flera OS
-- Automatisera i CI/CD
-
-Molecule är standard för Ansible testing.
-
----
-
-## Så fungerar det
-
-Molecule workflow:
-
-1. Skapa test-container/VM
-2. Kör playbook (converge)
-3. Testa idempotens
-4. Verifiera resultat
-5. Städa upp
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Installation
 
 ```bash
-# Installera Molecule
-pip install molecule
-
-# Med Docker driver (vanligast)
+# Installera Molecule med Docker driver
 pip install molecule molecule-docker
-
-# Med andra drivers
-pip install molecule-vagrant
-pip install molecule-ec2
-pip install molecule-podman
 
 # Verifiera
 molecule --version
 ```
 
----
+| Driver | Anvandning |
+|--------|------------|
+| docker | Snabbast, vanligast |
+| podman | Docker-alternativ |
+| vagrant | VMs for full systemtest |
+| ec2 | AWS-instanser |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Molecule Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  MOLECULE TEST SEQUENCE                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   lint ──► destroy ──► create ──► converge                     │
+│                                      │                          │
+│                                      ▼                          │
+│                              idempotence                        │
+│                                      │                          │
+│                                      ▼                          │
+│                              verify ──► destroy                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+| Steg | Beskrivning |
+|------|-------------|
+| lint | Validera YAML och Ansible syntax |
+| destroy | Ta bort eventuella gamla containers |
+| create | Skapa testcontainers |
+| converge | Kor playbook/role |
+| idempotence | Kor igen - ska inte andra nagot |
+| verify | Verifiera att allt fungerar |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Initiera Molecule
 
 ```bash
-# I befintlig role
 cd roles/webserver
 molecule init scenario -d docker
-
-# Skapar struktur:
-roles/webserver/
-├── molecule/
-│   └── default/
-│       ├── converge.yml
-│       ├── molecule.yml
-│       └── verify.yml
 ```
 
----
+```
+roles/webserver/
+└── molecule/
+    └── default/
+        ├── converge.yml      # Kor rolen
+        ├── molecule.yml      # Konfiguration
+        └── verify.yml        # Testa resultat
+```
 
-## Molecule configuration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## molecule.yml Konfiguration
 
 ```yaml
 # molecule/default/molecule.yml
 ---
-dependency:
-  name: galaxy
-  options:
-    requirements-file: requirements.yml
-
 driver:
   name: docker
 
@@ -4091,9 +3510,6 @@ platforms:
     image: geerlingguy/docker-ubuntu2204-ansible
     pre_build_image: true
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    cgroupns_mode: host
     command: /lib/systemd/systemd
 
   - name: debian-12
@@ -4102,84 +3518,45 @@ platforms:
     privileged: true
     command: /lib/systemd/systemd
 
-  - name: rockylinux-9
-    image: geerlingguy/docker-rockylinux9-ansible
-    pre_build_image: true
-    privileged: true
-    command: /lib/systemd/systemd
-
 provisioner:
   name: ansible
-  inventory:
-    host_vars:
-      ubuntu-22:
-        ansible_python_interpreter: /usr/bin/python3
   playbooks:
     converge: converge.yml
     verify: verify.yml
-  config_options:
-    defaults:
-      callbacks_enabled: profile_tasks
 
 verifier:
   name: ansible
 
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
-
 scenario:
-  name: default
   test_sequence:
-    - dependency
     - lint
-    - cleanup
     - destroy
-    - syntax
     - create
-    - prepare
     - converge
     - idempotence
     - verify
-    - cleanup
     - destroy
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Converge playbook
+## converge.yml och verify.yml
 
 ```yaml
-# molecule/default/converge.yml
+# converge.yml - Kor rolen
 ---
 - name: Converge
   hosts: all
   become: yes
 
-  vars:
-    nginx_port: 8080
-    nginx_sites:
-      - name: test
-        server_name: test.local
-        root: /var/www/test
-
-  pre_tasks:
-    - name: Update apt cache (Debian)
-      apt:
-        update_cache: yes
-      when: ansible_os_family == "Debian"
-
   roles:
     - role: webserver
+      vars:
+        nginx_port: 8080
 ```
 
----
-
-## Verify playbook
-
 ```yaml
-# molecule/default/verify.yml
+# verify.yml - Verifiera resultat
 ---
 - name: Verify
   hosts: all
@@ -4194,177 +3571,106 @@ scenario:
         that:
           - ansible_facts.services['nginx.service'].state == 'running'
         fail_msg: "nginx is not running"
-        success_msg: "nginx is running"
 
-    - name: Check nginx responds on port 8080
+    - name: Check nginx responds
       uri:
         url: http://localhost:8080
         status_code: 200
-      register: nginx_response
-
-    - name: Assert nginx response
-      assert:
-        that:
-          - nginx_response.status == 200
-
-    - name: Check config file exists
-      stat:
-        path: /etc/nginx/sites-enabled/test.conf
-      register: config_file
-
-    - name: Assert config exists
-      assert:
-        that:
-          - config_file.stat.exists
-          - config_file.stat.isreg
-
-    - name: Verify nginx config syntax
-      command: nginx -t
-      changed_when: false
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Molecule commands
+## Molecule Kommandon
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `molecule test` | Kor alla steg |
+| `molecule create` | Skapa containers |
+| `molecule converge` | Kor playbook |
+| `molecule idempotence` | Testa idempotens |
+| `molecule verify` | Kor verifiering |
+| `molecule login` | SSH till container |
+| `molecule destroy` | Ta bort containers |
+| `molecule list` | Lista status |
 
 ```bash
-# Fullständigt test (alla steg)
-molecule test
-
-# Skapa containers
+# Vanligt workflow under utveckling
 molecule create
-
-# Kör converge
 molecule converge
-
-# Testa idempotens
-molecule idempotence
-
-# Kör verify
+molecule login          # Debugga
+molecule converge       # Testa igen
 molecule verify
-
-# Logga in på container
-molecule login
-molecule login -h ubuntu-22           # Specifik host
-
-# Städa upp
 molecule destroy
-
-# Lista status
-molecule list
-
-# Debug
-molecule --debug test
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Prepare playbook
-
-```yaml
-# molecule/default/prepare.yml
-# Körs före converge för test-setup
----
-- name: Prepare
-  hosts: all
-  become: yes
-
-  tasks:
-    - name: Install test dependencies
-      apt:
-        name:
-          - curl
-          - netcat-openbsd
-        state: present
-      when: ansible_os_family == "Debian"
-
-    - name: Create test user
-      user:
-        name: testuser
-        state: present
-```
-
----
-
-## Multiple scenarios
+## Multiple Scenarios
 
 ```bash
-# Skapa flera scenarios
 molecule init scenario --scenario-name ubuntu-only -d docker
 molecule init scenario --scenario-name integration -d vagrant
+```
 
-# Struktur:
+```
 molecule/
 ├── default/
-│   ├── molecule.yml
-│   ├── converge.yml
-│   └── verify.yml
+│   └── molecule.yml
 ├── ubuntu-only/
-│   ├── molecule.yml
-│   ├── converge.yml
-│   └── verify.yml
+│   └── molecule.yml
 └── integration/
-    ├── molecule.yml
-    └── converge.yml
+    └── molecule.yml
 ```
 
 ```bash
-# Kör specifik scenario
 molecule test -s ubuntu-only
 molecule converge -s integration
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## CI/CD integration
+## CI/CD Integration
 
 ```yaml
 # .github/workflows/molecule.yml
 name: Molecule Test
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
   molecule:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro:
-          - ubuntu2204
-          - debian12
-          - rockylinux9
-
+        distro: [ubuntu2204, debian12]
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          pip install molecule molecule-docker ansible ansible-lint
-
-      - name: Run Molecule tests
-        run: molecule test
+      - run: pip install molecule molecule-docker ansible
+      - run: molecule test
         env:
           MOLECULE_DISTRO: ${{ matrix.distro }}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Molecule testar roles i isolerade containers
-2. `converge.yml` kör rolen
-3. `verify.yml` validerar resultat
-4. `idempotence` säkerställer repeat-safety
-5. Multiple scenarios för olika test-cases
+| Koncept | Beskrivning |
+|---------|-------------|
+| Molecule | Standard for Ansible role testing |
+| converge.yml | Kor rolen mot testcontainers |
+| verify.yml | Validera resultat med assert |
+| idempotence | Kor 2x - ska vara identiskt |
+| Scenarios | Olika testmiljoer (OS, drivers) |
+
+**Kom ihag:**
+- molecule test kor alla steg automatiskt
+- converge + login ar bra for debugging
+- Idempotens ar kritiskt - inga andringar vid andra korning
+- Multipla scenarios for olika OS/miljoer
+- Integrera i CI/CD for automatisk testning
 ''',
         },
         {
@@ -4374,32 +3680,38 @@ jobs:
             "content": '''
 # Callback Plugins
 
-## Varför behöver du kunna detta?
+Callback plugins lat dig utoka Ansibles beteende genom att haka pa events under korningen. Du kan anvanda inbyggda callbacks for profiling och JSON-output, eller skapa egna for att skicka notifikationer till Slack, logga till externa system eller integrera med monitoring-verktyg.
 
-Callback plugins utökar Ansibles output:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Anpassad logging
-- Integration med externa system
-- Performance profiling
-- Custom notifications
+## Callback Typer
 
-Utöka Ansible efter dina behov.
+| Typ | Beskrivning | Exempel |
+|-----|-------------|--------|
+| stdout | Andrar output-format | yaml, json, minimal |
+| notification | Skickar events externt | Slack, email |
+| aggregate | Samlar statistik | profile_tasks |
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   CALLBACK EVENTS                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   playbook_on_start                                            │
+│         │                                                       │
+│         ▼                                                       │
+│   play_on_start ──► task_on_start ──► runner_on_ok            │
+│                                    └─► runner_on_failed         │
+│         │                                                       │
+│         ▼                                                       │
+│   playbook_on_stats                                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Callbacks triggas vid events:
-
-1. Playbook start/end
-2. Play start/end
-3. Task start/end
-4. Host success/failure
-5. Stats
-
----
-
-## Inbyggda callbacks
+## Inbyggda Callbacks
 
 ```ini
 # ansible.cfg
@@ -4407,116 +3719,88 @@ Callbacks triggas vid events:
 # Aktivera flera callbacks
 callbacks_enabled = profile_tasks, timer, json
 
-# Stdout callback (en i taget)
+# Stdout callback (en at gangen)
 stdout_callback = yaml
-# Alternativ: default, minimal, dense, json, yaml
 ```
 
+| Callback | Beskrivning |
+|----------|-------------|
+| default | Standard output |
+| yaml | YAML-formaterad output |
+| json | JSON for parsing |
+| minimal | Minimal output |
+| profile_tasks | Tid per task |
+| profile_roles | Tid per role |
+| timer | Total koretid |
+
 ```bash
-# Lista tillgängliga callbacks
+# Lista alla callbacks
 ansible-doc -t callback -l
 
 # Visa dokumentation
 ansible-doc -t callback profile_tasks
-ansible-doc -t callback json
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Profile callbacks
+## Profile Callbacks
 
 ```ini
-# ansible.cfg - Performance profiling
+# ansible.cfg
 [defaults]
-callbacks_enabled = profile_tasks, profile_roles, timer
-
-# profile_tasks: Tid per task
-# profile_roles: Tid per role
-# timer: Total tid
+callbacks_enabled = profile_tasks, timer
 ```
 
-```bash
+```
 # Output med profile_tasks:
-# TASK [Install nginx] **************************
-# ok: [web1] => (item=nginx)
-# ok: [web1] => (item=curl)
-#
-# Tuesday 05 December 2024  10:30:00 +0000 (0:00:45.123)
-# ===============================================
-# Install nginx -------------------------------- 45.12s
-# Start service -------------------------------- 2.34s
-# -----------------------------------------------
-# Total ---------------------------------------- 47.46s
+TASK [Install nginx] ************************
+ok: [web1]
+
+Tuesday 05 December 2024 (0:00:45.123)
+===============================================
+Install nginx -------------------- 45.12s
+Start service -------------------- 2.34s
+-----------------------------------------------
+Total ---------------------------- 47.46s
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## JSON callback
+## JSON Callback
 
 ```bash
-# JSON output för parsing
+# JSON output for parsing
 ANSIBLE_STDOUT_CALLBACK=json ansible-playbook site.yml
 
-# Eller
+# Eller spara till fil
 ansible-playbook site.yml --stdout-callback json > output.json
 ```
 
 ```json
 {
-    "plays": [{
-        "play": {
-            "name": "Configure servers"
-        },
-        "tasks": [{
-            "task": {
-                "name": "Install nginx"
-            },
-            "hosts": {
-                "web1": {
-                    "changed": true,
-                    "msg": "Package installed"
-                }
-            }
-        }]
-    }],
-    "stats": {
-        "web1": {
-            "changed": 5,
-            "failures": 0,
-            "ok": 10
-        }
-    }
+  "plays": [{
+    "play": {"name": "Configure servers"},
+    "tasks": [{
+      "task": {"name": "Install nginx"},
+      "hosts": {
+        "web1": {"changed": true}
+      }
+    }]
+  }],
+  "stats": {
+    "web1": {"changed": 5, "ok": 10, "failures": 0}
+  }
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Custom callback plugin
+## Custom Callback Plugin
 
 ```python
 # callback_plugins/notify_slack.py
-
 from ansible.plugins.callback import CallbackBase
 import requests
-import json
-
-DOCUMENTATION = """
-callback: notify_slack
-type: notification
-short_description: Send notifications to Slack
-description:
-    - This callback sends play results to Slack
-requirements:
-    - requests
-options:
-    webhook_url:
-        description: Slack webhook URL
-        env:
-            - name: SLACK_WEBHOOK_URL
-        ini:
-            - section: callback_notify_slack
-              key: webhook_url
-"""
 
 class CallbackModule(CallbackBase):
     CALLBACK_VERSION = 2.0
@@ -4527,46 +3811,26 @@ class CallbackModule(CallbackBase):
     def __init__(self):
         super().__init__()
         self.webhook_url = None
-        self.playbook_name = None
-        self.results = []
 
-    def set_options(self, task_keys=None, var_options=None, direct=None):
-        super().set_options(task_keys=task_keys, var_options=var_options, direct=direct)
+    def set_options(self, **kwargs):
+        super().set_options(**kwargs)
         self.webhook_url = self.get_option('webhook_url')
 
-    def v2_playbook_on_start(self, playbook):
-        self.playbook_name = playbook._file_name
-
     def v2_playbook_on_stats(self, stats):
-        hosts = sorted(stats.processed.keys())
-
-        summary = {
-            'ok': 0,
-            'changed': 0,
-            'failures': 0,
-            'unreachable': 0
-        }
+        hosts = stats.processed.keys()
+        summary = {'ok': 0, 'failures': 0}
 
         for host in hosts:
             s = stats.summarize(host)
             summary['ok'] += s['ok']
-            summary['changed'] += s['changed']
             summary['failures'] += s['failures']
-            summary['unreachable'] += s['unreachable']
 
-        # Skicka till Slack
         color = 'good' if summary['failures'] == 0 else 'danger'
-
         payload = {
             'attachments': [{
                 'color': color,
-                'title': f'Ansible: {self.playbook_name}',
-                'fields': [
-                    {'title': 'OK', 'value': summary['ok'], 'short': True},
-                    {'title': 'Changed', 'value': summary['changed'], 'short': True},
-                    {'title': 'Failures', 'value': summary['failures'], 'short': True},
-                    {'title': 'Unreachable', 'value': summary['unreachable'], 'short': True}
-                ]
+                'title': 'Ansible Playbook',
+                'text': f"OK: {summary['ok']}, Failures: {summary['failures']}"
             }]
         }
 
@@ -4574,9 +3838,9 @@ class CallbackModule(CallbackBase):
             requests.post(self.webhook_url, json=payload)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Aktivera custom callback
+## Aktivera Custom Callback
 
 ```ini
 # ansible.cfg
@@ -4585,98 +3849,62 @@ callback_plugins = ./callback_plugins
 callbacks_enabled = notify_slack
 
 [callback_notify_slack]
-webhook_url = https://hooks.slack.com/services/XXX/YYY/ZZZ
+webhook_url = https://hooks.slack.com/services/XXX/YYY
 ```
 
 ```bash
-# Eller med environment variable
-export SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXX/YYY/ZZZ
+# Eller med environment
+export SLACK_WEBHOOK_URL=https://hooks.slack.com/...
 ansible-playbook site.yml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Callback events
+## Callback Events
+
+| Event | Metod | Nar |
+|-------|-------|-----|
+| Playbook start | `v2_playbook_on_start` | Borjan |
+| Play start | `v2_playbook_on_play_start` | Varje play |
+| Task start | `v2_playbook_on_task_start` | Varje task |
+| Success | `v2_runner_on_ok` | Task OK |
+| Failure | `v2_runner_on_failed` | Task misslyckades |
+| Stats | `v2_playbook_on_stats` | Slut med statistik |
 
 ```python
-# Tillgängliga callback-metoder
 class CallbackModule(CallbackBase):
-
-    # Playbook events
     def v2_playbook_on_start(self, playbook):
-        pass
-
-    def v2_playbook_on_play_start(self, play):
-        pass
-
-    def v2_playbook_on_stats(self, stats):
-        pass
-
-    # Task events
-    def v2_playbook_on_task_start(self, task, is_conditional):
+        # Playbook startar
         pass
 
     def v2_runner_on_ok(self, result):
-        pass
+        # Task lyckades
+        host = result._host.name
+        task = result._task.name
 
     def v2_runner_on_failed(self, result, ignore_errors=False):
-        pass
-
-    def v2_runner_on_skipped(self, result):
-        pass
-
-    def v2_runner_on_unreachable(self, result):
-        pass
-
-    # Handler events
-    def v2_playbook_on_handler_task_start(self, task):
+        # Task misslyckades
         pass
 ```
 
----
-
-## Log callback
-
-```python
-# callback_plugins/log_plays.py
-import os
-import datetime
-from ansible.plugins.callback import CallbackBase
-
-class CallbackModule(CallbackBase):
-    CALLBACK_VERSION = 2.0
-    CALLBACK_TYPE = 'notification'
-    CALLBACK_NAME = 'log_plays'
-    CALLBACK_NEEDS_WHITELIST = True
-
-    def __init__(self):
-        super().__init__()
-        self.log_file = os.getenv('ANSIBLE_LOG_FILE', '/var/log/ansible/plays.log')
-
-    def log(self, message):
-        timestamp = datetime.datetime.now().isoformat()
-        with open(self.log_file, 'a') as f:
-            f.write(f"{timestamp} - {message}\n")
-
-    def v2_playbook_on_start(self, playbook):
-        self.log(f"PLAYBOOK START: {playbook._file_name}")
-
-    def v2_runner_on_ok(self, result):
-        self.log(f"OK: {result._host.name} - {result._task.name}")
-
-    def v2_runner_on_failed(self, result, ignore_errors=False):
-        self.log(f"FAILED: {result._host.name} - {result._task.name}")
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Callbacks utökar Ansibles output
-2. `profile_tasks` för performance debugging
-3. Custom callbacks för integration
-4. Flera callbacks kan vara aktiva samtidigt
-5. `stdout_callback` för output-format
+| Koncept | Beskrivning |
+|---------|-------------|
+| stdout_callback | Andrar output-format (yaml, json) |
+| callbacks_enabled | Aktivera multipla callbacks |
+| profile_tasks | Performance debugging |
+| Custom callbacks | Integration med externa system |
+| Events | Haka pa playbook/task events |
+
+**Kom ihag:**
+- profile_tasks visar var tiden gar
+- JSON callback for maskinlasbar output
+- Custom callbacks for Slack/Teams notifikationer
+- Flera callbacks kan vara aktiva samtidigt
+- stdout_callback kan bara vara en at gangen
 ''',
         },
         {
@@ -4686,29 +3914,42 @@ class CallbackModule(CallbackBase):
             "content": '''
 # Ansible for Windows
 
-## Varför behöver du kunna detta?
+Ansible ar inte bara for Linux - Windows-hantering ar en kritisk del av enterprise automation. Hybrid-miljoer med bade Linux och Windows ar standard idag, och Ansible ger dig ett enhetligt satt att automatisera bada plattformar med samma playbooks och workflows.
 
-Windows är vanligt i enterprise:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Active Directory
-- IIS och .NET
-- SQL Server
-- Hybrid-miljöer
+## Windows Connection Architecture
 
-Ansible kan hantera Windows lika bra som Linux.
+```
++-------------------+       WinRM/HTTPS        +-------------------+
+|  Control Node     |------------------------->|  Windows Host     |
+|  (Linux)          |       Port 5986          |                   |
+|                   |                          |                   |
+|  ansible-playbook |       NTLM/Kerberos      |  PowerShell       |
+|  win_* modules    |       Authentication     |  Execution        |
++-------------------+                          +-------------------+
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Viktiga Windows Modules
 
-Windows-hantering via:
+| Module | Anvandning |
+|--------|------------|
+| win_feature | Installera Windows features/roles |
+| win_service | Hantera Windows services |
+| win_package | Installera MSI/EXE paket |
+| win_chocolatey | Pakethantering via Chocolatey |
+| win_copy | Kopiera filer till Windows |
+| win_template | Jinja2 templates till Windows |
+| win_regedit | Hantera Windows Registry |
+| win_shell | Kora PowerShell kommandon |
+| win_updates | Windows Update hantering |
+| win_domain_membership | Join/leave AD domain |
+| win_iis_* | IIS webbserver hantering |
+| win_dsc | PowerShell DSC integration |
 
-1. WinRM (Windows Remote Management)
-2. PowerShell modules
-3. Dedicated Windows modules
-4. Credentials och Kerberos
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## WinRM setup
 
@@ -4970,15 +4211,25 @@ tasks:
       Ensure: Present
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. WinRM måste konfigureras på Windows-servrar
-2. `pywinrm` Python-paket krävs
-3. Windows-specifika modules (`win_*`)
-4. Chocolatey för pakethantering
-5. DSC-integration för komplexa konfigurationer
+| Koncept | Detalj |
+|---------|--------|
+| WinRM | Windows motsvarighet till SSH, port 5986 for HTTPS |
+| win_* modules | Windows-specifik automation med PowerShell backend |
+| Chocolatey | Pakethantering for Windows via win_chocolatey |
+| DSC integration | PowerShell Desired State Configuration via win_dsc |
+| AD automation | Domain join, users, groups med dedikerade modules |
+| IIS hantering | win_iis_website, win_iis_webapppool for webbservrar |
+
+**Kom ihag:**
+- WinRM maste konfigureras pa Windows-hosten forst
+- HTTPS (port 5986) ar rekommenderat for produktion
+- NTLM eller Kerberos for authentication
+- win_* modules motsvarar Linux modules men for Windows
+- pywinrm maste installeras pa control node
 ''',
         },
         {
@@ -4988,31 +4239,52 @@ tasks:
             "content": '''
 # Ansible AWX
 
-## Varför behöver du kunna detta?
+AWX ar den oppna kallkods-versionen av Red Hat Ansible Tower - en kraftfull plattform som ger dig visuell hantering, schemaläggning och API-access for dina Ansible automationer. For team och enterprise ar AWX det som gor Ansible till en skalbar automation platform.
 
-AWX är Ansibles web UI och API:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Visuell job scheduling
-- Role-based access control
-- Audit logging
-- REST API
-- Inventory sync
+## AWX Architecture Overview
 
-Enterprise-ready automation platform.
+```
++------------------+     +------------------+     +------------------+
+|   Web Browser    |     |   CI/CD System   |     |   Custom Apps    |
++--------+---------+     +--------+---------+     +--------+---------+
+         |                        |                        |
+         v                        v                        v
++--------+------------------------+------------------------+---------+
+|                           AWX REST API                             |
++--------------------------------------------------------------------+
+|  Job Templates  |  Workflows  |  Inventories  |  Credentials       |
++--------------------------------------------------------------------+
+|                       Execution Engine                             |
+|    +------------+  +------------+  +------------+                  |
+|    | ansible-   |  | ansible-   |  | ansible-   |                  |
+|    | playbook   |  | playbook   |  | playbook   |                  |
+|    +------------+  +------------+  +------------+                  |
++--------------------------------------------------------------------+
+         |                    |                     |
+         v                    v                     v
+    +---------+         +---------+          +---------+
+    |  Linux  |         | Windows |          |  Cloud  |
+    |  Hosts  |         |  Hosts  |          |   VMs   |
+    +---------+         +---------+          +---------+
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## AWX Komponenter
 
-AWX components:
+| Komponent | Beskrivning |
+|-----------|-------------|
+| Job Templates | Forutdefinierade playbook-korningar med parametrar |
+| Workflows | Koppla ihop flera job templates i sekvens/parallell |
+| Inventories | Dynamisk eller statisk host-hantering |
+| Credentials | Sakert lagrade nycklar och losenord |
+| Projects | Git repos med playbooks synkade automatiskt |
+| Schedules | Cron-liknande schemaläggning av jobs |
+| RBAC | Role-based access control for team |
 
-1. Web UI för management
-2. REST API för integration
-3. Job templates och workflows
-4. Inventory sources
-5. Credential management
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Installation med Docker
 
@@ -5285,15 +4557,25 @@ print(f"Job ID: {job['id']}")
     enabled: yes
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. AWX ger web UI och API för Ansible
-2. Job templates och workflows för orchestration
-3. REST API för CI/CD integration
-4. Inventory sources synkar dynamiskt
-5. Centraliserad credential management
+| Koncept | Detalj |
+|---------|--------|
+| AWX | Open source version av Ansible Tower med Web UI |
+| Job Templates | Forutdefinierade playbook-korningar med parametrar |
+| Workflows | Koppla ihop jobs i sekvens eller parallellt |
+| REST API | Programmatisk access for CI/CD integration |
+| Inventory Sources | Dynamisk sync fran AWS, GCP, VMware etc |
+| Credentials | Centraliserad och sakert lagrad credential management |
+
+**Kom ihag:**
+- Docker eller Kubernetes for AWX installation
+- awx.awx collection for programmatisk hantering
+- REST API for integration med CI/CD pipelines
+- Inventory sources synkar automatiskt vid job launch
+- RBAC ger granular access control for team
 ''',
         },
         {
@@ -5303,30 +4585,39 @@ print(f"Job ID: {job['id']}")
             "content": '''
 # Security Best Practices
 
-## Varför behöver du kunna detta?
+Med stor makt kommer stort ansvar - Ansible har tillgang till alla servrar och hanterar kansliga credentials. Sakerhetsmisstag kan fa katastrofala konsekvenser. Denna nod gar igenom hur du bygger in sakerhet fran borjan och foljer best practices for enterprise-automation.
 
-Ansible har stor makt - och ansvar:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Tillgång till alla servrar
-- Hanterar känsliga credentials
-- Kan ändra säkerhetskonfigurationer
-- Audit-krav i enterprise
+## Security Checklist
 
-Säkerhet måste byggas in från början.
+```
++------------------------------------------------------------------+
+|                    ANSIBLE SECURITY LAYERS                       |
++------------------------------------------------------------------+
+|  1. Credentials     | Vault, no plaintext, rotate regularly     |
+|  2. SSH Hardening   | Key-only auth, dedicated users            |
+|  3. Least Privilege | Minimal sudo, specific commands           |
+|  4. Audit Logging   | Track all changes, who did what           |
+|  5. Secret Scanning | CI/CD checks for exposed secrets          |
+|  6. Network         | Bastion hosts, encrypted connections      |
++------------------------------------------------------------------+
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Security Practices Oversikt
 
-Säkerhetsområden:
+| Omrade | Best Practice |
+|--------|---------------|
+| Vault | Separata losenord per miljo (prod/dev/staging) |
+| SSH | Key-only auth, dedicated deploy user |
+| Become | Begransad sudo, specifika kommandon |
+| Logging | no_log: true for kanslig data |
+| Audit | Custom callbacks for compliance |
+| CI/CD | Secret scanning i pipelines |
 
-1. Credential management
-2. SSH härdning
-3. Playbook security
-4. Audit och logging
-5. Network security
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Vault best practices
 
@@ -5581,15 +4872,25 @@ jobs:
             grep -v "!vault" && exit 1 || exit 0
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Vault med separata lösenord per miljö
-2. `no_log: true` för känslig data
-3. Dedikerade deploy-användare med begränsad sudo
-4. Audit logging med custom callback
-5. Secret scanning i CI/CD
+| Koncept | Detalj |
+|---------|--------|
+| Vault | Separata losenord per miljo, krypterade secrets |
+| no_log | Dolj kanslig output i ansible logs |
+| Deploy user | Dedikerad anvandare med minimal sudo-rattigheter |
+| Audit callback | Custom plugin for compliance logging |
+| Secret scanning | Automatisk check i CI/CD for lakta secrets |
+| SSH hardening | Key-only auth, disable root login |
+
+**Kom ihag:**
+- Aldrig credentials i plaintext, alltid Vault
+- no_log: true pa alla tasks med kanslig data
+- Dedicerad deploy user med begransad sudo
+- Audit trail ar krav for enterprise compliance
+- Secret scanning i varje pull request
 ''',
         },
         {
@@ -5599,30 +4900,51 @@ jobs:
             "content": '''
 # Enterprise Patterns
 
-## Varför behöver du kunna detta?
+Nar Ansible skalar fran ett litet team till enterprise med tusentals servrar och multipla team kravs helt nya patterns. Denna nod gar igenom beproade metoder for repository-struktur, multi-team workflows, self-service automation och compliance - allt som kravs for att Ansible ska fungera i stor skala.
 
-Enterprise-skala kräver:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- Skalbarhet över tusentals servrar
-- Multi-team samarbete
-- Compliance och governance
-- Self-service automation
+## Enterprise Patterns Overview
 
-Patterns som fungerar i stor skala.
+```
++--------------------------------------------------------------------+
+|                   ENTERPRISE ANSIBLE ARCHITECTURE                  |
++--------------------------------------------------------------------+
+|                                                                    |
+|  +----------------+     +----------------+     +----------------+  |
+|  |  Dev Team      |     |  SRE Team      |     |  Security Team |  |
+|  |  /staging/     |     |  /production/  |     |  /security/    |  |
+|  +-------+--------+     +-------+--------+     +-------+--------+  |
+|          |                      |                      |           |
+|          v                      v                      v           |
+|  +-------+----------------------+----------------------+--------+  |
+|  |              Git Repository (CODEOWNERS)                     |  |
+|  |  /roles/  /playbooks/  /inventory/  /collections/            |  |
+|  +-------+----------------------+----------------------+--------+  |
+|          |                      |                      |           |
+|          v                      v                      v           |
+|  +-------+--------+     +-------+--------+     +-------+--------+  |
+|  |  AWX Staging   |     |  AWX Prod      |     |  Compliance    |  |
+|  |  Self-Service  |     |  Controlled    |     |  Automation    |  |
+|  +----------------+     +----------------+     +----------------+  |
+|                                                                    |
++--------------------------------------------------------------------+
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Enterprise Patterns Checklist
 
-Enterprise patterns:
+| Pattern | Beskrivning |
+|---------|-------------|
+| Monorepo | En repository for all automation med tydlig struktur |
+| CODEOWNERS | Team-ansvar for specifika mappar kravs review |
+| Self-Service | AWX surveys lar anvandare deploya utan CLI |
+| Canary Deploy | Rulla ut gradvis: 1 server, 25%, sedan 100% |
+| Compliance | Automatiska audits och rapporter som kod |
+| GitOps | Deklarativ automation synkad fran Git |
 
-1. Repository struktur
-2. Role-based access
-3. Self-service portaler
-4. Compliance automation
-5. Multi-tenant arkitektur
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Monorepo struktur
 
@@ -5957,15 +5279,25 @@ spec:
       restartPolicy: OnFailure
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Monorepo med tydlig struktur
-2. CODEOWNERS för team-ansvar
-3. Self-service via AWX surveys
-4. Compliance som kod
-5. GitOps för deklarativ automation
+| Koncept | Detalj |
+|---------|--------|
+| Monorepo | En repo for all automation med roles/playbooks/inventory |
+| CODEOWNERS | GitHub/GitLab file som kraver team-review for specifika mappar |
+| Self-Service | AWX surveys lar anvandare deploya utan terminal |
+| Canary | serial: [1, "25%", "100%"] for gradvis utrullning |
+| Compliance | Automatiska CIS benchmark checks som playbooks |
+| GitOps | ArgoCD + Kubernetes Job for kontinuerlig sync |
+
+**Kom ihag:**
+- Monorepo struktur med tydlig separation av concerns
+- CODEOWNERS skapar automatisk review gate per team
+- AWX surveys ger self-service for developers
+- Canary deployments minimerar risk vid utrullning
+- Compliance automation ar krav for enterprise
 ''',
         },
     ],
