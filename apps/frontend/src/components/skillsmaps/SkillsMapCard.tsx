@@ -122,7 +122,7 @@ export function SkillsMapCard({
     const isComplete = status === "complete"
 
     return (
-        <Link href={`/skillsmaps/${slug}`} className="block">
+        <Link prefetch={false} href={`/skillsmaps/${slug}`} className="block">
             <motion.div
                 className={cn(
                     "group relative overflow-hidden",

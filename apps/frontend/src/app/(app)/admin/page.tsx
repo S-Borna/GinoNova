@@ -429,7 +429,7 @@ function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => vo
                     <Button variant="outline" onClick={onClose}>
                         Stäng
                     </Button>
-                    <Link href={`/admin/users/${user.id}`}>
+                    <Link prefetch={false} href={`/admin/users/${user.id}`}>
                         <Button className="bg-purple-600 hover:bg-purple-500">
                             <Edit className="w-4 h-4 mr-2" />
                             Redigera profil
@@ -793,7 +793,7 @@ export default function AdminCommandCenter() {
                                     )}
                                 />
                             </div>
-                            <Link href="/admin/users">
+                            <Link prefetch={false} href="/admin/users">
                                 <Button variant="outline" size="sm" className="border-zinc-700">
                                     Se alla
                                     <ChevronRight className="w-4 h-4 ml-1" />

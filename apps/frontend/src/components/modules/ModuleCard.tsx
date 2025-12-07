@@ -370,7 +370,7 @@ export function ModuleCard({
     }
 
     return (
-        <Link href={`/modules/${id}`} className="block">
+        <Link prefetch={false} href={`/modules/${id}`} className="block">
             {cardContent}
         </Link>
     )

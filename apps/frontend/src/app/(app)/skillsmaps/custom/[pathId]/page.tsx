@@ -78,7 +78,7 @@ function CustomPathModuleCard({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
         >
-            <Link href={`/skillsmaps/${module.slug}`}>
+            <Link prefetch={false} href={`/skillsmaps/${module.slug}`}>
                 <motion.div
                     className={cn(
                         "group relative overflow-hidden rounded-2xl",
@@ -403,7 +403,7 @@ export default function CustomPathPage() {
                             transition={{ delay: 0.3 }}
                             className="mt-6"
                         >
-                            <Link href={`/skillsmaps/${nextModule.slug}`}>
+                            <Link prefetch={false} href={`/skillsmaps/${nextModule.slug}`}>
                                 <Button
                                     className={cn(
                                         "rounded-xl",

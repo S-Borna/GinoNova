@@ -120,7 +120,7 @@ function NavButton({ task, moduleId, direction }: NavButtonProps) {
 
     return (
         <div className="flex-1">
-            <Link href={`/modules/${moduleId}/tasks/${task.id}`}>
+            <Link prefetch={false} href={`/modules/${moduleId}/tasks/${task.id}`}>
                 <Button
                     variant="ghost"
                     className={cn(

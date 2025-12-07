@@ -7,7 +7,7 @@ module.exports = {
     // 🛡️ SECURITY: Disable source maps in production
     productionBrowserSourceMaps: false,
 
-    // 🛡️ SECURITY: Minimize exposure
+    // 🛡️ SECURITY: Minimize exposure - hide all internal structure
     poweredByHeader: false,
 
     // 🛡️ SECURITY: Remove ALL console output in production
@@ -15,11 +15,11 @@ module.exports = {
         removeConsole: process.env.NODE_ENV === 'production',
     },
 
-    // 📦 AGGRESSIVE OPTIMIZATION: Maximum bundling for minimal network requests
+    // 🛡️ SECURITY: Disable prefetching - stops DevTools from revealing routes
     experimental: {
         optimizePackageImports: [
             'lucide-react',
-            '@radix-ui/react-icons', 
+            '@radix-ui/react-icons',
             'framer-motion',
             'date-fns',
             '@hookform/resolvers',
@@ -36,13 +36,12 @@ module.exports = {
             config.optimization.splitChunks = {
                 chunks: 'all',
                 minSize: 0,
-                maxInitialRequests: 3, // Only 3 JS files max!
+                maxInitialRequests: 3,
                 maxAsyncRequests: 3,
                 cacheGroups: {
                     default: false,
                     vendors: false,
                     defaultVendors: false,
-                    // ONE file for all vendor code
                     vendor: {
                         name: 'vendor',
                         test: /[\\/]node_modules[\\/]/,
@@ -50,20 +49,33 @@ module.exports = {
                         priority: 20,
                         enforce: true,
                     },
-                    // ONE file for all app code
                     app: {
                         name: 'app',
                         test: /[\\/]src[\\/]/,
-                        chunks: 'all', 
+                        chunks: 'all',
                         priority: 10,
                         enforce: true,
                         minChunks: 1,
                     },
                 },
             };
-            
-            // Disable runtime chunk splitting
             config.optimization.runtimeChunk = false;
+            
+            // 🛡️ SECURITY: Mangle/obfuscate function and variable names
+            if (config.optimization.minimizer) {
+                config.optimization.minimizer.forEach((minimizer) => {
+                    if (minimizer.constructor.name === 'TerserPlugin') {
+                        minimizer.options.terserOptions = {
+                            ...minimizer.options.terserOptions,
+                            mangle: true,
+                            compress: {
+                                drop_console: true,
+                                drop_debugger: true,
+                            },
+                        };
+                    }
+                });
+            }
         }
         return config;
     },

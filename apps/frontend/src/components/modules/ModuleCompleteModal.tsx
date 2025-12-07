@@ -349,7 +349,7 @@ export function ModuleCompleteModal({
                                             boxShadow: `0 4px 14px ${trackColor}40`,
                                         }}
                                     >
-                                        <Link href={`/modules/${nextModule.slug}`}>
+                                        <Link prefetch={false} href={`/modules/${nextModule.slug}`}>
                                             Start Next Module
                                             <ChevronRight className="ml-1 w-4 h-4" />
                                         </Link>
@@ -359,7 +359,7 @@ export function ModuleCompleteModal({
                                         asChild
                                         className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500"
                                     >
-                                        <Link href="/modules">
+                                        <Link prefetch={false} href="/modules">
                                             View All Modules
                                             <ChevronRight className="ml-1 w-4 h-4" />
                                         </Link>

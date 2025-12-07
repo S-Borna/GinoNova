@@ -89,7 +89,7 @@ export function ModulesPreview({
                         </div>
                         <p className="text-sm font-medium text-gray-900 mb-1">No modules available</p>
                         <p className="text-xs text-gray-500 mb-4">Modules will appear here once created.</p>
-                        <Link href="/modules/new">
+                        <Link prefetch={false} href="/modules/new">
                             <Button variant="outline" size="sm" className="text-xs">
                                 Create Module
                             </Button>
@@ -141,7 +141,7 @@ export function ModulesPreview({
                                         </div>
 
                                         {/* Continue Button */}
-                                        <Link href={`/modules/${module.id}`}>
+                                        <Link prefetch={false} href={`/modules/${module.id}`}>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"

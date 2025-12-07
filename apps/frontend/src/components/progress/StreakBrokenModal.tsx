@@ -189,7 +189,7 @@ export function StreakBrokenModal({
                                     size="lg"
                                     className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold"
                                 >
-                                    <Link href="/dashboard">
+                                    <Link prefetch={false} href="/dashboard">
                                         <RefreshCw className="mr-2 w-4 h-4" />
                                         Start New Streak
                                     </Link>

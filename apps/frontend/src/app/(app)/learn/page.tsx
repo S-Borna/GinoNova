@@ -70,7 +70,7 @@ function PathCard({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + index * 0.15, duration: 0.5 }}
         >
-            <Link href={href} className="block group">
+            <Link prefetch={false} href={href} className="block group">
                 <div
                     className={cn(
                         "relative overflow-hidden rounded-3xl",

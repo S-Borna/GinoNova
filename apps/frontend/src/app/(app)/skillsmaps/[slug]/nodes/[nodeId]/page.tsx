@@ -128,7 +128,7 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
             </h2>
             <p className="text-zinc-400 mb-6">{error}</p>
             <div className="flex gap-3 justify-center">
-                <Link href={`/skillsmaps/${slug}`}>
+                <Link prefetch={false} href={`/skillsmaps/${slug}`}>
                     <Button variant="outline" className="rounded-xl">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Tillbaka till SkillsMap
