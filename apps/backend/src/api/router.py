@@ -71,7 +71,7 @@ api_router.include_router(career_router, tags=["career"])
 api_router.include_router(bookmarks_router, tags=["bookmarks"])
 api_router.include_router(quiz_router, tags=["quiz"])
 api_router.include_router(study_router, tags=["study"])
-api_router.include_router(studyflow_cards_router, tags=["studyflow-cards"])
+api_router.include_router(studyflow_cards_router, prefix="/studyflow", tags=["studyflow-practice"])
 
 # Phase 22-28: Final production-ready routes
 api_router.include_router(observability_router, tags=["observability"])
