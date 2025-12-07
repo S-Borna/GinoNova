@@ -93,6 +93,10 @@ async def generate_quiz(
     - **count**: Number of questions (1-20)
     - **difficulty**: beginner, intermediate, or advanced
     - **focus_area**: Optional specific topic to focus on
+
+    Quiz content is generated from the ACTUAL module node content,
+    which includes Docker-style V3 formatting with tables, ASCII diagrams,
+    code examples, and practical DevOps knowledge.
     """
     # Check access
     if not check_quiz_access(current_user):
@@ -101,27 +105,24 @@ async def generate_quiz(
             detail="AI Quiz Generator is a premium feature. Coming soon!"
         )
 
-    # Import service and repository
-    from src.services.quiz_service import generate_quiz as gen_quiz
-    from src.db.module_repository import get_module_by_slug
+    # Import service
+    from src.services.quiz_service import generate_quiz as gen_quiz, get_module_content_for_quiz
 
-    # Get module from in-memory repository
-    module = get_module_by_slug(request.module_slug)
-    if not module:
+    # Get module content from ACTUAL node data (not just metadata)
+    content = get_module_content_for_quiz(request.module_slug)
+    if not content:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Module '{request.module_slug}' not found"
         )
 
-    # Build content from module data
-    module_title = module.name
-    content = f"""Module: {module.name}
-Description: {getattr(module, 'description', 'DevOps learning module')}
+    # Extract module title from content
+    module_title = request.module_slug.replace("-", " ").title()
+    if content.startswith("# Module:"):
+        first_line = content.split("\n")[0]
+        module_title = first_line.replace("# Module:", "").strip()
 
-This module covers {module.name} concepts and practices in DevOps.
-Topics include configuration, best practices, troubleshooting, and real-world applications."""
-
-    # Generate quiz
+    # Generate quiz from actual node content
     result = gen_quiz(
         module_title=module_title,
         content=content,

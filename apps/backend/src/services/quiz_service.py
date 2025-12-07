@@ -140,27 +140,45 @@ Important:
 def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     """
     Get module content suitable for quiz generation.
-    Uses in-memory module_repository.
+    Retrieves ACTUAL node content from the module's tasks.
 
     Args:
         module_slug: Module slug to get content for
 
     Returns:
-        Combined content string or None
+        Combined content string from all nodes or None
     """
-    from src.db.module_repository import get_module_by_slug
+    from src.db.seeds.modules import ALL_MODULES
 
-    module = get_module_by_slug(module_slug)
-    if not module:
+    # Find the module by slug
+    module_data = None
+    for mod in ALL_MODULES:
+        if mod.get("slug", "").lower() == module_slug.lower():
+            module_data = mod
+            break
+
+    if not module_data:
         return None
 
-    # Build content string from module data
+    # Build content string from all node contents
     content_parts = [
-        f"Module: {module.name}",
-        f"Description: {getattr(module, 'description', 'DevOps learning module')}",
+        f"# Module: {module_data.get('name', module_slug)}",
+        f"Description: {module_data.get('description', 'DevOps learning module')}",
         "",
-        f"This module covers {module.name} concepts and practices.",
-        "Key topics include configuration, best practices, troubleshooting, and real-world applications."
     ]
 
-    return "\n".join(content_parts)
+    # Extract content from each task/node
+    tasks = module_data.get("tasks", [])
+    for i, task in enumerate(tasks, 1):
+        title = task.get("title", f"Node {i}")
+        node_content = task.get("content", "")
+
+        # Add node title and first ~2000 chars of content to avoid token limits
+        content_parts.append(f"\n## Node {i}: {title}")
+        if node_content:
+            # Truncate each node to ~2000 chars to fit within limits
+            content_parts.append(node_content[:2000])
+
+    # Return combined content (limit total to ~12000 chars for API)
+    combined = "\n".join(content_parts)
+    return combined[:12000]
