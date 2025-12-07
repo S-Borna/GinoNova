@@ -62,7 +62,7 @@ function StudySessionSetup() {
     const [customCount, setCustomCount] = useState<string>("")
     const [shuffle, setShuffle] = useState(true)
 
-    // Hämta modulinformation
+    // Hämta modulinformation (parallellt för snabbhet)
     useEffect(() => {
         async function fetchModuleInfo() {
             if (selectedModules.length === 0) {
@@ -72,22 +72,24 @@ function StudySessionSetup() {
 
             try {
                 setLoading(true)
-                const infos: ModuleInfo[] = []
-
-                for (const slug of selectedModules) {
+                
+                // Parallella anrop istället för sekventiella
+                const promises = selectedModules.map(async (slug) => {
                     const res = await fetch(`${API_BASE_URL}/api/study/modules/${slug}`)
                     if (res.ok) {
                         const data = await res.json()
-                        infos.push({
+                        return {
                             slug,
                             title: data.title,
                             flashcard_count: data.flashcard_count || 90,
                             quiz_count: data.quiz_count || 60,
-                        })
+                        }
                     }
-                }
+                    return null
+                })
 
-                setModuleInfos(infos)
+                const results = await Promise.all(promises)
+                setModuleInfos(results.filter((r): r is ModuleInfo => r !== null))
             } catch (err) {
                 console.error("Error fetching module info:", err)
             } finally {
@@ -144,8 +146,21 @@ function StudySessionSetup() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500" />
+            <div className="min-h-screen bg-zinc-950 text-white p-8">
+                <div className="max-w-2xl mx-auto">
+                    {/* Skeleton header */}
+                    <div className="mb-8">
+                        <div className="h-4 w-24 bg-zinc-800 rounded mb-4 animate-pulse" />
+                        <div className="h-8 w-64 bg-zinc-800 rounded animate-pulse" />
+                    </div>
+                    
+                    {/* Skeleton cards */}
+                    <div className="space-y-6">
+                        <div className="h-32 bg-zinc-900/50 rounded-2xl border border-zinc-800 animate-pulse" />
+                        <div className="h-32 bg-zinc-900/50 rounded-2xl border border-zinc-800 animate-pulse" />
+                        <div className="h-32 bg-zinc-900/50 rounded-2xl border border-zinc-800 animate-pulse" />
+                    </div>
+                </div>
             </div>
         )
     }
