@@ -157,6 +157,48 @@ STUDY_MODULES = {
         "icon": "Box",
         "get_data": get_docker_v2_data
     },
+    "bash-scripting": {
+        "slug": "bash-scripting",
+        "title": "Bash Scripting",
+        "description": "Automatisering med Bash-skript",
+        "icon": "Code",
+        "get_data": lambda: []
+    },
+    "kubernetes": {
+        "slug": "kubernetes",
+        "title": "Kubernetes",
+        "description": "Container-orkestrering med K8s",
+        "icon": "Layers",
+        "get_data": lambda: []
+    },
+    "git-version-control": {
+        "slug": "git-version-control",
+        "title": "Git & GitHub",
+        "description": "Versionshantering och samarbete",
+        "icon": "GitBranch",
+        "get_data": lambda: []
+    },
+    "aws-cloud": {
+        "slug": "aws-cloud",
+        "title": "AWS Cloud",
+        "description": "Amazon Web Services för DevOps",
+        "icon": "Cloud",
+        "get_data": lambda: []
+    },
+    "azure-cloud": {
+        "slug": "azure-cloud",
+        "title": "Azure Cloud",
+        "description": "Microsoft Azure för DevOps",
+        "icon": "Cloud",
+        "get_data": lambda: []
+    },
+    "cicd-pipelines": {
+        "slug": "cicd-pipelines",
+        "title": "CI/CD Pipelines",
+        "description": "Kontinuerlig integration och leverans",
+        "icon": "Server",
+        "get_data": lambda: []
+    },
 }
 
 
