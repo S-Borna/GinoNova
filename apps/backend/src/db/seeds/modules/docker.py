@@ -837,170 +837,476 @@ done
 """,
         },
         {
-            "title": "Container Lifecycle Management",
-            "slug": "container-lifecycle-management",
+            "title": "IP-adresser: Privat vs Publik",
+            "slug": "ip-addresses-private-public",
             "difficulty": "easy",
-            "estimated_minutes": 40,
-            "xp_reward": 70,
-            "content": """# Container Lifecycle Management
+            "estimated_minutes": 45,
+            "xp_reward": 75,
+            "content": """# IP-adresser: Privat vs Publik
 
-## Varför behöver du kunna detta?
+## 🎯 Varför IP-kunskap är kritiskt för DevOps
 
-Containers har en livscykel precis som processer. Du måste förstå:
+IP-adresser är grunden för all nätverkskommunikation. Som DevOps-ingenjör använder du dem för:
 
-- **Hur du startar och stoppar** containers korrekt
-- **Skillnaden mellan stop och kill** för graceful shutdown
-- **Hur du felsöker** containers som beter sig konstigt
+| Användningsområde | Beskrivning |
+|-------------------|-------------|
+| **Cloud infrastructure** | Konfigurera VPC, subnets, routing |
+| **Security** | Brandväggsregler, access control |
+| **Troubleshooting** | Felsöka nätverksproblem |
+| **Load balancing** | Distribuera trafik mellan servrar |
+| **Container networking** | Docker och Kubernetes nätverk |
+| **Firewall rules** | Tillåta/blockera specifika adresser |
 
 ---
 
-## Container States
+## 📊 IP-adress Grunderna
+
+### IPv4 Format
 
 ```bash
-┌─────────┐     docker create     ┌─────────┐
-│         │ ──────────────────▶   │ Created │
-│  Image  │                       └────┬────┘
-│         │                            │ docker start
-└─────────┘                            ▼
-                                 ┌─────────┐
-              docker run ──────▶ │ Running │ ◀─── docker restart
-                                 └────┬────┘
-                                      │
-                    ┌─────────────────┼─────────────────┐
-                    │ docker stop     │ docker kill     │ exit/crash
-                    ▼                 ▼                 ▼
-              ┌─────────┐       ┌─────────┐       ┌─────────┐
-              │ Exited  │       │ Exited  │       │ Exited  │
-              │ (0)     │       │ (137)   │       │ (1)     │
-              └─────────┘       └─────────┘       └─────────┘
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📐 IPv4 STRUKTUR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# IPv4 = 32 bitar = 4 bytes
+# Format: xxx.xxx.xxx.xxx (dotted decimal)
+# Range: 0.0.0.0 till 255.255.255.255
+# Totalt: ~4,3 miljarder adresser
+
+# Exempel:
+192.168.1.100
+│   │   │  │
+│   │   │  └── Host (0-255)
+│   │   └── Subnet (0-255)
+│   └── Subnet (0-255)
+└── Network (0-255)
+```
+
+### IPv6 Format
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📐 IPv6 STRUKTUR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# IPv6 = 128 bitar = 16 bytes
+# Format: xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx
+# Totalt: ~340 undecillion adresser (praktiskt taget oändligt)
+
+# Exempel:
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+# Förkortad form (ta bort ledande nollor, :: för sekvens av nollor):
+2001:db8:85a3::8a2e:370:7334
 ```
 
 ---
 
-## Starta Containers
+## 🏠 Privata IP-adresser
+
+Privata IP-adresser är som **"interna telefonnummer"** på ett företag - de fungerar bara inom ditt lokala nätverk och kan inte nås direkt från internet. De är gratis att använda och kan återanvändas i olika nätverk.
+
+### RFC 1918 - Privata IP-områden
+
+RFC 1918 definierar tre områden med privata IP-adresser som alla kan använda fritt:
 
 ```bash
-# Kör container i förgrunden
-docker run nginx                 # Blockerar terminalen
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🏢 CLASS A: 10.0.0.0/8 (Stora organisationer)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Range: 10.0.0.0 - 10.255.255.255
+# Antal adresser: 16,777,216 (över 16 miljoner!)
+# /8 betyder: de första 8 bitarna är fixerade (10.x.x.x)
 
-# Kör i bakgrunden (detached)
-docker run -d nginx              # Returnerar container ID
+# Användning: Stora företag, molnleverantörer (AWS, Azure, GCP)
+# Exempel: 10.0.0.1, 10.1.2.3, 10.255.255.254
 
-# Kör med namn
-docker run -d --name webserver nginx
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🏬 CLASS B: 172.16.0.0/12 (Medelstora organisationer)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Range: 172.16.0.0 - 172.31.255.255
+# Antal adresser: 1,048,576 (över en miljon)
+# /12 betyder: de första 12 bitarna är fixerade (172.16-31.x.x)
 
-# Kör och ta bort när den stoppar
-docker run --rm nginx            # Perfekt för engångsjobb
+# Användning: Medelstora företag, avancerade hemnätverk
+# Exempel: 172.16.0.1, 172.20.5.10, 172.31.255.254
 
-# Kör interaktivt
-docker run -it ubuntu bash       # -i = interactive, -t = tty
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🏠 CLASS C: 192.168.0.0/16 (Hem och små kontor)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Range: 192.168.0.0 - 192.168.255.255
+# Antal adresser: 65,536 (över 65 tusen)
+# /16 betyder: de första 16 bitarna är fixerade (192.168.x.x)
+
+# Användning: Hemrouter (standard!), små kontor
+# Exempel: 192.168.1.1 (router), 192.168.1.100 (dator)
+```
+
+### Sammanfattning privata områden
+
+| Klass | CIDR | Range | Antal adresser | Användning |
+|-------|------|-------|----------------|------------|
+| A | 10.0.0.0/8 | 10.0.0.0 - 10.255.255.255 | 16,777,216 | Stora företag, cloud |
+| B | 172.16.0.0/12 | 172.16.0.0 - 172.31.255.255 | 1,048,576 | Medelstora företag |
+| C | 192.168.0.0/16 | 192.168.0.0 - 192.168.255.255 | 65,536 | Hem, små kontor |
+
+### Egenskaper för privata IP
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ FÖRDELAR MED PRIVATA IP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ❌ Inte routbara på internet - fungerar bara lokalt
+# ♻️ Återanvändbara - samma IP kan finnas i olika nätverk
+# 🔒 Säkrare - inte direkt synliga från internet
+# 💰 Gratis - ingen registrering behövs
+# ⚠️ Kräver NAT för att nå internet
+```
+
+### Vanliga privata adresser
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 LOCALHOST (loopback - alltid din egen dator)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+127.0.0.1       # IPv4 localhost
+::1             # IPv6 localhost
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🚪 VANLIGA GATEWAY-ADRESSER (routern)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+192.168.1.1     # Vanligast för hemrouter
+192.168.0.1     # Alternativ
+10.0.0.1        # Företagsmiljö
+172.16.0.1      # Företagsmiljö
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐳 DOCKER & KUBERNETES DEFAULT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+172.17.0.0/16   # Docker bridge network
+10.96.0.0/12    # Kubernetes service CIDR
+10.244.0.0/16   # Kubernetes pod CIDR (Flannel)
 ```
 
 ---
 
-## Hantera körande containers
+## 🌐 Publika IP-adresser
+
+Publika IP-adresser är **globalt unika** och kan nås från var som helst på internet.
+
+### Egenskaper för publika IP
 
 ```bash
-# Lista körande containers
-docker ps
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌍 PUBLIKA IP EGENSKAPER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ Globalt unika - varje IP finns bara en gång i världen
+# 🌐 Routbara på internet - kan nås varifrån som helst
+# 📝 Registrerade - tilldelas av ISP:er eller cloud providers
+# 💰 Kostar pengar - särskilt statiska IP:er
+```
 
-# Följ loggar
-docker logs webserver            # Visa loggar
-docker logs -f webserver         # Följ i realtid (tail -f)
-docker logs --tail 100 webserver # Senaste 100 rader
+### Statisk vs Dynamisk IP
 
-# Kör kommandon i körande container
-docker exec webserver ls /etc    # Kör kommando
-docker exec -it webserver bash   # Öppna shell
+| Typ | Beskrivning | Kostnad | Användning |
+|-----|-------------|---------|------------|
+| **Statisk** | Ändras aldrig | Extra avgift | Servrar, VPN, DNS |
+| **Dynamisk** | Ändras periodiskt | Ingår ofta | Heminternet, mobil |
 
-# Inspektera container
-docker inspect webserver         # All metadata
-docker stats                     # CPU, minne, nätverk live
-docker top webserver             # Processer i containern
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📌 STATISK IP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Exempel: 203.0.113.42
+# - Ändras aldrig
+# - Perfekt för servrar
+# - Kostar oftast extra
+# - Behövs för: DNS, VPN-endpoints, viktiga tjänster
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 DYNAMISK IP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Ändras vid router-restart eller periodiskt
+# - Ingår i internetabonnemang
+# - Vanligt för hemmanvändare
+# - Kan vara problem om du behöver fast adress
 ```
 
 ---
 
-## Stoppa Containers
+## 🔄 NAT - Network Address Translation
+
+NAT är som en **"receptionist"** - när någon ringer utifrån ser de bara kontorets huvudnummer (publik IP), men receptionisten vet vilken intern telefon (privat IP) samtalet ska till.
+
+### Hur NAT fungerar
 
 ```bash
-# Graceful stop (skickar SIGTERM, väntar 10s, sen SIGKILL)
-docker stop webserver
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 NAT VISUALISERAT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Forcerad stop (SIGKILL direkt)
-docker kill webserver
+# Privat nätverk          NAT Router          Internet
+# ┌─────────────────┐    ┌───────────┐    ┌─────────────────┐
+# │ 192.168.1.10    │───▶│           │───▶│                 │
+# │ 192.168.1.11    │───▶│ 203.0.113.1 ───▶│   google.com    │
+# │ 192.168.1.12    │───▶│           │───▶│                 │
+# └─────────────────┘    └───────────┘    └─────────────────┘
+#   (Privata IPs)         (Publik IP)      (Internet)
 
-# Stoppa med timeout
-docker stop -t 30 webserver      # Vänta 30 sekunder
+# Alla enheter delar EN publik IP!
+# Routern översätter mellan privat ↔ publik
+```
 
-# Starta om
-docker restart webserver
+### NAT-processen steg för steg
 
-# Pausa/återuppta (fryser processer)
-docker pause webserver
-docker unpause webserver
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⬆️ UTGÅENDE TRAFIK (privat → internet)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1. Din dator (192.168.1.10) vill besöka google.com
+# 2. Routern ändrar "från-adressen" till 203.0.113.1 (publik IP)
+# 3. Routern kommer ihåg: "detta paket kom från 192.168.1.10"
+# 4. Paketet skickas ut med publik IP
+# 5. När svaret kommer → routern vet att skicka till 192.168.1.10
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⬇️ INKOMMANDE TRAFIK (internet → privat)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1. Någon från internet försöker nå 203.0.113.1
+# 2. Routern måste veta vilken intern dator som ska få paketet
+# 3. Kräver: port forwarding ELLER att intern dator initierat först
+```
+
+### Fördelar med NAT
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ NAT FÖRDELAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 💰 Sparar IP-adresser - många enheter delar en publik IP
+# 🔒 Ökar säkerhet - interna datorer är inte direkt synliga
+# 🎛️ Enkelt att hantera - bara routern behöver publik IP
+```
+
+### NAT-typer
+
+| Typ | Riktning | Användning |
+|-----|----------|------------|
+| **SNAT** (Source NAT) | Privat → Publik | Utgående anslutningar |
+| **DNAT** (Destination NAT) | Publik → Privat | Port forwarding, load balancing |
+
+---
+
+## ☁️ Cloud Provider IP-konfiguration
+
+### AWS
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟠 AWS IP-KONFIGURATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Privata IPs
+# - VPC default: 10.0.0.0/16
+# - EC2 instances får automatiskt privat IP
+# - Endast åtkomlig inom VPC
+
+# Publika IPs
+# - Elastic IP (statisk, reserverad)
+# - Auto-assigned public IP (dynamisk)
+# - Internet Gateway krävs för internet-åtkomst
+```
+
+### Azure
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔵 AZURE IP-KONFIGURATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Privata IPs
+# - VNet default: 10.0.0.0/16
+# - VM får automatiskt privat IP
+# - Endast åtkomlig inom VNet
+
+# Publika IPs
+# - Public IP resource (statisk/dynamisk)
+# - Load Balancer IP
+# - Application Gateway IP
+```
+
+### GCP
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟢 GCP IP-KONFIGURATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Privata IPs
+# - VPC default: 10.128.0.0/9
+# - VM får automatiskt privat IP
+# - Endast åtkomlig inom VPC
+
+# Publika IPs
+# - Static external IP
+# - Ephemeral external IP (försvinner vid stop)
+# - Load balancer IP
 ```
 
 ---
 
-## Ta bort Containers
+## 🔍 Kontrollera IP-adresser
+
+### Linux-kommandon
 
 ```bash
-# Ta bort stoppad container
-docker rm webserver
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📋 VISA ALLA IP-ADRESSER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ip addr show              # Moderna Linux
+ifconfig                  # Äldre kommando
 
-# Forcera borttagning av körande container
-docker rm -f webserver
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔢 FILTRERA PÅ IP-VERSION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ip -4 addr show           # Endast IPv4
+ip -6 addr show           # Endast IPv6
 
-# Ta bort alla stoppade containers
-docker container prune
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔌 SPECIFIKT NÄTVERKSKORT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ip addr show eth0         # Visa specifik interface
+ip addr show ens33        # VMware interface
 
-# Ta bort alla containers (körande och stoppade)
-docker rm -f $(docker ps -aq)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 HITTA DIN PUBLIKA IP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+curl ifconfig.me          # Enklast
+curl ipinfo.io/ip         # Alternativ
+curl icanhazip.com        # Alternativ
+curl ipecho.net/plain     # Alternativ
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🚦 KOLLA ROUTING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ip route                  # Visa routing-tabell
+ip route get 8.8.8.8      # Vilken route används till Google DNS?
 ```
 
 ---
 
-## Exit Codes
+## ⚙️ Konfigurera statisk IP (Linux)
 
-```bash
-# Vanliga exit codes:
-# 0   = Success (normal exit)
-# 1   = General error
-# 137 = SIGKILL (docker kill eller OOM)
-# 143 = SIGTERM (docker stop)
+```yaml
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📝 UBUNTU NETPLAN (/etc/netplan/50-cloud-init.yaml)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses:
+        - 192.168.1.100/24      # Statisk IP + subnet mask
+      routes:
+        - to: default
+          via: 192.168.1.1      # Gateway (routern)
+      nameservers:
+        addresses:
+          - 8.8.8.8             # Google DNS
+          - 8.8.4.4             # Google DNS backup
 
-# Kolla exit code
-docker inspect webserver --format='{{.State.ExitCode}}'
-
-# Kolla varför container stoppade
-docker inspect webserver --format='{{.State.OOMKilled}}'
+# Applicera: sudo netplan apply
 ```
 
 ---
 
-## Felsökning
+## 🛡️ Säkerhetsöverväganden
+
+### Privata IP - säkrare men inte immun
 
 ```bash
-# Container startar inte? Kolla loggar
-docker logs container_name
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔒 PRIVATA IP SÄKERHET
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ Inte direkt åtkomliga från internet
+# ✅ Kräver VPN eller port forwarding
+# ✅ Bra för interna tjänster
 
-# Container crashar direkt? Kör interaktivt
-docker run -it image_name sh
+# ⚠️ MEN - behöver fortfarande brandvägg!
+# - Defense in depth
+# - Interna hot existerar också
+```
 
-# Kolla events
-docker events                    # Realtids-events
-docker events --since 1h         # Senaste timmen
+### Publika IP - extra försiktighet krävs
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚠️ PUBLIK IP SÄKERHET
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ❗ Direkt åtkomlig från hela internet
+# ❗ Konstant under attack (bots, scanners)
+# ❗ Behöver starka brandväggsregler
+
+# 🛡️ Skydda med:
+# - Security groups (cloud)
+# - iptables/ufw (Linux)
+# - Minimera öppna portar
+# - Regelbundna uppdateringar
 ```
 
 ---
 
-## Key Takeaways
+## ✨ Best Practices
 
-- Använd `docker stop` för **graceful shutdown** (SIGTERM)
-- Använd `docker kill` bara när stop inte fungerar
-- `--rm` flaggan är perfekt för **engångscontainers**
-- **Exit codes** berättar varför containern stoppade
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1️⃣ ANVÄND PRIVATA IP FÖR INTERNA TJÄNSTER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DB_HOST=10.0.1.50       # Databas på privat IP
+CACHE_HOST=10.0.1.51    # Redis på privat IP
+APP_HOST=10.0.1.100     # App-server på privat IP
+
+# Endast exponera vad som behövs!
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 2️⃣ ANVÄND LOAD BALANCER FÖR PUBLIK ÅTKOMST
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ❌ Exponera INTE servrar direkt
+# ✅ Använd load balancer med publik IP
+# ✅ Servrar stannar på privata IPs
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 3️⃣ RESERVERA STATISKA IP FÖR KRITISKA TJÄNSTER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - DNS-servrar
+# - VPN-endpoints
+# - Tjänster som behöver brandväggsregler
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 4️⃣ DOKUMENTERA IP-ANVÄNDNING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Håll koll på vilka IP:er som används
+# - Undvik konflikter
+# - Använd IP Address Management (IPAM) verktyg
+```
+
+---
+
+## ✅ Sammanfattning
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Privata IP** | 10.x.x.x, 172.16-31.x.x, 192.168.x.x |
+| **Publika IP** | Globalt unika, routbara på internet |
+| **NAT** | Översätter privat ↔ publik |
+| **Statisk IP** | Ändras aldrig, kostar extra |
+| **Dynamisk IP** | Ändras periodiskt, ofta gratis |
+| **Localhost** | 127.0.0.1 (alltid din egen dator) |
+
+**Kom ihåg:**
+- 🏠 Använd privata IP:er för interna tjänster
+- 🌐 Använd publika IP:er bara när nödvändigt
+- 🔒 Skydda alltid publika tjänster med brandvägg
+- 📝 Dokumentera din IP-plan
+- 🎯 Load balancer framför servrar, inte direkt exponering
 """,
         },
         {
