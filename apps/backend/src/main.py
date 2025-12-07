@@ -222,10 +222,11 @@ def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
         order_offset = 16  # Start after bootcamp modules (15 modules)
         adjusted_order = order_offset + modules_created
 
-        # Create the module
+        # Create the module - handle both "name" and "title" keys
+        module_name = module_data.get("name") or module_data.get("title", module_data["slug"])
         module = create_module(ModuleCreate(
             track_id=track_id,
-            name=module_data["name"],
+            name=module_name,
             slug=module_data["slug"],
             description=module_data.get("description"),
             order_index=adjusted_order,
