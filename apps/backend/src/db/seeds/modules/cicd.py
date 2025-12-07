@@ -1060,39 +1060,51 @@ pipeline {
             "title": "Testing in Pipelines",
             "slug": "testing-in-pipelines",
             "difficulty": "intermediate",
-            "content": '''
-# Testing in Pipelines
+            "content": """# Testing in Pipelines
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Tester är CI/CD:s ryggrad:
+## Varfor viktigt for DevOps?
 
-- Fånga buggar innan produktion
-- Dokumentera förväntad funktion
-- Möjliggöra säkra refaktorer
-- Bygga förtroende för deployment
+| Fordel | Detalj |
+|--------|--------|
+| **Kvalitet** | Fanga buggar innan produktion |
+| **Dokumentation** | Tester visar forvantad funktion |
+| **Refaktorering** | Sakra andringar med testtackning |
+| **Fortroende** | Trygg kontinuerlig deployment |
+| **Snabbhet** | Automatiserad validering |
 
-Automatiserade tester = trygg kontinuerlig deployment.
+Automatiserade tester ar CI/CD:s ryggrad.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
-
-Test-pyramid:
+## Test-pyramid
 
 ```
-          /\\
-         /  \\
-        / E2E\\           Få, långsamma, högt värde
-       /──────\\
-      /Integr- \\         Mellan
-     /  ation   \\
-    /────────────\\
-   /   Unit       \\      Många, snabba, grundläggande
-  /________________\\
+┌─────────────────────────────────────────────────────────────┐
+│                    TEST PYRAMID                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│              /\\                                             │
+│             /  \\                                            │
+│            / E2E\\           Fa, langsamma, hogt varde       │
+│           /──────\\                                          │
+│          /Integr- \\         Mellan                          │
+│         /  ation   \\                                        │
+│        /────────────\\                                       │
+│       /   Unit       \\      Manga, snabba, grundlaggande    │
+│      /________________\\                                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+| Test-typ | Antal | Hastighet | Kostnad |
+|----------|-------|-----------|---------|
+| **Unit** | Manga | Snabb | Lag |
+| **Integration** | Mellan | Medium | Medium |
+| **E2E** | Fa | Langsam | Hog |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Unit Tests
 
@@ -1391,30 +1403,41 @@ jobs:
 
 ## Key Takeaways
 
-1. Unit tests = snabba, många, körs alltid
-2. Integration tests behöver services (DB, cache)
-3. E2E tests validerar hela flöden
-4. Parallella tester med sharding
-5. Security scans i varje pipeline
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Unit tests** | Snabba, manga, kors alltid |
+| **Integration** | Behover services (DB, cache) |
+| **E2E** | Validerar hela floden |
+| **Parallellt** | Sharding for snabbhet |
+| **Security** | Skanningar i varje pipeline |
+
+**Kom ihag:**
+- Unit tests ar snabbast och billigast
+- Integration tests kraver services (postgres, redis)
+- E2E testar hela anvandarfloden
+- Parallella tester med sharding sparar tid
+- Security scans (Snyk, Trivy) i varje pipeline
+""",
         },
         {
             "title": "Build & Release Strategies",
             "slug": "build-release-strategies",
             "difficulty": "intermediate",
-            "content": '''
-# Build & Release Strategies
+            "content": """# Build & Release Strategies
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Rätt release-strategi:
+## Varfor viktigt for DevOps?
 
-- Minimerar downtime
-- Möjliggör snabb rollback
-- Reducerar risk
-- Skalar med teamet
+| Fordel | Detalj |
+|--------|--------|
+| **Tillganglighet** | Minimerar downtime |
+| **Sakerhet** | Snabb rollback mojlig |
+| **Risk** | Reducerar release-risk |
+| **Skalbarhet** | Skalar med teamet |
+| **Flexibilitet** | Valj strategi per situation |
 
-En strategi passar inte alla situationer.
+Ratt release-strategi ar kritiskt for produktion.
 
 ---
 
@@ -1709,45 +1732,69 @@ jobs:
 
 ## Key Takeaways
 
-1. Rolling = gradvis, ingen extra infrastruktur
-2. Blue/Green = snabb switch, full rollback
-3. Canary = testa på liten grupp först
-4. Feature flags = runtime-kontroll
-5. Välj strategi efter risktolerans
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Rolling** | Gradvis, ingen extra infra |
+| **Blue/Green** | Snabb switch, full rollback |
+| **Canary** | Testa pa liten grupp forst |
+| **Feature flags** | Runtime-kontroll |
+| **SemVer** | Automatisk versioning |
+
+**Kom ihag:**
+- Rolling update ar enklast, ingen extra infrastruktur
+- Blue/Green ger snabb switch och full rollback
+- Canary testar pa liten grupp forst
+- Feature flags ger runtime-kontroll
+- Valj strategi efter risktolerans
+""",
         },
         {
             "title": "GitLab CI Deep Dive",
             "slug": "gitlab-ci-deep-dive",
             "difficulty": "intermediate",
-            "content": '''
-# GitLab CI Deep Dive
+            "content": """# GitLab CI Deep Dive
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitLab CI är integrerat:
+## Varfor viktigt for DevOps?
 
-- All-in-one DevOps-plattform
-- Inbyggd container registry
-- Kubernetes-integration
-- Enterprise-ready
+| Fordel | Detalj |
+|--------|--------|
+| **All-in-one** | Komplett DevOps-plattform |
+| **Registry** | Inbyggd container registry |
+| **K8s** | Native Kubernetes-integration |
+| **Enterprise** | Compliance och governance |
+| **Simplicitet** | Allt pa ett stalle |
 
-Många organisationer väljer GitLab för simplicitet.
+GitLab CI ar populart i enterprise-miljoer.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Komponenter
 
-GitLab CI-koncept:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 GITLAB CI KONCEPT                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Pipeline         Hela CI/CD-flodet                        │
+│   └── Stage        Grupp av jobs                            │
+│       └── Job      Enskild uppgift                          │
+│           └── Runner   Server som kor                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Pipeline** - hela CI/CD-flödet
-2. **Stage** - grupp av jobs
-3. **Job** - enskild uppgift
-4. **Runner** - server som kör jobs
+| Komponent | Funktion |
+|-----------|----------|
+| **Pipeline** | Hela CI/CD-flodet |
+| **Stage** | Grupperar jobs |
+| **Job** | Enskild uppgift |
+| **Runner** | Kor jobs |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Grundläggande Pipeline
+## Grundlaggande Pipeline
 
 ```yaml
 # .gitlab-ci.yml
@@ -2022,45 +2069,69 @@ security-scan:
 
 ## Key Takeaways
 
-1. Stages grupperar jobs, körs sekventiellt
-2. Services ger databaser och cache
-3. Registry integrerat - använd $CI_REGISTRY
-4. Review Apps för PR-previews
-5. Rules ersätter only/except
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Stages** | Grupperar jobs, kors sekventiellt |
+| **Services** | Databaser och cache for tests |
+| **Registry** | Inbyggt - anvand $CI_REGISTRY |
+| **Review Apps** | Dynamiska PR-previews |
+| **Rules** | Ersatter gamla only/except |
+
+**Kom ihag:**
+- Stages grupperar jobs och kors sekventiellt
+- Services ger databaser och cache for integration tests
+- Registry ar integrerat - anvand $CI_REGISTRY
+- Review Apps skapar dynamiska preview-miljoer
+- Rules ersatter gamla only/except syntax
+""",
         },
         {
             "title": "Azure DevOps Pipelines",
             "slug": "azure-devops-pipelines",
             "difficulty": "intermediate",
-            "content": '''
-# Azure DevOps Pipelines
+            "content": """# Azure DevOps Pipelines
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Azure DevOps för enterprise:
+## Varfor viktigt for DevOps?
 
-- Djup Azure-integration
-- Komplett DevOps-svit
-- Enterprise compliance
-- Microsoft support
+| Fordel | Detalj |
+|--------|--------|
+| **Azure** | Djup Azure-integration |
+| **Komplett** | Hela DevOps-sviten |
+| **Compliance** | Enterprise-ready |
+| **Support** | Microsoft support |
+| **Ekosystem** | Dominant i MS-miljoer |
 
-Dominant i Microsoft-miljöer.
+Azure DevOps ar standard i Microsoft-ekosystemet.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Struktur
 
-Azure Pipelines struktur:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              AZURE PIPELINES HIERARKI                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Pipeline (YAML-fil)                                       │
+│   └── Stage (logisk grupp)                                  │
+│       └── Job (kors pa en agent)                            │
+│           └── Step (enskild task)                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Pipeline** - YAML-fil
-2. **Stage** - logisk grupp
-3. **Job** - körs på en agent
-4. **Step** - enskild task
+| Komponent | Beskrivning |
+|-----------|-------------|
+| **Pipeline** | YAML-fil i repo |
+| **Stage** | Logisk grupp |
+| **Job** | Kors pa en agent |
+| **Step** | Enskild task |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Grundläggande Pipeline
+## Grundlaggande Pipeline
 
 ```yaml
 # azure-pipelines.yml
@@ -2361,44 +2432,69 @@ jobs:
 
 ## Key Takeaways
 
-1. Stages → Jobs → Steps hierarki
-2. Templates för återanvändning
-3. Environments för deployment-kontroll
-4. Variable groups för secrets
-5. Matrix för multi-platform testing
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Hierarki** | Stages, Jobs, Steps |
+| **Templates** | Ateranvandbara pipelines |
+| **Environments** | Deployment-kontroll |
+| **Variable groups** | Centraliserade secrets |
+| **Matrix** | Multi-platform testing |
+
+**Kom ihag:**
+- Stages innehaller Jobs som innehaller Steps
+- Templates mojliggor ateranvandning
+- Environments ger deployment-kontroll och approvals
+- Variable groups for centraliserad secrets-hantering
+- Matrix for parallell multi-platform testing
+""",
         },
         {
             "title": "Container-based CI/CD",
             "slug": "container-based-cicd",
             "difficulty": "intermediate",
-            "content": '''
-# Container-based CI/CD
+            "content": """# Container-based CI/CD
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Containers i CI/CD:
+## Varfor viktigt for DevOps?
 
-- Konsistenta build-miljöer
-- Snabbare pipeline-starts
-- Reproducerbarhet
-- Isolering mellan jobs
+| Fordel | Detalj |
+|--------|--------|
+| **Konsistens** | Samma miljo overallt |
+| **Snabbhet** | Snabbare pipeline-starts |
+| **Reproducerbarhet** | Samma resultat varje gang |
+| **Isolering** | Ingen konflikt mellan jobs |
+| **Portabilitet** | Flytta mellan plattformar |
 
-"Works on my machine" försvinner.
+Containers eliminerar "works on my machine"-problem.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Container-CI Flow
 
-Container-CI flow:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              CONTAINER CI/CD FLOW                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. BUILD     Skapa container image                        │
+│   2. TEST      Testa i container                            │
+│   3. SCAN      Sakerhetsscanning                            │
+│   4. PUSH      Till registry                                │
+│   5. DEPLOY    Till runtime                                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Build** - skapa container image
-2. **Test** - testa i container
-3. **Scan** - säkerhetsskanning
-4. **Push** - till registry
-5. **Deploy** - till runtime
+| Steg | Verktyg |
+|------|---------|
+| **Build** | Docker, Buildah, Kaniko |
+| **Test** | Container Structure Test |
+| **Scan** | Trivy, Grype, Snyk |
+| **Push** | Docker Registry, ECR, GCR |
+| **Deploy** | Kubernetes, ECS, Cloud Run |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Multi-Stage Dockerfile
 
@@ -2686,43 +2782,67 @@ jobs:
 
 ## Key Takeaways
 
-1. Multi-stage builds för mindre images
-2. Skanna images innan push
-3. Container structure tests validerar
-4. Cacha layers för snabbare builds
-5. Multi-registry för redundans
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Multi-stage** | Mindre images |
+| **Scanning** | Skanna innan push |
+| **Structure tests** | Validera container |
+| **Caching** | Snabbare builds |
+| **Multi-registry** | Redundans |
+
+**Kom ihag:**
+- Multi-stage builds ger mindre production images
+- Skanna images innan push (Trivy, Grype)
+- Container structure tests validerar konfiguration
+- Cacha layers for snabbare builds
+- Multi-registry for redundans och geo-distribution
+""",
         },
         {
             "title": "GitOps with ArgoCD",
             "slug": "gitops-argocd",
             "difficulty": "advanced",
-            "content": '''
-# GitOps with ArgoCD
+            "content": """# GitOps with ArgoCD
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitOps-fördelar:
+## Varfor viktigt for DevOps?
 
-- Git som single source of truth
-- Deklarativ infrastruktur
-- Automatisk drift-detection
-- Audit trail inbyggt
+| Fordel | Detalj |
+|--------|--------|
+| **Single source** | Git ar sanningskalla |
+| **Deklarativt** | Onskat state i Git |
+| **Automatik** | Drift-detection |
+| **Audit** | Inbyggd historik |
+| **Standard** | Modern K8s-deployment |
 
-Modern Kubernetes-deployment standard.
+GitOps ar modern standard for Kubernetes-deployment.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## GitOps-principer
 
-GitOps-principer:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 GITOPS PRINCIPER                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   DECLARATIVE    Onskat state definieras i Git             │
+│   VERSIONED      Alla andringar committas                   │
+│   AUTOMATED      Agent synkar automatiskt till cluster      │
+│   AUDITABLE      Git history = audit log                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Declarative** - önskad state i Git
-2. **Versioned** - all ändring committas
-3. **Automated** - agent synkar till cluster
-4. **Auditable** - Git history = audit log
+| Princip | Beskrivning |
+|---------|-------------|
+| **Declarative** | State i Git |
+| **Versioned** | Committas |
+| **Automated** | Agent synkar |
+| **Auditable** | Git history |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## ArgoCD Installation
 
@@ -3048,43 +3168,67 @@ spec:
 
 ## Key Takeaways
 
-1. Git = single source of truth
-2. App of Apps för skalbarhet
-3. Kustomize/Helm för miljö-variationer
-4. Image Updater automatiserar
-5. Rollouts för canary/blue-green
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Git** | Single source of truth |
+| **App of Apps** | Skalbar arkitektur |
+| **Kustomize/Helm** | Miljo-variationer |
+| **Image Updater** | Automatiska uppdateringar |
+| **Rollouts** | Canary och blue-green |
+
+**Kom ihag:**
+- Git ar single source of truth for all config
+- App of Apps pattern for skalbar arkitektur
+- Kustomize eller Helm for miljo-variationer
+- Image Updater automatiserar image updates
+- Argo Rollouts for canary och blue-green deploys
+""",
         },
         {
             "title": "Secrets Management",
             "slug": "secrets-management",
             "difficulty": "advanced",
-            "content": '''
-# Secrets Management
+            "content": """# Secrets Management
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Secrets-läckage är dyrt:
+## Varfor viktigt for DevOps?
 
-- API-nycklar på GitHub kostar miljoner
-- Databasen exponeras
-- Kunddata komprometteras
-- Compliance-brott
+| Fordel | Detalj |
+|--------|--------|
+| **Sakerhet** | API-nycklar pa GitHub kostar miljoner |
+| **Data** | Databasen kan exponeras |
+| **Kunddata** | Komprometteras vid lackage |
+| **Compliance** | Brott mot regler |
+| **Kritiskt** | ALDRIG secrets i kod |
 
-Secrets ska ALDRIG finnas i kod.
+Secrets-lackage ar extremt dyrt - bade ekonomiskt och for ryktet.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Secrets-strategier
 
-Secrets-strategier:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SECRETS STRATEGIER                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. Environment Variables    Runtime injection             │
+│   2. Secret Managers          Centraliserad lagring         │
+│   3. Sealed Secrets           Krypterade i Git              │
+│   4. SOPS                     Encrypted files               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Environment Variables** - runtime injection
-2. **Secret Managers** - centraliserad lagring
-3. **Sealed Secrets** - krypterade i Git
-4. **SOPS** - encrypted files
+| Strategi | Anvandning |
+|----------|------------|
+| **Env vars** | Runtime injection |
+| **Vault/AWS SM** | Centraliserat |
+| **Sealed Secrets** | GitOps-vanligt |
+| **SOPS** | Encrypted config |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitHub Actions Secrets
 
@@ -3377,43 +3521,67 @@ jobs:
 
 ## Key Takeaways
 
-1. ALDRIG secrets i kod eller Git
-2. OIDC > statiska credentials
-3. Vault för enterprise-scale
-4. Sealed Secrets för GitOps
-5. SOPS för encrypted config files
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Aldrig i kod** | Secrets ska ALDRIG i Git |
+| **OIDC** | Battre an statiska creds |
+| **Vault** | Enterprise-scale |
+| **Sealed Secrets** | GitOps-vanligt |
+| **SOPS** | Encrypted config files |
+
+**Kom ihag:**
+- ALDRIG secrets i kod eller Git
+- OIDC ar battre an statiska credentials
+- HashiCorp Vault for enterprise-scale
+- Sealed Secrets for GitOps-workflows
+- SOPS for encrypted configuration files
+""",
         },
         {
             "title": "Pipeline Optimization",
             "slug": "pipeline-optimization",
             "difficulty": "advanced",
-            "content": '''
-# Pipeline Optimization
+            "content": """# Pipeline Optimization
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Långsamma pipelines kostar:
+## Varfor viktigt for DevOps?
 
-- Utvecklartid i väntan
-- Försenade releaser
-- Frustration och context-switch
-- Högre infrastrukturkostnad
+| Fordel | Detalj |
+|--------|--------|
+| **Utvecklartid** | Mindre vantan |
+| **Releaser** | Snabbare leverans |
+| **Fokus** | Mindre context-switch |
+| **Kostnad** | Lagre infra-kostnad |
+| **Produktivitet** | 30 min till 5 min |
 
-30 min → 5 min = enorm produktivitetsökning.
+Langsamma pipelines kostar enormt i forlorad tid.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Optimeringsomraden
 
-Optimeringsområden:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              OPTIMERINGSOMRADEN                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. PARALLELLISM     Kor saker samtidigt                   │
+│   2. CACHING          Ateranvand resultat                   │
+│   3. INKREMENTELLT    Bygg bara det som andrats             │
+│   4. RATT RUNNERS     Resurser efter behov                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Parallellism** - kör saker samtidigt
-2. **Caching** - återanvänd resultat
-3. **Inkrementella builds** - bara ändrat
-4. **Rätt runners** - resurser efter behov
+| Omrade | Vinst |
+|--------|-------|
+| **Parallellism** | Storsta tidsvinst |
+| **Caching** | node_modules, builds |
+| **Inkrementellt** | Monorepo-optimering |
+| **Runners** | Storre for tunga tasks |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Parallel Execution
 
@@ -3695,44 +3863,67 @@ jobs:
 
 ## Key Takeaways
 
-1. Parallellism = största vinsten
-2. Cacha allt som går (node_modules, builds)
-3. Inkrementella builds i monorepos
-4. Större runners för krävande jobs
-5. Mät och iterera
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Parallellism** | Storsta vinsten |
+| **Caching** | node_modules, builds |
+| **Inkrementellt** | Monorepo-optimering |
+| **Runners** | Storre for tunga tasks |
+| **Metrics** | Mat och iterera |
+
+**Kom ihag:**
+- Parallellism ger storsta tidsvinsten
+- Cacha allt som gar (node_modules, builds)
+- Inkrementella builds i monorepos med Turbo/Nx
+- Storre runners for kravande jobs (GPU, high-memory)
+- Mat pipeline-performance och iterera
+""",
         },
         {
             "title": "Multi-Environment Deployments",
             "slug": "multi-environment-deployments",
             "difficulty": "advanced",
-            "content": '''
-# Multi-Environment Deployments
+            "content": """# Multi-Environment Deployments
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Flera miljöer ger:
+## Varfor viktigt for DevOps?
 
-- Säker testning före produktion
-- Isolering av features
-- Compliance-krav
-- Gradvis utrullning
+| Fordel | Detalj |
+|--------|--------|
+| **Testning** | Saker testning fore prod |
+| **Isolering** | Features separerade |
+| **Compliance** | Uppfyller krav |
+| **Utrullning** | Gradvis deployment |
+| **Standard** | Dev, Staging, Prod |
 
-Dev → Staging → Prod är standard.
+Flera miljoer ar standard for sakra deployments.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Miljo-hierarki
 
-Miljö-hierarki:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              MILJO-HIERARKI                                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   DEVELOPMENT    Utvecklartestning                          │
+│   STAGING        Prod-like testning                         │
+│   PRODUCTION     Live-trafik                                │
+│                                                             │
+│   Varje miljo = egen konfiguration                          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Development** - utvecklartestning
-2. **Staging** - prod-like testning
-3. **Production** - live-trafik
+| Miljo | Syfte |
+|-------|-------|
+| **Development** | Utvecklartestning |
+| **Staging** | Prod-like testning |
+| **Production** | Live-trafik |
 
-Varje miljö = egen konfiguration.
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitHub Environments
 
@@ -4082,45 +4273,69 @@ jobs:
 
 ## Key Takeaways
 
-1. Dev → Staging → Prod = standard flow
-2. GitHub Environments för approvals
-3. Kustomize för K8s per-miljö config
-4. Terraform workspaces för infra
-5. Promotion workflows för kontrollerade releaser
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Flow** | Dev, Staging, Prod standard |
+| **Environments** | GitHub Environments for approvals |
+| **Kustomize** | K8s per-miljo config |
+| **Terraform** | Workspaces for infra |
+| **Promotion** | Kontrollerade releaser |
+
+**Kom ihag:**
+- Dev till Staging till Prod ar standard flow
+- GitHub Environments ger approvals och secrets
+- Kustomize for Kubernetes per-miljo config
+- Terraform workspaces for infra per miljo
+- Promotion workflows for kontrollerade releaser
+""",
         },
         {
             "title": "Monitoring CI/CD Pipelines",
             "slug": "monitoring-cicd-pipelines",
             "difficulty": "advanced",
-            "content": '''
-# Monitoring CI/CD Pipelines
+            "content": """# Monitoring CI/CD Pipelines
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Pipeline-övervakning visar:
+## Varfor viktigt for DevOps?
 
-- Build success rate
-- Deploy frequency
-- Lead time för changes
-- Mean time to recovery
+| Fordel | Detalj |
+|--------|--------|
+| **Success rate** | Build-framgangar |
+| **Frequency** | Deploy-frekvens |
+| **Lead time** | Commit till prod |
+| **MTTR** | Aterhamtningstid |
+| **DORA** | Engineering excellence |
 
-DORA-metrics mäter engineering excellence.
+DORA-metrics mater engineering excellence.
 
----
-
-## Så fungerar det
-
-Vad att mäta:
-
-1. **Deployment Frequency** - hur ofta
-2. **Lead Time** - commit → prod
-3. **Change Failure Rate** - misslyckade deploys
-4. **MTTR** - tid att återställa
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## DORA Metrics
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 DORA METRICS                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. Deployment Frequency    Hur ofta deployas              │
+│   2. Lead Time               Commit till prod               │
+│   3. Change Failure Rate     Misslyckade deploys            │
+│   4. MTTR                    Tid att aterhamta              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Metric | Matning |
+|--------|---------|
+| **Deploy Frequency** | Dagligen = bra |
+| **Lead Time** | Under 1 dag = bra |
+| **Failure Rate** | Under 15% = bra |
+| **MTTR** | Under 1 timme = bra |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## DORA Metrics Implementation
 
 ```yaml
 # GitHub Actions - DORA metrics
@@ -4374,43 +4589,67 @@ jobs:
 
 ## Key Takeaways
 
-1. DORA metrics = engineering excellence KPIs
-2. Slack/Teams för realtids-notifieringar
-3. Prometheus/Grafana för dashboards
-4. PagerDuty för on-call alerting
-5. Spara historik för trend-analys
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **DORA** | Engineering excellence KPIs |
+| **Slack/Teams** | Realtids-notifieringar |
+| **Prometheus** | Metrics och dashboards |
+| **PagerDuty** | On-call alerting |
+| **Historik** | Trend-analys |
+
+**Kom ihag:**
+- DORA metrics mater engineering excellence
+- Slack/Teams for realtids-notifieringar
+- Prometheus/Grafana for dashboards och overvakning
+- PagerDuty for on-call alerting
+- Spara historik for trend-analys
+""",
         },
         {
             "title": "Compliance and Audit",
             "slug": "compliance-audit",
             "difficulty": "advanced",
-            "content": '''
-# Compliance and Audit
+            "content": """# Compliance and Audit
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Compliance-krav:
+## Varfor viktigt for DevOps?
 
-- SOC 2, ISO 27001
-- PCI DSS för betalningar
-- HIPAA för healthcare
-- GDPR för EU-data
+| Fordel | Detalj |
+|--------|--------|
+| **SOC 2** | Sakerhetsstandard |
+| **ISO 27001** | Informationssakerhet |
+| **PCI DSS** | Betalningar |
+| **HIPAA** | Healthcare |
+| **GDPR** | EU-data |
 
-Audit trail = bevis på processer.
+Audit trail ar bevis pa processer och compliance.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Compliance i CI/CD
 
-Compliance i CI/CD:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              COMPLIANCE OMRADEN                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. Access Control     Vem far deploya                     │
+│   2. Audit Trail        Vad hande nar                       │
+│   3. Approvals          Manuella godkannanden               │
+│   4. Scanning           Sakerhet och licenser               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Access Control** - vem får deploya
-2. **Audit Trail** - vad hände när
-3. **Approvals** - manuella godkännanden
-4. **Scanning** - säkerhet och licenser
+| Omrade | Beskrivning |
+|--------|-------------|
+| **Access Control** | Vem far deploya |
+| **Audit Trail** | Loggning av handelser |
+| **Approvals** | Manuella godkannanden |
+| **Scanning** | Sakerhet och licenser |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Branch Protection
 
@@ -4706,43 +4945,67 @@ jobs:
 
 ## Key Takeaways
 
-1. Branch protection = första försvarslinjen
-2. Multi-level approvals för känsliga deploys
-3. Audit logging för alla händelser
-4. License scanning för compliance
-5. Evidence collection för audits
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Branch protection** | Forsta forsvarslinjen |
+| **Approvals** | Multi-level for kansliga deploys |
+| **Audit logging** | Alla handelser loggas |
+| **License scanning** | Compliance-krav |
+| **Evidence** | Collection for audits |
+
+**Kom ihag:**
+- Branch protection ar forsta forsvarslinjen
+- Multi-level approvals for kansliga deploys
+- Audit logging for alla handelser
+- License scanning for compliance
+- Evidence collection for audits och revisioner
+""",
         },
         {
             "title": "Disaster Recovery",
             "slug": "disaster-recovery",
             "difficulty": "advanced",
-            "content": '''
-# Disaster Recovery
+            "content": """# Disaster Recovery
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Disaster recovery för CI/CD:
+## Varfor viktigt for DevOps?
 
-- Pipeline-infrastruktur kan gå ner
-- Secrets kan komprometteras
-- Deploys kan misslyckas kritiskt
-- Snabb recovery = mindre påverkan
+| Fordel | Detalj |
+|--------|--------|
+| **Infra** | Pipeline-infra kan ga ner |
+| **Secrets** | Kan komprometteras |
+| **Deploys** | Kritiska misslyckanden |
+| **Recovery** | Snabb aterhamtning |
+| **RTO/RPO** | Bestammer strategi |
 
-RTO och RPO styr strategin.
+Disaster recovery ar kritiskt for CI/CD-infrastruktur.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## DR-koncept
 
-DR-koncept:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              DR KONCEPT                                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   RTO     Recovery Time Objective                           │
+│   RPO     Recovery Point Objective                          │
+│   BACKUP  Sakerhetskopiering                                │
+│   ROLLBACK  Aterstall tidigare version                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **RTO** - Recovery Time Objective
-2. **RPO** - Recovery Point Objective
-3. **Backup** - säkerhetskopiering
-4. **Rollback** - återställ tidigare version
+| Koncept | Beskrivning |
+|---------|-------------|
+| **RTO** | Max nedtid |
+| **RPO** | Max dataforlust |
+| **Backup** | Sakerhetskopiering |
+| **Rollback** | Aterstall version |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Rollback Strategies
 
@@ -5019,43 +5282,67 @@ jobs:
 
 ## Key Takeaways
 
-1. Alltid ha rollback-strategi
-2. Blue/Green för snabb failover
-3. Backup CI/CD config regelbundet
-4. Multi-region för hög tillgänglighet
-5. Incident response workflows förbereds
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Rollback** | Alltid ha strategi |
+| **Blue/Green** | Snabb failover |
+| **Backup** | CI/CD config regelbundet |
+| **Multi-region** | Hog tillganglighet |
+| **Incident response** | Workflows forberedda |
+
+**Kom ihag:**
+- Alltid ha rollback-strategi
+- Blue/Green for snabb failover
+- Backup CI/CD config regelbundet
+- Multi-region for hog tillganglighet
+- Incident response workflows forbereds i forhand
+""",
         },
         {
             "title": "CircleCI and Other Platforms",
             "slug": "circleci-other-platforms",
             "difficulty": "intermediate",
-            "content": '''
-# CircleCI and Other Platforms
+            "content": """# CircleCI and Other Platforms
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Olika plattformar för olika behov:
+## Varfor viktigt for DevOps?
 
-- CircleCI = snabbhet och Docker-fokus
-- Travis CI = open source-vänlig
-- Bitbucket Pipelines = Atlassian-ekosystem
-- Buildkite = self-hosted power
+| Fordel | Detalj |
+|--------|--------|
+| **CircleCI** | Snabbhet och Docker-fokus |
+| **Travis CI** | Open source-vanlig |
+| **Bitbucket** | Atlassian-ekosystem |
+| **Buildkite** | Self-hosted power |
+| **Portabilitet** | Kunskap overfors |
 
-Kunskap överförs mellan plattformar.
+Olika plattformar passar olika behov.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Gemensamma Koncept
 
-Gemensamma koncept:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              GEMENSAMMA CI/CD KONCEPT                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Pipeline Definition    YAML-fil                           │
+│   Jobs                   Korbar enhet                       │
+│   Workflows              Orkestrering                       │
+│   Artifacts              Output-filer                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Pipeline Definition** - YAML-fil
-2. **Jobs** - körbar enhet
-3. **Workflows** - orkestrering
-4. **Artifacts** - output-filer
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Pipeline** | YAML-fil |
+| **Jobs** | Korbar enhet |
+| **Workflows** | Orkestrering |
+| **Artifacts** | Output-filer |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## CircleCI Basics
 
@@ -5464,43 +5751,67 @@ jobs:
 
 ## Key Takeaways
 
-1. CircleCI = snabb, Docker-native
-2. Travis CI = enkel, bra för OSS
-3. Bitbucket Pipelines = Atlassian-integration
-4. Buildkite = flexibel, self-hosted
-5. Koncept överförs mellan alla plattformar
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **CircleCI** | Snabb, Docker-native |
+| **Travis CI** | Enkel, OSS-vanlig |
+| **Bitbucket** | Atlassian-integration |
+| **Buildkite** | Flexibel, self-hosted |
+| **Portabilitet** | Koncept overfors |
+
+**Kom ihag:**
+- CircleCI ar snabb och Docker-native
+- Travis CI ar enkel och bra for open source
+- Bitbucket Pipelines for Atlassian-integration
+- Buildkite ar flexibel med self-hosted runners
+- Koncept overfors mellan alla plattformar
+""",
         },
         {
             "title": "Self-Hosted Runners",
             "slug": "self-hosted-runners",
             "difficulty": "advanced",
-            "content": '''
-# Self-Hosted Runners
+            "content": """# Self-Hosted Runners
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Self-hosted runners för:
+## Varfor viktigt for DevOps?
 
-- Specialhårdvara (GPU, ARM)
-- Striktare säkerhet/compliance
-- Kostnadsoptimering
-- Tillgång till interna resurser
+| Fordel | Detalj |
+|--------|--------|
+| **Hardvara** | GPU, ARM, specialbehov |
+| **Sakerhet** | Striktare compliance |
+| **Kostnad** | Optimering for stor volym |
+| **Interna** | Tillgang till resurser |
+| **Kontroll** | Full kontroll over miljon |
 
-Cloud runners räcker inte alltid.
+Cloud runners racker inte alltid.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Self-hosted Setup
 
-Self-hosted setup:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SELF-HOSTED SETUP                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. PROVISION    Skapa server                              │
+│   2. INSTALL      Runner-agent                              │
+│   3. REGISTER     Koppla till repo/org                      │
+│   4. LABEL        For targeting                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Provision** - skapa server
-2. **Install** - runner-agent
-3. **Register** - koppla till repo/org
-4. **Label** - för targeting
+| Steg | Beskrivning |
+|------|-------------|
+| **Provision** | Skapa server |
+| **Install** | Installera agent |
+| **Register** | Koppla till repo |
+| **Label** | Targeting |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitHub Actions Runner
 
@@ -5787,43 +6098,67 @@ spec:
 
 ## Key Takeaways
 
-1. Self-hosted för special-behov
-2. Kubernetes ARC för skalbarhet
-3. Ephemeral runners för säkerhet
-4. DinD för container builds
-5. Monitoring och alerting viktigt
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Self-hosted** | For special-behov |
+| **K8s ARC** | Skalbarhet |
+| **Ephemeral** | Sakerhet per job |
+| **DinD** | Container builds |
+| **Monitoring** | Alerting viktigt |
+
+**Kom ihag:**
+- Self-hosted runners for special-behov (GPU, ARM)
+- Kubernetes ARC for skalbarhet och autoscaling
+- Ephemeral runners for sakerhet
+- Docker-in-Docker for container builds
+- Monitoring och alerting ar kritiskt
+""",
         },
         {
             "title": "Monorepo CI/CD Patterns",
             "slug": "monorepo-cicd-patterns",
             "difficulty": "advanced",
-            "content": '''
-# Monorepo CI/CD Patterns
+            "content": """# Monorepo CI/CD Patterns
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Monorepos kräver smart CI/CD:
+## Varfor viktigt for DevOps?
 
-- Bygg inte allt vid varje commit
-- Dela cache mellan projekt
-- Versionera koordinerat
-- Hantera beroenden
+| Fordel | Detalj |
+|--------|--------|
+| **Effektivitet** | Bygg inte allt varje gang |
+| **Caching** | Dela cache mellan projekt |
+| **Versioning** | Koordinerad release |
+| **Dependencies** | Hantera beroenden smart |
+| **Verktyg** | Turbo, Nx, Bazel |
 
-Turbo, Nx, Bazel löser detta.
+Monorepos kraver smart CI/CD.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Monorepo CI-utmaningar
 
-Monorepo CI-utmaningar:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              MONOREPO UTMANINGAR                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. CHANGE DETECTION    Vad andrades?                      │
+│   2. DEPENDENCY GRAPH    Vad paverkas?                      │
+│   3. SELECTIVE EXEC      Kor bara det                       │
+│   4. CACHING             Spara tid                          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Change Detection** - vad ändrades
-2. **Dependency Graph** - vad påverkas
-3. **Selective Execution** - kör bara det
-4. **Caching** - spara tid
+| Utmaning | Losning |
+|----------|---------|
+| **Change detection** | Turbo/Nx |
+| **Dependencies** | Graph-analys |
+| **Selective** | Affected builds |
+| **Caching** | Remote cache |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Turborepo Setup
 
@@ -6167,43 +6502,67 @@ jobs:
 
 ## Key Takeaways
 
-1. Turbo/Nx för smart change detection
-2. Remote caching sparar enormt med tid
-3. Affected commands = bygg bara det ändrade
-4. Changesets för koordinerad versioning
-5. Deploy i rätt ordning för dependencies
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Turbo/Nx** | Smart change detection |
+| **Remote cache** | Sparar enormt tid |
+| **Affected** | Bygg bara andrat |
+| **Changesets** | Koordinerad versioning |
+| **Deploy order** | Ratt ordning for deps |
+
+**Kom ihag:**
+- Turbo/Nx for smart change detection
+- Remote caching sparar enormt med tid
+- Affected commands bygger bara det andrade
+- Changesets for koordinerad versioning
+- Deploy i ratt ordning for dependencies
+""",
         },
         {
             "title": "Enterprise CI/CD Patterns",
             "slug": "enterprise-cicd-patterns",
             "difficulty": "expert",
-            "content": '''
-# Enterprise CI/CD Patterns
+            "content": """# Enterprise CI/CD Patterns
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Enterprise-skala kräver:
+## Varfor viktigt for DevOps?
 
-- Standardisering över team
-- Centraliserad governance
-- Cost management
-- Compliance automation
+| Fordel | Detalj |
+|--------|--------|
+| **Standardisering** | Over alla team |
+| **Governance** | Centraliserad kontroll |
+| **Cost** | Management och optimering |
+| **Compliance** | Automatiserad |
+| **Skalbarhet** | 100+ team |
 
-Patterns som skalar till 100+ team.
+Enterprise-patterns skalar till stora organisationer.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Enterprise CI/CD Principer
 
-Enterprise CI/CD principer:
+```
+┌─────────────────────────────────────────────────────────────┐
+│              ENTERPRISE PRINCIPER                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. PLATFORM TEAM    Bygger verktygen                      │
+│   2. PRODUCT TEAMS    Anvander verktygen                    │
+│   3. GOLDEN PATHS     Rekommenderad vag                     │
+│   4. GUARDRAILS       Automatiska begransningar             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Platform Team** - bygger verktygen
-2. **Product Teams** - använder verktygen
-3. **Golden Paths** - rekommenderad väg
-4. **Guardrails** - automatiska begränsningar
+| Princip | Beskrivning |
+|---------|-------------|
+| **Platform Team** | Bygger verktygen |
+| **Product Teams** | Anvander verktygen |
+| **Golden Paths** | Rekommenderad vag |
+| **Guardrails** | Begransningar |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Template Libraries
 
@@ -6546,12 +6905,21 @@ jobs:
 
 ## Key Takeaways
 
-1. Templates standardiserar över teams
-2. Policy-as-Code för governance
-3. Cost management förhindrar överraskningar
-4. Centraliserad logging för visibility
-5. Self-service med guardrails
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Templates** | Standardiserar over teams |
+| **Policy-as-Code** | Governance |
+| **Cost management** | Forhindrar overraskningar |
+| **Logging** | Centraliserad visibility |
+| **Self-service** | Med guardrails |
+
+**Kom ihag:**
+- Templates standardiserar over teams
+- Policy-as-Code for governance (OPA/Conftest)
+- Cost management forhindrar overraskningar
+- Centraliserad logging for visibility
+- Self-service med guardrails for skalbarhet
+""",
         },
     ],
 }
