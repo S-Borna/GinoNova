@@ -2830,209 +2830,494 @@ tar --listed-incremental=snapshot.file -czf backup.tar.gz files/
 """,
         },
         {
-            "title": "Docker Compose Fundamentals",
-            "slug": "docker-compose-fundamentals",
+            "title": "Subnetting och CIDR",
+            "slug": "subnetting-and-cidr",
             "difficulty": "medium",
             "estimated_minutes": 50,
             "xp_reward": 85,
-            "content": """# Docker Compose Fundamentals
+            "content": """# Subnetting och CIDR
 
-## Varför behöver du kunna detta?
+## Varfor subnetting-kunskap ar kritiskt for DevOps
 
-Att köra `docker run` med 10 flaggor för flera containers är opraktiskt. Du behöver:
+Subnetting ar grundlaggande for:
 
-- **Definiera hela stacken** i en fil
-- **Starta allt med ett kommando**
-- **Versionshantera infrastrukturen** som kod
+| Anvandningsomrade | Beskrivning |
+|-------------------|-------------|
+| **Cloud VPC design** | Planera natverksarkitektur i AWS/Azure/GCP |
+| **Network segmentation** | Dela upp natverk i logiska delar |
+| **Security isolation** | Isolera kansliga system |
+| **IP address planning** | Effektiv anvandning av IP-adresser |
+| **Container networking** | Docker och Kubernetes subnets |
+| **Multi-tenant architectures** | Separera kunder/miljoer |
 
 ---
 
-## Vad är Docker Compose?
+## IP-adressens struktur
 
-Docker Compose låter dig definiera multi-container applikationer i en YAML-fil. Istället för:
+### IPv4-adress uppdelning
+
+En IPv4-adress bestar av tva delar: natvverksdelen (vilket natverk) och varddelen (vilken specifik dator).
 
 ```bash
-docker network create mynet
-docker run -d --name db --network mynet -v dbdata:/data postgres
-docker run -d --name api --network mynet -p 8080:8000 -e DB_HOST=db myapi
+# ==============================================================
+# IP-ADRESS UPPDELNING
+# ==============================================================
+
+192.168.1.100
+
+# 192.168.1 = Natvverksdelen (Network portion)
+# - Identifierar vilket natverk datorn tillhor
+# - Tank pa det som "gatan"
+# - Alla datorer med 192.168.1.x ar pa samma natverk
+# - Bestams av subnet masken (t.ex. /24)
+
+# 100 = Varddelen (Host portion)
+# - Identifierar den specifika datorn
+# - Tank pa det som "husnumret"
+# - Kan variera fran 1 till 254 (0 och 255 ar reserverade)
+
+# Totalt: 32 bitar
+# - 4 bytes (4 x 8 = 32 bitar)
+# - ~4.3 miljarder mojliga adresser
 ```
 
-Skriver du:
+### Subnet Mask
 
-```yaml
-# docker-compose.yml
-services:
-  db:
-    image: postgres
-    volumes:
-      - dbdata:/data
-  api:
-    image: myapi
-    ports:
-      - "8080:8000"
-    environment:
-      - DB_HOST=db
-
-volumes:
-  dbdata:
-```
-
----
-
-## Grundläggande struktur
-
-```yaml
-# docker-compose.yml
-version: "3.8"  # Compose file version (optional i nya versioner)
-
-services:       # Containers att köra
-  service1:
-    image: ...
-  service2:
-    build: ...
-
-volumes:        # Named volumes
-  data:
-
-networks:       # Custom networks
-  frontend:
-  backend:
-```
-
----
-
-## Service-konfiguration
-
-```yaml
-services:
-  webapp:
-    # Välj image ELLER build
-    image: nginx:alpine
-    # ELLER
-    build: ./app
-    build:
-      context: ./app
-      dockerfile: Dockerfile.prod
-
-    # Port mapping
-    ports:
-      - "8080:80"
-      - "443:443"
-
-    # Miljövariabler
-    environment:
-      - NODE_ENV=production
-      - API_KEY=secret
-    env_file:
-      - .env
-
-    # Volumes
-    volumes:
-      - ./app:/app          # Bind mount
-      - data:/var/lib/data  # Named volume
-
-    # Dependencies
-    depends_on:
-      - db
-      - redis
-
-    # Restart policy
-    restart: unless-stopped
-
-    # Resource limits
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-```
-
----
-
-## Grundläggande kommandon
+Subnet mask definierar vilka bitar som ar natvverksdelen vs varddelen:
 
 ```bash
-# Starta alla services
-docker compose up
+# ==============================================================
+# SUBNET MASK EXEMPEL
+# ==============================================================
 
-# Starta i bakgrunden
-docker compose up -d
+# 255.255.255.0 = /24
+#   Network:    192.168.1.0
+#   Hosts:      192.168.1.1 - 192.168.1.254
+#   Broadcast:  192.168.1.255
+#   Anvandbara: 254 adresser
 
-# Stoppa alla services
-docker compose down
-
-# Stoppa och ta bort volumes
-docker compose down -v
-
-# Se status
-docker compose ps
-
-# Se loggar
-docker compose logs
-docker compose logs -f webapp  # Följ specifik service
-
-# Bygg om images
-docker compose build
-docker compose up --build  # Build + start
+# 255.255.0.0 = /16
+#   Network:    192.168.0.0
+#   Hosts:      192.168.0.1 - 192.168.255.254
+#   Anvandbara: 65,534 adresser
 ```
 
 ---
 
-## Komplett exempel
+## CIDR-notation
 
-```yaml
-# docker-compose.yml
-services:
-  # Frontend
-  web:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    environment:
-      - API_URL=http://api:8000
-    depends_on:
-      - api
+### Vad ar CIDR?
 
-  # Backend API
-  api:
-    build: ./backend
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:secret@db:5432/app
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - db
-      - redis
-    volumes:
-      - ./backend:/app  # Hot reload i utveckling
+CIDR (Classless Inter-Domain Routing) ar ett kompakt satt att beskriva IP-adress och natmask.
 
-  # Database
-  db:
-    image: postgres:15
-    environment:
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=app
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    # Ingen port exponerad - bara intern access
+```bash
+# ==============================================================
+# CIDR FORMAT
+# ==============================================================
 
-  # Cache
-  redis:
-    image: redis:alpine
+# Format: IP_address/prefix_length
 
-volumes:
-  pgdata:
+# Exempel:
+192.168.1.0/24
+# - 192.168.1.0 = Natverkets adress
+# - /24 = De forsta 24 bitarna ar natvverksdelen
+# - Ger 256 adresser (254 anvandbara)
+
+10.0.0.0/8
+# - 10.0.0.0 = Natverkets adress
+# - /8 = De forsta 8 bitarna ar natvverksdelen
+# - Ger over 16 miljoner adresser
+
+172.16.0.0/12
+# - 172.16.0.0 = Natverkets adress
+# - /12 = De forsta 12 bitarna ar natvverksdelen
+# - Ger over en miljon adresser
+```
+
+### CIDR prefix-langder
+
+| Prefix | Subnet Mask | Antal adresser | Anvandbara |
+|--------|-------------|----------------|------------|
+| /8 | 255.0.0.0 | 16,777,216 | 16,777,214 |
+| /16 | 255.255.0.0 | 65,536 | 65,534 |
+| /24 | 255.255.255.0 | 256 | 254 |
+| /25 | 255.255.255.128 | 128 | 126 |
+| /26 | 255.255.255.192 | 64 | 62 |
+| /27 | 255.255.255.224 | 32 | 30 |
+| /28 | 255.255.255.240 | 16 | 14 |
+| /32 | 255.255.255.255 | 1 | 1 (host route) |
+
+**/24 ar vanligast for subnets**
+
+---
+
+## Vanliga CIDR-block
+
+```bash
+# ==============================================================
+# PRIVATA RANGES (RFC 1918)
+# ==============================================================
+
+10.0.0.0/8          # 10.0.0.0 - 10.255.255.255 (Class A)
+172.16.0.0/12       # 172.16.0.0 - 172.31.255.255 (Class B)
+192.168.0.0/16      # 192.168.0.0 - 192.168.255.255 (Class C)
+
+# ==============================================================
+# SPECIELLA RANGES
+# ==============================================================
+
+127.0.0.0/8         # Loopback (localhost)
+169.254.0.0/16      # Link-local (auto-assigned)
+0.0.0.0/0           # Default route (alla adresser)
 ```
 
 ---
 
-## Key Takeaways
+## Subnetting grunderna
 
-- **En fil = hela stacken** - lätt att versionshantera
-- Services i samma compose-fil får **automatiskt nätverk**
-- Använd **depends_on** för start-ordning
-- `docker compose down -v` tar bort **allt** inkl volumes
+### Varfor subnetta?
+
+```bash
+# ==============================================================
+# FORDELAR MED SUBNETTING
+# ==============================================================
+
+# 1. Network segmentation
+#    - Dela upp stora natverk i mindre delar
+
+# 2. Security isolation
+#    - Separera kansliga system (databaser, admin)
+
+# 3. Better organization
+#    - Logisk uppdelning per avdelning/funktion
+
+# 4. Reduced broadcast domains
+#    - Minskar broadcast-trafik
+
+# 5. Efficient IP usage
+#    - Anvand bara de adresser du behover
+```
+
+### Subnet-berakning
+
+```bash
+# ==============================================================
+# EXEMPEL: DELA UPP 192.168.1.0/24
+# ==============================================================
+
+# /24 subnet (original)
+# Network:    192.168.1.0
+# Netmask:    255.255.255.0
+# Hosts:      192.168.1.1 - 192.168.1.254
+# Broadcast:  192.168.1.255
+# Anvandbara: 254 hosts
+
+# /25 subnet (delat i 2)
+# Subnet 1:   192.168.1.0/25   (192.168.1.1 - 192.168.1.126)
+# Subnet 2:   192.168.1.128/25 (192.168.1.129 - 192.168.1.254)
+# Anvandbara: 126 hosts per subnet
+
+# /26 subnet (delat i 4)
+# Subnet 1:   192.168.1.0/26   (192.168.1.1 - 192.168.1.62)
+# Subnet 2:   192.168.1.64/26  (192.168.1.65 - 192.168.1.126)
+# Subnet 3:   192.168.1.128/26 (192.168.1.129 - 192.168.1.190)
+# Subnet 4:   192.168.1.192/26 (192.168.1.193 - 192.168.1.254)
+# Anvandbara: 62 hosts per subnet
+```
+
+### Subnetting-verktyg
+
+```bash
+# ==============================================================
+# VERKTYG FOR SUBNET-BERAKNING
+# ==============================================================
+
+# Med ipcalc
+ipcalc 192.168.1.0/24
+ipcalc 192.168.1.0/25
+ipcalc 192.168.1.0/26
+
+# Med sipcalc
+sipcalc 192.168.1.0/24
+
+# Online-kalkylatorer:
+# - subnet-calculator.com
+# - ipaddressguide.com
+```
+
+---
+
+## VPC Subnetting i Cloud
+
+### AWS VPC Exempel
+
+```bash
+# ==============================================================
+# AWS VPC DESIGN
+# ==============================================================
+
+# VPC: 10.0.0.0/16 (65,536 adresser)
+
+# Subnets:
+10.0.1.0/24    # Public subnet (AZ-a)  - Load balancers
+10.0.2.0/24    # Private subnet (AZ-a) - App servers
+10.0.3.0/24    # Public subnet (AZ-b)  - Load balancers
+10.0.4.0/24    # Private subnet (AZ-b) - App servers
+10.0.5.0/24    # Database subnet (AZ-a)
+10.0.6.0/24    # Database subnet (AZ-b)
+
+# Varfor flera AZ?
+# - High availability
+# - Fault tolerance
+```
+
+### Azure VNet Exempel
+
+```bash
+# ==============================================================
+# AZURE VNET DESIGN
+# ==============================================================
+
+# VNet: 10.0.0.0/16
+
+# Subnets:
+10.0.1.0/24    # Frontend
+10.0.2.0/24    # Backend
+10.0.3.0/24    # Database
+10.0.4.0/24    # Gateway subnet
+```
+
+### GCP VPC Exempel
+
+```bash
+# ==============================================================
+# GCP VPC DESIGN
+# ==============================================================
+
+# VPC: 10.0.0.0/16
+
+# Subnets (per region):
+10.0.1.0/24    # us-east1
+10.0.2.0/24    # us-west1
+10.0.3.0/24    # eu-west1
+```
+
+---
+
+## Subnet-typer
+
+### Public Subnet
+
+```bash
+# ==============================================================
+# PUBLIC SUBNET
+# ==============================================================
+
+# Egenskaper:
+# - Har Internet Gateway
+# - Kan na internet direkt
+# - For: Load balancers, NAT gateways, bastion hosts
+
+# Exempel:
+10.0.1.0/24    # Public subnet
+
+# Route table:
+# Destination     Target
+# 10.0.0.0/16     local
+# 0.0.0.0/0       igw-12345 (Internet Gateway)
+```
+
+### Private Subnet
+
+```bash
+# ==============================================================
+# PRIVATE SUBNET
+# ==============================================================
+
+# Egenskaper:
+# - Ingen direkt internet-atkomst
+# - Behover NAT Gateway for utgaende trafik
+# - For: Application servers, internal services
+
+# Exempel:
+10.0.2.0/24    # Private subnet
+
+# Route table:
+# Destination     Target
+# 10.0.0.0/16     local
+# 0.0.0.0/0       nat-12345 (NAT Gateway)
+```
+
+### Database Subnet
+
+```bash
+# ==============================================================
+# DATABASE SUBNET
+# ==============================================================
+
+# Egenskaper:
+# - Helt isolerat
+# - Ingen internet-atkomst (ingen default route)
+# - Endast atkomlig fran application subnets
+# - For: Databaser, cache, interna tjanster
+
+# Exempel:
+10.0.5.0/24    # Database subnet
+
+# Route table:
+# Destination     Target
+# 10.0.0.0/16     local
+# (ingen 0.0.0.0/0 route!)
+```
+
+---
+
+## Route Tables
+
+### Route Table grunderna
+
+```bash
+# ==============================================================
+# ROUTE TABLE KONCEPT
+# ==============================================================
+
+# Varje subnet har en route table
+# Definierar var trafik ska skickas
+
+# Default route (0.0.0.0/0):
+# - Public subnet:  -> Internet Gateway
+# - Private subnet: -> NAT Gateway
+# - Database:       -> Ingen (isolerat)
+
+# Local route (alltid med):
+# - VPC CIDR -> local (intern VPC-trafik)
+```
+
+### Exempel Route Tables
+
+```bash
+# ==============================================================
+# PUBLIC SUBNET ROUTE TABLE
+# ==============================================================
+# Destination      Target
+# 10.0.0.0/16      local         (VPC internt)
+# 0.0.0.0/0        igw-12345     (Internet)
+
+# ==============================================================
+# PRIVATE SUBNET ROUTE TABLE
+# ==============================================================
+# Destination      Target
+# 10.0.0.0/16      local         (VPC internt)
+# 0.0.0.0/0        nat-12345     (NAT for utgaende)
+
+# ==============================================================
+# DATABASE SUBNET ROUTE TABLE
+# ==============================================================
+# Destination      Target
+# 10.0.0.0/16      local         (VPC internt endast)
+```
+
+---
+
+## Subnet Sizing
+
+### Planera subnets
+
+```bash
+# ==============================================================
+# PLANERINGS-OVERVAGANDEN
+# ==============================================================
+
+# 1. Antal hosts som behovs
+# 2. Framtida tillvaxt
+# 3. Reserverade IP:er
+
+# AWS reserverar 5 IP:er per subnet:
+# - .0   Network address
+# - .1   VPC router
+# - .2   DNS
+# - .3   Future use
+# - .255 Broadcast
+
+# Sa ett /24 subnet har 251 anvandbara (256 - 5)
+```
+
+### Vanliga storlekar
+
+| CIDR | Totalt | Anvandbara (AWS) | Bra for |
+|------|--------|------------------|---------|
+| /28 | 16 | 11 | Sma subnets, point-to-point |
+| /27 | 32 | 27 | Sma tjanster |
+| /26 | 64 | 59 | Medelstora tjanster |
+| /24 | 256 | 251 | Standard, de flesta subnets |
+| /23 | 512 | 507 | Stora subnets |
+| /22 | 1024 | 1019 | Mycket stora subnets |
+
+---
+
+## Best Practices
+
+```bash
+# ==============================================================
+# 1. PLANERA FOR TILLVAXT
+# ==============================================================
+# - Anvand inte hela VPC for ett subnet
+# - Lamna rum for expansion
+# - Anvand /24 for de flesta subnets
+
+# ==============================================================
+# 2. SEGMENTERA PER FUNKTION
+# ==============================================================
+# Separata subnets for:
+# - Public-facing services
+# - Application servers
+# - Databases
+# - Management/admin
+
+# ==============================================================
+# 3. ANVAND KONSEKVENT STORLEK
+# ==============================================================
+# - Samma subnet-storlek nar mojligt
+# - Gor hantering enklare
+# - Forenklar routing
+
+# ==============================================================
+# 4. DOKUMENTERA SUBNET-ANVANDNING
+# ==============================================================
+# Dokumentera:
+# - Subnet syfte
+# - IP-ranges
+# - Route tables
+# - Security groups
+```
+
+---
+
+## Sammanfattning
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| **CIDR** | IP_address/prefix_length format |
+| **/24** | Vanligaste subnet-storleken (256 adresser) |
+| **Subnet mask** | Definierar network vs host bits |
+| **Public subnet** | Har Internet Gateway |
+| **Private subnet** | Behover NAT for internet |
+| **Route table** | Styr var trafik gar |
+
+| CIDR | Adresser | Typisk anvandning |
+|------|----------|-------------------|
+| /8 | 16M | Stora organisationer |
+| /16 | 65K | VPC/VNet |
+| /24 | 256 | Standard subnet |
+| /26 | 64 | Mindre subnet |
+| /32 | 1 | Host route |
+
+**Kom ihag:**
+- Planera for tillvaxt - anvand inte hela VPC direkt
+- Segmentera per funktion (public/private/database)
+- Dokumentera alla subnets och deras syfte
+- /24 ar standard for de flesta subnets
+- AWS reserverar 5 IP:er per subnet
 """,
         },
         {
