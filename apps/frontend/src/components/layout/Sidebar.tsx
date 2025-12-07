@@ -70,7 +70,7 @@ const mainNavItems: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: Home },
     { label: "Camp DevOps", href: "/modules", icon: BookOpen },
     { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
-    { label: "Studyflow", href: "/studyflow", icon: Clock },
+    { label: "Study", href: "/study", icon: Clock },
     { label: "AI Quiz", href: "/quiz", icon: Brain },
     { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Profile", href: "/profile", icon: User },

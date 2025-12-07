@@ -60,7 +60,7 @@ module.exports = {
                 },
             };
             config.optimization.runtimeChunk = false;
-            
+
             // 🛡️ SECURITY: Mangle/obfuscate function and variable names
             if (config.optimization.minimizer) {
                 config.optimization.minimizer.forEach((minimizer) => {
