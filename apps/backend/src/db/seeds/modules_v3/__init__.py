@@ -47,6 +47,9 @@ from .sql import MODULE_SQL_MASTERY
 from .module_linux_v2 import MODULE_LINUX_MASTERY_V2
 from .module_azure_v2 import MODULE_AZURE_MASTERY_V2
 
+# V3 MODULES (Swedish pedagogical style)
+from .module_linux_v3 import MODULE_LINUX_MASTERY_V3
+
 
 # =============================================================================
 # SKILLSMAPS - Additional Programming & Specialized Skills (11 modules)
@@ -74,7 +77,7 @@ from .ai_agents import MODULE_AI_AGENTS
 
 # Camp DevOps - Core YH DevOps curriculum
 CAMP_DEVOPS_MODULES = [
-    MODULE_LINUX_MASTERY_V2,  # V2 replaces V1
+    MODULE_LINUX_MASTERY_V3,  # V3 - Swedish pedagogical style (replaces V2)
     MODULE_BASH,
     MODULE_GIT_GITHUB_MASTERY,
     MODULE_DOCKER_MASTERY,
