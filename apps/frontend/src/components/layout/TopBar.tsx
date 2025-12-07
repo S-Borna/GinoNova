@@ -434,7 +434,7 @@ function SessionTimerDisplay() {
                 "bg-emerald-500/10 border border-emerald-500/20",
                 "text-emerald-600 dark:text-emerald-400"
             )}>
-                <Clock className="h-4 w-4" />
+                <span className="text-sm font-medium">Locked in!</span>
                 <span className="text-sm font-mono font-medium">0:00</span>
             </div>
         )
@@ -446,7 +446,7 @@ function SessionTimerDisplay() {
             "bg-emerald-500/10 border border-emerald-500/20",
             "text-emerald-600 dark:text-emerald-400"
         )}>
-            <Clock className="h-4 w-4" />
+            <span className="text-sm font-medium">Locked in!</span>
             <span className="text-sm font-mono font-medium">
                 {formatTime(currentSessionSeconds)}
             </span>
