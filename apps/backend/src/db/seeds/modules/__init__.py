@@ -4,21 +4,16 @@ DevOps Learning Modules - Clean Architecture
 
 EN fil per modul. Ingen V1/V2/V3. Bara senaste versionen.
 
-Struktur:
-- modules/linux.py      → Linux Mastery
-- modules/docker.py     → Docker Mastery
-- modules/kubernetes.py → Kubernetes Mastery
-- modules/git_github.py → Git & GitHub Mastery
-- modules/bash.py       → Bash Mastery
-- modules/terraform.py  → Terraform Mastery
-- modules/ansible.py    → Ansible Mastery
-- modules/cicd.py       → CI/CD Mastery
-- etc.
+22 moduler totalt:
+- 13 i Camp DevOps (DevOps-fokuserade)
+- 22 i SkillsMaps (alla moduler)
 
-Alla moduler exporteras via ALL_MODULES listan.
+Camp DevOps är ett subset av SkillsMaps.
 """
 
-# Refaktorerade moduler (nya rena filer)
+# =============================================================================
+# REFAKTORERADE MODULER (nya rena filer med 20 tasks var)
+# =============================================================================
 from .linux import MODULE as LINUX_MODULE
 from .docker import MODULE as DOCKER_MODULE
 from .kubernetes import MODULE as KUBERNETES_MODULE
@@ -29,17 +24,10 @@ from .ansible import MODULE as ANSIBLE_MODULE
 from .cicd import MODULE as CICD_MODULE
 from .aws import MODULE as AWS_MODULE
 
-# Legacy-moduler som ännu inte refaktorerats
-# Importeras från gamla strukturen tills de flyttas hit
+# =============================================================================
+# LEGACY-MODULER (väntar på omskrivning till Linux-mallen)
+# =============================================================================
 from ..modules_v3 import (
-    # MODULE_BASH, - Ersatt av bash.py
-    # MODULE_GIT_GITHUB_MASTERY, - Ersatt av git_github.py
-    # MODULE_DOCKER_MASTERY, - Ersatt av docker.py
-    # MODULE_KUBERNETES_MASTERY, - Ersatt av kubernetes.py
-    # MODULE_TERRAFORM_MASTERY, - Ersatt av terraform.py
-    # MODULE_ANSIBLE_MASTERY, - Ersatt av ansible.py
-    # MODULE_CICD_MASTERY, - Ersatt av cicd.py
-    # MODULE_AWS_DEVOPS, - Ersatt av aws.py
     MODULE_AZURE_MASTERY_V2,
     MODULE_PYTHON_DEVOPS,
     MODULE_SYSTEM_DESIGN,
@@ -55,8 +43,11 @@ from ..modules_v3 import (
     MODULE_AI_AGENTS,
 )
 
-# Refaktorerade moduler har prioritet
+# =============================================================================
+# ALLA MODULER (22 st) - används av SkillsMaps
+# =============================================================================
 ALL_MODULES = [
+    # Refaktorerade (9 st)
     LINUX_MODULE,
     DOCKER_MODULE,
     KUBERNETES_MODULE,
@@ -66,17 +57,7 @@ ALL_MODULES = [
     ANSIBLE_MODULE,
     CICD_MODULE,
     AWS_MODULE,
-]
-
-LEGACY_MODULES = [
-    # MODULE_BASH, - Ersatt av bash.py
-    # MODULE_GIT_GITHUB_MASTERY, - Ersatt av git_github.py
-    # MODULE_DOCKER_MASTERY, - Ersatt av docker.py
-    # MODULE_KUBERNETES_MASTERY, - Ersatt av kubernetes.py
-    # MODULE_TERRAFORM_MASTERY, - Ersatt av terraform.py
-    # MODULE_ANSIBLE_MASTERY, - Ersatt av ansible.py
-    # MODULE_CICD_MASTERY, - Ersatt av cicd.py
-    # MODULE_AWS_DEVOPS, - Ersatt av aws.py
+    # Legacy (13 st)
     MODULE_AZURE_MASTERY_V2,
     MODULE_PYTHON_DEVOPS,
     MODULE_SYSTEM_DESIGN,
@@ -92,34 +73,58 @@ LEGACY_MODULES = [
     MODULE_AI_AGENTS,
 ]
 
+# =============================================================================
+# CAMP DEVOPS (13 st) - DevOps-fokuserade moduler
+# =============================================================================
+CAMP_DEVOPS_SLUGS = [
+    "linux-mastery",
+    "bash-mastery",
+    "git-github-mastery",
+    "docker-mastery",
+    "kubernetes-mastery",
+    "cicd-mastery",
+    "terraform-mastery",
+    "ansible-mastery",
+    "aws-mastery",
+    "azure-mastery-v2",      # Legacy - väntar på omskrivning
+    "python-devops",         # Legacy - väntar på omskrivning
+    "system-design",         # Legacy - väntar på omskrivning
+    "sql-mastery",           # Legacy - väntar på omskrivning
+]
+
+# =============================================================================
+# HELPER FUNCTIONS
+# =============================================================================
 
 def get_all_modules():
-    """Returnerar alla moduler - refaktorerade + legacy."""
-    # Refaktorerade moduler har prioritet
-    refactored_slugs = {m["slug"] for m in ALL_MODULES}
+    """Returnerar alla 22 moduler (SkillsMaps)."""
+    return ALL_MODULES
 
-    # Lägg till legacy-moduler som inte refaktorerats än
-    combined = list(ALL_MODULES)
-    for legacy in LEGACY_MODULES:
-        if legacy["slug"] not in refactored_slugs:
-            combined.append(legacy)
 
-    return combined
+def get_camp_devops_modules():
+    """Returnerar Camp DevOps moduler (13 st DevOps-fokuserade)."""
+    return [m for m in ALL_MODULES if m.get("slug") in CAMP_DEVOPS_SLUGS]
+
+
+def get_skillsmaps_modules():
+    """Returnerar alla moduler (samma som get_all_modules)."""
+    return ALL_MODULES
 
 
 def get_module_by_slug(slug: str):
     """Hämta en modul via slug."""
-    for m in get_all_modules():
-        if m["slug"] == slug:
+    for m in ALL_MODULES:
+        if m.get("slug") == slug:
             return m
     return None
 
 
 def get_module_count():
     """Antal moduler totalt."""
-    return len(get_all_modules())
+    return len(ALL_MODULES)
 
 
 def get_total_tasks():
     """Totalt antal tasks."""
+    return sum(len(m.get("tasks", [])) for m in ALL_MODULES)
     return sum(len(m.get("tasks", [])) for m in get_all_modules())
