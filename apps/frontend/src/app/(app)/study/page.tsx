@@ -265,13 +265,13 @@ export default function StudyPage() {
                     <p className="text-zinc-400">{selectedModule.description}</p>
                 </div>
 
-                {/* Lesson Selection */}
+                {/* Difficulty Selection */}
                 <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h2 className="font-semibold text-lg">Välj lessons att öva på</h2>
+                            <h2 className="font-semibold text-lg">Välj svårighetsgrad</h2>
                             <p className="text-sm text-zinc-500">
-                                Välj en eller flera lessons, eller lämna tomt för hela modulen
+                                Välj en eller flera nivåer, eller lämna tomt för alla
                             </p>
                         </div>
                         <div className="flex gap-2">
@@ -290,28 +290,53 @@ export default function StudyPage() {
                         </div>
                     </div>
 
-                    {/* Lessons Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {selectedModule.lessons.map(lesson => (
-                            <button
-                                key={lesson.id}
-                                onClick={() => toggleLesson(lesson.id)}
-                                className={cn(
-                                    "flex items-center gap-3 p-4 rounded-lg text-left",
-                                    "border transition-all duration-200",
-                                    selectedLessons.has(lesson.id)
-                                        ? "bg-purple-500/20 border-purple-500/50"
-                                        : "bg-zinc-800/50 border-zinc-700 hover:border-zinc-600"
-                                )}
-                            >
-                                {selectedLessons.has(lesson.id) ? (
-                                    <CheckSquare className="w-5 h-5 text-purple-400 shrink-0" />
-                                ) : (
-                                    <Square className="w-5 h-5 text-zinc-600 shrink-0" />
-                                )}
-                                <span className="truncate">{lesson.title}</span>
-                            </button>
-                        ))}
+                    {/* Difficulty Grid with colors */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {selectedModule.lessons.map(lesson => {
+                            const isSelected = selectedLessons.has(lesson.id)
+                            const isEasy = lesson.title === "Grundläggande"
+                            const isMedium = lesson.title === "Medel"
+                            const isHard = lesson.title === "Avancerad"
+                            
+                            return (
+                                <button
+                                    key={lesson.id}
+                                    onClick={() => toggleLesson(lesson.id)}
+                                    className={cn(
+                                        "flex flex-col p-4 rounded-lg text-left",
+                                        "border transition-all duration-200",
+                                        isSelected && isEasy && "bg-emerald-500/20 border-emerald-500/50",
+                                        isSelected && isMedium && "bg-yellow-500/20 border-yellow-500/50",
+                                        isSelected && isHard && "bg-red-500/20 border-red-500/50",
+                                        !isSelected && "bg-zinc-800/50 border-zinc-700 hover:border-zinc-600"
+                                    )}
+                                >
+                                    <div className="flex items-center gap-3 mb-2">
+                                        {isSelected ? (
+                                            <CheckSquare className={cn(
+                                                "w-5 h-5 shrink-0",
+                                                isEasy && "text-emerald-400",
+                                                isMedium && "text-yellow-400",
+                                                isHard && "text-red-400"
+                                            )} />
+                                        ) : (
+                                            <Square className="w-5 h-5 text-zinc-600 shrink-0" />
+                                        )}
+                                        <span className={cn(
+                                            "font-medium",
+                                            isSelected && isEasy && "text-emerald-300",
+                                            isSelected && isMedium && "text-yellow-300",
+                                            isSelected && isHard && "text-red-300"
+                                        )}>
+                                            {lesson.title}
+                                        </span>
+                                    </div>
+                                    <div className="text-xs text-zinc-500 ml-8">
+                                        {lesson.flashcard_count} flashcards • {lesson.quiz_count} quiz
+                                    </div>
+                                </button>
+                            )
+                        })}
                     </div>
                 </div>
 
@@ -331,7 +356,7 @@ export default function StudyPage() {
                         <div className="text-left">
                             <p className="font-medium">Randomisera ordning</p>
                             <p className="text-sm text-zinc-500">
-                                När ingen specifik lesson är vald kommer flashcards/quiz att visas i slumpmässig ordning
+                                Slumpa ordningen på frågor och flashcards
                             </p>
                         </div>
                     </button>

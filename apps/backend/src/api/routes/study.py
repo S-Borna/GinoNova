@@ -112,7 +112,7 @@ def get_flashcards_for_module(module_slug: str) -> List[dict]:
     # Difficulty levels map to "lessons" for backwards compatibility
     difficulty_titles = {
         "easy": "Grundläggande",
-        "medium": "Medel", 
+        "medium": "Medel",
         "hard": "Avancerad"
     }
 
