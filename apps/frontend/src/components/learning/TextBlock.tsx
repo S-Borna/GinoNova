@@ -49,7 +49,7 @@ const customTheme = {
     },
     // Commands - cyan
     'function': { color: '#61dafb' },
-    // Flags/options - orange  
+    // Flags/options - orange
     'parameter': { color: '#ff9f43' },
     // Strings - green
     'string': { color: '#a6e22e' },
@@ -121,7 +121,7 @@ const markdownComponents = {
     code: ({ inline, className, children, ...props }: any) => {
         const match = /language-(\w+)/.exec(className || '')
         const language = match ? match[1] : 'bash'
-        
+
         if (inline) {
             return (
                 <code className="px-1.5 py-0.5 rounded bg-neutral-800 text-primary-400 font-mono text-sm">
@@ -129,7 +129,7 @@ const markdownComponents = {
                 </code>
             )
         }
-        
+
         return (
             <SyntaxHighlighter
                 style={customTheme}
