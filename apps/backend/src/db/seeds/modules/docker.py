@@ -23,123 +23,335 @@ MODULE = {
     "color": "#2496ED",
     "tasks": [
         {
-            "title": "Docker Fundamentals & Architecture",
-            "slug": "docker-fundamentals-architecture",
+            "title": "Docker Fundamentals",
+            "slug": "docker-fundamentals",
             "difficulty": "easy",
             "estimated_minutes": 45,
             "xp_reward": 75,
-            "content": """# Docker Fundamentals & Architecture
+            "content": """# Docker Fundamentals
 
-## Varför behöver du kunna detta?
+## ⚡ Snabbinstallation (2 minuter)
 
-Som DevOps-ingenjör kommer du använda Docker dagligen. Du måste förstå:
-
-- **Vad containers faktiskt är** så du kan felsöka när saker går fel
-- **Hur Docker-arkitekturen fungerar** så du vet var problem kan uppstå
-- **Skillnaden mellan containers och VMs** så du kan välja rätt verktyg
-
----
-
-## Så fungerar Docker
-
-Tänk på Docker som en **standardiserad fraktcontainer** för mjukvara. Precis som fraktcontainrar revolutionerade sjöfarten genom att standardisera hur gods transporteras, revolutionerar Docker hur mjukvara levereras.
-
----
-
-## Container vs Virtual Machine
+Innan vi börjar behöver du Docker installerat. Välj ditt operativsystem:
 
 ```bash
-# Virtual Machine (VM)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🍎 macOS / 🪟 Windows
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1. Gå till: https://docker.com/products/docker-desktop
+# 2. Ladda ner Docker Desktop
+# 3. Installera och starta
+# 4. Klart!
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐧 Linux (Ubuntu/Debian)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Kör Docker utan sudo (valfritt men rekommenderat)
+sudo usermod -aG docker $USER
+# Logga ut och in igen för att ändringen ska gälla
+```
+
+**Verifiera installationen:**
+
+```bash
+docker --version
+# Förväntad output: Docker version 24.x.x eller liknande
+
+docker run hello-world
+# Om du ser "Hello from Docker!" är allt klart! ✅
+```
+
+---
+
+## 🎯 Varför Docker är viktigt för DevOps
+
+Docker är ett av de viktigaste verktygen i modern DevOps. Här är varför:
+
+| Problem utan Docker | Lösning med Docker |
+|--------------------|--------------------|
+| "Det fungerade på min dator!" | Samma container körs identiskt överallt |
+| Deployment tar timmar | Containers startar på sekunder |
+| Varje server konfigureras manuellt | Allt är paketerat i imagen |
+| Resursslöseri med VMs | Containers delar OS-kärnan |
+| Svårt att skala | Starta fler containers direkt |
+| Beroendekonflikter | Varje app isolerad i sin container |
+
+---
+
+## 🐳 Vad är Docker egentligen?
+
+Docker låter dig paketera en applikation tillsammans med **allt den behöver** - kod, runtime, bibliotek, systemverktyg och inställningar - i en portabel enhet som kallas **container**.
+
+Tänk på det som en **standardiserad fraktcontainer** för mjukvara. Precis som fraktcontainrar revolutionerade sjöfarten genom att standardisera transport, revolutionerar Docker hur mjukvara levereras.
+
+```bash
+# En container innehåller:
+┌─────────────────────────────────────┐
+│  🔹 Din applikationskod             │
+│  🔹 Runtime (Node, Python, etc)     │
+│  🔹 Systembibliotek                 │
+│  🔹 Konfigurationsfiler             │
+│  🔹 Miljövariabler                  │
+└─────────────────────────────────────┘
+# Allt paketerat → fungerar överallt!
+```
+
+---
+
+## 📦 Containers vs Virtual Machines
+
+Det är viktigt att förstå skillnaden mellan containers och virtual machines (VMs):
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# VIRTUAL MACHINE
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ┌─────────────────────────────────────┐
 │           Din App                    │
 ├─────────────────────────────────────┤
-│        Guest OS (hela!)              │  # 1-10 GB
+│      Helt eget OS (Guest OS)         │  ← 1-10 GB bara för OS!
 ├─────────────────────────────────────┤
 │         Hypervisor                   │
 ├─────────────────────────────────────┤
 │          Host OS                     │
+├─────────────────────────────────────┤
+│         Hardware                     │
 └─────────────────────────────────────┘
+# Starttid: 1-5 minuter
+# RAM per VM: 1-4 GB minimum
 
-# Container
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# CONTAINER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ┌─────────────────────────────────────┐
 │           Din App                    │
 ├─────────────────────────────────────┤
-│     Container Runtime (Docker)       │  # MB istället för GB
+│        Docker Engine                 │  ← MB istället för GB!
 ├─────────────────────────────────────┤
 │          Host OS                     │
+├─────────────────────────────────────┤
+│         Hardware                     │
 └─────────────────────────────────────┘
+# Starttid: 1-2 sekunder
+# RAM per container: 50-200 MB
 ```
 
-**Containers delar Host OS kernel** - det är därför de är så snabba och lätta!
+**Nyckelpunkt:** Containers delar host-systemets OS-kärna. Det är därför de är så snabba och lätta!
+
+**Praktiskt exempel:**
+
+```bash
+# Du behöver köra 3 webbservrar:
+
+# Med VMs:
+# - 3 separata operativsystem
+# - Totalt: ~6-8 GB RAM
+# - Starttid: 5-10 minuter
+
+# Med Docker:
+# - 3 containers, delad OS-kärna
+# - Totalt: ~200 MB RAM
+# - Starttid: 3-5 sekunder
+```
 
 ---
 
-## Docker-arkitekturen
+## 🏗️ Docker-arkitekturen
+
+Docker består av flera komponenter som samarbetar:
 
 ```bash
 ┌──────────────────────────────────────────────────────────┐
-│                     Docker Client                         │
-│                    (docker CLI)                           │
+│                  📱 DOCKER CLIENT                         │
+│              (kommandoradsverktyget 'docker')            │
+│                                                          │
+│   docker run, docker build, docker pull, docker ps...    │
 └─────────────────────────┬────────────────────────────────┘
-                          │ REST API
+                          │
+                          │ REST API (kommunikation)
                           ▼
 ┌──────────────────────────────────────────────────────────┐
-│                    Docker Daemon                          │
-│                     (dockerd)                             │
-├──────────────────────────────────────────────────────────┤
-│  Images  │  Containers  │  Networks  │  Volumes          │
-└──────────────────────────────────────────────────────────┘
+│                  ⚙️ DOCKER DAEMON                         │
+│                    (dockerd)                              │
+│                                                          │
+│   Bakgrundsprocess som gör allt jobb:                    │
+│   - Hanterar images                                       │
+│   - Skapar/kör containers                                │
+│   - Hanterar nätverk och volymer                         │
+└─────────────────────────┬────────────────────────────────┘
                           │
                           ▼
 ┌──────────────────────────────────────────────────────────┐
-│                   Container Runtime                       │
-│                    (containerd)                           │
+│               📦 CONTAINER RUNTIME                        │
+│                  (containerd)                             │
+│                                                          │
+│   Lågnivå-hantering av containers                        │
 └──────────────────────────────────────────────────────────┘
 ```
 
+**Förklaring av komponenterna:**
+
+| Komponent | Vad den gör |
+|-----------|-------------|
+| **Docker Client** | CLI-verktyget du skriver kommandon i |
+| **Docker Daemon** | Bakgrundsprocess som gör allt arbete |
+| **Docker Images** | Read-only mallar för containers |
+| **Docker Containers** | Körande instanser av images |
+| **Docker Hub** | Publik registry för images (som GitHub för kod) |
+
 ---
 
-## Grundläggande kommandon
+## 🌐 Docker Hub - Appbutiken för containers
+
+Docker Hub är världens största registry för Docker images. Tänk på det som en **appbutik för containers**:
 
 ```bash
-# Kolla att Docker är installerat och kör
-docker version              # Visar client och server version
-docker info                 # Detaljerad info om Docker-installation
+# Docker Hub innehåller tusentals färdiga images:
+# ┌─────────────────────────────────────────────────┐
+# │  nginx        - Webbserver                      │
+# │  postgres     - PostgreSQL databas              │
+# │  redis        - Cache och meddelandehantering   │
+# │  node         - Node.js runtime                 │
+# │  python       - Python runtime                  │
+# │  mysql        - MySQL databas                   │
+# │  mongo        - MongoDB databas                 │
+# │  ubuntu       - Ubuntu basimage                 │
+# └─────────────────────────────────────────────────┘
 
-# Kör din första container
-docker run hello-world      # Laddar ner image och kör container
+# Sök efter images
+docker search nginx
+# Visar alla nginx-relaterade images
 
-# Lista containers
-docker ps                   # Visar körande containers
-docker ps -a                # Visar ALLA containers (även stoppade)
+# Ladda ner en image
+docker pull nginx
+# Hämtar officiella nginx-imagen
 
-# Lista images
-docker images               # Visar alla lokala images
+# Ladda upp din egen image
+docker push dittnamn/din-image
+# Publicerar till Docker Hub (kräver konto)
 ```
 
 ---
 
-## Vad händer när du kör "docker run"?
+## 🖥️ Docker på olika plattformar
+
+Docker fungerar på alla operativsystem, men bäst på Linux:
+
+| Plattform | Hur Docker körs | Prestanda |
+|-----------|-----------------|-----------|
+| **Linux** | Direkt på systemet (native) | ⭐⭐⭐⭐⭐ Bäst |
+| **macOS** | Via Docker Desktop (liten Linux VM) | ⭐⭐⭐⭐ Bra |
+| **Windows** | Via Docker Desktop (WSL2/Hyper-V) | ⭐⭐⭐⭐ Bra |
+
+---
+
+## 🔧 Grundläggande Docker-kommandon
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📊 INFORMATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+docker --version          # Visar Docker-versionen
+docker info               # Detaljerad systeminfo
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📦 IMAGES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+docker images             # Lista alla lokala images
+docker pull nginx         # Ladda ner nginx-image
+docker rmi nginx          # Ta bort en image
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐳 CONTAINERS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+docker ps                 # Lista körande containers
+docker ps -a              # Lista ALLA containers (även stoppade)
+docker run nginx          # Skapa och starta en container
+docker stop <id>          # Stoppa en container
+docker rm <id>            # Ta bort en container
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 💡 HJÄLP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+docker run --help         # Hjälp för specifikt kommando
+docker --help             # Lista alla kommandon
+```
+
+---
+
+## 🔄 Vad händer när du kör "docker run"?
 
 ```bash
 docker run nginx
 ```
 
-1. **Docker Client** skickar kommandot till Docker Daemon
-2. **Daemon** kollar om `nginx` image finns lokalt
-3. Om inte → laddar ner från **Docker Hub**
-4. **Daemon** skapar en container från imagen
-5. **Daemon** allokerar filsystem, nätverk, etc.
-6. **Daemon** startar containern
+Bakom kulisserna händer detta:
+
+```bash
+# Steg 1: Docker Client → Docker Daemon
+#         "Hej, jag vill köra nginx!"
+
+# Steg 2: Daemon kollar lokalt
+#         "Finns nginx-image på denna dator?"
+
+# Steg 3: Om nej → Ladda ner från Docker Hub
+#         "Hämtar nginx:latest från registry..."
+
+# Steg 4: Skapa container
+#         "Skapar isolerad miljö med filsystem, nätverk..."
+
+# Steg 5: Starta container
+#         "Nginx körs nu i containern!"
+```
+
+**Så `docker run` = pull + create + start i ett kommando!**
 
 ---
 
-## Key Takeaways
+## 🚀 Varför Docker i DevOps-arbetet?
 
-- Docker containers är **inte VMs** - de delar host OS kernel
-- **Docker Client** pratar med **Docker Daemon** via REST API
-- **Images** är read-only templates, **Containers** är körande instanser
-- `docker run` = pull + create + start i ett kommando
+| Traditionellt problem | Docker-lösning |
+|----------------------|----------------|
+| "Det fungerade på min dator" | Samma image körs överallt |
+| Komplexa installationssteg | `docker run` - en rad |
+| Konfigurationskaos | Allt i Dockerfile, versionshanterat |
+| Långsam deployment | Sekunder istället för timmar |
+| Resurshungriga VMs | Lätta containers |
+| Svårt att rulla tillbaka | Byt till tidigare image-tag |
+
+```bash
+# Före Docker (deployment):
+# 1. SSH till server
+# 2. Installera dependencies (kan ta timmar)
+# 3. Konfigurera miljön
+# 4. Starta applikationen
+# 5. Hoppas inget går fel...
+
+# Med Docker:
+docker pull min-app:v1.2.3
+docker run -d min-app:v1.2.3
+# Klart på sekunder! ✅
+```
+
+---
+
+## ✅ Sammanfattning
+
+| Begrepp | Förklaring |
+|---------|------------|
+| **Docker** | Plattform för att bygga och köra containers |
+| **Container** | Isolerad miljö med app + dependencies |
+| **Image** | Read-only mall för att skapa containers |
+| **Docker Hub** | Registry för att dela images |
+| **Docker Daemon** | Bakgrundsprocess som hanterar allt |
+| **Docker Client** | CLI-verktyget du använder |
+
+**Nästa steg:** Nu när du förstår grunderna ska vi dyka djupare i Docker Images!
 """,
         },
         {
