@@ -69,12 +69,12 @@ interface SidebarProps {
 
 const mainNavItems: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: Home },
+    { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Camp DevOps", href: "/modules", icon: BookOpen },
     { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
     { label: "Studyroom", href: "/study", icon: Clock },
-    { label: "Pulsmätning", href: "/pulse", icon: Heart },
     { label: "AI Quiz", href: "/quiz", icon: Brain },
-    { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
+    { label: "Pulsmätning", href: "/pulse", icon: Heart },
     { label: "Profile", href: "/profile", icon: User },
     { label: "Admin", href: "/admin", icon: Shield, adminOnly: true },
 ]

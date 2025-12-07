@@ -47,15 +47,15 @@ async def chat_with_dallas(request: ChatRequest):
     Chatta med Dallas - din DevOps-guide.
     Försöker använda OpenAI GPT-3.5-turbo, annars fallback.
     """
-    
+
     openai_key = os.getenv("OPENAI_API_KEY")
-    
+
     if openai_key:
         try:
             import openai
             client = openai.OpenAI(api_key=openai_key)
-            
-            system_prompt = f"""Du är Dallas, en vänlig DevOps-guide på DevOpsHub. 
+
+            system_prompt = f"""Du är Dallas, en vänlig DevOps-guide på DevOpsHub.
 Du pratar svenska och är stöttande, varm och pedagogisk.
 Användaren heter {request.user_name}.
 
@@ -76,20 +76,20 @@ Använd emojis sparsamt men kärleksfullt. 🐴"""
                 max_tokens=150,
                 temperature=0.8
             )
-            
+
             return ChatResponse(
                 response=response.choices[0].message.content,
                 context=request.context
             )
-            
+
         except Exception:
             # Om OpenAI failar, använd fallback
             pass
-    
+
     # Fallback-svar
     context_responses = FALLBACK_RESPONSES.get(request.context, FALLBACK_RESPONSES["general"])
     response_text = random.choice(context_responses)
-    
+
     return ChatResponse(
         response=response_text,
         context=request.context
