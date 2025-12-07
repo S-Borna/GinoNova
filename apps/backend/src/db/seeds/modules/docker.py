@@ -28,118 +28,297 @@ MODULE = {
             "difficulty": "easy",
             "estimated_minutes": 45,
             "xp_reward": 75,
-            "content": """# Docker Fundamentals & Architecture
+            "content": """# 🐳 Docker Fundamentals & Architecture
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 Varför viktigt för DevOps?
+
+| Scenario | Varför Docker är viktigt |
+|----------|-------------------------|
+| **Deployment** | Samma container körs identiskt överallt |
+| **Skalning** | Spinn upp nya instanser på sekunder |
+| **CI/CD** | Bygg en gång, deploya överallt |
+| **Microservices** | Isolera tjänster från varandra |
+| **Felsökning** | Reproducera produktionsproblem lokalt |
 
 Som DevOps-ingenjör kommer du använda Docker dagligen. Du måste förstå:
 
-- **Vad containers faktiskt är** så du kan felsöka när saker går fel
-- **Hur Docker-arkitekturen fungerar** så du vet var problem kan uppstå
-- **Skillnaden mellan containers och VMs** så du kan välja rätt verktyg
+- 📦 **Vad containers faktiskt är** så du kan felsöka när saker går fel
+- 🏗️ **Hur Docker-arkitekturen fungerar** så du vet var problem kan uppstå
+- ⚖️ **Skillnaden mellan containers och VMs** så du kan välja rätt verktyg
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar Docker
+## 📦 Vad är Docker?
 
 Tänk på Docker som en **standardiserad fraktcontainer** för mjukvara. Precis som fraktcontainrar revolutionerade sjöfarten genom att standardisera hur gods transporteras, revolutionerar Docker hur mjukvara levereras.
 
----
-
-## Container vs Virtual Machine
-
-```bash
-# Virtual Machine (VM)
-┌─────────────────────────────────────┐
-│           Din App                    │
-├─────────────────────────────────────┤
-│        Guest OS (hela!)              │  # 1-10 GB
-├─────────────────────────────────────┤
-│         Hypervisor                   │
-├─────────────────────────────────────┤
-│          Host OS                     │
-└─────────────────────────────────────┘
-
-# Container
-┌─────────────────────────────────────┐
-│           Din App                    │
-├─────────────────────────────────────┤
-│     Container Runtime (Docker)       │  # MB istället för GB
-├─────────────────────────────────────┤
-│          Host OS                     │
-└─────────────────────────────────────┘
 ```
+┌─────────────────────────────────────────────────────────────┐
+│                    DOCKER KONCEPTET                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   🚢 Fraktcontainer          🐳 Docker Container            │
+│   ─────────────────          ──────────────────────         │
+│   • Standardstorlek          • Standardformat               │
+│   • Fraktas var som helst    • Körs var som helst           │
+│   • Innehåll isolerat        • App isolerad                 │
+│   • Staplas effektivt        • Resurseffektiv               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ⚖️ Container vs Virtual Machine
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              VIRTUAL MACHINE (VM)                           │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                    │
+│  │  App A   │ │  App B   │ │  App C   │                    │
+│  ├──────────┤ ├──────────┤ ├──────────┤                    │
+│  │ Guest OS │ │ Guest OS │ │ Guest OS │  ← Varje VM har    │
+│  │ (5-10GB) │ │ (5-10GB) │ │ (5-10GB) │    eget OS!        │
+│  └──────────┘ └──────────┘ └──────────┘                    │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │              Hypervisor (VMware, KVM)               │   │
+│  └─────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │                    Host OS                          │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                    CONTAINERS                               │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                    │
+│  │  App A   │ │  App B   │ │  App C   │                    │
+│  │ (50 MB)  │ │ (100 MB) │ │ (30 MB)  │  ← Bara appen!     │
+│  └──────────┘ └──────────┘ └──────────┘                    │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │           Docker Engine (Container Runtime)         │   │
+│  └─────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │              Host OS (delad kernel)                 │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Jämförelsetabell
+
+| Egenskap | Virtual Machine | Container |
+|----------|----------------|-----------|
+| **Storlek** | 5-10 GB+ | 50-500 MB |
+| **Starttid** | Minuter | Sekunder |
+| **Isolation** | Fullständig (egen kernel) | Process-nivå (delad kernel) |
+| **Resursanvändning** | Hög (kör helt OS) | Låg (bara appen) |
+| **Portabilitet** | Begränsad | Hög |
+| **Användningsfall** | Legacy-appar, olika OS | Microservices, modern dev |
 
 **Containers delar Host OS kernel** - det är därför de är så snabba och lätta!
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Docker-arkitekturen
+## 🏗️ Docker-arkitekturen
 
-```bash
-┌──────────────────────────────────────────────────────────┐
-│                     Docker Client                         │
-│                    (docker CLI)                           │
-└─────────────────────────┬────────────────────────────────┘
-                          │ REST API
-                          ▼
-┌──────────────────────────────────────────────────────────┐
-│                    Docker Daemon                          │
-│                     (dockerd)                             │
-├──────────────────────────────────────────────────────────┤
-│  Images  │  Containers  │  Networks  │  Volumes          │
-└──────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌──────────────────────────────────────────────────────────┐
-│                   Container Runtime                       │
-│                    (containerd)                           │
-└──────────────────────────────────────────────────────────┘
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      DIN TERMINAL                           │
+│                    $ docker run nginx                       │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    DOCKER CLIENT                            │
+│                    (docker CLI)                             │
+│        Tar dina kommandon och skickar till daemon           │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ REST API (unix socket)
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    DOCKER DAEMON                            │
+│                     (dockerd)                               │
+├──────────┬──────────┬───────────┬──────────────────────────┤
+│  Images  │Containers│ Networks  │ Volumes                  │
+│  🖼️      │ 📦       │ 🌐        │ 💾                       │
+└──────────┴──────────┴───────────┴──────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  CONTAINER RUNTIME                          │
+│                   (containerd)                              │
+│          Hanterar container-livscykel                       │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                        RUNC                                 │
+│               Skapar och kör containers                     │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+### Komponentöversikt
 
-## Grundläggande kommandon
+| Komponent | Funktion | Fil/Process |
+|-----------|----------|-------------|
+| **Docker Client** | CLI som du använder | `docker` |
+| **Docker Daemon** | Bakgrundsprocess som gör jobbet | `dockerd` |
+| **containerd** | Container runtime | `containerd` |
+| **runc** | Skapar containers | `runc` |
+| **Docker Registry** | Lagrar images | Docker Hub, ECR, etc. |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 💻 Grundläggande kommandon
+
+### Verifiering och Info
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker version` | Visa client och server version |
+| `docker info` | Detaljerad info om Docker-installation |
+| `docker system df` | Diskutrymme som Docker använder |
 
 ```bash
 # Kolla att Docker är installerat och kör
-docker version              # Visar client och server version
-docker info                 # Detaljerad info om Docker-installation
+docker version
+# Client: Docker Engine - Community
+#  Version:           24.0.7
+# Server: Docker Engine - Community
+#  Version:           24.0.7
 
-# Kör din första container
-docker run hello-world      # Laddar ner image och kör container
-
-# Lista containers
-docker ps                   # Visar körande containers
-docker ps -a                # Visar ALLA containers (även stoppade)
-
-# Lista images
-docker images               # Visar alla lokala images
+docker info
+# Containers: 5
+# Images: 23
+# Storage Driver: overlay2
 ```
 
----
+### Dina första kommandon
 
-## Vad händer när du kör "docker run"?
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker run hello-world` | Kör test-container |
+| `docker ps` | Lista körande containers |
+| `docker ps -a` | Lista ALLA containers |
+| `docker images` | Lista lokala images |
+
+```bash
+# Kör din första container
+docker run hello-world
+# Unable to find image 'hello-world:latest' locally
+# latest: Pulling from library/hello-world
+# Hello from Docker!
+
+# Lista containers
+docker ps          # Körande containers
+docker ps -a       # Alla (även stoppade)
+
+# Lista images
+docker images
+# REPOSITORY    TAG       IMAGE ID       SIZE
+# hello-world   latest    d2c94e258dcb   13.3kB
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🔄 Vad händer när du kör "docker run"?
 
 ```bash
 docker run nginx
 ```
 
-1. **Docker Client** skickar kommandot till Docker Daemon
-2. **Daemon** kollar om `nginx` image finns lokalt
-3. Om inte → laddar ner från **Docker Hub**
-4. **Daemon** skapar en container från imagen
-5. **Daemon** allokerar filsystem, nätverk, etc.
-6. **Daemon** startar containern
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   docker run nginx                          │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+         ┌─────────────────┼─────────────────┐
+         ▼                 │                 │
+┌─────────────────┐        │        ┌────────▼────────┐
+│ 1️⃣ FINNS IMAGE  │        │        │ 2️⃣ PULL IMAGE   │
+│    LOKALT?      │──NEJ──▶│        │  från Docker    │
+│                 │        │        │  Hub            │
+└────────┬────────┘        │        └────────┬────────┘
+         │ JA              │                 │
+         ▼                 │                 ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3️⃣ SKAPA CONTAINER                                          │
+│    • Allokera filsystem (writable layer)                    │
+│    • Konfigurera nätverk (bridge network)                   │
+│    • Sätt upp namespace isolation                           │
+└──────────────────────────┬──────────────────────────────────┘
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 4️⃣ STARTA CONTAINER                                         │
+│    • Kör ENTRYPOINT/CMD                                     │
+│    • Container är nu igång!                                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+### Steg för steg
 
-## Key Takeaways
+| Steg | Vad händer | Docker-komponent |
+|------|------------|------------------|
+| 1 | Kommando tas emot | Docker Client |
+| 2 | Kolla om image finns lokalt | Docker Daemon |
+| 3 | Pull image om den saknas | Docker Daemon → Registry |
+| 4 | Skapa writable layer | Storage Driver |
+| 5 | Konfigurera nätverk | Network Driver |
+| 6 | Starta container | containerd → runc |
 
-- Docker containers är **inte VMs** - de delar host OS kernel
-- **Docker Client** pratar med **Docker Daemon** via REST API
-- **Images** är read-only templates, **Containers** är körande instanser
-- `docker run` = pull + create + start i ett kommando
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📊 Snabbreferens - Viktiga Termer
+
+| Term | Beskrivning |
+|------|-------------|
+| **Image** | Read-only mall/snapshot - receptet |
+| **Container** | Körande instans av en image |
+| **Registry** | Lagring för images (Docker Hub) |
+| **Dockerfile** | Instruktioner för att bygga image |
+| **Layer** | Varje steg i en image |
+| **Volume** | Persistent data utanför container |
+| **Network** | Kommunikation mellan containers |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ⚠️ Vanliga fel och lösningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `permission denied` | Docker kräver sudo | Lägg till user i docker-grupp |
+| `Cannot connect to Docker daemon` | dockerd körs inte | `sudo systemctl start docker` |
+| `image not found` | Fel image-namn | Kolla stavning på Docker Hub |
+| `port already in use` | Annan process på porten | Byt port eller stoppa processen |
+
+```bash
+# Fixa permission denied (logout/login efter)
+sudo usermod -aG docker $USER
+
+# Starta Docker daemon
+sudo systemctl start docker
+sudo systemctl enable docker  # Starta vid boot
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 Key Takeaways
+
+| Punkt | Förklaring |
+|-------|------------|
+| 📦 **Containers ≠ VMs** | Containers delar host OS kernel - mycket lättare |
+| 🔌 **Client-Server** | Docker Client pratar med Docker Daemon via REST API |
+| 🖼️ **Images vs Containers** | Images är templates, containers är körande instanser |
+| 🚀 **docker run** | = pull + create + start i ett kommando |
+
+**Kom ihåg:**
+- 🐳 Docker är **industristandard** för containerisering
+- 📦 En container innehåller **allt appen behöver** för att köra
+- 🔄 **Samma container** körs identiskt i dev, test och produktion
+- ⚡ Containers startar på **sekunder**, inte minuter
 """,
         },
         {
