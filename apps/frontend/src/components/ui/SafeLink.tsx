@@ -2,7 +2,7 @@
 
 /**
  * SafeLink - Security-hardened Link component
- * 
+ *
  * Disables prefetching to prevent route exposure in DevTools Network tab.
  * Use this instead of next/link throughout the app.
  */

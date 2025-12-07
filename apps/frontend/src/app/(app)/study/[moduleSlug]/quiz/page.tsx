@@ -1,0 +1,387 @@
+"use client"
+
+/**
+ * Multiple Choice Quiz Study Mode
+ * 
+ * Test knowledge with questions and answers
+ */
+
+import * as React from "react"
+import { useState, useEffect } from "react"
+import { useParams, useSearchParams } from "next/navigation"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { ArrowRight, CheckCircle, XCircle, RotateCcw, Lightbulb } from "lucide-react"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+
+interface QuizQuestion {
+    id: string
+    question: string
+    options: string[]
+    correct: number
+    explanation?: string
+    module_slug: string
+    lesson_title: string
+}
+
+export default function QuizPage() {
+    const params = useParams()
+    const searchParams = useSearchParams()
+    const moduleSlug = params.moduleSlug as string
+    
+    const [questions, setQuestions] = useState<QuizQuestion[]>([])
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+    const [showResult, setShowResult] = useState(false)
+    const [score, setScore] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const [moduleTitle, setModuleTitle] = useState("")
+    const [showHint, setShowHint] = useState(false)
+
+    useEffect(() => {
+        fetchQuiz()
+    }, [moduleSlug])
+
+    async function fetchQuiz() {
+        try {
+            setLoading(true)
+            
+            // Get lessons and shuffle params
+            const lessons = searchParams.get("lessons") || ""
+            const shuffle = searchParams.get("shuffle") === "true"
+            
+            const url = new URL(`${API_BASE_URL}/api/study/modules/${moduleSlug}/quiz`)
+            if (lessons) url.searchParams.set("lessons", lessons)
+            if (shuffle) url.searchParams.set("shuffle", "true")
+            
+            const res = await fetch(url.toString())
+            if (!res.ok) throw new Error("Failed to fetch quiz")
+            
+            const data = await res.json()
+            setQuestions(data.questions)
+            
+            // Get module title
+            const moduleRes = await fetch(`${API_BASE_URL}/api/study/modules/${moduleSlug}`)
+            if (moduleRes.ok) {
+                const moduleData = await moduleRes.json()
+                setModuleTitle(moduleData.title)
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error loading quiz")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    function selectAnswer(index: number) {
+        if (showResult) return
+        setSelectedAnswer(index)
+    }
+
+    function confirmAnswer() {
+        if (selectedAnswer === null) return
+        
+        const isCorrect = selectedAnswer === questions[currentIndex].correct
+        if (isCorrect) {
+            setScore(prev => prev + 1)
+        }
+        setShowResult(true)
+    }
+
+    function nextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            setCurrentIndex(prev => prev + 1)
+            setSelectedAnswer(null)
+            setShowResult(false)
+            setShowHint(false)
+        }
+    }
+
+    function resetQuiz() {
+        setCurrentIndex(0)
+        setSelectedAnswer(null)
+        setShowResult(false)
+        setScore(0)
+        setShowHint(false)
+    }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-blue-500" />
+            </div>
+        )
+    }
+
+    if (error || questions.length === 0) {
+        return (
+            <div className="min-h-screen bg-zinc-950 text-white p-8">
+                <div className="max-w-2xl mx-auto text-center py-20">
+                    <p className="text-zinc-400 mb-4">
+                        {error || "Inga quiz-frågor tillgängliga för denna modul"}
+                    </p>
+                    <Link
+                        href="/study"
+                        className="text-blue-400 hover:text-blue-300"
+                    >
+                        ← Tillbaka till Study
+                    </Link>
+                </div>
+            </div>
+        )
+    }
+
+    // Quiz Complete
+    if (currentIndex >= questions.length - 1 && showResult) {
+        const percentage = Math.round((score / questions.length) * 100)
+        const isCorrect = selectedAnswer === questions[currentIndex].correct
+        const finalScore = isCorrect ? score : score
+        const finalPercentage = Math.round((finalScore / questions.length) * 100)
+
+        return (
+            <div className="min-h-screen bg-zinc-950 text-white p-8">
+                <div className="max-w-2xl mx-auto">
+                    {/* Current Question Result */}
+                    <div className="mb-8">
+                        <div className={cn(
+                            "p-6 rounded-xl mb-4",
+                            isCorrect 
+                                ? "bg-emerald-500/10 border border-emerald-500/30"
+                                : "bg-red-500/10 border border-red-500/30"
+                        )}>
+                            <div className="flex items-center gap-2 mb-2">
+                                {isCorrect ? (
+                                    <CheckCircle className="w-5 h-5 text-emerald-400" />
+                                ) : (
+                                    <XCircle className="w-5 h-5 text-red-400" />
+                                )}
+                                <span className={isCorrect ? "text-emerald-400" : "text-red-400"}>
+                                    {isCorrect ? "Rätt!" : "Fel"}
+                                </span>
+                            </div>
+                            {questions[currentIndex].explanation && (
+                                <p className="text-sm text-zinc-400">
+                                    {questions[currentIndex].explanation}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Final Score */}
+                    <div className="text-center py-12">
+                        <h1 className="text-3xl font-bold mb-4">Quiz Klart!</h1>
+                        
+                        <div className={cn(
+                            "w-32 h-32 rounded-full mx-auto mb-6",
+                            "flex items-center justify-center",
+                            "text-4xl font-bold",
+                            finalPercentage >= 80 
+                                ? "bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/30"
+                                : finalPercentage >= 60
+                                    ? "bg-yellow-500/20 text-yellow-400 border-2 border-yellow-500/30"
+                                    : "bg-red-500/20 text-red-400 border-2 border-red-500/30"
+                        )}>
+                            {finalPercentage}%
+                        </div>
+
+                        <p className="text-xl text-zinc-300 mb-2">
+                            {finalScore} av {questions.length} rätt
+                        </p>
+                        
+                        <p className="text-zinc-500 mb-8">
+                            {finalPercentage >= 80 
+                                ? "Utmärkt! Du har koll på materialet! 🎉"
+                                : finalPercentage >= 60
+                                    ? "Bra jobbat! Lite mer övning så sitter det!"
+                                    : "Fortsätt öva! Du kommer dit! 💪"
+                            }
+                        </p>
+
+                        <div className="flex gap-4 justify-center">
+                            <button
+                                onClick={resetQuiz}
+                                className={cn(
+                                    "flex items-center gap-2 px-6 py-3 rounded-lg",
+                                    "bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                                )}
+                            >
+                                <RotateCcw className="w-4 h-4" />
+                                Försök igen
+                            </button>
+                            <Link
+                                href="/study"
+                                prefetch={false}
+                                className={cn(
+                                    "flex items-center gap-2 px-6 py-3 rounded-lg",
+                                    "bg-blue-600 hover:bg-blue-500 transition-colors"
+                                )}
+                            >
+                                Tillbaka till Study
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const currentQuestion = questions[currentIndex]
+    const progress = ((currentIndex + 1) / questions.length) * 100
+
+    return (
+        <div className="min-h-screen bg-zinc-950 text-white p-8">
+            <div className="max-w-2xl mx-auto">
+                {/* Header */}
+                <div className="mb-6">
+                    <Link
+                        href="/study"
+                        prefetch={false}
+                        className="text-zinc-400 hover:text-white flex items-center gap-2 mb-4"
+                    >
+                        ← Tillbaka
+                    </Link>
+                    <h1 className="text-2xl font-bold">{moduleTitle}</h1>
+                    <div className="flex items-center justify-between">
+                        <p className="text-zinc-400">
+                            Fråga {currentIndex + 1} av {questions.length}
+                        </p>
+                        <p className="text-sm text-zinc-500">
+                            {Math.round(progress)}% klart
+                        </p>
+                    </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="w-full h-1 bg-zinc-800 rounded-full mb-8">
+                    <div
+                        className="h-full bg-blue-500 rounded-full transition-all duration-300"
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+
+                {/* Question */}
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                        <p className="text-lg font-medium">{currentQuestion.question}</p>
+                        {!showResult && (
+                            <button
+                                onClick={() => setShowHint(!showHint)}
+                                className="text-zinc-500 hover:text-zinc-300 p-2"
+                                title="Visa ledtråd"
+                            >
+                                <Lightbulb className="w-5 h-5" />
+                            </button>
+                        )}
+                    </div>
+
+                    {showHint && currentQuestion.explanation && !showResult && (
+                        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                            <p className="text-sm text-yellow-300/80">
+                                💡 Ledtråd: {currentQuestion.explanation}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Options */}
+                    <div className="space-y-3">
+                        {currentQuestion.options.map((option, index) => {
+                            const isSelected = selectedAnswer === index
+                            const isCorrect = index === currentQuestion.correct
+                            const showCorrect = showResult && isCorrect
+                            const showWrong = showResult && isSelected && !isCorrect
+
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => selectAnswer(index)}
+                                    disabled={showResult}
+                                    className={cn(
+                                        "w-full text-left p-4 rounded-lg border transition-all duration-200",
+                                        !showResult && isSelected && "bg-blue-500/20 border-blue-500/50",
+                                        !showResult && !isSelected && "bg-zinc-800/50 border-zinc-700 hover:border-zinc-600",
+                                        showCorrect && "bg-emerald-500/20 border-emerald-500/50",
+                                        showWrong && "bg-red-500/20 border-red-500/50",
+                                        showResult && !showCorrect && !showWrong && "opacity-50"
+                                    )}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <span className={cn(
+                                            "w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium",
+                                            !showResult && isSelected && "bg-blue-500 text-white",
+                                            !showResult && !isSelected && "bg-zinc-700 text-zinc-400",
+                                            showCorrect && "bg-emerald-500 text-white",
+                                            showWrong && "bg-red-500 text-white"
+                                        )}>
+                                            {String.fromCharCode(65 + index)}
+                                        </span>
+                                        <span>{option}</span>
+                                        {showCorrect && <CheckCircle className="w-5 h-5 text-emerald-400 ml-auto" />}
+                                        {showWrong && <XCircle className="w-5 h-5 text-red-400 ml-auto" />}
+                                    </div>
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+
+                {/* Result Message */}
+                {showResult && (
+                    <div className={cn(
+                        "p-4 rounded-lg mb-6",
+                        selectedAnswer === currentQuestion.correct
+                            ? "bg-emerald-500/10 border border-emerald-500/30"
+                            : "bg-red-500/10 border border-red-500/30"
+                    )}>
+                        <div className="flex items-center gap-2 mb-2">
+                            {selectedAnswer === currentQuestion.correct ? (
+                                <>
+                                    <CheckCircle className="w-5 h-5 text-emerald-400" />
+                                    <span className="text-emerald-400 font-medium">Rätt svar!</span>
+                                </>
+                            ) : (
+                                <>
+                                    <XCircle className="w-5 h-5 text-red-400" />
+                                    <span className="text-red-400 font-medium">Fel svar</span>
+                                </>
+                            )}
+                        </div>
+                        {currentQuestion.explanation && (
+                            <p className="text-sm text-zinc-400">{currentQuestion.explanation}</p>
+                        )}
+                    </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex justify-end">
+                    {!showResult ? (
+                        <button
+                            onClick={confirmAnswer}
+                            disabled={selectedAnswer === null}
+                            className={cn(
+                                "px-6 py-3 rounded-lg font-medium transition-colors",
+                                selectedAnswer !== null
+                                    ? "bg-purple-600 hover:bg-purple-500"
+                                    : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                            )}
+                        >
+                            Bekräfta svar
+                        </button>
+                    ) : (
+                        <button
+                            onClick={nextQuestion}
+                            className={cn(
+                                "flex items-center gap-2 px-6 py-3 rounded-lg",
+                                "bg-blue-600 hover:bg-blue-500 transition-colors"
+                            )}
+                        >
+                            Nästa
+                            <ArrowRight className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
+}

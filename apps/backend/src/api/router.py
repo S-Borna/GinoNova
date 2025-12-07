@@ -28,6 +28,7 @@ from .routes.organization import router as organization_router
 from .routes.career import router as career_router
 from .routes.bookmarks import router as bookmarks_router
 from .routes.quiz import router as quiz_router
+from .routes.study import router as study_router
 
 # Phase 22-28: Final production-ready routes
 from .routes.observability import observability_router
@@ -68,6 +69,7 @@ api_router.include_router(organization_router, tags=["organization"])
 api_router.include_router(career_router, tags=["career"])
 api_router.include_router(bookmarks_router, tags=["bookmarks"])
 api_router.include_router(quiz_router, tags=["quiz"])
+api_router.include_router(study_router, tags=["study"])
 
 # Phase 22-28: Final production-ready routes
 api_router.include_router(observability_router, tags=["observability"])
