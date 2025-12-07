@@ -30,156 +30,201 @@ MODULE = {
             "xp_reward": 75,
             "content": """# AWS Introduktion och Grundkoncept
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-AWS är den största molnplattformen i världen med över 32% marknadsandel. Som DevOps-ingenjör kommer du nästan garanterat att arbeta med AWS. Du behöver förstå:
+## Varfor viktigt for DevOps?
 
-- **Hur AWS är organiserat** så du hittar rätt tjänster bland 200+ alternativ
-- **Regioner och Availability Zones** så du kan designa för hög tillgänglighet
-- **Grundläggande navigation** så du snabbt kan hitta och hantera resurser
-- **AWS CLI** så du kan automatisera istället för att klicka i konsolen
+| Scenario | Varfor AWS-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Infrastruktur** | 32% marknadsandel - du KOMMER arbeta med AWS |
+| **Automation** | CLI och SDK for att automatisera allt |
+| **Skalning** | Auto Scaling, Load Balancing, global distribution |
+| **Kostnadshantering** | Forstå prissättning for att undvika overraskningar |
+| **Compliance** | GDPR kräver rätt regionval |
 
----
+AWS är den största molnplattformen i världen. Som DevOps-ingenjör behöver du förstå hur AWS är organiserat, hur regioner och Availability Zones fungerar, och hur du automatiserar med CLI istället för att klicka i konsolen.
 
-## Så fungerar AWS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-AWS är uppdelat i regioner (geografiska områden) och availability zones (separata datacenter inom en region). Varje region har minst två AZs för redundans. Du väljer region baserat på var dina användare finns och vilka lagkrav du har (GDPR kräver ofta EU-region).
+## AWS Global Infrastructure
 
-Tänk på regioner som städer och AZs som separata byggnader i samma stad - om en byggnad brinner ner finns fortfarande de andra kvar.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    AWS GLOBAL STRUKTUR                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   REGION (eu-north-1 Stockholm)                             │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │                                                     │   │
+│   │   AZ-a              AZ-b              AZ-c          │   │
+│   │   ┌─────┐          ┌─────┐          ┌─────┐        │   │
+│   │   │ DC  │◄────────►│ DC  │◄────────►│ DC  │        │   │
+│   │   │     │  Fiber   │     │  Fiber   │     │        │   │
+│   │   └─────┘          └─────┘          └─────┘        │   │
+│   │                                                     │   │
+│   │   Separata         Låg latens       Redundans      │   │
+│   │   datacenter       <2ms mellan      vid fel        │   │
+│   │                                                     │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│   Andra regioner: eu-west-1, us-east-1, ap-northeast-1...   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+### Regionöversikt
+
+| Region | Namn | Användning |
+|--------|------|------------|
+| `eu-north-1` | Stockholm | Svenska projekt, GDPR |
+| `eu-west-1` | Irland | Europeiska användare |
+| `us-east-1` | N. Virginia | Nya tjänster först, US-användare |
+| `ap-northeast-1` | Tokyo | Asiatiska användare |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Installera AWS CLI
 
+| Steg | Kommando | Beskrivning |
+|------|----------|-------------|
+| 1 | `curl ... -o awscliv2.zip` | Ladda ner |
+| 2 | `unzip awscliv2.zip` | Packa upp |
+| 3 | `sudo ./aws/install` | Installera |
+| 4 | `aws --version` | Verifiera |
+
 ```bash
+# Ladda ner AWS CLI v2
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-# Laddar ner AWS CLI installationspaketet från Amazon
-# -o sparar filen med namnet awscliv2.zip
-# Detta är den officiella installationsmetoden för Linux
 
+# Packa upp
 unzip awscliv2.zip
-# Packar upp zip-filen till en katalog som heter 'aws'
-# Kräver att unzip är installerat (sudo apt install unzip)
-# Skapar aws/install och aws/dist/ med alla filer
 
+# Installera
 sudo ./aws/install
-# Kör installationsscriptet med sudo
-# Installerar aws-kommandot till /usr/local/bin/aws
-# Skapar även symlink så kommandot fungerar direkt
 
+# Verifiera installation
 aws --version
 # aws-cli/2.15.0 Python/3.11.6 Linux/5.15.0-1051-aws
-# Verifierar att installationen lyckades
-# Visar CLI-version, Python-version, och OS-information
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Konfigurera AWS CLI
 
-```bash
-aws configure
-# Startar interaktiv konfigurationsguide
-# Ställer fyra frågor och sparar svaren till ~/.aws/
-
-# AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-# Din Access Key ID från IAM-konsolen
-# Fungerar som ett användarnamn för API-åtkomst
-
-# AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-# Din hemliga nyckel - VISA ALDRIG DENNA FÖR NÅGON
-# Fungerar som lösenord - kan inte återskapas om du tappar den
-
-# Default region name [None]: eu-north-1
-# Standardregion för alla kommandon
-# eu-north-1 är Stockholm, eu-west-1 är Irland
-
-# Default output format [None]: json
-# Format för CLI-output: json, table, eller text
-# json är bäst för scripting, table för manuell läsning
-
-cat ~/.aws/credentials
-# [default]
-# aws_access_key_id = AKIAIOSFODNN7EXAMPLE
-# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-# Visar var credentials sparas
-# SKYDDA DENNA FIL - chmod 600 ~/.aws/credentials
-
-cat ~/.aws/config
-# [default]
-# region = eu-north-1
-# output = json
-# Visar konfigurationsfilen
-# Separerad från credentials för säkerhet
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 AWS CREDENTIAL FLOW                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   aws configure                                             │
+│        │                                                    │
+│        ▼                                                    │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │  ~/.aws/credentials        ~/.aws/config            │   │
+│   │  ─────────────────         ─────────────            │   │
+│   │  [default]                 [default]                │   │
+│   │  aws_access_key_id=...     region=eu-north-1        │   │
+│   │  aws_secret_access_key=... output=json              │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│   SKYDDA CREDENTIALS: chmod 600 ~/.aws/credentials          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Interaktiv konfiguration
+aws configure
+# AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+# AWS Secret Access Key [None]: wJalrXUtn.../bPxRfiCYEXAMPLEKEY
+# Default region name [None]: eu-north-1
+# Default output format [None]: json
+
+# Verifiera konfiguration
+cat ~/.aws/credentials
+cat ~/.aws/config
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Grundläggande kommandon
 
+| Kommando | Beskrivning |
+|----------|-------------|
+| `aws sts get-caller-identity` | Vem är jag inloggad som? |
+| `aws ec2 describe-regions` | Lista alla regioner |
+| `aws ec2 describe-availability-zones` | Lista AZs i region |
+| `aws s3 ls` | Lista S3-buckets |
+
 ```bash
+# Verifiera credentials - "whoami" for AWS
 aws sts get-caller-identity
 # {
 #     "UserId": "AIDAIOSFODNN7EXAMPLE",
 #     "Account": "123456789012",
 #     "Arn": "arn:aws:iam::123456789012:user/devops-user"
 # }
-# Visar vem du är inloggad som
-# Perfekt för att verifiera att credentials fungerar
-# Account visar ditt 12-siffriga AWS-konto-ID
 
+# Lista regioner
 aws ec2 describe-regions --output table
-# Listar alla tillgängliga AWS-regioner
-# --output table ger snygg tabellformatering
-# Du ser RegionName och Endpoint för varje region
 
+# Lista AZs i Stockholm
 aws ec2 describe-availability-zones --region eu-north-1
-# Listar alla AZs i Stockholm-regionen
-# Visar eu-north-1a, eu-north-1b, eu-north-1c
-# State visar om AZ är available eller inte
-# ZoneId är en unik identifierare
 
+# Lista S3-buckets
 aws s3 ls
-# Listar alla S3-buckets i ditt konto
-# Visar datum, tid och bucket-namn
-# Tom output betyder inga buckets finns ännu
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Miljövariabler för credentials
+## Miljövariabler for credentials
+
+| Variabel | Beskrivning |
+|----------|-------------|
+| `AWS_ACCESS_KEY_ID` | Access key (överrider config) |
+| `AWS_SECRET_ACCESS_KEY` | Secret key |
+| `AWS_DEFAULT_REGION` | Standardregion |
+| `AWS_PROFILE` | Välj named profile |
 
 ```bash
+# Satt credentials via miljövariabler (CI/CD)
 export AWS_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE"
-# Sätter access key som miljövariabel
-# Överrider värdet i ~/.aws/credentials
-# Användbart i CI/CD-pipelines
-
 export AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-# Sätter secret key som miljövariabel
-# ALDRIG hårdkoda i scripts - använd secrets manager
-# Lägg till i .bashrc om du vill ha permanent
-
 export AWS_DEFAULT_REGION="eu-north-1"
-# Sätter standardregion
-# Överrider värdet i ~/.aws/config
-# Kan också sättas per kommando med --region
 
+# Verifiera
 env | grep AWS
-# Visar alla AWS-relaterade miljövariabler
-# Bra för felsökning av credential-problem
-# Kontrollera att inga gamla värden ligger kvar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och lösningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `Unable to locate credentials` | Ej konfigurerat | `aws configure` |
+| `InvalidClientTokenId` | Fel access key | Kontrollera key i IAM |
+| `SignatureDoesNotMatch` | Fel secret key | Skapa ny key |
+| `UnauthorizedAccess` | Saknar permissions | Lägg till IAM policy |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Regioner är geografiska** - välj baserat på latens och compliance
-2. **AZs ger redundans** - sprida resurser över minst 2 AZs
-3. **CLI är kraftfullare än konsolen** - automatisering kräver CLI
-4. **Skydda dina credentials** - behandla dem som lösenord
-5. **eu-north-1 är Stockholm** - bra val för svenska projekt
+| Koncept | Detalj |
+|---------|--------|
+| **Regioner** | Geografiska områden - välj baserat på latens och compliance |
+| **Availability Zones** | Separata datacenter inom region - minst 2 for redundans |
+| **AWS CLI** | Kraftfullare än konsolen - krävs for automation |
+| **Credentials** | Behandla som lösenord - aldrig i kod |
+| **eu-north-1** | Stockholm-regionen - bra val for svenska projekt |
+
+**Kom ihåg:**
+- Använd **eu-north-1** for svenska projekt med GDPR-krav
+- **Sprid resurser** över minst 2 AZs for hög tillgänglighet
+- **Skydda credentials** - chmod 600 på ~/.aws/credentials
+- **aws sts get-caller-identity** är din "whoami" for AWS
+- **Miljövariabler** överrider config-filer
 """,
         },
         {
@@ -190,216 +235,269 @@ env | grep AWS
             "xp_reward": 80,
             "content": """# IAM - Identity and Access Management
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-IAM är AWS säkerhetssystem - det kontrollerar vem som får göra vad. Utan IAM-kunskap kan du:
+## Varfor viktigt for DevOps?
 
-- **Skapa säkerhetshål** som exponerar hela infrastrukturen
-- **Låsa dig själv ute** från resurser du skapat
-- **Misslyckas med automation** eftersom scripts saknar rätt permissions
-- **Bryta mot compliance** genom att ge för breda rättigheter
+| Scenario | Varfor IAM-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Sakerhet** | Felkonfigurerat IAM = exponerad infrastruktur |
+| **Automation** | CI/CD-pipelines kraver ratt permissions |
+| **Compliance** | Audit kräver spårbarhet av vem som gjorde vad |
+| **Least Privilege** | Minimera skada vid komprometterad credential |
+| **Multi-team** | Separera access mellan team och miljöer |
 
-IAM är grunden för allt säkerhetsarbete i AWS.
+IAM ar AWS sakerhetsgrund - det kontrollerar vem som far gora vad. Utan IAM-kunskap kan du skapa sakerhetshål, lasa dig sjalv ute, eller bryta mot compliance.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar IAM
+## IAM Komponenter
 
-IAM följer principen "deny by default" - allt är förbjudet tills du explicit tillåter det. Det finns fyra huvudkomponenter:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    IAM ARKITEKTUR                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│   │   USERS     │     │   GROUPS    │     │   ROLES     │   │
+│   │             │     │             │     │             │   │
+│   │  Personer   │────▶│  Samlingar  │     │  Temporara  │   │
+│   │  Service    │     │  av users   │     │  identitet  │   │
+│   │  accounts   │     │             │     │  for EC2,   │   │
+│   │             │     │             │     │  Lambda...  │   │
+│   └─────────────┘     └─────────────┘     └─────────────┘   │
+│          │                   │                   │          │
+│          └───────────────────┼───────────────────┘          │
+│                              ▼                              │
+│                    ┌─────────────────┐                      │
+│                    │    POLICIES     │                      │
+│                    │                 │                      │
+│                    │  JSON-dokument  │                      │
+│                    │  som definierar │                      │
+│                    │  permissions    │                      │
+│                    └─────────────────┘                      │
+│                                                             │
+│   PRINCIP: Deny by default - allt ar forbjudet tills       │
+│            du explicit tillåter det                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-- **Users** - mänskliga användare eller service accounts
-- **Groups** - samlingar av users med gemensamma permissions
-- **Roles** - temporära identiteter som kan "antas" av services
-- **Policies** - JSON-dokument som definierar permissions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Skapa IAM-anvandare
 
-## Skapa IAM-användare
+| Kommando | Beskrivning |
+|----------|-------------|
+| `aws iam create-user` | Skapa ny användare |
+| `aws iam list-users` | Lista alla användare |
+| `aws iam get-user` | Hämta info om användare |
+| `aws iam delete-user` | Ta bort användare |
 
 ```bash
+# Skapa användare
 aws iam create-user --user-name deploy-bot
-# {
-#     "User": {
-#         "UserName": "deploy-bot",
-#         "UserId": "AIDAIOSFODNN7EXAMPLE",
-#         "Arn": "arn:aws:iam::123456789012:user/deploy-bot",
-#         "CreateDate": "2024-01-15T10:30:00Z"
-#     }
-# }
-# Skapar en ny IAM-användare
 # Användaren har INGA permissions ännu
-# Arn är den unika identifieraren för resursen
 
+# Lista användare
 aws iam list-users
-# Listar alla IAM-användare i kontot
-# Visar UserName, UserId, Arn och CreateDate
-# Kräver iam:ListUsers permission
 
+# Hämta specifik användare
 aws iam get-user --user-name deploy-bot
-# Hämtar detaljerad info om en specifik användare
-# Visar även Tags och PermissionsBoundary om satta
-# Användbart för att verifiera att användaren skapades
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Access Keys för programmatisk åtkomst
+## Access Keys
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 ACCESS KEY LIFECYCLE                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   create-access-key          SecretAccessKey                │
+│         │                    VISAS BARA EN GÅNG!            │
+│         ▼                                                   │
+│   ┌─────────────┐                                          │
+│   │   ACTIVE    │ ◄─── Används för API-anrop               │
+│   └─────────────┘                                          │
+│         │                                                   │
+│         │ update-access-key --status Inactive               │
+│         ▼                                                   │
+│   ┌─────────────┐                                          │
+│   │  INACTIVE   │ ◄─── Tillfälligt avstängd                │
+│   └─────────────┘                                          │
+│         │                                                   │
+│         │ delete-access-key                                 │
+│         ▼                                                   │
+│   ┌─────────────┐                                          │
+│   │   DELETED   │ ◄─── Permanent borttagen                 │
+│   └─────────────┘                                          │
+│                                                             │
+│   MAX 2 ACCESS KEYS PER ANVÄNDARE                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Skapa access key - SPARA OUTPUT DIREKT!
 aws iam create-access-key --user-name deploy-bot
-# {
-#     "AccessKey": {
-#         "UserName": "deploy-bot",
-#         "AccessKeyId": "AKIAIOSFODNN7EXAMPLE",
-#         "SecretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-#         "Status": "Active"
-#     }
-# }
-# Skapar access keys för användaren
-# SPARA SecretAccessKey NU - den visas aldrig igen!
-# Användaren kan ha max 2 access keys
 
+# Lista access keys
 aws iam list-access-keys --user-name deploy-bot
-# Listar alla access keys för användaren
-# Visar AccessKeyId och Status (Active/Inactive)
-# SecretAccessKey visas ALDRIG efter skapande
 
-aws iam delete-access-key --user-name deploy-bot --access-key-id AKIAIOSFODNN7EXAMPLE
-# Tar bort en access key permanent
-# Använd för att rotera keys eller vid läcka
-# Användaren förlorar åtkomst som använde denna key
+# Rotera: inaktivera gammal
+aws iam update-access-key --user-name deploy-bot \\
+    --access-key-id AKIAOLD --status Inactive
+
+# Ta bort gammal key
+aws iam delete-access-key --user-name deploy-bot \\
+    --access-key-id AKIAOLD
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## IAM Groups
 
+| Kommando | Beskrivning |
+|----------|-------------|
+| `aws iam create-group` | Skapa grupp |
+| `aws iam add-user-to-group` | Lägg till användare |
+| `aws iam list-groups-for-user` | Visa användares grupper |
+| `aws iam attach-group-policy` | Ge gruppen permissions |
+
 ```bash
+# Skapa grupp
 aws iam create-group --group-name Developers
-# Skapar en ny grupp
-# Grupper har inga permissions själva
-# Permissions kommer från attachade policies
 
+# Lägg till användare i grupp
 aws iam add-user-to-group --user-name deploy-bot --group-name Developers
-# Lägger till användaren i gruppen
-# Användaren ärver alla permissions från gruppen
-# En användare kan vara med i flera grupper
 
-aws iam list-groups-for-user --user-name deploy-bot
-# Visar vilka grupper användaren tillhör
-# Användbart för att förstå varifrån permissions kommer
-# Returnerar GroupName, GroupId och Arn
-
-aws iam get-group --group-name Developers
-# Visar gruppens detaljer och alla medlemmar
-# Listar alla Users som tillhör gruppen
-# Användbart för att se vem som har vilka rättigheter
-```
-
----
-
-## IAM Policies
-
-```bash
-aws iam list-policies --scope AWS
-# Listar AWS-managed policies (fördefinierade)
-# --scope AWS visar bara Amazons policies
-# Det finns hundratals färdiga policies för vanliga behov
-
-aws iam list-policies --scope Local
-# Listar customer-managed policies (dina egna)
-# --scope Local visar bara policies du skapat
-# Dessa kan du modifiera till skillnad från AWS-managed
-
-aws iam get-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-# Hämtar metadata om en policy
-# Visar DefaultVersionId och AttachmentCount
-# Visar inte själva policy-dokumentet
-```
-
----
-
-## Attacha Policies
-
-```bash
-aws iam attach-user-policy \\
-    --user-name deploy-bot \\
-    --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-# Ger användaren S3 read-only access
-# Effekten är omedelbar
-# Användaren kan nu lista och läsa S3-objekt
-
+# Ge gruppen permissions
 aws iam attach-group-policy \\
     --group-name Developers \\
     --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess
-# Alla i gruppen får EC2-rättigheter
-# Bättre än att attacha till varje user
-# Enklare att hantera och audit:a
 
-aws iam list-attached-user-policies --user-name deploy-bot
-# Visar alla policies attachade direkt till användaren
-# Visar INTE policies från grupptillhörighet
-# PolicyName och PolicyArn för varje policy
-
-aws iam list-attached-group-policies --group-name Developers
-# Visar alla policies attachade till gruppen
-# Alla gruppmedlemmar har dessa permissions
-# Centraliserad hantering av rättigheter
+# Alla i gruppen ärver nu EC2-rättigheter
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa custom policy
+## IAM Policies
 
-```bash
-cat << 'EOF' > s3-upload-policy.json
+### Policy-struktur
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "AllowUploadToSpecificBucket",
+            "Sid": "AllowS3Upload",
             "Effect": "Allow",
             "Action": [
                 "s3:PutObject",
                 "s3:PutObjectAcl"
             ],
-            "Resource": "arn:aws:s3:::my-upload-bucket/*"
-        },
-        {
-            "Sid": "AllowListBucket",
-            "Effect": "Allow",
-            "Action": "s3:ListBucket",
-            "Resource": "arn:aws:s3:::my-upload-bucket"
+            "Resource": "arn:aws:s3:::my-bucket/*"
         }
     ]
 }
-EOF
-# Skapar en policy-fil lokalt
-# Version är alltid "2012-10-17"
-# Sid är en beskrivning (valfri men rekommenderad)
-# Effect: Allow eller Deny
-# Action: vilka API-anrop som tillåts
-# Resource: vilka resurser policyn gäller
-
-aws iam create-policy \\
-    --policy-name S3UploadOnly \\
-    --policy-document file://s3-upload-policy.json \\
-    --description "Allows upload to specific S3 bucket"
-# Skapar policyn i AWS
-# file:// läser från lokal fil
-# Returnerar PolicyArn som du använder för att attacha
-# Policyn är nu tillgänglig att attacha till users/groups/roles
 ```
 
----
+| Fält | Beskrivning |
+|------|-------------|
+| `Version` | Alltid "2012-10-17" |
+| `Sid` | Beskrivande namn (valfritt) |
+| `Effect` | Allow eller Deny |
+| `Action` | Vilka API-anrop som tillåts |
+| `Resource` | Vilka resurser policyn gäller |
+
+```bash
+# Skapa custom policy
+aws iam create-policy \\
+    --policy-name S3UploadOnly \\
+    --policy-document file://policy.json
+
+# Attacha till user
+aws iam attach-user-policy \\
+    --user-name deploy-bot \\
+    --policy-arn arn:aws:iam::123456789012:policy/S3UploadOnly
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## IAM Roles
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 ROLE VS USER                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   USER                          ROLE                        │
+│   ────                          ────                        │
+│   Permanent credentials         Temporära credentials       │
+│   Access keys                   STS tokens (expire)         │
+│   För människor/CI              För AWS-tjänster            │
+│                                                             │
+│   Exempel:                      Exempel:                    │
+│   - Utvecklare                  - EC2 som läser S3          │
+│   - GitHub Actions              - Lambda som skriver DynamoDB│
+│   - Deploy scripts              - ECS tasks                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```bash
+# Skapa role for EC2
+aws iam create-role \\
+    --role-name EC2-S3-Access \\
+    --assume-role-policy-document file://trust-policy.json
+
+# Trust policy (vem får anta rollen):
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [{
+#     "Effect": "Allow",
+#     "Principal": {"Service": "ec2.amazonaws.com"},
+#     "Action": "sts:AssumeRole"
+#   }]
+# }
+
+# Attacha permissions till role
+aws iam attach-role-policy \\
+    --role-name EC2-S3-Access \\
+    --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `AccessDenied` | Saknar permission | Lägg till rätt policy |
+| `InvalidClientTokenId` | Fel access key | Kontrollera credentials |
+| `EntityAlreadyExists` | User/group finns redan | Använd annat namn |
+| `DeleteConflict` | User har attachade policies | Detacha policies först |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Deny by default** - inget är tillåtet förrän du säger det
-2. **Använd Groups** - attacha policies till groups, inte users
-3. **Least privilege** - ge minsta möjliga permissions
-4. **Rotera access keys** - byt regelbundet och vid misstänkt läcka
-5. **Audit regelbundet** - kolla vem som har vilka rättigheter
+| Koncept | Detalj |
+|---------|--------|
+| **Deny by default** | Inget ar tillatet forrän du explicit tillåter |
+| **Groups over Users** | Attacha policies till groups, inte users |
+| **Least privilege** | Ge minsta möjliga permissions |
+| **Roles for services** | EC2, Lambda etc. ska använda roles |
+| **Rotera keys** | Byt access keys regelbundet |
+
+**Kom ihåg:**
+- **Använd Groups** for att hantera permissions centralt
+- **Aldrig root account** for dagligt arbete
+- **SecretAccessKey** visas bara en gång - spara direkt
+- **IAM Roles** for AWS-tjänster istället for hardcoded keys
+- **Audit regelbundet** med IAM Access Analyzer
 """,
         },
         {
@@ -410,31 +508,85 @@ aws iam create-policy \\
             "xp_reward": 85,
             "content": """# EC2 - Elastic Compute Cloud
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-EC2 är AWS ursprungliga och mest använda tjänst - virtuella servrar i molnet. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Starta och stoppa instanser** för att hantera kapacitet och kostnader
-- **Välja rätt instanstyp** för att balansera prestanda och pris
-- **Konfigurera nätverk och säkerhet** så applikationer är tillgängliga men skyddade
-- **Automatisera med User Data** så nya instanser konfigureras automatiskt
+| Scenario | Varfor EC2-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Compute** | Virtuella servrar for alla workloads |
+| **Skalning** | Starta/stoppa instanser baserat pa behov |
+| **Kostnader** | Fel instanstyp = slöseri med pengar |
+| **Automation** | User Data for automatisk konfiguration |
+| **Sakerhet** | Security Groups ar din brandvägg |
 
----
+EC2 ar AWS ursprungliga och mest anvanda tjanst - virtuella servrar i molnet. Du betalar per sekund for tiden instansen ar igång.
 
-## Så fungerar EC2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-EC2 låter dig hyra virtuella maskiner (instanser) som körs i AWS datacenter. Du betalar per sekund för tiden instansen är igång. Varje instans har:
+## EC2 Komponenter
 
-- **AMI** - Amazon Machine Image, operativsystemet och förinstallerad mjukvara
-- **Instance Type** - hur mycket CPU, RAM och nätverkskapacitet
-- **Security Group** - brandväggsregler för inkommande/utgående trafik
-- **Key Pair** - SSH-nyckel för inloggning
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    EC2 INSTANS                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │  AMI (Amazon Machine Image)                         │   │
+│   │  - Operativsystem (Ubuntu, Amazon Linux, Windows)   │   │
+│   │  - Forinstallerad mjukvara                          │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                           │                                 │
+│                           ▼                                 │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │  Instance Type (t3.micro, m5.large, etc.)           │   │
+│   │  - vCPUs, RAM, Nätverk                              │   │
+│   │  - t3.micro = 2 vCPU, 1 GB RAM (Free Tier)          │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                           │                                 │
+│                           ▼                                 │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│   │Security Group│  │   Key Pair   │  │  User Data   │     │
+│   │ (Brandvägg)  │  │  (SSH-nyckel)│  │  (Bootstrap) │     │
+│   └──────────────┘  └──────────────┘  └──────────────┘     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa en EC2-instans
+## Instanstyper
+
+| Typ | vCPU | RAM | Användning |
+|-----|------|-----|------------|
+| `t3.micro` | 2 | 1 GB | Test, dev (Free Tier) |
+| `t3.small` | 2 | 2 GB | Små workloads |
+| `t3.medium` | 2 | 4 GB | Webservrar |
+| `m5.large` | 2 | 8 GB | Produktion |
+| `c5.xlarge` | 4 | 8 GB | CPU-intensivt |
+| `r5.large` | 2 | 16 GB | Minnesintensivt |
 
 ```bash
+# Lista tillgängliga instanstyper
+aws ec2 describe-instance-types \\
+    --query "InstanceTypes[*].[InstanceType,VCpuInfo.DefaultVCpus,MemoryInfo.SizeInMiB]" \\
+    --output table
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa EC2-instans
+
+| Parameter | Beskrivning |
+|-----------|-------------|
+| `--image-id` | AMI (operativsystem) |
+| `--instance-type` | Storlek (CPU/RAM) |
+| `--key-name` | SSH-nyckel |
+| `--security-group-ids` | Brandvägg |
+| `--subnet-id` | Nätverk |
+
+```bash
+# Starta EC2-instans
 aws ec2 run-instances \\
     --image-id ami-0c55b159cbfafe1f0 \\
     --instance-type t3.micro \\
@@ -442,158 +594,200 @@ aws ec2 run-instances \\
     --security-group-ids sg-12345678 \\
     --subnet-id subnet-12345678 \\
     --count 1
-# Startar en ny EC2-instans
-# --image-id är AMI:n (Ubuntu, Amazon Linux, etc.)
-# --instance-type bestämmer storlek (t3.micro är gratis tier)
-# --key-name är SSH-nyckeln för inloggning
-# --security-group-ids är brandväggen
-# --count är antal instanser att starta
 
+# Lista körande instanser
 aws ec2 describe-instances \\
     --filters "Name=instance-state-name,Values=running" \\
     --query "Reservations[*].Instances[*].[InstanceId,PublicIpAddress,InstanceType]" \\
     --output table
-# Listar alla körande instanser
-# --filters begränsar till running instances
-# --query väljer ut specifika fält (JMESPath)
-# --output table ger snygg formatering
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Hantera instansens livscykel
+## Instans Lifecycle
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 EC2 LIFECYCLE                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   run-instances                                             │
+│        │                                                    │
+│        ▼                                                    │
+│   ┌─────────┐    start    ┌─────────┐                      │
+│   │ PENDING │ ──────────▶ │ RUNNING │ ◄──┐                 │
+│   └─────────┘             └────┬────┘    │                 │
+│                                │         │                 │
+│                    stop        │    start│                 │
+│                                ▼         │                 │
+│                           ┌─────────┐    │                 │
+│                           │ STOPPED │ ───┘                 │
+│                           └────┬────┘                      │
+│                                │                            │
+│                    terminate   │                            │
+│                                ▼                            │
+│                          ┌───────────┐                     │
+│                          │TERMINATED │                     │
+│                          └───────────┘                     │
+│                                                             │
+│   STOPPED = Ingen compute-kostnad (EBS kostar fortfarande) │
+│   TERMINATED = Permanent borttagen                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `stop-instances` | Stäng av (data bevaras) |
+| `start-instances` | Starta stoppad instans |
+| `reboot-instances` | Starta om |
+| `terminate-instances` | Ta bort PERMANENT |
 
 ```bash
+# Stoppa instans (spara pengar)
 aws ec2 stop-instances --instance-ids i-1234567890abcdef0
-# Stoppar instansen (som att stänga av en dator)
-# Du betalar INTE för compute när instansen är stoppad
-# EBS-volymer kostar fortfarande pengar
-# Data på instans-storage försvinner!
 
+# Starta igen
 aws ec2 start-instances --instance-ids i-1234567890abcdef0
-# Startar en stoppad instans
-# Kan ta 1-2 minuter innan den är tillgänglig
-# Public IP ändras om du inte har Elastic IP
 
-aws ec2 reboot-instances --instance-ids i-1234567890abcdef0
-# Startar om instansen
-# Snabbare än stop + start
-# Public IP behålls
-
+# Ta bort permanent (VARNING!)
 aws ec2 terminate-instances --instance-ids i-1234567890abcdef0
-# Tar bort instansen PERMANENT
-# Alla data på instansen försvinner
-# EBS-volymer raderas om DeleteOnTermination är true
-# VARNING: Går inte att ångra!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Security Groups
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│               SECURITY GROUP (Brandvägg)                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Internet                                                  │
+│      │                                                      │
+│      │ Port 443 (HTTPS) ✓ ALLOWED                          │
+│      │ Port 22 (SSH)    ✓ ALLOWED (från specifik IP)       │
+│      │ Port 3306        ✗ BLOCKED                          │
+│      ▼                                                      │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              SECURITY GROUP                         │   │
+│   │                                                     │   │
+│   │  INBOUND RULES:                                     │   │
+│   │  ┌────────┬──────┬─────────────┐                   │   │
+│   │  │ Port   │Proto │ Source      │                   │   │
+│   │  ├────────┼──────┼─────────────┤                   │   │
+│   │  │ 22     │ TCP  │ 10.0.0.0/8  │ (SSH)            │   │
+│   │  │ 443    │ TCP  │ 0.0.0.0/0   │ (HTTPS)          │   │
+│   │  └────────┴──────┴─────────────┘                   │   │
+│   │                                                     │   │
+│   │  OUTBOUND: All traffic allowed (default)           │   │
+│   │                                                     │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                          │                                  │
+│                          ▼                                  │
+│                    EC2 Instance                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ```bash
+# Skapa security group
 aws ec2 create-security-group \\
     --group-name web-server-sg \\
-    --description "Security group for web servers" \\
+    --description "Web server security group" \\
     --vpc-id vpc-12345678
-# Skapar en ny security group
-# Börjar utan några regler (all trafik blockerad)
-# --vpc-id anger vilken VPC den tillhör
 
+# Öppna port 22 (SSH) - BEGRÄNSA TILL DIN IP!
 aws ec2 authorize-security-group-ingress \\
     --group-id sg-12345678 \\
     --protocol tcp \\
     --port 22 \\
-    --cidr 0.0.0.0/0
-# Öppnar port 22 (SSH) från alla IP-adresser
-# VARNING: 0.0.0.0/0 är hela internet - använd med försiktighet
-# Bättre att begränsa till ditt kontor eller VPN
+    --cidr 10.0.0.0/8
 
+# Öppna port 443 (HTTPS) för alla
 aws ec2 authorize-security-group-ingress \\
     --group-id sg-12345678 \\
     --protocol tcp \\
     --port 443 \\
     --cidr 0.0.0.0/0
-# Öppnar port 443 (HTTPS) för webbtrafik
-# Detta är säkert att öppna för hela internet
-# Din webbserver behöver vara tillgänglig
-
-aws ec2 describe-security-groups --group-ids sg-12345678
-# Visar alla regler för security group
-# IpPermissions visar ingress (inkommande)
-# IpPermissionsEgress visar egress (utgående)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## SSH-nycklar
 
 ```bash
+# Skapa nyckelpar
 aws ec2 create-key-pair \\
     --key-name my-server-key \\
     --query 'KeyMaterial' \\
     --output text > my-server-key.pem
-# Skapar ett nytt nyckelpar
-# Private key sparas lokalt (my-server-key.pem)
-# Public key sparas i AWS
-# SPARA PRIVATE KEY - den kan aldrig hämtas igen!
 
+# Sätt rätt permissions (OBLIGATORISKT)
 chmod 400 my-server-key.pem
-# Sätter rätt permissions på nyckeln
-# SSH kräver att endast ägaren kan läsa
-# Utan detta får du "permission denied"
 
+# Anslut via SSH
 ssh -i my-server-key.pem ec2-user@<public-ip>
-# Ansluter till instansen via SSH
-# ec2-user är standardanvändaren på Amazon Linux
-# ubuntu är standardanvändaren på Ubuntu
-# Använd public IP eller DNS-namn
-
-aws ec2 describe-key-pairs
-# Listar alla sparade nycklar i AWS
-# Visar bara namn och fingerprint
-# Private keys lagras INTE i AWS
+# ec2-user = Amazon Linux
+# ubuntu = Ubuntu
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## User Data - automatisk konfiguration
+## User Data (Bootstrap)
 
 ```bash
-cat << 'EOF' > userdata.sh
+# userdata.sh - körs vid första boot
 #!/bin/bash
 yum update -y
 yum install -y httpd
 systemctl start httpd
 systemctl enable httpd
 echo "<h1>Hello from $(hostname)</h1>" > /var/www/html/index.html
-EOF
-# Skapar ett bootstrap-script
-# Körs automatiskt när instansen startar första gången
-# Körs som root - inget sudo behövs
-# Perfekt för att installera mjukvara och konfigurera
+```
 
+```bash
+# Starta instans med user data
 aws ec2 run-instances \\
     --image-id ami-0c55b159cbfafe1f0 \\
     --instance-type t3.micro \\
     --key-name my-key \\
     --security-group-ids sg-12345678 \\
     --user-data file://userdata.sh
-# Startar instans med user data
-# file:// läser från lokal fil
-# Scriptet körs vid första boot
-# Loggar finns i /var/log/cloud-init-output.log
+
+# Loggar finns i:
+# /var/log/cloud-init-output.log
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `Permission denied (publickey)` | Fel key eller permissions | chmod 400, rätt user |
+| `Connection timed out` | Security group blockerar | Öppna port 22 |
+| `Instance limit exceeded` | Konto-gräns nådd | Begär limit increase |
+| `InsufficientInstanceCapacity` | Ingen kapacitet i AZ | Prova annan AZ |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **t3.micro är gratis** - perfekt för test och utveckling
-2. **Security Groups är stateful** - reply-trafik tillåts automatiskt
-3. **Stoppa istället för terminate** - om du vill spara instansen
-4. **User Data för automation** - konfigurera instanser automatiskt
-5. **Skydda dina SSH-nycklar** - de är nyckeln till dina servrar
+| Koncept | Detalj |
+|---------|--------|
+| **t3.micro** | Free Tier - perfekt for test och dev |
+| **Security Groups** | Stateful brandvägg - reply tillåts automatiskt |
+| **Stop vs Terminate** | Stop bevarar data, terminate raderar allt |
+| **User Data** | Bootstrap-script for automatisk konfiguration |
+| **Key Pairs** | SSH-nycklar - private key sparas ALDRIG i AWS |
+
+**Kom ihåg:**
+- **Stoppa instanser** du inte använder for att spara pengar
+- **Begränsa SSH** till specifika IP:er, aldrig 0.0.0.0/0
+- **User Data** körs bara vid första boot
+- **chmod 400** på SSH-nycklar är obligatoriskt
+- **EBS-volymer** kostar även när instansen är stoppad
 """,
         },
         {
@@ -604,177 +798,252 @@ aws ec2 run-instances \\
             "xp_reward": 90,
             "content": """# VPC - Virtual Private Cloud
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-VPC är ditt privata nätverk i AWS - det isolerar dina resurser från andra kunder och internet. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Designa nätverksarkitektur** med publika och privata subnets
-- **Kontrollera trafik** med route tables och network ACLs
-- **Ansluta till internet** via Internet Gateway och NAT Gateway
-- **Felsöka anslutningsproblem** genom att förstå nätverksflödet
+| Scenario | Varfor VPC-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Isolation** | Separera resurser fran andra kunder och internet |
+| **Sakerhet** | Kontrollera vem som kan na vad |
+| **Arkitektur** | Design med publika och privata lager |
+| **Felsökning** | Förstå nätverksflödet när saker inte fungerar |
+| **Compliance** | Data i privata subnets for GDPR |
 
----
+VPC ar ditt privata natverk i AWS. Utan VPC-kunskap kan du inte bygga sakra, skalbara arkitekturer.
 
-## Så fungerar VPC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-En VPC är ett virtuellt nätverk som du definierar med ett IP-adressintervall (CIDR block). Inuti VPC:n skapar du subnets i olika Availability Zones. Subnets kan vara publika (har route till internet) eller privata (ingen direkt internetåtkomst).
+## VPC Arkitektur
 
-Tänk på VPC som ett kontorsbyggnad - du bestämmer vilka våningar som finns och vilka dörrar som leder vart.
-
----
-
-## Skapa en VPC
-
-```bash
-aws ec2 create-vpc --cidr-block 10.0.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=my-vpc}]'
-# {
-#     "Vpc": {
-#         "VpcId": "vpc-1234567890abcdef0",
-#         "CidrBlock": "10.0.0.0/16",
-#         "State": "available"
-#     }
-# }
-# Skapar en VPC med 65,536 IP-adresser (10.0.0.0 - 10.0.255.255)
-# /16 är ett vanligt val - tillräckligt stort för de flesta projekt
-# Mindre VPCs: /24 ger 256 adresser, /20 ger 4096 adresser
-
-aws ec2 describe-vpcs --filters "Name=tag:Name,Values=my-vpc"
-# Hittar VPC:n baserat på Name-taggen
-# Visar VpcId, CidrBlock, State och DhcpOptionsId
-# State bör vara "available"
-
-aws ec2 modify-vpc-attribute --vpc-id vpc-12345678 --enable-dns-hostnames '{"Value":true}'
-# Aktiverar DNS-hostnames för instanser i VPC:n
-# EC2-instanser får automatiskt DNS-namn
-# Krävs för många AWS-tjänster att fungera korrekt
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    VPC (10.0.0.0/16)                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Internet                                                  │
+│      │                                                      │
+│      ▼                                                      │
+│   ┌──────────────────┐                                      │
+│   │ Internet Gateway │                                      │
+│   └────────┬─────────┘                                      │
+│            │                                                │
+│   ┌────────┴────────────────────────────────────────────┐   │
+│   │              PUBLIC SUBNETS                         │   │
+│   │  ┌─────────────────┐    ┌─────────────────┐        │   │
+│   │  │   10.0.1.0/24   │    │   10.0.2.0/24   │        │   │
+│   │  │   eu-north-1a   │    │   eu-north-1b   │        │   │
+│   │  │   Load Balancer │    │   NAT Gateway   │        │   │
+│   │  └─────────────────┘    └────────┬────────┘        │   │
+│   └─────────────────────────────────┬───────────────────┘   │
+│                                     │                       │
+│   ┌─────────────────────────────────┴───────────────────┐   │
+│   │              PRIVATE SUBNETS                        │   │
+│   │  ┌─────────────────┐    ┌─────────────────┐        │   │
+│   │  │  10.0.10.0/24   │    │  10.0.11.0/24   │        │   │
+│   │  │   eu-north-1a   │    │   eu-north-1b   │        │   │
+│   │  │   App Servers   │    │   Databases     │        │   │
+│   │  └─────────────────┘    └─────────────────┘        │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│   PUBLIC = Route till Internet Gateway                      │
+│   PRIVATE = Route till NAT Gateway (ut) eller ingen         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## CIDR Block Planering
+
+| CIDR | IP-adresser | Användning |
+|------|-------------|------------|
+| `/16` | 65,536 | Hel VPC |
+| `/20` | 4,096 | Stort subnet |
+| `/24` | 256 | Standard subnet |
+| `/28` | 16 | Litet subnet |
+
+```bash
+# Skapa VPC
+aws ec2 create-vpc \\
+    --cidr-block 10.0.0.0/16 \\
+    --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=prod-vpc}]'
+
+# Aktivera DNS
+aws ec2 modify-vpc-attribute \\
+    --vpc-id vpc-12345678 \\
+    --enable-dns-hostnames '{"Value":true}'
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skapa Subnets
 
+| Subnet | CIDR | AZ | Typ |
+|--------|------|----|----|
+| public-1a | 10.0.1.0/24 | eu-north-1a | Public |
+| public-1b | 10.0.2.0/24 | eu-north-1b | Public |
+| private-1a | 10.0.10.0/24 | eu-north-1a | Private |
+| private-1b | 10.0.11.0/24 | eu-north-1b | Private |
+
 ```bash
+# Public subnet i AZ a
 aws ec2 create-subnet \\
     --vpc-id vpc-12345678 \\
     --cidr-block 10.0.1.0/24 \\
     --availability-zone eu-north-1a \\
-    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=public-subnet-1a}]'
-# Skapar ett subnet med 256 IP-adresser
-# Placeras i en specifik Availability Zone
-# Namn indikerar att det kommer vara publikt
-# AWS reserverar 5 adresser per subnet (.0, .1, .2, .3, .255)
+    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=public-1a}]'
 
-aws ec2 create-subnet \\
-    --vpc-id vpc-12345678 \\
-    --cidr-block 10.0.2.0/24 \\
-    --availability-zone eu-north-1b \\
-    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=public-subnet-1b}]'
-# Andra publika subnet i annan AZ för redundans
-# Samma storlek som första subnetet
-# Tillsammans ger de high availability
-
+# Private subnet i AZ a
 aws ec2 create-subnet \\
     --vpc-id vpc-12345678 \\
     --cidr-block 10.0.10.0/24 \\
     --availability-zone eu-north-1a \\
-    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=private-subnet-1a}]'
-# Privat subnet för databaser och backend
-# Separerat CIDR-block (10.0.10.x vs 10.0.1.x)
-# Kommer inte ha direkt internetåtkomst
+    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=private-1a}]'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Internet Gateway
 
-```bash
-aws ec2 create-internet-gateway \\
-    --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=my-igw}]'
-# Skapar en Internet Gateway
-# Behövs för att resurser ska nå internet
-# En IGW per VPC är tillräckligt
-
-aws ec2 attach-internet-gateway --internet-gateway-id igw-12345678 --vpc-id vpc-12345678
-# Kopplar IGW till VPC:n
-# Nu kan VPC:n kommunicera med internet
-# Men subnets behöver fortfarande route tables
-
-aws ec2 describe-internet-gateways --filters "Name=attachment.vpc-id,Values=vpc-12345678"
-# Visar vilken IGW som är kopplad till VPC:n
-# Attachments visar State: available
-# En VPC kan bara ha en IGW
+```
+┌─────────────────────────────────────────────────────────────┐
+│              INTERNET GATEWAY FLOW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Internet ◄──────────────────────────────────────┐         │
+│                                                   │         │
+│   ┌───────────────────────────────────────────────┼───┐     │
+│   │         Internet Gateway (IGW)                │   │     │
+│   │         1 per VPC                             │   │     │
+│   └───────────────────────────────────────────────┼───┘     │
+│                                                   │         │
+│   Route Table:                                    │         │
+│   ┌───────────────────────────────────────────────┼───┐     │
+│   │ Destination     │ Target                      │   │     │
+│   ├─────────────────┼─────────────────────────────┼───┤     │
+│   │ 10.0.0.0/16     │ local                       │   │     │
+│   │ 0.0.0.0/0       │ igw-xxxxx  ◄────────────────┘   │     │
+│   └─────────────────┴─────────────────────────────────┘     │
+│                                                             │
+│   0.0.0.0/0 = "default route" = all traffic not matching    │
+│               any other route goes here                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Skapa IGW
+aws ec2 create-internet-gateway \\
+    --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=prod-igw}]'
+
+# Attacha till VPC
+aws ec2 attach-internet-gateway \\
+    --internet-gateway-id igw-12345678 \\
+    --vpc-id vpc-12345678
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Route Tables
 
-```bash
-aws ec2 create-route-table --vpc-id vpc-12345678 \\
-    --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=public-rt}]'
-# Skapar en route table för publika subnets
-# Route tables bestämmer var trafik skickas
-# Varje subnet associeras med en route table
+| Route Table | Destination | Target | Subnet |
+|-------------|-------------|--------|--------|
+| public-rt | 0.0.0.0/0 | igw-xxx | public-* |
+| private-rt | 0.0.0.0/0 | nat-xxx | private-* |
 
+```bash
+# Skapa public route table
+aws ec2 create-route-table \\
+    --vpc-id vpc-12345678 \\
+    --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=public-rt}]'
+
+# Lägg till route till IGW
 aws ec2 create-route \\
     --route-table-id rtb-12345678 \\
     --destination-cidr-block 0.0.0.0/0 \\
     --gateway-id igw-12345678
-# Lägger till default route till Internet Gateway
-# 0.0.0.0/0 betyder "all trafik som inte matchar något annat"
-# Detta gör subnetet publikt!
 
-aws ec2 associate-route-table --route-table-id rtb-12345678 --subnet-id subnet-12345678
-# Kopplar subnetet till route table
-# Nu kan instanser i subnetet nå internet
-# Glöm inte att associera alla publika subnets
-
-aws ec2 describe-route-tables --route-table-ids rtb-12345678
-# Visar alla routes i tabellen
-# local route finns alltid (trafik inom VPC)
-# 0.0.0.0/0 -> igw visar internetåtkomst
+# Associera med public subnet
+aws ec2 associate-route-table \\
+    --route-table-id rtb-12345678 \\
+    --subnet-id subnet-public-1a
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## NAT Gateway för privata subnets
+## NAT Gateway
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              NAT GATEWAY FLOW                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Private Subnet          NAT Gateway         Internet      │
+│   (10.0.10.0/24)          (i public subnet)                 │
+│                                                             │
+│   ┌────────────┐          ┌────────────┐                    │
+│   │ App Server │ ────────▶│    NAT     │ ────────▶ Internet │
+│   │ 10.0.10.5  │          │ 52.95.1.1  │                    │
+│   └────────────┘          └────────────┘                    │
+│                                                             │
+│   ✓ App kan hämta uppdateringar                            │
+│   ✗ Internet kan INTE nå App                               │
+│                                                             │
+│   NAT Gateway:                                              │
+│   - Måste placeras i PUBLIC subnet                          │
+│   - Behöver Elastic IP                                      │
+│   - Kostar ~$0.045/timme + data transfer                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Allokera Elastic IP
 aws ec2 allocate-address --domain vpc
-# {
-#     "PublicIp": "52.95.1.1",
-#     "AllocationId": "eipalloc-12345678"
-# }
-# Allokerar en Elastic IP för NAT Gateway
-# NAT Gateway behöver en publik IP
-# Denna IP kostar pengar även när den inte används
 
+# Skapa NAT Gateway i PUBLIC subnet
 aws ec2 create-nat-gateway \\
-    --subnet-id subnet-12345678 \\
+    --subnet-id subnet-public-1a \\
     --allocation-id eipalloc-12345678 \\
-    --tag-specifications 'ResourceType=natgateway,Tags=[{Key=Name,Value=my-nat}]'
-# Skapar NAT Gateway i ett PUBLIKT subnet
-# Privata subnets routar genom denna för internetåtkomst
-# Tar några minuter att bli available
+    --tag-specifications 'ResourceType=natgateway,Tags=[{Key=Name,Value=prod-nat}]'
 
+# Skapa private route table med route till NAT
 aws ec2 create-route \\
     --route-table-id rtb-private \\
     --destination-cidr-block 0.0.0.0/0 \\
     --nat-gateway-id nat-12345678
-# Lägger till route från privat subnet till NAT
-# Instanser kan nå ut men internet kan inte nå in
-# Perfekt för databaser som behöver hämta uppdateringar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| Kan inte nå internet | Ingen route till IGW | Lägg till 0.0.0.0/0 -> igw |
+| Timeout till EC2 | Security Group blockerar | Öppna rätt portar |
+| Private subnet kan inte uppdatera | Ingen NAT | Skapa NAT Gateway |
+| Subnets kan inte kommunicera | Olika VPCs | VPC Peering eller samma VPC |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **VPC isolerar dina resurser** - ditt eget privata nätverk i molnet
-2. **Publika subnets har route till IGW** - privata har det inte
-3. **Minst 2 AZs för redundans** - alltid ha subnets i flera zoner
-4. **NAT Gateway kostar pengar** - stäng av i dev om möjligt
-5. **CIDR-planering är viktig** - tänk på framtida tillväxt
+| Koncept | Detalj |
+|---------|--------|
+| **VPC** | Ditt privata nätverk i AWS |
+| **Public subnet** | Har route till Internet Gateway |
+| **Private subnet** | Ingen direkt internetåtkomst |
+| **NAT Gateway** | Låter private subnets nå ut |
+| **Route Tables** | Bestämmer var trafik skickas |
+
+**Kom ihåg:**
+- **Minst 2 AZs** for high availability
+- **Databaser i private subnets** - aldrig publikt
+- **NAT Gateway kostar** - stäng av i dev-miljöer
+- **CIDR-planering** - tänk på framtida tillväxt
+- **Security Groups + NACLs** for defense in depth
 """,
         },
         {
@@ -785,114 +1054,171 @@ aws ec2 create-route \\
             "xp_reward": 80,
             "content": """# S3 - Simple Storage Service
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-S3 är AWS objektlagring - oändligt skalbar, billig och extremt tillförlitlig (99.999999999% durability). Som DevOps använder du S3 för:
+## Varfor viktigt for DevOps?
 
-- **Statisk webbhosting** för frontend-applikationer
-- **Backup och arkivering** av data och loggar
-- **Artifact storage** för build-outputs och Docker images
-- **Data lake** för analytics och machine learning
+| Scenario | Varfor S3-kunskap ar kritisk |
+|----------|------------------------------|
+| **Artifacts** | Build outputs, Docker images, logs |
+| **Static hosting** | Frontend-appar (React, Vue, Angular) |
+| **Backup** | Databaser, konfiguration, state-filer |
+| **Data lake** | Analytics, ML datasets |
+| **Terraform state** | Remote state backend |
 
----
+S3 ar AWS objektlagring med 99.999999999% durability (11 nior). Du forlorar 1 objekt av 10 miljarder pa 10,000 ar.
 
-## Så fungerar S3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-S3 lagrar objekt (filer) i buckets (behållare). Varje objekt identifieras av en unik key (sökväg). Buckets har globalt unika namn - om någon annan har tagit namnet kan du inte använda det.
+## S3 Koncept
 
-Tänk på S3 som en oändligt stor filserver där du betalar per GB lagring och per request.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    S3 STRUKTUR                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   BUCKET (globalt unikt namn)                               │
+│   s3://my-company-artifacts-prod                            │
+│   │                                                         │
+│   ├── builds/                                               │
+│   │   ├── app-v1.0.0.zip          (Objekt)                 │
+│   │   ├── app-v1.0.1.zip          (Objekt)                 │
+│   │   └── app-v1.1.0.zip          (Objekt)                 │
+│   │                                                         │
+│   ├── logs/                                                 │
+│   │   ├── 2024/12/07/access.log   (Prefix = "folder")      │
+│   │   └── 2024/12/07/error.log                             │
+│   │                                                         │
+│   └── config/                                               │
+│       └── settings.json                                     │
+│                                                             │
+│   KEY = builds/app-v1.0.0.zip                              │
+│   Det finns inga riktiga mappar - bara prefix i key         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa och hantera buckets
+## Bucket-operationer
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `aws s3 mb s3://bucket` | Skapa bucket |
+| `aws s3 ls` | Lista alla buckets |
+| `aws s3 ls s3://bucket/` | Lista innehåll |
+| `aws s3 rb s3://bucket` | Ta bort tom bucket |
+| `aws s3 rb s3://bucket --force` | Ta bort bucket + innehåll |
 
 ```bash
-aws s3 mb s3://my-unique-bucket-name-12345
-# make bucket - skapar en ny bucket
-# Namnet måste vara globalt unikt i hela AWS
-# Använd datum eller slumpmässiga suffix för unikhet
-# Bucket skapas i din default region
+# Skapa bucket (globalt unikt namn!)
+aws s3 mb s3://my-company-artifacts-12345
 
+# Lista buckets
 aws s3 ls
-# Listar alla dina buckets
-# Visar CreationDate och BucketName
-# Snabb överblick av ditt S3-innehav
 
-aws s3 ls s3://my-bucket/
-# Listar innehållet i en specifik bucket
-# Visar LastModified, Size och Key (filnamn)
-# Lägg till --recursive för alla undermappar
-
-aws s3 rb s3://my-empty-bucket
-# remove bucket - tar bort en TOM bucket
-# Bucket måste vara helt tom först
-# Använd --force för att ta bort bucket och innehåll
+# Lista innehåll
+aws s3 ls s3://my-company-artifacts-12345/
+aws s3 ls s3://my-company-artifacts-12345/ --recursive
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ladda upp och ner filer
+## Ladda upp och ner
 
-```bash
-aws s3 cp myfile.txt s3://my-bucket/
-# Kopierar lokal fil till S3
-# Filen får samma namn i bucket
-# Lägg till path för att organisera: s3://my-bucket/folder/myfile.txt
-
-aws s3 cp s3://my-bucket/myfile.txt ./
-# Laddar ner fil från S3 till nuvarande katalog
-# Skriver över om filen redan finns lokalt
-# Använd --recursive för hela mappar
-
-aws s3 sync ./my-folder s3://my-bucket/backup/
-# Synkroniserar lokal mapp till S3
-# Bara ändrade filer kopieras (inkrementell)
-# Perfekt för backups och deployments
-
-aws s3 sync s3://my-bucket/backup/ ./restored/
-# Synkroniserar S3 till lokal mapp
-# Laddar bara ner nya eller ändrade filer
-# Snabbare än att ladda ner allt varje gång
-```
-
----
-
-## Hantera objekt
+| Kommando | Beskrivning |
+|----------|-------------|
+| `aws s3 cp local s3://` | Ladda upp fil |
+| `aws s3 cp s3:// local` | Ladda ner fil |
+| `aws s3 sync local s3://` | Synka mapp (inkrementell) |
+| `aws s3 mv` | Flytta/byt namn |
+| `aws s3 rm` | Ta bort |
 
 ```bash
-aws s3 rm s3://my-bucket/unwanted-file.txt
-# Tar bort ett enskilt objekt
-# Permanent om versioning är av
-# Med versioning skapas en delete marker
+# Ladda upp fil
+aws s3 cp myfile.txt s3://my-bucket/folder/
 
+# Ladda ner fil
+aws s3 cp s3://my-bucket/folder/myfile.txt ./
+
+# Synka mapp (bara andrade filer)
+aws s3 sync ./dist s3://my-bucket/website/
+
+# Ta bort
+aws s3 rm s3://my-bucket/old-file.txt
 aws s3 rm s3://my-bucket/old-folder/ --recursive
-# Tar bort alla objekt i en mapp
-# --recursive krävs för mappar
-# VARNING: Går inte att ångra utan versioning!
-
-aws s3 mv s3://my-bucket/old-name.txt s3://my-bucket/new-name.txt
-# Byter namn på ett objekt
-# Tekniskt en copy + delete operation
-# Fungerar även mellan buckets
-
-aws s3 presign s3://my-bucket/private-file.txt --expires-in 3600
-# Skapar en tidsbegränsad URL för nedladdning
-# --expires-in är sekunder (3600 = 1 timme)
-# Perfekt för att dela privata filer tillfälligt
-# URL:en innehåller signatur som autentiserar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Bucket policies och åtkomst
+## Storage Classes
+
+| Klass | Användning | Kostnad |
+|-------|------------|---------|
+| **Standard** | Frekventa åtkomst | $$$ |
+| **Standard-IA** | Sällan åtkomst, snabb hämtning | $$ |
+| **Glacier** | Arkiv, minuter till timmar | $ |
+| **Glacier Deep Archive** | Långtidsarkiv, 12h hämtning | ¢ |
 
 ```bash
-cat << 'EOF' > bucket-policy.json
+# Ladda upp med specifik storage class
+aws s3 cp backup.tar.gz s3://my-bucket/ \\
+    --storage-class STANDARD_IA
+
+# Flytta till Glacier
+aws s3 cp s3://my-bucket/old-backup.tar.gz s3://my-bucket/old-backup.tar.gz \\
+    --storage-class GLACIER
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Presigned URLs
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                PRESIGNED URL FLOW                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. Generera URL med signatur                              │
+│      aws s3 presign s3://bucket/private-file.pdf            │
+│                                                             │
+│   2. URL innehåller:                                        │
+│      - Bucket och key                                       │
+│      - Utgångstid                                           │
+│      - Kryptografisk signatur                               │
+│                                                             │
+│   3. Dela URL med användare                                 │
+│      https://bucket.s3.amazonaws.com/file?                  │
+│        X-Amz-Expires=3600&                                  │
+│        X-Amz-Signature=abc123...                            │
+│                                                             │
+│   4. Användare kan ladda ner UTAN AWS credentials           │
+│      (Tills URL:en går ut)                                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```bash
+# Skapa presigned URL (1 timme)
+aws s3 presign s3://my-bucket/private-report.pdf --expires-in 3600
+
+# Output: https://my-bucket.s3.eu-north-1.amazonaws.com/private-report.pdf?
+#         X-Amz-Algorithm=AWS4-HMAC-SHA256&
+#         X-Amz-Credential=...&
+#         X-Amz-Expires=3600&
+#         X-Amz-Signature=...
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Bucket Policy
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "PublicReadGetObject",
+            "Sid": "PublicReadForWebsite",
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
@@ -900,58 +1226,61 @@ cat << 'EOF' > bucket-policy.json
         }
     ]
 }
-EOF
-# Policy för att göra bucket publikt läsbar
-# Principal: "*" betyder alla (anonyma användare)
-# Action: s3:GetObject tillåter nedladdning
-# Resource: /* betyder alla objekt i bucket
+```
 
+```bash
+# Applicera policy
 aws s3api put-bucket-policy \\
     --bucket my-website-bucket \\
     --policy file://bucket-policy.json
-# Applicerar policy på bucket
-# Alla kan nu ladda ner filer från bucket
-# Perfekt för statisk webbhosting
-
-aws s3api get-bucket-policy --bucket my-bucket
-# Visar nuvarande bucket policy
-# Returnerar JSON-dokumentet
-# Tomt om ingen policy är satt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Statisk webbhosting
 
 ```bash
+# Aktivera static website hosting
 aws s3 website s3://my-website-bucket/ \\
     --index-document index.html \\
     --error-document error.html
-# Aktiverar statisk webbhosting
-# index.html visas för rot-URL
-# error.html visas vid 404
-# Bucket måste ha publik läsåtkomst
 
+# Ladda upp webbapp
 aws s3 sync ./dist s3://my-website-bucket/
-# Laddar upp din byggda webbapp
-# React, Vue, Angular - alla fungerar
-# Glöm inte att bygga först (npm run build)
 
-echo "Website URL: http://my-website-bucket.s3-website.eu-north-1.amazonaws.com"
-# S3-webbplatsens URL
-# Formatet är bucket.s3-website.region.amazonaws.com
-# Använd CloudFront för HTTPS och bättre prestanda
+# URL:
+# http://my-website-bucket.s3-website.eu-north-1.amazonaws.com
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `BucketAlreadyExists` | Namn upptaget globalt | Lägg till unik suffix |
+| `AccessDenied` | Saknar permission | Kolla IAM policy |
+| `NoSuchBucket` | Bucket finns inte | Kontrollera namn och region |
+| `AllAccessDisabled` | Public access block | Inaktivera block om avsiktligt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Bucket-namn är globalt unika** - använd prefix eller suffix
-2. **sync är inkrementell** - snabbare än att kopiera allt
-3. **presign för tillfällig åtkomst** - dela privata filer säkert
-4. **S3 för statisk hosting** - billigt och enkelt för frontend
-5. **Bucket policies för publik åtkomst** - var försiktig med Principal: *
+| Koncept | Detalj |
+|---------|--------|
+| **Bucket-namn** | Globalt unika - lägg till suffix |
+| **sync** | Inkrementell - bara ändrade filer |
+| **presign** | Tillfällig åtkomst utan credentials |
+| **Storage Classes** | Välj baserat på åtkomstmönster |
+| **Static hosting** | Billigt och enkelt for frontend |
+
+**Kom ihåg:**
+- **Bucket-namn är permanenta** - välj klokt
+- **sync är smartare än cp** for mappar
+- **presign för tillfällig delning** av privata filer
+- **Versioning** skyddar mot oavsiktlig borttagning
+- **Lifecycle policies** för automatisk arkivering
 """,
         },
         {
@@ -962,198 +1291,215 @@ echo "Website URL: http://my-website-bucket.s3-website.eu-north-1.amazonaws.com"
             "xp_reward": 85,
             "content": """# RDS - Relational Database Service
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-RDS är AWS managed database service - du slipper installera, patcha och säkerhetskopiera databaser själv. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Skapa och konfigurera databaser** för applikationer
-- **Hantera backups och snapshots** för disaster recovery
-- **Skala upp och ner** baserat på load
-- **Konfigurera high availability** med Multi-AZ
+| Scenario | Varfor RDS-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Managed DB** | Slipper installera, patcha, säkerhetskopiera |
+| **High Availability** | Multi-AZ for automatisk failover |
+| **Skalning** | Ändra instanstyp utan dataförlust |
+| **Backup/Restore** | Point-in-time recovery |
+| **Säkerhet** | Kryptering, VPC isolation |
 
----
+RDS ar managed database service. Du valjer motor och storlek - AWS sköter resten.
 
-## Så fungerar RDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-RDS hanterar databasadministration åt dig - patching, backups, failover. Du väljer databasmotor (PostgreSQL, MySQL, MariaDB, Oracle, SQL Server, Aurora) och instansstorlek. RDS kör i din VPC och skyddas av Security Groups.
+## RDS Arkitektur
 
-Tänk på RDS som "database as a service" - du fokuserar på datan, AWS sköter infrastrukturen.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    RDS MULTI-AZ                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌───────────────────────────────────────────────────┐     │
+│   │                     VPC                           │     │
+│   │  ┌─────────────────┐    ┌─────────────────┐      │     │
+│   │  │  Private Subnet │    │  Private Subnet │      │     │
+│   │  │    AZ-a         │    │    AZ-b         │      │     │
+│   │  │                 │    │                 │      │     │
+│   │  │  ┌───────────┐  │    │  ┌───────────┐  │      │     │
+│   │  │  │  PRIMARY  │◄─┼────┼─►│  STANDBY  │  │      │     │
+│   │  │  │  (Read/   │  │sync│  │  (Passive)│  │      │     │
+│   │  │  │   Write)  │  │    │  │           │  │      │     │
+│   │  │  └───────────┘  │    │  └───────────┘  │      │     │
+│   │  └─────────────────┘    └─────────────────┘      │     │
+│   │                                                   │     │
+│   │  App ansluter via ENDPOINT                        │     │
+│   │  Vid failover: Endpoint pekar automatiskt         │     │
+│   │  på ny primary (30-60 sekunder)                   │     │
+│   │                                                   │     │
+│   └───────────────────────────────────────────────────┘     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa en RDS-instans
+## Databasmotorer
+
+| Motor | Användning | Free Tier |
+|-------|------------|-----------|
+| **PostgreSQL** | Modern, feature-rich | db.t3.micro |
+| **MySQL** | Populär, bred support | db.t3.micro |
+| **MariaDB** | MySQL-fork, community | db.t3.micro |
+| **Aurora** | AWS-optimerad, 5x snabbare | Nej |
+| **SQL Server** | Microsoft-ekosystem | db.t3.small |
+| **Oracle** | Enterprise, legacy | Nej |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa RDS-instans
 
 ```bash
+# 1. Skapa subnet group forst
+aws rds create-db-subnet-group \\
+    --db-subnet-group-name prod-db-subnets \\
+    --db-subnet-group-description "Private subnets for RDS" \\
+    --subnet-ids subnet-private-1a subnet-private-1b
+
+# 2. Skapa databas
 aws rds create-db-instance \\
-    --db-instance-identifier my-postgres-db \\
+    --db-instance-identifier prod-postgres \\
     --db-instance-class db.t3.micro \\
     --engine postgres \\
     --engine-version 15.4 \\
     --master-username admin \\
-    --master-user-password MySecretPass123! \\
+    --master-user-password SecretPass123! \\
     --allocated-storage 20 \\
-    --vpc-security-group-ids sg-12345678 \\
-    --db-subnet-group-name my-db-subnet-group \\
+    --vpc-security-group-ids sg-db-access \\
+    --db-subnet-group-name prod-db-subnets \\
     --backup-retention-period 7 \\
-    --no-publicly-accessible
-# Skapar en PostgreSQL-databas
-# --db-instance-class bestämmer CPU och RAM
-# --allocated-storage är disk i GB
-# --backup-retention-period är dagar att spara backups
-# --no-publicly-accessible = bara åtkomst inom VPC
-
-aws rds describe-db-instances --db-instance-identifier my-postgres-db
-# Visar status och detaljer
-# DBInstanceStatus: creating -> available
-# Endpoint.Address är hostname att ansluta till
-# Tar 5-15 minuter att skapa
-```
-
----
-
-## Subnet Groups
-
-```bash
-aws rds create-db-subnet-group \\
-    --db-subnet-group-name my-db-subnet-group \\
-    --db-subnet-group-description "Subnets for RDS" \\
-    --subnet-ids subnet-11111111 subnet-22222222
-# Skapar en grupp av subnets för RDS
-# Måste innehålla subnets i minst 2 AZs
-# RDS placerar instansen i ett av dessa subnets
-# Krävs före create-db-instance
-
-aws rds describe-db-subnet-groups
-# Listar alla subnet groups
-# Visar vilka subnets och AZs som ingår
-# SubnetGroupStatus bör vara "Complete"
-```
-
----
-
-## Parameter Groups och Option Groups
-
-```bash
-aws rds create-db-parameter-group \\
-    --db-parameter-group-name my-postgres-params \\
-    --db-parameter-group-family postgres15 \\
-    --description "Custom PostgreSQL parameters"
-# Skapar en parameter group för databasinställningar
-# Familjen måste matcha engine-version
-# Kopiera från default och anpassa
-
-aws rds modify-db-parameter-group \\
-    --db-parameter-group-name my-postgres-params \\
-    --parameters "ParameterName=log_statement,ParameterValue=all,ApplyMethod=pending-reboot"
-# Ändrar en databasparameter
-# log_statement=all loggar alla queries
-# ApplyMethod: immediate eller pending-reboot
-# Vissa ändringar kräver omstart
-
-aws rds modify-db-instance \\
-    --db-instance-identifier my-postgres-db \\
-    --db-parameter-group-name my-postgres-params \\
-    --apply-immediately
-# Applicerar parameter group på instansen
-# --apply-immediately gör ändringen nu
-# Utan flaggan väntar den till maintenance window
-```
-
----
-
-## Backups och Snapshots
-
-```bash
-aws rds create-db-snapshot \\
-    --db-instance-identifier my-postgres-db \\
-    --db-snapshot-identifier my-db-snapshot-20241215
-# Skapar en manuell snapshot
-# Automatiska backups är inkrementella, snapshots är fullständiga
-# Snapshots finns kvar tills du tar bort dem
-# Bra att ta före stora ändringar
-
-aws rds describe-db-snapshots \\
-    --db-instance-identifier my-postgres-db
-# Listar alla snapshots för instansen
-# Visar Status, SnapshotCreateTime och AllocatedStorage
-# Status: creating -> available
-
-aws rds restore-db-instance-from-db-snapshot \\
-    --db-instance-identifier my-restored-db \\
-    --db-snapshot-identifier my-db-snapshot-20241215
-# Återställer från snapshot till NY instans
-# Kan inte återställa till befintlig instans
-# Den nya instansen har samma data som snapshot
-# Uppdatera connection string i applikationen
-
-aws rds delete-db-snapshot --db-snapshot-identifier my-db-snapshot-20241215
-# Tar bort en snapshot
-# Frigör lagringskostnader
-# VARNING: Kan inte återställas efter borttagning
-```
-
----
-
-## Multi-AZ för High Availability
-
-```bash
-aws rds modify-db-instance \\
-    --db-instance-identifier my-postgres-db \\
     --multi-az \\
-    --apply-immediately
-# Aktiverar Multi-AZ deployment
-# AWS skapar en standby-instans i annan AZ
-# Automatisk failover vid problem
-# Kostar ungefär dubbelt så mycket
+    --no-publicly-accessible
 
-aws rds describe-db-instances \\
-    --db-instance-identifier my-postgres-db \\
-    --query "DBInstances[0].{MultiAZ:MultiAZ,SecondaryAZ:SecondaryAvailabilityZone}"
-# Visar Multi-AZ status
-# SecondaryAZ visar var standby finns
-# Vid failover blir standby primary
-
-aws rds reboot-db-instance \\
-    --db-instance-identifier my-postgres-db \\
-    --force-failover
-# Testar failover manuellt
-# --force-failover byter till standby
-# Bra för att testa att failover fungerar
-# Kortare avbrott än vanlig omstart
+# 3. Vänta på att databasen blir tillgänglig (5-15 min)
+aws rds wait db-instance-available \\
+    --db-instance-identifier prod-postgres
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ansluta till RDS
+## Backup och Restore
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   RDS BACKUP TYPER                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   AUTOMATISKA BACKUPS              MANUELLA SNAPSHOTS       │
+│   ───────────────────              ─────────────────        │
+│   - Dagliga under backup window    - Du skapar manuellt     │
+│   - Retention: 1-35 dagar          - Finns tills du tar bort│
+│   - Point-in-time recovery         - Fullständig kopia      │
+│   - Tas bort med instansen         - Finns efter deletion   │
+│                                                             │
+│   POINT-IN-TIME RECOVERY:                                   │
+│   ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐                       │
+│   │ 00:00│──│ 06:00│──│ 12:00│──│ Nu  │                     │
+│   └─────┘  └─────┘  └─────┘  └─────┘                       │
+│   Kan återställa till vilken tidpunkt som helst            │
+│   inom retention-perioden (med 5 min precision)            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `create-db-snapshot` | Manuell snapshot |
+| `describe-db-snapshots` | Lista snapshots |
+| `restore-db-instance-from-db-snapshot` | Återställ till NY instans |
+| `restore-db-instance-to-point-in-time` | Point-in-time recovery |
 
 ```bash
+# Skapa snapshot fore stor andring
+aws rds create-db-snapshot \\
+    --db-instance-identifier prod-postgres \\
+    --db-snapshot-identifier prod-postgres-before-migration
+
+# Återställ fran snapshot (skapar NY instans)
+aws rds restore-db-instance-from-db-snapshot \\
+    --db-instance-identifier prod-postgres-restored \\
+    --db-snapshot-identifier prod-postgres-before-migration
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skalning
+
+| Typ | Hur | Downtime |
+|-----|-----|----------|
+| **Vertikal** | Ändra instanstyp | Ja (minuter) |
+| **Storage** | Öka allocated-storage | Nej |
+| **Read Replicas** | Lägg till read-only kopior | Nej |
+
+```bash
+# Skala upp instanstyp (kräver omstart)
+aws rds modify-db-instance \\
+    --db-instance-identifier prod-postgres \\
+    --db-instance-class db.t3.medium \\
+    --apply-immediately
+
+# Öka storage (ingen downtime)
+aws rds modify-db-instance \\
+    --db-instance-identifier prod-postgres \\
+    --allocated-storage 100 \\
+    --apply-immediately
+
+# Skapa read replica
+aws rds create-db-instance-read-replica \\
+    --db-instance-identifier prod-postgres-read \\
+    --source-db-instance-identifier prod-postgres
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Anslutning
+
+```bash
+# Hämta endpoint
 aws rds describe-db-instances \\
-    --db-instance-identifier my-postgres-db \\
+    --db-instance-identifier prod-postgres \\
     --query "DBInstances[0].Endpoint.Address" \\
     --output text
-# Hämtar endpointens hostname
-# Använd detta i din connection string
-# Formatet är: instance-id.random.region.rds.amazonaws.com
+# prod-postgres.abc123.eu-north-1.rds.amazonaws.com
 
-psql -h my-postgres-db.abc123.eu-north-1.rds.amazonaws.com \\
-    -U admin \\
-    -d postgres
-# Ansluter med psql-klienten
-# -h hostname från endpoint
-# -U är master username
-# Du blir promptad för lösenord
-# Kräver att Security Group tillåter port 5432
+# Anslut med psql
+psql -h prod-postgres.abc123.eu-north-1.rds.amazonaws.com \\
+    -U admin -d postgres
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `Cannot connect` | Security Group blockerar | Öppna port 5432/3306 |
+| `Subnet group not found` | Saknar subnet group | Skapa med minst 2 AZs |
+| `Storage full` | Disk slut | Öka allocated-storage |
+| `Too many connections` | Applikation läcker | Connection pooling |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **RDS hanterar admin** - patching, backups, failover automatiskt
-2. **Subnet Groups krävs** - minst 2 AZs för RDS
-3. **Multi-AZ för produktion** - automatisk failover vid problem
-4. **Snapshots före ändringar** - enkelt att återställa
-5. **Security Groups** - begränsa åtkomst till applikationsservrar
+| Koncept | Detalj |
+|---------|--------|
+| **Managed** | AWS sköter patching, backups, failover |
+| **Multi-AZ** | Automatisk failover - obligatoriskt for prod |
+| **Subnet Groups** | Minst 2 AZs kravs |
+| **Snapshots** | Ta fore stora andringar |
+| **Security Groups** | Begränsa till app-servrar |
+
+**Kom ihåg:**
+- **Aldrig publicly accessible** for produktionsdatabaser
+- **Multi-AZ** kostar dubbelt men ar värt det
+- **Point-in-time recovery** räddar dig vid dataförlust
+- **Parameter Groups** for att tweaka databasinställningar
+- **Endpoint ändras inte** vid failover
 """,
         },
         {
@@ -1164,203 +1510,216 @@ psql -h my-postgres-db.abc123.eu-north-1.rds.amazonaws.com \\
             "xp_reward": 95,
             "content": """# ECS - Elastic Container Service
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ECS är AWS tjänst för att köra Docker-containers i produktion. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Deploya containeriserade applikationer** med hög tillgänglighet
-- **Skala automatiskt** baserat på CPU/minnesanvändning
-- **Integrera med andra AWS-tjänster** som ALB, CloudWatch och Secrets Manager
-- **Välja mellan Fargate och EC2** launch types för olika behov
+| Scenario | Varfor ECS-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Container orchestration** | Kor Docker i produktion |
+| **Microservices** | Varje service i egen container |
+| **CI/CD** | Automatiserade deployments |
+| **Skalning** | Auto-scale baserat pa metrics |
+| **Kostnad** | Fargate = betala per container |
 
----
+ECS ar AWS managed container orchestration. Med Fargate slipper du hantera servrar - AWS kör dina containers.
 
-## Så fungerar ECS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ECS har tre huvudkomponenter:
-- **Cluster** - logisk gruppering av resurser
-- **Task Definition** - blueprint för hur containers ska köras
-- **Service** - kör och underhåller önskat antal tasks
+## ECS Komponenter
 
-Med Fargate slipper du hantera servrar - AWS kör dina containers. Med EC2 launch type har du mer kontroll men måste hantera instanserna.
-
----
-
-## Skapa ett ECS Cluster
-
-```bash
-aws ecs create-cluster --cluster-name my-cluster
-# {
-#     "cluster": {
-#         "clusterArn": "arn:aws:ecs:eu-north-1:123456789012:cluster/my-cluster",
-#         "clusterName": "my-cluster",
-#         "status": "ACTIVE"
-#     }
-# }
-# Skapar ett tomt cluster
-# Med Fargate behövs ingen underliggande infrastruktur
-# Cluster är bara en logisk gruppering
-
-aws ecs list-clusters
-# Listar alla dina clusters
-# Visar bara ARN:s - använd describe för detaljer
-# Bra för att verifiera att cluster skapades
-
-aws ecs describe-clusters --clusters my-cluster
-# Visar detaljerad info om cluster
-# registeredContainerInstancesCount (EC2 mode)
-# runningTasksCount och pendingTasksCount
-# status bör vara ACTIVE
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ECS ARKITEKTUR                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │                    CLUSTER                          │   │
+│   │              (Logisk gruppering)                    │   │
+│   │                                                     │   │
+│   │   ┌─────────────────────────────────────────────┐   │   │
+│   │   │                SERVICE                      │   │   │
+│   │   │   (Underhåller desired count av tasks)     │   │   │
+│   │   │                                             │   │   │
+│   │   │   ┌─────────┐  ┌─────────┐  ┌─────────┐   │   │   │
+│   │   │   │  TASK   │  │  TASK   │  │  TASK   │   │   │   │
+│   │   │   │         │  │         │  │         │   │   │   │
+│   │   │   │┌───────┐│  │┌───────┐│  │┌───────┐│   │   │   │
+│   │   │   ││ nginx ││  ││ nginx ││  ││ nginx ││   │   │   │
+│   │   │   │└───────┘│  │└───────┘│  │└───────┘│   │   │   │
+│   │   │   └─────────┘  └─────────┘  └─────────┘   │   │   │
+│   │   │                                             │   │   │
+│   │   └─────────────────────────────────────────────┘   │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│   TASK DEFINITION = Blueprint (image, cpu, memory, ports)  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+| Komponent | Beskrivning |
+|-----------|-------------|
+| **Cluster** | Logisk gruppering av resurser |
+| **Task Definition** | Blueprint for hur containers körs |
+| **Task** | Körande instans av task definition |
+| **Service** | Kör och underhåller önskat antal tasks |
 
-## Task Definition
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Launch Types
+
+| Typ | Beskrivning | Användning |
+|-----|-------------|------------|
+| **Fargate** | Serverless, AWS hanterar servers | Enklast, betala per task |
+| **EC2** | Du hanterar EC2-instanser | Mer kontroll, reserved capacity |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa Cluster och Task Definition
 
 ```bash
-cat << 'EOF' > task-def.json
+# Skapa cluster
+aws ecs create-cluster --cluster-name prod-cluster
+
+# Task definition (task-def.json)
 {
-    "family": "my-web-app",
+    "family": "web-app",
     "networkMode": "awsvpc",
     "requiresCompatibilities": ["FARGATE"],
     "cpu": "256",
     "memory": "512",
     "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
-    "containerDefinitions": [
-        {
-            "name": "web",
-            "image": "nginx:latest",
-            "essential": true,
-            "portMappings": [
-                {
-                    "containerPort": 80,
-                    "protocol": "tcp"
-                }
-            ],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "/ecs/my-web-app",
-                    "awslogs-region": "eu-north-1",
-                    "awslogs-stream-prefix": "ecs"
-                }
+    "containerDefinitions": [{
+        "name": "web",
+        "image": "nginx:latest",
+        "essential": true,
+        "portMappings": [{"containerPort": 80}],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/web-app",
+                "awslogs-region": "eu-north-1",
+                "awslogs-stream-prefix": "ecs"
             }
         }
-    ]
+    }]
 }
-EOF
-# Task definition i JSON-format
-# family är namnet (versioneras automatiskt)
-# cpu/memory i Fargate-enheter (256 cpu = 0.25 vCPU)
-# containerDefinitions listar alla containers i tasken
 
+# Registrera task definition
 aws ecs register-task-definition --cli-input-json file://task-def.json
-# Registrerar task definition
-# Skapar revision 1 (ökar för varje uppdatering)
-# Task definition är immutable - ändringar skapar ny revision
-
-aws ecs list-task-definitions --family-prefix my-web-app
-# Listar alla revisioner av task definition
-# Senaste revisionen är den som används
-# Äldre revisioner kan användas för rollback
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa en ECS Service
+## Skapa Service
 
 ```bash
+# Skapa service med 2 tasks
 aws ecs create-service \\
-    --cluster my-cluster \\
-    --service-name my-web-service \\
-    --task-definition my-web-app:1 \\
+    --cluster prod-cluster \\
+    --service-name web-service \\
+    --task-definition web-app:1 \\
     --desired-count 2 \\
     --launch-type FARGATE \\
-    --network-configuration "awsvpcConfiguration={subnets=[subnet-111,subnet-222],securityGroups=[sg-12345],assignPublicIp=ENABLED}"
-# Skapar en service som kör 2 tasks
-# --desired-count är antal tasks att underhålla
-# FARGATE = AWS hanterar servrarna
-# awsvpcConfiguration anger nätverksinställningar
+    --network-configuration "awsvpcConfiguration={subnets=[subnet-1,subnet-2],securityGroups=[sg-xxx],assignPublicIp=ENABLED}"
 
-aws ecs describe-services --cluster my-cluster --services my-web-service
-# Visar service-status
-# runningCount ska matcha desiredCount
-# events visar vad som hänt (deployment, errors)
-# deployments visar aktiva deploymenter
-
-aws ecs list-tasks --cluster my-cluster --service-name my-web-service
-# Listar alla tasks i servicen
-# Visar taskArn för varje körande task
-# Använd describe-tasks för mer detaljer
+# Kolla status
+aws ecs describe-services \\
+    --cluster prod-cluster \\
+    --services web-service
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Uppdatera en Service
+## Deployment och Skalning
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              ROLLING DEPLOYMENT                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Före:     [v1] [v1] [v1]                                 │
+│                                                             │
+│   Steg 1:   [v1] [v1] [v1] [v2]     ← Starta ny task       │
+│                                                             │
+│   Steg 2:   [v1] [v1] [v2] [v2]     ← v2 healthy, stoppa v1│
+│                                                             │
+│   Steg 3:   [v1] [v2] [v2] [v2]     ← Fortsätt...          │
+│                                                             │
+│   Efter:    [v2] [v2] [v2]           ← Klart!              │
+│                                                             │
+│   ZERO DOWNTIME - ALB skickar bara trafik till healthy     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Deploy ny version
 aws ecs update-service \\
-    --cluster my-cluster \\
-    --service-name my-web-service \\
-    --task-definition my-web-app:2
-# Rullar ut ny version av task definition
-# ECS startar nya tasks med nya versionen
-# Gamla tasks stoppas när nya är healthy
-# Zero-downtime deployment
+    --cluster prod-cluster \\
+    --service-name web-service \\
+    --task-definition web-app:2
 
+# Skala upp
 aws ecs update-service \\
-    --cluster my-cluster \\
-    --service-name my-web-service \\
-    --desired-count 4
-# Skalar upp till 4 tasks
-# Nya tasks startas omedelbart
-# Perfekt för att hantera ökad load
+    --cluster prod-cluster \\
+    --service-name web-service \\
+    --desired-count 5
 
+# Skala ner till 0 (stoppa)
 aws ecs update-service \\
-    --cluster my-cluster \\
-    --service-name my-web-service \\
+    --cluster prod-cluster \\
+    --service-name web-service \\
     --desired-count 0
-# Skalar ner till 0 tasks
-# Stoppar alla körande containers
-# Service finns kvar men kör inget
-# Bra för att spara pengar i dev
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## ECR - Container Registry
 
 ```bash
+# Skapa repository
 aws ecr create-repository --repository-name my-app
-# Skapar ett privat container registry
-# Här pushar du dina Docker images
-# Integrerat med ECS och IAM
 
-aws ecr get-login-password | docker login --username AWS --password-stdin 123456789012.dkr.ecr.eu-north-1.amazonaws.com
-# Loggar in Docker mot ECR
-# Tokenen gäller i 12 timmar
-# Krävs före docker push
+# Logga in Docker mot ECR
+aws ecr get-login-password | docker login \\
+    --username AWS \\
+    --password-stdin 123456789012.dkr.ecr.eu-north-1.amazonaws.com
 
+# Tagga och pusha image
 docker tag my-app:latest 123456789012.dkr.ecr.eu-north-1.amazonaws.com/my-app:latest
-# Taggar imagen med ECR-repository
-# Formatet är: account.dkr.ecr.region.amazonaws.com/repo:tag
-# latest och version tags är vanliga
-
 docker push 123456789012.dkr.ecr.eu-north-1.amazonaws.com/my-app:latest
-# Pushar imagen till ECR
-# Uppdatera task definition med nya image-URIn
-# ECS drar automatiskt från ECR
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `Task failed to start` | Image pull error | Kontrollera ECR permissions |
+| `Service stuck deploying` | Health check failed | Kolla ALB target group |
+| `ResourceInitializationError` | ENI/subnet problem | Kontrollera VPC config |
+| `OutOfMemory` | Container använder for mycket | Öka memory i task def |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Fargate = serverless containers** - AWS hanterar infrastrukturen
-2. **Task Definition är blueprint** - versioneras automatiskt
-3. **Service underhåller desired count** - startar om kraschade tasks
-4. **ECR för privata images** - integrerat med IAM
-5. **Rolling deployment** - zero-downtime updates
+| Koncept | Detalj |
+|---------|--------|
+| **Fargate** | Serverless containers - enklast |
+| **Task Definition** | Blueprint - versioneras automatiskt |
+| **Service** | Underhåller desired count |
+| **Rolling deployment** | Zero-downtime updates |
+| **ECR** | Privat container registry |
+
+**Kom ihåg:**
+- **Fargate for enkel start** - ingen serverhantering
+- **Task definitions är immutable** - ny revision vid ändring
+- **Logga till CloudWatch** - awslogs driver
+- **ECR + ECS** integrerat med IAM
+- **desired-count 0** for att stoppa utan att ta bort
 """,
         },
         {
@@ -1371,196 +1730,125 @@ docker push 123456789012.dkr.ecr.eu-north-1.amazonaws.com/my-app:latest
             "xp_reward": 100,
             "content": """# EKS - Elastic Kubernetes Service
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-EKS är AWS managed Kubernetes service - du får kraften av Kubernetes utan att hantera control plane. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Skapa och hantera EKS-kluster** för containerorkestreringsplattform
-- **Konfigurera node groups** för compute capacity
-- **Integrera med AWS-tjänster** som IAM, ALB och CloudWatch
-- **Använda kubectl** för att hantera workloads
+| Scenario | Varfor EKS-kunskap ar kritisk |
+|----------|-------------------------------|
+| **Container orchestration** | Kubernetes i produktion |
+| **Multi-cloud** | Kubernetes är portabelt |
+| **Microservices** | Komplex service mesh |
+| **Skalning** | Horizontal Pod Autoscaler |
+| **GitOps** | ArgoCD, Flux integration |
 
----
+EKS ar AWS managed Kubernetes. Du far kraften av Kubernetes utan att hantera control plane.
 
-## Så fungerar EKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-EKS kör Kubernetes control plane (API server, etcd, scheduler) i AWS managed infrastruktur med hög tillgänglighet över flera AZs. Du hanterar worker nodes via node groups - antingen EC2-instanser eller Fargate för serverless.
+## EKS Arkitektur
 
-Tänk på EKS som Kubernetes-as-a-Service - du fokuserar på workloads, AWS sköter mastern.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    EKS ARKITEKTUR                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              AWS MANAGED                            │   │
+│   │  ┌────────────────────────────────────────────────┐ │   │
+│   │  │           CONTROL PLANE                        │ │   │
+│   │  │  ┌──────────┐ ┌──────────┐ ┌──────────┐       │ │   │
+│   │  │  │API Server│ │  etcd    │ │Scheduler │       │ │   │
+│   │  │  └──────────┘ └──────────┘ └──────────┘       │ │   │
+│   │  │         Multi-AZ, HA                           │ │   │
+│   │  └────────────────────────────────────────────────┘ │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                            │                                │
+│                            │ kubectl                        │
+│                            ▼                                │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              DU HANTERAR                            │   │
+│   │  ┌────────────────────────────────────────────────┐ │   │
+│   │  │           WORKER NODES                         │ │   │
+│   │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐       │ │   │
+│   │  │  │   Pod   │  │   Pod   │  │   Pod   │       │ │   │
+│   │  │  │┌───────┐│  │┌───────┐│  │┌───────┐│       │ │   │
+│   │  │  ││ nginx ││  ││  api  ││  ││  db   ││       │ │   │
+│   │  │  │└───────┘│  │└───────┘│  │└───────┘│       │ │   │
+│   │  │  └─────────┘  └─────────┘  └─────────┘       │ │   │
+│   │  │         EC2 eller Fargate                     │ │   │
+│   │  └────────────────────────────────────────────────┘ │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa ett EKS-kluster
+## Skapa EKS Cluster
 
 ```bash
+# Med eksctl (rekommenderat)
 eksctl create cluster \\
-    --name my-eks-cluster \\
+    --name prod-cluster \\
     --region eu-north-1 \\
     --version 1.28 \\
-    --nodegroup-name standard-workers \\
+    --nodegroup-name workers \\
     --node-type t3.medium \\
     --nodes 2 \\
     --nodes-min 1 \\
-    --nodes-max 4
-# eksctl är det rekommenderade verktyget för EKS
-# Skapar kluster med managed node group
-# --version är Kubernetes-version
-# --nodes är initial antal worker nodes
-# Tar 15-20 minuter att skapa
+    --nodes-max 5
 
-aws eks describe-cluster --name my-eks-cluster
-# Visar klusterstatus och konfiguration
-# status: CREATING -> ACTIVE
-# endpoint är API server URL
-# certificateAuthority för kubectl
-
-aws eks list-clusters
-# Listar alla EKS-kluster i regionen
-# Enkel överblick av dina kluster
-# Returnerar bara namn - använd describe för detaljer
+# Tar 15-20 minuter
+# Skapar VPC, subnets, IAM roles automatiskt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Konfigurera kubectl
 
 ```bash
-aws eks update-kubeconfig --name my-eks-cluster --region eu-north-1
-# Konfigurerar kubectl att prata med EKS
-# Uppdaterar ~/.kube/config
-# Använder IAM för autentisering
-# Du kan nu köra kubectl-kommandon
+# Uppdatera kubeconfig
+aws eks update-kubeconfig --name prod-cluster --region eu-north-1
 
+# Verifiera anslutning
 kubectl get nodes
-# Visar alla worker nodes i klustret
-# STATUS bör vara Ready
-# VERSION visar Kubernetes-version
-# AGE visar hur länge noden funnits
-
 kubectl cluster-info
-# Visar kluster-endpoints
-# Kubernetes control plane URL
-# CoreDNS service URL
-# Verifierar att anslutningen fungerar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Node Groups
 
+| Typ | Beskrivning | Användning |
+|-----|-------------|------------|
+| **Managed** | AWS hanterar scaling | Standard |
+| **Self-managed** | Du hanterar EC2 | Specialkrav |
+| **Fargate** | Serverless pods | Per-pod billing |
+| **Spot** | 90% rabatt, kan tas tillbaka | Batch jobs |
+
 ```bash
+# Skapa spot node group
 eksctl create nodegroup \\
-    --cluster my-eks-cluster \\
+    --cluster prod-cluster \\
     --name spot-workers \\
     --node-type t3.large \\
     --nodes 3 \\
     --spot
-# Skapar en ny node group med spot instances
-# --spot ger upp till 90% rabatt men kan tas tillbaka
-# Bra för batch-jobb och stateless workloads
-# Blanda on-demand och spot för balans
 
-aws eks list-nodegroups --cluster-name my-eks-cluster
-# Listar alla node groups i klustret
-# Visar namn på varje grupp
-# Olika grupper för olika workloads
-
+# Skala node group
 eksctl scale nodegroup \\
-    --cluster my-eks-cluster \\
-    --name standard-workers \\
+    --cluster prod-cluster \\
+    --name workers \\
     --nodes 5
-# Skalar node group till 5 noder
-# Nya noder startas automatiskt
-# Pods schemaläggs på nya noder
-
-eksctl delete nodegroup \\
-    --cluster my-eks-cluster \\
-    --name spot-workers
-# Tar bort en node group
-# Pods evicteras först
-# Nodes termineras
-# Klustret fortsätter med andra node groups
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## EKS med Fargate
+## Deploy Application
 
-```bash
-eksctl create fargateprofile \\
-    --cluster my-eks-cluster \\
-    --name my-fargate-profile \\
-    --namespace default \\
-    --labels app=backend
-# Skapar Fargate-profil för serverless pods
-# --namespace anger vilka namespaces som matchar
-# --labels ytterligare matchning
-# Pods som matchar körs på Fargate
-
-kubectl apply -f - << 'EOF'
-apiVersion: v1
-kind: Pod
-metadata:
-  name: fargate-test
-  namespace: default
-  labels:
-    app: backend
-spec:
-  containers:
-  - name: nginx
-    image: nginx:latest
-EOF
-# Skapar en pod som matchar Fargate-profilen
-# Körs automatiskt på Fargate istället för EC2
-# Ingen förhandsallokering av kapacitet
-# Betala per pod-sekund
-
-kubectl get pods -o wide
-# Visar pods och vilken node de kör på
-# Fargate-noder har namn som fargate-ip-x-x-x-x
-# EC2-noder har namn som ip-x-x-x-x
-```
-
----
-
-## AWS Load Balancer Controller
-
-```bash
-eksctl create iamserviceaccount \\
-    --cluster my-eks-cluster \\
-    --namespace kube-system \\
-    --name aws-load-balancer-controller \\
-    --attach-policy-arn arn:aws:iam::123456789012:policy/AWSLoadBalancerControllerIAMPolicy \\
-    --override-existing-serviceaccounts \\
-    --approve
-# Skapar IAM service account för controller
-# IRSA (IAM Roles for Service Accounts)
-# Controller behöver skapa ALBs och NLBs
-# Säker integration med IAM
-
-helm repo add eks https://aws.github.io/eks-charts
-helm repo update
-# Lägger till AWS Helm repository
-# Innehåller EKS-specifika charts
-# update hämtar senaste versioner
-
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller \\
-    -n kube-system \\
-    --set clusterName=my-eks-cluster \\
-    --set serviceAccount.create=false \\
-    --set serviceAccount.name=aws-load-balancer-controller
-# Installerar controller med Helm
-# Skapar inte service account (gjordes ovan)
-# Lyssnar på Ingress-resurser
-# Skapar automatiskt ALBs
-```
-
----
-
-## Deploying till EKS
-
-```bash
-kubectl apply -f - << 'EOF'
+```yaml
+# deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1591,29 +1879,43 @@ spec:
     app: web
   ports:
   - port: 80
-    targetPort: 80
-EOF
-# Skapar Deployment och Service
-# 3 replicas för high availability
-# Service type LoadBalancer skapar AWS ELB
-# Trafiken lastbalanseras mellan pods
-
-kubectl get svc web-service
-# Visar service med EXTERNAL-IP
-# ELB DNS-namn i EXTERNAL-IP kolumnen
-# Kan ta några minuter att provisionera
-# Använd detta DNS-namn för att nå appen
 ```
 
----
+```bash
+kubectl apply -f deployment.yaml
+kubectl get svc web-service
+# EXTERNAL-IP ar AWS ELB DNS-namn
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `Unauthorized` | IAM/kubeconfig fel | aws eks update-kubeconfig |
+| `No nodes available` | Node group tom | Skala upp eller fixa ASG |
+| `ImagePullBackOff` | Kan inte dra image | Kontrollera ECR permissions |
+| `Pending pods` | Resursbrist | Skala nodes eller minska requests |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **EKS = managed Kubernetes** - AWS sköter control plane
-2. **eksctl förenklar** - skapa kluster med ett kommando
-3. **Fargate för serverless** - inga noder att hantera
-4. **IRSA för säker IAM** - pods får egna IAM-roller
-5. **ALB Ingress Controller** - AWS-native lastbalansering
+| Koncept | Detalj |
+|---------|--------|
+| **Managed control plane** | AWS sköter master nodes |
+| **eksctl** | Enklaste sättet att skapa cluster |
+| **Node groups** | Olika typer for olika workloads |
+| **IRSA** | IAM Roles for Service Accounts |
+| **ALB Controller** | AWS-native ingress |
+
+**Kom ihåg:**
+- **eksctl** ar enklast for att komma igång
+- **Fargate** for serverless pods
+- **Spot instances** for kostnadsbesparingar
+- **IRSA** for säker IAM-integration
+- **Cluster Autoscaler** for dynamisk skalning
 """,
         },
         {
@@ -1624,32 +1926,64 @@ kubectl get svc web-service
             "xp_reward": 90,
             "content": """# Lambda - Serverless Functions
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Lambda är AWS serverless compute - kör kod utan att hantera servrar. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Deploya funktioner** för event-driven arkitektur
-- **Konfigurera triggers** från S3, API Gateway, SNS etc.
-- **Hantera miljövariabler** och secrets
-- **Optimera prestanda** med rätt minneskonfiguration
+| Scenario | Varfor Lambda-kunskap ar kritisk |
+|----------|----------------------------------|
+| **Event-driven** | Triggas av S3, SQS, API Gateway |
+| **Kostnadseffektivt** | Betala bara nar kod kors |
+| **Skalning** | Automatisk 0 till tusentals |
+| **CI/CD automation** | Trigger vid deployments |
+| **Microservices** | Sma fokuserade funktioner |
 
----
+Lambda ar serverless compute - kor kod utan att hantera servrar.
 
-## Så fungerar Lambda
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Lambda kör din kod som svar på events. Du betalar bara för exekveringstid (faktureras per millisekund). Lambda hanterar:
-- Skalning (från 0 till tusentals samtidiga körningar)
-- High availability (multi-AZ automatiskt)
-- Patching och infrastruktur
+## Lambda Arkitektur
 
-Tänk på Lambda som "function as a service" - du skriver funktioner, AWS kör dem.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   LAMBDA ARKITEKTUR                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    │
+│   │     S3      │    │ API Gateway │    │    SQS      │    │
+│   │   (event)   │    │  (request)  │    │  (message)  │    │
+│   └──────┬──────┘    └──────┬──────┘    └──────┬──────┘    │
+│          │                  │                  │            │
+│          └──────────────────┴──────────────────┘            │
+│                             │                               │
+│                             ▼                               │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │                    LAMBDA                           │   │
+│   │  ┌─────────────────────────────────────────────┐   │   │
+│   │  │              Execution Environment          │   │   │
+│   │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐ │   │   │
+│   │  │  │ Handler  │  │  Memory  │  │  /tmp    │ │   │   │
+│   │  │  │ function │  │ 128MB-   │  │  512MB   │ │   │   │
+│   │  │  │          │  │  10GB    │  │ storage  │ │   │   │
+│   │  │  └──────────┘  └──────────┘  └──────────┘ │   │   │
+│   │  │         Max 15 min timeout                   │   │   │
+│   │  └─────────────────────────────────────────────┘   │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                             │                               │
+│                             ▼                               │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │  Response / CloudWatch Logs / Dead Letter Queue    │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa en Lambda-funktion
+## Skapa Lambda Funktion
 
-```bash
-cat << 'EOF' > lambda_function.py
+```python
+# lambda_function.py
 import json
 
 def lambda_handler(event, context):
@@ -1658,176 +1992,169 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps({'message': f'Hello, {name}!'})
     }
-EOF
-# Skapar en enkel Lambda-funktion i Python
-# lambda_handler är default entry point
-# event innehåller input-data
-# context har runtime-information
+```
 
+```bash
+# Paketera och skapa
 zip function.zip lambda_function.py
-# Paketerar koden i en zip-fil
-# Lambda kräver zip eller container image
-# Inkludera dependencies i zippen
 
 aws lambda create-function \\
     --function-name my-hello-function \\
     --runtime python3.11 \\
-    --role arn:aws:iam::123456789012:role/lambda-execution-role \\
+    --role arn:aws:iam::123456789012:role/lambda-role \\
     --handler lambda_function.lambda_handler \\
     --zip-file fileb://function.zip
-# Skapar Lambda-funktionen
-# --runtime är programmeringsspråk/version
-# --role är IAM-rollen funktionen kör som
-# --handler är module.function_name
-# fileb:// för binär fil
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Testa och anropa funktioner
+## Testa och Anropa
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `invoke --invocation-type RequestResponse` | Synkront - vantar pa svar |
+| `invoke --invocation-type Event` | Asynkront - returnerar direkt |
+| `invoke --log-type Tail` | Inkludera loggar i response |
 
 ```bash
+# Synkront anrop
 aws lambda invoke \\
     --function-name my-hello-function \\
     --payload '{"name": "DevOps"}' \\
     --cli-binary-format raw-in-base64-out \\
     response.json
-# Anropar funktionen synkront
-# --payload är JSON-input till funktionen
-# Output sparas i response.json
-# StatusCode 200 = lyckad körning
 
 cat response.json
 # {"message": "Hello, DevOps!"}
-# Visar funktionens svar
-# body är det som returnerades
 
+# Asynkront anrop
 aws lambda invoke \\
     --function-name my-hello-function \\
     --invocation-type Event \\
     --payload '{"name": "Async"}' \\
     response.json
-# Asynkron anrop (fire and forget)
-# --invocation-type Event
 # Returnerar 202 Accepted
-# Kör i bakgrunden
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Uppdatera och versionshantera
+## Versioner och Alias
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  VERSION WORKFLOW                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   $LATEST ─────────────► Version 1                         │
+│      │                       │                              │
+│      │                       │                              │
+│      └──(publish)──► Version 2 ◄───── [prod alias]         │
+│                          │                                  │
+│                          │                                  │
+│                    Version 3 ◄───── [dev alias]            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-aws lambda update-function-code \\
-    --function-name my-hello-function \\
-    --zip-file fileb://function.zip
-# Uppdaterar funktionskoden
-# Tidigare version skrivs över
-# Ta snapshot först om du vill ha rollback
-
+# Publicera version
 aws lambda publish-version \\
     --function-name my-hello-function \\
-    --description "Initial release"
-# Publicerar en oföränderlig version
-# Returnerar VersionId (1, 2, 3...)
-# Versioner kan inte ändras
-# Bra för rollback
+    --description "Release v1.0"
 
+# Skapa alias
 aws lambda create-alias \\
     --function-name my-hello-function \\
     --name prod \\
     --function-version 1
-# Skapar ett alias som pekar på en version
-# Anropa via alias: my-hello-function:prod
-# Byt version utan att ändra triggers
 
+# Uppdatera alias till ny version
 aws lambda update-alias \\
     --function-name my-hello-function \\
     --name prod \\
     --function-version 2
-# Uppdaterar alias till ny version
-# Traffic shift till version 2
-# Instant deployment
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Miljövariabler och konfiguration
+## Konfiguration
 
 ```bash
+# Miljövariabler
 aws lambda update-function-configuration \\
     --function-name my-hello-function \\
-    --environment "Variables={DB_HOST=mydb.example.com,API_KEY=secret123}"
-# Sätter miljövariabler
-# Tillgängliga via os.environ i koden
-# Krypteras automatiskt med KMS
-# Ändring triggar cold start
+    --environment "Variables={DB_HOST=mydb.example.com,API_KEY=secret}"
 
+# Minne och timeout
 aws lambda update-function-configuration \\
     --function-name my-hello-function \\
     --memory-size 512 \\
     --timeout 30
-# Justerar minne och timeout
-# Minne: 128 MB - 10 GB
-# Timeout: 1 sek - 15 min
-# Mer minne = mer CPU = snabbare
-
-aws lambda get-function-configuration \\
-    --function-name my-hello-function
-# Visar all konfiguration
-# MemorySize, Timeout, Environment
-# Runtime, Handler, Role
-# VpcConfig om ansluten till VPC
 ```
 
----
+| Parameter | Min | Max | Default |
+|-----------|-----|-----|---------|
+| **Memory** | 128 MB | 10 GB | 128 MB |
+| **Timeout** | 1 sek | 15 min | 3 sek |
+| **Ephemeral storage** | 512 MB | 10 GB | 512 MB |
 
-## Triggers och Event Sources
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Event Sources
 
 ```bash
+# S3 trigger permission
 aws lambda add-permission \\
     --function-name my-hello-function \\
     --statement-id s3-trigger \\
     --action lambda:InvokeFunction \\
     --principal s3.amazonaws.com \\
     --source-arn arn:aws:s3:::my-bucket
-# Ger S3 permission att trigga funktionen
-# statement-id är en unik identifierare
-# principal är AWS-tjänsten som anropar
-# source-arn begränsar till specifik bucket
 
-aws s3api put-bucket-notification-configuration \\
-    --bucket my-bucket \\
-    --notification-configuration '{
-        "LambdaFunctionConfigurations": [{
-            "LambdaFunctionArn": "arn:aws:lambda:eu-north-1:123456789012:function:my-hello-function",
-            "Events": ["s3:ObjectCreated:*"]
-        }]
-    }'
-# Konfigurerar S3 att trigga Lambda
-# Events: ObjectCreated, ObjectRemoved, etc.
-# Funktionen körs för varje nytt objekt
-# Event innehåller bucket och key
-
+# SQS event source mapping
 aws lambda create-event-source-mapping \\
     --function-name my-hello-function \\
     --event-source-arn arn:aws:sqs:eu-north-1:123456789012:my-queue \\
     --batch-size 10
-# Kopplar Lambda till SQS-kö
-# Lambda pollar kön automatiskt
-# batch-size är antal meddelanden per anrop
-# Perfekt för asynkron bearbetning
 ```
 
----
+| Event Source | Typ | Polling |
+|--------------|-----|---------|
+| **S3** | Push | Nej - S3 anropar Lambda |
+| **API Gateway** | Push | Nej - synkront |
+| **SQS** | Poll | Ja - Lambda pollar |
+| **DynamoDB Streams** | Poll | Ja - Lambda pollar |
+| **SNS** | Push | Nej - SNS anropar |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `Task timed out` | Koden tar for lang tid | Oka timeout eller optimera |
+| `Out of memory` | For lite minne | Oka memory-size |
+| `Permission denied` | IAM role saknar rattigheter | Lagg till IAM policy |
+| `Module not found` | Dependency saknas | Inkludera i zip/layer |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Betala per millisekund** - ingen kostnad när inget körs
-2. **Automatisk skalning** - från 0 till tusentals samtidigt
-3. **Versioner för rollback** - publicera innan production
-4. **Alias för deployment** - byt version utan triggers-ändring
-5. **Cold starts** - första anropet tar längre tid
+| Koncept | Detalj |
+|---------|--------|
+| **Pay per use** | Faktureras per millisekund |
+| **Auto-scaling** | 0 till tusentals samtidigt |
+| **Versioner** | Immutable snapshots av kod |
+| **Alias** | Pekare till version (dev/prod) |
+| **Layers** | Delade dependencies |
+
+**Kom ihåg:**
+- **Cold start** - forsta anropet tar langre tid
+- **Versioner for rollback** - publicera innan prod
+- **Alias for deployments** - byt version utan andrad ARN
+- **Mer minne = mer CPU** - snabbare exekvering
+- **Max 15 min timeout** - ej for langa jobb
 """,
         },
         {
@@ -1838,150 +2165,170 @@ aws lambda create-event-source-mapping \\
             "xp_reward": 90,
             "content": """# API Gateway - REST och HTTP APIs
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-API Gateway är AWS tjänst för att skapa och hantera APIs. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Skapa REST/HTTP APIs** som frontend för Lambda eller andra backend-tjänster
-- **Konfigurera säkerhet** med API keys, IAM, eller Cognito
-- **Hantera stages** för dev, staging och production
-- **Sätta upp throttling** för att skydda backend
+| Scenario | Varfor API Gateway-kunskap ar kritisk |
+|----------|---------------------------------------|
+| **Microservices** | Unified entry point |
+| **Serverless** | Lambda-integration |
+| **Sakerhet** | Auth, throttling, WAF |
+| **Multi-platform** | Webb, mobil, IoT |
+| **Monitoring** | Request metrics och logging |
 
----
+API Gateway ar managed service for att skapa, publicera och hantera APIs.
 
-## Så fungerar API Gateway
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-API Gateway är en managed tjänst som:
-- Tar emot HTTP-requests från klienter
-- Routar till rätt backend (Lambda, EC2, externa URLs)
-- Hanterar autentisering, throttling och caching
-- Transformerar requests/responses vid behov
+## API Gateway Arkitektur
 
-Du har två huvudtyper:
-- **REST API** - fullständig kontroll, mer features, högre kostnad
-- **HTTP API** - enklare, snabbare, billigare (70% mindre)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  API GATEWAY FLOW                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────┐    ┌─────────┐    ┌─────────┐               │
+│   │  Web    │    │ Mobile  │    │  IoT    │               │
+│   │  App    │    │  App    │    │ Device  │               │
+│   └────┬────┘    └────┬────┘    └────┬────┘               │
+│        │              │              │                     │
+│        └──────────────┴──────────────┘                     │
+│                       │                                    │
+│                       ▼                                    │
+│   ┌─────────────────────────────────────────────────────┐  │
+│   │              API GATEWAY                            │  │
+│   │  ┌──────────┐ ┌──────────┐ ┌──────────┐           │  │
+│   │  │   Auth   │ │ Throttle │ │  Cache   │           │  │
+│   │  └──────────┘ └──────────┘ └──────────┘           │  │
+│   │  ┌────────────────────────────────────┐           │  │
+│   │  │   Routes: /users, /orders, /api    │           │  │
+│   │  └────────────────────────────────────┘           │  │
+│   └─────────────────────────────────────────────────────┘  │
+│                       │                                    │
+│        ┌──────────────┼──────────────┐                    │
+│        ▼              ▼              ▼                    │
+│   ┌─────────┐    ┌─────────┐    ┌─────────┐              │
+│   │ Lambda  │    │   EC2   │    │   ECS   │              │
+│   │Function │    │ Backend │    │ Service │              │
+│   └─────────┘    └─────────┘    └─────────┘              │
+│                                                           │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa ett HTTP API
+## HTTP API vs REST API
+
+| Feature | HTTP API | REST API |
+|---------|----------|----------|
+| **Kostnad** | 70% billigare | Hogre |
+| **Latens** | Lagre | Hogre |
+| **Features** | Grundlaggande | Alla |
+| **Caching** | Nej | Ja |
+| **Request validation** | Nej | Ja |
+| **Rekommendation** | Default val | Avancerade behov |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa HTTP API
 
 ```bash
+# Skapa HTTP API med Lambda target
 aws apigatewayv2 create-api \\
     --name my-http-api \\
     --protocol-type HTTP \\
     --target arn:aws:lambda:eu-north-1:123456789012:function:my-function
-# Skapar ett HTTP API
-# protocol-type HTTP (inte WEBSOCKET)
-# --target skapar default route till Lambda
-# Returnerar ApiId och ApiEndpoint
 
+# Lista APIs
 aws apigatewayv2 get-apis
-# Listar alla HTTP APIs
-# Visar ApiId, Name, ApiEndpoint
-# ApiEndpoint är den publika URL:en
-# Formatet: https://{api-id}.execute-api.{region}.amazonaws.com
 
+# Testa
 curl https://abc123.execute-api.eu-north-1.amazonaws.com/
-# Anropar API:et
-# Default route skickar till Lambda
-# Svar från Lambda returneras till klient
-# Content-Type beror på Lambda response
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Konfigurera routes och integrationer
+## Routes och Integrationer
 
 ```bash
+# Skapa Lambda integration
 aws apigatewayv2 create-integration \\
     --api-id abc123 \\
     --integration-type AWS_PROXY \\
-    --integration-uri arn:aws:lambda:eu-north-1:123456789012:function:users-function \\
+    --integration-uri arn:aws:lambda:eu-north-1:123456789012:function:users \\
     --payload-format-version 2.0
-# Skapar en Lambda-integration
-# AWS_PROXY skickar hela requesten till Lambda
-# payload-format-version 2.0 är nyare format
-# Returnerar IntegrationId
 
+# Skapa route
 aws apigatewayv2 create-route \\
     --api-id abc123 \\
     --route-key "GET /users" \\
     --target integrations/int123
-# Skapar en route
-# route-key är HTTP-metod + path
-# --target kopplar till integration
-# GET /users -> users-function Lambda
 
+# Skapa POST route till samma Lambda
 aws apigatewayv2 create-route \\
     --api-id abc123 \\
     --route-key "POST /users" \\
     --target integrations/int123
-# Samma integration, annan metod
-# Lambda får info om metod i event
-# event['requestContext']['http']['method']
-# Logik i Lambda hanterar skillnaden
-
-aws apigatewayv2 get-routes --api-id abc123
-# Listar alla routes
-# Visar RouteKey, Target, RouteId
-# Använd för att verifiera setup
-# DELETE /routes/{routeId} för att ta bort
 ```
 
----
+| Route Key | Beskrivning |
+|-----------|-------------|
+| `GET /users` | Lista användare |
+| `POST /users` | Skapa användare |
+| `GET /users/{id}` | Hämta specifik |
+| `$default` | Catch-all route |
 
-## Stages och deployment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Stages
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    STAGE WORKFLOW                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   API Config ──► deploy ──► dev stage (auto-deploy)        │
+│       │                                                     │
+│       └───────► deploy ──► prod stage (manual)             │
+│                                                             │
+│   URLs:                                                     │
+│   - https://abc123.../dev/users                            │
+│   - https://abc123.../prod/users                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Dev stage med auto-deploy
 aws apigatewayv2 create-stage \\
     --api-id abc123 \\
     --stage-name dev \\
     --auto-deploy
-# Skapar en stage
-# stage-name blir del av URL
-# --auto-deploy deployer automatiskt
-# URL: https://{api-id}.execute-api.{region}.amazonaws.com/dev
 
+# Prod stage utan auto-deploy
 aws apigatewayv2 create-stage \\
     --api-id abc123 \\
     --stage-name prod
-# Prod-stage utan auto-deploy
-# Kräver manuell deployment
-# Säkrare för production
-# Kontrollera exakt vad som deployas
 
+# Manuell deployment till prod
 aws apigatewayv2 create-deployment \\
     --api-id abc123 \\
     --stage-name prod
-# Deployer till prod stage
-# Tar aktuell API-config
-# Alla routes och integrationer
-# Atomic - allt eller inget
-
-aws apigatewayv2 update-stage \\
-    --api-id abc123 \\
-    --stage-name prod \\
-    --stage-variables "ENV=production,DB_HOST=prod-db.example.com"
-# Stage variables - miljövariabler per stage
-# Tillgängliga i Lambda via event
-# Använd för config per miljö
-# stageVariables['ENV'] i Lambda
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Throttling och säkerhet
+## Throttling och CORS
 
 ```bash
+# Satt throttling
 aws apigatewayv2 update-stage \\
     --api-id abc123 \\
     --stage-name prod \\
     --default-route-settings '{"ThrottlingBurstLimit": 100, "ThrottlingRateLimit": 50}'
-# Sätter throttling för alla routes
-# BurstLimit: max samtidiga requests
-# RateLimit: requests per sekund
-# Skyddar backend mot överbelastning
 
+# Konfigurera CORS
 aws apigatewayv2 update-api \\
     --api-id abc123 \\
     --cors-configuration '{
@@ -1989,11 +2336,20 @@ aws apigatewayv2 update-api \\
         "AllowMethods": ["GET", "POST"],
         "AllowHeaders": ["Authorization", "Content-Type"]
     }'
-# Konfigurerar CORS
-# AllowOrigins: tillåtna domäner
-# AllowMethods: tillåtna HTTP-metoder
-# Viktigt för webb-klienter
+```
 
+| Setting | Beskrivning |
+|---------|-------------|
+| **BurstLimit** | Max samtidiga requests |
+| **RateLimit** | Requests per sekund |
+| **AllowOrigins** | CORS - tillåtna domäner |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## JWT Authorizer
+
+```bash
+# Skapa JWT authorizer med Cognito
 aws apigatewayv2 create-authorizer \\
     --api-id abc123 \\
     --authorizer-type JWT \\
@@ -2001,23 +2357,35 @@ aws apigatewayv2 create-authorizer \\
     --name cognito-auth \\
     --jwt-configuration '{
         "Audience": ["my-app-client-id"],
-        "Issuer": "https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_abc123"
+        "Issuer": "https://cognito-idp.eu-north-1.amazonaws.com/pool-id"
     }'
-# JWT authorizer med Cognito
-# Validerar tokens automatiskt
-# identity-source är var token finns
-# 401 om token saknas/ogiltig
+
+# Koppla authorizer till route
+aws apigatewayv2 update-route \\
+    --api-id abc123 \\
+    --route-id routeId \\
+    --authorization-type JWT \\
+    --authorizer-id authId
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **HTTP API för de flesta fall** - billigare och snabbare
-2. **Routes + Integrations** - koppla URL-paths till backends
-3. **Stages för miljöer** - dev, staging, prod
-4. **Auto-deploy för dev** - snabbare iteration
-5. **Throttling skyddar backend** - sätt alltid limits
+| Koncept | Detalj |
+|---------|--------|
+| **HTTP API** | Valj for de flesta fall |
+| **Routes** | Map URL paths till backends |
+| **Stages** | Separera dev/staging/prod |
+| **Throttling** | Skydda backend mot overbelastning |
+| **JWT Auth** | Cognito eller annan IdP |
+
+**Kom ihåg:**
+- **HTTP API for 70% lagre kostnad**
+- **Auto-deploy for dev** - snabbare iteration
+- **Manuell deploy for prod** - kontroll
+- **Throttling alltid** - skydda backend
+- **CORS for webb** - maste konfigureras
 """,
         },
         {
@@ -2028,117 +2396,119 @@ aws apigatewayv2 create-authorizer \\
             "xp_reward": 90,
             "content": """# CloudWatch - Monitoring och Logging
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CloudWatch är AWS centrala monitoring- och loggningstjänst. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Samla och söka loggar** från alla AWS-tjänster
-- **Skapa metrics och dashboards** för att visualisera prestanda
-- **Sätta upp alarms** som notifierar vid problem
-- **Automatisera actions** baserat på metrics
+| Scenario | Varfor CloudWatch-kunskap ar kritisk |
+|----------|--------------------------------------|
+| **Observability** | Se vad som hander i systemet |
+| **Troubleshooting** | Hitta och losa problem snabbt |
+| **Alerting** | Fa veta innan anvandare klagar |
+| **Compliance** | Audit trails och loggarkivering |
+| **Cost optimization** | Identifiera overanvandning |
 
----
+CloudWatch ar AWS centrala monitoring-tjanst for loggar, metrics och alarms.
 
-## Så fungerar CloudWatch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CloudWatch består av flera komponenter:
-- **Logs** - samla och sök i loggdata
-- **Metrics** - tidsserie-data för resurser
-- **Alarms** - notifieringar vid tröskelvärden
-- **Dashboards** - visualisering av metrics
+## CloudWatch Komponenter
 
-Alla AWS-tjänster skickar automatiskt metrics till CloudWatch. Loggar måste ofta konfigureras explicit.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  CLOUDWATCH OVERSIKT                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐       │
+│   │    LOGS     │  │   METRICS   │  │   ALARMS    │       │
+│   │             │  │             │  │             │       │
+│   │ Log Groups  │  │ Namespaces  │  │ Thresholds  │       │
+│   │ Log Streams │  │ Dimensions  │  │ Actions     │       │
+│   │ Insights    │  │ Statistics  │  │ SNS/Lambda  │       │
+│   └──────┬──────┘  └──────┬──────┘  └──────┬──────┘       │
+│          │                │                │              │
+│          └────────────────┴────────────────┘              │
+│                           │                               │
+│                           ▼                               │
+│   ┌─────────────────────────────────────────────────────┐ │
+│   │                   DASHBOARDS                        │ │
+│   │   Visualisera metrics, loggar och alarms           │ │
+│   └─────────────────────────────────────────────────────┘ │
+│                                                           │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## CloudWatch Logs
 
 ```bash
-aws logs create-log-group \\
-    --log-group-name /app/my-service
-# Skapar en log group
-# Log groups organiserar loggar per app/tjänst
-# /app/prefix är konvention
-# Retention är obegränsad default
+# Skapa log group
+aws logs create-log-group --log-group-name /app/my-service
 
+# Satt retention (sparar pengar!)
 aws logs put-retention-policy \\
     --log-group-name /app/my-service \\
     --retention-in-days 30
-# Sätter retention policy
-# Raderar loggar äldre än 30 dagar
-# Sparar lagringskostnader
-# Vanliga värden: 7, 14, 30, 90, 365
 
+# Lista log streams
 aws logs describe-log-streams \\
     --log-group-name /app/my-service \\
     --order-by LastEventTime \\
     --descending
-# Listar log streams i gruppen
-# En stream per instans/container
-# order-by sorterar efter senaste logg
-# Visar logStreamName att använda
 
+# Hamta loggar
 aws logs get-log-events \\
     --log-group-name /app/my-service \\
     --log-stream-name i-abc123 \\
     --limit 50
-# Hämtar logghändelser
-# --limit begränsar antal
-# Returnerar events med timestamp
-# message innehåller loggtext
 ```
 
----
+| Retention | Anvandning |
+|-----------|------------|
+| **7 dagar** | Dev/test |
+| **30 dagar** | Standard produktion |
+| **90 dagar** | Compliance |
+| **365 dagar** | Audit requirements |
 
-## Logs Insights - sökning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Logs Insights
 
 ```bash
+# Starta query
 aws logs start-query \\
     --log-group-name /app/my-service \\
     --start-time $(date -d '1 hour ago' +%s) \\
     --end-time $(date +%s) \\
     --query-string 'fields @timestamp, @message | filter @message like /ERROR/ | limit 20'
-# Startar en Logs Insights-query
-# Returnerar queryId
-# Asynkron - resultat hämtas separat
-# Query language liknande SQL
 
-aws logs get-query-results \\
-    --query-id abc123-def456
-# Hämtar query-resultat
-# status: Running, Complete, Failed
-# results innehåller matchande loggar
-# Kör flera gånger tills Complete
+# Hamta resultat
+aws logs get-query-results --query-id abc123
 
-aws logs filter-log-events \\
-    --log-group-name /app/my-service \\
-    --filter-pattern "ERROR" \\
-    --start-time $(date -d '1 hour ago' +%s)000
-# Enklare synkron sökning
-# filter-pattern är enkelt mönster
-# start-time i millisekunder (lägg till 000)
-# Bra för snabba sökningar
-
+# Folja loggar i realtid
 aws logs tail /app/my-service --follow
-# Följer loggar i realtid
-# Som tail -f för CloudWatch
-# Ctrl+C för att avsluta
-# Kräver AWS CLI v2
 ```
 
----
+| Query Syntax | Beskrivning |
+|--------------|-------------|
+| `fields @timestamp, @message` | Valj falt |
+| `filter @message like /ERROR/` | Filtrera |
+| `sort @timestamp desc` | Sortera |
+| `limit 20` | Begransa resultat |
+| `stats count(*) by bin(1h)` | Aggregera |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## CloudWatch Metrics
 
 ```bash
+# Lista metrics
 aws cloudwatch list-metrics \\
     --namespace AWS/EC2 \\
     --metric-name CPUUtilization
-# Listar metrics
-# namespace grupperar per tjänst
-# AWS/EC2, AWS/RDS, AWS/Lambda etc.
-# Visar Dimensions (InstanceId etc.)
 
+# Hamta statistik
 aws cloudwatch get-metric-statistics \\
     --namespace AWS/EC2 \\
     --metric-name CPUUtilization \\
@@ -2147,28 +2517,51 @@ aws cloudwatch get-metric-statistics \\
     --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \\
     --period 300 \\
     --statistics Average
-# Hämtar metric-data
-# period 300 = 5 minuters intervall
-# statistics: Average, Sum, Min, Max
-# Returnerar Datapoints array
 
+# Publicera custom metric
 aws cloudwatch put-metric-data \\
     --namespace Custom/MyApp \\
     --metric-name RequestLatency \\
     --value 150 \\
     --unit Milliseconds \\
     --dimensions Service=UserAPI
-# Publicerar custom metric
-# Custom/ namespace för egna metrics
-# unit ger kontext (Milliseconds, Count, etc.)
-# Dimensions för filtrering
 ```
 
----
+| Namespace | Tjanst |
+|-----------|--------|
+| `AWS/EC2` | EC2 instanser |
+| `AWS/RDS` | Databaser |
+| `AWS/Lambda` | Lambda funktioner |
+| `AWS/ECS` | Containers |
+| `Custom/MyApp` | Egna metrics |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## CloudWatch Alarms
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ALARM STATES                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌────────────┐        ┌────────────┐                     │
+│   │     OK     │◄──────►│   ALARM    │                     │
+│   │            │        │            │                     │
+│   │ CPU < 80%  │        │ CPU > 80%  │──► SNS ──► Email   │
+│   └────────────┘        └────────────┘           Lambda   │
+│         │                     │                 Auto Scale│
+│         │                     │                            │
+│         ▼                     ▼                            │
+│   ┌────────────────────────────────────┐                  │
+│   │        INSUFFICIENT_DATA           │                  │
+│   │      (Ingen data annu)             │                  │
+│   └────────────────────────────────────┘                  │
+│                                                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ```bash
+# Skapa alarm
 aws cloudwatch put-metric-alarm \\
     --alarm-name high-cpu-alarm \\
     --metric-name CPUUtilization \\
@@ -2180,43 +2573,32 @@ aws cloudwatch put-metric-alarm \\
     --comparison-operator GreaterThanThreshold \\
     --evaluation-periods 2 \\
     --alarm-actions arn:aws:sns:eu-north-1:123456789012:alerts
-# Skapar ett alarm
-# Triggas när CPU > 80% i 2 perioder (10 min)
-# alarm-actions är SNS topic för notifiering
-# Skickar email, SMS, eller trigger Lambda
 
+# Lista alarms
 aws cloudwatch describe-alarms
-# Listar alla alarms
-# StateValue: OK, ALARM, INSUFFICIENT_DATA
-# Visar när alarm senast ändrades
-# Använd för att debugga
 
-aws cloudwatch set-alarm-state \\
-    --alarm-name high-cpu-alarm \\
-    --state-value OK \\
-    --state-reason "Manually reset"
-# Manuellt återställer alarm
-# Användbart för test eller override
-# StateReason loggas
-# Alarm går tillbaka om condition kvarstår
-
-aws cloudwatch disable-alarm-actions \\
-    --alarm-names high-cpu-alarm
-# Stänger av alarm-actions
-# Alarm övervakar fortfarande
-# Bra under maintenance
-# enable-alarm-actions för att aktivera igen
+# Disable alarm actions (for maintenance)
+aws cloudwatch disable-alarm-actions --alarm-names high-cpu-alarm
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Log Groups organiserar** - en per app eller tjänst
-2. **Retention sparar pengar** - sätt alltid policy
-3. **Logs Insights för sökning** - kraftfullt query-språk
-4. **Custom metrics för app-data** - skicka från din kod
-5. **Alarms för proaktiv monitoring** - SNS för notifiering
+| Koncept | Detalj |
+|---------|--------|
+| **Log Groups** | Organisera per app/tjanst |
+| **Retention** | Satt policy - sparar pengar |
+| **Logs Insights** | SQL-liknande sokning |
+| **Custom Metrics** | Skicka fran din kod |
+| **Alarms** | Proaktiv alerting via SNS |
+
+**Kom ihåg:**
+- **Satt retention** - default ar obegransat och dyrt
+- **Logs Insights** for komplex sokning
+- **Custom metrics** for app-specifika data
+- **Alarm actions** - SNS for email/SMS
+- **Dashboard** for visualisering
 """,
         },
         {
@@ -2227,235 +2609,223 @@ aws cloudwatch disable-alarm-actions \\
             "xp_reward": 95,
             "content": """# CloudFormation - Infrastructure as Code
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CloudFormation är AWS IaC-tjänst för att definiera infrastruktur som kod. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Definiera resurser** i YAML/JSON-templates
-- **Skapa och uppdatera stacks** reproducerbart
-- **Hantera beroenden** mellan resurser
-- **Använda parametrar** för återanvändbara templates
+| Scenario | Varfor CloudFormation-kunskap ar kritisk |
+|----------|------------------------------------------|
+| **IaC** | Versionskontrollera infrastruktur |
+| **Reproducerbarhet** | Samma template = samma resultat |
+| **Automation** | CI/CD for infra |
+| **Compliance** | Drift detection |
+| **Rollback** | Automatisk vid fel |
 
----
+CloudFormation ar AWS native IaC for att definiera och provisionera resurser.
 
-## Så fungerar CloudFormation
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CloudFormation tar en template (YAML eller JSON) och skapar en "stack" med alla definierade resurser. Fördelar:
-- **Reproducerbart** - samma template ger samma infrastruktur
-- **Versionskontroll** - templates i Git
-- **Rollback** - vid fel rullas allt tillbaka
-- **Dependency management** - CloudFormation förstår beroenden
+## CloudFormation Workflow
 
----
+```
+┌─────────────────────────────────────────────────────────────┐
+│                CLOUDFORMATION WORKFLOW                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐   │
+│   │  Template   │───►│ Change Set  │───►│   Stack     │   │
+│   │  (YAML)     │    │  (Preview)  │    │  (Deploy)   │   │
+│   └─────────────┘    └─────────────┘    └─────────────┘   │
+│         │                                      │           │
+│         │                                      ▼           │
+│         │                              ┌─────────────┐    │
+│         │                              │  Resources  │    │
+│         │                              │ EC2, S3,    │    │
+│         │                              │ RDS, etc    │    │
+│         │                              └─────────────┘    │
+│         │                                      │           │
+│         ▼                                      ▼           │
+│   ┌───────────────────────────────────────────────────┐   │
+│   │                   Git Repository                  │   │
+│   │           Version control templates               │   │
+│   └───────────────────────────────────────────────────┘   │
+│                                                           │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## Grundläggande template-struktur
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-cat << 'EOF' > template.yaml
+## Template Struktur
+
+```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Simple S3 bucket with versioning
+Description: Min infrastruktur
 
 Parameters:
-  BucketName:
+  Environment:
     Type: String
-    Description: Name of the S3 bucket
-    Default: my-app-bucket
+    Default: dev
+    AllowedValues: [dev, staging, prod]
 
 Resources:
   MyBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '\${BucketName}-\${AWS::AccountId}'
+      BucketName: !Sub 'app-data-bucket'
       VersioningConfiguration:
         Status: Enabled
-      Tags:
-        - Key: Environment
-          Value: production
 
 Outputs:
   BucketArn:
-    Description: ARN of the created bucket
     Value: !GetAtt MyBucket.Arn
     Export:
-      Name: !Sub '\${AWS::StackName}-BucketArn'
-EOF
-# AWSTemplateFormatVersion alltid 2010-09-09
-# Parameters gör templaten återanvändbar
-# Resources definierar AWS-resurser
-# !Sub substituerar variabler
-# !GetAtt hämtar resurs-attribut
-# Outputs exporterar värden
+      Name: !Sub 'BucketArn'
 ```
 
----
+| Sektion | Beskrivning |
+|---------|-------------|
+| **Parameters** | Input-variabler |
+| **Resources** | AWS-resurser att skapa |
+| **Outputs** | Export-varden |
+| **Mappings** | Lookup-tabeller |
+| **Conditions** | Villkorlig logik |
 
-## Skapa och hantera stacks
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa och Hantera Stacks
 
 ```bash
+# Skapa stack
 aws cloudformation create-stack \\
-    --stack-name my-app-storage \\
+    --stack-name my-app \\
     --template-body file://template.yaml \\
-    --parameters ParameterKey=BucketName,ParameterValue=my-app-data
-# Skapar en ny stack
-# --stack-name unik identifierare
-# file:// för lokal fil
-# --parameters sätter parametervärden
-# Returnerar StackId
+    --parameters ParameterKey=Environment,ParameterValue=prod
 
-aws cloudformation describe-stacks \\
-    --stack-name my-app-storage
-# Visar stack-status
-# StackStatus: CREATE_IN_PROGRESS, CREATE_COMPLETE
-# Om fel: CREATE_FAILED, ROLLBACK_COMPLETE
-# Outputs visas när COMPLETE
+# Vanta tills klar
+aws cloudformation wait stack-create-complete --stack-name my-app
 
-aws cloudformation list-stack-resources \\
-    --stack-name my-app-storage
-# Listar alla resurser i stacken
-# PhysicalResourceId är faktiska resurs-id
-# ResourceStatus per resurs
-# Användbart för debugging
+# Visa status
+aws cloudformation describe-stacks --stack-name my-app
 
-aws cloudformation wait stack-create-complete \\
-    --stack-name my-app-storage
-# Väntar tills stack är klar
-# Blockar tills CREATE_COMPLETE
-# Exit code 0 = success
-# Timeout efter ~25 min
+# Lista resurser
+aws cloudformation list-stack-resources --stack-name my-app
 ```
 
----
+| Status | Betydelse |
+|--------|-----------|
+| `CREATE_IN_PROGRESS` | Skapar resurser |
+| `CREATE_COMPLETE` | Klart |
+| `CREATE_FAILED` | Fel - kollar rollback |
+| `ROLLBACK_COMPLETE` | Rollback klar |
+| `UPDATE_IN_PROGRESS` | Uppdaterar |
 
-## Uppdatera stacks
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Change Sets
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    CHANGE SET FLOW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Template v2 ──► create-change-set ──► Review changes     │
+│                                              │              │
+│                                              ▼              │
+│                                    ┌─────────────────┐     │
+│                                    │ Action: Add     │     │
+│                                    │ Action: Modify  │     │
+│                                    │ Action: Remove  │     │
+│                                    │ Replacement?    │     │
+│                                    └────────┬────────┘     │
+│                                             │              │
+│                          Approve?  ─────────┼──────────    │
+│                           YES              NO              │
+│                            │                │              │
+│                            ▼                ▼              │
+│                    execute-change-set   delete-change-set  │
+│                                                            │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-aws cloudformation update-stack \\
-    --stack-name my-app-storage \\
-    --template-body file://template-v2.yaml \\
-    --parameters ParameterKey=BucketName,ParameterValue=my-app-data
-# Uppdaterar befintlig stack
-# CloudFormation beräknar diff
-# Endast ändrade resurser uppdateras
-# Vissa ändringar kräver replacement
-
-aws cloudformation describe-stack-events \\
-    --stack-name my-app-storage
-# Visar alla händelser
-# Kronologisk logg av skapande/uppdatering
-# ResourceStatusReason vid fel
-# Ovärderligt för debugging
-
+# Skapa change set (preview)
 aws cloudformation create-change-set \\
-    --stack-name my-app-storage \\
-    --change-set-name update-bucket \\
+    --stack-name my-app \\
+    --change-set-name update-v2 \\
     --template-body file://template-v2.yaml
-# Skapar change set utan att applicera
-# Visar exakt vad som kommer ändras
-# Action: Add, Modify, Remove
-# Replacement: True om resursen återskapas
 
+# Visa andringar
+aws cloudformation describe-change-set \\
+    --stack-name my-app \\
+    --change-set-name update-v2
+
+# Applicera
 aws cloudformation execute-change-set \\
-    --stack-name my-app-storage \\
-    --change-set-name update-bucket
-# Applicerar change set
-# Säkrare än direkt update-stack
-# Best practice för production
-# Kan reviewas innan körning
+    --stack-name my-app \\
+    --change-set-name update-v2
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Template-funktioner och beroenden
+## Intrinsic Functions
 
-```bash
-cat << 'EOF' > multi-resource.yaml
-AWSTemplateFormatVersion: '2010-09-09'
-Description: VPC with subnet and security group
+| Funktion | Anvandning |
+|----------|------------|
+| `!Ref` | Referera resurs (returnerar ID) |
+| `!GetAtt` | Hamta attribut (ARN, DNS, etc) |
+| `!Sub` | String substitution |
+| `!Join` | Slå ihop strängar |
+| `!Select` | Välj från lista |
+| `!If` | Villkorligt värde |
 
+```yaml
 Resources:
-  MyVPC:
-    Type: AWS::EC2::VPC
+  MyEC2:
+    Type: AWS::EC2::Instance
     Properties:
-      CidrBlock: 10.0.0.0/16
-      EnableDnsHostnames: true
-      Tags:
-        - Key: Name
-          Value: !Sub '\${AWS::StackName}-vpc'
-
-  PublicSubnet:
-    Type: AWS::EC2::Subnet
-    DependsOn: MyVPC
-    Properties:
-      VpcId: !Ref MyVPC
-      CidrBlock: 10.0.1.0/24
-      AvailabilityZone: !Select [0, !GetAZs '']
-      MapPublicIpOnLaunch: true
-
-  WebSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Allow HTTP traffic
-      VpcId: !Ref MyVPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
+      InstanceType: t3.micro
+      SubnetId: !Ref MySubnet
 
 Outputs:
-  VpcId:
-    Value: !Ref MyVPC
-  SubnetId:
-    Value: !Ref PublicSubnet
-  SecurityGroupId:
-    Value: !GetAtt WebSecurityGroup.GroupId
-EOF
-# !Ref refererar till resurs (returnerar ID)
-# !GetAtt hämtar specifikt attribut
-# !Select väljer från lista
-# !GetAZs '' hämtar AZs i regionen
-# DependsOn explicit beroende
-# Implicita beroenden via !Ref
+  InstanceIP:
+    Value: !GetAtt MyEC2.PublicIp
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Radera och skydda stacks
+## Skydda och Radera
 
 ```bash
-aws cloudformation delete-stack \\
-    --stack-name my-app-storage
-# Raderar stack och alla resurser
-# VIKTIGT: tar bort allt i stacken
-# Ingen confirmation prompt
-# Vissa resurser kan ha deletion protection
-
+# Aktivera termination protection
 aws cloudformation update-termination-protection \\
-    --stack-name my-app-storage \\
+    --stack-name my-app \\
     --enable-termination-protection
-# Skyddar mot oavsiktlig radering
-# delete-stack misslyckas
-# Måste explicit stänga av först
-# Best practice för production
 
-aws cloudformation describe-stack-resources \\
-    --stack-name my-app-storage \\
-    --query 'StackResources[*].{Name:LogicalResourceId,Type:ResourceType,Status:ResourceStatus}'
-# Query för att formatera output
-# Visar resursnamn, typ och status
-# --query använder JMESPath
-# Perfekt för scripting
+# Radera stack (alla resurser tas bort!)
+aws cloudformation delete-stack --stack-name my-app
+
+# Visa events (for debugging)
+aws cloudformation describe-stack-events --stack-name my-app
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Infrastructure as Code** - versionskontrollera din infrastruktur
-2. **Parameters för återanvändning** - samma template, olika miljöer
-3. **Change sets för säkerhet** - granska innan applicering
-4. **!Ref och !GetAtt** - referera mellan resurser
-5. **Termination protection** - skydda production stacks
+| Koncept | Detalj |
+|---------|--------|
+| **Templates** | YAML/JSON infrastruktur-definitioner |
+| **Stacks** | Deployment-enhet av resurser |
+| **Change Sets** | Preview innan deployment |
+| **Parameters** | Gor templates ateranvandbara |
+| **Outputs** | Exportera varden mellan stacks |
+
+**Kom ihåg:**
+- **Change sets for prod** - alltid preview forst
+- **Termination protection** - pa alla prod-stacks
+- **describe-stack-events** - for debugging
+- **Rollback ar automatiskt** - vid fel
+- **Drift detection** - hitta manuella andringar
 """,
         },
         {
@@ -2466,69 +2836,101 @@ aws cloudformation describe-stack-resources \\
             "xp_reward": 85,
             "content": """# Route 53 - DNS och Routing
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Route 53 är AWS DNS-tjänst för domänhantering och routing. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Hantera DNS-zoner** och records för dina domäner
-- **Konfigurera routing policies** för high availability
-- **Sätta upp health checks** för failover
-- **Integrera med andra AWS-tjänster** via alias records
+| Scenario | Varfor Route53-kunskap ar kritisk |
+|----------|-----------------------------------|
+| **Domain management** | Hantera DNS for alla tjanster |
+| **High availability** | Failover vid problem |
+| **Load distribution** | Weighted/latency routing |
+| **Global reach** | Geo-routing |
+| **Service discovery** | Private hosted zones |
 
----
+Route 53 ar AWS globally distribuerad DNS-tjanst med 100% SLA.
 
-## Så fungerar Route 53
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Route 53 är en globally distribuerad DNS-tjänst med 100% SLA. Funktioner:
-- **Hosted Zones** - DNS-zoner för dina domäner
-- **Record Sets** - DNS-poster (A, CNAME, MX, etc.)
-- **Routing Policies** - simple, weighted, latency, failover, geolocation
-- **Health Checks** - övervakar endpoints
+## Route 53 Komponenter
 
----
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  ROUTE 53 OVERSIKT                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              HOSTED ZONES                           │   │
+│   │  ┌─────────────┐  ┌─────────────┐                  │   │
+│   │  │example.com  │  │internal.com │                  │   │
+│   │  │(public)     │  │(private)    │                  │   │
+│   │  └──────┬──────┘  └──────┬──────┘                  │   │
+│   └─────────┼────────────────┼──────────────────────────┘   │
+│             │                │                              │
+│             ▼                ▼                              │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              RECORD SETS                            │   │
+│   │  A      CNAME    MX      TXT     ALIAS             │   │
+│   └─────────────────────────────────────────────────────┘   │
+│             │                                               │
+│             ▼                                               │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              ROUTING POLICIES                       │   │
+│   │  Simple | Weighted | Latency | Failover | Geo      │   │
+│   └─────────────────────────────────────────────────────┘   │
+│             │                                               │
+│             ▼                                               │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │              HEALTH CHECKS                          │   │
+│   │     Monitor endpoints for failover                  │   │
+│   └─────────────────────────────────────────────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## Skapa och hantera Hosted Zones
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Hosted Zones
 
 ```bash
+# Skapa hosted zone
 aws route53 create-hosted-zone \\
     --name example.com \\
     --caller-reference $(date +%s)
-# Skapar en hosted zone
-# caller-reference måste vara unik
-# Returnerar HostedZoneId och NS records
-# NS records konfigureras hos domänregistrar
 
+# Lista zones
 aws route53 list-hosted-zones
-# Listar alla hosted zones
-# Visar Id, Name, ResourceRecordSetCount
-# Id format: /hostedzone/Z1234567890
-# Använd Id för att hantera records
 
-aws route53 get-hosted-zone \\
-    --id Z1234567890
-# Hämtar zone-detaljer
-# DelegationSet innehåller NS records
-# ResourceRecordSetCount totalt antal records
-# Config visar om privat eller publik
-
+# Lista records i en zone
 aws route53 list-resource-record-sets \\
     --hosted-zone-id Z1234567890
-# Listar alla DNS records i zonen
-# Name, Type, TTL, ResourceRecords
-# Alias records har AliasTarget istället
-# Pagination om många records
 ```
 
----
+| Typ | Beskrivning |
+|-----|-------------|
+| **Public** | Internet-tillganglig DNS |
+| **Private** | Endast inom VPC |
 
-## Skapa DNS Records
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## DNS Records
+
+| Record | Anvandning |
+|--------|------------|
+| **A** | IPv4 adress |
+| **AAAA** | IPv6 adress |
+| **CNAME** | Alias till annan doman |
+| **MX** | Mail servers |
+| **TXT** | Text (verifiering, SPF) |
+| **ALIAS** | AWS-specifik pekare |
 
 ```bash
+# Skapa A record
 aws route53 change-resource-record-sets \\
     --hosted-zone-id Z1234567890 \\
     --change-batch '{
         "Changes": [{
-            "Action": "CREATE",
+            "Action": "UPSERT",
             "ResourceRecordSet": {
                 "Name": "www.example.com",
                 "Type": "A",
@@ -2537,30 +2939,8 @@ aws route53 change-resource-record-sets \\
             }
         }]
     }'
-# Skapar A record
-# Action: CREATE, DELETE, UPSERT
-# TTL i sekunder (300 = 5 min)
-# ResourceRecords innehåller IP-adresser
-# UPSERT skapar eller uppdaterar
 
-aws route53 change-resource-record-sets \\
-    --hosted-zone-id Z1234567890 \\
-    --change-batch '{
-        "Changes": [{
-            "Action": "CREATE",
-            "ResourceRecordSet": {
-                "Name": "api.example.com",
-                "Type": "CNAME",
-                "TTL": 300,
-                "ResourceRecords": [{"Value": "api.otherdomain.com"}]
-            }
-        }]
-    }'
-# CNAME record pekar till annat domännamn
-# Används för underdomäner
-# Kan inte användas för root domain (example.com)
-# Använd Alias istället för root
-
+# Alias till CloudFront
 aws route53 change-resource-record-sets \\
     --hosted-zone-id Z1234567890 \\
     --change-batch '{
@@ -2577,18 +2957,51 @@ aws route53 change-resource-record-sets \\
             }
         }]
     }'
-# Alias record till AWS-resurs
-# Fungerar för root domain
-# Ingen TTL - AWS hanterar det
-# HostedZoneId är för CloudFront
-# Gratis queries för alias till AWS
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Routing Policies
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 ROUTING POLICIES                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   SIMPLE        WEIGHTED         FAILOVER                   │
+│   ──────        ────────         ────────                   │
+│   ┌───┐         ┌───┐  70%       ┌───┐ PRIMARY              │
+│   │ A ├──►      │ A ├────►       │ A ├───────►              │
+│   └───┘         └───┘            └─┬─┘                      │
+│                 ┌───┐  30%         │ Health                 │
+│                 │ B ├────►         │ Check                  │
+│                 └───┘              ▼ fails                  │
+│                                  ┌───┐ SECONDARY            │
+│                                  │ B ├───────►              │
+│                                  └───┘                      │
+│                                                             │
+│   LATENCY       GEOLOCATION                                 │
+│   ───────       ───────────                                 │
+│   eu-north-1    Europe ────► EU Server                     │
+│   us-east-1     USA ───────► US Server                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Policy | Anvandning |
+|--------|------------|
+| **Simple** | Ett svar |
+| **Weighted** | Gradual rollout |
+| **Latency** | Narmaste region |
+| **Failover** | HA med health checks |
+| **Geolocation** | Baserat pa anvandare |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Health Checks
 
 ```bash
+# Skapa health check
 aws route53 create-health-check \\
     --caller-reference $(date +%s) \\
     --health-check-config '{
@@ -2599,97 +3012,35 @@ aws route53 create-health-check \\
         "RequestInterval": 30,
         "FailureThreshold": 3
     }'
-# Skapar health check
-# Kontrollerar /health var 30:e sekund
-# FailureThreshold 3 = unhealthy efter 3 misslyckanden
-# Type: HTTP, HTTPS, TCP
-# Returnerar HealthCheckId
 
-aws route53 get-health-check-status \\
-    --health-check-id abc123
-# Visar hälsostatus
-# Status från alla Route 53 health checkers
-# StatusReport per region
-# Aggregerad status i StatusReport
+# Kolla status
+aws route53 get-health-check-status --health-check-id abc123
 ```
 
----
+| Parameter | Beskrivning |
+|-----------|-------------|
+| **RequestInterval** | 10 eller 30 sekunder |
+| **FailureThreshold** | Antal misslyckanden |
+| **Type** | HTTP, HTTPS, TCP |
 
-## Routing Policies
-
-```bash
-aws route53 change-resource-record-sets \\
-    --hosted-zone-id Z1234567890 \\
-    --change-batch '{
-        "Changes": [{
-            "Action": "CREATE",
-            "ResourceRecordSet": {
-                "Name": "api.example.com",
-                "Type": "A",
-                "SetIdentifier": "primary",
-                "Failover": "PRIMARY",
-                "TTL": 60,
-                "ResourceRecords": [{"Value": "1.2.3.4"}],
-                "HealthCheckId": "abc123"
-            }
-        }, {
-            "Action": "CREATE",
-            "ResourceRecordSet": {
-                "Name": "api.example.com",
-                "Type": "A",
-                "SetIdentifier": "secondary",
-                "Failover": "SECONDARY",
-                "TTL": 60,
-                "ResourceRecords": [{"Value": "5.6.7.8"}]
-            }
-        }]
-    }'
-# Failover routing
-# PRIMARY används om health check OK
-# SECONDARY vid failover
-# SetIdentifier unikt namn per record
-# Health check krävs för PRIMARY
-
-aws route53 change-resource-record-sets \\
-    --hosted-zone-id Z1234567890 \\
-    --change-batch '{
-        "Changes": [{
-            "Action": "CREATE",
-            "ResourceRecordSet": {
-                "Name": "app.example.com",
-                "Type": "A",
-                "SetIdentifier": "eu-traffic",
-                "Weight": 70,
-                "TTL": 300,
-                "ResourceRecords": [{"Value": "1.2.3.4"}]
-            }
-        }, {
-            "Action": "CREATE",
-            "ResourceRecordSet": {
-                "Name": "app.example.com",
-                "Type": "A",
-                "SetIdentifier": "us-traffic",
-                "Weight": 30,
-                "TTL": 300,
-                "ResourceRecords": [{"Value": "5.6.7.8"}]
-            }
-        }]
-    }'
-# Weighted routing
-# 70% trafik till EU, 30% till US
-# Bra för gradual rollouts
-# Weight 0 stänger av endpoint
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Hosted Zones för domäner** - en zone per domän
-2. **Alias för AWS-resurser** - gratis och snabbt
-3. **Health checks för failover** - automatisk failover vid problem
-4. **Weighted routing** - gradual deployments
-5. **TTL påverkar propagering** - lägre TTL = snabbare ändringar
+| Koncept | Detalj |
+|---------|--------|
+| **Hosted Zones** | En per doman |
+| **ALIAS** | For AWS-resurser (gratis) |
+| **Health Checks** | Automatisk failover |
+| **Weighted** | Gradual deployments |
+| **TTL** | Lagre = snabbare andringar |
+
+**Kom ihåg:**
+- **ALIAS for root domain** - CNAME fungerar ej
+- **Health checks for failover** - krävs for automatik
+- **Lag TTL vid andringar** - snabbare propagering
+- **100% SLA** - extremt tillforlitlig
+- **Private zones** - for intern service discovery
 """,
         },
         {
@@ -2700,77 +3051,99 @@ aws route53 change-resource-record-sets \\
             "xp_reward": 90,
             "content": """# CloudFront - CDN och Edge
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CloudFront är AWS Content Delivery Network (CDN). Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Distribuera statiskt innehåll** globalt med låg latens
-- **Konfigurera origins** för S3, ALB eller custom endpoints
-- **Hantera cache** för optimal prestanda
-- **Sätta upp HTTPS** med SSL/TLS-certifikat
+| Scenario | Varfor CloudFront-kunskap ar kritisk |
+|----------|--------------------------------------|
+| **Performance** | Lag latens globalt |
+| **Kostnadseffektivt** | Minska load pa origin |
+| **Sakerhet** | DDoS-skydd, WAF-integration |
+| **HTTPS** | Gratis SSL med ACM |
+| **Static hosting** | S3 + CloudFront |
 
----
+CloudFront ar AWS CDN med 400+ edge locations globalt.
 
-## Så fungerar CloudFront
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CloudFront cachar innehåll på edge locations runt världen. När en användare efterfrågar innehåll:
-1. Request går till närmaste edge location
-2. Om cachat - returneras direkt (cache hit)
-3. Om inte cachat - hämtas från origin, cachas, returneras
+## CloudFront Arkitektur
 
-Fördelar: lägre latens, minskad load på origin, DDoS-skydd.
-
----
-
-## Skapa en CloudFront Distribution
-
-```bash
-aws cloudfront create-distribution \\
-    --distribution-config '{
-        "CallerReference": "my-dist-'$(date +%s)'",
-        "Origins": {
-            "Quantity": 1,
-            "Items": [{
-                "Id": "S3Origin",
-                "DomainName": "my-bucket.s3.eu-north-1.amazonaws.com",
-                "S3OriginConfig": {
-                    "OriginAccessIdentity": ""
-                }
-            }]
-        },
-        "DefaultCacheBehavior": {
-            "TargetOriginId": "S3Origin",
-            "ViewerProtocolPolicy": "redirect-to-https",
-            "AllowedMethods": {
-                "Quantity": 2,
-                "Items": ["GET", "HEAD"]
-            },
-            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
-            "Compress": true
-        },
-        "Enabled": true,
-        "Comment": "My static website CDN"
-    }'
-# Skapar CloudFront distribution
-# CallerReference måste vara unik
-# Origins definierar backend-källor
-# DefaultCacheBehavior för alla requests
-# CachePolicyId är AWS managed policy
-# 658327ea... = CachingOptimized
-# Returnerar Distribution och DomainName
-
-aws cloudfront list-distributions
-# Listar alla distributions
-# Visar Id, DomainName (d123.cloudfront.net)
-# Status: Deployed eller InProgress
-# Origins visar var content hämtas
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  CLOUDFRONT FLOW                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────┐                        ┌─────────────────┐   │
+│   │  User   │──── Request ──────────►│  Edge Location  │   │
+│   │ Sweden  │                        │   Stockholm     │   │
+│   └─────────┘                        └────────┬────────┘   │
+│                                               │            │
+│                                   ┌───────────┴──────────┐ │
+│                                   │                      │ │
+│                              Cache HIT?              Cache │
+│                                   │                  MISS  │
+│                                   ▼                      │ │
+│                           ┌─────────────┐                │ │
+│                           │  Return     │                │ │
+│                           │  Cached     │                │ │
+│                           └─────────────┘                │ │
+│                                                          │ │
+│                                                          ▼ │
+│   ┌────────────────────────────────────────────────────────┐
+│   │                      ORIGIN                           │
+│   │   ┌─────────┐    ┌─────────┐    ┌─────────┐         │
+│   │   │   S3    │    │   ALB   │    │ Custom  │         │
+│   │   │ Bucket  │    │         │    │ Server  │         │
+│   │   └─────────┘    └─────────┘    └─────────┘         │
+│   └────────────────────────────────────────────────────────┘
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Origins och Origin Access Control
+## Skapa Distribution
 
 ```bash
+# Lista distributions
+aws cloudfront list-distributions
+
+# Skapa distribution (forenklad)
+aws cloudfront create-distribution \\
+    --origin-domain-name my-bucket.s3.eu-north-1.amazonaws.com
+```
+
+| Origin Type | Anvandning |
+|-------------|------------|
+| **S3** | Statiska filer |
+| **ALB** | Dynamiskt content |
+| **Custom** | Externa servrar |
+| **MediaStore** | Video streaming |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Origin Access Control (OAC)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    S3 + CLOUDFRONT                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   User ──► CloudFront ──► S3 Bucket                        │
+│               │              │                              │
+│               │              │                              │
+│           Signerar        Policy:                          │
+│           requests        "Endast CloudFront"              │
+│                                                             │
+│   User ─────X─────────► S3 Bucket (BLOCKED)               │
+│            Direct access blocked                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```bash
+# Skapa OAC
 aws cloudfront create-origin-access-control \\
     --origin-access-control-config '{
         "Name": "my-oac",
@@ -2778,128 +3151,81 @@ aws cloudfront create-origin-access-control \\
         "SigningBehavior": "always",
         "OriginAccessControlOriginType": "s3"
     }'
-# Skapar Origin Access Control (OAC)
-# Ersätter äldre Origin Access Identity (OAI)
-# Signerar requests till S3
-# S3 kan blockera direktåtkomst
-# Returnerar OAC Id
-
-aws s3api put-bucket-policy \\
-    --bucket my-bucket \\
-    --policy '{
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "cloudfront.amazonaws.com"
-            },
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::my-bucket/*",
-            "Condition": {
-                "StringEquals": {
-                    "AWS:SourceArn": "arn:aws:cloudfront::123456789012:distribution/E1234567890"
-                }
-            }
-        }]
-    }'
-# Bucket policy för CloudFront
-# Tillåter endast CloudFront att läsa
-# SourceArn begränsar till specifik distribution
-# Blockerar direkta S3-anrop
-# Best practice för säkerhet
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Cache Behaviors och Invalidering
+## Cache Invalidering
 
 ```bash
-aws cloudfront get-distribution-config \\
-    --id E1234567890 \\
-    --query '{ETag: ETag, CacheBehaviors: DistributionConfig.CacheBehaviors}'
-# Hämtar cache behaviors
-# Olika caching per path pattern
-# /api/* kan ha annan policy än /static/*
-# ETag behövs för uppdateringar
-
+# Invalidera specifika filer
 aws cloudfront create-invalidation \\
     --distribution-id E1234567890 \\
     --paths '/images/*' '/index.html'
-# Invaliderar cachad content
-# Tvingar refresh från origin
-# Första 1000/månad gratis
-# /*' invaliderar allt (dyrt)
 
-aws cloudfront list-invalidations \\
-    --distribution-id E1234567890
-# Listar invalideringar
-# Status: InProgress eller Completed
-# CreateTime visar när
-# Invalidering tar 1-15 minuter
-
-aws cloudfront get-invalidation \\
-    --distribution-id E1234567890 \\
-    --id ABCD1234
-# Detaljer om specifik invalidering
-# InvalidationBatch visar paths
-# Status när den är klar
-# Använd för att vänta på completion
+# Lista invalideringar
+aws cloudfront list-invalidations --distribution-id E1234567890
 ```
 
----
+| Invalidering | Kostnad |
+|--------------|---------|
+| **Forsta 1000/manad** | Gratis |
+| **Darutover** | $0.005 per path |
+| **Wildcard /**** | Rakas som 1 path |
 
-## HTTPS och Custom Domains
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## HTTPS och Custom Domain
 
 ```bash
+# Bestall certifikat (MASTE vara us-east-1!)
 aws acm request-certificate \\
     --domain-name example.com \\
     --subject-alternative-names "*.example.com" \\
     --validation-method DNS \\
     --region us-east-1
-# Begär SSL-certifikat i ACM
-# VIKTIGT: CloudFront kräver us-east-1
-# subject-alternative-names för wildcard
-# DNS-validering enklast
-# Email-validering också möjlig
 
+# Kolla certifikatstatus
 aws acm describe-certificate \\
-    --certificate-arn arn:aws:acm:us-east-1:123456789012:certificate/abc123 \\
+    --certificate-arn arn:aws:acm:us-east-1:123456789012:certificate/abc \\
     --region us-east-1
-# Visar certifikatstatus
-# Status: PENDING_VALIDATION, ISSUED
-# DomainValidationOptions innehåller DNS records
-# Lägg till CNAME i Route 53
-
-aws cloudfront update-distribution \\
-    --id E1234567890 \\
-    --distribution-config '{
-        ...
-        "Aliases": {
-            "Quantity": 2,
-            "Items": ["example.com", "www.example.com"]
-        },
-        "ViewerCertificate": {
-            "ACMCertificateArn": "arn:aws:acm:us-east-1:123456789012:certificate/abc123",
-            "SSLSupportMethod": "sni-only",
-            "MinimumProtocolVersion": "TLSv1.2_2021"
-        }
-    }'
-# Lägger till custom domain och cert
-# Aliases är dina domäner
-# sni-only är standard (gratis)
-# MinimumProtocolVersion för säkerhet
-# dedicated-ip kostar $600/månad
 ```
 
----
+| Krav | Detalj |
+|------|--------|
+| **ACM region** | us-east-1 for CloudFront |
+| **Validering** | DNS eller Email |
+| **Wildcard** | *.example.com |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Cache Behaviors
+
+| Path Pattern | Cache Policy |
+|--------------|--------------|
+| `/api/*` | Ingen caching |
+| `/static/*` | Max caching |
+| `*.jpg` | Bilder - 1 ar |
+| `Default (*)` | Standard policy |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Edge caching** - innehåll nära användarna
-2. **OAC för S3** - blockera direktåtkomst till bucket
-3. **Invalidering kostar** - planera deploys för att minimera
-4. **ACM i us-east-1** - krav för CloudFront certifikat
-5. **Cache behaviors** - olika policies för olika paths
+| Koncept | Detalj |
+|---------|--------|
+| **Edge caching** | 400+ locations globalt |
+| **OAC** | Blockera direkt S3-access |
+| **Invalidering** | Tvinga cache refresh |
+| **ACM us-east-1** | KRAV for CloudFront |
+| **Behaviors** | Olika caching per path |
+
+**Kom ihåg:**
+- **ACM maste vara i us-east-1**
+- **OAC for S3** - sakerhet
+- **Invalidering kostar** - planera releases
+- **Cache headers** - origin kontrollerar TTL
+- **Versioning i filnamn** - battre an invalidering
 """,
         },
         {
@@ -2908,192 +3234,188 @@ aws cloudfront update-distribution \\
             "difficulty": "intermediate",
             "estimated_minutes": 55,
             "xp_reward": 90,
-            "content": """# SNS och SQS - Meddelandetjänster
+            "content": """# SNS och SQS - Meddelandetjanster
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-SNS (Simple Notification Service) och SQS (Simple Queue Service) är AWS meddelandetjänster. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Implementera pub/sub** med SNS för notifieringar
-- **Bygga köbaserade system** med SQS för async processing
-- **Kombinera SNS + SQS** för fan-out arkitektur
-- **Hantera dead-letter queues** för felhantering
+| Scenario | Varfor SNS/SQS-kunskap ar kritisk |
+|----------|-----------------------------------|
+| **Decoupling** | Loskoppla system |
+| **Async processing** | Bakgrundsjobb |
+| **Event-driven** | Reagera pa handelser |
+| **Fan-out** | Ett event till manga |
+| **Reliability** | Garanterad leverans |
 
----
+SNS (pub/sub) och SQS (koer) ar grundlaggande for moderna arkitekturer.
 
-## Så fungerar SNS och SQS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**SNS (Pub/Sub):**
-- Publisher skickar meddelande till topic
-- Alla subscribers får meddelandet
-- Push-modell (SNS pushar till mottagare)
+## SNS vs SQS
 
-**SQS (Queue):**
-- Producer skickar meddelande till kö
-- Consumer pollar och processar ett meddelande
-- Pull-modell (consumer hämtar)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   SNS vs SQS                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   SNS (Pub/Sub)              SQS (Queue)                   │
+│   ─────────────              ──────────                    │
+│                                                             │
+│   Publisher ──► Topic        Producer ──► Queue            │
+│                  │                          │              │
+│        ┌─────────┼─────────┐               │              │
+│        ▼         ▼         ▼               ▼              │
+│     Email     Lambda      SQS          Consumer           │
+│                                                            │
+│   PUSH model              PULL model                       │
+│   Many receivers          One receiver                     │
+│   Broadcast               Point-to-point                   │
+│                                                            │
+└─────────────────────────────────────────────────────────────┘
+```
 
-Vanligt mönster: SNS → SQS (fan-out till flera köer)
+| Feature | SNS | SQS |
+|---------|-----|-----|
+| **Model** | Push | Pull |
+| **Receivers** | Manga | En per meddelande |
+| **Persistence** | Nej | Ja (14 dagar) |
+| **Use case** | Notifications | Job queue |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## SNS Topics och Subscriptions
+## SNS Topics
 
 ```bash
-aws sns create-topic \\
-    --name order-events
-# Skapar SNS topic
-# Returnerar TopicArn
-# Arn format: arn:aws:sns:region:account:topic-name
-# Topics är regionala
+# Skapa topic
+aws sns create-topic --name order-events
 
-aws sns list-topics
-# Listar alla topics
-# Visar TopicArn för varje
-# Använd för att hitta befintliga topics
-# Paginering om många topics
-
+# Skapa email subscription
 aws sns subscribe \\
     --topic-arn arn:aws:sns:eu-north-1:123456789012:order-events \\
     --protocol email \\
     --notification-endpoint user@example.com
-# Skapar email-subscription
-# protocol: email, sqs, lambda, http, sms
-# Email kräver bekräftelse
-# Returnerar SubscriptionArn (pending confirmation)
 
+# Skapa SQS subscription (fan-out)
 aws sns subscribe \\
     --topic-arn arn:aws:sns:eu-north-1:123456789012:order-events \\
     --protocol sqs \\
-    --notification-endpoint arn:aws:sqs:eu-north-1:123456789012:order-processing
-# SQS subscription
-# Meddelanden pushas till kön
-# Kräver SQS policy som tillåter SNS
-# Perfekt för fan-out
+    --notification-endpoint arn:aws:sqs:eu-north-1:123456789012:my-queue
 
+# Publicera meddelande
 aws sns publish \\
     --topic-arn arn:aws:sns:eu-north-1:123456789012:order-events \\
-    --message '{"orderId": "123", "status": "created"}' \\
-    --message-attributes '{"eventType": {"DataType": "String", "StringValue": "OrderCreated"}}'
-# Publicerar meddelande
-# message är payload
-# message-attributes för metadata/filtrering
-# Alla subscribers får meddelandet
+    --message '{"orderId": "123", "status": "created"}'
 ```
 
----
+| Protocol | Beskrivning |
+|----------|-------------|
+| **email** | Skickar email |
+| **sqs** | Pushar till ko |
+| **lambda** | Anropar funktion |
+| **http/https** | Webhook |
 
-## SQS Köer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## SQS Koer
 
 ```bash
+# Skapa Standard queue
 aws sqs create-queue \\
     --queue-name order-processing \\
     --attributes '{
         "VisibilityTimeout": "30",
-        "MessageRetentionPeriod": "345600",
-        "ReceiveMessageWaitTimeSeconds": "20"
+        "MessageRetentionPeriod": "345600"
     }'
-# Skapar Standard SQS kö
-# VisibilityTimeout: hur länge meddelande är osynligt under processing
-# MessageRetentionPeriod: 4 dagar (345600 sek)
-# ReceiveMessageWaitTimeSeconds: long polling (20 sek)
-# Returnerar QueueUrl
 
+# Skapa FIFO queue
 aws sqs create-queue \\
     --queue-name order-processing.fifo \\
-    --attributes '{
-        "FifoQueue": "true",
-        "ContentBasedDeduplication": "true"
-    }'
-# FIFO-kö för ordnad leverans
-# Namn måste sluta med .fifo
-# ContentBasedDeduplication undviker dubbletter
-# Lägre throughput än standard
-
-aws sqs get-queue-attributes \\
-    --queue-url https://sqs.eu-north-1.amazonaws.com/123456789012/order-processing \\
-    --attribute-names ApproximateNumberOfMessages ApproximateNumberOfMessagesNotVisible
-# Visar kö-statistik
-# ApproximateNumberOfMessages: väntande meddelanden
-# MessagesNotVisible: under processing
-# Bra för monitoring
+    --attributes '{"FifoQueue": "true"}'
 ```
 
----
+| Typ | Throughput | Ordering | Duplicates |
+|-----|------------|----------|------------|
+| **Standard** | Unlimited | Best-effort | Possible |
+| **FIFO** | 300 msg/s | Guaranteed | Never |
 
-## Skicka och ta emot meddelanden
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skicka och Ta Emot
 
 ```bash
+# Skicka meddelande
 aws sqs send-message \\
     --queue-url https://sqs.eu-north-1.amazonaws.com/123456789012/order-processing \\
-    --message-body '{"orderId": "123", "items": ["item1", "item2"]}'
-# Skickar meddelande till kö
-# message-body är payload
-# Returnerar MessageId och MD5
-# Max 256 KB per meddelande
+    --message-body '{"orderId": "123"}'
 
+# Ta emot (long polling)
 aws sqs receive-message \\
     --queue-url https://sqs.eu-north-1.amazonaws.com/123456789012/order-processing \\
-    --max-number-of-messages 10 \\
     --wait-time-seconds 20
-# Tar emot meddelanden
-# max-number-of-messages: 1-10
-# wait-time-seconds: long polling
-# Returnerar Messages array
-# Varje message har ReceiptHandle
 
+# Radera efter processing
 aws sqs delete-message \\
     --queue-url https://sqs.eu-north-1.amazonaws.com/123456789012/order-processing \\
     --receipt-handle "AQEBwJnKyr..."
-# Raderar meddelande efter processing
-# ReceiptHandle från receive-message
-# VIKTIGT: radera efter lyckad processing
-# Annars blir meddelandet synligt igen
 ```
 
----
+| Parameter | Beskrivning |
+|-----------|-------------|
+| **VisibilityTimeout** | Tid meddelande ar osynligt |
+| **WaitTimeSeconds** | Long polling timeout |
+| **ReceiptHandle** | Kravs for delete |
 
-## Dead Letter Queues och SNS Filter
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Dead Letter Queue (DLQ)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  DLQ WORKFLOW                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Message ──► Main Queue ──► Consumer                      │
+│                   │              │                          │
+│                   │         Processing                      │
+│                   │         fails 3x                        │
+│                   │              │                          │
+│                   │              ▼                          │
+│                   └────────► DLQ ──► Investigation         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-aws sqs create-queue \\
-    --queue-name order-processing-dlq
-# Skapar Dead Letter Queue
-# Hit går meddelanden som misslyckats
-# Separat kö för analys/retry
-# Samma region som huvudkön
+# Skapa DLQ
+aws sqs create-queue --queue-name order-processing-dlq
 
+# Konfigurera redrive policy
 aws sqs set-queue-attributes \\
-    --queue-url https://sqs.eu-north-1.amazonaws.com/123456789012/order-processing \\
+    --queue-url https://sqs.../order-processing \\
     --attributes '{
-        "RedrivePolicy": "{\"deadLetterTargetArn\":\"arn:aws:sqs:eu-north-1:123456789012:order-processing-dlq\",\"maxReceiveCount\":\"3\"}"
+        "RedrivePolicy": "{\\"deadLetterTargetArn\\":\\"arn:aws:sqs:...:dlq\\",\\"maxReceiveCount\\":\\"3\\"}"
     }'
-# Kopplar DLQ till huvudkö
-# maxReceiveCount: antal försök innan DLQ
-# RedrivePolicy är JSON-sträng i JSON
-# Escape noga
-
-aws sns subscribe \\
-    --topic-arn arn:aws:sns:eu-north-1:123456789012:order-events \\
-    --protocol sqs \\
-    --notification-endpoint arn:aws:sqs:eu-north-1:123456789012:priority-orders \\
-    --attributes '{"FilterPolicy": "{\"priority\": [\"high\"]}"}'
-# SNS filter policy
-# Endast meddelanden med priority=high
-# Baserat på message-attributes
-# Minskar onödig processing
-# FilterPolicy är JSON-sträng
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **SNS för pub/sub** - ett meddelande till många mottagare
-2. **SQS för köer** - en consumer per meddelande
-3. **Long polling** - effektivare än short polling
-4. **DLQ för felhantering** - fånga misslyckade meddelanden
-5. **SNS + SQS fan-out** - vanligt mönster för decoupling
+| Koncept | Detalj |
+|---------|--------|
+| **SNS** | Pub/sub - broadcast till manga |
+| **SQS** | Queue - en consumer per message |
+| **Long polling** | wait-time-seconds = 20 |
+| **DLQ** | Fanga misslyckade meddelanden |
+| **Fan-out** | SNS → flera SQS |
+
+**Kom ihåg:**
+- **SNS + SQS** - vanligt fan-out pattern
+- **Long polling** - effektivare an short
+- **DLQ for alla prod-koer** - kraver investigation
+- **FIFO for ordering** - langsammare men garanterat
+- **VisibilityTimeout** - langre an processing time
 """,
         },
         {
@@ -3104,45 +3426,67 @@ aws sns subscribe \\
             "xp_reward": 90,
             "content": """# DynamoDB - NoSQL Database
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-DynamoDB är AWS managed NoSQL-databas. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Skapa och konfigurera tabeller** med rätt nyckeldesign
-- **Hantera kapacitet** med on-demand eller provisioned mode
-- **Sätta upp Global Tables** för multi-region
-- **Konfigurera backups** och point-in-time recovery
+| Scenario | Varfor DynamoDB-kunskap ar kritisk |
+|----------|-------------------------------------|
+| **Serverless** | Lambda + DynamoDB ar standard |
+| **Skalbarhet** | Automatisk utan downtime |
+| **Latens** | Single-digit millisekund |
+| **Global** | Multi-region replikering |
+| **NoOps** | Fully managed |
 
----
+DynamoDB ar AWS serverless NoSQL-databas med oandlig skalning.
 
-## Så fungerar DynamoDB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-DynamoDB är en key-value och document database med:
-- **Partition Key (PK)** - obligatoriskt, bestämmer partition
-- **Sort Key (SK)** - valfritt, för sortering inom partition
-- **Single-digit millisecond latency** - konsistent snabbhet
-- **Automatisk skalning** - hanterar last automatiskt
+## DynamoDB Datamodell
 
-Data organiseras i tabeller → items → attributes.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  DYNAMODB STRUKTUR                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   TABLE: Orders                                             │
+│   ┌─────────────────────────────────────────────────────┐  │
+│   │  Partition Key (PK)  │  Sort Key (SK)  │ Attributes │  │
+│   ├─────────────────────────────────────────────────────┤  │
+│   │  customerId: C001    │  order#001      │ total: 100 │  │
+│   │  customerId: C001    │  order#002      │ total: 250 │  │
+│   │  customerId: C002    │  order#001      │ total: 75  │  │
+│   └─────────────────────────────────────────────────────┘  │
+│                                                             │
+│   PK = Partition (which server)                            │
+│   SK = Sort (order within partition)                       │
+│   PK alone = Simple key                                    │
+│   PK + SK = Composite key                                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+| Term | Beskrivning |
+|------|-------------|
+| **Table** | Samling av items |
+| **Item** | En rad (max 400KB) |
+| **Attribute** | Falt i item |
+| **Partition Key** | HASH - bestammer partition |
+| **Sort Key** | RANGE - sortering inom partition |
 
-## Skapa tabeller
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa Tabell
 
 ```bash
+# Enkel tabell (endast PK)
 aws dynamodb create-table \\
     --table-name Users \\
-    --attribute-definitions \\
-        AttributeName=userId,AttributeType=S \\
-    --key-schema \\
-        AttributeName=userId,KeyType=HASH \\
+    --attribute-definitions AttributeName=userId,AttributeType=S \\
+    --key-schema AttributeName=userId,KeyType=HASH \\
     --billing-mode PAY_PER_REQUEST
-# Skapar tabell med partition key
-# AttributeType: S (string), N (number), B (binary)
-# KeyType HASH = partition key
-# PAY_PER_REQUEST = on-demand pricing
-# Betala per request, ingen kapacitetsplanering
 
+# Composite key (PK + SK)
 aws dynamodb create-table \\
     --table-name Orders \\
     --attribute-definitions \\
@@ -3152,155 +3496,136 @@ aws dynamodb create-table \\
         AttributeName=customerId,KeyType=HASH \\
         AttributeName=orderId,KeyType=RANGE \\
     --billing-mode PAY_PER_REQUEST
-# Tabell med composite key (PK + SK)
-# customerId är partition key (HASH)
-# orderId är sort key (RANGE)
-# Alla orders för en kund i samma partition
-# Effektivt för query på customerId
-
-aws dynamodb describe-table \\
-    --table-name Orders
-# Visar tabell-info
-# TableStatus: CREATING, ACTIVE, DELETING
-# ItemCount, TableSizeBytes
-# KeySchema och AttributeDefinitions
 ```
 
----
+| Billing Mode | Anvandning |
+|--------------|------------|
+| **PAY_PER_REQUEST** | Variabel last |
+| **PROVISIONED** | Forutsagbar last |
 
-## CRUD-operationer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## CRUD Operationer
 
 ```bash
+# Skapa/Ersatt item
 aws dynamodb put-item \\
     --table-name Users \\
     --item '{
         "userId": {"S": "user123"},
         "name": {"S": "Anna Andersson"},
-        "email": {"S": "anna@example.com"},
-        "createdAt": {"S": "2024-01-15T10:30:00Z"}
+        "email": {"S": "anna@example.com"}
     }'
-# Skapar eller ersätter item
-# Alla värden har typ-annotation (S, N, etc.)
-# userId är primary key
-# Övriga attribut är fria (schemaless)
-# Returnerar inget vid success
 
+# Hamta item
 aws dynamodb get-item \\
     --table-name Users \\
     --key '{"userId": {"S": "user123"}}'
-# Hämtar item med primary key
-# Returnerar Item med alla attribut
-# Null om item inte finns
-# Extremt snabbt (single-digit ms)
 
+# Uppdatera
 aws dynamodb update-item \\
     --table-name Users \\
     --key '{"userId": {"S": "user123"}}' \\
-    --update-expression "SET #n = :name, updatedAt = :now" \\
+    --update-expression "SET #n = :name" \\
     --expression-attribute-names '{"#n": "name"}' \\
-    --expression-attribute-values '{":name": {"S": "Anna Svensson"}, ":now": {"S": "2024-01-16T14:00:00Z"}}'
-# Uppdaterar specifika attribut
-# update-expression med SET, REMOVE, ADD, DELETE
-# #n är placeholder för reserverade ord (name)
-# :name är värde-placeholder
-# Atomic operation
+    --expression-attribute-values '{":name": {"S": "Anna Svensson"}}'
 
+# Radera
 aws dynamodb delete-item \\
     --table-name Users \\
     --key '{"userId": {"S": "user123"}}'
-# Raderar item
-# Kräver primary key
-# Idempotent - ok att köra flera gånger
-# Returnerar inget
 ```
 
----
+| Type | Notation |
+|------|----------|
+| **String** | S |
+| **Number** | N |
+| **Binary** | B |
+| **List** | L |
+| **Map** | M |
 
-## Query och Scan
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Query vs Scan
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  QUERY vs SCAN                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   QUERY                      SCAN                          │
+│   ─────                      ────                          │
+│   Anvander index             Laser HELA tabellen           │
+│   Snabbt och effektivt       Langsamt och dyrt            │
+│   Kraver PK                  Inga krav                     │
+│                                                             │
+│   ┌───┐                      ┌───┬───┬───┬───┬───┐        │
+│   │ X │◄── Hamtar            │ X │ X │ X │ X │ X │        │
+│   └───┘    specifik          └───┴───┴───┴───┴───┘        │
+│            partition              Laser alla              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Query (EFFEKTIVT)
 aws dynamodb query \\
     --table-name Orders \\
     --key-condition-expression "customerId = :cid" \\
-    --expression-attribute-values '{":cid": {"S": "customer456"}}'
-# Query använder index
-# Hämtar alla orders för en kund
-# Mycket effektivt
-# Kräver partition key i condition
-# Returnerar Items array
+    --expression-attribute-values '{":cid": {"S": "C001"}}'
 
-aws dynamodb query \\
-    --table-name Orders \\
-    --key-condition-expression "customerId = :cid AND orderId BETWEEN :start AND :end" \\
-    --expression-attribute-values '{
-        ":cid": {"S": "customer456"},
-        ":start": {"S": "2024-01"},
-        ":end": {"S": "2024-12"}
-    }'
-# Query med sort key condition
-# BETWEEN, begins_with, =, <, >, etc.
-# Filtrerar inom partition
-# Fortfarande effektivt
-
+# Scan (UNDVIK I PROD)
 aws dynamodb scan \\
     --table-name Users \\
     --filter-expression "contains(email, :domain)" \\
     --expression-attribute-values '{":domain": {"S": "@example.com"}}'
-# Scan läser HELA tabellen
-# filter-expression filtrerar efteråt
-# DYRT för stora tabeller
-# Undvik i produktion
-# Använd query + index istället
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Backups och Global Tables
 
 ```bash
+# Aktivera Point-in-Time Recovery
 aws dynamodb update-continuous-backups \\
     --table-name Orders \\
     --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true
-# Aktiverar Point-in-Time Recovery
-# Backup senaste 35 dagarna
-# Restore till vilken sekund som helst
-# Extra kostnad men värt det
 
+# Skapa on-demand backup
 aws dynamodb create-backup \\
     --table-name Orders \\
-    --backup-name orders-backup-2024-01
-# Skapar on-demand backup
-# Bevaras tills du raderar
-# Bra för major changes
-# Restore skapar ny tabell
+    --backup-name orders-backup-2024
 
+# Skapa Global Table replica
 aws dynamodb update-table \\
     --table-name Orders \\
     --replica-updates '[{"Create": {"RegionName": "us-east-1"}}]'
-# Skapar Global Table replica
-# Multi-region active-active
-# Automatisk replikering
-# Konflikthantering: last-writer-wins
-# Kräver on-demand eller samma provisioned capacity
-
-aws dynamodb describe-table \\
-    --table-name Orders \\
-    --query 'Table.Replicas'
-# Visar alla replicas
-# RegionName och ReplicaStatus
-# ACTIVE när synkroniserad
-# Global Tables för DR och latens
 ```
 
----
+| Feature | Beskrivning |
+|---------|-------------|
+| **PITR** | Restore till vilken sekund (35 dagar) |
+| **On-demand** | Manuell backup (bevaras for evigt) |
+| **Global Tables** | Multi-region active-active |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Partition key design** - kritiskt för prestanda
-2. **On-demand för variabel last** - ingen kapacitetsplanering
-3. **Query över Scan** - använd index, undvik full scan
-4. **Point-in-Time Recovery** - aktivera för alla prod-tabeller
-5. **Global Tables** - multi-region för DR och låg latens
+| Koncept | Detalj |
+|---------|--------|
+| **Partition Key** | Kritisk for prestanda |
+| **On-demand** | Betala per request |
+| **Query** | Anvand ALLTID over Scan |
+| **PITR** | Aktivera for prod-tabeller |
+| **Global Tables** | Multi-region DR |
+
+**Kom ihåg:**
+- **PK design ar kritiskt** - paverkar all prestanda
+- **Query over Scan** - Scan laser ALLT
+- **On-demand for variabel last** - ingen kapacitetsplanering
+- **PITR for alla prod-tabeller** - kraver backup
+- **Single-digit ms latens** - konsistent snabbt
 """,
         },
         {
@@ -3311,192 +3636,157 @@ aws dynamodb describe-table \\
             "xp_reward": 80,
             "content": """# Secrets Manager - Hemlighetshantering
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Secrets Manager är AWS tjänst för säker lagring av hemligheter. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Lagra och hämta secrets** säkert (API-nycklar, lösenord)
-- **Konfigurera automatisk rotation** för databaspassord
-- **Integrera med applikationer** via SDK eller CLI
-- **Hantera åtkomst** med IAM policies
+| Scenario | Varfor Secrets Manager-kunskap ar kritisk |
+|----------|-------------------------------------------|
+| **Sakerhet** | Inga hardkodade losenord |
+| **Rotation** | Automatisk losenordsbyte |
+| **Compliance** | Audit trail for access |
+| **Integration** | RDS, Redshift, DocumentDB |
+| **Multi-env** | Separera dev/prod secrets |
 
----
+Secrets Manager lagrar och roterar hemligheter sakert.
 
-## Så fungerar Secrets Manager
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Secrets Manager:
-- Krypterar secrets med AWS KMS
-- Hanterar versionering automatiskt
-- Kan rotera secrets automatiskt
-- Integrerar med RDS för databaspassword
+## Secrets Manager vs Parameter Store
 
-Skillnad mot Parameter Store:
-- Secrets Manager har inbyggd rotation
-- Parameter Store är billigare för enkel lagring
-- Secrets Manager optimerat för hemligheter
+| Feature | Secrets Manager | Parameter Store |
+|---------|-----------------|-----------------|
+| **Rotation** | Inbyggd | Manuell |
+| **Kostnad** | $0.40/secret/manad | Gratis (standard) |
+| **RDS integration** | Ja | Nej |
+| **KMS** | Alltid krypterat | SecureString |
+| **Anvandning** | Databas-losenord | Config values |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa och hantera secrets
+## Skapa och Hantera Secrets
 
 ```bash
+# Skapa secret (JSON)
 aws secretsmanager create-secret \\
     --name prod/myapp/db-credentials \\
     --description "Production database credentials" \\
     --secret-string '{"username": "admin", "password": "SuperSecret123!"}'
-# Skapar en ny secret
-# Namn följer hierarki (prod/app/secret)
-# secret-string för key-value JSON
-# Krypteras automatiskt med default KMS key
-# Returnerar ARN och VersionId
 
+# Skapa enkel string
 aws secretsmanager create-secret \\
     --name prod/myapp/api-key \\
     --secret-string "sk-abc123def456"
-# Enkel string istället för JSON
-# Bra för enkla API-nycklar
-# Samma kryptering och versionering
-# Hämtas som plain string
 
-aws secretsmanager list-secrets \\
-    --filters Key=name,Values=prod/
-# Listar secrets
-# Filtrerar på namn-prefix
-# Visar ARN, Name, LastChangedDate
-# SecretVersionsToStages visar versioner
-
-aws secretsmanager describe-secret \\
-    --secret-id prod/myapp/db-credentials
-# Detaljer om secret
-# RotationEnabled, RotationLambdaARN
-# VersionIdsToStages (AWSCURRENT, AWSPREVIOUS)
-# Visar INTE secret value
+# Lista secrets
+aws secretsmanager list-secrets --filters Key=name,Values=prod/
 ```
 
----
+| Namning | Beskrivning |
+|---------|-------------|
+| `prod/app/secret` | Hierarkisk struktur |
+| `dev/app/secret` | Separera miljoer |
 
-## Hämta secrets
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Hamta Secrets
 
 ```bash
+# Hamta secret
 aws secretsmanager get-secret-value \\
     --secret-id prod/myapp/db-credentials
-# Hämtar secret värde
-# SecretString innehåller värdet
-# AWSCURRENT version by default
-# Använd i scripts: $(aws secretsmanager get-secret-value --secret-id x --query SecretString --output text)
 
+# Hamta forega version
 aws secretsmanager get-secret-value \\
     --secret-id prod/myapp/db-credentials \\
     --version-stage AWSPREVIOUS
-# Hämtar föregående version
-# Bra vid rotation-problem
-# AWSCURRENT, AWSPREVIOUS, AWSPENDING
-# version-id för specifik version
 
+# Extrahera specifikt varde
 aws secretsmanager get-secret-value \\
     --secret-id prod/myapp/db-credentials \\
     --query 'SecretString' \\
     --output text | jq -r '.password'
-# Extraherar specifikt värde
-# --query hämtar bara SecretString
-# jq parsar JSON
-# Perfekt för shell scripts
 ```
 
----
+| Version Stage | Beskrivning |
+|---------------|-------------|
+| **AWSCURRENT** | Aktuell version |
+| **AWSPREVIOUS** | Foreg version |
+| **AWSPENDING** | Under rotation |
 
-## Uppdatera och rotera
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Rotation
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  ROTATION WORKFLOW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. Schedule triggers                                      │
+│              │                                              │
+│              ▼                                              │
+│   2. Lambda skapar nytt losenord ──► AWSPENDING            │
+│              │                                              │
+│              ▼                                              │
+│   3. Lambda uppdaterar databas                             │
+│              │                                              │
+│              ▼                                              │
+│   4. Lambda testar anslutning                              │
+│              │                                              │
+│              ▼                                              │
+│   5. AWSPENDING ──► AWSCURRENT (gammalt ──► AWSPREVIOUS)  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-aws secretsmanager update-secret \\
-    --secret-id prod/myapp/db-credentials \\
-    --secret-string '{"username": "admin", "password": "NewPassword456!"}'
-# Uppdaterar secret
-# Skapar ny version automatiskt
-# Förra versionen blir AWSPREVIOUS
-# Inga avbrott - applikationer hämtar ny
-
-aws secretsmanager put-secret-value \\
-    --secret-id prod/myapp/db-credentials \\
-    --secret-string '{"username": "admin", "password": "AnotherPass789!"}' \\
-    --version-stages AWSCURRENT
-# Alternativ för att sätta värde
-# Explicit version-stages
-# Kan användas för custom rotation
-# put-secret-value vs update-secret
-
-aws secretsmanager rotate-secret \\
-    --secret-id prod/myapp/db-credentials
-# Triggar rotation manuellt
-# Kräver rotation Lambda konfigurerad
-# Skapar ny version med AWSPENDING
-# Lambda flyttar till AWSCURRENT
-
+# Konfigurera rotation
 aws secretsmanager rotate-secret \\
     --secret-id prod/myapp/db-credentials \\
-    --rotation-lambda-arn arn:aws:lambda:eu-north-1:123456789012:function:db-rotator \\
+    --rotation-lambda-arn arn:aws:lambda:eu-north-1:123456789012:function:rotator \\
     --rotation-rules AutomaticallyAfterDays=30
-# Konfigurerar automatisk rotation
-# Lambda roterar var 30:e dag
-# AWS har färdiga Lambda templates
-# RDS rotation är enklast
+
+# Trigga manuell rotation
+aws secretsmanager rotate-secret \\
+    --secret-id prod/myapp/db-credentials
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Cross-account och CLI-användning
+## Anvand i Scripts
 
 ```bash
-aws secretsmanager get-resource-policy \\
-    --secret-id prod/myapp/db-credentials
-# Visar resource policy
-# Styr cross-account access
-# Null om ingen policy finns
-# Använd put-resource-policy för att sätta
-
-aws secretsmanager put-resource-policy \\
-    --secret-id prod/myapp/db-credentials \\
-    --resource-policy '{
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Effect": "Allow",
-            "Principal": {"AWS": "arn:aws:iam::987654321098:root"},
-            "Action": "secretsmanager:GetSecretValue",
-            "Resource": "*"
-        }]
-    }'
-# Tillåter annat konto läsa secret
-# Principal är det andra kontot
-# Behöver också IAM policy i det kontot
-# Resource: * = denna secret
-
+# Satt miljovariabel
 export DB_PASSWORD=$(aws secretsmanager get-secret-value \\
     --secret-id prod/myapp/db-credentials \\
     --query 'SecretString' \\
     --output text | jq -r '.password')
-# Sätter miljövariabel från secret
-# Användbart i deployment scripts
-# Undvik att logga värdet
-# set +x innan echo
 
+# Radera secret
 aws secretsmanager delete-secret \\
     --secret-id prod/myapp/old-credentials \\
     --recovery-window-in-days 7
-# Raderar secret
-# 7-30 dagars recovery window
-# --force-delete-without-recovery för omedelbar
-# Soft delete - kan återställas under window
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Hierarkiska namn** - prod/app/secret för organisation
-2. **Automatisk kryptering** - KMS-krypterat by default
-3. **Versionering inbyggd** - AWSCURRENT, AWSPREVIOUS
-4. **Rotation för databaser** - använd AWS Lambda templates
-5. **Resource policies** - cross-account access
+| Koncept | Detalj |
+|---------|--------|
+| **Hierarkiska namn** | prod/app/secret |
+| **Automatisk kryptering** | KMS by default |
+| **Versionering** | AWSCURRENT, AWSPREVIOUS |
+| **Rotation** | Lambda for automatik |
+| **Recovery window** | 7-30 dagar soft delete |
+
+**Kom ihåg:**
+- **Alltid krypterat** - KMS-nycklar
+- **Rotation for databaser** - anvand AWS templates
+- **jq for JSON** - extrahera specifika varden
+- **Soft delete** - aterhamtning mojlig
+- **Kostnad** - $0.40/secret/manad
 """,
         },
         {
@@ -3507,194 +3797,198 @@ aws secretsmanager delete-secret \\
             "xp_reward": 90,
             "content": """# Systems Manager - Operationell Hantering
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Systems Manager (SSM) är AWS svit för operationell hantering. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Köra kommandon på EC2** utan SSH via Run Command
-- **Hantera parametrar** med Parameter Store
-- **Automatisera med dokument** och Automation
-- **Säkra åtkomst** med Session Manager
+| Scenario | Varfor SSM-kunskap ar kritisk |
+|----------|-------------------------------|
+| **No SSH** | Saker access utan portar |
+| **Config management** | Parameter Store |
+| **Automation** | Runbooks och scripting |
+| **Patching** | Automatiska uppdateringar |
+| **Inventory** | Asset management |
 
----
+Systems Manager ar AWS operationella nav for EC2 och hybrid.
 
-## Så fungerar Systems Manager
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Systems Manager kräver SSM Agent på EC2 (förinstallerad på Amazon Linux). Komponenter:
-- **Run Command** - kör kommandon på instanser
-- **Parameter Store** - konfigurations- och hemlighetshantering
-- **Session Manager** - säker shell-åtkomst utan SSH
-- **Automation** - runbooks för komplexa operationer
+## SSM Komponenter
 
----
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  SYSTEMS MANAGER                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────┐  ┌─────────────────┐                │
+│   │ Parameter Store │  │  Run Command    │                │
+│   │  Config values  │  │  Remote exec    │                │
+│   │  Secrets        │  │  No SSH needed  │                │
+│   └─────────────────┘  └─────────────────┘                │
+│                                                             │
+│   ┌─────────────────┐  ┌─────────────────┐                │
+│   │ Session Manager │  │   Automation    │                │
+│   │  Secure shell   │  │   Runbooks      │                │
+│   │  Port forward   │  │   Multi-step    │                │
+│   └─────────────────┘  └─────────────────┘                │
+│                                                             │
+│   ┌─────────────────┐  ┌─────────────────┐                │
+│   │ Patch Manager   │  │    Inventory    │                │
+│   │  Auto patching  │  │  Asset mgmt     │                │
+│   └─────────────────┘  └─────────────────┘                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Parameter Store
 
 ```bash
+# Skapa String parameter
 aws ssm put-parameter \\
     --name /myapp/prod/db-host \\
     --value "db.example.com" \\
     --type String
-# Skapar parameter
-# Hierarkiskt namn (/app/env/param)
-# Type: String, StringList, SecureString
-# String för klartext config
 
+# Skapa SecureString (krypterad)
 aws ssm put-parameter \\
     --name /myapp/prod/db-password \\
     --value "SuperSecret123!" \\
     --type SecureString
-# SecureString för hemligheter
-# Krypteras med KMS (default key)
-# Gratis för standard tier
-# Advanced tier för >10KB
 
+# Hamta parameter
 aws ssm get-parameter \\
     --name /myapp/prod/db-host
-# Hämtar parameter
-# Value, Type, Version, ARN
-# LastModifiedDate
-# Perfekt för config
 
+# Hamta och dekryptera
 aws ssm get-parameter \\
     --name /myapp/prod/db-password \\
     --with-decryption
-# Hämtar och dekrypterar
-# --with-decryption krävs för SecureString
-# Utan flaggan får du krypterat värde
-# IAM behöver kms:Decrypt permission
 
+# Hamta alla under path
 aws ssm get-parameters-by-path \\
     --path /myapp/prod/ \\
     --recursive \\
     --with-decryption
-# Hämtar alla under path
-# --recursive inkluderar subpaths
-# Bra för att ladda all config
-# Returnerar Parameters array
 ```
 
----
+| Type | Kostnad | Max storlek |
+|------|---------|-------------|
+| **String** | Gratis | 4KB |
+| **SecureString** | Gratis | 4KB |
+| **Advanced** | $0.05/param | 8KB |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Run Command
 
 ```bash
+# Kor kommando via taggar
 aws ssm send-command \\
     --document-name AWS-RunShellScript \\
     --targets Key=tag:Environment,Values=production \\
     --parameters 'commands=["yum update -y"]'
-# Kör kommando på instanser
-# AWS-RunShellScript för Linux
-# targets väljer instanser via taggar
-# Returnerar CommandId
 
+# Kor pa specifika instanser
 aws ssm send-command \\
     --document-name AWS-RunShellScript \\
     --instance-ids i-abc123 i-def456 \\
-    --parameters 'commands=["systemctl restart nginx", "systemctl status nginx"]'
-# Specifika instanser
-# Flera kommandon i array
-# Kör i ordning
-# Bra för deployment/restart
+    --parameters 'commands=["systemctl restart nginx"]'
 
+# Visa resultat
 aws ssm list-command-invocations \\
-    --command-id abc123-def456 \\
+    --command-id abc123 \\
     --details
-# Visar resultat per instans
-# Status: Pending, InProgress, Success, Failed
-# StandardOutputContent med output
-# --details för full output
-
-aws ssm get-command-invocation \\
-    --command-id abc123-def456 \\
-    --instance-id i-abc123
-# Detaljerat resultat för en instans
-# StandardOutputContent
-# StandardErrorContent
-# ResponseCode
 ```
 
----
+| Document | Beskrivning |
+|----------|-------------|
+| `AWS-RunShellScript` | Linux bash |
+| `AWS-RunPowerShellScript` | Windows PS |
+| `AWS-UpdateSSMAgent` | Uppdatera agent |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Session Manager
 
-```bash
-aws ssm start-session \\
-    --target i-abc123
-# Startar interaktiv session
-# Som SSH men utan SSH keys/ports
-# All trafik via SSM endpoint
-# Session loggas i CloudWatch/S3
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  SESSION MANAGER                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Traditional SSH           Session Manager                 │
+│   ─────────────────         ───────────────                │
+│                                                             │
+│   ┌──────┐                  ┌──────┐                       │
+│   │ User │                  │ User │                       │
+│   └──┬───┘                  └──┬───┘                       │
+│      │                         │                            │
+│      │ SSH port 22             │ HTTPS to SSM endpoint     │
+│      ▼                         ▼                            │
+│   ┌──────┐                  ┌──────┐                       │
+│   │ EC2  │                  │ EC2  │ (SSM Agent)           │
+│   └──────┘                  └──────┘                       │
+│                                                             │
+│   Requires:                 Requires:                      │
+│   - Open port 22            - SSM Agent                    │
+│   - SSH keys                - IAM role                     │
+│   - Bastion host            - NO open ports                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
+```bash
+# Starta interaktiv session
+aws ssm start-session --target i-abc123
+
+# Port forwarding
 aws ssm start-session \\
     --target i-abc123 \\
     --document-name AWS-StartPortForwardingSession \\
     --parameters '{"portNumber":["3306"],"localPortNumber":["3306"]}'
-# Port forwarding
-# Åtkomst till RDS via bastion
-# Ingen publik IP behövs
-# Säkrare än SSH tunnels
 
-aws ssm describe-sessions \\
-    --state Active
-# Listar aktiva sessioner
-# SessionId, Target, Owner
-# StartDate, Status
-# Bra för audit
-
-aws ssm terminate-session \\
-    --session-id session-abc123
-# Avslutar session
-# Använd för att tvinga disconnect
-# Administratörer kan avsluta andras
-# Session timeout default 20 min
+# Lista aktiva sessioner
+aws ssm describe-sessions --state Active
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Automation och Documents
+## Automation
 
 ```bash
+# Lista automation documents
 aws ssm list-documents \\
-    --filters Key=DocumentType,Values=Automation \\
-    --query 'DocumentIdentifiers[*].Name'
-# Listar automation documents
-# AWS-prefixade är AWS managed
-# Skapa egna för custom workflows
-# DocumentType: Command, Automation, etc.
+    --filters Key=DocumentType,Values=Automation
 
+# Kor automation
 aws ssm start-automation-execution \\
     --document-name AWS-RestartEC2Instance \\
     --parameters '{"InstanceId":["i-abc123"]}'
-# Kör automation
-# AWS-RestartEC2Instance stoppar och startar
-# Multi-step med error handling
-# Returnerar AutomationExecutionId
 
+# Visa status
 aws ssm describe-automation-executions \\
     --filters Key=ExecutionStatus,Values=InProgress
-# Visar körningar
-# AutomationExecutionStatus
-# StepExecutions för varje steg
-# Outputs med resultat
-
-aws ssm get-automation-execution \\
-    --automation-execution-id abc123
-# Detaljer om körning
-# Alla steg och status
-# Outputs och errors
-# Duration och timing
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Parameter Store** - hierarkisk config, gratis standard tier
-2. **SecureString för hemligheter** - KMS-krypterat
-3. **Run Command** - kommandon utan SSH
-4. **Session Manager** - säker shell utan ports/keys
-5. **Automation** - multi-step runbooks
+| Koncept | Detalj |
+|---------|--------|
+| **Parameter Store** | Gratis config management |
+| **SecureString** | KMS-krypterat |
+| **Run Command** | Remote exec utan SSH |
+| **Session Manager** | Saker shell utan portar |
+| **Automation** | Multi-step runbooks |
+
+**Kom ihåg:**
+- **SSM Agent** - maste installeras (pre-installed pa Amazon Linux)
+- **IAM role** - EC2 behover SSM permissions
+- **Inga oppna portar** - all trafik via SSM endpoint
+- **Parameter Store** - gratis for standard tier
+- **Session logging** - CloudWatch/S3 for audit
 """,
         },
         {
@@ -3705,90 +3999,87 @@ aws ssm get-automation-execution \\
             "xp_reward": 85,
             "content": """# Cost Management - Kostnadsoptimering
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kostnadshantering är kritiskt i AWS. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Övervaka kostnader** med Cost Explorer och budgets
-- **Analysera användning** för att hitta besparingar
-- **Implementera tagging** för kostnadsallokering
-- **Sätta upp alerts** för oväntade kostnader
+| Scenario | Varfor Cost Management ar kritiskt |
+|----------|-------------------------------------|
+| **Budget** | Forhindra overskridanden |
+| **Optimering** | Hitta besparingar |
+| **Allokering** | Fordelning per team/projekt |
+| **Forecast** | Planera framtida kostnader |
+| **Anomalier** | Upptack ovantade okningar |
 
----
+Kostnadshantering ar en karnkompetens for alla DevOps-ingenjorer.
 
-## Så fungerar AWS Cost Management
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-AWS tillhandahåller flera verktyg:
-- **Cost Explorer** - visualisering och analys
-- **Budgets** - budgetar och alerts
-- **Cost and Usage Reports** - detaljerad data
-- **Savings Plans/Reserved Instances** - rabatter
+## Cost Management Verktyg
 
-Kostnader kommer med ~24h fördröjning.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  AWS COST TOOLS                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────┐  ┌─────────────────┐                │
+│   │ Cost Explorer   │  │   Budgets       │                │
+│   │ Visualisering   │  │   Alerts        │                │
+│   │ Analys          │  │   Forecasts     │                │
+│   └─────────────────┘  └─────────────────┘                │
+│                                                             │
+│   ┌─────────────────┐  ┌─────────────────┐                │
+│   │ Savings Plans   │  │ Right-sizing    │                │
+│   │ Rabatter        │  │ Compute Opt.    │                │
+│   │ 30-70% off      │  │ Recommendations │                │
+│   └─────────────────┘  └─────────────────┘                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Cost Explorer via CLI
+## Cost Explorer CLI
 
 ```bash
+# Total kostnad for manad
 aws ce get-cost-and-usage \\
     --time-period Start=2024-01-01,End=2024-01-31 \\
     --granularity MONTHLY \\
     --metrics UnblendedCost
-# Hämtar total kostnad
-# UnblendedCost är faktisk kostnad
-# BlendedCost för konsoliderad billing
-# Granularity: DAILY, MONTHLY, HOURLY
 
+# Kostnad per tjanst
 aws ce get-cost-and-usage \\
     --time-period Start=2024-01-01,End=2024-01-31 \\
     --granularity DAILY \\
     --metrics UnblendedCost \\
     --group-by Type=DIMENSION,Key=SERVICE
-# Grupperat per tjänst
-# Visar var pengarna går
-# SERVICE, REGION, USAGE_TYPE
-# Perfekt för kostnadsfördelning
 
-aws ce get-cost-and-usage \\
-    --time-period Start=2024-01-01,End=2024-01-31 \\
-    --granularity MONTHLY \\
-    --metrics UnblendedCost \\
-    --filter '{
-        "Dimensions": {
-            "Key": "SERVICE",
-            "Values": ["Amazon EC2"]
-        }
-    }'
-# Filtrerar på tjänst
-# Endast EC2-kostnader
-# Kombinera filter för precision
-# And, Or, Not för komplexa filter
-
+# Kostnadsprognos
 aws ce get-cost-forecast \\
     --time-period Start=2024-02-01,End=2024-02-28 \\
     --metric UNBLENDED_COST \\
     --granularity MONTHLY
-# Prognostiserar framtida kostnad
-# Baserat på historik
-# 80% confidence interval
-# Bra för budgetplanering
 ```
 
----
+| Metric | Beskrivning |
+|--------|-------------|
+| **UnblendedCost** | Faktisk kostnad |
+| **BlendedCost** | Konsoliderad billing |
+| **AmortizedCost** | Fordelad RI/SP kostnad |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## AWS Budgets
 
 ```bash
+# Skapa budget med alert
 aws budgets create-budget \\
     --account-id 123456789012 \\
     --budget '{
         "BudgetName": "monthly-budget",
         "BudgetType": "COST",
-        "BudgetLimit": {
-            "Amount": "1000",
-            "Unit": "USD"
-        },
+        "BudgetLimit": {"Amount": "1000", "Unit": "USD"},
         "TimeUnit": "MONTHLY"
     }' \\
     --notifications-with-subscribers '[{
@@ -3803,125 +4094,85 @@ aws budgets create-budget \\
             "Address": "alerts@example.com"
         }]
     }]'
-# Skapar månadsbudget på $1000
-# Alert vid 80% förbrukning
-# Email till alerts@example.com
-# ACTUAL för faktisk, FORECASTED för prognos
 
-aws budgets describe-budgets \\
-    --account-id 123456789012
-# Listar alla budgets
-# BudgetName, BudgetLimit
-# CalculatedSpend vs BudgetLimit
-# Visar om du är on track
-
-aws budgets create-budget \\
-    --account-id 123456789012 \\
-    --budget '{
-        "BudgetName": "ec2-budget",
-        "BudgetType": "COST",
-        "BudgetLimit": {"Amount": "500", "Unit": "USD"},
-        "TimeUnit": "MONTHLY",
-        "CostFilters": {
-            "Service": ["Amazon Elastic Compute Cloud - Compute"]
-        }
-    }'
-# Budget för specifik tjänst
-# CostFilters begränsar scope
-# Bra för per-team budgets
-# Service-namn från Cost Explorer
+# Lista budgets
+aws budgets describe-budgets --account-id 123456789012
 ```
 
----
+| Alert Type | Beskrivning |
+|------------|-------------|
+| **ACTUAL** | Faktisk forbrukning |
+| **FORECASTED** | Prognostiserad |
 
-## Tagging för kostnadsallokering
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Tagging for Kostnadsallokering
 
 ```bash
+# Tagga resurser
 aws ec2 create-tags \\
     --resources i-abc123 \\
     --tags Key=CostCenter,Value=engineering Key=Environment,Value=production
-# Taggar resurser för kostnadsallokering
-# CostCenter för avdelning
-# Environment för miljö
-# Project för projekt
 
-aws organizations enable-aws-service-access \\
-    --service-principal cost-allocation-tags.amazonaws.com
-# Aktiverar cost allocation tags
-# Kräver Organizations
-# Gör taggar synliga i Cost Explorer
-# Kan ta 24h att aktivera
-
+# Kostnad per tag
 aws ce get-cost-and-usage \\
     --time-period Start=2024-01-01,End=2024-01-31 \\
     --granularity MONTHLY \\
     --metrics UnblendedCost \\
     --group-by Type=TAG,Key=CostCenter
-# Grupperar kostnad per CostCenter tag
-# Visar fördelning per avdelning
-# Untagged resurser i separat grupp
-# Aktivera tags i Billing först
-
-aws resourcegroupstaggingapi get-resources \\
-    --tag-filters Key=CostCenter,Values=engineering \\
-    --resource-type-filters ec2:instance
-# Hitta resurser utan/med specifik tag
-# Audit för tagging compliance
-# Alla regioner och tjänster
-# resource-type-filters begränsar scope
 ```
 
----
+| Tag | Anvandning |
+|-----|------------|
+| **CostCenter** | Avdelning/team |
+| **Environment** | dev/staging/prod |
+| **Project** | Projektnamn |
 
-## Savings Plans och Reserved Instances
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Savings Plans och Recommendations
 
 ```bash
+# Savings Plans anvandning
 aws ce get-savings-plans-utilization \\
     --time-period Start=2024-01-01,End=2024-01-31
-# Visar Savings Plans användning
-# UtilizationPercentage bör vara >80%
-# TotalCommitment vs UsedCommitment
-# Optimera om låg utilization
 
-aws ce get-reservation-utilization \\
-    --time-period Start=2024-01-01,End=2024-01-31 \\
-    --group-by Type=DIMENSION,Key=SERVICE
-# Reserved Instances utilization
-# Per tjänst (EC2, RDS, etc.)
-# UnusedHours visar waste
-# Köp mer om hög on-demand usage
-
+# Kop-rekommendationer
 aws ce get-savings-plans-purchase-recommendation \\
     --savings-plans-type COMPUTE_SP \\
     --term-in-years ONE_YEAR \\
     --payment-option NO_UPFRONT \\
     --lookback-period-in-days SIXTY_DAYS
-# Rekommendation för Savings Plans
-# Baserat på 60 dagars historik
-# EstimatedMonthlySavingsAmount
-# Compute SP flexiblast
 
-aws ce get-rightsizing-recommendation \\
-    --service AmazonEC2 \\
-    --configuration '{
-        "BenefitsConsidered": true,
-        "RecommendationTarget": "SAME_INSTANCE_FAMILY"
-    }'
 # Right-sizing rekommendationer
-# Undersized och oversized instanser
-# EstimatedMonthlySavings
-# BenefitsConsidered inkluderar RI/SP
+aws ce get-rightsizing-recommendation \\
+    --service AmazonEC2
 ```
 
----
+| Savings Type | Rabatt | Flexibilitet |
+|--------------|--------|--------------|
+| **Compute SP** | 30-40% | Hog (EC2, Lambda, Fargate) |
+| **EC2 SP** | 40-50% | Medium (EC2 family) |
+| **Reserved** | 50-70% | Lag (specific instance) |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Budgets med alerts** - första försvaret mot överraskningar
-2. **Tagging obligatoriskt** - kan inte allokera utan taggar
-3. **Cost Explorer dagligen** - fånga anomalier tidigt
-4. **Savings Plans för rabatt** - 30-70% besparing på commit
-5. **Right-sizing** - betala inte för outnyttjad kapacitet
+| Koncept | Detalj |
+|---------|--------|
+| **Budgets** | Forsta forsvaret mot overraskningar |
+| **Tagging** | Obligatoriskt for allokering |
+| **Cost Explorer** | Daglig kontroll |
+| **Savings Plans** | 30-70% besparing |
+| **Right-sizing** | Betala inte for overkapacitet |
+
+**Kom ihåg:**
+- **Budget alerts vid 80%** - tid att reagera
+- **Tagga ALLT** - kan inte allokera utan taggar
+- **Cost Explorer dagligen** - fanga anomalier tidigt
+- **Compute SP** - flexiblast for de flesta
+- **Right-sizing forst** - sedan Savings Plans
 """,
         },
         {
@@ -3932,236 +4183,218 @@ aws ce get-rightsizing-recommendation \\
             "xp_reward": 100,
             "content": """# AWS Best Practices och Well-Architected
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Well-Architected Framework är AWS best practices för molnarkitektur. Som DevOps behöver du kunna:
+## Varfor viktigt for DevOps?
 
-- **Tillämpa de sex pelarna** för robusta system
-- **Göra Well-Architected Reviews** för att hitta förbättringar
-- **Implementera DevOps-principer** i AWS
-- **Designa för failure** med resilient arkitektur
+| Scenario | Varfor Well-Architected ar kritiskt |
+|----------|--------------------------------------|
+| **Design** | Bygga ratt fran start |
+| **Review** | Hitta svagheter |
+| **Compliance** | Uppfyll branschkrav |
+| **Optimering** | Kontinuerlig forbattring |
+| **Dokumentation** | Best practices samlade |
 
----
+Well-Architected Framework ar AWS officiella guide for att bygga sakra, effektiva och pålitliga system.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## De Sex Pelarna
 
-Well-Architected Framework har sex pelare:
+```
+┌─────────────────────────────────────────────────────────────┐
+│               WELL-ARCHITECTED FRAMEWORK                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│   │ Operational  │  │   Security   │  │ Reliability  │    │
+│   │ Excellence   │  │              │  │              │    │
+│   │  Automate    │  │  Defense     │  │  Recover     │    │
+│   └──────────────┘  └──────────────┘  └──────────────┘    │
+│                                                             │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│   │ Performance  │  │    Cost      │  │Sustainability│    │
+│   │ Efficiency   │  │ Optimization │  │              │    │
+│   │  Right-size  │  │  No waste    │  │  Green IT    │    │
+│   └──────────────┘  └──────────────┘  └──────────────┘    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Operational Excellence** - automatisera, dokumentera, lär av failure
-2. **Security** - identitet, åtkomst, data-skydd
-3. **Reliability** - återhämtning, skalning, change management
-4. **Performance Efficiency** - rätt resurser, övervakning
-5. **Cost Optimization** - kostnadskontroll, rätt storlek
-6. **Sustainability** - miljöpåverkan, effektiv användning
+| Pelare | Fokus |
+|--------|-------|
+| **Operational Excellence** | Automation, monitoring, runbooks |
+| **Security** | IAM, encryption, network isolation |
+| **Reliability** | Multi-AZ, backup, disaster recovery |
+| **Performance** | Right-sizing, caching, CDN |
+| **Cost Optimization** | Savings Plans, tagging, right-sizing |
+| **Sustainability** | Effektivitet, green regions |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Well-Architected Tool
 
 ```bash
+# Skapa workload for review
 aws wellarchitected create-workload \\
-    --workload-name "MyApplication" \\
-    --description "Production web application" \\
+    --workload-name "production-api" \\
     --environment PRODUCTION \\
     --lenses wellarchitected \\
-    --aws-regions eu-north-1 \\
-    --review-owner "devops-team"
-# Skapar workload för review
-# PRODUCTION eller PREPRODUCTION
-# wellarchitected är standard lens
-# Kan lägga till serverless, SaaS lenses
-# Returnerar WorkloadId
+    --review-owner "devops-team" \\
+    --aws-regions us-east-1
 
+# Lista workloads
 aws wellarchitected list-workloads
-# Listar alla workloads
-# WorkloadName, RiskCounts
-# HIGH_RISK, MEDIUM_RISK counts
-# Använd för översikt
 
+# Hamta fråga och svar
 aws wellarchitected get-answer \\
     --workload-id abc123 \\
     --lens-alias wellarchitected \\
     --pillar-id operationalExcellence \\
     --question-id ops-1
-# Hämtar specifik fråga och svar
-# Choices med bästa praxis
-# SelectedChoices markerar ditt svar
-# Notes för kommentarer
 
+# Uppdatera svar
 aws wellarchitected update-answer \\
     --workload-id abc123 \\
     --lens-alias wellarchitected \\
     --pillar-id operationalExcellence \\
     --question-id ops-1 \\
     --selected-choices choice1 choice3 \\
-    --notes "Implemented CloudWatch dashboards and automated runbooks"
-# Uppdaterar svar
-# Välj applicerbara best practices
-# Notes dokumenterar implementation
-# Risk uppdateras automatiskt
+    --notes "Implemented dashboards and runbooks"
 ```
 
----
+| Lens | Beskrivning |
+|------|-------------|
+| **wellarchitected** | Generell framework |
+| **serverless** | Lambda, API GW focus |
+| **saas** | Multi-tenant patterns |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Operational Excellence Patterns
 
 ```bash
-cat << 'EOF' > cloudwatch-dashboard.json
-{
-  "widgets": [
-    {
-      "type": "metric",
-      "properties": {
-        "metrics": [
-          ["AWS/ECS", "CPUUtilization", "ServiceName", "my-service"],
-          [".", "MemoryUtilization", ".", "."]
-        ],
-        "title": "ECS Service Health",
-        "period": 60,
-        "stat": "Average"
-      }
-    },
-    {
-      "type": "log",
-      "properties": {
-        "query": "fields @timestamp, @message | filter @message like /ERROR/ | limit 20",
-        "logGroupName": "/ecs/my-service",
-        "title": "Recent Errors"
-      }
-    }
-  ]
-}
-EOF
+# CloudWatch dashboard
 aws cloudwatch put-dashboard \\
     --dashboard-name MyAppOverview \\
-    --dashboard-body file://cloudwatch-dashboard.json
-# Operational dashboard
-# Samlad vy av metrics och loggar
-# Snabb problemidentifiering
-# Dela med teamet
+    --dashboard-body file://dashboard.json
 
+# EventBridge for deployment notifications
 aws events put-rule \\
-    --name deployment-notifications \\
+    --name deployment-failures \\
     --event-pattern '{
         "source": ["aws.codedeploy"],
-        "detail-type": ["CodeDeploy Deployment State-change Notification"],
+        "detail-type": ["CodeDeploy Deployment State-change"],
         "detail": {"state": ["FAILURE"]}
     }'
-# EventBridge regel för deployment failures
-# Notifiera teamet vid problem
-# Lär av failures
-# Koppla till SNS eller Lambda
 ```
 
----
+```
+┌─────────────────────────────────────────────────────────────┐
+│              OPERATIONAL EXCELLENCE                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Dashboard ──► Metrics ──► Alarms ──► Actions             │
+│       │                        │                            │
+│       ▼                        ▼                            │
+│   Observability           Auto-remediation                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Security Best Practices
 
 ```bash
+# IAM audit
 aws iam get-account-summary
-# IAM översikt
-# Users, Groups, Roles counts
-# MFADevices aktiverade
-# AccountMFAEnabled bör vara 1
-
 aws iam generate-credential-report
 aws iam get-credential-report --output text --query Content | base64 -d
-# Credential report
-# Visar alla användare
-# password_enabled, mfa_active
-# access_key_last_used
-# Audit regelbundet
 
+# Security Hub
 aws securityhub enable-security-hub
 aws securityhub get-findings \\
     --filters '{"SeverityLabel": [{"Value": "CRITICAL", "Comparison": "EQUALS"}]}'
-# Security Hub för överblick
-# Samlar findings från GuardDuty, Inspector, etc.
-# CRITICAL findings kräver omedelbar action
-# Integrera i incident response
 
-aws guardduty create-detector \\
-    --enable
-# GuardDuty för threat detection
-# Analyserar VPC Flow, CloudTrail, DNS
-# Hittar suspicious activity
-# Minimal performance impact
+# GuardDuty
+aws guardduty create-detector --enable
 ```
 
----
+| Princip | Implementering |
+|---------|----------------|
+| **Least Privilege** | Specifika permissions, inga wildcards |
+| **MFA** | Alla konsol-users |
+| **Encryption** | At-rest och in-transit |
+| **Audit** | CloudTrail, credential reports |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Reliability Patterns
 
 ```bash
+# Auto Scaling audit
 aws autoscaling describe-auto-scaling-groups \\
-    --query 'AutoScalingGroups[*].[AutoScalingGroupName,MinSize,MaxSize,DesiredCapacity]'
-# Auto Scaling konfiguration
-# MinSize >= 2 för HA
-# Multi-AZ för redundans
-# HealthCheckType: ELB för webb
+    --query 'AutoScalingGroups[*].[AutoScalingGroupName,MinSize,MaxSize]'
 
+# RDS HA check
 aws rds describe-db-instances \\
     --query 'DBInstances[*].[DBInstanceIdentifier,MultiAZ,BackupRetentionPeriod]'
-# RDS high availability
-# MultiAZ: true för failover
-# BackupRetentionPeriod > 0
-# EnablePerformanceInsights för monitoring
 
+# S3 versioning
 aws s3api get-bucket-versioning --bucket my-bucket
-aws s3api get-bucket-replication --bucket my-bucket
-# S3 data protection
-# Versioning för accidental delete
-# Replication för DR
-# Lifecycle policies för kostnad
 
-aws elasticloadbalancing describe-target-health \\
-    --target-group-arn arn:aws:elasticloadbalancing:eu-north-1:123456789012:targetgroup/my-tg/abc123
-# Health check status
-# Healthy targets per AZ
-# Draining targets vid deployment
-# Unhealthy kräver investigation
+# Target health
+aws elbv2 describe-target-health \\
+    --target-group-arn arn:aws:elasticloadbalancing:region:account:targetgroup/name/id
 ```
 
----
+| Pattern | Benefit |
+|---------|---------|
+| **Multi-AZ** | Automatisk failover |
+| **Auto Scaling** | Hantera lastspikes |
+| **Versioning** | Skydd mot accidental delete |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Performance och Sustainability
 
 ```bash
+# Compute Optimizer
 aws compute-optimizer get-ec2-instance-recommendations
-# Rightsizing recommendations
-# Over-provisioned = kostnad + miljö
-# Under-provisioned = performance
-# VERY_LOW/LOW/MEDIUM/HIGH risk
 
-aws trustedadvisor describe-check-result \\
-    --check-id Qch7DwouX1 \\
-    --language en
-# Trusted Advisor checks
-# Cost optimization, performance
-# Security, fault tolerance
-# Requires Business/Enterprise Support
-
+# Cost and usage
 aws ce get-cost-and-usage \\
     --time-period Start=2024-01-01,End=2024-01-31 \\
     --granularity DAILY \\
     --metrics UsageQuantity \\
-    --group-by Type=DIMENSION,Key=USAGE_TYPE \\
-    --filter '{"Dimensions": {"Key": "SERVICE", "Values": ["Amazon EC2"]}}'
-# Usage patterns
-# Identifiera peak times
-# Rightsizing potential
-# Sustainability: mindre användning = mindre impact
+    --group-by Type=DIMENSION,Key=USAGE_TYPE
 ```
 
----
+| Fokus | Action |
+|-------|--------|
+| **Right-sizing** | Folj Compute Optimizer |
+| **Caching** | ElastiCache, CloudFront |
+| **Sustainability** | Mindre resurser = mindre impact |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Well-Architected Reviews** - regelbundet, inte bara vid launch
-2. **Automatisera allt** - minska manuella fel och tid
-3. **Security by default** - GuardDuty, Security Hub, MFA
-4. **Design for failure** - Multi-AZ, Auto Scaling, backups
-5. **Mät och optimera** - metrics driver beslut
+| Koncept | Detalj |
+|---------|--------|
+| **6 Pelare** | Komplett arkitekturramverk |
+| **Reviews** | Regelbundet, inte bara vid launch |
+| **Automation** | Grund for operational excellence |
+| **Multi-AZ** | Minimum for produktion |
+| **Measure** | Metrics driver beslut |
+
+**Kom ihåg:**
+- **Well-Architected reviews kvartalvis** - kontinuerlig forbattring
+- **Least privilege alltid** - borja restriktivt
+- **Multi-AZ for allt kritiskt** - ingen SPOF
+- **GuardDuty + Security Hub** - sakerhet i lager
+- **Compute Optimizer** - data-driven rightsizing
 """,
         },
     ],
