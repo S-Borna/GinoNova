@@ -41,11 +41,11 @@ export default function QuizPage() {
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
     const [showHint, setShowHint] = useState(false)
-    
+
     // Star modal
     const [showStarModal, setShowStarModal] = useState(false)
     const [starName, setStarName] = useState("")
-    
+
     // Favorites hook
     const { addFavorite, removeFavorite, isFavorite, getFavoriteId } = useFavorites()
 
@@ -239,7 +239,7 @@ export default function QuizPage() {
     const currentQuestion = questions[currentIndex]
     const progress = ((currentIndex + 1) / questions.length) * 100
     const isCurrentFavorite = currentQuestion ? isFavorite(moduleSlug, currentQuestion.question, "quiz") : false
-    
+
     function handleStarClick() {
         if (isCurrentFavorite) {
             const favId = getFavoriteId(moduleSlug, currentQuestion.question, "quiz")
@@ -249,7 +249,7 @@ export default function QuizPage() {
             setStarName("")
         }
     }
-    
+
     function handleSaveStar() {
         if (!starName.trim()) return
         addFavorite({
@@ -430,7 +430,7 @@ export default function QuizPage() {
                     )}
                 </div>
             </div>
-            
+
             {/* Star Modal */}
             {showStarModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">

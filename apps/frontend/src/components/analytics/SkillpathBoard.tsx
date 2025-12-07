@@ -13,12 +13,13 @@
  * - Activity heatmap (GitHub-style)
  * - Module completion breakdown (live data)
  * - Current streak & milestones
- * - Time invested stats
+ * - Time invested stats (live from sessionTimer)
+ * - Completed exercises count
  *
  * @phase ENTERPRISE-LEVEL-5
  */
 
-import { useMemo } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useProgress } from "@/hooks/useProgress"
@@ -38,7 +39,8 @@ import {
     Loader2,
     AlertCircle,
     RefreshCw,
-    Rocket
+    Rocket,
+    CheckCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -653,13 +655,41 @@ export function SkillpathBoard() {
     const { data: modulesData, isLoading: modulesLoading } = useModules()
     const { user } = useAuth()
 
+    // Session timer state (weekly)
+    const [weeklyTime, setWeeklyTime] = useState(0)
+    const [completedExercises, setCompletedExercises] = useState(0)
+
+    // Load session timer and exercises from localStorage
+    useEffect(() => {
+        try {
+            // Weekly session time
+            const sessionStr = localStorage.getItem("devopshub_session_timer")
+            if (sessionStr) {
+                const sessionData = JSON.parse(sessionStr)
+                setWeeklyTime(sessionData.totalSeconds || 0)
+            }
+
+            // Completed exercises (flashcards + quiz)
+            const exercisesStr = localStorage.getItem("devopshub_completed_exercises")
+            if (exercisesStr) {
+                const exercisesData = JSON.parse(exercisesStr)
+                setCompletedExercises(exercisesData.total || 0)
+            }
+        } catch {
+            // Ignore errors
+        }
+    }, [])
+
     // Get user's first name for personalized greeting
     const firstName = user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'DevOps Pro'
 
-    const formatTime = (minutes: number): string => {
-        const hours = Math.floor(minutes / 60)
-        const mins = minutes % 60
-        return `${hours}h ${mins}m`
+    const formatTime = (seconds: number): string => {
+        const hours = Math.floor(seconds / 3600)
+        const mins = Math.floor((seconds % 3600) / 60)
+        if (hours > 0) {
+            return `${hours}h ${mins}m`
+        }
+        return `${mins}m`
     }
 
     // Transform API data to component format
@@ -813,10 +843,10 @@ export function SkillpathBoard() {
                     color="purple"
                 />
                 <StatCard
-                    icon={Flame}
-                    label="Streak"
-                    value={`${data.currentStreak} dagar`}
-                    subtext={data.currentStreak > 0 ? `Bäst: ${data.longestStreak} dagar` : "Starta din streak!"}
+                    icon={CheckCircle}
+                    label="Avklarade övningar"
+                    value={completedExercises}
+                    subtext={completedExercises > 0 ? "Flashcards & Quiz" : "Starta din första!"}
                     color="orange"
                 />
                 <StatCard
@@ -829,8 +859,8 @@ export function SkillpathBoard() {
                 <StatCard
                     icon={Clock}
                     label="Tid investerad"
-                    value={formatTime(data.totalTimeMinutes)}
-                    subtext="Uppskattad tid"
+                    value={formatTime(weeklyTime)}
+                    subtext="Uppskattad tid denna vecka"
                     color="blue"
                 />
             </div>
