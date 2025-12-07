@@ -9,6 +9,7 @@
  * - Headings, paragraphs, lists
  * - Tables with GFM support
  * - Links and images
+ * - Syntax highlighted code blocks
  * - Proper dark theme styling
  *
  * @phase ILE Phase 3 - Content Blocks
@@ -17,6 +18,8 @@
 import * as React from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { cn } from "@/lib/utils"
 
 /* ============================================================================
@@ -26,6 +29,38 @@ import { cn } from "@/lib/utils"
 export interface TextBlockProps {
     content: string
     className?: string
+}
+
+/* ============================================================================
+   CUSTOM SYNTAX THEME (DevOps-optimized)
+   ============================================================================ */
+
+const customTheme = {
+    ...oneDark,
+    'code[class*="language-"]': {
+        ...oneDark['code[class*="language-"]'],
+        background: 'transparent',
+    },
+    'pre[class*="language-"]': {
+        ...oneDark['pre[class*="language-"]'],
+        background: '#1a1a2e',
+        borderRadius: '0.5rem',
+        padding: '1rem',
+    },
+    // Commands - cyan
+    'function': { color: '#61dafb' },
+    // Flags/options - orange  
+    'parameter': { color: '#ff9f43' },
+    // Strings - green
+    'string': { color: '#a6e22e' },
+    // Comments - gray
+    'comment': { color: '#6272a4' },
+    // Keywords - purple
+    'keyword': { color: '#bd93f9' },
+    // Variables - yellow
+    'variable': { color: '#f1fa8c' },
+    // Operators - pink
+    'operator': { color: '#ff79c6' },
 }
 
 /* ============================================================================
@@ -83,7 +118,10 @@ const markdownComponents = {
             {children}
         </em>
     ),
-    code: ({ inline, children }: any) => {
+    code: ({ inline, className, children, ...props }: any) => {
+        const match = /language-(\w+)/.exec(className || '')
+        const language = match ? match[1] : 'bash'
+        
         if (inline) {
             return (
                 <code className="px-1.5 py-0.5 rounded bg-neutral-800 text-primary-400 font-mono text-sm">
@@ -91,16 +129,27 @@ const markdownComponents = {
                 </code>
             )
         }
+        
         return (
-            <code className="block bg-neutral-900 rounded-lg p-4 font-mono text-sm text-neutral-300 overflow-x-auto">
-                {children}
-            </code>
+            <SyntaxHighlighter
+                style={customTheme}
+                language={language}
+                PreTag="div"
+                customStyle={{
+                    margin: 0,
+                    borderRadius: '0.5rem',
+                    fontSize: '0.875rem',
+                }}
+                {...props}
+            >
+                {String(children).replace(/\n$/, '')}
+            </SyntaxHighlighter>
         )
     },
     pre: ({ children }: any) => (
-        <pre className="bg-neutral-900 rounded-lg p-4 overflow-x-auto mb-4">
+        <div className="mb-4 overflow-hidden rounded-lg">
             {children}
-        </pre>
+        </div>
     ),
     blockquote: ({ children }: any) => (
         <blockquote className="border-l-4 border-primary-500 pl-4 py-2 my-4 bg-neutral-900/50 rounded-r-lg">
