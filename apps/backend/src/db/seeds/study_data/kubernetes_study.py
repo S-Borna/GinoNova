@@ -8,7 +8,7 @@ Kubernetes Mastery - Study Data
 
 KUBERNETES_STUDY_DATA = {
     "module_slug": "kubernetes-mastery",
-    "module_title": "Kubernetes Mastery",
+    "module_title": "Kubernetes",
     "module_description": "Container-orkestrering med K8s",
     "icon": "Layers",
 

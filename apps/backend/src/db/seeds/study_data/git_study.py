@@ -8,7 +8,7 @@ Git & GitHub Mastery - Study Data
 
 GIT_STUDY_DATA = {
     "module_slug": "git-github-mastery",
-    "module_title": "Git & GitHub Mastery",
+    "module_title": "Git & GitHub",
     "module_description": "Versionshantering och samarbete med Git",
     "icon": "GitBranch",
 

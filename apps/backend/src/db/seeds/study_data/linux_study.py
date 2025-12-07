@@ -8,7 +8,7 @@ Linux Mastery - Study Data
 
 LINUX_STUDY_DATA = {
     "module_slug": "linux-mastery",
-    "module_title": "Linux Mastery",
+    "module_title": "Linux",
     "module_description": "Komplett Linux-administration på svenska",
     "icon": "Terminal",
 

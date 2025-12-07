@@ -8,7 +8,7 @@ Terraform Mastery - Study Data
 
 TERRAFORM_STUDY_DATA = {
     "module_slug": "terraform-mastery",
-    "module_title": "Terraform Mastery",
+    "module_title": "Terraform",
     "module_description": "Infrastructure as Code med Terraform",
     "icon": "Cloud",
 

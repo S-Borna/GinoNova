@@ -28,8 +28,10 @@ import {
     User,
     ChevronDown,
     Menu,
-    Command
+    Command,
+    Clock
 } from "lucide-react"
+import { useSessionTimer } from "@/hooks/useSessionTimer"
 
 /* ============================================================================
    TYPES
@@ -413,6 +415,27 @@ function SearchBar() {
 }
 
 /* ============================================================================
+   SESSION TIMER DISPLAY
+   ============================================================================ */
+
+function SessionTimerDisplay() {
+    const { currentSessionSeconds, formatTime } = useSessionTimer()
+
+    return (
+        <div className={cn(
+            "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl",
+            "bg-emerald-500/10 border border-emerald-500/20",
+            "text-emerald-600 dark:text-emerald-400"
+        )}>
+            <Clock className="h-4 w-4" />
+            <span className="text-sm font-mono font-medium">
+                {formatTime(currentSessionSeconds)}
+            </span>
+        </div>
+    )
+}
+
+/* ============================================================================
    MAIN TOP BAR COMPONENT
    ============================================================================ */
 
@@ -449,6 +472,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                 {/* Right side */}
                 <div className="flex items-center gap-3">
+                    {/* Session Timer */}
+                    <SessionTimerDisplay />
+
                     {/* Dallas AI Orb - NO wrapper, direct component */}
                     <DallasOrb />
 

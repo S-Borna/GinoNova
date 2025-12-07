@@ -8,7 +8,7 @@ Docker Mastery - Study Data
 
 DOCKER_STUDY_DATA = {
     "module_slug": "docker-mastery",
-    "module_title": "Docker Mastery",
+    "module_title": "Docker",
     "module_description": "Container-teknologi och Docker för DevOps",
     "icon": "Box",
 

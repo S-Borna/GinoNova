@@ -5,6 +5,7 @@
  *
  * Dallas frågar hur användaren mår och ger personlig vägledning.
  * Spara flashcards och quiz för snabb åtkomst.
+ * Session timer med veckohistorik.
  */
 
 import * as React from "react"
@@ -12,6 +13,8 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
+import { useSessionTimer } from "@/hooks/useSessionTimer"
+import { useFavorites, FavoriteItem } from "@/hooks/useFavorites"
 import {
     Send,
     BookOpen,
@@ -24,6 +27,9 @@ import {
     TrendingUp,
     Clock,
     Brain,
+    Star,
+    X,
+    Trash2,
 } from "lucide-react"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
@@ -211,6 +217,122 @@ function DallasChat({ userName }: { userName: string }) {
 }
 
 /* ============================================================================
+   WEEKLY SESSION CARD
+   ============================================================================ */
+
+function WeeklySessionCard() {
+    const { weeklyTotalSeconds, todaySeconds, currentSessionSeconds, formatTimeShort, weekHistory } = useSessionTimer()
+    
+    // Beräkna dagarna i veckan
+    const weekDays = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"]
+    const today = new Date()
+    const currentDay = today.getDay() === 0 ? 6 : today.getDay() - 1 // Måndag = 0
+    
+    return (
+        <div className="bg-zinc-900/60 border border-emerald-500/30 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+                <Clock className="w-5 h-5 text-emerald-400" />
+                <h2 className="text-lg font-semibold">Veckans studietid</h2>
+            </div>
+            
+            {/* Total tid denna vecka */}
+            <div className="text-center mb-6">
+                <p className="text-4xl font-bold text-emerald-400 font-mono">
+                    {formatTimeShort(weeklyTotalSeconds)}
+                </p>
+                <p className="text-sm text-zinc-500 mt-1">denna vecka</p>
+            </div>
+            
+            {/* Dagars aktivitet */}
+            <div className="flex justify-between gap-1 mb-4">
+                {weekDays.map((day, i) => (
+                    <div key={day} className="flex flex-col items-center gap-1">
+                        <div className={cn(
+                            "w-8 h-8 rounded-lg flex items-center justify-center text-xs",
+                            i === currentDay
+                                ? "bg-emerald-500 text-white font-bold"
+                                : i < currentDay
+                                    ? "bg-emerald-500/30 text-emerald-400"
+                                    : "bg-zinc-800 text-zinc-600"
+                        )}>
+                            {day[0]}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            
+            {/* Idag och session */}
+            <div className="grid grid-cols-2 gap-3 pt-4 border-t border-zinc-800">
+                <div className="text-center">
+                    <p className="text-lg font-semibold text-white">{formatTimeShort(todaySeconds)}</p>
+                    <p className="text-xs text-zinc-500">idag</p>
+                </div>
+                <div className="text-center">
+                    <p className="text-lg font-semibold text-purple-400">{formatTimeShort(currentSessionSeconds)}</p>
+                    <p className="text-xs text-zinc-500">denna session</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   FAVORITES CARD
+   ============================================================================ */
+
+function FavoritesCard() {
+    const { favorites, removeFavorite } = useFavorites()
+    
+    return (
+        <div className="bg-zinc-900/60 border border-amber-500/30 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+                <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                <h2 className="text-lg font-semibold">Mina Flashcards och Quiz</h2>
+                {favorites.length > 0 && (
+                    <span className="ml-auto text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full">
+                        {favorites.length}
+                    </span>
+                )}
+            </div>
+
+            {favorites.length === 0 ? (
+                <div className="text-center py-6">
+                    <BookmarkX className="w-10 h-10 text-zinc-600 mx-auto mb-2" />
+                    <p className="text-zinc-500 text-sm">Inga sparade favoriter</p>
+                    <p className="text-xs text-zinc-600 flex items-center justify-center gap-1 mt-1">
+                        <Star className="w-3 h-3 text-amber-500" />
+                        Stjärnmarkera i Studyroom
+                    </p>
+                </div>
+            ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {favorites.map((item) => (
+                        <div
+                            key={item.id}
+                            className="group flex items-center gap-2 p-2 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors"
+                        >
+                            {item.type === "flashcard" ? (
+                                <BookOpen className="w-4 h-4 text-purple-400 shrink-0" />
+                            ) : (
+                                <Brain className="w-4 h-4 text-blue-400 shrink-0" />
+                            )}
+                            <span className="font-medium text-sm text-amber-300">{item.customName}</span>
+                            <span className="text-xs text-zinc-500 truncate flex-1">{item.moduleTitle}</span>
+                            <button
+                                onClick={() => removeFavorite(item.id)}
+                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded transition-all"
+                            >
+                                <Trash2 className="w-3 h-3 text-red-400" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+
+/* ============================================================================
    MAIN PULSE PAGE
    ============================================================================ */
 
@@ -220,9 +342,6 @@ export default function PulsePage() {
     const fullName = user?.full_name || user?.email?.split("@")[0] || "du"
     const firstName = fullName.split(" ")[0] // Ta bara förnamnet
     const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
-
-    // Placeholder för sparade flashcards/quiz
-    const [savedItems, setSavedItems] = useState<any[]>([])
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white p-6">
@@ -257,36 +376,11 @@ export default function PulsePage() {
                 <DallasChat userName={displayName} />
 
                 {/* ============================================================
-                    MINA SPARADE FLASHCARDS OCH QUIZ
+                    VECKANS STUDIETID + MINA FAVORITER (side by side)
                     ============================================================ */}
-                <div className="bg-zinc-900/60 border border-amber-500/30 rounded-2xl p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                        <Bookmark className="w-5 h-5 text-amber-400" />
-                        <h2 className="text-lg font-semibold">Mina Flashcards och Quiz</h2>
-                    </div>
-
-                    {savedItems.length === 0 ? (
-                        <div className="text-center py-8">
-                            <BookmarkX className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-                            <p className="text-zinc-500">Inga sparade flashcards eller quiz</p>
-                            <p className="text-sm text-zinc-600 flex items-center justify-center gap-1 mt-1">
-                                <Bookmark className="w-4 h-4 text-amber-500" />
-                                Stjärnmarkera flashcards och quiz i Studyroom
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="space-y-2">
-                            {savedItems.map((item, i) => (
-                                <div
-                                    key={i}
-                                    className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors cursor-pointer"
-                                >
-                                    <BookOpen className="w-5 h-5 text-purple-400" />
-                                    <span className="flex-1">{item.title}</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <WeeklySessionCard />
+                    <FavoritesCard />
                 </div>
 
                 {/* ============================================================
