@@ -30,209 +30,257 @@ MODULE = {
             "xp_reward": 75,
             "content": """# Filesystem Hierarchy Standard (FHS)
 
-## Varför behöver du kunna detta?
+Valkommen till Linux-varlden! Har lar du dig hur Linux organiserar sina filer - grunden for allt du kommer gora som DevOps-ingenjor.
 
-Som DevOps-ingenjör lever du i terminalen. Du måste veta:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Var konfigurationer sparas** så du kan ändra inställningar
-- **Var loggar hamnar** så du kan felsöka
-- **Var program installeras** så du kan hantera dependencies
-- **Var användare har sina filer** så du kan sätta rätt permissions
+## Installation och Setup
 
----
+For att folja med i denna modul behover du tillgang till en Linux-miljo:
 
-## Så fungerar Linux filstruktur
-
-Alla Linux-distributioner följer något som kallas **FHS** - Filesystem Hierarchy Standard. Det betyder att oavsett om du kör Ubuntu, CentOS eller Debian så ligger saker på samma ställen. Detta gör livet mycket enklare när du hoppar mellan olika servrar!
-
----
-
-## /bin - Grundläggande kommandon
-
-Här ligger de absolut viktigaste kommandona - de som måste fungera även om resten av systemet har problem. Se det som överlevnadsverktyg.
+| Alternativ | Beskrivning | Rekommendation |
+|------------|-------------|----------------|
+| **WSL2** | Windows Subsystem for Linux | Bast for Windows |
+| **Virtuell maskin** | VirtualBox/VMware med Ubuntu | Bra for larande |
+| **Cloud server** | AWS EC2, DigitalOcean, etc | Bra for praktik |
+| **Docker** | `docker run -it ubuntu bash` | Snabbast att starta |
 
 ```bash
-ls /bin
-# Visar innehållet i /bin-katalogen
-# Här hittar du grundläggande kommandon som ls, cp, mv, cat, echo
-# Dessa finns alltid tillgängliga, oavsett vad som hänt med systemet
+# Windows - Installera WSL2
+wsl --install -d Ubuntu
 
+# macOS - Anvand terminalen direkt eller Docker
+docker run -it ubuntu:22.04 bash
+
+# Verifiera att du har tillgang
+cat /etc/os-release
+# NAME="Ubuntu"
+# VERSION="22.04.3 LTS (Jammy Jellyfish)"
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Konfigurationer** | Var installningar sparas |
+| **Felsökning** | Var loggar hamnar |
+| **Installation** | Var program installeras |
+| **Permissions** | Var anvandare har sina filer |
+
+Som DevOps-ingenjor lever du i terminalen. Du maste veta var saker ligger!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Linux Filstruktur - Oversikt
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                         / (root)                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   /bin ────── Grundlaggande kommandon (ls, cp, mv)         │
+│   /etc ────── Konfigurationsfiler                          │
+│   /var ────── Variabel data (loggar, databaser)            │
+│   /usr ────── Installerade program                         │
+│   /home ───── Anvandarkataloger                            │
+│   /tmp ────── Temporara filer                              │
+│   /opt ────── Tredjepartsprogram                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Katalog | Syfte | Exempel |
+|---------|-------|---------|
+| `/bin` | Grundkommandon | ls, cp, mv, cat |
+| `/etc` | Konfiguration | nginx.conf, passwd |
+| `/var` | Variabel data | Loggar, databaser |
+| `/usr` | Program | python, git, docker |
+| `/home` | Anvandarfiler | /home/devops |
+| `/tmp` | Temporart | Rensas vid reboot |
+| `/opt` | Tredjepartsprogram | Chrome, containerd |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## /bin - Grundlaggande kommandon
+
+Har ligger de absolut viktigaste kommandona - de som maste fungera aven om resten av systemet har problem.
+
+```bash
+# Lista innehall i /bin
+ls /bin
+
+# Se var ett kommando finns
 which cp
 # /bin/cp
-# which-kommandot berättar var ett program finns
-# Här ser vi att cp (copy) ligger i /bin
-# Det är därför cp alltid fungerar - /bin laddas först av systemet
 ```
 
-Se /bin som första-hjälpen-lådan - den innehåller bara det mest nödvändiga, men det räcker för att överleva!
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ls` | Lista filer |
+| `cp` | Kopiera filer |
+| `mv` | Flytta/byt namn |
+| `cat` | Visa filinnehall |
+| `echo` | Skriv ut text |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## /etc - Alla inställningar
+## /etc - Alla installningar
 
-Den här katalogen är hjärtat av systemkonfigurationen. Varje gång du vill ändra hur ett program eller tjänst beter sig, är det hit du går.
+Hjartat av systemkonfigurationen. Varje gang du vill andra hur ett program beter sig, ar det hit du gar.
 
 ```bash
+# Serverns namn
 cat /etc/hostname
-# Visar serverns namn
-# Denna fil innehåller bara en rad - datorns namn
-# Om du vill byta namn på servern, ändrar du här
 
+# Nginx konfiguration
 ls /etc/nginx/
-# Visar nginx konfigurationsfiler
-# nginx.conf är huvudfilen
-# sites-available/ innehåller webbplatskonfigurationer
-# Varje webbserver, databas, och tjänst har sina config-filer i /etc
 
+# Visa forsta 5 anvandare
 head -5 /etc/passwd
-# Visar de första 5 raderna i passwd-filen
-# Här listas alla användare i systemet
-# Varje rad = en användare med info om hemkatalog, shell, etc.
 ```
 
-**Gyllene regeln:** Innan du rör något i /etc - ta backup!
+| Fil | Innehall |
+|-----|----------|
+| `/etc/hostname` | Serverns namn |
+| `/etc/passwd` | Anvandarlista |
+| `/etc/nginx/` | Nginx-config |
+| `/etc/ssh/` | SSH-config |
+
+**Gyllene regeln:** Innan du ror nagot i /etc - ta backup!
 
 ```bash
+# Ta backup innan andring
 sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-# Kopierar nginx.conf till nginx.conf.bak
-# .bak är en vanlig konvention för backup-filer
-# Om något går fel kan du återställa med: sudo cp nginx.conf.bak nginx.conf
-# Det tar 2 sekunder att göra backup, men kan spara timmar av felsökning!
 ```
 
-Se /etc som kontrollrummet - alla spakar och knappar finns här, men tryck inte på något utan att veta vad det gör!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## /var - Data som andras
 
-## /var - Data som ändras
-
-Medan /etc innehåller statiska inställningar, innehåller /var saker som ständigt förändras - loggar som växer, databaser som uppdateras, mail som kommer in.
+Medan /etc innehaller statiska installningar, innehaller /var saker som standigt forandras.
 
 ```bash
+# Lista loggfiler
 ls /var/log/
-# Listar alla loggfiler och loggkataloger
-# syslog eller messages - systemhändelser
-# auth.log - inloggningsförsök
-# nginx/ eller apache2/ - webbserverloggar
-# Här börjar du ALLTID när något gått fel!
 
+# Visa senaste systemhändelser
 tail -20 /var/log/syslog
-# Visar de 20 senaste raderna i systemloggen
-# tail läser från slutet av filen (de nyaste händelserna)
-# -20 betyder 20 rader
-# Perfekt för att snabbt se vad som hänt nyligen
 
+# Overvaka loggstorlek i realtid
 watch -n 2 'ls -lh /var/log/*.log'
-# watch kör ett kommando upprepat
-# -n 2 betyder var 2:a sekund
-# Här ser vi hur loggfilerna växer i realtid
-# Användbart för att upptäcka loggar som växer för fort
 ```
 
-Se /var som aktivitetsloggen - allt som händer i systemet dokumenteras här. När något går fel är detta första stället att kolla!
+| Katalog | Innehall |
+|---------|----------|
+| `/var/log/` | Loggfiler |
+| `/var/log/syslog` | Systemhändelser |
+| `/var/log/auth.log` | Inloggningsforsok |
+| `/var/lib/` | Databaser, state |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## /usr - Installerade program
 
-De flesta program du installerar hamnar här. Det är som "Program Files" på Windows, fast mer organiserat.
+De flesta program du installerar hamnar har. Som "Program Files" pa Windows.
 
 ```bash
+# Rakna program i /usr/bin
 ls /usr/bin/ | wc -l
-# Räknar hur många program som finns i /usr/bin
-# wc -l räknar antal rader (en rad per program)
-# Du kommer se hundratals eller tusentals program
-# Allt från git till python till docker
 
+# Se var python finns
 which python3
 # /usr/bin/python3
-# De flesta program du installerar med apt/yum hamnar här
-# Till skillnad från /bin som har grundkommandon,
-# har /usr/bin användarprogram som installerats efteråt
 
+# Egna scripts (roras inte av pakethanterare)
 ls /usr/local/bin/
-# Här lägger du egna scripts och program
-# Pakethanteraren (apt/yum) rör aldrig denna katalog
-# Perfekt för deploy-scripts, cronjobs, och custom tools
-# Om du vill att alla användare ska kunna köra ditt script - lägg det här
 ```
 
----
+| Katalog | Anvandning |
+|---------|------------|
+| `/usr/bin/` | Installerade program |
+| `/usr/local/bin/` | Egna scripts |
+| `/usr/lib/` | Bibliotek |
+| `/usr/share/` | Delad data |
 
-## /home - Användarnas utrymme
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Varje användare får sin egen katalog under /home. Det är deras privata utrymme för filer, inställningar och scripts.
+## /home - Anvandarnas utrymme
+
+Varje anvandare far sin egen katalog under /home.
 
 ```bash
+# Visa alla anvandarkataloger
 ls -la /home/
-# Visar alla användarkataloger
-# -la visar även dolda filer och permissions
-# Varje användare har en katalog med sitt användarnamn
-# Permissions är oftast 755 eller 700 (bara ägaren kan läsa)
 
+# Din egen hemkatalog
 ls -la ~/
-# ~ är en genväg till din egen hemkatalog
-# Samma som /home/ditt-användarnamn
-# Här ser du .bashrc, .ssh/, och andra personliga filer
-# Filer som börjar med . (punkt) är dolda
 
+# Visa .bashrc
 cat ~/.bashrc | head -20
-# .bashrc körs varje gång du öppnar en terminal
-# Här lägger du aliases, miljövariabler, och anpassningar
-# Exempelvis: alias ll='ls -la' för att skapa genvägar
-# Ändringar kräver ny terminal eller 'source ~/.bashrc'
 ```
 
----
+| Fil | Syfte |
+|-----|-------|
+| `~/.bashrc` | Shell-installningar |
+| `~/.ssh/` | SSH-nycklar |
+| `~/.profile` | Miljövariabler |
 
-## /tmp - Temporära filer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Skräphantering! Hit går filer som bara behövs tillfälligt. Systemet rensar denna katalog automatiskt.
+## /tmp och /opt
 
 ```bash
+# Temporara filer (rensas vid reboot)
 ls /tmp/
-# Visar temporära filer
-# Program skapar temp-filer här när de kör
-# Allt kan försvinna vid omstart - lita ALDRIG på att saker finns kvar här
 
+# Skapa unik temp-fil
 mktemp
 # /tmp/tmp.Xf4kL2
-# Skapar en unik temporär fil och skriver ut sökvägen
-# Använd detta i scripts för säker temp-hantering
-# Filen får ett slumpmässigt namn så det inte krockar med andra
-```
 
-**Varning:** Spara aldrig viktig data i /tmp - det kan raderas när som helst!
-
----
-
-## /opt - Tredjepartsprogram
-
-Stora program som inte passar in i standardstrukturen hamnar ofta här - saker som kommer som ett komplett paket.
-
-```bash
+# Tredjepartsprogram
 ls /opt/
-# Visar installerade tredjepartsprogram
-# Vanliga exempel: /opt/google/chrome, /opt/containerd
-# Varje program får sin helt egna mapp
-# Fördelen: lätt att ta bort - bara radera mappen
 
+# Se storlek per program
 du -sh /opt/*
-# Visar hur mycket utrymme varje program tar
-# du = disk usage
-# -s = summering per katalog
-# -h = human-readable (MB, GB istället för bytes)
 ```
 
----
+| Katalog | Egenskap |
+|---------|----------|
+| `/tmp` | Rensas automatiskt |
+| `/opt` | Ett program per mapp |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Behov | Katalog |
+|-------|---------|
+| Andra config | `/etc` |
+| Felsoka | `/var/log` |
+| Egna scripts | `/usr/local/bin` |
+| Anvandarfiler | `/home` |
+| Temp-filer | `/tmp` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **/etc** = konfiguration - hit går du för att ändra inställningar
-2. **/var/log** = loggar - hit går du för att felsöka
-3. **/usr/local/bin** = egna scripts - hit lägger du dina verktyg
-4. **/home** = användarfiler - varje användare har sin katalog
-5. **Ta alltid backup** innan du ändrar filer i /etc!
+| Punkt | Forklaring |
+|-------|------------|
+| **/etc** | Konfiguration - hit for installningar |
+| **/var/log** | Loggar - hit for felsökning |
+| **/usr/local/bin** | Egna scripts - roras inte av apt |
+| **/home** | Anvandarfiler - varje anvandare har sin |
+| **Backup** | Ta ALLTID backup innan /etc-andring |
+
+**Kom ihag:**
+- `/etc` = konfiguration
+- `/var/log` = loggar
+- `/usr/local/bin` = egna scripts
+- `/home` = anvandarfiler
+- Ta alltid backup innan du andrar i /etc!
 """,
         },
         {
@@ -243,22 +291,39 @@ du -sh /opt/*
             "xp_reward": 65,
             "content": """# Mount Points och Device Files
 
-## Varför behöver du kunna detta?
+I Linux ar allt en fil - aven harddiskar och USB-minnen. Har lar du dig hur Linux hanterar lagringsenheter och hur du kopplar dem till filsystemet.
 
-I Linux är allt en fil - även hårddiskar, USB-minnen och nätverkslagringar. För att använda dem måste du "mounta" dem till en plats i filsystemet. Som DevOps behöver du:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Ansluta externa diskar** för backup och lagring
-- **Förstå /dev-katalogen** där alla enheter finns
-- **Konfigurera automatisk mount** så diskar fungerar efter reboot
-- **Felsöka "disk full"** genom att förstå var saker är mountade
+## Varfor viktigt for DevOps?
 
----
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Backup** | Ansluta externa diskar |
+| **Felsökning** | Forsta /dev-katalogen |
+| **Automatisering** | Konfigurera auto-mount |
+| **Disk full** | Forsta var saker ar mountade |
 
-## Så fungerar mounting
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-När du kopplar in en disk i Linux dyker den upp som en fil i `/dev` - men du kan inte läsa den direkt. Du måste "mounta" den till en katalog. Tänk på det som att koppla in en extern hårddisk och ge den en bokstav på Windows - fast i Linux väljer du en katalog istället.
+## Sa fungerar mounting
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    MOUNT PROCESS                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   /dev/sdb1 ──────────► mount ──────────► /mnt/external    │
+│   (fysisk disk)                           (tillganglig)     │
+│                                                             │
+│   Disk dyker upp      Kommando           Nu kan du          │
+│   i /dev              kopplar ihop       lasa/skriva        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Lista alla diskar och partitioner
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 # sda      8:0    0   100G  0 disk
@@ -266,167 +331,170 @@ lsblk
 # └─sda2   8:2    0     1G  0 part [SWAP]
 # sdb      8:16   0   500G  0 disk
 # └─sdb1   8:17   0   500G  0 part
-#
-# lsblk listar alla blockenheter (diskar)
-# sda är första disken, sdb är andra
-# sda1 är första partitionen på sda
-# MOUNTPOINT visar var disken är ansluten i filsystemet
-# sdb1 har ingen mountpoint - den är inte ansluten ännu!
 ```
 
----
+| Kolumn | Betydelse |
+|--------|-----------|
+| NAME | Enhetsnamn |
+| SIZE | Storlek |
+| TYPE | disk/part |
+| MOUNTPOINT | Var den ar monterad |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## /dev - Alla enheter
 
-`/dev` är en speciell katalog där Linux representerar all hårdvara som filer. Här hittar du diskar, tangentbord, mus, och till och med slumptalsgeneratorer.
+`/dev` ar en speciell katalog dar Linux representerar all hardvara som filer.
 
 ```bash
+# SATA/SCSI diskar
 ls /dev/sd*
-# /dev/sda  /dev/sda1  /dev/sda2  /dev/sdb  /dev/sdb1
-# sd = SCSI/SATA disk
-# sda = första disken, sdb = andra disken
-# sda1 = första partitionen på sda
-# Dessa filer representerar fysiska diskar
+# /dev/sda  /dev/sda1  /dev/sdb  /dev/sdb1
 
+# NVMe SSD-diskar
 ls /dev/nvme*
-# /dev/nvme0n1  /dev/nvme0n1p1  /dev/nvme0n1p2
-# nvme = NVMe SSD-diskar (snabbare moderna diskar)
-# nvme0n1 = första NVMe-disken
-# p1, p2 = partitioner
+# /dev/nvme0n1  /dev/nvme0n1p1
 
-cat /dev/null
-# (ingen output)
-# /dev/null är en "svart hål" - allt du skriver hit försvinner
-# Användbart för att tysta output: command > /dev/null
-
-head -c 16 /dev/urandom | xxd
-# Visar 16 slumpmässiga bytes
-# /dev/urandom genererar slumptal
-# Används för att skapa lösenord, nycklar, etc.
+# Specialenheter
+cat /dev/null          # Svart hal - allt forsvinner
+head -c 16 /dev/urandom | xxd   # Slumptal
 ```
 
-Tänk på /dev som hårdvarans telefonbok - varje enhet har en "fil" du kan prata med!
+| Enhet | Typ |
+|-------|-----|
+| `/dev/sda` | Forsta SATA-disk |
+| `/dev/sdb1` | Forsta partition pa andra disk |
+| `/dev/nvme0n1` | Forsta NVMe-disk |
+| `/dev/null` | Svart hal |
+| `/dev/urandom` | Slumptalsgenerator |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Mounta en disk
 
-När du har identifierat en disk i /dev måste du mounta den för att kunna använda filerna.
+| Kommando | Beskrivning |
+|----------|-------------|
+| `mkdir /mnt/external` | Skapa mount-punkt |
+| `mount /dev/sdb1 /mnt/external` | Mounta disk |
+| `df -h /mnt/external` | Visa diskutrymme |
+| `ls /mnt/external` | Lista innehall |
 
 ```bash
+# Skapa mount-punkt
 sudo mkdir /mnt/external
-# Skapar en tom katalog som mount-punkt
-# /mnt är standardplatsen för temporära mounts
-# Du kan välja vilket namn du vill
 
+# Mounta partition
 sudo mount /dev/sdb1 /mnt/external
-# Ansluter partitionen sdb1 till /mnt/external
-# Nu kan du komma åt filerna via /mnt/external
-# Allt du sparar här hamnar på den externa disken
 
+# Visa innehall
 ls /mnt/external
-# Visar innehållet på den mountade disken
-# Om disken var tom ser du inget
-# Om den hade filer ser du dem nu
 
+# Kontrollera utrymme
 df -h /mnt/external
-# Visar hur mycket utrymme som finns på disken
-# -h = human-readable (GB istället för bytes)
-# Du ser total storlek, använt, och ledigt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Unmounta säkert
+## Unmounta sakert
 
-Innan du kopplar bort en disk måste du "unmounta" den - annars riskerar du datakorruption.
+| Kommando | Beskrivning |
+|----------|-------------|
+| `umount /mnt/external` | Koppla bort (OBS: umount!) |
+| `lsof /mnt/external` | Se vad som anvander disken |
+| `fuser -m /mnt/external` | Lista processer |
+| `umount -l /mnt/external` | Lazy unmount |
 
 ```bash
+# Koppla bort sakert
 sudo umount /mnt/external
-# Kopplar bort disken säkert
-# OBS! Det heter umount, INTE unmount (vanligt misstag!)
-# Se till att ingen använder disken först
 
-# Om du får "target is busy":
-lsof /mnt/external
-# Visar vilka processer som använder disken
-# Du måste stänga dessa innan du kan unmounta
-
-fuser -m /mnt/external
-# Alternativt sätt att se vilka processer som använder disken
-# Visar process-ID:n som har filer öppna
-
-sudo umount -l /mnt/external
-# -l = lazy unmount
-# Kopplar bort så fort ingen använder den längre
-# Använd bara om vanlig umount inte fungerar
+# Om "target is busy":
+lsof /mnt/external        # Se vilka processer
+sudo umount -l /mnt/external   # Lazy unmount
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Automatisk mount med /etc/fstab
 
-Om du vill att disken ska monteras automatiskt vid boot måste du lägga till den i `/etc/fstab`.
-
 ```bash
+# Hamta diskens UUID
 blkid /dev/sdb1
 # /dev/sdb1: UUID="abc-123-def" TYPE="ext4"
-# blkid visar diskens unika ID (UUID)
-# Använd UUID istället för /dev/sdb1 i fstab
-# UUID ändras aldrig, men /dev/sdb kan bli /dev/sdc om du lägger till diskar
-
-cat /etc/fstab
-# <file system>  <mount point>  <type>  <options>  <dump>  <pass>
-# UUID=abc-123   /mnt/external  ext4    defaults   0       2
-#
-# file system = vilken disk (använd UUID!)
-# mount point = var den ska monteras
-# type = filsystemstyp (ext4, xfs, ntfs, etc.)
-# options = mount-inställningar
-# dump = backup (oftast 0)
-# pass = filsystemskontroll vid boot (1 för root, 2 för andra, 0 för att skippa)
-
-sudo mount -a
-# Monterar allt i fstab som inte redan är monterat
-# Bra för att testa att fstab är korrekt
-# Om detta misslyckas, kommer servern inte boota ordentligt!
 ```
 
-**Varning:** Ett fel i fstab kan göra att servern inte startar! Testa alltid med `mount -a` innan du rebootar.
+```
+/etc/fstab format:
+┌──────────────────────────────────────────────────────────┐
+│ <file system>  <mount point>  <type>  <options>  <dump>  │
+│ UUID=abc-123   /mnt/external  ext4    defaults   0    2  │
+└──────────────────────────────────────────────────────────┘
+```
 
----
+| Falt | Betydelse |
+|------|-----------|
+| file system | UUID eller /dev/sdX |
+| mount point | Var den monteras |
+| type | ext4, xfs, ntfs |
+| options | defaults, ro, rw |
+| dump | Backup (0=nej) |
+| pass | fsck vid boot (1=root, 2=andra) |
+
+```bash
+# Testa fstab (VIKTIGT!)
+sudo mount -a
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Vanliga mount-typer
 
+| Typ | Kommando | Anvandning |
+|-----|----------|------------|
+| NFS | `mount -t nfs server:/share /mnt/nfs` | Natverkslagring |
+| CIFS | `mount -t cifs //server/share /mnt/smb` | Windows-delning |
+| tmpfs | `mount -t tmpfs -o size=1G tmpfs /mnt/ram` | RAM-disk |
+
 ```bash
-# NFS - nätverkslagring
+# NFS (natverkslagring)
 sudo mount -t nfs server:/share /mnt/nfs
-# -t nfs = filsystemstyp är NFS
-# server:/share = NFS-serverns adress och delning
-# Kräver att nfs-common är installerat
 
-# CIFS/SMB - Windows-delningar
+# CIFS/SMB (Windows-delningar)
 sudo mount -t cifs //server/share /mnt/smb -o user=admin
-# -t cifs = Windows/Samba-filsystem
-# -o user=admin = anslut som användaren "admin"
-# Du blir tillfrågad om lösenord
 
-# tmpfs - RAM-disk
+# tmpfs (RAM-disk - supersnabb, forsvinner vid reboot)
 sudo mount -t tmpfs -o size=1G tmpfs /mnt/ramdisk
-# Skapar en disk i RAM-minnet
-# Supersnabbt men försvinner vid reboot
-# Perfekt för temporära filer som behöver vara snabba
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| "target is busy" | Nagon anvander disken | `lsof /mnt/...` |
+| "wrong fs type" | Fel filsystemstyp | Ange `-t ext4` |
+| Boot failar | Fel i fstab | `mount -a` forst! |
+| "permission denied" | Fel rattigheter | `sudo mount` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **lsblk** = se alla diskar och var de är monterade
-2. **mount/umount** = anslut och koppla bort diskar (OBS: umount, inte unmount!)
-3. **/etc/fstab** = automatisk mount vid boot - testa alltid med `mount -a` först
-4. **UUID** = använd alltid UUID i fstab, inte /dev/sdX
-5. **Unmounta innan du kopplar bort** = annars riskerar du datakorruption
+| Punkt | Forklaring |
+|-------|------------|
+| **lsblk** | Se alla diskar och mount points |
+| **mount/umount** | Anslut/koppla bort (OBS: umount!) |
+| **/etc/fstab** | Automatisk mount vid boot |
+| **UUID** | Anvand alltid UUID i fstab |
+| **mount -a** | Testa ALLTID innan reboot |
+
+**Kom ihag:**
+- `lsblk` for att se diskar
+- `umount` (INTE unmount!)
+- Testa `mount -a` innan reboot
+- Anvand UUID i fstab
+- Unmounta innan du kopplar bort fysiskt
 """,
         },
         {
@@ -437,202 +505,186 @@ sudo mount -t tmpfs -o size=1G tmpfs /mnt/ramdisk
             "xp_reward": 75,
             "content": """# File Permissions
 
-## Varför behöver du kunna detta?
+Permissions ar Linux sakerhetssystem - de avgor vem som kan lasa, skriva och kora filer. Utan denna kunskap kommer du stota pa "Permission denied" overallt!
 
-Permissions avgör vem som kan göra vad med en fil. Som DevOps stöter du på permission-problem dagligen:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Deploy-scripts som inte kan köras** - saknar execute-permission
-- **Webbservrar som inte kan läsa filer** - fel ägare
-- **SSH-nycklar som inte accepteras** - för öppna permissions
-- **Config-filer som inte kan ändras** - saknar write-permission
+## Varfor viktigt for DevOps?
 
----
+| Scenario | Problem |
+|----------|---------|
+| **Deploy-scripts** | Kan inte koras - saknar execute |
+| **Webbservrar** | Kan inte lasa filer - fel agare |
+| **SSH-nycklar** | Accepteras inte - for oppna permissions |
+| **Config-filer** | Kan inte andras - saknar write |
 
-## Så fungerar permissions
+Permissions avgor vem som kan gora vad med en fil. Du stoter pa detta dagligen!
 
-Varje fil i Linux har tre typer av permissions för tre typer av användare. Tänk på det som ett säkerhetssystem med tre nivåer.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-ls -l myfile.txt
-# -rw-r--r-- 1 john developers 1024 Dec 7 10:30 myfile.txt
-#
-# Första tecknet: filtyp (- = fil, d = katalog, l = länk)
-# Nästa 9 tecken: permissions i tre grupper
-#   rw-  = owner (john) kan läsa och skriva
-#   r--  = group (developers) kan bara läsa
-#   r--  = others (alla andra) kan bara läsa
-# john = ägare (user/owner)
-# developers = grupp (group)
+## Sa fungerar permissions
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    PERMISSION STRING                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   -rw-r--r-- 1 john developers 1024 Dec 7 myfile.txt       │
+│   │└┬┘└┬┘└┬┘                                                │
+│   │ │  │  └── Others: r-- (bara lasa)                      │
+│   │ │  └───── Group:  r-- (bara lasa)                      │
+│   │ └──────── Owner:  rw- (lasa och skriva)                │
+│   └────────── Filtyp: - (fil), d (katalog), l (lank)       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+| Tecken | Betydelse |
+|--------|-----------|
+| `r` | Read - lasa |
+| `w` | Write - skriva/andra |
+| `x` | Execute - kora/oppna katalog |
+| `-` | Ingen permission |
 
-## Permission-bokstäverna
-
-```bash
-# r = read (läsa)
-# w = write (skriva/ändra)
-# x = execute (köra/öppna katalog)
-# - = ingen permission
-
-ls -la /etc/passwd
-# -rw-r--r-- 1 root root 2847 Dec 1 12:00 /etc/passwd
-# Alla kan LÄSA filen (viktig för systemet)
-# Bara root kan ÄNDRA filen (säkerhet)
-# Ingen behöver KÖRA filen (det är inte ett program)
-
-ls -la /usr/bin/ls
-# -rwxr-xr-x 1 root root 142144 Nov 5 2023 /usr/bin/ls
-# Detta är ett program, därför finns x (execute)
-# Alla kan köra ls-kommandot
-# Bara root kan ändra programmet
-```
-
----
-
-## Ändra permissions med chmod
-
-chmod (change mode) ändrar permissions på filer och kataloger.
-
-```bash
-chmod u+x script.sh
-# u = user (ägaren)
-# + = lägg till
-# x = execute-permission
-# Nu kan ägaren köra scriptet
-
-chmod g-w file.txt
-# g = group
-# - = ta bort
-# w = write-permission
-# Gruppen kan inte längre ändra filen
-
-chmod o=r document.txt
-# o = others (alla andra)
-# = = sätt exakt dessa permissions
-# r = bara läsa
-# Andra kan bara läsa, inget annat
-
-chmod a+r public.html
-# a = all (alla: user, group, others)
-# Alla får läsa filen
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Oktala permissions (siffror)
 
-Istället för bokstäver kan du använda siffror - detta är vanligast i scripts och dokumentation.
+| Siffra | Binart | Permissions |
+|--------|--------|-------------|
+| 7 | 4+2+1 | rwx (alla) |
+| 6 | 4+2 | rw- (lasa+skriva) |
+| 5 | 4+1 | r-x (lasa+kora) |
+| 4 | 4 | r-- (bara lasa) |
+| 0 | 0 | --- (inga) |
 
 ```bash
-# Varje siffra är summan av:
-# r = 4
-# w = 2
-# x = 1
-
-# 7 = 4+2+1 = rwx (alla permissions)
-# 6 = 4+2   = rw- (läsa och skriva)
-# 5 = 4+1   = r-x (läsa och köra)
-# 4 = 4     = r-- (bara läsa)
-# 0 = 0     = --- (inga permissions)
-
-chmod 755 script.sh
-# 7 = rwx för owner (full kontroll)
-# 5 = r-x för group (läsa och köra)
-# 5 = r-x för others (läsa och köra)
-# Perfekt för scripts som alla ska kunna köra
-
-chmod 644 config.txt
-# 6 = rw- för owner (läsa och skriva)
-# 4 = r-- för group (bara läsa)
-# 4 = r-- för others (bara läsa)
-# Standard för vanliga filer
-
-chmod 600 ~/.ssh/id_rsa
-# 6 = rw- för owner (läsa och skriva)
-# 0 = --- för group (ingenting)
-# 0 = --- för others (ingenting)
-# OBLIGATORISKT för SSH-nycklar! SSH vägrar annars.
+# Vanliga kombinationer
+chmod 755 script.sh    # rwxr-xr-x - scripts
+chmod 644 config.txt   # rw-r--r-- - config-filer
+chmod 600 ~/.ssh/id_rsa # rw------- - SSH-nycklar (OBLIGATORISKT!)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ändra ägare med chown
+## Andra permissions med chmod
 
-chown (change owner) ändrar vem som äger en fil.
+| Kommando | Beskrivning |
+|----------|-------------|
+| `chmod u+x file` | Lagg till execute for owner |
+| `chmod g-w file` | Ta bort write for group |
+| `chmod o=r file` | Satt only read for others |
+| `chmod a+r file` | Lagg till read for alla |
+| `chmod 755 file` | rwxr-xr-x |
+| `chmod 644 file` | rw-r--r-- |
 
 ```bash
+# Symboliskt
+chmod u+x script.sh      # Owner kan kora
+chmod g-w file.txt       # Group kan inte skriva
+chmod o=r document.txt   # Others bara lasa
+chmod a+r public.html    # Alla kan lasa
+
+# Oktalt (vanligast)
+chmod 755 deploy.sh      # Script alla kan kora
+chmod 644 nginx.conf     # Config bara owner andrar
+chmod 600 secrets.env    # Hemligt - bara owner
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Andra agare med chown
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `chown user file` | Andra agare |
+| `chown user:group file` | Andra agare OCH grupp |
+| `chown -R user dir/` | Rekursivt (alla filer under) |
+
+```bash
+# Andra agare
 sudo chown nginx /var/www/html/index.html
-# Ändrar ägaren till nginx
-# Bara root kan ändra ägare (därför sudo)
 
+# Andra agare OCH grupp
 sudo chown nginx:www-data /var/www/html/index.html
-# Ändrar BÅDE ägare (nginx) OCH grupp (www-data)
-# : separerar user och group
 
+# Rekursivt (vanligt vid deploy)
 sudo chown -R deploy:deploy /var/www/app/
-# -R = recursive (alla filer och mappar under)
-# Ändrar ägare på ALLT under /var/www/app/
-# Vanligt vid deployment-setup
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Vanliga permission-mönster
+## Vanliga permission-monster
+
+| Anvandning | Permission | Forklaring |
+|------------|------------|------------|
+| Scripts | 755 | Alla kan kora |
+| Config-filer | 644 | Alla laser, owner skriver |
+| Hemligheter | 600 | BARA owner |
+| SSH-katalog | 700 | BARA owner |
+| Webbfiler | 644 | Webbserver laser |
 
 ```bash
-# För scripts och körbara filer
+# Scripts och program
 chmod 755 deploy.sh
-# Owner: full kontroll, Alla andra: kan köra
 
-# För config-filer
+# Config-filer
 chmod 644 nginx.conf
-# Owner: kan ändra, Alla andra: kan bara läsa
 
-# För hemliga filer (nycklar, lösenord)
+# Hemliga filer (nycklar, losenord)
 chmod 600 secrets.env
-# BARA owner kan läsa och skriva
 
-# För kataloger som alla ska kunna lista
+# Kataloger - offentliga
 chmod 755 /var/www/
-# Alla kan gå in och se innehållet
 
-# För privata kataloger
+# Kataloger - privata
 chmod 700 ~/.ssh/
-# BARA ägaren kan gå in
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Felsökning
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| "Permission denied" vid kor | Saknar x | `chmod +x script.sh` |
+| SSH "permissions too open" | For oppna nycklar | `chmod 600 ~/.ssh/id_rsa` |
+| Webbserver 403 | Fel agare | `chown www-data:www-data` |
+| Kan inte cd till katalog | Saknar x pa katalog | `chmod +x directory/` |
 
 ```bash
-# "Permission denied" när du kör ett script
+# Felsok: se permissions
 ls -la script.sh
-# Kolla om x (execute) finns
-chmod +x script.sh
-# Lägg till execute-permission
 
-# SSH-nyckel "permissions too open"
+# Fix: lagg till execute
+chmod +x script.sh
+
+# SSH-nyckel maste vara 600
 chmod 600 ~/.ssh/id_rsa
 chmod 700 ~/.ssh/
-# SSH kräver strikt permissions
 
-# Webbserver kan inte läsa filer
-ls -la /var/www/html/
-# Kolla att www-data (eller nginx) kan läsa
+# Webbserver-fix
 sudo chown -R www-data:www-data /var/www/html/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **rwx** = read (4), write (2), execute (1) - lär dig siffrorna!
-2. **755** = för scripts och kataloger som alla ska kunna använda
-3. **644** = för config-filer som bara ägaren ska ändra
-4. **600** = för hemligheter - SSH-nycklar, lösenord, tokens
-5. **chown -R** = ändra ägare rekursivt - vanligt vid deploy
+| Punkt | Forklaring |
+|-------|------------|
+| **rwx = 4,2,1** | Lar dig siffrorna! |
+| **755** | Scripts och kataloger |
+| **644** | Config-filer |
+| **600** | Hemligheter och SSH-nycklar |
+| **chown -R** | Rekursiv agarandring vid deploy |
+
+**Kom ihag:**
+- `rwx` = read (4), write (2), execute (1)
+- `755` for scripts
+- `644` for config
+- `600` for hemligheter (SSH KRAVER detta!)
+- `chown -R` for rekursiv andring
 """,
         },
         {
@@ -643,201 +695,258 @@ sudo chown -R www-data:www-data /var/www/html/
             "xp_reward": 80,
             "content": """# Inodes, Hard Links och Symbolic Links
 
-## Varför behöver du kunna detta?
+Lankar ar kraftfulla verktyg i Linux som mojliggor zero-downtime deploys, flexibel filhantering och effektiv lagring. Har lar du dig hur de fungerar under huven.
 
-Länkar är fundamentala för hur Linux fungerar. Du stöter på dem överallt:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Zero-downtime deploys** använder symlinks för att byta version
-- **"Disk full" trots ledigt utrymme** kan bero på slut på inodes
-- **Raderade filer som fortfarande tar plats** beror på hur inodes fungerar
-- **Delade config-filer** mellan miljöer använder ofta länkar
+## Varfor viktigt for DevOps?
 
----
+| Scenario | Anvandning |
+|----------|------------|
+| **Zero-downtime deploy** | Symlinks byter version atomiskt |
+| **Disk full trots ledigt** | Slut pa inodes |
+| **Raderade filer tar plats** | Hard links haller data |
+| **Delad config** | Lankar mellan miljoer |
 
-## Vad är en inode?
+Lankar ar fundamentala for hur Linux fungerar och anvands overallt i produktion.
 
-Varje fil i Linux har en inode - en datastruktur som innehåller all metadata om filen. Tänk på det som ett "ID-kort" för filen.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-ls -i myfile.txt
-# 12345678 myfile.txt
-#
-# 12345678 är filens inode-nummer
-# Detta nummer är unikt inom filsystemet
-# Inode-numret är filens verkliga identitet - filnamnet är bara en etikett
+## Vad ar en inode?
 
-stat myfile.txt
-# File: myfile.txt
-# Size: 1024       Blocks: 8          IO Block: 4096   regular file
-# Device: 801h/2049d      Inode: 12345678    Links: 1
-# Access: (0644/-rw-r--r--)  Uid: ( 1000/john)   Gid: ( 1000/john)
-# Access: 2024-12-07 10:00:00
-# Modify: 2024-12-07 09:30:00
-# Change: 2024-12-07 09:30:00
-#
-# stat visar ALLT om filen
-# Inode: 12345678 - filens unika nummer
-# Links: 1 - hur många namn som pekar på denna inode
-# Access/Modify/Change - tre olika timestamps!
+```
+┌─────────────────────────────────────────────────────────────┐
+│                         INODE                               │
+├─────────────────────────────────────────────────────────────┤
+│  Varje fil har en inode - ett "ID-kort" med metadata        │
+│                                                             │
+│  ┌─────────────┐                                            │
+│  │ Inode 12345 │                                            │
+│  ├─────────────┤                                            │
+│  │ Permissions │                                            │
+│  │ Owner/Group │                                            │
+│  │ Timestamps  │                                            │
+│  │ Size        │                                            │
+│  │ Data blocks │──────► [Faktisk data pa disk]             │
+│  └─────────────┘                                            │
+│         ▲                                                   │
+│         │                                                   │
+│   "myfile.txt" (filnamn ar bara en etikett)                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Visa inode-nummer
+ls -i myfile.txt
+# 12345678 myfile.txt
+
+# Visa ALL metadata
+stat myfile.txt
+# Inode: 12345678    Links: 1
+```
+
+| Kommando | Visar |
+|----------|-------|
+| `ls -i` | Inode-nummer |
+| `stat file` | All metadata |
+| `df -i` | Inode-anvandning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Hard Links
 
-En hard link är ett extra namn som pekar på samma inode. Tänk på det som att ge samma person ett smeknamn - det är fortfarande samma person.
+En hard link ar ett extra namn som pekar pa SAMMA inode.
 
-```bash
-echo "Hello World" > original.txt
-# Skapar en fil med innehållet "Hello World"
-
-ln original.txt hardlink.txt
-# Skapar en hard link
-# Nu finns det TVÅ namn som pekar på SAMMA inode
-# Ingen av dem är "originalet" - de är likvärdiga
-
-ls -li original.txt hardlink.txt
-# 12345678 -rw-r--r-- 2 john john 12 Dec 7 10:00 original.txt
-# 12345678 -rw-r--r-- 2 john john 12 Dec 7 10:00 hardlink.txt
-#
-# SAMMA inode-nummer (12345678)!
-# Links: 2 - nu finns två namn för denna inode
-# Båda filerna är identiska och delar samma data
-
-rm original.txt
-# Raderar BARA namnet "original.txt"
-# Datan finns fortfarande kvar!
-
-cat hardlink.txt
-# Hello World
-# Innehållet finns kvar via hardlink.txt
-# Datan raderas först när ALLA hard links är borta
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      HARD LINK                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   "original.txt" ─────┐                                     │
+│                       │                                     │
+│                       ▼                                     │
+│               ┌─────────────┐                               │
+│               │ Inode 12345 │──────► [Data]                │
+│               └─────────────┘                               │
+│                       ▲                                     │
+│                       │                                     │
+│   "hardlink.txt" ─────┘                                     │
+│                                                             │
+│   Bada namnen ar LIKVARDIGA - samma inode, samma data      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Skapa original
+echo "Hello World" > original.txt
+
+# Skapa hard link
+ln original.txt hardlink.txt
+
+# Se att de har SAMMA inode
+ls -li original.txt hardlink.txt
+# 12345678 -rw-r--r-- 2 john john 12 original.txt
+# 12345678 -rw-r--r-- 2 john john 12 hardlink.txt
+
+# Radera original - data finns kvar!
+rm original.txt
+cat hardlink.txt
+# Hello World
+```
+
+| Egenskap | Hard Link |
+|----------|-----------|
+| Samma inode | Ja |
+| Data kvar om original raderas | Ja |
+| Fungerar over filsystem | Nej |
+| Kan lanka kataloger | Nej |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Symbolic Links (Symlinks)
 
-En symlink är en pekare till ett filnamn - inte till inoden. Tänk på det som en genväg på skrivbordet.
+En symlink ar en pekare till ett FILNAMN - inte inoden.
 
-```bash
-ln -s /var/log/syslog loggen
-# Skapar en symlink som heter "loggen"
-# -s = symbolic (annars blir det hard link)
-# loggen pekar på /var/log/syslog
-
-ls -la loggen
-# lrwxrwxrwx 1 john john 15 Dec 7 10:00 loggen -> /var/log/syslog
-#
-# l i början = detta är en länk
-# -> visar vart länken pekar
-# Storleken (15) är längden på sökvägen, inte filen
-
-cat loggen
-# (visar innehållet i /var/log/syslog)
-# Linux följer länken automatiskt
-
-rm /var/log/syslog
-# Nu är länken "broken" - målet finns inte längre
-
-cat loggen
-# cat: loggen: No such file or directory
-# Symlinken pekar på ett namn som inte längre finns
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     SYMBOLIC LINK                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   "symlink" ─────► "/path/to/original.txt" ─────► [Data]   │
+│   (egen inode)     (pekar pa NAMNET)                        │
+│                                                             │
+│   Om original.txt raderas:                                  │
+│   "symlink" ─────► "/path/to/original.txt" ─────► BROKEN!  │
+│                    (namnet finns inte langre)               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Skapa symlink
+ln -s /var/log/syslog loggen
 
-## Skillnaden i praktiken
+# Se lanken
+ls -la loggen
+# lrwxrwxrwx 1 john john 15 loggen -> /var/log/syslog
+
+# Anvand lanken
+cat loggen   # Visar syslog
+```
+
+| Egenskap | Symlink |
+|----------|---------|
+| Egen inode | Ja |
+| Data kvar om original raderas | Nej (broken) |
+| Fungerar over filsystem | Ja |
+| Kan lanka kataloger | Ja |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Jamforelse
+
+| Aspekt | Hard Link | Symlink |
+|--------|-----------|---------|
+| Skapas med | `ln file link` | `ln -s file link` |
+| Samma inode | Ja | Nej |
+| Original raderas | Data kvar | Broken link |
+| Over filsystem | Nej | Ja |
+| Kataloger | Nej | Ja |
+| Anvandning | Backup, dedup | Deploy, genvagar |
 
 ```bash
-# Skapa testfil
-echo "Test data" > source.txt
-
-# Skapa båda typer av länkar
-ln source.txt hard_copy
-ln -s source.txt soft_copy
+# Test: skapa bada typer
+echo "Test" > source.txt
+ln source.txt hard_copy      # Hard link
+ln -s source.txt soft_copy   # Symlink
 
 # Se skillnaden
 ls -li source.txt hard_copy soft_copy
-# 12345 -rw-r--r-- 2 john john 10 Dec 7 source.txt
-# 12345 -rw-r--r-- 2 john john 10 Dec 7 hard_copy    <- SAMMA inode!
-# 67890 lrwxrwxrwx 1 john john 10 Dec 7 soft_copy -> source.txt  <- ANNAN inode
+# 12345 ... source.txt
+# 12345 ... hard_copy      <- SAMMA inode
+# 67890 ... soft_copy -> source.txt   <- ANNAN inode
 
-# Radera originalet
+# Radera original
 rm source.txt
-
-cat hard_copy
-# Test data
-# FUNGERAR! Hard link har fortfarande datan
-
-cat soft_copy
-# cat: soft_copy: No such file or directory
-# FUNKAR INTE! Symlink pekar på ett namn som inte finns
+cat hard_copy    # FUNGERAR
+cat soft_copy    # BROKEN!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Inode Exhaustion
 
-Varje filsystem har ett begränsat antal inodes. Du kan ha ledigt diskutrymme men ändå inte kunna skapa filer!
+Du kan ha ledigt diskutrymme men slut pa inodes!
 
 ```bash
+# Kolla inode-anvandning
 df -i
 # Filesystem      Inodes   IUsed   IFree IUse% Mounted on
 # /dev/sda1     6553600 1234567 5319033   19% /
-#
-# df -i visar inode-användning
-# Om IUse% är 100% kan du inte skapa fler filer!
-# Vanligt problem: miljontals små filer (cache, sessions)
 
-df -ih
-# Samma sak men med human-readable format
+# 100% IUse% = kan inte skapa fler filer!
 
-# Om du har slut på inodes:
+# Hitta manga smafiler
 find /tmp -type f | wc -l
-# Räknar antal filer i /tmp
-# Ofta är det temporära filer som tar slut på inodes
-
-find /var/spool -type f -delete
-# VARNING: Raderar alla filer i /var/spool
-# Gör bara detta om du vet vad du gör!
 ```
 
----
+| Problem | Orsak | Losning |
+|---------|-------|---------|
+| IUse% = 100% | For manga filer | Radera filer |
+| Ledigt utrymme finns | Smafiler (cache) | `find ... -delete` |
 
-## Symlinks för deployment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Symlinks är perfekta för zero-downtime deploys:
+## Symlinks for Deployment
+
+```
+Zero-Downtime Deploy:
+┌─────────────────────────────────────────────────────────────┐
+│  /app/releases/v1.0.0/                                      │
+│  /app/releases/v1.1.0/                                      │
+│  /app/current ─────► releases/v1.0.0                        │
+│                                                             │
+│  Deploy ny version:                                         │
+│  ln -sfn /app/releases/v1.1.0 /app/current                 │
+│                                                             │
+│  /app/current ─────► releases/v1.1.0  (atomiskt byte!)     │
+│                                                             │
+│  Rollback:                                                  │
+│  ln -sfn /app/releases/v1.0.0 /app/current                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-# Struktur:
-# /app/releases/v1.0.0/
-# /app/releases/v1.1.0/
-# /app/current -> releases/v1.0.0
-
-# Deploy ny version
+# Atomisk symlink-switch
 ln -sfn /app/releases/v1.1.0 /app/current
-# -s = symbolic link
-# -f = force (ersätt om finns)
-# -n = no-dereference (behandla destination som fil, inte katalog)
-#
-# Nu pekar /app/current på v1.1.0
-# Bytet är atomiskt - ingen downtime!
+# -s = symbolic
+# -f = force (ersatt)
+# -n = no-dereference
 
-# Rollback är enkelt:
+# Rollback pa 1 sekund!
 ln -sfn /app/releases/v1.0.0 /app/current
-# Tillbaka till v1.0.0 på en sekund!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Inode** = filens ID-kort med all metadata, filnamnet är bara en etikett
-2. **Hard link** = extra namn till samma inode, datan finns kvar tills alla namn är borta
-3. **Symlink** = pekare till ett filnamn, blir broken om målet försvinner
-4. **df -i** = kolla inode-användning, 100% = kan inte skapa filer
-5. **ln -sfn** = atomisk symlink-switch, perfekt för deploys
+| Punkt | Forklaring |
+|-------|------------|
+| **Inode** | Filens ID-kort, filnamn ar bara etikett |
+| **Hard link** | Extra namn, data kvar till alla borta |
+| **Symlink** | Pekare till namn, blir broken om mal forsvinner |
+| **df -i** | Kolla inodes, 100% = problem |
+| **ln -sfn** | Atomisk switch for deploys |
+
+**Kom ihag:**
+- Inode = metadata, filnamn = etikett
+- Hard link = samma inode
+- Symlink = pekare till namn
+- `df -i` for inode-kontroll
+- `ln -sfn` for zero-downtime deploys
 """,
         },
         {
@@ -848,218 +957,222 @@ ln -sfn /app/releases/v1.0.0 /app/current
             "xp_reward": 85,
             "content": """# Disk Management
 
-## Varför behöver du kunna detta?
+Nar disken blir full stannar allt. Har lar du dig hitta vad som tar plats, rensa upp, och hantera diskar som ett proffs.
 
-Diskar är kritiska i alla system. Som DevOps hanterar du:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **"Disk full" larm** - måste snabbt hitta vad som tar plats
-- **Nya diskar** som ska partitioneras och formateras
-- **Utökad lagring** när applikationer växer
-- **LVM** för flexibel diskhantering i produktion
+## Varfor viktigt for DevOps?
 
----
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Disk full larm** | Snabbt hitta vad som tar plats |
+| **Nya diskar** | Partitionera och formatera |
+| **Utokad lagring** | Nar applikationer vaxer |
+| **LVM** | Flexibel diskhantering i produktion |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Kolla diskutrymme med df
 
-df (disk free) visar hur mycket utrymme som är ledigt på monterade filsystem.
-
-```bash
-df -h
-# Filesystem      Size  Used Avail Use% Mounted on
-# /dev/sda1        50G   35G   13G  73% /
-# /dev/sdb1       100G   80G   15G  85% /data
-# tmpfs           2.0G  100M  1.9G   5% /tmp
-#
-# -h = human-readable (GB, MB istället för bytes)
-# Size = total storlek
-# Used = använt utrymme
-# Avail = ledigt utrymme
-# Use% = procent använt - när detta når 100% är det problem!
-# Mounted on = var disken är ansluten
-
-df -h /var/log
-# Visar bara filsystemet som /var/log ligger på
-# Snabbt sätt att kolla hur det står till med en specifik katalog
-
-df -i
-# Filesystem      Inodes   IUsed   IFree IUse% Mounted on
-# /dev/sda1      3276800  234567 3042233    8% /
-#
-# -i = inodes istället för bytes
-# Du kan ha ledigt utrymme men slut på inodes!
-# Varje fil kräver en inode
+```
+Disk Usage Overview:
+┌─────────────────────────────────────────────────────────────┐
+│  df -h                                                      │
+├─────────────────────────────────────────────────────────────┤
+│  Filesystem      Size  Used Avail Use% Mounted on          │
+│  /dev/sda1        50G   35G   13G  73% /                   │
+│  /dev/sdb1       100G   80G   15G  85% /data               │
+│  tmpfs           2.0G  100M  1.9G   5% /tmp                │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+| Kommando | Beskrivning |
+|----------|-------------|
+| `df -h` | Diskutrymme (human-readable) |
+| `df -h /var/log` | Specifik katalog |
+| `df -i` | Inode-anvandning |
+
+```bash
+# Oversikt av alla filsystem
+df -h
+
+# Specifik katalog
+df -h /var/log
+
+# Inodes (kan ta slut aven om disk har plats)
+df -i
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Hitta vad som tar plats med du
 
-du (disk usage) visar hur mycket utrymme filer och kataloger tar.
+| Kommando | Beskrivning |
+|----------|-------------|
+| `du -sh /path` | Storlek pa katalog |
+| `du -sh /path/*` | Storlek per underkatalog |
+| `du -sh /* \\| sort -rh` | Storsta forst |
 
 ```bash
+# Storlek pa katalog
 du -sh /var/log
 # 2.5G    /var/log
-#
-# -s = summary (bara totalen, inte varje fil)
-# -h = human-readable
-# Visar att /var/log tar 2.5 GB
 
+# Per underkatalog
 du -sh /var/log/*
 # 1.2G    /var/log/syslog
 # 800M    /var/log/nginx
-# 300M    /var/log/auth.log
-# 200M    /var/log/kern.log
-#
-# Listar storleken på varje fil/katalog i /var/log
-# Nu ser du vad som tar mest plats!
 
+# Hitta storsta katalogerna
 du -sh /* 2>/dev/null | sort -rh | head -10
 # 15G     /var
 # 8.5G    /usr
 # 3.2G    /home
-# 1.1G    /opt
-#
-# Visar de 10 största katalogerna i root
-# sort -rh = sortera numeriskt, störst först
-# 2>/dev/null = tystar "permission denied" errors
-# Perfekt för att snabbt hitta var utrymmet tar slut!
-
-# Gå djupare i den största katalogen:
-du -sh /var/* 2>/dev/null | sort -rh | head -10
-# 12G     /var/log
-# 2G      /var/cache
-# 500M    /var/lib
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Hitta stora filer
 
-```bash
-find / -type f -size +100M 2>/dev/null
-# /var/log/syslog.1
-# /var/log/nginx/access.log
-# /home/john/backup.tar.gz
-#
-# Hittar alla filer större än 100 MB
-# -type f = bara filer (inte kataloger)
-# -size +100M = större än 100 megabyte
-# Perfekt för att hitta oväntade stora filer
+| Kommando | Beskrivning |
+|----------|-------------|
+| `find / -size +100M` | Filer storre an 100MB |
+| `find /var -size +50M -exec ls -lh {} \\;` | Med detaljer |
 
+```bash
+# Hitta filer storre an 100MB
+find / -type f -size +100M 2>/dev/null
+
+# Med storlek och datum
 find /var/log -type f -size +50M -exec ls -lh {} \\;
-# -rw-r--r-- 1 root root 250M Dec 7 10:00 /var/log/syslog
-# -rw-r--r-- 1 root root 180M Dec 7 09:00 /var/log/nginx/access.log
-#
-# -exec ls -lh {} \\; kör ls -lh på varje hittad fil
-# Visar storlek och datum för varje stor fil
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Snabbstädning
+## Snabbstadning
+
+| Kommando | Effekt |
+|----------|--------|
+| `journalctl --vacuum-time=7d` | Rensa loggar aldre an 7 dagar |
+| `apt clean` | Rensa paket-cache |
+| `find ... -delete` | Radera gamla filer |
 
 ```bash
-# Rensa systemloggar (behåll senaste veckan)
+# Rensa systemloggar (behall senaste veckan)
 sudo journalctl --vacuum-time=7d
-# Freed 500M of archived journals
-# journalctl hanterar systemd-loggar
-# --vacuum-time=7d raderar loggar äldre än 7 dagar
 
 # Rensa apt cache (Ubuntu/Debian)
 sudo apt clean
-# Raderar nedladdade paketfiler
-# Kan frigöra flera GB
 
-# Hitta och radera gamla loggar
+# Radera komprimerade loggar aldre an 30 dagar
 find /var/log -name "*.log.*.gz" -mtime +30 -delete
-# Raderar komprimerade loggar äldre än 30 dagar
-# -mtime +30 = modified more than 30 days ago
-# -delete = radera (VARNING: ingen bekräftelse!)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Partitioner och filsystem
 
+```
+Disk Structure:
+┌─────────────────────────────────────────────────────────────┐
+│  lsblk                                                      │
+├─────────────────────────────────────────────────────────────┤
+│  NAME   SIZE TYPE MOUNTPOINT                                │
+│  sda    100G disk                                           │
+│  ├─sda1  99G part /                                        │
+│  └─sda2   1G part [SWAP]                                   │
+│  sdb    500G disk                                           │
+│  └─sdb1 500G part /data                                    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `lsblk` | Lista diskar och partitioner |
+| `fdisk /dev/sdb` | Skapa partition |
+| `mkfs.ext4 /dev/sdb1` | Formatera |
+| `mount /dev/sdb1 /mnt` | Mounta |
+
 ```bash
+# Lista diskar
 lsblk
-# NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-# sda      8:0    0   100G  0 disk
-# ├─sda1   8:1    0    99G  0 part /
-# └─sda2   8:2    0     1G  0 part [SWAP]
-# sdb      8:16   0   500G  0 disk
-#
-# Visar alla diskar och partitioner
-# sda = första disken
-# sda1 = första partitionen på sda
-# sdb har ingen partition ännu
 
-# Skapa partition på ny disk (FÖRSIKTIGT!)
+# Skapa partition (interaktivt)
 sudo fdisk /dev/sdb
-# m = visa hjälp
-# n = ny partition
-# p = primary partition
-# 1 = partition nummer
-# (enter för default start)
-# (enter för default end - hela disken)
-# w = write och avsluta
+# n = ny partition, w = spara
 
-# Formatera med ext4
+# Formatera
 sudo mkfs.ext4 /dev/sdb1
-# Skapar ext4-filsystem på partitionen
-# VARNING: Detta raderar all data!
 
 # Mounta
 sudo mkdir /mnt/newdisk
 sudo mount /dev/sdb1 /mnt/newdisk
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## LVM Basics
 
-LVM (Logical Volume Manager) ger flexibel diskhantering - du kan enkelt utöka volymer utan omstart.
+```
+LVM Architecture:
+┌─────────────────────────────────────────────────────────────┐
+│  Physical Volumes (PV)  ──►  Volume Group (VG)             │
+│  /dev/sda3                   ubuntu-vg                      │
+│  /dev/sdb1                        │                         │
+│                                   ▼                         │
+│                          Logical Volumes (LV)               │
+│                          root-lv, swap-lv                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `pvs` | Lista Physical Volumes |
+| `vgs` | Lista Volume Groups |
+| `lvs` | Lista Logical Volumes |
+| `lvextend -L +50G` | Utoka volym |
+| `resize2fs` | Utoka filsystem |
 
 ```bash
 # Visa LVM-struktur
-sudo pvs
-# PV         VG     Fmt  Attr PSize   PFree
-# /dev/sda3  ubuntu lvm2 a--  <99.00g    0
-#
-# PV = Physical Volume (fysisk disk/partition)
-# VG = Volume Group (grupp av diskar)
+sudo pvs   # Physical Volumes
+sudo vgs   # Volume Groups
+sudo lvs   # Logical Volumes
 
-sudo vgs
-# VG     #PV #LV #SN Attr   VSize   VFree
-# ubuntu   1   2   0 wz--n- <99.00g    0
-#
-# Visar volymgrupper
-
-sudo lvs
-# LV     VG     Attr       LSize   Pool Origin Data%
-# root   ubuntu -wi-ao---- <98.00g
-# swap_1 ubuntu -wi-ao----   1.00g
-#
-# Visar logiska volymer
-
-# Utöka en LVM-volym (efter att ha lagt till disk)
+# Utoka en LVM-volym
 sudo lvextend -L +50G /dev/ubuntu/root
-# Utökar volymen med 50 GB
-
 sudo resize2fs /dev/ubuntu/root
-# Utökar filsystemet till att fylla volymen
-# Fungerar på ext4-filsystem
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| "No space left" | Disk full | `du -sh /* \\| sort -rh` |
+| "No space" men df visar plats | Slut pa inodes | `df -i` |
+| Kan inte mounta | Fel filsystemstyp | `mkfs.ext4` |
+| resize2fs funkar inte | XFS filsystem | `xfs_growfs` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **df -h** = snabb överblick av diskutrymme per filsystem
-2. **du -sh /path/* | sort -rh** = hitta vad som tar plats
-3. **find -size +100M** = hitta stora filer
-4. **journalctl --vacuum-time=7d** = rensa gamla systemloggar
-5. **LVM** = flexibel diskhantering, kan utöka volymer live
+| Punkt | Forklaring |
+|-------|------------|
+| **df -h** | Snabb oversikt per filsystem |
+| **du -sh** | Hitta vad som tar plats |
+| **find -size** | Hitta stora filer |
+| **journalctl --vacuum** | Rensa loggar |
+| **LVM** | Flexibel diskhantering |
+
+**Kom ihag:**
+- `df -h` for oversikt
+- `du -sh /path/* | sort -rh` for att hitta storheter
+- `find -size +100M` for stora filer
+- LVM kan utoka volymer live
+- Rensa loggar regelbundet
 """,
         },
         {
@@ -1070,190 +1183,185 @@ sudo resize2fs /dev/ubuntu/root
             "xp_reward": 80,
             "content": """# Process Lifecycle and States
 
-## Varför behöver du kunna detta?
+Processer ar allt som kor i Linux - fran din terminal till webservrar. Har lar du dig forsta hur de fungerar, vilka tillstand de kan vara i, och hur du hanterar dem.
 
-Processer är allt som körs i Linux. Som DevOps måste du förstå:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Varför en process hänger** och hur du fixar det
-- **Zombie-processer** som tar upp resurser
-- **Processträd** för att förstå vad som startade vad
-- **Resource-användning** för att optimera servrar
+## Varfor viktigt for DevOps?
 
----
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Process hanger** | Forsta och fixa problemet |
+| **Zombie-processer** | Identifiera och stada upp |
+| **Processtrad** | Forsta vad som startade vad |
+| **Optimering** | Resource-anvandning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Processer i Linux
 
-Varje program som körs är en process. Varje process har ett unikt ID (PID) och en förälder (PPID).
+```
+Process Hierarchy:
+┌─────────────────────────────────────────────────────────────┐
+│  systemd (PID 1) ─────────── Forsta processen              │
+│       │                                                     │
+│       ├── sshd ─────────────── SSH-daemon                  │
+│       │     └── bash ────────── Ditt shell                 │
+│       │           └── vim ───── Din editor                 │
+│       │                                                     │
+│       ├── nginx ────────────── Webbserver                  │
+│       │     ├── worker                                     │
+│       │     └── worker                                     │
+│       │                                                     │
+│       └── mysqld ───────────── Databas                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Begrepp | Beskrivning |
+|---------|-------------|
+| **PID** | Process ID (unikt nummer) |
+| **PPID** | Parent PID (foraldern) |
+| **USER** | Vem kor processen |
+| **STAT** | Processtillstand |
 
 ```bash
+# Visa processer
 ps aux | head -5
-# USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-# root         1  0.0  0.1 169936 11896 ?        Ss   Dec06   0:03 /sbin/init
-# root         2  0.0  0.0      0     0 ?        S    Dec06   0:00 [kthreadd]
-# root         3  0.0  0.0      0     0 ?        I<   Dec06   0:00 [rcu_gp]
-#
-# PID = Process ID (unikt nummer)
-# USER = vilken användare som kör processen
-# %CPU = hur mycket CPU processen använder
-# %MEM = hur mycket minne processen använder
-# STAT = processens tillstånd (se nedan)
-# COMMAND = vilket program som körs
 
+# Ditt shells PID
 echo $$
-# 12345
-# $$ är en speciell variabel som visar nuvarande shells PID
-# Användbart i scripts för att skapa unika filnamn
 
+# Foralderns PID
 echo $PPID
-# 12340
-# PPID = Parent Process ID
-# Visar vilken process som startade den här processen
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Process States (STAT-kolumnen)
+## Process States (STAT)
+
+| State | Namn | Beskrivning |
+|-------|------|-------------|
+| `R` | Running | Kor just nu pa CPU |
+| `S` | Sleeping | Vantar pa nago (disk, natverk) |
+| `D` | Uninterruptible | Vantar pa I/O, kan inte avbrytas |
+| `T` | Stopped | Pausad (t.ex. Ctrl+Z) |
+| `Z` | Zombie | Klar men foraldern har inte hamtat |
+
+| Extra | Betydelse |
+|-------|-----------|
+| `s` | Session leader |
+| `l` | Multi-threaded |
+| `+` | I forgrunden |
+| `<` | Hog prioritet |
+| `N` | Lag prioritet |
 
 ```bash
-ps aux | grep -E "^USER|nginx|mysql"
-# USER       PID %CPU %MEM STAT COMMAND
-# root      1234  0.0  0.1 Ss   nginx: master
-# www-data  1235  0.2  0.5 S    nginx: worker
-# mysql     2345  1.5  5.0 Sl   /usr/sbin/mysqld
-
-# Vanliga tillstånd:
-# R = Running (körs just nu på CPU)
-# S = Sleeping (väntar på något, t.ex. disk eller nätverk)
-# D = Uninterruptible sleep (väntar på I/O, kan inte avbrytas)
-# T = Stopped (pausad, t.ex. med Ctrl+Z)
-# Z = Zombie (färdig men föräldern har inte hämtat exit-status)
-
-# Extra bokstäver:
-# s = session leader (t.ex. login shell)
-# l = multi-threaded
-# + = i förgrunden
-# < = hög prioritet
-# N = låg prioritet
+# Se STAT for processer
+ps aux | grep nginx
+# root  1234  0.0  0.1 Ss   nginx: master
+# www   1235  0.2  0.5 S    nginx: worker
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Zombie-processer
 
-En zombie är en process som är klar men vars förälder inte har "hämtat" den ännu. Den tar ingen CPU eller minne, men upptar en plats i processtabellen.
-
-```bash
-ps aux | grep Z
-# USER       PID %CPU %MEM STAT COMMAND
-# john      5678  0.0  0.0 Z    [defunct]
-#
-# Z i STAT-kolumnen = zombie
-# [defunct] visas ibland som COMMAND
-# Zombies kan inte dödas med kill!
-
-# Hitta zombiens förälder
-ps -o ppid= -p 5678
-# 1234
-# PPID 1234 är föräldern som borde städa upp zombien
-
-# Lösning: döda föräldern (eller vänta tills den gör det själv)
-kill 1234
-# När föräldern dör ärver init (PID 1) zombien och städar upp
+```
+Zombie Process:
+┌─────────────────────────────────────────────────────────────┐
+│  En zombie ar en process som ar KLAR men vars foralder     │
+│  inte har "hamtat" den annu.                               │
+│                                                             │
+│  - Tar ingen CPU eller minne                               │
+│  - Upptar plats i processtabellen                          │
+│  - KAN INTE dodas med kill!                                │
+│  - Losning: doda foraldern                                 │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Hitta zombies
+ps aux | grep Z
 
-## Processträd
+# Hitta zombiens foralder
+ps -o ppid= -p 5678
+
+# Doda foraldern (zombien forsvinner)
+kill 1234
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Processtrad
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `pstree` | Visa processtrad |
+| `pstree -p` | Med PID |
+| `pstree -p 1234` | Fran specifik process |
 
 ```bash
+# Visa processtrad
 pstree
 # systemd─┬─sshd───sshd───bash───pstree
 #         ├─nginx─┬─nginx
 #         │       └─nginx
 #         └─mysqld
-#
-# Visar hur processer hänger ihop
-# systemd (PID 1) är föräldern till allt
-# sshd startade en bash som kör pstree
 
+# Med PID
 pstree -p
-# systemd(1)─┬─sshd(1234)───sshd(5678)───bash(5680)───pstree(5690)
-#
-# -p visar PID för varje process
-# Användbart för att hitta vilken process som startade vad
-
-pstree -p 1234
-# Visar trädet under en specifik process
-# Perfekt för att se alla barnprocesser till t.ex. en webserver
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skapa processer
+## Process-information i /proc
 
-```bash
-# Bakgrundsprocess med &
-sleep 60 &
-# [1] 12345
-# Startar sleep i bakgrunden
-# [1] = jobbnummer
-# 12345 = PID
-
-# Visa bakgrundsjobb
-jobs
-# [1]+  Running    sleep 60 &
-# Visar alla jobb i nuvarande shell
-
-# Subshell
-(cd /tmp && ls)
-# Kör kommandon i en subshell
-# cd påverkar inte nuvarande shell
-# Parenteser skapar ny process
-
-# Fork bomb (KÖR ALDRIG I PRODUKTION!)
-# :(){ :|:& };:
-# Klassisk fork bomb som skapar oändligt många processer
-# Kan krascha hela systemet på sekunder
-```
-
----
-
-## Process-information
+| Fil | Innehall |
+|-----|----------|
+| `/proc/PID/status` | Overgripande info |
+| `/proc/PID/fd/` | Oppna filer |
+| `/proc/PID/cmdline` | Startkommando |
+| `/proc/PID/environ` | Miljovariabler |
 
 ```bash
-# Detaljerad info om en process
+# Detaljerad info
 cat /proc/1234/status
-# Name:   nginx
-# State:  S (sleeping)
-# Pid:    1234
-# PPid:   1
-# Uid:    33  33  33  33
-# VmRSS:  12340 kB
-#
-# /proc/PID/ innehåller allt om en process
-# status visar övergripande info
 
+# Oppna filer
 ls /proc/1234/fd/
-# 0  1  2  3  4
-# Visar alla öppna filedescriptors
-# 0 = stdin, 1 = stdout, 2 = stderr
-# 3, 4, ... = andra öppna filer/sockets
 
+# Hur processen startades
 cat /proc/1234/cmdline | tr '\\0' ' '
-# /usr/sbin/nginx -g daemon off;
-# Visar exakt hur processen startades
-# tr ersätter null-tecken med mellanslag för läsbarhet
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Zombies hopar sig | Dalig foralder | Doda foraldern |
+| Process i D-state | Vantar pa disk | Vanta eller reboot |
+| Hogt CPU | Runaway process | `top`, sedan `kill` |
+| Processen kan inte dodas | Kernel-state | `kill -9` eller reboot |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **PID** = unikt process-ID, **PPID** = förälderns ID
-2. **STAT** = processtillstånd (R=running, S=sleeping, Z=zombie)
-3. **Zombies** kan inte dödas - döda föräldern istället
-4. **pstree** = se hur processer hänger ihop
-5. **/proc/PID/** = all info om en specifik process
+| Punkt | Forklaring |
+|-------|------------|
+| **PID/PPID** | Unikt ID och foralder |
+| **STAT** | R=running, S=sleeping, Z=zombie |
+| **Zombies** | Doda foraldern, inte zombien |
+| **pstree** | Se hur processer hanger ihop |
+| **/proc/PID/** | All info om en process |
+
+**Kom ihag:**
+- PID = unikt, PPID = foralder
+- Zombies kan inte dodas - doda foraldern
+- `pstree` visar relationer
+- `/proc/PID/` innehaller allt
 """,
         },
         {
@@ -1264,185 +1372,169 @@ cat /proc/1234/cmdline | tr '\\0' ' '
             "xp_reward": 80,
             "content": """# Foreground vs Background Processes
 
-## Varför behöver du kunna detta?
+Nar du jobbar med Linux-servrar maste du kunna kora langvariga processer utan att blockera terminalen. Har lar du dig skilja pa forgrund och bakgrund.
 
-När du jobbar med Linux-servrar behöver du ofta köra långvariga processer - backups, databasmigrering, byggjobb. Om du kör dem i förgrunden och tappar SSH-anslutningen avbryts allt. Förståelse för förgrund och bakgrund är skillnaden mellan att behöva starta om ett 4-timmars jobb eller låta det köra klart medan du gör annat.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Förgrund och bakgrund
+| Scenario | Problem utan kunskap |
+|----------|---------------------|
+| **SSH tappar anslutning** | Langvarigt jobb avbryts |
+| **Maste gora flera saker** | Terminaln blockerad |
+| **Backup pa natten** | Maste vara inloggad |
 
-Tänk på det som en restaurangkock. Förgrunden är det du aktivt lagar just nu - du står vid spisen och rör i grytan. Bakgrunden är ugnen som jobbar på egen hand medan du gör annat.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-sleep 60
-# Kör i förgrunden - terminalen är blockerad
-# Du kan inte skriva något annat förrän sleep är klar
-# Ctrl+C avbryter kommandot
+## Forgrund vs Bakgrund
 
-sleep 60 &
-# [1] 12345
-# & startar processen i bakgrunden
-# [1] är jobbnumret i ditt shell
-# 12345 är processens PID
-# Terminalen är fri - du kan fortsätta jobba
+```
+Terminal Control:
+┌─────────────────────────────────────────────────────────────┐
+│  FORGRUND                   │  BAKGRUND                    │
+│  ─────────                  │  ─────────                   │
+│  - Blockerar terminalen     │  - Terminal fri              │
+│  - Ctrl+C avbryter          │  - Maste anvanda kill        │
+│  - Direkt output            │  - Output kan ga forlorad    │
+│  - Standard for kommandon   │  - Kraver & eller bg         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Forgrund - terminalen blockeras
+sleep 60
+# Ctrl+C avbryter
 
-## Hantera bakgrundsjobb
+# Bakgrund med &
+sleep 60 &
+# [1] 12345
+# Terminalen fri
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Jobs-kommandot
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `jobs` | Lista alla jobb |
+| `jobs -l` | Med PID |
+| `jobs -p` | Bara PID |
+
+| Symbol | Betydelse |
+|--------|-----------|
+| `+` | Current job (default for fg) |
+| `-` | Previous job |
 
 ```bash
 jobs
 # [1]+  Running    sleep 60 &
 # [2]-  Stopped    vim file.txt
-#
-# Visar alla jobb i nuvarande shell-session
-# + markerar "current job" (default för fg/bg)
-# - markerar "previous job"
-# Running = körs i bakgrunden
-# Stopped = pausad (t.ex. med Ctrl+Z)
-
-jobs -l
-# [1]+ 12345 Running    sleep 60 &
-# [2]- 12346 Stopped    vim file.txt
-#
-# -l visar även PID för varje jobb
-# Användbart om du behöver skicka signaler
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Flytta mellan förgrund och bakgrund
+## Flytta mellan forgrund och bakgrund
+
+| Kommando | Funktion |
+|----------|----------|
+| `Ctrl+Z` | Pausa forgrundsprocess |
+| `fg` | Ta tillbaka till forgrund |
+| `fg %1` | Specifikt jobb till forgrund |
+| `bg` | Fortsatt i bakgrund |
+| `bg %1` | Specifikt jobb i bakgrund |
 
 ```bash
-# Starta något i förgrunden
+# Pausa med Ctrl+Z
 vim file.txt
-# Tryck Ctrl+Z för att pausa
 # [1]+  Stopped    vim file.txt
 
-bg %1
-# [1]+ vim file.txt &
-# bg återupptar jobbet i bakgrunden
-# %1 refererar till jobb nummer 1
-# Fungerar inte för vim (behöver terminal), men bra för scripts
-
+# Tillbaka till forgrund
 fg %1
-# vim öppnas igen i förgrunden
-# fg tar tillbaka ett jobb till förgrunden
-# Nu kan du fortsätta redigera
 
-# Kortform
-fg
-# Tar tillbaka senaste jobbet (markerat med +)
-# Ingen %nummer behövs för current job
+# Eller bakgrund
+bg %1
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Hålla processer vid liv efter logout
+## Overleva logout med nohup
 
-Problemet med bakgrundsprocesser är att de dör när du loggar ut. Din SSH-session äger processen, och när sessionen stängs skickas SIGHUP till alla barnprocesser.
-
-```bash
-nohup ./long_running_script.sh &
-# nohup: ignoring input and appending output to 'nohup.out'
-# [1] 12345
-#
-# nohup = "no hangup"
-# Processen ignorerar SIGHUP-signalen
-# Output sparas automatiskt i nohup.out
-# Processen överlever även om du stänger terminalen
-
-nohup ./backup.sh > /var/log/backup.log 2>&1 &
-# Samma princip men med egen loggfil
-# 2>&1 skickar stderr till samma fil som stdout
-# Nu loggas allt till /var/log/backup.log
-```
-
----
-
-## disown - ta bort från jobbkontroll
-
-Om du glömde nohup kan du rädda situationen med disown:
+| Problem | Losning |
+|---------|---------|
+| Process dor vid logout | `nohup` |
+| Output forsvinner | Redirect till fil |
+| Glomde nohup | `disown` |
 
 ```bash
+# Overlev logout
+nohup ./backup.sh &
+
+# Med loggfil
+nohup ./backup.sh > backup.log 2>&1 &
+
+# Glomde nohup? Anvand disown
 ./long_job.sh &
-# [1] 12345
-# Ups, glömde nohup!
-
 disown %1
-# Tar bort jobbet från shell:ets jobbkontroll
-# Nu skickas inte SIGHUP när du loggar ut
-# Jobbet är fortfarande igång men syns inte i jobs
-
-disown -h %1
-# -h markerar bara att SIGHUP ska ignoreras
-# Jobbet syns fortfarande i jobs
-# Säkrare alternativ - du behåller kontrollen
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Praktiskt exempel: Deploy-script
+## Screen/tmux for langvariga jobb
+
+```
+Session Management:
+┌─────────────────────────────────────────────────────────────┐
+│  screen -S deploy      Skapa session                       │
+│  Ctrl+A, D             Detach (koppla loss)                │
+│  screen -ls            Lista sessioner                     │
+│  screen -r deploy      Ateranslut                          │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-# Dåligt sätt - dör om SSH tappar anslutning
+# Starta session
+screen -S deploy
+
+# Kor kommandon, sen Ctrl+A, D
+
+# Ateranslut senare
+screen -r deploy
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktiskt exempel
+
+```bash
+# Dalligt - dor vid disconnect
 ./deploy.sh
 
-# Bättre - körs i bakgrunden
+# Bra - bakgrund
 ./deploy.sh &
 
-# Bäst - överlever logout och loggar allt
-nohup ./deploy.sh > /var/log/deploy-$(date +%Y%m%d).log 2>&1 &
-# date +%Y%m%d ger dagens datum (20250615)
-# All output går till en datummärkt loggfil
-# Processen överlever även om du tappar anslutningen
-
-# Kolla status senare
-tail -f /var/log/deploy-20250615.log
-# -f följer filen i realtid
-# Ctrl+C avslutar tail, inte deploy-scriptet
+# Bast - overlever logout med logg
+nohup ./deploy.sh > /var/log/deploy.log 2>&1 &
 ```
 
----
-
-## Screen och tmux för riktiga jobb
-
-För långvariga interaktiva jobb är screen eller tmux bättre än nohup:
-
-```bash
-# Starta en screen-session
-screen -S deploy
-# Skapar en session med namn "deploy"
-# Nu är du inne i screen
-
-# Kör dina kommandon
-./deploy.sh
-
-# Koppla loss sessionen (behåll körande)
-# Tryck Ctrl+A, sedan D
-
-# Lista sessioner
-screen -ls
-# There is a screen on:
-#     12345.deploy (Detached)
-
-# Återanslut till sessionen
-screen -r deploy
-# Nu är du tillbaka i samma session
-# Fungerar även från en annan dator!
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **&** = starta process i bakgrunden
-2. **Ctrl+Z** = pausa förgrundsprocess
-3. **jobs** = lista bakgrundsjobb
-4. **fg/bg** = flytta jobb mellan förgrund/bakgrund
-5. **nohup** = överlev logout
+| Punkt | Forklaring |
+|-------|------------|
+| **&** | Starta i bakgrund |
+| **Ctrl+Z** | Pausa process |
+| **jobs** | Lista bakgrundsjobb |
+| **fg/bg** | Flytta mellan forgrund/bakgrund |
+| **nohup** | Overlev logout |
+| **screen** | Battre for interaktiva jobb |
+
+**Kom ihag:**
+- & startar direkt i bakgrund
+- Ctrl+Z pausar, bg fortsatter
+- nohup for langvariga jobb
+- screen/tmux for interaktiva sessioner
 """,
         },
         {
@@ -1453,172 +1545,155 @@ screen -r deploy
             "xp_reward": 75,
             "content": """# Job Control (jobs, fg, bg, nohup)
 
-## Varför behöver du kunna detta?
+Jobbkontroll ar konsten att hantera flera processer fran en terminal - pausa, ateruppta, och se till att de overlever aven om du tappar anslutningen.
 
-Som DevOps-ingenjör kommer du ofta att köra långvariga kommandon - databasexporter, logganalyser, backup-skript. Du måste kunna pausa dem, flytta dem till bakgrunden, och se till att de överlever även om du tappar din SSH-anslutning.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
+
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Langvarig backup** | Kor i bakgrund |
+| **SSH tappar** | Jobb maste overleva |
+| **Flera jobb** | Parallellt arbete |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Jobs-kommandot
 
-Tänk på det som en lista över allt du har igång i din terminal. Precis som du kan ha flera flikar öppna i webbläsaren kan du ha flera processer körande i samma terminal.
+```
+Job Notation:
+┌─────────────────────────────────────────────────────────────┐
+│  %1    Jobb nummer 1                                       │
+│  %+    Current job (default)                               │
+│  %-    Previous job                                        │
+│  %%    Samma som %+                                        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `jobs` | Lista alla jobb |
+| `jobs -l` | Med PID |
+| `jobs -p` | Bara PID |
 
 ```bash
 jobs
 # [1]+  Running    ./backup.sh &
 # [2]-  Stopped    vim config.txt
-#
-# [1] och [2] är jobbnummer - används med fg och bg
-# + markerar "current job" (det fg tar om du inte anger nummer)
-# - markerar "previous job"
-# Running = körs i bakgrunden
-# Stopped = pausad med Ctrl+Z
-
-jobs -l
-# [1]+ 12345 Running    ./backup.sh &
-# [2]- 12346 Stopped    vim config.txt
-#
-# -l lägger till PID för varje jobb
-# PID:et behövs om du vill skicka signaler direkt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Pausa och återuppta processer
+## Pausa och ateruppta
+
+| Aktion | Kommando |
+|--------|----------|
+| Pausa | `Ctrl+Z` |
+| Bakgrund | `bg %1` |
+| Forgrund | `fg %1` |
+| Starta i bakgrund | `kommando &` |
 
 ```bash
-# Starta en process i förgrunden
-./long_script.sh
-# Processen körs, terminalen är blockerad
+# Pausa korande process
+./script.sh
+# Ctrl+Z
+# [1]+  Stopped    ./script.sh
 
-# Tryck Ctrl+Z för att pausa
-# [1]+  Stopped    ./long_script.sh
-# Processen fryses mitt i allt den gör
-# Som att trycka paus på en video
-
-# Se pausade jobb
-jobs
-# [1]+  Stopped    ./long_script.sh
-
-# Återuppta i bakgrunden
+# Fortsatt i bakgrund
 bg %1
-# [1]+ ./long_script.sh &
-# Processen fortsätter köra
-# Du får tillbaka terminalen
 
-# Eller återuppta i förgrunden
+# Eller forgrund
 fg %1
-# Processen tar över terminalen igen
-# Du ser outputen i realtid
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Starta direkt i bakgrunden
+## Starta flera jobb parallellt
 
 ```bash
-./backup.sh &
-# [1] 12345
-# & efter kommandot startar det i bakgrunden
-# [1] = jobbnummer
-# 12345 = processens PID
-
-# Flera jobb samtidigt
+# Tre jobb samtidigt
 ./job1.sh &
 ./job2.sh &
 ./job3.sh &
-# Nu körs tre jobb parallellt
-# Alla tre arbetar samtidigt
 
+# Kontrollera
 jobs
 # [1]   Running    ./job1.sh &
 # [2]-  Running    ./job2.sh &
 # [3]+  Running    ./job3.sh &
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## nohup - överlev avbruten anslutning
+## nohup - overlev logout
 
-Det stora problemet med bakgrundsjobb är att de dör om du loggar ut eller tappar SSH-anslutningen. Signalen SIGHUP skickas till alla processer som tillhör din session.
+| Kommando | Funktion |
+|----------|----------|
+| `nohup cmd &` | Ignorera SIGHUP |
+| `nohup cmd > log 2>&1 &` | Med loggfil |
 
 ```bash
+# Basic nohup
 nohup ./backup.sh &
-# [1] 12345
-# nohup: ignoring input and appending output to 'nohup.out'
-#
-# nohup betyder "no hangup"
-# Processen ignorerar SIGHUP
-# Output skrivs till nohup.out om du inte anger annat
+# Output till nohup.out
 
 # Med egen loggfil
-nohup ./backup.sh > /var/log/backup.log 2>&1 &
-# > /var/log/backup.log skickar stdout till loggfilen
-# 2>&1 skickar stderr till samma ställe
-# Nu loggas allt snyggt
-
-# Verifiera att processen körs
-ps aux | grep backup.sh
-# Processen syns även efter du loggat ut och in igen
+nohup ./backup.sh > backup.log 2>&1 &
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## disown - rädda glömda jobb
+## disown - radda glomda jobb
 
-Ibland startar du ett jobb utan nohup och inser sedan att du behöver logga ut:
+| Kommando | Funktion |
+|----------|----------|
+| `disown %1` | Ta bort fran shell |
+| `disown -h %1` | Markera att ignorera SIGHUP |
 
 ```bash
-./important_job.sh &
-# [1] 12345
-# Ops, glömde nohup!
-
+# Glomde nohup?
+./long_job.sh &
 disown %1
-# Jobbet tas bort från shell:ets kontroll
-# Nu skickas inte SIGHUP när du loggar ut
-# Men jobbet syns inte längre i jobs
-
-# Alternativ: behåll i jobs men ignorera SIGHUP
-disown -h %1
-# -h = håll jobbet i listan
-# Men markera att det ska ignorera SIGHUP
-# Bästa av båda världar
+# Nu overlever den logout
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Praktiskt exempel: Databasmigrering
+## Praktiskt exempel
 
 ```bash
-# Starta migreringsscript
-./migrate_database.sh
-# Märker att det tar timmar...
-# Tryck Ctrl+Z
-# [1]+  Stopped    ./migrate_database.sh
+# Starta migrering
+./migrate.sh
+# Tar lang tid... Ctrl+Z
 
-# Flytta till bakgrunden
+# Flytta till bakgrund
 bg %1
-# [1]+ ./migrate_database.sh &
-# Nu körs migreringen i bakgrunden
 
-# Se till att den överlever logout
+# Se till att overleva logout
 disown -h %1
-# Nu kan du logga ut tryggt
 
-# Kolla statusen senare från var som helst
+# Kolla senare
 ps aux | grep migrate
-# Se att processen fortfarande körs
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Ctrl+Z** = pausa förgrundsprocess
-2. **bg %n** = fortsätt pausat jobb i bakgrunden
-3. **fg %n** = ta tillbaka jobb till förgrunden
-4. **nohup** = starta process som överlever logout
-5. **disown** = rädda redan startade jobb
+| Punkt | Forklaring |
+|-------|------------|
+| **Ctrl+Z** | Pausa process |
+| **bg/fg** | Flytta mellan bakgrund/forgrund |
+| **nohup** | Overlev logout |
+| **disown** | Radda glomda jobb |
+| **%n** | Referera till jobb nummer n |
+
+**Kom ihag:**
+- Ctrl+Z pausar, bg fortsatter
+- nohup for nya jobb, disown for gloemda
+- jobs visar alla jobb i sessionen
+- PID och jobbnummer ar olika saker
 """,
         },
         {
@@ -1629,210 +1704,142 @@ ps aux | grep migrate
             "xp_reward": 80,
             "content": """# Signals (SIGTERM, SIGKILL, SIGHUP)
 
-## Varför behöver du kunna detta?
+Signaler ar hur Linux kommunicerar med processer - fran Ctrl+C till graceful shutdown. Har lar du dig anvanda dem ratt for att undvika dataforlust.
 
-Signaler är hur Linux kommunicerar med processer. När du trycker Ctrl+C, startar om en tjänst, eller stänger av en server - allt sker via signaler. Som DevOps måste du veta skillnaden mellan att be en process snällt att avsluta och att tvångsstänga den, annars riskerar du dataförlust och korrupta filer.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Vad är signaler?
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Graceful shutdown** | Lat process stada upp |
+| **Reload config** | Utan omstart |
+| **Hanterad process** | Doda korrekt |
 
-Tänk på det som meddelanden till processer. En del meddelanden är förfrågningar som processen kan ignorera, andra är tvingande order. Precis som skillnaden mellan att be någon gå hem och att fysiskt lyfta ut dem.
-
-```bash
-kill -l
-# Lista alla tillgängliga signaler
-#  1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL
-#  9) SIGKILL     15) SIGTERM     18) SIGCONT     19) SIGSTOP
-# ...och många fler
-
-# Signaler har både nummer och namn
-# kill -15 = kill -SIGTERM = kill -TERM
-# Alla tre gör samma sak
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## De viktigaste signalerna
 
+| Signal | Nummer | Beskrivning | Kan ignoreras? |
+|--------|--------|-------------|----------------|
+| SIGTERM | 15 | Be snallt avsluta | Ja |
+| SIGKILL | 9 | Tvangsavsluta | Nej |
+| SIGINT | 2 | Avbryt (Ctrl+C) | Ja |
+| SIGHUP | 1 | Terminal stangdes / reload | Ja |
+| SIGSTOP | 19 | Pausa process | Nej |
+| SIGCONT | 18 | Fortsatt process | Ja |
+
 ```bash
-# SIGTERM (15) - "Var snäll och avsluta"
-kill 12345
-# Samma som kill -15 12345
-# Processen får chansen att städa upp
-# Stänga databasanslutningar, spara filer
-# Det civiliserade sättet att avsluta
-
-# SIGKILL (9) - "Dö. Nu."
-kill -9 12345
-# Processen kan INTE ignorera detta
-# Ingen cleanup, ingen nåd
-# Använd bara som sista utväg
-# Kan lämna temporära filer, låsta resurser
-
-# SIGINT (2) - "Avbryt det du gör"
-# Samma som Ctrl+C
-kill -2 12345
-# Processen får signal att avbryta
-# Brukar leda till exit
-
-# SIGHUP (1) - "Terminalen stängdes"
-kill -1 12345
-# Skickas automatiskt när terminal stängs
-# Många daemoner läser om config vid SIGHUP
-# T.ex. nginx reload sker via SIGHUP
+# Lista alla signaler
+kill -l
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Skillnaden mellan SIGTERM och SIGKILL
+## SIGTERM vs SIGKILL
 
-```bash
-# SIGTERM - rätt sätt
-kill 12345
-# Processen får besked: "Snälla avsluta"
-# Processen kan:
-#   - Spara data till disk
-#   - Stänga databaskopplingar
-#   - Skriva loggmeddelande
-#   - Ta bort temporära filer
-# Sedan avslutar den frivilligt
-
-# SIGKILL - nödläge
-kill -9 12345
-# Kerneln terminerar processen omedelbart
-# Processen får ingen chans att göra något
-# Potentiella problem:
-#   - Osparat data försvinner
-#   - Låsta filer kan förbli låsta
-#   - Temporära filer städas inte
-#   - Databaskorruption möjlig
+```
+Signal Comparison:
+┌─────────────────────────────────────────────────────────────┐
+│  SIGTERM (15)               │  SIGKILL (9)                 │
+│  ────────────               │  ────────────                │
+│  - "Snalla avsluta"         │  - "Do. Nu."                 │
+│  - Process far stada        │  - Ingen cleanup             │
+│  - Kan ignoreras            │  - Kan INTE ignoreras        │
+│  - Forst val                │  - Sista utväg               │
+│  - Sparar data              │  - Risk for dataforlust      │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+```bash
+# Ratt ordning:
+kill 12345          # SIGTERM forst
+sleep 5             # Vanta
+kill -9 12345       # SIGKILL om nodvandigt
+```
 
-## kill, killall och pkill
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## kill, killall, pkill
+
+| Kommando | Anvandning |
+|----------|------------|
+| `kill PID` | Doda via PID |
+| `kill -9 PID` | Tvangsavsluta |
+| `killall namn` | Doda alla med namn |
+| `pkill -f monster` | Doda via monster |
+| `pgrep namn` | Hitta PID |
 
 ```bash
-# kill - döda via PID
+# Via PID
 kill 12345
-# Skickar SIGTERM till process 12345
 
-# killall - döda via namn
+# Via namn
 killall nginx
-# Dödar ALLA processer som heter "nginx"
-# Var försiktig - kan träffa fel processer!
 
-# pkill - döda via mönster
+# Via monster i kommandorad
 pkill -f "python backup.py"
-# -f matchar mot hela kommandoraden
-# Mer flexibelt än killall
 
-# Hitta PID först
+# Hitta forst
 pgrep nginx
-# 12345
-# 12346
-# Visar PID för processer som matchar
-
-pgrep -f "python backup"
-# 23456
-# -f söker i hela kommandoraden
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Graceful shutdown
+## SIGHUP for reload
 
-```bash
-# Steg 1: Be snällt
-kill 12345
-# Vänta några sekunder
-
-# Steg 2: Kolla om den lever
-ps aux | grep 12345
-# Om den fortfarande finns...
-
-# Steg 3: Tvinga (om nödvändigt)
-kill -9 12345
-
-# Som script:
-PID=12345
-kill $PID
-# Vänta max 10 sekunder på graceful shutdown
-for i in {1..10}; do
-    if ! ps -p $PID > /dev/null 2>&1; then
-        echo "Process avslutad gracefully"
-        exit 0
-    fi
-    sleep 1
-done
-# Om fortfarande vid liv, tvinga
-kill -9 $PID
-echo "Process tvångsstängd"
-```
-
----
-
-## SIGHUP för reload
-
-Många tjänster använder SIGHUP för att läsa om sin konfiguration utan att starta om:
+| Tjanst | Effekt av SIGHUP |
+|--------|------------------|
+| nginx | Laser om config |
+| sshd | Laser om config |
+| apache | Graceful restart |
 
 ```bash
-# Nginx reload via signal
+# Reload nginx
 kill -HUP $(cat /var/run/nginx.pid)
-# Nginx läser om nginx.conf
-# Inga aktiva anslutningar avbryts
-# Samma som: nginx -s reload
 
-# SSH daemon
-kill -HUP $(pgrep sshd)
-# Läser om sshd_config
-# Befintliga SSH-sessioner påverkas inte
-
-# Systemd-sättet (rekommenderat)
+# Eller via systemd
 sudo systemctl reload nginx
-# Gör samma sak men mer robust
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Trap i scripts
-
-Du kan fånga signaler i dina egna scripts:
+## trap i scripts
 
 ```bash
 #!/bin/bash
-# cleanup.sh
-
 cleanup() {
-    echo "Städar upp temporära filer..."
+    echo "Stadar upp..."
     rm -f /tmp/myapp_*
-    echo "Klar!"
     exit 0
 }
 
-# Fånga SIGTERM och SIGINT
+# Fanga signaler
 trap cleanup SIGTERM SIGINT
 
-echo "Script kör... (Ctrl+C för att avsluta)"
+# Script logik har...
 while true; do
-    # Gör arbete här
     sleep 1
 done
-
-# Nu när scriptet får Ctrl+C eller kill
-# körs cleanup-funktionen först
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **SIGTERM (kill)** = be snällt, låt processen städa
-2. **SIGKILL (kill -9)** = tvinga, sista utväg
-3. **SIGHUP** = läs om config (reload)
-4. **Ctrl+C** = SIGINT
-5. **Alltid SIGTERM först**, SIGKILL bara om nödvändigt
+| Punkt | Forklaring |
+|-------|------------|
+| **SIGTERM** | Be snallt, lat stada |
+| **SIGKILL** | Tvinga, sista utvag |
+| **SIGHUP** | Reload config |
+| **Ctrl+C** | Skickar SIGINT |
+| **trap** | Fanga signaler i script |
+
+**Kom ihag:**
+- Alltid SIGTERM forst
+- SIGKILL bara om nodvandigt
+- SIGHUP for reload utan omstart
+- Anvand trap for graceful cleanup
 """,
         },
         {
@@ -1843,194 +1850,154 @@ done
             "xp_reward": 80,
             "content": """# Process Monitoring (ps, top, htop)
 
-## Varför behöver du kunna detta?
+Nar servern blir langsam ar processovervakning ditt forsta verktyg. Har lar du dig identifiera vilken process som ater CPU eller minne.
 
-När en server blir långsam eller slutar svara är processövervakning ditt första diagnostikverktyg. Du måste kunna identifiera vilken process som äter all CPU, vilket program som läcker minne, och vad som blockerar din databas.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## ps - ögonblicksbild av processer
+| Scenario | Verktyg |
+|----------|---------|
+| **Hog CPU** | top, htop |
+| **Minneslacka** | ps --sort=-%mem |
+| **Port upptagen** | lsof -i :port |
+| **Hitta PID** | pgrep |
 
-ps visar processer vid ett specifikt ögonblick, som en stillbild. Det är perfekt för att lista vad som körs och filtrera med grep.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ps - ogonblicksbild
+
+| Flagga | Betydelse |
+|--------|-----------|
+| `a` | Alla anvandarnas processer |
+| `u` | User-format |
+| `x` | Aven utan terminal |
+| `--sort=-cpu` | Sortera pa CPU |
+| `--sort=-mem` | Sortera pa minne |
+
+| Kolumn | Betydelse |
+|--------|-----------|
+| PID | Process ID |
+| %CPU | CPU-anvandning |
+| %MEM | Minnesanvandning |
+| RSS | Fysiskt minne |
+| STAT | Tillstand |
 
 ```bash
-ps aux
-# USER       PID %CPU %MEM    VSZ   RSS TTY STAT START   TIME COMMAND
-# root         1  0.0  0.1 169936 11896 ?   Ss   Dec06   0:03 /sbin/init
-# postgres  1234  2.3  5.0 421532 51200 ?   Ssl  10:30   1:23 postgres
-# nginx     2345  0.1  0.2  98765  2048 ?   S    10:30   0:05 nginx: worker
-#
-# a = alla användares processer
-# u = user-format med mer detaljer
-# x = även processer utan terminal
-
-# Viktiga kolumner:
-# PID = process ID
-# %CPU = CPU-användning just nu
-# %MEM = minnesanvändning
-# VSZ = virtuellt minne (kan vara stort, oroa dig inte)
-# RSS = faktiskt fysiskt minne (detta är vad som räknas)
-# STAT = status (S=sleeping, R=running, Z=zombie)
-# TIME = total CPU-tid sedan start
-
+ps aux | head -5
 ps aux | grep nginx
-# Filtrera på processnamn
-# Visar bara nginx-processer
-# Inkluderar även grep-kommandot självt
-
-ps aux | grep "[n]ginx"
-# Fint trick - [n] matchar inte grep-kommandot
-# Så du slipper se "grep nginx" i outputen
+ps aux --sort=-%mem | head -10
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## top - realtidsövervakning
+## top - realtidsovervakning
+
+```
+Top Interface:
+┌─────────────────────────────────────────────────────────────┐
+│  load average: 0.52, 0.48, 0.45                            │
+│  ──────────────────────────                                │
+│  1 min  5 min  15 min                                      │
+│  Under antal CPU-karnor = OK                               │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Tangent | Funktion |
+|---------|----------|
+| `M` | Sortera pa minne |
+| `P` | Sortera pa CPU |
+| `k` | Doda process |
+| `1` | Visa alla CPU-karnor |
+| `q` | Avsluta |
 
 ```bash
 top
-# top visar processer i realtid, uppdateras varannan sekund
-# Som att titta på aktivitetshanteraren
-#
-# top - 14:23:45 up 5 days,  3:12,  2 users,  load average: 0.52, 0.48, 0.45
-# Tasks: 234 total,   1 running, 232 sleeping,   0 stopped,   1 zombie
-# %Cpu(s):  5.2 us,  2.1 sy,  0.0 ni, 92.3 id,  0.3 wa,  0.0 hi,  0.1 si
-# MiB Mem :  16000.0 total,   4523.2 free,   8234.1 used,   3242.7 buff/cache
-#
-# load average: 0.52, 0.48, 0.45
-# = belastning senaste 1, 5, 15 minuter
-# Under antal CPU-kärnor = okej
-# Över = överlast
-
-# Tangenter i top:
-# M = sortera efter minne
-# P = sortera efter CPU
-# k = döda process (frågar om PID)
-# q = avsluta
-# 1 = visa alla CPU-kärnor separat
-# h = hjälp
+top -bn1 | head -20  # Batch mode for scripts
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## htop - modern processövervakning
+## htop - modern overvakning
+
+| Funktion | Tangent |
+|----------|---------|
+| Tradvy | `F5` |
+| Doda process | `F9` |
+| Sok | `F3` |
+| Filter | `F4` |
 
 ```bash
-htop
-# htop är top med färger och mus-stöd
-# Mycket lättare att läsa
-# Visar CPU och minne som grafer
-#
-# Fördelar över top:
-# - Färgkodning
-# - Kan scrolla horisontellt
-# - Visar hela kommandorader
-# - Träd-vy (F5)
-# - Enklare att döda processer (F9)
-# - Sök med F3
-# - Filter med F4
-
-# Installera om det saknas
+# Installera
 sudo apt install htop
-# eller
-brew install htop
 
-# Kör för specifik användare
+# Kor
+htop
+
+# For specifik anvandare
 htop -u www-data
-# Visar bara processer för www-data
-# Bra för att se vad en tjänst gör
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Hitta processer
+## pgrep och lsof
+
+| Kommando | Funktion |
+|----------|----------|
+| `pgrep namn` | Hitta PID for process |
+| `pgrep -f monster` | Sok i kommandorad |
+| `lsof -i :port` | Vad anvander porten? |
+| `lsof -p PID` | Vad har processen oppet? |
 
 ```bash
+# Hitta nginx PID
 pgrep nginx
-# 1234
-# 1235
-# pgrep hittar PID för processer som matchar
-# Enklare än ps aux | grep
 
-pgrep -l nginx
-# 1234 nginx
-# 1235 nginx
-# -l visar även processnamn
-
-pgrep -f "python backup.py"
-# 5678
-# -f söker i hela kommandoraden
-# Hittar "python backup.py" även om processnamnet bara är "python"
-
-pidof nginx
-# 1234 1235
-# Liknande men alla PID på en rad
-# Användbart i scripts
-```
-
----
-
-## lsof - öppna filer och portar
-
-```bash
+# Vem lyssnar pa port 80?
 lsof -i :80
-# COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-# nginx    1234   root    6u  IPv4  12345      0t0  TCP *:http (LISTEN)
-# nginx    1235   www-data 6u  IPv4  12345      0t0  TCP *:http (LISTEN)
-#
-# Visar vad som lyssnar på port 80
-# Perfekt för "address already in use" fel
 
-lsof -i :3000
-# Kolla vilken process som använder port 3000
-# Vanligt problem: app startar inte för porten är upptagen
-
+# Vad har process 1234 oppet?
 lsof -p 1234
-# Visa alla filer öppna av process 1234
-# Inkluderar nätverksanslutningar, loggfiler, etc.
-
-lsof -u postgres
-# Visa allt som postgres-användaren har öppet
-# Bra för att förstå vad en tjänst gör
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Praktiskt exempel: Felsök långsam server
+## Felsokningsworkflow
 
 ```bash
-# Steg 1: Kolla load
+# 1. Kolla load
 uptime
-# 14:23:45 up 5 days, load average: 8.52, 7.48, 6.45
-# Load över antal kärnor = problem!
 
-# Steg 2: Hitta vad som äter CPU
+# 2. Hitta CPU-slukare
 top -bn1 | head -20
-# -b = batch mode (för scripts)
-# -n1 = bara en iteration
-# Kolla vilken process har högst %CPU
 
-# Steg 3: Kolla minne
+# 3. Kolla minne
 free -h
-#               total        used        free      shared  buff/cache   available
-# Mem:           16Gi       14Gi       500Mi       256Mi        1.5Gi        1.2Gi
-# Om "available" är lågt = minnesproblem
 
-# Steg 4: Hitta minnesslukare
+# 4. Hitta minnesslukare
 ps aux --sort=-%mem | head -10
-# Sorterar efter minne, högst först
-# --sort=-%cpu för CPU istället
+
+# 5. Kolla specifik port
+lsof -i :3000
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **ps aux** = lista alla processer (ögonblicksbild)
-2. **top/htop** = realtidsövervakning
-3. **pgrep** = hitta PID snabbt
-4. **lsof -i :port** = vad använder porten?
-5. **load average** = under antal kärnor är okej
+| Punkt | Forklaring |
+|-------|------------|
+| **ps aux** | Ogonblicksbild av processer |
+| **top/htop** | Realtidsovervakning |
+| **pgrep** | Hitta PID snabbt |
+| **lsof** | Oppna filer och portar |
+| **load average** | Under antal karnor = OK |
+
+**Kom ihag:**
+- ps for ogonblicksbild, top for realtid
+- htop ar lattare att anvanda
+- lsof -i :port for "address in use"
+- load average under antal karnor ar bra
 """,
         },
         {
@@ -2041,217 +2008,140 @@ ps aux --sort=-%mem | head -10
             "xp_reward": 85,
             "content": """# Systemd Architecture
 
-## Varför behöver du kunna detta?
+Systemd ar hjartat i moderna Linux - det ar PID 1 som startar och hanterar alla tjanster. Har lar du dig forsta hur det fungerar.
 
-Systemd är hjärtat i moderna Linux-system. Det är processen som startar först (PID 1) och ansvarar för att starta alla andra tjänster. Som DevOps måste du förstå hur systemd fungerar för att kunna felsöka startproblem, konfigurera tjänster rätt, och förstå varför saker ibland inte fungerar som förväntat.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Vad är systemd?
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Tjanst startar inte** | Forsta dependencies |
+| **Automatisk omstart** | Konfigurera korrekt |
+| **Boot-ordning** | Hantera beroenden |
 
-Tänk på det som en projektledare som ansvarar för att koordinera alla arbetare (tjänster) på en byggarbetsplats. Projektledaren vet vilka som måste komma först, vilka som är beroende av varandra, och ser till att alla startar i rätt ordning.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Systemd oversikt
+
+```
+Systemd Hierarchy:
+┌─────────────────────────────────────────────────────────────┐
+│  systemd (PID 1)                                           │
+│       │                                                     │
+│       ├── service units ────── nginx, postgres, etc        │
+│       ├── socket units ─────── aktivering via socket       │
+│       ├── timer units ──────── schemalagda jobb            │
+│       ├── target units ─────── grupper (multi-user)        │
+│       └── mount units ──────── filsystem                   │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
+# Verifiera PID 1
 ps -p 1
-# PID TTY      TIME CMD
-#   1 ?        00:00:03 systemd
-#
-# PID 1 är alltid den första processen
-# På moderna Linux är detta systemd
-# Alla andra processer är barn eller barnbarn till denna
-
-pstree -p 1 | head -20
-# systemd(1)─┬─agetty(456)
-#            ├─cron(789)
-#            ├─nginx(1234)─┬─nginx(1235)
-#            │             └─nginx(1236)
-#            └─sshd(2345)───sshd(3456)───bash(3457)
-#
-# Visar hur alla processer härstammar från systemd
-# Om en tjänst kraschar kan systemd starta om den
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Units - systemds byggstenar
+## Unit-typer
 
-Systemd hanterar allt som "units". Det finns olika typer beroende på vad de gör:
+| Typ | Anvandning |
+|-----|------------|
+| `service` | Tjanster (nginx, postgres) |
+| `socket` | Aktivering via socket |
+| `timer` | Schemalagda jobb |
+| `target` | Grupper av units |
+| `mount` | Filsystem |
+| `path` | Overvaka filer |
 
 ```bash
-systemctl list-units --type=help
-# Available unit types:
-# service  - Tjänster/daemoner (nginx, postgresql)
-# socket   - Nätverkssockets
-# target   - Grupper av units (multi-user.target)
-# timer    - Schemalagda jobb (som cron)
-# mount    - Filsystem att mounta
-# device   - Hårdvaruenheter
-# path     - Övervaka filer/kataloger
-
+# Lista services
 systemctl list-units --type=service --state=running
-# UNIT                    LOAD   ACTIVE SUB     DESCRIPTION
-# cron.service            loaded active running Regular background program processing daemon
-# nginx.service           loaded active running A high performance web server
-# postgresql.service      loaded active running PostgreSQL RDBMS
-# ssh.service             loaded active running OpenBSD Secure Shell server
-#
-# Visar alla körande tjänster
-# --state= kan vara running, failed, inactive
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Var finns unit-filer?
+## Unit-filer - var finns de?
+
+| Sokväg | Anvandning |
+|--------|------------|
+| `/lib/systemd/system/` | Paketinstallerade (ror ej) |
+| `/etc/systemd/system/` | Dina egna |
+| `/run/systemd/system/` | Runtime (temporara) |
 
 ```bash
-# Systemets unit-filer (paketinstallerade)
-ls /lib/systemd/system/*.service | head -5
-# /lib/systemd/system/cron.service
-# /lib/systemd/system/nginx.service
-# /lib/systemd/system/ssh.service
-# Rör INTE dessa - de skrivs över vid uppgradering
-
-# Administratörens unit-filer (dina egna)
-ls /etc/systemd/system/*.service 2>/dev/null
-# /etc/systemd/system/myapp.service
-# Här lägger du egna tjänster
-# Har prioritet över /lib-versioner
-
-# Runtime units (skapas dynamiskt)
-ls /run/systemd/system/
-# Skapas och försvinner vid körning
-# Sällan något du behöver röra
-
-# Se var en specifik unit kommer från
-systemctl show nginx.service --property=FragmentPath
-# FragmentPath=/lib/systemd/system/nginx.service
+# Hitta var unit kommer fran
+systemctl show nginx --property=FragmentPath
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Dependencies och ordning
+## Dependencies
+
+| Direktiv | Betydelse |
+|----------|-----------|
+| `After=` | Starta efter |
+| `Before=` | Starta fore |
+| `Requires=` | Hard dependency |
+| `Wants=` | Mjuk dependency |
 
 ```bash
-# Vad beror nginx på?
-systemctl list-dependencies nginx.service
-# nginx.service
-# ├─system.slice
-# └─sysinit.target
-#   ├─dev-hugepages.mount
-#   └─...
-#
-# nginx beror på att sysinit.target är klar
-# systemd startar dependencies först
+# Se dependencies
+systemctl list-dependencies nginx
 
-# Vad beror på nginx?
-systemctl list-dependencies --reverse nginx.service
-# Visar vilka units som kräver att nginx körs
-
-# Detaljerade dependencies
-systemctl show nginx.service | grep -E "^(Wants|Requires|After|Before)="
-# Wants=      - mjuka beroenden (startas om möjligt)
-# Requires=   - hårda beroenden (måste finnas)
-# After=      - starta efter dessa
-# Before=     - starta före dessa
+# Reverse dependencies
+systemctl list-dependencies --reverse nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Targets - grupper av tjänster
+## Targets
 
-Targets är som bokmärken för systemtillstånd. multi-user.target är normalt körläge, graphical.target inkluderar skrivbordet.
+| Target | Beskrivning |
+|--------|-------------|
+| `multi-user.target` | Normalt korlage |
+| `graphical.target` | Skrivbord |
+| `rescue.target` | Rescue mode |
+| `emergency.target` | Minimal boot |
 
 ```bash
-systemctl list-units --type=target
-# UNIT                   LOAD   ACTIVE DESCRIPTION
-# basic.target           loaded active Basic System
-# multi-user.target      loaded active Multi-User System
-# network-online.target  loaded active Network is Online
-# network.target         loaded active Network
-#
-# Targets grupperar relaterade tjänster
-# multi-user.target = "servern är redo"
-
-# Vilket target körs nu?
+# Aktuellt target
 systemctl get-default
-# multi-user.target
-# Detta är vad systemet siktar på vid boot
 
-# Ändra default target (för servrar behövs sällan)
+# Andra default
 sudo systemctl set-default multi-user.target
-# Nu bootar systemet till textkonsol, inte grafiskt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Cgroups - resurskontroll
 
-Systemd använder Linux cgroups för att isolera och begränsa resurser:
-
 ```bash
+# Se process-hierarki
 systemd-cgls
-# Control group /:
-# ├─1 /sbin/init
-# ├─user.slice
-# │ └─user-1000.slice
-# │   └─session-1.scope
-# │     ├─3456 sshd: user@pts/0
-# │     └─3457 -bash
-# └─system.slice
-#   ├─nginx.service
-#   │ ├─1234 nginx: master process
-#   │ └─1235 nginx: worker process
-#
-# Visar process-hierarkin organiserad i cgroups
-# Varje tjänst kör i sin egen grupp
 
-# Resursanvändning per tjänst
+# Resursanvandning per tjanst
 systemd-cgtop
-# Control Group                          Tasks   %CPU   Memory
-# /system.slice/nginx.service                3    0.2   128.0M
-# /system.slice/postgresql.service          15    1.5   512.0M
-#
-# Som top men grupperat per tjänst
-# Perfekt för att se vilken tjänst som är resurskrävande
 ```
 
----
-
-## Praktiskt exempel: Felsök startproblem
-
-```bash
-# Tjänsten startar inte - vad är fel?
-systemctl status myapp.service
-# ● myapp.service - My Application
-#    Loaded: loaded (/etc/systemd/system/myapp.service; enabled)
-#    Active: failed (Result: exit-code) since Mon 2025-01-15 10:30:00 UTC
-# Main PID: 12345 (code=exited, status=1/FAILURE)
-
-# Kolla loggarna
-journalctl -u myapp.service -n 50
-# Se vad som gick fel vid senaste start
-
-# Kolla dependency-ordning
-systemctl list-dependencies myapp.service --all
-# Kanske beror den på något som inte startat?
-
-# Starta om efter fix
-sudo systemctl daemon-reload
-# Läser om unit-filer efter ändringar
-
-sudo systemctl restart myapp.service
-# Försök starta igen
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **systemd är PID 1** - förälder till alla processer
-2. **Units** = tjänster, sockets, targets, timers
-3. **/etc/systemd/system/** = dina egna tjänster
-4. **Targets** = grupper av tjänster (multi-user.target)
-5. **daemon-reload** = läs om efter ändringar i unit-filer
+| Punkt | Forklaring |
+|-------|------------|
+| **PID 1** | systemd ar forst |
+| **Units** | Services, timers, targets |
+| **/etc/systemd/system/** | Dina egna tjanster |
+| **Targets** | Grupper av tjanster |
+| **daemon-reload** | Las om efter andringar |
+
+**Kom ihag:**
+- systemd startar och overvakar allt
+- Units ar byggstenarna
+- /etc/systemd/system for egna tjanster
+- daemon-reload efter varje andring
 """,
         },
         {
@@ -2262,213 +2152,58 @@ sudo systemctl restart myapp.service
             "xp_reward": 85,
             "content": """# Unit Files (service, timer, socket)
 
-## Varför behöver du kunna detta?
+For att kora dina applikationer som tjanster maste du skapa unit-filer. Har lar du dig syntaxen for services, timers och sockets.
 
-För att köra dina egna applikationer som tjänster på Linux måste du skapa unit-filer. Det är också så du sätter upp schemalagda jobb med timers istället för det äldre cron-systemet. Att förstå unit-filers syntax gör dig kapabel att konfigurera exakt hur din app ska starta, starta om vid krasch, och bero på andra tjänster.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Service units
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Egen app som tjanst** | Automatisk start vid boot |
+| **Schemalagda jobb** | Timer istallet for cron |
+| **On-demand start** | Socket activation |
 
-En service unit beskriver en tjänst som ska köras. Det är den vanligaste typen.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-cat /etc/systemd/system/myapp.service
-# [Unit]
-# Description=My Application
-# After=network.target postgresql.service
-# Requires=postgresql.service
-#
-# [Unit]-sektionen beskriver tjänsten
-# Description = vad användare ser i systemctl status
-# After = starta EFTER dessa tjänster
-# Requires = dessa MÅSTE köra (hard dependency)
+## Service unit struktur
 
-# [Service]
-# Type=simple
-# User=myapp
-# Group=myapp
-# WorkingDirectory=/opt/myapp
-# ExecStart=/opt/myapp/bin/server
-# ExecReload=/bin/kill -HUP $MAINPID
-# Restart=on-failure
-# RestartSec=5
-#
-# [Service]-sektionen beskriver hur tjänsten körs
-# Type=simple = processen ÄR tjänsten
-# User/Group = vilken användare som kör
-# WorkingDirectory = cd hit före start
-# ExecStart = kommandot som startar tjänsten
-# Restart=on-failure = starta om vid krasch
-# RestartSec=5 = vänta 5 sekunder före omstart
-
-# [Install]
-# WantedBy=multi-user.target
-#
-# [Install]-sektionen beskriver när tjänsten ska vara aktiv
-# WantedBy = aktiveras när denna target nås
-# multi-user.target = normalt körläge för servrar
+```
+Unit File Sections:
+┌─────────────────────────────────────────────────────────────┐
+│  [Unit]        Beskrivning och dependencies                │
+│  [Service]     Hur tjansten kors                           │
+│  [Install]     Nar den aktiveras                           │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+| Sektion | Direktiv | Betydelse |
+|---------|----------|-----------|
+| [Unit] | Description | Vad tjansten gor |
+| [Unit] | After | Starta efter |
+| [Unit] | Requires | Hard dependency |
+| [Service] | Type | simple, forking, oneshot |
+| [Service] | ExecStart | Startkommando |
+| [Service] | Restart | on-failure, always |
+| [Install] | WantedBy | multi-user.target |
 
-## Skapa en egen service
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-sudo vim /etc/systemd/system/myapp.service
-# Skriv innehållet ovan
-
-# Läs om konfigurationen
-sudo systemctl daemon-reload
-# ALLTID efter ändringar i unit-filer
-# Annars ser systemd inte dina ändringar
-
-# Aktivera tjänsten
-sudo systemctl enable myapp.service
-# Skapar symlink så den startar vid boot
-
-# Starta tjänsten
-sudo systemctl start myapp.service
-# Nu körs din app
-
-# Kolla status
-systemctl status myapp.service
-# Visar om den körs, senaste loggraderna, PID mm
-```
-
----
-
-## Timer units
-
-Timer units är moderna ersättaren för cron. De är mer flexibla och integrerar med journald för loggning.
-
-```bash
-cat /etc/systemd/system/backup.timer
-# [Unit]
-# Description=Run backup every night
-#
-# [Timer]
-# OnCalendar=*-*-* 02:00:00
-# Persistent=true
-#
-# [Install]
-# WantedBy=timers.target
-
-# OnCalendar följer formatet: År-Månad-Dag Tim:Minut:Sekund
-# *-*-* 02:00:00 = varje dag kl 02:00
-# *-*-* *:00:00 = varje timme
-# Mon *-*-* 10:00:00 = varje måndag kl 10:00
-# *-*-01 00:00:00 = första dagen varje månad
-
-# Persistent=true = kör om missad (t.ex. om servern var av)
-
-cat /etc/systemd/system/backup.service
-# [Unit]
-# Description=Backup script
-#
-# [Service]
-# Type=oneshot
-# ExecStart=/usr/local/bin/backup.sh
-#
-# Type=oneshot = kör en gång och avsluta
-# Ingen [Install]-sektion behövs - timern startar den
-```
-
----
-
-## Aktivera timer
-
-```bash
-sudo systemctl daemon-reload
-# Läs om nya filer
-
-sudo systemctl enable backup.timer
-# Aktivera timern vid boot
-
-sudo systemctl start backup.timer
-# Starta timern nu
-
-systemctl list-timers
-# NEXT                         LEFT          LAST                         PASSED       UNIT
-# Tue 2025-01-16 02:00:00 UTC  11h left      Mon 2025-01-15 02:00:00 UTC  12h ago      backup.timer
-#
-# Visar alla aktiva timers
-# NEXT = när den körs nästa gång
-# LAST = senaste körning
-```
-
----
-
-## Socket units
-
-Socket units startar tjänster on-demand - först när någon ansluter till porten. Sparar resurser för sällan använda tjänster.
-
-```bash
-cat /etc/systemd/system/myapp.socket
-# [Unit]
-# Description=MyApp Socket
-#
-# [Socket]
-# ListenStream=8080
-# Accept=no
-#
-# [Install]
-# WantedBy=sockets.target
-
-# ListenStream=8080 = lyssna på TCP port 8080
-# Accept=no = starta tjänsten vid första anslutning
-#             (Accept=yes = en instans per anslutning)
-
-# Tjänsten startas automatiskt:
-# myapp.socket -> myapp.service
-# Namnen måste matcha (minus suffixet)
-```
-
----
-
-## Viktiga direktiv
-
-```bash
-# Restart-beteende
-# Restart=no          - starta aldrig om (default)
-# Restart=on-failure  - starta om vid krasch (exit != 0)
-# Restart=always      - starta alltid om (även vid success)
-# Restart=on-abnormal - vid signaler, timeout, watchdog
-
-# Service-typer
-# Type=simple   - ExecStart är huvudprocessen
-# Type=forking  - processen forkar (äldre daemons)
-# Type=oneshot  - kör en gång och avsluta
-# Type=notify   - tjänsten meddelar när den är redo
-
-# Environment
-# Environment=NODE_ENV=production
-# EnvironmentFile=/etc/myapp/config
-```
-
----
-
-## Praktiskt exempel: Node.js app som service
-
-```bash
-sudo vim /etc/systemd/system/nodeapp.service
-```
+## Exempel: Service unit
 
 ```ini
+# /etc/systemd/system/myapp.service
 [Unit]
-Description=Node.js Application
+Description=My Application
 After=network.target
 
 [Service]
 Type=simple
-User=nodeapp
-Group=nodeapp
-WorkingDirectory=/opt/nodeapp
-ExecStart=/usr/bin/node /opt/nodeapp/server.js
+User=myapp
+WorkingDirectory=/opt/myapp
+ExecStart=/opt/myapp/bin/server
 Restart=on-failure
-RestartSec=10
-Environment=NODE_ENV=production
-Environment=PORT=3000
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -2476,19 +2211,86 @@ WantedBy=multi-user.target
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now nodeapp.service
-# enable --now = enable + start i ett kommando
+sudo systemctl enable --now myapp
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Timer units
+
+| OnCalendar | Betydelse |
+|------------|-----------|
+| `*-*-* 02:00:00` | Varje dag kl 02:00 |
+| `*-*-* *:00:00` | Varje timme |
+| `Mon *-*-* 10:00` | Mandag 10:00 |
+| `*-*-01 00:00:00` | Forsta dagen varje manad |
+
+```ini
+# /etc/systemd/system/backup.timer
+[Unit]
+Description=Daily backup
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+```bash
+sudo systemctl enable --now backup.timer
+systemctl list-timers
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Socket units
+
+```ini
+# /etc/systemd/system/myapp.socket
+[Unit]
+Description=MyApp Socket
+
+[Socket]
+ListenStream=8080
+Accept=no
+
+[Install]
+WantedBy=sockets.target
+```
+
+Tjansten startas forst nar nagon ansluter till porten.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Viktiga direktiv
+
+| Direktiv | Varde | Betydelse |
+|----------|-------|-----------|
+| Type | simple | ExecStart ar huvudprocess |
+| Type | forking | Process forkar |
+| Type | oneshot | Kor en gang |
+| Restart | on-failure | Vid krasch |
+| Restart | always | Alltid |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **[Unit]** = beskrivning och dependencies
-2. **[Service]** = hur tjänsten körs
-3. **[Install]** = när den aktiveras
-4. **daemon-reload** = ALLTID efter ändringar
-5. **timer units** = moderna cron-jobb
+| Punkt | Forklaring |
+|-------|------------|
+| **[Unit]** | Beskrivning och dependencies |
+| **[Service]** | Hur den kors |
+| **[Install]** | Nar den aktiveras |
+| **daemon-reload** | ALLTID efter andringar |
+| **Timer** | Modern cron |
+
+**Kom ihag:**
+- daemon-reload efter varje andring
+- enable --now for bade enable och start
+- Timer units ar battre an cron
+- Socket activation sparar resurser
 """,
         },
         {
@@ -2499,213 +2301,129 @@ sudo systemctl enable --now nodeapp.service
             "xp_reward": 80,
             "content": """# Service Management (systemctl)
 
-## Varför behöver du kunna detta?
+Varje webbserver, databas och applikation pa en Linux-server kor som en tjanst. Har lar du dig hantera dem med systemctl.
 
-Varje webbserver, databas, cache och applikation på en Linux-server körs som en tjänst hanterad av systemd. Du måste kunna starta, stoppa, starta om och felsöka tjänster. Det är vad du gör varje dag som DevOps-ingenjör.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Grundläggande tjänsthantering
+| Scenario | Kommando |
+|----------|----------|
+| **Starta tjanst** | `systemctl start` |
+| **Starta om efter deploy** | `systemctl restart` |
+| **Reload config** | `systemctl reload` |
+| **Felsokning** | `systemctl status` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Grundlaggande kommandon
+
+| Kommando | Funktion |
+|----------|----------|
+| `start` | Starta tjanst |
+| `stop` | Stoppa tjanst |
+| `restart` | Stop + start |
+| `reload` | Las om config (ingen nedtid) |
+| `status` | Visa status |
 
 ```bash
 sudo systemctl start nginx
-# Startar nginx-tjänsten omedelbart
-# Gör ingenting om den redan körs
-# Kräver sudo för de flesta tjänster
-
 sudo systemctl stop nginx
-# Stoppar nginx-tjänsten
-# Skickar SIGTERM, väntar, sedan SIGKILL om nödvändigt
-# Alla anslutningar stängs
-
 sudo systemctl restart nginx
-# Stop + start i en operation
-# Orsakar kort nedtid
-# Använd för större konfigurationsändringar
-
 sudo systemctl reload nginx
-# Läser om konfiguration utan att stoppa
-# Skickar SIGHUP till processen
-# INGEN nedtid - befintliga anslutningar fortsätter
-# Fungerar bara om tjänsten stödjer det
-```
-
----
-
-## Status och information
-
-```bash
 systemctl status nginx
-# ● nginx.service - A high performance web server
-#    Loaded: loaded (/lib/systemd/system/nginx.service; enabled)
-#    Active: active (running) since Mon 2025-01-15 10:00:00 UTC; 2h ago
-#  Main PID: 1234 (nginx)
-#     Tasks: 3 (limit: 4915)
-#    Memory: 12.5M
-#    CGroup: /system.slice/nginx.service
-#            ├─1234 nginx: master process /usr/sbin/nginx
-#            ├─1235 nginx: worker process
-#            └─1236 nginx: worker process
-#
-# Visar:
-# - Om tjänsten körs (active/running)
-# - Sedan när
-# - Process-ID
-# - Minnesanvändning
-# - Senaste loggraderna
-
-systemctl is-active nginx
-# active
-# Returkod 0 = körs
-# Returkod != 0 = körs inte
-# Perfekt för scripts
-
-systemctl is-enabled nginx
-# enabled
-# Visar om tjänsten startar vid boot
-
-systemctl show nginx --property=MainPID
-# MainPID=1234
-# Hämta specifik egenskap
-# Användbart för automation
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Enable och disable
+## Enable/Disable
+
+| Kommando | Funktion |
+|----------|----------|
+| `enable` | Starta vid boot |
+| `disable` | Starta INTE vid boot |
+| `enable --now` | Enable + start |
+| `is-enabled` | Kolla om enabled |
 
 ```bash
 sudo systemctl enable nginx
-# Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service
-# → /lib/systemd/system/nginx.service
-#
-# Tjänsten startar nu automatiskt vid boot
-# Skapar en symlink i target-katalogen
-# Startar INTE tjänsten just nu
-
-sudo systemctl disable nginx
-# Removed symlink /etc/systemd/system/multi-user.target.wants/nginx.service
-#
-# Tjänsten startar INTE vid boot längre
-# Stoppar INTE tjänsten just nu
-
 sudo systemctl enable --now nginx
-# Gör båda i ett kommando:
-# 1. Aktiverar vid boot
-# 2. Startar omedelbart
-# Perfekt för nya installationer
+systemctl is-enabled nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Lista tjänster
+## Lista tjanster
+
+| Kommando | Visar |
+|----------|-------|
+| `list-units --type=service` | Aktiva tjanster |
+| `--state=running` | Korande |
+| `--state=failed` | Kraschade |
+| `list-unit-files --type=service` | Alla installerade |
 
 ```bash
-systemctl list-units --type=service
-# UNIT                      LOAD   ACTIVE SUB     DESCRIPTION
-# cron.service              loaded active running Regular background program
-# nginx.service             loaded active running A high performance web server
-# postgresql.service        loaded active running PostgreSQL RDBMS
-#
-# Visar alla laddade och aktiva tjänster
-# LOAD = om unit-filen hittades
-# ACTIVE = övergripande tillstånd
-# SUB = detaljerat tillstånd
-
 systemctl list-units --type=service --state=running
-# Bara körande tjänster
-# --state= kan vara running, failed, inactive, dead
-
 systemctl list-units --type=service --state=failed
-# Visar tjänster som kraschat
-# Första stoppet vid felsökning
-
-systemctl list-unit-files --type=service
-# UNIT FILE                  STATE
-# nginx.service              enabled
-# postgresql.service         enabled
-# apache2.service            disabled
-#
-# Visar alla installerade tjänster
-# Oavsett om de körs eller inte
-# STATE = enabled/disabled/masked
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Mask och unmask
+## Mask/Unmask
+
+| Kommando | Funktion |
+|----------|----------|
+| `mask` | Forhindra start helt |
+| `unmask` | Ta bort maskering |
 
 ```bash
+# Mask - kan INTE startas
 sudo systemctl mask apache2
-# Created symlink /etc/systemd/system/apache2.service → /dev/null
-#
-# Tjänsten kan INTE startas alls
-# Inte ens manuellt
-# Använd för att förhindra konflikt
-# T.ex. nginx OCH apache på samma server
 
+# Unmask - kan startas igen
 sudo systemctl unmask apache2
-# Removed symlink /etc/systemd/system/apache2.service
-#
-# Tar bort maskeringen
-# Nu kan tjänsten startas igen
-
-# Skillnad: disable vs mask
-# disable = startar inte vid boot, KAN startas manuellt
-# mask = kan INTE startas överhuvudtaget
 ```
 
----
+| Metod | Kan startas manuellt? | Startar vid boot? |
+|-------|----------------------|-------------------|
+| disable | Ja | Nej |
+| mask | Nej | Nej |
 
-## Praktiskt exempel: Deploy ny version
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Deploy-workflow
 
 ```bash
-# 1. Kolla att tjänsten körs
+# 1. Kolla status
 systemctl is-active myapp
-# active
 
-# 2. Deployka ny kod
-# ... (kopiera filer, etc)
+# 2. Deploy kod...
 
-# 3. Starta om tjänsten
+# 3. Restart
 sudo systemctl restart myapp
 
-# 4. Verifiera att den startade
+# 4. Verifiera
 systemctl status myapp
-# Se att den är active och inga felmeddelanden
-
-# 5. Kolla loggarna för säkerhets skull
 journalctl -u myapp -n 20
-# Se att starten gick bra
-
-# Eller som ett script:
-#!/bin/bash
-deploy_app() {
-    echo "Deploying..."
-    # ... kopiera filer ...
-
-    sudo systemctl restart myapp
-    sleep 2
-
-    if systemctl is-active --quiet myapp; then
-        echo "Deploy successful!"
-    else
-        echo "Deploy FAILED! Check logs:"
-        journalctl -u myapp -n 30
-        exit 1
-    fi
-}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **start/stop/restart** = kontrollera tjänster
-2. **reload** = läs om config utan nedtid
-3. **enable --now** = aktivera + starta
-4. **status** = första kommandot vid problem
-5. **--failed** = hitta kraschade tjänster
+| Punkt | Forklaring |
+|-------|------------|
+| **start/stop/restart** | Kontrollera tjanster |
+| **reload** | Ingen nedtid |
+| **enable --now** | Enable + start |
+| **status** | Forsta vid problem |
+| **--failed** | Hitta kraschade |
+
+**Kom ihag:**
+- restart for kod-andringar
+- reload for config-andringar
+- status visar senaste loggar
+- is-active for scripts
 """,
         },
         {
@@ -2716,211 +2434,139 @@ deploy_app() {
             "xp_reward": 80,
             "content": """# Boot Process and Targets
 
-## Varför behöver du kunna detta?
+Nar en server inte startar behover du forsta bootprocessen for att felstoka. Har lar du dig hela kedjan fran strom till korande system.
 
-När en server inte startar behöver du förstå bootprocessen för att felsöka. Var i kedjan fastnade den? BIOS? Bootloader? Kernel? Systemd? Du behöver också förstå targets för att konfigurera vad som ska starta automatiskt och kunna boota till rescue mode för att fixa trasiga system.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Bootprocessen steg för steg
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Server bootar inte** | Felstok i kedjan |
+| **Rescue mode** | Fixa trasigt system |
+| **Boot-ordning** | Konfigurera targets |
 
-```bash
-# Linux boot-sekvens:
-#
-# 1. BIOS/UEFI
-#    - Firmware på moderkortet
-#    - Hittar boot-enhet (disk, USB, nätverk)
-#    - Laddar bootloader från första sektorn
-#
-# 2. GRUB (bootloader)
-#    - Visar boot-meny
-#    - Laddar Linux-kernel och initramfs
-#    - Du kan redigera boot-parametrar här
-#
-# 3. Kernel
-#    - Startar och initierar hårdvara
-#    - Mountar initramfs som temporärt root
-#    - Laddar drivrutiner
-#
-# 4. Initramfs
-#    - Temporärt mini-filsystem i RAM
-#    - Innehåller moduler för att mounta riktiga diskar
-#    - Överlämnar till riktiga root-filsystemet
-#
-# 5. Systemd (PID 1)
-#    - Tar över från initramfs
-#    - Startar tjänster enligt target
-#    - Mountar filsystem enligt /etc/fstab
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Boot-sekvensen
+
+```
+Boot Process:
+┌─────────────────────────────────────────────────────────────┐
+│  1. BIOS/UEFI ──── Hittar boot-enhet                       │
+│         │                                                   │
+│  2. GRUB ─────── Laddar kernel + initramfs                 │
+│         │                                                   │
+│  3. Kernel ───── Initierar hardvara                        │
+│         │                                                   │
+│  4. Initramfs ── Mountar riktiga root                      │
+│         │                                                   │
+│  5. Systemd ──── Startar tjanster                          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Targets - systemds runlevels
+## Targets (systemds runlevels)
 
-Targets ersätter de gamla runlevels. De definierar systemtillstånd.
+| Target | Beskrivning | Runlevel |
+|--------|-------------|----------|
+| poweroff.target | Stang av | 0 |
+| rescue.target | Single user | 1 |
+| multi-user.target | Server-standard | 3 |
+| graphical.target | Med GUI | 5 |
+| reboot.target | Omstart | 6 |
 
 ```bash
-systemctl list-units --type=target
-# UNIT                   LOAD   ACTIVE DESCRIPTION
-# basic.target           loaded active Basic System
-# emergency.target       loaded active Emergency Mode
-# graphical.target       loaded active Graphical Interface
-# multi-user.target      loaded active Multi-User System
-# network.target         loaded active Network
-# rescue.target          loaded active Rescue Mode
-#
-# Vanliga targets:
-# poweroff.target   - Stäng av (runlevel 0)
-# rescue.target     - Single user, minimal system
-# multi-user.target - Fullständigt system utan GUI (runlevel 3)
-# graphical.target  - Med GUI (runlevel 5)
-# reboot.target     - Omstart (runlevel 6)
-
-# Vilket target är default?
+# Aktuellt default target
 systemctl get-default
-# multi-user.target
-# Detta är vad systemet bootar till
 
-# Ändra default target
+# Andra default
 sudo systemctl set-default multi-user.target
-# Servrar ska vara multi-user
-# Skrivbord ska vara graphical
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Byta target vid körning
+## Byta target vid korning
+
+| Kommando | Funktion |
+|----------|----------|
+| `isolate rescue.target` | Ga till rescue |
+| `isolate multi-user.target` | Tillbaka till normalt |
+| `poweroff` | Stang av |
+| `reboot` | Starta om |
 
 ```bash
-# Byt till rescue mode (single user)
 sudo systemctl isolate rescue.target
-# Stoppar nästan alla tjänster
-# Bara root-shell
-# Nätverket är nere
-# Användbart för systemunderhåll
-
-# Tillbaka till normalt
-sudo systemctl isolate multi-user.target
-# Startar alla tjänster igen
-
-# Stäng av
-sudo systemctl poweroff
-# Samma som: shutdown -h now
-
-# Starta om
 sudo systemctl reboot
-# Samma som: shutdown -r now
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GRUB bootloader
 
-```bash
-# GRUB-konfiguration
-cat /etc/default/grub
-# GRUB_DEFAULT=0
-# GRUB_TIMEOUT=5
-# GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
-# GRUB_CMDLINE_LINUX=""
-#
-# GRUB_DEFAULT = vilken menypost som väljs automatiskt
-# GRUB_TIMEOUT = sekunder innan auto-boot
-# GRUB_CMDLINE = kernel-parametrar
+| Fil | Funktion |
+|-----|----------|
+| `/etc/default/grub` | Konfiguration |
+| `GRUB_DEFAULT` | Vilken menypost |
+| `GRUB_TIMEOUT` | Sekunder innan boot |
 
-# Efter ändringar, uppdatera GRUB
+```bash
+# Uppdatera GRUB efter andringar
 sudo update-grub
-# eller
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-# Regenererar GRUB-konfigurationen
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Emergency och rescue mode
+## Rescue och Emergency mode
 
-Om systemet inte startar normalt kan du boota till speciella lägen:
+| Mode | Anvandning |
+|------|------------|
+| rescue | Root-shell, minimala tjanster |
+| emergency | Annu mer minimalt, ro filsystem |
 
 ```bash
-# Vid GRUB-menyn:
-# 1. Tryck 'e' för att redigera boot-entry
-# 2. Hitta raden som börjar med 'linux'
-# 3. Lägg till 'systemd.unit=rescue.target' eller 'single'
-# 4. Tryck Ctrl+X för att boota
+# Via GRUB:
+# 1. Tryck 'e' vid menyn
+# 2. Lagg till: systemd.unit=rescue.target
+# 3. Ctrl+X for att boota
 
-# Rescue mode
-# - Root-shell med lösenord
-# - Minimala tjänster
-# - Filsystem mountade
-# - Nätverket nere
-
-# Emergency mode
-# - Ännu mer minimalt
-# - Bara root-filsystem mountat (read-only)
-# - Används när rescue misslyckas
-
-# Mounta filsystem read-write i emergency
+# I emergency mode:
 mount -o remount,rw /
-# Nu kan du redigera filer
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Felsök boot-problem
+## Felstok boot-problem
 
 ```bash
-# Kolla senaste boot
+# Loggar fran aktuell boot
 journalctl -b
-# Visar alla meddelanden från senaste boot
-# Scrolla med piltangenter, q för att avsluta
 
-# Föregående boot
+# Foregaende boot
 journalctl -b -1
-# -1 = förra booten
-# -2 = två bootar sedan
-# Bra när systemet inte startade senast
 
-# Bara fel och varningar
+# Bara fel
 journalctl -b -p err
-# -p err = priority error och värre
-# Filtrera bort allt brus
-
-# Bootlog för specifik tjänst
-journalctl -b -u nginx
-# Varför startade inte nginx vid boot?
 ```
 
----
-
-## Praktiskt exempel: Fixa trasigt system
-
-```bash
-# Server bootar inte - disk full
-# 1. Boota till rescue mode (via GRUB)
-
-# 2. Mounta root-filsystem read-write
-mount -o remount,rw /
-
-# 3. Ta reda på vad som tar plats
-du -sh /* | sort -rh | head
-
-# 4. Rensa t.ex. gamla loggar
-rm -rf /var/log/*.gz
-rm -rf /var/log/*.1
-
-# 5. Starta om normalt
-reboot
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Boot-sekvens**: BIOS → GRUB → Kernel → initramfs → systemd
-2. **Targets** = systemtillstånd (multi-user = server-standard)
-3. **set-default** = ändra boot-target
-4. **rescue.target** = felsökning med minimal system
-5. **journalctl -b** = kolla boot-loggar
+| Punkt | Forklaring |
+|-------|------------|
+| **Boot-sekvens** | BIOS > GRUB > Kernel > systemd |
+| **multi-user.target** | Server-standard |
+| **rescue.target** | Felstokningslage |
+| **journalctl -b** | Boot-loggar |
+| **update-grub** | Efter GRUB-andringar |
+
+**Kom ihag:**
+- multi-user.target for servrar
+- rescue.target for att fixa trasiga system
+- journalctl -b -1 for forra bootens loggar
+- mount -o remount,rw / i emergency
 """,
         },
         {
@@ -2931,220 +2577,146 @@ reboot
             "xp_reward": 80,
             "content": """# Journald and Logging
 
-## Varför behöver du kunna detta?
+Loggar ar dina ogon in i systemet. Nar nagot gar fel ar journalctl forsta verktyget du anvander. Har lar du dig bemstra logganalys.
 
-Loggar är dina ögon in i systemet. När något går fel är loggarna första stället du tittar. Som DevOps-ingenjör kommer du spendera mycket tid med journalctl för att förstå varför en tjänst kraschade, vem som loggade in, och vad som hände vid en specifik tidpunkt.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## journalctl - det centrala loggverktyget
+| Scenario | Kommando |
+|----------|----------|
+| **Tjanst kraschade** | `journalctl -u tjanst` |
+| **Senaste errors** | `journalctl -p err` |
+| **Realtid** | `journalctl -f` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## journalctl grundlaggande
+
+| Kommando | Funktion |
+|----------|----------|
+| `journalctl` | Alla loggar |
+| `journalctl -f` | Follow (realtid) |
+| `journalctl -n 50` | Senaste 50 rader |
+| `journalctl --since "1 hour ago"` | Senaste timmen |
 
 ```bash
-journalctl
-# Visar alla systemloggar från början
-# Scrolla med piltangenter, sök med /
-# q för att avsluta (som i less)
-
 journalctl -f
-# Follow mode - visar nya loggar i realtid
-# Som tail -f men för alla tjänster
-# Ctrl+C för att avsluta
-
-journalctl -n 50
-# Visa senaste 50 rader
-# Bra för snabb överblick
-# Default är 10 rader
-
-journalctl --since "1 hour ago"
-# Loggar från senaste timmen
-# Kan också vara: "yesterday", "today", "2025-01-15 10:00"
-
-journalctl --since "2025-01-15 10:00" --until "2025-01-15 12:00"
-# Specifikt tidsintervall
-# Perfekt för att undersöka en incident
+# Ctrl+C for att avsluta
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Filtrera efter tjänst
+## Filtrera efter tjanst
+
+| Kommando | Funktion |
+|----------|----------|
+| `-u nginx` | Nginx loggar |
+| `-u nginx -f` | Follow nginx |
+| `-u nginx -u postgres` | Flera tjanster |
 
 ```bash
-journalctl -u nginx
-# Alla loggar för nginx-tjänsten
-# -u = unit (tjänstens namn)
-
+journalctl -u nginx -n 100
 journalctl -u nginx -f
-# Follow nginx-loggar i realtid
-# Det du använder oftast vid felsökning
-
-journalctl -u nginx -n 100 --no-pager
-# Senaste 100 rader utan pager
-# --no-pager skriver direkt till terminalen
-# Användbart för scripts
-
-journalctl -u nginx -u postgresql
-# Flera tjänster samtidigt
-# Se hur de interagerar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Filtrera efter prioritet
 
+| Prioritet | Nummer | Beskrivning |
+|-----------|--------|-------------|
+| emerg | 0 | System oanvandbart |
+| alert | 1 | Atgard kravs nu |
+| crit | 2 | Kritiskt |
+| err | 3 | Fel |
+| warning | 4 | Varning |
+| notice | 5 | Normalt men viktigt |
+| info | 6 | Information |
+| debug | 7 | Debug |
+
 ```bash
-journalctl -p err
-# Bara errors och värre
-# Priorities (0 = värst):
-# 0 = emerg   - Systemet är oanvändbart
-# 1 = alert   - Åtgärd krävs omedelbart
-# 2 = crit    - Kritiskt tillstånd
-# 3 = err     - Fel
-# 4 = warning - Varningar
-# 5 = notice  - Normalt men viktigt
-# 6 = info    - Informativa meddelanden
-# 7 = debug   - Debug-meddelanden
-
-journalctl -p warning
-# warning och allt allvarligare (0-4)
-# Filtrerar bort info och debug
-
-journalctl -u nginx -p err --since today
-# Kombinera filter
-# Nginx errors från idag
+journalctl -p err          # Errors och varre
+journalctl -p warning      # Warnings och varre
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Boot-relaterade loggar
+## Boot-loggar
+
+| Kommando | Funktion |
+|----------|----------|
+| `-b` | Aktuell boot |
+| `-b -1` | Forra booten |
+| `--list-boots` | Lista alla bootar |
 
 ```bash
 journalctl -b
-# Alla loggar från aktuell boot
-# Från det att systemet startade
-
-journalctl -b -1
-# Förra booten
-# -2 = två bootar sedan
-# Användbart om systemet kraschade
-
-journalctl --list-boots
-# Lista alla sparade bootar
-# IDX BOOT ID                          FIRST ENTRY                 LAST ENTRY
-#  -1 abc123...                        Mon 2025-01-14 08:00:00 UTC Mon 2025-01-14 23:59:59 UTC
-#   0 def456...                        Tue 2025-01-15 00:00:01 UTC Tue 2025-01-15 14:30:00 UTC
-
 journalctl -b -1 -p err
-# Errors från förra booten
-# Varför startade inte servern igår?
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Kernel-loggar
+## Traditionella loggar i /var/log/
 
-```bash
-journalctl -k
-# Bara kernel-meddelanden
-# Hårdvaruproblem, drivrutiner, etc.
-# Samma som dmesg men med tidsstämplar
-
-journalctl -k --since "5 minutes ago"
-# Senaste kernel-meddelanden
-# Vad hände nyss med hårdvaran?
-```
-
----
-
-## Traditionella loggfiler
-
-Förutom journald finns fortfarande klassiska loggfiler i /var/log:
+| Fil | Innehall |
+|-----|----------|
+| `auth.log` | Inloggningar, sudo |
+| `syslog` | Systemmeddelanden |
+| `nginx/access.log` | HTTP requests |
+| `nginx/error.log` | Nginx fel |
 
 ```bash
-ls /var/log/
-# auth.log      - Inloggningar, sudo
-# syslog        - Systemmeddelanden
-# kern.log      - Kernel-meddelanden
-# nginx/        - Nginx-specifika loggar
-# mysql/        - MySQL-loggar
-# apt/          - Pakethantering
-
-# Kolla inloggningsförsök
 sudo tail -f /var/log/auth.log
-# Se SSH-inloggningar och sudo-användning
-# Bra för säkerhetsövervakning
-
-# Nginx access log
-sudo tail -f /var/log/nginx/access.log
-# Se alla HTTP-requests
-# IP, tid, URL, status, user-agent
-
-# Nginx error log
 sudo tail -f /var/log/nginx/error.log
-# Se fel - 404, 500, config-problem
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Logrotate - hantera loggstorlek
+## Logrotate
+
+Automatisk rotation av loggar for att spara diskutrymme.
 
 ```bash
-cat /etc/logrotate.conf
-# Hur loggar roteras (arkiveras)
-# weekly        - Rotera varje vecka
-# rotate 4      - Behåll 4 gamla versioner
-# compress      - Komprimera gamla loggar
-
 cat /etc/logrotate.d/nginx
-# /var/log/nginx/*.log {
-#     daily
-#     rotate 14
-#     compress
-#     delaycompress
-#     notifempty
-#     create 0640 www-data adm
-#     sharedscripts
-#     postrotate
-#         /bin/kill -USR1 $(cat /var/run/nginx.pid)
-#     endscript
-# }
-#
-# daily = rotera varje dag
-# rotate 14 = behåll 14 dagar
-# compress = gzip gamla filer
-# postrotate = kör efter rotation (signalera nginx)
+# daily, rotate 14, compress
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Praktiskt exempel: Felsök kraschad tjänst
+## Felsokningsworkflow
 
 ```bash
-# Tjänsten är nere
+# 1. Status
 systemctl status myapp
-# Active: failed
 
-# Kolla loggarna
+# 2. Senaste loggar
 journalctl -u myapp -n 100
-# Scrolla och leta efter error-meddelanden
 
-# Filtrera bara errors
+# 3. Bara errors
 journalctl -u myapp -p err --since "1 hour ago"
-# Vad gick fel?
 
-# Kolla vid vilken tidpunkt
+# 4. Specifik tid
 journalctl -u myapp --since "10:00" --until "10:05"
-# Exakt vad hände vid kraschen?
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **journalctl -u tjänst** = loggar för specifik tjänst
-2. **journalctl -f** = följ loggar i realtid
-3. **journalctl -p err** = bara errors
-4. **journalctl -b** = loggar från aktuell boot
-5. **/var/log/** = traditionella loggfiler
+| Punkt | Forklaring |
+|-------|------------|
+| **-u tjanst** | Loggar for tjanst |
+| **-f** | Follow realtid |
+| **-p err** | Bara errors |
+| **-b** | Boot-loggar |
+| **/var/log/** | Traditionella filer |
+
+**Kom ihag:**
+- journalctl -u tjanst -f for realtid
+- -p err for att filtrera bort brus
+- -b -1 for forra bootens loggar
+- /var/log for applikationsloggar
 """,
         },
         {
@@ -3155,211 +2727,141 @@ journalctl -u myapp --since "10:00" --until "10:05"
             "xp_reward": 80,
             "content": """# User and Group Management
 
-## Varför behöver du kunna detta?
+Linux ar ett multiuser-system. Du maste kunna skapa anvandare for deploy, services och teammedlemmar. Har lar du dig grunderna.
 
-Linux är ett multiuser-system. Du måste kunna skapa användare för olika ändamål - deploy-användare för CI/CD, service-konton för applikationer, och personliga konton för teammedlemmar. Rätt hantering av användare och grupper är grundläggande för säkerhet och åtkomstkontroll.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Skapa användare
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Deploy-anvandare** | CI/CD access |
+| **Service accounts** | Applikationer |
+| **Teammedlemmar** | SSH-access |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa anvandare
+
+| Kommando | Funktion |
+|----------|----------|
+| `useradd namn` | Skapa anvandare (minimal) |
+| `useradd -m namn` | Med home directory |
+| `useradd -m -s /bin/bash namn` | Med home + bash |
+| `passwd namn` | Satt losenord |
 
 ```bash
-sudo useradd deploy
-# Skapar en ny användare "deploy"
-# Skapar INTE home directory (!)
-# Skapar INTE lösenord
-# Användaren kan inte logga in ännu
-
 sudo useradd -m -s /bin/bash deploy
-# -m = skapa home directory (/home/deploy)
-# -s = ange shell (annars /bin/sh)
-# Nu har användaren ett hem och bash-shell
-
 sudo passwd deploy
-# Sätt lösenord för användaren
-# Du uppmanas skriva lösenordet två gånger
-
-# Eller gör allt på en gång
-sudo useradd -m -s /bin/bash -c "Deploy User" devops
-# -c = kommentar (ofta fullständigt namn)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Förstå användarfilerna
+## Viktiga filer
+
+| Fil | Innehall |
+|-----|----------|
+| `/etc/passwd` | Anvandare |
+| `/etc/shadow` | Hashade losenord |
+| `/etc/group` | Grupper |
 
 ```bash
-cat /etc/passwd
-# deploy:x:1001:1001:Deploy User:/home/deploy:/bin/bash
-#
-# Fält separerade med :
-# 1. Användarnamn: deploy
-# 2. Lösenord: x (betyder att det finns i /etc/shadow)
-# 3. UID: 1001 (User ID)
-# 4. GID: 1001 (Primary Group ID)
-# 5. GECOS: Deploy User (kommentar/namn)
-# 6. Home: /home/deploy
-# 7. Shell: /bin/bash
-
-sudo cat /etc/shadow
-# deploy:$6$xyz...:19377:0:99999:7:::
-#
-# Här ligger hashade lösenord
-# Bara root kan läsa denna fil
-# $6$ = SHA-512 hash
-
-cat /etc/group
-# deploy:x:1001:
-# developers:x:1002:deploy,john,jane
-#
-# Gruppdefinitioner
-# Sista fältet = medlemmar (kommaseparerat)
+# passwd-format:
+# namn:x:UID:GID:Kommentar:Home:Shell
+cat /etc/passwd | grep deploy
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Modifiera användare
+## Modifiera anvandare
+
+| Kommando | Funktion |
+|----------|----------|
+| `usermod -aG grupp user` | Lagg till i grupp |
+| `usermod -s /bin/zsh user` | Byt shell |
+| `usermod -L user` | Las konto |
+| `usermod -U user` | Las upp konto |
 
 ```bash
+# VIKTIGT: -a betyder append!
 sudo usermod -aG docker deploy
-# Lägg till "deploy" i gruppen "docker"
-# -a = append (lägg till, ta INTE bort andra grupper)
-# -G = supplementary groups
-# VIKTIGT: Glöm INTE -a, annars tas alla andra grupper bort!
-
-sudo usermod -s /bin/zsh deploy
-# Byt shell till zsh
-
-sudo usermod -L deploy
-# Lås kontot (kan inte logga in)
-# Sätter ! framför lösenordshash i /etc/shadow
-
-sudo usermod -U deploy
-# Lås upp kontot igen
-
-sudo usermod -l newname oldname
-# Byt användarnamn
-# Home directory ändras INTE automatiskt
+# Utan -a tas andra grupper bort!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Grupper
 
+| Kommando | Funktion |
+|----------|----------|
+| `groupadd namn` | Skapa grupp |
+| `groups user` | Visa anvandares grupper |
+| `id user` | Detaljerad info |
+
 ```bash
 sudo groupadd developers
-# Skapa en ny grupp
-
 sudo usermod -aG developers john
-sudo usermod -aG developers jane
-# Lägg till användare i gruppen
-
 groups john
-# john : john developers docker
-# Visar alla grupper john tillhör
-# Första = primär grupp
-
-id john
-# uid=1001(john) gid=1001(john) groups=1001(john),1002(developers),999(docker)
-# Mer detaljerad info
-
-sudo gpasswd -d john developers
-# Ta bort john från gruppen developers
-# Alternativ till usermod
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ta bort användare
+## Ta bort anvandare
+
+| Kommando | Funktion |
+|----------|----------|
+| `userdel user` | Ta bort (behall home) |
+| `userdel -r user` | Ta bort inkl home |
 
 ```bash
-sudo userdel deploy
-# Tar bort användaren
-# Behåller home directory och filer
-
-sudo userdel -r deploy
-# Tar bort användaren OCH home directory
-# -r = remove home directory
-# VARNING: Data försvinner permanent!
-
-# Säkrare metod:
-sudo tar -czvf /backup/deploy_home.tar.gz /home/deploy
-sudo userdel -r deploy
-# Säkerhetskopiera först, ta bort sedan
+# Sakert satt:
+sudo tar -czvf /backup/user_home.tar.gz /home/user
+sudo userdel -r user
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Service accounts
 
-För applikationer skapar du ofta service accounts utan login-möjlighet:
-
 ```bash
+# System-konto utan login
 sudo useradd -r -s /usr/sbin/nologin myapp
-# -r = system account (lågt UID, ingen home)
-# -s /usr/sbin/nologin = kan inte logga in
-# Perfekt för tjänster som kör som specifik användare
-
-# I systemd service:
-# [Service]
-# User=myapp
-# Group=myapp
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Lösenordspolicies
-
-```bash
-sudo chage -l deploy
-# Last password change                    : Jan 15, 2025
-# Password expires                        : never
-# Account expires                         : never
-# Minimum number of days between password change : 0
-# Maximum number of days between password change : 99999
-
-sudo chage -M 90 deploy
-# Lösenord måste bytas var 90:e dag
-
-sudo chage -E 2025-12-31 contractor
-# Kontot upphör 2025-12-31
-# Bra för tillfälliga användare
-```
-
----
-
-## Praktiskt exempel: Sätt upp deploy-användare
+## Praktiskt: Deploy-anvandare
 
 ```bash
-# Skapa användaren
-sudo useradd -m -s /bin/bash -c "Deployment User" deploy
+# Skapa
+sudo useradd -m -s /bin/bash deploy
 
-# Sätt inget lösenord (SSH-nyckel only)
+# SSH-nyckel istallet for losenord
 sudo passwd -l deploy
-
-# Lägg till i docker-gruppen (om Docker används)
-sudo usermod -aG docker deploy
-
-# Sätt upp SSH-nyckel
 sudo mkdir -p /home/deploy/.ssh
-sudo touch /home/deploy/.ssh/authorized_keys
-sudo chown -R deploy:deploy /home/deploy/.ssh
 sudo chmod 700 /home/deploy/.ssh
-sudo chmod 600 /home/deploy/.ssh/authorized_keys
 
-# Lägg till public key
-echo "ssh-ed25519 AAAA... deploy@ci" | sudo tee -a /home/deploy/.ssh/authorized_keys
+# Lagg till i docker
+sudo usermod -aG docker deploy
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **useradd -m -s /bin/bash** = skapa användare med home och shell
-2. **usermod -aG grupp user** = lägg till i grupp (glöm inte -a!)
-3. **groups user** = visa vilka grupper användaren tillhör
-4. **/usr/sbin/nologin** = shell för service accounts
-5. **userdel -r** = ta bort användare inklusive home
+| Punkt | Forklaring |
+|-------|------------|
+| **useradd -m -s** | Skapa med home och shell |
+| **usermod -aG** | Lagg till i grupp (GLOM INTE -a) |
+| **groups** | Se anvandares grupper |
+| **/usr/sbin/nologin** | For service accounts |
+| **userdel -r** | Ta bort inkl home |
+
+**Kom ihag:**
+- Alltid -a med usermod -G
+- Service accounts med nologin shell
+- Backupa innan userdel -r
+- id visar all anvandareinfo
 """,
         },
         {
@@ -3370,166 +2872,118 @@ echo "ssh-ed25519 AAAA... deploy@ci" | sudo tee -a /home/deploy/.ssh/authorized_
             "xp_reward": 80,
             "content": """# Sudo Configuration
 
-## Varför behöver du kunna detta?
+sudo ar hur anvandare far tillfallig root-access. Ratt konfigurerad sudo ger kontroll over vem som kan gora vad, med fullstandig audit trail.
 
-sudo är hur användare får tillfällig root-access på Linux. Rätt konfigurerad sudo ger dig kontroll över vem som kan göra vad, med fullständig audit trail. Fel konfigurerad sudo är en säkerhetsrisk. Som DevOps måste du förstå hur man ger just tillräckligt med rättigheter - inte mer, inte mindre.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Grundläggande sudo
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **CI/CD** | Deploy utan losenord |
+| **Automation** | Specifika kommandon |
+| **Sakerhet** | Begransad access |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Grundlaggande sudo
+
+| Kommando | Funktion |
+|----------|----------|
+| `sudo kommando` | Kor som root |
+| `sudo -i` | Root shell |
+| `sudo -u user kommando` | Kor som annan user |
+| `sudo -l` | Lista dina rattigheter |
 
 ```bash
 sudo apt update
-# Kör apt update som root
-# Frågar efter DITT lösenord (inte roots)
-# Loggas i /var/log/auth.log
-
 sudo -i
-# Öppna ett root-shell (som su -)
-# Behåller sudo:s audit trail
-# exit för att återgå
-
 sudo -u postgres psql
-# Kör kommando som annan användare
-# -u = vilken användare
-# Användbart för databashantering
-
-sudo -l
-# Lista vad du får göra med sudo
-# User john may run the following commands:
-#     (ALL) ALL
-# eller
-#     (ALL) NOPASSWD: /usr/bin/systemctl restart nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## visudo - redigera sudoers
 
 ```bash
+# ENDA ratta sattet
 sudo visudo
-# ENDA rätta sättet att redigera /etc/sudoers
-# Kontrollerar syntax innan sparning
-# Förhindrar att du låser ut dig själv
 
-# NIR ALDRIG redigera /etc/sudoers direkt!
-# Om filen blir korrupt kan ingen köra sudo
+# ALDRIG redigera direkt!
+# nano /etc/sudoers  # FEL!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## sudoers syntax
 
-```bash
-# /etc/sudoers format:
-# vem    var=(som vem)  vad
-
-# Exempel:
-john    ALL=(ALL)       ALL
-# john kan köra allt, på alla maskiner, som alla användare
-
-%admin  ALL=(ALL)       ALL
-# Alla i gruppen admin (% = grupp)
-
-deploy  ALL=(ALL)       NOPASSWD: ALL
-# deploy behöver inte skriva lösenord
-# FARLIGT! Använd bara för automation
-
-deploy  ALL=(ALL)       NOPASSWD: /usr/bin/systemctl restart nginx
-# deploy kan BARA starta om nginx utan lösenord
-# SÄKRARE - begränsa till specifika kommandon
+```
+Format: vem   var=(som vem)  vad
 ```
 
----
+| Exempel | Betydelse |
+|---------|-----------|
+| `john ALL=(ALL) ALL` | Full access |
+| `%admin ALL=(ALL) ALL` | Grupp admin |
+| `deploy ALL=(ALL) NOPASSWD: ALL` | Utan losenord (farligt!) |
+| `deploy ALL=(ALL) NOPASSWD: /bin/cmd` | Specifikt kommando |
 
-## Fil i /etc/sudoers.d/
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Bättre än att ändra i /etc/sudoers är att skapa egna filer:
+## Filer i /etc/sudoers.d/
 
 ```bash
+# Battre an att andra /etc/sudoers
 sudo visudo -f /etc/sudoers.d/deploy
-# Skapa en fil för deploy-användaren
 
-# Innehåll:
+# Innehall:
 deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart myapp
 deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl status myapp
-
-# Kontrollera att /etc/sudoers har:
-# @includedir /etc/sudoers.d
-# (finns där som default på moderna system)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Praktiska exempel
+## Best practices
 
-```bash
-# CI/CD deploy-användare
-sudo visudo -f /etc/sudoers.d/deploy
-# deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart myapp
-# deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl status myapp
+| Godt | Dalligt |
+|------|---------|
+| NOPASSWD for specifika cmd | NOPASSWD: ALL |
+| Anvand sudoers.d/ | Redigera /etc/sudoers direkt |
+| Anvand visudo | nano /etc/sudoers |
+| Begransade rattigheter | Full access |
 
-# Docker-access utan sudo (bättre alternativ)
-sudo usermod -aG docker deploy
-# Istället för sudo docker, lägg användaren i docker-gruppen
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Ge grupp sudo-access
-sudo visudo -f /etc/sudoers.d/developers
-# %developers ALL=(ALL) ALL
-# Alla i developers-gruppen får sudo med lösenord
-```
-
----
-
-## Säkerhetsaspekter
+## Felsok
 
 ```bash
-# Loggar
-sudo grep sudo /var/log/auth.log
-# Jan 15 10:30:00 server sudo: john : TTY=pts/0 ; PWD=/home/john ; USER=root ; COMMAND=/usr/bin/apt update
-# Alla sudo-kommandon loggas
-
-# Defaults i sudoers
-Defaults        logfile="/var/log/sudo.log"
-# Separat loggfil för sudo
-
-Defaults        timestamp_timeout=5
-# Fråga om lösenord igen efter 5 minuter inaktivitet
-
-Defaults        requiretty
-# Kräv terminal (skyddar mot vissa attacker)
-```
-
----
-
-## Felsökning
-
-```bash
-# Syntaxfel i sudoers
+# Kolla syntax
 sudo visudo -c
-# /etc/sudoers: parsed OK
-# /etc/sudoers.d/deploy: parsed OK
 
-# Om du låst ut dig själv:
-# 1. Starta om i recovery mode
-# 2. Eller använd root-konto (om tillgängligt)
-# 3. Fixa /etc/sudoers
-
-# Kolla om användare är i sudo-grupp
+# Se anvandares grupper
 groups username
-id username
-# Se om sudo eller wheel finns med
+
+# Kolla sudo-logg
+sudo grep sudo /var/log/auth.log
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **visudo** = ENDA sättet att redigera sudoers
-2. **/etc/sudoers.d/** = lägg egna regler i separata filer
-3. **NOPASSWD:** = bara för specifika kommandon, inte ALL
-4. **%grupp** = ge sudo till en hel grupp
-5. **sudo -l** = se vad du får göra
+| Punkt | Forklaring |
+|-------|------------|
+| **visudo** | ENDA sattet att redigera |
+| **/etc/sudoers.d/** | Separata filer |
+| **NOPASSWD** | Bara specifika cmd |
+| **%grupp** | Sudo for grupp |
+| **sudo -l** | Se dina rattigheter |
+
+**Kom ihag:**
+- Alltid visudo, aldrig nano/vim direkt
+- NOPASSWD bara for specifika kommandon
+- /etc/sudoers.d/ for egna regler
+- Allt loggas i auth.log
 """,
         },
         {
@@ -3540,215 +2994,115 @@ id username
             "xp_reward": 85,
             "content": """# PAM Modules
 
-PAM står för Pluggable Authentication Modules. Tänk på det som ett modulsystem för autentisering där Linux kan plugga in olika sätt att verifiera användare. Istället för att varje program (login, ssh, sudo) ska ha sin egen autentiseringskod, så delegerar de till PAM som sköter allt på ett ställe.
+PAM (Pluggable Authentication Modules) ar Linux modulsystem for autentisering. Istallet for att varje program har egen auth-kod delegerar de till PAM.
 
-Det smarta med PAM är att du kan stapla moduler på varandra. En användare kan behöva lösenord OCH ha rätt IP OCH logga in under rätt tider. PAM låter dig bygga dessa kedjor av krav utan att röra programmen själva.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Hur PAM fungerar
+| Scenario | Varfor du behover detta |
+|----------|------------------------|
+| **Losenordspolicy** | Starka losenord |
+| **Grupprestriktioner** | Begransat sudo |
+| **Resurslimits** | Processer, filer |
 
-När ett program vill autentisera en användare frågar det PAM. PAM tittar i sin konfiguration och kör igenom alla moduler som är definierade. Varje modul svarar "ja", "nej" eller "skippa mig", och PAM sammanställer resultatet.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-# Visa vilka PAM-moduler som finns installerade
-ls -la /lib/security/                # modulfilerna finns här som .so-filer
+## PAM-arkitektur
 
-# Eller på vissa system
-ls -la /lib/x86_64-linux-gnu/security/   # debian/ubuntu lägger dem här
-
-# Visa PAM-konfiguration för olika tjänster
-ls -la /etc/pam.d/                   # varje fil = en tjänst (sshd, sudo, login, etc)
-
-# Läs konfigurationen för sudo
-cat /etc/pam.d/sudo                  # visar vilka moduler sudo använder
+```
+PAM Flow:
+┌─────────────────────────────────────────────────────────────┐
+│  Program (ssh, sudo, login)                                │
+│         │                                                   │
+│         v                                                   │
+│  /etc/pam.d/tjanst ────── Konfiguration                   │
+│         │                                                   │
+│         v                                                   │
+│  PAM moduler (/lib/security/) ── .so filer                 │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## PAM-konfigurationsformat
-
-Varje rad i en PAM-fil har fyra delar: typ, kontrollflagga, modul och argument.
-
 ```bash
-# Titta på login-konfigurationen
-cat /etc/pam.d/login
-
-# Formatet är:
-# typ       kontrollflagga    modul                 argument
-# auth      required          pam_unix.so           nullok
-# account   required          pam_unix.so
-# password  required          pam_unix.so           sha512
-# session   required          pam_unix.so
+ls /etc/pam.d/
+cat /etc/pam.d/sudo
 ```
 
-De fyra typerna är:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **auth** - kollar vem användaren är (lösenord, fingeravtryck, etc)
-- **account** - kollar om kontot får användas (utgånget? låst?)
-- **password** - hanterar lösenordsändringar
-- **session** - saker som ska ske vid login/logout (mount home, sätt miljövariabler)
+## PAM-typer
 
----
+| Typ | Funktion |
+|-----|----------|
+| auth | Vem ar du? (losenord, etc) |
+| account | Far kontot anvandas? |
+| password | Losenordsandringar |
+| session | Vid login/logout |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Kontrollflaggor
 
-Kontrollflaggan bestämmer vad som händer om en modul lyckas eller misslyckas:
+| Flagga | Beteende |
+|--------|----------|
+| required | Maste lyckas, fortsatt anda |
+| requisite | Maste lyckas, avbryt vid fel |
+| sufficient | Lyckas = klart |
+| optional | Spelar ingen roll |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga moduler
+
+| Modul | Funktion |
+|-------|----------|
+| pam_unix.so | Standard Unix auth |
+| pam_wheel.so | Krav wheel-grupp |
+| pam_limits.so | Resursbegransningar |
+| pam_pwquality.so | Losenordspolicy |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Limits i /etc/security/limits.conf
+
+| Doman | Typ | Objekt | Varde |
+|-------|-----|--------|-------|
+| @developers | soft | nproc | 1000 |
+| * | hard | nofile | 8192 |
 
 ```bash
-# Visa common-auth för att se typiska kontrollflaggor
-cat /etc/pam.d/common-auth
-
-# Förklaring av flaggorna:
-# required    - måste lyckas, men fortsätt köra resten av modulerna ändå
-# requisite   - måste lyckas, avbryt direkt vid fel
-# sufficient  - om denna lyckas, skippa resten (om inget required misslyckat tidigare)
-# optional    - spelar ingen roll om den lyckas eller misslyckas
-# include     - inkludera en annan PAM-fil
-```
-
-Tänk på det som en kedja av vakter. "required" betyder att vakten måste släppa igenom dig, men nästa vakt får ändå titta. "requisite" betyder att om vakten säger nej så blir du utslängd direkt.
-
----
-
-## Vanliga PAM-moduler
-
-```bash
-# pam_unix.so - standard Unix-autentisering (kollar /etc/passwd och /etc/shadow)
-# pam_deny.so - nekar alltid, används för att blockera
-# pam_permit.so - tillåter alltid, används för tjänster som inte behöver auth
-# pam_wheel.so - kräver att användaren är medlem i wheel-gruppen
-# pam_limits.so - sätter resursbegränsningar (ulimit)
-# pam_env.so - sätter miljövariabler vid login
-
-# Se vilken modul som används var
-grep -r "pam_unix" /etc/pam.d/       # hitta alla användningar av pam_unix
-grep -r "pam_wheel" /etc/pam.d/      # hitta var pam_wheel används
-```
-
----
-
-## Begränsa sudo till wheel-gruppen
-
-Ett klassiskt sätt att begränsa vem som får köra sudo är att kräva medlemskap i wheel-gruppen:
-
-```bash
-# Redigera sudo PAM-konfiguration
-sudo nano /etc/pam.d/sudo
-
-# Lägg till denna rad i början (efter eventuella includes):
-# auth       required     pam_wheel.so use_uid
-
-# use_uid betyder att den kollar användarens riktiga UID, inte effektiva
-```
-
-Efter denna ändring måste användare vara medlemmar i wheel-gruppen för att kunna använda sudo, även om de finns i sudoers.
-
----
-
-## Lösenordspolicy med PAM
-
-Du kan sätta krav på hur lösenord ska se ut:
-
-```bash
-# På Debian/Ubuntu, redigera common-password
-cat /etc/pam.d/common-password
-
-# Modulen pam_pwquality.so (eller pam_cracklib.so på äldre system) hanterar detta
-# Exempel på konfiguration:
-# password  requisite  pam_pwquality.so retry=3 minlen=12 difok=3 ucredit=-1 lcredit=-1 dcredit=-1
-
-# retry=3    - användaren får 3 försök att ange ett godkänt lösenord
-# minlen=12  - minst 12 tecken
-# difok=3    - minst 3 tecken måste skilja från gamla lösenordet
-# ucredit=-1 - kräv minst 1 versal (-1 betyder "kräv minst 1")
-# lcredit=-1 - kräv minst 1 gemen
-# dcredit=-1 - kräv minst 1 siffra
-```
-
----
-
-## Session-begränsningar med pam_limits
-
-pam_limits.so läser från /etc/security/limits.conf för att sätta resursbegränsningar:
-
-```bash
-# Visa nuvarande limits-konfiguration
 cat /etc/security/limits.conf
-
-# Formatet är:
-# domän        typ      objekt    värde
-# @developers  soft     nproc     1000
-# @developers  hard     nproc     2000
-# *            soft     nofile    4096
-# *            hard     nofile    8192
-
-# domän kan vara användarnamn, @gruppnamn eller * för alla
-# typ är soft (varning) eller hard (absolut gräns)
-# vanliga objekt: nproc (processer), nofile (öppna filer), maxlogins
-
-# Kolla att pam_limits är aktiverad för login
-grep pam_limits /etc/pam.d/common-session
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Felsökning av PAM
-
-När PAM-autentisering misslyckas loggas det till syslog:
+## Felsokning
 
 ```bash
-# Se PAM-relaterade loggmeddelanden
-sudo grep -i pam /var/log/auth.log       # Debian/Ubuntu
-sudo grep -i pam /var/log/secure         # RHEL/CentOS
+# PAM-loggar
+sudo grep -i pam /var/log/auth.log
 
-# Vanliga felmeddelanden:
-# "authentication failure" - fel lösenord eller blockerad modul
-# "account expired" - kontot har gått ut
-# "Permission denied" - pam_wheel eller liknande blockerade
-
-# Testa PAM-konfiguration utan att låsa ut dig
-# VARNING: ha alltid en root-terminal öppen som backup!
-pamtester sudo dinuser authenticate      # testa sudo-autentisering
+# Testa
+pamtester sudo user authenticate
 ```
 
----
-
-## Praktiskt exempel: Begränsa SSH-inloggning
-
-Låt oss säga att du bara vill tillåta användare i gruppen "sshusers" att logga in via SSH:
-
-```bash
-# Skapa gruppen om den inte finns
-sudo groupadd sshusers                   # skapa gruppen sshusers
-
-# Lägg till tillåtna användare
-sudo usermod -aG sshusers alice          # lägg till alice i gruppen
-sudo usermod -aG sshusers bob            # lägg till bob i gruppen
-
-# Redigera PAM-konfigurationen för sshd
-sudo nano /etc/pam.d/sshd
-
-# Lägg till denna rad tidigt i filen (efter auth includes):
-# auth       required     pam_succeed_if.so user ingroup sshusers
-
-# pam_succeed_if.so kollar ett villkor och lyckas om det stämmer
-# "user ingroup sshusers" = användaren måste vara i gruppen sshusers
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-**PAM-strukturen** - Konfiguration finns i /etc/pam.d/ med en fil per tjänst. Modulerna är .so-filer i /lib/security/. Varje rad har typ, kontrollflagga, modul och argument.
+| Punkt | Forklaring |
+|-------|------------|
+| **/etc/pam.d/** | Konfiguration per tjanst |
+| **auth/account/password/session** | Fyra typer |
+| **required** | Maste lyckas |
+| **pam_limits** | Resursbegransningar |
+| **auth.log** | PAM-loggar |
 
-**De fyra typerna** - auth (vem är du?), account (får kontot användas?), password (lösenordsändring), session (vid login/logout).
-
-**Kontrollflaggor** - required (måste lyckas, kör vidare), requisite (måste lyckas, avbryt vid fel), sufficient (lyckas = klart), optional (spelar ingen roll).
-
-**Vanliga säkerhetsåtgärder** - pam_wheel.so för att begränsa sudo till wheel-gruppen, pam_pwquality.so för lösenordspolicy, pam_limits.so för resursbegränsningar.
-
-**Felsökning** - Loggarna i /var/log/auth.log visar PAM-fel. Ha alltid en backup-root-terminal öppen när du ändrar PAM-konfiguration.
+**Kom ihag:**
+- En fil per tjanst i /etc/pam.d/
+- Ha backup-terminal vid andringar
+- Loggar i /var/log/auth.log
+- pam_limits for ulimit-settings
 """,
         },
         {
@@ -3759,282 +3113,282 @@ sudo nano /etc/pam.d/sshd
             "xp_reward": 85,
             "content": """# SSH Hardening
 
-SSH är dörren till din server. Varje Linux-server som är exponerad mot internet bombarderas konstant av automatiska inloggningsförsök. Utan rätt konfiguration är det bara en tidsfråga innan någon gissar rätt lösenord. SSH hardening handlar om att göra den dörren så svår att forcera som möjligt.
+SSH ar dorren till din server och varje exponerad maskin bombarderas konstant med automatiska inloggningsattacker. Hardening handlar om att gora den dorren sa svar att forcera som mojligt genom att lasa ut angripare pa flera nivaer.
 
-Tänk på det som att säkra ingången till ditt hus. Du vill inte bara ha ett lås, du vill ha flera lås, en kamera, och kanske till och med flytta dörren så tjuvarna inte ens hittar den.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## SSH Hardening Checklista
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SSH HARDENING STEG                           │
+├─────────────────────────────────────────────────────────────────┤
+│  [ ] 1. Byt SSH-port (2222 eller annan)                        │
+│  [ ] 2. Inaktivera root login (PermitRootLogin no)             │
+│  [ ] 3. Generera SSH-nycklar (ed25519)                         │
+│  [ ] 4. Inaktivera losenord (PasswordAuthentication no)        │
+│  [ ] 5. Begränsa anvandare (AllowUsers/AllowGroups)            │
+│  [ ] 6. Installera fail2ban                                     │
+│  [ ] 7. Konfigurera timeouts                                    │
+│  [ ] 8. Verifiera med sshd -t                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## SSH-konfigurationsfilen
 
-All SSH-serverkonfiguration finns i /etc/ssh/sshd_config:
+| Kommando | Beskrivning |
+|----------|-------------|
+| `cat /etc/ssh/sshd_config` | Visa hela konfigurationen |
+| `grep -v "^#" /etc/ssh/sshd_config \\| grep -v "^$"` | Visa endast aktiva rader |
+| `sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup` | Skapa backup |
+| `sudo sshd -t` | Testa konfigurationssyntax |
+| `sudo sshd -T` | Visa effektiv konfiguration |
 
-```bash
-# Visa nuvarande konfiguration
-cat /etc/ssh/sshd_config             # hela filen med alla inställningar
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Visa bara aktiva rader (inte kommentarer)
-grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"   # filtrera bort tomma och kommentarer
+## Steg 1: Byt SSH-port
 
-# Innan du ändrar något, ta en backup
-sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup   # alltid backup först!
+```
+Port 22 (default)         Port 2222 (ny)
+       │                         │
+       ▼                         ▼
+   ┌───────┐                 ┌───────┐
+   │ 99%   │   ───────►      │ <1%   │
+   │ bots  │   efter byte    │ bots  │
+   └───────┘                 └───────┘
 ```
 
----
-
-## Steg 1: Byt port (security through obscurity)
-
-Att byta SSH-port stoppar inte en målmedveten angripare, men det minskar 99% av automatiska attacker:
-
 ```bash
-# Redigera sshd_config
-sudo nano /etc/ssh/sshd_config
+# I /etc/ssh/sshd_config:
+Port 2222
 
-# Ändra eller lägg till:
-# Port 2222
+# Under overgang - bada portar aktiva:
+Port 22
+Port 2222
 
-# Du kan ha flera portar aktiva samtidigt under övergången:
-# Port 22
-# Port 2222
+# Testa och applicera
+sudo sshd -t                     # verifiera syntax
+sudo systemctl restart sshd      # applicera
 
-# Testa konfigurationen innan du applicerar
-sudo sshd -t                         # -t = test mode, visar syntax-fel
-
-# Starta om SSH-tjänsten
-sudo systemctl restart sshd          # applicera ändringar
-
-# Glöm inte öppna nya porten i brandväggen!
-sudo ufw allow 2222/tcp              # om du kör ufw
+# Oppna brandvagg
+sudo ufw allow 2222/tcp
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Steg 2: Inaktivera root-login
 
-Root-kontot är första målet för angripare. Inaktivera SSH-login för root:
+| Installning | Effekt |
+|-------------|--------|
+| `PermitRootLogin no` | Blockerar root helt (rekommenderat) |
+| `PermitRootLogin prohibit-password` | Endast nyckel-login for root |
+| `PermitRootLogin yes` | Tillater allt (farligt!) |
 
 ```bash
-# I /etc/ssh/sshd_config, sätt:
-# PermitRootLogin no
-
-# Om du fortfarande behöver root-åtkomst ibland:
-# PermitRootLogin prohibit-password
-
-# "prohibit-password" tillåter endast nyckel-baserad login för root
-# "no" blockerar root helt (rekommenderat)
-
-# Verifiera att du har ett annat konto med sudo-rättigheter först!
-sudo grep "^sudo" /etc/group         # se vilka som har sudo-access
-```
-
----
-
-## Steg 3: Nyckelbaserad autentisering
-
-SSH-nycklar är både säkrare och smidigare än lösenord:
-
-```bash
-# PÅ DIN LOKALA DATOR - generera ett nyckelpar
-ssh-keygen -t ed25519 -C "din.email@example.com"   # ed25519 är modernast och säkrast
-
-# Du kan också använda RSA med stor nyckel
-ssh-keygen -t rsa -b 4096 -C "din.email@example.com"  # -b 4096 = 4096 bitar
-
-# Kopiera din publika nyckel till servern
-ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server   # enklaste sättet
-
-# Eller manuellt - på servern:
-mkdir -p ~/.ssh                      # skapa .ssh-mappen om den inte finns
-chmod 700 ~/.ssh                     # bara ägaren får läsa
-nano ~/.ssh/authorized_keys          # klistra in din publika nyckel här
-chmod 600 ~/.ssh/authorized_keys     # bara ägaren får läsa/skriva
-```
-
----
-
-## Steg 4: Inaktivera lösenordsautentisering
-
-När nycklar fungerar, stäng av lösenord helt:
-
-```bash
-# VIKTIGT: Testa att nyckel-login fungerar FÖRST
-# Ha en backup-session öppen ifall något går fel!
-
 # I /etc/ssh/sshd_config:
-# PasswordAuthentication no
-# PubkeyAuthentication yes
-# ChallengeResponseAuthentication no
+PermitRootLogin no
 
-# Testa och starta om
-sudo sshd -t                         # verifiera syntax
-sudo systemctl restart sshd          # applicera ändringar
-
-# Testa från en NY terminal (stäng inte den gamla!)
-ssh -i ~/.ssh/id_ed25519 user@server   # explicit ange nyckel för att testa
+# Verifiera att du har sudo-access forst!
+sudo grep "^sudo" /etc/group
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Steg 5: Begränsa vilka som får logga in
+## Steg 3: SSH-nycklar
 
-Du kan explicit ange vilka användare eller grupper som får SSH-åtkomst:
+| Nyckeltyp | Kommando | Rekommendation |
+|-----------|----------|----------------|
+| Ed25519 | `ssh-keygen -t ed25519` | Modernast, sakrast |
+| RSA 4096 | `ssh-keygen -t rsa -b 4096` | Bred kompatibilitet |
+| ECDSA | `ssh-keygen -t ecdsa` | Snabb, god sakerhet |
 
 ```bash
-# I /etc/ssh/sshd_config, lägg till:
-# AllowUsers alice bob deploy
-# Endast dessa tre användare kan logga in via SSH
+# Generera nyckel (lokal dator)
+ssh-keygen -t ed25519 -C "user@example.com"
 
-# Eller begränsa per grupp:
-# AllowGroups sshusers admins
-# Endast medlemmar i dessa grupper får logga in
+# Kopiera till server
+ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
 
-# Du kan kombinera med IP-begränsningar:
-# AllowUsers alice@192.168.1.* bob@10.0.0.*
-# alice kan bara logga in från 192.168.1.x-nätverket
-
-# Det finns även DenyUsers och DenyGroups för blocklisting
+# Manuell installation pa server
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys          # klistra in publik nyckel
+chmod 600 ~/.ssh/authorized_keys
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Steg 6: Ytterligare säkerhetsinställningar
+## Steg 4: Inaktivera losenord
 
-```bash
-# I /etc/ssh/sshd_config, överväg dessa inställningar:
-
-# MaxAuthTries 3
-# Begränsa antal inloggningsförsök per session
-
-# LoginGraceTime 60
-# Hur länge (sekunder) en användare har på sig att logga in
-
-# ClientAliveInterval 300
-# ClientAliveCountMax 2
-# Koppla bort inaktiva sessioner efter 10 minuter (300*2 sekunder)
-
-# X11Forwarding no
-# Stäng av X11-forwarding om du inte behöver det
-
-# AllowTcpForwarding no
-# Stäng av port forwarding om du inte behöver det
-
-# Protocol 2
-# Tvinga SSH version 2 (version 1 är osäker)
+```
+INNAN: Losenord + Nycklar           EFTER: Endast Nycklar
+      ┌─────────────┐                    ┌─────────────┐
+      │  Losenord   │ ──► X              │   Nyckel    │
+      │    eller    │      STANG AV      │   ENDAST    │
+      │   Nyckel    │                    └─────────────┘
+      └─────────────┘
 ```
 
----
+```bash
+# I /etc/ssh/sshd_config:
+PasswordAuthentication no
+PubkeyAuthentication yes
+ChallengeResponseAuthentication no
 
-## Fail2ban - Automatisk blockering
+# VIKTIGT: Testa nyckel-login FORST!
+# Ha backup-session oppen!
+sudo sshd -t && sudo systemctl restart sshd
+```
 
-Fail2ban övervakar loggfiler och blockerar IP-adresser som gör för många misslyckade inloggningsförsök:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Steg 5: Begransa atkomst
+
+| Direktiv | Exempel | Effekt |
+|----------|---------|--------|
+| `AllowUsers` | `AllowUsers alice bob` | Endast dessa anvandare |
+| `AllowGroups` | `AllowGroups sshusers` | Endast gruppmedlemmar |
+| `AllowUsers` | `AllowUsers alice@192.168.1.*` | Anvandare + IP-filter |
+| `DenyUsers` | `DenyUsers guest` | Blocklista anvandare |
 
 ```bash
-# Installera fail2ban
+# I /etc/ssh/sshd_config:
+AllowUsers alice bob deploy
+# eller
+AllowGroups sshusers admins
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Steg 6: Sakerhetsinställningar
+
+| Installning | Varde | Beskrivning |
+|-------------|-------|-------------|
+| `MaxAuthTries` | 3 | Max inloggningsforsk |
+| `LoginGraceTime` | 60 | Sekunder for login |
+| `ClientAliveInterval` | 300 | Keepalive interval |
+| `ClientAliveCountMax` | 2 | Max missade keepalives |
+| `X11Forwarding` | no | Stang av X11 |
+| `AllowTcpForwarding` | no | Stang av port forwarding |
+| `Protocol` | 2 | Endast SSH v2 |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Fail2ban Installation
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    FAIL2BAN FLODE                               │
+│                                                                 │
+│    /var/log/auth.log                                           │
+│           │                                                     │
+│           ▼                                                     │
+│    ┌─────────────┐    3 fel inom    ┌─────────────┐            │
+│    │  Fail2ban   │ ──────────────►  │   BANNED    │            │
+│    │  overvakar  │    10 minuter    │   1 timme   │            │
+│    └─────────────┘                  └─────────────┘            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+```bash
+# Installation
 sudo apt install fail2ban            # Debian/Ubuntu
 sudo dnf install fail2ban            # RHEL/Fedora
 
-# Skapa lokal konfiguration (ändra aldrig jail.conf direkt)
-sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local   # lokal fil åsidosätter
-
-# Redigera jail.local
+# Konfigurera
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 sudo nano /etc/fail2ban/jail.local
-
-# Aktivera SSH-skydd:
-# [sshd]
-# enabled = true
-# port = ssh,2222
-# filter = sshd
-# logpath = /var/log/auth.log
-# maxretry = 3
-# bantime = 3600
-# findtime = 600
-
-# maxretry = 3 fel inom findtime = 600 sekunder = ban i bantime = 3600 sekunder
-
-# Starta fail2ban
-sudo systemctl enable fail2ban       # starta vid boot
-sudo systemctl start fail2ban        # starta nu
-
-# Se status
-sudo fail2ban-client status sshd     # visa aktuella bans för SSH
 ```
 
----
-
-## Komplett säker sshd_config
-
-Här är ett exempel på en härdad konfiguration:
+Lagg till i jail.local:
+```
+[sshd]
+enabled = true
+port = ssh,2222
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime = 3600
+findtime = 600
+```
 
 ```bash
-# Visa exempel på säker konfiguration
-cat << 'EOF'
-# /etc/ssh/sshd_config - Hardened configuration
+# Aktivera
+sudo systemctl enable --now fail2ban
 
+# Status
+sudo fail2ban-client status sshd
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Komplett Hardened sshd_config
+
+```bash
+# /etc/ssh/sshd_config - Hardened
+
+# Natverksinstallningar
 Port 2222
 Protocol 2
 
-# Authentication
+# Autentisering
 PermitRootLogin no
 PubkeyAuthentication yes
 PasswordAuthentication no
 PermitEmptyPasswords no
 ChallengeResponseAuthentication no
 
-# Authorization
+# Auktorisering
 AllowGroups sshusers
 
-# Limits
+# Granser
 MaxAuthTries 3
 MaxSessions 2
 LoginGraceTime 60
 ClientAliveInterval 300
 ClientAliveCountMax 2
 
-# Security
+# Sakerhet
 X11Forwarding no
 AllowTcpForwarding no
 AllowAgentForwarding no
 PermitUserEnvironment no
 
-# Logging
+# Loggning
 LogLevel VERBOSE
-EOF
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Verifiera din SSH-säkerhet
+## Verifiering
 
-```bash
-# Kolla vilken port SSH lyssnar på
-sudo ss -tlnp | grep sshd            # visa SSH-lyssnande sockets
+| Uppgift | Kommando |
+|---------|----------|
+| Visa lyssnande port | `sudo ss -tlnp \\| grep sshd` |
+| Testa konfiguration | `sudo sshd -T` |
+| Misslyckade forsok | `sudo grep "Failed password" /var/log/auth.log \\| tail -20` |
+| Lyckade logins | `sudo grep "Accepted" /var/log/auth.log \\| tail -10` |
+| Fail2ban status | `sudo fail2ban-client status sshd` |
 
-# Kontrollera SSH-konfiguration
-sudo sshd -T                         # visa effektiv konfiguration
-
-# Se misslyckade inloggningsförsök
-sudo grep "Failed password" /var/log/auth.log | tail -20   # senaste 20 misslyckade
-
-# Se lyckade inloggningar
-sudo grep "Accepted" /var/log/auth.log | tail -10          # senaste 10 lyckade
-
-# Kolla fail2ban-status
-sudo fail2ban-client status sshd     # visa bannade IP-adresser
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-**Nyckelbaserad autentisering** - Byt från lösenord till SSH-nycklar. Generera med ssh-keygen, kopiera med ssh-copy-id, inaktivera sedan PasswordAuthentication.
+| Koncept | Beskrivning |
+|---------|-------------|
+| Nyckelbaserad auth | ed25519-nycklar + PasswordAuthentication no |
+| Root-blockering | PermitRootLogin no, anvand sudo istallet |
+| Atkomstbegransning | AllowUsers/AllowGroups for explicit kontroll |
+| Fail2ban | Automatisk IP-blockering vid upprepade fel |
+| Testning | sshd -t innan restart, backup-session oppen |
 
-**Inaktivera root-login** - Sätt PermitRootLogin no och använd istället ett vanligt konto med sudo-rättigheter.
-
-**Begränsa åtkomst** - Använd AllowUsers eller AllowGroups för att explicit ange vem som får logga in via SSH.
-
-**Fail2ban** - Installera och konfigurera fail2ban för att automatiskt blockera IP-adresser som gör upprepade misslyckade inloggningsförsök.
-
-**Testa innan du applicerar** - Kör alltid sshd -t för att verifiera konfigurationen. Ha en backup-session öppen när du ändrar SSH-inställningar så du inte låser ut dig själv.
+**Kom ihag:**
+- Testa ALLTID nyckel-login innan du stangar av losenord
+- Ha en backup-session oppen vid SSH-andringar
+- Uppdatera brandvagg om du byter port
+- fail2ban ar standard for produktionsservrar
+- Loggar i /var/log/auth.log for felsokning
 """,
         },
         {
@@ -4045,295 +3399,296 @@ sudo fail2ban-client status sshd     # visa bannade IP-adresser
             "xp_reward": 90,
             "content": """# Firewall Basics (ufw, iptables)
 
-En brandvägg är som en vakt vid varje dörr till din server. Den bestämmer vilken trafik som får komma in och vilken som får gå ut. Utan brandvägg är alla portar öppna för vem som helst på internet att försöka ansluta till.
+En brandvagg ar vakten vid varje port pa din server och bestammer vilken trafik som far komma in och ga ut. Utan brandvagg ar alla portar oppna for vem som helst pa internet att forsoka ansluta till.
 
-Tänk på det som ett hus med hundra dörrar. Utan brandvägg står alla dörrar vidöppna. Med brandvägg låser du alla utom de du aktivt vill ha öppna.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Brandvagg Oversikt
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      INTERNET                                   │
+│                          │                                      │
+│                          ▼                                      │
+│                    ┌───────────┐                                │
+│                    │ BRANDVAGG │                                │
+│                    └─────┬─────┘                                │
+│                          │                                      │
+│          ┌───────────────┼───────────────┐                      │
+│          ▼               ▼               ▼                      │
+│     Port 22         Port 80        Port 443     Port 3306       │
+│      ALLOW           ALLOW          ALLOW         DENY          │
+│       SSH            HTTP          HTTPS         MySQL          │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## UFW vs iptables vs firewalld
+
+| Verktyg | Distribution | Komplexitet | Anvandningsfall |
+|---------|--------------|-------------|-----------------|
+| UFW | Ubuntu/Debian | Enkel | De flesta servrar |
+| iptables | Alla | Avancerad | Full kontroll |
+| firewalld | RHEL/CentOS | Medel | Zoner och services |
+| nftables | Moderna | Avancerad | Ersatter iptables |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## UFW - Uncomplicated Firewall
 
-UFW är ett användarvänligt gränssnitt till iptables. Det är standard på Ubuntu och perfekt för de flesta användningsfall:
+| Kommando | Beskrivning |
+|----------|-------------|
+| `sudo ufw status` | Visa brandvaggsstatus |
+| `sudo ufw status verbose` | Detaljerad status |
+| `sudo ufw status numbered` | Regler med nummer |
+| `sudo ufw enable` | Aktivera brandvagg |
+| `sudo ufw disable` | Inaktivera brandvagg |
+| `sudo ufw reset` | Aterstall allt |
 
-```bash
-# Installera UFW om det saknas
-sudo apt install ufw                 # Debian/Ubuntu
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Kolla status
-sudo ufw status                      # visar om brandväggen är aktiv
-sudo ufw status verbose              # mer detaljerad status
-sudo ufw status numbered             # visar regler med nummer (för borttagning)
+## UFW Grundkonfiguration
+
+```
+VIKTIGT ORDNING:
+                    1. allow ssh
+                          │
+                          ▼
+                    2. default deny incoming
+                          │
+                          ▼
+                    3. default allow outgoing
+                          │
+                          ▼
+                    4. ufw enable
 ```
 
----
-
-## Grundläggande UFW-konfiguration
-
-Innan du aktiverar brandväggen, se till att tillåta SSH så du inte låser ut dig:
-
 ```bash
-# VIKTIGT: Tillåt SSH FÖRST innan du aktiverar brandväggen
-sudo ufw allow ssh                   # tillåter port 22
+# FORST: Tillat SSH (lasa inte ut dig!)
+sudo ufw allow ssh               # port 22
+# eller
+sudo ufw allow 2222/tcp          # annan SSH-port
 
-# Eller om du kör SSH på annan port
-sudo ufw allow 2222/tcp              # tillåter port 2222 för TCP
+# Satt defaults
+sudo ufw default deny incoming   # neka all inkommande
+sudo ufw default allow outgoing  # tillat all utgaende
 
-# Sätt default policies
-sudo ufw default deny incoming       # neka all inkommande trafik som standard
-sudo ufw default allow outgoing      # tillåt all utgående trafik som standard
-
-# Aktivera brandväggen
-sudo ufw enable                      # slå på brandväggen
-
-# Du kan alltid inaktivera den om något går fel
-sudo ufw disable                     # stäng av brandväggen
+# Aktivera
+sudo ufw enable
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## UFW-regler för vanliga tjänster
+## UFW Vanliga Regler
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `sudo ufw allow http` | Port 80 |
+| `sudo ufw allow https` | Port 443 |
+| `sudo ufw allow 'Nginx Full'` | Port 80 + 443 |
+| `sudo ufw allow 5432/tcp` | PostgreSQL |
+| `sudo ufw allow 3306/tcp` | MySQL |
+| `sudo ufw allow from 192.168.1.100` | Specifik IP |
+| `sudo ufw allow from 192.168.1.0/24` | Hela subnet |
+| `sudo ufw allow from 192.168.1.100 to any port 22` | IP + port |
+| `sudo ufw allow 6000:6007/tcp` | Portintervall |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Ta Bort UFW-regler
 
 ```bash
-# Webbtrafik
-sudo ufw allow http                  # tillåter port 80
-sudo ufw allow https                 # tillåter port 443
-sudo ufw allow 'Nginx Full'          # tillåter både 80 och 443 för Nginx
+# Visa med nummer
+sudo ufw status numbered
+# Output: [1] 22/tcp ALLOW IN Anywhere
+#         [2] 80/tcp ALLOW IN Anywhere
 
-# Databasportar (var försiktig med dessa!)
-sudo ufw allow 5432/tcp              # PostgreSQL
-sudo ufw allow 3306/tcp              # MySQL
-sudo ufw allow 27017/tcp             # MongoDB
+# Ta bort med nummer
+sudo ufw delete 2                # tar bort regel 2
 
-# Tillåt från specifik IP
-sudo ufw allow from 192.168.1.100    # tillåt all trafik från denna IP
-sudo ufw allow from 192.168.1.0/24   # tillåt hela subnätet
+# Ta bort med regel-syntax
+sudo ufw delete allow http
+sudo ufw delete allow from 192.168.1.100
 
-# Tillåt specifik port från specifik IP
-sudo ufw allow from 192.168.1.100 to any port 22   # SSH bara från denna IP
-
-# Tillåt portintervall
-sudo ufw allow 6000:6007/tcp         # tillåt TCP-portar 6000-6007
+# Aterstall allt
+sudo ufw reset
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Ta bort UFW-regler
+## iptables Grunder
 
-```bash
-# Visa regler med nummer
-sudo ufw status numbered             # visar regler som [1], [2], etc
-
-# Ta bort regel med nummer
-sudo ufw delete 3                    # tar bort regel nummer 3
-
-# Eller ta bort genom att upprepa regeln med "delete"
-sudo ufw delete allow http           # tar bort regeln som tillåter port 80
-sudo ufw delete allow from 192.168.1.100   # tar bort IP-baserad regel
-
-# Återställ alla regler
-sudo ufw reset                       # tar bort ALLA regler, inaktiverar brandväggen
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     IPTABLES CHAINS                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  INKOMMANDE ──► [INPUT]    ──► Lokal process                   │
+│                                                                 │
+│  Lokal process ──► [OUTPUT] ──► UTGAENDE                       │
+│                                                                 │
+│  INKOMMANDE ──► [FORWARD] ──► UTGAENDE (routing)               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
----
+| Kommando | Beskrivning |
+|----------|-------------|
+| `sudo iptables -L` | Lista alla regler |
+| `sudo iptables -L -n` | Numeriska portar |
+| `sudo iptables -L -v` | Verbose med raknare |
+| `sudo iptables -L -n -v --line-numbers` | Allt |
+| `sudo iptables -F` | Flush (rensa) allt |
 
-## iptables - Den kraftfulla grunden
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-UFW är egentligen ett gränssnitt till iptables. För mer avancerade scenarier behöver du förstå iptables direkt:
+## iptables Syntax
 
-```bash
-# Visa alla iptables-regler
-sudo iptables -L                     # lista alla regler
-sudo iptables -L -n                  # numeriska portar (snabbare)
-sudo iptables -L -v                  # verbose med byte/paket-räknare
-sudo iptables -L -n -v --line-numbers   # allt på en gång
+```
+iptables -A CHAIN -p PROTOKOLL --dport PORT -j ACTION
 
-# iptables har tre huvudsakliga "chains":
-# INPUT   - trafik som kommer IN till servern
-# OUTPUT  - trafik som går UT från servern
-# FORWARD - trafik som passerar GENOM servern (routing)
+Flaggor:
+  -A    Append (lagg till i slutet)
+  -I    Insert (lagg till i borjan)
+  -D    Delete (ta bort)
+  -p    Protokoll (tcp, udp, icmp)
+  --dport  Destinationsport
+  -j    Jump/Action (ACCEPT, DROP, REJECT)
+  -s    Source IP
+  -i    Input interface
 ```
 
----
-
-## iptables-regler
-
 ```bash
-# Grundläggande syntax:
-# iptables -A CHAIN -p protokoll --dport port -j ACTION
-# -A = append (lägg till i slutet)
-# -I = insert (lägg till i början)
-# -p = protokoll (tcp, udp, icmp)
-# --dport = destination port
-# -j = jump (vad som ska hända: ACCEPT, DROP, REJECT)
-
-# Tillåt SSH
-sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT   # acceptera SSH
-
-# Tillåt HTTP och HTTPS
-sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT   # acceptera HTTP
-sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT  # acceptera HTTPS
-
-# Tillåt etablerade anslutningar
-sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT   # viktigt!
-
-# Tillåt loopback (localhost)
-sudo iptables -A INPUT -i lo -j ACCEPT               # tillåt trafik på lo-interface
-
-# Droppa allt annat (sätt som sista regel)
-sudo iptables -A INPUT -j DROP                       # neka allt som inte matchat
-```
-
----
-
-## iptables - Ta bort och spara regler
-
-```bash
-# Visa regler med radnummer
-sudo iptables -L INPUT --line-numbers   # visa INPUT-chain med nummer
-
-# Ta bort specifik regel
-sudo iptables -D INPUT 3                # ta bort regel 3 från INPUT
-
-# Ta bort alla regler (flush)
-sudo iptables -F                        # VARNING: rensar ALLT
-
-# Spara regler permanent (Debian/Ubuntu)
-sudo apt install iptables-persistent    # installera för automatisk restore
-sudo netfilter-persistent save          # spara nuvarande regler
-sudo netfilter-persistent reload        # ladda sparade regler
-
-# På RHEL/CentOS
-sudo service iptables save              # spara till /etc/sysconfig/iptables
-```
-
----
-
-## Praktiskt exempel: Webbserver-brandvägg
-
-Här är en komplett brandväggskonfiguration för en webbserver:
-
-```bash
-# Med UFW (enklast)
-sudo ufw default deny incoming       # neka all inkommande
-sudo ufw default allow outgoing      # tillåt all utgående
-sudo ufw allow ssh                   # tillåt SSH (port 22)
-sudo ufw allow http                  # tillåt HTTP (port 80)
-sudo ufw allow https                 # tillåt HTTPS (port 443)
-sudo ufw enable                      # aktivera
-
-# Verifiera
-sudo ufw status verbose              # kolla att allt ser rätt ut
-```
-
-Samma sak med iptables:
-
-```bash
-# Rensa befintliga regler först
-sudo iptables -F                     # flush alla regler
-
-# Tillåt loopback
-sudo iptables -A INPUT -i lo -j ACCEPT   # localhost måste fungera
-
-# Tillåt etablerade anslutningar
-sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-# Tillåt SSH, HTTP, HTTPS
+# Tillat SSH
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Tillat HTTP/HTTPS
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 
-# Neka allt annat
-sudo iptables -A INPUT -j DROP
-
-# Spara permanent
-sudo netfilter-persistent save       # på Debian/Ubuntu med iptables-persistent
-```
-
----
-
-## Felsökning av brandväggsregler
-
-```bash
-# Testa om en port är öppen utifrån
-nc -zv server.example.com 80         # testa port 80
-
-# Se vilka portar som lyssnar på servern
-sudo ss -tulnp                       # visa alla lyssnande portar
-
-# Kolla brandväggsregler
-sudo ufw status                      # UFW
-sudo iptables -L -n -v               # iptables
-
-# Tillfälligt inaktivera brandväggen för test (BARA för felsökning!)
-sudo ufw disable                     # stäng av UFW
-# Kom ihåg att slå på den igen: sudo ufw enable
-
-# Logga droppade paket för debugging
-sudo ufw logging on                  # aktivera loggning
-sudo tail -f /var/log/ufw.log        # följ brandväggsloggen
-```
-
----
-
-## Vanliga misstag att undvika
-
-```bash
-# MISSTAG 1: Aktivera brandvägg innan SSH är tillåten
-# LÖSNING: Alltid "ufw allow ssh" INNAN "ufw enable"
-
-# MISSTAG 2: Glömma att tillåta etablerade anslutningar med iptables
-# LÖSNING: Lägg alltid till:
+# Tillat etablerade anslutningar (VIKTIGT!)
 sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# MISSTAG 3: Blockera loopback-interface
-# LÖSNING: Tillåt alltid localhost:
+# Tillat loopback
 sudo iptables -A INPUT -i lo -j ACCEPT
 
-# MISSTAG 4: Glömma att spara iptables-regler
-# LÖSNING: Reglerna försvinner vid omstart! Spara dem:
-sudo netfilter-persistent save
+# Droppa allt annat (SIST!)
+sudo iptables -A INPUT -j DROP
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## firewalld (RHEL/CentOS/Fedora)
+## iptables Spara Regler
 
-På Red Hat-baserade system är firewalld standard istället för UFW:
+| Distribution | Kommando |
+|--------------|----------|
+| Debian/Ubuntu | `sudo apt install iptables-persistent` |
+| | `sudo netfilter-persistent save` |
+| | `sudo netfilter-persistent reload` |
+| RHEL/CentOS | `sudo service iptables save` |
+| | Sparas i /etc/sysconfig/iptables |
 
 ```bash
-# Kolla status
-sudo firewall-cmd --state            # visar om firewalld kör
-sudo firewall-cmd --list-all         # visa alla regler
-
-# Tillåt tjänster
-sudo firewall-cmd --add-service=ssh --permanent    # tillåt SSH permanent
-sudo firewall-cmd --add-service=http --permanent   # tillåt HTTP permanent
-sudo firewall-cmd --add-service=https --permanent  # tillåt HTTPS permanent
-
-# Tillåt specifik port
-sudo firewall-cmd --add-port=8080/tcp --permanent  # tillåt port 8080
-
-# Ladda om efter ändringar
-sudo firewall-cmd --reload           # applicera permanenta ändringar
-
-# Ta bort regel
-sudo firewall-cmd --remove-service=http --permanent   # ta bort HTTP
-sudo firewall-cmd --reload                            # applicera
+# Ta bort specifik regel
+sudo iptables -L INPUT --line-numbers
+sudo iptables -D INPUT 3             # ta bort regel 3
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktiskt Exempel: Webbserver
+
+```bash
+# UFW (enklast)
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+sudo ufw status verbose
+
+# iptables (samma sak)
+sudo iptables -F                                              # rensa
+sudo iptables -A INPUT -i lo -j ACCEPT                        # localhost
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT            # SSH
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT            # HTTP
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT           # HTTPS
+sudo iptables -A INPUT -j DROP                                # neka resten
+sudo netfilter-persistent save                                # spara
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## firewalld (RHEL/CentOS)
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `sudo firewall-cmd --state` | Visa status |
+| `sudo firewall-cmd --list-all` | Lista regler |
+| `sudo firewall-cmd --add-service=ssh --permanent` | Tillat SSH |
+| `sudo firewall-cmd --add-service=http --permanent` | Tillat HTTP |
+| `sudo firewall-cmd --add-port=8080/tcp --permanent` | Tillat port |
+| `sudo firewall-cmd --reload` | Ladda om |
+| `sudo firewall-cmd --remove-service=http --permanent` | Ta bort |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Felsokning
+
+| Uppgift | Kommando |
+|---------|----------|
+| Testa port utifran | `nc -zv server.example.com 80` |
+| Lyssnande portar | `sudo ss -tulnp` |
+| UFW status | `sudo ufw status` |
+| iptables regler | `sudo iptables -L -n -v` |
+| Aktivera UFW-logg | `sudo ufw logging on` |
+| Visa logg | `sudo tail -f /var/log/ufw.log` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga Misstag
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   MISSTAG ATT UNDVIKA                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. Aktivera brandvagg INNAN SSH ar tillaten                   │
+│     Losning: ufw allow ssh FORST                               │
+│                                                                 │
+│  2. Glommer ESTABLISHED,RELATED i iptables                     │
+│     Losning: -m state --state ESTABLISHED,RELATED -j ACCEPT    │
+│                                                                 │
+│  3. Blockera loopback (localhost)                              │
+│     Losning: -A INPUT -i lo -j ACCEPT                          │
+│                                                                 │
+│  4. Glommer spara iptables-regler                              │
+│     Losning: netfilter-persistent save                         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-**UFW för enkelhet** - På Ubuntu/Debian är UFW enklast. Alltid "allow ssh" innan "enable". Default deny incoming, allow outgoing är en bra utgångspunkt.
+| Koncept | Beskrivning |
+|---------|-------------|
+| UFW for enkelhet | "allow ssh" innan "enable", deny incoming default |
+| iptables chains | INPUT (in), OUTPUT (ut), FORWARD (routing) |
+| ESTABLISHED | Glom aldrig tillata etablerade anslutningar |
+| Spara regler | iptables-regler forsvinner vid omstart utan save |
+| Felsokning | ss -tulnp for lyssnande, nc -zv for test |
 
-**iptables för kontroll** - UFW är ett gränssnitt till iptables. För avancerade scenarier, lär dig iptables chains (INPUT, OUTPUT, FORWARD) och actions (ACCEPT, DROP, REJECT).
-
-**Etablerade anslutningar** - Med iptables, glöm aldrig att tillåta ESTABLISHED,RELATED så att svar på utgående förfrågningar kommer tillbaka.
-
-**Spara regler** - iptables-regler försvinner vid omstart. Använd iptables-persistent eller netfilter-persistent för att spara dem permanent.
-
-**Felsökning** - "ss -tulnp" visar lyssnande portar, "nc -zv" testar om portar är nåbara utifrån. Aktivera brandväggsloggning vid problem.
+**Kom ihag:**
+- ALLTID tillat SSH innan du aktiverar brandvaggen
+- UFW ar wrapper runt iptables - samma sakerhet
+- iptables-regler forsvinner vid reboot utan persistent
+- Loopback (lo) maste vara tillaten for localhost
+- firewalld pa RHEL/CentOS, UFW pa Ubuntu/Debian
 """,
         },
     ],
