@@ -419,7 +419,26 @@ function SearchBar() {
    ============================================================================ */
 
 function SessionTimerDisplay() {
+    const [mounted, setMounted] = React.useState(false)
     const { currentSessionSeconds, formatTime } = useSessionTimer()
+
+    // Prevent hydration mismatch
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return (
+            <div className={cn(
+                "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl",
+                "bg-emerald-500/10 border border-emerald-500/20",
+                "text-emerald-600 dark:text-emerald-400"
+            )}>
+                <Clock className="h-4 w-4" />
+                <span className="text-sm font-mono font-medium">0:00</span>
+            </div>
+        )
+    }
 
     return (
         <div className={cn(
