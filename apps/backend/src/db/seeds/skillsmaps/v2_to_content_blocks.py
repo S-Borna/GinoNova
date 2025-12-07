@@ -286,12 +286,44 @@ def convert_v2_node_to_task(node: dict) -> dict:
 
 
 def load_v2_linux_nodes() -> list[dict]:
-    """Load all Linux V2 nodes and convert to tasks."""
-    from .linux import ALL_LINUX_V2_NODES
-    return [convert_v2_node_to_task(node) for node in ALL_LINUX_V2_NODES]
+    """Load Linux nodes from linux_skillsmap.py (markdown format)."""
+    from .linux_skillsmap import LINUX_SKILLSMAP_NODES
+    return [convert_markdown_node_to_task(node) for node in LINUX_SKILLSMAP_NODES]
 
 
 def load_v2_azure_nodes() -> list[dict]:
     """Load all Azure V2 nodes and convert to tasks."""
     from .azure import ALL_AZURE_V2_NODES
     return [convert_v2_node_to_task(node) for node in ALL_AZURE_V2_NODES]
+
+
+def convert_markdown_node_to_task(node: dict) -> dict:
+    """
+    Convert a markdown-based node (from linux_skillsmap.py) to task format.
+
+    The markdown content is preserved as a single text block, ensuring
+    all formatting, diagrams, and content remain intact.
+    """
+    content = node.get("content", "")
+
+    # Create content_blocks from the markdown content
+    content_blocks = []
+
+    if content:
+        content_blocks.append({
+            "type": "text",
+            "content": content.strip()
+        })
+
+    return {
+        "title": node.get("title", ""),
+        "slug": node.get("slug", ""),
+        "description": f"Lär dig {node.get('title', '')} - täcker: {', '.join(node.get('topics_covered', [])[:5])}",
+        "difficulty": node.get("difficulty", "intermediate"),
+        "estimated_minutes": node.get("estimated_minutes", 45),
+        "xp_reward": node.get("xp_reward", 80),
+        "content": content,  # Keep legacy markdown for fallback
+        "content_blocks": content_blocks,
+        "requirements": [],
+        "task_tier": "premium",
+    }
