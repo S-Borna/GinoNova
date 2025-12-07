@@ -68,7 +68,7 @@ function StudySessionSetup() {
     // Hämta modulinformation (parallellt för snabbhet)
     useEffect(() => {
         let cancelled = false
-        
+
         async function fetchModuleInfo() {
             if (selectedModules.length === 0) {
                 router.push("/study")
@@ -107,7 +107,7 @@ function StudySessionSetup() {
         }
 
         fetchModuleInfo()
-        
+
         return () => { cancelled = true }
     }, [selectedModules, router])
 
