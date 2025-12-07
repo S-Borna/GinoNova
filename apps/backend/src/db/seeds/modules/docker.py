@@ -355,136 +355,485 @@ docker run -d min-app:v1.2.3
 """,
         },
         {
-            "title": "Docker Images Deep Dive",
-            "slug": "docker-images-deep-dive",
+            "title": "SSH & Remote Access",
+            "slug": "ssh-remote-access",
             "difficulty": "easy",
-            "estimated_minutes": 45,
-            "xp_reward": 75,
-            "content": """# Docker Images Deep Dive
+            "estimated_minutes": 50,
+            "xp_reward": 80,
+            "content": """# SSH & Remote Access
 
-## Varför behöver du kunna detta?
+## 🎯 Varför SSH är kritiskt för DevOps
 
-Images är grunden för allt i Docker. Du måste förstå:
+SSH är standardverktyget för att hantera servrar. Som DevOps-ingenjör använder du det dagligen för:
 
-- **Hur images byggs upp** så du kan optimera storlek och build-tid
-- **Layers och caching** så du inte slösar tid på onödiga rebuilds
-- **Tagging-strategier** så du kan hantera versioner i produktion
+| Användningsområde | Beskrivning |
+|-------------------|-------------|
+| **Remote server access** | Logga in på servrar över nätverket |
+| **Säker filöverföring** | Kopiera filer med SCP och RSYNC |
+| **Tunneling** | Skapa säkra kanaler för annan trafik |
+| **Remote commands** | Kör kommandon på servrar utan att logga in |
+| **Automation** | Skript som hanterar många servrar |
+| **Production management** | Hantera produktionsmiljöer säkert |
 
 ---
 
-## Vad är en Docker Image?
+## ⚡ Snabbinstallation
 
-Tänk på en image som en **snapshot av ett filsystem** plus metadata om hur containern ska köras. Det är som en mall eller recept - du kan skapa hur många containers som helst från samma image.
-
----
-
-## Image Layers
+SSH-klienten är oftast förinstallerad. Verifiera:
 
 ```bash
-# Varje instruktion i Dockerfile skapar ett layer
-┌─────────────────────────────────────┐
-│  Layer 4: COPY app.py              │  ← Ditt app-lager
-├─────────────────────────────────────┤
-│  Layer 3: RUN pip install flask     │  ← Dependencies
-├─────────────────────────────────────┤
-│  Layer 2: RUN apt-get update        │  ← System packages
-├─────────────────────────────────────┤
-│  Layer 1: FROM python:3.11          │  ← Base image
-└─────────────────────────────────────┘
-```
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔍 KONTROLLERA OM SSH FINNS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -V
+# Förväntad output: OpenSSH_8.x eller liknande
 
-**Varje layer är immutable** - ändrar du något skapas ett nytt layer ovanpå.
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐧 LINUX - Installera om det saknas
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+sudo apt update && sudo apt install openssh-client -y
 
----
-
-## Arbeta med Images
-
-```bash
-# Ladda ner en image
-docker pull nginx                    # Senaste versionen (latest)
-docker pull nginx:1.25               # Specifik version
-docker pull nginx:1.25-alpine        # Alpine-variant (mindre)
-
-# Lista lokala images
-docker images                        # Alla images
-docker images nginx                  # Filtrera på namn
-
-# Inspektera en image
-docker inspect nginx                 # All metadata som JSON
-docker history nginx                 # Visa alla layers
-
-# Ta bort images
-docker rmi nginx                     # Ta bort specifik image
-docker image prune                   # Ta bort oanvända images
-docker image prune -a                # Ta bort ALLA oanvända
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🍎 macOS / 🪟 Windows
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SSH är förinstallerat på macOS
+# Windows 10/11: SSH finns i PowerShell eller använd Git Bash
 ```
 
 ---
 
-## Image Tagging
+## 🔌 Grundläggande anslutning
+
+SSH (Secure Shell) skapar en krypterad anslutning till en fjärrdator. Allt du skriver och ser är skyddat från avlyssning.
 
 ```bash
-# Format: registry/repository:tag
-docker.io/library/nginx:1.25
-│         │       │     │
-│         │       │     └── Tag (version)
-│         │       └── Repository (image-namn)
-│         └── Namespace (user/org)
-└── Registry (docker.io är default)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📡 BASIC CONNECTION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh user@hostname
+# ssh        = kommandot
+# user       = användarnamnet på fjärrdatorn
+# @          = separator
+# hostname   = servernamn eller IP-adress
+# Exempel: ssh alice@server.example.com
 
-# Tagga en image
-docker tag nginx:latest myregistry.com/nginx:v1.0
-docker tag nginx:latest nginx:production
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔢 MED SPECIFIK PORT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -p 2222 user@hostname
+# -p 2222    = anslut till port 2222 istället för standard (22)
+# Vissa servrar använder annan port för ökad säkerhet
 
-# Pusha till registry
-docker push myregistry.com/nginx:v1.0
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 MED IP-ADRESS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh user@192.168.1.100
+# Använd IP-adress direkt när du inte har DNS
+# Användbart i lokala nätverk eller vid felsökning
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚡ KÖR KOMMANDO REMOTE (utan interaktiv session)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh user@hostname "ls -la"
+# Kör kommandot, visa output, stäng anslutningen
+# Perfekt för automation och skript!
+
+ssh user@hostname "df -h && free -m"
+# Kör flera kommandon med &&
 ```
 
 ---
 
-## Layer Caching
+## 🔍 Verbose-läge för felsökning
 
 ```bash
-# Docker cachar layers för snabbare builds
-# Om inget ändrats → använd cached layer
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐛 DEBUG-NIVÅER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -v user@hostname      # Verbose - grundläggande debug-info
+ssh -vv user@hostname     # Mer detaljerat
+ssh -vvv user@hostname    # Maximalt detaljerat - visar ALLT
 
-# DÅLIGT - cache invalideras vid varje kodändring
-FROM python:3.11
-COPY . /app                    # ← Ändras ofta → allt efter invalideras
-RUN pip install -r requirements.txt
-
-# BRA - dependencies cachas separat
-FROM python:3.11
-COPY requirements.txt /app/    # ← Ändras sällan
-RUN pip install -r requirements.txt  # ← Cachas!
-COPY . /app                    # ← Bara detta körs om vid kodändring
+# Användbart när anslutningen misslyckas
+# Visar vilka nycklar som testas, vilka algoritmer som används, etc.
 ```
 
 ---
 
-## Image-storlek
+## 🚪 Avsluta SSH-session
 
 ```bash
-# Jämför storlekar
-docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
-
-# Typiska storlekar:
-# python:3.11          ~1 GB
-# python:3.11-slim     ~150 MB
-# python:3.11-alpine   ~50 MB
-
-# Alpine är minst men kan ha kompatibilitetsproblem
-# Slim är en bra kompromiss
+exit        # Skriv exit
+logout      # Eller logout
+# Ctrl+D    # Eller tangentbordsgenväg
 ```
 
 ---
 
-## Key Takeaways
+## 🔑 SSH-nycklar (säkrare än lösenord)
 
-- Images består av **read-only layers** stackade på varandra
-- **Layer caching** sparar tid - ordna Dockerfile smart
-- Använd **specifika tags** i produktion, aldrig `latest`
-- **Slim/Alpine** varianter sparar diskutrymme och minskar attack-yta
+SSH-nycklar fungerar som ett nyckelpar - en **privat** (hemlig) och en **publik** (kan delas). Det är mycket säkrare än lösenord!
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔐 GENERERA NYCKLAR - ED25519 (rekommenderat)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh-keygen -t ed25519 -a 100 -C "din@email.com"
+# -t ed25519  = nyckeltyp (modern och säker)
+# -a 100      = antal krypteringsrundor (mer = säkrare)
+# -C          = kommentar (hjälper identifiera nyckeln)
+
+# Du får frågor:
+# 1. Var ska nyckeln sparas? (Enter för default: ~/.ssh/id_ed25519)
+# 2. Passphrase? (REKOMMENDERAS - extra säkerhet för nyckeln)
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔐 ALTERNATIV: RSA (om ED25519 inte stöds)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh-keygen -t rsa -b 4096 -a 100 -C "din@email.com"
+# -t rsa      = RSA-nyckel (äldre men fungerar överallt)
+# -b 4096     = 4096 bitar (minimum för säkerhet idag)
+```
+
+**Varför nycklar är bättre än lösenord:**
+- Även om någon får din publika nyckel kan de inte logga in
+- Längre och mer slumpmässiga än lösenord
+- Kan inte gissas med brute-force
+- Kan skyddas med passphrase
+
+---
+
+## 📁 Nyckelfiler och rättigheter
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📂 VAR NYCKLARNA SPARAS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+~/.ssh/id_ed25519       # Privat nyckel (HEMLIG!)
+~/.ssh/id_ed25519.pub   # Publik nyckel (kan delas)
+~/.ssh/id_rsa           # Privat RSA-nyckel
+~/.ssh/id_rsa.pub       # Publik RSA-nyckel
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔒 KRITISKA RÄTTIGHETER (SSH vägrar annars!)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+chmod 700 ~/.ssh              # Bara du kan läsa mappen
+chmod 600 ~/.ssh/id_ed25519   # Bara du kan läsa privata nyckeln
+chmod 644 ~/.ssh/id_ed25519.pub  # Alla kan läsa publika nyckeln
+chmod 600 ~/.ssh/authorized_keys  # Serverns lista med tillåtna nycklar
+```
+
+---
+
+## 📤 Kopiera publik nyckel till server
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✨ METOD 1: ssh-copy-id (enklast!)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh-copy-id user@hostname
+# Kopierar din publika nyckel automatiskt till servern
+# Du loggar in med lösenord EN gång, sedan fungerar nyckeln
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📋 METOD 2: Manuellt med pipe
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cat ~/.ssh/id_ed25519.pub | ssh user@hostname "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✂️ METOD 3: Kopiera och klistra
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cat ~/.ssh/id_ed25519.pub   # Visa din publika nyckel
+# Kopiera outputen, logga in på servern, och:
+mkdir -p ~/.ssh
+echo "KLISTRA-NYCKELN-HÄR" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+---
+
+## ⚙️ SSH Config (spara tid!)
+
+Skapa `~/.ssh/config` för att slippa skriva långa kommandon:
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📝 EXEMPEL: ~/.ssh/config
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Host production
+    HostName 192.168.1.100
+    User deploy
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+Host staging
+    HostName staging.example.com
+    User admin
+    IdentityFile ~/.ssh/staging_key
+
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+```
+
+**Nu kan du ansluta med:**
+
+```bash
+ssh production    # Istället för: ssh -p 2222 deploy@192.168.1.100
+ssh staging       # Istället för: ssh admin@staging.example.com
+```
+
+**Vanliga config-optioner:**
+
+| Option | Beskrivning |
+|--------|-------------|
+| `HostName` | Serveradress (IP eller domän) |
+| `User` | Användarnamn |
+| `Port` | SSH-port |
+| `IdentityFile` | Vilken nyckel som ska användas |
+| `ServerAliveInterval` | Skicka keep-alive var X:e sekund |
+| `ServerAliveCountMax` | Max antal missade keep-alive |
+
+---
+
+## 🚇 Port Forwarding (tunnlar)
+
+Port forwarding skapar "hemliga tunnlar" genom SSH - perfekt för att nå tjänster som inte är direkt tillgängliga.
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📥 LOCAL PORT FORWARDING (-L)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -L 8080:localhost:3000 user@server
+# Din lokala port 8080 → tunnlas till → serverns localhost:3000
+# Öppna localhost:8080 i webbläsaren → ser serverns app på port 3000
+
+# Praktiskt exempel: Nå databas som bara lyssnar lokalt
+ssh -L 5432:localhost:5432 user@dbserver
+# Nu kan du ansluta till localhost:5432 och nå databasen!
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📤 REMOTE PORT FORWARDING (-R)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -R 8080:localhost:3000 user@server
+# Serverns port 8080 → tunnlas till → din lokala port 3000
+# Användbart: Visa lokal utveckling via servern
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 DYNAMIC PORT FORWARDING (-D) - SOCKS Proxy
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -D 1080 user@server
+# Skapar SOCKS-proxy på localhost:1080
+# All trafik genom proxyn går via SSH-tunneln
+# Konfigurera webbläsaren att använda localhost:1080
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 BAKGRUNDSTUNNEL
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -f -N -L 5432:localhost:5432 user@dbserver
+# -f = kör i bakgrunden
+# -N = kör inget kommando (bara tunneln)
+```
+
+---
+
+## 📦 SCP - Kopiera filer säkert
+
+SCP (Secure Copy) kopierar filer över SSH - enkelt och krypterat.
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⬆️ KOPIERA TILL SERVER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+scp file.txt user@hostname:/path/to/destination
+# Kopierar file.txt till servern
+
+scp -r directory/ user@hostname:/path/
+# -r = recursive, kopierar hela mappen med innehåll
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⬇️ KOPIERA FRÅN SERVER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+scp user@hostname:/path/to/file.txt ./
+# Kopierar fil från servern till nuvarande mapp
+
+scp user@hostname:/home/user/data.txt ~/Downloads/
+# Kopierar till specifik mapp
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔢 MED ANNAN PORT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+scp -P 2222 file.txt user@hostname:/path/
+# OBS: Stort -P för SCP, litet -p för SSH!
+```
+
+---
+
+## 🔄 RSYNC över SSH
+
+RSYNC är smartare än SCP - synkar bara det som ändrats.
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔁 SYNKA FILER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+rsync -avz -e ssh local/ user@hostname:/remote/
+# -a = archive (behåll permissions, timestamps, etc)
+# -v = verbose (visa vad som händer)
+# -z = compress (snabbare över nätverket)
+# -e ssh = använd SSH för transport
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🚫 EXKLUDERA FILER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+rsync -avz --exclude '*.log' --exclude 'node_modules' -e ssh local/ user@hostname:/remote/
+```
+
+---
+
+## 🔐 SSH Agent (hantera nycklar)
+
+SSH Agent håller dina nycklar i minnet så du slipper ange passphrase varje gång.
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🚀 STARTA OCH ANVÄND AGENT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+eval $(ssh-agent)       # Starta agenten
+ssh-add ~/.ssh/id_ed25519  # Lägg till nyckel (ange passphrase en gång)
+ssh-add -l              # Lista laddade nycklar
+ssh-add -d ~/.ssh/id_ed25519  # Ta bort specifik nyckel
+ssh-add -D              # Ta bort alla nycklar
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 AGENT FORWARDING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -A user@hostname    # Vidarebefordra din agent till servern
+# Nu kan du SSH vidare från servern med dina lokala nycklar!
+
+# Eller i config:
+Host server
+    ForwardAgent yes
+```
+
+---
+
+## 🛡️ Säkerhetstips
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ BEST PRACTICES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1. Använd starka nycklar
+ssh-keygen -t ed25519 -a 100
+
+# 2. Skydda privata nyckeln
+chmod 600 ~/.ssh/id_ed25519
+
+# 3. Använd passphrase på nyckeln
+
+# 4. Rotera nycklar regelbundet
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔐 KNOWN HOSTS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ~/.ssh/known_hosts sparar serverns fingeravtryck
+# Skyddar mot man-in-the-middle attacker
+
+ssh-keygen -R hostname  # Ta bort gammal host-key
+ssh-keyscan hostname    # Hämta serverns host-key
+```
+
+---
+
+## 🔧 Felsökning
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ❌ CONNECTION REFUSED
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+systemctl status sshd           # Kör SSH-servern?
+ss -tlnp | grep :22            # Lyssnar den på port 22?
+sudo ufw status | grep 22       # Blockerar brandväggen?
+sudo journalctl -u sshd -n 50   # Vad säger loggarna?
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🚫 PERMISSION DENIED
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ls -la ~/.ssh/                  # Rätt permissions?
+ls -la ~/.ssh/authorized_keys   # Finns filen? Rätt permissions?
+ssh -vvv user@hostname          # Detaljerad debug-info
+sudo tail -f /var/log/auth.log  # Serverloggar
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐌 LÅNGSAM ANSLUTNING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -o GSSAPIAuthentication=no user@hostname
+
+# Eller permanent i ~/.ssh/config:
+Host *
+    GSSAPIAuthentication no
+    UseDNS no
+```
+
+---
+
+## 🚀 Produktionsmönster
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📦 AUTOMATISERAD DEPLOY
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#!/bin/bash
+SERVER="user@production"
+APP_DIR="/opt/myapp"
+
+# Synka filer
+rsync -avz --exclude 'node_modules' -e ssh ./ $SERVER:$APP_DIR/
+
+# Kör deploy-kommando
+ssh $SERVER "cd $APP_DIR && ./deploy.sh"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📊 ÖVERVAKA FLERA SERVRAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#!/bin/bash
+SERVERS=("server1" "server2" "server3")
+
+for server in "${SERVERS[@]}"; do
+    if ssh -o ConnectTimeout=5 "$server" "systemctl is-active nginx" &>/dev/null; then
+        echo "✓ $server: nginx running"
+    else
+        echo "✗ $server: nginx down"
+    fi
+done
+```
+
+---
+
+## ✅ Sammanfattning
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `ssh user@hostname` | Anslut till server |
+| `ssh -p PORT` | Använd specifik port |
+| `ssh-keygen` | Generera nycklar |
+| `ssh-copy-id` | Kopiera publik nyckel till server |
+| `~/.ssh/config` | Klientkonfiguration |
+| `-L` | Local port forwarding |
+| `-R` | Remote port forwarding |
+| `-D` | Dynamic forwarding (SOCKS) |
+| `scp` | Säker filkopiering |
+| `rsync -e ssh` | Synka över SSH |
+| `ssh-agent` | Hantera nycklar i minnet |
+
+**Kom ihåg:**
+- 🔒 Skydda privata nycklar (chmod 600)
+- 🔑 Använd ED25519 eller RSA 4096
+- ⚙️ Använd SSH config för bekvämlighet
+- 🧪 Testa anslutningar innan du automatiserar
 """,
         },
         {
