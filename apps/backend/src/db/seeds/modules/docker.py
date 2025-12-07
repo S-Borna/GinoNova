@@ -1661,7 +1661,17 @@ docker network disconnect frontend-net webapp
             "xp_reward": 80,
             "content": """# Docker Volumes & Persistence
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Varför Volumes är viktigt |
+|----------|---------------------------|
+| **Databaser** | Data måste överleva container restarts |
+| **Stateful apps** | Uploads, sessions, cache |
+| **Utveckling** | Hot reload utan rebuild |
+| **Backup/Restore** | Kunna återställa data |
+| **Shared state** | Data mellan containers |
 
 Containers är ephemeral - data försvinner när de tas bort. Du måste förstå:
 
@@ -1669,9 +1679,30 @@ Containers är ephemeral - data försvinner när de tas bort. Du måste förstå
 - **Skillnaden mellan volumes och bind mounts**
 - **Backup och restore** av container-data
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Problemet utan volumes
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 DATA UTAN VOLUMES                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. docker run postgres                                    │
+│      ┌──────────────────┐                                   │
+│      │    PostgreSQL    │                                   │
+│      │   ┌──────────┐   │                                   │
+│      │   │   DATA   │   │  ← Data i container               │
+│      │   └──────────┘   │                                   │
+│      └──────────────────┘                                   │
+│                                                             │
+│   2. docker rm postgres                                     │
+│      ┌──────────────────┐                                   │
+│      │    BORTTAGEN     │  ← DATA FÖRLORAD!                 │
+│      └──────────────────┘                                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
 # Starta databas
@@ -1681,12 +1712,44 @@ docker run -d --name db postgres
 # Stoppa och ta bort
 docker rm -f db
 
-# All data är BORTA! 💥
+# All data är BORTA!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Tre sätt att persistera data
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 STORAGE OPTIONS                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   VOLUMES              BIND MOUNTS          TMPFS           │
+│   ───────              ───────────          ─────           │
+│   Docker-managed       Host directory       RAM-disk        │
+│   /var/lib/docker/     /host/path           Försvinner      │
+│   volumes/             Kräver absolut       vid stopp       │
+│   Best för prod        path                 Temp-filer      │
+│                        Best för dev                         │
+│                                                             │
+│   ┌────────┐           ┌────────┐           ┌────────┐      │
+│   │Volume  │           │Host FS │           │  RAM   │      │
+│   │        │           │        │           │        │      │
+│   └────────┘           └────────┘           └────────┘      │
+│       │                    │                    │           │
+│       ▼                    ▼                    ▼           │
+│   ┌────────────────────────────────────────────────────┐    │
+│   │                   Container                        │    │
+│   └────────────────────────────────────────────────────┘    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Typ | Syntax | Användning |
+|-----|--------|------------|
+| **Volume** | `-v mydata:/app/data` | Produktion, databaser |
+| **Bind mount** | `-v /host/path:/container/path` | Utveckling |
+| **tmpfs** | `--tmpfs /tmp` | Temp-filer, säkerhet |
 
 ```bash
 # 1. Volumes (Docker-managed) - REKOMMENDERAS
@@ -1699,9 +1762,19 @@ docker run -v /host/path:/container/path postgres
 docker run --tmpfs /tmp postgres
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Volumes (Docker-managed)
+
+### Grundläggande kommandon
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker volume create name` | Skapa volume |
+| `docker volume ls` | Lista volumes |
+| `docker volume inspect name` | Visa detaljer |
+| `docker volume rm name` | Ta bort volume |
+| `docker volume prune` | Ta bort oanvända |
 
 ```bash
 # Skapa volume
@@ -1715,9 +1788,13 @@ docker run -d \\
 
 # Lista volumes
 docker volume ls
+# DRIVER    VOLUME NAME
+# local     dbdata
+# local     redis-data
 
 # Inspektera volume
 docker volume inspect dbdata
+# [{"Name": "dbdata", "Mountpoint": "/var/lib/docker/volumes/dbdata/_data"}]
 
 # Ta bort volume
 docker volume rm dbdata
@@ -1726,15 +1803,17 @@ docker volume rm dbdata
 docker volume prune
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Bind Mounts
+
+Montera host-katalog direkt i container. Perfekt för utveckling.
 
 ```bash
 # Montera host-katalog i container
 docker run -v $(pwd)/app:/app myimage
 
-# Read-only mount
+# Read-only mount (container kan inte skriva)
 docker run -v $(pwd)/config:/etc/app/config:ro myimage
 
 # Användningsområden:
@@ -1743,27 +1822,53 @@ docker run -v $(pwd)/config:/etc/app/config:ro myimage
 # - Loggar du vill nå från host
 ```
 
----
+### Bind Mount Options
+
+| Option | Beskrivning |
+|--------|-------------|
+| `:ro` | Read-only |
+| `:rw` | Read-write (default) |
+| `:z` | SELinux shared |
+| `:Z` | SELinux private |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Volumes vs Bind Mounts
 
-```bash
-# Volumes
-# ✅ Docker hanterar lagring
-# ✅ Fungerar på alla plattformar
-# ✅ Kan backas upp med docker-kommandon
-# ✅ Kan delas mellan containers
+| Egenskap | Volumes | Bind Mounts |
+|----------|---------|-------------|
+| **Management** | Docker hanterar | Du hanterar |
+| **Plattform** | Fungerar överallt | Path-beroende |
+| **Backup** | docker-kommandon | Standard backup |
+| **Delning** | Mellan containers | Via host |
+| **Performance** | Optimerat | Beror på host |
+| **Användning** | Produktion | Utveckling |
 
-# Bind mounts
-# ✅ Du kontrollerar exakt var data sparas
-# ✅ Bra för utveckling (hot reload)
-# ❌ Beroende av host path
-# ❌ Permissions kan bli krångligt
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 VOLUMES vs BIND MOUNTS                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   VOLUMES                       BIND MOUNTS                 │
+│   ───────                       ───────────                 │
+│   + Docker hanterar lagring     + Kontroll över path        │
+│   + Plattformsoberoende         + Bra för utveckling        │
+│   + Backup med docker           + Hot reload                │
+│   + Dela mellan containers                                  │
+│                                 - Host path-beroende        │
+│                                 - Permission-problem        │
+│                                                             │
+│   ANVÄND FÖR:                   ANVÄND FÖR:                 │
+│   • Databaser                   • Kod under utveckling      │
+│   • Uploads                     • Config-filer              │
+│   • Cache                       • Log-filer                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Praktiskt exempel: Databas
+## Praktiskt exempel: Persistent Databas
 
 ```bash
 # Skapa persistent PostgreSQL
@@ -1778,12 +1883,37 @@ docker run -d \\
 # Data överlever container restart/removal
 docker rm -f postgres
 docker run -d --name postgres -v pgdata:/var/lib/postgresql/data postgres
-# Data finns kvar! ✅
+# Data finns kvar!
 ```
 
----
+### Vanliga mount points
+
+| Image | Data path |
+|-------|-----------|
+| **postgres** | `/var/lib/postgresql/data` |
+| **mysql** | `/var/lib/mysql` |
+| **mongodb** | `/data/db` |
+| **redis** | `/data` |
+| **elasticsearch** | `/usr/share/elasticsearch/data` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Backup och Restore
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 BACKUP STRATEGY                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Volume ──► Container ──► tar.gz ──► S3/Backup             │
+│                                                             │
+│   1. Skapa temp container                                   │
+│   2. Montera volume som /source                             │
+│   3. Montera backup-dir som /backup                         │
+│   4. Kör tar för att komprimera                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
 # Backup volume till tar-fil
@@ -1797,16 +1927,54 @@ docker run --rm \\
     -v pgdata:/target \\
     -v $(pwd):/backup \\
     alpine tar xzf /backup/pgdata-backup.tar.gz -C /target
+
+# Kopiera fil till/från volume
+docker cp localfile.txt container:/path/in/volume/
+docker cp container:/path/in/volume/file.txt ./local/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker volume create name` | Skapa volume |
+| `docker volume ls` | Lista volumes |
+| `docker volume inspect name` | Visa detaljer |
+| `docker volume rm name` | Ta bort |
+| `docker volume prune` | Städa oanvända |
+| `-v vol:/path` | Montera volume |
+| `-v /host:/path` | Bind mount |
+| `-v /host:/path:ro` | Read-only mount |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och lösningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| Permission denied | User mismatch | `--user` eller `chown` |
+| Volume busy | Container använder | Stoppa container först |
+| Data försvinner | Glömde volume | Kolla `-v` flagga |
+| Disk full | Stora volumes | `docker volume prune` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- Använd **volumes för produktionsdata** (databaser, uploads)
-- Använd **bind mounts för utveckling** (kod, config)
-- Data i volumes **överlever** container removal
-- **Backup regelbundet** - volumes är inte automatiskt säkrade
+| Punkt | Förklaring |
+|-------|------------|
+| **Volumes för prod** | Docker-managed, pålitligt |
+| **Bind mounts för dev** | Hot reload, enkel access |
+| **Data överlever** | Volumes överlever container removal |
+| **Backup viktigt** | Volumes är inte automatiskt säkrade |
+
+**Kom ihåg:**
+- **Alltid** använd volumes för databaser
+- **Bind mounts** för kod under utveckling
+- **Backup regelbundet** - automatisera det
+- **docker volume prune** frigör diskutrymme
 """,
         },
         {
@@ -1817,7 +1985,17 @@ docker run --rm \\
             "xp_reward": 85,
             "content": """# Docker Compose Fundamentals
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Varför Docker Compose är viktigt |
+|----------|----------------------------------|
+| **Multi-container apps** | Frontend + Backend + DB i en fil |
+| **Reproducerbarhet** | Samma setup för alla utvecklare |
+| **IaC** | Infrastruktur som kod, versionshantera |
+| **Onboarding** | Nya utvecklare kör `docker compose up` |
+| **Testing** | Snabbt starta hela test-miljön |
 
 Att köra `docker run` med 10 flaggor för flera containers är opraktiskt. Du behöver:
 
@@ -1825,20 +2003,36 @@ Att köra `docker run` med 10 flaggor för flera containers är opraktiskt. Du b
 - **Starta allt med ett kommando**
 - **Versionshantera infrastrukturen** som kod
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Vad är Docker Compose?
 
-Docker Compose låter dig definiera multi-container applikationer i en YAML-fil. Istället för:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 DOCKER COMPOSE                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   UTAN Compose:                MED Compose:                 │
+│   ────────────                 ───────────                  │
+│   docker network create...     docker compose up            │
+│   docker run db...                                          │
+│   docker run api...            Allt definierat i            │
+│   docker run web...            docker-compose.yml           │
+│   (många kommandon!)           (en fil, ett kommando!)      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
+Docker Compose låter dig definiera multi-container applikationer i en YAML-fil.
+
+### Utan Compose (jobbigt):
 ```bash
 docker network create mynet
 docker run -d --name db --network mynet -v dbdata:/data postgres
 docker run -d --name api --network mynet -p 8080:8000 -e DB_HOST=db myapi
 ```
 
-Skriver du:
-
+### Med Compose (enkelt):
 ```yaml
 # docker-compose.yml
 services:
@@ -1857,14 +2051,12 @@ volumes:
   dbdata:
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Grundläggande struktur
 
 ```yaml
 # docker-compose.yml
-version: "3.8"  # Compose file version (optional i nya versioner)
-
 services:       # Containers att köra
   service1:
     image: ...
@@ -1874,14 +2066,38 @@ services:       # Containers att köra
 volumes:        # Named volumes
   data:
 
-networks:       # Custom networks
+networks:       # Custom networks (optional)
   frontend:
   backend:
 ```
 
----
+### Struktur-översikt
+
+| Sektion | Beskrivning |
+|---------|-------------|
+| `services` | Containers att köra (obligatorisk) |
+| `volumes` | Named volumes |
+| `networks` | Custom networks |
+| `secrets` | Känslig data (Swarm) |
+| `configs` | Config-filer (Swarm) |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Service-konfiguration
+
+### Alla viktiga options
+
+| Option | Beskrivning | Exempel |
+|--------|-------------|---------|
+| `image` | Använd befintlig image | `image: nginx:alpine` |
+| `build` | Bygg från Dockerfile | `build: ./app` |
+| `ports` | Port mapping | `ports: ["8080:80"]` |
+| `environment` | Miljövariabler | `environment: [DEBUG=1]` |
+| `env_file` | Variabler från fil | `env_file: .env` |
+| `volumes` | Mount volumes | `volumes: [./app:/app]` |
+| `depends_on` | Start-ordning | `depends_on: [db]` |
+| `restart` | Restart policy | `restart: unless-stopped` |
+| `networks` | Nätverk | `networks: [backend]` |
 
 ```yaml
 services:
@@ -1889,7 +2105,6 @@ services:
     # Välj image ELLER build
     image: nginx:alpine
     # ELLER
-    build: ./app
     build:
       context: ./app
       dockerfile: Dockerfile.prod
@@ -1927,9 +2142,21 @@ services:
           memory: 512M
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Grundläggande kommandon
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker compose up` | Starta alla services |
+| `docker compose up -d` | Starta i bakgrunden |
+| `docker compose down` | Stoppa och ta bort |
+| `docker compose down -v` | + ta bort volumes |
+| `docker compose ps` | Lista services |
+| `docker compose logs` | Visa loggar |
+| `docker compose logs -f` | Följ loggar |
+| `docker compose build` | Bygg images |
+| `docker compose exec service cmd` | Kör kommando |
 
 ```bash
 # Starta alla services
@@ -1941,11 +2168,14 @@ docker compose up -d
 # Stoppa alla services
 docker compose down
 
-# Stoppa och ta bort volumes
+# Stoppa och ta bort volumes (VARNING: raderar data!)
 docker compose down -v
 
 # Se status
 docker compose ps
+# NAME        SERVICE   STATUS    PORTS
+# app-db-1    db        running   5432/tcp
+# app-api-1   api       running   0.0.0.0:8000->8000/tcp
 
 # Se loggar
 docker compose logs
@@ -1954,11 +2184,37 @@ docker compose logs -f webapp  # Följ specifik service
 # Bygg om images
 docker compose build
 docker compose up --build  # Build + start
+
+# Kör kommando i service
+docker compose exec db psql -U postgres
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Komplett exempel
+## Komplett exempel: Full Stack App
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 FULL STACK ARCHITECTURE                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Internet                                                  │
+│      │                                                      │
+│      │ :3000                                                │
+│      ▼                                                      │
+│   ┌─────────┐    :8000     ┌─────────┐     ┌─────────┐     │
+│   │   web   │ ───────────▶ │   api   │ ──▶ │   db    │     │
+│   │ (React) │              │(FastAPI)│     │(Postgres│     │
+│   └─────────┘              └─────────┘     └─────────┘     │
+│                                 │                          │
+│                                 ▼                          │
+│                            ┌─────────┐                     │
+│                            │  redis  │                     │
+│                            │ (cache) │                     │
+│                            └─────────┘                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```yaml
 # docker-compose.yml
@@ -2005,14 +2261,49 @@ volumes:
   pgdata:
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker compose up -d` | Starta i bakgrund |
+| `docker compose down` | Stoppa allt |
+| `docker compose ps` | Lista services |
+| `docker compose logs -f` | Följ loggar |
+| `docker compose exec svc cmd` | Kör i service |
+| `docker compose build` | Bygg images |
+| `docker compose pull` | Hämta images |
+| `docker compose restart svc` | Starta om service |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och lösningar
+
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| `service not found` | Fel service-namn | Kolla stavning i yml |
+| `port already in use` | Port upptagen | Byt port eller stoppa process |
+| `cannot connect to db` | DB ej startat | Lägg till depends_on |
+| `volume permission denied` | User mismatch | Fixa permissions |
+| `build failed` | Dockerfile-fel | Kolla build-output |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- **En fil = hela stacken** - lätt att versionshantera
-- Services i samma compose-fil får **automatiskt nätverk**
-- Använd **depends_on** för start-ordning
-- `docker compose down -v` tar bort **allt** inkl volumes
+| Punkt | Förklaring |
+|-------|------------|
+| **En fil = hela stacken** | Lätt att versionshantera |
+| **Automatiskt nätverk** | Services hittar varandra via namn |
+| **depends_on** | Kontrollerar start-ordning |
+| **down -v** | Tar bort allt inkl volumes |
+
+**Kom ihåg:**
+- Compose är **standard för local development**
+- Services **kommunicerar via service-namn**
+- Använd **.env** för miljövariabler
+- **depends_on** garanterar inte att service är ready
 """,
         },
         {
