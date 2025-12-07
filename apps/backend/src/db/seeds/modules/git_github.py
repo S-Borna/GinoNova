@@ -1,20 +1,20 @@
 """
-Git & GitHub Mastery - Linux-mallen
-=====================================
+Git & GitHub Mastery - Docker-style V3
+========================================
 
-20 tasks som följer Linux-mallen:
-- Varför behöver du kunna detta?
-- Så fungerar det
-- Bash-kommentarer på VARJE rad
-- Key Takeaways
-- Inga emojis i headers
-- Inga tabeller
+20 noder med Docker-style formatering:
+- Unicode-separatorer
+- Tabeller for struktur
+- ASCII-diagram
+- Key Takeaways som tabell
+- Kom ihag som bullet-lista
+- Svenska utan emojis
 """
 
 MODULE = {
     "name": "Git & GitHub Mastery",
     "slug": "git-github-mastery",
-    "description": "Behärska versionskontroll med Git och samarbete via GitHub",
+    "description": "Beharska versionskontroll med Git och samarbete via GitHub",
     "icon": "git-branch",
     "difficulty": "beginner",
     "estimated_hours": 25,
@@ -26,41 +26,58 @@ MODULE = {
             "content": """
 # Git Fundamentals & Architecture
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Git är fundamentet för all modern mjukvaruutveckling. Utan förståelse för hur Git fungerar internt kommer du att:
+## Varfor viktigt for DevOps?
 
-- Förlora kod vid merge-konflikter
-- Inte kunna återställa misstag
-- Skapa kaotiska commit-historiker
-- Bromsa hela teamets arbetsflöde
+| Scenario                  | Utan Git-forstaelse           | Med Git-forstaelse            |
+|---------------------------|-------------------------------|-------------------------------|
+| Merge-konflikt            | Forlorar kod, gamlingar       | Loser snabbt, bevarar allt    |
+| Misstag i kod             | Manuell rollback, kaos        | git revert pa sekunder        |
+| Team-samarbete            | Overskrivna filer             | Clean branch-workflow         |
+| Deployment                | "Vilken version ar live?"     | Tags och releases             |
 
-Varje DevOps-ingenjör arbetar med Git dagligen. Förståelse för arkitekturen gör skillnaden mellan att gissa och att veta exakt vad som händer.
+Git ar fundamentet for ALL modern DevOps - CI/CD, GitOps, Infrastructure as Code.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Gits Arkitektur
 
-Git är ett distribuerat versionskontrollsystem. Till skillnad från centraliserade system (SVN, CVS) har varje utvecklare en komplett kopia av hela repositoryt, inklusive all historik.
+Git ar ett DISTRIBUERAT versionskontrollsystem - varje klon ar ett komplett repo.
 
-**Gits tre områden:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         GIT WORKFLOW                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────┐    git add    ┌──────────────┐   git commit   │
+│  │   Working    │ ────────────► │   Staging    │ ────────────►  │
+│  │  Directory   │               │    Area      │                │
+│  │              │               │   (Index)    │                │
+│  │  Dina filer  │               │ Forberedelse │   ┌─────────┐  │
+│  │  pa disk     │               │              │   │  .git/  │  │
+│  └──────────────┘               └──────────────┘   │  Repo   │  │
+│         ▲                                          └─────────┘  │
+│         │                  git checkout/restore                 │
+│         └───────────────────────────────────────────────────────│
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-1. **Working Directory** - Dina faktiska filer på disk
-2. **Staging Area (Index)** - Förberedelser för nästa commit
-3. **Repository (.git)** - Databasen med alla commits
+**Gits fyra objekttyper:**
 
-**Gits objekt:**
+| Objekttyp | Beskrivning                    | Exempel                        |
+|-----------|--------------------------------|--------------------------------|
+| blob      | Filinnehall (ingen metadata)   | Innehallet i app.js            |
+| tree      | Katalogstruktur                | Pekar pa blobs och andra trees |
+| commit    | Snapshot med metadata          | Author, datum, meddelande      |
+| tag       | Namngiven pekare               | v1.0.0 pekar pa en commit      |
 
-- **Blob** - Filinnehåll (ingen metadata)
-- **Tree** - Katalogstruktur, pekar på blobs och andra trees
-- **Commit** - Snapshot med metadata, pekar på ett tree
-- **Tag** - Namngiven pekare till en commit
+Allt identifieras med SHA-1 hashar (40 tecken). Samma innehall = samma hash.
 
-Allt i Git identifieras med SHA-1 hashar (40 tecken). Samma innehåll = samma hash, vilket ger integritet och deduplicering.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Grundläggande Git-kommandon
+## Grundlaggande Git-kommandon
 
 ```bash
 # Installera Git (Ubuntu/Debian)
@@ -149,31 +166,74 @@ git commit -am "Update hello.txt"    # -a stagar alla modifierade trackade filer
 
 ```bash
 # Visa commit-logg
-git log                              # Fullständig logg
+git log                              # Fullstandig logg
 git log --oneline                    # Kompakt vy, en rad per commit
 git log --graph                      # Visar branch-graf
-git log --oneline --graph --all      # Kompakt graf för alla branches
+git log --oneline --graph --all      # Kompakt graf for alla branches
 
 # Visa specifik commit
 git show abc123                      # Visar commit-detaljer och diff
 git show HEAD                        # Visar senaste commit
-git show HEAD~1                      # Visar näst senaste commit (1 steg bakåt)
-git show HEAD~3                      # 3 commits bakåt
+git show HEAD~1                      # Visar nast senaste commit (1 steg bakat)
+git show HEAD~3                      # 3 commits bakat
 
-# Visa ändringar för en fil
-git log -p hello.txt                 # Logg med patches för filen
-git log --follow hello.txt           # Följer filhistorik även vid rename
+# Visa andringar for en fil
+git log -p hello.txt                 # Logg med patches for filen
+git log --follow hello.txt           # Foljer filhistorik aven vid rename
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## .git-katalogen
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      .git/ STRUKTUR                             │
+├─────────────────────────────────────────────────────────────────┤
+│  .git/                                                          │
+│  ├── config         Repo-specifik konfiguration                 │
+│  ├── HEAD           Pekare till aktuell branch                  │
+│  ├── index          Staging area (binarfil)                     │
+│  ├── objects/       Alla Git-objekt (blobs, trees, commits)     │
+│  │   ├── ab/        Objekt med hash som borjar "ab"             │
+│  │   └── pack/      Packade objekt (optimering)                 │
+│  └── refs/          Branch- och tag-pekare                      │
+│      ├── heads/     Lokala branches                             │
+│      ├── remotes/   Remote tracking branches                    │
+│      └── tags/      Taggar                                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+```bash
+# Inspektera .git
+cat .git/HEAD                        # Visar: ref: refs/heads/main
+cat .git/refs/heads/main             # Visar commit-hash (40 tecken)
+git cat-file -t abc123               # Visar objekttyp (blob/tree/commit)
+git cat-file -p abc123               # Visar objektinnehall
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Git är distribuerat - varje klon är ett komplett repository
-2. Tre områden: Working Directory → Staging Area → Repository
-3. Allt identifieras med SHA-1 hashar för integritet
-4. `git add` flyttar ändringar till staging, `git commit` sparar dem
-5. `.git/` innehåller hela repositoryts data och historik
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Distribuerat              | Varje klon ar ett komplett repository               |
+| Tre omraden               | Working Directory - Staging Area - Repository       |
+| SHA-1 hashar              | 40 tecken, identifierar allt, ger integritet        |
+| git add                   | Flyttar andringar till staging                      |
+| git commit                | Sparar staging till repository                      |
+| .git/                     | Innehaller HELA repositoryts data och historik      |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Git ar distribuerat - du har ALLTID full historik lokalt
+- Staging area lat dig valja exakt vad som ska committas
+- Commit ofta, push regelbundet, pull innan du borjar arbeta
+- Forsta .git-strukturen = forsta hur Git fungerar
+- Samma innehall = samma hash (deduplicering)
 """,
         },
         {
@@ -183,33 +243,64 @@ git log --follow hello.txt           # Följer filhistorik även vid rename
             "content": """
 # Branching & Merging
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Branching är det som gör Git överlägset. Det låter dig:
+## Varfor viktigt for DevOps?
 
-- Arbeta på features isolerat utan att störa main
-- Experimentera utan risk
-- Ha flera versioner parallellt (development, staging, production)
-- Samarbeta effektivt i team
+| Scenario                  | Utan branching              | Med branching                 |
+|---------------------------|------------------------------|-------------------------------|
+| Ny feature                | Jobbar pa main, blockar alla | Isolerad branch, parallellt   |
+| Buggfix akut              | Maste vanta pa features      | Hotfix-branch direkt          |
+| Experiment                | Risk att forstora main       | Branch, testa, kasta om fel   |
+| Code review               | Ingen struktur               | PR fran branch, review, merge |
 
-Utan branching-strategi blir kodbasen kaotisk. Merge-konflikter blir mardrömmar. Releases blir riskfyllda.
+Branching ar det som gor Git overlaget. Det kostar INGENTING att skapa en branch.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Hur Branching Fungerar
 
-En branch i Git är bara en pekare till en commit. Det kostar nästan ingenting att skapa en branch - det är bara en 41-byte fil med en commit-hash.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      BRANCH = PEKARE                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  En branch ar BARA en 41-byte fil med en commit-hash!           │
+│                                                                 │
+│      ┌────────┐                                                 │
+│      │  HEAD  │ ◄── Vilken branch du ar pa                      │
+│      └───┬────┘                                                 │
+│          │                                                      │
+│          ▼                                                      │
+│      ┌────────┐        ┌────────┐        ┌────────┐            │
+│      │  main  │───────►│ commit │◄───────│feature │            │
+│      └────────┘        │  C3    │        └────────┘            │
+│                        └───┬────┘                               │
+│                            │                                    │
+│                        ┌───▼────┐        ┌────────┐            │
+│                        │ commit │◄───────│ commit │            │
+│                        │  C2    │        │  C4    │            │
+│                        └───┬────┘        └────────┘            │
+│                            │               (feature)            │
+│                        ┌───▼────┐                               │
+│                        │ commit │                               │
+│                        │  C1    │                               │
+│                        └────────┘                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**HEAD** är en speciell pekare som visar vilken branch du är på.
+**Merge-strategier:**
 
-**Merge** kombinerar två branches. Git väljer automatiskt rätt strategi:
+| Strategi        | Nar                           | Resultat                      |
+|-----------------|-------------------------------|-------------------------------|
+| Fast-forward    | Malet har inte divergerat     | Flyttar bara pekaren          |
+| Three-way merge | Bada branches har commits     | Skapar merge-commit           |
+| Squash merge    | Vill ha clean historik        | En commit med alla andringar  |
 
-- **Fast-forward** - Om målet inte har divergerat, flyttas bara pekaren
-- **Three-way merge** - Om båda branches har commits, skapas en merge-commit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Skapa och hantera branches
+## Skapa och Hantera Branches
 
 ```bash
 # Lista branches
@@ -320,15 +411,27 @@ git merge feature-login              # Merga in feature
 git branch -d feature-login          # Ta bort feature-branch
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Branches är billiga - bara pekare till commits
-2. `git switch` är det moderna sättet att byta branch
-3. Fast-forward sker när målet inte har divergerat
-4. Konflikter löses manuellt, sedan `git add` och `git commit`
-5. Ta bort mergade branches för att hålla ordning
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Branch = pekare           | Bara 41 bytes, kostar ingenting att skapa           |
+| git switch                | Moderna sattet att byta branch (istallet for checkout) |
+| Fast-forward              | Nar malet inte har divergerat                       |
+| --no-ff                   | Tvingar merge-commit aven vid fast-forward          |
+| Stada upp                 | Ta bort mergade branches for ordning                |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Branches ar billiga - skapa en for varje feature
+- Anvand git switch istallet for git checkout
+- Konfliktmarkorar: <<<<<<< HEAD, =======, >>>>>>> branch
+- Merga till main ofta for att undvika stora konflikter
+- Ta bort branches efter merge for att halla ordning
 """,
         },
         {
@@ -338,32 +441,58 @@ git branch -d feature-login          # Ta bort feature-branch
             "content": """
 # Remote Repositories & GitHub
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Lokalt Git är bra, men värdet kommer från samarbete. Remote repositories låter dig:
+## Varfor viktigt for DevOps?
 
-- Dela kod med teamet
-- Ha backup av all kod
-- Deploya automatiskt via CI/CD
-- Spåra issues och pull requests
+| Scenario                  | Utan remote                   | Med remote (GitHub)           |
+|---------------------------|-------------------------------|-------------------------------|
+| Backup                    | Forlorar allt vid diskcrash   | Kod sakert i molnet           |
+| Team-samarbete            | USB-sticka, email?            | Clone, push, pull             |
+| CI/CD                     | Manuell deployment            | Push triggar pipeline         |
+| Code review               | Visa skarmen?                 | Pull Requests                 |
 
-GitHub är den dominerande plattformen. Att förstå remote-hantering är kritiskt för DevOps-arbete.
+GitHub ar den dominerande plattformen. Remote-hantering ar kritiskt for DevOps.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Remote Arkitektur
 
-Ett remote repository är en kopia av ditt repo på en server (GitHub, GitLab, etc.).
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    LOCAL vs REMOTE                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ┌─────────────────┐              ┌─────────────────┐          │
+│   │   LOCAL REPO    │              │  REMOTE (origin)│          │
+│   │                 │    git push  │                 │          │
+│   │  main ─────────────────────────► main           │          │
+│   │                 │              │                 │          │
+│   │  origin/main◄───────────────────                │          │
+│   │  (tracking)     │   git fetch  │                 │          │
+│   │                 │              │                 │          │
+│   │  feature ──────────────────────► feature        │          │
+│   │                 │              │                 │          │
+│   └─────────────────┘              └─────────────────┘          │
+│                                                                 │
+│   origin/main = LOKAL kopia av remote branch                    │
+│   Uppdateras vid fetch/pull, inte automatiskt                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Remote tracking branches** är lokala kopior av remote branches. De heter `origin/main`, `origin/feature-x`, etc.
+**Kommandon:**
 
-**Fetch** hämtar ändringar från remote men applicerar dem inte.
-**Pull** = fetch + merge.
-**Push** skickar dina commits till remote.
+| Kommando       | Vad det gor                                          |
+|----------------|------------------------------------------------------|
+| git fetch      | Hamtar data fran remote, applicerar INTE             |
+| git pull       | fetch + merge (eller rebase med --rebase)            |
+| git push       | Skickar dina commits till remote                     |
+| git clone      | Skapar lokal kopia av remote repo                    |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Konfigurera remotes
+## SSH-nycklar for GitHub
 
 ```bash
 # Se befintliga remotes
@@ -488,18 +617,30 @@ git switch main                      # Byt till main
 git merge upstream/main              # Merga upstream's main
 
 # Pusha till din fork
-git push origin main                 # Uppdaterar din fork på GitHub
+git push origin main                 # Uppdaterar din fork pa GitHub
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Remote är en kopia på en server - `origin` är standardnamnet
-2. SSH-nycklar är säkrare och smidigare än HTTPS + lösenord
-3. `fetch` hämtar data, `pull` hämtar och mergar
-4. `-u` sätter tracking så du slipper ange remote varje gång
-5. `--prune` städar bort refs till borttagna remote branches
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Remote = origin           | Standardnamn for remote repository                  |
+| SSH vs HTTPS              | SSH ar sakrare och smidigare an losenord            |
+| fetch vs pull             | fetch hamtar data, pull hamtar OCH mergar           |
+| -u (upstream)             | Satter tracking sa du slipper ange remote varje gang|
+| --prune                   | Stadar bort refs till borttagna remote branches     |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Konfigurera SSH-nycklar FORST - slipper losenord varje gang
+- git pull --rebase ger renare historik an vanlig pull
+- origin/main ar lokal kopia - uppdateras vid fetch
+- For forks: upstream = original, origin = din fork
+- Fetch forst, kolla diff, sedan merge/pull
 """,
         },
         {
@@ -509,31 +650,63 @@ git push origin main                 # Uppdaterar din fork på GitHub
             "content": """
 # Git Workflow Strategies
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Utan en definierad workflow blir Git-historiken kaotisk. Team behöver:
+## Varfor viktigt for DevOps?
 
-- Tydliga regler för när och hur man mergar
-- Skydd för produktionskod
-- Effektiv code review-process
-- Förutsägbara releaser
+| Scenario                  | Utan workflow                 | Med workflow                  |
+|---------------------------|-------------------------------|-------------------------------|
+| Release                   | "Vilken commit ar stabil?"    | Taggar, release branches      |
+| Hotfix                    | Panik, pushes direkt till main| Strukturerad hotfix-process   |
+| Code review               | Ingen standardisering         | PR-templates, approvals       |
+| CI/CD                     | Buildar ibland, kraschar ofta | Automatiserat, forutsagbart   |
 
-Rätt workflow minskar konflikter, förbättrar kodkvalitet och snabbar upp leverans.
+Ratt workflow minskar konflikter, forbattrar kodkvalitet och snabbar upp leverans.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Workflow-jamforelse
 
-Det finns flera etablerade workflows. Varje organisation väljer baserat på teamstorlek, release-frekvens och komplexitet.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    WORKFLOW COMPARISON                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  GITHUB FLOW (Enkel - Rekommenderas)                           │
+│  ──────────────────────────────────────                         │
+│  main ─────●─────●─────●─────●─────●                           │
+│             \\         /                                         │
+│              ●───────●  feature                                 │
+│                 PR                                              │
+│                                                                 │
+│  GIT FLOW (Komplex - Schemalagda releaser)                     │
+│  ──────────────────────────────────────────                     │
+│  main    ─────●─────────────────●─────●                        │
+│               │                 │     │                         │
+│  release      │     ●───────────●     │                        │
+│               │    /            │     │                         │
+│  develop ─────●───●─────●───────●─────●                        │
+│                    \\   /                                        │
+│  feature            ●─●                                         │
+│                                                                 │
+│  TRUNK-BASED (Snabbast - Mogna team)                           │
+│  ────────────────────────────────────                           │
+│  main ─────●─────●─────●─────●─────●                           │
+│             \\   /   \\   /   \\   /                              │
+│              ●       ●       ●   (kort-livade branches)        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Git Flow** - Komplex, för schemalagda releaser
-**GitHub Flow** - Enkel, för kontinuerlig deployment
-**GitLab Flow** - Mellanväg med environment-branches
-**Trunk-Based** - Minimal branching, för mogna team
+| Workflow     | Komplexitet | Release-frekvens   | Bast for               |
+|--------------|-------------|--------------------|-----------------------|
+| GitHub Flow  | Lag         | Kontinuerlig       | De flesta team        |
+| Git Flow     | Hog         | Schemalagd         | Stora projekt, apps   |
+| Trunk-Based  | Lag         | Kontinuerlig       | Mogna team, micro     |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## GitHub Flow (Rekommenderat för de flesta)
+## GitHub Flow (Rekommenderat)
 
 ```bash
 # GitHub Flow: Enkel och effektiv
@@ -710,15 +883,27 @@ feature/JIRA-123-user-auth
 fix/GH-456-login-bug
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. GitHub Flow är enklast - en branch, PR, merge till main
-2. Git Flow passar större projekt med schemalagda releaser
-3. Trunk-Based kräver mogen CI/CD men ger snabbast leverans
-4. Conventional Commits gör historiken läsbar och automatiserbar
-5. Konsekvent namngivning hjälper hela teamet
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| GitHub Flow               | Enklast - en branch, PR, merge till main            |
+| Git Flow                  | For storre projekt med schemalagda releaser         |
+| Trunk-Based               | Kraver mogen CI/CD men ger snabbast leverans        |
+| Conventional Commits      | Gor historiken lasbar och automatiserbar            |
+| Konsekvent namngivning    | feature/, fix/, hotfix/ - hjalper hela teamet       |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Borja med GitHub Flow - enklast och fungerar for de flesta
+- Commit-meddelanden ar dokumentation - skriv tydligt
+- feat: ny funktion, fix: buggfix, docs: dokumentation
+- Sma commits ar batttre an stora - lattare att reviewa
+- Branch-namn ska vara beskrivande: feature/user-auth
 """,
         },
         {
@@ -728,35 +913,57 @@ fix/GH-456-login-bug
             "content": """
 # Rebasing & Interactive Rebase
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Merge skapar "merge commits" som gör historiken svårläst. Rebase ger en linjär, ren historik.
+## Varfor viktigt for DevOps?
 
-Dessutom låter interactive rebase dig:
+| Scenario                  | Utan rebase                   | Med rebase                    |
+|---------------------------|-------------------------------|-------------------------------|
+| Feature branch            | Massa merge-commits           | Linjar, ren historik          |
+| WIP commits               | "WIP", "fix", "oops" synliga  | Squashade till en fin commit  |
+| Code review               | Svart att folja               | Tydlig, logisk historik       |
+| git bisect                | Hoppar runt i merge-spaghetti | Linjar sokning                |
 
-- Slå ihop flera commits till en
-- Redigera commit-meddelanden
-- Ta bort oönskade commits
-- Ordna om commits
+Professionella utvecklare forvantas kunna halla en ren Git-historik.
 
-Professionella utvecklare förväntas kunna hålla en ren Git-historik.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Merge vs Rebase
 
-## Så fungerar det
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MERGE vs REBASE                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  FORE:                                                          │
+│        A───B───C feature                                        │
+│       /                                                         │
+│  D───E───F───G main                                             │
+│                                                                 │
+│  EFTER MERGE:                                                   │
+│        A───B───C                                                │
+│       /         \\                                               │
+│  D───E───F───G───M main  (M = merge commit)                    │
+│                                                                 │
+│  EFTER REBASE:                                                  │
+│                  A'──B'──C' feature                            │
+│                 /                                               │
+│  D───E───F───G main                                             │
+│                                                                 │
+│  Rebase "flyttar" commits till ny bas (nya hashar A', B', C')  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Rebase** flyttar commits till en ny bas. Istället för att skapa en merge-commit "spelas" dina commits upp på toppen av target-branchen.
+| Aspekt          | Merge                         | Rebase                        |
+|-----------------|-------------------------------|-------------------------------|
+| Historik        | Bevarar allt, merge-commits   | Linjar, omskrivna commits     |
+| Saker           | Aldrig problem                | Farligt for publika commits   |
+| Anvandning      | Publika branches, PRs         | Lokala branches, cleanup      |
 
-**Interactive rebase** (`-i`) låter dig välja vad som ska hända med varje commit:
-- **pick** - Behåll commit som den är
-- **reword** - Ändra commit-meddelande
-- **squash** - Slå ihop med föregående commit
-- **fixup** - Som squash men behåll inte meddelandet
-- **drop** - Ta bort commit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Grundläggande rebase
+## Grundlaggande Rebase
 
 ```bash
 # Scenario: feature-branch har divergerat från main
@@ -921,18 +1128,43 @@ git push --force-with-lease          # Misslyckas om remote har nya commits
 
 # Om olyckan är framme
 git reflog                           # Visar alla HEAD-ändringar
-git reset --hard HEAD@{2}            # Återställ till tidigare tillstånd
+git reset --hard HEAD@{2}            # Aterstall till tidigare tillstand
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Interactive Rebase Actions
+
+| Action   | Vad det gor                                          |
+|----------|------------------------------------------------------|
+| pick     | Behall commit som den ar                             |
+| reword   | Andra commit-meddelande                              |
+| squash   | Sla ihop med foregaende, behall bada meddelanden     |
+| fixup    | Sla ihop, behall BARA foregaendes meddelande         |
+| drop     | Ta bort commit helt                                  |
+| edit     | Pausa for att andra commit                           |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Rebase ger linjär historik - renare än merge
-2. Interactive rebase (`-i`) ger full kontroll över commits
-3. Squash WIP-commits före PR för professionell historik
-4. `--fixup` och `--autosquash` automatiserar cleanup
-5. **ALDRIG rebasa publika commits** - använd `--force-with-lease` om nödvändigt
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Rebase                    | Ger linjar historik - renare an merge               |
+| Interactive rebase (-i)   | Full kontroll over commits                          |
+| Squash                    | Sla ihop WIP-commits fore PR                        |
+| --fixup + --autosquash    | Automatiserar cleanup                               |
+| ALDRIG rebasa publikt     | Anvand --force-with-lease om nodvandigt             |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Rebase LOKALA branches - aldrig publika
+- Squash WIP-commits fore PR for professionell historik
+- --force-with-lease ar sakrare an --force
+- Vid problem: git rebase --abort for att avbryta
+- Reflog ar din raddning om det gar fel
 """,
         },
         {
@@ -942,33 +1174,57 @@ git reset --hard HEAD@{2}            # Återställ till tidigare tillstånd
             "content": """
 # Undoing Changes & Recovery
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Misstag händer. Du kommer att:
+## Varfor viktigt for DevOps?
 
-- Commita fel saker
-- Pusha till fel branch
-- Ta bort kod av misstag
-- Förstöra historiken med dålig rebase
+| Scenario                  | Utan recovery-kunskap         | Med recovery-kunskap          |
+|---------------------------|-------------------------------|-------------------------------|
+| Fel commit                | Panik, manuell fix            | git revert pa sekunder        |
+| Push till fel branch      | Kaos i teamet                 | Reset + correct branch        |
+| Kaslig data pushad        | "Vad gor vi nu?!"             | Filter-branch + force push    |
+| Forlorade commits         | Forlorade for evigt           | Reflog raddar dagen           |
 
-Förmågan att återställa är skillnaden mellan panik och lugn problemlösning.
+Formagan att aterstalla ar skillnaden mellan panik och lugn problemlosning.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Undo Cheat Sheet
 
-Git har flera sätt att ångra, beroende på var ändringen är:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      UNDO DECISION TREE                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Var ar andringen?                                              │
+│  │                                                              │
+│  ├─► Working Directory (ej stagad)                              │
+│  │   └─► git restore <file>                                     │
+│  │                                                              │
+│  ├─► Staging Area (stagad, ej committad)                        │
+│  │   └─► git restore --staged <file>                            │
+│  │                                                              │
+│  ├─► Committad (lokalt)                                         │
+│  │   ├─► Angra + behall andringar: git reset --soft HEAD~1      │
+│  │   ├─► Angra + unstage: git reset HEAD~1                      │
+│  │   └─► Angra + kasta allt: git reset --hard HEAD~1            │
+│  │                                                              │
+│  └─► Pushad (remote)                                            │
+│      └─► git revert HEAD (skapar NY commit som angrar)          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-1. **Working directory** - Ändringar inte stagade
-2. **Staging area** - Stagade men inte committade
-3. **Committed** - Lokala commits
-4. **Pushed** - Commits på remote
+| Situation            | Kommando                          | Effekt                        |
+|----------------------|-----------------------------------|-------------------------------|
+| Unstage fil          | git restore --staged file         | Tar bort fran staging         |
+| Kasta lokal andring  | git restore file                  | Atergar till HEAD             |
+| Angra senaste commit | git reset --soft HEAD~1           | Behaller andringar i staging  |
+| Revert pushad commit | git revert HEAD                   | Ny commit som angrar          |
 
-Varje steg kräver olika kommandon.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Ångra ändringar i working directory
+## Angra i Working Directory
 
 ```bash
 # Kasta bort ändringar i en fil (återställ till senaste commit)
@@ -1147,18 +1403,30 @@ git revert -m 1 HEAD                 # Om pushad
 git log --oneline -1                 # Notera commit-hash
 git reset --hard HEAD~1              # Ta bort från fel branch
 git switch correct-branch            # Byt till rätt branch
-git cherry-pick abc1234              # Applicera commit här
+git cherry-pick abc1234              # Applicera commit har
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `restore` för working directory, `restore --staged` för staging area
-2. `reset --soft` behåller ändringar, `--hard` kastar allt
-3. `revert` för publika commits - skapar ny commit som ångrar
-4. `reflog` är din backup - loggar allt även "borttaget"
-5. Känslig data kräver omedelbar action OCH ny credential
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| git restore               | For working directory och staging area              |
+| git reset --soft          | Angra commit, behall andringar staged               |
+| git reset --hard          | Angra commit OCH kasta andringar (farligt!)         |
+| git revert                | For publika commits - skapar ny commit som angrar   |
+| git reflog                | Din backup - loggar allt aven "borttaget"           |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Reflog ar din livlina - commits ar aldrig helt forlorade
+- Revert for publika commits, reset for lokala
+- --force-with-lease ar sakrare an --force
+- Kanslig data kraver OMEDELBAR credential-rotation
+- Skriv ner commit-hashar innan du gor farliga operationer
 """,
         },
         {
@@ -1168,31 +1436,60 @@ git cherry-pick abc1234              # Applicera commit här
             "content": """
 # Pull Requests & Code Review
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Pull Requests (PRs) är hjärtat i modern mjukvaruutveckling. De ger:
+## Varfor viktigt for DevOps?
 
-- Code review före merge
-- Dokumentation av ändringar
-- CI/CD-integration
-- Diskussion och feedback
+| Scenario                  | Utan PR-process               | Med PR-process                |
+|---------------------------|-------------------------------|-------------------------------|
+| Kodkvalitet               | Buggar gar rakt till prod     | Review fangar problem         |
+| Kunskapsspridning         | Bara en vet hur X fungerar    | Teamet laser varandras kod    |
+| Dokumentation             | "Varfor andrade vi detta?"    | PR-beskrivning forklarar      |
+| CI/CD                     | Manuella tester               | Automatiska checks i PR       |
 
-Bra PR-praxis höjer kodkvaliteten och sprider kunskap i teamet.
+PRs ar hjartat i modern mjukvaruutveckling. Bra PR-praxis hojer kodkvaliteten.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## PR Workflow
 
-En Pull Request är en förfrågan om att merga en branch in i en annan. GitHub visar:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      PR LIFECYCLE                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. SKAPA BRANCH                                                │
+│     git switch -c feature/user-auth                             │
+│              │                                                  │
+│              ▼                                                  │
+│  2. UTVECKLA + COMMITA                                          │
+│     git commit -m "feat(auth): add login"                       │
+│              │                                                  │
+│              ▼                                                  │
+│  3. PUSH + SKAPA PR                                             │
+│     git push -u origin feature/user-auth                        │
+│     → GitHub: "Compare & pull request"                          │
+│              │                                                  │
+│              ▼                                                  │
+│  4. CI KORS AUTOMATISKT                                         │
+│     Tests, linting, build                                       │
+│              │                                                  │
+│              ▼                                                  │
+│  5. CODE REVIEW                                                 │
+│     Kommentarer, feedback, diskussion                           │
+│              │                                                  │
+│              ▼                                                  │
+│  6. APPROVED + MERGE                                            │
+│     Squash and merge till main                                  │
+│              │                                                  │
+│              ▼                                                  │
+│  7. DELETE BRANCH                                               │
+│     Automatiskt eller manuellt                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-- Alla commits i branchen
-- Diff av alla ändringar
-- CI/CD-status (tester, linting)
-- Review-kommentarer och godkännanden
-
-PRs kan konfigureras med regler: kräv reviews, passerade tester, etc.
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skapa en bra Pull Request
 
@@ -1379,15 +1676,38 @@ Dockerfile      @devops-team
 package.json    @tech-lead
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Review Feedback Kategorier
+
+| Prefix      | Betydelse                          | Action                        |
+|-------------|-----------------------------------|-------------------------------|
+| [nitpick]   | Mindre forslag, ok att ignorera   | Valfritt att fixa             |
+| [suggestion]| Bra ide, diskuterbart             | Diskutera, besluta            |
+| [blocking]  | Maste fixas fore merge            | Obligatorisk fix              |
+| [question]  | Behover forklaring                | Svara pa fragan               |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Rebasa och städa commits innan PR för enklare review
-2. Bra PR-beskrivning sparar reviewers tid
-3. Kategorisera feedback: nitpick, suggestion, blocking
-4. Branch protection rules förhindrar misstag
-5. CODEOWNERS automatiserar reviewer-tilldelning
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Rebasa fore PR            | Ger enklare review, clean historik                  |
+| PR-beskrivning            | Sparar reviewers tid - forklara VARFOR              |
+| Kategorisera feedback     | nitpick, suggestion, blocking                       |
+| Branch protection         | Forhindrar misstag, kraver reviews                  |
+| CODEOWNERS                | Automatiserar reviewer-tilldelning                  |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Sma PRs ar batttre an stora - lattare att reviewa
+- Svara pa ALLA kommentarer, aven om du inte andrar
+- gh CLI ar kraftfullt - gh pr create, gh pr checkout
+- Squash and merge for clean historik
+- Delete branch efter merge - automatisera detta
 """,
         },
         {
@@ -1397,34 +1717,61 @@ package.json    @tech-lead
             "content": """
 # GitHub Actions Basics
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitHub Actions är GitHubs inbyggda CI/CD-plattform. Fördelarna:
+## Varfor viktigt for DevOps?
 
-- Ingen extern tjänst behövs
-- Gratis för public repos
-- Djup GitHub-integration
-- Tusentals community actions
+| Scenario                  | Utan GitHub Actions           | Med GitHub Actions            |
+|---------------------------|-------------------------------|-------------------------------|
+| Tester                    | Manuellt, glomms bort         | Automatiskt vid varje push    |
+| Deployment               | SSH + manuella steg           | git push = deploy             |
+| Code quality              | "Jag testar lokalt"           | CI blockerar trasig kod       |
+| Kostnad                   | Jenkins-server, underhall     | Gratis for public repos       |
 
-Automatiserad testning och deployment är standard i professionell utveckling.
+GitHub Actions ar standard for CI/CD i modern utveckling.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## GitHub Actions Arkitektur
 
-GitHub Actions kör **workflows** definierade i YAML-filer under `.github/workflows/`.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  GITHUB ACTIONS STRUCTURE                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  WORKFLOW (.github/workflows/ci.yml)                           │
+│  │                                                              │
+│  ├─► EVENT (trigger)                                            │
+│  │   push, pull_request, schedule, workflow_dispatch            │
+│  │                                                              │
+│  └─► JOBS (parallella som standard)                             │
+│      │                                                          │
+│      ├─► job: build                                             │
+│      │   runs-on: ubuntu-latest                                 │
+│      │   steps:                                                 │
+│      │     - uses: actions/checkout@v4                          │
+│      │     - run: npm install                                   │
+│      │     - run: npm test                                      │
+│      │                                                          │
+│      └─► job: deploy (needs: build)                             │
+│          runs-on: ubuntu-latest                                 │
+│          steps: ...                                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Komponenter:**
-- **Workflow** - En automatiserad process
-- **Event** - Trigger som startar workflow (push, PR, schedule)
-- **Job** - Grupp av steg som körs på samma runner
-- **Step** - Enskild uppgift (kör script eller action)
-- **Action** - Återanvändbar enhet (community eller egen)
-- **Runner** - Maskin som kör jobbet (GitHub-hosted eller self-hosted)
+| Komponent   | Beskrivning                                          |
+|-------------|------------------------------------------------------|
+| Workflow    | YAML-fil som definierar automation                   |
+| Event       | Trigger (push, PR, cron, manuell)                    |
+| Job         | Grupp av steg pa samma runner                        |
+| Step        | Enskild uppgift (action eller script)                |
+| Action      | Ateranvandbar enhet fran marketplace                 |
+| Runner      | Maskin som kor jobbet                                |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Första workflow
+## Forsta Workflow
 
 ```yaml
 # .github/workflows/ci.yml
@@ -1660,26 +2007,55 @@ jobs:
             "content": """
 # Git Stash & Worktrees
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Du arbetar på en feature när något akut dyker upp. Du behöver byta branch men har uncommittade ändringar. Vad gör du?
+## Varfor viktigt for DevOps?
 
-**Stash** låter dig temporärt spara ändringar utan att commita.
-**Worktrees** låter dig ha flera branches utcheckade samtidigt.
+| Scenario                  | Utan stash/worktrees          | Med stash/worktrees           |
+|---------------------------|-------------------------------|-------------------------------|
+| Akut buggfix              | Commita halvfardigt, kladd    | Stash, fixa, pop              |
+| Testa annan branch        | Forlora andringar             | Worktree = parallellt         |
+| Code review               | Byt branch, tappa context     | Worktree for review           |
+| Experiment                | Risk att blanda               | Isolerade worktrees           |
 
-Båda är kritiska för effektivt arbete.
+Stash och worktrees ar kritiska for effektivt arbete i team.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Stash Visualisering
 
-**Stash** fungerar som en stack. Du pushar ändringar till stacken, byter branch, och poppar tillbaka dem senare.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      STASH STACK                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  WORKING DIRECTORY                                              │
+│  (med andringar)                                                │
+│        │                                                        │
+│        │ git stash                                              │
+│        ▼                                                        │
+│  ┌─────────────┐                                                │
+│  │ stash@{0}   │ ◄── Senaste stash                              │
+│  │ "WIP auth"  │                                                │
+│  ├─────────────┤                                                │
+│  │ stash@{1}   │                                                │
+│  │ "Fix bug"   │                                                │
+│  ├─────────────┤                                                │
+│  │ stash@{2}   │                                                │
+│  │ "Refactor"  │                                                │
+│  └─────────────┘                                                │
+│        │                                                        │
+│        │ git stash pop                                          │
+│        ▼                                                        │
+│  WORKING DIRECTORY                                              │
+│  (andringar tillbaka)                                           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Worktrees** skapar separata working directories som delar samma `.git`-mapp. Du kan ha `main` i en katalog och `feature-x` i en annan - samtidigt.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Git Stash grunderna
+## Git Stash Grunderna
 
 ```bash
 # Spara aktuella ändringar i stash
@@ -1845,15 +2221,27 @@ npm install && npm test              # Testa PR lokalt
 git worktree remove ~/projects/app-pr-review
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `git stash` sparar ändringar temporärt utan commit
-2. `stash -u` inkluderar untracked files
-3. Worktrees låter dig ha flera branches utcheckade samtidigt
-4. Worktrees delar `.git` - ändringar synkas automatiskt
-5. Använd beskrivande stash-meddelanden (`-m`) för att hålla ordning
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| git stash                 | Sparar andringar temporart utan commit              |
+| stash -u                  | Inkluderar untracked files                          |
+| stash -m                  | Beskrivande meddelande for ordning                  |
+| Worktrees                 | Flera branches utcheckade samtidigt                 |
+| Delar .git                | Worktrees synkar automatiskt                        |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Stash ar en stack - LIFO (Last In, First Out)
+- git stash pop = apply + drop i ett steg
+- Worktrees ar perfekta for code review
+- Varje worktree maste ha unik branch
+- Stada upp worktrees med git worktree remove
 """,
         },
         {
@@ -1863,35 +2251,57 @@ git worktree remove ~/projects/app-pr-review
             "content": """
 # Git Tags & Releases
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Tags markerar viktiga punkter i historiken - vanligtvis releaser. De ger:
+## Varfor viktigt for DevOps?
 
-- Tydlig versionshantering (v1.0.0, v2.0.0)
-- Snabb navigering till specifika releases
-- Underlag för GitHub Releases
-- Deployment-triggers i CI/CD
+| Scenario                  | Utan taggar                   | Med taggar                    |
+|---------------------------|-------------------------------|-------------------------------|
+| Release                   | "Vilken commit ar v1.2.0?"    | git checkout v1.2.0           |
+| Rollback                  | Leta i logg, gissa            | git checkout v1.1.0           |
+| CI/CD deploy              | Manuell trigger               | Push tag = auto deploy        |
+| Changelog                 | Manuell dokumentation         | Auto-genererat fran tags      |
 
-Utan taggar är det svårt att spåra vad som är deployat var.
+Tags ar fundamentet for versionshantering och release-automatisering.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Tag-typer
 
-Git har två typer av taggar:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    LIGHTWEIGHT vs ANNOTATED                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  LIGHTWEIGHT TAG                 ANNOTATED TAG                  │
+│  ────────────────                ──────────────                 │
+│  Bara en pekare                  Fullt Git-objekt               │
+│                                                                 │
+│  ┌────────┐                      ┌────────────────┐             │
+│  │ v1.0.0 │────► commit          │ v1.0.0 (tag)   │             │
+│  └────────┘                      │ Author: Said   │             │
+│                                  │ Date: 2024-01  │             │
+│                                  │ Msg: Release   │             │
+│                                  └───────┬────────┘             │
+│                                          │                      │
+│                                          ▼                      │
+│                                       commit                    │
+│                                                                 │
+│  Anvandning: Temporart           Anvandning: Releases           │
+│                                  (rekommenderas)                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Lightweight tags** - Bara en pekare till en commit
-**Annotated tags** - Fullt Git-objekt med metadata (rekommenderas)
+| Typ         | Skapas med         | Innehall                     | Anvandning     |
+|-------------|--------------------|-----------------------------|----------------|
+| Lightweight | git tag v1.0.0     | Bara pekare                 | Temporara tags |
+| Annotated   | git tag -a v1.0.0  | Metadata, meddelande, datum | Releases       |
+| Signed      | git tag -s v1.0.0  | + GPG-signatur              | Sakra releases |
 
-Annotated tags innehåller:
-- Taggare (namn + email)
-- Datum
-- Meddelande
-- Valfri GPG-signatur
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Skapa taggar
+## Skapa Taggar
 
 ```bash
 # Lightweight tag (bara pekare)
@@ -2071,15 +2481,38 @@ jobs:
           generate_release_notes: true
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Semantic Versioning
+
+| Version       | Nar                                    | Exempel                       |
+|---------------|----------------------------------------|-------------------------------|
+| MAJOR (X.0.0) | Breaking changes, inkompatibelt        | v1.0.0 → v2.0.0               |
+| MINOR (0.X.0) | Ny funktionalitet, bakatkompat         | v1.0.0 → v1.1.0               |
+| PATCH (0.0.X) | Buggfixar, bakatkompat                 | v1.0.0 → v1.0.1               |
+| Pre-release   | Alpha, beta, RC                        | v2.0.0-beta.1                 |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Använd annotated tags (`-a`) för releases
-2. Semantic versioning: MAJOR.MINOR.PATCH
-3. `--follow-tags` pushar bara annoterade taggar
-4. GitHub Releases bygger på Git tags + extra metadata
-5. Taggar är perfekta triggers för CI/CD releases
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Annotated tags (-a)       | Anvand for releases - har metadata                  |
+| Semantic versioning       | MAJOR.MINOR.PATCH                                   |
+| --follow-tags             | Pushar bara annoterade taggar                       |
+| GitHub Releases           | Bygger pa Git tags + release notes                  |
+| CI/CD trigger             | Push tag = automatisk deployment                    |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- ALLTID annotated tags for releases: git tag -a v1.0.0
+- Push tags explicit: git push origin v1.0.0
+- gh release create for GitHub Releases fran CLI
+- Tags ar permanenta - ta bort kraver --delete
+- Semantic versioning ar standard - folj det
 """,
         },
         {
@@ -2089,36 +2522,62 @@ jobs:
             "content": """
 # Git Hooks
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Git hooks automatiserar kvalitetskontroller. De kan:
+## Varfor viktigt for DevOps?
 
-- Köra linting före commit
-- Validera commit-meddelanden
-- Köra tester före push
-- Formatera kod automatiskt
+| Scenario                  | Utan hooks                    | Med hooks                     |
+|---------------------------|-------------------------------|-------------------------------|
+| Lint-fel                  | Upptacks i CI, forsenar       | Blockeras vid commit          |
+| Daliga commit-msg         | Oläsbar historik              | Valideras automatiskt         |
+| Trasig kod pushad         | Bryter prod, rollback         | Pre-push tester stoppar       |
+| Formatering               | Inkonsekvent kod              | Auto-formatering vid commit   |
 
-Hooks förhindrar att dålig kod ens hamnar i repositoryt.
+Hooks forhindrar att dalig kod ens hamnar i repositoryt.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Hook-typer
 
-Hooks är scripts som Git kör vid specifika events. De ligger i `.git/hooks/`.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      GIT HOOKS LIFECYCLE                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  CLIENT-SIDE HOOKS                                              │
+│  ─────────────────                                              │
+│                                                                 │
+│  git commit                                                     │
+│       │                                                         │
+│       ├──► pre-commit         Lint, formatera, tester           │
+│       │                                                         │
+│       ├──► prepare-commit-msg Redigera default-meddelande       │
+│       │                                                         │
+│       └──► commit-msg         Validera commit-meddelande        │
+│                                                                 │
+│  git push                                                       │
+│       │                                                         │
+│       └──► pre-push           Full test suite, build            │
+│                                                                 │
+│  SERVER-SIDE HOOKS                                              │
+│  ─────────────────                                              │
+│                                                                 │
+│  pre-receive    Validera fore accept                            │
+│  post-receive   Trigger deployment, notifieringar               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Client-side hooks:**
-- `pre-commit` - Före commit skapas
-- `prepare-commit-msg` - Redigera default commit-meddelande
-- `commit-msg` - Validera commit-meddelande
-- `pre-push` - Före push till remote
+| Hook             | Nar                    | Anvandning                    |
+|------------------|------------------------|-------------------------------|
+| pre-commit       | Fore commit skapas     | Lint, format, unit tests      |
+| commit-msg       | Efter meddelande       | Validera Conventional Commits |
+| pre-push         | Fore push till remote  | Full test suite, build        |
+| post-receive     | Efter server tar emot  | Deploy, notifiera             |
 
-**Server-side hooks:**
-- `pre-receive` - Före commits accepteras
-- `post-receive` - Efter commits accepterats
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Grundläggande hooks
+## Grundlaggande Hooks
 
 ```bash
 # Hooks ligger i .git/hooks/
@@ -2321,15 +2780,27 @@ npm install lint-staged --save-dev
 npx lint-staged
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Hooks är scripts som körs vid Git-events
-2. `pre-commit` för linting, `commit-msg` för meddelandevalidering
-3. `.git/hooks/` versionshanteras INTE - använd Husky
-4. lint-staged kör checks bara på staged files
-5. Hooks förhindrar dålig kod från att committas
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Hooks                     | Scripts som kors vid Git-events                     |
+| pre-commit                | For linting, formatering, snabba tester             |
+| commit-msg                | Validera commit-meddelanden                         |
+| Husky                     | Versionshanterar hooks, teamet far automatiskt      |
+| lint-staged               | Kor checks BARA pa staged files (snabbt)            |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- .git/hooks/ versionshanteras INTE - anvand Husky
+- Hooks maste vara executable: chmod +x
+- Exit 0 = OK, Exit non-zero = blockera
+- lint-staged ar mycket snabbare an att kora pa alla filer
+- Conventional Commits + commitlint = automatisk changelog
 """,
         },
         {
@@ -2339,29 +2810,53 @@ npx lint-staged
             "content": """
 # Git Configuration & Aliases
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Git är konfigurerbart. Rätt inställningar sparar tid och förhindrar misstag.
+## Varfor viktigt for DevOps?
 
-Aliases låter dig skapa genvägar för vanliga kommandon. Istället för att skriva `git log --oneline --graph --all` kan du skriva `git lg`.
+| Scenario                  | Utan config/aliases           | Med config/aliases            |
+|---------------------------|-------------------------------|-------------------------------|
+| Vanliga kommandon         | git log --oneline --graph...  | git lg                        |
+| Pull-strategi             | Merge commits overallt        | Rebase som default            |
+| Credentials               | Ange varje gang               | Cached/keychain               |
+| Misstag                   | Push till main direkt         | Branch protection hints       |
 
-Professionella utvecklare har sina egna optimerade Git-konfigurationer.
+Professionella utvecklare har optimerade Git-konfigurationer.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Konfigurationsnivaer
 
-Git-konfiguration lagras på tre nivåer:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  GIT CONFIG HIERARCHY                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  PRIORITET (hogst forst):                                       │
+│                                                                 │
+│  ┌─────────────────┐                                            │
+│  │  LOCAL          │  .git/config      Repo-specifik            │
+│  │  --local        │  Overskriver allt                          │
+│  └────────┬────────┘                                            │
+│           │                                                     │
+│           ▼                                                     │
+│  ┌─────────────────┐                                            │
+│  │  GLOBAL         │  ~/.gitconfig     Din anvandare            │
+│  │  --global       │  Rekommenderat for personliga settings     │
+│  └────────┬────────┘                                            │
+│           │                                                     │
+│           ▼                                                     │
+│  ┌─────────────────┐                                            │
+│  │  SYSTEM         │  /etc/gitconfig   Alla anvandare           │
+│  │  --system       │  Sallan anvand                             │
+│  └─────────────────┘                                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-1. **System** (`/etc/gitconfig`) - Alla användare
-2. **Global** (`~/.gitconfig`) - Din användare
-3. **Local** (`.git/config`) - Specifikt repo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Local överskrider Global som överskrider System.
-
----
-
-## Grundläggande konfiguration
+## Grundlaggande Konfiguration
 
 ```bash
 # Obligatoriskt: identitet
@@ -2583,15 +3078,27 @@ git config --global --unset alias.st
 git config --global --remove-section alias
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Tre nivåer: system → global → local (local vinner)
-2. `--global` för personliga inställningar, local för projekt
-3. Aliases sparar tid: `git lg` istället för lång log-kommando
-4. `pull.rebase = true` ger renare historik
-5. Global gitignore för OS- och editor-filer
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Tre nivaer                | system - global - local (local vinner)              |
+| --global                  | For personliga installningar                        |
+| Aliases                   | Sparar tid: git lg istallet for lang logg           |
+| pull.rebase = true        | Ger renare historik som default                     |
+| Global gitignore          | For OS- och editor-filer (.DS_Store, .idea/)        |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Satt upp din identitet FORST: user.name och user.email
+- Aliases ar personliga - skapa for kommandon du anvander ofta
+- git config --global --edit for att redigera direkt
+- Dela bra aliases med teamet via dokumentation
+- Global gitignore forhindrar att .DS_Store hamnar i commits
 """,
         },
         {
@@ -2601,24 +3108,56 @@ git config --global --remove-section alias
             "content": """
 # Submodules & Monorepos
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Större projekt behöver hantera kod på olika sätt:
+## Varfor viktigt for DevOps?
 
-**Submodules** - Inkludera externa repos i ditt projekt
-**Monorepos** - Flera projekt i samma repository
+| Scenario                  | Utan strategi                 | Med submodules/monorepo       |
+|---------------------------|-------------------------------|-------------------------------|
+| Delad kod                 | Copy-paste, divergerar        | En kalla, synkad              |
+| Beroenden                 | npm install fran npm          | Lokal utveckling, snabbare    |
+| Microservices             | 20 separata repos             | Monorepo, atomara commits     |
+| Libraries                 | Publicera till npm            | Submodule, pinnad version     |
 
-Båda har för- och nackdelar. Rätt val beror på teamstorlek, beroenden och release-cykler.
+Storre projekt kraver strukturerad kodhantering.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Submodules vs Monorepo
 
-**Submodules** skapar en referens till en specifik commit i ett annat repo. De är som dependencies men med full Git-historik.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                SUBMODULES vs MONOREPO                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  SUBMODULES                      MONOREPO                       │
+│  ──────────                      ────────                       │
+│                                                                 │
+│  repo-main/                      company/                       │
+│  ├── src/                        ├── apps/                      │
+│  ├── libs/                       │   ├── web/                   │
+│  │   └── shared/ ──► repo        │   ├── api/                   │
+│  └── .gitmodules                 │   └── mobile/                │
+│                                  ├── packages/                  │
+│  Separata repos                  │   ├── ui/                    │
+│  Pinnades till commit            │   └── utils/                 │
+│  Explicit version                └── turbo.json                 │
+│                                                                 │
+│                                  Allt i ett repo                │
+│                                  Atomara commits                │
+│                                  Enklare refactoring            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Monorepos** samlar all kod i ett repo. Kräver verktyg som Nx, Turborepo eller Lerna för att skala.
+| Aspekt           | Submodules                   | Monorepo                      |
+|------------------|------------------------------|-------------------------------|
+| Versionshantering| Pinnades till commit         | Alltid senaste                |
+| Atomara commits  | Nej, separata repos          | Ja, en commit for alla        |
+| CI/CD            | Per-repo pipelines           | Intelligent caching           |
+| Bast for         | Externa beroenden            | Intern kod, team-projekt      |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Git Submodules
 
@@ -2816,18 +3355,30 @@ git worktree add -b hotfix-api ../api-hotfix main
 cd ../api-hotfix
 # Fixa något i API:et
 
-# Kombinera med sparse checkout för stora repos
+# Kombinera med sparse checkout for stora repos
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Submodules inkluderar externa repos vid specifik commit
-2. `--recurse-submodules` vid clone för att få all kod
-3. Monorepos samlar allt i ett repo - kräver verktyg som Turborepo
-4. Sparse checkout för att bara klona delar av stora repos
-5. Worktrees ger parallellt arbete i monorepos
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Submodules                | Inkluderar externa repos vid specifik commit        |
+| --recurse-submodules      | Vid clone for att fa all kod                        |
+| Monorepo                  | Allt i ett repo, kraver Turborepo/Nx                |
+| Sparse checkout           | Klona bara delar av stora repos                     |
+| Worktrees                 | Parallellt arbete i monorepos                       |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Submodules ar komplexa - dokumentera for teamet
+- git submodule update --init --recursive vid clone
+- Monorepo kraver verktyg: Turborepo, Nx, eller Lerna
+- Sparse checkout for att spara tid vid clone
+- Submodules for externa beroenden, monorepo for intern kod
 """,
         },
         {
@@ -2837,24 +3388,53 @@ cd ../api-hotfix
             "content": """
 # Git Bisect & Debugging
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-En bugg har introducerats någonstans i historiken. Du vet att det fungerade förra veckan. Hur hittar du exakt vilken commit som introducerade buggen?
+## Varfor viktigt for DevOps?
 
-`git bisect` gör binärsökning genom commit-historiken. Istället för att testa 100 commits testar du ~7.
+| Scenario                  | Utan bisect                   | Med bisect                    |
+|---------------------------|-------------------------------|-------------------------------|
+| Bugg i prod               | Manuellt leta, timmar         | Binarsokning, minuter         |
+| 100 commits sedan OK      | Testa 50 i snitt              | Testa ~7                      |
+| Regression                | "Nagon maste ha andrat..."    | Exakt commit identifierad     |
+| Accountability            | Gissning                      | git blame visar vem           |
 
----
+git bisect ar kraftfullt for att hitta exakt vilken commit som introducerade en bugg.
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Git bisect delar upp historiken i hälfter. Du testar mitten och säger "bra" eller "dålig". Git väljer nästa halva automatiskt.
+## Bisect Visualisering
 
-**Binärsökning:** 1000 commits → ~10 tester
-**Linjär sökning:** 1000 commits → ~500 tester i snitt
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    BINARY SEARCH                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1000 commits att soka igenom?                                  │
+│                                                                 │
+│  LINJAR SOKNING:    ~500 tester i snitt                        │
+│  BINARSOKNING:      ~10 tester (log2 1000)                     │
+│                                                                 │
+│  [GOOD]────────────────[?]────────────────[BAD]                │
+│    │                    │                    │                  │
+│    v1.0.0               │                  HEAD                 │
+│                         │                                       │
+│                    testa mitten                                 │
+│                         │                                       │
+│                   ┌─────┴─────┐                                 │
+│                   │           │                                 │
+│                  BAD?       GOOD?                               │
+│                   │           │                                 │
+│              soka har     soka har                              │
+│                                                                 │
+│  Varje test halverar sokomradet!                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Grundläggande bisect
+## Grundlaggande Bisect
 
 ```bash
 # Starta bisect
@@ -3066,18 +3646,30 @@ git blame -L :function:file.js       # Kontext
 
 # 6. Avsluta och fixa
 git bisect reset
-# Skapa fix baserad på vad du hittat
+# Skapa fix baserad pa vad du hittat
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `git bisect` gör binärsökning - ~7 tester för 100 commits
-2. `git bisect run` automatiserar med test-script
-3. `git blame` visar vem som ändrade varje rad
-4. `-S` i log hittar commits som ändrade en sträng
-5. Kombinera bisect + blame + log för effektiv debugging
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| git bisect                | Binarsokning - ~7 tester for 100 commits            |
+| git bisect run            | Automatisera med test-script                        |
+| git blame                 | Visar vem som andrade varje rad                     |
+| git log -S                | Hittar commits som andrade en strang                |
+| Kombinera                 | bisect + blame + log for effektiv debugging         |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- git bisect ar MAKALOST for att hitta regressioner
+- Automatisera med git bisect run nar mojligt
+- Exit 125 = skip (commit kan ej testas)
+- git blame -w ignorerar whitespace-andringar
+- Avsluta ALLTID med git bisect reset
 """,
         },
         {
@@ -3087,32 +3679,49 @@ git bisect reset
             "content": """
 # Git LFS & Large Files
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Git är optimerat för textfiler. Stora binärfiler (bilder, videos, modeller) gör repos:
+## Varfor viktigt for DevOps?
 
-- Långsamma att klona
-- Stora på disk
-- Svåra att hantera
+| Scenario                  | Utan LFS                      | Med LFS                       |
+|---------------------------|-------------------------------|-------------------------------|
+| Clone-tid                 | 10+ minuter                   | Sekunder                      |
+| Repo-storlek              | 5 GB                          | 50 MB + on-demand             |
+| CI/CD                     | Timeout vid clone             | Snabba pipelines              |
+| Historik                  | Varje version av bild sparas  | Bara pekare i historik        |
 
-Git LFS (Large File Storage) löser detta genom att lagra stora filer separat.
+Git ar optimerat for text. Stora binarfiler (bilder, videos, ML-modeller) kraver LFS.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## LFS Arkitektur
 
-Git LFS ersätter stora filer med pekare. Själva filerna lagras på en separat server.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GIT LFS WORKFLOW                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  UTAN LFS:                                                      │
+│  ─────────                                                      │
+│  .git/objects/                                                  │
+│  ├── commit1 ──► image.psd (50 MB)                             │
+│  ├── commit2 ──► image.psd (50 MB)  Varje version sparas!      │
+│  └── commit3 ──► image.psd (50 MB)  = 150 MB for en fil        │
+│                                                                 │
+│  MED LFS:                                                       │
+│  ────────                                                       │
+│  .git/objects/                     LFS Server                   │
+│  ├── commit1 ──► pekare (130 B)    ├── abc123.psd (50 MB)      │
+│  ├── commit2 ──► pekare (130 B)    ├── def456.psd (50 MB)      │
+│  └── commit3 ──► pekare (130 B)    └── ghi789.psd (50 MB)      │
+│                                                                 │
+│  Pekare i repo, faktiska filer pa LFS-server                   │
+│  Laddas ned on-demand vid checkout                              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Vanlig Git:**
-- Varje commit lagrar hela filen
-- Historiken växer snabbt
-
-**Git LFS:**
-- Commits innehåller bara pekare (~130 bytes)
-- Filer laddas ned vid checkout
-- Bara den version du behöver
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Installera Git LFS
 
@@ -3311,15 +3920,27 @@ EOF
 # Gratis tier har begränsningar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Git LFS lagrar stora filer separat - snabbare kloning
-2. `git lfs track` före du lägger till stora filer
-3. `.gitattributes` måste committas och pushas
-4. `migrate import` skriver om historiken - kräver force push
-5. Sätt upp LFS tidigt i projektet för bäst resultat
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Git LFS                   | Lagrar stora filer separat - snabbare kloning       |
+| git lfs track             | Kor FORE du lagger till stora filer                 |
+| .gitattributes            | Maste committas och pushas                          |
+| migrate import            | Skriver om historiken - kraver force push           |
+| Timing                    | Satt upp LFS tidigt i projektet                     |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- LFS = pekare i repo, filer pa separat server
+- Gor git lfs track INNAN du lagger till filer
+- .gitattributes maste vara med i forsta commit
+- git lfs migrate skriver om HELA historiken
+- Gratis tier har bandbreddsbegransningar
 """,
         },
         {
@@ -3329,24 +3950,51 @@ EOF
             "content": """
 # GitHub Features & Settings
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitHub är mer än Git-hosting. Det är en komplett utvecklingsplattform med:
+## Varfor viktigt for DevOps?
 
-- Issues och projekt för planering
-- Discussions för community
-- Wiki för dokumentation
-- Security features för säkerhet
+| Feature                   | DevOps-anvandning                                   |
+|---------------------------|-----------------------------------------------------|
+| Issues                    | Buggtracking, feature requests                      |
+| Projects                  | Sprint-planering, Kanban                            |
+| Discussions               | Team-kommunikation, RFC                             |
+| Wiki                      | Dokumentation, runbooks                             |
+| Templates                 | Standardiserade PRs och issues                      |
 
-Att utnyttja dessa features förbättrar team-samarbetet dramatiskt.
+GitHub ar mer an Git-hosting - det ar en hel utvecklingsplattform.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## GitHub Platform Oversikt
 
-GitHub bygger på Git men lägger till ett lager av samarbetsverktyg. Dessa är GitHub-specifika och finns inte i "ren" Git.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GITHUB PLATFORM                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │   ISSUES    │  │  PROJECTS   │  │ DISCUSSIONS │             │
+│  │  Bug track  │  │   Kanban    │  │  Community  │             │
+│  │  Features   │  │  Roadmap    │  │    Q&A      │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                                                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │    WIKI     │  │  ACTIONS    │  │  SECURITY   │             │
+│  │    Docs     │  │   CI/CD     │  │  Scanning   │             │
+│  │  Runbooks   │  │ Automation  │  │ Dependabot  │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                                                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │  PACKAGES   │  │  RELEASES   │  │   PAGES     │             │
+│  │   Docker    │  │  Versions   │  │   Static    │             │
+│  │    npm      │  │ Changelogs  │  │   Sites     │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Repository Settings
 
@@ -3614,15 +4262,27 @@ LICENSE
 .gitignore
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. GitHub är mer än Git - Issues, Projects, Discussions
-2. Issue templates standardiserar buggrapporter
-3. Projects ger Kanban-boards för planering
-4. Dependabot håller dependencies uppdaterade
-5. Template repos sparar tid vid nya projekt
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| GitHub                    | Mer an Git - Issues, Projects, Discussions          |
+| Issue templates           | Standardiserar buggrapporter och feature requests   |
+| Projects                  | Kanban-boards for planering och sprinthantering     |
+| Dependabot                | Haller dependencies uppdaterade automatiskt         |
+| Template repos            | Sparar tid vid nya projekt                          |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Aktivera Issue templates for konsekvent rapportering
+- Projects kan automatisera issue-hantering
+- Dependabot.yml kravs for automatiska uppdateringar
+- Wiki kan klonas och redigeras som vanligt Git-repo
+- Template repos sparar setup-tid for nya projekt
 """,
         },
         {
@@ -3632,29 +4292,46 @@ LICENSE
             "content": """
 # GitHub Security & Access Control
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Säkerhet i repositories är kritiskt. En läckt API-nyckel eller för breda behörigheter kan leda till:
+## Varfor viktigt for DevOps?
 
-- Datastöld
-- Infrastruktur-kompromiss
-- Ekonomiska förluster
-- Rykteskador
+| Risk                      | Konsekvens                     | Prevention                    |
+|---------------------------|--------------------------------|-------------------------------|
+| Lackt API-nyckel          | Infrastruktur-kompromiss       | Secret scanning               |
+| For breda behorigheter    | Obehorig access                | Fine-grained PATs             |
+| Direkt push till main     | Trasig produktion              | Branch protection             |
+| Sarbara dependencies      | Sakerhetshall                  | Dependabot                    |
 
-GitHub har kraftfulla verktyg för att skydda kod och credentials.
+Sakerhet i repositories ar kritiskt - en lackt credential kan kosta miljoner.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## GitHub Sakerhetslager
 
-GitHub erbjuder flera säkerhetslager:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GITHUB SECURITY LAYERS                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  AUTENTISERING              AUKTORISERING                       │
+│  ──────────────             ──────────────                      │
+│  - SSH-nycklar              - Repo permissions                  │
+│  - PATs (tokens)            - Branch protection                 │
+│  - 2FA / SAML SSO           - Team access                       │
+│  - Deploy keys              - CODEOWNERS                        │
+│                                                                 │
+│  SCANNING                   AUDIT                               │
+│  ────────                   ─────                               │
+│  - Secret scanning          - Audit logs                        │
+│  - Dependabot               - Security advisories               │
+│  - CodeQL                   - Compliance reports                │
+│  - Push protection          - API activity                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-1. **Autentisering** - SSH-nycklar, tokens, 2FA
-2. **Auktorisering** - Repo-åtkomst, branch protection
-3. **Scanning** - Secrets, vulnerabilities, code
-4. **Audit** - Loggar vem som gjorde vad
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Personal Access Tokens (PAT)
 
@@ -3925,15 +4602,27 @@ curl -H "Authorization: token $TOKEN" \\
   "https://api.github.com/orgs/myorg/audit-log?phrase=action:repo.create"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Fine-grained PATs är säkrare än classic tokens
-2. Deploy keys för CI/CD, begränsade till ett repo
-3. Branch protection förhindrar direkta pushes till main
-4. Secret scanning blockerar läckta credentials
-5. Dependabot håller dependencies säkra automatiskt
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Fine-grained PATs         | Sakrare an classic tokens - granular permissions    |
+| Deploy keys               | For CI/CD - begransade till ETT repo                |
+| Branch protection         | Forhindrar direkta pushes till main                 |
+| Secret scanning           | Blockerar lackta credentials automatiskt            |
+| Dependabot                | Haller dependencies sakra med auto-PRs              |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Fine-grained PATs med utgangsdatum och repo-begransning
+- Deploy keys kan inte atervandas mellan repos
+- Branch protection rules galler ALLA inklusive admins
+- Secret scanning push protection ar on by default
+- CodeQL hittar sarbarheter i koden sjalv
 """,
         },
         {
@@ -3943,28 +4632,52 @@ curl -H "Authorization: token $TOKEN" \\
             "content": """
 # Advanced Git Internals
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Förståelse för Gits internals gör dig till en Git-mästare. Du kan:
+## Varfor viktigt for DevOps?
 
-- Återställa "förlorad" data
-- Förstå varför kommandon beter sig som de gör
-- Optimera stora repositories
-- Felsöka komplexa problem
+| Scenario                  | Krav pa Git-kunskap                                 |
+|---------------------------|-----------------------------------------------------|
+| Aterstalla forlorad kod   | Forsta objektmodellen och reflog                    |
+| Felsoka konstiga beteenden| Veta hur refs och index fungerar                    |
+| Optimera stora repos      | Forsta packfiles och gc                             |
+| Skripta Git-operationer   | Anvanda plumbing-kommandon                          |
 
----
+Forstaelse for Gits internals gor dig till en Git-mastare.
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Git är fundamentalt en content-addressable filesystem. Allt lagras som objekt identifierade av SHA-1 hashar.
+## Git Object Model
 
-**Fyra objekttyper:**
-- blob - Filinnehåll
-- tree - Katalogstruktur
-- commit - Snapshot med metadata
-- tag - Namngiven pekare (annotated)
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GIT OBJECT DATABASE                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  FYRA OBJEKTTYPER:                                              │
+│                                                                 │
+│  ┌──────────┐     ┌──────────┐     ┌──────────┐                │
+│  │   BLOB   │     │   TREE   │     │  COMMIT  │                │
+│  │          │     │          │     │          │                │
+│  │ Fildata  │◄────│ Katalog  │◄────│ Snapshot │                │
+│  │ (binart) │     │ struktur │     │ +metadata│                │
+│  └──────────┘     └──────────┘     └──────────┘                │
+│                                          │                      │
+│                                          ▼                      │
+│                                    ┌──────────┐                │
+│                                    │   TAG    │                │
+│                                    │          │                │
+│                                    │ Namngiven│                │
+│                                    │  pekare  │                │
+│                                    └──────────┘                │
+│                                                                 │
+│  SHA-1 hash: abc123def456...                                    │
+│  Lagringsplats: .git/objects/ab/c123def456...                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Git Objects
 
@@ -4186,15 +4899,27 @@ git config core.commitGraph true
 git multi-pack-index write
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Git är en content-addressable database med fyra objekttyper
-2. Refs är pekare till commits - branches och tags
-3. Index (staging area) är mellansteget före commit
-4. Packfiles komprimerar objekt för effektivitet
-5. `git fsck` för att verifiera och hitta problem
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Objekttyper               | blob, tree, commit, tag - allt ar SHA-1 hashat      |
+| Refs                      | Pekare till commits - branches och tags             |
+| Index                     | Staging area - mellansteget fore commit             |
+| Packfiles                 | Komprimerar objekt for effektivitet                 |
+| git fsck                  | Verifiera och hitta problem i repo                  |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Git ar en content-addressable databas
+- Allt identifieras med SHA-1 hash
+- Refs ar bara textfiler med commit-hashar
+- Packfiles skapas av git gc
+- Dangling objects ar inte forlorade - bara unreferenced
 """,
         },
         {
@@ -4204,30 +4929,54 @@ git multi-pack-index write
             "content": """
 # Git for DevOps & Automation
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-DevOps handlar om automation. Git-kunskap är kritisk för:
+## Varfor viktigt for DevOps?
 
-- GitOps-workflows (Kubernetes, ArgoCD)
-- Infrastructure as Code (Terraform, Ansible)
-- CI/CD-pipelines
-- Automatisk dokumentation
+| Koncept                   | DevOps-anvandning                                   |
+|---------------------------|-----------------------------------------------------|
+| GitOps                    | Git som source of truth for infrastruktur           |
+| IaC                       | Terraform/Ansible i versionskontroll                |
+| CI/CD triggers            | Push/PR triggar deployment pipelines                |
+| Audit trail               | Git log = compliance och spaarbarhet                |
 
-Git är fundamentet för modern DevOps.
+Git ar fundamentet for modern DevOps och automation.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## GitOps Arkitektur
 
-DevOps använder Git som:
-- Single source of truth för infrastruktur
-- Trigger för automation
-- Audit trail för ändringar
-- Kollaborationsverktyg för ops och dev
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GITOPS WORKFLOW                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  DEVELOPER              GIT REPO                CLUSTER         │
+│  ─────────              ────────                ───────         │
+│                                                                 │
+│  ┌─────────┐           ┌─────────┐           ┌─────────┐       │
+│  │  Code   │──push────►│  main   │◄──sync────│  ArgoCD │       │
+│  │ Change  │           │ branch  │           │  /Flux  │       │
+│  └─────────┘           └─────────┘           └─────────┘       │
+│       │                     │                     │             │
+│       ▼                     ▼                     ▼             │
+│  ┌─────────┐           ┌─────────┐           ┌─────────┐       │
+│  │   PR    │──review──►│  merge  │──trigger─►│ deploy  │       │
+│  │ Review  │           │         │           │         │       │
+│  └─────────┘           └─────────┘           └─────────┘       │
+│                                                                 │
+│  Principer:                                                     │
+│  1. Deklarativ  - Beskriv onskat tillstand                     │
+│  2. Versioned   - Allt i Git                                    │
+│  3. Automated   - PR = Deploy                                   │
+│  4. Observed    - Kontinuerlig sync                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## GitOps-mönster
+## GitOps-monster
 
 ```yaml
 # GitOps: Git som source of truth för infrastruktur
@@ -4526,15 +5275,27 @@ sops secrets.yaml                    # Krypterar YAML-filer
 # Stöder AWS KMS, GCP KMS, Azure Key Vault, PGP
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. GitOps: Git är source of truth för infrastruktur
-2. Remote state för Terraform, aldrig i Git
-3. Environment branches för deployment-stages
-4. git-crypt eller SOPS för krypterade secrets
-5. Conventional Commits möjliggör automatisk changelog
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| GitOps                    | Git ar source of truth for infrastruktur            |
+| Terraform state           | Remote state, ALDRIG i Git                          |
+| Environment branches      | main/staging/develop for deployment-stages          |
+| Secrets                   | git-crypt eller SOPS for krypterade filer           |
+| Conventional Commits      | Mojliggor automatisk changelog-generering           |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- GitOps: Git = single source of truth
+- Terraform state i S3/GCS med locking
+- ALDRIG commita secrets - anvand environment variables
+- Environment protection for production-deploys
+- Conventional Commits for automatisk changelog
 """,
         },
         {
@@ -4544,25 +5305,53 @@ sops secrets.yaml                    # Krypterar YAML-filer
             "content": """
 # Git Troubleshooting & Common Issues
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Alla stöter på Git-problem. De vanligaste:
+## Varfor viktigt for DevOps?
 
-- Merge-konflikter
-- Detached HEAD
-- Push rejected
-- Förlorade commits
-- Korrupt repository
+| Problem                   | Tidsforlust utan losning                            |
+|---------------------------|-----------------------------------------------------|
+| Merge conflicts           | Timmar av frustration                               |
+| Detached HEAD             | Forlorade commits                                   |
+| Push rejected             | Blockerad deployment                                |
+| Korrupt repo              | Potentiell dataforlust                              |
 
-Att snabbt lösa dessa sparar timmar av frustration.
+Alla stoter pa Git-problem. Snabb losning sparar timmar.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Vanligaste Git-problemen
 
-De flesta Git-problem har enkla lösningar - när du vet vad du letar efter. Denna guide täcker de vanligaste scenarierna.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GIT TROUBLESHOOTING                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  PROBLEM              SYMPTOM                LOSNING            │
+│  ───────              ───────                ───────            │
+│                                                                 │
+│  Merge conflict       <<<< ==== >>>>         Redigera, add,     │
+│                       markorer i fil         commit             │
+│                                                                 │
+│  Detached HEAD        "detached HEAD"        git switch -c      │
+│                       varning                new-branch         │
+│                                                                 │
+│  Push rejected        fetch first            git pull --rebase  │
+│                       meddelande             sen push           │
+│                                                                 │
+│  Forlorade commits    Commits "forsvann"     git reflog         │
+│                       efter reset            git reset --hard   │
+│                                                                 │
+│  Korrupt index        index file error       rm .git/index      │
+│                                              git reset          │
+│                                                                 │
+│  SSH permission       Permission denied      ssh-add, config    │
+│                       (publickey)                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Merge Conflicts
 
@@ -4835,15 +5624,27 @@ git clone --depth 1 URL
 git clone --filter=blob:none URL
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `git reflog` är din livräddare för "förlorade" commits
-2. `--force-with-lease` är säkrare än `--force`
-3. `git fsck` för att hitta repository-problem
-4. SSH-problem? Kontrollera ssh-agent och config
-5. Performance: `git gc` och stora filer kan vara boven
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| git reflog                | Din livräddare for forlorade commits                |
+| --force-with-lease        | Sakrare an --force for push                         |
+| git fsck                  | Hitta och diagnostisera repo-problem                |
+| SSH-problem               | Kontrollera ssh-agent och ~/.ssh/config             |
+| Performance               | git gc och stora filer kan vara boven               |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- git reflog visar ALLA HEAD-andringar (90 dagar)
+- ALDRIG --force pa delade branches - anvand --force-with-lease
+- Merge conflict? git merge --abort for att backa
+- Detached HEAD? git switch -c new-branch
+- Korrupt repo? rm .git/index && git reset
 """,
         },
     ],
