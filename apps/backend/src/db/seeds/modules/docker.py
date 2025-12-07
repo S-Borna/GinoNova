@@ -1310,187 +1310,537 @@ APP_HOST=10.0.1.100     # App-server på privat IP
 """,
         },
         {
-            "title": "Dockerfile Mastery",
-            "slug": "dockerfile-mastery",
-            "difficulty": "medium",
-            "estimated_minutes": 50,
-            "xp_reward": 85,
-            "content": """# Dockerfile Mastery
+            "title": "Portar och Tjänster",
+            "slug": "ports-and-services",
+            "difficulty": "easy",
+            "estimated_minutes": 45,
+            "xp_reward": 75,
+            "content": """# Portar och Tjänster
 
-## Varför behöver du kunna detta?
+## 🎯 Varför portar är essentiellt för DevOps
 
-Dockerfile är receptet för dina images. Du måste kunna:
+Port-kunskap är kritiskt för:
 
-- **Skriva effektiva Dockerfiles** som bygger snabbt
-- **Optimera för storlek och säkerhet**
-- **Förstå varje instruktion** så du kan felsöka build-problem
-
----
-
-## Dockerfile Struktur
-
-```dockerfile
-# Kommentar
-INSTRUKTION argument
-```
-
-Docker läser Dockerfile uppifrån och ner. Varje instruktion skapar ett nytt layer.
+| Användningsområde | Beskrivning |
+|-------------------|-------------|
+| **Service configuration** | Konfigurera vilka portar tjänster använder |
+| **Security** | Brandväggsregler, begränsa åtkomst |
+| **Troubleshooting** | Felsöka anslutningsproblem |
+| **Load balancing** | Distribuera trafik till rätt portar |
+| **Container networking** | Docker port mapping |
+| **Service discovery** | Hitta tjänster i nätverk |
 
 ---
 
-## De viktigaste instruktionerna
+## 📊 Port Grunderna
 
-```dockerfile
-# FROM - Välj base image (MÅSTE vara först)
-FROM python:3.11-slim
+### Vad är en port?
 
-# WORKDIR - Sätt arbetskatalog (skapar om den inte finns)
-WORKDIR /app
-
-# COPY - Kopiera filer från host till image
-COPY requirements.txt .
-COPY src/ ./src/
-
-# RUN - Kör kommandon under build
-RUN pip install -r requirements.txt
-RUN apt-get update && apt-get install -y curl
-
-# ENV - Sätt miljövariabler
-ENV PYTHONUNBUFFERED=1
-ENV APP_ENV=production
-
-# EXPOSE - Dokumentera vilken port appen lyssnar på
-EXPOSE 8000
-
-# CMD - Default-kommando när container startar
-CMD ["python", "app.py"]
-```
-
----
-
-## COPY vs ADD
-
-```dockerfile
-# COPY - Enkel kopiering (rekommenderas)
-COPY app.py /app/
-COPY . /app/
-
-# ADD - Kan mer men undvik om möjligt
-ADD https://example.com/file.tar.gz /app/  # Laddar ner URL
-ADD archive.tar.gz /app/                    # Auto-extraherar
-
-# Använd COPY om du inte behöver ADD:s extra funktioner
-```
-
----
-
-## CMD vs ENTRYPOINT
-
-```dockerfile
-# CMD - Kan överskrivas vid docker run
-CMD ["python", "app.py"]
-# docker run myimage              → python app.py
-# docker run myimage python test.py → python test.py (CMD ignoreras)
-
-# ENTRYPOINT - Körs alltid, CMD blir argument
-ENTRYPOINT ["python"]
-CMD ["app.py"]
-# docker run myimage              → python app.py
-# docker run myimage test.py      → python test.py
-
-# Kombinera för flexibilitet
-ENTRYPOINT ["python", "manage.py"]
-CMD ["runserver"]
-# docker run myimage              → python manage.py runserver
-# docker run myimage migrate      → python manage.py migrate
-```
-
----
-
-## Optimerad Dockerfile
-
-```dockerfile
-# 1. Välj minimal base image
-FROM python:3.11-slim
-
-# 2. Sätt miljövariabler tidigt
-ENV PYTHONUNBUFFERED=1 \\
-    PYTHONDONTWRITEBYTECODE=1 \\
-    PIP_NO_CACHE_DIR=1
-
-# 3. Skapa non-root user
-RUN useradd --create-home appuser
-
-# 4. Sätt arbetskatalog
-WORKDIR /app
-
-# 5. Kopiera dependencies först (layer caching!)
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# 6. Kopiera applikationskod
-COPY --chown=appuser:appuser . .
-
-# 7. Byt till non-root user
-USER appuser
-
-# 8. Dokumentera port
-EXPOSE 8000
-
-# 9. Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s \\
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# 10. Startkommando
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
-```
-
----
-
-## Multi-stage Builds
-
-```dockerfile
-# Stage 1: Build
-FROM node:18 AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# Stage 2: Production
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-
-# Resultat: Bara nginx + statiska filer, inte Node.js!
-```
-
----
-
-## .dockerignore
+En port är som ett **"rumnummer"** på ett hotell - IP-adressen är hotellet (datorn), och porten är vilket rum (programmet) du vill nå.
 
 ```bash
-# .dockerignore - exkludera från COPY/ADD
-node_modules
-.git
-.env
-*.log
-__pycache__
-.pytest_cache
-Dockerfile
-docker-compose.yml
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔢 PORT BASICS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Port = Communication endpoint
+# En "endpoint" - en specifik plats där kommunikation sker
+# Tänk på det som en dörr som program kan öppna
+
+# Range: 0 - 65535 (16-bit nummer)
+# 2^16 = 65536 möjliga portar
+# Mer än tillräckligt för alla program
+
+# IP-adress + Port = Socket
+# Identifierar EXAKT vilket program på vilken dator
+# Tänk: "Hotell 192.168.1.100, rum 80"
+
+# Exempel:
+192.168.1.100:80
+│             │
+│             └── Port 80 (webbserver)
+└── IP-adress (vilken dator)
 ```
 
 ---
 
-## Key Takeaways
+## 📋 Port-områden
 
-- **Ordning spelar roll** - sätt saker som ändras sällan först (caching)
-- **Multi-stage builds** minskar image-storlek dramatiskt
-- Kör alltid som **non-root user** i produktion
-- Använd **.dockerignore** för snabbare builds
+Portar är uppdelade i tre kategorier:
+
+### Well-known Ports (0 - 1023)
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔒 SYSTEM PORTS (0-1023)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚡ Reserverade för systemtjänster
+# 🔐 Kräver root/admin för att öppna
+# 📌 Standardiserade användningar
+
+# Vanliga:
+22    # SSH - Secure Shell
+80    # HTTP - Web (okrypterad)
+443   # HTTPS - Web (krypterad)
+53    # DNS - Domain Name System
+25    # SMTP - Mail
+```
+
+### Registered Ports (1024 - 49151)
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📝 REGISTERED PORTS (1024-49151)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📋 Registrerade hos IANA
+# 🔓 Kräver inte root
+# 🎯 Vanliga applikationer
+
+# Vanliga:
+3306   # MySQL
+5432   # PostgreSQL
+27017  # MongoDB
+6379   # Redis
+8080   # Alternativ HTTP
+```
+
+### Dynamic/Private Ports (49152 - 65535)
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 EPHEMERAL PORTS (49152-65535)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⏱️ Tillfälliga (ephemeral)
+# 🎲 Tilldelas automatiskt av OS
+# 📤 Används för utgående anslutningar
+
+# När du besöker google.com:
+# - Din dator använder t.ex. port 52431 (tillfällig)
+# - Ansluter till google.com:443
+# - Svaret kommer tillbaka till din port 52431
+```
+
+### Sammanfattning port-områden
+
+| Kategori | Range | Beskrivning | Root krävs |
+|----------|-------|-------------|------------|
+| **Well-known** | 0-1023 | Systemtjänster | ✅ Ja |
+| **Registered** | 1024-49151 | Applikationer | ❌ Nej |
+| **Dynamic** | 49152-65535 | Tillfälliga | ❌ Nej |
+
+---
+
+## 🌐 Vanliga portar att känna till
+
+### Web Services
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 HTTP / HTTPS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+80     # HTTP - okrypterad webbtrafik
+443    # HTTPS - krypterad webbtrafik
+8080   # Alternativ HTTP (ofta för appar)
+8443   # Alternativ HTTPS
+8000   # Utvecklingsservrar (Django, etc)
+3000   # Node.js/React dev server
+
+# Exempel-URLer:
+# http://example.com      → port 80 (implicit)
+# https://example.com     → port 443 (implicit)
+# http://localhost:8080   → port 8080 (explicit)
+```
+
+### Databaser
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🗄️ DATABASER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3306   # MySQL / MariaDB
+5432   # PostgreSQL
+27017  # MongoDB
+6379   # Redis
+9200   # Elasticsearch (HTTP API)
+9300   # Elasticsearch (transport)
+```
+
+### Remote Access
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔐 FJÄRRÅTKOMST
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+22     # SSH (standard)
+2222   # SSH (alternativ, för säkerhet)
+3389   # RDP - Remote Desktop (Windows)
+5900   # VNC
+```
+
+### E-post
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📧 E-POST
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+25     # SMTP (ofta blockerad av ISP)
+587    # SMTP med TLS (submission)
+465    # SMTP över SSL
+143    # IMAP
+993    # IMAP över SSL
+110    # POP3
+995    # POP3 över SSL
+```
+
+### DNS
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌍 DNS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+53     # DNS (både UDP och TCP)
+```
+
+---
+
+## 🔍 Kontrollera portar
+
+### Lista lyssnande portar
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📋 VISA LYSSNANDE PORTAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Med ss (modern, rekommenderas)
+ss -tlnp                 # TCP lyssnande portar
+ss -ulnp                 # UDP lyssnande portar
+ss -tlnp | grep :80      # Specifik port
+
+# Med netstat (äldre)
+netstat -tlnp            # TCP lyssnande portar
+netstat -ulnp            # UDP lyssnande portar
+
+# Med lsof
+lsof -i :80              # Vad använder port 80?
+lsof -i -P -n | grep LISTEN
+```
+
+### Testa port-anslutning
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🧪 TESTA PORTAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Med telnet
+telnet hostname 80
+telnet 192.168.1.100 3306
+
+# Med netcat (nc) - snabbast!
+nc -zv hostname 80           # TCP
+nc -zv 192.168.1.100 3306    # TCP
+nc -zv -u hostname 53        # UDP
+
+# Med curl
+curl http://hostname:80
+curl -v telnet://hostname:3306
+
+# Med nmap (port scanning)
+nmap -p 80,443,22 hostname       # Specifika portar
+nmap -p 1-1000 hostname          # Port range
+```
+
+### Snabbkoll om port är öppen
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚡ SNABBTEST
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# One-liner
+timeout 1 bash -c "</dev/tcp/hostname/80" && echo "Open" || echo "Closed"
+
+# Funktion för återanvändning
+check_port() {
+    local host=$1
+    local port=$2
+    timeout 1 bash -c "</dev/tcp/$host/$port" 2>/dev/null
+    if [ $? -eq 0 ]; then
+        echo "✅ Port $port is OPEN on $host"
+    else
+        echo "❌ Port $port is CLOSED on $host"
+    fi
+}
+
+# Användning:
+check_port google.com 80
+check_port localhost 5432
+```
+
+---
+
+## 🚇 Port Forwarding
+
+### SSH Local Port Forwarding
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📥 LOCAL PORT FORWARDING (-L)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -L 8080:localhost:80 user@remote-server
+# Din lokala port 8080 → remote serverns localhost:80
+
+ssh -L 3306:db-server:3306 user@jump-host
+# Din lokala port 3306 → db-server:3306 (via jump-host)
+
+# Användning: Nå databaser bakom brandvägg
+```
+
+### SSH Remote Port Forwarding
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📤 REMOTE PORT FORWARDING (-R)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh -R 8080:localhost:80 user@remote-server
+# Remote serverns port 8080 → din lokala port 80
+
+# Användning: Exponera lokal utveckling via server
+```
+
+### Docker Port Mapping
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐳 DOCKER PORT MAPPING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+docker run -p 8080:80 nginx
+#          │     │
+#          │     └── Container port (nginx lyssnar)
+#          └── Host port (du ansluter till)
+
+# Flera portar
+docker run -p 8080:80 -p 8443:443 nginx
+
+# Exponera alla portar
+docker run -P nginx     # Random host-portar
+
+# Visa port mappings
+docker port container_name
+```
+
+---
+
+## 🔥 Brandvägg och portar
+
+### UFW (Ubuntu)
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🛡️ UFW BRANDVÄGG
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Tillåt port
+sudo ufw allow 80
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Tillåt port-range
+sudo ufw allow 8000:9000/tcp
+
+# Blockera port
+sudo ufw deny 3306
+
+# Visa status
+sudo ufw status
+sudo ufw status numbered
+```
+
+### firewalld (RHEL/CentOS)
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔥 FIREWALLD
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Tillåt port
+sudo firewall-cmd --add-port=80/tcp --permanent
+sudo firewall-cmd --reload
+
+# Tillåt tjänst
+sudo firewall-cmd --add-service=http --permanent
+sudo firewall-cmd --reload
+
+# Lista portar
+sudo firewall-cmd --list-ports
+```
+
+### iptables
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚙️ IPTABLES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Tillåt port
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Spara regler
+sudo iptables-save > /etc/iptables/rules.v4
+```
+
+---
+
+## ☁️ Cloud Security Groups
+
+### AWS
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟠 AWS SECURITY GROUP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Inbound rule:
+# Type: HTTP
+# Protocol: TCP
+# Port: 80
+# Source: 0.0.0.0/0 (hela internet)
+
+# Outbound rule:
+# Type: All traffic
+# Protocol: All
+# Port: All
+# Destination: 0.0.0.0/0
+```
+
+### Azure NSG
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔵 AZURE NSG
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Inbound rule:
+# Name: Allow-HTTP
+# Priority: 1000
+# Source: Any
+# Destination: Any
+# Protocol: TCP
+# Port: 80
+# Action: Allow
+```
+
+---
+
+## 🔧 Hantera port-konflikter
+
+### Hitta process som använder port
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔍 HITTA PROCESS PÅ PORT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Med lsof
+sudo lsof -i :80
+sudo lsof -i :3306
+
+# Med ss
+sudo ss -tlnp | grep :80
+
+# Med fuser
+sudo fuser 80/tcp
+```
+
+### Döda process på port
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚠️ DÖDA PROCESS PÅ PORT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Hitta PID
+PID=$(sudo lsof -t -i:80)
+
+# Döda processen
+sudo kill $PID          # Graceful
+sudo kill -9 $PID       # Force kill
+
+# One-liner
+sudo kill $(sudo lsof -t -i:80)
+```
+
+---
+
+## ✨ Best Practices
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1️⃣ ANVÄND ICKE-STANDARD PORTAR FÖR SÄKERHET
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Ändra SSH-port i /etc/ssh/sshd_config:
+Port 2222
+
+# Minskar automatiserade attacker
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 2️⃣ DOKUMENTERA PORT-ANVÄNDNING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Håll lista på:
+# - Vilka portar som används
+# - Vilka tjänster som använder dem
+# - Varför de behövs
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 3️⃣ MINIMERA ÖPPNA PORTAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Öppna bara nödvändiga portar
+# - Stäng oanvända portar
+# - Använd brandvägg
+# - Principle of least privilege
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 4️⃣ ANVÄND LOAD BALANCER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Exponera inte alla servrar direkt
+# - Load balancer på standard-portar
+# - Backend-servrar på privata IP:er
+```
+
+---
+
+## ✅ Sammanfattning
+
+| Port-typ | Range | Beskrivning |
+|----------|-------|-------------|
+| **Well-known** | 0-1023 | Systemtjänster (root krävs) |
+| **Registered** | 1024-49151 | Vanliga applikationer |
+| **Dynamic** | 49152-65535 | Tillfälliga/ephemeral |
+
+| Vanliga portar | Tjänst |
+|---------------|--------|
+| 22 | SSH |
+| 80 | HTTP |
+| 443 | HTTPS |
+| 3306 | MySQL |
+| 5432 | PostgreSQL |
+| 6379 | Redis |
+| 27017 | MongoDB |
+
+| Kommando | Användning |
+|----------|------------|
+| `ss -tlnp` | Lista lyssnande portar |
+| `nc -zv host port` | Testa port |
+| `lsof -i :port` | Vad använder porten? |
+| `sudo ufw allow port` | Öppna port i brandvägg |
+
+**Kom ihåg:**
+- 🔒 Minimera öppna portar
+- 📝 Dokumentera port-användning
+- 🛡️ Använd brandvägg alltid
+- 🔍 `ss -tlnp` och `nc -zv` är dina vänner
 """,
         },
         {
