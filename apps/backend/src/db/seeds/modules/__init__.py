@@ -15,13 +15,14 @@ Alla moduler exporteras via ALL_MODULES listan.
 
 # Refaktorerade moduler (nya rena filer)
 from .linux import MODULE as LINUX_MODULE
+from .docker import MODULE as DOCKER_MODULE
 
 # Legacy-moduler som ännu inte refaktorerats
 # Importeras från gamla strukturen tills de flyttas hit
 from ..modules_v3 import (
     MODULE_BASH,
     MODULE_GIT_GITHUB_MASTERY,
-    MODULE_DOCKER_MASTERY,
+    # MODULE_DOCKER_MASTERY, - Ersatt av docker.py
     MODULE_KUBERNETES_MASTERY,
     MODULE_CICD_MASTERY,
     MODULE_TERRAFORM_MASTERY,
@@ -45,12 +46,13 @@ from ..modules_v3 import (
 # Refaktorerade moduler har prioritet
 ALL_MODULES = [
     LINUX_MODULE,
+    DOCKER_MODULE,
 ]
 
 LEGACY_MODULES = [
     MODULE_BASH,
     MODULE_GIT_GITHUB_MASTERY,
-    MODULE_DOCKER_MASTERY,
+    # MODULE_DOCKER_MASTERY, - Ersatt av docker.py
     MODULE_KUBERNETES_MASTERY,
     MODULE_CICD_MASTERY,
     MODULE_TERRAFORM_MASTERY,
@@ -76,13 +78,13 @@ def get_all_modules():
     """Returnerar alla moduler - refaktorerade + legacy."""
     # Refaktorerade moduler har prioritet
     refactored_slugs = {m["slug"] for m in ALL_MODULES}
-    
+
     # Lägg till legacy-moduler som inte refaktorerats än
     combined = list(ALL_MODULES)
     for legacy in LEGACY_MODULES:
         if legacy["slug"] not in refactored_slugs:
             combined.append(legacy)
-    
+
     return combined
 
 
