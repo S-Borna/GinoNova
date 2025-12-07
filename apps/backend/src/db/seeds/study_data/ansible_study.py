@@ -8,7 +8,7 @@ Ansible Mastery - Study Data
 
 ANSIBLE_STUDY_DATA = {
     "module_slug": "ansible-mastery",
-    "module_title": "Ansible Mastery",
+    "module_title": "Ansible",
     "module_description": "Configuration Management och Automation med Ansible",
     "icon": "Settings",
 

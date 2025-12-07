@@ -11,6 +11,10 @@
 // Auth hooks (from AuthProvider)
 export { useAuth } from "@/components/auth/AuthProvider"
 
+// Session timer and favorites
+export { useSessionTimer } from "./useSessionTimer"
+export { useFavorites, type FavoriteItem } from "./useFavorites"
+
 // User hooks
 export {
     useUser,

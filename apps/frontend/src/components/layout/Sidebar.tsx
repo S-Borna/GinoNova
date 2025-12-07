@@ -69,7 +69,7 @@ interface SidebarProps {
 
 const mainNavItems: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: Home },
-    { label: "Skillpath Board", href: "/skillpath-board", icon: LayoutDashboard },
+    { label: "Skillpath", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Camp DevOps", href: "/modules", icon: BookOpen },
     { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
     { label: "Studyroom", href: "/study", icon: Clock },

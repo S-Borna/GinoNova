@@ -8,7 +8,7 @@ Bash Mastery - Study Data
 
 BASH_STUDY_DATA = {
     "module_slug": "bash-mastery",
-    "module_title": "Bash Mastery",
+    "module_title": "Bash",
     "module_description": "Automatisering med Bash-skript",
     "icon": "Terminal",
 

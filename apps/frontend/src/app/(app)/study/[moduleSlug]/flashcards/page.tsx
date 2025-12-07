@@ -4,6 +4,7 @@
  * Flashcards Study Mode
  *
  * Simple flip-card interface for memorization
+ * With star/favorite functionality
  */
 
 import * as React from "react"
@@ -11,7 +12,8 @@ import { useState, useEffect } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle } from "lucide-react"
+import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle, Star, X } from "lucide-react"
+import { useFavorites } from "@/hooks/useFavorites"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
@@ -34,6 +36,13 @@ export default function FlashcardsPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
+    
+    // Star modal
+    const [showStarModal, setShowStarModal] = useState(false)
+    const [starName, setStarName] = useState("")
+    
+    // Favorites hook
+    const { addFavorite, removeFavorite, isFavorite, getFavoriteId } = useFavorites()
 
     useEffect(() => {
         fetchFlashcards()
@@ -117,6 +126,30 @@ export default function FlashcardsPage() {
 
     const currentCard = flashcards[currentIndex]
     const progress = ((currentIndex + 1) / flashcards.length) * 100
+    const isCurrentFavorite = currentCard ? isFavorite(moduleSlug, currentCard.front, "flashcard") : false
+    
+    function handleStarClick() {
+        if (isCurrentFavorite) {
+            const favId = getFavoriteId(moduleSlug, currentCard.front, "flashcard")
+            if (favId) removeFavorite(favId)
+        } else {
+            setShowStarModal(true)
+            setStarName("")
+        }
+    }
+    
+    function handleSaveStar() {
+        if (!starName.trim()) return
+        addFavorite({
+            type: "flashcard",
+            customName: starName.slice(0, 6),
+            moduleSlug,
+            moduleTitle,
+            originalQuestion: currentCard.front
+        })
+        setShowStarModal(false)
+        setStarName("")
+    }
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white p-8">
@@ -130,10 +163,27 @@ export default function FlashcardsPage() {
                     >
                         ← Tillbaka
                     </Link>
-                    <h1 className="text-2xl font-bold">{moduleTitle}</h1>
-                    <p className="text-zinc-400">
-                        Flashcard {currentIndex + 1} av {flashcards.length}
-                    </p>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold">{moduleTitle}</h1>
+                            <p className="text-zinc-400">
+                                Flashcard {currentIndex + 1} av {flashcards.length}
+                            </p>
+                        </div>
+                        {/* Star button */}
+                        <button
+                            onClick={handleStarClick}
+                            className={cn(
+                                "p-3 rounded-xl transition-all",
+                                isCurrentFavorite
+                                    ? "bg-amber-500/20 text-amber-400"
+                                    : "bg-zinc-800 text-zinc-400 hover:text-amber-400 hover:bg-zinc-700"
+                            )}
+                            title={isCurrentFavorite ? "Ta bort favorit" : "Lägg till favorit"}
+                        >
+                            <Star className={cn("w-5 h-5", isCurrentFavorite && "fill-amber-400")} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Progress Bar */}
@@ -240,6 +290,50 @@ export default function FlashcardsPage() {
                     )}
                 </div>
             </div>
+            
+            {/* Star Modal */}
+            {showStarModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 w-80">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold">Namnge favorit</h3>
+                            <button
+                                onClick={() => setShowStarModal(false)}
+                                className="p-1 hover:bg-zinc-800 rounded"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <p className="text-sm text-zinc-400 mb-4">Max 6 tecken</p>
+                        <input
+                            type="text"
+                            value={starName}
+                            onChange={(e) => setStarName(e.target.value.slice(0, 6))}
+                            placeholder="Ex: K8sPod"
+                            maxLength={6}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 mb-4 text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500"
+                            autoFocus
+                            onKeyDown={(e) => e.key === "Enter" && handleSaveStar()}
+                        />
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setShowStarModal(false)}
+                                className="flex-1 px-4 py-2 bg-zinc-800 rounded-xl hover:bg-zinc-700 transition-colors"
+                            >
+                                Avbryt
+                            </button>
+                            <button
+                                onClick={handleSaveStar}
+                                disabled={!starName.trim()}
+                                className="flex-1 px-4 py-2 bg-amber-500 text-black font-medium rounded-xl hover:bg-amber-400 transition-colors disabled:opacity-50"
+                            >
+                                <Star className="w-4 h-4 inline mr-1" />
+                                Spara
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
