@@ -34,146 +34,164 @@ LINUX_SKILLSMAP_INFO = {
 
 
 # =============================================================================
-# NODE 1: PROCESS MANAGEMENT
+# NODE 1: LINUX FOUNDATION & FILESYSTEM ARCHITECTURE
 # =============================================================================
 
-NODE_01_PROCESS_MANAGEMENT = {
+NODE_01_LINUX_FOUNDATION = {
     "node_id": 1,
-    "title": "Process Management Mastery",
-    "slug": "process-management",
-    "difficulty": "intermediate",
-    "estimated_minutes": 60,
+    "title": "Linux Foundation & Filesystem Architecture",
+    "slug": "linux-foundation-filesystem",
+    "difficulty": "beginner",
+    "estimated_minutes": 55,
     "xp_reward": 80,
     "topics_covered": [
-        "ps", "top", "htop", "pstree", "kill", "killall", "pkill",
-        "nice", "renice", "bg", "fg", "jobs", "nohup", "disown",
-        "process states", "signals", "zombie processes", "orphan processes"
+        "FHS", "inodes", "hard links", "soft links", "symlinks",
+        "file types", "directory structure", "block devices",
+        "character devices", "stat", "ls -i", "df -i"
     ],
-    "content": """# Process Management Mastery
+    "content": """# Linux Foundation & Filesystem Architecture
 
 ---
 
-## 1. Vad lär du dig?
+## Vad lär du dig?
 
-- Förstå vad en process är och hur Linux hanterar dem
-- Använda `ps`, `top`, `htop` för att övervaka processer
-- Döda, pausa och återuppta processer med `kill`, `bg`, `fg`
-- Identifiera zombie- och orphan-processer
-- Hantera process-prioritet med `nice` och `renice`
-
----
-
-## 2. Varför viktigt i DevOps?
-
-I produktion är processer allt. En hängande process kan ta ner en hel tjänst. En skenande process kan äta upp all CPU/RAM och orsaka att din server blir oåtkomlig. Som DevOps-ingenjör MÅSTE du kunna identifiera och hantera problematiska processer snabbt — ofta under pågående incident.
+- Förstå Filesystem Hierarchy Standard (FHS) och varför Linux ser ut som det gör
+- Begripa inodes — hjärtat i Linux filsystem
+- Skilja på hard links och soft links (symlinks)
+- Identifiera alla filtyper i Linux (regular, directory, device, socket, pipe)
+- Navigera och förstå /dev, /proc, /sys och andra speciella filsystem
 
 ---
 
-## 3. Vad händer om du inte kan detta i produktion?
+## Varför viktigt i DevOps?
 
-- Du kan inte identifiera vilken tjänst som orsakar hög CPU-last
-- Du vet inte hur du dödar en hängande process säkert
-- Zombie-processer fyller din process-tabell och till slut kan inga nya processer skapas
-- Du kan inte felsöka varför en applikation inte svarar
-- Incident-tiden förlängs drastiskt när du fumlar med grundläggande kommandon
+Linux filsystemstruktur är grunden för ALLT. Configs ligger i /etc, loggar i /var/log, tjänstedata i /opt eller /srv. Om du inte vet var saker ligger slösar du tid vid varje deploy och incident. Förståelse för inodes och links är kritiskt för att förstå varför disk kan vara "full" trots att du raderat filer, eller varför en symlink plötsligt pekar fel efter en deploy.
 
 ---
 
-## 4. Mini-lab
+## Vad händer om du inte kan detta i produktion?
 
-**Mission:** En mystisk process äter 80% CPU. Hitta den och eliminera den.
+- Du hittar inte konfigurationsfiler och slösar tid under incidenter
+- Du förstår inte varför disken är full trots att du raderat filer (inodes slut, eller öppna file handles)
+- Symlinks pekar fel efter deploy och tjänster kraschar
+- Du kan inte felsöka device-problem eftersom /dev är ett mysterium
+- Du gör misstag med hard links som leder till datakorruption
+
+---
+
+## Mini-lab
+
+**Mission:** Skapa en hard link och en soft link, förstå skillnaden genom att radera originalet.
 
 **Steg:**
-1. Starta en CPU-intensiv process i bakgrunden
-2. Använd `top` för att identifiera den
-3. Notera PID
-4. Döda processen med rätt signal
+1. Skapa en testfil med innehåll
+2. Skapa en hard link till filen
+3. Skapa en soft link till filen
+4. Radera originalfilen
+5. Verifiera vad som händer med båda länkarna
 
 **Kommandon:**
 ```bash
-# Steg 1: Skapa problemet
-yes > /dev/null &
+# Steg 1: Skapa original
+echo "Hello Linux" > original.txt
 
-# Steg 2: Hitta boven
-top -o %CPU
+# Steg 2: Hard link
+ln original.txt hardlink.txt
 
-# Steg 3: Notera PID (t.ex. 1234)
-# Steg 4: Döda den
-kill 1234
+# Steg 3: Soft link
+ln -s original.txt softlink.txt
+
+# Steg 4: Kolla inodes
+ls -li original.txt hardlink.txt softlink.txt
+
+# Steg 5: Radera original
+rm original.txt
+
+# Steg 6: Testa båda
+cat hardlink.txt    # Fungerar! Data finns kvar
+cat softlink.txt    # FAIL! "No such file"
 ```
 
 **Expected output:**
 ```
-[1]+  Terminated    yes > /dev/null
+cat: softlink.txt: No such file or directory
+Hello Linux  (från hardlink.txt)
 ```
 
 ---
 
-## 5. AI-komponenter
+## AI-coach
 
-### AI-coach
-"Bra jobbat! Du hittade processen med `top`. Nästa gång, prova `htop` för en mer interaktiv vy. Kom ihåg: `kill -9` är sista utvägen — prova alltid `kill -15` (SIGTERM) först för att ge processen chans att städa upp."
-
-### AI-diagnostic
-- "Du missade steg 2 — du använde `ps aux` men sorterade inte efter CPU. Prova `ps aux --sort=-%cpu | head`"
-- "Outputen visar att processen fortfarande körs. Du använde fel PID — dubbelkolla med `pgrep yes`"
-
-### AI-playbook
-**CI/CD:** I pipeline-runners kan hängande builds skapa zombie-processer. Använd `timeout` och process-monitoring.
-**Kubernetes:** `kubectl top pods` visar resursanvändning, men du behöver fortfarande kunna SSH:a in och debugga med `top`.
-**Incident Response:** Första steget vid "server slow" är alltid `top` eller `htop` för att se vad som äter resurser.
+"Perfekt! Du upptäckte den kritiska skillnaden: hard links delar samma inode så datan finns kvar även om 'originalet' raderas. Soft links är bara pekare till ett filnamn — raderas filen blir länken broken. I produktion använder vi symlinks för versionshantering (current -> v1.2.3) men förstå att de kan bli broken vid flytt."
 
 ---
 
-## 6. Said förklarar
+## AI-diagnostic
 
-Tänk på Linux som en restaurang. Varje process är en kock som jobbar med en beställning. Köket (CPU) har begränsat utrymme. Om en kock (process) går amok och tar över hela köket, kan ingen annan laga mat.
-
-`ps` är som att ta ett foto av köket — du ser vilka kockar som finns just nu.
-`top` är som en live-kamera — du ser i realtid vem som gör vad.
-`kill` är som att skicka hem en kock — antingen snällt (SIGTERM) eller direkt (SIGKILL).
-
-Zombie-processer är kockar som är klara men ingen har sagt "bra jobbat, gå hem". De tar upp plats i listan men gör inget.
+- "Du missade steg 4 — utan `ls -li` ser du inte att hard link och original har SAMMA inode-nummer. Det är hela poängen med hard links."
+- "Outputen visar att softlink.txt fortfarande funkar — du raderade förmodligen fel fil. Kör `ls -la` och leta efter -> pilen som visar symlink-target."
 
 ---
 
-## 7. Kommandon
+## AI-playbook
+
+**CI/CD:** Symlinks används för zero-downtime deploys: `current -> release-v1.2.3`. Vid deploy skapar du ny mapp och atomiskt byter symlink.
+**Containers:** Docker images bygger på layers och hard links för att spara utrymme. Förståelse för inodes förklarar varför.
+**Incident Response:** "Disk full" kan betyda slut på inodes (`df -i`), inte bara bytes. Miljoner små filer = inode exhaustion.
+
+---
+
+## Said förklarar
+
+Tänk på filsystemet som ett bibliotek. Varje bok (fil) har ett unikt katalogkort (inode) som säger var boken står, vem som äger den, och hur stor den är. Filnamnet är bara en etikett på hyllan som pekar på katalogkortet.
+
+En hard link är som att sätta SAMMA katalogkort i två olika hyllor — båda etiketterna pekar på exakt samma bok. Raderar du en etikett finns boken kvar via den andra.
+
+En soft link är som en lapp som säger "boken finns på hylla 3". Flyttar någon boken blir lappen värdelös.
+
+FHS (Filesystem Hierarchy Standard) är bibliotekets sorteringssystem: /etc för policies, /var för tidningar som ändras, /home för personliga saker, /tmp för skräppapper som kastas vid städning.
+
+---
+
+## Kommandon
 
 ```bash
-# Se alla processer, sorterade efter CPU
-ps aux --sort=-%cpu | head -10
-# aux = alla användare, user-format, inklusive utan terminal
+# Visa inode för fil
+ls -i file.txt
+stat file.txt
 
-# Realtidsövervakning
-top
-# Tryck 'q' för att avsluta, 'k' för att döda, 'r' för renice
+# Kolla inode-användning (disk kan vara "full" pga inodes)
+df -i
 
-# Hitta process efter namn
-pgrep -l nginx
-# -l visar också processnamnet
+# Hitta alla hard links till en fil
+find / -inum 12345 2>/dev/null
 
-# Döda alla processer med namn
-pkill -15 nginx
-# -15 = SIGTERM (snällt), -9 = SIGKILL (hårt)
+# Hitta broken symlinks
+find /path -xtype l
+
+# Visa filtyp
+file /dev/sda
+file /etc/passwd
 ```
 
 ---
 
-## 8. Troubleshooting
+## Troubleshooting
 
-- **"kill fungerar inte"** — Processen är i D-state (disk sleep). Vänta eller reboot. `kill -9` fungerar inte på D-state.
-- **"För många zombie-processer"** — Parent-processen hämtar inte exit-status. Döda parent-processen eller starta om tjänsten.
-- **"Vet inte vilken process som är problemet"** — Använd `top` och sortera på CPU (%CPU) eller minne (%MEM). Tryck `P` för CPU, `M` för minne.
+- **"No space left on device" men df visar ledigt** — Kolla `df -i`, du kan ha slut på inodes. Lösning: radera mängder av små filer.
+- **"Symlink fungerade igår"** — Target flyttades eller raderades. Kör `ls -la` och kolla vart -> pekar, sedan `ls -la TARGET`.
+- **"Kan inte skapa fler filer"** — Inode exhaustion. `df -i` visar 100% IUse. Rensa eller utöka filsystem.
+- **"rm raderade filen men disk fortfarande full"** — En process har filen öppen. `lsof +L1` visar deleted files som fortfarande används. Starta om processen.
 
 ---
 
-## 9. Key Takeaways
+## Key Takeaways
 
-1. **`ps aux`** för snapshot, **`top`/`htop`** för realtid
-2. **SIGTERM (15)** först, **SIGKILL (9)** bara om nödvändigt
-3. **Zombie-processer** är döda men inte "begravda" — parent måste städa
-4. **D-state** processer kan INTE dödas — de väntar på I/O
-5. **`nice`** vid start, **`renice`** för körande processer
+1. **FHS** är standarden — /etc för config, /var för dynamisk data, /tmp rensas vid reboot
+2. **Inodes** lagrar metadata, filnamn är bara pekare till inodes
+3. **Hard links** = samma inode, data kvar tills ALLA länkar raderas
+4. **Soft links** = pekare till filnamn, blir broken om target försvinner
+5. **df -i** avslöjar inode exhaustion — en vanlig "disk full" som inte syns med bara `df -h`
 """
 }
 
@@ -3673,26 +3691,6 @@ Du kan nu hantera tjänster. Nästa node: **Disk & Storage** — partitioner, mo
 
 
 # =============================================================================
-# ALL NODES COLLECTION
-# =============================================================================
-
-LINUX_SKILLSMAP_NODES = [
-    NODE_01_PROCESS_MANAGEMENT,
-    NODE_02_FILE_SYSTEM_NAVIGATION,
-    NODE_03_FILE_OPERATIONS,
-    NODE_04_FILE_PERMISSIONS,
-    NODE_05_TEXT_PROCESSING,
-    NODE_06_TEXT_EDITORS,
-    NODE_07_IO_REDIRECTION,
-    NODE_08_USER_MANAGEMENT,
-    NODE_09_PACKAGE_MANAGEMENT,
-    NODE_10_SERVICE_MANAGEMENT,
-    # NODE_11_DISK_STORAGE (to be added)
-    # ... up to NODE_20
-]
-
-
-# =============================================================================
 # NODE 11: DISK & STORAGE
 # =============================================================================
 
@@ -4325,25 +4323,6 @@ ss -tulnp
 Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** — fördjupning i DNS.
 '''
 }
-
-
-# Update the nodes list
-LINUX_SKILLSMAP_NODES = [
-    NODE_01_PROCESS_MANAGEMENT,
-    NODE_02_FILE_SYSTEM_NAVIGATION,
-    NODE_03_FILE_OPERATIONS,
-    NODE_04_FILE_PERMISSIONS,
-    NODE_05_TEXT_PROCESSING,
-    NODE_06_TEXT_EDITORS,
-    NODE_07_IO_REDIRECTION,
-    NODE_08_USER_MANAGEMENT,
-    NODE_09_PACKAGE_MANAGEMENT,
-    NODE_10_SERVICE_MANAGEMENT,
-    NODE_11_DISK_STORAGE,
-    NODE_12_NETWORKING,
-    # NODE_13_DNS (to be added)
-    # ... up to NODE_20
-]
 
 
 # =============================================================================
@@ -6131,7 +6110,7 @@ Du kan nu:
 # =============================================================================
 
 LINUX_SKILLSMAP_NODES = [
-    NODE_01_PROCESS_MANAGEMENT,
+    NODE_01_LINUX_FOUNDATION,
     NODE_02_FILE_SYSTEM_NAVIGATION,
     NODE_03_FILE_OPERATIONS,
     NODE_04_FILE_PERMISSIONS,
