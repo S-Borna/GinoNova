@@ -9,8 +9,9 @@
  */
 
 import * as React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
@@ -280,8 +281,44 @@ function WeeklySessionCard() {
    FAVORITES CARD
    ============================================================================ */
 
+interface GroupedFavorites {
+    moduleSlug: string
+    moduleTitle: string
+    flashcards: FavoriteItem[]
+    quizzes: FavoriteItem[]
+}
+
 function FavoritesCard() {
+    const router = useRouter()
     const { favorites, removeFavorite } = useFavorites()
+
+    // Gruppera favoriter per modul
+    const groupedFavorites = useMemo(() => {
+        const groups: Record<string, GroupedFavorites> = {}
+
+        favorites.forEach(item => {
+            if (!groups[item.moduleSlug]) {
+                groups[item.moduleSlug] = {
+                    moduleSlug: item.moduleSlug,
+                    moduleTitle: item.moduleTitle,
+                    flashcards: [],
+                    quizzes: []
+                }
+            }
+            if (item.type === "flashcard") {
+                groups[item.moduleSlug].flashcards.push(item)
+            } else {
+                groups[item.moduleSlug].quizzes.push(item)
+            }
+        })
+
+        return Object.values(groups)
+    }, [favorites])
+
+    function handleGroupClick(group: GroupedFavorites, type: "flashcard" | "quiz") {
+        // Navigera till flashcards eller quiz för modulen
+        router.push(`/study/${group.moduleSlug}/${type === "flashcard" ? "flashcards" : "quiz"}`)
+    }
 
     return (
         <div className="bg-zinc-900/60 border border-amber-500/30 rounded-2xl p-6">
@@ -305,25 +342,46 @@ function FavoritesCard() {
                     </p>
                 </div>
             ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {favorites.map((item) => (
+                <div className="space-y-3 max-h-80 overflow-y-auto">
+                    {groupedFavorites.map((group) => (
                         <div
-                            key={item.id}
-                            className="group flex items-center gap-2 p-2 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors"
+                            key={group.moduleSlug}
+                            className="bg-zinc-800/50 rounded-xl p-3 space-y-2"
                         >
-                            {item.type === "flashcard" ? (
-                                <BookOpen className="w-4 h-4 text-purple-400 shrink-0" />
-                            ) : (
-                                <Brain className="w-4 h-4 text-blue-400 shrink-0" />
+                            {/* Modulnamn */}
+                            <p className="text-xs text-zinc-400 font-medium">{group.moduleTitle}</p>
+
+                            {/* Flashcards rad */}
+                            {group.flashcards.length > 0 && (
+                                <button
+                                    onClick={() => handleGroupClick(group, "flashcard")}
+                                    className="w-full flex items-center gap-2 p-2 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500/20 transition-colors text-left"
+                                >
+                                    <BookOpen className="w-4 h-4 text-purple-400 shrink-0" />
+                                    <span className="text-sm text-purple-300">
+                                        {group.flashcards.map(f => f.customName).join(", ")}
+                                    </span>
+                                    <span className="ml-auto text-xs text-purple-400/60">
+                                        {group.flashcards.length} kort
+                                    </span>
+                                </button>
                             )}
-                            <span className="font-medium text-sm text-amber-300">{item.customName}</span>
-                            <span className="text-xs text-zinc-500 truncate flex-1">{item.moduleTitle}</span>
-                            <button
-                                onClick={() => removeFavorite(item.id)}
-                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded transition-all"
-                            >
-                                <Trash2 className="w-3 h-3 text-red-400" />
-                            </button>
+
+                            {/* Quiz rad */}
+                            {group.quizzes.length > 0 && (
+                                <button
+                                    onClick={() => handleGroupClick(group, "quiz")}
+                                    className="w-full flex items-center gap-2 p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-colors text-left"
+                                >
+                                    <Brain className="w-4 h-4 text-blue-400 shrink-0" />
+                                    <span className="text-sm text-blue-300">
+                                        {group.quizzes.map(q => q.customName).join(", ")}
+                                    </span>
+                                    <span className="ml-auto text-xs text-blue-400/60">
+                                        {group.quizzes.length} frågor
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>
