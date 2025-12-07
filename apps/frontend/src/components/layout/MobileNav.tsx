@@ -48,7 +48,7 @@ interface MobileNavProps {
 const navItems: NavItem[] = [
     { label: "Home", href: "/dashboard", icon: Home },
     { label: "Modules", href: "/modules", icon: BookOpen },
-    { label: "Study", href: "/studyflow", icon: Clock },
+    { label: "Studyroom", href: "/study", icon: Clock },
     { label: "Progress", href: "/progress", icon: BarChart3 },
     { label: "Profile", href: "/profile", icon: User },
 ]
