@@ -2,7 +2,7 @@
 
 /**
  * Pulsmätning - Hur mår du idag?
- * 
+ *
  * Dallas frågar hur användaren mår och ger personlig vägledning.
  * Spara flashcards och quiz för snabb åtkomst.
  */
@@ -78,8 +78,8 @@ function DallasChat({ userName }: { userName: string }) {
 
             if (res.ok) {
                 const data = await res.json()
-                setMessages(prev => [...prev, { 
-                    role: "assistant", 
+                setMessages(prev => [...prev, {
+                    role: "assistant",
                     content: data.response || "Jag förstår. Berätta mer! 💜"
                 }])
             } else {
@@ -94,8 +94,8 @@ function DallasChat({ userName }: { userName: string }) {
                 setMessages(prev => [...prev, { role: "assistant", content: randomResponse }])
             }
         } catch {
-            setMessages(prev => [...prev, { 
-                role: "assistant", 
+            setMessages(prev => [...prev, {
+                role: "assistant",
                 content: "Jag är här för dig! Berätta mer om hur du känner dig. 💜"
             }])
         } finally {
@@ -216,8 +216,10 @@ function DallasChat({ userName }: { userName: string }) {
 
 export default function PulsePage() {
     const { user } = useAuth()
-    const userName = user?.email?.split("@")[0] || "du"
-    const displayName = userName.charAt(0).toUpperCase() + userName.slice(1)
+    // Extrahera förnamn från full_name eller email
+    const fullName = user?.full_name || user?.email?.split("@")[0] || "du"
+    const firstName = fullName.split(" ")[0] // Ta bara förnamnet
+    const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
 
     // Placeholder för sparade flashcards/quiz
     const [savedItems, setSavedItems] = useState<any[]>([])
@@ -225,7 +227,7 @@ export default function PulsePage() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white p-6">
             <div className="max-w-4xl mx-auto space-y-6">
-                
+
                 {/* ============================================================
                     HEADER - Pulsmätning
                     ============================================================ */}
@@ -240,7 +242,7 @@ export default function PulsePage() {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold">
-                                Ta en egen pulsmätning, {displayName}!
+                                Pulsmätning, {displayName}!
                             </h1>
                             <p className="text-zinc-400 text-sm">
                                 Planera din DevOps-resa, sätt upp mål och följ din progress
@@ -275,7 +277,7 @@ export default function PulsePage() {
                     ) : (
                         <div className="space-y-2">
                             {savedItems.map((item, i) => (
-                                <div 
+                                <div
                                     key={i}
                                     className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors cursor-pointer"
                                 >
