@@ -2,7 +2,7 @@
 
 /**
  * Study Page - Simple, clean study flow
- * 
+ *
  * Flow:
  * 1. Select module
  * 2. Select lessons (checkboxes)
@@ -151,12 +151,12 @@ export default function StudyPage() {
 
     function getStudyUrl(type: "flashcards" | "quiz") {
         if (!selectedModule) return "#"
-        
-        const lessonsParam = selectedLessons.size > 0 
+
+        const lessonsParam = selectedLessons.size > 0
             ? `&lessons=${Array.from(selectedLessons).join(",")}`
             : ""
         const shuffleParam = randomize ? "&shuffle=true" : ""
-        
+
         return `/study/${selectedModule.slug}/${type}?${lessonsParam}${shuffleParam}`
     }
 
@@ -318,7 +318,7 @@ export default function StudyPage() {
                 {/* Settings */}
                 <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-6">
                     <h2 className="font-semibold text-lg mb-4">Inställningar</h2>
-                    
+
                     <button
                         onClick={() => setRandomize(!randomize)}
                         className="flex items-center gap-3"

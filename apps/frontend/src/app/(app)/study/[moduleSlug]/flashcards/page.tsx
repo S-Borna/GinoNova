@@ -2,7 +2,7 @@
 
 /**
  * Flashcards Study Mode
- * 
+ *
  * Simple flip-card interface for memorization
  */
 
@@ -27,7 +27,7 @@ export default function FlashcardsPage() {
     const params = useParams()
     const searchParams = useSearchParams()
     const moduleSlug = params?.moduleSlug as string || ""
-    
+
     const [flashcards, setFlashcards] = useState<Flashcard[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isFlipped, setIsFlipped] = useState(false)
@@ -42,21 +42,21 @@ export default function FlashcardsPage() {
     async function fetchFlashcards() {
         try {
             setLoading(true)
-            
+
             // Get lessons and shuffle params
             const lessons = searchParams?.get("lessons") || ""
             const shuffle = searchParams?.get("shuffle") === "true"
-            
+
             const url = new URL(`${API_BASE_URL}/api/study/modules/${moduleSlug}/flashcards`)
             if (lessons) url.searchParams.set("lessons", lessons)
             if (shuffle) url.searchParams.set("shuffle", "true")
-            
+
             const res = await fetch(url.toString())
             if (!res.ok) throw new Error("Failed to fetch flashcards")
-            
+
             const data = await res.json()
             setFlashcards(data.flashcards)
-            
+
             // Get module title
             const moduleRes = await fetch(`${API_BASE_URL}/api/study/modules/${moduleSlug}`)
             if (moduleRes.ok) {
