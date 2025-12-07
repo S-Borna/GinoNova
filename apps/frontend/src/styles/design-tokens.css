@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 /**
  * DevOpsHub Design Tokens
  * Premium Polish Update - "Learn like a pro, feel like home"
@@ -7,8 +9,6 @@
  * - Purple/Violet signature color
  * - Gamification that feels rewarding
  */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
     /* ============================================================================
