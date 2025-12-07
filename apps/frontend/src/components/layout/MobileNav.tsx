@@ -4,13 +4,13 @@
  * ============================================================================
  * MOBILE NAVIGATION - Bottom Tab Bar
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - iOS tab bar inspired design
  * - Safe area padding for notched phones
  * - Active state with filled icons
  * - Subtle tap feedback animation
- * 
+ *
  * @phase D.3 - Navigation + Layout
  */
 
@@ -78,11 +78,11 @@ function NavItemComponent({ item, isActive }: NavItemProps) {
             )}
         >
             <div className="relative">
-                <Icon 
+                <Icon
                     className={cn(
                         "h-6 w-6 transition-transform duration-200",
                         isActive && "scale-110"
-                    )} 
+                    )}
                     strokeWidth={isActive ? 2.5 : 2}
                 />
                 {/* Active indicator dot */}
@@ -137,7 +137,7 @@ export function MobileNav({ className }: MobileNavProps) {
                     />
                 ))}
             </div>
-            
+
             {/* Home indicator spacing (iOS) */}
             <div className="h-1 md:hidden" />
         </nav>
