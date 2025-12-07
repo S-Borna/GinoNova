@@ -116,6 +116,12 @@ class ModuleUpdate(BaseModel):
         max_length=100,
         description="Module name (2-100 characters)"
     )
+    slug: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=60,
+        description="Module URL slug"
+    )
     description: Optional[str] = Field(
         None,
         max_length=500,
@@ -126,6 +132,16 @@ class ModuleUpdate(BaseModel):
     estimated_hours: Optional[float] = Field(None, ge=1.0, le=50.0)
     prerequisites: Optional[list[str]] = None
     is_active: Optional[bool] = Field(None, description="Whether module is active")
+
+    @field_validator("slug")
+    @classmethod
+    def validate_slug(cls, v: Optional[str]) -> Optional[str]:
+        """Validate slug format if provided"""
+        if v is not None:
+            v = v.strip().lower()
+            if not v.replace("-", "").replace("_", "").isalnum():
+                raise ValueError("Slug must be alphanumeric with hyphens/underscores only")
+        return v
 
     @field_validator("name")
     @classmethod
