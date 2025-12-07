@@ -2314,7 +2314,17 @@ volumes:
             "xp_reward": 95,
             "content": """# Docker Compose Advanced Patterns
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Varför Advanced Compose är viktigt |
+|----------|-----------------------------------|
+| **Miljöhantering** | Samma kod, olika config för dev/prod |
+| **Reliability** | Healthchecks för automatisk recovery |
+| **Skalning** | Köra flera instanser av en service |
+| **Säkerhet** | Secrets management för känslig data |
+| **DRY** | Återanvänd config med YAML anchors |
 
 Grundläggande Compose räcker för utveckling, men produktion kräver mer:
 
@@ -2322,21 +2332,44 @@ Grundläggande Compose räcker för utveckling, men produktion kräver mer:
 - **Healthchecks och restart policies**
 - **Skalning och load balancing**
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Multiple Compose Files
 
-```bash
-# Bas-konfiguration
-# docker-compose.yml
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 COMPOSE FILE LAYERING                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   docker-compose.yml          (bas-konfiguration)           │
+│          │                                                  │
+│          ▼                                                  │
+│   docker-compose.override.yml (laddas automatiskt, dev)     │
+│          │                                                  │
+│          ▼                                                  │
+│   docker-compose.prod.yml     (explicit, produktion)        │
+│                                                             │
+│   Senare filer överskriver tidigare!                        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Fil | Laddas | Användning |
+|-----|--------|------------|
+| `docker-compose.yml` | Alltid | Bas-konfiguration |
+| `docker-compose.override.yml` | Automatiskt | Development |
+| `docker-compose.prod.yml` | Med `-f` | Production |
+| `docker-compose.test.yml` | Med `-f` | Testing |
+
+```yaml
+# docker-compose.yml (bas)
 services:
   api:
     build: .
     environment:
       - DATABASE_URL=postgresql://db:5432/app
 
-# Development overrides
-# docker-compose.override.yml (laddas automatiskt)
+# docker-compose.override.yml (dev, laddas automatiskt)
 services:
   api:
     volumes:
@@ -2344,7 +2377,6 @@ services:
     environment:
       - DEBUG=true
 
-# Production overrides
 # docker-compose.prod.yml
 services:
   api:
@@ -2352,14 +2384,29 @@ services:
     restart: always
     deploy:
       replicas: 3
+```
 
-# Kör med specifik override
+```bash
+# Development (override laddas automatiskt)
+docker compose up
+
+# Production (explicit)
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Healthchecks
+
+Healthchecks låter Docker veta om en service är frisk.
+
+| Parameter | Beskrivning | Default |
+|-----------|-------------|---------|
+| `test` | Kommando som returnerar 0=healthy | - |
+| `interval` | Tid mellan checks | 30s |
+| `timeout` | Max tid för check | 30s |
+| `retries` | Antal misslyckanden innan unhealthy | 3 |
+| `start_period` | Grace period vid start | 0s |
 
 ```yaml
 services:
@@ -2380,16 +2427,23 @@ services:
       timeout: 5s
       retries: 5
 
-  # Vänta på att dependency är healthy
+  # Vänta på att dependency är HEALTHY (inte bara started)
   api:
     depends_on:
       db:
         condition: service_healthy
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Environment Variables
+
+| Metod | Syntax | Användning |
+|-------|--------|------------|
+| Direkt | `VAR=value` | Enkla värden |
+| Från host | `VAR=${VAR}` | Runtime config |
+| Med default | `VAR=${VAR:-default}` | Fallback |
+| Från fil | `env_file: .env` | Många variabler |
 
 ```yaml
 services:
@@ -2406,30 +2460,33 @@ services:
     # Eller från fil
     env_file:
       - .env
-      - .env.local
+      - .env.local  # Överskriver .env
 ```
 
 ```bash
 # .env
 POSTGRES_PASSWORD=secret
 API_KEY=abc123
+DEBUG=false
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Profiles
+
+Profiles låter dig gruppera services som startas tillsammans.
 
 ```yaml
 services:
   api:
     image: myapi
-    # Alltid aktiv (inget profile)
+    # Ingen profile = alltid aktiv
 
   debug-tools:
     image: busybox
     profiles:
       - debug
-    # Startas bara med: docker compose --profile debug up
+    # Startas BARA med --profile debug
 
   monitoring:
     image: prometheus
@@ -2439,12 +2496,20 @@ services:
 ```
 
 ```bash
-# Starta med specifika profiles
+# Bara api (ingen profile angiven)
+docker compose up
+
+# api + debug-tools
 docker compose --profile debug up
+
+# api + monitoring
+docker compose --profile monitoring up
+
+# Flera profiles
 docker compose --profile monitoring --profile debug up
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skalning
 
@@ -2463,11 +2528,18 @@ services:
 ```bash
 # Skala dynamiskt
 docker compose up -d --scale worker=5
+
+# Se status
+docker compose ps
+# NAME           SERVICE   REPLICAS   STATUS
+# app-worker-1   worker    5/5        running
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Secrets
+
+Säkrare än environment variables för känslig data.
 
 ```yaml
 services:
@@ -2481,21 +2553,23 @@ secrets:
   db_password:
     file: ./secrets/db_password.txt
   api_key:
-    environment: API_KEY
+    environment: API_KEY  # Från host env
 ```
 
 ```bash
-# I containern läses secrets från:
-# /run/secrets/db_password
-# /run/secrets/api_key
+# I containern läses secrets från filer:
+cat /run/secrets/db_password
+cat /run/secrets/api_key
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Extension Fields (YAML anchors)
 
+Återanvänd konfiguration för DRY (Don't Repeat Yourself).
+
 ```yaml
-# Återanvänd konfiguration
+# Definiera med x- prefix
 x-common-env: &common-env
   LOG_LEVEL: info
   TZ: Europe/Stockholm
@@ -2508,8 +2582,8 @@ x-healthcheck: &default-healthcheck
 services:
   api:
     environment:
-      <<: *common-env
-      SERVICE_NAME: api
+      <<: *common-env      # Spread anchor
+      SERVICE_NAME: api    # Override/add
     healthcheck:
       <<: *default-healthcheck
       test: curl -f http://localhost:8000/health
@@ -2520,14 +2594,36 @@ services:
       SERVICE_NAME: worker
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Feature | Syntax |
+|---------|--------|
+| Override fil | `-f compose.yml -f override.yml` |
+| Healthcheck | `healthcheck: test: [CMD, ...]` |
+| Condition | `depends_on: svc: condition: service_healthy` |
+| Profile | `profiles: [debug]` |
+| Scale | `--scale worker=5` |
+| Secrets | `secrets: [name]` |
+| Anchor | `&name` och `<<: *name` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- Använd **override files** för miljöspecifik config
-- **Healthchecks** är kritiska för produktion
-- **Profiles** för att gruppera valfria services
-- **Secrets** för känslig data (inte environment variables)
+| Punkt | Förklaring |
+|-------|------------|
+| **Override files** | Miljöspecifik config utan duplicering |
+| **Healthchecks** | Kritiska för automatisk recovery |
+| **Profiles** | Gruppera valfria services |
+| **Secrets** | Säkrare än environment variables |
+
+**Kom ihåg:**
+- **override.yml** laddas automatiskt i development
+- **service_healthy** väntar på faktisk health, inte bara start
+- **YAML anchors** minskar duplicering
+- Använd **secrets** för lösenord, inte env vars
 """,
         },
         {
@@ -2538,7 +2634,17 @@ services:
             "xp_reward": 90,
             "content": """# Docker Security Best Practices
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Risk | Konsekvens |
+|------|------------|
+| **Root i container** | Container escape → host komprometterad |
+| **Stora images** | Fler sårbarheter, större attack surface |
+| **Secrets i image** | Läcker i registry, git history |
+| **Ingen scanning** | Kända CVEs i produktion |
+| **Inga resource limits** | DoS, kraschar andra containers |
 
 Containers är inte automatiskt säkra. Du måste förstå:
 
@@ -2546,9 +2652,26 @@ Containers är inte automatiskt säkra. Du måste förstå:
 - **Principle of least privilege** för containers
 - **Image scanning** för sårbarheter
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Kör ALDRIG som root
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              ROOT vs NON-ROOT                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ROOT (default)              NON-ROOT (säkert)             │
+│   ──────────────              ─────────────────             │
+│   UID 0                       UID 1000+                     │
+│   Full host access            Begränsad access              │
+│   Container escape risk       Isolerad                      │
+│                                                             │
+│   Om container komprometteras:                              │
+│   Root → Kan skada host       Non-root → Begränsad skada    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```dockerfile
 # DÅLIGT - kör som root (default)
@@ -2565,9 +2688,17 @@ USER appuser
 CMD ["python", "app.py"]
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Minimal Base Images
+
+| Image | Storlek | Paket | Säkerhet |
+|-------|---------|-------|----------|
+| `ubuntu:22.04` | ~77 MB | Många | Lägst |
+| `python:3.11` | ~1 GB | Många | Låg |
+| `python:3.11-slim` | ~150 MB | Få | Medium |
+| `python:3.11-alpine` | ~50 MB | Minimalt | Hög |
+| `distroless` | ~20 MB | Endast runtime | Högst |
 
 ```dockerfile
 # DÅLIGT - full OS med massa onödiga paket
@@ -2581,17 +2712,17 @@ FROM python:3.11-slim
 FROM gcr.io/distroless/python3
 ```
 
-```bash
-# Jämför storlekar:
-# ubuntu:22.04     ~77 MB
-# python:3.11      ~1 GB
-# python:3.11-slim ~150 MB
-# distroless       ~50 MB
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Använd specifika tags
+
+| Tagging | Exempel | Säkerhet |
+|---------|---------|----------|
+| **latest** | `python:latest` | Farligt - kan ändras |
+| **Major** | `python:3` | Riskabelt |
+| **Minor** | `python:3.11` | Bättre |
+| **Patch** | `python:3.11.7-slim` | Bra |
+| **SHA digest** | `python@sha256:abc...` | Bäst - immutable |
 
 ```dockerfile
 # DÅLIGT - kan ändras när som helst
@@ -2606,7 +2737,7 @@ FROM nginx:1.25.3-alpine
 FROM python@sha256:abc123...
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Read-only filsystem
 
@@ -2622,25 +2753,41 @@ docker run --read-only \\
     myimage
 ```
 
----
+| Flag | Beskrivning |
+|------|-------------|
+| `--read-only` | Gör root filesystem read-only |
+| `--tmpfs /tmp` | RAM-disk för temp-filer |
+| `-v logs:/path` | Persistent volume för loggar |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Begränsa capabilities
 
+Linux capabilities ger finkornig kontroll över privilegier.
+
+| Capability | Funktion | Behövs ofta? |
+|------------|----------|--------------|
+| `NET_BIND_SERVICE` | Bind ports < 1024 | Ibland |
+| `CHOWN` | Ändra fil-ägare | Sällan |
+| `SETUID/SETGID` | Ändra user/group | Sällan |
+| `SYS_ADMIN` | Systemadmin | Aldrig |
+| `NET_RAW` | Raw sockets | Sällan |
+
 ```bash
-# Containers får för många Linux capabilities by default
 # Ta bort alla och lägg till bara det som behövs
-
 docker run --cap-drop=ALL --cap-add=NET_BIND_SERVICE myimage
-
-# Vanliga capabilities:
-# NET_BIND_SERVICE - bind to ports < 1024
-# CHOWN - change file ownership
-# SETUID/SETGID - change user/group ID
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Resource Limits
+
+| Limit | Flag | Beskrivning |
+|-------|------|-------------|
+| Memory | `--memory=512m` | Max RAM |
+| Memory+Swap | `--memory-swap=512m` | Disable swap |
+| CPU | `--cpus=0.5` | CPU-tid (0.5 = 50%) |
+| PIDs | `--pids-limit=100` | Max processer |
 
 ```bash
 # Utan limits kan en container ta alla resurser
@@ -2666,9 +2813,16 @@ services:
           memory: 256M
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Image Scanning
+
+| Verktyg | Typ | Kommando |
+|---------|-----|----------|
+| **Docker Scout** | Inbyggt | `docker scout cves myimage` |
+| **Trivy** | Open source | `trivy image myimage` |
+| **Snyk** | Commercial | `snyk container test myimage` |
+| **Grype** | Open source | `grype myimage` |
 
 ```bash
 # Scanna image för sårbarheter
@@ -2682,9 +2836,16 @@ trivy image myimage
 snyk container test myimage
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Secrets Hantering
+
+| Metod | Säkerhet | Användning |
+|-------|----------|------------|
+| Environment vars | Låg | Synliga i inspect |
+| Dockerfile ENV | Låg | Finns i image |
+| Docker Secrets | Hög | Fil i /run/secrets |
+| External (Vault) | Högst | Enterprise |
 
 ```bash
 # DÅLIGT - secrets i environment variables
@@ -2702,7 +2863,7 @@ docker run --secret db_pass myimage
 # HashiCorp Vault, AWS Secrets Manager, etc.
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Network Security
 
@@ -2715,30 +2876,44 @@ docker network create --internal backend
 docker run -p 127.0.0.1:8080:8080 myimage  # Bara localhost
 ```
 
----
+| Network type | Internet | Isolation |
+|--------------|----------|-----------|
+| `bridge` | Ja | Per-nätverk |
+| `--internal` | Nej | Hög |
+| `none` | Nej | Total |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Security Checklist
 
-```bash
-# ✅ Non-root user
-# ✅ Minimal base image (slim/alpine/distroless)
-# ✅ Specifika image tags
-# ✅ Read-only filesystem där möjligt
-# ✅ Dropped capabilities
-# ✅ Resource limits
-# ✅ No secrets i images/env vars
-# ✅ Regelbunden image scanning
-# ✅ Isolerade nätverk
-```
+| Check | Status |
+|-------|--------|
+| Non-root user | [ ] |
+| Minimal base image (slim/alpine/distroless) | [ ] |
+| Specifika image tags | [ ] |
+| Read-only filesystem där möjligt | [ ] |
+| Dropped capabilities | [ ] |
+| Resource limits | [ ] |
+| No secrets i images/env vars | [ ] |
+| Regelbunden image scanning | [ ] |
+| Isolerade nätverk | [ ] |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- **Kör aldrig som root** - skapa en appuser
-- **Minimal images** = mindre attack surface
-- **Scanna images** regelbundet för CVEs
-- **Secrets hör inte hemma** i env vars eller Dockerfiles
+| Punkt | Förklaring |
+|-------|------------|
+| **Non-root** | Kör aldrig som root - skapa appuser |
+| **Minimal images** | Mindre image = mindre attack surface |
+| **Scanning** | Scanna images regelbundet för CVEs |
+| **Secrets** | Hör inte hemma i env vars eller Dockerfiles |
+
+**Kom ihåg:**
+- Säkerhet är **inte optional** i produktion
+- **Defense in depth** - flera lager av skydd
+- **Automatisera scanning** i CI/CD pipeline
+- **Uppdatera base images** regelbundet
 """,
         },
         {
@@ -2749,7 +2924,17 @@ docker run -p 127.0.0.1:8080:8080 myimage  # Bara localhost
             "xp_reward": 95,
             "content": """# Docker in Production
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Varför production-kunskap är kritisk |
+|----------|-------------------------------------|
+| **Uptime** | Containers måste överleva crashes |
+| **Debugging** | Loggar måste vara tillgängliga |
+| **Performance** | Resource management för stabilitet |
+| **Updates** | Zero-downtime deployments |
+| **Recovery** | Backup och restore-strategier |
 
 Att köra Docker lokalt är en sak - produktion är en annan. Du måste förstå:
 
@@ -2757,22 +2942,23 @@ Att köra Docker lokalt är en sak - produktion är en annan. Du måste förstå
 - **Restart policies** för att hantera crashes
 - **Resource management** för stabil drift
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Restart Policies
 
+| Policy | Beteende | Användning |
+|--------|----------|------------|
+| `no` | Starta aldrig om (default) | Test/debug |
+| `always` | Starta alltid om | Kritiska services |
+| `unless-stopped` | Som always, men inte om manuellt stoppad | Production |
+| `on-failure:N` | Bara vid crash, max N försök | Jobs |
+
 ```bash
-# no - starta aldrig om (default)
-docker run --restart no myimage
-
-# always - starta alltid om (även vid reboot)
-docker run --restart always myimage
-
-# unless-stopped - som always, men inte om manuellt stoppad
-docker run --restart unless-stopped myimage
-
-# on-failure - bara vid crash (exit code != 0)
-docker run --restart on-failure:5 myimage  # Max 5 försök
+# Exempel
+docker run --restart no myimage           # Ingen restart
+docker run --restart always myimage       # Alltid (även vid reboot)
+docker run --restart unless-stopped myimage # Production standard
+docker run --restart on-failure:5 myimage # Max 5 försök vid crash
 ```
 
 ```yaml
@@ -2783,9 +2969,17 @@ services:
     restart: unless-stopped
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Logging
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker logs container` | Visa loggar |
+| `docker logs -f container` | Follow (tail -f) |
+| `docker logs --tail 100` | Senaste 100 rader |
+| `docker logs --since 1h` | Senaste timmen |
+| `docker logs -t` | Med timestamps |
 
 ```bash
 # Se loggar
@@ -2793,22 +2987,36 @@ docker logs container_name
 docker logs -f container_name      # Follow
 docker logs --tail 100 container_name
 docker logs --since 1h container_name
+```
 
-# Log drivers
+### Log Drivers
+
+| Driver | Beskrivning | Användning |
+|--------|-------------|------------|
+| `json-file` | Default, lokala filer | Development |
+| `syslog` | System syslog | Linux servers |
+| `fluentd` | Fluentd collector | Centraliserad |
+| `awslogs` | AWS CloudWatch | AWS |
+| `gcplogs` | Google Cloud Logging | GCP |
+
+```bash
+# Konfigurera log driver
 docker run --log-driver json-file \\
     --log-opt max-size=10m \\
     --log-opt max-file=3 \\
     myimage
-
-# Centraliserad logging (exempel: Fluentd)
-docker run --log-driver fluentd \\
-    --log-opt fluentd-address=localhost:24224 \\
-    myimage
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Monitoring
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker stats` | Live CPU, mem, net |
+| `docker stats --no-stream` | Snapshot |
+| `docker top container` | Processer |
+| `docker inspect` | Full metadata |
 
 ```bash
 # Real-time stats
@@ -2821,9 +3029,16 @@ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 docker inspect --format='{{.State.Health.Status}}' container_name
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Healthchecks
+
+| Parameter | Beskrivning | Default |
+|-----------|-------------|---------|
+| `--interval` | Tid mellan checks | 30s |
+| `--timeout` | Max tid per check | 30s |
+| `--retries` | Misslyckanden innan unhealthy | 3 |
+| `--start-period` | Grace period vid start | 0s |
 
 ```dockerfile
 # I Dockerfile
@@ -2843,7 +3058,7 @@ docker run --health-cmd="curl -f http://localhost:8000/health" \\
 docker inspect --format='{{json .State.Health}}' container_name
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Production Docker Compose
 
@@ -2886,7 +3101,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    # Ingen port exponerad utåt!
 
 secrets:
   db_password:
@@ -2896,43 +3110,51 @@ volumes:
   pgdata:
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Blue-Green Deployment
+## Deployment Strategies
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              DEPLOYMENT STRATEGIES                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   BLUE-GREEN                  ROLLING UPDATE                │
+│   ──────────                  ──────────────                │
+│   [Blue v1] ──┐               [v1] [v1] [v1]                │
+│               │ Switch        [v2] [v1] [v1]                │
+│   [Green v2]──┘               [v2] [v2] [v1]                │
+│                               [v2] [v2] [v2]                │
+│                                                             │
+│   + Instant rollback          + No extra resources          │
+│   - Double resources          - Slower rollback             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-# Starta ny version
+# Blue-Green
 docker compose -p myapp-green up -d
-
-# Testa att den fungerar
 curl http://localhost:8081/health
-
-# Byt trafik (via load balancer/nginx)
-# ...
-
-# Ta bort gamla versionen
+# Byt trafik via load balancer
 docker compose -p myapp-blue down
-```
 
----
-
-## Rolling Updates
-
-```bash
-# Med Docker Swarm
+# Rolling (Swarm)
 docker service update --image myimage:v2 myservice
-
-# Med Compose (manuellt)
-docker compose pull
-docker compose up -d --no-deps --build api
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Backup Strategy
 
+| Vad | Hur | Frekvens |
+|-----|-----|----------|
+| **Volumes** | tar + offsite | Dagligen |
+| **Databas** | pg_dump/mysqldump | Var 6:e timme |
+| **Config** | Git repo | Vid ändring |
+
 ```bash
-# Backup volumes regelbundet
+# Backup volumes
 docker run --rm \\
     -v mydata:/source:ro \\
     -v $(pwd)/backups:/backup \\
@@ -2942,14 +3164,21 @@ docker run --rm \\
 docker exec postgres pg_dump -U postgres mydb > backup.sql
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- Använd `restart: unless-stopped` för produktionscontainers
-- **Healthchecks** är obligatoriska i produktion
-- **Resource limits** förhindrar att en container tar ner allt
-- **Centraliserad logging** för att kunna felsöka
+| Punkt | Förklaring |
+|-------|------------|
+| **Restart policy** | `unless-stopped` för prod |
+| **Healthchecks** | Obligatoriska i produktion |
+| **Resource limits** | Förhindrar att en container tar ner allt |
+| **Logging** | Centraliserat för felsökning |
+
+**Kom ihåg:**
+- **Planera för failure** - containers kommer krascha
+- **Automatisera backup** - testa restore regelbundet
+- **Monitoring är obligatoriskt** - du kan inte fixa det du inte ser
 """,
         },
         {
@@ -2960,7 +3189,16 @@ docker exec postgres pg_dump -U postgres mydb > backup.sql
             "xp_reward": 80,
             "content": """# Docker Registry & Image Distribution
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Varför registry-kunskap är kritisk |
+|----------|-----------------------------------|
+| **CI/CD** | Automatiserad push/pull i pipelines |
+| **Distribution** | Dela images mellan team och miljöer |
+| **Säkerhet** | Private registries för känslig kod |
+| **Versioning** | Tagging-strategier för rollback |
 
 Images måste lagras och distribueras. Du måste förstå:
 
@@ -2968,25 +3206,53 @@ Images måste lagras och distribueras. Du måste förstå:
 - **Push och pull** av images
 - **Private registries** för företagsbruk
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Vad är ett Registry?
 
 Ett registry är en lagringsplats för Docker images. Tänk på det som "npm för containers".
 
-```bash
-# Image naming convention
-registry.example.com/namespace/repository:tag
-│                    │         │          │
-│                    │         │          └── Version (default: latest)
-│                    │         └── Image name
-│                    └── User/Organization
-└── Registry URL (default: docker.io)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 IMAGE NAMING CONVENTION                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   registry.example.com / namespace / repository : tag       │
+│   ────────────────────   ─────────   ──────────   ───       │
+│   Registry URL           User/Org    Image name   Version   │
+│   (default: docker.io)                            (latest)  │
+│                                                             │
+│   Exempel:                                                  │
+│   docker.io/library/nginx:1.25                              │
+│   ghcr.io/myorg/myapp:v2.0.0                               │
+│   123456.dkr.ecr.eu-north-1.amazonaws.com/api:latest       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Registry-typer
+
+| Registry | Typ | Användning |
+|----------|-----|------------|
+| **Docker Hub** | Public/Private | Default, open source |
+| **GitHub GHCR** | Private | GitHub-integrerat |
+| **AWS ECR** | Private | AWS-ekosystem |
+| **Google GCR** | Private | GCP-ekosystem |
+| **Azure ACR** | Private | Azure-ekosystem |
+| **Harbor** | Self-hosted | Enterprise on-prem |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Docker Hub (Public)
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker login` | Logga in |
+| `docker tag img user/img:tag` | Tagga image |
+| `docker push user/img:tag` | Pusha till Hub |
+| `docker pull user/img:tag` | Pulla från Hub |
 
 ```bash
 # Logga in
@@ -3002,35 +3268,41 @@ docker push username/myimage:v1.0
 docker pull username/myimage:v1.0
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Private Registries
 
+### AWS ECR
 ```bash
-# AWS ECR
 aws ecr get-login-password --region eu-north-1 | \\
     docker login --username AWS --password-stdin 123456789.dkr.ecr.eu-north-1.amazonaws.com
 
 docker tag myimage 123456789.dkr.ecr.eu-north-1.amazonaws.com/myimage:v1
 docker push 123456789.dkr.ecr.eu-north-1.amazonaws.com/myimage:v1
+```
 
-# Google Container Registry
+### Google Container Registry
+```bash
 gcloud auth configure-docker
 docker tag myimage gcr.io/my-project/myimage:v1
 docker push gcr.io/my-project/myimage:v1
+```
 
-# Azure Container Registry
+### Azure Container Registry
+```bash
 az acr login --name myregistry
 docker tag myimage myregistry.azurecr.io/myimage:v1
 docker push myregistry.azurecr.io/myimage:v1
+```
 
-# GitHub Container Registry
+### GitHub Container Registry
+```bash
 echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
 docker tag myimage ghcr.io/username/myimage:v1
 docker push ghcr.io/username/myimage:v1
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Self-hosted Registry
 
@@ -3044,27 +3316,26 @@ docker push localhost:5000/myimage:v1
 docker pull localhost:5000/myimage:v1
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Image Tagging Strategy
 
+| Strategy | Exempel | Användning |
+|----------|---------|------------|
+| **Semantic** | `1.0.0`, `1.0`, `1` | Release versions |
+| **Git SHA** | `abc123f` | CI/CD traceability |
+| **Branch** | `main`, `develop` | Dev environments |
+| **Timestamp** | `20241207-143022` | Continuous deploys |
+| **Latest** | `latest` | UNDVIK i prod! |
+
 ```bash
-# Semantisk versioning
-myimage:1.0.0          # Specifik version
-myimage:1.0            # Minor version
-myimage:1              # Major version
-myimage:latest         # Senaste (undvik i produktion!)
-
-# Git-baserad
-myimage:main           # Branch
-myimage:abc123f        # Commit SHA
-myimage:v1.2.3-abc123f # Version + SHA
-
-# Timestamp
-myimage:20241207-143022
+# Bra tagging i CI/CD
+myimage:1.2.3              # Semantisk version
+myimage:abc123f            # Git commit SHA
+myimage:v1.2.3-abc123f     # Kombination (bäst!)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Multi-platform Images
 
@@ -3082,14 +3353,27 @@ docker buildx build \\
 docker manifest inspect myimage:v1
 ```
 
----
+| Platform | Användning |
+|----------|------------|
+| `linux/amd64` | Standard servers, Intel/AMD |
+| `linux/arm64` | AWS Graviton, Apple Silicon |
+| `linux/arm/v7` | Raspberry Pi |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- **Docker Hub** för public images, **private registry** för företaget
-- Använd **specifika tags** i produktion, aldrig `latest`
-- **Multi-platform builds** för ARM/AMD64 kompatibilitet
-- Logga in innan push/pull till private registries
+| Punkt | Förklaring |
+|-------|------------|
+| **Docker Hub** | Public images, open source |
+| **Private registry** | Företagets images, känslig kod |
+| **Specifika tags** | Aldrig `latest` i produktion |
+| **Multi-platform** | ARM/AMD64 kompatibilitet |
+
+**Kom ihåg:**
+- **Logga in** innan push/pull till private registries
+- **Tagga med SHA** för spårbarhet i CI/CD
+- **Multi-platform** för moderna ARM-baserade servers
 """,
         },
         {
@@ -3100,7 +3384,16 @@ docker manifest inspect myimage:v1
             "xp_reward": 80,
             "content": """# Docker Multi-stage Builds
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Problem | Multi-stage lösning |
+|---------|---------------------|
+| **Stora images** | Bara runtime i final image |
+| **Build tools i prod** | Separera build och runtime |
+| **Säkerhetsrisk** | Mindre attack surface |
+| **Långsam deploy** | Mindre image = snabbare pull |
 
 Build-verktyg och dependencies behövs inte i produktion. Du måste kunna:
 
@@ -3108,7 +3401,7 @@ Build-verktyg och dependencies behövs inte i produktion. Du måste kunna:
 - **Kopiera artefakter** mellan stages
 - **Optimera för säkerhet** genom att exkludera build-verktyg
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Problemet utan multi-stage
 
@@ -3125,9 +3418,27 @@ RUN npm run build
 CMD ["node", "dist/index.js"]
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Multi-stage lösningen
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 MULTI-STAGE BUILD                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   STAGE 1: builder              STAGE 2: production         │
+│   ───────────────               ────────────────────        │
+│   FROM node:18                  FROM node:18-slim           │
+│   + npm, devDeps                - Bara runtime              │
+│   + Source code                 - Compiled code             │
+│   + Build tools                 - prod deps only            │
+│   = ~1 GB                       = ~150 MB                   │
+│                                                             │
+│   [Build] ─── COPY --from=builder ───▶ [Production]         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```dockerfile
 # Stage 1: Build
@@ -3149,9 +3460,16 @@ CMD ["node", "dist/index.js"]
 # Storlek: ~150 MB
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Go Example (statisk binär)
+## Språkspecifika exempel
+
+### Go (statisk binär)
+
+| Stage | Base image | Storlek |
+|-------|------------|---------|
+| Build | `golang:1.21` | ~1 GB |
+| Prod | `scratch` | ~10-20 MB |
 
 ```dockerfile
 # Build stage
@@ -3167,12 +3485,9 @@ FROM scratch
 COPY --from=builder /app/server /server
 USER 1000
 ENTRYPOINT ["/server"]
-# Image storlek: ~10-20 MB (bara binären!)
 ```
 
----
-
-## Python Example
+### Python
 
 ```dockerfile
 # Build stage
@@ -3193,9 +3508,7 @@ USER nobody
 CMD ["python", "app.py"]
 ```
 
----
-
-## React/Frontend Example
+### React/Frontend
 
 ```dockerfile
 # Build stage
@@ -3215,9 +3528,9 @@ CMD ["nginx", "-g", "daemon off;"]
 # Image storlek: ~25 MB
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Flera build stages
+## Avancerat: Flera stages
 
 ```dockerfile
 # Base stage med gemensamma dependencies
@@ -3252,7 +3565,17 @@ USER node
 CMD ["node", "dist/index.js"]
 ```
 
----
+### Bygg specifik stage
+
+```bash
+# Bygg bara test stage
+docker build --target tester -t myapp:test .
+
+# Bygg prod (default, sista stage)
+docker build -t myapp:prod .
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Kopiera från externa images
 
@@ -3263,14 +3586,33 @@ COPY --from=docker:cli /usr/local/bin/docker /usr/local/bin/
 COPY --from=hashicorp/terraform:latest /bin/terraform /usr/local/bin/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Storleksjämförelse
+
+| Språk | Single-stage | Multi-stage | Besparing |
+|-------|--------------|-------------|-----------|
+| Node.js | ~1 GB | ~150 MB | 85% |
+| Go | ~1 GB | ~10 MB | 99% |
+| Python | ~1 GB | ~200 MB | 80% |
+| React | ~500 MB | ~25 MB | 95% |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- **Separera build och runtime** - dramatiskt mindre images
-- `COPY --from=stage` kopierar filer mellan stages
-- Bara **sista FROM** blir den slutliga imagen
-- Använd **slim/alpine/scratch** för production stage
+| Punkt | Förklaring |
+|-------|------------|
+| **Separera stages** | Build vs runtime |
+| **COPY --from** | Kopiera mellan stages |
+| **Sista FROM** | Blir final image |
+| **slim/alpine/scratch** | Minimal prod image |
+
+**Kom ihåg:**
+- Multi-stage ger **dramatiskt mindre images**
+- Mindre image = **snabbare deploys**
+- Mindre image = **mindre attack surface**
+- Använd **--target** för att bygga specifik stage
 """,
         },
         {
@@ -3281,7 +3623,16 @@ COPY --from=hashicorp/terraform:latest /bin/terraform /usr/local/bin/
             "xp_reward": 90,
             "content": """# Docker Performance Optimization
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Problem | Kostnad |
+|---------|---------|
+| **Långsamma builds** | Slöseri med utvecklartid |
+| **Stora images** | Långsam deploy, mer lagring |
+| **Dålig caching** | Onödiga rebuilds |
+| **Resource-hunger** | Instabil drift |
 
 Långsamma builds och stora images kostar tid och pengar. Du måste kunna:
 
@@ -3289,9 +3640,25 @@ Långsamma builds och stora images kostar tid och pengar. Du måste kunna:
 - **Minska image-storlek** för snabbare deploys
 - **Förbättra runtime-prestanda**
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Build Cache Optimization
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 LAYER CACHING                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Layer 1: FROM python ────────────── [CACHED]              │
+│   Layer 2: COPY requirements.txt ──── [CACHED]              │
+│   Layer 3: RUN pip install ────────── [CACHED]              │
+│   Layer 4: COPY . . ───────────────── [REBUILD] <-- ändring │
+│   Layer 5: RUN build ──────────────── [REBUILD]             │
+│                                                             │
+│   Om Layer N ändras → alla efterföljande rebuilds!          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ```dockerfile
 # DÅLIGT - cache invalideras vid varje kodändring
@@ -3307,9 +3674,17 @@ RUN pip install -r requirements.txt  # Cachas om requirements.txt inte ändras
 COPY . .
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Layer Order Matters
+## Layer Order - Bästa praxis
+
+| Ordning | Vad | Ändras |
+|---------|-----|--------|
+| 1 | Base image | Sällan |
+| 2 | System packages | Sällan |
+| 3 | Dependencies | Ibland |
+| 4 | Application code | Ofta |
+| 5 | Build step | Ofta |
 
 ```dockerfile
 # Ordna från minst till mest ändrade
@@ -3329,18 +3704,18 @@ COPY . .
 RUN npm run build
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Minska antal layers
 
 ```dockerfile
-# DÅLIGT - varje RUN skapar ett layer
+# DÅLIGT - 4 layers
 RUN apt-get update
 RUN apt-get install -y curl
 RUN apt-get install -y git
 RUN rm -rf /var/lib/apt/lists/*
 
-# BRA - kombinera till ett layer
+# BRA - 1 layer
 RUN apt-get update && \\
     apt-get install -y \\
         curl \\
@@ -3348,7 +3723,7 @@ RUN apt-get update && \\
     rm -rf /var/lib/apt/lists/*
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## .dockerignore
 
@@ -3365,59 +3740,76 @@ __pycache__
 *.pyc
 .pytest_cache
 coverage
-.nyc_output
 dist
 build
 ```
 
----
+| Fil | Varför exkludera |
+|-----|------------------|
+| `node_modules` | Installeras i container |
+| `.git` | Inte nödvändig, stor |
+| `*.md` | Dokumentation |
+| `__pycache__` | Python bytecode |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## BuildKit Features
+
+| Feature | Beskrivning |
+|---------|-------------|
+| Parallella builds | Bygger oberoende stages samtidigt |
+| Cache mounts | Cachar paketmanagers mellan builds |
+| Secret mounts | Säker hantering av secrets under build |
+| SSH mounts | Git clone med SSH keys |
 
 ```bash
 # Aktivera BuildKit (snabbare builds)
 export DOCKER_BUILDKIT=1
 docker build .
 
-# Eller
-docker buildx build .
-
 # Cache mount - cachar paketmanagers
 FROM python:3.11
 RUN --mount=type=cache,target=/root/.cache/pip \\
     pip install -r requirements.txt
-
-# Bind mount - undviker COPY för build-time filer
-RUN --mount=type=bind,source=package.json,target=/app/package.json \\
-    npm install
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Image Size Reduction
 
-```dockerfile
-# 1. Välj minimal base image
-FROM python:3.11-slim  # istället för python:3.11
+| Teknik | Besparing |
+|--------|-----------|
+| Slim base image | 80-90% |
+| Multi-stage build | 70-95% |
+| --no-cache-dir | 10-20% |
+| Clean apt cache | 5-10% |
 
-# 2. Ta bort cache och temp-filer
+```dockerfile
+# 1. Minimal base image
+FROM python:3.11-slim
+
+# 2. Ta bort cache
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 3. Ta bort package manager cache
+# 3. Städa apt cache
 RUN apt-get update && \\
     apt-get install -y curl && \\
     apt-get clean && \\
     rm -rf /var/lib/apt/lists/*
-
-# 4. Multi-stage build (kopiera bara det som behövs)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Analysera image-storlek
 
+| Verktyg | Användning |
+|---------|------------|
+| `docker history` | Se layers och storlekar |
+| `dive` | Interaktiv layer-analys |
+| `docker scout` | Säkerhet + storlek |
+
 ```bash
-# Se layers och storlekar
+# Se layers
 docker history myimage
 
 # Dive - interaktiv analys
@@ -3427,45 +3819,42 @@ dive myimage
 docker scout quickview myimage
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Runtime Performance
+
+| Flag | Beskrivning |
+|------|-------------|
+| `--cpus=2` | Begränsa CPU |
+| `--memory=2g` | Begränsa RAM |
+| `--memory-swap=2g` | Disable swap |
+| `--cpuset-cpus="0,1"` | CPU pinning |
 
 ```bash
 # Resource limits
 docker run \\
     --cpus=2 \\
     --memory=2g \\
-    --memory-swap=2g \\  # Disable swap
+    --memory-swap=2g \\
     myimage
-
-# CPU pinning (specifika cores)
-docker run --cpuset-cpus="0,1" myimage
-
-# Ulimits
-docker run --ulimit nofile=65535:65535 myimage
 ```
 
----
-
-## Storage Driver
-
-```bash
-# Kolla aktuell storage driver
-docker info | grep "Storage Driver"
-
-# overlay2 är rekommenderat för de flesta
-# Undvik devicemapper och aufs
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- **Ordning spelar roll** - sätt saker som ändras sällan först
-- Använd **.dockerignore** för snabbare COPY
-- **BuildKit** ger snabbare builds och bättre caching
-- **Analysera images** med `dive` eller `docker history`
+| Punkt | Förklaring |
+|-------|------------|
+| **Layer order** | Saker som ändras sällan först |
+| **.dockerignore** | Snabbare COPY |
+| **BuildKit** | Parallella, snabbare builds |
+| **Analysera** | dive/history för optimering |
+
+**Kom ihåg:**
+- **Caching är nyckeln** till snabba builds
+- **Minimal base image** = mindre storlek
+- **BuildKit** är standard i nya Docker
+- **Mät före och efter** optimeringar
 """,
         },
         {
@@ -3476,7 +3865,16 @@ docker info | grep "Storage Driver"
             "xp_reward": 80,
             "content": """# Docker Debugging & Troubleshooting
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Vad du behöver |
+|----------|----------------|
+| **Container kraschar** | Loggar, exit codes |
+| **Nätverksproblem** | Connectivity-test |
+| **Performance-issue** | Stats, resource usage |
+| **Disk full** | System prune |
 
 Containers kommer att krasha och bete sig konstigt. Du måste kunna:
 
@@ -3484,9 +3882,39 @@ Containers kommer att krasha och bete sig konstigt. Du måste kunna:
 - **Debugga körande containers** utan att störa produktion
 - **Hantera vanliga problem** snabbt
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Container startar inte
+## Container startar inte - Felsökningssteg
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              TROUBLESHOOTING FLOW                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. docker logs container     ─── Se felmeddelande         │
+│              │                                              │
+│              ▼                                              │
+│   2. docker inspect            ─── Kolla exit code          │
+│              │                                              │
+│              ▼                                              │
+│   3. docker run -it --entrypoint sh ── Debugga interaktivt  │
+│              │                                              │
+│              ▼                                              │
+│   4. docker events             ─── System-level events      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Exit Codes
+
+| Code | Betydelse | Åtgärd |
+|------|-----------|--------|
+| `0` | Normal exit | OK |
+| `1` | Application error | Kolla loggar |
+| `137` | OOM/SIGKILL | Öka memory |
+| `143` | SIGTERM | Graceful shutdown |
+| `126` | Permission denied | Kolla chmod |
+| `127` | Command not found | Kolla CMD/ENTRYPOINT |
 
 ```bash
 # Steg 1: Kolla loggar
@@ -3495,19 +3923,21 @@ docker logs --tail 50 container_name
 
 # Steg 2: Kolla exit code
 docker inspect container_name --format='{{.State.ExitCode}}'
-# 0 = OK, 1 = Error, 137 = OOM/Kill, 143 = SIGTERM
 
 # Steg 3: Kör interaktivt för att debugga
 docker run -it --entrypoint sh myimage
-docker run -it --entrypoint bash myimage
-
-# Steg 4: Kolla events
-docker events --since 10m
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Inspektera containers
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker inspect` | All metadata |
+| `docker inspect --format` | Specifikt fält |
+| `docker top` | Processer |
+| `docker stats` | Resource usage |
 
 ```bash
 # Full metadata
@@ -3525,9 +3955,15 @@ docker top container_name
 docker stats container_name
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Debugga körande container
+
+| Kommando | Användning |
+|----------|------------|
+| `docker exec -it container sh` | Öppna shell |
+| `docker exec container cmd` | Kör kommando |
+| `docker exec -u 0` | Kör som root |
 
 ```bash
 # Öppna shell i körande container
@@ -3542,65 +3978,51 @@ docker exec container_name env
 docker exec -u 0 container_name bash
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Nätverksproblem
+
+| Test | Kommando |
+|------|----------|
+| Kolla IP | `docker inspect --format='{{.NetworkSettings.IPAddress}}'` |
+| DNS lookup | `docker exec container nslookup other` |
+| Ping | `docker exec container ping other` |
+| HTTP | `docker exec container curl http://other:8080` |
 
 ```bash
 # Kolla container IP
 docker inspect container_name --format='{{.NetworkSettings.IPAddress}}'
 
-# Lista nätverk
-docker network ls
-
-# Inspektera nätverk
-docker network inspect bridge
-
 # Testa connectivity från container
 docker exec container_name ping other_container
 docker exec container_name curl http://other_container:8080
-docker exec container_name nslookup other_container
 
 # Kolla port mappings
 docker port container_name
 ```
 
----
-
-## Loggproblem
-
-```bash
-# Inga loggar? Appen kanske loggar till fil
-docker exec container_name cat /var/log/app.log
-
-# Loggar för stora? Kolla log settings
-docker inspect container_name --format='{{json .HostConfig.LogConfig}}'
-
-# Rensa loggar (json-file driver)
-truncate -s 0 $(docker inspect --format='{{.LogPath}}' container_name)
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Disk/Storage problem
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker system df` | Disk usage |
+| `docker system prune` | Städa allt |
+| `docker system prune -a` | + oanvända images |
+| `docker volume prune` | Städa volumes |
 
 ```bash
 # Kolla disk usage
 docker system df
 
-# Detaljerad
-docker system df -v
-
 # Rensa oanvända resurser
 docker system prune        # Containers, networks, images
 docker system prune -a     # + alla oanvända images
 docker system prune --volumes  # + volumes
-
-# Kolla volume
-docker volume inspect myvolume
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## OOM (Out of Memory)
 
@@ -3615,69 +4037,34 @@ docker stats container_name --no-stream
 docker update --memory=2g container_name
 ```
 
----
-
-## Image problem
-
-```bash
-# Image finns inte
-docker pull myimage:tag  # Pulla explicit
-
-# Kolla image layers
-docker history myimage
-
-# Inspektera image
-docker inspect myimage
-
-# Verifiera image
-docker image inspect myimage --format='{{.Id}}'
-```
-
----
-
-## Debug Dockerfile
-
-```bash
-# Bygg med output
-DOCKER_BUILDKIT=0 docker build -t myimage .
-
-# Stanna vid specifik stage
-docker build --target builder -t myimage-debug .
-
-# Kör en "failed" build interaktivt
-# 1. Hitta sista lyckade layer ID i build output
-# 2. docker run -it <layer-id> sh
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Vanliga fel och lösningar
 
-```bash
-# "Permission denied"
-# → Kolla att USER i Dockerfile har rätt rättigheter
-# → Kolla volume permissions
+| Fel | Orsak | Lösning |
+|-----|-------|---------|
+| Permission denied | Fel user/permissions | `--user` eller `chown` |
+| Port already in use | Port upptagen | Byt port eller stoppa process |
+| No space left | Disk full | `docker system prune -a` |
+| Cannot connect to daemon | Docker ej startat | `sudo systemctl start docker` |
+| OOMKilled | För lite minne | Öka `--memory` |
 
-# "Port already in use"
-docker ps | grep :8080
-docker stop container_using_port
-
-# "No space left on device"
-docker system prune -a --volumes
-
-# "Cannot connect to Docker daemon"
-sudo systemctl start docker
-# Eller: lägg till user i docker-gruppen
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-- **Loggar först** - `docker logs` är din bästa vän
-- **Exit codes berättar** varför container stoppade
-- `docker exec -it` för att **debugga körande containers**
-- `docker system prune` när **disken är full**
+| Punkt | Förklaring |
+|-------|------------|
+| **Loggar först** | `docker logs` är din bästa vän |
+| **Exit codes** | Berättar varför container stoppade |
+| **exec -it** | Debugga körande containers |
+| **system prune** | När disken är full |
+
+**Kom ihåg:**
+- **Metodisk felsökning** - loggar -> inspect -> exec
+- **Exit codes** har betydelse - lär dig dem
+- **docker events** visar system-level händelser
+- **Städa regelbundet** med prune
 """,
         },
         {
@@ -3688,7 +4075,16 @@ sudo systemctl start docker
             "xp_reward": 90,
             "content": """# Docker with CI/CD
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varför viktigt för DevOps?
+
+| Scenario | Docker i CI/CD |
+|----------|----------------|
+| **Automatisering** | Bygg vid varje push |
+| **Konsistens** | Samma image i alla miljöer |
+| **Spårbarhet** | SHA-tagging |
+| **Säkerhet** | Scanning i pipeline |
 
 Docker och CI/CD hör ihop. Du måste kunna:
 
@@ -3696,7 +4092,7 @@ Docker och CI/CD hör ihop. Du måste kunna:
 - **Pusha till registry** från pipeline
 - **Deploya** nya versioner automatiskt
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitHub Actions
 
@@ -3738,7 +4134,7 @@ jobs:
           cache-to: type=gha,mode=max
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GitLab CI
 
@@ -3779,9 +4175,16 @@ deploy:
     - main
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Smart Tagging Strategy
+
+| Tag-typ | Exempel | Användning |
+|---------|---------|------------|
+| Branch | `myapp:main` | Development |
+| PR | `myapp:pr-123` | Review |
+| Semver | `myapp:1.2.3` | Release |
+| SHA | `myapp:abc1234` | Spårbarhet |
 
 ```yaml
 # GitHub Actions - multiple tags
@@ -3795,17 +4198,17 @@ deploy:
       type=ref,event=pr
       type=semver,pattern={{version}}
       type=sha,prefix=
-
-# Resultat:
-# - main branch: myapp:main
-# - PR #123: myapp:pr-123
-# - Tag v1.2.3: myapp:1.2.3
-# - Alltid: myapp:abc1234 (SHA)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Layer Caching i CI
+
+| Cache-typ | Beskrivning | Hastighet |
+|-----------|-------------|-----------|
+| `type=gha` | GitHub Actions cache | Snabb |
+| `type=registry` | Registry-based | Persistent |
+| `type=local` | Local directory | Snabbast |
 
 ```yaml
 # GitHub Actions med cache
@@ -3817,18 +4220,14 @@ deploy:
     tags: myapp:latest
     cache-from: type=gha
     cache-to: type=gha,mode=max
-
-# Eller registry-based cache
-    cache-from: type=registry,ref=myapp:buildcache
-    cache-to: type=registry,ref=myapp:buildcache,mode=max
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Security Scanning i Pipeline
 
 ```yaml
-# GitHub Actions
+# GitHub Actions - Trivy scanning
 - name: Run Trivy vulnerability scanner
   uses: aquasecurity/trivy-action@master
   with:
@@ -3842,9 +4241,9 @@ deploy:
     sarif_file: 'trivy-results.sarif'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Multi-platform Builds
+## Multi-platform Builds i CI
 
 ```yaml
 - name: Set up QEMU
@@ -3862,9 +4261,9 @@ deploy:
     tags: myapp:latest
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Deploy with Docker Compose
+## Deploy med Docker Compose
 
 ```yaml
 deploy:
@@ -3881,14 +4280,22 @@ deploy:
     - main
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
+| Punkt | Förklaring |
+|-------|------------|
+| **SHA-tagging** | Spårbarhet till commit |
+| **Layer cache** | Snabbare builds |
+| **Security scanning** | Sårbarheter före deploy |
+| **Multi-platform** | ARM/AMD64 support |
+
+**Kom ihåg:**
+- **Automatisera allt** - bygg, test, scan, deploy
 - **Tagga med SHA** för spårbarhet
-- **Cache layers** för snabbare builds
-- **Scanna images** för sårbarheter i pipeline
-- **Multi-platform** för ARM/AMD64 stöd
+- **Scanna images** innan de når produktion
+- **Cache layers** för snabbare CI/CD
 """,
         },
         {
@@ -3899,34 +4306,61 @@ deploy:
             "xp_reward": 80,
             "content": """# Docker Swarm Basics
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Swarm är Dockers inbyggda orkestrering. Du behöver förstå det för att:
+## Varför viktigt for DevOps?
 
+| Scenario | Swarm ger dig |
+|----------|---------------|
+| **Multi-host** | Containers over flera servrar |
+| **Skalning** | Enkel replikering |
+| **HA** | Automatisk failover |
+| **Enkel setup** | Inbyggt i Docker |
+
+Swarm är Dockers inbyggda orkestrering:
 - **Köra containers över flera hosts**
 - **Förstå orkestreringskoncept** innan Kubernetes
 - **Hantera enklare produktionsmiljöer**
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Vad är Docker Swarm?
+## Swarm Arkitektur
 
-Docker Swarm är clustering och orkestrering inbyggt i Docker. Det är enklare än Kubernetes men har färre features.
-
-```bash
-# Swarm arkitektur
-┌─────────────────────────────────────────────────────┐
-│                    Manager Nodes                     │
-│  (Hanterar klustret, schemalägger tasks)            │
-├─────────────────────────────────────────────────────┤
-│                    Worker Nodes                      │
-│  (Kör containers/tasks)                              │
-└─────────────────────────────────────────────────────┘
+```
+┌─────────────────────────────────────────────────────────┐
+│                     SWARM CLUSTER                        │
+├─────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
+│  │   MANAGER   │  │   MANAGER   │  │   MANAGER   │      │
+│  │   (Leader)  │  │  (Standby)  │  │  (Standby)  │      │
+│  └─────────────┘  └─────────────┘  └─────────────┘      │
+│         │                                                │
+│         ▼ Scheduling & State                            │
+├─────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
+│  │   WORKER    │  │   WORKER    │  │   WORKER    │      │
+│  │  [Task 1]   │  │  [Task 2]   │  │  [Task 3]   │      │
+│  └─────────────┘  └─────────────┘  └─────────────┘      │
+└─────────────────────────────────────────────────────────┘
 ```
 
----
+| Komponent | Roll |
+|-----------|------|
+| **Manager** | Hanterar klustret, schemalägger tasks |
+| **Worker** | Kör containers/tasks |
+| **Service** | Definierar applikationen |
+| **Task** | En container-instans |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Initiera Swarm
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker swarm init` | Initiera manager |
+| `docker swarm join-token worker` | Visa join token |
+| `docker swarm join` | Anslut worker |
+| `docker node ls` | Lista alla noder |
 
 ```bash
 # Gör denna maskin till manager
@@ -3942,9 +4376,16 @@ docker swarm join --token SWMTKN-xxx manager-ip:2377
 docker node ls
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Services
+## Services vs Containers
+
+| Aspekt | `docker run` | `docker service` |
+|--------|--------------|------------------|
+| Scope | En container | Flera replikor |
+| Scaling | Manuellt | `scale=N` |
+| Failover | Ingen | Automatisk |
+| Nätverk | Manuellt | Overlay |
 
 ```bash
 # Skapa en service (istället för docker run)
@@ -3966,7 +4407,7 @@ docker service update --image nginx:1.25 web
 docker service rm web
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Stacks (Swarm + Compose)
 
@@ -3987,6 +4428,13 @@ services:
       - "80:80"
 ```
 
+| Stack-kommando | Beskrivning |
+|----------------|-------------|
+| `docker stack deploy` | Deploya stack |
+| `docker stack ls` | Lista stacks |
+| `docker stack services` | Se services |
+| `docker stack rm` | Ta bort stack |
+
 ```bash
 # Deploya stack
 docker stack deploy -c docker-compose.yml mystack
@@ -4001,9 +4449,23 @@ docker stack services mystack
 docker stack rm mystack
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Rolling Updates
+
+```
+Update Process:
+┌─────────────────────────────────────────────────────┐
+│  Service: web (replicas=3)                          │
+│                                                      │
+│  [v1.0] ─────> [v1.1] (update 1/3)                 │
+│  [v1.0]        [v1.0] (waiting...)                  │
+│  [v1.0]        [v1.0] (waiting...)                  │
+│                                                      │
+│  --update-parallelism 1                             │
+│  --update-delay 10s                                 │
+└─────────────────────────────────────────────────────┘
+```
 
 ```bash
 # Uppdatera image med rolling update
@@ -4017,10 +4479,18 @@ docker service update \\
 docker service rollback web
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
+| Punkt | Förklaring |
+|-------|------------|
+| **Swarm** | Enklare än K8s, inbyggt |
+| **Services** | Ersätter containers |
+| **Stacks** | Compose för Swarm |
+| **Rolling updates** | Zero-downtime deploys |
+
+**Kom ihåg:**
 - **Swarm är enklare** än Kubernetes men mindre kraftfullt
 - **Services** ersätter containers för skalning
 - **Stacks** är Compose-filer för Swarm
@@ -4035,13 +4505,33 @@ docker service rollback web
             "xp_reward": 75,
             "content": """# Docker Best Practices Summary
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-En sammanfattning av alla best practices för att skriva professionella Dockerfiles och köra containers i produktion.
+## Varför viktigt för DevOps?
 
----
+| Kategori | Bra praxis = |
+|----------|--------------|
+| **Dockerfile** | Mindre, säkrare images |
+| **Security** | Inga sårbarheter |
+| **Production** | Stabil drift |
+| **Team** | Konsistens över tid |
+
+En sammanfattning av alla best practices för professionella Dockerfiles och produktion.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Dockerfile Best Practices
+
+| Regel | Varför |
+|-------|--------|
+| Specifik base tag | Reproducerbarhet |
+| Multi-stage builds | Mindre image |
+| Minimera layers | Snabbare pulls |
+| Cache-ordning | Snabbare builds |
+| Non-root user | Säkerhet |
+| HEALTHCHECK | Monitoring |
+| COPY > ADD | Tydlighet |
+| Labels | Metadata |
 
 ```dockerfile
 # 1. Använd specifik base image tag
@@ -4079,9 +4569,17 @@ LABEL maintainer="team@example.com"
 LABEL version="1.0"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Image Best Practices
+
+| Regel | Exempel |
+|-------|---------|
+| Slim/alpine | `python:3.11-slim` |
+| Scanna CVE | `docker scout cves` |
+| Tag med version+SHA | `myapp:1.2.3-abc123` |
+| Signera images | `DOCKER_CONTENT_TRUST=1` |
+| Undvik latest | Specifik tag alltid |
 
 ```bash
 # 1. Använd slim/alpine varianter
@@ -4104,9 +4602,18 @@ export DOCKER_CONTENT_TRUST=1
 docker push myimage:1.2.3
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Container Best Practices
+
+| Regel | Kommando |
+|-------|----------|
+| Resource limits | `--memory=512m --cpus=0.5` |
+| Restart policy | `--restart unless-stopped` |
+| Minimal ports | `-p 127.0.0.1:8080:8080` |
+| Read-only | `--read-only --tmpfs /tmp` |
+| Drop caps | `--cap-drop ALL` |
+| Isolerat nätverk | `--network internal` |
 
 ```bash
 # 1. Sätt resource limits
@@ -4128,7 +4635,7 @@ docker run --cap-drop ALL --cap-add NET_BIND_SERVICE myimage
 docker network create --internal backend
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Docker Compose Best Practices
 
@@ -4156,37 +4663,31 @@ secrets:
     external: true
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Checklista
 
-```bash
-# Dockerfile
-☐ Specifik base image tag
-☐ Multi-stage build
-☐ Non-root user
-☐ Healthcheck
-☐ .dockerignore
-☐ Minimala layers
+| Dockerfile | Security | Produktion |
+|------------|----------|------------|
+| Specifik base tag | Image scanning | Restart policy |
+| Multi-stage build | No secrets i image | Centraliserad logging |
+| Non-root user | Resource limits | Health monitoring |
+| Healthcheck | Read-only filesystem | Backup strategy |
+| .dockerignore | Dropped capabilities | - |
+| Minimala layers | - | - |
 
-# Security
-☐ Image scanning
-☐ No secrets i image
-☐ Resource limits
-☐ Read-only filesystem
-☐ Dropped capabilities
-
-# Produktion
-☐ Restart policy
-☐ Centraliserad logging
-☐ Health monitoring
-☐ Backup strategy
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
+| Punkt | Förklaring |
+|-------|------------|
+| **Säkerhet först** | Non-root, minimal, scanning |
+| **Optimera storlek** | Multi-stage, slim |
+| **Optimera cache** | Ordna Dockerfile smart |
+| **Checklista** | Följ före deploy |
+
+**Kom ihåg:**
 - **Optimera för säkerhet** - non-root, minimal image, scanning
 - **Optimera för storlek** - multi-stage, slim images
 - **Optimera för cache** - ordna Dockerfile smart
@@ -4201,17 +4702,53 @@ secrets:
             "xp_reward": 70,
             "content": """# Docker Development Workflow
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Docker förändrar hur du utvecklar. Du behöver förstå:
+## Varför viktigt för DevOps?
 
-- **Hur du sätter upp lokal utvecklingsmiljö** med Docker
+| Scenario | Docker Dev ger dig |
+|----------|---------------------|
+| **Hot reload** | Ändringar syns direkt |
+| **Debugging** | VS Code attach |
+| **Miljölikhet** | Dev = Prod |
+| **Isolering** | Inga konflikter |
+
+Docker förändrar hur du utvecklar:
+- **Sätter upp lokal utvecklingsmiljö** med Docker
 - **Hot reload och debugging** i containers
 - **Skillnaden mellan dev och prod** konfiguration
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Development vs Production
+
+```
+Dev Environment:
+┌─────────────────────────────────────────────────────┐
+│  docker-compose.yml (bas)                           │
+│  + docker-compose.override.yml (dev, auto-laddas)  │
+│                                                      │
+│  - Volume mounts (hot reload)                       │
+│  - Debug ports exponerade                           │
+│  - DEBUG=true                                       │
+└─────────────────────────────────────────────────────┘
+
+Prod Environment:
+┌─────────────────────────────────────────────────────┐
+│  docker-compose.yml (bas)                           │
+│  + docker-compose.prod.yml (explicit)               │
+│                                                      │
+│  - Built image från registry                        │
+│  - Restart policies                                 │
+│  - Resource limits                                  │
+└─────────────────────────────────────────────────────┘
+```
+
+| Fil | Syfte | Automatisk? |
+|-----|-------|-------------|
+| `docker-compose.yml` | Gemensam bas | Ja |
+| `docker-compose.override.yml` | Dev-specifikt | Ja |
+| `docker-compose.prod.yml` | Prod-specifikt | Nej (-f) |
 
 ```yaml
 # docker-compose.yml (bas)
@@ -4242,7 +4779,7 @@ services:
     restart: unless-stopped
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Hot Reload Setup
 
@@ -4265,9 +4802,17 @@ RUN npm run build
 CMD ["node", "dist/index.js"]
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Användbart dev-kommando
+## Användbart dev-kommandon
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `docker compose up` | Starta dev |
+| `docker compose up --build` | Bygg om + starta |
+| `docker compose exec api sh` | Shell i container |
+| `docker compose logs -f api` | Följa loggar |
+| `docker compose restart api` | Starta om service |
 
 ```bash
 # Starta dev environment
@@ -4287,7 +4832,7 @@ docker compose logs -f api
 docker compose restart api
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Debugging i Container
 
@@ -4313,7 +4858,7 @@ services:
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Database i Development
 
@@ -4334,7 +4879,7 @@ volumes:
   pgdata:
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Makefile för vanliga tasks
 
@@ -4362,10 +4907,27 @@ clean:
 	docker system prune -f
 ```
 
----
+| Make target | Kommando |
+|-------------|----------|
+| `make dev` | Starta development |
+| `make prod` | Starta production |
+| `make test` | Kör tester |
+| `make shell` | Shell i container |
+| `make logs` | Följa loggar |
+| `make clean` | Rensa allt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
+| Punkt | Förklaring |
+|-------|------------|
+| **Override files** | Miljöspecifik config |
+| **Volume mounts** | Hot reload |
+| **Debug ports** | VS Code attach |
+| **Makefile** | Vanliga kommandon |
+
+**Kom ihåg:**
 - **Override files** för miljöspecifik config
 - **Volume mounts** för hot reload
 - **Expose debug ports** för VS Code attach
@@ -4380,33 +4942,48 @@ clean:
             "xp_reward": 65,
             "content": """# Docker Ecosystem & Tools
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Docker är mer än bara Docker Engine. Du behöver känna till:
+## Varför viktigt för DevOps?
 
+| Kategori | Varför viktigt |
+|----------|----------------|
+| **Verktyg** | Kompletterar Docker |
+| **Alternativ** | Podman, containerd |
+| **Scanning** | Säkerhet i pipeline |
+| **Orchestration** | Produktion i skala |
+
+Docker är mer än bara Docker Engine:
 - **Verktyg som kompletterar Docker**
 - **Alternativ och relaterade teknologier**
 - **Var Docker passar in i DevOps-landskapet**
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Docker Desktop
 
-```bash
-# Inkluderar:
-# - Docker Engine
-# - Docker Compose
-# - Docker Scout (security scanning)
-# - Kubernetes (single-node)
-# - Extensions
+| Inkluderar | Beskrivning |
+|------------|-------------|
+| Docker Engine | Container runtime |
+| Docker Compose | Multi-container |
+| Docker Scout | Security scanning |
+| Kubernetes | Single-node K8s |
+| Extensions | Plugins |
 
+```bash
 # Bra för lokal utveckling på Mac/Windows
 # I produktion: använd Docker Engine direkt på Linux
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Podman (Docker-alternativ)
+
+| Fördel | Beskrivning |
+|--------|-------------|
+| Daemonless | Ingen bakgrundsprocess |
+| Rootless | Säkrare by default |
+| Kompatibel | Samma CLI som Docker |
 
 ```bash
 # Podman - daemonless, rootless containers
@@ -4414,16 +4991,18 @@ Docker är mer än bara Docker Engine. Du behöver känna till:
 
 podman run nginx           # Samma syntax som docker
 podman build -t myimage .  # Samma Dockerfiles
-
-# Fördelar:
-# - Ingen daemon (säkrare)
-# - Rootless by default
-# - Kompatibel med Docker
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Image Scanning Tools
+
+| Verktyg | Typ | Användning |
+|---------|-----|------------|
+| Docker Scout | Inbyggt | `docker scout cves` |
+| Trivy | Open source | `trivy image` |
+| Snyk | SaaS | `snyk container test` |
+| Grype | Open source | `grype myimage` |
 
 ```bash
 # Docker Scout (inbyggt)
@@ -4440,30 +5019,36 @@ snyk container test myimage
 grype myimage
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Container Registries
 
-```bash
-# Public
-# - Docker Hub (docker.io)
-# - GitHub Container Registry (ghcr.io)
-# - Quay.io
+| Typ | Exempel |
+|-----|---------|
+| **Public** | Docker Hub, GHCR, Quay.io |
+| **Cloud** | AWS ECR, GCR, ACR |
+| **Self-hosted** | Harbor, GitLab, Nexus |
 
-# Cloud-managed
-# - AWS ECR
-# - Google Artifact Registry
-# - Azure Container Registry
-
-# Self-hosted
-# - Harbor
-# - GitLab Container Registry
-# - Nexus
+```
+Registry Landscape:
+┌─────────────────────────────────────────────────────┐
+│  PUBLIC          │  CLOUD          │  SELF-HOSTED   │
+├──────────────────┼─────────────────┼────────────────┤
+│  docker.io       │  AWS ECR        │  Harbor        │
+│  ghcr.io         │  Google GCR     │  GitLab CR     │
+│  quay.io         │  Azure ACR      │  Nexus         │
+└─────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Image Analysis Tools
+
+| Verktyg | Syfte |
+|---------|-------|
+| Dive | Analysera layers interaktivt |
+| docker history | Visa image layers |
+| Skopeo | Kopiera mellan registries |
 
 ```bash
 # Dive - analysera layers
@@ -4476,9 +5061,16 @@ docker history myimage
 skopeo copy docker://docker.io/nginx docker://myregistry/nginx
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Build Tools
+
+| Verktyg | Användning |
+|---------|------------|
+| BuildKit | Standard i nya Docker |
+| Buildx | Multi-platform |
+| Kaniko | K8s utan daemon |
+| Buildah | OCI image builder |
 
 ```bash
 # BuildKit (standard i nya Docker)
@@ -4494,9 +5086,16 @@ docker buildx build --platform linux/amd64,linux/arm64 .
 buildah build-using-dockerfile -t myimage .
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Orchestration
+
+| Plattform | Beskrivning |
+|-----------|-------------|
+| Docker Swarm | Inbyggt, enkelt |
+| Kubernetes | Standard, kraftfullt |
+| Nomad | HashiCorp alternativ |
+| ECS | AWS managed |
 
 ```bash
 # Docker Swarm - inbyggt i Docker
@@ -4512,28 +5111,40 @@ nomad job run myapp.nomad
 aws ecs create-service ...
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Monitoring & Logging
 
-```bash
-# Prometheus + Grafana
-# - Metrics collection och visualization
+| Stack | Syfte |
+|-------|-------|
+| Prometheus + Grafana | Metrics & visualization |
+| ELK | Centraliserad logging |
+| Datadog/New Relic | Managed monitoring |
+| cAdvisor | Container resource |
 
-# ELK Stack (Elasticsearch, Logstash, Kibana)
-# - Centraliserad logging
-
-# Datadog, New Relic
-# - Managed monitoring
-
-# cAdvisor
-# - Container resource monitoring
+```
+Monitoring Stack:
+┌─────────────────────────────────────────────────────┐
+│  METRICS         │  LOGGING        │  APM           │
+├──────────────────┼─────────────────┼────────────────┤
+│  Prometheus      │  Elasticsearch  │  Datadog       │
+│  Grafana         │  Logstash       │  New Relic     │
+│  cAdvisor        │  Kibana         │  Jaeger        │
+└─────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
+| Punkt | Förklaring |
+|-------|------------|
+| **Scanning** | Scout/Trivy för CVE |
+| **Buildx** | Multi-platform |
+| **Kubernetes** | Standard i skala |
+| **Harbor** | Self-hosted registry |
+
+**Kom ihåg:**
 - **Docker Scout/Trivy** för security scanning
 - **Buildx** för multi-platform builds
 - **Kubernetes** är standard för större deployments
@@ -4548,55 +5159,68 @@ aws ecs create-service ...
             "xp_reward": 60,
             "content": """# Docker Certification Path
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Docker-certifieringar validerar dina kunskaper. Du behöver veta:
+## Varför viktigt för DevOps?
 
+| Scenario | Certifiering ger dig |
+|----------|----------------------|
+| **CV** | Validerad kunskap |
+| **Karriär** | Konkurrenskraft |
+| **Kunskap** | Strukturerad inlärning |
+| **Företag** | Kvalitetsstämpel |
+
+Docker-certifieringar validerar dina kunskaper:
 - **Vilka certifieringar som finns**
 - **Vad de täcker**
 - **Hur du förbereder dig**
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Docker Certified Associate (DCA)
 
-```bash
-# Den primära Docker-certifieringen
-# Täcker:
+| Område | Procent | Ämnen |
+|--------|---------|-------|
+| Orchestration | 25% | Swarm, services, stacks |
+| Image Management | 20% | Dockerfile, multi-stage, registry |
+| Installation | 15% | Engine, storage, logging drivers |
+| Networking | 15% | Drivers, DNS, load balancing |
+| Security | 15% | Image security, secrets, trust |
+| Storage | 10% | Volume types, backup |
 
-# 1. Orchestration (25%)
-# - Swarm setup och management
-# - Services och stacks
-# - Networking i Swarm
-
-# 2. Image Creation & Management (20%)
-# - Dockerfile best practices
-# - Multi-stage builds
-# - Registry operations
-
-# 3. Installation & Configuration (15%)
-# - Docker Engine installation
-# - Storage drivers
-# - Logging drivers
-
-# 4. Networking (15%)
-# - Network drivers
-# - DNS och service discovery
-# - Load balancing
-
-# 5. Security (15%)
-# - Image security
-# - Secrets management
-# - Content trust
-
-# 6. Storage & Volumes (10%)
-# - Volume types
-# - Backup strategies
+```
+DCA Exam Overview:
+┌─────────────────────────────────────────────────────┐
+│  Orchestration (25%)                                │
+│  ████████████████████████                           │
+├─────────────────────────────────────────────────────┤
+│  Image Management (20%)                             │
+│  ████████████████████                               │
+├─────────────────────────────────────────────────────┤
+│  Installation (15%)                                 │
+│  ███████████████                                    │
+├─────────────────────────────────────────────────────┤
+│  Networking (15%)                                   │
+│  ███████████████                                    │
+├─────────────────────────────────────────────────────┤
+│  Security (15%)                                     │
+│  ███████████████                                    │
+├─────────────────────────────────────────────────────┤
+│  Storage (10%)                                      │
+│  ██████████                                         │
+└─────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Förberedelse
+
+| Metod | Resurs |
+|-------|--------|
+| Hands-on | Bygg egna images, multi-container, Swarm |
+| Dokumentation | docs.docker.com |
+| Practice exams | Whizlabs, online tests |
+| Labs | Play with Docker, Katacoda |
 
 ```bash
 # 1. Hands-on erfarenhet (viktigast!)
@@ -4616,42 +5240,64 @@ Docker-certifieringar validerar dina kunskaper. Du behöver veta:
 # - Katacoda scenarios
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Relaterade Certifieringar
 
-```bash
-# Kubernetes certifieringar (nästa steg)
-# - CKA (Certified Kubernetes Administrator)
-# - CKAD (Certified Kubernetes Application Developer)
-# - CKS (Certified Kubernetes Security Specialist)
+| Certifiering | Fokus | Nivå |
+|--------------|-------|------|
+| CKA | Kubernetes Admin | Intermediate |
+| CKAD | Kubernetes Dev | Intermediate |
+| CKS | Kubernetes Security | Advanced |
+| AWS DevOps | AWS + Containers | Advanced |
+| Azure DevOps | Azure + Containers | Advanced |
 
-# Cloud certifieringar med container-fokus
-# - AWS Certified DevOps Engineer
-# - Azure DevOps Engineer Expert
-# - Google Professional Cloud DevOps Engineer
+```
+Certification Path:
+┌─────────────────────────────────────────────────────┐
+│                                                      │
+│  Docker Certified Associate (DCA)                   │
+│              │                                       │
+│              ▼                                       │
+│  ┌─────────────────────────────────────────┐        │
+│  │  Kubernetes Path                         │        │
+│  │  CKA ──> CKAD ──> CKS                   │        │
+│  └─────────────────────────────────────────┘        │
+│              │                                       │
+│              ▼                                       │
+│  Cloud Certifications (AWS/Azure/GCP DevOps)        │
+│                                                      │
+└─────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Study Checklist
 
-```bash
-☐ Dockerfile syntax och best practices
-☐ Docker Compose för multi-container apps
-☐ Docker networking (bridge, host, overlay)
-☐ Docker volumes och storage
-☐ Docker Swarm basics
-☐ Image security och scanning
-☐ Registry operations
-☐ Logging och monitoring
-☐ Troubleshooting containers
-```
+| Ämne | Status |
+|------|--------|
+| Dockerfile syntax och best practices | |
+| Docker Compose för multi-container apps | |
+| Docker networking (bridge, host, overlay) | |
+| Docker volumes och storage | |
+| Docker Swarm basics | |
+| Image security och scanning | |
+| Registry operations | |
+| Logging och monitoring | |
+| Troubleshooting containers | |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
+| Punkt | Förklaring |
+|-------|------------|
+| **DCA** | Bra första certifiering |
+| **Hands-on** | Viktigast för inlärning |
+| **Kubernetes** | Naturligt nästa steg |
+| **Labs** | Play with Docker |
+
+**Kom ihåg:**
 - **DCA** är bra första certifiering
 - **Hands-on experience** är viktigast
 - **Kubernetes-cert** är naturligt nästa steg
