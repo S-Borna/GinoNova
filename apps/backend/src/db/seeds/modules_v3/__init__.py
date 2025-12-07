@@ -1,88 +1,128 @@
 """
-Bootcamp v3 Modules - Auto-converted from Skillsmaps
+DevOps Learning Modules
 ============================================================================
 
-Contains all DevOps learning modules in bootcamp_v3 format.
-Each module has tasks with full pedagogical content.
+CAMP DEVOPS: Core DevOps curriculum (YH-level)
+SKILLSMAPS: Additional programming & specialized skills
 
-Total: 18 modules, 360+ tasks (ALL PREMIUM V3)
+Total: 13 Camp DevOps + 11 SkillsMaps = 24 modules
 """
 
-# Import all converted modules
-from .module_aws import MODULE_AWS_DEVOPS
-from .module_bash import MODULE_BASH
-from .module_cicd import MODULE_CICD_MASTERY
-from .docker import MODULE_DOCKER_MASTERY  # Premium upgraded version
-from .git import MODULE_GIT_GITHUB_MASTERY  # Premium upgraded version
-from .go import MODULE_GO_MASTERY  # Premium upgraded version
-from .module_javascript import MODULE_JAVASCRIPT
-from .kubernetes import MODULE_KUBERNETES_MASTERY  # Premium upgraded version
+# =============================================================================
+# CAMP DEVOPS - Core DevOps Curriculum (13 modules)
+# =============================================================================
+
+# Core Infrastructure
 from .module_linux import MODULE_LINUX_MASTERY
-from .module_mlops import MODULE_MLOPS
-from .module_nodejs import MODULE_NODEJS
-from .module_python import MODULE_PYTHON_DEVOPS
-from .terraform import MODULE_TERRAFORM_MASTERY  # Premium upgraded version
-from .module_typescript import MODULE_TYPESCRIPT
+from .module_bash import MODULE_BASH
 
-# NEW V3 PREMIUM MODULES
+# Version Control
+from .git import MODULE_GIT_GITHUB_MASTERY
+
+# Containers & Orchestration
+from .docker import MODULE_DOCKER_MASTERY
+from .kubernetes import MODULE_KUBERNETES_MASTERY
+
+# CI/CD & IaC
+from .module_cicd import MODULE_CICD_MASTERY
+from .terraform import MODULE_TERRAFORM_MASTERY
 from .ansible import MODULE_ANSIBLE_MASTERY
-from .sql import MODULE_SQL_MASTERY
-from .system_design import MODULE_SYSTEM_DESIGN
-from .prompt_engineering import MODULE_PROMPT_ENGINEERING
-from .ai_agents import MODULE_AI_AGENTS
 
-# FRONTEND MODULES
-from .react_nextjs import MODULE_REACT_NEXTJS
-
-# LANGUAGE MODULES
-from .dotnet import MODULE_INFO as MODULE_DOTNET_MASTERY
-
-# CLOUD MODULES
+# Cloud Platforms
+from .module_aws import MODULE_AWS_DEVOPS
 from .azure import SKILLSMAP_METADATA as MODULE_AZURE_INFO, ALL_NODES as AZURE_NODES
-
-# Construct Azure module info
 MODULE_AZURE_MASTERY = {
     **MODULE_AZURE_INFO,
     "tasks": AZURE_NODES,
 }
+
+# Scripting & Automation
+from .module_python import MODULE_PYTHON_DEVOPS
+
+# Architecture & Data
+from .system_design import MODULE_SYSTEM_DESIGN
+from .sql import MODULE_SQL_MASTERY
 
 # V2 MODULES (with content_blocks for ILE)
 from .module_linux_v2 import MODULE_LINUX_MASTERY_V2
 from .module_azure_v2 import MODULE_AZURE_MASTERY_V2
 
 
-# All modules list (22 TOTAL + 2 V2 = 24)
-ALL_V3_MODULES = [
-    MODULE_AI_AGENTS,  # NEW
-    MODULE_AWS_DEVOPS,
-    MODULE_ANSIBLE_MASTERY,  # NEW
-    MODULE_AZURE_MASTERY,  # NEW - Azure Cloud
-    MODULE_AZURE_MASTERY_V2,  # V2 with content_blocks
+# =============================================================================
+# SKILLSMAPS - Additional Programming & Specialized Skills (11 modules)
+# =============================================================================
+
+# Programming Languages
+from .module_javascript import MODULE_JAVASCRIPT
+from .module_typescript import MODULE_TYPESCRIPT
+from .module_nodejs import MODULE_NODEJS
+from .go import MODULE_GO_MASTERY
+from .dotnet import MODULE_INFO as MODULE_DOTNET_MASTERY
+
+# Frontend
+from .react_nextjs import MODULE_REACT_NEXTJS
+
+# Specialized/Emerging
+from .module_mlops import MODULE_MLOPS
+from .prompt_engineering import MODULE_PROMPT_ENGINEERING
+from .ai_agents import MODULE_AI_AGENTS
+
+
+# =============================================================================
+# MODULE LISTS
+# =============================================================================
+
+# Camp DevOps - Core YH DevOps curriculum
+CAMP_DEVOPS_MODULES = [
+    MODULE_LINUX_MASTERY_V2,  # V2 replaces V1
     MODULE_BASH,
-    MODULE_CICD_MASTERY,
-    MODULE_DOCKER_MASTERY,
-    MODULE_DOTNET_MASTERY,  # NEW - C# & .NET
     MODULE_GIT_GITHUB_MASTERY,
-    MODULE_GO_MASTERY,
-    MODULE_JAVASCRIPT,
+    MODULE_DOCKER_MASTERY,
     MODULE_KUBERNETES_MASTERY,
-    MODULE_LINUX_MASTERY,
-    MODULE_LINUX_MASTERY_V2,  # V2 with content_blocks
-    MODULE_MLOPS,
-    MODULE_NODEJS,
-    MODULE_PROMPT_ENGINEERING,  # NEW
-    MODULE_PYTHON_DEVOPS,
-    MODULE_REACT_NEXTJS,  # NEW - Frontend
-    MODULE_SQL_MASTERY,  # NEW
-    MODULE_SYSTEM_DESIGN,  # NEW
+    MODULE_CICD_MASTERY,
     MODULE_TERRAFORM_MASTERY,
-    MODULE_TYPESCRIPT,
+    MODULE_ANSIBLE_MASTERY,
+    MODULE_AWS_DEVOPS,
+    MODULE_AZURE_MASTERY_V2,  # V2 replaces V1
+    MODULE_PYTHON_DEVOPS,
+    MODULE_SYSTEM_DESIGN,
+    MODULE_SQL_MASTERY,
 ]
 
+# SkillsMaps - Additional programming & specialized skills
+SKILLSMAPS_MODULES = [
+    MODULE_JAVASCRIPT,
+    MODULE_TYPESCRIPT,
+    MODULE_NODEJS,
+    MODULE_GO_MASTERY,
+    MODULE_DOTNET_MASTERY,
+    MODULE_REACT_NEXTJS,
+    MODULE_MLOPS,
+    MODULE_PROMPT_ENGINEERING,
+    MODULE_AI_AGENTS,
+]
+
+# All modules combined (for backwards compatibility)
+ALL_V3_MODULES = CAMP_DEVOPS_MODULES + SKILLSMAPS_MODULES
+
+
+# =============================================================================
+# HELPER FUNCTIONS
+# =============================================================================
 
 def get_all_modules():
-    """Returns all v3 modules."""
+    """Returns all modules."""
     return ALL_V3_MODULES
+
+
+def get_camp_devops_modules():
+    """Returns Camp DevOps modules (core YH curriculum)."""
+    return CAMP_DEVOPS_MODULES
+
+
+def get_skillsmaps_modules():
+    """Returns SkillsMaps modules (additional skills)."""
+    return SKILLSMAPS_MODULES
 
 
 def get_module_count():
@@ -105,4 +145,4 @@ def get_module_by_slug(slug: str):
 
 def get_modules_by_track(track_slug: str):
     """Returns all modules for a specific track."""
-    return [m for m in ALL_V3_MODULES if m['track_slug'] == track_slug]
+    return [m for m in ALL_V3_MODULES if m.get('track_slug') == track_slug]
