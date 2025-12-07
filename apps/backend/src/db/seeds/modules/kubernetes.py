@@ -30,24 +30,61 @@ MODULE = {
             "xp_reward": 80,
             "content": """# Kubernetes Architecture & Core Concepts
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes har blivit standarden för container-orkestrering. Som DevOps-ingenjör måste du förstå:
+## Varfor viktigt for DevOps?
 
-- **Hur klustret är uppbyggt** så du vet var problem kan uppstå
-- **Vad varje komponent gör** så du kan felsöka effektivt
-- **Control Plane vs Worker Nodes** så du förstår ansvarsfördelningen
-- **Hur kommunikationen fungerar** så du kan säkra och optimera
+| Scenario                  | Utan K8s-kunskap                | Med K8s-kunskap                |
+|---------------------------|--------------------------------|--------------------------------|
+| Klusterfel                | Gissar var felet ar            | Vet exakt vilken komponent     |
+| Skalning                  | Manuell hantering              | Automatisk orkestrering        |
+| Deployment                | SSH till servrar               | Deklarativ YAML                |
+| HA och failover           | Komplex manuell setup          | Inbyggt i plattformen          |
 
----
+Kubernetes ar STANDARD for container-orkestrering - du MASTE kunna det.
 
-## Så fungerar Kubernetes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Tänk på Kubernetes som en **dirigent för en orkester**. Dirigenten (Control Plane) bestämmer vad som ska spelas och när, medan musikerna (Worker Nodes) faktiskt spelar musiken (kör containers). Dirigenten bryr sig inte om vilken specifik musiker som spelar - bara att rätt musik kommer ut!
+## Kubernetes Arkitektur
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    KUBERNETES CLUSTER                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  CONTROL PLANE                                                  │
+│  ─────────────                                                  │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │
+│  │  API Server   │  │   Scheduler   │  │  Controller   │       │
+│  │               │  │               │  │   Manager     │       │
+│  │  All traffic  │  │  Pod placement│  │  Reconcile    │       │
+│  │  goes here    │  │  on nodes     │  │  desired state│       │
+│  └───────────────┘  └───────────────┘  └───────────────┘       │
+│           │                                                     │
+│           ▼                                                     │
+│  ┌───────────────┐                                              │
+│  │     etcd      │  Distributed key-value store                │
+│  │               │  Cluster state & config                      │
+│  └───────────────┘                                              │
+│                                                                 │
+│  WORKER NODES                                                   │
+│  ────────────                                                   │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Node 1                        Node 2                    │   │
+│  │  ┌─────────┐ ┌─────────┐      ┌─────────┐ ┌─────────┐  │   │
+│  │  │ kubelet │ │  Pods   │      │ kubelet │ │  Pods   │  │   │
+│  │  └─────────┘ └─────────┘      └─────────┘ └─────────┘  │   │
+│  │  ┌─────────┐                  ┌─────────┐              │   │
+│  │  │kube-proxy│                  │kube-proxy│              │   │
+│  │  └─────────┘                  └─────────┘              │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Control Plane - Hjärnan i klustret
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Control Plane - Hjarnan i klustret
 
 Control Plane fattar alla beslut om klustret. Den övervakar, schemalägger och reagerar på händelser.
 
@@ -159,15 +196,27 @@ journalctl -u kubelet -f
 # Här ser du varför pods inte startar
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Control Plane** = beslutsfattare, Worker Nodes = arbetare
-2. **API Server** = all kommunikation går genom den
-3. **etcd** = kritisk databas, backup är livsviktig
-4. **Kubelet** = agenten på varje node som kör containers
-5. **kubectl** = ditt verktyg för att prata med klustret
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Control Plane             | Beslutsfattare - API Server, Scheduler, Controller  |
+| Worker Nodes              | Arbetare - kor pods via kubelet                     |
+| API Server                | ALL kommunikation gar genom den                     |
+| etcd                      | Kritisk databas - backup ar livsviktig              |
+| kubelet                   | Agent pa varje node som kor containers              |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Control Plane = hjarnan, Worker Nodes = musklerna
+- etcd backup ar KRITISK for disaster recovery
+- kubectl ar ditt verktyg for att prata med klustret
+- API Server ar single point of entry
+- kubelet maste kora pa VARJE worker node
 """,
         },
         {
@@ -178,7 +227,52 @@ journalctl -u kubelet -f
             "xp_reward": 75,
             "content": """# Pods - Smallest Deployable Unit
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Scenario                  | Forstaelse kravs                                    |
+|---------------------------|-----------------------------------------------------|
+| Felsoka containers        | Pod-status, logs, events                            |
+| Multi-container apps      | Sidecar patterns, shared volumes                    |
+| Resource management       | Requests vs Limits                                  |
+| Networking                | Pod IP, container ports                             |
+
+Pods ar det DU deployer - allt annat ar abstraktion ovanpa.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Pod Anatomy
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                          POD                                    │
+├─────────────────────────────────────────────────────────────────┤
+│  Pod IP: 10.244.1.5                                             │
+│                                                                 │
+│  ┌─────────────────┐  ┌─────────────────┐                      │
+│  │   Container 1   │  │   Container 2   │                      │
+│  │   (main app)    │  │   (sidecar)     │                      │
+│  │   Port: 8080    │  │   Port: 9090    │                      │
+│  └────────┬────────┘  └────────┬────────┘                      │
+│           │                    │                                │
+│           └────────┬───────────┘                                │
+│                    │                                            │
+│           ┌────────▼────────┐                                   │
+│           │  Shared Volume  │                                   │
+│           │    /data        │                                   │
+│           └─────────────────┘                                   │
+│                                                                 │
+│  Containers i samma pod:                                        │
+│  - Delar natverk (localhost)                                    │
+│  - Delar storage (volumes)                                      │
+│  - Schemalaggas pa samma node                                   │
+│  - Startar/stoppas tillsammans                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Pods är den minsta enheten i Kubernetes. Du deployar inte containers direkt - du deployar pods. Som DevOps behöver du förstå:
 
@@ -339,15 +433,27 @@ kubectl exec -it <pod-name> -c <container-name> -- /bin/sh
 # Testa sh om bash inte finns
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Pod** = en eller flera containers som delar nätverk och lagring
-2. **En container per pod** = vanligaste mönstret
-3. **kubectl describe** = första stoppet vid felsökning
-4. **kubectl logs --previous** = livräddare vid crashloops
-5. **Pods är efemära** - de kan dö och återskapas när som helst
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Pod                       | En eller flera containers som delar natverk/storage |
+| En container per pod      | Vanligaste monstret - enklast att hantera           |
+| kubectl describe          | Forsta stoppet vid felskning                        |
+| kubectl logs --previous   | Livraddare vid CrashLoopBackOff                     |
+| Efemara pods              | De kan do och aterskapas nar som helst              |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- En pod = en IP-adress (delar mellan containers)
+- Sidecar pattern for logging, proxies, metrics
+- kubectl exec for att felsoka inifrn container
+- YAML ar preferred over kubectl run i produktion
+- Pod som crashar = kolla events och logs
 """,
         },
         {
@@ -358,24 +464,53 @@ kubectl exec -it <pod-name> -c <container-name> -- /bin/sh
             "xp_reward": 85,
             "content": """# ReplicaSets & Deployments
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-I produktion kör du aldrig nakna pods - de har ingen redundans eller self-healing. Deployments ger dig:
+## Varfor viktigt for DevOps?
 
-- **Automatisk skalning** - kör flera kopior av din app
-- **Self-healing** - döda pods ersätts automatiskt
-- **Rolling updates** - uppdatera utan downtime
-- **Rollbacks** - gå tillbaka om något går fel
+| Scenario                  | Utan Deployments                | Med Deployments                |
+|---------------------------|--------------------------------|--------------------------------|
+| Pod som dor               | Manuellt starta ny             | Automatiskt ersatt             |
+| Uppdatera app             | Downtime vid byte              | Rolling update utan downtime   |
+| Trasig release            | Panic och manuell rollback     | kubectl rollout undo           |
+| Skalning                  | Manuellt hantera pods          | kubectl scale eller HPA        |
 
----
+Du kor ALDRIG nakna pods i produktion - alltid Deployments.
 
-## Så fungerar hierarkin
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Deployment → ReplicaSet → Pods
+## Deployment Hierarki
 
-En Deployment skapar och hanterar ReplicaSets. En ReplicaSet ser till att rätt antal pods alltid körs. Du interagerar nästan alltid med Deployments - inte ReplicaSets eller Pods direkt.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    DEPLOYMENT HIERARCHY                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  DEPLOYMENT (web-app)                                           │
+│  ─────────────────────                                          │
+│  replicas: 3                                                    │
+│  strategy: RollingUpdate                                        │
+│       │                                                         │
+│       ▼                                                         │
+│  REPLICASET (web-app-7d9f8b6c4)                                │
+│  ────────────────────────────                                   │
+│  desired: 3, current: 3, ready: 3                               │
+│       │                                                         │
+│       ├────────────┬────────────┐                               │
+│       ▼            ▼            ▼                               │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐                         │
+│  │  POD 1  │  │  POD 2  │  │  POD 3  │                         │
+│  │ nginx   │  │ nginx   │  │ nginx   │                         │
+│  │ 1.21    │  │ 1.21    │  │ 1.21    │                         │
+│  └─────────┘  └─────────┘  └─────────┘                         │
+│                                                                 │
+│  Du skapar: Deployment                                          │
+│  K8s skapar: ReplicaSet → Pods                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skapa en Deployment
 
@@ -529,15 +664,27 @@ kubectl get pods --show-labels
 # Kubernetes använder detta för att matcha pods
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Deployment** = det du skapar, hanterar ReplicaSets
-2. **ReplicaSet** = ser till att rätt antal pods kör
-3. **Rolling updates** = zero-downtime deploys
-4. **Rollbacks** = snabb återställning vid problem
-5. **Skala med --replicas** eller HPA för automatik
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Deployment                | Det du skapar - hanterar ReplicaSets automatiskt    |
+| ReplicaSet                | Ser till att ratt antal pods kor                    |
+| Rolling updates           | Zero-downtime deploys med gradvis byte              |
+| Rollbacks                 | kubectl rollout undo for snabb aterstallning        |
+| Skalning                  | --replicas manuellt eller HPA for automatik         |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Deployment → ReplicaSet → Pods (hierarkin)
+- Aldrig redigera ReplicaSets direkt - lat Deployment hantera
+- rollout history visar alla revisioner for rollback
+- HPA kraver metrics-server for att fungera
+- Gamla ReplicaSets behalls for rollback-mojlighet
 """,
         },
         {
@@ -548,22 +695,50 @@ kubectl get pods --show-labels
             "xp_reward": 90,
             "content": """# Services & Networking
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Pods är efemära - de får nya IP-adresser varje gång de startas om. Services ger dig:
+## Varfor viktigt for DevOps?
 
-- **Stabil endpoint** - samma adress oavsett vilka pods som kör
-- **Load balancing** - trafik fördelas över alla pods
-- **Service discovery** - hitta tjänster via DNS
-- **Extern åtkomst** - exponera appar utanför klustret
+| Service Type              | Anvandning                                          |
+|---------------------------|-----------------------------------------------------|
+| ClusterIP                 | Intern kommunikation mellan pods                    |
+| NodePort                  | Exponera pa nodernas IP:port                        |
+| LoadBalancer              | Cloud load balancer (AWS ELB, GCP LB)               |
+| ExternalName              | DNS CNAME till extern tjanst                        |
 
----
+Services ger STABIL endpoint trots att pods ar efemara.
 
-## Så fungerar Services
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-En Service är som en **telefonväxel**. Istället för att ringa direkt till en person (pod) ringer du till växeln (Service) som kopplar dig till någon som är ledig. Om en person slutar (pod dör) fungerar växeln fortfarande - den kopplar bara till någon annan.
+## Service Typer
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    KUBERNETES SERVICES                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  CLUSTERIP (default)           NODEPORT                         │
+│  ──────────────────           ────────                          │
+│  ┌─────────────┐              ┌─────────────┐                   │
+│  │ 10.96.0.100 │              │ NodeIP:30080│                   │
+│  │   :80       │              │   :30080    │                   │
+│  └──────┬──────┘              └──────┬──────┘                   │
+│         │                            │                          │
+│    Intern endast               Extern via node IP               │
+│                                                                 │
+│  LOADBALANCER                  EXTERNALNAME                     │
+│  ────────────                  ────────────                     │
+│  ┌─────────────┐              ┌─────────────┐                   │
+│  │ 34.56.78.90 │              │ CNAME:      │                   │
+│  │   :80       │              │ db.aws.com  │                   │
+│  └──────┬──────┘              └─────────────┘                   │
+│         │                                                       │
+│    Cloud LB                    DNS alias                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## ClusterIP - Intern kommunikation
 
@@ -745,15 +920,27 @@ nslookup db-headless
 # StatefulSets använder ofta headless services
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **ClusterIP** = intern kommunikation (default)
-2. **NodePort** = enkel extern åtkomst via nodernas portar
-3. **LoadBalancer** = cloud load balancer för produktion
-4. **DNS** = services nås via namn, inte IP
-5. **Endpoints** = lista över pods som matchar servicens selector
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| ClusterIP                 | Intern kommunikation (default typ)                  |
+| NodePort                  | Enkel extern atkomst via nodernas portar            |
+| LoadBalancer              | Cloud load balancer for produktion                  |
+| DNS                       | Services nas via namn, inte IP                      |
+| Endpoints                 | Lista over pods som matchar selector                |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- ClusterIP ar default - intern endast
+- NodePort range: 30000-32767
+- LoadBalancer fungerar bara i cloud (AWS/GCP/Azure)
+- DNS format: service.namespace.svc.cluster.local
+- Headless (clusterIP: None) for StatefulSets
 """,
         },
         {
@@ -764,22 +951,50 @@ nslookup db-headless
             "xp_reward": 80,
             "content": """# ConfigMaps & Secrets
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Hårdkodade värden i container images är ett recept för problem. ConfigMaps och Secrets ger dig:
+## Varfor viktigt for DevOps?
 
-- **Separation** - konfig separeras från kod
-- **Återanvändbarhet** - samma image i dev, staging och prod
-- **Säkerhet** - känslig data hanteras separat
-- **Dynamiska uppdateringar** - ändra konfig utan att bygga om
+| Problem                   | Utan ConfigMaps/Secrets         | Med ConfigMaps/Secrets          |
+|---------------------------|--------------------------------|--------------------------------|
+| Miljo-specifik config     | Rebuild image per miljo        | Samma image, olika config      |
+| Losenord i kod            | Lackt i Git                    | Separerad och krypterad        |
+| Config-andring            | Ny deploy kravs                | Dynamisk uppdatering           |
+| Audit                     | Ingen sparbarhet               | Kubernetes RBAC och logs       |
 
----
+Separation av config fran kod ar KRITISK for sakerhet och flexibilitet.
 
-## Så fungerar ConfigMaps
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ConfigMaps lagrar icke-känslig konfigurationsdata som key-value par. Tänk på det som en **extern .env-fil** som Kubernetes hanterar åt dig.
+## ConfigMaps vs Secrets
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    CONFIGMAPS VS SECRETS                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  CONFIGMAPS                        SECRETS                      │
+│  ──────────                        ───────                      │
+│  - Plain text                      - Base64 encoded             │
+│  - Icke-kanslig data               - Kanslig data               │
+│  - LOG_LEVEL=debug                 - DB_PASSWORD=xxx            │
+│  - Max 1 MB                        - Max 1 MB                   │
+│                                                                 │
+│  ANVANDNING:                       ANVANDNING:                  │
+│  - App config                      - Losenord                   │
+│  - Feature flags                   - API-nycklar                │
+│  - Endpoints                       - TLS-certifikat             │
+│                                                                 │
+│  MONTERING:                                                     │
+│  ┌─────────────────────────────────────────────┐               │
+│  │  ENV VARS        eller        VOLUME MOUNT  │               │
+│  │  DB_HOST=xxx                  /etc/config/  │               │
+│  └─────────────────────────────────────────────┘               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skapa ConfigMaps
 
@@ -978,15 +1193,27 @@ kubectl exec secure-app -- cat /etc/secrets/API_KEY
 # Säkrare än miljövariabler för vissa användningsfall
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **ConfigMaps** = icke-känslig konfiguration
-2. **Secrets** = känslig data (men endast base64-kodad)
-3. **envFrom** = ladda alla keys som env vars
-4. **volumeMounts** = montera som filer
-5. **I produktion** = använd extern secrets manager (Vault, AWS Secrets Manager)
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| ConfigMaps                | Icke-kanslig konfiguration i key-value format       |
+| Secrets                   | Kanslig data (endast base64-kodad som standard)     |
+| envFrom                   | Ladda alla keys som environment variables           |
+| volumeMounts              | Montera som filer i container                       |
+| Produktion                | Anvand extern secrets manager (Vault, AWS SM)       |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- base64 ar INTE kryptering - bara encoding
+- Secrets ar inte sakra utan extern lsning (Sealed Secrets, Vault)
+- stringData i YAML undviker manuell base64-encoding
+- Volume-monterad secret uppdateras automatiskt (med delay)
+- Env vars uppdateras INTE - pod maste restartas
 """,
         },
         {
@@ -997,22 +1224,50 @@ kubectl exec secure-app -- cat /etc/secrets/API_KEY
             "xp_reward": 70,
             "content": """# Namespaces & Resource Organization
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Utan organisation blir ett kluster snabbt kaotiskt. Namespaces ger dig:
+## Varfor viktigt for DevOps?
 
-- **Isolering** - separera team, miljöer eller projekt
-- **Resurskvoter** - begränsa hur mycket varje team kan använda
-- **Åtkomstkontroll** - RBAC per namespace
-- **Överskådlighet** - lättare att hitta och hantera resurser
+| Scenario                  | Utan Namespaces                 | Med Namespaces                  |
+|---------------------------|--------------------------------|--------------------------------|
+| Multi-team kluster        | Namnkonflikter                 | Isolerade resurser             |
+| Dev/Staging/Prod          | Riskabel mix                   | Separerade miljoer             |
+| Resurskontroll            | Ingen begransning              | ResourceQuota per namespace    |
+| Access control            | All-or-nothing                 | RBAC per namespace             |
 
----
+Namespaces ar GRUNDLAGGANDE for kluster-organisation.
 
-## Så fungerar Namespaces
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Namespaces är som **mappar i ett filsystem**. De grupperar relaterade resurser och skapar logiska gränser. En pod som heter "web" kan finnas i både "development" och "production" namespace - de är helt separata.
+## Namespace Struktur
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    KUBERNETES NAMESPACES                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  SYSTEM NAMESPACES                                              │
+│  ─────────────────                                              │
+│  kube-system      Kubernetes komponenter (CoreDNS, etc)         │
+│  kube-public      Publikt lasbar data                          │
+│  kube-node-lease  Node heartbeats                               │
+│  default          Resurser utan explicit namespace              │
+│                                                                 │
+│  USER NAMESPACES                                                │
+│  ───────────────                                                │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │ development │  │   staging   │  │ production  │             │
+│  │ - web-app   │  │ - web-app   │  │ - web-app   │             │
+│  │ - api       │  │ - api       │  │ - api       │             │
+│  │ - db        │  │ - db        │  │ - db        │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                                                                 │
+│  Samma namn, olika namespaces = isolerade resurser              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Standardnamespaces
 
@@ -1214,15 +1469,27 @@ kubectl get svc -A | grep backend
 # Hjälper att hitta rätt service att prata med
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Namespaces** = logiska gränser för resurser
-2. **kube-system** = hands off, Kubernetes interna komponenter
-3. **ResourceQuotas** = begränsa total resursanvändning per namespace
-4. **LimitRanges** = sätt default limits för containers
-5. **Cross-namespace DNS** = service.namespace.svc.cluster.local
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Namespaces                | Logiska granser for resurser                        |
+| kube-system               | Hands off - Kubernetes interna komponenter          |
+| ResourceQuotas            | Begransar total resursanvandning per namespace      |
+| LimitRanges               | Satter default limits for containers                |
+| Cross-namespace DNS       | service.namespace.svc.cluster.local                 |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- default namespace ar for test - anvand egna namespaces i prod
+- ResourceQuota utan requests/limits i pods = deployment blockeras
+- kubectl config set-context --current --namespace=X andar default
+- Vissa resurser ar cluster-wide (nodes, PVs, namespaces sjalva)
+- Ta bort namespace = tar bort ALLT i det (var forsiktig!)
 """,
         },
         {
@@ -1233,24 +1500,52 @@ kubectl get svc -A | grep backend
             "xp_reward": 65,
             "content": """# Labels, Selectors & Annotations
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Labels är limet som håller ihop Kubernetes. De används för:
+## Varfor viktigt for DevOps?
 
-- **Service routing** - vilka pods får trafik
-- **Scheduling** - var pods ska köras
-- **Organisering** - gruppera och filtrera resurser
-- **Automatisering** - selektorer i controllers
+| Anvandning                | Label/Selector                                      |
+|---------------------------|-----------------------------------------------------|
+| Service routing           | selector matchar pod labels                         |
+| Deployment pods           | matchLabels kopplar ReplicaSet till pods            |
+| Node affinity             | Schemalagga pa specifika noder                      |
+| Batch operationer         | kubectl delete pods -l app=nginx                    |
 
----
+Labels ar LIMET som haller ihop Kubernetes-resurser.
 
-## Så fungerar Labels
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Labels är key-value par som du sätter på alla Kubernetes-resurser. De är som **taggar på kläder** - du kan snabbt hitta alla blå skjortor eller alla plagg i storlek M.
+## Labels vs Annotations
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    LABELS VS ANNOTATIONS                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  LABELS                            ANNOTATIONS                  │
+│  ──────                            ───────────                  │
+│  - Key-value pairs                 - Key-value pairs            │
+│  - Identifiera objekt              - Metadata/information       │
+│  - Anvands av selectors            - INTE for selektion         │
+│  - Max 63 chars value              - Storre varden (4KB)        │
+│                                                                 │
+│  EXEMPEL:                          EXEMPEL:                     │
+│  app: nginx                        build-timestamp: "2024-01"   │
+│  environment: prod                 git-commit: "abc123"         │
+│  version: v1.2.3                   description: "Main web"      │
+│  team: platform                    contact: "ops@company.com"   │
+│                                                                 │
+│  ANVANDNING:                       ANVANDNING:                  │
+│  kubectl get pods -l app=nginx     Tooling (Helm, ArgoCD)       │
+│  Service selector                  Audit information            │
+│  Deployment matchLabels            Dokumentation                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Lägga till Labels
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Lagga till Labels
 
 ```bash
 kubectl label pods web-pod environment=production
@@ -1450,15 +1745,27 @@ kubectl get pods -l 'app.kubernetes.io/part-of=e-commerce'
 # Ger konsistens i stora organisationer
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Labels** = för filtrering och selektion
-2. **Annotations** = för metadata och verktyg
-3. **Selectors** = hur Services, Deployments hittar pods
-4. **Komma** = AND, **in()** = OR
-5. **Konsekvens** = använd samma labels överallt
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Labels                    | For filtrering och selektion (key-value)            |
+| Annotations               | For metadata och verktyg (storre varden)            |
+| Selectors                 | Hur Services och Deployments hittar pods            |
+| Komma-separator           | AND-logik (app=web,env=prod)                        |
+| in() operator             | OR-logik (env in (dev,staging))                     |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Labels ar for SELEKTION, annotations ar for INFORMATION
+- Service selector MASTE matcha pod labels
+- app.kubernetes.io/ prefix ar Kubernetes-standard
+- prometheus.io/scrape annotation aktiverar auto-discovery
+- --show-labels ar din van vid felskning
 """,
         },
         {
@@ -1469,22 +1776,62 @@ kubectl get pods -l 'app.kubernetes.io/part-of=e-commerce'
             "xp_reward": 90,
             "content": """# Ingress Controllers & Routing
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-LoadBalancer Services fungerar, men de blir dyra och svårhanterade med många tjänster. Ingress ger dig:
+## Varfor viktigt for DevOps?
 
-- **En ingångspunkt** - en load balancer för alla tjänster
-- **HTTP-routing** - dirigera baserat på hostname och path
-- **TLS-terminering** - centraliserad SSL-hantering
-- **Avancerade features** - rate limiting, authentication, etc.
+| Scenario                  | LoadBalancer per service        | Ingress                         |
+|---------------------------|--------------------------------|--------------------------------|
+| 10 tjanster               | 10 LBs ($$$)                   | 1 Ingress Controller           |
+| TLS-certifikat            | Per service                    | Centraliserat                  |
+| Routing-regler            | Extern (DNS)                   | I klustret (YAML)              |
+| Rate limiting             | Extern service                 | Inbyggt (annotations)          |
 
----
+Ingress ar KOSTNADSEFFEKTIVT och KRAFTFULLT for HTTP-routing.
 
-## Så fungerar Ingress
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Ingress är som en **receptionist** i ett kontorshus. Istället för att varje företag (service) har sin egen ingång, finns en gemensam reception som dirigerar besökare till rätt våning baserat på vem de söker.
+## Ingress Arkitektur
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    INGRESS TRAFFIC FLOW                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  INTERNET                                                       │
+│     │                                                           │
+│     ▼                                                           │
+│  ┌─────────────────────────────────────────┐                   │
+│  │        CLOUD LOAD BALANCER              │                   │
+│  │        (AWS ALB / GCP LB)               │                   │
+│  └────────────────┬────────────────────────┘                   │
+│                   │                                             │
+│                   ▼                                             │
+│  ┌─────────────────────────────────────────┐                   │
+│  │      INGRESS CONTROLLER (NGINX)         │                   │
+│  │                                         │                   │
+│  │  Regler:                                │                   │
+│  │  - api.example.com  → api-service       │                   │
+│  │  - www.example.com  → web-service       │                   │
+│  │  - /api/*           → backend-service   │                   │
+│  │                                         │                   │
+│  └───────┬─────────────┬───────────────────┘                   │
+│          │             │                                        │
+│          ▼             ▼                                        │
+│     ┌─────────┐   ┌─────────┐                                  │
+│     │api-svc  │   │web-svc  │                                  │
+│     │ClusterIP│   │ClusterIP│                                  │
+│     └────┬────┘   └────┬────┘                                  │
+│          │             │                                        │
+│          ▼             ▼                                        │
+│     ┌─────────┐   ┌─────────┐                                  │
+│     │API Pods │   │Web Pods │                                  │
+│     └─────────┘   └─────────┘                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Installera Ingress Controller
 
@@ -1741,15 +2088,27 @@ kubectl apply -f ingress-certmanager.yaml
 # Kräver att ClusterIssuer är konfigurerad först
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Ingress Controller** = måste installeras separat (t.ex. nginx-ingress)
-2. **Host-baserad** = olika domäner till olika services
-3. **Path-baserad** = olika URL-paths till olika services
-4. **TLS** = termineras vid Ingress, certifikat i Secrets
-5. **cert-manager** = automatiserar Let's Encrypt certifikat
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Ingress Controller        | Maste installeras separat (nginx, traefik)          |
+| Host-baserad routing      | Olika domaner till olika services                   |
+| Path-baserad routing      | Olika URL-paths till olika services                 |
+| TLS                       | Termineras vid Ingress, certifikat i Secrets        |
+| cert-manager              | Automatiserar Let's Encrypt certifikat              |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Ingress kravs separat installation - ar bara en spec
+- ingressClassName: nginx ar obligatoriskt (default borttaget)
+- pathType: Prefix eller Exact - viktigt for matching
+- TLS secret maste finnas FORE Ingress skapas
+- cert-manager + Let's Encrypt = gratiscertifikat
 """,
         },
         {
@@ -1760,24 +2119,61 @@ kubectl apply -f ingress-certmanager.yaml
             "xp_reward": 85,
             "content": """# Persistent Volumes & Storage
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Containers är efemära - data försvinner när de dör. Persistent Volumes ger dig:
+## Varfor viktigt for DevOps?
 
-- **Beständig data** - överlevande container-restarts
-- **Delad lagring** - flera pods kan läsa samma data
-- **Databaslagring** - PostgreSQL, MySQL, MongoDB behöver disk
-- **Abstraktion** - samma kod fungerar på olika cloud providers
+| Scenario                  | Utan PV                         | Med PV                          |
+|---------------------------|--------------------------------|--------------------------------|
+| Databas pod dor           | All data forlorad              | Data bevarad                   |
+| Pod flyttar till ny node  | Data finns pa gammal node      | Volume foljer med              |
+| Backup                    | Manuellt fran container        | Snapshot av volume             |
+| Scaling                   | Stateless endast               | Stateful apps mojliga          |
 
----
+Persistent Volumes ar OBLIGATORISKT for produktionsdatabaser.
 
-## Så fungerar lagring i Kubernetes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes separerar **vad** du behöver (PVC) från **hur** det tillhandahålls (PV). Det är som att beställa en hyrbil - du säger "jag behöver en bil med automatväxel och GPS" (PVC) och uthyraren ger dig en specifik bil (PV) som matchar kraven.
+## Storage Arkitektur
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    KUBERNETES STORAGE                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  POD                              STORAGE BACKEND               │
+│  ───                              ───────────────               │
+│  ┌─────────────────┐                                           │
+│  │   Container     │              ┌─────────────────┐          │
+│  │   ┌─────────┐   │              │  AWS EBS        │          │
+│  │   │ /data   │◄──┼──────────────┤  GCP PD         │          │
+│  │   └─────────┘   │              │  Azure Disk     │          │
+│  └─────────────────┘              │  NFS            │          │
+│          ▲                        │  Local          │          │
+│          │                        └─────────────────┘          │
+│          │                                 ▲                    │
+│  ┌───────┴───────┐                        │                    │
+│  │      PVC      │                        │                    │
+│  │ "10Gi RWO"    │────────────────────────┘                    │
+│  └───────────────┘                                              │
+│          ▲                                                      │
+│          │                                                      │
+│  ┌───────┴───────┐     ┌─────────────────┐                     │
+│  │      PV       │     │  StorageClass   │                     │
+│  │ "aws-ebs-10"  │◄────│  "gp2"          │                     │
+│  └───────────────┘     │  provisioner:   │                     │
+│                        │  aws-ebs        │                     │
+│                        └─────────────────┘                     │
+│                                                                 │
+│  PVC = Vad du behover   PV = Specifik disk                     │
+│  StorageClass = Hur det skapas automatiskt                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## PersistentVolume (PV) - Tillgänglig lagring
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## PersistentVolume (PV) - Tillganglig lagring
 
 ```yaml
 # pv-local.yaml
@@ -1952,31 +2348,43 @@ kubectl apply -f storageclass-ssd.yaml
 
 ---
 
-## Utöka lagring
+## Utoka lagring
 
 ```bash
 kubectl patch pvc database-storage -p '{"spec":{"resources":{"requests":{"storage":"10Gi"}}}}'
-# Utökar PVC från 5Gi till 10Gi
-# Kräver att StorageClass har allowVolumeExpansion: true
-# Volymen växer utan att data förloras
-# Kan ta tid beroende på cloud provider
+# Utokar PVC fran 5Gi till 10Gi
+# Kraver att StorageClass har allowVolumeExpansion: true
+# Volymen vaxer utan att data forloras
+# Kan ta tid beroende pa cloud provider
 
 kubectl get pvc database-storage -w
-# Följer expansionsprocessen
-# Status ändras under tiden
+# Foljer expansionsprocessen
+# Status andras under tiden
 # FileSystemResizePending -> normalt
-# När klart: ny capacity visas
+# Nar klart: ny capacity visas
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **PV** = faktisk lagring (admin skapar eller dynamiskt)
-2. **PVC** = beställning av lagring (utvecklare skapar)
-3. **StorageClass** = mall för dynamisk provisioning
-4. **RWO** = en pod, **ROX** = många läser, **RWX** = många läser/skriver
-5. **Data överlever pod-restarts** men kolla reclaimPolicy!
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| PV                        | Faktisk lagring (admin eller dynamiskt)             |
+| PVC                       | Bestallning av lagring (utvecklare)                 |
+| StorageClass              | Mall for dynamisk provisioning                      |
+| Access Modes              | RWO (en pod), ROX/RWX (manga pods)                  |
+| Reclaim Policy            | Retain (spara), Delete (ta bort vid PVC-borttagning)|
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- PVC binder till PV automatiskt baserat pa storlek och accessMode
+- StorageClass med provisioner = dynamisk volym-skapande
+- hostPath ar BARA for test - anvand cloud storage i prod
+- Retain policy bevarar data aven nar PVC tas bort
+- Expansion kraver allowVolumeExpansion: true
 """,
         },
         {
@@ -1987,22 +2395,53 @@ kubectl get pvc database-storage -w
             "xp_reward": 90,
             "content": """# StatefulSets for Stateful Applications
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Deployments är perfekta för stateless appar, men databaser och klustrade system behöver mer. StatefulSets ger dig:
+## Varfor viktigt for DevOps?
 
-- **Stabil nätverksidentitet** - samma hostname vid omstart
-- **Ordnad deployment** - pods startas i sekvens
-- **Persistent lagring** - varje pod får sin egen volym
-- **Ordnad terminering** - säker nedstängning
+| Deployment                | StatefulSet                                         |
+|---------------------------|-----------------------------------------------------|
+| web-app-abc123            | mysql-0, mysql-1, mysql-2                           |
+| Slumpmasiga namn          | Ordnade, forutsagbara namn                          |
+| Delad eller ingen PV      | Varje pod far egen PersistentVolume                 |
+| Parallell startup         | Sekventiell startup (0 fore 1 fore 2)               |
 
----
+StatefulSets ar OBLIGATORISKT for databaser och klustrade system.
 
-## Så fungerar StatefulSets
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Tänk på StatefulSets som **numrerade bås** i ett garage istället för att parkera var som helst. Pod-0 är alltid Pod-0, har alltid samma plats (hostname) och samma förvaringsutrymme (volym). Om Pod-0 dör får ersättaren samma nummer och samma utrymme.
+## StatefulSet Arkitektur
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    STATEFULSET PATTERN                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  HEADLESS SERVICE: mysql-headless                               │
+│  ────────────────────────────────                               │
+│  DNS: mysql-0.mysql-headless.default.svc.cluster.local          │
+│       mysql-1.mysql-headless.default.svc.cluster.local          │
+│       mysql-2.mysql-headless.default.svc.cluster.local          │
+│                                                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │  mysql-0    │  │  mysql-1    │  │  mysql-2    │             │
+│  │  (master)   │  │  (replica)  │  │  (replica)  │             │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘             │
+│         │                │                │                     │
+│         ▼                ▼                ▼                     │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │  PVC: data- │  │  PVC: data- │  │  PVC: data- │             │
+│  │  mysql-0    │  │  mysql-1    │  │  mysql-2    │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                                                                 │
+│  Startup order: mysql-0 → mysql-1 → mysql-2                     │
+│  Shutdown order: mysql-2 → mysql-1 → mysql-0                    │
+│  Varje pod behaller sin PVC aven vid omstart                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## StatefulSet vs Deployment
 
@@ -2011,16 +2450,16 @@ Tänk på StatefulSets som **numrerade bås** i ett garage istället för att pa
 # web-app-7d9c8b7f6-abc12
 # web-app-7d9c8b7f6-def34
 # web-app-7d9c8b7f6-ghi56
-# Slumpmässiga namn, ingen ordning, utbytbara
+# Slumpmasiga namn, ingen ordning, utbytbara
 
 # StatefulSet pods:
 # mysql-0
 # mysql-1
 # mysql-2
-# Ordnade namn, förutsägbara, persistenta
+# Ordnade namn, forutsagbara, persistenta
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skapa en StatefulSet
 
@@ -2217,15 +2656,27 @@ kubectl patch statefulset mysql -p '{"spec":{"updateStrategy":{"rollingUpdate":{
 # Säker canary-deploy för stateful apps
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **StatefulSets** = för databaser och klustrade system
-2. **Ordnade namn** = pod-0, pod-1, pod-2 (förutsägbara)
-3. **Headless Service** = direkt DNS till varje pod
-4. **volumeClaimTemplates** = automatisk PVC per pod
-5. **Ordnad uppdatering** = sista först, säkert för master-slave
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| StatefulSets              | For databaser och klustrade system                  |
+| Ordnade namn              | pod-0, pod-1, pod-2 (forutsagbara och stabila)      |
+| Headless Service          | Direkt DNS till varje pod                           |
+| volumeClaimTemplates      | Automatisk PVC per pod                              |
+| Update order              | Sista forst, sakert for master-slave                |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- StatefulSet KRAVER headless service (clusterIP: None)
+- PVCs tas INTE bort automatiskt vid delete
+- Partition ar kraftfullt for canary deploys
+- Orderedready = en i taget, Parallel = alla samtidigt
+- mysql-0 ar ofta master, mysql-1+ ar replicas
 """,
         },
         {
@@ -2236,18 +2687,47 @@ kubectl patch statefulset mysql -p '{"spec":{"updateStrategy":{"rollingUpdate":{
             "xp_reward": 75,
             "content": """# DaemonSets & Node-level Operations
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Vissa applikationer behöver köra på varje node - logginsamling, monitoring, nätverksagenter. DaemonSets ger dig:
+## Varfor viktigt for DevOps?
 
-- **En pod per node** - automatiskt på alla noder
-- **Nodspecifika operationer** - loggar, metrics, storage drivers
-- **Automatisk skalning** - nya noder får podden automatiskt
-- **Tolererar node-problem** - fortsätter köra även vid issues
+| Anvandning                | Exempel                                             |
+|---------------------------|-----------------------------------------------------|
+| Log collection            | Fluentd, Filebeat pa varje node                     |
+| Monitoring                | Node exporter, cAdvisor                             |
+| Network                   | Calico, Cilium CNI plugins                          |
+| Storage                   | CSI drivers for cloud storage                       |
 
----
+DaemonSets garanterar EN pod per node - perfekt for infra-komponenter.
 
-## Så fungerar DaemonSets
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## DaemonSet vs Deployment
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    DAEMONSET PATTERN                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  DEPLOYMENT (replicas: 3)     DAEMONSET                         │
+│  ────────────────────────     ─────────                         │
+│                                                                 │
+│  Node 1: [pod] [pod]          Node 1: [pod]                     │
+│  Node 2: [pod]                Node 2: [pod]                     │
+│  Node 3: (inga pods)          Node 3: [pod]                     │
+│                                                                 │
+│  Scheduler valjer noder       EN pod per node (garanterat)      │
+│  Kan vara ojamnt fordelat     Alltid en, aldrig fler            │
+│                                                                 │
+│  NY NODE LAGGS TILL:                                            │
+│  Deployment: kanske far pod   DaemonSet: far ALLTID pod         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa en DaemonSet
 
 DaemonSets är som **vakter** i ett bostadsområde. Varje hus (node) får exakt en vakt (pod). När ett nytt hus byggs får det automatiskt en vakt. Om en vakt slutar ersätts den automatiskt.
 
@@ -2446,39 +2926,51 @@ kubectl rollout history daemonset fluentd
 # Samma workflow som Deployments
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Vanliga DaemonSet-användningsfall
+## Vanliga DaemonSet-anvandningsfall
 
 ```bash
 # Logging
-# Fluentd, Filebeat - samlar loggar från alla containers
+# Fluentd, Filebeat - samlar loggar fran alla containers
 
 # Monitoring
-# Node Exporter, cAdvisor - samlar metrics från noder
+# Node Exporter, cAdvisor - samlar metrics fran noder
 
 # Networking
-# kube-proxy, Calico, Cilium - nätverksfunktionalitet
+# kube-proxy, Calico, Cilium - natverksfunktionalitet
 
 # Storage
-# CSI drivers - tillåter pods att använda molnlagring
+# CSI drivers - tillater pods att anvanda molnlagring
 
 kubectl get daemonsets -n kube-system
 # Visar system-DaemonSets
-# kube-proxy kör på alla noder för networking
-# Andra addons kan finnas beroende på klustret
-# Rör aldrig dessa utan att veta vad du gör!
+# kube-proxy kor pa alla noder for networking
+# Andra addons kan finnas beroende pa klustret
+# Ror aldrig dessa utan att veta vad du gor!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **DaemonSet** = en pod per node, automatiskt
-2. **Nya noder** får podden automatiskt
-3. **nodeSelector** = begränsa till specifika noder
-4. **tolerations** = kör på taintade noder (t.ex. control-plane)
-5. **Vanliga användningsfall** = logging, monitoring, networking
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| DaemonSet                 | En pod per node, automatiskt                        |
+| Nya noder                 | Far DaemonSet pods automatiskt                      |
+| nodeSelector              | Begransar till specifika noder                      |
+| tolerations               | Tillater korning pa taintade noder                  |
+| Vanliga fall              | Logging, monitoring, networking, storage            |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- DaemonSet ar for infra-komponenter, inte apps
+- hostPath volumes ar vanliga for att lasa nodens filer
+- Tolerations kravs for att kora pa control-plane noder
+- updateStrategy styr hur uppdateringar rullas ut
+- DESIRED/CURRENT/READY visar DaemonSet-halsa
 """,
         },
         {
@@ -2489,22 +2981,53 @@ kubectl get daemonsets -n kube-system
             "xp_reward": 70,
             "content": """# Jobs & CronJobs
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Inte allt är långkörande tjänster. Batch-processer och schemalagda uppgifter behöver annat. Jobs och CronJobs ger dig:
+## Varfor viktigt for DevOps?
 
-- **Körning till slutförande** - pods som avslutas framgångsrikt
-- **Retry-logik** - försök igen vid misslyckande
-- **Schemaläggning** - kör vid specifika tider
-- **Parallellism** - kör flera instanser samtidigt
+| Scenario                  | Resurs                                              |
+|---------------------------|-----------------------------------------------------|
+| Database backup           | CronJob (nattlig)                                   |
+| Data migration            | Job (engangskrning)                                |
+| Log rotation              | CronJob (varje timme)                               |
+| Batch processing          | Job med parallelism                                 |
 
----
+Jobs/CronJobs ar for BATCH-processer, inte langtkorande tjanster.
 
-## Så fungerar Jobs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Jobs är som **engångsuppgifter** - de kör tills de är klara, inte för evigt. Tänk på det som att skicka en anställd att hämta kaffe: uppgiften har ett slut, och om den misslyckas kan vi skicka någon annan.
+## Job vs CronJob
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    JOBS VS CRONJOBS                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  JOB                              CRONJOB                       │
+│  ───                              ───────                       │
+│  Kor ENGNG                       Kor pa SCHEMA                  │
+│  Manuellt triggas                 Automatiskt triggas           │
+│  Ex: migration                    Ex: backup varje natt         │
+│                                                                 │
+│  JOB LIVSCYKEL:                                                 │
+│  ┌──────┐    ┌─────────┐    ┌───────────┐                      │
+│  │Create│───►│ Running │───►│ Completed │                      │
+│  └──────┘    └─────────┘    └───────────┘                      │
+│                  │                                              │
+│                  ▼ (vid fel)                                    │
+│             ┌─────────┐                                         │
+│             │  Retry  │ (backoffLimit ganger)                   │
+│             └─────────┘                                         │
+│                                                                 │
+│  CRONJOB SKAPAR JOBS:                                           │
+│  CronJob ──► Job 1 (00:00)                                      │
+│          ──► Job 2 (01:00)                                      │
+│          ──► Job 3 (02:00)                                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Skapa ett Job
 
@@ -2706,52 +3229,64 @@ spec:
 
 ```bash
 # concurrencyPolicy:
-# Allow - nya jobs startar även om tidigare kör (default)
-# Forbid - hoppa över om föregående fortfarande kör
-# Replace - ta bort föregående och starta nytt
+# Allow - nya jobs startar aven om tidigare kor (default)
+# Forbid - hoppa over om foregaende fortfarande kor
+# Replace - ta bort foregaende och starta nytt
 
 # startingDeadlineSeconds:
 # Max tid efter scheduled time att starta jobbet
-# Om missad window - hoppa över den körningen
+# Om missad window - hoppa over den korningen
 
 # History limits:
-# Hur många gamla jobs att behålla
-# Bra för debugging men rensa automatiskt
+# Hur manga gamla jobs att behalla
+# Bra for debugging men rensa automatiskt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Hantera CronJobs
 
 ```bash
 kubectl create job manual-backup --from=cronjob/nightly-backup
-# Skapar ett manuellt job från CronJob-mallen
-# Användbart för att testa eller köra omedelbart
+# Skapar ett manuellt job fran CronJob-mallen
+# Anvandbart for att testa eller kora omedelbart
 # Jobbet har samma spec som CronJobs vanliga jobs
 # Namnet blir "manual-backup"
 
 kubectl patch cronjob nightly-backup -p '{"spec":{"suspend":true}}'
 # Pausar CronJob
-# Inga nya jobs schemaläggs
-# Pågående jobs fortsätter
-# Bra vid underhåll eller felsökning
+# Inga nya jobs schemalagges
+# Pagaende jobs fortsatter
+# Bra vid underhall eller felsokning
 
 kubectl get jobs --sort-by=.metadata.creationTimestamp
 # Listar jobs sorterat efter tid
-# Senaste längst ner
-# Hjälper att följa CronJob-historik
-# Kombinera med grep för specifik CronJob
+# Senaste langst ner
+# Hjalper att folja CronJob-historik
+# Kombinera med grep for specifik CronJob
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Job** = kör till slutförande, sedan klart
-2. **restartPolicy: Never** = ny pod vid fel
-3. **parallelism** = flera pods samtidigt
-4. **CronJob** = schemalagda jobs med cron-syntax
-5. **concurrencyPolicy** = hantera överlappande körningar
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Job                       | Kor till slutforande, sedan klart                   |
+| restartPolicy             | Never (ny pod) eller OnFailure (restarta)           |
+| parallelism               | Flera pods samtidigt for snabbare batch             |
+| CronJob                   | Schemalagda jobs med cron-syntax                    |
+| concurrencyPolicy         | Hantera overlappande korningar                      |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- Cron syntax: minut timme dag manad veckodag
+- backoffLimit styr antal retries fore fail
+- ttlSecondsAfterFinished rensar gamla pods automatiskt
+- successfulJobsHistoryLimit och failedJobsHistoryLimit for CronJobs
+- kubectl create job --from=cronjob for manuell korning
 """,
         },
         {
@@ -2762,24 +3297,58 @@ kubectl get jobs --sort-by=.metadata.creationTimestamp
             "xp_reward": 80,
             "content": """# Resource Management & Limits
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Utan resursgränser kan en app ta alla resurser och döda allt annat. Resource management ger dig:
+## Varfor viktigt for DevOps?
 
-- **Förutsägbar prestanda** - appar får garanterade resurser
-- **Skydd mot resource starvation** - ingen app kan ta allt
-- **Effektiv packning** - schemaläggaren kan placera pods optimalt
-- **Kostnadsoptimering** - använd bara det du behöver
+| Utan resursgranser             | Med resursgranser                                |
+|--------------------------------|--------------------------------------------------|
+| En app tar all CPU             | Garanterade resurser per pod                     |
+| OOM kills overallt             | Predictable memory usage                         |
+| Oforutsagbar prestanda         | Stabil performance                               |
+| Ineffektiv packning            | Optimal node utilization                         |
 
----
+Resource management ar KRITISKT for stabil produktion.
 
-## Så fungerar resurser i Kubernetes
-
-Kubernetes hanterar två huvudresurser: **CPU** och **Memory**. CPU mäts i millicores (1000m = 1 CPU-kärna) och memory i bytes (Mi, Gi). Du sätter **requests** (vad du behöver) och **limits** (max du får ta).
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Requests vs Limits
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    REQUESTS VS LIMITS                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  REQUESTS                         LIMITS                        │
+│  ────────                         ──────                        │
+│  "Vad jag BEHOVER"                "Max jag FAR anvanda"         │
+│  Garanteras av scheduler          Hard cap                      │
+│  Anvands for placement            CPU throttlas, Memory OOMKill │
+│                                                                 │
+│  EXEMPEL:                                                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Pod: app                                                │   │
+│  │  requests:           limits:                             │   │
+│  │    cpu: 100m           cpu: 500m                         │   │
+│  │    memory: 128Mi       memory: 256Mi                     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  BETEENDE:                                                      │
+│  - Pod far minst 100m CPU och 128Mi memory                     │
+│  - Pod kan anvanda upp till 500m CPU (throttlas darofter)      │
+│  - Pod som tar >256Mi memory = OOMKilled                       │
+│                                                                 │
+│  QoS CLASSES:                                                   │
+│  Guaranteed: requests = limits (hogst prioritet)                │
+│  Burstable:  requests < limits                                  │
+│  BestEffort: inga requests/limits (lagst prioritet)            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Requests vs Limits YAML
 
 ```yaml
 # pod-resources.yaml
@@ -2998,31 +3567,43 @@ kubectl describe vpa nginx-vpa
 ## Best Practices
 
 ```bash
-# Börja med requests = limits (Guaranteed QoS)
-# Övervaka faktisk användning med metrics
-# Justera baserat på observerad användning
-# Sätt alltid requests - annars BestEffort!
+# Borja med requests = limits (Guaranteed QoS)
+# Overvaka faktisk anvandning med metrics
+# Justera baserat pa observerad anvandning
+# Satt alltid requests - annars BestEffort!
 
-# CPU: börja lågt och öka vid throttling
-# Memory: börja med vad appen behöver + marginal
-# OBS: Memory leak = limits hjälper, löser inte problemet
+# CPU: borja lagt och oka vid throttling
+# Memory: borja med vad appen behover + marginal
+# OBS: Memory leak = limits hjalper, loser inte problemet
 
 kubectl top pods --sort-by=memory
-# Sorterar pods efter minnesanvändning
+# Sorterar pods efter minnesanvandning
 # Hitta de mest resurshungriga
-# Hjälper identifiera optimeringsmöjligheter
-# Kör regelbundet för kapacitetsplanering
+# Hjalper identifiera optimeringsmojligheter
+# Kor regelbundet for kapacitetsplanering
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. **Requests** = garanterat, **Limits** = max tillåtet
-2. **CPU throttlas**, **Memory OOMKillas**
-3. **QoS klasser** = Guaranteed > Burstable > BestEffort
-4. **LimitRange** = defaults och gränser per namespace
-5. **ResourceQuota** = total kvot per namespace
+| Koncept                   | Detalj                                              |
+|---------------------------|-----------------------------------------------------|
+| Requests                  | Garanterat minimum, anvands for scheduling          |
+| Limits                    | Max tillatet, hard cap                              |
+| CPU                       | Throttlas vid limit (appen blir langsam)            |
+| Memory                    | OOMKill vid limit (pod dor)                         |
+| QoS classes               | Guaranteed > Burstable > BestEffort                 |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kom ihag
+
+- ALLTID satt requests - annars ar du BestEffort
+- requests = limits ger Guaranteed QoS (hogst prioritet)
+- LimitRange ger defaults, ResourceQuota ger totalkvoter
+- CPU mats i millicores (1000m = 1 karna)
+- Memory mats i Mi/Gi (MiB/GiB)
 """,
         },
         {
@@ -3033,25 +3614,60 @@ kubectl top pods --sort-by=memory
             "xp_reward": 80,
             "content": """# Health Checks & Probes
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes behöver veta om dina pods är friska. Probes ger dig:
+## Varfor viktigt for DevOps?
 
-- **Automatisk omstart** - döda containers startas om
-- **Intelligent routing** - trafik endast till friska pods
-- **Graceful startups** - vänta tills appen är redo
-- **Self-healing** - klustret reparerar sig självt
+| Utan probes                    | Med probes                                       |
+|--------------------------------|--------------------------------------------------|
+| Trasig container kor for evigt | Automatisk omstart vid failure                   |
+| Trafik till unready pods       | Intelligent routing till friska pods             |
+| Cold start-fel                 | Graceful startup med startupProbe                |
+| Manuell intervention           | Self-healing kluster                             |
 
----
+Probes ar KRITISKA for produktions-stabilitet.
 
-## Så fungerar probes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes har tre typer av probes som alla svarar på frågan "är containern OK?":
-- **Liveness** = lever den? (starta om om den inte svarar)
-- **Readiness** = kan den ta emot trafik? (ta bort från Service)
-- **Startup** = har den startat? (vänta med andra probes)
+## Probe Typer
 
----
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    KUBERNETES PROBES                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  STARTUP PROBE           (kor forst)                            │
+│  ─────────────                                                  │
+│  "Har containern startat?"                                      │
+│  - Vanta pa langsamma startups                                  │
+│  - Disablar liveness/readiness tills klar                       │
+│  - Fel → restarta containern                                    │
+│                                                                 │
+│           │ success                                             │
+│           ▼                                                     │
+│  LIVENESS PROBE          (kontinuerligt)                        │
+│  ──────────────                                                 │
+│  "Lever containern?"                                            │
+│  - Detekterar deadlocks, hangs                                  │
+│  - Fel → restarta containern                                    │
+│                                                                 │
+│  READINESS PROBE         (kontinuerligt)                        │
+│  ───────────────                                                │
+│  "Kan containern ta emot trafik?"                               │
+│  - Temporary unavailability                                     │
+│  - Fel → ta bort fran Service endpoints                        │
+│  - Restartar INTE containern                                    │
+│                                                                 │
+│  PROBE METODER:                                                 │
+│  - httpGet:    HTTP GET request                                 │
+│  - tcpSocket:  TCP connection                                   │
+│  - exec:       Kor kommando i container                         │
+│  - grpc:       gRPC health check                                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Liveness Probe
 
@@ -3294,11 +3910,21 @@ kubectl logs <pod-name> --previous
 
 ## Key Takeaways
 
-1. **Liveness** = lever den? Starta om vid failure
-2. **Readiness** = redo för trafik? Ta bort från Service
-3. **Startup** = för långsamma startups, blockerar andra probes
-4. **httpGet** = vanligast, tcpSocket för databaser
-5. **Sätt alltid probes i produktion** - utan dem ingen self-healing
+| Koncept | Detalj |
+|---------|--------|
+| Liveness Probe | Lever den? Starta om vid failure |
+| Readiness Probe | Redo for trafik? Ta bort fran Service vid failure |
+| Startup Probe | For langsamma startups, blockerar andra probes |
+| httpGet | Vanligaste probe-typen, tcpSocket for databaser |
+| initialDelaySeconds | Vanta innan forsta probe, matcha appens startup-tid |
+
+## Kom ihag
+
+- ALLTID satt probes i produktion - utan dem ingen self-healing
+- Liveness ska kolla om appen ar fundamentalt trasig
+- Readiness ska kolla beroenden som databaskoppling
+- Startup probe skyddar mot for tidiga liveness-checks
+- failureThreshold x periodSeconds = total tolerans for failure
 """,
         },
         {
@@ -3309,20 +3935,32 @@ kubectl logs <pod-name> --previous
             "xp_reward": 100,
             "content": """# RBAC & Security
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes har kraftfulla API:er - vem som helst med access kan göra nästan vad som helst. RBAC ger dig:
+## Varfor viktigt for DevOps?
 
-- **Least privilege** - ge bara de rättigheter som behövs
-- **Audit trail** - vem gjorde vad
-- **Multi-tenancy** - säkra team-gränser
-- **Compliance** - uppfyll säkerhetskrav
+| Problem utan RBAC | Konsekvens |
+|------------------|------------|
+| Alla har full access | En miss kan ta ner hela klustret |
+| Ingen audit trail | Vet inte vem som gjorde vad |
+| Delad ServiceAccount | Lateral movement vid kompromiss |
+| Over-privileged pods | Angreppyta for attackerare |
 
----
+RBAC (Role-Based Access Control) binder Subjects (anvandare/serviceaccounts) till Roles (uppsattning permissions) via RoleBindings. Det ar som att ge nycklar - du bestammer vem som far vilka nycklar och vilka dorrar nycklarna oppnar.
 
-## Så fungerar RBAC
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Subject   │◀───▶│ RoleBinding │◀───▶│    Role     │
+│ (vem)       │     │ (koppling)  │     │ (vad)       │
+└─────────────┘     └─────────────┘     └─────────────┘
+      │                   │                   │
+      ▼                   ▼                   ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ User        │     │ namespace   │     │ pods: get   │
+│ Group       │     │ eller       │     │ pods: list  │
+│ ServiceAcct │     │ cluster     │     │ pods: watch │
+└─────────────┘     └─────────────┘     └─────────────┘
 
-RBAC (Role-Based Access Control) binder **Subjects** (användare/serviceaccounts) till **Roles** (uppsättning permissions) via **RoleBindings**. Det är som att ge nycklar - du bestämmer vem som får vilka nycklar och vilka dörrar nycklarna öppnar.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -3584,11 +4222,21 @@ kubectl get networkpolicies -n production
 
 ## Key Takeaways
 
-1. **ServiceAccount** = identitet för pods
-2. **Role** = namespace-scoped permissions
-3. **ClusterRole** = cluster-wide permissions
-4. **RoleBinding** = kopplar subject till role
-5. **Pod Security** = runAsNonRoot, drop capabilities, readOnly
+| Koncept | Detalj |
+|---------|--------|
+| ServiceAccount | Identitet for pods, token monteras automatiskt |
+| Role | Namespace-scoped permissions (get, list, watch, etc.) |
+| ClusterRole | Cluster-wide permissions over alla namespaces |
+| RoleBinding | Kopplar Subject till Role i specifikt namespace |
+| Pod Security | runAsNonRoot, drop capabilities, readOnlyRootFilesystem |
+
+## Kom ihag
+
+- ALLTID skapa separat ServiceAccount for varje app, anvand inte default
+- kubectl auth can-i testar permissions - anvand for att verifiera RBAC
+- NetworkPolicies kraver CNI som stodjer dem (Calico, Cilium)
+- Drop ALL capabilities och lagg bara till de som behovs
+- ClusterRoleBinding ger access i ALLA namespaces - anvand sparsamt
 """,
         },
         {
@@ -3599,20 +4247,32 @@ kubectl get networkpolicies -n production
             "xp_reward": 85,
             "content": """# Helm Package Manager
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes YAML blir snabbt ohanterligt - samma filer kopieras och ändras. Helm ger dig:
+## Varfor viktigt for DevOps?
 
-- **Pakethantering** - installera komplexa appar med ett kommando
-- **Templating** - samma charts för dev, staging, prod
-- **Versionering** - rollback till tidigare versioner
-- **Återanvändning** - community charts för vanliga appar
+| Problem utan Helm | Konsekvens |
+|------------------|------------|
+| Duplicerad YAML | Samma filer kopieras och modifieras manuellt |
+| Ingen templating | Dev, staging, prod har separata filer |
+| Svar rollback | Manuell aterskapning vid problem |
+| Komplex installation | Manga kubectl apply for en app |
 
----
+Helm ar Kubernetes pakethanterare. Ett chart ar ett paket med alla YAML-filer for en app. Values ar variabler som anpassar chartet. Nar du installerar skapas en release - en specifik installation av ett chart.
 
-## Så fungerar Helm
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│    Chart    │  +  │   Values    │  =  │   Release   │
+│  (template) │     │  (config)   │     │  (instance) │
+└─────────────┘     └─────────────┘     └─────────────┘
+      │                   │                   │
+      ▼                   ▼                   ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│ Deployment  │     │ replicaCount│     │  my-nginx   │
+│ Service     │     │ image.tag   │     │  revision 1 │
+│ ConfigMap   │     │ resources   │     │  Running    │
+└─────────────┘     └─────────────┘     └─────────────┘
 
-Helm är Kubernetes pakethanterare. Ett **chart** är ett paket med alla YAML-filer för en app. **Values** är variabler som anpassar chartet. När du installerar skapas en **release** - en specifik installation av ett chart.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -3815,22 +4475,32 @@ spec:
 ```
 
 ```bash
-# Hooks kör vid specifika tidpunkter
-# pre-install = före alla resurser skapas
+# Hooks kor vid specifika tidpunkter
+# pre-install = fore alla resurser skapas
 # post-install = efter installation klar
 # pre-upgrade, post-upgrade = vid uppgradering
-# Perfekt för databas-migreringar
+# Perfekt for databas-migreringar
 ```
 
 ---
 
 ## Key Takeaways
 
-1. **Chart** = paket med Kubernetes YAML
-2. **Values** = variabler för anpassning
-3. **Release** = en installation av ett chart
-4. **helm upgrade** = uppdatera med nya values
-5. **helm rollback** = snabb återställning
+| Koncept | Detalj |
+|---------|--------|
+| Chart | Paket med Kubernetes YAML-filer och templates |
+| Values | Variabler for miljospecifik anpassning |
+| Release | En specifik installation av ett chart med namn |
+| helm upgrade | Uppdaterar release med nya values, skapar revision |
+| helm rollback | Aterstaller till tidigare revision pa sekunder |
+
+## Kom ihag
+
+- helm repo add + helm repo update innan forsta installation
+- helm show values exporterar alla tillgangliga konfigurationsalternativ
+- helm template renderar YAML utan att installera - perfekt for debugging
+- helm lint validerar chart-struktur och best practices
+- Hooks kor databas-migreringar automatiskt vid upgrade
 """,
         },
         {
@@ -3841,20 +4511,31 @@ spec:
             "xp_reward": 85,
             "content": """# Monitoring & Observability
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Du kan inte fixa det du inte kan se. Observability ger dig:
+## Varfor viktigt for DevOps?
 
-- **Metrics** - mätvärden över tid (CPU, requests, latency)
-- **Logs** - händelser och fel från containers
-- **Traces** - följa requests genom microservices
-- **Alerting** - veta innan användare klagar
+| Problem utan observability | Konsekvens |
+|---------------------------|------------|
+| Kan inte se resursanvandning | Overraskande OOM-kills och throttling |
+| Ingen loggaggregering | Soka manuellt i varje container |
+| Saknar alerting | Anvandare rapporterar fel fore dig |
+| Ingen tracing | Omojligt hitta flaskhalsar i microservices |
 
----
+Observability = metrics + logs + traces. Du kan inte fixa det du inte kan se. Prometheus scrapar metrics, Loki samlar loggar, Grafana visualiserar - tillsammans ger de fullstandig insyn i klustret.
 
-## Så fungerar observability i Kubernetes
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Metrics   │────▶│  Prometheus │────▶│   Grafana   │
+│   Server    │     │   (scrape)  │     │   (visas)   │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                   │                   ▲
+       ▼                   ▼                   │
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  kubectl    │     │   Loki      │────▶│  Dashboards │
+│    top      │     │   (logs)    │     │   Alerts    │
+└─────────────┘     └─────────────┘     └─────────────┘
 
-Kubernetes exponerar metrics via Metrics Server och API:er. Prometheus scrapar dessa och lagrar tidsserier. Grafana visualiserar data. Tillsammans ger de fullständig insyn i klustret.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4073,11 +4754,21 @@ kubectl get servicemonitors -n monitoring
 
 ## Key Takeaways
 
-1. **Metrics Server** = grundläggande metrics för kubectl top
-2. **Prometheus** = scraping, lagring, queries (PromQL)
-3. **Grafana** = visualisering och dashboards
-4. **Loki** = logghantering (LogQL)
-5. **ServiceMonitor** = automatisk Prometheus-konfiguration
+| Koncept | Detalj |
+|---------|--------|
+| Metrics Server | Grundlaggande metrics for kubectl top och HPA |
+| Prometheus | Scraping, lagring, queries med PromQL |
+| Grafana | Visualisering med dashboards och alerts |
+| Loki | Logghantering med LogQL queries |
+| ServiceMonitor | CRD for automatisk Prometheus-konfiguration |
+
+## Kom ihag
+
+- Installera prometheus-community Helm chart for komplett stack
+- PromQL rate() konverterar counters till anvandbar data
+- ServiceMonitor matar Prometheus vilka services som ska scrapas
+- Alertmanager skickar notifications vid definierade triggers
+- Loki + Grafana = enhetlig plattform for loggar och metrics
 """,
         },
         {
@@ -4088,20 +4779,30 @@ kubectl get servicemonitors -n monitoring
             "xp_reward": 95,
             "content": """# Troubleshooting Kubernetes
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Saker går fel - det är inte "om" utan "när". Effektiv felsökning ger dig:
+## Varfor viktigt for DevOps?
 
-- **Snabb diagnos** - hitta problemet på minuter, inte timmar
-- **Systematiskt approach** - följ en beprövad process
-- **Rätt verktyg** - kubectl, logs, events, describe
-- **Djup förståelse** - förstå varför saker går fel
+| Problem utan felsokning | Konsekvens |
+|------------------------|------------|
+| Slumpmassig debugging | Timmar bortkastade pa gissningar |
+| Saknar systematik | Missar rotorsak, fixar symptom |
+| Fel verktyg | Ser inte vad som faktiskt hander |
+| Ingen process | Panik nar incidenter intraffar |
 
----
+Saker gar fel - det ar inte "om" utan "nar". Effektiv felsokning foljer ordningen: Nodes -> Pods -> Containers -> Logs -> Events. Borja brett och zooma in. De flesta problem ligger i pods som inte startar eller containers som crashar.
 
-## Så går du tillväga
+┌───────────────────────────────────────────────────────────┐
+│              TROUBLESHOOTING WORKFLOW                      │
+├───────────────────────────────────────────────────────────┤
+│  1. kubectl get nodes          - Ar alla noder Ready?      │
+│  2. kubectl get pods           - Vilka pods har problem?   │
+│  3. kubectl describe pod       - Vad sager Events?         │
+│  4. kubectl logs --previous    - Varfor crashade den?      │
+│  5. kubectl exec -it           - Debugga inifran           │
+└───────────────────────────────────────────────────────────┘
 
-Följ denna ordning: **Nodes → Pods → Containers → Logs → Events**. Börja brett och zooma in. De flesta problem ligger i pods som inte startar eller containers som crashar.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4330,11 +5031,21 @@ kubectl describe pvc <pvc>     # Events
 
 ## Key Takeaways
 
-1. **kubectl describe** = första kommandot för alla problem
-2. **Events** = berättar vad Kubernetes försökt göra
-3. **logs --previous** = kritiskt för crashloops
-4. **Debug pod** = för nätverkstester inifrån klustret
-5. **Systematiskt** = Nodes → Pods → Containers → Logs
+| Koncept | Detalj |
+|---------|--------|
+| kubectl describe | ALLTID forsta kommandot - visar Events och Conditions |
+| Events | Kubernetes berattelse om vad den forsokat gora |
+| logs --previous | KRITISKT for CrashLoopBackOff - visar loggar innan crash |
+| Debug pod | busybox for natverkstester inifran klustret |
+| Systematik | Folj ordningen Nodes -> Pods -> Containers -> Logs |
+
+## Kom ihag
+
+- Pending = scheduling-problem, kolla node resources och taints
+- ImagePullBackOff = fel image-namn, tag eller registry-access
+- CrashLoopBackOff = container crashar, anvand logs --previous
+- Exit code 137 = OOMKilled, oka memory limits
+- DNS-problem = kolla CoreDNS pods i kube-system namespace
 """,
         },
         {
@@ -4345,20 +5056,32 @@ kubectl describe pvc <pvc>     # Events
             "xp_reward": 95,
             "content": """# GitOps & Continuous Deployment
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Manuella deploys skalas inte och är felfyllda. GitOps ger dig:
+## Varfor viktigt for DevOps?
 
-- **Git som single source of truth** - all config i version control
-- **Automatiska synk** - klustret matchar alltid Git
-- **Audit trail** - Git history = deployment history
-- **Rollback via Git** - revert commit = rollback deploy
+| Problem utan GitOps | Konsekvens |
+|--------------------|------------|
+| Manuella deploys | Skalas inte, felbenaget, tidskravande |
+| Ingen audit trail | Vet inte vem som deployade vad och nar |
+| Svar rollback | Stressigt aterstella vid problem |
+| Config drift | Kluster matchar inte dokumentation |
 
----
+GitOps vander pa deployment-processen. Istallet for att pusha till klustret, pullar klustret fran Git. En operator (ArgoCD, Flux) overvakar repot och synkroniserar andringar automatiskt. Git = single source of truth.
 
-## Så fungerar GitOps
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Developer  │────▶│    Git      │────▶│   ArgoCD    │
+│  (commit)   │     │   (repo)    │     │  (watch)    │
+└─────────────┘     └─────────────┘     └─────────────┘
+                                               │
+                           ┌───────────────────┘
+                           ▼
+                    ┌─────────────┐     ┌─────────────┐
+                    │  Kubernetes │◀────│    Sync     │
+                    │  (cluster)  │     │  (apply)    │
+                    └─────────────┘     └─────────────┘
 
-GitOps vänder på deployment-processen. Istället för att pusha till klustret, pullar klustret från Git. En operator (ArgoCD, Flux) övervakar repot och synkroniserar ändringar automatiskt.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4613,11 +5336,21 @@ kubectl apply -f sealed-secret.yaml
 
 ## Key Takeaways
 
-1. **GitOps** = Git är single source of truth
-2. **ArgoCD/Flux** = operatorer som synkroniserar
-3. **Automated sync** = push till Git = deploy
-4. **Rollback** = git revert eller sync till gammal revision
-5. **Secrets** = använd Sealed Secrets eller External Secrets
+| Koncept | Detalj |
+|---------|--------|
+| GitOps | Git ar single source of truth for all infrastruktur |
+| ArgoCD/Flux | Operators som overvakar Git och synkroniserar till kluster |
+| Automated sync | Push till Git = automatisk deploy till kluster |
+| Rollback | git revert eller argocd sync till gammal revision |
+| Sealed Secrets | Krypterade secrets sakra att committa till Git |
+
+## Kom ihag
+
+- Separera app-repo (kod) fran config-repo (Kubernetes YAML)
+- Kustomize overlays for miljospecifik konfiguration
+- PR-baserat workflow = code review for infra-andringar
+- ALDRIG commit secrets i klartext - anvand Sealed Secrets
+- Flux bootstrap konfigurerar sig sjalv via GitOps
 """,
         },
         {
@@ -4628,14 +5361,31 @@ kubectl apply -f sealed-secret.yaml
             "xp_reward": 90,
             "content": """# Kubernetes Best Practices
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Kubernetes är flexibelt - det finns många sätt att göra saker. Best practices hjälper dig:
+## Varfor viktigt for DevOps?
 
-- **Undvika vanliga misstag** - lär av andras erfarenheter
-- **Bygga för produktion** - från dag ett
-- **Säkerhet** - utan att offra användbarhet
-- **Skalbarhet** - system som växer med behoven
+| Problem utan best practices | Konsekvens |
+|---------------------------|------------|
+| Ingen resurshantering | Pods som tar alla resurser, OOM-kills |
+| :latest tag | Oforutsagbara deploys, ingen reproducerbarhet |
+| Root containers | Sakerhetssarbarheter, potentiell kompromiss |
+| Saknar probes | Trafik till ohalsosamma pods, dalig UX |
+
+Kubernetes ar flexibelt - det finns manga satt att gora saker. Best practices hjalper dig bygga for produktion fran dag ett, undvika vanliga misstag och skapa system som skalar med behoven.
+
+┌─────────────────────────────────────────────────────────────┐
+│               PRODUCTION-READY CHECKLIST                     │
+├─────────────────────────────────────────────────────────────┤
+│ [ ] Resource requests OCH limits satta                       │
+│ [ ] Liveness OCH readiness probes konfigurerade             │
+│ [ ] Specifik image tag (ALDRIG :latest)                      │
+│ [ ] SecurityContext med non-root, readOnlyRootFilesystem    │
+│ [ ] NetworkPolicies for trafikbegransning                   │
+│ [ ] PodDisruptionBudget for HA                              │
+└─────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -4940,11 +5690,21 @@ velero backup create daily-backup --include-namespaces production
 
 ## Key Takeaways
 
-1. **Alltid** sätt resource requests/limits och probes
-2. **Aldrig** kör som root eller med :latest tag
-3. **Använd** namespaces för isolering
-4. **Implementera** NetworkPolicies och RBAC
-5. **Automatisera** med GitOps och CI/CD
+| Koncept | Detalj |
+|---------|--------|
+| Resource requests/limits | ALLTID satta - requests for scheduling, limits for skydd |
+| Non-root containers | ALDRIG kor som root - runAsNonRoot: true |
+| Specifika image tags | ALDRIG :latest - anvand semantisk versioning |
+| Probes | Liveness OCH readiness for varje container |
+| GitOps workflow | All config i Git, PR-baserad review, automated sync |
+
+## Kom ihag
+
+- RollingUpdate med maxSurge/maxUnavailable 25% ar bra default
+- Pod anti-affinity sprider replicas over olika noder
+- PodDisruptionBudget skyddar mot oavsiktlig nedskalning
+- Namespace per team + miljo for basta isolering
+- Backup etcd och PVs regelbundet - testa recovery
 """,
         },
     ],
