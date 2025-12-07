@@ -241,31 +241,72 @@ What would you like to learn about Kubernetes?`
 Where are you in your journey? I can give more specific recommendations!`
     }
 
-    // Greetings
-    if (lowerMessage.includes("hej") || lowerMessage.includes("hello") || lowerMessage.includes("hi ") || lowerMessage.includes("tjena")) {
-        return `Hey! 👋 I'm Dallas, your DevOps guide.
+    // Greetings - warm and welcoming
+    if (lowerMessage.match(/^(hej|hello|hi|hey|tjena|hallå|hejsan|tjo|yo|sup|what'?s up|god dag|goddag|morsning|tjenare)[\s!?.]*$/i) ||
+        lowerMessage.includes("hej dallas") || lowerMessage.includes("hi dallas") || lowerMessage.includes("hello dallas")) {
+        const greetings = [
+            `Hej hej! 👋✨ Vad kul att du är här! Jag är Dallas, din DevOps-kompis. Hur kan jag hjälpa dig idag? Vill du lära dig något nytt eller har du en fråga?`,
+            `Tjena! 🐺 Välkommen! Jag är Dallas och jag älskar att hjälpa dig med DevOps. Vad har du på hjärtat idag?`,
+            `Hey there! 👋🚀 Så roligt att träffas! Jag är Dallas, redo att guida dig genom DevOps-världen. Vad vill du utforska?`,
+            `Hallå! ✨ Kul att se dig! Jag är Dallas, din personliga DevOps-guide. Ställ en fråga eller säg bara vad du vill lära dig!`,
+            `Hejsan! 🎉 Välkommen till DevOps Hub! Jag är Dallas och jag finns här för att hjälpa dig. Vad kan jag göra för dig?`,
+            `Yo! 🐺💜 Skönt att du droppar in! Jag är Dallas - fråga mig vad som helst om Linux, Docker, Kubernetes eller DevOps generellt!`
+        ]
+        return greetings[Math.floor(Math.random() * greetings.length)]
+    }
 
-I can help you with:
-- Linux commands and concepts
-- Docker containerization
-- Kubernetes orchestration
-- AWS cloud services
-- CI/CD pipelines
-- And much more!
+    // Thanks
+    if (lowerMessage.match(/^(tack|thanks|thx|thank you|tackar|tack så mycket)[\s!?.]*$/i)) {
+        const thanksResponses = [
+            `Ingen orsak! 😊 Det är alltid kul att hjälpa. Har du fler frågor är det bara att fråga!`,
+            `Varsågod! 🐺✨ Jag finns här om du behöver mer hjälp!`,
+            `Alltid redo att hjälpa! 💪 Lycka till med dina DevOps-äventyr!`,
+            `Det var så lite! 🚀 Hojta till om du undrar något mer!`
+        ]
+        return thanksResponses[Math.floor(Math.random() * thanksResponses.length)]
+    }
 
-What would you like to learn about today?`
+    // How are you / small talk
+    if (lowerMessage.includes("hur mår du") || lowerMessage.includes("how are you") || lowerMessage.includes("läget") || lowerMessage.includes("how's it going")) {
+        return `Jag mår toppen! 🐺✨ Tack för att du frågar! Alltid peppad på att hjälpa dig lära dig nya saker. Vad kan jag hjälpa dig med idag?`
+    }
+
+    // Who are you
+    if (lowerMessage.includes("vem är du") || lowerMessage.includes("who are you") || lowerMessage.includes("vad är du")) {
+        return `Jag är Dallas! 🐺 Din AI-kompis och DevOps-guide här på plattformen.
+
+Jag kan hjälpa dig med:
+• 🐧 Linux & Bash-kommandon
+• 🐳 Docker & containers
+• ☸️ Kubernetes
+• ☁️ AWS, Azure & molntjänster
+• 🔄 CI/CD pipelines
+• 💡 Tips för din lärresa
+
+Jag älskar att förklara saker och finns här 24/7. Fråga på! 💜`
+    }
+
+    // Goodbye
+    if (lowerMessage.match(/^(hejdå|bye|goodbye|ses|vi ses|ciao|adjö)[\s!?.]*$/i)) {
+        const goodbyes = [
+            `Hejdå! 👋 Lycka till med pluggandet! Kom tillbaka när som helst! 🐺`,
+            `Vi ses! 🚀 Fortsätt vara awesome! Jag finns här när du behöver mig!`,
+            `Bye bye! ✨ Ha det så bra och fortsätt lära dig coola saker!`,
+            `Adjö för nu! 💜 Glöm inte: Consistency beats perfection!`
+        ]
+        return goodbyes[Math.floor(Math.random() * goodbyes.length)]
     }
 
     // Default response
-    return `Hey! 👋 I'm your DevOps Wizard.
+    return `Hej! 👋 Jag är Dallas, din DevOps-guide! 🐺
 
-I can help you with:
-- Linux commands and concepts
-- Docker containerization
-- Kubernetes orchestration
-- AWS cloud services
-- CI/CD pipelines
-- Platform questions (XP, streaks, bookmarks)
+Jag kan hjälpa dig med:
+• 🐧 Linux-kommandon & Bash
+• 🐳 Docker & containers
+• ☸️ Kubernetes-orkestrering
+• ☁️ AWS, Azure, GCP
+• 🔄 CI/CD pipelines
+• 📚 Plattformsfrågor (XP, streaks, bookmarks)
 
-What would you like to learn about today?`
+Vad vill du lära dig idag? Bara att fråga! 💜`
 }
