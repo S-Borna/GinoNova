@@ -108,7 +108,7 @@ export default function FlashcardsPage() {
                         href="/study"
                         className="text-purple-400 hover:text-purple-300"
                     >
-                        ← Tillbaka till Study
+                        ← Tillbaka till Studyroom
                     </Link>
                 </div>
             </div>

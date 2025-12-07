@@ -181,9 +181,9 @@ export default function StudyPage() {
                 <div className="max-w-6xl mx-auto">
                     {/* Header */}
                     <div className="mb-8">
-                        <h1 className="text-3xl font-bold mb-2">Study</h1>
+                        <h1 className="text-3xl font-bold mb-2">📚 Studyroom</h1>
                         <p className="text-zinc-400">
-                            Öva med flashcards, quiz och terminal-simulator för att förstärka dina kunskaper. Välj en modul för att börja öva.
+                            Öva med flashcards och quiz för att förstärka dina DevOps-kunskaper. Välj modul och ämnen, sedan genereras unika frågor varje gång!
                         </p>
                     </div>
 

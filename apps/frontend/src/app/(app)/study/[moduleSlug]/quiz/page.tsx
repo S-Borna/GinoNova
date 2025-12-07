@@ -126,7 +126,7 @@ export default function QuizPage() {
                         href="/study"
                         className="text-blue-400 hover:text-blue-300"
                     >
-                        ← Tillbaka till Study
+                        ← Tillbaka till Studyroom
                     </Link>
                 </div>
             </div>
@@ -218,7 +218,7 @@ export default function QuizPage() {
                                     "bg-blue-600 hover:bg-blue-500 transition-colors"
                                 )}
                             >
-                                Tillbaka till Study
+                                Tillbaka till Studyroom
                             </Link>
                         </div>
                     </div>
