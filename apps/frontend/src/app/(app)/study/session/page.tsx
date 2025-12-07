@@ -47,9 +47,12 @@ function StudySessionSetup() {
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    // Hämta valda moduler från URL
+    // Hämta valda moduler från URL - memorera för att undvika oändlig loop
     const modulesParam = searchParams?.get("modules") || ""
-    const selectedModules = modulesParam.split(",").filter(Boolean)
+    const selectedModules = React.useMemo(
+        () => modulesParam.split(",").filter(Boolean),
+        [modulesParam]
+    )
 
     // State
     const [moduleInfos, setModuleInfos] = useState<ModuleInfo[]>([])
@@ -64,6 +67,8 @@ function StudySessionSetup() {
 
     // Hämta modulinformation (parallellt för snabbhet)
     useEffect(() => {
+        let cancelled = false
+        
         async function fetchModuleInfo() {
             if (selectedModules.length === 0) {
                 router.push("/study")
@@ -89,15 +94,21 @@ function StudySessionSetup() {
                 })
 
                 const results = await Promise.all(promises)
-                setModuleInfos(results.filter((r): r is ModuleInfo => r !== null))
+                if (!cancelled) {
+                    setModuleInfos(results.filter((r): r is ModuleInfo => r !== null))
+                }
             } catch (err) {
                 console.error("Error fetching module info:", err)
             } finally {
-                setLoading(false)
+                if (!cancelled) {
+                    setLoading(false)
+                }
             }
         }
 
         fetchModuleInfo()
+        
+        return () => { cancelled = true }
     }, [selectedModules, router])
 
     // Beräkna totalt tillgängligt
