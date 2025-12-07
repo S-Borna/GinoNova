@@ -382,416 +382,160 @@ NODE_03_FILE_OPERATIONS = {
     ],
     "content": '''# File Operations Mastery
 
-## Varför detta är kritiskt
+---
 
-> "Every deployment, every backup, every configuration change involves file operations. One wrong `rm -rf` can end careers. One missing `-p` in mkdir can break a deployment. Master these commands — they're your daily bread."
+## Vad lär du dig?
+
+- Skapa filer och kataloger med touch och mkdir
+- Kopiera filer säkert med cp (inklusive -a för backups)
+- Flytta och byta namn på filer med mv
+- Ta bort filer säkert och förstå riskerna med rm -rf
+- Skapa och använda hard links och symlinks
+- Förstå skillnaden mellan hard links och soft links
 
 ---
 
-## Skapa filer och kataloger
+## Varför viktigt i DevOps?
 
-### touch — Skapa tomma filer / Uppdatera tidsstämpel
-
-```bash
-# Skapa en tom fil
-touch newfile.txt
-
-# Skapa flera filer
-touch file1.txt file2.txt file3.txt
-
-# Uppdatera tidsstämpel på befintlig fil
-touch existing_file.txt
-
-# Sätt specifik tidsstämpel
-touch -t 202512011200 file.txt    # ÅÅÅÅMMDDTTMM
-
-# Använd annan fils tidsstämpel
-touch -r reference.txt target.txt
-```
-
-**Pro Tip:** `touch` skapar INTE filen om den inte existerar och du använder `-c`:
-```bash
-touch -c maybe_exists.txt   # Skapar INTE om den inte finns
-```
-
-### mkdir — Skapa kataloger
-
-```bash
-# Skapa en katalog
-mkdir projects
-
-# Skapa med mellanliggande kataloger (-p = parents)
-mkdir -p projects/webapp/src/components
-
-# Skapa flera kataloger
-mkdir dir1 dir2 dir3
-
-# Skapa med specifika permissions
-mkdir -m 755 secure_folder
-
-# Verbose (visa vad som skapas)
-mkdir -pv deep/nested/structure
-```
-
-**KRITISKT:** Alltid använd `-p` i scripts! Utan det misslyckas kommandot om parent inte finns.
-
-```bash
-# Script-safe pattern:
-mkdir -p /var/log/myapp
-mkdir -p /etc/myapp/conf.d
-```
+Varje deployment, backup, och konfigurationsändring involverar filoperationer. Ett felaktigt `rm -rf` kan radera hela produktionsdatan. En saknad `-p` i mkdir kan göra att deploy-scriptet fallerar. Symlinks används för zero-downtime deploys. Detta är kommandon du använder hundratals gånger om dagen.
 
 ---
 
-## Kopiera filer
+## Vad händer om du inte kan detta i produktion?
 
-### cp — Copy
-
-```bash
-# Kopiera fil
-cp source.txt destination.txt
-
-# Kopiera till katalog
-cp file.txt /path/to/directory/
-
-# Kopiera flera filer till katalog
-cp file1.txt file2.txt /destination/
-
-# Kopiera katalog rekursivt (-r = recursive)
-cp -r source_dir/ destination_dir/
-
-# Bevara alla attribut (-a = archive, bäst för backups)
-cp -a source_dir/ backup_dir/
-
-# Interactive (fråga innan överskrivning)
-cp -i file.txt /destination/
-
-# Force (skriv över utan att fråga)
-cp -f file.txt /destination/
-
-# Verbose
-cp -v file.txt /destination/
-
-# Uppdatera bara om source är nyare
-cp -u source.txt destination.txt
-```
-
-### Vanliga cp-kombinationer
-
-```bash
-# Backup-stil kopiering (bevarar allt)
-cp -av /source/ /backup/
-
-# Säker kopiering (frågar)
-cp -iv important.txt /archive/
-
-# Deployment-kopiering (uppdatera bara ändrade)
-cp -ruv ./dist/* /var/www/html/
-```
-
-**Viktigt om trailing slash:**
-```bash
-cp -r folder /dest/       # Kopierar folder TILL dest → /dest/folder/
-cp -r folder/ /dest/      # Kopierar INNEHÅLLET i folder → /dest/*
-```
+- Du raderar fel filer med rm -rf och förlorar data
+- Dina deploy-scripts misslyckas för att mkdir inte kan skapa nested directories
+- Backups blir korrupta för att du inte använde cp -a
+- Zero-downtime deploy fungerar inte för du förstår inte symlinks
+- Du kan inte återställa filer för att du inte vet skillnaden på hard/soft links
 
 ---
 
-## Flytta och byt namn
+## Mini-lab
 
-### mv — Move / Rename
+**Mission:** Implementera en blue-green deployment med symlinks.
 
+**Steg:**
+1. Skapa två "versioner" av en app
+2. Skapa en current-symlink som pekar på aktiv version
+3. Simulera deployment genom att byta symlink
+4. Verifiera att "rollback" fungerar
+
+**Kommandon:**
 ```bash
-# Byt namn på fil
-mv oldname.txt newname.txt
+# Steg 1: Skapa app-versioner
+mkdir -p /tmp/deploy/releases/v1.0
+mkdir -p /tmp/deploy/releases/v2.0
+echo "Version 1.0" > /tmp/deploy/releases/v1.0/index.html
+echo "Version 2.0" > /tmp/deploy/releases/v2.0/index.html
 
-# Flytta till katalog
-mv file.txt /path/to/directory/
+# Steg 2: Skapa initial symlink (v1.0 är live)
+ln -s /tmp/deploy/releases/v1.0 /tmp/deploy/current
 
-# Flytta och byt namn
-mv file.txt /path/to/directory/newname.txt
+# Steg 3: Verifiera
+cat /tmp/deploy/current/index.html
+# Output: Version 1.0
 
-# Flytta flera filer
-mv file1.txt file2.txt /destination/
+# Steg 4: Deploy v2.0 (atomisk switch!)
+ln -sfn /tmp/deploy/releases/v2.0 /tmp/deploy/current
 
-# Flytta katalog
-mv source_dir/ /new/location/
+# Steg 5: Verifiera ny version
+cat /tmp/deploy/current/index.html
+# Output: Version 2.0
 
-# Interactive
-mv -i file.txt /destination/
-
-# Force
-mv -f file.txt /destination/
-
-# Backup before overwrite
-mv -b file.txt /destination/    # Skapar file.txt~
-
-# Verbose
-mv -v file.txt /destination/
+# Steg 6: Rollback till v1.0
+ln -sfn /tmp/deploy/releases/v1.0 /tmp/deploy/current
 ```
 
-**Pro Tip:** `mv` är atomiskt på samma filsystem — det ändrar bara metadata, inte data. Perfekt för:
+**Expected output:**
+Du har nu en fungerande blue-green deployment setup där du kan byta version atomiskt!
+
+---
+
+## AI-coach
+
+"Excellent! Du har just implementerat samma deployment-strategi som används av Netflix, Spotify och andra storföretag. Symlink-switchen är atomisk — det finns ingen tidpunkt då 'current' pekar på ingenting. Detta är grunden för zero-downtime deploys!"
+
+---
+
+## AI-diagnostic
+
+- "ln: failed to create symbolic link" — Du glömde -f (force) flaggan. Symlinken finns redan. Använd `ln -sfn` för att ersätta.
+- "rm: cannot remove directory" — Du glömde -r (recursive). `rm -r directory/` tar bort kataloger.
+- "mkdir: cannot create directory: No such file" — Parent-katalogen finns inte. Använd `mkdir -p` för att skapa alla nivåer.
+- "cp: omitting directory" — Du försöker kopiera en katalog utan -r flaggan. Använd `cp -r` eller `cp -a`.
+
+---
+
+## AI-playbook
+
+**Deployment:** Använd symlinks för releases: `/app/releases/v1.2.3` + `/app/current -> releases/v1.2.3`. Deploy ny version, testa, byt symlink atomiskt.
+**Backup:** Alltid `cp -a` för att bevara permissions, timestamps och symlinks. Verifiera med `diff -r`.
+**Cleanup:** Aldrig `rm -rf $VAR/*` — om $VAR är tom blir det `rm -rf /*`. Använd `${VAR:?}` för att fånga tomma variabler.
+
+---
+
+## Said förklarar
+
+Tänk på filsystemet som ett kontorsskåp:
+
+**touch** är som att sätta en tom mapp i skåpet — mappen finns men är tom.
+**mkdir** är som att sätta in en ny låda — och med `-p` sätter du in lådor inuti lådor automatiskt.
+**cp** är en kopiator — `-a` är "archive mode" som kopierar ALLT inklusive stämplar och anteckningar.
+**mv** är som att flytta en mapp till en annan låda — eller bara byta etikett (rename).
+**rm** är en dokumentförstörare — `-rf` är turboläge utan bekräftelse. FARLIGT!
+
+**Hard link** är som två etiketter på SAMMA mapp — raderar du en finns mappen kvar via den andra.
+**Soft link** är som en post-it som säger "mappen finns i låda 3" — flyttar någon mappen blir post-it:n värdelös.
+
+---
+
+## Kommandon
+
 ```bash
-# Atomisk deploy
-mv /tmp/new_config.yaml /etc/app/config.yaml
+# Skapa
+touch file.txt               # Skapa tom fil
+mkdir -p path/to/dir         # Skapa kataloger (med parents)
+
+# Kopiera
+cp file.txt copy.txt         # Kopiera fil
+cp -a source/ dest/          # Kopiera allt (archive mode)
+cp -r dir/ newdir/           # Kopiera katalog rekursivt
+
+# Flytta/Byt namn
+mv old.txt new.txt           # Byt namn
+mv file.txt /path/           # Flytta fil
+
+# Ta bort (FÖRSIKTIGT!)
+rm file.txt                  # Ta bort fil
+rm -rf directory/            # Ta bort katalog (FARLIGT!)
+rm -i *.log                  # Interaktiv (frågar först)
+
+# Länkar
+ln file.txt hardlink.txt     # Hard link
+ln -s /path/to/file symlink  # Soft link (symlink)
+ln -sfn target symlink       # Ersätt symlink atomiskt
 ```
 
 ---
 
-## Ta bort filer och kataloger
+## Troubleshooting
 
-### rm — Remove (FARLIGT!)
-
-```bash
-# Ta bort fil
-rm file.txt
-
-# Ta bort flera filer
-rm file1.txt file2.txt file3.txt
-
-# Ta bort med wildcard
-rm *.log
-
-# Ta bort katalog rekursivt (-r = recursive)
-rm -r directory/
-
-# Force (ingen fråga, ignorera icke-existerande)
-rm -f file.txt
-
-# Den FARLIGA kombinationen
-rm -rf directory/          # Tar bort ALLT utan att fråga
-
-# Interactive (säkrare)
-rm -i file.txt             # Frågar för varje fil
-
-# Interactive för mer än 3 filer
-rm -I *.txt
-
-# Verbose
-rm -v file.txt
-```
-
-### ⚠️ rm -rf VARNINGAR
-
-```bash
-# ALDRIG gör detta:
-rm -rf /                   # Tar bort ALLT (root protection finns nu)
-rm -rf /*                  # Tar bort allt i root
-rm -rf $UNDEFINED_VAR/*    # Om variabeln är tom = rm -rf /*
-
-# SÄKRA MÖNSTER:
-# Alltid använd fullständig path:
-rm -rf /var/log/myapp/temp/*
-
-# Dubbelkolla variabler:
-[ -n "$DIR" ] && rm -rf "$DIR"/*
-
-# Eller använd :? för att fånga tom variabel
-rm -rf "${DIR:?Variable not set}"/*
-```
-
-### rmdir — Ta bort tomma kataloger
-
-```bash
-# Ta bort tom katalog
-rmdir empty_directory/
-
-# Ta bort parent directories om tomma
-rmdir -p path/to/empty/dirs/
-```
+- **"rm: cannot remove: Permission denied"** — Du äger inte filen eller har inte write-permission på katalogen. Använd `sudo` eller ändra permissions.
+- **"cp: omitting directory"** — Lägg till `-r` för att kopiera kataloger rekursivt.
+- **"Symlink fungerade igår men inte idag"** — Target har flyttats eller raderats. Kolla med `ls -la symlink` vart den pekar, sedan `ls -la target`.
+- **"mkdir: File exists"** — Katalogen finns redan. Använd `mkdir -p` som ignorerar om den redan finns.
+- **"rm -rf gjorde ingenting"** — Förmodligen permission denied. Kolla att du har rätt att ta bort filerna.
 
 ---
 
-## Länkar (Hard & Soft)
+## Key Takeaways
 
-### Förstå Inodes
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    INODE (metadata)                         │
-├─────────────────────────────────────────────────────────────┤
-│  Inode #: 12345                                            │
-│  Type: regular file                                        │
-│  Permissions: -rw-r--r--                                   │
-│  Owner: user                                               │
-│  Size: 4096 bytes                                          │
-│  Pointers to data blocks: [block1, block2, ...]            │
-└─────────────────────────────────────────────────────────────┘
-           │                          │
-           │                          │
-    ┌──────┴──────┐            ┌──────┴──────┐
-    │  file.txt   │            │  link.txt   │
-    │  (filename) │            │ (hard link) │
-    └─────────────┘            └─────────────┘
-```
-
-### Hard Links
-
-Ett hard link är ett ANNAT NAMN för samma inode (samma data).
-
-```bash
-# Skapa hard link
-ln original.txt hardlink.txt
-
-# Verifiera (samma inode nummer)
-ls -li original.txt hardlink.txt
-# 12345 -rw-r--r-- 2 user group 100 Dec 1 original.txt
-# 12345 -rw-r--r-- 2 user group 100 Dec 1 hardlink.txt
-#   ^                ^
-#   Samma inode     Link count = 2
-```
-
-**Hard link egenskaper:**
-- Delar samma inode → exakt samma data
-- Om du raderar originalet finns datan kvar (så länge en link finns)
-- Kan INTE korsa filsystem
-- Kan INTE länka till kataloger (undantag: . och ..)
-
-### Soft Links (Symlinks)
-
-Ett soft link är en PEKARE till ett filnamn (som Windows-genvägar).
-
-```bash
-# Skapa symlink
-ln -s /path/to/original.txt symlink.txt
-
-# Skapa symlink med relativ path
-ln -s ../config/app.yaml current_config.yaml
-
-# Skapa symlink till katalog
-ln -s /var/log/nginx logs
-
-# Verifiera
-ls -l symlink.txt
-# lrwxrwxrwx 1 user group 20 Dec 1 symlink.txt -> /path/to/original.txt
-```
-
-**Soft link egenskaper:**
-- Pekar på ett FILNAMN, inte inode
-- Kan korsa filsystem
-- Kan länka till kataloger
-- Blir "broken" om target raderas
-
-### Praktiska symlink-mönster
-
-```bash
-# Versionshantering med symlinks
-ln -s myapp-1.2.3 myapp-current
-# Uppgradera:
-ln -sfn myapp-1.2.4 myapp-current   # -n = no-dereference for dirs
-
-# Config-hantering
-ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
-
-# Snabbåtkomst
-ln -s /var/log/application logs
-```
-
----
-
-## Avancerade operationer
-
-### dd — Disk/Data Duplicator
-
-`dd` kopierar data på låg nivå. Kraftfullt men farligt.
-
-```bash
-# Skapa fil med specifik storlek
-dd if=/dev/zero of=testfile bs=1M count=100
-# 100 MB fil fylld med nollor
-
-# Skapa ISO från CD
-dd if=/dev/cdrom of=backup.iso
-
-# Klona hel disk (FÖRSIKTIGT!)
-dd if=/dev/sda of=/dev/sdb bs=64K status=progress
-
-# Wipe disk (DESTRUKTIVT!)
-dd if=/dev/zero of=/dev/sda bs=1M status=progress
-```
-
-**dd parametrar:**
-- `if=` : Input file
-- `of=` : Output file
-- `bs=` : Block size
-- `count=` : Antal block
-- `status=progress` : Visa progress
-
----
-
-## Praktiska Övningar
-
-### Övning 1: Katalogstruktur
-
-```bash
-# 1. Skapa projektstruktur
-mkdir -p myproject/{src,tests,docs,config}
-touch myproject/src/main.py
-touch myproject/tests/test_main.py
-touch myproject/README.md
-
-# 2. Verifiera
-tree myproject/
-
-# 3. Kopiera hela strukturen
-cp -a myproject/ myproject_backup/
-```
-
-### Övning 2: Symlinks
-
-```bash
-# 1. Skapa versioner
-mkdir -p versions/app-{1.0,1.1,1.2}
-echo "v1.0" > versions/app-1.0/version.txt
-echo "v1.1" > versions/app-1.1/version.txt
-echo "v1.2" > versions/app-1.2/version.txt
-
-# 2. Skapa current symlink
-ln -s app-1.2 versions/current
-
-# 3. Läs version
-cat versions/current/version.txt
-
-# 4. "Uppgradera" till ny version
-ln -sfn app-1.1 versions/current
-cat versions/current/version.txt
-```
-
-### Övning 3: Säker rensning
-
-```bash
-# Skapa testfiler
-mkdir -p /tmp/cleanup_test
-touch /tmp/cleanup_test/file{1..10}.log
-touch /tmp/cleanup_test/keep.txt
-
-# Säker rensning (bara .log filer)
-find /tmp/cleanup_test -name "*.log" -type f -delete
-
-# Verifiera
-ls /tmp/cleanup_test/
-```
-
----
-
-## Sammanfattning
-
-| Kommando | Användning |
-|----------|------------|
-| `touch` | Skapa tom fil / uppdatera tidsstämpel |
-| `mkdir -p` | Skapa katalog(er) |
-| `cp -a` | Kopiera (archive mode) |
-| `mv` | Flytta / byt namn |
-| `rm -rf` | Ta bort rekursivt (VARNING!) |
-| `ln` | Skapa hard link |
-| `ln -s` | Skapa soft link (symlink) |
-| `dd` | Lågnivå-kopiering |
-
----
-
-## Nästa Steg
-
-Du kan nu manipulera filer som ett proffs. Nästa node: **File Permissions** — kontrollera vem som får göra vad med dina filer.
+1. **mkdir -p** alltid i scripts — skapar alla parent-kataloger automatiskt
+2. **cp -a** för backups — bevarar permissions, timestamps, och symlinks
+3. **rm -rf är farligt** — dubbelkolla ALLTID path innan du kör
+4. **Symlinks för deployment** — atomisk switch mellan versioner
+5. **Hard links delar data** — filen finns kvar tills ALLA länkar är borta
 '''
 }
 
