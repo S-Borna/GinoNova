@@ -75,7 +75,7 @@ def get_linux_v2_data():
     from src.db.seeds.skillsmaps.linux.node_3_fileops_v2 import LINUX_NODE_3_FILEOPS_V2
     from src.db.seeds.skillsmaps.linux.node_4_permissions_v2 import LINUX_NODE_4_PERMISSIONS_V2
     from src.db.seeds.skillsmaps.linux.node_5_textproc_v2 import LINUX_NODE_5_TEXTPROC_V2
-    
+
     return [
         LINUX_NODE_1_PROCESS_V2,
         LINUX_NODE_2_FILESYSTEM_V2,
@@ -98,12 +98,12 @@ def extract_flashcards_from_node(node: dict, module_slug: str) -> List[Flashcard
     """Extract flashcards from a V2 node"""
     flashcards = []
     lesson_title = node.get("title", "Unknown")
-    
+
     for section in node.get("sections", []):
         if section.get("type") == "quiz":
             content = section.get("content", {})
             questions = content.get("questions", {})
-            
+
             for i, fc in enumerate(questions.get("flashcards", [])):
                 flashcards.append(Flashcard(
                     id=f"{module_slug}-{node.get('node_id', 0)}-fc-{i}",
@@ -112,7 +112,7 @@ def extract_flashcards_from_node(node: dict, module_slug: str) -> List[Flashcard
                     module_slug=module_slug,
                     lesson_title=lesson_title
                 ))
-    
+
     return flashcards
 
 
@@ -120,12 +120,12 @@ def extract_quiz_from_node(node: dict, module_slug: str) -> List[QuizQuestion]:
     """Extract multiple choice questions from a V2 node"""
     questions = []
     lesson_title = node.get("title", "Unknown")
-    
+
     for section in node.get("sections", []):
         if section.get("type") == "quiz":
             content = section.get("content", {})
             quiz_questions = content.get("questions", {})
-            
+
             for i, q in enumerate(quiz_questions.get("multiple_choice", [])):
                 questions.append(QuizQuestion(
                     id=f"{module_slug}-{node.get('node_id', 0)}-mc-{i}",
@@ -136,7 +136,7 @@ def extract_quiz_from_node(node: dict, module_slug: str) -> List[QuizQuestion]:
                     module_slug=module_slug,
                     lesson_title=lesson_title
                 ))
-    
+
     return questions
 
 
@@ -166,18 +166,18 @@ STUDY_MODULES = {
 async def list_study_modules():
     """Get all modules available for study with flashcards/quiz"""
     result = []
-    
+
     for slug, module_info in STUDY_MODULES.items():
         try:
             nodes = module_info["get_data"]()
-            
+
             flashcard_count = 0
             quiz_count = 0
-            
+
             for node in nodes:
                 flashcard_count += len(extract_flashcards_from_node(node, slug))
                 quiz_count += len(extract_quiz_from_node(node, slug))
-            
+
             result.append(StudyModule(
                 slug=slug,
                 title=module_info["title"],
@@ -190,7 +190,7 @@ async def list_study_modules():
         except Exception as e:
             print(f"Error loading module {slug}: {e}")
             continue
-    
+
     return result
 
 
@@ -202,22 +202,22 @@ async def get_study_module(module_slug: str):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Module '{module_slug}' not found"
         )
-    
+
     module_info = STUDY_MODULES[module_slug]
     nodes = module_info["get_data"]()
-    
+
     lessons = []
     for node in nodes:
         flashcards = extract_flashcards_from_node(node, module_slug)
         quiz_questions = extract_quiz_from_node(node, module_slug)
-        
+
         lessons.append(StudyLesson(
             id=f"{module_slug}-{node.get('node_id', 0)}",
             title=node.get("title", "Unknown"),
             flashcard_count=len(flashcards),
             quiz_count=len(quiz_questions)
         ))
-    
+
     return StudyModuleDetail(
         slug=module_slug,
         title=module_info["title"],
@@ -239,30 +239,30 @@ async def get_flashcards(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Module '{module_slug}' not found"
         )
-    
+
     module_info = STUDY_MODULES[module_slug]
     nodes = module_info["get_data"]()
-    
+
     # Parse lesson filter
     lesson_filter = None
     if lessons:
         lesson_filter = set(lessons.split(","))
-    
+
     all_flashcards = []
     for node in nodes:
         lesson_id = f"{module_slug}-{node.get('node_id', 0)}"
-        
+
         # Skip if not in filter
         if lesson_filter and lesson_id not in lesson_filter:
             continue
-        
+
         flashcards = extract_flashcards_from_node(node, module_slug)
         all_flashcards.extend(flashcards)
-    
+
     # Shuffle if requested
     if shuffle:
         random.shuffle(all_flashcards)
-    
+
     return FlashcardsResponse(
         flashcards=all_flashcards,
         total=len(all_flashcards)
@@ -281,30 +281,30 @@ async def get_quiz(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Module '{module_slug}' not found"
         )
-    
+
     module_info = STUDY_MODULES[module_slug]
     nodes = module_info["get_data"]()
-    
+
     # Parse lesson filter
     lesson_filter = None
     if lessons:
         lesson_filter = set(lessons.split(","))
-    
+
     all_questions = []
     for node in nodes:
         lesson_id = f"{module_slug}-{node.get('node_id', 0)}"
-        
+
         # Skip if not in filter
         if lesson_filter and lesson_id not in lesson_filter:
             continue
-        
+
         questions = extract_quiz_from_node(node, module_slug)
         all_questions.extend(questions)
-    
+
     # Shuffle if requested
     if shuffle:
         random.shuffle(all_questions)
-    
+
     return QuizResponse(
         questions=all_questions,
         total=len(all_questions)

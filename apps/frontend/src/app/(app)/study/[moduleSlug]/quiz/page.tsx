@@ -2,7 +2,7 @@
 
 /**
  * Multiple Choice Quiz Study Mode
- * 
+ *
  * Test knowledge with questions and answers
  */
 
@@ -29,7 +29,7 @@ export default function QuizPage() {
     const params = useParams()
     const searchParams = useSearchParams()
     const moduleSlug = params?.moduleSlug as string || ""
-    
+
     const [questions, setQuestions] = useState<QuizQuestion[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -47,21 +47,21 @@ export default function QuizPage() {
     async function fetchQuiz() {
         try {
             setLoading(true)
-            
+
             // Get lessons and shuffle params
             const lessons = searchParams?.get("lessons") || ""
             const shuffle = searchParams?.get("shuffle") === "true"
-            
+
             const url = new URL(`${API_BASE_URL}/api/study/modules/${moduleSlug}/quiz`)
             if (lessons) url.searchParams.set("lessons", lessons)
             if (shuffle) url.searchParams.set("shuffle", "true")
-            
+
             const res = await fetch(url.toString())
             if (!res.ok) throw new Error("Failed to fetch quiz")
-            
+
             const data = await res.json()
             setQuestions(data.questions)
-            
+
             // Get module title
             const moduleRes = await fetch(`${API_BASE_URL}/api/study/modules/${moduleSlug}`)
             if (moduleRes.ok) {
@@ -82,7 +82,7 @@ export default function QuizPage() {
 
     function confirmAnswer() {
         if (selectedAnswer === null) return
-        
+
         const isCorrect = selectedAnswer === questions[currentIndex].correct
         if (isCorrect) {
             setScore(prev => prev + 1)
@@ -147,7 +147,7 @@ export default function QuizPage() {
                     <div className="mb-8">
                         <div className={cn(
                             "p-6 rounded-xl mb-4",
-                            isCorrect 
+                            isCorrect
                                 ? "bg-emerald-500/10 border border-emerald-500/30"
                                 : "bg-red-500/10 border border-red-500/30"
                         )}>
@@ -172,12 +172,12 @@ export default function QuizPage() {
                     {/* Final Score */}
                     <div className="text-center py-12">
                         <h1 className="text-3xl font-bold mb-4">Quiz Klart!</h1>
-                        
+
                         <div className={cn(
                             "w-32 h-32 rounded-full mx-auto mb-6",
                             "flex items-center justify-center",
                             "text-4xl font-bold",
-                            finalPercentage >= 80 
+                            finalPercentage >= 80
                                 ? "bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/30"
                                 : finalPercentage >= 60
                                     ? "bg-yellow-500/20 text-yellow-400 border-2 border-yellow-500/30"
@@ -189,9 +189,9 @@ export default function QuizPage() {
                         <p className="text-xl text-zinc-300 mb-2">
                             {finalScore} av {questions.length} rätt
                         </p>
-                        
+
                         <p className="text-zinc-500 mb-8">
-                            {finalPercentage >= 80 
+                            {finalPercentage >= 80
                                 ? "Utmärkt! Du har koll på materialet! 🎉"
                                 : finalPercentage >= 60
                                     ? "Bra jobbat! Lite mer övning så sitter det!"
