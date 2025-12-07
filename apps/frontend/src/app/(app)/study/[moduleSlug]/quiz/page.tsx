@@ -8,7 +8,7 @@
  */
 
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -27,7 +27,7 @@ interface QuizQuestion {
     lesson_title: string
 }
 
-export default function QuizPage() {
+function QuizContent() {
     const params = useParams()
     const searchParams = useSearchParams()
     const moduleSlug = params?.moduleSlug as string || ""
@@ -475,5 +475,21 @@ export default function QuizPage() {
                 </div>
             )}
         </div>
+    )
+}
+
+/* ============================================================================
+   EXPORT WITH SUSPENSE
+   ============================================================================ */
+
+export default function QuizPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500" />
+            </div>
+        }>
+            <QuizContent />
+        </Suspense>
     )
 }

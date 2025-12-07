@@ -8,7 +8,7 @@
  */
 
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -25,7 +25,7 @@ interface Flashcard {
     lesson_title: string
 }
 
-export default function FlashcardsPage() {
+function FlashcardsContent() {
     const params = useParams()
     const searchParams = useSearchParams()
     const moduleSlug = params?.moduleSlug as string || ""
@@ -335,5 +335,21 @@ export default function FlashcardsPage() {
                 </div>
             )}
         </div>
+    )
+}
+
+/* ============================================================================
+   EXPORT WITH SUSPENSE
+   ============================================================================ */
+
+export default function FlashcardsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500" />
+            </div>
+        }>
+            <FlashcardsContent />
+        </Suspense>
     )
 }
