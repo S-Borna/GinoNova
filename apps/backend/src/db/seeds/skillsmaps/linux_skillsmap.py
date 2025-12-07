@@ -213,374 +213,154 @@ NODE_02_FILE_SYSTEM_NAVIGATION = {
     ],
     "content": """# File System Navigation
 
-## Varför detta är kritiskt
+---
 
-> "The Linux file system is not just folders and files — it's the operating system's central nervous system. Every configuration, every log, every program lives in a predictable location. Master the filesystem, and you master Linux."
+## Vad lär du dig?
+
+- Navigera Linux-filsystemet snabbt och effektivt med cd, ls, pwd
+- Förstå FHS (Filesystem Hierarchy Standard) — var allt ligger
+- Hitta filer med find och locate — två olika strategier
+- Identifiera filtyper och metadata med file och stat
+- Använda which, whereis och type för att hitta kommandon
 
 ---
 
-## FHS — Filesystem Hierarchy Standard
+## Varför viktigt i DevOps?
 
-Linux följer FHS (Filesystem Hierarchy Standard). Alla distros har samma grundstruktur:
-
-```
-/
-├── bin/        → Essential binaries (ls, cp, mv)
-├── boot/       → Boot files, kernel
-├── dev/        → Device files
-├── etc/        → Configuration files (etcetera)
-├── home/       → User home directories
-├── lib/        → Shared libraries
-├── media/      → Removable media mount points
-├── mnt/        → Temporary mount points
-├── opt/        → Optional/third-party software
-├── proc/       → Virtual filesystem for processes
-├── root/       → Root user's home
-├── run/        → Runtime data
-├── sbin/       → System binaries (admin commands)
-├── srv/        → Service data
-├── sys/        → Virtual filesystem for kernel
-├── tmp/        → Temporary files
-├── usr/        → User programs and data
-│   ├── bin/    → User binaries
-│   ├── lib/    → User libraries
-│   ├── local/  → Locally installed software
-│   └── share/  → Shared data (docs, icons)
-└── var/        → Variable data (logs, caches)
-    ├── log/    → Log files
-    ├── cache/  → Application caches
-    └── www/    → Web server files
-```
-
-### DevOps-kritiska directories
-
-| Directory | Vad du hittar där | Varför det spelar roll |
-|-----------|-------------------|------------------------|
-| `/etc` | Konfiguration | Alla app-configs |
-| `/var/log` | Loggar | Debugging, monitoring |
-| `/tmp` | Temp-filer | Rensar vid reboot |
-| `/opt` | Third-party apps | Docker, custom apps |
-| `/home` | Användardata | Backup target |
+Som DevOps-ingenjör spenderar du majoriteten av din tid i terminalen. Du behöver hitta konfigurationsfiler i /etc, analysera loggar i /var/log, deploya till /opt eller /srv, och felsöka i /tmp. Om du inte kan navigera snabbt slösar du tid vid varje incident. Skillnaden mellan en junior och senior är ofta hur snabbt de kan röra sig i filsystemet.
 
 ---
 
-## Grundläggande Navigation
+## Vad händer om du inte kan detta i produktion?
 
-### pwd — Print Working Directory
-
-```bash
-# Var är jag?
-pwd
-# /home/username
-
-# Alltid absolut sökväg
-```
-
-### cd — Change Directory
-
-```bash
-# Gå till specifik katalog
-cd /var/log
-
-# Gå hem
-cd          # eller
-cd ~        # eller
-cd $HOME
-
-# Gå till föregående katalog
-cd -
-
-# Gå upp ett steg
-cd ..
-
-# Gå upp två steg
-cd ../..
-
-# Relativ vs absolut
-cd documents        # Relativ (från nuvarande position)
-cd /home/user/documents  # Absolut (från root)
-```
-
-**Pro Tip:** Tab-completion fungerar med `cd`. Skriv första bokstäverna och tryck Tab!
-
-### ls — List Directory Contents
-
-```bash
-# Grundläggande
-ls
-
-# Alla filer (inklusive dolda)
-ls -a
-
-# Long format (detaljer)
-ls -l
-
-# Human-readable storlekar
-ls -lh
-
-# Sortera på tid (nyast först)
-ls -lt
-
-# Sortera på storlek (störst först)
-ls -lS
-
-# Rekursiv (alla subdirectories)
-ls -R
-
-# Kombinera vanliga flaggor
-ls -lah
-```
-
-### Förstå ls -l output
-
-```
--rw-r--r-- 1 user group 4.0K Dec  1 10:30 file.txt
-│├──┼──┼──┤ │  │    │     │      │         │
-││  │  │  │ │  │    │     │      │         └── Filename
-││  │  │  │ │  │    │     │      └── Modification time
-││  │  │  │ │  │    │     └── Size
-││  │  │  │ │  │    └── Group owner
-││  │  │  │ │  └── User owner
-││  │  │  │ └── Hard link count
-││  │  │  └── Others permissions (r-x)
-││  │  └── Group permissions (r-x)
-││  └── User permissions (rwx)
-│└── File type (- = file, d = dir, l = link)
-```
+- Du slösar minuter på att hitta config-filer medan sajten är nere
+- Du missar kritiska loggar för att du inte vet var de ligger
+- Du förstår inte varför en tjänst inte hittar sina filer (relative vs absolute paths)
+- Du kan inte snabbt verifiera vad som deployats och var
+- Incident-tiden ökar för varje sekund du fumlar i filsystemet
 
 ---
 
-## Avancerad Navigation
+## Mini-lab
 
-### tree — Visa katalogstruktur
+**Mission:** Hitta alla nginx-relaterade konfigurationsfiler och loggar på en server.
 
+**Steg:**
+1. Hitta var nginx-binären ligger
+2. Hitta alla nginx config-filer i /etc
+3. Hitta nginx-loggar
+4. Skapa en snabblänk för framtida åtkomst
+
+**Kommandon:**
 ```bash
-# Installation
-sudo apt install tree    # Ubuntu/Debian
-brew install tree        # macOS
+# Steg 1: Var ligger nginx?
+which nginx
+# /usr/sbin/nginx
 
-# Grundläggande
-tree
+# Steg 2: Hitta alla config-filer
+find /etc -name "*nginx*" -type f 2>/dev/null
+# /etc/nginx/nginx.conf
+# /etc/nginx/sites-available/default
 
-# Begränsa djup
-tree -L 2
+# Steg 3: Hitta loggar
+ls -la /var/log/nginx/
+# access.log  error.log
 
-# Visa bara directories
-tree -d
-
-# Inkludera dolda filer
-tree -a
-
-# Visa storlekar
-tree -sh
-
-# Ignorera mönster
-tree -I "node_modules|.git"
+# Steg 4: Skapa snabbåtkomst
+alias nginx-logs='cd /var/log/nginx && ls -lah'
+alias nginx-conf='cd /etc/nginx && ls -lah'
 ```
 
-### find — Hitta filer
+**Expected output:**
+Du har nu snabbkommandon för att hoppa direkt till nginx-config och loggar.
 
-`find` är det mest kraftfulla sökverktyget.
+---
+
+## AI-coach
+
+"Utmärkt! Du använde rätt verktyg för rätt jobb: `which` för att hitta binären, `find` för att söka config-filer, och `ls` för att lista loggar. Du skapade också alias för att snabba upp framtida arbete — det är precis vad erfarna DevOps-ingenjörer gör!"
+
+---
+
+## AI-diagnostic
+
+- "Du fick 'Permission denied' — prova `sudo find` eller lägg till `2>/dev/null` för att filtrera bort felmeddelanden."
+- "find hittade ingenting — kontrollera att nginx är installerat med `which nginx`. Om det returnerar tomt är nginx inte installerat."
+- "Du använde `locate` men fick gamla resultat — kör `sudo updatedb` först för att uppdatera databasen."
+
+---
+
+## AI-playbook
+
+**Incident Response:** När en tjänst inte startar, börja alltid med `which <service>` för att verifiera att binären finns, sedan `find /etc -name "*<service>*"` för att hitta config.
+**Deployment:** Verifiera alltid deployen med `ls -la /path/to/deployment` och `stat` för att se timestamps.
+**Debugging:** Använd `find /var/log -name "*.log" -mmin -10` för att hitta loggar modifierade senaste 10 minuterna.
+
+---
+
+## Said förklarar
+
+Tänk på filsystemet som en stad. Root (/) är stadens centrum. Varje stadsdel har ett syfte:
+- **/etc** är stadshuset — alla regler och policies (configs) finns här
+- **/var/log** är polisstation — alla rapporter (loggar) hamnar här
+- **/home** är bostadsområdet — varje användare har sitt hus
+- **/tmp** är en parkeringsplats — saker försvinner vid midnatt (reboot)
+- **/opt** är industriområdet — tredjepartsprogram installeras här
+
+`find` är som att gå runt och leta fysiskt — tar tid men du hittar allt. `locate` är som att fråga receptionen som har en förteckning — snabbt men kanske inte uppdaterat.
+
+---
+
+## Kommandon
 
 ```bash
-# Grundläggande syntax
-find [path] [options] [expression]
+# Navigation
+pwd                          # Var är jag?
+cd /var/log                  # Gå till specifik plats
+cd -                         # Gå tillbaka till förra katalogen
+cd ~                         # Gå hem
 
-# Hitta fil med exakt namn
-find /home -name "config.yaml"
-
-# Case-insensitive
-find /home -iname "config.yaml"
-
-# Hitta kataloger
-find /var -type d -name "log"
+# Lista filer
+ls -lah                      # Lista allt med detaljer, human-readable
+ls -lt                       # Sortera på tid (nyast först)
+ls -lS                       # Sortera på storlek (störst först)
 
 # Hitta filer
-find /var -type f -name "*.log"
+find /etc -name "*.conf"     # Hitta alla .conf-filer
+find / -type f -size +100M   # Hitta filer större än 100MB
+locate nginx.conf            # Snabbsök i databas
 
-# Hitta filer större än 100MB
-find / -type f -size +100M
+# Hitta kommandon
+which python                 # Var ligger python?
+whereis nginx                # Binär, source, man-page
+type ls                      # Vad är ls? (alias, builtin, etc)
 
-# Hitta filer ändrade senaste 24h
-find /var/log -mtime -1
+# Fil-information
+file /bin/ls                 # Vad för typ av fil?
+stat config.yaml             # Detaljerad metadata
 
-# Hitta filer äldre än 30 dagar
-find /tmp -mtime +30
-
-# Hitta och radera (FÖRSIKTIGT!)
-find /tmp -type f -mtime +30 -delete
-
-# Hitta och kör kommando
-find /var/log -name "*.log" -exec ls -lh {} \\;
-
-# Hitta med permissions
-find / -perm 777 -type f
-```
-
-### locate — Snabb sökning
-
-`locate` använder en databas och är mycket snabbare än `find`.
-
-```bash
-# Installation
-sudo apt install mlocate    # Ubuntu/Debian
-
-# Uppdatera databasen
-sudo updatedb
-
-# Sök
-locate nginx.conf
-
-# Case-insensitive
-locate -i NGINX.CONF
-
-# Begränsa antal resultat
-locate -n 10 nginx
-```
-
-**find vs locate:**
-- `find`: Sök live i filsystemet, långsam men alltid aktuell
-- `locate`: Sök i databas, snabb men kan vara föråldrad
-
----
-
-## Hitta kommandon
-
-### which — Hitta körbar fil
-
-```bash
-# Var ligger python?
-which python
-# /usr/bin/python
-
-# Alla matchningar
-which -a python
-```
-
-### whereis — Hitta binär, source, man
-
-```bash
-whereis nginx
-# nginx: /usr/sbin/nginx /usr/share/nginx /usr/share/man/man8/nginx.8.gz
-```
-
-### type — Vad är kommandot?
-
-```bash
-type ls
-# ls is aliased to `ls --color=auto'
-
-type cd
-# cd is a shell builtin
-
-type find
-# find is /usr/bin/find
+# Katalogstruktur
+tree -L 2 /etc               # Visa trädstruktur, max 2 nivåer
 ```
 
 ---
 
-## Fil-information
+## Troubleshooting
 
-### file — Identifiera filtyp
-
-```bash
-file /bin/ls
-# /bin/ls: ELF 64-bit LSB pie executable...
-
-file /etc/passwd
-# /etc/passwd: ASCII text
-
-file image.jpg
-# image.jpg: JPEG image data...
-
-file mystery_file
-# mystery_file: gzip compressed data...
-```
-
-### stat — Detaljerad fil-metadata
-
-```bash
-stat file.txt
-#   File: file.txt
-#   Size: 4096       Blocks: 8          IO Block: 4096   regular file
-# Device: 802h/2050d Inode: 1234567     Links: 1
-# Access: (0644/-rw-r--r--)  Uid: ( 1000/user)   Gid: ( 1000/user)
-# Access: 2025-12-01 10:30:00
-# Modify: 2025-12-01 09:15:00
-# Change: 2025-12-01 09:15:00
-#  Birth: -
-```
-
-| Tidsstämpel | Betydelse |
-|-------------|-----------|
-| Access (atime) | Senast läst |
-| Modify (mtime) | Senast ändrad (innehåll) |
-| Change (ctime) | Senast ändrad (metadata) |
+- **"No such file or directory"** — Du använde relativ path men är i fel katalog. Använd `pwd` för att kolla var du är, sedan `cd` eller använd absolut path.
+- **"Permission denied" vid find** — Lägg till `2>/dev/null` för att tysta errors, eller använd `sudo` om du behöver söka i skyddade kataloger.
+- **locate hittar inte nya filer** — Databasen är inte uppdaterad. Kör `sudo updatedb` och försök igen.
+- **"Command not found" för tree** — tree är inte alltid installerat. Installera med `sudo apt install tree` (Ubuntu) eller `brew install tree` (Mac).
 
 ---
 
-## Praktiska Övningar
+## Key Takeaways
 
-### Övning 1: Utforska systemet
-
-```bash
-# 1. Gå till rotkatalogen
-cd /
-
-# 2. Lista alla top-level directories
-ls -l
-
-# 3. Hitta alla .conf-filer i /etc
-find /etc -name "*.conf" 2>/dev/null | head -20
-
-# 4. Visa träd för /etc med max 2 nivåer
-tree -L 2 /etc
-```
-
-### Övning 2: Hitta stora filer
-
-```bash
-# 1. Hitta filer större än 50MB
-find / -type f -size +50M 2>/dev/null
-
-# 2. Hitta de 10 största filerna
-find / -type f -exec du -h {} + 2>/dev/null | sort -rh | head -10
-```
-
-### Övning 3: Navigation efficiency
-
-```bash
-# 1. Skapa alias för vanliga directories
-echo 'alias logs="cd /var/log"' >> ~/.bashrc
-echo 'alias etc="cd /etc"' >> ~/.bashrc
-source ~/.bashrc
-
-# 2. Nu kan du bara skriva:
-logs    # → går till /var/log
-```
-
----
-
-## Sammanfattning
-
-| Kommando | Användning |
-|----------|------------|
-| `pwd` | Visa nuvarande katalog |
-| `cd` | Byt katalog |
-| `ls` | Lista innehåll |
-| `tree` | Visa katalogträd |
-| `find` | Sök filer live |
-| `locate` | Snabbsök i databas |
-| `which` | Hitta körbar |
-| `whereis` | Hitta bin/source/man |
-| `file` | Identifiera filtyp |
-| `stat` | Detaljerad metadata |
-
----
-
-## Nästa Steg
-
-Du kan nu navigera Linux-filsystemet effektivt. Nästa node: **File Operations** — lär dig manipulera filer och kataloger.
+1. **FHS** = Filesystem Hierarchy Standard — lär dig de viktiga: /etc (config), /var/log (loggar), /tmp (temp), /opt (apps)
+2. **pwd** först — vet alltid var du är innan du gör något
+3. **find vs locate** — find söker live (alltid aktuellt), locate söker i databas (snabbt men kan vara gammalt)
+4. **ls -la** är din bästa vän — visar allt inklusive dolda filer och permissions
+5. **Absoluta paths i scripts** — använd aldrig relativa paths i automation
 """
 }
 
