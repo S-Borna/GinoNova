@@ -69,12 +69,27 @@ class QuizResponse(BaseModel):
 # Import V2 nodes to extract quiz content
 
 def get_linux_v2_data():
-    """Get Linux V2 nodes with quiz data"""
+    """Get all 20 Linux V2 nodes with quiz data"""
     from src.db.seeds.skillsmaps.linux.node_1_process_v2 import LINUX_NODE_1_PROCESS_V2
     from src.db.seeds.skillsmaps.linux.node_2_filesystem_v2 import LINUX_NODE_2_FILESYSTEM_V2
     from src.db.seeds.skillsmaps.linux.node_3_fileops_v2 import LINUX_NODE_3_FILEOPS_V2
     from src.db.seeds.skillsmaps.linux.node_4_permissions_v2 import LINUX_NODE_4_PERMISSIONS_V2
     from src.db.seeds.skillsmaps.linux.node_5_textproc_v2 import LINUX_NODE_5_TEXTPROC_V2
+    from src.db.seeds.skillsmaps.linux.node_6_editors_v2 import LINUX_NODE_6_EDITORS_V2
+    from src.db.seeds.skillsmaps.linux.node_7_pipes_v2 import LINUX_NODE_7_PIPES_V2
+    from src.db.seeds.skillsmaps.linux.node_8_users_v2 import LINUX_NODE_8_USERS_V2
+    from src.db.seeds.skillsmaps.linux.node_9_packages_v2 import LINUX_NODE_9_PACKAGES_V2
+    from src.db.seeds.skillsmaps.linux.node_10_services_v2 import LINUX_NODE_10_SERVICES_V2
+    from src.db.seeds.skillsmaps.linux.node_11_storage_v2 import LINUX_NODE_11_STORAGE_V2
+    from src.db.seeds.skillsmaps.linux.node_12_networking_v2 import LINUX_NODE_12_NETWORKING_V2
+    from src.db.seeds.skillsmaps.linux.node_13_dns_v2 import LINUX_NODE_13_DNS_V2
+    from src.db.seeds.skillsmaps.linux.node_14_firewall_v2 import LINUX_NODE_14_FIREWALL_V2
+    from src.db.seeds.skillsmaps.linux.node_15_ssh_v2 import LINUX_NODE_15_SSH_V2
+    from src.db.seeds.skillsmaps.linux.node_16_archiving_v2 import LINUX_NODE_16_ARCHIVING_V2
+    from src.db.seeds.skillsmaps.linux.node_17_cron_v2 import LINUX_NODE_17_CRON_V2
+    from src.db.seeds.skillsmaps.linux.node_18_logs_v2 import LINUX_NODE_18_LOGS_V2
+    from src.db.seeds.skillsmaps.linux.node_19_performance_v2 import LINUX_NODE_19_PERFORMANCE_V2
+    from src.db.seeds.skillsmaps.linux.node_20_troubleshooting_v2 import LINUX_NODE_20_TROUBLESHOOTING_V2
 
     return [
         LINUX_NODE_1_PROCESS_V2,
@@ -82,7 +97,42 @@ def get_linux_v2_data():
         LINUX_NODE_3_FILEOPS_V2,
         LINUX_NODE_4_PERMISSIONS_V2,
         LINUX_NODE_5_TEXTPROC_V2,
+        LINUX_NODE_6_EDITORS_V2,
+        LINUX_NODE_7_PIPES_V2,
+        LINUX_NODE_8_USERS_V2,
+        LINUX_NODE_9_PACKAGES_V2,
+        LINUX_NODE_10_SERVICES_V2,
+        LINUX_NODE_11_STORAGE_V2,
+        LINUX_NODE_12_NETWORKING_V2,
+        LINUX_NODE_13_DNS_V2,
+        LINUX_NODE_14_FIREWALL_V2,
+        LINUX_NODE_15_SSH_V2,
+        LINUX_NODE_16_ARCHIVING_V2,
+        LINUX_NODE_17_CRON_V2,
+        LINUX_NODE_18_LOGS_V2,
+        LINUX_NODE_19_PERFORMANCE_V2,
+        LINUX_NODE_20_TROUBLESHOOTING_V2,
     ]
+
+
+def get_bash_v2_data():
+    """Get Bash V2 nodes with quiz data"""
+    try:
+        from src.db.seeds.skillsmaps.bash.node_1_introduction_v2 import NODE_BASH_01_INTRODUCTION_V2
+        from src.db.seeds.skillsmaps.bash.node_2_variables_v2 import NODE_BASH_02_VARIABLES_V2
+        from src.db.seeds.skillsmaps.bash.node_3_conditionals_v2 import NODE_BASH_03_CONDITIONALS_V2
+        from src.db.seeds.skillsmaps.bash.node_4_loops_v2 import NODE_BASH_04_LOOPS_V2
+        from src.db.seeds.skillsmaps.bash.node_5_functions_v2 import NODE_BASH_05_FUNCTIONS_V2
+        return [
+            NODE_BASH_01_INTRODUCTION_V2,
+            NODE_BASH_02_VARIABLES_V2,
+            NODE_BASH_03_CONDITIONALS_V2,
+            NODE_BASH_04_LOOPS_V2,
+            NODE_BASH_05_FUNCTIONS_V2,
+        ]
+    except ImportError as e:
+        print(f"Bash import error: {e}")
+        return []
 
 
 def get_docker_v2_data():
@@ -91,6 +141,27 @@ def get_docker_v2_data():
         from src.db.seeds.skillsmaps.docker.nodes_v2 import ALL_DOCKER_V2_NODES
         return ALL_DOCKER_V2_NODES
     except ImportError:
+        return []
+
+
+def get_kubernetes_v2_data():
+    """Get Kubernetes V2 nodes with quiz data"""
+    try:
+        from src.db.seeds.skillsmaps.kubernetes.block_1_fundamentals_part1 import BLOCK_1_PART_1_NODES
+        from src.db.seeds.skillsmaps.kubernetes.block_1_fundamentals_part2 import BLOCK_1_PART_2_NODES
+        return BLOCK_1_PART_1_NODES + BLOCK_1_PART_2_NODES
+    except ImportError as e:
+        print(f"K8s import error: {e}")
+        return []
+
+
+def get_git_v2_data():
+    """Get Git V2 nodes with quiz data"""
+    try:
+        from src.db.seeds.skillsmaps.git.block_1_fundamentals import GIT_BLOCK_1
+        return GIT_BLOCK_1
+    except ImportError as e:
+        print(f"Git import error: {e}")
         return []
 
 
@@ -150,6 +221,13 @@ STUDY_MODULES = {
         "icon": "Terminal",
         "get_data": get_linux_v2_data
     },
+    "bash-scripting": {
+        "slug": "bash-scripting",
+        "title": "Bash Scripting",
+        "description": "Automatisering med Bash-skript",
+        "icon": "Code",
+        "get_data": get_bash_v2_data
+    },
     "docker-containers": {
         "slug": "docker-containers",
         "title": "Docker & Containers",
@@ -157,26 +235,19 @@ STUDY_MODULES = {
         "icon": "Box",
         "get_data": get_docker_v2_data
     },
-    "bash-scripting": {
-        "slug": "bash-scripting",
-        "title": "Bash Scripting",
-        "description": "Automatisering med Bash-skript",
-        "icon": "Code",
-        "get_data": lambda: []
-    },
     "kubernetes": {
         "slug": "kubernetes",
         "title": "Kubernetes",
         "description": "Container-orkestrering med K8s",
         "icon": "Layers",
-        "get_data": lambda: []
+        "get_data": get_kubernetes_v2_data
     },
     "git-version-control": {
         "slug": "git-version-control",
         "title": "Git & GitHub",
         "description": "Versionshantering och samarbete",
         "icon": "GitBranch",
-        "get_data": lambda: []
+        "get_data": get_git_v2_data
     },
     "aws-cloud": {
         "slug": "aws-cloud",
