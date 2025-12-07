@@ -28,7 +28,7 @@ interface QuizQuestion {
 export default function QuizPage() {
     const params = useParams()
     const searchParams = useSearchParams()
-    const moduleSlug = params.moduleSlug as string
+    const moduleSlug = params?.moduleSlug as string || ""
     
     const [questions, setQuestions] = useState<QuizQuestion[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -49,8 +49,8 @@ export default function QuizPage() {
             setLoading(true)
             
             // Get lessons and shuffle params
-            const lessons = searchParams.get("lessons") || ""
-            const shuffle = searchParams.get("shuffle") === "true"
+            const lessons = searchParams?.get("lessons") || ""
+            const shuffle = searchParams?.get("shuffle") === "true"
             
             const url = new URL(`${API_BASE_URL}/api/study/modules/${moduleSlug}/quiz`)
             if (lessons) url.searchParams.set("lessons", lessons)
