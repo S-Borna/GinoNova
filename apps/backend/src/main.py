@@ -95,11 +95,13 @@ def auto_seed_if_empty():
             task_title = task_data["title"]
 
             # Check if we have ILE content for this task
+            # SKIP ILE for linux-mastery - V3 has its own content
             ile_content = None
-            if task_title == "Understanding File Permissions" or "file permissions" in task_title.lower():
-                ile_content = SAMPLE_PERMISSIONS_TASK
-            elif task_title in MODULE_01_TASKS:
-                ile_content = MODULE_01_TASKS[task_title]
+            if module_data["slug"] != "linux-mastery":
+                if task_title == "Understanding File Permissions" or "file permissions" in task_title.lower():
+                    ile_content = SAMPLE_PERMISSIONS_TASK
+                elif task_title in MODULE_01_TASKS:
+                    ile_content = MODULE_01_TASKS[task_title]
 
             # Use ILE content if available, otherwise use original task data
             if ile_content:
