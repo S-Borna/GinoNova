@@ -1844,173 +1844,517 @@ Port 2222
 """,
         },
         {
-            "title": "Docker Networking",
-            "slug": "docker-networking",
-            "difficulty": "medium",
-            "estimated_minutes": 50,
-            "xp_reward": 85,
-            "content": """# Docker Networking
+            "title": "Hosts och Hostnames",
+            "slug": "hosts-and-hostnames",
+            "difficulty": "easy",
+            "estimated_minutes": 45,
+            "xp_reward": 75,
+            "content": """# Hosts och Hostnames
 
-## Varför behöver du kunna detta?
+## 🎯 Varför host-kunskap är kritiskt för DevOps
 
-Containers behöver prata med varandra och omvärlden. Du måste förstå:
+Host-kunskap är essentiellt för:
 
-- **Olika network drivers** och när du använder vilken
-- **Hur containers hittar varandra** via DNS
-- **Port mapping** för att exponera tjänster
+| Användningsområde | Beskrivning |
+|-------------------|-------------|
+| **Service discovery** | Hitta tjänster i nätverket |
+| **DNS configuration** | Konfigurera namnupplösning |
+| **Load balancing** | Distribuera trafik till rätt servrar |
+| **Container orchestration** | Docker, Kubernetes networking |
+| **Troubleshooting** | Felsöka nätverksproblem |
+| **Service communication** | Tjänster som pratar med varandra |
 
 ---
 
-## Network Drivers
+## 🖥️ Vad är en Host?
+
+### Host Definition
 
 ```bash
-# Bridge (default) - containers på samma host
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🖥️ HOST = VALFRI ENHET PÅ ETT NÄTVERK
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Exempel på hosts:
+# - Datorer
+# - Servrar
+# - Routrar
+# - Skrivare
+# - IoT-enheter
+# - Containers
+# - Virtuella maskiner
+```
+
+### Host Identification
+
+Varje host kan identifieras på flera sätt - tänk på det som olika "namn" för samma enhet:
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔍 OLIKA SÄTT ATT IDENTIFIERA EN HOST
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. IP-adress (192.168.1.100)
+#    → "Gatadressen" - unik nummeradress på nätverket
+#    → Vad datorer använder för att hitta varandra
+
+# 2. Hostname (server.example.com)
+#    → "Människovänligt namn" - lättare att komma ihåg
+#    → DNS konverterar hostname → IP-adress
+
+# 3. MAC-adress (00:1a:2b:3c:4d:5e)
+#    → "Serienumret" - unikt för varje nätverkskort
+#    → Hårdvarunivå, ändras inte
+
+# Analogi:
+# IP-adress    = Gatadressen
+# Hostname     = Namnet på huset
+# MAC-adress   = Serienumret på dörrlåset
+```
+
+---
+
+## 🏷️ Hostnames
+
+### Hostname-typer
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📛 SHORT HOSTNAME
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+hostname
+# Output: server1
+
+# Bara maskinens namn, utan domän
+# Användbart inom samma domän
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 FQDN (Fully Qualified Domain Name)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+hostname -f
+# Output: server1.example.com
+
+# Fullständigt namn = hostname + domän
+# Unikt över hela internet!
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🏢 DOMAIN NAME
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+hostname -d
+# Output: example.com
+
+# Bara domändelen
+# Flera hosts kan tillhöra samma domän
+```
+
+### Sätta hostname
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚙️ ÄNDRA HOSTNAME (Linux systemd)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Sätt short hostname
+sudo hostnamectl set-hostname server1
+
+# Sätt FQDN
+sudo hostnamectl set-hostname server1.example.com
+
+# Verifiera
+hostnamectl
+
+# Alternativ metod (äldre)
+sudo hostname server1
+echo "server1" | sudo tee /etc/hostname
+```
+
+---
+
+## 📁 /etc/hosts-filen
+
+`/etc/hosts` är en lokal "telefonbok" som mappar hostnames till IP-adresser. Den kontrolleras **FÖRE** DNS!
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📖 FORMAT: IP_address   hostname   aliases
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Loopback (alltid med)
+127.0.0.1       localhost
+127.0.0.1       localhost.localdomain
+::1             localhost6
+
+# Egna mappningar
+192.168.1.100   server1.example.com server1
+192.168.1.101   db.example.com db
+10.0.0.50       api.internal api
+
+# Visa innehåll
+cat /etc/hosts
+
+# Testa
+ping server1
+ping db.example.com
+```
+
+### Viktigt om /etc/hosts
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚠️ /etc/hosts KONTROLLERAS FÖRE DNS!
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Om hostname finns i /etc/hosts:
+# → Den IP:n används direkt
+# → DNS tillfrågas INTE
+
+# Användningsområden:
+# ✅ Lokal utveckling
+# ✅ Snabbare åtkomst till vanliga servrar
+# ✅ Temporära overrides
+# ❌ Inte för produktion i stor skala (använd DNS)
+```
+
+---
+
+## 🌐 DNS-upplösning
+
+### Hur DNS fungerar
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 DNS-PROCESSEN STEG FÖR STEG
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. Program begär: server1.example.com
+#    ↓
+# 2. System kollar /etc/hosts FÖRST
+#    ↓
+# 3. Om inte hittad → frågar DNS-server
+#    ↓
+# 4. DNS-server returnerar IP-adress
+#    ↓
+# 5. Program ansluter till IP:n
+
+# Analogi: DNS är som en telefonbok
+# Du slår upp namnet (hostname) för att hitta numret (IP)
+# Sedan ringer du numret!
+```
+
+### DNS Lookup-kommandon
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔍 DNS LOOKUP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Med host (enklast)
+host server1.example.com
+host 192.168.1.100              # Reverse lookup
+
+# Med nslookup
+nslookup server1.example.com
+nslookup 192.168.1.100
+
+# Med dig (mest detaljerat)
+dig server1.example.com
+dig +short server1.example.com  # Bara IP:n
+dig @8.8.8.8 server1.example.com  # Använd specifik DNS
+
+# Med getent (kontrollerar /etc/hosts också)
+getent hosts server1.example.com
+```
+
+### DNS-konfiguration
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚙️ /etc/resolv.conf
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# DNS-servrar
+nameserver 8.8.8.8       # Google DNS
+nameserver 8.8.4.4       # Google DNS backup
+nameserver 1.1.1.1       # Cloudflare DNS
+
+# Sökdomäner (så du kan skriva "server1" istället för "server1.example.com")
+search example.com internal.local
+
+# Visa
+cat /etc/resolv.conf
+
+# Systemd
+systemd-resolve --status
+```
+
+---
+
+## 🔌 Nätverksinterface
+
+### Interface-namn
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔌 INTERFACE-NAMNKONVENTIONER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Traditionellt
+eth0, eth1    # Ethernet
+wlan0         # Wireless
+lo            # Loopback (127.0.0.1)
+
+# Systemd (predictable naming)
+enp3s0        # Ethernet PCI
+wlp2s0        # Wireless PCI
+ens33         # VMware ethernet
+```
+
+### Visa interface-info
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📋 VISA INTERFACE OCH IP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Lista interfaces
+ip link show
+ifconfig                # Äldre
+
+# Visa IP-adresser
+ip addr show
+ip -4 addr show         # Bara IPv4
+
+# Visa routing
+ip route show
+route -n
+```
+
+---
+
+## 🏢 Host-typer
+
+### Server Hosts
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🖥️ SERVRAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+web.example.com     → 192.168.1.10    # Webbserver
+db.example.com      → 192.168.1.20    # Databas
+api.example.com     → 192.168.1.30    # API-server
+```
+
+### Nätverksenheter
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 NÄTVERKSENHETER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+gateway.example.com → 192.168.1.1     # Router/Gateway
+switch1.example.com                    # Switch
+fw.example.com                         # Brandvägg
+```
+
+---
+
+## 🔎 Service Discovery
+
+### Statisk konfiguration
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📌 STATISK CONFIG
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Hårdkodad i config
+DB_HOST=db.example.com
+API_HOST=api.example.com
+
+# /etc/hosts
+192.168.1.20 db.example.com
+192.168.1.30 api.example.com
+```
+
+### DNS-baserad discovery
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 DNS-BASERAD DISCOVERY
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Flera A-records för load balancing
+api.example.com → 192.168.1.30
+api.example.com → 192.168.1.31
+api.example.com → 192.168.1.32
+# DNS roterar mellan dessa (round-robin)
+```
+
+---
+
+## 🐳 Container Hosts
+
+### Docker
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🐳 DOCKER HOSTNAMES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Sätt container hostname
+docker run --hostname mycontainer nginx
+
+# Network alias
+docker run --network-alias db mysql
+
+# Custom network (containers kan nå varandra via namn)
 docker network create mynetwork
-
-# Host - container delar hosts nätverk (ingen isolation)
-docker run --network host nginx
-
-# None - ingen nätverksåtkomst
-docker run --network none alpine
-
-# Overlay - containers över flera hosts (Swarm/Kubernetes)
-docker network create -d overlay myoverlay
+docker run --network mynetwork --name db mysql
+docker run --network mynetwork --name app nginx
+# app kan nå db via "db"
 ```
 
----
-
-## Bridge Network (Default)
+### Kubernetes
 
 ```bash
-# Skapa ett nätverk
-docker network create backend-net
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ☸️ KUBERNETES SERVICE NAMES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Starta containers i nätverket
-docker run -d --name db --network backend-net postgres
-docker run -d --name api --network backend-net myapi
+# Service name = hostname
+# Service: database
 
-# Nu kan api nå db via hostname "db"
-# Inuti api-containern: ping db → fungerar!
+# Kort form (samma namespace)
+database
 
-# Lista nätverk
-docker network ls
-
-# Inspektera nätverk
-docker network inspect backend-net
+# Full FQDN
+database.default.svc.cluster.local
 ```
 
 ---
 
-## Container DNS
+## ☁️ Cloud Hosts
+
+### AWS
 
 ```bash
-# Docker har inbyggd DNS för containers i samma nätverk
-# Hostname = container name
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟠 AWS HOSTNAMES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Exempel: api behöver nå databas
-docker run -d --name postgres --network mynet postgres
-docker run -d --name api --network mynet \\
-    -e DATABASE_URL=postgresql://postgres:5432/db \\
-    myapi
+# Privat DNS
+ip-192-168-1-100.ec2.internal
 
-# Inuti api: "postgres" resolvas automatiskt till rätt IP
+# Publik DNS
+ec2-1-2-3-4.compute-1.amazonaws.com
 ```
 
----
-
-## Port Mapping
+### Azure / GCP
 
 ```bash
-# Exponera port till host
-docker run -p 8080:80 nginx
-#          │    │
-#          │    └── Container port (nginx lyssnar på 80)
-#          └── Host port (du når via localhost:8080)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔵 AZURE
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+vmname.region.cloudapp.azure.com
 
-# Exponera till specifik IP
-docker run -p 127.0.0.1:8080:80 nginx  # Bara localhost
-
-# Random host port
-docker run -p 80 nginx                  # Docker väljer port
-docker port container_name              # Se vilken port
-
-# Flera portar
-docker run -p 80:80 -p 443:443 nginx
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟢 GCP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+instance-name.zone.c.project-id.internal
 ```
 
 ---
 
-## Praktiskt exempel
+## 🧪 Testa host-anslutning
 
 ```bash
-# Scenario: Web app + databas
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📡 PING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ping server1.example.com          # Ping hostname
+ping 192.168.1.100                # Ping IP
+ping -c 4 server1.example.com     # Bara 4 paket
 
-# 1. Skapa nätverk
-docker network create webapp-net
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔀 TRACEROUTE
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+traceroute server1.example.com    # Visa vägen
+tracepath server1.example.com     # Alternativ
 
-# 2. Starta databas (ingen port exponerad utåt!)
-docker run -d \\
-    --name db \\
-    --network webapp-net \\
-    -e POSTGRES_PASSWORD=secret \\
-    postgres
-
-# 3. Starta app som pratar med db internt
-docker run -d \\
-    --name webapp \\
-    --network webapp-net \\
-    -e DATABASE_HOST=db \\
-    -p 8080:8000 \\
-    mywebapp
-
-# Resultat:
-# - webapp nåbar på localhost:8080
-# - db INTE nåbar utifrån (säkrare!)
-# - webapp kan nå db via hostname "db"
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔌 TESTA PORT
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+telnet server1.example.com 80     # Testa port 80
+nc -zv server1.example.com 80     # Netcat
 ```
 
 ---
 
-## Network Troubleshooting
+## ✨ Best Practices
 
 ```bash
-# Se vilka nätverk en container är i
-docker inspect container_name --format='{{.NetworkSettings.Networks}}'
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1️⃣ ANVÄND BESKRIVANDE HOSTNAMES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Se alla containers i ett nätverk
-docker network inspect mynet --format='{{range .Containers}}{{.Name}} {{end}}'
+# ✅ BRA
+web-prod-01.example.com
+db-prod-01.example.com
+api-staging-01.example.com
 
-# Testa connectivity från container
-docker exec webapp ping db
-docker exec webapp curl http://api:8000/health
+# ❌ DÅLIGT
+server1
+host1
+machine1
 
-# Se nätverksstatistik
-docker stats --format "table {{.Name}}\t{{.NetIO}}"
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 2️⃣ NAMNKONVENTION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Format: {service}-{environment}-{number}.{domain}
+# web-prod-01.example.com
+# db-staging-02.example.com
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 3️⃣ ANVÄND DNS I PRODUKTION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# /etc/hosts bara för lokal utveckling
+# DNS för allt annat
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 4️⃣ DOKUMENTERA HOST-MAPPNINGAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Hostname → IP-mappningar
+# - Syfte med varje host
+# - Vilka tjänster som körs
 ```
 
 ---
 
-## Koppla container till flera nätverk
+## ✅ Sammanfattning
 
-```bash
-# Container kan vara i flera nätverk
-docker network connect frontend-net webapp
-docker network connect backend-net webapp
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Host** | Valfri enhet på nätverket |
+| **Hostname** | Människovänligt namn för host |
+| **FQDN** | Fullständigt kvalificerat domännamn |
+| **DNS** | Översätter hostname → IP |
+| **/etc/hosts** | Lokal namnupplösning (före DNS) |
+| **Service discovery** | Hitta tjänster via namn |
 
-# Nu kan webapp prata med båda nätverken
+| Kommando | Användning |
+|----------|------------|
+| `hostname` | Visa/sätt hostname |
+| `hostname -f` | Visa FQDN |
+| `cat /etc/hosts` | Visa lokala mappningar |
+| `dig hostname` | DNS lookup |
+| `host hostname` | Enkel DNS lookup |
+| `ping hostname` | Testa anslutning |
 
-# Koppla bort
-docker network disconnect frontend-net webapp
-```
-
----
-
-## Key Takeaways
-
-- Använd **user-defined bridge networks** för isolation
-- Containers i samma nätverk kan nå varandra via **hostname**
-- **Exponera bara nödvändiga portar** till host
-- `-p 127.0.0.1:8080:80` begränsar till localhost
+**Kom ihåg:**
+- 🏷️ Använd beskrivande hostnames
+- 📁 /etc/hosts kontrolleras före DNS
+- 🌐 Använd DNS i produktion
+- 📝 Dokumentera alla host-mappningar
+- 🧪 `ping` och `dig` är dina vänner
 """,
         },
         {
