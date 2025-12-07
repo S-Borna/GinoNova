@@ -219,7 +219,7 @@ export function ModuleProgress({
 
             {/* Continue Learning button */}
             {nextTaskId ? (
-                <Link href={`/modules/${moduleId}/tasks/${nextTaskId}`} className="block mb-6">
+                <Link prefetch={false} href={`/modules/${moduleId}/tasks/${nextTaskId}`} className="block mb-6">
                     <Button
                         className={cn(
                             "w-full rounded-xl",
@@ -233,7 +233,7 @@ export function ModuleProgress({
                     </Button>
                 </Link>
             ) : progress < 100 ? (
-                <Link href={`/modules/${moduleId}`} className="block mb-6">
+                <Link prefetch={false} href={`/modules/${moduleId}`} className="block mb-6">
                     <Button
                         className={cn(
                             "w-full rounded-xl",

@@ -25,6 +25,11 @@ import { getDashboardSummary, DashboardSummary } from "@/lib/dashboard"
 import { motion } from "framer-motion"
 import Link from "next/link"
 
+// 🛡️ SECURITY: Disable prefetching on all links
+const SecureLink = ({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) => (
+    <Link href={href} prefetch={false} className={className}>{children}</Link>
+)
+
 // @saas/ui Design System
 import { PageLayout, Section } from "@saas/ui"
 
@@ -342,7 +347,7 @@ function QuickActionCard({ icon, title, description, href, color, delay = 0 }: Q
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
         >
-            <Link href={href}>
+            <Link href={href} prefetch={false}>
                 <div className={cn(
                     "group relative p-6 rounded-2xl",
                     "bg-gradient-to-br from-zinc-900/80 to-zinc-800/50",

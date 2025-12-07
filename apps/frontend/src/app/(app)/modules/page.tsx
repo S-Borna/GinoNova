@@ -385,7 +385,7 @@ function EmptyState() {
             <p className="text-gray-600 dark:text-neutral-400 mb-6">
                 Modules will appear here once they&apos;re added to your learning path.
             </p>
-            <Link href="/modules/new">
+            <Link prefetch={false} href="/modules/new">
                 <Button className="rounded-xl">Create First Module</Button>
             </Link>
         </div>

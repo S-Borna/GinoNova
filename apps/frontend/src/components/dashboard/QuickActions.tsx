@@ -72,7 +72,7 @@ function ActionCard({ action, delay = 0 }: ActionCardProps) {
     if (action.isPrimary) {
         // Primary action with gradient background
         return (
-            <Link href={action.href}>
+            <Link prefetch={false} href={action.href}>
                 <div
                     className="flex items-center gap-4 p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 animate-fade-in-up"
                     style={{ animationDelay: `${delay}ms` }}
@@ -97,7 +97,7 @@ function ActionCard({ action, delay = 0 }: ActionCardProps) {
 
     // Secondary action with white background
     return (
-        <Link href={action.href}>
+        <Link prefetch={false} href={action.href}>
             <div
                 className="flex items-center gap-4 p-6 bg-white dark:bg-neutral-800 rounded-xl border border-gray-100 dark:border-neutral-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 animate-fade-in-up"
                 style={{ animationDelay: `${delay}ms` }}

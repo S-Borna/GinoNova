@@ -264,7 +264,7 @@ export default function AdminUserDetailPage() {
                 <div className="text-center">
                     <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                     <h1 className="text-2xl font-bold text-white mb-2">{error}</h1>
-                    <Link href="/admin">
+                    <Link prefetch={false} href="/admin">
                         <Button variant="outline" className="mt-4">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Tillbaka

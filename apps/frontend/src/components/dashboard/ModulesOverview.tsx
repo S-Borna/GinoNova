@@ -187,7 +187,7 @@ function ModuleCard({ module, index, delay = 0 }: ModuleCardProps) {
     }
 
     return (
-        <Link href={`/modules/${module.slug || module.id}`}>
+        <Link prefetch={false} href={`/modules/${module.slug || module.id}`}>
             {cardContent}
         </Link>
     )

@@ -225,7 +225,7 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
             </h2>
             <p className="text-zinc-400 mb-6">{error}</p>
             <div className="flex gap-3 justify-center">
-                <Link href="/modules">
+                <Link prefetch={false} href="/modules">
                     <Button variant="outline" className="rounded-xl">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Tillbaka

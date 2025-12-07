@@ -224,7 +224,7 @@ export function ErrorState({
               variant="outline"
               size={compact ? 'sm' : 'default'}
             >
-              <Link href="/">
+              <Link prefetch={false} href="/">
                 <Home className="mr-2 h-4 w-4" />
                 Go Home
               </Link>
