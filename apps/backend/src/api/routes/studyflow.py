@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 import random
 
-router = APIRouter(prefix="/studyflow", tags=["studyflow"])
+router = APIRouter(tags=["studyflow-practice"])
 
 
 # === Schemas ===

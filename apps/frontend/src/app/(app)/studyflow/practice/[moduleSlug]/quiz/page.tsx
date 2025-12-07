@@ -257,8 +257,8 @@ export default function QuizPage() {
                                     finalScore >= 80
                                         ? "bg-green-500/10 border border-green-500/30"
                                         : finalScore >= 50
-                                        ? "bg-yellow-500/10 border border-yellow-500/30"
-                                        : "bg-red-500/10 border border-red-500/30"
+                                            ? "bg-yellow-500/10 border border-yellow-500/30"
+                                            : "bg-red-500/10 border border-red-500/30"
                                 )}
                             >
                                 <div className="text-4xl font-bold mb-2">
@@ -271,8 +271,8 @@ export default function QuizPage() {
                                     {finalScore >= 80
                                         ? "🎉 Utmärkt!"
                                         : finalScore >= 50
-                                        ? "👍 Bra jobbat!"
-                                        : "💪 Fortsätt öva!"}
+                                            ? "👍 Bra jobbat!"
+                                            : "💪 Fortsätt öva!"}
                                 </p>
                             </div>
                             <button
