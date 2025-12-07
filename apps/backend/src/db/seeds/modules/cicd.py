@@ -20,219 +20,252 @@ MODULE = {
             "title": "Introduction to CI/CD",
             "slug": "introduction-to-cicd",
             "difficulty": "beginner",
-            "content": '''
-# Introduction to CI/CD
+            "content": """# Introduction to CI/CD
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Utan CI/CD:
+## Varfor viktigt for DevOps?
 
-- Manuella deployments som tar timmar
-- "Det funkar på min maskin" problem
-- Buggar upptäcks sent
-- Rädsla för att deploya
+| Utan CI/CD | Med CI/CD |
+|------------|-----------|
+| Manuella deployments (timmar) | Automatiserat (minuter) |
+| "Funkar pa min maskin" | Reproducerbara byggen |
+| Buggar upptacks sent | Snabb feedback |
+| Radsla for att deploya | Trygg kontinuerlig release |
 
-Med CI/CD:
+CI/CD ar grunden for modern DevOps.
 
-- Automatiserade, reproducerbara deployments
-- Snabb feedback på kodkvalitet
-- Kontinuerligt värde till användare
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Så fungerar det
-
-CI/CD är en pipeline:
-
-1. **Continuous Integration (CI)** - automatisk bygg och test vid varje commit
-2. **Continuous Delivery (CD)** - kod alltid redo för produktion
-3. **Continuous Deployment** - automatisk deploy till produktion
-
----
-
-## CI/CD Pipeline stages
+## CI/CD Pipeline Oversikt
 
 ```
-┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
-│  Code   │───▶│  Build  │───▶│  Test   │───▶│ Deploy  │───▶│ Monitor │
-│ Commit  │    │         │    │         │    │         │    │         │
-└─────────┘    └─────────┘    └─────────┘    └─────────┘    └─────────┘
-     │              │              │              │              │
-     ▼              ▼              ▼              ▼              ▼
-  Git push     Compile        Unit tests    Staging      Alerts
-  PR/MR        Lint           Integration   Production   Metrics
-               Dependencies   E2E tests     Canary       Logs
+┌─────────────────────────────────────────────────────────────┐
+│                    CI/CD PIPELINE                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   CODE ──► BUILD ──► TEST ──► DEPLOY ──► MONITOR            │
+│     │        │        │         │          │                │
+│     ▼        ▼        ▼         ▼          ▼                │
+│   Git     Compile   Unit     Staging    Alerts              │
+│   push    Lint      Integ.   Prod       Metrics             │
+│   PR/MR   Deps      E2E      Canary     Logs                │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│   CI = Continuous Integration (bygg + test)                 │
+│   CD = Continuous Delivery/Deployment                       │
+└─────────────────────────────────────────────────────────────┘
 ```
 
----
+| Steg | Vad det gor |
+|------|-------------|
+| **Code** | Push till repo |
+| **Build** | Kompilera, lint |
+| **Test** | Unit, integration, E2E |
+| **Deploy** | Staging, production |
+| **Monitor** | Loggar, metrics |
 
-## Populära CI/CD-verktyg
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## CI/CD Verktyg
 
 ```bash
 # Cloud-baserade
 GitHub Actions         # Integrerat i GitHub
 GitLab CI              # Integrerat i GitLab
-CircleCI               # Populärt för open source
+CircleCI               # Populart for open source
 Azure DevOps           # Microsoft-ekosystem
 AWS CodePipeline       # AWS-native
 
 # Self-hosted
-Jenkins                # Mest flexibelt, äldst
-TeamCity               # JetBrains
+Jenkins                # Mest flexibelt
+Argo CD                # Kubernetes GitOps
 Drone CI               # Container-native
-Argo CD                # Kubernetes-native GitOps
 ```
 
----
+| Verktyg | Bast for |
+|---------|----------|
+| GitHub Actions | GitHub repos |
+| GitLab CI | GitLab repos |
+| Jenkins | Flexibilitet |
+| Argo CD | Kubernetes |
 
-## Första pipelinen (GitHub Actions)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Forsta Pipeline (GitHub Actions)
 
 ```yaml
 # .github/workflows/ci.yml
-name: CI Pipeline                      # Pipeline-namn
+name: CI Pipeline
 
-on:                                    # Triggers
+on:
   push:
-    branches: [main, develop]          # Vid push till dessa branches
+    branches: [main, develop]
   pull_request:
-    branches: [main]                   # Vid PR mot main
+    branches: [main]
 
 jobs:
-  build:                               # Job-namn
-    runs-on: ubuntu-latest             # Runner OS
+  build:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code            # Hämta kod
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js            # Installera Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies     # Installera dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run linter               # Lint-kontroll
+      - name: Run linter
         run: npm run lint
 
-      - name: Run tests                # Kör tester
+      - name: Run tests
         run: npm test
 
-      - name: Build                    # Bygg applikation
+      - name: Build
         run: npm run build
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## CI/CD Best Practices
+## Best Practices
 
 ```yaml
-# 1. Snabb feedback - kör snabba tester först
+# Snabb feedback - snabba tester forst
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm run lint             # Sekunder, inte minuter
+      - run: npm run lint          # Sekunder
 
   unit-test:
-    needs: lint                        # Kör efter lint
+    needs: lint                    # Kor efter lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: npm test
 
   integration-test:
-    needs: unit-test                   # Kör efter unit tests
+    needs: unit-test               # Kor efter unit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: npm run test:integration
+      - run: npm run test:e2e
 ```
 
-```bash
-# 2. Reproducerbarhet
-# Använd lock-filer
-npm ci                                 # Inte npm install
-pip install -r requirements.txt        # Pinnade versioner
-```
+| Princip | Implementation |
+|---------|----------------|
+| Snabb feedback | Lint forst |
+| Reproducerbarhet | npm ci, lock-filer |
+| Parallellism | Oberoende jobs |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. CI/CD automatiserar hela vägen från kod till produktion
-2. CI = bygg och test vid varje commit
-3. CD = automatisk deployment (delivery eller deployment)
-4. Snabb feedback är kritiskt
-5. Reproducerbarhet genom lock-filer och pinnade versioner
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **CI** | Bygg + test vid varje commit |
+| **CD** | Auto-deploy till produktion |
+| **Pipeline** | Code → Build → Test → Deploy |
+| **Feedback** | Snabbare = battre |
+| **Lock-filer** | Reproducerbara byggen |
+
+**Kom ihag:**
+- CI/CD automatiserar hela deployment-processen
+- Snabb feedback ar kritiskt for produktivitet
+- Anvand lock-filer for reproducerbarhet
+- GitHub Actions ar standard for GitHub-projekt
+- Kor snabba tester forst (lint, unit)
+""",
         },
         {
             "title": "GitHub Actions Fundamentals",
             "slug": "github-actions-fundamentals",
             "difficulty": "beginner",
-            "content": '''
-# GitHub Actions Fundamentals
+            "content": """# GitHub Actions Fundamentals
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitHub Actions är industristandard:
+## Varfor viktigt for DevOps?
 
-- Integrerat direkt i GitHub
-- Gratis för public repos
-- Stort marketplace med färdiga actions
-- Matrix builds för multi-platform
+| Fordel | Detalj |
+|--------|--------|
+| **Integrerat** | Direkt i GitHub |
+| **Gratis** | For public repos |
+| **Marketplace** | 15,000+ actions |
+| **Matrix builds** | Multi-platform |
+| **Community** | Stort ekosystem |
 
----
+GitHub Actions ar industristandard for GitHub-projekt.
 
-## Så fungerar det
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitHub Actions komponenter:
+## Komponenter
 
-1. **Workflow** - YAML-fil som definierar automation
-2. **Job** - en uppsättning steg som körs på samma runner
-3. **Step** - individuell task (action eller command)
-4. **Action** - återanvändbar komponent
-5. **Runner** - maskin som kör jobs
+```
+┌─────────────────────────────────────────────────────────────┐
+│                GITHUB ACTIONS STRUKTUR                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   WORKFLOW (.github/workflows/ci.yml)                       │
+│   └── JOB (build, test, deploy)                             │
+│       └── STEP (checkout, install, test)                    │
+│           └── ACTION (actions/checkout@v4)                  │
+│               eller COMMAND (npm test)                      │
+│                                                             │
+│   RUNNER = Maskin som kor jobs                              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
----
+| Komponent | Beskrivning |
+|-----------|-------------|
+| **Workflow** | YAML-fil med automation |
+| **Job** | Samling steg pa samma runner |
+| **Step** | En action eller command |
+| **Action** | Ateranvandbar komponent |
+| **Runner** | ubuntu, windows, macos |
 
-## Workflow syntax
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Workflow Syntax
 
 ```yaml
 # .github/workflows/main.yml
-name: Main Workflow                    # Visas i GitHub UI
+name: Main Workflow
 
-on:                                    # Triggers
+on:
   push:
     branches:
       - main
-      - 'release/*'                    # Wildcard pattern
+      - 'release/*'              # Wildcard
     paths:
-      - 'src/**'                       # Bara om src ändras
-      - '!src/**/*.md'                 # Utom markdown
+      - 'src/**'                 # Bara om src andras
+      - '!src/**/*.md'           # Utom markdown
 
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize]
 
   schedule:
-    - cron: '0 0 * * *'                # Dagligen vid midnatt
+    - cron: '0 0 * * *'          # Dagligen midnatt
 
-  workflow_dispatch:                   # Manuell trigger
+  workflow_dispatch:             # Manuell trigger
     inputs:
       environment:
-        description: 'Target environment'
+        description: 'Target env'
         required: true
-        default: 'staging'
         type: choice
         options:
           - staging
           - production
 
-env:                                   # Globala env vars
+env:                             # Globala env vars
   NODE_ENV: production
   CI: true
 
@@ -243,9 +276,16 @@ jobs:
       - uses: actions/checkout@v4
 ```
 
----
+| Trigger | Anvandning |
+|---------|------------|
+| `push` | Vid commit |
+| `pull_request` | Vid PR |
+| `schedule` | Cron |
+| `workflow_dispatch` | Manuell |
 
-## Jobs och dependencies
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Jobs och Dependencies
 
 ```yaml
 jobs:
@@ -257,29 +297,28 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: lint                        # Vänta på lint
+    needs: lint                  # Vanta pa lint
     steps:
       - uses: actions/checkout@v4
       - run: npm test
 
   build:
     runs-on: ubuntu-latest
-    needs: [lint, test]                # Vänta på båda
+    needs: [lint, test]          # Vanta pa bada
     steps:
-      - uses: actions/checkout@v4
       - run: npm run build
 
   deploy:
-    runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/main'  # Bara på main
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying..."
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Matrix builds
+## Matrix Builds
 
 ```yaml
 jobs:
@@ -292,10 +331,6 @@ jobs:
         exclude:
           - os: windows-latest
             node: 18
-        include:
-          - os: ubuntu-latest
-            node: 20
-            experimental: true
 
     steps:
       - uses: actions/checkout@v4
@@ -307,35 +342,44 @@ jobs:
 
       - run: npm ci
       - run: npm test
-        continue-on-error: ${{ matrix.experimental || false }}
 ```
 
----
+| Matrix | Kombinationer |
+|--------|---------------|
+| 3 OS x 3 Node | 9 jobb |
+| Med exclude | 8 jobb |
 
-## Secrets och variabler
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Secrets och Variabler
 
 ```yaml
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production            # GitHub Environment
+    environment: production
 
     steps:
-      - name: Deploy to server
+      - name: Deploy
         env:
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           API_KEY: ${{ secrets.API_KEY }}
         run: |
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
-          ssh -i key.pem user@server "deploy.sh"
+          ssh -i key.pem user@server
 
-      # Repository variable
       - name: Use variable
-        run: echo "Deploying to ${{ vars.DEPLOY_URL }}"
+        run: echo "URL: ${{ vars.DEPLOY_URL }}"
 ```
 
----
+| Typ | Anvandning |
+|-----|------------|
+| `secrets.*` | Kanslig data |
+| `vars.*` | Publik config |
+| `env:` | Job/step scope |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Caching
 
@@ -346,33 +390,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Cache npm dependencies
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            npm-
-
-      # Eller använd setup-node med cache
+      # Automatisk cache med setup-node
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'                 # Automatisk cache
+          cache: 'npm'
 
       - run: npm ci
       - run: npm run build
 
-      # Cache build output
-      - name: Cache build
-        uses: actions/cache@v4
+      # Manuell cache
+      - uses: actions/cache@v4
         with:
           path: dist
           key: build-${{ github.sha }}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Artifacts
 
@@ -381,12 +415,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
       - run: npm run build
 
-      # Ladda upp build-output
-      - name: Upload build artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-output
@@ -397,128 +428,101 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Ladda ner artifact
-      - name: Download build artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: dist/
-
-      - name: Deploy
-        run: |
-          ls -la dist/
-          # Deploy files...
 ```
 
----
-
-## Reusable workflows
-
-```yaml
-# .github/workflows/deploy-reusable.yml
-name: Reusable Deploy
-
-on:
-  workflow_call:                       # Gör workflow anropbar
-    inputs:
-      environment:
-        required: true
-        type: string
-    secrets:
-      deploy_key:
-        required: true
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    steps:
-      - run: echo "Deploying to ${{ inputs.environment }}"
-```
-
-```yaml
-# .github/workflows/main.yml - Anropa reusable
-jobs:
-  deploy-staging:
-    uses: ./.github/workflows/deploy-reusable.yml
-    with:
-      environment: staging
-    secrets:
-      deploy_key: ${{ secrets.STAGING_KEY }}
-
-  deploy-production:
-    needs: deploy-staging
-    uses: ./.github/workflows/deploy-reusable.yml
-    with:
-      environment: production
-    secrets:
-      deploy_key: ${{ secrets.PRODUCTION_KEY }}
-```
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Workflows triggas av events (push, PR, schedule)
-2. Jobs körs parallellt om inte `needs` specificeras
-3. Matrix builds för multi-platform/version testing
-4. Caching sparar tid på dependencies
-5. Artifacts delar data mellan jobs
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Workflow** | YAML i .github/workflows/ |
+| **needs** | Job-dependencies |
+| **matrix** | Multi-platform testing |
+| **secrets** | Kanslig data |
+| **cache** | Snabbare builds |
+
+**Kom ihag:**
+- Workflows triggas av events (push, PR, schedule)
+- Jobs kor parallellt om inte needs anges
+- Matrix builds testar flera kombinationer
+- Secrets hanteras via GitHub UI
+- Caching sparar tid pa dependencies
+""",
         },
         {
             "title": "GitLab CI/CD",
             "slug": "gitlab-cicd",
             "difficulty": "beginner",
-            "content": '''
-# GitLab CI/CD
+            "content": """# GitLab CI/CD
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-GitLab CI/CD är kraftfullt:
+## Varfor viktigt for DevOps?
 
-- Integrerat DevSecOps
-- Auto DevOps för snabbstart
-- Container Registry inbyggt
-- Kubernetes integration
+| Fordel | Detalj |
+|--------|--------|
+| **DevSecOps** | Integrerad sakerhet |
+| **Auto DevOps** | Snabbstart |
+| **Container Registry** | Inbyggt |
+| **K8s integration** | Native support |
+| **Enterprise** | Populart i stora org |
 
-Populärt i enterprise-miljöer.
+GitLab CI/CD ar kraftfullt och populart i enterprise.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Komponenter
 
-GitLab CI/CD components:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 GITLAB CI/CD STRUKTUR                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   .gitlab-ci.yml (repo-root)                                │
+│   └── PIPELINE (alla jobs for en commit)                    │
+│       └── STAGES (build, test, deploy)                      │
+│           └── JOBS (individuella tasks)                     │
+│               └── RUNNERS (kor jobs)                        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. `.gitlab-ci.yml` i repo-root
-2. **Pipeline** - alla jobs för en commit
-3. **Stages** - grupperar jobs
-4. **Jobs** - individuella tasks
-5. **Runners** - kör jobs
+| Komponent | Beskrivning |
+|-----------|-------------|
+| **.gitlab-ci.yml** | Config i repo-root |
+| **Pipeline** | Alla jobs for en commit |
+| **Stages** | Grupperar jobs |
+| **Jobs** | Individuella tasks |
+| **Runners** | Maskiner som kor |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Grundläggande pipeline
+## Grundlaggande Pipeline
 
 ```yaml
 # .gitlab-ci.yml
-stages:                                # Definiera stages
+stages:
   - build
   - test
   - deploy
 
-variables:                             # Globala variabler
+variables:
   NODE_VERSION: "20"
 
-build:                                 # Job-namn
-  stage: build                         # Tillhör build-stage
-  image: node:${NODE_VERSION}          # Docker image
+build:
+  stage: build
+  image: node:${NODE_VERSION}
   script:
-    - npm ci                           # Installera dependencies
-    - npm run build                    # Bygg
+    - npm ci
+    - npm run build
   artifacts:
     paths:
-      - dist/                          # Spara build output
+      - dist/
     expire_in: 1 hour
 
 test:
@@ -527,22 +531,21 @@ test:
   script:
     - npm ci
     - npm test
-  coverage: '/Coverage: (\d+\.\d+)%/'  # Parse coverage från output
 
 deploy:
   stage: deploy
   script:
-    - echo "Deploying application..."
+    - echo "Deploying..."
   only:
-    - main                             # Bara på main branch
+    - main
   environment:
     name: production
     url: https://example.com
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Jobs och dependencies
+## Jobs och Dependencies
 
 ```yaml
 stages:
@@ -558,22 +561,16 @@ build-frontend:
     paths:
       - frontend/dist/
 
-build-backend:
-  stage: build
-  script:
-    - cd backend && pip install -r requirements.txt
-
 unit-tests:
   stage: test
-  needs: []                            # Kör direkt, vänta inte på build
+  needs: []                      # Kor direkt, vanta ej pa build
   script:
     - npm test
 
 integration-tests:
   stage: test
   needs:
-    - build-frontend
-    - build-backend
+    - build-frontend             # Vanta pa frontend
   script:
     - npm run test:integration
 
@@ -582,27 +579,32 @@ deploy-staging:
   needs:
     - integration-tests
   script:
-    - deploy_to_staging.sh
+    - ./deploy.sh staging
   environment:
     name: staging
 ```
 
----
+| Keyword | Funktion |
+|---------|----------|
+| `needs: []` | Kor direkt |
+| `needs: [job]` | Vanta pa job |
+| `only:` | Filter branch |
 
-## Cache och artifacts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Cache och Artifacts
 
 ```yaml
-# Cache för snabbare builds
 build:
   stage: build
   image: node:20
   cache:
     key:
       files:
-        - package-lock.json            # Cache key baserat på lockfile
+        - package-lock.json      # Cache key pa lockfile
     paths:
-      - node_modules/                  # Cacha dependencies
-    policy: pull-push                  # Hämta och uppdatera
+      - node_modules/
+    policy: pull-push            # Hamta och uppdatera
 
   script:
     - npm ci
@@ -612,20 +614,17 @@ build:
     paths:
       - dist/
     expire_in: 1 week
-    when: on_success                   # Bara vid success
-
-# Separata cache per branch
-test:
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"         # Branch-namn som key
-    paths:
-      - node_modules/
-    policy: pull                       # Bara hämta, uppdatera inte
+    when: on_success
 ```
 
----
+| Typ | Anvandning |
+|-----|------------|
+| **cache** | Dependencies mellan pipelines |
+| **artifacts** | Output mellan jobs |
 
-## Environments och deployment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Environments och Deployment
 
 ```yaml
 deploy-staging:
@@ -635,7 +634,7 @@ deploy-staging:
   environment:
     name: staging
     url: https://staging.example.com
-    on_stop: stop-staging              # Job att köra vid stop
+    on_stop: stop-staging
 
 stop-staging:
   stage: deploy
@@ -652,18 +651,16 @@ deploy-production:
     - ./deploy.sh production
   environment:
     name: production
-    url: https://example.com
-  when: manual                         # Manuell trigger
+  when: manual                   # Manuell trigger
   only:
     - main
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Rules och conditions
+## Rules (Modern Syntax)
 
 ```yaml
-# Moderna rules (ersätter only/except)
 build:
   script:
     - npm run build
@@ -674,53 +671,42 @@ build:
       when: always
     - if: '$CI_COMMIT_TAG'
       when: always
-    - when: never                      # Default: kör inte
+    - when: never
 
 test:
   script:
     - npm test
   rules:
     - changes:
-        - src/**/*                     # Kör om src ändras
+        - src/**/*
         - tests/**/*
-    - if: '$CI_COMMIT_MESSAGE =~ /\[skip tests\]/'
-      when: never
-
-deploy:
-  script:
-    - ./deploy.sh
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
-      allow_failure: false
 ```
 
----
+| Rule | Effekt |
+|------|--------|
+| `if:` | Villkor |
+| `changes:` | File-filter |
+| `when: manual` | Manuell |
 
-## Includes och templates
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Includes och Templates
 
 ```yaml
-# .gitlab-ci.yml
 include:
-  # Lokal fil
   - local: '/templates/test.yml'
-
-  # Från annat projekt
   - project: 'company/ci-templates'
     ref: main
     file: '/templates/deploy.yml'
 
-  # Remote URL
-  - remote: 'https://example.com/ci-template.yml'
-
-# Använd template med extends
-.node-template:                        # Template (börjar med .)
+# Template (borjar med .)
+.node-template:
   image: node:20
   before_script:
     - npm ci
 
 build:
-  extends: .node-template              # Ärv från template
+  extends: .node-template
   script:
     - npm run build
 
@@ -730,24 +716,20 @@ test:
     - npm test
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Services (sidecars)
+## Services (Sidecars)
 
 ```yaml
-# Test med database
 test:
   stage: test
   image: python:3.11
   services:
     - name: postgres:15
-      alias: db                        # Hostname i job
+      alias: db
     - name: redis:7
       alias: cache
   variables:
-    POSTGRES_DB: test_db
-    POSTGRES_USER: test
-    POSTGRES_PASSWORD: test
     DATABASE_URL: "postgresql://test:test@db:5432/test_db"
     REDIS_URL: "redis://cache:6379"
   script:
@@ -755,96 +737,107 @@ test:
     - pytest
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. `.gitlab-ci.yml` i repo-root
-2. Stages grupperar jobs
-3. `needs` för DAG-baserade dependencies
-4. `rules` ersätter only/except
-5. `include` för återanvändbara templates
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **.gitlab-ci.yml** | Config i repo-root |
+| **stages** | Grupperar jobs |
+| **needs** | DAG dependencies |
+| **rules** | Ersatter only/except |
+| **extends** | Ateranvandbara templates |
+
+**Kom ihag:**
+- .gitlab-ci.yml i repo-root
+- Stages grupperar jobs i ordning
+- needs ger DAG-baserade dependencies
+- rules ersatter gamla only/except
+- include for ateranvandbara templates
+""",
         },
         {
             "title": "Jenkins Pipelines",
             "slug": "jenkins-pipelines",
             "difficulty": "intermediate",
-            "content": '''
-# Jenkins Pipelines
+            "content": """# Jenkins Pipelines
 
-## Varför behöver du kunna detta?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Jenkins är fortfarande enormt populärt:
+## Varfor viktigt for DevOps?
 
-- Mest flexibla CI/CD-verktyget
-- Tusentals plugins
-- Self-hosted kontroll
-- Legacy-system integration
+| Fordel | Detalj |
+|--------|--------|
+| **Flexibelt** | Mest anpassningsbart |
+| **Plugins** | Tusentals tillagg |
+| **Self-hosted** | Full kontroll |
+| **Legacy** | Enterprise standard |
+| **Groovy** | Programmatisk logik |
 
-Många företag har Jenkins-infrastruktur.
+Jenkins ar fortfarande enormt populart i enterprise.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Så fungerar det
+## Pipeline Typer
 
-Jenkins Pipeline typer:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 JENKINS PIPELINE TYPER                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   1. Declarative Pipeline                                   │
+│      - Strukturerad syntax                                  │
+│      - Enkel att lasa                                       │
+│      - Rekommenderad                                        │
+│                                                             │
+│   2. Scripted Pipeline                                      │
+│      - Full Groovy-kontroll                                 │
+│      - Max flexibilitet                                     │
+│                                                             │
+│   3. Multibranch Pipeline                                   │
+│      - Automatisk per branch                                │
+│      - Scan repository                                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-1. **Declarative Pipeline** - strukturerad YAML-liknande syntax
-2. **Scripted Pipeline** - full Groovy-kontroll
-3. **Multibranch Pipeline** - automatisk per branch
-
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Declarative Pipeline
 
 ```groovy
 // Jenkinsfile
 pipeline {
-    agent any                          // Kör på valfri agent
+    agent any
 
-    environment {                      // Environment variables
+    environment {
         NODE_ENV = 'production'
-        DEPLOY_ENV = "${params.ENVIRONMENT}"
     }
 
-    parameters {                       // Input-parametrar
+    parameters {
         choice(
             name: 'ENVIRONMENT',
             choices: ['staging', 'production'],
             description: 'Deploy target'
         )
-        booleanParam(
-            name: 'SKIP_TESTS',
-            defaultValue: false,
-            description: 'Skip test stage'
-        )
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm           // Hämta kod från SCM
-            }
-        }
-
         stage('Build') {
             steps {
-                sh 'npm ci'            // Shell-kommando
+                sh 'npm ci'
                 sh 'npm run build'
             }
         }
 
         stage('Test') {
-            when {
-                expression { !params.SKIP_TESTS }
-            }
             steps {
                 sh 'npm test'
             }
             post {
                 always {
-                    junit 'test-results/*.xml'  // Publicera test results
+                    junit 'test-results/*.xml'
                 }
             }
         }
@@ -854,43 +847,41 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sh './deploy.sh ${DEPLOY_ENV}'
+                sh './deploy.sh'
             }
         }
     }
 
-    post {                             // Körs efter alla stages
+    post {
         success {
-            echo 'Pipeline succeeded!'
-            slackSend channel: '#deployments', message: 'Deploy OK'
+            slackSend message: 'Deploy OK'
         }
         failure {
-            echo 'Pipeline failed!'
-            slackSend channel: '#alerts', message: 'Deploy FAILED'
+            slackSend message: 'Deploy FAILED'
         }
         always {
-            cleanWs()                  // Rensa workspace
+            cleanWs()
         }
     }
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Agent options
+## Agent Options
 
 ```groovy
 pipeline {
-    // Kör på specifik agent
+    // Specifik agent
     agent {
-        label 'linux && docker'        // Agent med labels
+        label 'linux && docker'
     }
 
     stages {
         stage('Docker Build') {
             agent {
                 docker {
-                    image 'node:20'    // Kör i Docker container
+                    image 'node:20'
                     args '-v /tmp:/tmp'
                 }
             }
@@ -898,48 +889,27 @@ pipeline {
                 sh 'npm ci && npm run build'
             }
         }
-
-        stage('Kubernetes') {
-            agent {
-                kubernetes {
-                    yaml \'\'\'
-                    apiVersion: v1
-                    kind: Pod
-                    spec:
-                      containers:
-                      - name: node
-                        image: node:20
-                        command: ['sleep', 'infinity']
-                    \'\'\'
-                }
-            }
-            steps {
-                container('node') {
-                    sh 'npm test'
-                }
-            }
-        }
     }
 }
 ```
 
----
+| Agent | Anvandning |
+|-------|------------|
+| `agent any` | Valfri tillganglig |
+| `agent { label }` | Specifik label |
+| `agent { docker }` | Docker container |
 
-## Parallel execution
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Parallel Execution
 
 ```groovy
 pipeline {
     agent any
 
     stages {
-        stage('Build') {
-            steps {
-                sh 'npm ci'
-            }
-        }
-
         stage('Test') {
-            parallel {                 // Kör parallellt
+            parallel {
                 stage('Unit Tests') {
                     steps {
                         sh 'npm run test:unit'
@@ -951,9 +921,6 @@ pipeline {
                     }
                 }
                 stage('E2E Tests') {
-                    agent {
-                        docker { image 'cypress/included:latest' }
-                    }
                     steps {
                         sh 'npm run test:e2e'
                     }
@@ -964,7 +931,7 @@ pipeline {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Credentials
 
@@ -973,30 +940,23 @@ pipeline {
     agent any
 
     environment {
-        // Hämta credentials
-        AWS_CREDS = credentials('aws-credentials')  // username/password
-        SSH_KEY = credentials('deploy-ssh-key')     // SSH key
-        API_TOKEN = credentials('api-token')        // Secret text
+        AWS_CREDS = credentials('aws-credentials')
+        SSH_KEY = credentials('deploy-ssh-key')
     }
 
     stages {
         stage('Deploy') {
             steps {
-                // AWS credentials sätts som AWS_CREDS_USR och AWS_CREDS_PSW
-                sh \'\'\'
+                // AWS credentials
+                sh '''
                     export AWS_ACCESS_KEY_ID=$AWS_CREDS_USR
                     export AWS_SECRET_ACCESS_KEY=$AWS_CREDS_PSW
-                    aws s3 sync dist/ s3://my-bucket/
-                \'\'\'
+                    aws s3 sync dist/ s3://bucket/
+                '''
 
                 // SSH key
                 sshagent(['deploy-ssh-key']) {
                     sh 'ssh user@server "deploy.sh"'
-                }
-
-                // API token
-                withCredentials([string(credentialsId: 'api-token', variable: 'TOKEN')]) {
-                    sh 'curl -H "Authorization: Bearer $TOKEN" https://api.example.com'
                 }
             }
         }
@@ -1004,37 +964,27 @@ pipeline {
 }
 ```
 
----
+| Credential | Typ |
+|------------|-----|
+| `credentials()` | Env var |
+| `sshagent()` | SSH agent |
+| `withCredentials()` | Scoped |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Shared Libraries
 
 ```groovy
-// vars/deployApp.groovy (i shared library repo)
+// vars/deployApp.groovy
 def call(Map config = [:]) {
     def environment = config.environment ?: 'staging'
     def version = config.version ?: 'latest'
 
-    echo "Deploying version ${version} to ${environment}"
-
-    sh """
-        kubectl set image deployment/app app=${version} -n ${environment}
-        kubectl rollout status deployment/app -n ${environment}
-    """
+    sh "kubectl set image deployment/app app=${version}"
+    sh "kubectl rollout status deployment/app"
 }
 
-// vars/notifySlack.groovy
-def call(String status, String channel = '#deployments') {
-    def color = status == 'SUCCESS' ? 'good' : 'danger'
-    slackSend(
-        channel: channel,
-        color: color,
-        message: "${env.JOB_NAME} - ${status}"
-    )
-}
-```
-
-```groovy
-// Jenkinsfile - använd shared library
+// Jenkinsfile
 @Library('my-shared-library') _
 
 pipeline {
@@ -1045,25 +995,19 @@ pipeline {
             steps {
                 deployApp(
                     environment: 'production',
-                    version: "${env.BUILD_NUMBER}"
+                    version: env.BUILD_NUMBER
                 )
             }
         }
     }
-
-    post {
-        success { notifySlack('SUCCESS') }
-        failure { notifySlack('FAILURE', '#alerts') }
-    }
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Multibranch Pipeline
 
 ```groovy
-// Jenkinsfile - automatiskt för alla branches
 pipeline {
     agent any
 
@@ -1075,27 +1019,14 @@ pipeline {
         }
 
         stage('Deploy to Dev') {
-            when {
-                branch 'develop'
-            }
+            when { branch 'develop' }
             steps {
                 sh './deploy.sh dev'
             }
         }
 
-        stage('Deploy to Staging') {
-            when {
-                branch 'release/*'
-            }
-            steps {
-                sh './deploy.sh staging'
-            }
-        }
-
         stage('Deploy to Production') {
-            when {
-                branch 'main'
-            }
+            when { branch 'main' }
             steps {
                 input message: 'Deploy to production?'
                 sh './deploy.sh production'
@@ -1105,16 +1036,25 @@ pipeline {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Key Takeaways
 
-1. Declarative Pipeline för strukturerad syntax
-2. `agent` bestämmer var pipeline körs
-3. `parallel` för concurrent execution
-4. `credentials()` för säker secrets-hantering
-5. Shared Libraries för återanvändbar kod
-''',
+| Koncept | Detalj |
+|---------|--------|
+| **Declarative** | Strukturerad syntax |
+| **agent** | Var pipeline kors |
+| **parallel** | Concurrent execution |
+| **credentials()** | Saker secrets |
+| **Shared Libraries** | Ateranvandbar kod |
+
+**Kom ihag:**
+- Declarative Pipeline ar rekommenderat
+- agent bestammer var pipeline kors
+- parallel for parallell exekvering
+- credentials() for saker secrets-hantering
+- Shared Libraries for ateranvandbar kod
+""",
         },
         {
             "title": "Testing in Pipelines",
