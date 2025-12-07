@@ -2358,159 +2358,475 @@ machine1
 """,
         },
         {
-            "title": "Docker Volumes & Persistence",
-            "slug": "docker-volumes-persistence",
-            "difficulty": "medium",
+            "title": "Dataöverföring: Bytes och Bandwidth",
+            "slug": "data-transfer-bytes-bandwidth",
+            "difficulty": "easy",
             "estimated_minutes": 45,
-            "xp_reward": 80,
-            "content": """# Docker Volumes & Persistence
+            "xp_reward": 75,
+            "content": """# Dataöverföring: Bytes och Bandwidth
 
-## Varför behöver du kunna detta?
+## 🎯 Varför data transfer-kunskap är essentiellt för DevOps
 
-Containers är ephemeral - data försvinner när de tas bort. Du måste förstå:
+Data transfer-kunskap är kritiskt för:
 
-- **Hur du persisterar data** som databaser och uploads
-- **Skillnaden mellan volumes och bind mounts**
-- **Backup och restore** av container-data
+| Användningsområde | Beskrivning |
+|-------------------|-------------|
+| **Performance optimization** | Optimera överföringshastigheter |
+| **Capacity planning** | Planera nätverkskapacitet |
+| **Troubleshooting** | Felsöka långsamma nätverk |
+| **Cost optimization** | Minimera cloud-kostnader (egress) |
+| **Monitoring** | Övervaka bandwidth-användning |
+| **Bandwidth management** | Hantera nätverksresurser |
 
 ---
 
-## Problemet utan volumes
+## 📊 Dataenheter: Bits vs Bytes
+
+### Den kritiska skillnaden
 
 ```bash
-# Starta databas
-docker run -d --name db postgres
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔢 BIT (liten b) = HASTIGHET
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Skriv data...
-# Stoppa och ta bort
-docker rm -f db
+# Bit (b) = Minsta enheten (0 eller 1)
+# Används för: HASTIGHET (data rates, bandwidth)
+# Exempel: 100 Mbps = 100 megabit per sekund
 
-# All data är BORTA! 💥
+# Detta är vad du ser när du mäter internet-hastighet
+# ISP:er annonserar i bits: "100 Mbps internet"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📦 BYTE (stor B) = STORLEK
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Byte (B) = 8 bits
+# Används för: STORLEK (filstorlekar, lagring)
+# Exempel: 100 MB = 100 megabyte
+
+# Detta är vad du ser för filstorlekar
+# "1 GB fil" = 1 gigabyte
+```
+
+### ⚠️ Viktigt: 1 Byte = 8 bits
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 KONVERTERING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1 Byte = 8 bits
+# Så: 100 Mbps (bits) = 12.5 MBps (bytes)
+#     100 ÷ 8 = 12.5
+
+# DÄRFÖR kan din "100 Mbps" internet
+# INTE överföra 100 MB per sekund!
+# Den kan överföra 12.5 MB per sekund
+
+# Detta är en av de vanligaste förvirringarna i nätverk!
+```
+
+### Sammanfattning bits vs bytes
+
+| Enhet | Symbol | Användning | Exempel |
+|-------|--------|------------|---------|
+| **Bit** | b (liten) | Hastighet | 100 M**b**ps |
+| **Byte** | B (stor) | Storlek | 100 M**B** fil |
+| **Konvertering** | | 1 Byte = 8 bits | |
+
+---
+
+## 📐 Datastorleksenheter
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📦 STORLEK (Bytes)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Bit (b)       = 1 bit
+# Byte (B)      = 8 bits
+# Kilobyte (KB) = 1,024 bytes (2^10)
+# Megabyte (MB) = 1,024 KB = ~1 miljon bytes
+# Gigabyte (GB) = 1,024 MB = ~1 miljard bytes
+# Terabyte (TB) = 1,024 GB
+
+# OBS: Ibland används 1,000 istället för 1,024 (decimal vs binär)
 ```
 
 ---
 
-## Tre sätt att persistera data
+## ⚡ Datahastighetsenheter
 
 ```bash
-# 1. Volumes (Docker-managed) - REKOMMENDERAS
-docker run -v mydata:/var/lib/postgresql/data postgres
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🚀 HASTIGHET (bits per sekund)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# 2. Bind mounts (host path)
-docker run -v /host/path:/container/path postgres
+# bps  = bits per second
+# Kbps = Kilobits per second (1,000 bps)
+# Mbps = Megabits per second (1,000,000 bps)
+# Gbps = Gigabits per second (1,000,000,000 bps)
 
-# 3. tmpfs (RAM-disk, försvinner vid stopp)
-docker run --tmpfs /tmp postgres
+# Alternativt (bytes):
+# Bps  = Bytes per second
+# KBps = Kilobytes per second
+# MBps = Megabytes per second
 ```
 
 ---
 
-## Volumes (Docker-managed)
+## 📶 Bandwidth
+
+### Vad är Bandwidth?
 
 ```bash
-# Skapa volume
-docker volume create dbdata
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📶 BANDWIDTH = MAXIMAL KAPACITET
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Använd volume
-docker run -d \\
-    --name postgres \\
-    -v dbdata:/var/lib/postgresql/data \\
-    postgres
+# Bandwidth är den MAXIMALA dataöverföringshastigheten
+# Tänk på det som "vägens bredd"
+# - Bredare väg = mer trafik kan passera
+# - 100 Mbps = max 100 megabit per sekund
 
-# Lista volumes
-docker volume ls
+# ⚠️ OBS: Bandwidth är kapacitet, inte "hastighet"!
+# Du kan ha hög bandwidth men fortfarande hög latency
+```
 
-# Inspektera volume
-docker volume inspect dbdata
+### Analogi: Motorvägen
 
-# Ta bort volume
-docker volume rm dbdata
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🛣️ MOTORVÄGSANALOGI
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Ta bort oanvända volumes
-docker volume prune
+# Bandwidth = Antal filer på vägen
+# - 4-filig motorväg kan hantera mer trafik än 2-filig
+# - Men bilarna kör inte nödvändigtvis SNABBARE
+
+# Latency = Hur lång tid att köra sträckan
+# - Även på 4-filig väg tar det tid att nå destinationen
+# - Hög bandwidth ≠ låg latency!
+```
+
+### Vanliga bandwidths
+
+| Miljö | Bandwidth | Användning |
+|-------|-----------|------------|
+| **Hem (basic)** | 10 Mbps | Surfning, e-post |
+| **Hem (standard)** | 50-100 Mbps | Streaming, gaming |
+| **Hem (snabbt)** | 1 Gbps | Fiber, flera användare |
+| **Datacenter** | 1-10 Gbps | Standard server |
+| **Enterprise** | 10-100 Gbps | Hög prestanda |
+
+---
+
+## 🆚 Bandwidth vs Latency
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📊 SKILLNADEN
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Bandwidth = HUR MYCKET data per sekund
+# Latency   = HUR LÅNG TID innan data anländer
+
+# Hög bandwidth + hög latency:
+# - Kan överföra mycket data
+# - Men tar tid att starta
+# - Exempel: Satellit-internet
+
+# Låg bandwidth + låg latency:
+# - Snabb respons
+# - Men begränsad throughput
+# - Exempel: Äldre modem med bra ping
 ```
 
 ---
 
-## Bind Mounts
+## 🧮 Beräkna överföringstid
+
+### Formeln
 
 ```bash
-# Montera host-katalog i container
-docker run -v $(pwd)/app:/app myimage
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📐 FORMEL
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Read-only mount
-docker run -v $(pwd)/config:/etc/app/config:ro myimage
+# Tid = Storlek / Hastighet
 
-# Användningsområden:
-# - Utveckling (live reload)
-# - Konfig-filer
-# - Loggar du vill nå från host
+# VIKTIGT: Båda måste vara i samma enhet!
+# Storlek i bits, hastighet i bits per sekund
+```
+
+### Praktiska exempel
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📝 EXEMPEL 1: 1 GB fil över 100 Mbps
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Steg 1: Konvertera storlek till bits
+# 1 GB = 1,000 MB = 8,000 Mbits (1 byte = 8 bits)
+
+# Steg 2: Beräkna tid
+# Tid = 8,000 Mbits / 100 Mbps = 80 sekunder
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📝 EXEMPEL 2: 10 GB fil över 1 Gbps
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 10 GB = 80,000 Mbits = 80 Gbits
+# Tid = 80 Gbits / 1 Gbps = 80 sekunder
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📝 EXEMPEL 3: 100 MB fil över 10 Mbps
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 100 MB = 800 Mbits
+# Tid = 800 Mbits / 10 Mbps = 80 sekunder
+```
+
+### Snabbreferens
+
+| Filstorlek | 10 Mbps | 100 Mbps | 1 Gbps |
+|------------|---------|----------|--------|
+| 100 MB | 80 sek | 8 sek | 0.8 sek |
+| 1 GB | 13 min | 80 sek | 8 sek |
+| 10 GB | 2.2 tim | 13 min | 80 sek |
+
+---
+
+## 📈 Throughput (faktisk hastighet)
+
+### Teoretisk vs faktisk
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📊 VERKLIG PRESTANDA
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 100 Mbps anslutning:
+# - Teoretiskt: 100 Mbps
+# - Faktiskt:   ~90-95 Mbps (90-95%)
+
+# Varför? OVERHEAD:
+# - Protocol headers (TCP/IP ~40 bytes/paket)
+# - Error correction
+# - Retransmissions (förlorade paket)
+# - Network congestion (trängsel)
+
+# ✅ 90-95% av teoretisk bandwidth är NORMALT!
 ```
 
 ---
 
-## Volumes vs Bind Mounts
+## 🔍 Mäta nätverksprestanda
+
+### Hastighetstest
 
 ```bash
-# Volumes
-# ✅ Docker hanterar lagring
-# ✅ Fungerar på alla plattformar
-# ✅ Kan backas upp med docker-kommandon
-# ✅ Kan delas mellan containers
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🧪 HASTIGHETSTEST
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Bind mounts
-# ✅ Du kontrollerar exakt var data sparas
-# ✅ Bra för utveckling (hot reload)
-# ❌ Beroende av host path
-# ❌ Permissions kan bli krångligt
+# Med speedtest-cli
+speedtest-cli
+speedtest-cli --simple
+
+# Med curl (download speed)
+curl -o /dev/null -s -w "%{speed_download}\\n" http://speedtest.example.com/file
+
+# Med wget
+wget --progress=bar:force http://speedtest.example.com/file
+```
+
+### Throughput-test med iperf3
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔬 IPERF3 (professionellt verktyg)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Server (mottagare)
+iperf3 -s
+
+# Client (sändare)
+iperf3 -c server-ip
+iperf3 -c server-ip -t 60     # 60 sekunder
+iperf3 -c server-ip -P 4      # 4 parallella strömmar
+```
+
+### Övervakningsverktyg
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📊 MONITORING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# iftop (realtid per interface)
+sudo iftop -i eth0
+
+# nethogs (per process)
+sudo nethogs
+
+# vnstat (statistik över tid)
+vnstat -i eth0
+vnstat -h         # Per timme
+vnstat -d         # Per dag
+
+# Nätverksstatistik
+ip -s link show eth0
+cat /proc/net/dev
 ```
 
 ---
 
-## Praktiskt exempel: Databas
+## ☁️ Cloud Data Transfer-kostnader
+
+### AWS
 
 ```bash
-# Skapa persistent PostgreSQL
-docker volume create pgdata
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟠 AWS KOSTNADER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-docker run -d \\
-    --name postgres \\
-    -v pgdata:/var/lib/postgresql/data \\
-    -e POSTGRES_PASSWORD=secret \\
-    postgres
+# Data UT (egress) - KOSTAR PENGAR
+# - Första 100 GB/månad: Gratis (vissa regioner)
+# - Efter: ~$0.09 per GB
 
-# Data överlever container restart/removal
-docker rm -f postgres
-docker run -d --name postgres -v pgdata:/var/lib/postgresql/data postgres
-# Data finns kvar! ✅
+# Data IN (ingress) - GRATIS
+# Samma region - GRATIS
+# Cross-region - KOSTAR
+```
+
+### Azure / GCP
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔵 AZURE
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Data UT: Första 5 GB/månad gratis, sedan varierande
+# Data IN: Gratis
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🟢 GCP
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Data UT: Första 1 TB/månad gratis, sedan varierande
+# Data IN: Gratis
 ```
 
 ---
 
-## Backup och Restore
+## 🚀 Optimera dataöverföring
+
+### Komprimering
 
 ```bash
-# Backup volume till tar-fil
-docker run --rm \\
-    -v pgdata:/source:ro \\
-    -v $(pwd):/backup \\
-    alpine tar czf /backup/pgdata-backup.tar.gz -C /source .
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🗜️ KOMPRIMERA FÖRE ÖVERFÖRING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Restore från backup
-docker run --rm \\
-    -v pgdata:/target \\
-    -v $(pwd):/backup \\
-    alpine tar xzf /backup/pgdata-backup.tar.gz -C /target
+# Komprimera och överför
+tar -czf archive.tar.gz files/
+scp archive.tar.gz user@server:/path/
+
+# rsync med komprimering
+rsync -avz file user@server:/path/
+#      -z = compress
+```
+
+### Delta-överföring (bara ändringar)
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔄 ÖVERFÖR BARA ÄNDRINGAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# rsync skickar bara det som ändrats
+rsync -av source/ dest/
+
+# Inkrementella backups
+tar --listed-incremental=snapshot.file -czf backup.tar.gz files/
+```
+
+### Caching och CDN
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🌐 CDN FÖR STATISKT INNEHÅLL
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Fördelar:
+# - Cache vid edge locations (nära användarna)
+# - Minskar load på origin server
+# - Minskar egress-kostnader
+# - Snabbare för användarna
 ```
 
 ---
 
-## Key Takeaways
+## ✨ Best Practices
 
-- Använd **volumes för produktionsdata** (databaser, uploads)
-- Använd **bind mounts för utveckling** (kod, config)
-- Data i volumes **överlever** container removal
-- **Backup regelbundet** - volumes är inte automatiskt säkrade
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 1️⃣ ÖVERVAKA BANDWIDTH-ANVÄNDNING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Tracka användning över tid
+# - Identifiera toppar
+# - Planera kapacitet
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 2️⃣ OPTIMERA DATAÖVERFÖRING
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Använd komprimering
+# - Aktivera caching
+# - Använd CDN för statiskt innehåll
+# - Minimera onödig dataöverföring
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 3️⃣ FÖRSTÅ CLOUD-KOSTNADER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Data UT (egress) kostar pengar
+# - Minimera egress
+# - Använd samma region när möjligt
+# - Cache vid edge
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 4️⃣ SÄTT UPP LARM
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# - Larma vid hög bandwidth
+# - Larma vid ovanliga mönster
+# - Övervaka kostnader
+```
+
+---
+
+## ✅ Sammanfattning
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Bit (b)** | Minsta enhet, används för hastighet |
+| **Byte (B)** | 8 bits, används för storlek |
+| **1 Byte** | = 8 bits (kritiskt att komma ihåg!) |
+| **Bandwidth** | Maximal överföringshastighet (Mbps) |
+| **Throughput** | Faktisk överföringshastighet |
+| **Latency** | Fördröjning (ej samma som bandwidth) |
+
+| Verktyg | Användning |
+|---------|------------|
+| `speedtest-cli` | Testa internet-hastighet |
+| `iperf3` | Professionellt throughput-test |
+| `iftop` | Realtids bandwidth per interface |
+| `vnstat` | Statistik över tid |
+| `nethogs` | Bandwidth per process |
+
+**Kom ihåg:**
+- 📊 **bits** (liten b) = hastighet, **Bytes** (stor B) = storlek
+- 🔢 100 Mbps ≠ 100 MB/s (dividera med 8!)
+- 📉 Förvänta dig 90-95% av teoretisk bandwidth
+- 💰 Cloud egress kostar pengar - optimera!
+- 🗜️ Komprimera data före överföring
 """,
         },
         {
