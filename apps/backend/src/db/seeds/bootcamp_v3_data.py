@@ -44658,7 +44658,7 @@ def get_tracks() -> list[dict]:
 def get_modules() -> list[dict]:
     """Returns all 15 modules, with Linux V3 replacing the original."""
     from .modules_v3.module_linux_v3 import MODULE_LINUX_MASTERY_V3
-    
+
     # Replace linux-mastery with V3 version
     result = []
     for module in BOOTCAMP_MODULES:
