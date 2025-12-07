@@ -1,11 +1,18 @@
 """
-Study API Routes - Static flashcards and quiz from V2 nodes
-No AI required - pulls questions directly from module content.
+Study API Routes - Flashcards och Quiz från dedikerad study_data
+================================================================
+
+9 färdiga moduler med:
+- 90 flashcards per modul (30 easy, 30 medium, 30 hard)
+- 60 quiz-frågor per modul (20 easy, 20 medium, 20 hard)
+- Slumpning av frågor OCH svarspositioner
 """
-from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, HTTPException, status, Query
+from pydantic import BaseModel
 from typing import List, Optional, Literal
 import random
+
+from src.db.seeds.study_data import STUDY_DATA_REGISTRY, get_all_study_modules
 
 router = APIRouter(prefix="/study", tags=["study"])
 
@@ -16,18 +23,22 @@ class Flashcard(BaseModel):
     id: str
     front: str
     back: str
-    module_slug: str
-    lesson_title: str
+    difficulty: Literal["easy", "medium", "hard"]
 
 
 class QuizQuestion(BaseModel):
     id: str
     question: str
     options: List[str]
-    correct: int
+    correct: int  # Index of correct answer (0-3)
     explanation: Optional[str] = None
-    module_slug: str
-    lesson_title: str
+    difficulty: Literal["easy", "medium", "hard"]
+
+
+class StudyNode(BaseModel):
+    id: int
+    title: str
+    slug: str
 
 
 class StudyModule(BaseModel):
@@ -35,390 +46,327 @@ class StudyModule(BaseModel):
     title: str
     description: str
     icon: str
-    lesson_count: int
+    node_count: int
     flashcard_count: int
     quiz_count: int
-
-
-class StudyLesson(BaseModel):
-    id: str
-    title: str
-    flashcard_count: int
-    quiz_count: int
-
-
-class StudyModuleDetail(BaseModel):
-    slug: str
-    title: str
-    description: str
-    icon: str
-    lessons: List[StudyLesson]
+    nodes: List[StudyNode]
 
 
 class FlashcardsResponse(BaseModel):
     flashcards: List[Flashcard]
     total: int
+    module_slug: str
+    module_title: str
+    difficulty: Optional[str] = None
 
 
 class QuizResponse(BaseModel):
     questions: List[QuizQuestion]
     total: int
+    module_slug: str
+    module_title: str
+    difficulty: Optional[str] = None
 
 
-# === Data Sources ===
-# Import V2 nodes to extract quiz content
+# === Helper Functions ===
 
-def get_linux_v2_data():
-    """Get all 20 Linux V2 nodes with quiz data"""
-    from src.db.seeds.skillsmaps.linux.node_1_process_v2 import LINUX_NODE_1_PROCESS_V2
-    from src.db.seeds.skillsmaps.linux.node_2_filesystem_v2 import LINUX_NODE_2_FILESYSTEM_V2
-    from src.db.seeds.skillsmaps.linux.node_3_fileops_v2 import LINUX_NODE_3_FILEOPS_V2
-    from src.db.seeds.skillsmaps.linux.node_4_permissions_v2 import LINUX_NODE_4_PERMISSIONS_V2
-    from src.db.seeds.skillsmaps.linux.node_5_textproc_v2 import LINUX_NODE_5_TEXTPROC_V2
-    from src.db.seeds.skillsmaps.linux.node_6_editors_v2 import LINUX_NODE_6_EDITORS_V2
-    from src.db.seeds.skillsmaps.linux.node_7_pipes_v2 import LINUX_NODE_7_PIPES_V2
-    from src.db.seeds.skillsmaps.linux.node_8_users_v2 import LINUX_NODE_8_USERS_V2
-    from src.db.seeds.skillsmaps.linux.node_9_packages_v2 import LINUX_NODE_9_PACKAGES_V2
-    from src.db.seeds.skillsmaps.linux.node_10_services_v2 import LINUX_NODE_10_SERVICES_V2
-    from src.db.seeds.skillsmaps.linux.node_11_storage_v2 import LINUX_NODE_11_STORAGE_V2
-    from src.db.seeds.skillsmaps.linux.node_12_networking_v2 import LINUX_NODE_12_NETWORKING_V2
-    from src.db.seeds.skillsmaps.linux.node_13_dns_v2 import LINUX_NODE_13_DNS_V2
-    from src.db.seeds.skillsmaps.linux.node_14_firewall_v2 import LINUX_NODE_14_FIREWALL_V2
-    from src.db.seeds.skillsmaps.linux.node_15_ssh_v2 import LINUX_NODE_15_SSH_V2
-    from src.db.seeds.skillsmaps.linux.node_16_archiving_v2 import LINUX_NODE_16_ARCHIVING_V2
-    from src.db.seeds.skillsmaps.linux.node_17_cron_v2 import LINUX_NODE_17_CRON_V2
-    from src.db.seeds.skillsmaps.linux.node_18_logs_v2 import LINUX_NODE_18_LOGS_V2
-    from src.db.seeds.skillsmaps.linux.node_19_performance_v2 import LINUX_NODE_19_PERFORMANCE_V2
-    from src.db.seeds.skillsmaps.linux.node_20_troubleshooting_v2 import LINUX_NODE_20_TROUBLESHOOTING_V2
+def shuffle_quiz_options(question: dict) -> dict:
+    """
+    Slumpa ordningen på svarsalternativ OCH uppdatera correct index.
+    Så att rätt svar inte alltid är samma bokstav.
+    """
+    options = question["options"].copy()
+    correct_answer = options[question["correct"]]
 
-    return [
-        LINUX_NODE_1_PROCESS_V2,
-        LINUX_NODE_2_FILESYSTEM_V2,
-        LINUX_NODE_3_FILEOPS_V2,
-        LINUX_NODE_4_PERMISSIONS_V2,
-        LINUX_NODE_5_TEXTPROC_V2,
-        LINUX_NODE_6_EDITORS_V2,
-        LINUX_NODE_7_PIPES_V2,
-        LINUX_NODE_8_USERS_V2,
-        LINUX_NODE_9_PACKAGES_V2,
-        LINUX_NODE_10_SERVICES_V2,
-        LINUX_NODE_11_STORAGE_V2,
-        LINUX_NODE_12_NETWORKING_V2,
-        LINUX_NODE_13_DNS_V2,
-        LINUX_NODE_14_FIREWALL_V2,
-        LINUX_NODE_15_SSH_V2,
-        LINUX_NODE_16_ARCHIVING_V2,
-        LINUX_NODE_17_CRON_V2,
-        LINUX_NODE_18_LOGS_V2,
-        LINUX_NODE_19_PERFORMANCE_V2,
-        LINUX_NODE_20_TROUBLESHOOTING_V2,
-    ]
+    # Skapa index-mapping och shuffla
+    indices = list(range(len(options)))
+    random.shuffle(indices)
+
+    # Bygg nya options i shufflad ordning
+    new_options = [options[i] for i in indices]
+
+    # Hitta var rätt svar hamnade
+    new_correct = new_options.index(correct_answer)
+
+    return {
+        **question,
+        "options": new_options,
+        "correct": new_correct
+    }
 
 
-def get_bash_v2_data():
-    """Get Bash V2 nodes with quiz data"""
-    try:
-        from src.db.seeds.skillsmaps.bash.node_1_introduction_v2 import NODE_BASH_01_INTRODUCTION_V2
-        from src.db.seeds.skillsmaps.bash.node_2_variables_v2 import NODE_BASH_02_VARIABLES_V2
-        from src.db.seeds.skillsmaps.bash.node_3_conditionals_v2 import NODE_BASH_03_CONDITIONALS_V2
-        from src.db.seeds.skillsmaps.bash.node_4_loops_v2 import NODE_BASH_04_LOOPS_V2
-        from src.db.seeds.skillsmaps.bash.node_5_functions_v2 import NODE_BASH_05_FUNCTIONS_V2
-        return [
-            NODE_BASH_01_INTRODUCTION_V2,
-            NODE_BASH_02_VARIABLES_V2,
-            NODE_BASH_03_CONDITIONALS_V2,
-            NODE_BASH_04_LOOPS_V2,
-            NODE_BASH_05_FUNCTIONS_V2,
-        ]
-    except ImportError as e:
-        print(f"Bash import error: {e}")
+def get_flashcards_for_module(module_slug: str, difficulty: Optional[str] = None) -> List[dict]:
+    """Hämta flashcards från study_data"""
+    study_data = STUDY_DATA_REGISTRY.get(module_slug)
+    if not study_data:
         return []
 
+    flashcards_data = study_data.get("flashcards", {})
+    result = []
 
-def get_docker_v2_data():
-    """Get Docker V2 nodes with quiz data"""
-    try:
-        from src.db.seeds.skillsmaps.docker.nodes_v2 import ALL_DOCKER_V2_NODES
-        return ALL_DOCKER_V2_NODES
-    except ImportError:
+    difficulties = [difficulty] if difficulty else ["easy", "medium", "hard"]
+
+    for diff in difficulties:
+        cards = flashcards_data.get(diff, [])
+        for i, card in enumerate(cards):
+            result.append({
+                "id": f"{module_slug}-fc-{diff}-{i}",
+                "front": card["front"],
+                "back": card["back"],
+                "difficulty": diff
+            })
+
+    return result
+
+
+def get_quiz_for_module(module_slug: str, difficulty: Optional[str] = None) -> List[dict]:
+    """Hämta quiz-frågor från study_data"""
+    study_data = STUDY_DATA_REGISTRY.get(module_slug)
+    if not study_data:
         return []
 
+    quiz_data = study_data.get("quiz", {})
+    result = []
 
-def get_kubernetes_v2_data():
-    """Get Kubernetes V2 nodes with quiz data"""
-    try:
-        from src.db.seeds.skillsmaps.kubernetes.block_1_fundamentals_part1 import BLOCK_1_PART_1_NODES
-        from src.db.seeds.skillsmaps.kubernetes.block_1_fundamentals_part2 import BLOCK_1_PART_2_NODES
-        return BLOCK_1_PART_1_NODES + BLOCK_1_PART_2_NODES
-    except ImportError as e:
-        print(f"K8s import error: {e}")
-        return []
+    difficulties = [difficulty] if difficulty else ["easy", "medium", "hard"]
 
+    for diff in difficulties:
+        questions = quiz_data.get(diff, [])
+        for i, q in enumerate(questions):
+            result.append({
+                "id": f"{module_slug}-quiz-{diff}-{i}",
+                "question": q["question"],
+                "options": q["options"],
+                "correct": q["correct"],
+                "explanation": q.get("explanation"),
+                "difficulty": diff
+            })
 
-def get_git_v2_data():
-    """Get Git V2 nodes with quiz data"""
-    try:
-        from src.db.seeds.skillsmaps.git.block_1_fundamentals import GIT_BLOCK_1
-        return GIT_BLOCK_1
-    except ImportError as e:
-        print(f"Git import error: {e}")
-        return []
-
-
-def extract_flashcards_from_node(node: dict, module_slug: str) -> List[Flashcard]:
-    """Extract flashcards from a V2 node"""
-    flashcards = []
-    lesson_title = node.get("title", "Unknown")
-
-    for section in node.get("sections", []):
-        if section.get("type") == "quiz":
-            content = section.get("content", {})
-            questions = content.get("questions", {})
-
-            for i, fc in enumerate(questions.get("flashcards", [])):
-                flashcards.append(Flashcard(
-                    id=f"{module_slug}-{node.get('node_id', 0)}-fc-{i}",
-                    front=fc.get("front", ""),
-                    back=fc.get("back", ""),
-                    module_slug=module_slug,
-                    lesson_title=lesson_title
-                ))
-
-    return flashcards
-
-
-def extract_quiz_from_node(node: dict, module_slug: str) -> List[QuizQuestion]:
-    """Extract multiple choice questions from a V2 node"""
-    questions = []
-    lesson_title = node.get("title", "Unknown")
-
-    for section in node.get("sections", []):
-        if section.get("type") == "quiz":
-            content = section.get("content", {})
-            quiz_questions = content.get("questions", {})
-
-            for i, q in enumerate(quiz_questions.get("multiple_choice", [])):
-                questions.append(QuizQuestion(
-                    id=f"{module_slug}-{node.get('node_id', 0)}-mc-{i}",
-                    question=q.get("question", ""),
-                    options=q.get("options", []),
-                    correct=q.get("correct", 0),
-                    explanation=q.get("explanation"),
-                    module_slug=module_slug,
-                    lesson_title=lesson_title
-                ))
-
-    return questions
-
-
-# === Module Registry ===
-
-STUDY_MODULES = {
-    "linux-mastery": {
-        "slug": "linux-mastery",
-        "title": "Linux Mastery",
-        "description": "Komplett Linux-kurs på svenska för DevOps",
-        "icon": "Terminal",
-        "get_data": get_linux_v2_data
-    },
-    "bash-scripting": {
-        "slug": "bash-scripting",
-        "title": "Bash Scripting",
-        "description": "Automatisering med Bash-skript",
-        "icon": "Code",
-        "get_data": get_bash_v2_data
-    },
-    "docker-containers": {
-        "slug": "docker-containers",
-        "title": "Docker & Containers",
-        "description": "Container-teknologi och Docker för DevOps",
-        "icon": "Box",
-        "get_data": get_docker_v2_data
-    },
-    "kubernetes": {
-        "slug": "kubernetes",
-        "title": "Kubernetes",
-        "description": "Container-orkestrering med K8s",
-        "icon": "Layers",
-        "get_data": get_kubernetes_v2_data
-    },
-    "git-version-control": {
-        "slug": "git-version-control",
-        "title": "Git & GitHub",
-        "description": "Versionshantering och samarbete",
-        "icon": "GitBranch",
-        "get_data": get_git_v2_data
-    },
-    "aws-cloud": {
-        "slug": "aws-cloud",
-        "title": "AWS Cloud",
-        "description": "Amazon Web Services för DevOps",
-        "icon": "Cloud",
-        "get_data": lambda: []
-    },
-    "azure-cloud": {
-        "slug": "azure-cloud",
-        "title": "Azure Cloud",
-        "description": "Microsoft Azure för DevOps",
-        "icon": "Cloud",
-        "get_data": lambda: []
-    },
-    "cicd-pipelines": {
-        "slug": "cicd-pipelines",
-        "title": "CI/CD Pipelines",
-        "description": "Kontinuerlig integration och leverans",
-        "icon": "Server",
-        "get_data": lambda: []
-    },
-}
+    return result
 
 
 # === Endpoints ===
 
 @router.get("/modules", response_model=List[StudyModule])
 async def list_study_modules():
-    """Get all modules available for study with flashcards/quiz"""
+    """
+    Lista alla 9 färdiga moduler med studydata.
+    Returnerar antal flashcards och quiz per modul.
+    """
     result = []
 
-    for slug, module_info in STUDY_MODULES.items():
-        try:
-            nodes = module_info["get_data"]()
-
-            flashcard_count = 0
-            quiz_count = 0
-
-            for node in nodes:
-                flashcard_count += len(extract_flashcards_from_node(node, slug))
-                quiz_count += len(extract_quiz_from_node(node, slug))
-
-            result.append(StudyModule(
-                slug=slug,
-                title=module_info["title"],
-                description=module_info["description"],
-                icon=module_info["icon"],
-                lesson_count=len(nodes),
-                flashcard_count=flashcard_count,
-                quiz_count=quiz_count
-            ))
-        except Exception as e:
-            print(f"Error loading module {slug}: {e}")
+    for module_slug in get_all_study_modules():
+        study_data = STUDY_DATA_REGISTRY.get(module_slug)
+        if not study_data:
             continue
+
+        # Räkna flashcards och quiz
+        flashcard_count = sum(
+            len(study_data.get("flashcards", {}).get(diff, []))
+            for diff in ["easy", "medium", "hard"]
+        )
+        quiz_count = sum(
+            len(study_data.get("quiz", {}).get(diff, []))
+            for diff in ["easy", "medium", "hard"]
+        )
+
+        # Hämta nodes
+        nodes = [
+            StudyNode(id=n["id"], title=n["title"], slug=n["slug"])
+            for n in study_data.get("nodes", [])
+        ]
+
+        result.append(StudyModule(
+            slug=study_data.get("module_slug", module_slug),
+            title=study_data.get("module_title", "Unknown"),
+            description=study_data.get("module_description", ""),
+            icon=study_data.get("icon", "BookOpen"),
+            node_count=len(nodes),
+            flashcard_count=flashcard_count,
+            quiz_count=quiz_count,
+            nodes=nodes
+        ))
 
     return result
 
 
-@router.get("/modules/{module_slug}", response_model=StudyModuleDetail)
+@router.get("/modules/{module_slug}", response_model=StudyModule)
 async def get_study_module(module_slug: str):
-    """Get module details with lessons"""
-    if module_slug not in STUDY_MODULES:
+    """Hämta detaljer för en specifik modul"""
+    study_data = STUDY_DATA_REGISTRY.get(module_slug)
+
+    if not study_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Module '{module_slug}' not found"
+            detail=f"Modul '{module_slug}' hittades inte"
         )
 
-    module_info = STUDY_MODULES[module_slug]
-    nodes = module_info["get_data"]()
+    flashcard_count = sum(
+        len(study_data.get("flashcards", {}).get(diff, []))
+        for diff in ["easy", "medium", "hard"]
+    )
+    quiz_count = sum(
+        len(study_data.get("quiz", {}).get(diff, []))
+        for diff in ["easy", "medium", "hard"]
+    )
 
-    lessons = []
-    for node in nodes:
-        flashcards = extract_flashcards_from_node(node, module_slug)
-        quiz_questions = extract_quiz_from_node(node, module_slug)
+    nodes = [
+        StudyNode(id=n["id"], title=n["title"], slug=n["slug"])
+        for n in study_data.get("nodes", [])
+    ]
 
-        lessons.append(StudyLesson(
-            id=f"{module_slug}-{node.get('node_id', 0)}",
-            title=node.get("title", "Unknown"),
-            flashcard_count=len(flashcards),
-            quiz_count=len(quiz_questions)
-        ))
-
-    return StudyModuleDetail(
-        slug=module_slug,
-        title=module_info["title"],
-        description=module_info["description"],
-        icon=module_info["icon"],
-        lessons=lessons
+    return StudyModule(
+        slug=study_data.get("module_slug", module_slug),
+        title=study_data.get("module_title", "Unknown"),
+        description=study_data.get("module_description", ""),
+        icon=study_data.get("icon", "BookOpen"),
+        node_count=len(nodes),
+        flashcard_count=flashcard_count,
+        quiz_count=quiz_count,
+        nodes=nodes
     )
 
 
 @router.get("/modules/{module_slug}/flashcards", response_model=FlashcardsResponse)
 async def get_flashcards(
     module_slug: str,
-    lessons: Optional[str] = None,  # Comma-separated lesson IDs
-    shuffle: bool = False
+    difficulty: Optional[Literal["easy", "medium", "hard"]] = Query(
+        None, description="Filtrera på svårighetsgrad"
+    ),
+    shuffle: bool = Query(True, description="Slumpa ordningen på kort"),
+    limit: Optional[int] = Query(None, description="Max antal kort att returnera")
 ):
-    """Get flashcards for a module, optionally filtered by lessons"""
-    if module_slug not in STUDY_MODULES:
+    """
+    Hämta flashcards för en modul.
+
+    - **difficulty**: easy, medium, eller hard (alla om ej angiven)
+    - **shuffle**: Slumpa ordningen (default: true)
+    - **limit**: Begränsa antal kort
+    """
+    study_data = STUDY_DATA_REGISTRY.get(module_slug)
+
+    if not study_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Module '{module_slug}' not found"
+            detail=f"Modul '{module_slug}' hittades inte"
         )
 
-    module_info = STUDY_MODULES[module_slug]
-    nodes = module_info["get_data"]()
+    flashcards = get_flashcards_for_module(module_slug, difficulty)
 
-    # Parse lesson filter
-    lesson_filter = None
-    if lessons:
-        lesson_filter = set(lessons.split(","))
-
-    all_flashcards = []
-    for node in nodes:
-        lesson_id = f"{module_slug}-{node.get('node_id', 0)}"
-
-        # Skip if not in filter
-        if lesson_filter and lesson_id not in lesson_filter:
-            continue
-
-        flashcards = extract_flashcards_from_node(node, module_slug)
-        all_flashcards.extend(flashcards)
-
-    # Shuffle if requested
+    # Slumpa ordningen
     if shuffle:
-        random.shuffle(all_flashcards)
+        random.shuffle(flashcards)
+
+    # Begränsa antal
+    if limit and limit > 0:
+        flashcards = flashcards[:limit]
 
     return FlashcardsResponse(
-        flashcards=all_flashcards,
-        total=len(all_flashcards)
+        flashcards=[Flashcard(**fc) for fc in flashcards],
+        total=len(flashcards),
+        module_slug=module_slug,
+        module_title=study_data.get("module_title", "Unknown"),
+        difficulty=difficulty
     )
 
 
 @router.get("/modules/{module_slug}/quiz", response_model=QuizResponse)
 async def get_quiz(
     module_slug: str,
-    lessons: Optional[str] = None,  # Comma-separated lesson IDs
-    shuffle: bool = False
+    difficulty: Optional[Literal["easy", "medium", "hard"]] = Query(
+        None, description="Filtrera på svårighetsgrad"
+    ),
+    shuffle: bool = Query(True, description="Slumpa ordningen på frågor"),
+    shuffle_options: bool = Query(True, description="Slumpa svarsalternativens ordning"),
+    limit: Optional[int] = Query(None, description="Max antal frågor att returnera")
 ):
-    """Get quiz questions for a module, optionally filtered by lessons"""
-    if module_slug not in STUDY_MODULES:
+    """
+    Hämta quiz-frågor för en modul.
+
+    - **difficulty**: easy, medium, eller hard (alla om ej angiven)
+    - **shuffle**: Slumpa frågeordningen (default: true)
+    - **shuffle_options**: Slumpa svarsalternativ så rätt svar inte alltid är A (default: true)
+    - **limit**: Begränsa antal frågor
+    """
+    study_data = STUDY_DATA_REGISTRY.get(module_slug)
+
+    if not study_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Module '{module_slug}' not found"
+            detail=f"Modul '{module_slug}' hittades inte"
         )
 
-    module_info = STUDY_MODULES[module_slug]
-    nodes = module_info["get_data"]()
+    questions = get_quiz_for_module(module_slug, difficulty)
 
-    # Parse lesson filter
-    lesson_filter = None
-    if lessons:
-        lesson_filter = set(lessons.split(","))
+    # Slumpa svarsalternativens ordning för varje fråga
+    if shuffle_options:
+        questions = [shuffle_quiz_options(q) for q in questions]
 
-    all_questions = []
-    for node in nodes:
-        lesson_id = f"{module_slug}-{node.get('node_id', 0)}"
-
-        # Skip if not in filter
-        if lesson_filter and lesson_id not in lesson_filter:
-            continue
-
-        questions = extract_quiz_from_node(node, module_slug)
-        all_questions.extend(questions)
-
-    # Shuffle if requested
+    # Slumpa frågeordningen
     if shuffle:
-        random.shuffle(all_questions)
+        random.shuffle(questions)
+
+    # Begränsa antal
+    if limit and limit > 0:
+        questions = questions[:limit]
 
     return QuizResponse(
-        questions=all_questions,
-        total=len(all_questions)
+        questions=[QuizQuestion(**q) for q in questions],
+        total=len(questions),
+        module_slug=module_slug,
+        module_title=study_data.get("module_title", "Unknown"),
+        difficulty=difficulty
     )
+
+
+# === Stats Endpoint ===
+
+@router.get("/stats")
+async def get_study_stats():
+    """
+    Hämta statistik för Studyroom.
+    Visar totalt antal flashcards och quiz per modul.
+    """
+    stats = {
+        "total_modules": len(get_all_study_modules()),
+        "total_flashcards": 0,
+        "total_quiz_questions": 0,
+        "modules": []
+    }
+
+    for module_slug in get_all_study_modules():
+        study_data = STUDY_DATA_REGISTRY.get(module_slug)
+        if not study_data:
+            continue
+
+        fc_easy = len(study_data.get("flashcards", {}).get("easy", []))
+        fc_medium = len(study_data.get("flashcards", {}).get("medium", []))
+        fc_hard = len(study_data.get("flashcards", {}).get("hard", []))
+        fc_total = fc_easy + fc_medium + fc_hard
+
+        quiz_easy = len(study_data.get("quiz", {}).get("easy", []))
+        quiz_medium = len(study_data.get("quiz", {}).get("medium", []))
+        quiz_hard = len(study_data.get("quiz", {}).get("hard", []))
+        quiz_total = quiz_easy + quiz_medium + quiz_hard
+
+        stats["total_flashcards"] += fc_total
+        stats["total_quiz_questions"] += quiz_total
+
+        stats["modules"].append({
+            "slug": module_slug,
+            "title": study_data.get("module_title", "Unknown"),
+            "flashcards": {
+                "easy": fc_easy,
+                "medium": fc_medium,
+                "hard": fc_hard,
+                "total": fc_total
+            },
+            "quiz": {
+                "easy": quiz_easy,
+                "medium": quiz_medium,
+                "hard": quiz_hard,
+                "total": quiz_total
+            }
+        })
+
+    return stats
