@@ -33,7 +33,7 @@ def get_database_url():
 
 
 def update_linux_module():
-    """Replace all tasks in linux-mastery with V3 content."""
+    """Replace all tasks in linux-mastery with V3 content, or create if not exists."""
     db_url = get_database_url()
 
     # Handle Railway's postgres:// vs postgresql://
@@ -64,13 +64,57 @@ def update_linux_module():
                 break
 
         if not module_id:
-            print("❌ Linux module not found in database!")
-            print(f"   Tried slugs: {linux_slugs}")
-            print("\n📋 Available modules:")
-            all_modules = session.execute(text("SELECT slug, name FROM modules")).fetchall()
-            for m in all_modules:
-                print(f"   - {m[0]}: {m[1]}")
-            return
+            print("📦 Linux module not found - creating new module...")
+
+            # First ensure track exists
+            track_result = session.execute(
+                text("SELECT id FROM tracks WHERE slug = 'foundation'")
+            ).fetchone()
+
+            if not track_result:
+                print("   Creating 'foundation' track...")
+                import uuid
+                track_uuid = str(uuid.uuid4())
+                session.execute(
+                    text("""
+                        INSERT INTO tracks (id, name, slug, description, color, icon, order_index)
+                        VALUES (:id, 'Foundation', 'foundation', 'Core DevOps fundamentals', '#3b82f6', '🏗️', 1)
+                    """),
+                    {"id": track_uuid}
+                )
+                session.commit()
+                track_result = session.execute(
+                    text("SELECT id FROM tracks WHERE slug = 'foundation'")
+                ).fetchone()
+
+            track_id = track_result[0]
+
+            # Create the Linux module
+            import uuid
+            module_uuid = str(uuid.uuid4())
+            session.execute(
+                text("""
+                    INSERT INTO modules (id, track_id, name, slug, description, order_index, difficulty, estimated_hours)
+                    VALUES (:id, :track_id, :name, :slug, :desc, 1, 'intermediate', :hours)
+                """),
+                {
+                    "id": module_uuid,
+                    "track_id": track_id,
+                    "name": MODULE_LINUX_MASTERY_V3["name"],
+                    "slug": "linux-mastery",
+                    "desc": MODULE_LINUX_MASTERY_V3.get("description", ""),
+                    "hours": MODULE_LINUX_MASTERY_V3.get("estimated_hours", 30),
+                }
+            )
+            session.commit()
+
+            result = session.execute(
+                text("SELECT id, name FROM modules WHERE slug = 'linux-mastery'")
+            ).fetchone()
+            module_id = result[0]
+            module_name = result[1]
+            found_slug = "linux-mastery"
+            print(f"   ✅ Created module: {module_name}")
 
         print(f"✅ Found module: {module_name} (slug: {found_slug}, id: {module_id})")
 
@@ -90,17 +134,20 @@ def update_linux_module():
 
         # Insert new V3 tasks
         print(f"📝 Inserting {len(MODULE_LINUX_MASTERY_V3['tasks'])} new tasks...")
+        import uuid
 
         new_tasks = MODULE_LINUX_MASTERY_V3["tasks"]
         for idx, task in enumerate(new_tasks, 1):
+            task_uuid = str(uuid.uuid4())
             session.execute(
                 text("""
-                    INSERT INTO tasks (module_id, title, description, content, order_index,
+                    INSERT INTO tasks (id, module_id, title, description, content, order_index,
                                        difficulty, estimated_minutes, xp_reward)
-                    VALUES (:module_id, :title, :description, :content, :order_index,
+                    VALUES (:id, :module_id, :title, :description, :content, :order_index,
                             :difficulty, :estimated_minutes, :xp_reward)
                 """),
                 {
+                    "id": task_uuid,
                     "module_id": module_id,
                     "title": task["title"],
                     "description": task.get("description", ""),
