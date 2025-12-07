@@ -9,7 +9,7 @@ Study API Routes - Flashcards och Quiz från dedikerad study_data
 """
 from fastapi import APIRouter, HTTPException, status, Query
 from pydantic import BaseModel
-from typing import List, Optional, Literal
+from typing import List, Optional
 import random
 
 from src.db.seeds.study_data import STUDY_DATA_REGISTRY, get_all_study_modules
@@ -23,7 +23,8 @@ class Flashcard(BaseModel):
     id: str
     front: str
     back: str
-    difficulty: Literal["easy", "medium", "hard"]
+    module_slug: str
+    lesson_title: str  # Maps to difficulty for backwards compatibility
 
 
 class QuizQuestion(BaseModel):
@@ -32,13 +33,16 @@ class QuizQuestion(BaseModel):
     options: List[str]
     correct: int  # Index of correct answer (0-3)
     explanation: Optional[str] = None
-    difficulty: Literal["easy", "medium", "hard"]
+    module_slug: str
+    lesson_title: str  # Maps to difficulty for backwards compatibility
 
 
-class StudyNode(BaseModel):
-    id: int
+class StudyLesson(BaseModel):
+    """Backwards compatible - maps to difficulty levels"""
+    id: str
     title: str
-    slug: str
+    flashcard_count: int
+    quiz_count: int
 
 
 class StudyModule(BaseModel):
@@ -46,26 +50,27 @@ class StudyModule(BaseModel):
     title: str
     description: str
     icon: str
-    node_count: int
+    lesson_count: int
     flashcard_count: int
     quiz_count: int
-    nodes: List[StudyNode]
+
+
+class StudyModuleDetail(BaseModel):
+    slug: str
+    title: str
+    description: str
+    icon: str
+    lessons: List[StudyLesson]
 
 
 class FlashcardsResponse(BaseModel):
     flashcards: List[Flashcard]
     total: int
-    module_slug: str
-    module_title: str
-    difficulty: Optional[str] = None
 
 
 class QuizResponse(BaseModel):
     questions: List[QuizQuestion]
     total: int
-    module_slug: str
-    module_title: str
-    difficulty: Optional[str] = None
 
 
 # === Helper Functions ===
@@ -95,8 +100,8 @@ def shuffle_quiz_options(question: dict) -> dict:
     }
 
 
-def get_flashcards_for_module(module_slug: str, difficulty: Optional[str] = None) -> List[dict]:
-    """Hämta flashcards från study_data"""
+def get_flashcards_for_module(module_slug: str) -> List[dict]:
+    """Hämta flashcards från study_data med bakåtkompatibla fält"""
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
     if not study_data:
         return []
@@ -104,23 +109,29 @@ def get_flashcards_for_module(module_slug: str, difficulty: Optional[str] = None
     flashcards_data = study_data.get("flashcards", {})
     result = []
 
-    difficulties = [difficulty] if difficulty else ["easy", "medium", "hard"]
+    # Difficulty levels map to "lessons" for backwards compatibility
+    difficulty_titles = {
+        "easy": "Grundläggande",
+        "medium": "Medel", 
+        "hard": "Avancerad"
+    }
 
-    for diff in difficulties:
+    for diff in ["easy", "medium", "hard"]:
         cards = flashcards_data.get(diff, [])
         for i, card in enumerate(cards):
             result.append({
                 "id": f"{module_slug}-fc-{diff}-{i}",
                 "front": card["front"],
                 "back": card["back"],
-                "difficulty": diff
+                "module_slug": module_slug,
+                "lesson_title": difficulty_titles[diff]
             })
 
     return result
 
 
-def get_quiz_for_module(module_slug: str, difficulty: Optional[str] = None) -> List[dict]:
-    """Hämta quiz-frågor från study_data"""
+def get_quiz_for_module(module_slug: str) -> List[dict]:
+    """Hämta quiz-frågor från study_data med bakåtkompatibla fält"""
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
     if not study_data:
         return []
@@ -128,9 +139,13 @@ def get_quiz_for_module(module_slug: str, difficulty: Optional[str] = None) -> L
     quiz_data = study_data.get("quiz", {})
     result = []
 
-    difficulties = [difficulty] if difficulty else ["easy", "medium", "hard"]
+    difficulty_titles = {
+        "easy": "Grundläggande",
+        "medium": "Medel",
+        "hard": "Avancerad"
+    }
 
-    for diff in difficulties:
+    for diff in ["easy", "medium", "hard"]:
         questions = quiz_data.get(diff, [])
         for i, q in enumerate(questions):
             result.append({
@@ -139,10 +154,41 @@ def get_quiz_for_module(module_slug: str, difficulty: Optional[str] = None) -> L
                 "options": q["options"],
                 "correct": q["correct"],
                 "explanation": q.get("explanation"),
-                "difficulty": diff
+                "module_slug": module_slug,
+                "lesson_title": difficulty_titles[diff]
             })
 
     return result
+
+
+def get_lessons_for_module(module_slug: str) -> List[dict]:
+    """Skapa 'lessons' från difficulty levels för bakåtkompatibilitet"""
+    study_data = STUDY_DATA_REGISTRY.get(module_slug)
+    if not study_data:
+        return []
+
+    flashcards_data = study_data.get("flashcards", {})
+    quiz_data = study_data.get("quiz", {})
+
+    lessons = []
+    difficulty_map = [
+        ("easy", "Grundläggande"),
+        ("medium", "Medel"),
+        ("hard", "Avancerad")
+    ]
+
+    for diff, title in difficulty_map:
+        fc_count = len(flashcards_data.get(diff, []))
+        quiz_count = len(quiz_data.get(diff, []))
+
+        lessons.append({
+            "id": f"{module_slug}-{diff}",
+            "title": title,
+            "flashcard_count": fc_count,
+            "quiz_count": quiz_count
+        })
+
+    return lessons
 
 
 # === Endpoints ===
@@ -170,29 +216,22 @@ async def list_study_modules():
             for diff in ["easy", "medium", "hard"]
         )
 
-        # Hämta nodes
-        nodes = [
-            StudyNode(id=n["id"], title=n["title"], slug=n["slug"])
-            for n in study_data.get("nodes", [])
-        ]
-
         result.append(StudyModule(
             slug=study_data.get("module_slug", module_slug),
             title=study_data.get("module_title", "Unknown"),
             description=study_data.get("module_description", ""),
             icon=study_data.get("icon", "BookOpen"),
-            node_count=len(nodes),
+            lesson_count=3,  # easy, medium, hard
             flashcard_count=flashcard_count,
-            quiz_count=quiz_count,
-            nodes=nodes
+            quiz_count=quiz_count
         ))
 
     return result
 
 
-@router.get("/modules/{module_slug}", response_model=StudyModule)
+@router.get("/modules/{module_slug}", response_model=StudyModuleDetail)
 async def get_study_module(module_slug: str):
-    """Hämta detaljer för en specifik modul"""
+    """Hämta detaljer för en specifik modul med lessons"""
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
 
     if not study_data:
@@ -201,47 +240,28 @@ async def get_study_module(module_slug: str):
             detail=f"Modul '{module_slug}' hittades inte"
         )
 
-    flashcard_count = sum(
-        len(study_data.get("flashcards", {}).get(diff, []))
-        for diff in ["easy", "medium", "hard"]
-    )
-    quiz_count = sum(
-        len(study_data.get("quiz", {}).get(diff, []))
-        for diff in ["easy", "medium", "hard"]
-    )
+    lessons = [StudyLesson(**lesson) for lesson in get_lessons_for_module(module_slug)]
 
-    nodes = [
-        StudyNode(id=n["id"], title=n["title"], slug=n["slug"])
-        for n in study_data.get("nodes", [])
-    ]
-
-    return StudyModule(
+    return StudyModuleDetail(
         slug=study_data.get("module_slug", module_slug),
         title=study_data.get("module_title", "Unknown"),
         description=study_data.get("module_description", ""),
         icon=study_data.get("icon", "BookOpen"),
-        node_count=len(nodes),
-        flashcard_count=flashcard_count,
-        quiz_count=quiz_count,
-        nodes=nodes
+        lessons=lessons
     )
 
 
 @router.get("/modules/{module_slug}/flashcards", response_model=FlashcardsResponse)
 async def get_flashcards(
     module_slug: str,
-    difficulty: Optional[Literal["easy", "medium", "hard"]] = Query(
-        None, description="Filtrera på svårighetsgrad"
-    ),
-    shuffle: bool = Query(True, description="Slumpa ordningen på kort"),
-    limit: Optional[int] = Query(None, description="Max antal kort att returnera")
+    lessons: Optional[str] = Query(None, description="Kommaseparerade lesson IDs"),
+    shuffle: bool = Query(True, description="Slumpa ordningen på kort")
 ):
     """
     Hämta flashcards för en modul.
 
-    - **difficulty**: easy, medium, eller hard (alla om ej angiven)
+    - **lessons**: Filtrera på lesson IDs (kommaseparerade)
     - **shuffle**: Slumpa ordningen (default: true)
-    - **limit**: Begränsa antal kort
     """
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
 
@@ -251,42 +271,36 @@ async def get_flashcards(
             detail=f"Modul '{module_slug}' hittades inte"
         )
 
-    flashcards = get_flashcards_for_module(module_slug, difficulty)
+    flashcards = get_flashcards_for_module(module_slug)
+
+    # Filtrera på lessons om angivet
+    if lessons:
+        lesson_ids = [lid.strip() for lid in lessons.split(",")]
+        flashcards = [fc for fc in flashcards if any(lid in fc["id"] for lid in lesson_ids)]
 
     # Slumpa ordningen
     if shuffle:
         random.shuffle(flashcards)
 
-    # Begränsa antal
-    if limit and limit > 0:
-        flashcards = flashcards[:limit]
-
     return FlashcardsResponse(
         flashcards=[Flashcard(**fc) for fc in flashcards],
-        total=len(flashcards),
-        module_slug=module_slug,
-        module_title=study_data.get("module_title", "Unknown"),
-        difficulty=difficulty
+        total=len(flashcards)
     )
 
 
 @router.get("/modules/{module_slug}/quiz", response_model=QuizResponse)
 async def get_quiz(
     module_slug: str,
-    difficulty: Optional[Literal["easy", "medium", "hard"]] = Query(
-        None, description="Filtrera på svårighetsgrad"
-    ),
+    lessons: Optional[str] = Query(None, description="Kommaseparerade lesson IDs"),
     shuffle: bool = Query(True, description="Slumpa ordningen på frågor"),
-    shuffle_options: bool = Query(True, description="Slumpa svarsalternativens ordning"),
-    limit: Optional[int] = Query(None, description="Max antal frågor att returnera")
+    shuffle_options: bool = Query(True, description="Slumpa svarsalternativens ordning")
 ):
     """
     Hämta quiz-frågor för en modul.
 
-    - **difficulty**: easy, medium, eller hard (alla om ej angiven)
+    - **lessons**: Filtrera på lesson IDs (kommaseparerade)
     - **shuffle**: Slumpa frågeordningen (default: true)
     - **shuffle_options**: Slumpa svarsalternativ så rätt svar inte alltid är A (default: true)
-    - **limit**: Begränsa antal frågor
     """
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
 
@@ -296,7 +310,12 @@ async def get_quiz(
             detail=f"Modul '{module_slug}' hittades inte"
         )
 
-    questions = get_quiz_for_module(module_slug, difficulty)
+    questions = get_quiz_for_module(module_slug)
+
+    # Filtrera på lessons om angivet
+    if lessons:
+        lesson_ids = [lid.strip() for lid in lessons.split(",")]
+        questions = [q for q in questions if any(lid in q["id"] for lid in lesson_ids)]
 
     # Slumpa svarsalternativens ordning för varje fråga
     if shuffle_options:
@@ -306,16 +325,9 @@ async def get_quiz(
     if shuffle:
         random.shuffle(questions)
 
-    # Begränsa antal
-    if limit and limit > 0:
-        questions = questions[:limit]
-
     return QuizResponse(
         questions=[QuizQuestion(**q) for q in questions],
-        total=len(questions),
-        module_slug=module_slug,
-        module_title=study_data.get("module_title", "Unknown"),
-        difficulty=difficulty
+        total=len(questions)
     )
 
 
