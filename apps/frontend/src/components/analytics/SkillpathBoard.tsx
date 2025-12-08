@@ -844,7 +844,7 @@ export function SkillpathBoard() {
                 />
                 <StatCard
                     icon={CheckCircle}
-                    label="Avklarade övningar"
+                    label="Avklarade Flash/Quiz"
                     value={completedExercises}
                     subtext={completedExercises > 0 ? "Flashcards & Quiz" : "Starta din första!"}
                     color="orange"
