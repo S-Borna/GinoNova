@@ -495,6 +495,7 @@ export default function AdminCommandCenter() {
                 }
             })
             const data = await res.json()
+            console.log("Migration response:", data)
             if (data.success) {
                 if (data.applied) {
                     setMigrationStatus(`✅ Migrationer körda! ${data.previous_revision} → ${data.current_revision}`)
@@ -502,7 +503,14 @@ export default function AdminCommandCenter() {
                     setMigrationStatus(`✅ Databasen är redan uppdaterad (${data.current_revision})`)
                 }
             } else {
-                setMigrationStatus(`❌ Fel: ${data.error || data.stderr || 'Okänt fel'}`)
+                // Show detailed error info
+                const errorDetails = [
+                    data.error,
+                    data.stderr,
+                    data.current_error,
+                    data.backend_dir ? `Dir: ${data.backend_dir}` : null
+                ].filter(Boolean).join(' | ')
+                setMigrationStatus(`❌ Fel: ${errorDetails || 'Okänt fel'}`)
             }
         } catch (err) {
             setMigrationStatus(`❌ Kunde inte köra migrationer: ${err}`)
@@ -870,7 +878,7 @@ export default function AdminCommandCenter() {
                     {migrationStatus && (
                         <div className={cn(
                             "p-3 rounded-lg text-sm",
-                            migrationStatus.startsWith("✅") 
+                            migrationStatus.startsWith("✅")
                                 ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
                                 : "bg-red-500/10 border border-red-500/30 text-red-400"
                         )}>
