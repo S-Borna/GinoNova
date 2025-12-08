@@ -490,12 +490,12 @@ export function Hero() {
                     >
                         <span className="flex items-center gap-1">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            15 modules
+                            36 modules
                         </span>
                         <span className="text-neutral-700">•</span>
                         <span className="flex items-center gap-1">
                             <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-                            60+ hands-on labs
+                            80+ hands-on labs
                         </span>
                         <span className="text-neutral-700">•</span>
                         <span className="flex items-center gap-1">
@@ -548,14 +548,14 @@ export function Hero() {
                 <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
                     <StatCard
                         icon={<Clock className="w-5 h-5" />}
-                        value="200+"
+                        value="310+"
                         label="Hours of Content"
                         delay={0}
                         accentColor="primary"
                     />
                     <StatCard
                         icon={<BookOpen className="w-5 h-5" />}
-                        value="15"
+                        value="36"
                         label="Modules"
                         delay={0.1}
                         accentColor="purple"

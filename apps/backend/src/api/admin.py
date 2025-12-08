@@ -647,6 +647,94 @@ def get_system_stats(
 
 
 # ==============================================================================
+# AI USAGE TRACKING ENDPOINTS
+# ==============================================================================
+
+@admin_router.get("/ai-usage")
+def get_ai_usage_overview(
+    response: Response,
+    current_user: CurrentUser,
+    year: Optional[int] = Query(None, description="Filter by year"),
+    week: Optional[int] = Query(None, description="Filter by week number"),
+):
+    """
+    Get AI usage overview - all users and their usage stats (admin only).
+
+    Shows:
+    - Total calls, tokens, cost per user
+    - Filterable by year/week
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    from ..services.ai_usage_service import get_all_users_usage, get_weekly_summary
+
+    users_usage = get_all_users_usage(year=year, week=week)
+    weekly_summary = get_weekly_summary(year=year)
+
+    # Calculate totals
+    total_calls = sum(u["total_calls"] for u in users_usage)
+    total_tokens = sum(u["total_tokens"] for u in users_usage)
+    total_cost = sum(u["total_cost_usd"] for u in users_usage)
+
+    return {
+        "year": year,
+        "week": week,
+        "totals": {
+            "total_calls": total_calls,
+            "total_tokens": total_tokens,
+            "total_cost_usd": round(total_cost, 4),
+            "unique_users": len(users_usage),
+        },
+        "users": users_usage,
+        "weekly_summary": weekly_summary,
+    }
+
+
+@admin_router.get("/ai-usage/user/{user_id}")
+def get_user_ai_usage(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+    year: Optional[int] = Query(None, description="Filter by year"),
+    week: Optional[int] = Query(None, description="Filter by week number"),
+):
+    """
+    Get AI usage for a specific user (admin only).
+
+    Shows breakdown by feature (Dallas, AI Quiz, etc.)
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    from ..services.ai_usage_service import get_user_usage_stats
+
+    return get_user_usage_stats(user_id=user_id, year=year, week=week)
+
+
+@admin_router.get("/ai-usage/weekly")
+def get_weekly_ai_usage(
+    response: Response,
+    current_user: CurrentUser,
+    year: Optional[int] = Query(None, description="Year to get weekly data for"),
+):
+    """
+    Get weekly AI usage breakdown (admin only).
+
+    Shows usage per week for cost tracking.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    from ..services.ai_usage_service import get_weekly_summary
+
+    return {
+        "year": year or datetime.utcnow().year,
+        "weeks": get_weekly_summary(year=year),
+    }
+
+
+# ==============================================================================
 # CONTENT MANAGEMENT ENDPOINTS
 # ==============================================================================
 
