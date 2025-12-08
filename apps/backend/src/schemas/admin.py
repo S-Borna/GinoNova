@@ -25,6 +25,14 @@ class AdminUserSummary(BaseModel):
         from_attributes = True
 
 
+class UserPermissionsSchema(BaseModel):
+    """Feature permissions schema"""
+    ai_quiz: bool = True
+    premium_modules: bool = True
+    study_room: bool = True
+    skillpath: bool = True
+
+
 class AdminUserDetail(BaseModel):
     """Detailed user info for admin view"""
     id: UUID
@@ -37,6 +45,9 @@ class AdminUserDetail(BaseModel):
     is_active: bool = True
     is_admin: bool = False
     is_verified: bool = False
+
+    # Permissions
+    permissions: Optional[UserPermissionsSchema] = None
 
     # Stats
     total_xp: int = 0
