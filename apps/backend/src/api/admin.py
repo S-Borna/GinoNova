@@ -89,8 +89,141 @@ def admin_status(response: Response):
         "database": "postgres" if is_db_configured() else "memory",
         "endpoints": [
             "users", "users/{id}", "stats", "content/summary",
-            "content/health", "seed-bootcamp", "seed-status", "clear-data"
+            "content/health", "seed-bootcamp", "seed-status", "clear-data",
+            "backfill-activity", "activity-log"
         ]
+    }
+
+
+# ==============================================================================
+# ACTIVITY BACKFILL & LOG ENDPOINTS
+# ==============================================================================
+
+@admin_router.post("/backfill-activity")
+def backfill_user_activity(
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Backfill last_activity_at for all users based on their progress records.
+
+    This fixes users who logged in before the last_activity_at tracking was implemented.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"error": "Database not configured", "updated": 0}
+
+    from ..db.database import get_db_context
+    from ..db.models import User, Progress
+
+    updated_count = 0
+    with get_db_context() as db:
+        users = db.query(User).all()
+
+        for user in users:
+            # Find the most recent activity for this user
+            latest_progress = db.query(Progress).filter(
+                Progress.user_id == user.id
+            ).order_by(Progress.updated_at.desc()).first()
+
+            # Determine best last_activity_at
+            best_activity = user.updated_at
+
+            if latest_progress and latest_progress.updated_at:
+                if latest_progress.updated_at > best_activity:
+                    best_activity = latest_progress.updated_at
+
+            # Only update if last_activity_at is NULL or older
+            if user.last_activity_at is None or best_activity > user.last_activity_at:
+                user.last_activity_at = best_activity
+                updated_count += 1
+
+        db.flush()
+
+    return {
+        "success": True,
+        "message": f"Backfilled last_activity_at for {updated_count} users",
+        "updated": updated_count,
+        "total_users": len(users)
+    }
+
+
+@admin_router.get("/activity-log")
+def get_activity_log(
+    response: Response,
+    current_user: CurrentUser,
+    days: int = Query(7, ge=1, le=90, description="Number of days to look back"),
+):
+    """
+    Get activity log for all users in the last N days.
+
+    Shows registrations, logins (via last_activity_at), and progress updates.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"error": "Database not configured", "events": []}
+
+    from ..db.database import get_db_context
+    from ..db.models import User, Progress
+
+    cutoff = datetime.utcnow() - timedelta(days=days)
+    events = []
+
+    with get_db_context() as db:
+        # Get new registrations
+        new_users = db.query(User).filter(User.created_at >= cutoff).all()
+        for user in new_users:
+            events.append({
+                "type": "registration",
+                "email": user.email,
+                "name": user.full_name,
+                "timestamp": user.created_at.isoformat(),
+                "details": f"New user registered via {user.oauth_provider or 'email'}"
+            })
+
+        # Get recent activity (last_activity_at updates)
+        active_users = db.query(User).filter(
+            User.last_activity_at >= cutoff
+        ).all()
+        for user in active_users:
+            if user.last_activity_at and user.last_activity_at != user.created_at:
+                events.append({
+                    "type": "login",
+                    "email": user.email,
+                    "name": user.full_name,
+                    "timestamp": user.last_activity_at.isoformat(),
+                    "details": "User logged in / was active"
+                })
+
+        # Get progress updates
+        progress_records = db.query(Progress).filter(
+            Progress.updated_at >= cutoff
+        ).order_by(Progress.updated_at.desc()).limit(100).all()
+
+        for p in progress_records:
+            user = db.query(User).filter(User.id == p.user_id).first()
+            if user:
+                events.append({
+                    "type": "progress",
+                    "email": user.email,
+                    "name": user.full_name,
+                    "timestamp": p.updated_at.isoformat(),
+                    "details": f"Progress: {p.status} ({p.progress}%)"
+                })
+
+    # Sort by timestamp descending
+    events.sort(key=lambda x: x["timestamp"], reverse=True)
+
+    return {
+        "period_days": days,
+        "total_events": len(events),
+        "new_registrations": len([e for e in events if e["type"] == "registration"]),
+        "active_users": len(set(e["email"] for e in events if e["type"] == "login")),
+        "events": events[:200]  # Limit to 200 most recent
     }
 
 
@@ -161,7 +294,7 @@ def list_all_users(
         )
 
         user_xp = getattr(user, 'total_xp', tasks_completed * 25)
-        
+
         # Get last_activity_at - prefer user's last_activity_at, fallback to progress or updated_at
         last_active = getattr(user, 'last_activity_at', None) or user.updated_at
         if progress_records:

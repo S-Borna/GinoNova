@@ -441,6 +441,22 @@ function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => vo
     )
 }
 
+interface ActivityEvent {
+    type: "registration" | "login" | "progress"
+    email: string
+    name: string | null
+    timestamp: string
+    details: string
+}
+
+interface ActivityLogResponse {
+    period_days: number
+    total_events: number
+    new_registrations: number
+    active_users: number
+    events: ActivityEvent[]
+}
+
 /* ============================================================================
    MAIN COMPONENT
    ============================================================================ */
@@ -456,6 +472,8 @@ export default function AdminCommandCenter() {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
     const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+    const [activityLog, setActivityLog] = useState<ActivityLogResponse | null>(null)
+    const [backfillStatus, setBackfillStatus] = useState<string | null>(null)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
@@ -510,6 +528,24 @@ export default function AdminCommandCenter() {
                 }
             } catch (statsErr) {
                 // Stats endpoint might not exist - silent fail
+            }
+
+            // Fetch activity log
+            try {
+                const activityRes = await fetch(`${API_BASE_URL}/api/admin/activity-log?days=7`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    cache: 'no-store',
+                })
+
+                if (activityRes.ok) {
+                    const activityData: ActivityLogResponse = await activityRes.json()
+                    setActivityLog(activityData)
+                }
+            } catch (activityErr) {
+                // Activity log might not exist - silent fail
             }
 
             setError(null)
@@ -861,6 +897,107 @@ export default function AdminCommandCenter() {
                     </Link>
                 </div>
             </motion.div>
+
+            {/* Activity Log Section */}
+            {activityLog && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-8"
+                >
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <Activity className="w-5 h-5 text-emerald-400" />
+                            <h2 className="text-lg font-semibold text-white">
+                                Aktivitetslogg ({activityLog.total_events} händelser senaste {activityLog.period_days} dagar)
+                            </h2>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-zinc-500">
+                                {activityLog.new_registrations} nya registreringar • {activityLog.active_users} aktiva
+                            </span>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-zinc-700"
+                                onClick={async () => {
+                                    try {
+                                        setBackfillStatus("Kör backfill...")
+                                        const token = getToken()
+                                        const res = await fetch(`${API_BASE_URL}/api/admin/backfill-activity`, {
+                                            method: "POST",
+                                            headers: {
+                                                Authorization: `Bearer ${token}`,
+                                                "Content-Type": "application/json"
+                                            },
+                                        })
+                                        if (res.ok) {
+                                            const data = await res.json()
+                                            setBackfillStatus(`✓ ${data.updated} användare uppdaterade`)
+                                            fetchData()
+                                        } else {
+                                            setBackfillStatus("✗ Backfill misslyckades")
+                                        }
+                                    } catch {
+                                        setBackfillStatus("✗ Nätverksfel")
+                                    }
+                                    setTimeout(() => setBackfillStatus(null), 3000)
+                                }}
+                            >
+                                <Database className="w-4 h-4 mr-1" />
+                                Backfill
+                            </Button>
+                        </div>
+                    </div>
+                    {backfillStatus && (
+                        <div className="mb-4 px-4 py-2 rounded-lg bg-zinc-800 text-sm text-zinc-300">
+                            {backfillStatus}
+                        </div>
+                    )}
+                    <div className={cn(
+                        "rounded-xl overflow-hidden",
+                        "bg-zinc-900/80 border border-zinc-800",
+                        "max-h-96 overflow-y-auto"
+                    )}>
+                        {activityLog.events.length === 0 ? (
+                            <div className="p-6 text-center text-zinc-500">
+                                Ingen aktivitet de senaste {activityLog.period_days} dagarna
+                            </div>
+                        ) : (
+                            <div className="divide-y divide-zinc-800">
+                                {activityLog.events.slice(0, 20).map((event, idx) => (
+                                    <div key={idx} className="px-4 py-3 flex items-center gap-3 hover:bg-zinc-800/30">
+                                        <div className={cn(
+                                            "p-2 rounded-lg",
+                                            event.type === "registration" && "bg-emerald-500/20",
+                                            event.type === "login" && "bg-blue-500/20",
+                                            event.type === "progress" && "bg-purple-500/20"
+                                        )}>
+                                            {event.type === "registration" && <UserPlus className="w-4 h-4 text-emerald-400" />}
+                                            {event.type === "login" && <LogIn className="w-4 h-4 text-blue-400" />}
+                                            {event.type === "progress" && <Target className="w-4 h-4 text-purple-400" />}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-white truncate">
+                                                {event.name || event.email}
+                                            </p>
+                                            <p className="text-xs text-zinc-500">{event.details}</p>
+                                        </div>
+                                        <div className="text-xs text-zinc-500 whitespace-nowrap">
+                                            {new Date(event.timestamp).toLocaleString("sv-SE", {
+                                                month: "short",
+                                                day: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit"
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+            )}
 
             {/* Users Section */}
             <motion.div
