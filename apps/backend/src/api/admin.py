@@ -303,6 +303,87 @@ def get_migration_status(
         return {"error": str(e)}
 
 
+@admin_router.post("/apply-schema-updates")
+def apply_schema_updates(
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Apply missing schema updates directly via SQL.
+    This is a fallback when Alembic migrations don't work properly.
+    
+    Adds:
+    - permissions column to users table
+    - ai_usage_logs table
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"error": "Database not configured"}
+
+    from sqlalchemy import text
+    from ..db.database import get_db_context
+
+    results = []
+    
+    with get_db_context() as db:
+        # 1. Add permissions column to users table if it doesn't exist
+        try:
+            db.execute(text("""
+                ALTER TABLE users 
+                ADD COLUMN IF NOT EXISTS permissions JSONB 
+                DEFAULT '{"ai_quiz": true, "premium_modules": true, "study_room": true, "skillpath": true}'::jsonb
+            """))
+            db.commit()
+            results.append("✅ permissions column added to users")
+        except Exception as e:
+            results.append(f"⚠️ permissions column: {str(e)}")
+            db.rollback()
+
+        # 2. Create ai_usage_logs table if it doesn't exist
+        try:
+            db.execute(text("""
+                CREATE TABLE IF NOT EXISTS ai_usage_logs (
+                    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+                    feature VARCHAR(50) NOT NULL,
+                    model VARCHAR(50) NOT NULL,
+                    prompt_tokens INTEGER DEFAULT 0,
+                    completion_tokens INTEGER DEFAULT 0,
+                    total_tokens INTEGER DEFAULT 0,
+                    cost_usd FLOAT DEFAULT 0.0,
+                    request_type VARCHAR(100),
+                    week_number INTEGER,
+                    year INTEGER,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """))
+            db.commit()
+            results.append("✅ ai_usage_logs table created")
+        except Exception as e:
+            results.append(f"⚠️ ai_usage_logs table: {str(e)}")
+            db.rollback()
+
+        # 3. Create index on ai_usage_logs if not exists
+        try:
+            db.execute(text("""
+                CREATE INDEX IF NOT EXISTS idx_ai_usage_user_id ON ai_usage_logs(user_id);
+                CREATE INDEX IF NOT EXISTS idx_ai_usage_week ON ai_usage_logs(year, week_number);
+            """))
+            db.commit()
+            results.append("✅ ai_usage_logs indexes created")
+        except Exception as e:
+            results.append(f"⚠️ ai_usage_logs indexes: {str(e)}")
+            db.rollback()
+
+    return {
+        "success": True,
+        "message": "Schema updates applied",
+        "results": results
+    }
+
+
 @admin_router.post("/backfill-activity")
 def backfill_user_activity(
     response: Response,

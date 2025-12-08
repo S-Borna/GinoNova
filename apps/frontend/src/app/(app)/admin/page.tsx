@@ -478,8 +478,37 @@ export default function AdminCommandCenter() {
     const [backfillStatus, setBackfillStatus] = useState<string | null>(null)
     const [migrationStatus, setMigrationStatus] = useState<string | null>(null)
     const [migrationLoading, setMigrationLoading] = useState(false)
+    const [schemaStatus, setSchemaStatus] = useState<string | null>(null)
+    const [schemaLoading, setSchemaLoading] = useState(false)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
+
+    // Apply schema updates (direct SQL)
+    const applySchemaUpdates = async () => {
+        setSchemaLoading(true)
+        setSchemaStatus(null)
+        try {
+            const token = getToken()
+            const res = await fetch(`${API_BASE_URL}/api/admin/apply-schema-updates`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+            const data = await res.json()
+            console.log("Schema update response:", data)
+            if (data.success) {
+                setSchemaStatus(`✅ ${data.results?.join(' | ') || 'Schema uppdaterat'}`)
+            } else {
+                setSchemaStatus(`❌ Fel: ${data.error || 'Okänt fel'}`)
+            }
+        } catch (err) {
+            setSchemaStatus(`❌ Kunde inte uppdatera schema: ${err}`)
+        } finally {
+            setSchemaLoading(false)
+        }
+    }
 
     // Run database migrations
     const runMigrations = async () => {
@@ -852,29 +881,59 @@ export default function AdminCommandCenter() {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
                             <Database className="w-5 h-5 text-cyan-400" />
-                            <h3 className="text-lg font-semibold text-white">Databasmigrationer</h3>
+                            <h3 className="text-lg font-semibold text-white">Databashantering</h3>
                         </div>
-                        <Button
-                            onClick={runMigrations}
-                            disabled={migrationLoading}
-                            className="bg-cyan-600 hover:bg-cyan-700 text-white"
-                        >
-                            {migrationLoading ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Kör...
-                                </>
-                            ) : (
-                                <>
-                                    <Zap className="w-4 h-4 mr-2" />
-                                    Kör Migrationer
-                                </>
-                            )}
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={applySchemaUpdates}
+                                disabled={schemaLoading}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                            >
+                                {schemaLoading ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Kör...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Zap className="w-4 h-4 mr-2" />
+                                        Lägg till Features
+                                    </>
+                                )}
+                            </Button>
+                            <Button
+                                onClick={runMigrations}
+                                disabled={migrationLoading}
+                                className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                            >
+                                {migrationLoading ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Kör...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Zap className="w-4 h-4 mr-2" />
+                                        Kör Migrationer
+                                    </>
+                                )}
+                            </Button>
+                        </div>
                     </div>
                     <p className="text-sm text-zinc-400 mb-3">
-                        Kör väntande databasmigrationer för att aktivera nya features (permissions, AI tracking, etc).
+                        <strong>Lägg till Features:</strong> Skapar permissions-kolumn + AI tracking-tabell direkt via SQL.<br/>
+                        <strong>Kör Migrationer:</strong> Kör Alembic-migrationer (om de inte redan körts).
                     </p>
+                    {schemaStatus && (
+                        <div className={cn(
+                            "p-3 rounded-lg text-sm mb-2",
+                            schemaStatus.startsWith("✅")
+                                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                                : "bg-red-500/10 border border-red-500/30 text-red-400"
+                        )}>
+                            {schemaStatus}
+                        </div>
+                    )}
                     {migrationStatus && (
                         <div className={cn(
                             "p-3 rounded-lg text-sm",
