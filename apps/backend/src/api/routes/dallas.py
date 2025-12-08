@@ -51,8 +51,8 @@ async def chat_with_dallas(request: ChatRequest):
     from uuid import UUID as UUIDType
     from ...services.ai_usage_service import log_ai_usage
 
-    # Try multiple env var names for OpenAI key
-    openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY") or os.getenv("OPEN_AI_KEY")
+    # Try multiple env var names for OpenAI key (OPENAI_KEY first - Railway config)
+    openai_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_KEY")
 
     if openai_key:
         try:
