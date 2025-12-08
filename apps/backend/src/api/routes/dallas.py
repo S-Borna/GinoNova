@@ -53,7 +53,7 @@ async def chat_with_dallas(request: ChatRequest):
 
     # Try multiple env var names for OpenAI key (OPENAI_KEY first - Railway config)
     openai_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_KEY")
-    
+
     # Debug: Log which key was found
     print(f"Dallas: OPENAI_KEY={'set' if os.getenv('OPENAI_KEY') else 'not set'}")
     print(f"Dallas: OPENAI_API_KEY={'set' if os.getenv('OPENAI_API_KEY') else 'not set'}")
@@ -68,11 +68,16 @@ async def chat_with_dallas(request: ChatRequest):
 Du pratar svenska och är stöttande, varm och pedagogisk.
 Användaren heter {request.user_name}.
 
+VIKTIGT:
+- Säg INTE "Hej {request.user_name}" i varje svar - endast vid första kontakten
+- Svara direkt på frågan utan onödiga hälsningar
+- Håll svaren korta och koncisa (max 2-3 meningar)
+- Var hjälpsam och informativ
+
 Om context är 'pulse_check':
 - Fråga hur användaren mår
-- Var empatisk och stöttande
+- Var empatisk och stöttande  
 - Föreslå lärresurser baserat på deras humör
-- Håll svaren korta och personliga (max 2-3 meningar)
 
 Använd emojis sparsamt men kärleksfullt. 🐺"""
 
@@ -129,7 +134,7 @@ Använd emojis sparsamt men kärleksfullt. 🐺"""
 async def dallas_status():
     """Kolla om Dallas är online och om OpenAI är konfigurerad"""
     openai_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_KEY")
-    
+
     return {
         "status": "online",
         "name": "Dallas",
