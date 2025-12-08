@@ -18,6 +18,7 @@ from ..core.exceptions import (
     UserAlreadyExistsError,
     InvalidCredentialsError,
 )
+from ..db import user_repository
 
 auth_router = APIRouter()
 
@@ -146,7 +147,10 @@ def get_current_user_info(current_user: CurrentUser):
 
     Requires valid JWT token in Authorization header.
     Returns UserPublic schema.
+    Also updates last_activity_at for online status tracking.
     """
+    # Update last_activity_at for online status tracking
+    user_repository.update_user(current_user.id, last_activity_at=datetime.utcnow())
     return current_user
 
 

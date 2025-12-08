@@ -19,6 +19,7 @@ from ..core.deps import CurrentUser
 from ..db.database import is_db_configured
 from ..db import task_block_progress_repository as progress_repo
 from ..db.task_repository import get_task_by_id
+from ..db import user_repository
 
 
 task_progress_router = APIRouter()
@@ -187,6 +188,9 @@ def start_task(
 
     # Create or get existing progress
     progress = progress_repo.create_progress(current_user.id, task_id)
+
+    # Update last_activity_at for online status tracking
+    user_repository.update_user(current_user.id, last_activity_at=datetime.utcnow())
 
     content_blocks = getattr(task, 'content_blocks', []) or []
     return _calculate_progress_response(progress, task.xp_reward, content_blocks)
@@ -389,6 +393,9 @@ def complete_task_endpoint(
 
     if not updated:
         raise HTTPException(status_code=500, detail="Failed to complete task")
+
+    # Update last_activity_at for online status tracking
+    user_repository.update_user(current_user.id, last_activity_at=datetime.utcnow())
 
     # TODO: Update user's total XP in user model
 
