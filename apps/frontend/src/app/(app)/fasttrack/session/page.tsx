@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle, XCircle, BookOpen, Brain, Lightbulb } from "lucide-react"
-import { TOOLS_DATA } from "../page"
+import { TOOLS_DATA } from "@/data/fasttrack-tools"
 import { FASTTRACK_FLASHCARDS } from "@/data/fasttrack-flashcards"
 import { FASTTRACK_QUIZ } from "@/data/fasttrack-quiz"
 

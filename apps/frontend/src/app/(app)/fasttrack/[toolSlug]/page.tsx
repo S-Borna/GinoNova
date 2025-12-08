@@ -39,7 +39,7 @@ import {
     Layers,
     Container,
 } from "lucide-react"
-import { TOOLS_DATA, TOOL_CATEGORIES, type Tool } from "../page"
+import { TOOLS_DATA, TOOL_CATEGORIES, type Tool } from "@/data/fasttrack-tools"
 
 /* ============================================================================
    COPY BUTTON COMPONENT
