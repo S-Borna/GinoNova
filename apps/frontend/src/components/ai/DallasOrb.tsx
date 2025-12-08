@@ -28,6 +28,7 @@ import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { getToken } from "@/lib/auth"
+import { useAuth } from "@/components/auth/AuthProvider"
 import { X, Send, Loader2, Sparkles } from "lucide-react"
 import { usePathname } from "next/navigation"
 
@@ -244,6 +245,7 @@ function TypingIndicator() {
    ============================================================================ */
 
 export function DallasOrb() {
+    const { user } = useAuth()
     const [isOpen, setIsOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE])
     const [input, setInput] = useState("")
@@ -303,6 +305,7 @@ export function DallasOrb() {
 
         try {
             const token = getToken()
+            const userName = user?.full_name || user?.email?.split('@')[0] || "du"
             const response = await fetch("/api/ai/chat", {
                 method: "POST",
                 headers: { 
@@ -312,6 +315,7 @@ export function DallasOrb() {
                 body: JSON.stringify({
                     message: userMessage.content,
                     context: getContext(),
+                    user_name: userName,
                 }),
             })
 
