@@ -48,7 +48,8 @@ async def chat_with_dallas(request: ChatRequest):
     Försöker använda OpenAI GPT-3.5-turbo, annars fallback.
     """
 
-    openai_key = os.getenv("OPENAI_API_KEY")
+    # Try multiple env var names for OpenAI key
+    openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY") or os.getenv("OPEN_AI_KEY")
 
     if openai_key:
         try:
