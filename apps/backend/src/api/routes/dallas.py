@@ -53,6 +53,11 @@ async def chat_with_dallas(request: ChatRequest):
 
     # Try multiple env var names for OpenAI key (OPENAI_KEY first - Railway config)
     openai_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_KEY")
+    
+    # Debug: Log which key was found
+    print(f"Dallas: OPENAI_KEY={'set' if os.getenv('OPENAI_KEY') else 'not set'}")
+    print(f"Dallas: OPENAI_API_KEY={'set' if os.getenv('OPENAI_API_KEY') else 'not set'}")
+    print(f"Dallas: openai_key={'found' if openai_key else 'NOT FOUND'}")
 
     if openai_key:
         try:
@@ -107,7 +112,7 @@ Använd emojis sparsamt men kärleksfullt. 🐺"""
 
         except Exception as e:
             # Om OpenAI failar, använd fallback
-            print(f"Dallas OpenAI error: {e}")
+            print(f"Dallas OpenAI error: {type(e).__name__}: {e}")
             pass
 
     # Fallback-svar (no AI usage logged for fallback)
@@ -122,10 +127,14 @@ Använd emojis sparsamt men kärleksfullt. 🐺"""
 
 @router.get("/status")
 async def dallas_status():
-    """Kolla om Dallas är online"""
+    """Kolla om Dallas är online och om OpenAI är konfigurerad"""
+    openai_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_KEY")
+    
     return {
         "status": "online",
         "name": "Dallas",
         "role": "Din DevOps-guide",
-        "mood": "🐺 Redo att hjälpa!"
+        "mood": "🐺 Redo att hjälpa!",
+        "openai_configured": bool(openai_key),
+        "openai_key_source": "OPENAI_KEY" if os.getenv("OPENAI_KEY") else ("OPENAI_API_KEY" if os.getenv("OPENAI_API_KEY") else ("OPEN_AI_KEY" if os.getenv("OPEN_AI_KEY") else "none"))
     }
