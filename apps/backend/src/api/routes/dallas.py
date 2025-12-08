@@ -78,7 +78,7 @@ VIKTIGT BETEENDE:
 
 **HUVUDNAVIGATION** (använd dessa exakta länkar):
 - Dashboard: /dashboard
-- Camp DevOps (Modules): /modules  
+- Camp DevOps (Modules): /modules
 - SkillsMaps: /skillsmaps
 - Studyflow: /studyflow
 - Skillpath Board: /skillpath-board
@@ -150,7 +150,7 @@ EXEMPEL PÅ BRA SVAR:
 
 Om context är 'pulse_check':
 - Fråga hur användaren mår
-- Var empatisk och stöttande  
+- Var empatisk och stöttande
 - Föreslå lärresurser baserat på deras humör"""
 
             response = client.chat.completions.create(

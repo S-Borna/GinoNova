@@ -683,6 +683,57 @@ def get_user_detail(
 
 
 # ==============================================================================
+# UPDATE USER ENDPOINT (for admin to toggle active/admin status)
+# ==============================================================================
+
+class UserStatusUpdate(BaseModel):
+    """Schema for updating user status"""
+    is_active: Optional[bool] = None
+    is_admin: Optional[bool] = None
+
+
+@admin_router.patch("/users/{user_id}")
+def update_user_status(
+    user_id: UUID,
+    data: UserStatusUpdate,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Update user status (active, admin) - admin only.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        raise HTTPException(status_code=500, detail="Database not configured")
+
+    from ..db.database import get_db_context
+    from ..db.models import User
+
+    with get_db_context() as db:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Update fields if provided
+        if data.is_active is not None:
+            user.is_active = data.is_active
+        if data.is_admin is not None:
+            user.is_admin = data.is_admin
+
+        db.commit()
+        db.refresh(user)
+
+        return {
+            "success": True,
+            "user_id": str(user_id),
+            "is_active": user.is_active,
+            "is_admin": user.is_admin,
+        }
+
+
+# ==============================================================================
 # USER PERMISSIONS ENDPOINT
 # ==============================================================================
 
