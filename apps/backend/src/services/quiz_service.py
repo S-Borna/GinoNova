@@ -20,11 +20,13 @@ def _get_client():
     if _openai_client is None:
         try:
             from openai import OpenAI
-            api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY")
+            # Check OPENAI_KEY first (Railway config), then OPENAI_API_KEY
+            api_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY")
             if not api_key:
-                logger.warning("OpenAI API key not configured")
+                logger.warning("OpenAI API key not configured (checked OPENAI_KEY and OPENAI_API_KEY)")
                 return None
             _openai_client = OpenAI(api_key=api_key)
+            logger.info(f"OpenAI client initialized with key from: {'OPENAI_KEY' if os.getenv('OPENAI_KEY') else 'OPENAI_API_KEY'}")
         except ImportError:
             logger.error("OpenAI package not installed")
             return None
