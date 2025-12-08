@@ -476,8 +476,40 @@ export default function AdminCommandCenter() {
     const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
     const [activityLog, setActivityLog] = useState<ActivityLogResponse | null>(null)
     const [backfillStatus, setBackfillStatus] = useState<string | null>(null)
+    const [migrationStatus, setMigrationStatus] = useState<string | null>(null)
+    const [migrationLoading, setMigrationLoading] = useState(false)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
+
+    // Run database migrations
+    const runMigrations = async () => {
+        setMigrationLoading(true)
+        setMigrationStatus(null)
+        try {
+            const token = getToken()
+            const res = await fetch(`${API_BASE_URL}/api/admin/run-migrations`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+            const data = await res.json()
+            if (data.success) {
+                if (data.applied) {
+                    setMigrationStatus(`✅ Migrationer körda! ${data.previous_revision} → ${data.current_revision}`)
+                } else {
+                    setMigrationStatus(`✅ Databasen är redan uppdaterad (${data.current_revision})`)
+                }
+            } else {
+                setMigrationStatus(`❌ Fel: ${data.error || data.stderr || 'Okänt fel'}`)
+            }
+        } catch (err) {
+            setMigrationStatus(`❌ Kunde inte köra migrationer: ${err}`)
+        } finally {
+            setMigrationLoading(false)
+        }
+    }
 
     const fetchData = useCallback(async () => {
         try {
@@ -797,6 +829,56 @@ export default function AdminCommandCenter() {
                     </motion.div>
                 </div>
             )}
+
+            {/* Database Migrations Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8"
+            >
+                <div className={cn(
+                    "rounded-xl overflow-hidden",
+                    "bg-zinc-900/80 border border-zinc-800",
+                    "p-6"
+                )}>
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <Database className="w-5 h-5 text-cyan-400" />
+                            <h3 className="text-lg font-semibold text-white">Databasmigrationer</h3>
+                        </div>
+                        <Button
+                            onClick={runMigrations}
+                            disabled={migrationLoading}
+                            className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                        >
+                            {migrationLoading ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Kör...
+                                </>
+                            ) : (
+                                <>
+                                    <Zap className="w-4 h-4 mr-2" />
+                                    Kör Migrationer
+                                </>
+                            )}
+                        </Button>
+                    </div>
+                    <p className="text-sm text-zinc-400 mb-3">
+                        Kör väntande databasmigrationer för att aktivera nya features (permissions, AI tracking, etc).
+                    </p>
+                    {migrationStatus && (
+                        <div className={cn(
+                            "p-3 rounded-lg text-sm",
+                            migrationStatus.startsWith("✅") 
+                                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                                : "bg-red-500/10 border border-red-500/30 text-red-400"
+                        )}>
+                            {migrationStatus}
+                        </div>
+                    )}
+                </div>
+            </motion.div>
 
             {/* Online Users Section */}
             {stats && stats.online_now > 0 && (
