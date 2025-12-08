@@ -84,6 +84,33 @@ interface AdminUser {
     total_study_time?: number
 }
 
+/* ============================================================================
+   HELPER FUNCTIONS
+   ============================================================================ */
+
+// Get display name - handles OAuth users without names
+function getDisplayName(user: AdminUser): string {
+    if (user.full_name && user.full_name.trim()) {
+        return user.full_name
+    }
+    // For OAuth users without name, create name from email
+    const emailPrefix = user.email.split("@")[0]
+    return emailPrefix
+        .replace(/[._-]/g, " ")
+        .replace(/\d+$/, "")
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(" ")
+        .trim() || user.email
+}
+
+// Check if user is new (registered within last 7 days)
+function isNewUser(createdAt: string): boolean {
+    const created = new Date(createdAt)
+    const diffDays = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24)
+    return diffDays <= 7
+}
+
 interface SystemStats {
     total_users: number
     active_users: number
@@ -211,11 +238,16 @@ function ActivityIndicator({ lastActive }: { lastActive: string | null }) {
 }
 
 function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (user: AdminUser) => void }) {
+    const displayName = getDisplayName(user)
+    const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
+    const isNew = isNewUser(user.created_at)
+    
     return (
         <motion.tr
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors"
+            onClick={() => onViewDetails(user)}
+            className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors cursor-pointer"
         >
             <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
@@ -225,7 +257,7 @@ function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (use
                             "bg-gradient-to-br from-purple-500 to-indigo-600",
                             "text-white font-bold text-sm"
                         )}>
-                            {user.full_name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
+                            {initials}
                         </div>
                         {user.is_admin && (
                             <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
@@ -234,9 +266,15 @@ function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (use
                         )}
                     </div>
                     <div>
-                        <p className="font-medium text-white text-sm">
-                            {user.full_name || "Inget namn"}
-                        </p>
+                        <div className="flex items-center gap-2">
+                            <p className="font-medium text-white text-sm">{displayName}</p>
+                            {isNew && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-400">NY</span>
+                            )}
+                            {!user.is_active && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-400">SPÄRRAD</span>
+                            )}
+                        </div>
                         <p className="text-xs text-zinc-500">{user.email}</p>
                     </div>
                 </div>
@@ -291,7 +329,49 @@ function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (use
     )
 }
 
-function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => void }) {
+function UserDetailModal({ 
+    user, 
+    onClose,
+    onToggleActive,
+    onToggleAdmin,
+    currentUserEmail
+}: { 
+    user: AdminUser
+    onClose: () => void
+    onToggleActive: (userId: string, isActive: boolean) => Promise<void>
+    onToggleAdmin: (userId: string, isAdmin: boolean) => Promise<void>
+    currentUserEmail: string
+}) {
+    const [actionLoading, setActionLoading] = useState(false)
+    const [actionStatus, setActionStatus] = useState<string | null>(null)
+    const displayName = getDisplayName(user)
+    const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
+    const canModify = user.email.toLowerCase() !== currentUserEmail.toLowerCase()
+
+    const handleToggleActive = async () => {
+        setActionLoading(true)
+        try {
+            await onToggleActive(user.id, !user.is_active)
+            setActionStatus(user.is_active ? "✓ Användare spärrad" : "✓ Användare aktiverad")
+        } catch {
+            setActionStatus("✗ Kunde inte uppdatera")
+        }
+        setActionLoading(false)
+        setTimeout(() => setActionStatus(null), 2000)
+    }
+
+    const handleToggleAdmin = async () => {
+        setActionLoading(true)
+        try {
+            await onToggleAdmin(user.id, !user.is_admin)
+            setActionStatus(user.is_admin ? "✓ Admin-rättighet borttagen" : "✓ Admin-rättighet tillagd")
+        } catch {
+            setActionStatus("✗ Kunde inte uppdatera")
+        }
+        setActionLoading(false)
+        setTimeout(() => setActionStatus(null), 2000)
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -319,11 +399,11 @@ function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => vo
                             "bg-gradient-to-br from-purple-500 to-indigo-600",
                             "text-white font-bold text-2xl"
                         )}>
-                            {user.full_name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
+                            {initials}
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-white">
-                                {user.full_name || "Inget namn"}
+                                {displayName}
                             </h2>
                             <p className="text-zinc-400">{user.email}</p>
                             <div className="flex items-center gap-2 mt-2">
@@ -339,7 +419,12 @@ function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => vo
                                     </span>
                                 ) : (
                                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
-                                        Inaktiv
+                                        Spärrad
+                                    </span>
+                                )}
+                                {isNewUser(user.created_at) && (
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
+                                        Ny användare
                                     </span>
                                 )}
                             </div>
@@ -400,43 +485,97 @@ function UserDetailModal({ user, onClose }: { user: AdminUser; onClose: () => vo
                             </span>
                         </div>
                         <div>
-                            <span className="text-zinc-500">Moduler påbörjade:</span>
-                            <span className="ml-2 text-white">{user.modules_started || 0}</span>
-                        </div>
-                        <div>
-                            <span className="text-zinc-500">Moduler klara:</span>
-                            <span className="ml-2 text-white">{user.modules_completed}</span>
-                        </div>
-                        <div>
-                            <span className="text-zinc-500">Labs klara:</span>
-                            <span className="ml-2 text-white">{user.labs_completed || 0}</span>
-                        </div>
-                        <div>
-                            <span className="text-zinc-500">Projekt klara:</span>
-                            <span className="ml-2 text-white">{user.projects_completed || 0}</span>
+                            <span className="text-zinc-500">Moduler:</span>
+                            <span className="ml-2 text-white">{user.modules_completed}/{user.modules_started || 0} klara</span>
                         </div>
                         <div>
                             <span className="text-zinc-500">Längsta streak:</span>
                             <span className="ml-2 text-white">{user.longest_streak || 0} dagar</span>
                         </div>
-                        <div>
-                            <span className="text-zinc-500">User ID:</span>
-                            <span className="ml-2 text-zinc-400 font-mono text-xs">{user.id}</span>
-                        </div>
                     </div>
                 </div>
 
-                {/* Actions */}
-                <div className="p-6 border-t border-zinc-800 flex justify-end gap-3">
+                {/* Behörigheter */}
+                <div className="p-6 border-t border-zinc-800">
+                    <h3 className="font-semibold text-white mb-3">Behörigheter</h3>
+                    
+                    {actionStatus && (
+                        <div className={cn(
+                            "mb-4 p-3 rounded-lg text-sm",
+                            actionStatus.startsWith("✓") 
+                                ? "bg-emerald-500/10 text-emerald-400"
+                                : "bg-red-500/10 text-red-400"
+                        )}>
+                            {actionStatus}
+                        </div>
+                    )}
+
+                    <div className="space-y-3">
+                        <Button
+                            onClick={handleToggleActive}
+                            disabled={actionLoading || !canModify}
+                            className={cn(
+                                "w-full justify-start",
+                                user.is_active
+                                    ? "bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30"
+                                    : "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                            )}
+                            variant="outline"
+                        >
+                            {actionLoading ? (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : user.is_active ? (
+                                <>
+                                    <AlertCircle className="w-4 h-4 mr-2" />
+                                    Spärra användare
+                                </>
+                            ) : (
+                                <>
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Aktivera användare
+                                </>
+                            )}
+                        </Button>
+
+                        <Button
+                            onClick={handleToggleAdmin}
+                            disabled={actionLoading || !canModify}
+                            className={cn(
+                                "w-full justify-start",
+                                user.is_admin
+                                    ? "bg-zinc-500/10 hover:bg-zinc-500/20 text-zinc-400 border border-zinc-500/30"
+                                    : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                            )}
+                            variant="outline"
+                        >
+                            {actionLoading ? (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : user.is_admin ? (
+                                <>
+                                    <Shield className="w-4 h-4 mr-2" />
+                                    Ta bort admin-rättighet
+                                </>
+                            ) : (
+                                <>
+                                    <Shield className="w-4 h-4 mr-2" />
+                                    Gör till admin
+                                </>
+                            )}
+                        </Button>
+
+                        {!canModify && (
+                            <p className="text-xs text-zinc-500 text-center">
+                                Du kan inte ändra din egen behörighet
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Close button */}
+                <div className="p-6 border-t border-zinc-800 flex justify-end">
                     <Button variant="outline" onClick={onClose}>
                         Stäng
                     </Button>
-                    <Link prefetch={false} href={`/admin/users/${user.id}`}>
-                        <Button className="bg-purple-600 hover:bg-purple-500">
-                            <Edit className="w-4 h-4 mr-2" />
-                            Redigera profil
-                        </Button>
-                    </Link>
                 </div>
             </motion.div>
         </motion.div>
@@ -482,6 +621,50 @@ export default function AdminCommandCenter() {
     const [schemaLoading, setSchemaLoading] = useState(false)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
+
+    // Toggle user active status
+    const toggleUserActive = async (userId: string, isActive: boolean) => {
+        const token = getToken()
+        const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ is_active: isActive })
+        })
+        if (!res.ok) throw new Error("Failed to update user")
+        
+        // Update local state
+        setUsers(prev => prev.map(u => 
+            u.id === userId ? { ...u, is_active: isActive } : u
+        ))
+        if (selectedUser?.id === userId) {
+            setSelectedUser(prev => prev ? { ...prev, is_active: isActive } : null)
+        }
+    }
+
+    // Toggle user admin status
+    const toggleUserAdmin = async (userId: string, isAdminStatus: boolean) => {
+        const token = getToken()
+        const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ is_admin: isAdminStatus })
+        })
+        if (!res.ok) throw new Error("Failed to update user")
+        
+        // Update local state
+        setUsers(prev => prev.map(u => 
+            u.id === userId ? { ...u, is_admin: isAdminStatus } : u
+        ))
+        if (selectedUser?.id === userId) {
+            setSelectedUser(prev => prev ? { ...prev, is_admin: isAdminStatus } : null)
+        }
+    }
 
     // Apply schema updates (direct SQL)
     const applySchemaUpdates = async () => {
@@ -613,6 +796,10 @@ export default function AdminCommandCenter() {
 
                 if (activityRes.ok) {
                     const activityData: ActivityLogResponse = await activityRes.json()
+                    // Sort events by timestamp (newest first)
+                    activityData.events.sort((a, b) => 
+                        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                    )
                     setActivityLog(activityData)
                 }
             } catch (activityErr) {
@@ -1124,12 +1311,12 @@ export default function AdminCommandCenter() {
                         <div className="flex items-center gap-2">
                             <Activity className="w-5 h-5 text-emerald-400" />
                             <h2 className="text-lg font-semibold text-white">
-                                Aktivitetslogg ({activityLog.total_events} händelser senaste {activityLog.period_days} dagar)
+                                Logg (senaste 7 dagar)
                             </h2>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-zinc-500">
-                                {activityLog.new_registrations} nya registreringar • {activityLog.active_users} aktiva
+                                {activityLog.total_events} händelser
                             </span>
                             <Button
                                 variant="outline"
@@ -1176,38 +1363,49 @@ export default function AdminCommandCenter() {
                     )}>
                         {activityLog.events.length === 0 ? (
                             <div className="p-6 text-center text-zinc-500">
-                                Ingen aktivitet de senaste {activityLog.period_days} dagarna
+                                Ingen aktivitet
                             </div>
                         ) : (
                             <div className="divide-y divide-zinc-800">
-                                {activityLog.events.slice(0, 20).map((event, idx) => (
-                                    <div key={idx} className="px-4 py-3 flex items-center gap-3 hover:bg-zinc-800/30">
-                                        <div className={cn(
-                                            "p-2 rounded-lg",
-                                            event.type === "registration" && "bg-emerald-500/20",
-                                            event.type === "login" && "bg-blue-500/20",
-                                            event.type === "progress" && "bg-purple-500/20"
-                                        )}>
-                                            {event.type === "registration" && <UserPlus className="w-4 h-4 text-emerald-400" />}
-                                            {event.type === "login" && <LogIn className="w-4 h-4 text-blue-400" />}
-                                            {event.type === "progress" && <Target className="w-4 h-4 text-purple-400" />}
+                                {activityLog.events.slice(0, 30).map((event, idx) => {
+                                    // Create display name from email if name is missing
+                                    const displayName = event.name || event.email.split("@")[0]
+                                        .replace(/[._-]/g, " ")
+                                        .replace(/\d+$/, "")
+                                        .split(" ")
+                                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                        .join(" ")
+                                        .trim()
+                                    
+                                    return (
+                                        <div key={idx} className="px-4 py-3 flex items-center gap-3 hover:bg-zinc-800/30">
+                                            <div className={cn(
+                                                "p-2 rounded-lg",
+                                                event.type === "registration" && "bg-emerald-500/20",
+                                                event.type === "login" && "bg-blue-500/20",
+                                                event.type === "progress" && "bg-purple-500/20"
+                                            )}>
+                                                {event.type === "registration" && <UserPlus className="w-4 h-4 text-emerald-400" />}
+                                                {event.type === "login" && <LogIn className="w-4 h-4 text-blue-400" />}
+                                                {event.type === "progress" && <Target className="w-4 h-4 text-purple-400" />}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium text-white truncate">
+                                                    {displayName}
+                                                </p>
+                                                <p className="text-xs text-zinc-500">{event.details}</p>
+                                            </div>
+                                            <div className="text-xs text-zinc-500 whitespace-nowrap">
+                                                {new Date(event.timestamp).toLocaleString("sv-SE", {
+                                                    day: "numeric",
+                                                    month: "short",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit"
+                                                })}
+                                            </div>
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-white truncate">
-                                                {event.name || event.email}
-                                            </p>
-                                            <p className="text-xs text-zinc-500">{event.details}</p>
-                                        </div>
-                                        <div className="text-xs text-zinc-500 whitespace-nowrap">
-                                            {new Date(event.timestamp).toLocaleString("sv-SE", {
-                                                month: "short",
-                                                day: "numeric",
-                                                hour: "2-digit",
-                                                minute: "2-digit"
-                                            })}
-                                        </div>
-                                    </div>
-                                ))}
+                                    )
+                                })}
                             </div>
                         )}
                     </div>
@@ -1324,6 +1522,9 @@ export default function AdminCommandCenter() {
                     <UserDetailModal
                         user={selectedUser}
                         onClose={() => setSelectedUser(null)}
+                        onToggleActive={toggleUserActive}
+                        onToggleAdmin={toggleUserAdmin}
+                        currentUserEmail={user?.email || ""}
                     />
                 )}
             </AnimatePresence>

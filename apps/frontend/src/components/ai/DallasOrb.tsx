@@ -308,7 +308,7 @@ export function DallasOrb() {
             const userName = user?.full_name || user?.email?.split('@')[0] || "du"
             const response = await fetch("/api/ai/chat", {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     ...(token ? { Authorization: `Bearer ${token}` } : {})
                 },
