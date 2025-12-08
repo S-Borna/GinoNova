@@ -118,25 +118,90 @@ def run_database_migrations(
 
     import subprocess
     import os
+    from sqlalchemy import text
+    from ..db.database import get_db_context
 
     try:
-        # Get the backend directory
+        # Get the backend directory - handle both local and Docker paths
         backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+        # Fallback to /app/apps/backend if we're in Docker
+        if not os.path.exists(os.path.join(backend_dir, "alembic.ini")):
+            backend_dir = "/app/apps/backend"
+
+        # Verify alembic.ini exists
+        alembic_ini = os.path.join(backend_dir, "alembic.ini")
+        if not os.path.exists(alembic_ini):
+            return {
+                "success": False,
+                "error": f"alembic.ini not found at {alembic_ini}",
+                "backend_dir": backend_dir,
+                "cwd": os.getcwd()
+            }
+
+        # Get current environment (needed for DATABASE_URL)
+        env = os.environ.copy()
+
+        # Check if alembic_version table exists
+        alembic_version_exists = False
+        current_db_revision = None
+        with get_db_context() as db:
+            try:
+                result = db.execute(text("SELECT version_num FROM alembic_version LIMIT 1"))
+                row = result.fetchone()
+                if row:
+                    current_db_revision = row[0]
+                    alembic_version_exists = True
+            except Exception:
+                alembic_version_exists = False
+
+        # If no alembic_version table, stamp current schema
+        if not alembic_version_exists:
+            # Database was created without Alembic - stamp it
+            stamp_result = subprocess.run(
+                ["python", "-m", "alembic", "stamp", "head"],
+                cwd=backend_dir,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            if stamp_result.returncode == 0:
+                return {
+                    "success": True,
+                    "message": "Database stamped to head (no migrations needed - schema already exists)",
+                    "previous_revision": "none",
+                    "current_revision": "head (stamped)",
+                    "applied": False,
+                    "stamped": True,
+                    "backend_dir": backend_dir
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": "Failed to stamp database",
+                    "stdout": stamp_result.stdout,
+                    "stderr": stamp_result.stderr,
+                    "backend_dir": backend_dir
+                }
 
         # First, check current migration status
         result_current = subprocess.run(
             ["python", "-m", "alembic", "current"],
             cwd=backend_dir,
+            env=env,
             capture_output=True,
             text=True,
             timeout=30
         )
-        current_revision = result_current.stdout.strip() if result_current.returncode == 0 else "unknown"
+        current_revision = result_current.stdout.strip() if result_current.returncode == 0 else current_db_revision or "unknown"
+        current_error = result_current.stderr.strip() if result_current.returncode != 0 else None
 
         # Run alembic upgrade head
         result = subprocess.run(
             ["python", "-m", "alembic", "upgrade", "head"],
             cwd=backend_dir,
+            env=env,
             capture_output=True,
             text=True,
             timeout=60
@@ -147,6 +212,7 @@ def run_database_migrations(
             result_new = subprocess.run(
                 ["python", "-m", "alembic", "current"],
                 cwd=backend_dir,
+                env=env,
                 capture_output=True,
                 text=True,
                 timeout=30
@@ -159,7 +225,8 @@ def run_database_migrations(
                 "previous_revision": current_revision,
                 "current_revision": new_revision,
                 "output": result.stdout,
-                "applied": current_revision != new_revision
+                "applied": current_revision != new_revision,
+                "backend_dir": backend_dir
             }
         else:
             return {
@@ -167,13 +234,16 @@ def run_database_migrations(
                 "error": "Migration failed",
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "previous_revision": current_revision
+                "previous_revision": current_revision,
+                "current_error": current_error,
+                "backend_dir": backend_dir
             }
 
     except subprocess.TimeoutExpired:
         return {"success": False, "error": "Migration timed out after 60 seconds"}
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        import traceback
+        return {"success": False, "error": str(e), "traceback": traceback.format_exc()}
 
 
 @admin_router.get("/migration-status")
@@ -195,11 +265,18 @@ def get_migration_status(
 
     backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+    # Fallback to Docker path
+    if not os.path.exists(os.path.join(backend_dir, "alembic.ini")):
+        backend_dir = "/app/apps/backend"
+
+    env = os.environ.copy()
+
     try:
         # Get current revision
         result_current = subprocess.run(
             ["python", "-m", "alembic", "current"],
             cwd=backend_dir,
+            env=env,
             capture_output=True,
             text=True,
             timeout=30
@@ -209,6 +286,7 @@ def get_migration_status(
         result_history = subprocess.run(
             ["python", "-m", "alembic", "history", "--verbose"],
             cwd=backend_dir,
+            env=env,
             capture_output=True,
             text=True,
             timeout=30
@@ -217,7 +295,8 @@ def get_migration_status(
         return {
             "current_revision": result_current.stdout.strip() if result_current.returncode == 0 else "none",
             "history": result_history.stdout if result_history.returncode == 0 else "unavailable",
-            "current_error": result_current.stderr if result_current.returncode != 0 else None
+            "current_error": result_current.stderr if result_current.returncode != 0 else None,
+            "backend_dir": backend_dir
         }
 
     except Exception as e:
