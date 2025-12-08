@@ -106,7 +106,7 @@ def run_database_migrations(
 ):
     """
     Run all pending Alembic migrations (admin only).
-    
+
     This endpoint safely runs database migrations without restarting the server.
     Returns details about which migrations were applied.
     """
@@ -122,7 +122,7 @@ def run_database_migrations(
     try:
         # Get the backend directory
         backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        
+
         # First, check current migration status
         result_current = subprocess.run(
             ["python", "-m", "alembic", "current"],
@@ -132,7 +132,7 @@ def run_database_migrations(
             timeout=30
         )
         current_revision = result_current.stdout.strip() if result_current.returncode == 0 else "unknown"
-        
+
         # Run alembic upgrade head
         result = subprocess.run(
             ["python", "-m", "alembic", "upgrade", "head"],
@@ -152,7 +152,7 @@ def run_database_migrations(
                 timeout=30
             )
             new_revision = result_new.stdout.strip() if result_new.returncode == 0 else "unknown"
-            
+
             return {
                 "success": True,
                 "message": "Migrations completed successfully",
@@ -204,7 +204,7 @@ def get_migration_status(
             text=True,
             timeout=30
         )
-        
+
         # Get migration history
         result_history = subprocess.run(
             ["python", "-m", "alembic", "history", "--verbose"],
