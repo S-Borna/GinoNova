@@ -38,13 +38,14 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     is_verified = Column(Boolean, default=False)
 
-    # Permissions (feature access)
-    permissions = Column(JSON, default=lambda: {
-        "ai_quiz": True,
-        "premium_modules": True,
-        "study_room": True,
-        "skillpath": True
-    })
+    # Permissions (feature access) - TEMPORARILY COMMENTED OUT
+    # Will be enabled after migration 005_add_user_permissions runs
+    # permissions = Column(JSON, default=lambda: {
+    #     "ai_quiz": True,
+    #     "premium_modules": True,
+    #     "study_room": True,
+    #     "skillpath": True
+    # })
 
     # Stats
     total_xp = Column(Integer, default=0)

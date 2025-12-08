@@ -26,10 +26,10 @@ def upgrade() -> None:
         nullable=True,
         server_default='{"ai_quiz": true, "premium_modules": true, "study_room": true, "skillpath": true}'
     ))
-    
+
     # Update existing users to have default permissions
     op.execute("""
-        UPDATE users 
+        UPDATE users
         SET permissions = '{"ai_quiz": true, "premium_modules": true, "study_room": true, "skillpath": true}'::jsonb
         WHERE permissions IS NULL
     """)
