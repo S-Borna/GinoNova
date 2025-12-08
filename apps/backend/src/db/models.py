@@ -38,13 +38,8 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     is_verified = Column(Boolean, default=False)
 
-    # Permissions (feature access control)
-    permissions = Column(JSON, default=lambda: {
-        "ai_quiz": True,
-        "premium_modules": True,
-        "study_room": True,
-        "skillpath": True
-    })
+    # Permissions (feature access control) - nullable, handled in code
+    permissions = Column(JSON, nullable=True)
 
     # Stats
     total_xp = Column(Integer, default=0)
