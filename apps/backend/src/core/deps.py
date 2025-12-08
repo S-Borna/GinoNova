@@ -1,9 +1,11 @@
 """
 Dependencies - FastAPI dependency injection for auth
 Phase 1.4: Enhanced error messages and is_active check
+Phase 10.1: Auto-update last_activity_at on every authenticated request
 """
 from typing import Annotated, Optional
 from uuid import UUID
+from datetime import datetime, timedelta
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -11,9 +13,13 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from ..core.jwt import decode_access_token
 from ..services.user_service import user_service
 from ..schemas.user import UserPublic
+from ..db import user_repository
 
 # HTTP Bearer token security scheme (auto_error=False for explicit error handling)
 security = HTTPBearer(auto_error=False)
+
+# Throttle activity updates - only update if more than 5 minutes since last update
+ACTIVITY_UPDATE_THROTTLE_MINUTES = 5
 
 
 async def get_current_user(
@@ -71,6 +77,25 @@ async def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User account is deactivated"
         )
+
+    # Auto-update last_activity_at (throttled to avoid excessive DB writes)
+    # Only update if more than ACTIVITY_UPDATE_THROTTLE_MINUTES since last update
+    now = datetime.utcnow()
+    should_update_activity = False
+    
+    if user.last_activity_at is None:
+        should_update_activity = True
+    else:
+        time_since_last = now - user.last_activity_at
+        if time_since_last > timedelta(minutes=ACTIVITY_UPDATE_THROTTLE_MINUTES):
+            should_update_activity = True
+    
+    if should_update_activity:
+        try:
+            user_repository.update_user(user.id, last_activity_at=now)
+        except Exception:
+            # Don't fail the request if activity update fails
+            pass
 
     return UserPublic(
         id=user.id,
