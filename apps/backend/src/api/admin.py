@@ -99,6 +99,131 @@ def admin_status(response: Response):
 # ACTIVITY BACKFILL & LOG ENDPOINTS
 # ==============================================================================
 
+@admin_router.post("/run-migrations")
+def run_database_migrations(
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Run all pending Alembic migrations (admin only).
+    
+    This endpoint safely runs database migrations without restarting the server.
+    Returns details about which migrations were applied.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"success": False, "error": "Database not configured", "migrations": []}
+
+    import subprocess
+    import os
+
+    try:
+        # Get the backend directory
+        backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        
+        # First, check current migration status
+        result_current = subprocess.run(
+            ["python", "-m", "alembic", "current"],
+            cwd=backend_dir,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        current_revision = result_current.stdout.strip() if result_current.returncode == 0 else "unknown"
+        
+        # Run alembic upgrade head
+        result = subprocess.run(
+            ["python", "-m", "alembic", "upgrade", "head"],
+            cwd=backend_dir,
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+
+        if result.returncode == 0:
+            # Get new current revision
+            result_new = subprocess.run(
+                ["python", "-m", "alembic", "current"],
+                cwd=backend_dir,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            new_revision = result_new.stdout.strip() if result_new.returncode == 0 else "unknown"
+            
+            return {
+                "success": True,
+                "message": "Migrations completed successfully",
+                "previous_revision": current_revision,
+                "current_revision": new_revision,
+                "output": result.stdout,
+                "applied": current_revision != new_revision
+            }
+        else:
+            return {
+                "success": False,
+                "error": "Migration failed",
+                "stdout": result.stdout,
+                "stderr": result.stderr,
+                "previous_revision": current_revision
+            }
+
+    except subprocess.TimeoutExpired:
+        return {"success": False, "error": "Migration timed out after 60 seconds"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@admin_router.get("/migration-status")
+def get_migration_status(
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Get current migration status and list available migrations.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"error": "Database not configured"}
+
+    import subprocess
+    import os
+
+    backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+    try:
+        # Get current revision
+        result_current = subprocess.run(
+            ["python", "-m", "alembic", "current"],
+            cwd=backend_dir,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        # Get migration history
+        result_history = subprocess.run(
+            ["python", "-m", "alembic", "history", "--verbose"],
+            cwd=backend_dir,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+
+        return {
+            "current_revision": result_current.stdout.strip() if result_current.returncode == 0 else "none",
+            "history": result_history.stdout if result_history.returncode == 0 else "unavailable",
+            "current_error": result_current.stderr if result_current.returncode != 0 else None
+        }
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
 @admin_router.post("/backfill-activity")
 def backfill_user_activity(
     response: Response,
