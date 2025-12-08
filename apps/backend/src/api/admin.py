@@ -248,6 +248,21 @@ def list_all_users(
     add_phase_header(response)
     require_admin(current_user)
 
+    # Get permissions lookup from database
+    user_permissions_map = {}
+    if is_db_configured():
+        from ..db.database import get_db_context
+        from ..db.models import User as UserModel
+        with get_db_context() as db:
+            db_users = db.query(UserModel).all()
+            for u in db_users:
+                user_permissions_map[str(u.id)] = u.permissions or {
+                    "ai_quiz": True,
+                    "premium_modules": True,
+                    "study_room": True,
+                    "skillpath": True
+                }
+
     users = user_repository.list_users()
     all_modules = list_modules()
     all_tasks = list_tasks()
@@ -302,6 +317,14 @@ def list_all_users(
             if latest.updated_at > last_active:
                 last_active = latest.updated_at
 
+        # Get permissions for this user
+        user_perms = user_permissions_map.get(str(user.id), {
+            "ai_quiz": True,
+            "premium_modules": True,
+            "study_room": True,
+            "skillpath": True
+        })
+
         user_details.append(AdminUserDetail(
             id=user.id,
             email=user.email,
@@ -311,6 +334,7 @@ def list_all_users(
             is_active=user.is_active,
             is_admin=getattr(user, 'is_admin', False),
             is_verified=getattr(user, 'is_verified', False),
+            permissions=user_perms,
             total_xp=user_xp,
             level=calculate_level(user_xp),
             current_streak=getattr(user, 'current_streak', 0),
@@ -495,6 +519,104 @@ def deactivate_user(
     else:
         user_repository.update_user(user_id, is_active=False)
         return {"success": True, "message": "User deactivated"}
+
+
+# ==============================================================================
+# PERMISSIONS ENDPOINTS
+# ==============================================================================
+
+class UserPermissions(BaseModel):
+    """User feature permissions"""
+    ai_quiz: bool = True
+    premium_modules: bool = True
+    study_room: bool = True
+    skillpath: bool = True
+
+
+class PermissionsUpdate(BaseModel):
+    """Partial permissions update"""
+    permissions: dict
+
+
+@admin_router.get("/users/{user_id}/permissions")
+def get_user_permissions(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """Get permissions for a specific user."""
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        raise HTTPException(status_code=503, detail="Database not configured")
+
+    from ..db.database import get_db_context
+    from ..db.models import User
+
+    with get_db_context() as db:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Return default permissions if none set
+        perms = user.permissions or {
+            "ai_quiz": True,
+            "premium_modules": True,
+            "study_room": True,
+            "skillpath": True
+        }
+
+        return {
+            "user_id": str(user_id),
+            "email": user.email,
+            "permissions": perms
+        }
+
+
+@admin_router.patch("/users/{user_id}/permissions")
+def update_user_permissions(
+    user_id: UUID,
+    data: PermissionsUpdate,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """Update permissions for a specific user."""
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        raise HTTPException(status_code=503, detail="Database not configured")
+
+    from ..db.database import get_db_context
+    from ..db.models import User
+
+    with get_db_context() as db:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Merge existing permissions with updates
+        current_perms = user.permissions or {
+            "ai_quiz": True,
+            "premium_modules": True,
+            "study_room": True,
+            "skillpath": True
+        }
+
+        # Update only provided fields
+        for key, value in data.permissions.items():
+            if key in current_perms:
+                current_perms[key] = value
+
+        user.permissions = current_perms
+        db.flush()
+
+        return {
+            "success": True,
+            "user_id": str(user_id),
+            "permissions": current_perms
+        }
 
 
 # ==============================================================================

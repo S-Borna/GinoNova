@@ -82,14 +82,14 @@ async def get_current_user(
     # Only update if more than ACTIVITY_UPDATE_THROTTLE_MINUTES since last update
     now = datetime.utcnow()
     should_update_activity = False
-    
+
     if user.last_activity_at is None:
         should_update_activity = True
     else:
         time_since_last = now - user.last_activity_at
         if time_since_last > timedelta(minutes=ACTIVITY_UPDATE_THROTTLE_MINUTES):
             should_update_activity = True
-    
+
     if should_update_activity:
         try:
             user_repository.update_user(user.id, last_activity_at=now)
