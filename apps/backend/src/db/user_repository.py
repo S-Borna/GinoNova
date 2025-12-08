@@ -29,6 +29,7 @@ def _model_to_schema(user) -> UserInDB:
         is_admin=user.is_admin,
         created_at=user.created_at,
         updated_at=user.updated_at,
+        last_activity_at=getattr(user, 'last_activity_at', None),
     )
 
 

@@ -475,6 +475,7 @@ export default function AdminCommandCenter() {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
+                cache: 'no-store',
             })
 
             if (!usersRes.ok) {
@@ -500,6 +501,7 @@ export default function AdminCommandCenter() {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json"
                     },
+                    cache: 'no-store',
                 })
 
                 if (statsRes.ok) {

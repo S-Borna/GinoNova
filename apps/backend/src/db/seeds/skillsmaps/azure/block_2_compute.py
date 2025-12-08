@@ -21,65 +21,77 @@ AZURE_NODE_5_VMS = {
         "virtual machines", "vm sizes", "images", "disks",
         "availability sets", "scale sets", "vm extensions"
     ],
-    "content": """
-# Azure Virtual Machines
+    "content": """# Azure Virtual Machines
 
-> *"VMs give you full control - but with great power comes great responsibility."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor VMs ar viktigt |
+|----------|----------------------|
+| **Full kontroll** | Hantera OS, middleware, applikationer |
+| **Legacy-appar** | Kor applikationer som inte passar PaaS |
+| **Custom images** | Skapa gyllene images for snabb deploy |
+| **Hybrid** | Migrera fran on-prem till cloud |
+| **HA/DR** | Availability Sets/Zones for redundans |
 
-Azure VMs är IaaS-grunden:
-- **Full kontroll** - OS, middleware, applikationer
-- **Flexibilitet** - Windows, Linux, custom images
-- **Integration** - med Azure-tjänster
-- **Skalbarhet** - Scale Sets för auto-scaling
+Azure VMs ar IaaS-grunden - full kontroll over compute.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 VM Size Families
+## VM Size Families
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    AZURE VM SIZE FAMILIES                        │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  FAMILY    USE CASE                  EXAMPLE          vCPU  RAM │
-│  ────────────────────────────────────────────────────────────── │
-│  B-series  Burstable, dev/test       Standard_B2s      2    4GB │
+│  FAMILY    ANVANDNING              EXEMPEL          vCPU  RAM   │
+│  ───────────────────────────────────────────────────────────    │
+│  B-series  Burstable, dev/test     Standard_B2s      2    4GB   │
 │            (ekonomisk, variabel CPU)                            │
 │                                                                  │
-│  D-series  General purpose           Standard_D4s_v5   4   16GB │
+│  D-series  General purpose         Standard_D4s_v5   4   16GB   │
 │            (balanserad compute)                                 │
 │                                                                  │
-│  E-series  Memory optimized          Standard_E4s_v5   4   32GB │
+│  E-series  Memory optimized        Standard_E4s_v5   4   32GB   │
 │            (databaser, caching)                                 │
 │                                                                  │
-│  F-series  Compute optimized         Standard_F4s_v2   4    8GB │
+│  F-series  Compute optimized       Standard_F4s_v2   4    8GB   │
 │            (batch, gaming, analytics)                           │
 │                                                                  │
-│  N-series  GPU                       Standard_NC6      6   56GB │
-│            (ML, rendering, HPC)      (+ GPU)                    │
+│  N-series  GPU                     Standard_NC6      6   56GB   │
+│            (ML, rendering, HPC)    (+ GPU)                      │
 │                                                                  │
-│  L-series  Storage optimized         Standard_L8s_v2   8   64GB │
-│            (big data, SQL, NoSQL)    (+ NVMe)                   │
-│                                                                  │
-│  NAMING CONVENTION:                                              │
-│  Standard_D4as_v5                                                │
-│  │       │││   │                                                 │
-│  │       │││   └── Version                                       │
-│  │       ││└── Special: s=SSD, r=RDMA, a=AMD                     │
-│  │       │└── CPU count                                          │
-│  │       └── Family                                              │
-│  └── Tier (Basic/Standard)                                       │
+│  L-series  Storage optimized       Standard_L8s_v2   8   64GB   │
+│            (big data, SQL, NoSQL)  (+ NVMe)                     │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+### Naming Convention
 
-## 💻 Skapa VM med CLI
+```
+Standard_D4as_v5
+│       │││   │
+│       │││   └── Version (nyare = battre)
+│       ││└── Special: s=SSD, r=RDMA, a=AMD
+│       │└── CPU count
+│       └── Family
+└── Tier (Basic/Standard)
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa VM med CLI
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az vm create` | Skapa VM |
+| `az vm list` | Lista VMs |
+| `az vm start/stop` | Starta/stoppa |
+| `az vm deallocate` | Deallocate (sparar pengar) |
+| `az vm resize` | Andra storlek |
 
 ```bash
 # Skapa enkel Linux VM
@@ -114,18 +126,18 @@ az vm create \\
     --nsg-rule SSH
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 VM Lifecycle
+## VM Lifecycle
 
 ```bash
 # Start VM
 az vm start --resource-group rg-demo --name vm-linux-01
 
-# Stop VM (still billing for storage!)
+# Stop VM (fortfarande fakturering for storage!)
 az vm stop --resource-group rg-demo --name vm-linux-01
 
-# Deallocate (no compute charges)
+# Deallocate (ingen compute-kostnad)
 az vm deallocate --resource-group rg-demo --name vm-linux-01
 
 # Restart
@@ -138,9 +150,16 @@ az vm resize --resource-group rg-demo --name vm-linux-01 --size Standard_D4s_v5
 az vm delete --resource-group rg-demo --name vm-linux-01 --yes
 ```
 
----
+### Stop vs Deallocate
 
-## 💻 VM Disks
+| Operation | Compute-kostnad | Storage-kostnad | Public IP |
+|-----------|-----------------|-----------------|-----------|
+| **Stop** | Ja (betalar!) | Ja | Behalles |
+| **Deallocate** | Nej | Ja | Kan frigoras |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## VM Disks
 
 ```bash
 # Skapa och koppla datadisk
@@ -161,30 +180,18 @@ sudo mount /dev/sdc /data
 echo '/dev/sdc /data ext4 defaults,nofail 0 0' | sudo tee -a /etc/fstab
 ```
 
----
+### Disk-typer
 
-## 💻 VM Extensions
+| Typ | IOPS | Anvandning |
+|-----|------|------------|
+| **Standard HDD** | 500 | Backup, dev |
+| **Standard SSD** | 6000 | Web servers |
+| **Premium SSD** | 20000 | Databaser, produktion |
+| **Ultra Disk** | 160000 | Mission-critical |
 
-```bash
-# Installera Azure Monitor agent
-az vm extension set \\
-    --resource-group rg-demo \\
-    --vm-name vm-linux-01 \\
-    --name AzureMonitorLinuxAgent \\
-    --publisher Microsoft.Azure.Monitor
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Custom script extension
-az vm extension set \\
-    --resource-group rg-demo \\
-    --vm-name vm-linux-01 \\
-    --name customScript \\
-    --publisher Microsoft.Azure.Extensions \\
-    --settings '{"commandToExecute":"apt-get update && apt-get install -y nginx"}'
-```
-
----
-
-## 💻 High Availability
+## High Availability
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -212,46 +219,71 @@ az vm extension set \\
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+| Strategi | SLA | Skyddar mot |
+|----------|-----|-------------|
+| **Single VM (Premium)** | 99.9% | - |
+| **Availability Set** | 99.95% | Rack-fel |
+| **Availability Zone** | 99.99% | Datacenter-fel |
 
-## ⚠️ Vanliga Problem
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Problem 1: VM fastnar i "Creating"
+## VM Extensions
+
+```bash
+# Installera Azure Monitor agent
+az vm extension set \\
+    --resource-group rg-demo \\
+    --vm-name vm-linux-01 \\
+    --name AzureMonitorLinuxAgent \\
+    --publisher Microsoft.Azure.Monitor
+
+# Custom script extension
+az vm extension set \\
+    --resource-group rg-demo \\
+    --vm-name vm-linux-01 \\
+    --name customScript \\
+    --publisher Microsoft.Azure.Extensions \\
+    --settings '{"commandToExecute":"apt-get update && apt-get install -y nginx"}'
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| VM fastnar i "Creating" | Quota | `az vm list-usage --location` |
+| Kan inte SSH | NSG blockerar | Lagg till port 22 i NSG |
+| VM stoppad men kostar | Stop != Deallocate | Anvand `az vm deallocate` |
+| Kan inte resize | Size ej tillganglig | Deallocate forst |
 
 ```bash
 # Kontrollera quota
 az vm list-usage --location northeurope --output table
 
-# Begär quota-ökning i Portal
-# Subscriptions → Usage + quotas → Request increase
-```
-
-### Problem 2: Kan inte SSH
-
-```bash
 # Kontrollera NSG-regler
-az network nsg rule list --resource-group rg-demo --nsg-name vm-linux-01-nsg --output table
-
-# Lägg till SSH-regel
-az network nsg rule create \\
+az network nsg rule list \\
     --resource-group rg-demo \\
     --nsg-name vm-linux-01-nsg \\
-    --name AllowSSH \\
-    --priority 1000 \\
-    --access Allow \\
-    --source-address-prefixes "YOUR_IP" \\
-    --destination-port-ranges 22
+    --output table
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Välj rätt size family** för workload
-- **Deallocate** för att stoppa betalning
-- **Premium SSD** för produktion
-- **Availability Zones** för 99.99% SLA
-- **Extensions** för automation
+| Koncept | Detalj |
+|---------|--------|
+| **Size Family** | Valj ratt family for workload (B=dev, D=general) |
+| **Deallocate** | Stoppa betalning - inte bara stop |
+| **Premium SSD** | For produktion och databaser |
+| **Availability Zones** | 99.99% SLA - sprida over datacenter |
+
+**Kom ihag:**
+- **B-series** for dev/test (billig, burstable)
+- **Deallocate** for att sluta betala compute
+- **Premium SSD** for produktions-workloads
+- **Availability Zones** for hogsta SLA
 """,
 }
 
@@ -272,24 +304,25 @@ AZURE_NODE_6_APP_SERVICE = {
         "app service", "app service plan", "deployment slots",
         "scaling", "custom domains", "ssl certificates"
     ],
-    "content": """
-# Azure App Service
+    "content": """# Azure App Service
 
-> *"Focus on your code, let Azure handle the infrastructure."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor App Service ar viktigt |
+|----------|------------------------------|
+| **Ingen infrastruktur** | Azure skoter OS, patching, scaling |
+| **Multi-language** | .NET, Node, Python, Java, PHP |
+| **CI/CD built-in** | GitHub Actions, Azure DevOps |
+| **Zero-downtime deploys** | Deployment slots for swapping |
+| **Auto-scale** | Skala baserat pa trafik |
 
-App Service är Azures PaaS för webappar:
-- **Ingen infrastruktur** - Azure sköter OS, patching
-- **Multi-language** - .NET, Node, Python, Java, PHP
-- **CI/CD built-in** - GitHub Actions, Azure DevOps
-- **Scaling** - auto-scale baserat på trafik
+App Service ar Azures PaaS for webappar - fokusera pa kod.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 App Service Architecture
+## App Service Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -298,7 +331,7 @@ App Service är Azures PaaS för webappar:
 │                                                                  │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │                   APP SERVICE PLAN                         │  │
-│  │  (Defines compute resources: CPU, RAM, features)           │  │
+│  │  (Definierar compute-resurser: CPU, RAM, features)         │  │
 │  │                                                             │  │
 │  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐          │  │
 │  │  │  Web App 1  │ │  Web App 2  │ │  Web App 3  │          │  │
@@ -318,9 +351,25 @@ App Service är Azures PaaS för webappar:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+### App Service Plan Tiers
 
-## 💻 Skapa App Service
+| Tier | Anvandning | Features |
+|------|------------|----------|
+| **Free/Shared** | Dev/test | Ingen SLA, delad |
+| **Basic** | Latt produktion | Custom DNS, SSL |
+| **Standard** | Produktion | Slots, auto-scale, backup |
+| **Premium** | Hog trafik | Mer scale, Traffic Manager |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa App Service
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az appservice plan create` | Skapa plan |
+| `az webapp create` | Skapa web app |
+| `az webapp list` | Lista appar |
+| `az webapp deployment` | Deploy |
 
 ```bash
 # Skapa App Service Plan
@@ -353,9 +402,16 @@ az webapp create \\
     --runtime "DOTNETCORE:8.0"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Deployment Methods
+## Deployment Methods
+
+| Metod | Anvandning | Komplexitet |
+|-------|------------|-------------|
+| **ZIP Deploy** | Enkel, snabb | Lag |
+| **Git Deploy** | Local git push | Medel |
+| **GitHub Actions** | CI/CD (rekommenderas) | Medel |
+| **Container** | Docker images | Hog |
 
 ```bash
 # 1. ZIP Deploy (enklast)
@@ -369,7 +425,6 @@ az webapp deployment source config-local-git \\
     --resource-group rg-demo \\
     --name myapp-unique-123
 
-# Push to Azure remote
 git remote add azure https://myapp-unique-123.scm.azurewebsites.net/myapp-unique-123.git
 git push azure main
 
@@ -388,12 +443,12 @@ az webapp create \\
     --deployment-container-image-name myregistry.azurecr.io/myapp:latest
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 App Settings & Connection Strings
+## App Settings & Connection Strings
 
 ```bash
-# Sätt app settings (environment variables)
+# Satt app settings (environment variables)
 az webapp config appsettings set \\
     --resource-group rg-demo \\
     --name myapp-unique-123 \\
@@ -401,21 +456,46 @@ az webapp config appsettings set \\
         NODE_ENV=production \\
         API_KEY=@Microsoft.KeyVault(VaultName=mykv;SecretName=api-key)
 
-# Sätt connection string
+# Satt connection string
 az webapp config connection-string set \\
     --resource-group rg-demo \\
     --name myapp-unique-123 \\
     --connection-string-type SQLAzure \\
     --settings \\
-        DefaultConnection="Server=myserver.database.windows.net;Database=mydb;..."
+        DefaultConnection="Server=myserver.database.windows.net;..."
 
 # Visa settings
-az webapp config appsettings list --resource-group rg-demo --name myapp-unique-123
+az webapp config appsettings list \\
+    --resource-group rg-demo \\
+    --name myapp-unique-123
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Deployment Slots
+## Deployment Slots
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    DEPLOYMENT SLOTS                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. Deploy till staging                                         │
+│  ┌─────────────────┐    ┌─────────────────┐                    │
+│  │   PRODUCTION    │    │    STAGING      │                    │
+│  │   (v1.0)        │    │    (v2.0)       │  <-- ny version    │
+│  └─────────────────┘    └─────────────────┘                    │
+│                                                                  │
+│  2. Testa staging                                               │
+│     https://myapp-staging.azurewebsites.net                     │
+│                                                                  │
+│  3. SWAP! (zero downtime)                                       │
+│  ┌─────────────────┐    ┌─────────────────┐                    │
+│  │   PRODUCTION    │<-->│    STAGING      │                    │
+│  │   (v2.0)        │    │    (v1.0)       │  <-- rollback!     │
+│  └─────────────────┘    └─────────────────┘                    │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ```bash
 # Skapa staging slot
@@ -431,7 +511,7 @@ az webapp deployment source config-zip \\
     --slot staging \\
     --src app.zip
 
-# Swap staging → production (zero downtime!)
+# Swap staging -> production (zero downtime!)
 az webapp deployment slot swap \\
     --resource-group rg-demo \\
     --name myapp-unique-123 \\
@@ -439,12 +519,12 @@ az webapp deployment slot swap \\
     --target-slot production
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Custom Domain & SSL
+## Custom Domain & SSL
 
 ```bash
-# Lägg till custom domain
+# Lagg till custom domain
 az webapp config hostname add \\
     --resource-group rg-demo \\
     --webapp-name myapp-unique-123 \\
@@ -464,9 +544,9 @@ az webapp config ssl bind \\
     --ssl-type SNI
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Scaling
+## Scaling
 
 ```bash
 # Manual scale (fler instances)
@@ -475,13 +555,13 @@ az appservice plan update \\
     --name asp-myapp \\
     --number-of-workers 3
 
-# Scale up (större VM)
+# Scale up (storre VM)
 az appservice plan update \\
     --resource-group rg-demo \\
     --name asp-myapp \\
     --sku P1v2
 
-# Auto-scale (baserat på CPU)
+# Auto-scale (baserat pa CPU)
 az monitor autoscale create \\
     --resource-group rg-demo \\
     --resource asp-myapp \\
@@ -492,15 +572,22 @@ az monitor autoscale create \\
     --count 2
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga fel och losningar
 
-### Problem 1: "Site cannot be reached"
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Site cannot be reached | App crashar | Kolla logs |
+| 502 Bad Gateway | Startup timeout | Oka startup time |
+| Slow cold start | App Service Plan | Anvand Always On |
+| SSL error | Cert ej bundet | Bind SSL cert |
 
 ```bash
-# Kontrollera logs
-az webapp log tail --resource-group rg-demo --name myapp-unique-123
+# Visa logs
+az webapp log tail \\
+    --resource-group rg-demo \\
+    --name myapp-unique-123
 
 # Aktivera logging
 az webapp log config \\
@@ -510,15 +597,22 @@ az webapp log config \\
     --detailed-error-messages true
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **App Service Plan** bestämmer resurser
-- **Deployment Slots** för zero-downtime deploys
-- **Managed SSL** är gratis
-- **Auto-scale** baserat på metrics
-- **GitHub Actions** för CI/CD
+| Koncept | Detalj |
+|---------|--------|
+| **App Service Plan** | Bestammer resurser och pris |
+| **Deployment Slots** | Zero-downtime deploys och rollback |
+| **Managed SSL** | Gratis SSL-certifikat |
+| **Auto-scale** | Skala baserat pa CPU/minne/requests |
+
+**Kom ihag:**
+- **Standard tier** kravs for deployment slots
+- **GitHub Actions** ar basta satt for CI/CD
+- **Managed SSL** ar gratis och automatisk
+- **Always On** forhindrar cold starts
 """,
 }
 
@@ -539,24 +633,25 @@ AZURE_NODE_7_FUNCTIONS = {
         "azure functions", "serverless", "triggers", "bindings",
         "durable functions", "consumption plan", "premium plan"
     ],
-    "content": """
-# Azure Functions
+    "content": """# Azure Functions
 
-> *"Run code when you need it, pay only for what you use."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor Serverless ar viktigt |
+|----------|------------------------------|
+| **Event-driven** | Reagera pa events utan server |
+| **Cost-effective** | Betala endast for exekvering |
+| **Auto-scale** | 0 till 1000+ instances automatiskt |
+| **Microservices** | Sma, fokuserade funktioner |
+| **Integration** | Triggers fran 100+ Azure-tjanster |
 
-Serverless computing:
-- **Ingen server-hantering** - fokusera på kod
-- **Event-driven** - reagera på triggers
-- **Auto-scale** - 0 till 1000+ instances
-- **Pay-per-execution** - ingen baseline-kostnad
+Serverless = fokusera pa kod, inte infrastruktur.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Azure Functions Architecture
+## Azure Functions Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -569,36 +664,36 @@ Serverless computing:
 │  │ request  │ cron     │ storage  │ message │ stream     │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                           │                                      │
-│                           ▼                                      │
+│                           v                                      │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │                   YOUR FUNCTION                          │    │
+│  │                   DIN FUNKTION                           │    │
 │  │              (C#, JavaScript, Python, Java)              │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                           │                                      │
-│                           ▼                                      │
+│                           v                                      │
 │  BINDINGS (Input/Output)                                        │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │ Cosmos DB │ SQL    │ Blob    │ Queue   │ SendGrid     │    │
 │  │ Table     │ Event  │ SignalR │ Twilio  │ Service Bus  │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
-│  HOSTING PLANS:                                                 │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │ Consumption │ Premium       │ Dedicated (App Service)   │   │
-│  │ - Pay/exec  │ - Pre-warmed  │ - Always running          │   │
-│  │ - Cold start│ - VNet        │ - No cold start           │   │
-│  │ - 5min max  │ - Unlimited   │ - Predictable cost        │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+### Hosting Plans
 
-## 💻 Skapa Function App
+| Plan | Beskrivning | Cold Start | Max tid |
+|------|-------------|------------|---------|
+| **Consumption** | Pay-per-execution | Ja (1-2s) | 5-10 min |
+| **Premium** | Pre-warmed instances | Nej | Unlimited |
+| **Dedicated** | App Service Plan | Nej | Unlimited |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Skapa Function App
 
 ```bash
-# Skapa Storage Account (required for Functions)
+# Skapa Storage Account (kravs for Functions)
 az storage account create \\
     --name stfuncmyapp123 \\
     --resource-group rg-demo \\
@@ -631,9 +726,18 @@ az functionapp create \\
     --runtime-version 3.11
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Function Code Examples
+## Trigger Types
+
+| Trigger | Anvandning | Exempel |
+|---------|------------|---------|
+| **HTTP** | REST API, webhooks | API endpoints |
+| **Timer** | Schemalagda jobb | Daglig cleanup |
+| **Blob** | Fil uppladdad | Bildprocessning |
+| **Queue** | Meddelande i ko | Asynkron processing |
+| **Event Hub** | Event streaming | IoT data |
+| **Cosmos DB** | Dokument andrat | Change feed |
 
 ### HTTP Trigger (JavaScript)
 
@@ -679,65 +783,24 @@ def main(mytimer: func.TimerRequest) -> None:
         logging.warning('Timer is running late!')
 
     logging.info('Timer trigger executed!')
-    # Din logik här - cleanup, rapporter, etc.
+    # Din logik har - cleanup, rapporter, etc.
 
-# function.json
+# function.json - var 5:e minut
 {
     "bindings": [
         {
             "name": "mytimer",
             "type": "timerTrigger",
             "direction": "in",
-            "schedule": "0 */5 * * * *"  // Var 5:e minut
+            "schedule": "0 */5 * * * *"
         }
     ]
 }
 ```
 
-### Blob Trigger with Output Binding
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```python
-# BlobProcessor/__init__.py
-import azure.functions as func
-from PIL import Image
-import io
-
-def main(inputblob: func.InputStream, outputblob: func.Out[bytes]) -> None:
-    # Läs bild
-    image = Image.open(inputblob)
-
-    # Resize
-    thumbnail = image.resize((150, 150))
-
-    # Spara som output
-    buffer = io.BytesIO()
-    thumbnail.save(buffer, format='JPEG')
-    outputblob.set(buffer.getvalue())
-
-# function.json
-{
-    "bindings": [
-        {
-            "name": "inputblob",
-            "type": "blobTrigger",
-            "direction": "in",
-            "path": "images/{name}",
-            "connection": "AzureWebJobsStorage"
-        },
-        {
-            "name": "outputblob",
-            "type": "blob",
-            "direction": "out",
-            "path": "thumbnails/{name}",
-            "connection": "AzureWebJobsStorage"
-        }
-    ]
-}
-```
-
----
-
-## 💻 Local Development
+## Local Development
 
 ```bash
 # Installera Azure Functions Core Tools
@@ -751,52 +814,33 @@ cd MyFunctionProject
 # Skapa ny function
 func new --name HttpExample --template "HTTP trigger"
 
-# Kör lokalt
+# Kor lokalt
 func start
 
 # Test
 curl http://localhost:7071/api/HttpExample?name=Azure
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Deployment
+## Deployment
 
 ```bash
-# Deploy från lokal maskin
+# Deploy fran lokal maskin
 func azure functionapp publish func-myapp-123
 
-# GitHub Actions deployment
-# .github/workflows/deploy.yml
-# name: Deploy to Azure Functions
-# on:
-#   push:
-#     branches: [main]
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: Azure/functions-action@v1
-#         with:
-#           app-name: func-myapp-123
-#           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-```
-
----
-
-## 💻 Environment Variables
-
-```bash
-# Sätt app settings
+# Satt app settings
 az functionapp config appsettings set \\
     --name func-myapp-123 \\
     --resource-group rg-demo \\
     --settings \\
         DATABASE_URL="postgresql://..." \\
         API_KEY="@Microsoft.KeyVault(VaultName=mykv;SecretName=api-key)"
+```
 
-# Local settings (local.settings.json)
+### local.settings.json
+
+```json
 {
     "IsEncrypted": false,
     "Values": {
@@ -807,39 +851,43 @@ az functionapp config appsettings set \\
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga fel och losningar
 
-### Problem 1: Cold Start
-
-```bash
-# Consumption plan har cold starts (1-2 sekunder)
-
-# Lösningar:
-# 1. Premium plan (pre-warmed instances)
-# 2. Dedicated plan (always running)
-# 3. Minimera dependencies för snabbare startup
-```
-
-### Problem 2: Timeout
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Cold start slow | Consumption plan | Premium plan eller keep-alive |
+| Function timeout | Max 5 min | Premium plan for langre |
+| Out of memory | For lite minne | Oka memory i plan |
+| Binding error | Fel connection string | Kolla app settings |
 
 ```bash
-# Consumption: max 5 min (default) / 10 min (max)
-# Premium/Dedicated: unlimited
+# Visa logs
+az functionapp logs show \\
+    --name func-myapp-123 \\
+    --resource-group rg-demo
 
-# För längre jobb: använd Durable Functions
+# Stream logs
+func azure functionapp logstream func-myapp-123
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Triggers** startar funktioner
-- **Bindings** kopplar input/output
-- **Consumption** för sporadisk användning
-- **Premium** för produktion utan cold starts
-- **Core Tools** för lokal utveckling
+| Koncept | Detalj |
+|---------|--------|
+| **Triggers** | Vad som startar funktionen |
+| **Bindings** | Deklarativ input/output |
+| **Consumption** | Pay-per-use, cold starts |
+| **Premium** | Pre-warmed, VNet, unlimited time |
+
+**Kom ihag:**
+- **Consumption** for sporadisk anvandning (billigast)
+- **Premium** for produktion (inga cold starts)
+- **Core Tools** for lokal utveckling
+- **Triggers + Bindings** = deklarativ integration
 """,
 }
 
@@ -852,7 +900,7 @@ AZURE_NODE_8_VNET = {
     "node_id": 8,
     "title": "Azure Virtual Network",
     "slug": "azure-virtual-network",
-    "description": "Nätverksarkitektur i Azure",
+    "description": "Natverksarkitektur i Azure",
     "difficulty": "intermediate",
     "estimated_minutes": 65,
     "xp_reward": 120,
@@ -860,24 +908,25 @@ AZURE_NODE_8_VNET = {
         "virtual network", "subnets", "nsg", "load balancer",
         "vpn gateway", "peering", "private endpoints"
     ],
-    "content": """
-# Azure Virtual Network
+    "content": """# Azure Virtual Network
 
-> *"A well-designed network is the foundation of security."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor VNet ar viktigt |
+|----------|------------------------|
+| **Isolation** | Separera workloads fran varandra |
+| **Security** | Kontrollera trafikflode med NSG |
+| **Connectivity** | Koppla ihop resurser sakkert |
+| **Hybrid** | Anslut till on-prem med VPN/ExpressRoute |
+| **Compliance** | Data stannar i privat natverk |
 
-Nätverk är grunden för allt i Azure:
-- **Isolation** - separera workloads
-- **Security** - kontrollera trafikflöde
-- **Connectivity** - koppla ihop resurser
-- **Hybrid** - anslut till on-premises
+Natverk ar grunden for all sakerhet i Azure.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 VNet Architecture
+## VNet Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -889,34 +938,40 @@ Nätverk är grunden för allt i Azure:
 │  │                                                          │    │
 │  │  Subnet: snet-web (10.0.1.0/24)                         │    │
 │  │  ┌─────────┐ ┌─────────┐ ┌─────────┐                   │    │
-│  │  │  VM-1   │ │  VM-2   │ │  VM-3   │  ←─── NSG-web     │    │
+│  │  │  VM-1   │ │  VM-2   │ │  VM-3   │  <--- NSG-web     │    │
 │  │  │ .1.4    │ │ .1.5    │ │ .1.6    │                   │    │
 │  │  └─────────┘ └─────────┘ └─────────┘                   │    │
-│  │                      ↑                                   │    │
+│  │                      ^                                   │    │
 │  │              Load Balancer                               │    │
-│  │                      ↑                                   │    │
+│  │                      ^                                   │    │
 │  │              Public IP                                   │    │
 │  │                                                          │    │
 │  │  Subnet: snet-app (10.0.2.0/24)                         │    │
 │  │  ┌─────────┐ ┌─────────┐                               │    │
-│  │  │  VM-4   │ │  VM-5   │  ←─── NSG-app                 │    │
-│  │  │ .2.4    │ │ .2.5    │  (No public IP!)              │    │
+│  │  │  VM-4   │ │  VM-5   │  <--- NSG-app                 │    │
+│  │  │ .2.4    │ │ .2.5    │  (Ingen public IP!)           │    │
 │  │  └─────────┘ └─────────┘                               │    │
 │  │                      │                                   │    │
-│  │                      ▼                                   │    │
+│  │                      v                                   │    │
 │  │  Subnet: snet-db (10.0.3.0/24)                          │    │
 │  │  ┌─────────┐                                            │    │
-│  │  │ SQL DB  │  ←─── Private Endpoint                     │    │
-│  │  └─────────┘       (No public access!)                  │    │
+│  │  │ SQL DB  │  <--- Private Endpoint                     │    │
+│  │  └─────────┘       (Ingen public access!)               │    │
 │  │                                                          │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa Virtual Network
+## Skapa Virtual Network
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az network vnet create` | Skapa VNet |
+| `az network vnet subnet create` | Skapa subnet |
+| `az network vnet list` | Lista VNets |
 
 ```bash
 # Skapa VNet
@@ -946,9 +1001,26 @@ az network vnet subnet create \\
     --address-prefix 10.0.3.0/24
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Network Security Groups (NSG)
+## Network Security Groups (NSG)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    NSG REGLER                                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Priority  Namn           Port   Kaella        Action           │
+│  ───────────────────────────────────────────────────────────    │
+│  100       AllowHTTP      80     Internet      Allow            │
+│  110       AllowHTTPS     443    Internet      Allow            │
+│  120       AllowSSH       22     MyIP          Allow            │
+│  4096      DenyAll        *      *             Deny             │
+│                                                                  │
+│  Lagre priority = hogre prioritet (100 kors fore 200)           │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ```bash
 # Skapa NSG
@@ -956,7 +1028,7 @@ az network nsg create \\
     --resource-group rg-demo \\
     --name nsg-web
 
-# Tillåt HTTP/HTTPS från internet
+# Tillat HTTP/HTTPS fran internet
 az network nsg rule create \\
     --resource-group rg-demo \\
     --nsg-name nsg-web \\
@@ -968,7 +1040,7 @@ az network nsg rule create \\
     --protocol Tcp \\
     --direction Inbound
 
-# Tillåt SSH endast från specifik IP
+# Tillat SSH endast fran specifik IP
 az network nsg rule create \\
     --resource-group rg-demo \\
     --nsg-name nsg-web \\
@@ -980,18 +1052,6 @@ az network nsg rule create \\
     --protocol Tcp \\
     --direction Inbound
 
-# Neka allt annat (implicit, men explicit är tydligare)
-az network nsg rule create \\
-    --resource-group rg-demo \\
-    --nsg-name nsg-web \\
-    --name DenyAll \\
-    --priority 4096 \\
-    --source-address-prefixes "*" \\
-    --destination-port-ranges "*" \\
-    --access Deny \\
-    --protocol "*" \\
-    --direction Inbound
-
 # Koppla NSG till subnet
 az network vnet subnet update \\
     --resource-group rg-demo \\
@@ -1000,12 +1060,12 @@ az network vnet subnet update \\
     --network-security-group nsg-web
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Load Balancer
+## Load Balancer
 
 ```bash
-# Skapa public IP för LB
+# Skapa public IP for LB
 az network public-ip create \\
     --resource-group rg-demo \\
     --name pip-lb \\
@@ -1041,92 +1101,116 @@ az network lb rule create \\
     --frontend-ip-name fe-web \\
     --backend-pool-name be-pool \\
     --probe-name hp-http
-
-# Lägg till VM till backend pool
-az network nic ip-config address-pool add \\
-    --resource-group rg-demo \\
-    --nic-name vm-web-01-nic \\
-    --ip-config-name ipconfig1 \\
-    --lb-name lb-web \\
-    --address-pool be-pool
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 VNet Peering
+## VNet Peering
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    VNET PEERING                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  VNet-A (10.0.0.0/16)         VNet-B (10.1.0.0/16)             │
+│  ┌─────────────────┐          ┌─────────────────┐              │
+│  │                 │  <---->  │                 │              │
+│  │   Production    │  Peering │   Shared Svcs   │              │
+│  │                 │          │                 │              │
+│  └─────────────────┘          └─────────────────┘              │
+│                                                                  │
+│  + Privat trafik over Microsoft backbone                        │
+│  + Lag latens, hog bandbredd                                    │
+│  + Kravs fran bada sidor                                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ```bash
-# Peera två VNets (kräver två kommandon)
-# VNet A → VNet B
+# Peera tva VNets (kravs tva kommandon - bada riktningar)
+# VNet A -> VNet B
 az network vnet peering create \\
     --resource-group rg-demo \\
     --name peer-vnetA-to-vnetB \\
     --vnet-name vnet-A \\
-    --remote-vnet /subscriptions/.../resourceGroups/.../providers/Microsoft.Network/virtualNetworks/vnet-B \\
+    --remote-vnet /subscriptions/.../vnet-B \\
     --allow-vnet-access
 
-# VNet B → VNet A
+# VNet B -> VNet A
 az network vnet peering create \\
     --resource-group rg-demo \\
     --name peer-vnetB-to-vnetA \\
     --vnet-name vnet-B \\
-    --remote-vnet /subscriptions/.../resourceGroups/.../providers/Microsoft.Network/virtualNetworks/vnet-A \\
+    --remote-vnet /subscriptions/.../vnet-A \\
     --allow-vnet-access
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Private Endpoints
+## Private Endpoints
 
 ```bash
-# Skapa Private Endpoint för Azure SQL
+# Skapa Private Endpoint for Azure SQL
 az network private-endpoint create \\
     --resource-group rg-demo \\
     --name pe-sql \\
     --vnet-name vnet-myapp \\
     --subnet snet-db \\
-    --private-connection-resource-id "/subscriptions/.../resourceGroups/.../providers/Microsoft.Sql/servers/mysqlserver" \\
+    --private-connection-resource-id "/subscriptions/.../Microsoft.Sql/servers/mysqlserver" \\
     --group-id sqlServer \\
     --connection-name pe-sql-connection
 
-# Nu kan SQL nås via privat IP (10.0.3.x) istället för public endpoint
+# Nu kan SQL nas via privat IP (10.0.3.x) istallet for public endpoint
 ```
 
----
+### Private Endpoint vs Service Endpoint
 
-## ⚠️ Vanliga Problem
+| Feature | Private Endpoint | Service Endpoint |
+|---------|------------------|------------------|
+| **IP** | Privat IP i VNet | Public IP med VNet-rule |
+| **DNS** | Kravs privat DNS | Ingen andring |
+| **Kostnad** | Per endpoint | Gratis |
+| **On-prem** | Fungerar | Fungerar ej |
 
-### Problem 1: VMs kan inte nå internet
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| VMs kan inte na internet | Ingen route | Kontrollera UDR |
+| NSG blockerar trafik | Fel regel | `az network nic show-effective-nsg` |
+| Peering fungerar ej | Bara en riktning | Skapa bada riktningar |
+| Private Endpoint DNS | Fel DNS | Konfigurera Private DNS Zone |
 
 ```bash
-# Kontrollera att subnet har route till internet
-# Standard: Azure tillhandahåller default route
-
-# Om du har UDR (User Defined Route), kontrollera:
-az network route-table route list --resource-group rg-demo --route-table-name rt-custom
-```
-
-### Problem 2: NSG blockerar trafik
-
-```bash
-# Visa effektiva NSG-regler för VM
+# Visa effektiva NSG-regler for VM
 az network nic show-effective-nsg \\
     --resource-group rg-demo \\
     --name vm-web-01-nic
 
-# Kontrollera NSG flow logs
-# Portal → NSG → Diagnostic settings → Enable flow logs
+# Lista VNet peerings
+az network vnet peering list \\
+    --resource-group rg-demo \\
+    --vnet-name vnet-myapp
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **VNet** isolerar dina resurser
-- **Subnets** segmenterar trafik
-- **NSGs** kontrollerar vad som tillåts
-- **Load Balancer** distribuerar trafik
-- **Private Endpoints** eliminerar public access
+| Koncept | Detalj |
+|---------|--------|
+| **VNet** | Isolerar resurser i privat natverk |
+| **Subnets** | Segmenterar trafik inom VNet |
+| **NSG** | Kontrollerar vad som tillats in/ut |
+| **Private Endpoints** | Eliminerar public access till PaaS |
+
+**Kom ihag:**
+- **NSG pa subnet**, inte bara pa NIC
+- **Private Endpoints** for databaser och storage
+- **VNet Peering** kravs fran **bada sidor**
+- **Planera IP-adresser** innan du bygger (svart att andra)
 """,
 }
 

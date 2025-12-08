@@ -26,20 +26,20 @@ AZURE_NODE_13_DEVOPS = {
 
 > *"Plan smarter, collaborate better, ship faster."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Azure DevOps är komplett DevOps-plattform:
-- **Boards** - agil planering (Scrum/Kanban)
-- **Repos** - Git-hosting med PRs
-- **Pipelines** - CI/CD automation
-- **Artifacts** - package management
-- **Test Plans** - manuell/automatisk testning
+| Scenario | Problem utan Azure DevOps | Losning med Azure DevOps |
+|----------|---------------------------|--------------------------|
+| Spridda verktyg | Jira + GitHub + Jenkins + Artifactory | Allt-i-ett plattform |
+| Azure integration | Manuell setup av CI/CD | Native Azure-integration |
+| Compliance | Svart att spara audit trail | Inbyggd traceability |
+| Kostnader | Betala for flera verktyg | Generos gratis-tier |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Azure DevOps Overview
+## Azure DevOps Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -78,9 +78,9 @@ Azure DevOps är komplett DevOps-plattform:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Komma igång
+## Komma igang
 
 ```bash
 # 1. Gå till https://dev.azure.com
@@ -100,9 +100,9 @@ az devops configure --defaults organization=https://dev.azure.com/myorg project=
 az devops project list --output table
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure Boards
+## Azure Boards
 
 ```bash
 # Skapa work item
@@ -129,9 +129,9 @@ az boards work-item relation add \\
     --target-id 456
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure Repos
+## Azure Repos
 
 ```bash
 # Lista repos
@@ -159,9 +159,9 @@ az repos pr create \\
     --work-items 123 456
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure Artifacts
+## Azure Artifacts
 
 ```bash
 # Skapa feed
@@ -184,9 +184,9 @@ npm publish
 pip install my-package --index-url https://pkgs.dev.azure.com/myorg/_packaging/my-packages/pypi/simple/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Service Connections
+## Service Connections
 
 ```bash
 # Skapa service connection till Azure (för pipelines)
@@ -205,9 +205,9 @@ az devops service-endpoint azurerm create \\
 az devops service-endpoint list --output table
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Project Settings
+## Project Settings
 
 ```bash
 # Best practices för projekt:
@@ -224,9 +224,9 @@ az devops service-endpoint list --output table
 # - Project Administrators: full kontroll
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: PAT (Personal Access Token) expired
 
@@ -240,15 +240,23 @@ az devops service-endpoint list --output table
 # - Packaging: Read & write
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Boards** för agil projekthantering
-- **Repos** för Git med branch policies
-- **Artifacts** för package management
-- **Service Connections** kopplar till Azure
-- **Free tier** är generös för små team
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Boards | Agil projekthantering (Scrum, Kanban) |
+| Repos | Git-hosting med branch policies och PRs |
+| Artifacts | Package management (NuGet, npm, Maven, Python) |
+| Service Connections | Koppling till Azure for deployment |
+| Work Item Linking | Traceability fran kod till krav |
+
+**Kom ihag:**
+- Aktivera branch policies pa main-branchen
+- Anvand Service Connections istallet for hardkodade credentials
+- Free tier ar generos nog for sma team
+- Lank work items till PRs for traceability
 """,
 }
 
@@ -274,19 +282,20 @@ AZURE_NODE_14_ACR = {
 
 > *"Your private Docker Hub, but in Azure."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-ACR är managed container registry:
-- **Privat** - säker lagring av container images
-- **Integrerat** - sömlöst med AKS, App Service, Functions
-- **CI/CD** - ACR Tasks bygger images
-- **Geo-replicated** - snabb pull från närmaste region
+| Scenario | Problem utan ACR | Losning med ACR |
+|----------|------------------|-----------------|
+| Security | Docker Hub = public by default | Privat registry med RBAC |
+| CI/CD | Manuell build och push | ACR Tasks bygger automatiskt |
+| AKS integration | ImagePullSecrets kravs | Attach ACR = somlost |
+| Geo distribution | Lag pull-hastighet | Geo-replication |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 ACR Architecture
+## ACR Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -325,9 +334,9 @@ ACR är managed container registry:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa ACR
+## Skapa ACR
 
 ```bash
 # Skapa Container Registry
@@ -350,9 +359,9 @@ docker login myregistry123.azurecr.io \\
     --password $(az acr credential show --name myregistry123 --query "passwords[0].value" -o tsv)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Push/Pull Images
+## Push/Pull Images
 
 ```bash
 # Tagga lokal image för ACR
@@ -373,9 +382,9 @@ az acr repository show-tags --name myregistry123 --repository myapp --output tab
 docker pull myregistry123.azurecr.io/myapp:v1.0.0
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 ACR Tasks (Build i molnet)
+## ACR Tasks (Build i molnet)
 
 ```bash
 # Quick build (bygg direkt i ACR)
@@ -412,9 +421,9 @@ az acr task create \\
     --file acr-task.yaml
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Security
+## Security
 
 ```bash
 # Aktivera Content Trust (signerade images)
@@ -444,9 +453,9 @@ az role assignment create \\
     --scope $(az acr show --name myregistry123 --query id -o tsv)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Integration med AKS
+## Integration med AKS
 
 ```bash
 # Attach ACR till AKS (enklast!)
@@ -461,9 +470,9 @@ az aks update \\
 # image: myregistry123.azurecr.io/myapp:v1.0.0
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Cleanup & Retention
+## Cleanup & Retention
 
 ```bash
 # Radera gammal tag
@@ -493,9 +502,9 @@ az acr task create \\
     --context /dev/null
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "unauthorized: authentication required"
 
@@ -508,15 +517,23 @@ docker logout myregistry123.azurecr.io
 az acr login --name myregistry123
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **ACR** är private Docker registry
-- **ACR Tasks** bygger images i molnet
-- **Attach till AKS** för sömlös integration
-- **Premium** för geo-replication och private link
-- **Purge policies** håller registret rent
+| Begrepp | Beskrivning |
+|---------|-------------|
+| ACR | Privat Docker registry i Azure |
+| ACR Tasks | Bygg images i molnet utan lokal Docker |
+| AKS attach | Somlost pull utan ImagePullSecrets |
+| Geo-replication | Premium tier for multi-region |
+| Purge policies | Automatisk cleanup av gamla images |
+
+**Kom ihag:**
+- Anvand az acr login for enkel autentisering
+- Attach ACR till AKS for somlost deployment
+- Satt upp purge policies for att spara lagringskostnad
+- Standard tier racker for de flesta anvandningsfall
 """,
 }
 
@@ -542,19 +559,20 @@ AZURE_NODE_15_BICEP = {
 
 > *"Define your infrastructure in code, deploy it anywhere."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Infrastructure as Code för Azure:
-- **Reproducerbart** - samma infra varje gång
-- **Version-kontroll** - Git för infrastruktur
-- **Automation** - deploy med CI/CD
-- **Validering** - what-if innan deployment
+| Scenario | Problem utan IaC | Losning med Bicep |
+|----------|------------------|-------------------|
+| Reproducerbarhet | Manuell setup ger inkonsistens | Identisk infra varje gang |
+| Version control | Ingen historik pa infra-andringar | Git for infrastruktur |
+| DR/Recovery | Timmar att aterbygga miljo | Deploy pa minuter |
+| Code review | Ingen granskning av infra | PR-process for infra |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 ARM vs Bicep
+## ARM vs Bicep
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -583,9 +601,9 @@ Infrastructure as Code för Azure:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Bicep Basics
+## Bicep Basics
 
 ```bicep
 // main.bicep
@@ -671,9 +689,9 @@ output webAppUrl string = 'https://${webApp.properties.defaultHostName}'
 output storageAccountName string = storageAccount.name
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Parameters File
+## Parameters File
 
 ```json
 // parameters.prod.json
@@ -691,9 +709,9 @@ output storageAccountName string = storageAccount.name
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Deploy Bicep
+## Deploy Bicep
 
 ```bash
 # Installera Bicep (inkluderat i Azure CLI)
@@ -731,9 +749,9 @@ az deployment group show \\
     --query properties.outputs
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Bicep Modules
+## Bicep Modules
 
 ```bicep
 // modules/storage.bicep
@@ -767,9 +785,9 @@ module storage 'modules/storage.bicep' = {
 output storageEndpoint string = storage.outputs.primaryEndpoint
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Loops & Conditions
+## Loops & Conditions
 
 ```bicep
 // Loop över lista
@@ -800,9 +818,9 @@ resource redisCache 'Microsoft.Cache/redis@2023-04-01' = if (deployRedis) {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Complete Example: Full Stack
+## Complete Example: Full Stack
 
 ```bicep
 // infra/main.bicep
@@ -839,9 +857,9 @@ module webapp 'modules/webapp.bicep' = {
 output appUrl string = webapp.outputs.url
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "Resource already exists"
 
@@ -853,15 +871,23 @@ output appUrl string = webapp.outputs.url
 az deployment group what-if ...
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Bicep** är enklare än ARM JSON
-- **Modules** för återanvändbara komponenter
-- **What-if** innan deployment
-- **Parameters** för miljö-specifik config
-- **Loops & conditions** för dynamiska templates
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Bicep | Enklare syntax an ARM JSON, kompileras till ARM |
+| Modules | Ateranvandbara komponenter |
+| What-if | Forhandsgranska andringar innan deploy |
+| Parameters | Miljo-specifik konfiguration |
+| Loops | Skapa flera resurser dynamiskt |
+
+**Kom ihag:**
+- Anvand Bicep for nya projekt (inte ARM JSON)
+- Kor alltid what-if innan deployment till prod
+- Organisera med modules for ateranvandning
+- Anvand parameter-filer for miljoskillnader
 """,
 }
 
@@ -887,19 +913,20 @@ AZURE_NODE_16_PIPELINES = {
 
 > *"Automate your build, test, and deployment."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Azure Pipelines för CI/CD:
-- **Multi-platform** - Windows, Linux, macOS
-- **Language-agnostic** - alla språk och frameworks
-- **Cloud-native** - tight Azure-integration
-- **YAML-based** - pipeline as code
+| Scenario | Problem utan Pipelines | Losning med Pipelines |
+|----------|------------------------|------------------------|
+| Manuell deploy | Manbart att gora fel, ingen audit | Automatiserad, repeterbar |
+| Kvalitet | Tester kors inte konsekvent | Varje PR valideras |
+| Multi-platform | Olika build-maskiner | Windows/Linux/macOS agents |
+| Azure integration | Komplex setup | Native service connections |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Pipeline Structure
+## Pipeline Structure
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -942,9 +969,9 @@ Azure Pipelines för CI/CD:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Basic Pipeline
+## Basic Pipeline
 
 ```yaml
 # azure-pipelines.yml
@@ -996,9 +1023,9 @@ stages:
             displayName: 'Publish Artifact'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Multi-Stage Pipeline
+## Multi-Stage Pipeline
 
 ```yaml
 # azure-pipelines.yml
@@ -1092,9 +1119,9 @@ stages:
                     containers: '$(dockerRegistry)/myapp:$(Build.BuildId)'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Environments & Approvals
+## Environments & Approvals
 
 ```bash
 # Skapa environment i Portal:
@@ -1109,9 +1136,9 @@ stages:
 # - Instructions
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Templates
+## Templates
 
 ```yaml
 # templates/build-template.yml
@@ -1145,9 +1172,9 @@ stages:
               nodeVersion: '20.x'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Secrets & Variable Groups
+## Secrets & Variable Groups
 
 ```yaml
 # Variable group från Library
@@ -1168,9 +1195,9 @@ variables:
   - group: 'kv-secrets'  # Linked to Azure Key Vault
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 PR Validation
+## PR Validation
 
 ```yaml
 # azure-pipelines.yml
@@ -1200,9 +1227,9 @@ stages:
           - task: OWASP@2
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "Pipeline not triggered"
 
@@ -1219,15 +1246,23 @@ paths:
     - 'src/**'  # Om ändring är i docs/, triggas inte
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **YAML pipelines** för versionskontrollerad CI/CD
-- **Stages** för build → test → deploy flow
-- **Environments** med approvals för production
-- **Templates** för återanvändbarhet
-- **Variable groups** för secrets management
+| Begrepp | Beskrivning |
+|---------|-------------|
+| YAML pipelines | Versionskontrollerad CI/CD |
+| Stages | Build -> Test -> Deploy flow |
+| Environments | Approvals och checks for produktion |
+| Templates | Ateranvandbar pipeline-kod |
+| Variable groups | Centraliserad secrets management |
+
+**Kom ihag:**
+- Anvand YAML-pipelines (inte Classic) for nya projekt
+- Konfigurera approvals pa production environment
+- Anvand templates for att undvika duplicering
+- Lank Variable Groups till Key Vault for secrets
 """,
 }
 

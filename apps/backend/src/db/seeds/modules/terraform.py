@@ -9,12 +9,16 @@ Följer Linux-mallen: Svenska, pedagogiskt, bash-kommentarer på varje rad.
 """
 
 MODULE = {
+    "name": "Terraform Mastery",
     "slug": "terraform-mastery",
-    "title": "Terraform Mastery",
     "description": "Bygg skalbar infrastruktur som kod med Terraform",
-    "icon": "terminal",
-    "category": "infrastructure",
-    "order": 7,
+    "track_slug": "infrastructure",
+    "order_index": 7,
+    "difficulty": "intermediate",
+    "estimated_hours": 25,
+    "prerequisites": ["linux-mastery"],
+    "icon": "🏗️",
+    "color": "#7B42BC",
     "tasks": [
         {
             "title": "Introduction to Terraform",

@@ -26,19 +26,20 @@ AZURE_NODE_17_ENTRA = {
 
 > *"Identity is the new perimeter."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Azure Entra ID är kärnan i Azure-säkerhet:
-- **Authentication** - verifiera vem du är
-- **Authorization** - vad du får göra
-- **SSO** - ett login för allt
-- **MFA** - extra säkerhetslager
+| Scenario | Problem utan Entra ID | Losning med Entra ID |
+|----------|----------------------|----------------------|
+| CI/CD auth | Hardkodade credentials | Service Principals med RBAC |
+| App secrets | Losenord i kod | Managed Identity (no secrets!) |
+| Access control | Alla har samma access | Finkornig RBAC |
+| Audit | Ingen sparbarhet | Full audit trail |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Identity Concepts
+## Identity Concepts
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -75,9 +76,9 @@ Azure Entra ID är kärnan i Azure-säkerhet:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Service Principal
+## Service Principal
 
 ```bash
 # Skapa Service Principal (för CI/CD, scripts etc.)
@@ -106,9 +107,9 @@ az ad sp list --display-name "sp-myapp" --output table
 az ad sp credential reset --id <appId>
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Managed Identity
+## Managed Identity
 
 ```bash
 # Managed Identity = Azure hanterar credentials åt dig!
@@ -138,9 +139,9 @@ az vm identity assign \\
     --identities /subscriptions/xxx/resourceGroups/rg-demo/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-myapp
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Använda Managed Identity
+## Anvanda Managed Identity
 
 ```python
 # Python: Azure SDK med Managed Identity
@@ -182,9 +183,9 @@ await foreach (var container in blobServiceClient.GetBlobContainersAsync())
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 RBAC (Role-Based Access Control)
+## RBAC (Role-Based Access Control)
 
 ```bash
 # RBAC = Vem (Identity) får göra vad (Role) var (Scope)
@@ -216,9 +217,9 @@ az role assignment list \\
     --output table
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Conditional Access
+## Conditional Access
 
 ```bash
 # Conditional Access policies (via Portal eller Graph API)
@@ -240,9 +241,9 @@ az role assignment list \\
 # - Require approved client app
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 App Registration
+## App Registration
 
 ```bash
 # Registrera app i Entra ID (för OAuth)
@@ -261,9 +262,9 @@ az ad app permission add \\
 az ad app permission admin-consent --id <app-id>
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "AADSTS700016: Application not found"
 
@@ -277,15 +278,23 @@ az ad app show --id <app-id>
 # - AzureADandPersonalMicrosoftAccount: alla + personliga
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Service Principal** för CI/CD och automation
-- **Managed Identity** för Azure-till-Azure (bästa praxis!)
-- **RBAC** för finkorning access control
-- **Conditional Access** för säkerhetspolicies
-- **DefaultAzureCredential** för sömlös auth i kod
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Service Principal | For CI/CD och automation (Client ID + Secret) |
+| Managed Identity | Basta praxis - Azure hanterar credentials |
+| RBAC | Finkornig access control (Role + Scope) |
+| Conditional Access | Policy-baserad access (MFA, device compliance) |
+| DefaultAzureCredential | SDK-klass som provar alla auth-metoder |
+
+**Kom ihag:**
+- Anvand Managed Identity istallet for Service Principal nar mojligt
+- Folj principen om minsta behorighet (least privilege)
+- RBAC-roller propagerar nedat i scope-hierarkin
+- DefaultAzureCredential fungerar bade lokalt och i Azure
 """,
 }
 
@@ -311,19 +320,20 @@ AZURE_NODE_18_KEYVAULT = {
 
 > *"Never store secrets in code. Ever."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Key Vault för säker secrets management:
-- **Secrets** - connection strings, API keys
-- **Keys** - kryptografiska nycklar
-- **Certificates** - SSL/TLS certs
-- **HSM-backed** - hardware-skyddade nycklar
+| Scenario | Problem utan Key Vault | Losning med Key Vault |
+|----------|------------------------|------------------------|
+| Secrets i kod | Credentials i Git-historik | Centraliserad secrets store |
+| Rotation | Manuell uppdatering overallt | Automatisk rotation |
+| Audit | Ingen sparbarhet | Full access logging |
+| Compliance | Svar att bevisa kontroll | RBAC + HSM-stod |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Key Vault Architecture
+## Key Vault Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -363,9 +373,9 @@ Key Vault för säker secrets management:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa Key Vault
+## Skapa Key Vault
 
 ```bash
 # Skapa Key Vault
@@ -386,9 +396,9 @@ az keyvault create \\
     --enable-purge-protection true
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Hantera Secrets
+## Hantera Secrets
 
 ```bash
 # Skapa secret
@@ -435,9 +445,9 @@ az keyvault secret recover \\
     --name "db-password"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Access med RBAC
+## Access med RBAC
 
 ```bash
 # Ge app/user access till secrets
@@ -455,9 +465,9 @@ az role assignment create \\
 # - Key Vault Reader: read metadata only
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Använda i Kod
+## Anvanda i Kod
 
 ```python
 # Python: Hämta secrets med Managed Identity
@@ -495,9 +505,9 @@ KeyVaultSecret secret = await client.GetSecretAsync("db-password");
 Console.WriteLine($"Password: {secret.Value}");
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Integration med App Service
+## Integration med App Service
 
 ```bash
 # Referera Key Vault secret i App Settings
@@ -511,9 +521,9 @@ az webapp config appsettings set \\
 # App Service Managed Identity måste ha "Key Vault Secrets User" roll!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Integration med Azure DevOps
+## Integration med Azure DevOps
 
 ```yaml
 # azure-pipelines.yml
@@ -535,9 +545,9 @@ steps:
       DB_PASSWORD: $(db-password)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Private Endpoint
+## Private Endpoint
 
 ```bash
 # Disable public access
@@ -556,9 +566,9 @@ az network private-endpoint create \\
     --connection-name kv-connection
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "Access denied" trots RBAC
 
@@ -573,15 +583,23 @@ az role assignment list \\
 az keyvault show --name kv-myapp --query properties.enableRbacAuthorization
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Key Vault** för centraliserad secrets management
-- **RBAC** (inte Access Policies) för access control
-- **Managed Identity** för applikations-access
-- **App Service integration** med @Microsoft.KeyVault()
-- **Private endpoints** för privat access
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Key Vault | Centraliserad secrets, keys, certificates |
+| RBAC | Rekommenderat over Access Policies |
+| Managed Identity | Basta satt att accessa fran Azure-resurser |
+| Key Vault Reference | App Service kan hamta direkt fran KV |
+| Soft-delete | Skyddar mot oavsiktlig radering |
+
+**Kom ihag:**
+- Aktivera RBAC istallet for Access Policies pa nya vaults
+- Anvand @Microsoft.KeyVault() i App Service settings
+- Aktivera soft-delete och purge protection for prod
+- RBAC-roller kan ta 5-10 minuter att propagera
 """,
 }
 
@@ -607,19 +625,20 @@ AZURE_NODE_19_DEFENDER = {
 
 > *"Security that keeps pace with your cloud."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Defender for Cloud (tidigare Security Center):
-- **CSPM** - Cloud Security Posture Management
-- **CWPP** - Cloud Workload Protection Platform
-- **Secure Score** - mät din säkerhet
-- **Multi-cloud** - Azure, AWS, GCP
+| Scenario | Problem utan Defender | Losning med Defender |
+|----------|----------------------|----------------------|
+| Security posture | Ingen overblick | Secure Score dashboard |
+| Misconfiguration | Upptacks vid breach | Proaktiva recommendations |
+| Compliance | Manuell audit | Automatiserad compliance check |
+| Threat detection | Reaktiv hantering | Real-time alerts |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Defender Architecture
+## Defender Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -659,9 +678,9 @@ Defender for Cloud (tidigare Security Center):
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Aktivera Defender
+## Aktivera Defender
 
 ```bash
 # Visa pricing tiers
@@ -691,9 +710,9 @@ az security pricing create \\
 az security pricing list --query "[?pricingTier=='Standard']" --output table
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Secure Score
+## Secure Score
 
 ```bash
 # Visa Secure Score
@@ -710,9 +729,9 @@ az security secure-score-control list --output table
 # - Enable audit logs
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Security Recommendations
+## Security Recommendations
 
 ```bash
 # Lista alla rekommendationer
@@ -730,9 +749,9 @@ az security recommendation list \\
 # - "MFA should be enabled on accounts with owner permissions"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Security Alerts
+## Security Alerts
 
 ```bash
 # Lista security alerts
@@ -755,9 +774,9 @@ az security alert update \\
     --status "Dismissed"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Just-In-Time (JIT) VM Access
+## Just-In-Time (JIT) VM Access
 
 ```bash
 # JIT = temporär port-öppning för SSH/RDP
@@ -792,9 +811,9 @@ az security jit-policy initiate \\
     }]'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Compliance
+## Compliance
 
 ```bash
 # Lista regulatory compliance standards
@@ -814,9 +833,9 @@ az security regulatory-compliance-controls list \\
 # - HIPAA
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Export till SIEM
+## Export till SIEM
 
 ```bash
 # Continuous export till Log Analytics
@@ -840,9 +859,9 @@ az security automation create \\
 # | summarize count() by AlertSeverity
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "Secure Score didn't update"
 
@@ -854,15 +873,23 @@ az security automation create \\
 # Defender for Cloud → Recommendations → Refresh
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Secure Score** för att mäta säkerhetsläget
-- **Recommendations** för förbättringar
-- **Alerts** för hotdetektering
-- **JIT Access** för säker VM-access
-- **Compliance** för regulatoriska krav
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Secure Score | Mal pa din sakerhetspostyr (0-100%) |
+| Recommendations | Atgardsforslag for att forbattra score |
+| Alerts | Real-time notifiering om hot |
+| JIT Access | Temporar port-oppning for SSH/RDP |
+| Compliance | Automatiserad kontroll mot standards |
+
+**Kom ihag:**
+- Free tier ger Secure Score och recommendations
+- Paid tier (Defender plans) ger threat protection
+- JIT Access eliminerar behovet av oppna management-portar
+- Exportera alerts till SIEM for centraliserad overvakning
 """,
 }
 
@@ -888,19 +915,20 @@ AZURE_NODE_20_GOVERNANCE = {
 
 > *"Control without constraints, compliance without complexity."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Azure Governance för storskala:
-- **Policy** - tvinga standarder
-- **Blueprints** - template för miljöer
-- **Management Groups** - hierarkisk access
-- **Cost Management** - budgets och alerts
+| Scenario | Problem utan Governance | Losning med Governance |
+|----------|------------------------|------------------------|
+| Compliance | Manuell kontroll | Azure Policy tvingar standarder |
+| Kostnader | Ingen budget-kontroll | Budgets med auto-alerts |
+| Standardisering | Varje team gor olika | Blueprints for consistency |
+| Oavsiktlig radering | Kritiska resurser raderas | Resource Locks |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Governance Hierarchy
+## Governance Hierarchy
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -938,9 +966,9 @@ Azure Governance för storskala:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure Policy
+## Azure Policy
 
 ```bash
 # Lista built-in policies
@@ -973,9 +1001,9 @@ az policy assignment create \\
     --enforcement-mode Default  # Deny!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Custom Policy
+## Custom Policy
 
 ```json
 // custom-policy-deny-public-storage.json
@@ -1018,9 +1046,9 @@ az policy assignment create \\
     --scope "/subscriptions/xxx"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Management Groups
+## Management Groups
 
 ```bash
 # Skapa management group hierarchy
@@ -1042,9 +1070,9 @@ az policy assignment create \\
 # Nu gäller policyn för ALLA subscriptions under mg-organization!
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Resource Locks
+## Resource Locks
 
 ```bash
 # Prevent accidental deletion
@@ -1074,9 +1102,9 @@ az lock list --resource-group rg-production --output table
 az lock delete --name "no-delete" --resource-group rg-production
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Cost Management
+## Cost Management
 
 ```bash
 # Visa current spend
@@ -1107,9 +1135,9 @@ az consumption budget create \\
     }]'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Tags
+## Tags
 
 ```bash
 # Tagging strategy
@@ -1139,9 +1167,9 @@ az policy assignment create \\
     --params '{ "tagName": { "value": "Environment" } }'
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure Blueprints (Preview)
+## Azure Blueprints (Preview)
 
 ```bash
 # Blueprints = template för hela miljöer
@@ -1160,9 +1188,9 @@ az blueprint create \\
     --management-group "mg-organization"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "Policy blocks deployment"
 
@@ -1181,15 +1209,23 @@ az policy exemption create \\
     --scope "/subscriptions/xxx/resourceGroups/rg-demo"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Management Groups** för hierarkisk access
-- **Azure Policy** för compliance (audit/deny)
-- **Resource Locks** förhindrar oavsiktliga ändringar
-- **Cost Management** med budgets och alerts
-- **Tags** för kostnadsallokering och organisation
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Management Groups | Hierarkisk access over subscriptions |
+| Azure Policy | Tvinga compliance (audit eller deny) |
+| Resource Locks | Skydda mot oavsiktlig radering/andring |
+| Cost Management | Budgets med automatiska alerts |
+| Tags | Organisera och spara kostnader |
+
+**Kom ihag:**
+- Policies arver nedat i scope-hierarkin
+- Anvand Audit-mode forst, sedan Deny
+- Resource Locks maste tas bort innan resurs kan raderas
+- Tagga ALLA resurser for kostnadsrapportering
 """,
 }
 

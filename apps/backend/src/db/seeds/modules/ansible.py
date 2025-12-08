@@ -9,12 +9,16 @@ Följer Linux-mallen: Svenska, pedagogiskt, bash-kommentarer på varje rad.
 """
 
 MODULE = {
+    "name": "Ansible Mastery",
     "slug": "ansible-mastery",
-    "title": "Ansible Mastery",
     "description": "Automatisera konfiguration och deployment med Ansible",
-    "icon": "settings",
-    "category": "infrastructure",
-    "order": 8,
+    "track_slug": "infrastructure",
+    "order_index": 8,
+    "difficulty": "intermediate",
+    "estimated_hours": 20,
+    "prerequisites": ["linux-mastery"],
+    "icon": "⚙️",
+    "color": "#EE0000",
     "tasks": [
         {
             "title": "Introduction to Ansible",
