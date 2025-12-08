@@ -398,63 +398,72 @@ def get_user_detail(
 
 
 # ==============================================================================
-# USER PERMISSIONS ENDPOINT - TEMPORARILY DISABLED
-# Enable after migration 005_add_user_permissions runs
+# USER PERMISSIONS ENDPOINT
 # ==============================================================================
 
-# class UserPermissionsUpdate(BaseModel):
-#     """Schema for updating user permissions"""
-#     permissions: dict  # {"ai_quiz": bool, "premium_modules": bool, ...}
+class UserPermissionsUpdate(BaseModel):
+    """Schema for updating user permissions"""
+    permissions: dict  # {"ai_quiz": bool, "premium_modules": bool, ...}
 
 
-# @admin_router.patch("/users/{user_id}/permissions")
-# def update_user_permissions(
-#     user_id: UUID,
-#     data: UserPermissionsUpdate,
-#     response: Response,
-#     current_user: CurrentUser,
-# ):
-#     """
-#     Update user permissions (admin only).
-#
-#     Permissions: ai_quiz, premium_modules, study_room, skillpath
-#     """
-#     add_phase_header(response)
-#     require_admin(current_user)
-#
-#     if not is_db_configured():
-#         return {"error": "Database not configured", "success": False}
-#
-#     from ..db.database import get_db_context
-#     from ..db.models import User
-#
-#     with get_db_context() as db:
-#         user = db.query(User).filter(User.id == user_id).first()
-#         if not user:
-#             raise HTTPException(status_code=404, detail="User not found")
-#
-#         # Get existing permissions or create default
-#         existing_permissions = getattr(user, 'permissions', None) or {
-#             "ai_quiz": True,
-#             "premium_modules": True,
-#             "study_room": True,
-#             "skillpath": True
-#         }
-#
-#         # Update with new permissions
-#         updated_permissions = {**existing_permissions, **data.permissions}
-#
-#         # Store permissions (using JSON column if available, or as a workaround using bio field temporarily)
-#         # In production, you'd add a proper permissions JSON column to the User model
-#         # For now, we'll store as JSON string in a metadata approach
-#         user.permissions = updated_permissions
-#         db.flush()
-#
-#     return {
-#         "success": True,
-#         "user_id": str(user_id),
-#         "permissions": updated_permissions
-#     }
+@admin_router.patch("/users/{user_id}/permissions")
+def update_user_permissions(
+    user_id: UUID,
+    data: UserPermissionsUpdate,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Update user permissions (admin only).
+
+    Permissions: ai_quiz, premium_modules, study_room, skillpath
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"error": "Database not configured", "success": False}
+
+    from ..db.database import get_db_context
+    from ..db.models import User
+    from sqlalchemy import text
+
+    with get_db_context() as db:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Check if permissions column exists
+        try:
+            # Try to get existing permissions
+            existing_permissions = getattr(user, 'permissions', None) or {
+                "ai_quiz": True,
+                "premium_modules": True,
+                "study_room": True,
+                "skillpath": True
+            }
+
+            # Update with new permissions
+            updated_permissions = {**existing_permissions, **data.permissions}
+
+            # Try to save to permissions column
+            user.permissions = updated_permissions
+            db.flush()
+
+            return {
+                "success": True,
+                "user_id": str(user_id),
+                "permissions": updated_permissions
+            }
+        except Exception as e:
+            # If permissions column doesn't exist yet, return error
+            db.rollback()
+            return {
+                "success": False,
+                "error": "Permissions column not available. Run migration 005_add_user_permissions first.",
+                "user_id": str(user_id),
+                "permissions": data.permissions
+            }
 
 
 @admin_router.put("/users/{user_id}", response_model=AdminUserDetail)
