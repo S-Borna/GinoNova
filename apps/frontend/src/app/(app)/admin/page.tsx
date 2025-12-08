@@ -512,7 +512,6 @@ export default function AdminCommandCenter() {
             }
 
             const usersData: AdminUsersResponse = await usersRes.json()
-            console.log("Admin users data:", usersData.users.map(u => ({ email: u.email, last_activity_at: u.last_activity_at })))
             setUsers(usersData.users)
 
             // Fetch stats
@@ -822,11 +821,9 @@ export default function AdminCommandCenter() {
                             {users
                                 .filter(u => {
                                     if (!u.last_activity_at) return false
-                                    // Parse UTC time from backend
-                                    const lastActive = new Date(u.last_activity_at.endsWith('Z') ? u.last_activity_at : u.last_activity_at + 'Z')
+                                    const lastActive = new Date(u.last_activity_at)
                                     const now = new Date()
                                     const minAgo = (now.getTime() - lastActive.getTime()) / (1000 * 60)
-                                    console.log(`User ${u.email}: last_activity_at=${u.last_activity_at}, minAgo=${minAgo}`)
                                     return minAgo <= 30
                                 })
                                 .map(u => (
