@@ -72,8 +72,8 @@ def log_ai_usage(
     Returns:
         Dict with usage info or None if logging failed
     """
-    from .db.database import is_db_configured, get_db_context
-    from .db.models import AIUsageLog
+    from ..db.database import is_db_configured, get_db_context
+    from ..db.models import AIUsageLog
 
     if not is_db_configured():
         # Return usage info even if not saved to DB
@@ -142,8 +142,8 @@ def get_user_usage_stats(
     Returns:
         Dict with usage stats
     """
-    from .db.database import is_db_configured, get_db_context
-    from .db.models import AIUsageLog
+    from ..db.database import is_db_configured, get_db_context
+    from ..db.models import AIUsageLog
     from sqlalchemy import func
 
     if not is_db_configured():
@@ -215,8 +215,8 @@ def get_all_users_usage(
 
     Returns list of users with their usage stats.
     """
-    from .db.database import is_db_configured, get_db_context
-    from .db.models import AIUsageLog, User
+    from ..db.database import is_db_configured, get_db_context
+    from ..db.models import AIUsageLog, User
     from sqlalchemy import func
 
     if not is_db_configured():
@@ -264,8 +264,8 @@ def get_weekly_summary(year: Optional[int] = None) -> List[Dict[str, Any]]:
 
     Returns list of weeks with total usage.
     """
-    from .db.database import is_db_configured, get_db_context
-    from .db.models import AIUsageLog
+    from ..db.database import is_db_configured, get_db_context
+    from ..db.models import AIUsageLog
     from sqlalchemy import func
 
     if not is_db_configured():
