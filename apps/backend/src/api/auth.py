@@ -122,6 +122,10 @@ def login(login_data: UserLogin):
     if not user:
         raise_unauthorized("Incorrect email or password")
 
+    # Update last_activity_at on login
+    from ..db import user_repository
+    user_repository.update_user(user.id, last_activity_at=datetime.utcnow())
+
     # Generate JWT token
     access_token = create_access_token(
         user_id=user.id,
@@ -259,7 +263,7 @@ def oauth_login(oauth_data: OAuthRequest):
         existing_user = user_repository.get_user_by_email(oauth_data.email)
 
         if existing_user:
-            # User exists - update OAuth info if needed and return token
+            # User exists - update OAuth info and last_activity_at
             if is_db_configured():
                 from ..db.models import User as UserModel
                 with get_db_context() as db:
@@ -272,6 +276,9 @@ def oauth_login(oauth_data: OAuthRequest):
                         # Update avatar if provided and not already set
                         if oauth_data.avatar and not user.avatar_url:
                             user.avatar_url = oauth_data.avatar
+                        # Update last_activity_at on OAuth login
+                        user.last_activity_at = datetime.utcnow()
+                        user.updated_at = datetime.utcnow()
                         db.flush()
                         db.refresh(user)
 
@@ -314,6 +321,7 @@ def oauth_login(oauth_data: OAuthRequest):
                     is_admin=False,
                     created_at=now,
                     updated_at=now,
+                    last_activity_at=now,
                 )
                 db.add(db_user)
                 db.flush()

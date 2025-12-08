@@ -26,19 +26,20 @@ AZURE_NODE_9_BLOB = {
 
 > *"Blob Storage is where the world's data lives."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Azure Blob Storage hanterar petabytes av data:
-- **Ostrukturerad data** - bilder, videos, backups, logs
-- **Billig lagring** - från $0.02/GB/månad
-- **Global åtkomst** - via CDN
-- **Livscykelhantering** - automatisk tiering
+| Scenario | Problem utan Blob Storage | Losning med Blob Storage |
+|----------|---------------------------|--------------------------|
+| Backup pipeline | Lokal lagring begransad och riskabel | Oandlig skalbar cloud storage |
+| Static content | CDN konfiguration komplex | Inbyggd static website hosting |
+| Log aggregation | Loggar sprids over servrar | Centraliserad log storage |
+| Cost optimization | Samma pris for alla data | Auto-tiering (Hot/Cool/Archive) |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Blob Storage Hierarchy
+## Blob Storage Hierarchy
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -77,9 +78,9 @@ Azure Blob Storage hanterar petabytes av data:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa Storage Account
+## Skapa Storage Account
 
 ```bash
 # Skapa Storage Account
@@ -103,9 +104,9 @@ az storage account keys list \\
     --resource-group rg-demo
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Upload/Download Blobs
+## Upload/Download Blobs
 
 ```bash
 # Upload fil
@@ -143,9 +144,9 @@ az storage blob delete \\
     --name photos/old-photo.jpg
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 SAS Tokens (Shared Access Signatures)
+## SAS Tokens (Shared Access Signatures)
 
 ```bash
 # Generera SAS token för container (tidsbegränsad åtkomst)
@@ -169,9 +170,9 @@ az storage blob generate-sas \\
 # https://stmyapp123.blob.core.windows.net/images/photos/secret.jpg?sv=...&sig=...
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Lifecycle Management
+## Lifecycle Management
 
 ```bash
 # Skapa lifecycle policy (JSON)
@@ -207,9 +208,9 @@ az storage account management-policy create \\
     --policy @lifecycle-policy.json
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Static Website Hosting
+## Static Website Hosting
 
 ```bash
 # Aktivera static website
@@ -234,9 +235,9 @@ az storage account show \\
 # Resultat: https://stmyapp123.z16.web.core.windows.net/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 SDK Usage (Python)
+## SDK Usage (Python)
 
 ```python
 from azure.storage.blob import BlobServiceClient
@@ -264,9 +265,9 @@ for blob in container.list_blobs(name_starts_with="photos/"):
     print(f"{blob.name}: {blob.size} bytes")
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: Access Denied
 
@@ -278,15 +279,23 @@ az role assignment create \\
     --scope "/subscriptions/.../resourceGroups/rg-demo/providers/Microsoft.Storage/storageAccounts/stmyapp123"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Block Blobs** för de flesta scenarier
-- **Access tiers** optimerar kostnad
-- **Lifecycle policies** automatiserar tiering
-- **SAS tokens** för säker delning
-- **Static websites** för enkel hosting
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Block Blobs | Anvand for de flesta scenarier (bilder, videos, backups) |
+| Access tiers | Hot/Cool/Archive optimerar kostnad automatiskt |
+| Lifecycle policies | Automatiserar tiering och radering |
+| SAS tokens | Tidsbegransad delning utan att ge access keys |
+| Static websites | Enkel hosting direkt fran Blob Storage |
+
+**Kom ihag:**
+- Valj ratt access tier baserat pa hur ofta data accessas
+- Anvand SAS tokens istallet for att dela access keys
+- Satt upp lifecycle policies for att spara pengar
+- Block Blobs ar nastan alltid ratt val
 """,
 }
 
@@ -312,19 +321,20 @@ AZURE_NODE_10_SQL = {
 
 > *"Your database, managed by Microsoft."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Azure SQL är enterprise-grade databas:
-- **Fully managed** - patching, backups, HA automatiskt
-- **99.99% SLA** - inbyggd high availability
-- **Intelligent** - auto-tuning, query insights
-- **Skalbar** - från 2 vCores till 128
+| Scenario | Problem utan Azure SQL | Losning med Azure SQL |
+|----------|------------------------|------------------------|
+| Databashantering | Patching, backups, HA manuellt | Fully managed av Microsoft |
+| Skalning | Provisionera ny server, migrera | Andras med ett kommando |
+| Disaster recovery | Komplex replikering | Inbyggd geo-replication |
+| Dev/test kostnader | Betala for idle servrar | Serverless auto-pause |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Azure SQL Options
+## Azure SQL Options
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -372,9 +382,9 @@ Azure SQL är enterprise-grade databas:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa SQL Database
+## Skapa SQL Database
 
 ```bash
 # Skapa SQL Server (logical server)
@@ -415,9 +425,9 @@ az sql db create \\
     --auto-pause-delay 60  # minuter
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Firewall & Security
+## Firewall & Security
 
 ```bash
 # Tillåt Azure services
@@ -444,9 +454,9 @@ az sql server ad-admin create \\
     --object-id "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Connection Strings
+## Connection Strings
 
 ```bash
 # Visa connection string
@@ -462,9 +472,9 @@ az sql db show-connection-string \\
 "Server=tcp:sqlserver-myapp.database.windows.net,1433;Initial Catalog=mydb;Authentication=Active Directory Default;"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Geo-Replication & Failover
+## Geo-Replication & Failover
 
 ```bash
 # Skapa geo-replica (läs-replica i annan region)
@@ -487,9 +497,9 @@ az sql failover-group create \\
     --grace-period 1
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Backup & Restore
+## Backup & Restore
 
 ```bash
 # Azure SQL har automatisk backup:
@@ -517,9 +527,9 @@ az sql db restore \\
     --geo-backup
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Performance Monitoring
+## Performance Monitoring
 
 ```bash
 # Query Performance Insight (i Portal)
@@ -539,9 +549,9 @@ az monitor metrics list \\
     --interval PT1H
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: "Cannot connect to SQL Server"
 
@@ -553,15 +563,23 @@ az sql server firewall-rule list --resource-group rg-demo --server sqlserver-mya
 telnet sqlserver-myapp.database.windows.net 1433
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Single Database** för nya appar
-- **Elastic Pool** för SaaS
-- **Serverless** sparar pengar på dev/test
-- **Geo-replication** för disaster recovery
-- **Automatiska backups** med PITR
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Single Database | Bast for nya appar och microservices |
+| Elastic Pool | Kostnadseffektivt for SaaS med flera databaser |
+| Serverless | Sparar pengar pa dev/test med auto-pause |
+| Geo-replication | Las-replika i annan region for DR |
+| PITR | Point-in-time restore fran automatiska backups |
+
+**Kom ihag:**
+- Anvand Serverless for dev/test miljoer
+- Satt upp Elastic Pool om du har flera databaser
+- Aktivera Azure AD authentication istallet for SQL auth
+- Geo-replication ar basta DR-losningen
 """,
 }
 
@@ -587,19 +605,20 @@ AZURE_NODE_11_COSMOS = {
 
 > *"Single-digit millisecond latency, anywhere in the world."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Cosmos DB är Azures flagship NoSQL:
-- **Global distribution** - multi-region writes
-- **99.999% SLA** - mest tillgänglig databas
-- **Multi-model** - SQL, MongoDB, Cassandra, Gremlin
-- **Auto-scale** - från 400 RU till unlimited
+| Scenario | Problem utan Cosmos DB | Losning med Cosmos DB |
+|----------|------------------------|------------------------|
+| Global app | Hog latency for avlagsna users | Multi-region writes, laga ms |
+| Schema evolution | Migreringar nar schema andras | Schemalost (NoSQL) |
+| Varying workloads | Over/under-provisioning | Autoscale RU |
+| Multi-API stod | Migrera fran MongoDB/Cassandra | Native API-stod |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Cosmos DB Architecture
+## Cosmos DB Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -638,9 +657,9 @@ Cosmos DB är Azures flagship NoSQL:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa Cosmos DB
+## Skapa Cosmos DB
 
 ```bash
 # Skapa Cosmos DB account
@@ -676,9 +695,9 @@ az cosmosdb sql container create \\
     --max-throughput 4000  # Auto-scales 400-4000 RU
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Request Units (RU)
+## Request Units (RU)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -706,9 +725,9 @@ az cosmosdb sql container create \\
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 CRUD Operations (Python SDK)
+## CRUD Operations (Python SDK)
 
 ```python
 from azure.cosmos import CosmosClient, PartitionKey
@@ -752,9 +771,9 @@ container.upsert_item(body=user)
 container.delete_item(item="user-123", partition_key="user-123")
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Partition Key Design
+## Partition Key Design
 
 ```python
 # ✅ GOOD partition keys:
@@ -784,9 +803,9 @@ container.query_items(
 )
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Global Distribution
+## Global Distribution
 
 ```bash
 # Lägg till region
@@ -809,11 +828,11 @@ az cosmosdb failover-priority-change \\
     --failover-policies "westeurope=0" "northeurope=1"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
-### Problem 1: Höga RU costs
+### Problem 1: Hoga RU costs
 
 ```python
 # ❌ Cross-partition query
@@ -829,15 +848,23 @@ container.query_items(
 )
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Partition key** är viktigaste designbeslutet
-- **Request Units (RU)** är throughput-valutan
-- **Consistency levels** balanserar prestanda/konsistens
-- **Global distribution** för låg latency överallt
-- **Autoscale** för variabel workload
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Partition key | Viktigaste designbeslutet - valj noggrant |
+| Request Units | Throughput-valutan - 1 RU = 1 read av 1KB |
+| Consistency levels | Session ar bast for de flesta use cases |
+| Global distribution | Multi-region for lag latency overallt |
+| Autoscale | Dynamisk skalning for variabel workload |
+
+**Kom ihag:**
+- Partition key kan INTE andras efter container skapats
+- Undvik cross-partition queries (dyra i RU)
+- Anvand read_item() med partition key for 1 RU reads
+- Session consistency ar default och rekommenderat
 """,
 }
 
@@ -863,19 +890,20 @@ AZURE_NODE_12_CACHE = {
 
 > *"The fastest way to speed up your app is to not hit the database."*
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Redis caching ger dramatisk prestanda-boost:
-- **Microsekund-latency** - 100x snabbare än databas
-- **Minska DB-load** - cache vanliga queries
-- **Session management** - distribuerade sessioner
-- **Real-time** - pub/sub, leaderboards
+| Scenario | Problem utan Redis | Losning med Redis |
+|----------|-------------------|-------------------|
+| Databas-load | Varje request slar DB | Cache vanliga queries |
+| Session state | Sticky sessions, single point of failure | Distribuerad session store |
+| Real-time features | Polling, hog latency | Pub/Sub, microsekunder |
+| Rate limiting | Komplex implementation | Atomic INCR med TTL |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Caching Architecture
+## Caching Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -911,9 +939,9 @@ Redis caching ger dramatisk prestanda-boost:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa Redis Cache
+## Skapa Redis Cache
 
 ```bash
 # Skapa Redis Cache (Standard tier)
@@ -946,9 +974,9 @@ az redis show \\
     --query "{Host:hostName,Port:sslPort}"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Python Usage
+## Python Usage
 
 ```python
 import redis
@@ -1022,9 +1050,9 @@ def validate_session(session_id: str):
     return json.loads(session_data)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Common Patterns
+## Common Patterns
 
 ```python
 # ========================================
@@ -1078,9 +1106,9 @@ for message in pubsub.listen():
         print(f"Received: {data}")
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 .NET Integration
+## .NET Integration
 
 ```csharp
 // StackExchange.Redis
@@ -1101,9 +1129,9 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga Problem
 
 ### Problem 1: Cache Stampede
 
@@ -1140,15 +1168,23 @@ def get_popular_item_safe(item_id):
         return get_popular_item_safe(item_id)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Cache-Aside** mönster för de flesta use cases
-- **TTL** förhindrar stale data
-- **Sorted Sets** för leaderboards/rankings
-- **Pub/Sub** för real-time features
-- **Rate limiting** med atomic INCR
+| Begrepp | Beskrivning |
+|---------|-------------|
+| Cache-Aside | Kolla cache forst, hamta fran DB vid miss |
+| TTL | Time To Live forhindrar stale data |
+| Sorted Sets | Perfekt for leaderboards och rankings |
+| Pub/Sub | Real-time notifications och events |
+| Rate limiting | Atomic INCR med EXPIRE for throttling |
+
+**Kom ihag:**
+- Satt alltid TTL pa cached data
+- Anvand locking/mutex for att undvika cache stampede
+- Standard tier for produktion (har replikas)
+- Premium for clustering och VNet-integration
 """,
 }
 

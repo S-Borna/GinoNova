@@ -9,12 +9,16 @@ Följer Linux-mallen: Svenska, pedagogiskt, kommentarer på varje rad.
 """
 
 MODULE = {
+    "name": "CI/CD Mastery",
     "slug": "cicd-mastery",
-    "title": "CI/CD Mastery",
     "description": "Automatisera bygg, test och deployment med moderna CI/CD-pipelines",
-    "icon": "git-pull-request",
-    "category": "devops",
-    "order": 9,
+    "track_slug": "devops",
+    "order_index": 9,
+    "difficulty": "intermediate",
+    "estimated_hours": 20,
+    "prerequisites": ["git-github-mastery"],
+    "icon": "🔄",
+    "color": "#2088FF",
     "tasks": [
         {
             "title": "Introduction to CI/CD",

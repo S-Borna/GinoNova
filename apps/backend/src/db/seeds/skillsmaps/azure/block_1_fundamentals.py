@@ -13,7 +13,7 @@ AZURE_NODE_1_INTRO = {
     "node_id": 1,
     "title": "Introduction to Azure",
     "slug": "azure-introduction",
-    "description": "Förstå Microsoft Azure och cloud computing koncept",
+    "description": "Forsta Microsoft Azure och cloud computing koncept",
     "difficulty": "beginner",
     "estimated_minutes": 45,
     "xp_reward": 80,
@@ -21,24 +21,29 @@ AZURE_NODE_1_INTRO = {
         "azure overview", "cloud computing", "regions", "availability zones",
         "iaas", "paas", "saas", "azure services"
     ],
-    "content": """
-# Introduction to Azure
+    "content": """# Introduction to Azure
 
-> *"The cloud isn't about where you store your stuff - it's about what you can do."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor Azure ar viktigt |
+|----------|------------------------|
+| **Multi-cloud strategi** | Azure ar #2 globalt - maste kunna |
+| **Enterprise-integration** | Active Directory, Office 365, Teams |
+| **Hybrid-scenarios** | Azure Arc for on-prem + cloud |
+| **CI/CD pipelines** | Azure DevOps ar industristandard |
+| **Certifieringar** | AZ-900, AZ-104, AZ-400 efterfragas |
 
-Microsoft Azure är världens näst största molnplattform:
-- **200+ tjänster** - compute, storage, AI, IoT och mer
-- **60+ regioner** - global täckning
-- **$80B+ omsättning** - massivt ekosystem
+Microsoft Azure ar varldens nast storsta molnplattform:
+
+- **200+ tjanster** - compute, storage, AI, IoT och mer
+- **60+ regioner** - global tackning
 - **Enterprise-fokus** - stark integration med Microsoft-produkter
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Cloud Computing Models
+## Cloud Computing Models
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -47,7 +52,7 @@ Microsoft Azure är världens näst största molnplattform:
 │                                                                  │
 │   ON-PREMISES        IaaS           PaaS           SaaS         │
 │  ┌───────────┐   ┌───────────┐  ┌───────────┐  ┌───────────┐   │
-│  │Applications│   │Applications│  │Applications│  │Applications│   │
+│  │Application│   │Application│  │Application│  │Application│   │
 │  ├───────────┤   ├───────────┤  ├───────────┤  ├───────────┤   │
 │  │  Runtime  │   │  Runtime  │  │  Runtime  │  │  Runtime  │   │
 │  ├───────────┤   ├───────────┤  ├───────────┤  ├───────────┤   │
@@ -59,131 +64,130 @@ Microsoft Azure är världens näst största molnplattform:
 │  ├───────────┤   ├───────────┤  ├───────────┤  ├───────────┤   │
 │  │ Network   │   │ Network   │  │ Network   │  │ Network   │   │
 │  └───────────┘   └───────────┘  └───────────┘  └───────────┘   │
-│       │              │              │              │             │
-│     YOU           YOU/AZURE      AZURE          AZURE           │
-│   MANAGE          MANAGE         MANAGES        MANAGES         │
+│       │               │              │              │            │
+│    DU HANTERAR    DU/AZURE       AZURE          AZURE           │
+│     ALLT          DELAR         HANTERAR       HANTERAR         │
 │                                                                  │
-│  Examples:       Examples:      Examples:      Examples:        │
-│  Your server     Azure VMs      App Service    Microsoft 365    │
-│  room            Azure          Functions      Dynamics 365     │
-│                  Storage        AKS            Power BI         │
-│                                                                  │
+│  Exempel:        Exempel:       Exempel:       Exempel:         │
+│  Ditt            Azure VMs      App Service    Microsoft 365    │
+│  serverrum       Azure Storage  Functions      Dynamics 365     │
+│                                 AKS            Power BI         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+### Ansvarsfordelning
 
-## 💻 Azure Global Infrastructure
+| Modell | Du hanterar | Azure hanterar |
+|--------|-------------|----------------|
+| **On-Prem** | Allt | Inget |
+| **IaaS** | OS, Runtime, App | Natverk, Storage, VMs |
+| **PaaS** | App, Data | Allt annat |
+| **SaaS** | Inget | Allt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Azure Global Infrastructure
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                 AZURE GLOBAL INFRASTRUCTURE                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  GEOGRAPHY (Geopolitical boundary)                              │
-│  └── REGION (Data center cluster)                               │
-│      └── AVAILABILITY ZONE (Isolated data center)               │
+│  GEOGRAPHY (Geopolitisk grans)                                  │
+│  └── REGION (Datacenter-kluster)                                │
+│      └── AVAILABILITY ZONE (Isolerat datacenter)                │
 │                                                                  │
-│  Example: Europe Geography                                       │
+│  Exempel: Europe Geography                                       │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │  North Europe Region (Ireland)                             │  │
 │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐                   │  │
 │  │  │  AZ 1   │  │  AZ 2   │  │  AZ 3   │                   │  │
 │  │  │ (DC 1)  │  │ (DC 2)  │  │ (DC 3)  │                   │  │
 │  │  └─────────┘  └─────────┘  └─────────┘                   │  │
-│  │       ↑____________↑____________↑                         │  │
-│  │              Low-latency network                          │  │
+│  │       └──────────┴──────────┘                             │  │
+│  │           Low-latency network                             │  │
 │  └───────────────────────────────────────────────────────────┘  │
 │                                                                  │
-│  Popular Regions:                                               │
-│  • West Europe (Netherlands)                                    │
-│  • North Europe (Ireland)                                       │
-│  • Sweden Central (Gävle)                                       │
-│  • UK South (London)                                            │
-│  • East US / West US                                            │
-│                                                                  │
+│  Populara regioner:                                             │
+│  • West Europe (Netherlands) - Lagst latens fran Sverige        │
+│  • North Europe (Ireland) - Billigare                           │
+│  • Sweden Central (Gavle) - Data residency                      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Core Azure Services
+## Core Azure Services
 
-| Kategori | Tjänster | Användning |
+| Kategori | Tjanster | Anvandning |
 |----------|----------|------------|
-| **Compute** | VMs, App Service, Functions, AKS | Kör applikationer |
+| **Compute** | VMs, App Service, Functions, AKS | Kor applikationer |
 | **Storage** | Blob, Files, Queues, Tables | Lagra data |
 | **Database** | SQL Database, Cosmos DB, PostgreSQL | Relationell/NoSQL |
-| **Networking** | VNet, Load Balancer, VPN Gateway | Nätverksinfrastruktur |
+| **Networking** | VNet, Load Balancer, VPN Gateway | Natverksinfrastruktur |
 | **Identity** | Azure AD, RBAC | Autentisering/auktorisering |
 | **DevOps** | Azure DevOps, Container Registry | CI/CD |
 | **AI/ML** | Cognitive Services, Azure ML | Machine Learning |
-| **Monitoring** | Azure Monitor, Log Analytics | Övervakning |
+| **Monitoring** | Azure Monitor, Log Analytics | Overvakning |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure vs AWS vs GCP
+## Azure vs AWS vs GCP
 
 | Feature | Azure | AWS | GCP |
 |---------|-------|-----|-----|
-| **Styrka** | Enterprise, Microsoft-integration | Market leader, most services | Data/ML, Kubernetes |
+| **Styrka** | Enterprise, MS-integration | Market leader | Data/ML, K8s |
 | **IaaS** | Virtual Machines | EC2 | Compute Engine |
 | **PaaS** | App Service | Elastic Beanstalk | App Engine |
 | **Serverless** | Functions | Lambda | Cloud Functions |
 | **Containers** | AKS | EKS | GKE |
 | **Storage** | Blob Storage | S3 | Cloud Storage |
-| **Database** | Azure SQL, Cosmos DB | RDS, DynamoDB | Cloud SQL, Firestore |
+| **Database** | Azure SQL, Cosmos DB | RDS, DynamoDB | Cloud SQL |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Skapa Azure-konto
+## Skapa Azure-konto
 
 ```bash
-# 1. Gå till https://azure.microsoft.com/free
+# 1. Ga till https://azure.microsoft.com/free
 # 2. Registrera med Microsoft-konto
-# 3. Du får $200 kredit i 30 dagar + 12 månader gratistjänster
+# 3. Du far $200 kredit i 30 dagar + 12 manader gratistjanster
 
 # Free tier inkluderar:
-# - 750h B1s Linux VM (12 mån)
-# - 750h B1s Windows VM (12 mån)
-# - 5GB Blob Storage (12 mån)
+# - 750h B1s Linux VM (12 man)
+# - 750h B1s Windows VM (12 man)
+# - 5GB Blob Storage (12 man)
 # - Azure App Service (alltid gratis)
-# - Azure Functions (1M requests/mån)
+# - Azure Functions (1M requests/man)
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Kostnadsmisstag
+## Vanliga fel och losningar
 
-### Misstag 1: Glömda resurser
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Glomda resurser | VM kostar aven stoppad | Deallocate eller radera |
+| Fel region | Hogre kostnad | Jamfor priser i calculator |
+| Ingen budget-alert | Ovantad rakring | Satt upp i Cost Management |
+| Over-provisioned | For stor VM | Right-size enligt Advisor |
 
-```bash
-# ❌ Glömt bort att stänga av VM
-# → $100+/månad för en oanvänd VM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# ✅ Sätt budget-alerts
-# Azure Portal → Cost Management → Budgets
-```
+## Key Takeaways
 
-### Misstag 2: Fel region
+| Koncept | Detalj |
+|---------|--------|
+| **Azure** | Enterprise-fokuserad molnplattform, #2 globalt |
+| **IaaS/PaaS/SaaS** | Olika ansvarsnivder - valj ratt modell |
+| **Regioner & Zoner** | Valj region nara anvandare, zoner for HA |
+| **Free tier** | $200 kredit + 12 man gratis for att lara sig |
 
-```bash
-# ❌ Väljer region utan att tänka på kostnad
-# → US-regioner ofta billigare än Europa
-
-# ✅ Jämför priser
-# https://azure.microsoft.com/pricing/calculator
-```
-
----
-
-## ✅ Sammanfattning
-
-- **Azure** är enterprise-fokuserad molnplattform
-- **IaaS/PaaS/SaaS** - olika ansvarsnivåer
-- **Regioner & Zoner** för high availability
-- **Free tier** för att lära sig
-- **Sätt budget-alerts** för kostnadskontroll
+**Kom ihag:**
+- Azure ar starkt integrerat med **Microsoft-produkter** (AD, Office, Teams)
+- **Regioner** paverkar bade **latens och kostnad**
+- Satt **alltid budget-alerts** innan du borjar experimentera
+- **AZ-900** ar en bra start-certifiering
 """,
 }
 
@@ -204,24 +208,25 @@ AZURE_NODE_2_RESOURCES = {
         "resource groups", "azure resources", "tags", "locks",
         "management groups", "subscriptions", "arm templates"
     ],
-    "content": """
-# Resource Groups & Management
+    "content": """# Resource Groups & Management
 
-> *"A well-organized cloud is a manageable cloud."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor Resource Management ar viktigt |
+|----------|--------------------------------------|
+| **Organisation** | Gruppera relaterade resurser logiskt |
+| **Access Control** | Satt rattigheter pa grupp-niva med RBAC |
+| **Cost Tracking** | Folj kostnader per projekt/team/miljo |
+| **Lifecycle** | Radera hela miljoer med ett kommando |
+| **Automation** | Terraform/ARM arbetar med resource groups |
 
-Resource management är grunden för Azure:
-- **Organisation** - gruppera relaterade resurser
-- **Access Control** - sätt rättigheter på grupp-nivå
-- **Cost Tracking** - följ kostnader per projekt
-- **Lifecycle** - radera hela miljöer med ett kommando
+Resource management ar grunden for all Azure-hantering.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Azure Resource Hierarchy
+## Azure Resource Hierarchy
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -230,17 +235,17 @@ Resource management är grunden för Azure:
 │                                                                  │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │              Azure Active Directory (Tenant)             │    │
-│  │  Identiteter, användare, grupper, service principals    │    │
+│  │  Identiteter, anvandare, grupper, service principals    │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                           │                                      │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │                Management Groups (Optional)              │    │
-│  │  Gruppera subscriptions för policy och RBAC              │    │
+│  │                Management Groups (Valfritt)              │    │
+│  │  Gruppera subscriptions for policy och RBAC              │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                           │                                      │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │                     Subscriptions                        │    │
-│  │  Faktureringsenheter, en per miljö eller avdelning       │    │
+│  │  Faktureringsenheter, en per miljo eller avdelning       │    │
 │  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐     │    │
 │  │  │ Dev Subscr.  │ │ Test Subscr. │ │ Prod Subscr. │     │    │
 │  │  └──────────────┘ └──────────────┘ └──────────────┘     │    │
@@ -248,7 +253,7 @@ Resource management är grunden för Azure:
 │                           │                                      │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │                   Resource Groups                        │    │
-│  │  Logiska containrar för relaterade resurser              │    │
+│  │  Logiska containrar for relaterade resurser              │    │
 │  │  ┌────────────┐ ┌────────────┐ ┌────────────┐           │    │
 │  │  │ rg-web-dev │ │rg-api-dev  │ │ rg-db-dev  │           │    │
 │  │  └────────────┘ └────────────┘ └────────────┘           │    │
@@ -262,12 +267,19 @@ Resource management är grunden för Azure:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Resource Groups
+## Resource Group Kommandon
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az group create` | Skapa resource group |
+| `az group list` | Lista alla resource groups |
+| `az resource list -g <name>` | Lista resurser i grupp |
+| `az group delete` | Radera grupp och ALLA resurser |
 
 ```bash
-# Azure CLI - skapa resource group
+# Skapa resource group med tags
 az group create \\
     --name rg-myproject-dev \\
     --location northeurope \\
@@ -283,9 +295,9 @@ az resource list --resource-group rg-myproject-dev --output table
 az group delete --name rg-myproject-dev --yes --no-wait
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Naming Conventions
+## Naming Conventions
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -294,18 +306,18 @@ az group delete --name rg-myproject-dev --yes --no-wait
 │                                                                  │
 │  Format: {resource-type}-{workload}-{environment}-{region}-{#}  │
 │                                                                  │
-│  Examples:                                                       │
+│  Exempel:                                                        │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │ Resource Group:    rg-webshop-prod-ne-001               │    │
 │  │ Virtual Machine:   vm-webshop-prod-ne-001               │    │
-│  │ Storage Account:   stwebshopprodne001 (no hyphens!)     │    │
+│  │ Storage Account:   stwebshopprodne001 (inga bindestreck!)│    │
 │  │ App Service:       app-webshop-prod-ne-001              │    │
 │  │ SQL Database:      sql-webshop-prod-ne-001              │    │
 │  │ Key Vault:         kv-webshop-prod-ne-001               │    │
 │  │ Virtual Network:   vnet-webshop-prod-ne-001             │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
-│  Common Prefixes:                                                │
+│  Vanliga prefix:                                                 │
 │  rg   = Resource Group     vm   = Virtual Machine               │
 │  st   = Storage Account    sql  = SQL Database                  │
 │  app  = App Service        func = Function App                  │
@@ -316,19 +328,21 @@ az group delete --name rg-myproject-dev --yes --no-wait
 │  dev = Development         test = Testing                       │
 │  stg = Staging             prod = Production                    │
 │                                                                  │
-│  Region:                                                         │
-│  ne = North Europe         we = West Europe                     │
-│  eus = East US             wus = West US                        │
-│                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Tags
+## Tags
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `--tags Key=Value` | Lagg till vid skapande |
+| `az resource tag` | Uppdatera tags |
+| `az resource list --tag` | Filtrera pa tag |
 
 ```bash
-# Lägg till tags vid skapande
+# Lagg till tags vid skapande
 az group create \\
     --name rg-myproject-prod \\
     --location northeurope \\
@@ -339,31 +353,36 @@ az group create \\
         Owner=team@company.com \\
         CreatedBy=terraform
 
-# Uppdatera tags på befintlig resurs
-az resource tag \\
-    --tags Environment=Production CostCenter=CC-123 \\
-    --ids /subscriptions/xxx/resourceGroups/rg-myproject/providers/...
-
-# Filtrera resurser på tag
+# Filtrera resurser pa tag
 az resource list --tag Environment=Production --output table
 
 # Visa kostnader per tag i Cost Management
-# Azure Portal → Cost Management → Cost Analysis → Group by: Tag
+# Azure Portal -> Cost Management -> Cost Analysis -> Group by: Tag
 ```
 
----
+### Rekommenderade Tags
 
-## 💻 Resource Locks
+| Tag | Syfte | Exempel |
+|-----|-------|---------|
+| **Environment** | Miljo | Production, Development |
+| **Project** | Projekt | WebShop, API |
+| **CostCenter** | Fakturering | CC-123 |
+| **Owner** | Ansvarig | team@company.com |
+| **CreatedBy** | Skapad av | terraform, manual |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Resource Locks
 
 ```bash
-# Skapa lock som förhindrar radering
+# Skapa lock som forhindrar radering
 az lock create \\
     --name DoNotDelete \\
     --resource-group rg-production \\
     --lock-type CanNotDelete \\
     --notes "Production environment - do not delete"
 
-# Skapa ReadOnly lock (förhindrar ändringar)
+# Skapa ReadOnly lock (forhindrar andringar)
 az lock create \\
     --name ReadOnly \\
     --resource-group rg-production \\
@@ -372,54 +391,72 @@ az lock create \\
 # Lista locks
 az lock list --resource-group rg-production --output table
 
-# Ta bort lock (krävs för att kunna radera)
+# Ta bort lock (kravs for att kunna radera)
 az lock delete --name DoNotDelete --resource-group rg-production
 ```
 
----
+### Lock-typer
 
-## 💻 Best Practices
+| Lock-typ | Forhindrar | Anvandning |
+|----------|------------|------------|
+| **CanNotDelete** | Radering | Skydda produktion |
+| **ReadOnly** | Alla andringar | Kritiska resurser |
 
-### Resource Group Design
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-# ✅ Gruppera efter livscykel
-rg-webshop-frontend-prod    # Frontend-resurser
-rg-webshop-backend-prod     # Backend-resurser
-rg-webshop-shared-prod      # Delade resurser
+## Best Practices for Resource Groups
 
-# ✅ Gruppera efter miljö
-rg-myapp-dev
-rg-myapp-test
-rg-myapp-prod
-
-# ❌ Undvik att blanda miljöer
-# rg-all-resources (blandar dev och prod!)
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 RESOURCE GROUP DESIGN                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  RATT: Gruppera efter livscykel                                 │
+│  ─────────────────────────────────────────────────────          │
+│  rg-webshop-frontend-prod    # Frontend-resurser                │
+│  rg-webshop-backend-prod     # Backend-resurser                 │
+│  rg-webshop-shared-prod      # Delade resurser                  │
+│                                                                  │
+│  RATT: Gruppera efter miljo                                     │
+│  ─────────────────────────────────────────────────────          │
+│  rg-myapp-dev                                                   │
+│  rg-myapp-test                                                  │
+│  rg-myapp-prod                                                  │
+│                                                                  │
+│  FEL: Blanda miljoer                                            │
+│  ─────────────────────────────────────────────────────          │
+│  rg-all-resources (blandar dev och prod!)                       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Misstag
+## Vanliga fel och losningar
 
-### Misstag: Radera resource group med produktion
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Raderar produktion | Inget lock | Skapa CanNotDelete lock |
+| Hittar inte resurs | Fel subscription | `az account set` |
+| Kan inte radera | Lock finns | Ta bort lock forst |
+| Kostnad oorganiserad | Inga tags | Implementera tagging policy |
 
-```bash
-# ⚠️ Detta raderar ALLT i gruppen!
-az group delete --name rg-production
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# ✅ Använd locks för kritiska miljöer
-az lock create --name critical --resource-group rg-production --lock-type CanNotDelete
-```
+## Key Takeaways
 
----
+| Koncept | Detalj |
+|---------|--------|
+| **Resource Groups** | Logiska containrar - gruppera efter livscykel |
+| **Naming Convention** | Konsekvent namngivning sparar tid |
+| **Tags** | Organisation och kostnadssparning |
+| **Locks** | Skydda kritiska miljoer fran misstag |
 
-## ✅ Sammanfattning
-
-- **Resource Groups** grupperar relaterade resurser
-- **Naming conventions** för tydlighet
-- **Tags** för organisation och kostnadsspårning
-- **Locks** skyddar mot oavsiktlig radering
-- **Subscription-design** separerar miljöer
+**Kom ihag:**
+- En resurs kan **bara finnas i en** resource group
+- Resource groups har **en region** men resurser kan vara i olika
+- **Radering av grupp = radering av ALLT** i gruppen
+- Anvand **locks pa produktion** - alltid
 """,
 }
 
@@ -432,7 +469,7 @@ AZURE_NODE_3_PORTAL_CLI = {
     "node_id": 3,
     "title": "Azure Portal & CLI",
     "slug": "azure-portal-cli",
-    "description": "Navigera Azure Portal och använda Azure CLI",
+    "description": "Navigera Azure Portal och anvanda Azure CLI",
     "difficulty": "beginner",
     "estimated_minutes": 55,
     "xp_reward": 100,
@@ -440,24 +477,25 @@ AZURE_NODE_3_PORTAL_CLI = {
         "azure portal", "azure cli", "cloud shell", "az commands",
         "powershell", "authentication", "scripting"
     ],
-    "content": """
-# Azure Portal & CLI
+    "content": """# Azure Portal & CLI
 
-> *"The CLI is for automation, the portal is for exploration."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor CLI ar viktigt |
+|----------|----------------------|
+| **Automation** | Skripta repetitiva uppgifter |
+| **CI/CD** | Deploya fran pipelines |
+| **Reproducerbarhet** | Samma kommando = samma resultat |
+| **Hastighet** | CLI ar snabbare an portal for erfarna |
+| **Dokumentation** | Kommandon ar sjalvdokumenterande |
 
-Flera sätt att hantera Azure:
-- **Portal** - visuell, bra för utforskning
-- **CLI** - scriptbar, snabb för repetitiva uppgifter
-- **PowerShell** - för Windows-admins
-- **ARM/Bicep** - Infrastructure as Code
+Flera satt att hantera Azure - valj ratt verktyg for uppgiften.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Azure Management Tools
+## Azure Management Tools
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -467,44 +505,51 @@ Flera sätt att hantera Azure:
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                    AZURE PORTAL                           │   │
 │  │  https://portal.azure.com                                 │   │
-│  │  ✓ Visual interface                                       │   │
-│  │  ✓ Best for exploration                                   │   │
-│  │  ✓ Dashboards & monitoring                                │   │
-│  │  ✗ Hard to automate                                       │   │
+│  │  + Visuellt interface                                     │   │
+│  │  + Bast for utforskning                                   │   │
+│  │  + Dashboards & monitoring                                │   │
+│  │  - Svart att automatisera                                 │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                           │                                      │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                      AZURE CLI                            │   │
 │  │  az <service> <command>                                   │   │
-│  │  ✓ Cross-platform (Windows, Mac, Linux)                   │   │
-│  │  ✓ Scriptable (bash, zsh)                                 │   │
-│  │  ✓ JSON output for parsing                                │   │
-│  │  ✓ Tab completion                                         │   │
+│  │  + Cross-platform (Windows, Mac, Linux)                   │   │
+│  │  + Scriptbar (bash, zsh)                                  │   │
+│  │  + JSON output for parsing                                │   │
+│  │  + Tab completion                                         │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                           │                                      │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                   AZURE POWERSHELL                        │   │
 │  │  Connect-AzAccount / Get-AzResource                       │   │
-│  │  ✓ Native PowerShell cmdlets                              │   │
-│  │  ✓ Good for Windows admins                                │   │
-│  │  ✓ Object-oriented output                                 │   │
+│  │  + Nativa PowerShell cmdlets                              │   │
+│  │  + Bra for Windows-admins                                 │   │
+│  │  + Objekt-orienterad output                               │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                           │                                      │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                    CLOUD SHELL                            │   │
 │  │  shell.azure.com                                          │   │
-│  │  ✓ Browser-based CLI                                      │   │
-│  │  ✓ No installation needed                                 │   │
-│  │  ✓ Pre-authenticated                                      │   │
-│  │  ✓ Has az, kubectl, terraform, etc.                       │   │
+│  │  + Browserbased CLI                                       │   │
+│  │  + Ingen installation                                     │   │
+│  │  + For-autentiserad                                       │   │
+│  │  + Har az, kubectl, terraform, etc.                       │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure CLI Installation
+## Azure CLI Installation
+
+| Plattform | Kommando |
+|-----------|----------|
+| **macOS** | `brew install azure-cli` |
+| **Ubuntu/Debian** | `curl -sL https://aka.ms/InstallAzureCLIDeb \\| sudo bash` |
+| **Windows** | `winget install Microsoft.AzureCLI` |
+| **Docker** | `docker run -it mcr.microsoft.com/azure-cli` |
 
 ```bash
 # macOS
@@ -513,24 +558,25 @@ brew install azure-cli
 # Ubuntu/Debian
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-# Windows (PowerShell as Admin)
-winget install Microsoft.AzureCLI
-
-# Docker
-docker run -it mcr.microsoft.com/azure-cli
-
 # Verifiera
 az --version
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Azure CLI Basics
+## Azure CLI Basics
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az login` | Logga in (oppnar webblasare) |
+| `az account show` | Visa aktuellt konto |
+| `az account list` | Lista subscriptions |
+| `az account set --subscription` | Byt subscription |
 
 ```bash
 # Logga in
 az login
-# Öppnar webbläsare för autentisering
+# Oppnar webblasare for autentisering
 
 # Logga in med service principal (CI/CD)
 az login --service-principal \\
@@ -538,28 +584,29 @@ az login --service-principal \\
     --password $AZURE_CLIENT_SECRET \\
     --tenant $AZURE_TENANT_ID
 
-# Visa konto
-az account show
+# Visa aktuell subscription
+az account show --query name -o tsv
 
 # Lista subscriptions
 az account list --output table
 
 # Byt subscription
 az account set --subscription "My Subscription Name"
-
-# Visa aktuell subscription
-az account show --query name -o tsv
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Vanliga az-kommandon
+## Vanliga az-kommandon
+
+### Resource Groups
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az group create` | Skapa resource group |
+| `az group list` | Lista grupper |
+| `az group delete` | Radera grupp |
 
 ```bash
-# ═══════════════════════════════════════════════════════════════
-# RESOURCE GROUPS
-# ═══════════════════════════════════════════════════════════════
-
 # Skapa
 az group create --name rg-demo --location northeurope
 
@@ -568,11 +615,18 @@ az group list --output table
 
 # Radera
 az group delete --name rg-demo --yes
+```
 
-# ═══════════════════════════════════════════════════════════════
-# VIRTUAL MACHINES
-# ═══════════════════════════════════════════════════════════════
+### Virtual Machines
 
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az vm create` | Skapa VM |
+| `az vm list` | Lista VMs |
+| `az vm start/stop` | Starta/stoppa |
+| `az vm deallocate` | Deallocate (sparar pengar!) |
+
+```bash
 # Skapa VM
 az vm create \\
     --resource-group rg-demo \\
@@ -589,14 +643,11 @@ az vm list --output table
 az vm start --resource-group rg-demo --name vm-demo
 az vm stop --resource-group rg-demo --name vm-demo
 az vm deallocate --resource-group rg-demo --name vm-demo  # Sparar pengar!
+```
 
-# Radera
-az vm delete --resource-group rg-demo --name vm-demo --yes
+### Storage
 
-# ═══════════════════════════════════════════════════════════════
-# STORAGE
-# ═══════════════════════════════════════════════════════════════
-
+```bash
 # Skapa storage account
 az storage account create \\
     --name stdemo12345 \\
@@ -617,9 +668,16 @@ az storage blob upload \\
     --file ./local-file.txt
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Output Formats
+## Output Formats
+
+| Format | Flagga | Anvandning |
+|--------|--------|------------|
+| **Table** | `--output table` | Lasbar for manniskor |
+| **JSON** | `--output json` | Parsing, default |
+| **TSV** | `--output tsv` | Scripting |
+| **YAML** | `--output yaml` | Konfiguration |
 
 ```bash
 # Table (human-readable)
@@ -628,93 +686,109 @@ az vm list --output table
 # JSON (default, for parsing)
 az vm list --output json
 
-# YAML
-az vm list --output yaml
-
-# TSV (för scripting)
+# TSV (for scripting)
 az vm list --query "[].name" --output tsv
 
 # JMESPath queries
-az vm show -g rg-demo -n vm-demo --query "{Name:name, OS:storageProfile.osDisk.osType}"
+az vm show -g rg-demo -n vm-demo \\
+    --query "{Name:name, OS:storageProfile.osDisk.osType}"
 
 # Spara till variabel
 VM_IP=$(az vm show -g rg-demo -n vm-demo --query publicIps -o tsv)
 echo $VM_IP
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Cloud Shell
+## Cloud Shell
 
-```bash
-# Öppna i browser: shell.azure.com
-# Eller via portal: Klicka på >_ ikonen
-
-# Cloud Shell har:
-# ✅ az (Azure CLI)
-# ✅ kubectl
-# ✅ terraform
-# ✅ ansible
-# ✅ git
-# ✅ Persistent home directory (Azure Files)
-
-# Ladda upp filer till Cloud Shell:
-# Klicka på Upload/Download ikonen
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                       CLOUD SHELL                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  URL: shell.azure.com                                           │
+│  Eller: Portal -> klicka pa >_ ikonen                           │
+│                                                                  │
+│  Forinstallerat:                                                │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  az          - Azure CLI                                │    │
+│  │  kubectl     - Kubernetes CLI                           │    │
+│  │  terraform   - Infrastructure as Code                   │    │
+│  │  ansible     - Configuration Management                 │    │
+│  │  git         - Version Control                          │    │
+│  │  code        - VS Code (editor)                         │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  + Persistent home directory (Azure Files)                      │
+│  + For-autentiserad med ditt konto                              │
+│  + 5GB lagring inkluderat                                       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Hjälpsystem
+## Hjalpsystem
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az --help` | Generell hjalp |
+| `az vm --help` | Hjalp for service |
+| `az vm create --help` | Hjalp for kommando |
+| `az interactive` | Interaktivt lage |
+| `az find "create vm"` | Sok kommando |
 
 ```bash
-# Generell hjälp
+# Generell hjalp
 az --help
 
-# Hjälp för specifik tjänst
+# Hjalp for specifik tjanst
 az vm --help
 az vm create --help
 
-# Interaktiv läge (tab completion!)
+# Interaktiv lage (tab completion!)
 az interactive
 
-# Find command
+# Hitta kommando
 az find "create vm"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga fel och losningar
 
-### Problem 1: Fel subscription
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Fel subscription | Standard vald | `az account set --subscription` |
+| VM kostar trots stopp | Ej deallocate | `az vm deallocate` |
+| Command not found | CLI ej installerad | Installera az CLI |
+| Unauthorized | Token expired | `az login` igen |
 
 ```bash
-# ❌ Skapar resurs i fel subscription
-az vm create --resource-group rg-demo --name vm-demo ...
-
-# ✅ Kontrollera först
+# Kontrollera subscription innan kritiska operationer
 az account show --query name
-az account set --subscription "Correct Subscription"
-```
 
-### Problem 2: Glömd deallocate
-
-```bash
-# ❌ Stoppar VM men betalar fortfarande
-az vm stop --resource-group rg-demo --name vm-demo
-
-# ✅ Deallocate för att sluta betala
+# Deallocate for att sluta betala
 az vm deallocate --resource-group rg-demo --name vm-demo
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Key Takeaways
 
-- **Portal** för utforskning, **CLI** för automation
-- **az login** för att börja
-- **JMESPath queries** för att extrahera data
-- **Cloud Shell** när du inte har CLI lokalt
-- **Deallocate** VMs för att spara pengar
+| Koncept | Detalj |
+|---------|--------|
+| **Portal** | For utforskning och dashboards |
+| **CLI** | For automation och scripting |
+| **Cloud Shell** | Nar du inte har CLI lokalt |
+| **JMESPath** | Queries for att extrahera data |
+
+**Kom ihag:**
+- **Portal for utforskning**, CLI for automation
+- `az login` for att borja, `az account set` for att byta subscription
+- **Deallocate** VMs for att spara pengar (stop racker inte!)
+- Anvand **--output table** for lasbarhet, **tsv** for scripting
 """,
 }
 
@@ -735,66 +809,73 @@ AZURE_NODE_4_SUBSCRIPTIONS = {
         "subscriptions", "billing", "cost management", "budgets",
         "cost analysis", "reserved instances", "azure advisor"
     ],
-    "content": """
-# Subscriptions & Cost Management
+    "content": """# Subscriptions & Cost Management
 
-> *"The cloud is pay-as-you-go, not pay-and-forget."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor Cost Management ar viktigt |
+|----------|----------------------------------|
+| **Budget-kontroll** | Forhindra ovantade rakningar |
+| **Kostnadsoptimering** | Right-size resurser, spara pengar |
+| **Showback/Chargeback** | Visa kostnader per team/projekt |
+| **Forecasting** | Planera framtida kostnader |
+| **FinOps** | Kombinera Dev + Finance + Ops |
 
-Molnkostnader kan snabbt skena:
-- **Oväntade räkningar** - resurser man glömt
-- **Budget-överskriden** - saknar alerts
-- **Fel storlekar** - over-provisioned VMs
-- **Reservationer** - kan spara 40-70%
+Molnkostnader kan snabbt skena utan kontroll.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Subscription Strategy
+## Subscription Strategies
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                 SUBSCRIPTION STRATEGIES                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  STRATEGY 1: Per Environment                                    │
+│  STRATEGI 1: Per Miljo                                          │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │  subscription-dev     subscription-test    subscription-prod │    │
-│  │  ├── rg-app-dev      ├── rg-app-test     ├── rg-app-prod    │    │
-│  │  └── rg-db-dev       └── rg-db-test      └── rg-db-prod     │    │
+│  │  subscription-dev    subscription-test   subscription-prod   │
+│  │  +-- rg-app-dev     +-- rg-app-test     +-- rg-app-prod     │
+│  │  +-- rg-db-dev      +-- rg-db-test      +-- rg-db-prod      │
 │  └─────────────────────────────────────────────────────────┘    │
-│  ✅ Tydlig separation                                            │
-│  ✅ Enkel kostnadsspårning per miljö                             │
-│  ✅ Olika budgetar/policies per miljö                            │
+│  + Tydlig separation mellan miljoer                             │
+│  + Enkel kostnadssparning per miljo                             │
+│  + Olika budgetar/policies per miljo                            │
 │                                                                  │
-│  STRATEGY 2: Per Department                                      │
+│  STRATEGI 2: Per Avdelning                                      │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │  subscription-it      subscription-marketing  subscription-hr │    │
-│  │  ├── rg-dev          ├── rg-website         ├── rg-hr-sys   │    │
-│  │  └── rg-prod         └── rg-campaigns       └── rg-payroll  │    │
+│  │  subscription-it     subscription-marketing  subscription-hr │
+│  │  +-- rg-dev         +-- rg-website          +-- rg-hr-sys   │
+│  │  +-- rg-prod        +-- rg-campaigns        +-- rg-payroll  │
 │  └─────────────────────────────────────────────────────────┘    │
-│  ✅ Tydlig kostnad per avdelning                                 │
-│  ✅ Avdelningar kan ha egna budgetar                             │
+│  + Tydlig kostnad per avdelning                                 │
+│  + Avdelningar kan ha egna budgetar                             │
 │                                                                  │
-│  STRATEGY 3: Hybrid (Recommended)                                │
+│  STRATEGI 3: Hybrid (Rekommenderas)                             │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │  Management Group: Company                               │    │
-│  │  ├── MG: Production                                      │    │
-│  │  │   ├── subscription-prod-eu                            │    │
-│  │  │   └── subscription-prod-us                            │    │
-│  │  └── MG: Non-Production                                  │    │
-│  │      ├── subscription-dev                                │    │
-│  │      └── subscription-test                               │    │
+│  │  +-- MG: Production                                      │    │
+│  │  │   +-- subscription-prod-eu                            │    │
+│  │  │   +-- subscription-prod-us                            │    │
+│  │  +-- MG: Non-Production                                  │    │
+│  │      +-- subscription-dev                                │    │
+│  │      +-- subscription-test                               │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Subscription Management
+## Subscription Management
+
+| Kommando | Beskrivning |
+|----------|-------------|
+| `az account list` | Lista subscriptions |
+| `az account show` | Visa aktuell |
+| `az account set` | Byt subscription |
 
 ```bash
 # Lista alla subscriptions
@@ -808,7 +889,7 @@ az account set --subscription "Subscription Name"
 # eller med ID
 az account set --subscription "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
-# Skapa alias för snabbt byte (i .bashrc/.zshrc)
+# Skapa alias for snabbt byte (i .bashrc/.zshrc)
 alias az-dev='az account set --subscription "Dev Subscription"'
 alias az-prod='az account set --subscription "Prod Subscription"'
 
@@ -816,37 +897,9 @@ alias az-prod='az account set --subscription "Prod Subscription"'
 az account show --query "{Name:name, Id:id}" --output table
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Cost Management CLI
-
-```bash
-# Visa kostnad för aktuell månad
-az consumption usage list \\
-    --start-date 2024-12-01 \\
-    --end-date 2024-12-31 \\
-    --output table
-
-# Gruppera kostnad per resource group
-az consumption usage list \\
-    --query "[].{ResourceGroup:instanceName, Cost:pretaxCost}" \\
-    --output table
-
-# Visa budgets
-az consumption budget list --output table
-
-# Skapa budget med alert
-az consumption budget create \\
-    --budget-name "Monthly-Budget" \\
-    --amount 1000 \\
-    --time-grain Monthly \\
-    --category Cost \\
-    --notifications "80:admin@company.com,90:admin@company.com,100:admin@company.com"
-```
-
----
-
-## 💻 Kostnadskontroll i Portal
+## Cost Management i Portal
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -857,53 +910,57 @@ az consumption budget create \\
 │                                                                  │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │  COST ANALYSIS                                           │    │
-│  │  • Filtrera per tidperiod                                │    │
-│  │  • Gruppera per resource group, tag, service             │    │
-│  │  • Exportera till CSV                                    │    │
-│  │  • Jämför med föregående period                          │    │
+│  │  - Filtrera per tidperiod                                │    │
+│  │  - Gruppera per resource group, tag, service             │    │
+│  │  - Exportera till CSV                                    │    │
+│  │  - Jamfor med foregaende period                          │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │  BUDGETS                                                 │    │
-│  │  • Sätt månadsbudget                                     │    │
-│  │  • Email-alerts vid 50%, 75%, 90%, 100%                  │    │
-│  │  • Action Groups för automatisering                      │    │
+│  │  - Satt manadsbudget                                     │    │
+│  │  - Email-alerts vid 50%, 75%, 90%, 100%                  │    │
+│  │  - Action Groups for automatisering                      │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │  ADVISOR RECOMMENDATIONS                                 │    │
-│  │  • Right-size VMs (mindre = billigare)                   │    │
-│  │  • Reserved Instance recommendations                     │    │
-│  │  • Oanvända resurser                                     │    │
+│  │  - Right-size VMs (mindre = billigare)                   │    │
+│  │  - Reserved Instance recommendations                     │    │
+│  │  - Oanvanda resurser                                     │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Cost-Saving Strategies
+## Cost-Saving Strategies
 
 ### 1. Reserved Instances (RIs)
 
-```bash
-# Spara upp till 72% på VMs med 1-3 års åtagande
+| Term | Rabatt | Anvandning |
+|------|--------|------------|
+| **Pay-as-you-go** | 0% | Test, kortvarig |
+| **1-year RI** | ~40% | Stabil workload |
+| **3-year RI** | ~60-72% | Produktion |
 
+```bash
 # Exempel: Standard_D4s_v3 VM
 # Pay-as-you-go: ~$140/month
 # 1-year RI:     ~$85/month (40% rabatt)
 # 3-year RI:     ~$55/month (60% rabatt)
 
-# Köp RI i Portal:
-# Reservations → Add → Virtual Machine → Välj region, storlek, term
+# Kop RI i Portal:
+# Reservations -> Add -> Virtual Machine -> Valj region, storlek, term
 ```
 
 ### 2. Azure Hybrid Benefit
 
 ```bash
-# Använd befintliga Windows/SQL-licenser i Azure
-# Spara upp till 40% på Windows VMs
-# Spara upp till 55% på SQL Server
+# Anvand befintliga Windows/SQL-licenser i Azure
+# Spara upp till 40% pa Windows VMs
+# Spara upp till 55% pa SQL Server
 
 # Aktivera vid VM-skapande:
 az vm create \\
@@ -916,7 +973,7 @@ az vm create \\
 ### 3. Auto-shutdown
 
 ```bash
-# Stäng av dev-VMs på natten
+# Stang av dev-VMs pa natten
 az vm auto-shutdown \\
     --resource-group rg-dev \\
     --name vm-dev \\
@@ -927,7 +984,7 @@ az vm auto-shutdown \\
 ### 4. Spot VMs
 
 ```bash
-# Upp till 90% rabatt för interruptible workloads
+# Upp till 90% rabatt for interruptible workloads
 az vm create \\
     --resource-group rg-demo \\
     --name vm-spot \\
@@ -937,53 +994,54 @@ az vm create \\
     --max-price 0.05  # Max pris per timme
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Budget Alert Setup
-
-```bash
-# Skapa action group för notifieringar
-az monitor action-group create \\
-    --name "CostAlerts" \\
-    --resource-group rg-monitoring \\
-    --short-name "CostAlerts" \\
-    --email-receiver name="Admin" email-address="admin@company.com"
-
-# Skapa budget med action group
-# (Enklast via Portal för full funktionalitet)
-```
-
----
-
-## ⚠️ Vanliga Kostnadsmisstag
-
-### Misstag 1: Oanvända resurser
+## Hitta oanvanda resurser
 
 ```bash
-# Hitta oanvända diskar
-az disk list --query "[?diskState=='Unattached'].{Name:name,Size:diskSizeGb}" --output table
+# Hitta oanvanda diskar
+az disk list \\
+    --query "[?diskState=='Unattached'].{Name:name,Size:diskSizeGb}" \\
+    --output table
 
 # Hitta stoppade VMs som fortfarande kostar
-az vm list --query "[?powerState!='VM deallocated'].{Name:name,State:powerState}" --output table
+az vm list \\
+    --query "[?powerState!='VM deallocated'].{Name:name,State:powerState}" \\
+    --output table
+
+# Hitta gamla snapshots
+az snapshot list \\
+    --query "[?timeCreated<'2024-01-01'].{Name:name,Created:timeCreated}" \\
+    --output table
 ```
 
-### Misstag 2: Over-provisioned VMs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-# Kontrollera CPU-användning
-# Portal → VM → Metrics → CPU percentage
-# Om < 20% genomsnitt → right-size till mindre VM
-```
+## Vanliga fel och losningar
 
----
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Ovantad hog rakning | Glomda resurser | Satt budget alerts |
+| VM kostar trots stangd | Stop != Deallocate | Anvand deallocate |
+| Storage kostar mycket | Gamla snapshots | Rensa regelbundet |
+| Over-provisioned | For stor VM | Folj Advisor recommendations |
 
-## ✅ Sammanfattning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Subscription-design** för kostnadskontroll
-- **Budgets + alerts** förhindrar överraskningar
-- **Reserved Instances** sparar 40-72%
-- **Auto-shutdown** för dev-miljöer
-- **Kontrollera oanvända resurser** regelbundet
+## Key Takeaways
+
+| Koncept | Detalj |
+|---------|--------|
+| **Subscription-design** | Separera miljoer for kostnadskontroll |
+| **Budgets + alerts** | Forhindrar overraskningar |
+| **Reserved Instances** | Spara 40-72% pa stabila workloads |
+| **Auto-shutdown** | Stang av dev-miljoer pa natten |
+
+**Kom ihag:**
+- Satt **alltid budget-alerts** innan du borjar
+- **Deallocate** VMs istallet for bara stop
+- **Reserved Instances** for produktion (40-72% rabatt)
+- **Kontrollera Advisor** regelbundet for recommendations
 """,
 }
 

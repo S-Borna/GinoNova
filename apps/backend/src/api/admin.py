@@ -161,7 +161,9 @@ def list_all_users(
         )
 
         user_xp = getattr(user, 'total_xp', tasks_completed * 25)
-        last_active = user.updated_at
+        
+        # Get last_activity_at - prefer user's last_activity_at, fallback to progress or updated_at
+        last_active = getattr(user, 'last_activity_at', None) or user.updated_at
         if progress_records:
             latest = max(progress_records, key=lambda p: p.updated_at)
             if latest.updated_at > last_active:

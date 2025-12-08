@@ -67,6 +67,7 @@ class UserPublic(UserBase):
 class UserInDB(UserPublic):
     """Schema for user data stored in database (includes hashed password)"""
     password_hash: Optional[str] = None  # Optional for OAuth users
+    last_activity_at: Optional[datetime] = None  # Track last activity for admin panel
 
 
 def create_user_in_db(

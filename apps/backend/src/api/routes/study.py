@@ -119,13 +119,13 @@ def get_flashcards_for_module(module_slug: str) -> List[dict]:
     if v3_data and v3_data.get("flashcards"):
         flashcards_data = v3_data["flashcards"]
         result = []
-        
+
         difficulty_titles = {
             "easy": "Grundläggande",
             "medium": "Medel",
             "hard": "Avancerad"
         }
-        
+
         for diff in ["easy", "medium", "hard"]:
             cards = flashcards_data.get(diff, [])
             for i, card in enumerate(cards):
@@ -137,10 +137,10 @@ def get_flashcards_for_module(module_slug: str) -> List[dict]:
                     "lesson_title": difficulty_titles[diff],
                     "source": card.get("source", "V3 Content")
                 })
-        
+
         if result:  # Om vi fick ut något, returnera det
             return result
-    
+
     # Fallback till statisk study_data
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
     if not study_data:
@@ -178,13 +178,13 @@ def get_quiz_for_module(module_slug: str) -> List[dict]:
     if v3_data and v3_data.get("quiz"):
         quiz_data = v3_data["quiz"]
         result = []
-        
+
         difficulty_titles = {
             "easy": "Grundläggande",
             "medium": "Medel",
             "hard": "Avancerad"
         }
-        
+
         for diff in ["easy", "medium", "hard"]:
             questions = quiz_data.get(diff, [])
             for i, q in enumerate(questions):
@@ -198,10 +198,10 @@ def get_quiz_for_module(module_slug: str) -> List[dict]:
                     "lesson_title": difficulty_titles[diff],
                     "source": q.get("source", "V3 Content")
                 })
-        
+
         if result:  # Om vi fick ut något, returnera det
             return result
-    
+
     # Fallback till statisk study_data
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
     if not study_data:
@@ -277,14 +277,14 @@ async def list_study_modules():
     Prioriterar V3-genererat innehåll, fallback till statisk data.
     """
     result = []
-    
+
     # Hämta alla tillgängliga moduler (kombinera V3 och statisk)
     all_slugs = set(get_v3_study_modules()) | set(get_all_study_modules())
 
     for module_slug in sorted(all_slugs):
         # Försök V3 först
         v3_data = get_v3_study_data(module_slug)
-        
+
         if v3_data:
             flashcard_count = sum(
                 len(v3_data.get("flashcards", {}).get(diff, []))
@@ -294,7 +294,7 @@ async def list_study_modules():
                 len(v3_data.get("quiz", {}).get(diff, []))
                 for diff in ["easy", "medium", "hard"]
             )
-            
+
             result.append(StudyModule(
                 slug=module_slug,
                 title=v3_data.get("module_title", module_slug),
@@ -337,7 +337,7 @@ async def get_study_module(module_slug: str):
     """Hämta detaljer för en specifik modul med lessons"""
     # Försök V3 först
     v3_data = get_v3_study_data(module_slug)
-    
+
     if v3_data:
         lessons = [StudyLesson(**lesson) for lesson in get_lessons_for_module(module_slug)]
         return StudyModuleDetail(
@@ -347,7 +347,7 @@ async def get_study_module(module_slug: str):
             icon=get_module_icon(module_slug),
             lessons=lessons
         )
-    
+
     # Fallback till statisk data
     study_data = STUDY_DATA_REGISTRY.get(module_slug)
 
@@ -456,7 +456,7 @@ async def get_study_stats():
     Prioriterar V3-genererat innehåll.
     """
     all_slugs = set(get_v3_study_modules()) | set(get_all_study_modules())
-    
+
     stats = {
         "total_modules": len(all_slugs),
         "total_flashcards": 0,
@@ -468,7 +468,7 @@ async def get_study_stats():
     for module_slug in sorted(all_slugs):
         # Försök V3 först
         v3_data = get_v3_study_data(module_slug)
-        
+
         if v3_data:
             fc_data = v3_data.get("flashcards", {})
             quiz_data = v3_data.get("quiz", {})
