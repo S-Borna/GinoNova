@@ -921,7 +921,7 @@ export default function AdminCommandCenter() {
                         </div>
                     </div>
                     <p className="text-sm text-zinc-400 mb-3">
-                        <strong>Lägg till Features:</strong> Skapar permissions-kolumn + AI tracking-tabell direkt via SQL.<br/>
+                        <strong>Lägg till Features:</strong> Skapar permissions-kolumn + AI tracking-tabell direkt via SQL.<br />
                         <strong>Kör Migrationer:</strong> Kör Alembic-migrationer (om de inte redan körts).
                     </p>
                     {schemaStatus && (

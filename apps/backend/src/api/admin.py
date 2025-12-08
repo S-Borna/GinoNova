@@ -311,7 +311,7 @@ def apply_schema_updates(
     """
     Apply missing schema updates directly via SQL.
     This is a fallback when Alembic migrations don't work properly.
-    
+
     Adds:
     - permissions column to users table
     - ai_usage_logs table
@@ -326,13 +326,13 @@ def apply_schema_updates(
     from ..db.database import get_db_context
 
     results = []
-    
+
     with get_db_context() as db:
         # 1. Add permissions column to users table if it doesn't exist
         try:
             db.execute(text("""
-                ALTER TABLE users 
-                ADD COLUMN IF NOT EXISTS permissions JSONB 
+                ALTER TABLE users
+                ADD COLUMN IF NOT EXISTS permissions JSONB
                 DEFAULT '{"ai_quiz": true, "premium_modules": true, "study_room": true, "skillpath": true}'::jsonb
             """))
             db.commit()
