@@ -1356,11 +1356,11 @@ export default function AdminCommandCenter() {
                         .map((u) => {
                             const displayName = getDisplayName(u)
                             const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
-                            
+
                             // Calculate online status
-                            const isOnline = u.last_activity_at && 
+                            const isOnline = u.last_activity_at &&
                                 (Date.now() - new Date(u.last_activity_at).getTime()) / (1000 * 60) <= 30
-                            
+
                             return (
                                 <motion.div
                                     key={u.id}
@@ -1409,8 +1409,8 @@ export default function AdminCommandCenter() {
                                     <div className="text-center min-w-[80px]">
                                         <span className={cn(
                                             "inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium",
-                                            isOnline 
-                                                ? "bg-emerald-500/20 text-emerald-400" 
+                                            isOnline
+                                                ? "bg-emerald-500/20 text-emerald-400"
                                                 : "bg-zinc-800 text-zinc-500"
                                         )}>
                                             <span className={cn(
@@ -1425,7 +1425,7 @@ export default function AdminCommandCenter() {
                                     <div className="text-right min-w-[100px]">
                                         <p className="text-xs text-zinc-400">Senast inlogg</p>
                                         <p className="text-sm text-white">
-                                            {u.last_activity_at 
+                                            {u.last_activity_at
                                                 ? new Date(u.last_activity_at).toLocaleDateString("sv-SE", {
                                                     day: "numeric",
                                                     month: "short",
