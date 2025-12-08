@@ -665,4 +665,1736 @@ export const TOOLS_DATA: Tool[] = [
         flashcardCount: 20,
         quizCount: 15
     },
+    // ============================================================================
+    // DEL 1: CLI & TERMINAL-VERKTYG (20 verktyg)
+    // ============================================================================
+    {
+        slug: "curl",
+        name: "cURL",
+        category: "linux",
+        icon: "🌐",
+        shortDesc: "Data transfer tool",
+        description: "cURL är ett kommandoradsverktyg för att överföra data med URL-syntax. Stödjer HTTP, HTTPS, FTP och många fler protokoll.",
+        installation: {
+            apt: "sudo apt install curl",
+            brew: "brew install curl"
+        },
+        useCases: ["API testing", "File downloads", "HTTP requests", "Webhooks", "Scripting"],
+        keyFeatures: ["-X method", "-H headers", "-d data", "-o output", "-v verbose", "Cookie handling"],
+        officialUrl: "https://curl.se",
+        docsUrl: "https://curl.se/docs/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "wget",
+        name: "Wget",
+        category: "linux",
+        icon: "📥",
+        shortDesc: "Network downloader",
+        description: "Wget är ett verktyg för att ladda ner filer från webben. Stödjer HTTP, HTTPS och FTP med resume-funktion.",
+        installation: {
+            apt: "sudo apt install wget",
+            brew: "brew install wget"
+        },
+        useCases: ["File downloads", "Website mirroring", "Recursive downloads", "Background downloads"],
+        keyFeatures: ["-r recursive", "-c continue", "-b background", "--mirror", "-O output", "-q quiet"],
+        officialUrl: "https://www.gnu.org/software/wget/",
+        docsUrl: "https://www.gnu.org/software/wget/manual/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "grep",
+        name: "grep",
+        category: "linux",
+        icon: "🔍",
+        shortDesc: "Pattern matching",
+        description: "grep söker efter mönster i text och filer. Ett av de mest använda Linux-verktygen för textbearbetning.",
+        installation: {
+            apt: "sudo apt install grep",
+            other: "Förinstallerat på de flesta system"
+        },
+        useCases: ["Log analysis", "Code search", "Pattern matching", "Filtering output", "Pipeline processing"],
+        keyFeatures: ["-r recursive", "-i ignore case", "-n line numbers", "-E regex", "-v invert", "-c count"],
+        docsUrl: "https://www.gnu.org/software/grep/manual/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "sed",
+        name: "sed",
+        category: "linux",
+        icon: "✂️",
+        shortDesc: "Stream editor",
+        description: "sed är en stream editor för att transformera text. Perfekt för find-and-replace och textmanipulation i scripts.",
+        installation: {
+            apt: "sudo apt install sed",
+            other: "Förinstallerat på de flesta system"
+        },
+        useCases: ["Text replacement", "Line deletion", "Text transformation", "Config file editing", "Batch processing"],
+        keyFeatures: ["s/find/replace/", "-i in-place", "-n suppress", "Address ranges", "Hold buffer", "Multiple commands"],
+        docsUrl: "https://www.gnu.org/software/sed/manual/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "awk",
+        name: "AWK",
+        category: "linux",
+        icon: "📊",
+        shortDesc: "Text processing language",
+        description: "AWK är ett programmeringsspråk för textbearbetning. Extremt kraftfullt för att bearbeta strukturerad text och loggar.",
+        installation: {
+            apt: "sudo apt install gawk",
+            other: "Förinstallerat på de flesta system"
+        },
+        useCases: ["Log parsing", "CSV processing", "Report generation", "Data extraction", "Column manipulation"],
+        keyFeatures: ["Field splitting", "Pattern matching", "Built-in variables", "Functions", "BEGIN/END blocks"],
+        docsUrl: "https://www.gnu.org/software/gawk/manual/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "find",
+        name: "find",
+        category: "linux",
+        icon: "📂",
+        shortDesc: "File search utility",
+        description: "find söker efter filer och kataloger baserat på olika kriterier som namn, storlek, datum och typ.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["File search", "Batch operations", "Cleanup scripts", "Permission audits", "Disk analysis"],
+        keyFeatures: ["-name pattern", "-type f/d", "-size", "-mtime", "-exec", "-delete", "-print0"],
+        docsUrl: "https://www.gnu.org/software/findutils/manual/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "xargs",
+        name: "xargs",
+        category: "linux",
+        icon: "🔗",
+        shortDesc: "Build command lines",
+        description: "xargs bygger och kör kommandon från standard input. Perfekt för att kombinera med find och andra verktyg.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Batch processing", "Pipeline chaining", "Parallel execution", "File operations", "Command building"],
+        keyFeatures: ["-I placeholder", "-P parallel", "-n max-args", "-0 null delimiter", "-t verbose"],
+        docsUrl: "https://www.gnu.org/software/findutils/manual/",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "htop",
+        name: "htop",
+        category: "linux",
+        icon: "📈",
+        shortDesc: "Interactive process viewer",
+        description: "htop är en interaktiv processvisare för Unix. Bättre än top med färger, scrollning och musinteraktion.",
+        installation: {
+            apt: "sudo apt install htop",
+            brew: "brew install htop"
+        },
+        useCases: ["Process monitoring", "Resource usage", "Process management", "System diagnostics", "Performance tuning"],
+        keyFeatures: ["Color display", "Mouse support", "Tree view", "Process filtering", "Custom columns", "Kill processes"],
+        officialUrl: "https://htop.dev",
+        docsUrl: "https://htop.dev/docs/",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "tmux",
+        name: "tmux",
+        category: "linux",
+        icon: "🪟",
+        shortDesc: "Terminal multiplexer",
+        description: "tmux låter dig köra flera terminalsessioner i ett fönster. Sessioner överlever disconnects.",
+        installation: {
+            apt: "sudo apt install tmux",
+            brew: "brew install tmux"
+        },
+        useCases: ["Remote sessions", "Session persistence", "Window management", "Pair programming", "Server administration"],
+        keyFeatures: ["Sessions", "Windows", "Panes", "Detach/attach", "Key bindings", "Status bar", "Copy mode"],
+        officialUrl: "https://github.com/tmux/tmux",
+        docsUrl: "https://github.com/tmux/tmux/wiki",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "screen",
+        name: "GNU Screen",
+        category: "linux",
+        icon: "📺",
+        shortDesc: "Terminal multiplexer",
+        description: "GNU Screen är en terminal multiplexer som låter dig köra flera sessioner från en terminal.",
+        installation: {
+            apt: "sudo apt install screen",
+            brew: "brew install screen"
+        },
+        useCases: ["Persistent sessions", "Remote work", "Long-running processes", "Session sharing"],
+        keyFeatures: ["Detach/reattach", "Multiple windows", "Session logging", "Screen splitting", "Scrollback"],
+        officialUrl: "https://www.gnu.org/software/screen/",
+        docsUrl: "https://www.gnu.org/software/screen/manual/",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "jq",
+        name: "jq",
+        category: "linux",
+        icon: "📋",
+        shortDesc: "JSON processor",
+        description: "jq är en lättviktig och flexibel kommandorads-JSON-processor. Perfekt för att parsa API-svar.",
+        installation: {
+            apt: "sudo apt install jq",
+            brew: "brew install jq"
+        },
+        useCases: ["JSON parsing", "API response processing", "Data transformation", "Config file manipulation", "Pipeline processing"],
+        keyFeatures: ["Filters", "Selectors", "Functions", "Conditionals", "String interpolation", "Raw output"],
+        officialUrl: "https://stedolan.github.io/jq/",
+        docsUrl: "https://stedolan.github.io/jq/manual/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "yq",
+        name: "yq",
+        category: "linux",
+        icon: "📄",
+        shortDesc: "YAML processor",
+        description: "yq är som jq men för YAML. Kommandoradsverktyg för att läsa, uppdatera och manipulera YAML-filer.",
+        installation: {
+            brew: "brew install yq",
+            pip: "pip install yq"
+        },
+        useCases: ["YAML parsing", "Kubernetes manifests", "Config editing", "CI/CD pipelines", "Data conversion"],
+        keyFeatures: ["jq-liknande syntax", "In-place editing", "YAML/JSON conversion", "Multiple documents", "Merge files"],
+        officialUrl: "https://github.com/mikefarah/yq",
+        docsUrl: "https://mikefarah.gitbook.io/yq/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "tree",
+        name: "tree",
+        category: "linux",
+        icon: "🌳",
+        shortDesc: "Directory listing",
+        description: "tree visar katalogstrukturen i ett trädformat. Perfekt för att visualisera projektstrukturer.",
+        installation: {
+            apt: "sudo apt install tree",
+            brew: "brew install tree"
+        },
+        useCases: ["Directory visualization", "Documentation", "Project structure", "File system exploration"],
+        keyFeatures: ["-L depth", "-d directories only", "-a all files", "-I exclude", "--gitignore", "-J JSON output"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "watch",
+        name: "watch",
+        category: "linux",
+        icon: "👁️",
+        shortDesc: "Execute periodically",
+        description: "watch kör ett kommando upprepade gånger och visar output. Perfekt för att övervaka förändringar.",
+        installation: {
+            apt: "sudo apt install procps",
+            other: "Förinstallerat på de flesta Linux-system"
+        },
+        useCases: ["Monitoring", "Log watching", "Resource tracking", "File changes", "Process monitoring"],
+        keyFeatures: ["-n interval", "-d differences", "-c color", "-t no title", "-g exit on change"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "netcat",
+        name: "Netcat (nc)",
+        category: "network",
+        icon: "🔌",
+        shortDesc: "Network Swiss Army knife",
+        description: "Netcat är ett mångsidigt nätverksverktyg för att läsa och skriva data över TCP/UDP-anslutningar.",
+        installation: {
+            apt: "sudo apt install netcat-openbsd",
+            brew: "brew install netcat"
+        },
+        useCases: ["Port scanning", "File transfer", "Chat server", "Debugging", "Reverse shells", "Port listening"],
+        keyFeatures: ["-l listen", "-p port", "-u UDP", "-v verbose", "-z scan", "-w timeout"],
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "dig",
+        name: "dig",
+        category: "network",
+        icon: "🔍",
+        shortDesc: "DNS lookup",
+        description: "dig (Domain Information Groper) är ett verktyg för DNS-uppslag. Mer detaljerat än nslookup.",
+        installation: {
+            apt: "sudo apt install dnsutils",
+            brew: "brew install bind"
+        },
+        useCases: ["DNS troubleshooting", "Record lookup", "DNS debugging", "Zone transfers", "Reverse lookups"],
+        keyFeatures: ["+short", "+trace", "+noall +answer", "ANY query", "MX/TXT/CNAME records", "@server"],
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "nslookup",
+        name: "nslookup",
+        category: "network",
+        icon: "🌐",
+        shortDesc: "Name server lookup",
+        description: "nslookup är ett klassiskt verktyg för att fråga DNS-servrar om domännamn och IP-adresser.",
+        installation: {
+            apt: "sudo apt install dnsutils",
+            other: "Förinstallerat på de flesta system"
+        },
+        useCases: ["DNS lookup", "Troubleshooting", "Record queries", "Server testing"],
+        keyFeatures: ["Interactive mode", "Server specification", "Record types", "Reverse lookup"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "traceroute",
+        name: "traceroute",
+        category: "network",
+        icon: "🛤️",
+        shortDesc: "Network path tracing",
+        description: "traceroute visar nätverksvägen till en destination genom att lista alla hopp längs vägen.",
+        installation: {
+            apt: "sudo apt install traceroute",
+            brew: "brew install traceroute"
+        },
+        useCases: ["Network debugging", "Latency analysis", "Route discovery", "ISP troubleshooting"],
+        keyFeatures: ["-n numeric", "-w timeout", "-m max hops", "-I ICMP", "UDP/TCP modes"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "ping",
+        name: "ping",
+        category: "network",
+        icon: "📡",
+        shortDesc: "Network connectivity test",
+        description: "ping testar nätverksanslutning genom att skicka ICMP-paket till en värd och mäta svarstid.",
+        installation: {
+            other: "Förinstallerat på alla system"
+        },
+        useCases: ["Connectivity testing", "Latency measurement", "Network diagnostics", "Host availability"],
+        keyFeatures: ["-c count", "-i interval", "-s size", "-t TTL", "-W timeout", "Statistics"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "telnet",
+        name: "telnet",
+        category: "network",
+        icon: "📞",
+        shortDesc: "Network protocol client",
+        description: "telnet är ett klassiskt protokoll för textbaserad kommunikation. Används ofta för att testa TCP-portar.",
+        installation: {
+            apt: "sudo apt install telnet",
+            brew: "brew install telnet"
+        },
+        useCases: ["Port testing", "Protocol debugging", "SMTP testing", "HTTP debugging", "Legacy systems"],
+        keyFeatures: ["Port connection", "Interactive mode", "Protocol testing", "Banner grabbing"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    // ============================================================================
+    // DEL 2: DEVOPS & AUTOMATION (20 verktyg)
+    // ============================================================================
+    {
+        slug: "make",
+        name: "Make",
+        category: "linux",
+        icon: "🔨",
+        shortDesc: "Build automation",
+        description: "Make är ett klassiskt build-verktyg som automatiserar kompilering och andra uppgifter via Makefiles.",
+        installation: {
+            apt: "sudo apt install make",
+            brew: "brew install make"
+        },
+        useCases: ["Build automation", "Task running", "Dependency management", "CI/CD", "Project setup"],
+        keyFeatures: ["Targets", "Dependencies", "Variables", "Pattern rules", "Phony targets", "Includes"],
+        officialUrl: "https://www.gnu.org/software/make/",
+        docsUrl: "https://www.gnu.org/software/make/manual/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "cron",
+        name: "Cron",
+        category: "linux",
+        icon: "⏰",
+        shortDesc: "Job scheduler",
+        description: "Cron är Unix/Linux standard för att schemalägga återkommande uppgifter. Kör scripts vid specifika tider.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Scheduled tasks", "Backups", "Log rotation", "System maintenance", "Automated reports"],
+        keyFeatures: ["Crontab syntax", "User crontabs", "System crontabs", "@reboot", "Email notifications", "Logging"],
+        docsUrl: "https://man7.org/linux/man-pages/man5/crontab.5.html",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "at",
+        name: "at",
+        category: "linux",
+        icon: "📅",
+        shortDesc: "One-time job scheduler",
+        description: "at schemalägger engångsjobb att köras vid en specifik tidpunkt. Komplement till cron för enstaka uppgifter.",
+        installation: {
+            apt: "sudo apt install at",
+            brew: "brew install at"
+        },
+        useCases: ["One-time tasks", "Delayed execution", "Maintenance windows", "Scheduled shutdowns"],
+        keyFeatures: ["at command", "atq queue", "atrm remove", "Flexible time formats", "batch command"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/at.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "rsync",
+        name: "rsync",
+        category: "linux",
+        icon: "🔄",
+        shortDesc: "Fast file sync",
+        description: "rsync är ett snabbt och mångsidigt verktyg för filkopiering. Överför endast ändrade delar av filer.",
+        installation: {
+            apt: "sudo apt install rsync",
+            brew: "brew install rsync"
+        },
+        useCases: ["Backups", "File sync", "Remote transfers", "Mirroring", "Deployment"],
+        keyFeatures: ["-a archive", "-v verbose", "-z compress", "--delete", "--exclude", "-e ssh", "--progress"],
+        officialUrl: "https://rsync.samba.org",
+        docsUrl: "https://rsync.samba.org/documentation.html",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "tar",
+        name: "tar",
+        category: "linux",
+        icon: "📦",
+        shortDesc: "Archive utility",
+        description: "tar skapar och extraherar arkiv. Standard för att paketera filer i Unix/Linux-världen.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Archiving", "Backups", "Distribution", "Compression", "File bundling"],
+        keyFeatures: ["-c create", "-x extract", "-v verbose", "-f file", "-z gzip", "-j bzip2", "-t list"],
+        docsUrl: "https://www.gnu.org/software/tar/manual/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "gzip",
+        name: "gzip",
+        category: "linux",
+        icon: "🗜️",
+        shortDesc: "File compression",
+        description: "gzip är standard komprimeringsverktyg i Unix/Linux. Skapar .gz-filer med effektiv komprimering.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["File compression", "Log compression", "Bandwidth savings", "Storage optimization"],
+        keyFeatures: ["-d decompress", "-k keep", "-r recursive", "-v verbose", "-1 to -9 levels", "gunzip"],
+        docsUrl: "https://www.gnu.org/software/gzip/manual/",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "zip",
+        name: "zip/unzip",
+        category: "linux",
+        icon: "📁",
+        shortDesc: "ZIP archive utility",
+        description: "zip/unzip hanterar ZIP-arkiv, det mest portabla arkivformatet som fungerar på alla plattformar.",
+        installation: {
+            apt: "sudo apt install zip unzip",
+            brew: "brew install zip unzip"
+        },
+        useCases: ["Cross-platform archives", "File distribution", "Compression", "Backup"],
+        keyFeatures: ["-r recursive", "-e encrypt", "-u update", "-d delete", "-l list", "Password protection"],
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "chmod",
+        name: "chmod",
+        category: "linux",
+        icon: "🔐",
+        shortDesc: "Change permissions",
+        description: "chmod ändrar filrättigheter i Unix/Linux. Kontrollerar vem som kan läsa, skriva och köra filer.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Security", "Script execution", "Access control", "File sharing", "Web server setup"],
+        keyFeatures: ["Numeric mode (755)", "Symbolic mode (u+x)", "-R recursive", "Special bits (setuid)", "umask"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/chmod.1.html",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "chown",
+        name: "chown",
+        category: "linux",
+        icon: "👤",
+        shortDesc: "Change ownership",
+        description: "chown ändrar ägare och grupp för filer och kataloger. Viktigt för säkerhet och access control.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Access control", "Security", "Web server setup", "Deployment", "Multi-user systems"],
+        keyFeatures: ["user:group", "-R recursive", "--reference", "-v verbose", "--from"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/chown.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "ln",
+        name: "ln",
+        category: "linux",
+        icon: "🔗",
+        shortDesc: "Create links",
+        description: "ln skapar hårda och symboliska länkar mellan filer. Symboliska länkar är som genvägar.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Shortcuts", "Version management", "Configuration", "Shared libraries", "Dotfiles"],
+        keyFeatures: ["-s symbolic", "-f force", "-n no-dereference", "Hard vs soft links", "-v verbose"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/ln.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "df",
+        name: "df",
+        category: "linux",
+        icon: "💾",
+        shortDesc: "Disk space usage",
+        description: "df visar diskutrymme för filsystem. Viktigt för att övervaka lagringsstatus på servrar.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Disk monitoring", "Capacity planning", "System administration", "Alerts"],
+        keyFeatures: ["-h human-readable", "-T filesystem type", "-i inodes", "--total", "-a all"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/df.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "du",
+        name: "du",
+        category: "linux",
+        icon: "📏",
+        shortDesc: "Directory size",
+        description: "du visar diskutrymme använt av filer och kataloger. Perfekt för att hitta vad som tar plats.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Find large files", "Disk cleanup", "Quota management", "Storage analysis"],
+        keyFeatures: ["-h human-readable", "-s summary", "-a all", "--max-depth", "-c total", "--exclude"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/du.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "ps",
+        name: "ps",
+        category: "linux",
+        icon: "📋",
+        shortDesc: "Process status",
+        description: "ps visar information om körande processer. Grundläggande verktyg för processhantering.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Process listing", "Debugging", "System monitoring", "Script automation"],
+        keyFeatures: ["aux", "-ef", "--forest", "-o custom output", "Process trees", "User filtering"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/ps.1.html",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "kill",
+        name: "kill/killall",
+        category: "linux",
+        icon: "💀",
+        shortDesc: "Terminate processes",
+        description: "kill skickar signaler till processer, vanligtvis för att avsluta dem. killall avslutar processer efter namn.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Process termination", "Signal sending", "Graceful shutdown", "Force kill"],
+        keyFeatures: ["-9 SIGKILL", "-15 SIGTERM", "-HUP reload", "killall by name", "pkill pattern"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/kill.1.html",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "top",
+        name: "top",
+        category: "linux",
+        icon: "📊",
+        shortDesc: "Process monitor",
+        description: "top visar realtidsinformation om systemprocesser, CPU och minnesanvändning.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["System monitoring", "Performance analysis", "Resource tracking", "Process management"],
+        keyFeatures: ["Interactive commands", "Sorting", "Filtering", "Kill processes", "CPU/Memory stats"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/top.1.html",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "free",
+        name: "free",
+        category: "linux",
+        icon: "🧠",
+        shortDesc: "Memory usage",
+        description: "free visar mängden ledigt och använt minne i systemet, inklusive swap.",
+        installation: {
+            other: "Förinstallerat på alla Linux system"
+        },
+        useCases: ["Memory monitoring", "Performance tuning", "Capacity planning", "Troubleshooting"],
+        keyFeatures: ["-h human-readable", "-m megabytes", "-g gigabytes", "-s interval", "-t total"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/free.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "uptime",
+        name: "uptime",
+        category: "linux",
+        icon: "⏱️",
+        shortDesc: "System uptime",
+        description: "uptime visar hur länge systemet har körts, antal användare och systembelastning.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["System monitoring", "Health checks", "Load monitoring", "SLA tracking"],
+        keyFeatures: ["Uptime display", "Load averages", "-p pretty format", "-s since"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/uptime.1.html",
+        flashcardCount: 4,
+        quizCount: 3
+    },
+    {
+        slug: "uname",
+        name: "uname",
+        category: "linux",
+        icon: "🖥️",
+        shortDesc: "System information",
+        description: "uname visar systeminformation som kernel-version, maskintyp och operativsystem.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["System info", "Scripting", "Compatibility checks", "Debugging"],
+        keyFeatures: ["-a all", "-r kernel release", "-m machine", "-n hostname", "-s kernel name"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/uname.1.html",
+        flashcardCount: 4,
+        quizCount: 3
+    },
+    {
+        slug: "hostname",
+        name: "hostname",
+        category: "linux",
+        icon: "🏷️",
+        shortDesc: "System hostname",
+        description: "hostname visar eller sätter systemets värdnamn. Viktigt för nätverksidentifikation.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Identity", "Network config", "Scripting", "Logging"],
+        keyFeatures: ["-f FQDN", "-i IP address", "-d domain", "hostnamectl (systemd)"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/hostname.1.html",
+        flashcardCount: 4,
+        quizCount: 3
+    },
+    {
+        slug: "env",
+        name: "env",
+        category: "linux",
+        icon: "🌍",
+        shortDesc: "Environment variables",
+        description: "env visar eller modifierar miljövariabler. Används för att köra kommandon med ändrad miljö.",
+        installation: {
+            other: "Förinstallerat på alla Unix/Linux system"
+        },
+        useCases: ["Environment display", "Variable setting", "Clean environment", "Script debugging"],
+        keyFeatures: ["List variables", "-i ignore env", "-u unset", "VAR=value command", "printenv"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/env.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    // ============================================================================
+    // DEL 3: CONTAINERS & CLOUD (20 verktyg)
+    // ============================================================================
+    {
+        slug: "skopeo",
+        name: "Skopeo",
+        category: "containers",
+        icon: "🔭",
+        shortDesc: "Container image operations",
+        description: "Skopeo inspekterar och kopierar container images mellan registries utan att behöva en daemon.",
+        installation: {
+            apt: "sudo apt install skopeo",
+            brew: "brew install skopeo"
+        },
+        useCases: ["Image inspection", "Registry sync", "Image copying", "Signature verification"],
+        keyFeatures: ["inspect", "copy", "sync", "delete", "No daemon needed", "Multi-registry support"],
+        officialUrl: "https://github.com/containers/skopeo",
+        docsUrl: "https://github.com/containers/skopeo/blob/main/docs/skopeo.1.md",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "buildah",
+        name: "Buildah",
+        category: "containers",
+        icon: "🏗️",
+        shortDesc: "Build OCI containers",
+        description: "Buildah bygger OCI-kompatibla container images utan Docker daemon. Perfekt för CI/CD.",
+        installation: {
+            apt: "sudo apt install buildah",
+            brew: "brew install buildah"
+        },
+        useCases: ["CI/CD builds", "Rootless builds", "Dockerfile alternative", "Image customization"],
+        keyFeatures: ["from scratch", "bud (build using dockerfile)", "commit", "Rootless", "No daemon"],
+        officialUrl: "https://buildah.io",
+        docsUrl: "https://github.com/containers/buildah/tree/main/docs",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "cri-o",
+        name: "CRI-O",
+        category: "containers",
+        icon: "⚙️",
+        shortDesc: "Kubernetes container runtime",
+        description: "CRI-O är en lättviktig container runtime specifikt designad för Kubernetes.",
+        installation: {
+            other: "Se docs för distribution-specifik installation"
+        },
+        useCases: ["Kubernetes runtime", "Production workloads", "Lightweight alternative", "Security-focused"],
+        keyFeatures: ["OCI-compliant", "CRI implementation", "Kubernetes native", "Minimal footprint"],
+        officialUrl: "https://cri-o.io",
+        docsUrl: "https://cri-o.io/docs/",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "minikube",
+        name: "Minikube",
+        category: "orchestration",
+        icon: "🎯",
+        shortDesc: "Local Kubernetes",
+        description: "Minikube kör en lokal Kubernetes-kluster på din maskin. Perfekt för utveckling och lärande.",
+        installation: {
+            brew: "brew install minikube",
+            other: "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
+        },
+        useCases: ["Local development", "Learning Kubernetes", "Testing", "CI/CD"],
+        keyFeatures: ["start/stop", "Addons", "Multi-node", "Dashboard", "LoadBalancer", "Ingress"],
+        officialUrl: "https://minikube.sigs.k8s.io",
+        docsUrl: "https://minikube.sigs.k8s.io/docs/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "kind",
+        name: "kind",
+        category: "orchestration",
+        icon: "📦",
+        shortDesc: "Kubernetes in Docker",
+        description: "kind (Kubernetes IN Docker) kör lokala Kubernetes-kluster med Docker containers som noder.",
+        installation: {
+            brew: "brew install kind",
+            other: "go install sigs.k8s.io/kind@latest"
+        },
+        useCases: ["Local testing", "CI/CD", "Development", "Multi-node clusters"],
+        keyFeatures: ["Fast startup", "Multi-node", "Docker-based", "CI-friendly", "Config file"],
+        officialUrl: "https://kind.sigs.k8s.io",
+        docsUrl: "https://kind.sigs.k8s.io/docs/",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "k3s",
+        name: "K3s",
+        category: "orchestration",
+        icon: "🚀",
+        shortDesc: "Lightweight Kubernetes",
+        description: "K3s är en certifierad lättviktig Kubernetes-distribution perfekt för edge, IoT och CI.",
+        installation: {
+            other: "curl -sfL https://get.k3s.io | sh -"
+        },
+        useCases: ["Edge computing", "IoT", "CI/CD", "Resource-constrained environments", "Development"],
+        keyFeatures: ["Single binary", "SQLite default", "Low memory", "ARM support", "Auto TLS"],
+        officialUrl: "https://k3s.io",
+        docsUrl: "https://docs.k3s.io",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "k9s",
+        name: "K9s",
+        category: "orchestration",
+        icon: "🐶",
+        shortDesc: "Kubernetes CLI UI",
+        description: "K9s är ett terminalgränssnitt för att hantera Kubernetes-kluster. Snabbt och intuitivt.",
+        installation: {
+            brew: "brew install derailed/k9s/k9s",
+            other: "go install github.com/derailed/k9s@latest"
+        },
+        useCases: ["Cluster management", "Debugging", "Log viewing", "Resource navigation"],
+        keyFeatures: ["Real-time views", "Log streaming", "Port forwarding", "Shell access", "Custom views"],
+        officialUrl: "https://k9scli.io",
+        docsUrl: "https://k9scli.io/topics/commands/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "lens",
+        name: "Lens",
+        category: "orchestration",
+        icon: "🔍",
+        shortDesc: "Kubernetes IDE",
+        description: "Lens är en kraftfull desktop-applikation för att hantera Kubernetes-kluster med grafiskt gränssnitt.",
+        installation: {
+            brew: "brew install --cask lens",
+            other: "https://k8slens.dev/download"
+        },
+        useCases: ["Cluster management", "Multi-cluster", "Visualization", "Team collaboration"],
+        keyFeatures: ["Multi-cluster", "Built-in terminal", "Metrics", "Extensions", "Helm support"],
+        officialUrl: "https://k8slens.dev",
+        docsUrl: "https://docs.k8slens.dev",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "kubectx",
+        name: "kubectx",
+        category: "orchestration",
+        icon: "🔀",
+        shortDesc: "Switch Kubernetes contexts",
+        description: "kubectx gör det enkelt att växla mellan Kubernetes-kontexter (kluster).",
+        installation: {
+            brew: "brew install kubectx",
+            other: "kubectl krew install ctx"
+        },
+        useCases: ["Multi-cluster", "Context switching", "Productivity", "DevOps workflows"],
+        keyFeatures: ["Fast switching", "fzf integration", "List contexts", "Rename contexts"],
+        officialUrl: "https://github.com/ahmetb/kubectx",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "kubens",
+        name: "kubens",
+        category: "orchestration",
+        icon: "📂",
+        shortDesc: "Switch Kubernetes namespaces",
+        description: "kubens gör det enkelt att växla mellan Kubernetes namespaces.",
+        installation: {
+            brew: "brew install kubectx",
+            other: "kubectl krew install ns"
+        },
+        useCases: ["Namespace switching", "Multi-tenant", "Development workflows"],
+        keyFeatures: ["Fast switching", "fzf integration", "List namespaces", "Default namespace"],
+        officialUrl: "https://github.com/ahmetb/kubectx",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "stern",
+        name: "Stern",
+        category: "orchestration",
+        icon: "📜",
+        shortDesc: "Multi-pod log tailing",
+        description: "Stern visar loggar från flera pods och containers samtidigt med färgkodning.",
+        installation: {
+            brew: "brew install stern",
+            other: "go install github.com/stern/stern@latest"
+        },
+        useCases: ["Log aggregation", "Debugging", "Microservices", "Real-time monitoring"],
+        keyFeatures: ["Multi-pod", "Color-coded", "Regex filtering", "Container selection", "Timestamps"],
+        officialUrl: "https://github.com/stern/stern",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "kustomize",
+        name: "Kustomize",
+        category: "orchestration",
+        icon: "🎨",
+        shortDesc: "Kubernetes configuration",
+        description: "Kustomize anpassar Kubernetes YAML-konfigurationer utan templating. Inbyggt i kubectl.",
+        installation: {
+            brew: "brew install kustomize",
+            other: "kubectl kustomize (inbyggt)"
+        },
+        useCases: ["Environment-specific configs", "Overlays", "Configuration management", "GitOps"],
+        keyFeatures: ["Overlays", "Patches", "Generators", "Transformers", "No templates", "Built into kubectl"],
+        officialUrl: "https://kustomize.io",
+        docsUrl: "https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "kompose",
+        name: "Kompose",
+        category: "orchestration",
+        icon: "🔄",
+        shortDesc: "Docker Compose to Kubernetes",
+        description: "Kompose konverterar Docker Compose-filer till Kubernetes-resurser.",
+        installation: {
+            brew: "brew install kompose",
+            other: "curl -L https://github.com/kubernetes/kompose/releases/download/v1.31.2/kompose-linux-amd64 -o kompose"
+        },
+        useCases: ["Migration", "Learning", "Quick conversion", "Development to production"],
+        keyFeatures: ["convert command", "Multiple output formats", "Helm charts", "OpenShift support"],
+        officialUrl: "https://kompose.io",
+        docsUrl: "https://kompose.io/user-guide/",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "lazydocker",
+        name: "Lazydocker",
+        category: "containers",
+        icon: "🦥",
+        shortDesc: "Docker terminal UI",
+        description: "Lazydocker är ett terminalgränssnitt för Docker. Hantera containers, images och volumes visuellt.",
+        installation: {
+            brew: "brew install jesseduffield/lazydocker/lazydocker",
+            other: "go install github.com/jesseduffield/lazydocker@latest"
+        },
+        useCases: ["Container management", "Log viewing", "Resource monitoring", "Quick operations"],
+        keyFeatures: ["Visual interface", "Logs", "Stats", "Shell access", "Image management", "Prune"],
+        officialUrl: "https://github.com/jesseduffield/lazydocker",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "dive",
+        name: "Dive",
+        category: "containers",
+        icon: "🤿",
+        shortDesc: "Docker image explorer",
+        description: "Dive analyserar Docker images layer-för-layer för att hitta sätt att minska storlek.",
+        installation: {
+            brew: "brew install dive",
+            other: "go install github.com/wagoodman/dive@latest"
+        },
+        useCases: ["Image optimization", "Size reduction", "CI/CD checks", "Debugging"],
+        keyFeatures: ["Layer analysis", "Wasted space detection", "CI integration", "Image efficiency score"],
+        officialUrl: "https://github.com/wagoodman/dive",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "trivy",
+        name: "Trivy",
+        category: "security",
+        icon: "🔒",
+        shortDesc: "Security scanner",
+        description: "Trivy är en omfattande säkerhetsscanner för containers, filesystems, Git repos och mer.",
+        installation: {
+            brew: "brew install aquasecurity/trivy/trivy",
+            apt: "sudo apt install trivy"
+        },
+        useCases: ["Vulnerability scanning", "CI/CD security", "Compliance", "IaC scanning"],
+        keyFeatures: ["Container scanning", "Filesystem scan", "Git repo scan", "SBOM", "Secret detection"],
+        officialUrl: "https://trivy.dev",
+        docsUrl: "https://aquasecurity.github.io/trivy/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "hadolint",
+        name: "Hadolint",
+        category: "containers",
+        icon: "📝",
+        shortDesc: "Dockerfile linter",
+        description: "Hadolint är en smart Dockerfile-linter som hjälper dig skriva bästa praxis Dockerfiles.",
+        installation: {
+            brew: "brew install hadolint",
+            other: "docker run hadolint/hadolint"
+        },
+        useCases: ["Dockerfile quality", "CI/CD checks", "Best practices", "Security"],
+        keyFeatures: ["Best practice rules", "ShellCheck integration", "Ignore rules", "CI integration"],
+        officialUrl: "https://github.com/hadolint/hadolint",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "dockle",
+        name: "Dockle",
+        category: "containers",
+        icon: "🔍",
+        shortDesc: "Container image linter",
+        description: "Dockle är en säkerhets-linter för container images baserad på CIS Benchmark.",
+        installation: {
+            brew: "brew install goodwithtech/r/dockle",
+            other: "docker run goodwithtech/dockle"
+        },
+        useCases: ["Image security", "Compliance", "CI/CD", "Best practices"],
+        keyFeatures: ["CIS Benchmark", "Security checks", "Best practices", "CI-friendly output"],
+        officialUrl: "https://github.com/goodwithtech/dockle",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "grype",
+        name: "Grype",
+        category: "security",
+        icon: "🦅",
+        shortDesc: "Vulnerability scanner",
+        description: "Grype är en snabb vulnerability scanner för container images och filesystems.",
+        installation: {
+            brew: "brew install grype",
+            other: "curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s"
+        },
+        useCases: ["Vulnerability scanning", "SBOM analysis", "CI/CD", "Security audits"],
+        keyFeatures: ["Fast scanning", "SBOM support", "Multiple formats", "DB updates", "Ignore rules"],
+        officialUrl: "https://github.com/anchore/grype",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "syft",
+        name: "Syft",
+        category: "security",
+        icon: "📋",
+        shortDesc: "SBOM generator",
+        description: "Syft genererar Software Bill of Materials (SBOM) från container images och filesystems.",
+        installation: {
+            brew: "brew install syft",
+            other: "curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s"
+        },
+        useCases: ["SBOM generation", "Compliance", "Supply chain security", "Vulnerability management"],
+        keyFeatures: ["Multiple formats (SPDX, CycloneDX)", "Container support", "Filesystem support", "CI integration"],
+        officialUrl: "https://github.com/anchore/syft",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    // ============================================================================
+    // DEL 4: MONITORING & SECURITY (20 verktyg)
+    // ============================================================================
+    {
+        slug: "loki",
+        name: "Grafana Loki",
+        category: "monitoring",
+        icon: "📝",
+        shortDesc: "Log aggregation",
+        description: "Loki är ett loggaggregeringssystem från Grafana. Designat för att vara kostnadseffektivt och enkelt att driva.",
+        installation: {
+            brew: "brew install grafana/tap/loki",
+            other: "docker run grafana/loki"
+        },
+        useCases: ["Log aggregation", "Grafana integration", "Kubernetes logging", "Cost-effective logging"],
+        keyFeatures: ["LogQL", "Label-based indexing", "Promtail agent", "Grafana integration", "Multi-tenancy"],
+        officialUrl: "https://grafana.com/oss/loki/",
+        docsUrl: "https://grafana.com/docs/loki/latest/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "jaeger",
+        name: "Jaeger",
+        category: "monitoring",
+        icon: "🔍",
+        shortDesc: "Distributed tracing",
+        description: "Jaeger är ett distribuerat tracing-system för att övervaka och felsöka microservices.",
+        installation: {
+            other: "docker run jaegertracing/all-in-one"
+        },
+        useCases: ["Distributed tracing", "Performance monitoring", "Root cause analysis", "Service dependencies"],
+        keyFeatures: ["Trace visualization", "Service topology", "OpenTelemetry support", "Adaptive sampling"],
+        officialUrl: "https://www.jaegertracing.io",
+        docsUrl: "https://www.jaegertracing.io/docs/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "opentelemetry",
+        name: "OpenTelemetry",
+        category: "monitoring",
+        icon: "📡",
+        shortDesc: "Observability framework",
+        description: "OpenTelemetry är en samling verktyg, APIs och SDKs för instrumentering, generering och insamling av telemetridata.",
+        installation: {
+            pip: "pip install opentelemetry-api opentelemetry-sdk",
+            npm: "npm install @opentelemetry/api"
+        },
+        useCases: ["Distributed tracing", "Metrics", "Logging", "Vendor-neutral observability"],
+        keyFeatures: ["Traces", "Metrics", "Logs", "Collector", "Auto-instrumentation", "Multiple backends"],
+        officialUrl: "https://opentelemetry.io",
+        docsUrl: "https://opentelemetry.io/docs/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "fluentd",
+        name: "Fluentd",
+        category: "monitoring",
+        icon: "📊",
+        shortDesc: "Data collector",
+        description: "Fluentd är en unified logging layer som samlar in, transformerar och skickar loggar.",
+        installation: {
+            apt: "sudo apt install td-agent",
+            brew: "brew install fluentd"
+        },
+        useCases: ["Log collection", "Data pipeline", "Cloud logging", "Container logging"],
+        keyFeatures: ["Plugins", "Buffering", "Routing", "Multiple outputs", "High availability"],
+        officialUrl: "https://www.fluentd.org",
+        docsUrl: "https://docs.fluentd.org",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "logstash",
+        name: "Logstash",
+        category: "monitoring",
+        icon: "🔄",
+        shortDesc: "Data processing pipeline",
+        description: "Logstash är en datainsamlings- och processerings-pipeline. Del av Elastic Stack (ELK).",
+        installation: {
+            apt: "sudo apt install logstash",
+            brew: "brew install logstash"
+        },
+        useCases: ["Log processing", "ETL", "Data enrichment", "Centralized logging"],
+        keyFeatures: ["Input plugins", "Filter plugins", "Output plugins", "Grok patterns", "Codecs"],
+        officialUrl: "https://www.elastic.co/logstash",
+        docsUrl: "https://www.elastic.co/guide/en/logstash/current/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "filebeat",
+        name: "Filebeat",
+        category: "monitoring",
+        icon: "📁",
+        shortDesc: "Log shipper",
+        description: "Filebeat är en lättviktig loggskeppare som övervakar loggfiler och vidarebefordrar dem.",
+        installation: {
+            apt: "sudo apt install filebeat",
+            brew: "brew install filebeat"
+        },
+        useCases: ["Log shipping", "File monitoring", "Container logging", "Centralized logs"],
+        keyFeatures: ["Lightweight", "Modules", "Autodiscover", "Backpressure handling", "Multiple outputs"],
+        officialUrl: "https://www.elastic.co/beats/filebeat",
+        docsUrl: "https://www.elastic.co/guide/en/beats/filebeat/current/",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "vault",
+        name: "HashiCorp Vault",
+        category: "security",
+        icon: "🔐",
+        shortDesc: "Secrets management",
+        description: "Vault hanterar hemligheter och skyddar känslig data. Centraliserad secrets management.",
+        installation: {
+            brew: "brew install vault",
+            other: "https://developer.hashicorp.com/vault/downloads"
+        },
+        useCases: ["Secrets management", "Dynamic credentials", "Encryption as service", "PKI"],
+        keyFeatures: ["Secret engines", "Auth methods", "Dynamic secrets", "Encryption", "Leasing", "Audit"],
+        officialUrl: "https://www.vaultproject.io",
+        docsUrl: "https://developer.hashicorp.com/vault/docs",
+        flashcardCount: 15,
+        quizCount: 10
+    },
+    {
+        slug: "certbot",
+        name: "Certbot",
+        category: "security",
+        icon: "📜",
+        shortDesc: "Let's Encrypt client",
+        description: "Certbot automatiserar hämtning och förnyelse av TLS/SSL-certifikat från Let's Encrypt.",
+        installation: {
+            apt: "sudo apt install certbot",
+            brew: "brew install certbot"
+        },
+        useCases: ["SSL certificates", "HTTPS setup", "Certificate renewal", "Wildcard certs"],
+        keyFeatures: ["Auto-renewal", "Multiple plugins", "Wildcard support", "DNS challenges", "Standalone mode"],
+        officialUrl: "https://certbot.eff.org",
+        docsUrl: "https://eff-certbot.readthedocs.io",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "fail2ban",
+        name: "Fail2ban",
+        category: "security",
+        icon: "🚫",
+        shortDesc: "Intrusion prevention",
+        description: "Fail2ban skyddar mot brute-force attacker genom att blockera IP-adresser baserat på loggmönster.",
+        installation: {
+            apt: "sudo apt install fail2ban",
+            brew: "brew install fail2ban"
+        },
+        useCases: ["SSH protection", "Web server security", "Brute-force prevention", "Log monitoring"],
+        keyFeatures: ["Jails", "Filters", "Actions", "Ban time", "Whitelisting", "Email notifications"],
+        officialUrl: "https://www.fail2ban.org",
+        docsUrl: "https://www.fail2ban.org/wiki/index.php/MANUAL_0_8",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "ufw",
+        name: "UFW",
+        category: "security",
+        icon: "🧱",
+        shortDesc: "Uncomplicated Firewall",
+        description: "UFW är ett användarvänligt gränssnitt för iptables. Förenklar brandväggshantering på Ubuntu/Debian.",
+        installation: {
+            apt: "sudo apt install ufw"
+        },
+        useCases: ["Firewall management", "Port control", "Network security", "Server hardening"],
+        keyFeatures: ["allow/deny", "Application profiles", "Logging", "IPv6 support", "Rate limiting"],
+        docsUrl: "https://help.ubuntu.com/community/UFW",
+        flashcardCount: 8,
+        quizCount: 5
+    },
+    {
+        slug: "iptables",
+        name: "iptables",
+        category: "security",
+        icon: "🔥",
+        shortDesc: "Linux firewall",
+        description: "iptables är Linux-kernelns brandvägg. Kraftfullt men komplext verktyg för nätverksfiltrering.",
+        installation: {
+            apt: "sudo apt install iptables",
+            other: "Förinstallerat på de flesta Linux-system"
+        },
+        useCases: ["Firewall rules", "NAT", "Port forwarding", "Traffic shaping", "Security"],
+        keyFeatures: ["Chains", "Tables", "Rules", "NAT", "Mangle", "Filter", "ACCEPT/DROP/REJECT"],
+        docsUrl: "https://linux.die.net/man/8/iptables",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "nmap",
+        name: "Nmap",
+        category: "security",
+        icon: "🗺️",
+        shortDesc: "Network scanner",
+        description: "Nmap är ett kraftfullt verktyg för nätverksutforskning och säkerhetsrevisioner.",
+        installation: {
+            apt: "sudo apt install nmap",
+            brew: "brew install nmap"
+        },
+        useCases: ["Port scanning", "Network discovery", "Security auditing", "Service detection"],
+        keyFeatures: ["-sS SYN scan", "-sV version", "-O OS detection", "-A aggressive", "Scripts (NSE)"],
+        officialUrl: "https://nmap.org",
+        docsUrl: "https://nmap.org/docs.html",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "wireshark",
+        name: "Wireshark",
+        category: "security",
+        icon: "🦈",
+        shortDesc: "Network analyzer",
+        description: "Wireshark är världens mest använda nätverksprotokollanalysator för felsökning och analys.",
+        installation: {
+            apt: "sudo apt install wireshark",
+            brew: "brew install --cask wireshark"
+        },
+        useCases: ["Network troubleshooting", "Protocol analysis", "Security analysis", "Education"],
+        keyFeatures: ["Deep inspection", "Live capture", "Display filters", "Statistics", "Export options"],
+        officialUrl: "https://www.wireshark.org",
+        docsUrl: "https://www.wireshark.org/docs/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "tcpdump",
+        name: "tcpdump",
+        category: "security",
+        icon: "📡",
+        shortDesc: "Packet analyzer",
+        description: "tcpdump är ett kommandorads-verktyg för att fånga och analysera nätverkstrafik.",
+        installation: {
+            apt: "sudo apt install tcpdump",
+            brew: "brew install tcpdump"
+        },
+        useCases: ["Network debugging", "Traffic capture", "Security analysis", "Protocol debugging"],
+        keyFeatures: ["-i interface", "-w write file", "-r read file", "BPF filters", "-n numeric"],
+        docsUrl: "https://www.tcpdump.org/manpages/tcpdump.1.html",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "strace",
+        name: "strace",
+        category: "linux",
+        icon: "🔬",
+        shortDesc: "System call tracer",
+        description: "strace spårar systemanrop och signaler för en process. Ovärderligt för debugging.",
+        installation: {
+            apt: "sudo apt install strace",
+            brew: "brew install strace"
+        },
+        useCases: ["Debugging", "Performance analysis", "Security analysis", "Process tracing"],
+        keyFeatures: ["-p pid", "-f follow forks", "-e trace", "-o output", "-t timestamps", "-c summary"],
+        docsUrl: "https://strace.io/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "ltrace",
+        name: "ltrace",
+        category: "linux",
+        icon: "📚",
+        shortDesc: "Library call tracer",
+        description: "ltrace spårar biblioteksanrop i ett program. Komplement till strace.",
+        installation: {
+            apt: "sudo apt install ltrace"
+        },
+        useCases: ["Debugging", "Reverse engineering", "Performance analysis", "Library usage"],
+        keyFeatures: ["-p pid", "-e filter", "-o output", "-c summary", "-S show syscalls"],
+        docsUrl: "https://man7.org/linux/man-pages/man1/ltrace.1.html",
+        flashcardCount: 6,
+        quizCount: 4
+    },
+    {
+        slug: "gdb",
+        name: "GDB",
+        category: "linux",
+        icon: "🐛",
+        shortDesc: "GNU Debugger",
+        description: "GDB är GNU-projektets debugger för C, C++ och andra språk. Kraftfullt för felsökning.",
+        installation: {
+            apt: "sudo apt install gdb",
+            brew: "brew install gdb"
+        },
+        useCases: ["Debugging", "Core dump analysis", "Reverse engineering", "Memory analysis"],
+        keyFeatures: ["Breakpoints", "Watchpoints", "Stack traces", "Memory inspection", "Remote debugging"],
+        officialUrl: "https://www.gnu.org/software/gdb/",
+        docsUrl: "https://sourceware.org/gdb/documentation/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "valgrind",
+        name: "Valgrind",
+        category: "linux",
+        icon: "🧪",
+        shortDesc: "Memory debugger",
+        description: "Valgrind är ett verktyg för minnesdebugning, minnesläckagedetektering och profilering.",
+        installation: {
+            apt: "sudo apt install valgrind",
+            brew: "brew install valgrind"
+        },
+        useCases: ["Memory leaks", "Memory debugging", "Profiling", "Thread debugging"],
+        keyFeatures: ["Memcheck", "Cachegrind", "Callgrind", "Helgrind", "DRD"],
+        officialUrl: "https://valgrind.org",
+        docsUrl: "https://valgrind.org/docs/manual/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "perf",
+        name: "perf",
+        category: "linux",
+        icon: "⚡",
+        shortDesc: "Performance analyzer",
+        description: "perf är Linux-kernelns profileringsverktyg för CPU-prestanda och systemanalys.",
+        installation: {
+            apt: "sudo apt install linux-tools-common"
+        },
+        useCases: ["CPU profiling", "Performance analysis", "Bottleneck detection", "System tuning"],
+        keyFeatures: ["stat", "record", "report", "top", "Hardware counters", "Flame graphs"],
+        docsUrl: "https://perf.wiki.kernel.org",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "bpftrace",
+        name: "bpftrace",
+        category: "linux",
+        icon: "🔮",
+        shortDesc: "Dynamic tracing",
+        description: "bpftrace är ett högnivå-tracingspråk för Linux eBPF. Kraftfullt för systemanalys.",
+        installation: {
+            apt: "sudo apt install bpftrace",
+            brew: "brew install bpftrace"
+        },
+        useCases: ["Dynamic tracing", "Performance analysis", "Debugging", "System observability"],
+        keyFeatures: ["One-liners", "Probes", "Maps", "Aggregations", "Histograms", "Stack traces"],
+        officialUrl: "https://bpftrace.org",
+        docsUrl: "https://github.com/bpftrace/bpftrace/blob/master/docs/reference_guide.md",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    // ============================================================================
+    // DEL 5: DATABASER & UTVECKLING (20 verktyg)
+    // ============================================================================
+    {
+        slug: "mysql",
+        name: "MySQL",
+        category: "database",
+        icon: "🐬",
+        shortDesc: "Relational database",
+        description: "MySQL är en av världens mest populära relationsdatabaser. Open source och snabb.",
+        installation: {
+            apt: "sudo apt install mysql-server",
+            brew: "brew install mysql"
+        },
+        useCases: ["Web applications", "E-commerce", "Data warehousing", "CMS backends"],
+        keyFeatures: ["InnoDB engine", "Replication", "Clustering", "Full-text search", "Stored procedures"],
+        officialUrl: "https://www.mysql.com",
+        docsUrl: "https://dev.mysql.com/doc/",
+        flashcardCount: 15,
+        quizCount: 10
+    },
+    {
+        slug: "mongodb",
+        name: "MongoDB",
+        category: "database",
+        icon: "🍃",
+        shortDesc: "Document database",
+        description: "MongoDB är en NoSQL dokumentdatabas med flexibelt schema. Populär för modern utveckling.",
+        installation: {
+            brew: "brew tap mongodb/brew && brew install mongodb-community",
+            other: "docker run mongo"
+        },
+        useCases: ["Content management", "Real-time analytics", "IoT", "Mobile apps", "Catalogs"],
+        keyFeatures: ["Document model", "Aggregation pipeline", "Sharding", "Replication", "Atlas cloud"],
+        officialUrl: "https://www.mongodb.com",
+        docsUrl: "https://docs.mongodb.com",
+        flashcardCount: 15,
+        quizCount: 10
+    },
+    {
+        slug: "sqlite",
+        name: "SQLite",
+        category: "database",
+        icon: "📁",
+        shortDesc: "Embedded database",
+        description: "SQLite är en lättviktig, filbaserad SQL-databas. Perfekt för lokala applikationer och prototyper.",
+        installation: {
+            apt: "sudo apt install sqlite3",
+            brew: "brew install sqlite"
+        },
+        useCases: ["Embedded apps", "Mobile apps", "Testing", "Configuration", "Local caching"],
+        keyFeatures: ["Zero configuration", "Single file", "Full SQL", "Transactional", "Cross-platform"],
+        officialUrl: "https://www.sqlite.org",
+        docsUrl: "https://www.sqlite.org/docs.html",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "elasticsearch",
+        name: "Elasticsearch",
+        category: "database",
+        icon: "🔎",
+        shortDesc: "Search engine",
+        description: "Elasticsearch är en distribuerad sökmotor och analysplattform baserad på Lucene.",
+        installation: {
+            brew: "brew install elasticsearch",
+            other: "docker run elasticsearch:8.11.0"
+        },
+        useCases: ["Full-text search", "Log analytics", "Application monitoring", "Security analytics"],
+        keyFeatures: ["RESTful API", "Distributed", "Real-time", "Schema-free", "Kibana integration"],
+        officialUrl: "https://www.elastic.co/elasticsearch",
+        docsUrl: "https://www.elastic.co/guide/en/elasticsearch/reference/current/",
+        flashcardCount: 15,
+        quizCount: 10
+    },
+    {
+        slug: "rabbitmq",
+        name: "RabbitMQ",
+        category: "database",
+        icon: "🐰",
+        shortDesc: "Message broker",
+        description: "RabbitMQ är en meddelandeköbroker som implementerar AMQP. Pålitlig och flexibel.",
+        installation: {
+            apt: "sudo apt install rabbitmq-server",
+            brew: "brew install rabbitmq"
+        },
+        useCases: ["Message queuing", "Microservices", "Task queues", "Pub/sub", "Event streaming"],
+        keyFeatures: ["Exchanges", "Queues", "Bindings", "Clustering", "Management UI", "Multiple protocols"],
+        officialUrl: "https://www.rabbitmq.com",
+        docsUrl: "https://www.rabbitmq.com/docs",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "kafka",
+        name: "Apache Kafka",
+        category: "database",
+        icon: "📨",
+        shortDesc: "Event streaming",
+        description: "Kafka är en distribuerad event streaming-plattform för högpresterande datapipelines.",
+        installation: {
+            brew: "brew install kafka",
+            other: "docker run confluentinc/cp-kafka"
+        },
+        useCases: ["Event streaming", "Log aggregation", "Stream processing", "Data integration", "Messaging"],
+        keyFeatures: ["Topics", "Partitions", "Consumer groups", "Exactly-once", "Kafka Connect", "ksqlDB"],
+        officialUrl: "https://kafka.apache.org",
+        docsUrl: "https://kafka.apache.org/documentation/",
+        flashcardCount: 15,
+        quizCount: 10
+    },
+    {
+        slug: "etcd",
+        name: "etcd",
+        category: "database",
+        icon: "🔑",
+        shortDesc: "Distributed key-value store",
+        description: "etcd är en distribuerad, pålitlig key-value store. Används av Kubernetes för konfiguration.",
+        installation: {
+            brew: "brew install etcd",
+            other: "docker run quay.io/coreos/etcd"
+        },
+        useCases: ["Service discovery", "Configuration management", "Kubernetes backend", "Leader election"],
+        keyFeatures: ["Raft consensus", "Watch", "Leases", "Transactions", "gRPC API"],
+        officialUrl: "https://etcd.io",
+        docsUrl: "https://etcd.io/docs/",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "consul",
+        name: "HashiCorp Consul",
+        category: "database",
+        icon: "🌐",
+        shortDesc: "Service mesh",
+        description: "Consul är en service mesh-lösning med service discovery, configuration och segmentering.",
+        installation: {
+            brew: "brew install consul",
+            other: "https://developer.hashicorp.com/consul/downloads"
+        },
+        useCases: ["Service discovery", "Health checking", "KV store", "Service mesh", "Multi-datacenter"],
+        keyFeatures: ["Service discovery", "Health checks", "KV store", "Service mesh", "DNS interface"],
+        officialUrl: "https://www.consul.io",
+        docsUrl: "https://developer.hashicorp.com/consul/docs",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "minio",
+        name: "MinIO",
+        category: "database",
+        icon: "🪣",
+        shortDesc: "Object storage",
+        description: "MinIO är en högpresterande, S3-kompatibel objektlagring. Perfekt för on-premise moln.",
+        installation: {
+            brew: "brew install minio/stable/minio",
+            other: "docker run minio/minio server /data"
+        },
+        useCases: ["Object storage", "Data lake", "Backup", "S3 replacement", "Machine learning"],
+        keyFeatures: ["S3 compatible", "High performance", "Kubernetes native", "Encryption", "Versioning"],
+        officialUrl: "https://min.io",
+        docsUrl: "https://min.io/docs/minio/linux/index.html",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "httpd",
+        name: "Apache HTTP Server",
+        category: "linux",
+        icon: "🪶",
+        shortDesc: "Web server",
+        description: "Apache HTTP Server är världens äldsta och en av de mest använda webbservrarna.",
+        installation: {
+            apt: "sudo apt install apache2",
+            brew: "brew install httpd"
+        },
+        useCases: ["Web serving", "Reverse proxy", "Virtual hosts", "PHP hosting", ".htaccess"],
+        keyFeatures: ["Modules", "Virtual hosts", ".htaccess", "mod_rewrite", "mod_ssl", "MPM"],
+        officialUrl: "https://httpd.apache.org",
+        docsUrl: "https://httpd.apache.org/docs/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "haproxy",
+        name: "HAProxy",
+        category: "network",
+        icon: "⚖️",
+        shortDesc: "Load balancer",
+        description: "HAProxy är en pålitlig, högpresterande TCP/HTTP load balancer och proxy.",
+        installation: {
+            apt: "sudo apt install haproxy",
+            brew: "brew install haproxy"
+        },
+        useCases: ["Load balancing", "High availability", "SSL termination", "Rate limiting"],
+        keyFeatures: ["TCP/HTTP balancing", "Health checks", "Sticky sessions", "SSL offloading", "Stats"],
+        officialUrl: "https://www.haproxy.org",
+        docsUrl: "https://docs.haproxy.org",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "traefik",
+        name: "Traefik",
+        category: "network",
+        icon: "🚦",
+        shortDesc: "Cloud-native proxy",
+        description: "Traefik är en modern reverse proxy och load balancer för microservices och containers.",
+        installation: {
+            brew: "brew install traefik",
+            other: "docker run traefik"
+        },
+        useCases: ["Kubernetes ingress", "Docker routing", "Auto-discovery", "Let's Encrypt"],
+        keyFeatures: ["Auto-discovery", "Kubernetes/Docker native", "Let's Encrypt", "Middlewares", "Dashboard"],
+        officialUrl: "https://traefik.io",
+        docsUrl: "https://doc.traefik.io/traefik/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "envoy",
+        name: "Envoy",
+        category: "network",
+        icon: "🛡️",
+        shortDesc: "Service proxy",
+        description: "Envoy är en högpresterande edge och service proxy designad för molnbaserade applikationer.",
+        installation: {
+            brew: "brew install envoy",
+            other: "docker run envoyproxy/envoy"
+        },
+        useCases: ["Service mesh", "API gateway", "Load balancing", "Observability"],
+        keyFeatures: ["L3/L4 filter", "HTTP L7 filter", "Service discovery", "Health checking", "xDS API"],
+        officialUrl: "https://www.envoyproxy.io",
+        docsUrl: "https://www.envoyproxy.io/docs/envoy/latest/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "istio",
+        name: "Istio",
+        category: "orchestration",
+        icon: "⛵",
+        shortDesc: "Service mesh",
+        description: "Istio är en komplett service mesh för Kubernetes med traffic management och säkerhet.",
+        installation: {
+            brew: "brew install istioctl",
+            other: "curl -L https://istio.io/downloadIstio | sh -"
+        },
+        useCases: ["Traffic management", "Security", "Observability", "Policy enforcement"],
+        keyFeatures: ["Envoy sidecar", "mTLS", "Traffic control", "Telemetry", "Authorization"],
+        officialUrl: "https://istio.io",
+        docsUrl: "https://istio.io/latest/docs/",
+        flashcardCount: 15,
+        quizCount: 10
+    },
+    {
+        slug: "linkerd",
+        name: "Linkerd",
+        category: "orchestration",
+        icon: "🔗",
+        shortDesc: "Lightweight service mesh",
+        description: "Linkerd är en lättviktig, snabb service mesh för Kubernetes. CNCF graduated project.",
+        installation: {
+            brew: "brew install linkerd",
+            other: "curl -sL https://run.linkerd.io/install | sh"
+        },
+        useCases: ["Service mesh", "mTLS", "Observability", "Traffic splitting"],
+        keyFeatures: ["Lightweight", "Rust proxy", "mTLS", "Golden metrics", "Traffic split"],
+        officialUrl: "https://linkerd.io",
+        docsUrl: "https://linkerd.io/docs/",
+        flashcardCount: 10,
+        quizCount: 7
+    },
+    {
+        slug: "pulumi",
+        name: "Pulumi",
+        category: "cloud",
+        icon: "🧬",
+        shortDesc: "Infrastructure as Code",
+        description: "Pulumi låter dig definiera infrastruktur med riktiga programmeringsspråk som Python, TypeScript.",
+        installation: {
+            brew: "brew install pulumi",
+            npm: "npm install -g @pulumi/pulumi"
+        },
+        useCases: ["IaC", "Multi-cloud", "Modern languages", "DevOps automation"],
+        keyFeatures: ["TypeScript/Python/Go", "State management", "Secrets", "Policy as Code", "Testing"],
+        officialUrl: "https://www.pulumi.com",
+        docsUrl: "https://www.pulumi.com/docs/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "crossplane",
+        name: "Crossplane",
+        category: "cloud",
+        icon: "✈️",
+        shortDesc: "Kubernetes-native IaC",
+        description: "Crossplane låter dig hantera molnresurser med Kubernetes-manifest. Infrastructure as Data.",
+        installation: {
+            other: "kubectl create namespace crossplane-system && helm install crossplane crossplane-stable/crossplane"
+        },
+        useCases: ["Multi-cloud", "GitOps infrastructure", "Self-service platforms", "Kubernetes-native IaC"],
+        keyFeatures: ["Custom resources", "Compositions", "Provider ecosystem", "GitOps friendly"],
+        officialUrl: "https://crossplane.io",
+        docsUrl: "https://docs.crossplane.io",
+        flashcardCount: 10,
+        quizCount: 6
+    },
+    {
+        slug: "cdk",
+        name: "AWS CDK",
+        category: "cloud",
+        icon: "☁️",
+        shortDesc: "Cloud Development Kit",
+        description: "AWS CDK låter dig definiera molninfrastruktur med programmeringsspråk och syntetisera CloudFormation.",
+        installation: {
+            npm: "npm install -g aws-cdk"
+        },
+        useCases: ["AWS infrastructure", "CloudFormation generation", "Reusable components", "DevOps"],
+        keyFeatures: ["Constructs", "TypeScript/Python/Java", "L1/L2/L3 constructs", "Assets", "Testing"],
+        officialUrl: "https://aws.amazon.com/cdk/",
+        docsUrl: "https://docs.aws.amazon.com/cdk/",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "serverless",
+        name: "Serverless Framework",
+        category: "cloud",
+        icon: "⚡",
+        shortDesc: "Serverless deployment",
+        description: "Serverless Framework förenklar deployment av serverless applikationer på AWS, Azure, GCP.",
+        installation: {
+            npm: "npm install -g serverless"
+        },
+        useCases: ["Lambda functions", "API Gateway", "Event-driven apps", "Multi-cloud serverless"],
+        keyFeatures: ["serverless.yml", "Plugins", "Multi-provider", "Local development", "Variables"],
+        officialUrl: "https://www.serverless.com",
+        docsUrl: "https://www.serverless.com/framework/docs",
+        flashcardCount: 12,
+        quizCount: 8
+    },
+    {
+        slug: "flyway",
+        name: "Flyway",
+        category: "database",
+        icon: "✈️",
+        shortDesc: "Database migrations",
+        description: "Flyway är ett verktyg för versionshantering av databaser. Migrationer med SQL eller Java.",
+        installation: {
+            brew: "brew install flyway",
+            other: "docker run flyway/flyway"
+        },
+        useCases: ["Database versioning", "CI/CD migrations", "Schema management", "Team collaboration"],
+        keyFeatures: ["SQL migrations", "Versioning", "Baseline", "Repair", "Callbacks", "Placeholders"],
+        officialUrl: "https://flywaydb.org",
+        docsUrl: "https://documentation.red-gate.com/fd",
+        flashcardCount: 10,
+        quizCount: 7
+    },
 ]
