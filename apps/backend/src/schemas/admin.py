@@ -90,7 +90,7 @@ class SystemStats(BaseModel):
     admin_users: int = 0
     users_today: int = 0
     users_this_week: int = 0
-    
+
     # Real-time activity
     online_now: int = 0  # Users active in last 30 min
     active_today: int = 0  # Users active today

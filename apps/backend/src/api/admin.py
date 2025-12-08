@@ -508,7 +508,7 @@ def get_system_stats(
 ) -> SystemStats:
     """
     Get system-wide statistics (admin only).
-    
+
     Includes real-time activity tracking:
     - online_now: Users active in last 30 minutes
     - active_today: Users active today
