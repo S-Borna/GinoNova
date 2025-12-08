@@ -27,6 +27,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { getToken } from "@/lib/auth"
 import { X, Send, Loader2, Sparkles } from "lucide-react"
 import { usePathname } from "next/navigation"
 
@@ -301,9 +302,13 @@ export function DallasOrb() {
         setIsLoading(true)
 
         try {
+            const token = getToken()
             const response = await fetch("/api/ai/chat", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                },
                 body: JSON.stringify({
                     message: userMessage.content,
                     context: getContext(),

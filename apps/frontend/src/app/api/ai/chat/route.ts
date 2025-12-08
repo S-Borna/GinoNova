@@ -1,5 +1,5 @@
 /**
- * AI Chat API Route - Proxies requests to backend AI service
+ * AI Chat API Route - Proxies requests to backend Dallas AI service
  * @phase AI-WIZARD-FAS-1
  */
 
@@ -10,10 +10,14 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
-        const { message, context, session_id } = body
+        const { message, context, session_id, user_name } = body
 
-        // Forward to backend AI service
-        const response = await fetch(`${BACKEND_URL}/api/ai/chat`, {
+        // Debug logging for production
+        console.log("[AI Chat Route] BACKEND_URL:", BACKEND_URL)
+        console.log("[AI Chat Route] Has Authorization:", !!request.headers.get("Authorization"))
+
+        // Forward to backend Dallas AI service
+        const response = await fetch(`${BACKEND_URL}/api/dallas/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -24,22 +28,27 @@ export async function POST(request: NextRequest) {
             },
             body: JSON.stringify({
                 message,
-                context,
-                session_id,
+                context: context?.type || "general",
+                user_name: user_name || "User",
             }),
         })
 
+        console.log("[AI Chat Route] Backend response status:", response.status)
+
         if (!response.ok) {
-            // If backend fails, return fallback response (works in dev AND production)
-            console.error("Backend AI error:", response.status)
+            // Log the actual error from backend
+            const errorText = await response.text().catch(() => "Unknown error")
+            console.error("[AI Chat Route] Backend AI error:", response.status, errorText)
             return NextResponse.json({
                 response: getFallbackResponse(message),
                 session_id: session_id || "fallback-session",
                 tokens_used: 0,
+                _debug: { backend_status: response.status, backend_error: errorText.substring(0, 200) }
             })
         }
 
         const data = await response.json()
+        console.log("[AI Chat Route] Backend response OK, tokens:", data.tokens_used)
         return NextResponse.json(data)
     } catch (error) {
         console.error("AI chat error:", error)
