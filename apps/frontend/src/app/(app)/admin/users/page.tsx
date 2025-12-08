@@ -51,6 +51,7 @@ interface AdminUser {
     modules_started: number
     modules_completed: number
     last_active: string | null
+    last_activity_at: string | null
     is_active: boolean
 }
 
@@ -61,6 +62,8 @@ interface AdminStats {
     total_tasks_completed: number
     total_xp_earned: number
     active_users_today: number
+    online_now: number
+    active_today: number
     avg_tasks_per_user: number
     avg_xp_per_user: number
     total_modules: number

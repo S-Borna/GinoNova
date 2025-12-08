@@ -90,6 +90,8 @@ interface SystemStats {
     admin_users: number
     users_today: number
     users_this_week: number
+    online_now: number
+    active_today: number
     total_tracks: number
     total_modules: number
     total_tasks: number
@@ -703,10 +705,10 @@ export default function AdminCommandCenter() {
                         trend="up"
                     />
                     <StatCard
-                        icon={Activity}
-                        label="Aktiva idag"
-                        value={stats.users_today}
-                        subValue={`${stats.active_users} totalt aktiva`}
+                        icon={Globe}
+                        label="Online nu"
+                        value={stats.online_now}
+                        subValue={`${stats.active_today} aktiva idag`}
                         color="bg-emerald-500"
                     />
                     <StatCard
@@ -794,6 +796,66 @@ export default function AdminCommandCenter() {
                         </div>
                     </motion.div>
                 </div>
+            )}
+
+            {/* Online Users Section */}
+            {stats && stats.online_now > 0 && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-8"
+                >
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="relative">
+                            <Globe className="w-5 h-5 text-emerald-400" />
+                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                        </div>
+                        <h2 className="text-lg font-semibold text-white">Online nu ({stats.online_now})</h2>
+                    </div>
+                    <div className={cn(
+                        "rounded-xl overflow-hidden",
+                        "bg-zinc-900/80 border border-emerald-500/30",
+                        "p-4"
+                    )}>
+                        <div className="flex flex-wrap gap-3">
+                            {users
+                                .filter(u => {
+                                    if (!u.last_activity_at) return false
+                                    const lastActive = new Date(u.last_activity_at)
+                                    const now = new Date()
+                                    const minAgo = (now.getTime() - lastActive.getTime()) / (1000 * 60)
+                                    return minAgo <= 30
+                                })
+                                .map(u => (
+                                    <div
+                                        key={u.id}
+                                        className={cn(
+                                            "flex items-center gap-2 px-3 py-2 rounded-lg",
+                                            "bg-zinc-800 border border-zinc-700"
+                                        )}
+                                    >
+                                        <div className="relative">
+                                            <div className={cn(
+                                                "w-8 h-8 rounded-lg flex items-center justify-center",
+                                                "bg-gradient-to-br from-emerald-500 to-teal-600",
+                                                "text-white font-bold text-xs"
+                                            )}>
+                                                {u.full_name?.[0]?.toUpperCase() || u.email[0].toUpperCase()}
+                                            </div>
+                                            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-zinc-800" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-white">
+                                                {u.full_name || u.email.split("@")[0]}
+                                            </p>
+                                            <p className="text-xs text-emerald-400">Online</p>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </motion.div>
             )}
 
             {/* Admin Tools Section */}

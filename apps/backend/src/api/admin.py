@@ -248,28 +248,6 @@ def list_all_users(
     add_phase_header(response)
     require_admin(current_user)
 
-    # Get permissions lookup from database (with safe fallback if column doesn't exist yet)
-    user_permissions_map = {}
-    default_permissions = {
-        "ai_quiz": True,
-        "premium_modules": True,
-        "study_room": True,
-        "skillpath": True
-    }
-    if is_db_configured():
-        from ..db.database import get_db_context
-        from ..db.models import User as UserModel
-        try:
-            with get_db_context() as db:
-                db_users = db.query(UserModel).all()
-                for u in db_users:
-                    # Use getattr to safely handle case where permissions column doesn't exist
-                    user_perms = getattr(u, 'permissions', None)
-                    user_permissions_map[str(u.id)] = user_perms if user_perms else default_permissions
-        except Exception:
-            # If permissions column doesn't exist yet, use defaults
-            pass
-
     users = user_repository.list_users()
     all_modules = list_modules()
     all_tasks = list_tasks()
@@ -324,9 +302,6 @@ def list_all_users(
             if latest.updated_at > last_active:
                 last_active = latest.updated_at
 
-        # Get permissions for this user (with default fallback)
-        user_perms = user_permissions_map.get(str(user.id), default_permissions)
-
         user_details.append(AdminUserDetail(
             id=user.id,
             email=user.email,
@@ -336,7 +311,6 @@ def list_all_users(
             is_active=user.is_active,
             is_admin=getattr(user, 'is_admin', False),
             is_verified=getattr(user, 'is_verified', False),
-            permissions=user_perms,
             total_xp=user_xp,
             level=calculate_level(user_xp),
             current_streak=getattr(user, 'current_streak', 0),
@@ -524,113 +498,6 @@ def deactivate_user(
 
 
 # ==============================================================================
-# PERMISSIONS ENDPOINTS
-# ==============================================================================
-
-class UserPermissions(BaseModel):
-    """User feature permissions"""
-    ai_quiz: bool = True
-    premium_modules: bool = True
-    study_room: bool = True
-    skillpath: bool = True
-
-
-class PermissionsUpdate(BaseModel):
-    """Partial permissions update"""
-    permissions: dict
-
-
-@admin_router.get("/users/{user_id}/permissions")
-def get_user_permissions(
-    user_id: UUID,
-    response: Response,
-    current_user: CurrentUser,
-):
-    """Get permissions for a specific user."""
-    add_phase_header(response)
-    require_admin(current_user)
-
-    if not is_db_configured():
-        raise HTTPException(status_code=503, detail="Database not configured")
-
-    from ..db.database import get_db_context
-    from ..db.models import User
-
-    default_perms = {
-        "ai_quiz": True,
-        "premium_modules": True,
-        "study_room": True,
-        "skillpath": True
-    }
-
-    with get_db_context() as db:
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        # Return default permissions if none set (safe access with getattr)
-        perms = getattr(user, 'permissions', None) or default_perms
-
-        return {
-            "user_id": str(user_id),
-            "email": user.email,
-            "permissions": perms
-        }
-
-
-@admin_router.patch("/users/{user_id}/permissions")
-def update_user_permissions(
-    user_id: UUID,
-    data: PermissionsUpdate,
-    response: Response,
-    current_user: CurrentUser,
-):
-    """Update permissions for a specific user."""
-    add_phase_header(response)
-    require_admin(current_user)
-
-    if not is_db_configured():
-        raise HTTPException(status_code=503, detail="Database not configured")
-
-    from ..db.database import get_db_context
-    from ..db.models import User
-
-    default_perms = {
-        "ai_quiz": True,
-        "premium_modules": True,
-        "study_room": True,
-        "skillpath": True
-    }
-
-    with get_db_context() as db:
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        # Merge existing permissions with updates (safe access with getattr)
-        current_perms = getattr(user, 'permissions', None) or default_perms.copy()
-
-        # Update only provided fields
-        for key, value in data.permissions.items():
-            if key in current_perms:
-                current_perms[key] = value
-
-        # Try to save permissions - if column doesn't exist, just return success
-        try:
-            user.permissions = current_perms
-            db.flush()
-        except Exception:
-            # Column might not exist in DB yet - return success anyway
-            pass
-
-        return {
-            "success": True,
-            "user_id": str(user_id),
-            "permissions": current_perms
-        }
-
-
-# ==============================================================================
 # SYSTEM STATS ENDPOINTS
 # ==============================================================================
 
@@ -641,6 +508,10 @@ def get_system_stats(
 ) -> SystemStats:
     """
     Get system-wide statistics (admin only).
+    
+    Includes real-time activity tracking:
+    - online_now: Users active in last 30 minutes
+    - active_today: Users active today
     """
     add_phase_header(response)
     require_admin(current_user)
@@ -655,6 +526,7 @@ def get_system_stats(
     now = datetime.utcnow()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     week_ago = now - timedelta(days=7)
+    thirty_min_ago = now - timedelta(minutes=30)
 
     # User stats
     total_users = len(users)
@@ -662,6 +534,17 @@ def get_system_stats(
     admin_users = sum(1 for u in users if is_admin(u))
     users_today = sum(1 for u in users if u.created_at >= today_start)
     users_this_week = sum(1 for u in users if u.created_at >= week_ago)
+
+    # Real-time activity stats
+    online_now = 0
+    active_today = 0
+    for u in users:
+        last_activity = getattr(u, 'last_activity_at', None)
+        if last_activity:
+            if last_activity >= thirty_min_ago:
+                online_now += 1
+            if last_activity >= today_start:
+                active_today += 1
 
     # Activity stats
     total_tasks_completed = 0
@@ -683,6 +566,8 @@ def get_system_stats(
         admin_users=admin_users,
         users_today=users_today,
         users_this_week=users_this_week,
+        online_now=online_now,
+        active_today=active_today,
         total_tracks=len(tracks),
         total_modules=len(modules),
         total_tasks=len(tasks),
