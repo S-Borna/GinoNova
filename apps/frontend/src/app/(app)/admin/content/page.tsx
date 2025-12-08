@@ -242,7 +242,7 @@ export default function AdminContentPage() {
                                     <BookOpen className="w-12 h-12 mx-auto mb-3 text-zinc-600" />
                                     <p className="text-zinc-400">Inga moduler hittades</p>
                                     <p className="text-sm text-zinc-500 mt-1">
-                                        Klicka på "Seed V3 Content" för att ladda in kursmaterial
+                                        Klicka på &quot;Seed V3 Content&quot; för att ladda in kursmaterial
                                     </p>
                                 </div>
                             ) : (
