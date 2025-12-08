@@ -103,7 +103,7 @@ export function Footer() {
                         <p className="text-neutral-400 text-sm leading-relaxed mb-6 max-w-xs">
                             The most comprehensive DevOps learning platform.
                             Master modern infrastructure, from Linux to Kubernetes.
-                            A project by Ebadi.
+                            A project from Said.
                         </p>
 
                         {/* Social links */}
@@ -156,7 +156,7 @@ export function Footer() {
                 {/* Bottom bar */}
                 <div className="py-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-neutral-500">
-                        © {currentYear} Ebadi. All rights reserved.
+                        © {currentYear} The Ebadi Group. All rights reserved.
                     </p>
 
                     <p className="text-sm text-neutral-500 flex items-center gap-1">

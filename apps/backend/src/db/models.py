@@ -306,3 +306,48 @@ class Bookmark(Base):
         Index('ix_bookmarks_user_task', 'user_id', 'task_id', unique=True),
     )
 
+
+class AIUsageLog(Base):
+    """
+    AI Usage Tracking - Logs every AI API call (Dallas, AI Quiz, etc.)
+    Used for cost tracking and usage analytics per user.
+    """
+    __tablename__ = "ai_usage_logs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)  # Nullable for anonymous
+
+    # What feature used the AI
+    feature = Column(String(50), nullable=False)  # 'dallas', 'ai_quiz', 'ai_chat', etc.
+
+    # Model info
+    model = Column(String(50), nullable=False)  # 'gpt-3.5-turbo', 'gpt-4', etc.
+
+    # Token usage
+    prompt_tokens = Column(Integer, default=0)
+    completion_tokens = Column(Integer, default=0)
+    total_tokens = Column(Integer, default=0)
+
+    # Cost in USD (calculated based on model pricing)
+    cost_usd = Column(Float, default=0.0)
+
+    # Request details (optional, for debugging)
+    request_type = Column(String(100), nullable=True)  # 'chat', 'quiz_generate', 'quiz_feedback', etc.
+
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Week number for easy grouping (ISO week)
+    week_number = Column(Integer, nullable=True)
+    year = Column(Integer, nullable=True)
+
+    # Relationships
+    user = relationship("User", backref="ai_usage_logs")
+
+    __table_args__ = (
+        Index('ix_ai_usage_user_id', 'user_id'),
+        Index('ix_ai_usage_feature', 'feature'),
+        Index('ix_ai_usage_created_at', 'created_at'),
+        Index('ix_ai_usage_week_year', 'year', 'week_number'),
+    )
+

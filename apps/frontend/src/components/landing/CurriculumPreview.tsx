@@ -237,7 +237,7 @@ export function CurriculumPreview() {
                         Full Curriculum
                     </span>
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-                        15 Modules of{" "}
+                        36 Modules of{" "}
                         <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                             Deep Learning
                         </span>
@@ -265,15 +265,15 @@ export function CurriculumPreview() {
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                         <div>
-                            <div className="text-3xl font-bold text-white">15</div>
+                            <div className="text-3xl font-bold text-white">36</div>
                             <div className="text-sm text-neutral-400">Modules</div>
                         </div>
                         <div>
-                            <div className="text-3xl font-bold text-white">270h</div>
+                            <div className="text-3xl font-bold text-white">310h</div>
                             <div className="text-sm text-neutral-400">Content</div>
                         </div>
                         <div>
-                            <div className="text-3xl font-bold text-white">164</div>
+                            <div className="text-3xl font-bold text-white">384</div>
                             <div className="text-sm text-neutral-400">Tasks</div>
                         </div>
                         <div>

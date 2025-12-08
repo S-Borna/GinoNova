@@ -44,7 +44,7 @@ interface Message {
     content: string
 }
 
-function DallasChat({ userName }: { userName: string }) {
+function DallasChat({ userName, userId }: { userName: string; userId?: string }) {
     const [messages, setMessages] = useState<Message[]>([
         {
             role: "assistant",
@@ -83,7 +83,8 @@ function DallasChat({ userName }: { userName: string }) {
                 body: JSON.stringify({
                     message: userMessage,
                     context: "pulse_check",
-                    user_name: userName
+                    user_name: userName,
+                    user_id: userId  // For AI usage tracking
                 })
             })
 
@@ -438,7 +439,7 @@ export default function PulsePage() {
                 {/* ============================================================
                     DALLAS CHAT
                     ============================================================ */}
-                <DallasChat userName={displayName} />
+                <DallasChat userName={displayName} userId={user?.id} />
 
                 {/* ============================================================
                     VECKANS STUDIETID + MINA FAVORITER (side by side)

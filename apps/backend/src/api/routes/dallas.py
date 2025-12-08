@@ -17,6 +17,7 @@ class ChatRequest(BaseModel):
     message: str
     context: Optional[str] = "general"
     user_name: Optional[str] = "du"
+    user_id: Optional[str] = None  # For usage tracking
 
 
 class ChatResponse(BaseModel):
@@ -47,6 +48,8 @@ async def chat_with_dallas(request: ChatRequest):
     Chatta med Dallas - din DevOps-guide.
     Försöker använda OpenAI GPT-3.5-turbo, annars fallback.
     """
+    from uuid import UUID as UUIDType
+    from ...services.ai_usage_service import log_ai_usage
 
     # Try multiple env var names for OpenAI key
     openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_KEY") or os.getenv("OPEN_AI_KEY")
@@ -78,24 +81,44 @@ Använd emojis sparsamt men kärleksfullt. 🐺"""
                 temperature=0.8
             )
 
+            # Log AI usage
+            usage = response.usage
+            if usage:
+                user_uuid = None
+                if request.user_id:
+                    try:
+                        user_uuid = UUIDType(request.user_id)
+                    except ValueError:
+                        pass
+
+                log_ai_usage(
+                    feature="dallas",
+                    model="gpt-3.5-turbo",
+                    prompt_tokens=usage.prompt_tokens,
+                    completion_tokens=usage.completion_tokens,
+                    user_id=user_uuid,
+                    request_type=request.context or "general",
+                )
+
             return ChatResponse(
                 response=response.choices[0].message.content,
                 context=request.context
             )
 
-        except Exception:
+        except Exception as e:
             # Om OpenAI failar, använd fallback
+            print(f"Dallas OpenAI error: {e}")
             pass
 
-    # Fallback-svar
-    context_responses = FALLBACK_RESPONSES.get(request.context, FALLBACK_RESPONSES["general"])
+    # Fallback-svar (no AI usage logged for fallback)
+    context_key = request.context or "general"
+    context_responses = FALLBACK_RESPONSES.get(context_key, FALLBACK_RESPONSES["general"])
     response_text = random.choice(context_responses)
 
     return ChatResponse(
         response=response_text,
         context=request.context
     )
-
 
 @router.get("/status")
 async def dallas_status():
