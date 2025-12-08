@@ -241,7 +241,7 @@ function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (use
     const displayName = getDisplayName(user)
     const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
     const isNew = isNewUser(user.created_at)
-    
+
     return (
         <motion.tr
             initial={{ opacity: 0 }}
@@ -329,13 +329,13 @@ function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (use
     )
 }
 
-function UserDetailModal({ 
-    user, 
+function UserDetailModal({
+    user,
     onClose,
     onToggleActive,
     onToggleAdmin,
     currentUserEmail
-}: { 
+}: {
     user: AdminUser
     onClose: () => void
     onToggleActive: (userId: string, isActive: boolean) => Promise<void>
@@ -498,11 +498,11 @@ function UserDetailModal({
                 {/* Behörigheter */}
                 <div className="p-6 border-t border-zinc-800">
                     <h3 className="font-semibold text-white mb-3">Behörigheter</h3>
-                    
+
                     {actionStatus && (
                         <div className={cn(
                             "mb-4 p-3 rounded-lg text-sm",
-                            actionStatus.startsWith("✓") 
+                            actionStatus.startsWith("✓")
                                 ? "bg-emerald-500/10 text-emerald-400"
                                 : "bg-red-500/10 text-red-400"
                         )}>
@@ -634,9 +634,9 @@ export default function AdminCommandCenter() {
             body: JSON.stringify({ is_active: isActive })
         })
         if (!res.ok) throw new Error("Failed to update user")
-        
+
         // Update local state
-        setUsers(prev => prev.map(u => 
+        setUsers(prev => prev.map(u =>
             u.id === userId ? { ...u, is_active: isActive } : u
         ))
         if (selectedUser?.id === userId) {
@@ -656,9 +656,9 @@ export default function AdminCommandCenter() {
             body: JSON.stringify({ is_admin: isAdminStatus })
         })
         if (!res.ok) throw new Error("Failed to update user")
-        
+
         // Update local state
-        setUsers(prev => prev.map(u => 
+        setUsers(prev => prev.map(u =>
             u.id === userId ? { ...u, is_admin: isAdminStatus } : u
         ))
         if (selectedUser?.id === userId) {
@@ -797,7 +797,7 @@ export default function AdminCommandCenter() {
                 if (activityRes.ok) {
                     const activityData: ActivityLogResponse = await activityRes.json()
                     // Sort events by timestamp (newest first)
-                    activityData.events.sort((a, b) => 
+                    activityData.events.sort((a, b) =>
                         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
                     )
                     setActivityLog(activityData)
@@ -1300,119 +1300,7 @@ export default function AdminCommandCenter() {
                 </div>
             </motion.div>
 
-            {/* Activity Log Section */}
-            {activityLog && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-8"
-                >
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-emerald-400" />
-                            <h2 className="text-lg font-semibold text-white">
-                                Logg (senaste 7 dagar)
-                            </h2>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs text-zinc-500">
-                                {activityLog.total_events} händelser
-                            </span>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="border-zinc-700"
-                                onClick={async () => {
-                                    try {
-                                        setBackfillStatus("Kör backfill...")
-                                        const token = getToken()
-                                        const res = await fetch(`${API_BASE_URL}/api/admin/backfill-activity`, {
-                                            method: "POST",
-                                            headers: {
-                                                Authorization: `Bearer ${token}`,
-                                                "Content-Type": "application/json"
-                                            },
-                                        })
-                                        if (res.ok) {
-                                            const data = await res.json()
-                                            setBackfillStatus(`✓ ${data.updated} användare uppdaterade`)
-                                            fetchData()
-                                        } else {
-                                            setBackfillStatus("✗ Backfill misslyckades")
-                                        }
-                                    } catch {
-                                        setBackfillStatus("✗ Nätverksfel")
-                                    }
-                                    setTimeout(() => setBackfillStatus(null), 3000)
-                                }}
-                            >
-                                <Database className="w-4 h-4 mr-1" />
-                                Backfill
-                            </Button>
-                        </div>
-                    </div>
-                    {backfillStatus && (
-                        <div className="mb-4 px-4 py-2 rounded-lg bg-zinc-800 text-sm text-zinc-300">
-                            {backfillStatus}
-                        </div>
-                    )}
-                    <div className={cn(
-                        "rounded-xl overflow-hidden",
-                        "bg-zinc-900/80 border border-zinc-800",
-                        "max-h-96 overflow-y-auto"
-                    )}>
-                        {activityLog.events.length === 0 ? (
-                            <div className="p-6 text-center text-zinc-500">
-                                Ingen aktivitet
-                            </div>
-                        ) : (
-                            <div className="divide-y divide-zinc-800">
-                                {activityLog.events.slice(0, 30).map((event, idx) => {
-                                    // Create display name from email if name is missing
-                                    const displayName = event.name || event.email.split("@")[0]
-                                        .replace(/[._-]/g, " ")
-                                        .replace(/\d+$/, "")
-                                        .split(" ")
-                                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                        .join(" ")
-                                        .trim()
-                                    
-                                    return (
-                                        <div key={idx} className="px-4 py-3 flex items-center gap-3 hover:bg-zinc-800/30">
-                                            <div className={cn(
-                                                "p-2 rounded-lg",
-                                                event.type === "registration" && "bg-emerald-500/20",
-                                                event.type === "login" && "bg-blue-500/20",
-                                                event.type === "progress" && "bg-purple-500/20"
-                                            )}>
-                                                {event.type === "registration" && <UserPlus className="w-4 h-4 text-emerald-400" />}
-                                                {event.type === "login" && <LogIn className="w-4 h-4 text-blue-400" />}
-                                                {event.type === "progress" && <Target className="w-4 h-4 text-purple-400" />}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-white truncate">
-                                                    {displayName}
-                                                </p>
-                                                <p className="text-xs text-zinc-500">{event.details}</p>
-                                            </div>
-                                            <div className="text-xs text-zinc-500 whitespace-nowrap">
-                                                {new Date(event.timestamp).toLocaleString("sv-SE", {
-                                                    day: "numeric",
-                                                    month: "short",
-                                                    hour: "2-digit",
-                                                    minute: "2-digit"
-                                                })}
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        )}
-                    </div>
-                </motion.div>
-            )}
-
-            {/* Users Section */}
+            {/* Aktivitetslogg - Unified User Activity */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1421,21 +1309,26 @@ export default function AdminCommandCenter() {
                     "bg-zinc-900/80 border border-zinc-800"
                 )}
             >
-                {/* Users Header */}
+                {/* Header */}
                 <div className="p-6 border-b border-zinc-800">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <Users className="w-5 h-5 text-purple-400" />
-                            <h2 className="text-lg font-semibold text-white">
-                                Användare ({users.length})
-                            </h2>
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-purple-500/20">
+                                <Activity className="w-5 h-5 text-purple-400" />
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-semibold text-white">
+                                    Aktivitetslogg
+                                </h2>
+                                <p className="text-xs text-zinc-500">{users.length} användare</p>
+                            </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="relative">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                                 <input
                                     type="text"
-                                    placeholder="Sök användare..."
+                                    placeholder="Sök..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className={cn(
@@ -1443,71 +1336,134 @@ export default function AdminCommandCenter() {
                                         "bg-zinc-800 border border-zinc-700",
                                         "text-white placeholder-zinc-500",
                                         "focus:outline-none focus:border-purple-500",
-                                        "text-sm w-64"
+                                        "text-sm w-48"
                                     )}
                                 />
                             </div>
-                            <Link prefetch={false} href="/admin/users">
-                                <Button variant="outline" size="sm" className="border-zinc-700">
-                                    Se alla
-                                    <ChevronRight className="w-4 h-4 ml-1" />
-                                </Button>
-                            </Link>
                         </div>
                     </div>
                 </div>
 
-                {/* Users Table */}
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="bg-zinc-800/50 border-b border-zinc-800">
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">
-                                    Användare
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">
-                                    Status
-                                </th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-zinc-400 uppercase">
-                                    Nivå
-                                </th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-zinc-400 uppercase">
-                                    XP
-                                </th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-zinc-400 uppercase">
-                                    Moduler
-                                </th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-zinc-400 uppercase">
-                                    Tasks
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">
-                                    Registrerad
-                                </th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-zinc-400 uppercase">
-                                    Åtgärd
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredUsers.map((u) => (
-                                <UserRow
+                {/* User List */}
+                <div className="divide-y divide-zinc-800/50 max-h-[500px] overflow-y-auto">
+                    {filteredUsers
+                        .sort((a, b) => {
+                            // Sort by last activity (most recent first), then by created_at
+                            const aTime = a.last_activity_at ? new Date(a.last_activity_at).getTime() : 0
+                            const bTime = b.last_activity_at ? new Date(b.last_activity_at).getTime() : 0
+                            return bTime - aTime
+                        })
+                        .map((u) => {
+                            const displayName = getDisplayName(u)
+                            const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
+                            
+                            // Calculate online status
+                            const isOnline = u.last_activity_at && 
+                                (Date.now() - new Date(u.last_activity_at).getTime()) / (1000 * 60) <= 30
+                            
+                            return (
+                                <motion.div
                                     key={u.id}
-                                    user={u}
-                                    onViewDetails={setSelectedUser}
-                                />
-                            ))}
-                            {filteredUsers.length === 0 && (
-                                <tr>
-                                    <td colSpan={8} className="px-4 py-12 text-center">
-                                        <UserPlus className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                                        <p className="text-zinc-500">
-                                            {searchQuery ? "Inga användare matchar sökningen" : "Inga användare registrerade ännu"}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    onClick={() => setSelectedUser(u)}
+                                    className="px-6 py-4 flex items-center gap-4 hover:bg-zinc-800/30 cursor-pointer transition-colors"
+                                >
+                                    {/* Avatar with status indicator */}
+                                    <div className="relative">
+                                        <div className={cn(
+                                            "w-11 h-11 rounded-xl flex items-center justify-center",
+                                            "bg-gradient-to-br from-purple-500 to-indigo-600",
+                                            "text-white font-bold text-sm"
+                                        )}>
+                                            {initials}
+                                        </div>
+                                        {/* Online/Offline indicator */}
+                                        <span className={cn(
+                                            "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-zinc-900",
+                                            isOnline ? "bg-emerald-500" : "bg-zinc-600"
+                                        )} />
+                                        {/* Admin badge */}
+                                        {u.is_admin && (
+                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
+                                                <Shield className="w-2.5 h-2.5 text-white" />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* User info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <p className="font-medium text-white text-sm truncate">{displayName}</p>
+                                            {isNewUser(u.created_at) && (
+                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-400">NY</span>
+                                            )}
+                                            {!u.is_active && (
+                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-400">SPÄRRAD</span>
+                                            )}
+                                        </div>
+                                        <p className="text-xs text-zinc-500 truncate">{u.email}</p>
+                                    </div>
+
+                                    {/* Status */}
+                                    <div className="text-center min-w-[80px]">
+                                        <span className={cn(
+                                            "inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium",
+                                            isOnline 
+                                                ? "bg-emerald-500/20 text-emerald-400" 
+                                                : "bg-zinc-800 text-zinc-500"
+                                        )}>
+                                            <span className={cn(
+                                                "w-1.5 h-1.5 rounded-full",
+                                                isOnline ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"
+                                            )} />
+                                            {isOnline ? "Online" : "Offline"}
+                                        </span>
+                                    </div>
+
+                                    {/* Last login */}
+                                    <div className="text-right min-w-[100px]">
+                                        <p className="text-xs text-zinc-400">Senast inlogg</p>
+                                        <p className="text-sm text-white">
+                                            {u.last_activity_at 
+                                                ? new Date(u.last_activity_at).toLocaleDateString("sv-SE", {
+                                                    day: "numeric",
+                                                    month: "short",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit"
+                                                })
+                                                : "Aldrig"
+                                            }
                                         </p>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                    </div>
+
+                                    {/* Registered */}
+                                    <div className="text-right min-w-[90px]">
+                                        <p className="text-xs text-zinc-400">Registrerad</p>
+                                        <p className="text-sm text-white">
+                                            {new Date(u.created_at).toLocaleDateString("sv-SE", {
+                                                day: "numeric",
+                                                month: "short",
+                                                year: "numeric"
+                                            })}
+                                        </p>
+                                    </div>
+
+                                    {/* Action */}
+                                    <div className="pl-2">
+                                        <ChevronRight className="w-4 h-4 text-zinc-600" />
+                                    </div>
+                                </motion.div>
+                            )
+                        })}
+                    {filteredUsers.length === 0 && (
+                        <div className="px-6 py-12 text-center">
+                            <Users className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                            <p className="text-zinc-500">
+                                {searchQuery ? "Inga användare matchar sökningen" : "Inga användare registrerade ännu"}
+                            </p>
+                        </div>
+                    )}
                 </div>
             </motion.div>
 
