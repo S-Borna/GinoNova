@@ -25,14 +25,6 @@ class AdminUserSummary(BaseModel):
         from_attributes = True
 
 
-class UserPermissionsSchema(BaseModel):
-    """Feature permissions schema"""
-    ai_quiz: bool = True
-    premium_modules: bool = True
-    study_room: bool = True
-    skillpath: bool = True
-
-
 class AdminUserDetail(BaseModel):
     """Detailed user info for admin view"""
     id: UUID
@@ -45,9 +37,6 @@ class AdminUserDetail(BaseModel):
     is_active: bool = True
     is_admin: bool = False
     is_verified: bool = False
-
-    # Permissions
-    permissions: Optional[UserPermissionsSchema] = None
 
     # Stats
     total_xp: int = 0
@@ -101,6 +90,10 @@ class SystemStats(BaseModel):
     admin_users: int = 0
     users_today: int = 0
     users_this_week: int = 0
+    
+    # Real-time activity
+    online_now: int = 0  # Users active in last 30 min
+    active_today: int = 0  # Users active today
 
     # Content
     total_tracks: int = 0
