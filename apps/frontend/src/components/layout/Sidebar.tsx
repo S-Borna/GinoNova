@@ -37,6 +37,7 @@ import {
     Shield,
     Brain,
     Heart,
+    Zap,
     type LucideIcon
 } from "lucide-react"
 
@@ -72,6 +73,7 @@ const mainNavItems: NavItem[] = [
     { label: "Skillpath", href: "/skillpath-board", icon: LayoutDashboard },
     { label: "Camp DevOps", href: "/modules", icon: BookOpen },
     { label: "SkillsMaps", href: "/skillsmaps", icon: Map },
+    { label: "FastTrack", href: "/fasttrack", icon: Zap },
     { label: "Studyroom", href: "/study", icon: Clock },
     { label: "AI Quiz", href: "/quiz", icon: Brain },
     { label: "Pulsmätning", href: "/pulse", icon: Heart },

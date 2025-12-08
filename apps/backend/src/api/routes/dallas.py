@@ -31,7 +31,7 @@ FALLBACK_RESPONSES = {
         "Jag hör dig! DevOps-resan har sina upp och nedgångar. Kom ihåg att varje liten bit räknas. Vill du att vi fokuserar på något specifikt idag? 💪",
         "Det låter som att du har mycket på gång! Ta det i din egen takt. Ska vi börja med något enkelt för att komma igång? 🌟",
         "Tack för att du är ärlig! Det är första steget. Vill du prata mer om det, eller ska vi hoppa in i lite lärande? 📚",
-        "Jag förstår helt! Ibland behöver man bara ta ett andetag. När du känner dig redo finns jag här. Vad lockar dig mest - Linux, Docker eller något annat? 🐴",
+        "Jag förstår helt! Ibland behöver man bara ta ett andetag. När du känner dig redo finns jag här. Vad lockar dig mest - Linux, Docker eller något annat? 🐺",
     ],
     "general": [
         "Intressant fråga! Berätta mer så hjälper jag dig. 🤔",
@@ -65,7 +65,7 @@ Om context är 'pulse_check':
 - Föreslå lärresurser baserat på deras humör
 - Håll svaren korta och personliga (max 2-3 meningar)
 
-Använd emojis sparsamt men kärleksfullt. 🐴"""
+Använd emojis sparsamt men kärleksfullt. 🐺"""
 
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -103,5 +103,5 @@ async def dallas_status():
         "status": "online",
         "name": "Dallas",
         "role": "Din DevOps-guide",
-        "mood": "🐴 Redo att hjälpa!"
+        "mood": "🐺 Redo att hjälpa!"
     }

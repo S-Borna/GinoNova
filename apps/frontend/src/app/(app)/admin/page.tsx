@@ -821,9 +821,13 @@ export default function AdminCommandCenter() {
                             {users
                                 .filter(u => {
                                     if (!u.last_activity_at) return false
-                                    const lastActive = new Date(u.last_activity_at)
-                                    const now = new Date()
-                                    const minAgo = (now.getTime() - lastActive.getTime()) / (1000 * 60)
+                                    // Ensure UTC comparison by appending Z if not present
+                                    const activityStr = u.last_activity_at.endsWith('Z')
+                                        ? u.last_activity_at
+                                        : u.last_activity_at + 'Z'
+                                    const lastActive = new Date(activityStr)
+                                    const nowUtc = Date.now()
+                                    const minAgo = (nowUtc - lastActive.getTime()) / (1000 * 60)
                                     return minAgo <= 30
                                 })
                                 .map(u => (

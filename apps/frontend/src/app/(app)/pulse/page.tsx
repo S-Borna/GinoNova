@@ -54,9 +54,13 @@ function DallasChat({ userName }: { userName: string }) {
     const [input, setInput] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
+    const chatContainerRef = useRef<HTMLDivElement>(null)
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+        // Only scroll within the chat container, not the whole page
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+        }
     }
 
     useEffect(() => {
@@ -124,7 +128,7 @@ function DallasChat({ userName }: { userName: string }) {
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
-                            <span className="text-2xl">🐴</span>
+                            <span className="text-2xl">🐺</span>
                         </div>
                         <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-emerald-500 rounded-full border-2 border-zinc-900" />
                     </div>
@@ -142,7 +146,10 @@ function DallasChat({ userName }: { userName: string }) {
             </div>
 
             {/* Messages */}
-            <div className="h-64 overflow-y-auto p-4 space-y-4">
+            <div
+                ref={chatContainerRef}
+                className="h-64 overflow-y-auto p-4 space-y-4"
+            >
                 {messages.map((msg, i) => (
                     <div
                         key={i}
@@ -153,7 +160,7 @@ function DallasChat({ userName }: { userName: string }) {
                     >
                         {msg.role === "assistant" && (
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/30 to-blue-600/30 flex items-center justify-center shrink-0">
-                                <span className="text-sm">🐴</span>
+                                <span className="text-sm">🐺</span>
                             </div>
                         )}
                         <div className={cn(
@@ -169,7 +176,7 @@ function DallasChat({ userName }: { userName: string }) {
                 {isLoading && (
                     <div className="flex gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500/30 to-blue-600/30 flex items-center justify-center">
-                            <span className="text-sm">🐴</span>
+                            <span className="text-sm">🐺</span>
                         </div>
                         <div className="bg-zinc-800/80 p-3 rounded-2xl rounded-bl-md">
                             <div className="flex gap-1">
