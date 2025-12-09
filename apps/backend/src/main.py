@@ -312,6 +312,8 @@ default_origins = [
     "http://localhost:3001",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
+    "https://ginonova.com",
+    "https://www.ginonova.com",
     "https://saids-devopshub.netlify.app",
     "https://saasprojekt.netlify.app",
     "https://*.netlify.app",

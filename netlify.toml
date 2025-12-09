@@ -3,7 +3,7 @@
   publish = "apps/frontend/.next"
 
 [build.environment]
-  NEXT_PUBLIC_API_URL = "https://saas-project-production-31f8.up.railway.app"
+  NEXT_PUBLIC_API_URL = "https://api.ginonova.com"
   NPM_FLAGS = "--include=optional"
 
 [[plugins]]
