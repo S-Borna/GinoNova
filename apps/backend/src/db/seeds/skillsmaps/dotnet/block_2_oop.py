@@ -21,21 +21,26 @@ DOTNET_NODE_5_CLASSES = {
         "classes", "objects", "properties", "constructors",
         "access modifiers", "fields", "auto-properties"
     ],
-    "content": """
-# Classes & Objects
+    "content": """# Classes och Objects
 
-> *"A class is a blueprint, an object is a building made from that blueprint."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor OOP ar viktigt |
+|----------|----------------------|
+| **Encapsulation** | Gruppera data och beteende |
+| **Abstraction** | Gom implementation |
+| **Maintainability** | Organiserad, modular kod |
+| **Domain modeling** | Representera verkliga koncept |
 
-OOP är paradigmen som C# är byggt kring:
-- **Encapsulation** - gruppera data och beteende
-- **Abstraction** - gömma implementation
-- **Maintainability** - organiserad, modulär kod
+Du maste forsta:
 
----
+- **Classes vs Objects** - blueprint vs instans
+- **Properties** - kontrollerad dataatkomst
+- **Constructors** - initialisering av objekt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Class Anatomy
 
@@ -319,15 +324,45 @@ public class Order
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Classes** kapslar in data och beteende
-- **Properties** ger kontrollerad åtkomst
-- **Constructors** initialiserar objekt
-- **Records** för immutable data med value equality
-- **Access modifiers** styr synlighet
+| Access Modifier | Synlighet |
+|-----------------|-----------|
+| `public` | Overallt |
+| `private` | Endast i klassen |
+| `protected` | Klass + subklasser |
+| `internal` | Samma assembly |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Exposed collection | Public List | Anvand IReadOnlyList |
+| No validation | Auto-property | Full property med validation |
+| Mutable object | Public setters | Anvand init eller private set |
+| Memory leak | Event handlers | Unsubscribe eller weak reference |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Classes** | Kapslar in data och beteende |
+| **Properties** | Kontrollerad atkomst |
+| **Constructors** | Initialiserar objekt |
+| **Records** | Immutable data med value equality |
+
+**Kom ihag:**
+
+- Anvand auto-properties for enkel data
+- Validera alltid i setters
+- Records ar perfekta for DTOs
+- Gom interna detaljer med private
 """,
 }
 
@@ -348,21 +383,26 @@ DOTNET_NODE_6_INHERITANCE = {
         "inheritance", "virtual", "override", "abstract",
         "sealed", "base", "polymorphism"
     ],
-    "content": """
-# Inheritance & Polymorphism
+    "content": """# Inheritance och Polymorphism
 
-> *"Favor composition over inheritance, but know when inheritance is the right tool."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor arv ar viktigt |
+|----------|----------------------|
+| **Code reuse** | Ateranvand basklass-kod |
+| **Polymorphism** | Behandla olika typer enhetligt |
+| **Extensibility** | Utoka utan att modifiera |
+| **Framework design** | Basklasser for extension points |
 
-Arv möjliggör:
-- **Code reuse** - återanvänd basklass-kod
-- **Polymorphism** - behandla olika typer enhetligt
-- **Extensibility** - utöka utan att modifiera
+Du maste forsta:
 
----
+- **Inheritance** - is-a relation
+- **virtual/override** - polymorfism
+- **abstract** - tvinga implementation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Inheritance Hierarchy
 
@@ -678,15 +718,47 @@ public class Dog : Animal
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Inheritance** med `:` syntax
-- **virtual/override** för polymorfism
-- **abstract** tvingar implementation
-- **sealed** förhindrar arv
-- **Favor composition** för flexibilitet
+| Keyword | Beskrivning |
+|---------|-------------|
+| `:` | Arv fran basklass |
+| `virtual` | Kan overridas |
+| `override` | Overridar basmetod |
+| `abstract` | Maste implementeras |
+| `sealed` | Kan ej arvas |
+| `base` | Anropar basklassmetod |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| new istallet for override | Glomde virtual | Lagg till virtual i basklass |
+| Cannot override | Ej virtual | Markera som virtual |
+| Deep hierarchy | For manga nivaer | Anvand composition |
+| Fragile base class | Andring bryter subklasser | Design for inheritance |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Inheritance** | Med : syntax |
+| **virtual/override** | For polymorfism |
+| **abstract** | Tvingar implementation |
+| **sealed** | Forhindrar arv |
+
+**Kom ihag:**
+
+- Favor composition over inheritance
+- Anvand abstract for gemensamma kontrakt
+- sealed for klasser som inte ska arvas
+- Max 2-3 nivaer av arv
 """,
 }
 
@@ -707,21 +779,26 @@ DOTNET_NODE_7_INTERFACES = {
         "interfaces", "implementation", "multiple interfaces",
         "default implementation", "dependency injection"
     ],
-    "content": """
-# Interfaces & Abstraction
+    "content": """# Interfaces och Abstraction
 
-> *"Program to an interface, not an implementation."* — Gang of Four
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor interfaces ar viktigt |
+|----------|------------------------------|
+| **Loose coupling** | Byt implementation utan att andra kod |
+| **Testability** | Mocka beroenden enkelt |
+| **SOLID** | Dependency Inversion Principle |
+| **Plugins** | Extensible arkitektur |
 
-Interfaces är fundamentala för:
-- **Loose coupling** - byt implementation utan att ändra kod
-- **Testability** - mocka beroenden enkelt
-- **SOLID principles** - särskilt D (Dependency Inversion)
+Du maste forsta:
 
----
+- **Interface vs abstract class** - nar anvanda vilken
+- **Multiple interfaces** - multipelt arv for kontrakt
+- **Dependency Injection** - loose coupling
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Interface vs Abstract Class
 
@@ -1021,15 +1098,45 @@ public interface IUserService
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Interfaces** definierar kontrakt
-- **Multiple interfaces** möjliggör flexibilitet
-- **Dependency Injection** för loose coupling
-- **Generic interfaces** för återanvändbarhet
-- **Segregera** interfaces efter ansvar
+| Term | Beskrivning |
+|------|-------------|
+| `interface` | Definierar kontrakt |
+| `IDisposable` | For resurshanterings-cleanup |
+| `IEnumerable<T>` | For iteration |
+| `IComparable<T>` | For sortering |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Leaking implementation | SqlConnection i interface | Abstrahera bort detaljer |
+| Fat interface | For manga metoder | Interface Segregation |
+| No DI | Hard-coded dependencies | Injicera via constructor |
+| Concrete dependency | Beror pa klass | Beror pa interface |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Interfaces** | Definierar kontrakt |
+| **Multiple interfaces** | Mojliggor flexibilitet |
+| **Dependency Injection** | For loose coupling |
+| **Generic interfaces** | For ateranvandbarhet |
+
+**Kom ihag:**
+
+- Program to an interface, not an implementation
+- Sma fokuserade interfaces (ISP)
+- Injicera dependencies via constructor
+- Interface for allt som kan ha flera implementationer
 """,
 }
 
@@ -1050,21 +1157,26 @@ DOTNET_NODE_8_GENERICS = {
         "generics", "type parameters", "constraints",
         "list", "dictionary", "queue", "stack", "hashset"
     ],
-    "content": """
-# Generics & Collections
+    "content": """# Generics och Collections
 
-> *"Generics provide type safety without the cost of boxing or casting."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor generics ar viktigt |
+|----------|---------------------------|
+| **Type safety** | Kompilator-validering |
+| **Code reuse** | En implementation for alla typer |
+| **Performance** | Ingen boxing/unboxing |
+| **Collections** | Typsakra datastrukturer |
 
-Generics ger:
-- **Type safety** vid compile-time
-- **Code reuse** utan duplicering
-- **Performance** - inga boxing/unboxing-kostnader
+Du maste forsta:
 
----
+- **Generic types** - T, TKey, TValue
+- **Constraints** - begransa tillatet typer
+- **Collections** - List, Dictionary, HashSet
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Collections Overview
 
@@ -1343,16 +1455,46 @@ for (int i = list.Count - 1; i >= 0; i--)
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Generics** ger type safety och code reuse
-- **Constraints** begränsar tillåtna typer
-- **List<T>** för ordnade sekvenser
-- **Dictionary<K,V>** för key-value lookups
-- **HashSet<T>** för unika värden
-- **LINQ** för deklarativa queries
+| Collection | Anvandning |
+|------------|------------|
+| `List<T>` | Ordnad sekvens med index |
+| `Dictionary<K,V>` | Key-value lookups |
+| `HashSet<T>` | Unika varden |
+| `Queue<T>` | FIFO |
+| `Stack<T>` | LIFO |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| InvalidOperationException | Modifierar under iteration | Anvand RemoveAll |
+| KeyNotFoundException | Nyckel saknas | Anvand TryGetValue |
+| Boxing overhead | object istallet for T | Anvand generics |
+| Wrong collection | Fel datastruktur | Valj ratt for use case |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Generics** | Type safety och code reuse |
+| **Constraints** | Begransar tillatet typer |
+| **List<T>** | For ordnade sekvenser |
+| **Dictionary<K,V>** | For key-value lookups |
+
+**Kom ihag:**
+
+- Anvand generics istallet for object
+- HashSet for unikhet, Dictionary for lookup
+- LINQ for deklarativa queries
+- Iterera aldrig och modifiera samtidigt
 """,
 }
 

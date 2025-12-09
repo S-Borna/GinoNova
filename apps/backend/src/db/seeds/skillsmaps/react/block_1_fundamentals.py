@@ -11,9 +11,9 @@ from typing import Any
 
 REACT_NODE_01_INTRODUCTION = {
     "node_id": 1,
-    "title": "React Introduction & Setup",
+    "title": "React Introduktion och Setup",
     "slug": "react-introduction",
-    "description": "Förstå React och sätt upp din utvecklingsmiljö",
+    "description": "Forsta React och satt upp din utvecklingsmiljo",
     "difficulty": "beginner",
     "estimated_minutes": 45,
     "xp_reward": 80,
@@ -21,35 +21,30 @@ REACT_NODE_01_INTRODUCTION = {
         "react", "vite", "create-react-app", "jsx", "virtual dom",
         "component", "rendering", "npm", "yarn", "pnpm"
     ],
-    "content": """
-# React Introduction & Setup
+    "content": """# React Introduktion och Setup
 
-> *"React changed how we think about UI. Instead of manipulating the DOM, we describe what we want to see."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor React ar viktigt |
+|----------|------------------------|
+| **Dashboard-byggande** | Manga DevOps-verktyg har React-baserade UI |
+| **Intern tooling** | Bygg admin-paneler och monitoring-dashboards |
+| **Full-stack forstaelse** | Forsta frontend for battre API-design |
+| **CI/CD pipelines** | Bygg och testa React-appar i pipelines |
 
-React är världens mest populära frontend-bibliotek:
+Du maste forsta:
 
-- **Facebook, Instagram, Netflix, Airbnb** använder React
-- **95% av Fortune 500** har React i sin tech stack
-- **Job market:** React-utvecklare är efterfrågade och välbetalda
-- **Ekosystem:** Next.js, React Native, Remix - alla bygger på React
+- **Vad React ar** - for att kunna deploya och konfigurera React-appar
+- **Hur komponenter fungerar** - for att forsta applikationsstruktur
+- **Build-processen** - for att optimera CI/CD pipelines
 
-Som utvecklare kommer du att:
-- Bygga interaktiva användargränssnitt
-- Skapa återanvändbara komponenter
-- Hantera komplex applikationsstate
-- Optimera prestanda för miljontals användare
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar React?
 
-## 🧠 Core Concepts
-
-### Vad är React?
-
-React är ett **deklarativt** UI-bibliotek. Istället för att säga *hur* UI ska uppdateras, beskriver du *vad* du vill se:
+React ar ett **deklarativt** UI-bibliotek fran Meta (Facebook). Istallet for att saga *hur* UI ska uppdateras, beskriver du *vad* du vill se.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -60,49 +55,63 @@ React är ett **deklarativt** UI-bibliotek. Istället för att säga *hur* UI sk
 │  ─────────────────────                ────────────────────      │
 │  const btn = document.                function Counter() {      │
 │    createElement('button');             const [count, setCount] │
-│  btn.textContent = count;               = useState(0);         │
-│  btn.onclick = () => {                  return (               │
-│    count++;                               <button onClick={     │
-│    btn.textContent = count;                () => setCount(c+1) │
-│  };                                       }>                    │
-│  document.body.appendChild(btn);           {count}              │
-│                                          </button>              │
-│                                        );                       │
-│                                       }                         │
+│  btn.textContent = count;               = useState(0);          │
+│  btn.onclick = () => {                  return (                │
+│    count++;                               <button onClick={      │
+│    btn.textContent = count;                () => setCount(c+1)  │
+│  };                                       }>                     │
+│  document.body.appendChild(btn);           {count}               │
+│                                          </button>               │
+│                                        );                        │
+│                                       }                          │
+│                                                                  │
+│  Problem: Manuell DOM-manipulation     Losning: React hanterar  │
+│  blir komplex och buggig               DOM automatiskt          │
+│                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Virtual DOM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-React använder en **Virtual DOM** för effektiva uppdateringar:
+## Virtual DOM
+
+React anvander en **Virtual DOM** for effektiva uppdateringar:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     REACT RENDERING CYCLE                        │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  1. State ändras                                                │
-│     │                                                           │
-│     ▼                                                           │
-│  2. React skapar ny Virtual DOM                                 │
-│     │                                                           │
-│     ▼                                                           │
-│  3. Diffing: Jämför gammal vs ny Virtual DOM                    │
-│     │                                                           │
-│     ▼                                                           │
-│  4. Reconciliation: Beräkna minimala ändringar                  │
-│     │                                                           │
-│     ▼                                                           │
-│  5. Commit: Uppdatera bara det som ändrats i riktiga DOM        │
+│  1. State andras                                                 │
+│     │                                                            │
+│     ▼                                                            │
+│  2. React skapar ny Virtual DOM                                  │
+│     │                                                            │
+│     ▼                                                            │
+│  3. Diffing: Jamfor gammal vs ny Virtual DOM                     │
+│     │                                                            │
+│     ▼                                                            │
+│  4. Reconciliation: Berakna minimala andringar                   │
+│     │                                                            │
+│     ▼                                                            │
+│  5. Commit: Uppdatera bara det som andrats i riktiga DOM         │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Setup & Installation
+## Kommandon och Installation
 
-### Alternativ 1: Vite (Rekommenderat 2024+)
+| Kommando | Beskrivning |
+|----------|-------------|
+| `npm create vite@latest` | Skapa nytt React-projekt med Vite |
+| `npx create-next-app@latest` | Skapa Next.js-app (fullstack) |
+| `npm install` | Installera dependencies |
+| `npm run dev` | Starta utvecklingsserver |
+| `npm run build` | Bygg for produktion |
+
+### Vite Setup (Rekommenderat)
 
 ```bash
 # Skapa nytt React-projekt med Vite
@@ -114,52 +123,57 @@ npm install
 
 # Starta utvecklingsserver
 npm run dev
+# Output: Local: http://localhost:5173/
 ```
 
-### Alternativ 2: Next.js (Fullstack)
+### Next.js Setup (Fullstack)
 
 ```bash
 # Skapa Next.js-app (App Router)
 npx create-next-app@latest my-nextjs-app
-
-# Välj options:
-# ✔ TypeScript? Yes
-# ✔ ESLint? Yes
-# ✔ Tailwind CSS? Yes
-# ✔ src/ directory? Yes
-# ✔ App Router? Yes
+# Valj: TypeScript, ESLint, Tailwind CSS, App Router
 
 cd my-nextjs-app
 npm run dev
+# Output: Local: http://localhost:3000/
 ```
 
-### Projektstruktur (Vite)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-my-react-app/
-├── public/
-│   └── vite.svg
-├── src/
-│   ├── assets/
-│   │   └── react.svg
-│   ├── App.tsx           # Huvudkomponent
-│   ├── App.css           # Styles
-│   ├── main.tsx          # Entry point
-│   └── index.css         # Global CSS
-├── index.html            # HTML template
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+## Projektstruktur
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    VITE REACT PROJEKTSTRUKTUR                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  my-react-app/                                                   │
+│  ├── public/                  # Statiska filer                   │
+│  │   └── vite.svg                                                │
+│  ├── src/                     # Kallkod                          │
+│  │   ├── assets/              # Bilder, fonts                    │
+│  │   ├── App.tsx              # Huvudkomponent                   │
+│  │   ├── App.css              # Komponent-styles                 │
+│  │   ├── main.tsx             # Entry point                      │
+│  │   └── index.css            # Global CSS                       │
+│  ├── index.html               # HTML template                    │
+│  ├── package.json             # Dependencies                     │
+│  ├── tsconfig.json            # TypeScript config                │
+│  └── vite.config.ts           # Vite config                      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Din första React-komponent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktiskt Exempel
 
 ```tsx
-// src/App.tsx
+// src/App.tsx - Din forsta React-komponent
 function App() {
   return (
     <div className="app">
-      <h1>Hello, React! 🚀</h1>
+      <h1>Hello, React!</h1>
       <p>Welcome to your first React application.</p>
     </div>
   );
@@ -168,10 +182,8 @@ function App() {
 export default App;
 ```
 
-### Entry Point
-
 ```tsx
-// src/main.tsx
+// src/main.tsx - Entry point
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -184,92 +196,47 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Snabbreferens
 
-### Problem 1: "Cannot find module 'react'"
+| Term | Beskrivning |
+|------|-------------|
+| **React** | Deklarativt UI-bibliotek fran Meta |
+| **JSX** | JavaScript XML - HTML-liknande syntax i JS |
+| **Virtual DOM** | In-memory representation av UI |
+| **Component** | Ateranvandbar UI-byggblock |
+| **Vite** | Modern, snabb build-tool for React |
+| **Next.js** | React-framework med SSR och routing |
 
-```bash
-# Lösning: Installera dependencies
-npm install
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Eller specifikt
-npm install react react-dom
-```
+## Vanliga fel och losningar
 
-### Problem 2: Port redan upptagen
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| `Cannot find module 'react'` | Dependencies ej installerade | `npm install` |
+| `Port 5173 already in use` | Annan process anvander porten | `npm run dev -- --port 3001` |
+| `JSX element has no corresponding closing tag` | Obalanserade taggar | Kontrollera JSX-syntax |
+| `'React' must be in scope` | Gammal React-version | Uppgradera eller lagg till `import React` |
 
-```bash
-# Vite: Ändra port i vite.config.ts
-export default defineConfig({
-  server: {
-    port: 3001
-  }
-});
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Eller använd --port flag
-npm run dev -- --port 3001
-```
+## Key Takeaways
 
-### Problem 3: TypeScript errors
+| Punkt | Forklaring |
+|-------|------------|
+| **Deklarativt** | Beskriv vad du vill se, inte hur |
+| **Komponentbaserat** | Bygg UI av ateranvandbara delar |
+| **Virtual DOM** | Effektiv rendering genom diffing |
+| **Vite/Next.js** | Moderna verktyg for React-utveckling |
 
-```bash
-# Se till att tsconfig.json har rätt jsx setting
-{
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "strict": true
-  }
-}
-```
+**Kom ihag:**
 
----
-
-## 🎮 Praktisk Övning
-
-**Uppgift:** Sätt upp ett React-projekt och skapa en välkomstkomponent.
-
-1. Skapa projekt med Vite:
-   ```bash
-   npm create vite@latest devops-dashboard -- --template react-ts
-   cd devops-dashboard
-   npm install
-   ```
-
-2. Modifiera `src/App.tsx`:
-   ```tsx
-   function App() {
-     const features = ['CI/CD', 'Docker', 'Kubernetes', 'Terraform'];
-
-     return (
-       <div className="dashboard">
-         <h1>DevOps Dashboard 🛠️</h1>
-         <ul>
-           {features.map(f => <li key={f}>{f}</li>)}
-         </ul>
-       </div>
-     );
-   }
-
-   export default App;
-   ```
-
-3. Starta och verifiera:
-   ```bash
-   npm run dev
-   # Öppna http://localhost:5173
-   ```
-
----
-
-## ✅ Sammanfattning
-
-- React är ett **deklarativt** UI-bibliotek för att bygga komponentbaserade gränssnitt
-- **Virtual DOM** möjliggör effektiva UI-uppdateringar
-- **Vite** är det moderna valet för React-projekt
-- **Next.js** lägger till server-rendering och routing
-- React använder **JSX** - JavaScript med HTML-liknande syntax
+- React ar ett bibliotek, inte ett framework
+- Komponenter ar funktioner som returnerar JSX
+- Virtual DOM gor React snabbt
+- Vite ar det moderna valet for nya projekt
 """,
 }
 
@@ -282,7 +249,7 @@ REACT_NODE_02_JSX = {
     "node_id": 2,
     "title": "JSX - JavaScript XML",
     "slug": "jsx-syntax",
-    "description": "Behärska JSX-syntax och dynamiska uttryck",
+    "description": "Beharска JSX-syntax och dynamiska uttryck",
     "difficulty": "beginner",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -290,36 +257,68 @@ REACT_NODE_02_JSX = {
         "jsx", "expressions", "attributes", "children", "fragments",
         "conditional rendering", "lists", "keys", "className"
     ],
-    "content": """
-# JSX - JavaScript XML
+    "content": """# JSX - JavaScript XML
 
-> *"JSX is just syntax sugar. Under the hood, it's all JavaScript."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor JSX ar viktigt |
+|----------|----------------------|
+| **Dashboard-UI** | Skapa dynamiska vyer for monitoring |
+| **Konfiguration** | Rendera listor av servrar, containers |
+| **Statusvisning** | Villkorlig rendering baserat pa status |
+| **Formuler** | Bygg admin-verktyg och input-forms |
 
-JSX är hjärtat av React. Det låter dig skriva UI på ett intuitivt sätt som kombinerar HTML och JavaScript. Varje React-utvecklare måste behärska JSX.
+Du maste forsta:
 
----
+- **JSX-syntax** - grundlaggande for all React-utveckling
+- **Expressions** - for att visa dynamisk data
+- **Listor och keys** - for att rendera collections effektivt
 
-## 🧠 Core Concepts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Vad är JSX?
+## Vad ar JSX?
 
-JSX är en syntaxextension för JavaScript som låter dig skriva HTML-liknande kod:
+JSX ar en syntaxextension for JavaScript som later dig skriva HTML-liknande kod:
 
-```tsx
-// JSX
-const element = <h1>Hello, World!</h1>;
-
-// Kompileras till (av Babel/TypeScript):
-const element = React.createElement('h1', null, 'Hello, World!');
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    JSX TRANSFORMATION                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  JSX (vad du skriver):                                           │
+│  ─────────────────────                                           │
+│  const element = <h1>Hello, World!</h1>;                         │
+│                                                                  │
+│                        │                                         │
+│                        ▼  (kompileras av Babel/TypeScript)       │
+│                                                                  │
+│  JavaScript (vad som kors):                                      │
+│  ──────────────────────────                                      │
+│  const element = React.createElement('h1', null, 'Hello!');      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### JSX Expressions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Du kan använda JavaScript-uttryck inom `{}`:
+## JSX Syntax
+
+| Syntax | Beskrivning | Exempel |
+|--------|-------------|---------|
+| `{expression}` | JavaScript-uttryck | `{name}`, `{2 + 2}` |
+| `className` | CSS-klass (inte class) | `className="btn"` |
+| `onClick` | Event handler (camelCase) | `onClick={handler}` |
+| `style={{}}` | Inline styles som objekt | `style={{color: 'red'}}` |
+| `<></>` | Fragment (ingen wrapper) | Returnera flera element |
+| `key` | Unik identifierare i listor | `key={item.id}` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktiska Exempel
+
+### Expressions i JSX
 
 ```tsx
 function Greeting() {
@@ -337,20 +336,17 @@ function Greeting() {
 }
 ```
 
-### JSX Attributes
-
-Attribut i JSX använder camelCase:
+### Attribut i JSX
 
 ```tsx
 function StyledButton() {
   return (
     <button
-      className="btn-primary"      // inte "class"!
-      onClick={() => alert('Hi')}  // inte "onclick"
+      className="btn-primary"
+      onClick={() => alert('Clicked!')}
       disabled={false}
-      tabIndex={0}
       style={{
-        backgroundColor: 'blue',   // CSS i JS = camelCase
+        backgroundColor: 'blue',
         fontSize: '16px'
       }}
     >
@@ -360,11 +356,10 @@ function StyledButton() {
 }
 ```
 
-### Conditional Rendering
+### Villkorlig Rendering
 
 ```tsx
 function UserStatus({ isLoggedIn }: { isLoggedIn: boolean }) {
-  // Ternary operator
   return (
     <div>
       {isLoggedIn ? (
@@ -376,7 +371,7 @@ function UserStatus({ isLoggedIn }: { isLoggedIn: boolean }) {
   );
 }
 
-// && operator (om true, visa)
+// AND-operator for enkel villkor
 function Notifications({ count }: { count: number }) {
   return (
     <div>
@@ -386,21 +381,21 @@ function Notifications({ count }: { count: number }) {
 }
 ```
 
-### Lists & Keys
+### Listor och Keys
 
 ```tsx
-interface Task {
+interface Server {
   id: string;
-  title: string;
-  completed: boolean;
+  name: string;
+  status: 'online' | 'offline';
 }
 
-function TaskList({ tasks }: { tasks: Task[] }) {
+function ServerList({ servers }: { servers: Server[] }) {
   return (
     <ul>
-      {tasks.map(task => (
-        <li key={task.id}>  {/* Key är obligatoriskt! */}
-          {task.completed ? '✅' : '⬜'} {task.title}
+      {servers.map(server => (
+        <li key={server.id}>
+          {server.status === 'online' ? 'ON' : 'OFF'} {server.name}
         </li>
       ))}
     </ul>
@@ -409,8 +404,6 @@ function TaskList({ tasks }: { tasks: Task[] }) {
 ```
 
 ### Fragments
-
-När du behöver returnera flera element utan en wrapper:
 
 ```tsx
 function Profile() {
@@ -422,10 +415,10 @@ function Profile() {
   );
 }
 
-// Eller med explicit Fragment (för key i lists)
+// Med key i listor
 import { Fragment } from 'react';
 
-function Items({ items }) {
+function DefinitionList({ items }) {
   return items.map(item => (
     <Fragment key={item.id}>
       <dt>{item.title}</dt>
@@ -435,162 +428,47 @@ function Items({ items }) {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Advanced JSX Patterns
+## Snabbreferens
 
-### Spread Attributes
+| Term | Beskrivning |
+|------|-------------|
+| **JSX** | JavaScript XML - HTML-liknande syntax |
+| **Expression** | JavaScript-kod inom `{}` |
+| **className** | CSS-klass i JSX (inte class) |
+| **Fragment** | `<>...</>` for multipla element |
+| **key** | Unik ID for list-element |
+| **Ternary** | `condition ? true : false` for villkor |
 
-```tsx
-interface ButtonProps {
-  variant: 'primary' | 'secondary';
-  size: 'sm' | 'md' | 'lg';
-}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function Button({ variant, size, ...rest }: ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      className={`btn btn-${variant} btn-${size}`}
-      {...rest}  // Spread alla andra props (onClick, disabled, etc.)
-    />
-  );
-}
+## Vanliga fel och losningar
 
-// Användning
-<Button variant="primary" size="md" onClick={() => {}} disabled>
-  Submit
-</Button>
-```
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| `Adjacent JSX elements must be wrapped` | Flera root-element | Wrappa i `<>...</>` eller `<div>` |
+| `class is not valid` | Fel attributnamn | Anvand `className` |
+| `Each child should have unique key` | Saknar key i lista | Lagg till `key={uniqueId}` |
+| `Objects are not valid as React child` | Renderar objekt direkt | Konvertera till string eller mappa |
 
-### Dynamic Tag Names
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```tsx
-type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+## Key Takeaways
 
-function Heading({ level, children }: { level: HeadingLevel; children: React.ReactNode }) {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
-  return <Tag>{children}</Tag>;
-}
+| Punkt | Forklaring |
+|-------|------------|
+| **JSX = JavaScript** | Kompileras till React.createElement() |
+| **Expressions** | Anvand `{}` for dynamisk data |
+| **className** | Inte class - React-specifikt |
+| **Keys** | Obligatoriskt i listor for performance |
 
-// Användning
-<Heading level={1}>Main Title</Heading>
-<Heading level={2}>Subtitle</Heading>
-```
+**Kom ihag:**
 
----
-
-## ⚠️ Vanliga Problem
-
-### Problem 1: Adjacent JSX elements
-
-```tsx
-// ❌ FEL - Måste ha en wrapper
-function Bad() {
-  return (
-    <h1>Title</h1>
-    <p>Content</p>
-  );
-}
-
-// ✅ RÄTT - Använd Fragment
-function Good() {
-  return (
-    <>
-      <h1>Title</h1>
-      <p>Content</p>
-    </>
-  );
-}
-```
-
-### Problem 2: class vs className
-
-```tsx
-// ❌ FEL
-<div class="container">
-
-// ✅ RÄTT
-<div className="container">
-```
-
-### Problem 3: Keys in lists
-
-```tsx
-// ❌ FEL - Använd inte index som key om listan kan ändras
-{items.map((item, index) => (
-  <li key={index}>{item}</li>
-))}
-
-// ✅ RÄTT - Använd unikt ID
-{items.map(item => (
-  <li key={item.id}>{item.title}</li>
-))}
-```
-
----
-
-## 🎮 Praktisk Övning
-
-**Uppgift:** Bygg en enkel profil-komponent med JSX.
-
-```tsx
-interface User {
-  name: string;
-  role: string;
-  avatar: string;
-  skills: string[];
-  isOnline: boolean;
-}
-
-function ProfileCard({ user }: { user: User }) {
-  return (
-    <article className="profile-card">
-      <img
-        src={user.avatar}
-        alt={`${user.name}'s avatar`}
-        className="avatar"
-      />
-      <h2>{user.name}</h2>
-      <p className="role">{user.role}</p>
-
-      {user.isOnline && (
-        <span className="status online">● Online</span>
-      )}
-
-      <h3>Skills</h3>
-      <ul className="skills">
-        {user.skills.map(skill => (
-          <li key={skill} className="skill-tag">
-            {skill}
-          </li>
-        ))}
-      </ul>
-    </article>
-  );
-}
-
-// Användning
-const devOpsEngineer: User = {
-  name: "Alex",
-  role: "Senior DevOps Engineer",
-  avatar: "/avatar.png",
-  skills: ["Docker", "Kubernetes", "Terraform", "AWS"],
-  isOnline: true
-};
-
-<ProfileCard user={devOpsEngineer} />
-```
-
----
-
-## ✅ Sammanfattning
-
-- **JSX** är syntax sugar som kompileras till `React.createElement()`
-- Använd `{}` för JavaScript-uttryck
-- **className** istället för class, **camelCase** för attribut
-- **Key** är obligatoriskt i listor för Reacts diffing-algoritm
-- **Fragments** (`<>...</>`) för att gruppera utan extra DOM-element
-- **Conditional rendering** med ternary (`? :`) eller `&&`
+- JSX ar inte HTML - det ar JavaScript
+- Alla attribut ar camelCase (onClick, className)
+- Alltid unika keys i listor - aldrig index om listan andras
+- Fragments sparar onodiga DOM-noder
 """,
 }
 
@@ -601,9 +479,9 @@ const devOpsEngineer: User = {
 
 REACT_NODE_03_COMPONENTS = {
     "node_id": 3,
-    "title": "Components - Building Blocks",
+    "title": "Komponenter - Byggstenar",
     "slug": "react-components",
-    "description": "Förstå och skapa React-komponenter",
+    "description": "Forsta och skapa React-komponenter",
     "difficulty": "beginner",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -611,62 +489,85 @@ REACT_NODE_03_COMPONENTS = {
         "function components", "class components", "component composition",
         "reusability", "separation of concerns", "component tree"
     ],
-    "content": """
-# Components - Building Blocks
+    "content": """# Komponenter - Byggstenar
 
-> *"Components let you split the UI into independent, reusable pieces."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor komponenter ar viktiga |
+|----------|------------------------------|
+| **Dashboard-moduler** | Ateranvand samma kort for olika metrics |
+| **Status-widgets** | Samma komponent for olika tjanster |
+| **Formulerhantering** | Generiska input-komponenter |
+| **Navigation** | Konsistent UI over hela appen |
 
-Komponenter är Reacts DNA. En modern React-app består av hundratals komponenter som arbetar tillsammans. Att designa bra komponenter är nyckeln till underhållbar kod.
+Du maste forsta:
 
----
+- **Komponent-tanket** - bryt ner UI i ateranvandbara delar
+- **Composition** - bygg komplext fran enkelt
+- **Separation of concerns** - varje komponent gor en sak
 
-## 🧠 Core Concepts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Vad är en komponent?
+## Vad ar en komponent?
 
-En komponent är en funktion som returnerar JSX:
+En komponent ar en funktion som returnerar JSX:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    COMPONENT ANATOMY                             │
+│                    KOMPONENT-ANATOMI                             │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  function Button({ label, onClick }) {  // Props (input)        │
-│    const [clicked, setClicked] = useState(false);  // State     │
+│  function Button({ label, onClick }) {  // Props (input)         │
+│    const [clicked, setClicked] = useState(false);  // State      │
 │                                                                  │
-│    const handleClick = () => {  // Event handler                │
-│      setClicked(true);                                          │
+│    const handleClick = () => {  // Event handler                 │
+│      setClicked(true);                                           │
 │      onClick?.();                                                │
-│    };                                                           │
+│    };                                                            │
 │                                                                  │
-│    return (                    // JSX (output)                  │
-│      <button onClick={handleClick}>                             │
-│        {label}                                                  │
-│      </button>                                                  │
-│    );                                                           │
-│  }                                                              │
+│    return (                    // JSX (output)                   │
+│      <button onClick={handleClick}>                              │
+│        {label}                                                   │
+│      </button>                                                   │
+│    );                                                            │
+│  }                                                               │
+│                                                                  │
+│  INPUT: Props (data fran parent)                                 │
+│  INTERN: State (lokal data)                                      │
+│  OUTPUT: JSX (UI att rendera)                                    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Function Components
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Moderna React använder nästan uteslutande function components:
+## Komponent-typer
+
+| Typ | Beskrivning | Anvandning |
+|-----|-------------|------------|
+| **Function Component** | Funktion som returnerar JSX | Standard idag |
+| **Presentation** | Endast UI, ingen logik | Knappar, kort, text |
+| **Container** | Logik och datahamtning | Sidor, wrappers |
+| **Compound** | Flexibla sub-komponenter | Card.Header, Card.Body |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktiska Exempel
+
+### Enkel komponent
 
 ```tsx
-// Simple component
+// Enkel funktion
 function Greeting() {
   return <h1>Hello!</h1>;
 }
 
-// Arrow function variant
+// Arrow function
 const Greeting = () => <h1>Hello!</h1>;
 
-// With TypeScript types
+// Med TypeScript
 interface GreetingProps {
   name: string;
 }
@@ -676,12 +577,10 @@ function Greeting({ name }: GreetingProps) {
 }
 ```
 
-### Component Composition
-
-Bygg komplexa UI genom att kombinera enkla komponenter:
+### Komponent-komposition
 
 ```tsx
-// Small, focused components
+// Sma, fokuserade komponenter
 function Avatar({ src, alt }: { src: string; alt: string }) {
   return <img src={src} alt={alt} className="avatar" />;
 }
@@ -695,7 +594,7 @@ function UserInfo({ name, role }: { name: string; role: string }) {
   );
 }
 
-// Composed component
+// Sammansatt komponent
 function UserCard({ user }: { user: User }) {
   return (
     <article className="user-card">
@@ -704,228 +603,122 @@ function UserCard({ user }: { user: User }) {
     </article>
   );
 }
-
-// Page-level composition
-function TeamPage({ members }: { members: User[] }) {
-  return (
-    <main>
-      <h1>Our Team</h1>
-      <div className="team-grid">
-        {members.map(member => (
-          <UserCard key={member.id} user={member} />
-        ))}
-      </div>
-    </main>
-  );
-}
 ```
 
-### Component Hierarchy
+### Komponent-hierarki
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     COMPONENT TREE EXAMPLE                       │
+│                     KOMPONENT-TRAD                               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │                          App                                     │
 │                           │                                      │
-│         ┌─────────────────┼─────────────────┐                   │
+│         ┌─────────────────┼─────────────────┐                    │
 │         │                 │                 │                    │
 │      Header            Main             Footer                   │
 │         │                 │                                      │
-│    ┌────┴────┐      ┌────┴────┐                                 │
+│    ┌────┴────┐      ┌────┴────┐                                  │
 │    │         │      │         │                                  │
-│   Logo    NavBar  Sidebar   Content                             │
+│   Logo    NavBar  Sidebar   Content                              │
 │              │                 │                                 │
-│         ┌────┴────┐       ArticleList                           │
+│         ┌────┴────┐       ServerList                             │
 │         │         │           │                                  │
-│      NavItem  NavItem    ArticleCard                            │
+│      NavItem  NavItem    ServerCard                              │
 │                              │                                   │
 │                         ┌────┴────┐                              │
 │                         │         │                              │
-│                       Title    Summary                           │
+│                      Status    Actions                           │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 💻 Component Patterns
-
 ### Container vs Presentation
 
 ```tsx
-// Presentation component (dumb) - bara UI
-function TaskItem({ task, onToggle }: {
-  task: Task;
-  onToggle: (id: string) => void
+// Presentation (dumb) - endast UI
+function ServerCard({ server, onRestart }: {
+  server: Server;
+  onRestart: (id: string) => void
 }) {
   return (
-    <li onClick={() => onToggle(task.id)}>
-      {task.completed ? '✅' : '⬜'} {task.title}
-    </li>
-  );
-}
-
-// Container component (smart) - logik och data
-function TaskListContainer() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  useEffect(() => {
-    fetchTasks().then(setTasks);
-  }, []);
-
-  const handleToggle = (id: string) => {
-    setTasks(tasks.map(t =>
-      t.id === id ? { ...t, completed: !t.completed } : t
-    ));
-  };
-
-  return (
-    <ul>
-      {tasks.map(task => (
-        <TaskItem key={task.id} task={task} onToggle={handleToggle} />
-      ))}
-    </ul>
-  );
-}
-```
-
-### Compound Components
-
-```tsx
-// Flexible card with compound components
-function Card({ children }: { children: React.ReactNode }) {
-  return <div className="card">{children}</div>;
-}
-
-Card.Header = function CardHeader({ children }: { children: React.ReactNode }) {
-  return <div className="card-header">{children}</div>;
-};
-
-Card.Body = function CardBody({ children }: { children: React.ReactNode }) {
-  return <div className="card-body">{children}</div>;
-};
-
-Card.Footer = function CardFooter({ children }: { children: React.ReactNode }) {
-  return <div className="card-footer">{children}</div>;
-};
-
-// Användning - flexibel struktur
-<Card>
-  <Card.Header>
-    <h2>Server Status</h2>
-  </Card.Header>
-  <Card.Body>
-    <p>All systems operational</p>
-  </Card.Body>
-  <Card.Footer>
-    <button>View Details</button>
-  </Card.Footer>
-</Card>
-```
-
----
-
-## ⚠️ Vanliga Problem
-
-### Problem 1: Components måste börja med stor bokstav
-
-```tsx
-// ❌ FEL - lowercase tolkas som HTML-element
-function button() {
-  return <button>Click</button>;
-}
-<button />  // Renderar <button></button>, inte komponenten!
-
-// ✅ RÄTT
-function Button() {
-  return <button>Click</button>;
-}
-<Button />
-```
-
-### Problem 2: Render måste returnera ett element
-
-```tsx
-// ❌ FEL
-function Bad() {
-  // Returnerar inget
-}
-
-// ✅ RÄTT
-function Good() {
-  return null;  // OK att returnera null
-}
-```
-
----
-
-## 🎮 Praktisk Övning
-
-Bygg en DevOps Dashboard med komponenter:
-
-```tsx
-// components/MetricCard.tsx
-interface MetricCardProps {
-  title: string;
-  value: string | number;
-  trend?: 'up' | 'down' | 'stable';
-  icon: string;
-}
-
-function MetricCard({ title, value, trend, icon }: MetricCardProps) {
-  const trendColors = {
-    up: 'text-green-500',
-    down: 'text-red-500',
-    stable: 'text-gray-500'
-  };
-
-  return (
-    <div className="metric-card">
-      <span className="icon">{icon}</span>
-      <h3>{title}</h3>
-      <p className="value">{value}</p>
-      {trend && (
-        <span className={trendColors[trend]}>
-          {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'}
-        </span>
-      )}
+    <div className="server-card">
+      <span>{server.status === 'online' ? 'ON' : 'OFF'}</span>
+      <h3>{server.name}</h3>
+      <button onClick={() => onRestart(server.id)}>Restart</button>
     </div>
   );
 }
 
-// components/Dashboard.tsx
-function Dashboard() {
-  const metrics = [
-    { title: 'Deployments', value: 142, trend: 'up' as const, icon: '🚀' },
-    { title: 'Uptime', value: '99.9%', trend: 'stable' as const, icon: '✅' },
-    { title: 'Errors', value: 3, trend: 'down' as const, icon: '❌' },
-    { title: 'Build Time', value: '2m 34s', trend: 'up' as const, icon: '⏱️' },
-  ];
+// Container (smart) - logik och data
+function ServerListContainer() {
+  const [servers, setServers] = useState<Server[]>([]);
+
+  useEffect(() => {
+    fetchServers().then(setServers);
+  }, []);
+
+  const handleRestart = async (id: string) => {
+    await restartServer(id);
+    setServers(prev => prev.map(s =>
+      s.id === id ? { ...s, status: 'restarting' } : s
+    ));
+  };
 
   return (
-    <main className="dashboard">
-      <h1>DevOps Dashboard</h1>
-      <div className="metrics-grid">
-        {metrics.map(metric => (
-          <MetricCard key={metric.title} {...metric} />
-        ))}
-      </div>
-    </main>
+    <div className="server-list">
+      {servers.map(server => (
+        <ServerCard
+          key={server.id}
+          server={server}
+          onRestart={handleRestart}
+        />
+      ))}
+    </div>
   );
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Komponenter** är återanvändbara UI-bygglodsar
-- Använd **function components** (inte class components)
-- **Composition** > Inheritance - bygg komplext från enkelt
-- Följ **Single Responsibility Principle** - en komponent gör en sak
-- **PascalCase** för komponentnamn
+| Term | Beskrivning |
+|------|-------------|
+| **Component** | Ateranvandbar UI-funktion |
+| **Props** | Input-data fran parent |
+| **State** | Intern, foranderlig data |
+| **Composition** | Bygga komplext fran enkelt |
+| **PascalCase** | Komponentnamn borjar med stor bokstav |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| `button is not defined` | Komponent med liten bokstav | Anvand `Button` (PascalCase) |
+| `Nothing was returned from render` | Inget return-varde | Returnera JSX eller null |
+| `Too many re-renders` | State-uppdatering i render | Flytta till useEffect |
+| `Cannot read property of undefined` | Props saknas | Lagg till default-varden |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Ateranvandbarhet** | Skriv komponenter som kan anvandas pa flera stallen |
+| **Single Responsibility** | Varje komponent gor EN sak |
+| **Composition** | Bygg komplext genom att kombinera enkelt |
+| **PascalCase** | Alltid stor bokstav for komponentnamn |
+
+**Kom ihag:**
+
+- Function components ar standard - undvik class components
+- Bryt ner stora komponenter i mindre
+- Props gar nedat, callbacks gar uppat
+- Testa komponenter isolerat
 """,
 }
 
@@ -936,9 +729,9 @@ function Dashboard() {
 
 REACT_NODE_04_PROPS = {
     "node_id": 4,
-    "title": "Props - Component Communication",
+    "title": "Props - Komponentkommunikation",
     "slug": "react-props",
-    "description": "Data flow med props och prop patterns",
+    "description": "Dataflode med props och prop-monster",
     "difficulty": "beginner",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -946,24 +739,28 @@ REACT_NODE_04_PROPS = {
         "props", "children", "default props", "prop types",
         "typescript interfaces", "destructuring", "prop drilling"
     ],
-    "content": """
-# Props - Component Communication
+    "content": """# Props - Komponentkommunikation
 
-> *"Props are how data flows down the component tree. They're React's main mechanism for composition."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor props ar viktigt |
+|----------|------------------------|
+| **Konfigurerbara komponenter** | Samma komponent, olika data |
+| **Dataflode** | Forsta hur applikationer hangar ihop |
+| **Callback-monster** | Child-to-parent kommunikation |
+| **Ateranvandbarhet** | Generiska komponenter for olika use cases |
 
-Props (properties) är hur komponenter kommunicerar. Att förstå props är fundamentalt för att bygga React-appar.
+Du maste forsta:
 
----
+- **Unidirectional data flow** - data gar nedat
+- **Callbacks** - events gar uppat
+- **Prop drilling** - och hur man undviker det
 
-## 🧠 Core Concepts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Data Flow i React
-
-React har **unidirectional data flow** - data flödar nedåt:
+## Dataflode i React
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -971,53 +768,71 @@ React har **unidirectional data flow** - data flödar nedåt:
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │                        Parent                                    │
-│                     [state: user]                                │
+│                     [state: servers]                             │
 │                          │                                       │
-│                    props │                                       │
-│                          ▼                                       │
-│         ┌────────────────┴────────────────┐                     │
+│              props       │       callback                        │
+│              (data)      ▼       (events)                        │
+│         ┌────────────────┴────────────────┐                      │
 │         │                                 │                      │
 │         ▼                                 ▼                      │
 │      Child A                          Child B                    │
-│   <Avatar user={user} />          <Profile user={user} />       │
+│   <ServerList                     <AddServerForm                 │
+│     servers={servers}               onAdd={handleAdd}            │
+│   />                              />                             │
 │                                                                  │
-│  ⚠️ Children kan INTE ändra parent's state direkt!              │
-│  ✅ Istället: Parent skickar callback functions via props       │
+│  Data flodar NEDAT via props                                     │
+│  Events flodar UPPAT via callbacks                               │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Basic Props
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Props-typer
+
+| Prop-typ | Beskrivning | Exempel |
+|----------|-------------|---------|
+| **Primitiv** | String, number, boolean | `name="Server1"` |
+| **Objekt** | Komplexa datastrukturer | `server={serverObj}` |
+| **Array** | Listor av data | `items={[1,2,3]}` |
+| **Funktion** | Callbacks | `onClick={handler}` |
+| **Children** | Nested JSX | `<Card>content</Card>` |
+| **Optional** | Med `?` i TypeScript | `title?: string` |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktiska Exempel
+
+### Grundlaggande Props
 
 ```tsx
-// Definiera props med TypeScript interface
-interface WelcomeProps {
+interface ServerCardProps {
   name: string;
-  age?: number;  // Optional prop
+  status: 'online' | 'offline';
+  ip?: string;  // Optional
 }
 
-function Welcome({ name, age }: WelcomeProps) {
+function ServerCard({ name, status, ip }: ServerCardProps) {
   return (
-    <div>
-      <h1>Welcome, {name}!</h1>
-      {age && <p>You are {age} years old</p>}
+    <div className="server-card">
+      <h3>{name}</h3>
+      <span className={status}>{status.toUpperCase()}</span>
+      {ip && <p>IP: {ip}</p>}
     </div>
   );
 }
 
-// Användning
-<Welcome name="Alex" />
-<Welcome name="Sam" age={28} />
+// Anvandning
+<ServerCard name="web-01" status="online" ip="192.168.1.1" />
+<ServerCard name="db-01" status="offline" />
 ```
 
 ### Children Prop
 
-`children` är en speciell prop för nested content:
-
 ```tsx
 interface CardProps {
   title: string;
-  children: React.ReactNode;  // Accepterar JSX
+  children: React.ReactNode;
 }
 
 function Card({ title, children }: CardProps) {
@@ -1031,13 +846,12 @@ function Card({ title, children }: CardProps) {
   );
 }
 
-// Användning - allt mellan öppnings/stängningstaggen blir children
+// Anvandning - allt mellan taggarna blir children
 <Card title="Server Status">
   <p>All systems operational</p>
   <ul>
-    <li>API: ✅</li>
-    <li>Database: ✅</li>
-    <li>Cache: ✅</li>
+    <li>API: Online</li>
+    <li>Database: Online</li>
   </ul>
 </Card>
 ```
@@ -1053,7 +867,7 @@ interface ButtonProps {
 
 function Button({
   label,
-  variant = 'primary',  // Default value
+  variant = 'primary',
   size = 'md'
 }: ButtonProps) {
   return (
@@ -1063,7 +877,7 @@ function Button({
   );
 }
 
-// Alla dessa är giltiga
+// Alla dessa fungerar
 <Button label="Submit" />
 <Button label="Cancel" variant="secondary" />
 <Button label="Delete" variant="danger" size="sm" />
@@ -1071,15 +885,13 @@ function Button({
 
 ### Callback Props
 
-Skicka funktioner för child-to-parent communication:
-
 ```tsx
 interface SearchProps {
   onSearch: (query: string) => void;
   placeholder?: string;
 }
 
-function SearchInput({ onSearch, placeholder = "Search..." }: SearchProps) {
+function SearchInput({ onSearch, placeholder = "Sok..." }: SearchProps) {
   const [value, setValue] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1094,59 +906,19 @@ function SearchInput({ onSearch, placeholder = "Search..." }: SearchProps) {
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
       />
-      <button type="submit">Search</button>
+      <button type="submit">Sok</button>
     </form>
   );
 }
 
-// Parent component
+// Parent
 function App() {
   const handleSearch = (query: string) => {
-    console.log('Searching for:', query);
-    // Gör API-anrop etc.
+    console.log('Soker efter:', query);
   };
 
   return <SearchInput onSearch={handleSearch} />;
 }
-```
-
----
-
-## 💻 Advanced Patterns
-
-### Render Props
-
-```tsx
-interface DataFetcherProps<T> {
-  url: string;
-  render: (data: T | null, loading: boolean, error: Error | null) => React.ReactNode;
-}
-
-function DataFetcher<T>({ url, render }: DataFetcherProps<T>) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    fetch(url)
-      .then(res => res.json())
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, [url]);
-
-  return <>{render(data, loading, error)}</>;
-}
-
-// Användning
-<DataFetcher<User[]>
-  url="/api/users"
-  render={(users, loading, error) => {
-    if (loading) return <Spinner />;
-    if (error) return <Error message={error.message} />;
-    return <UserList users={users!} />;
-  }}
-/>
 ```
 
 ### Props Spreading
@@ -1162,7 +934,7 @@ function Input({ label, error, ...inputProps }: InputProps) {
     <div className="form-field">
       <label>{label}</label>
       <input {...inputProps} className={error ? 'error' : ''} />
-      {error && <span className="error-message">{error}</span>}
+      {error && <span className="error-msg">{error}</span>}
     </div>
   );
 }
@@ -1173,125 +945,50 @@ function Input({ label, error, ...inputProps }: InputProps) {
   type="email"
   required
   placeholder="Enter email"
-  error="Invalid email format"
+  error="Invalid format"
 />
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Snabbreferens
 
-### Problem 1: Props är read-only
+| Term | Beskrivning |
+|------|-------------|
+| **Props** | Read-only data fran parent |
+| **Children** | Speciell prop for nested content |
+| **Callback** | Funktion som prop for events |
+| **Destructuring** | `{ name, age }` istallet for `props.name` |
+| **Spread** | `{...props}` for att vidarebefordra alla props |
 
-```tsx
-// ❌ FEL - Mutera aldrig props
-function Bad({ user }: { user: User }) {
-  user.name = "Changed";  // ALDRIG göra detta!
-  return <p>{user.name}</p>;
-}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// ✅ RÄTT - Be parent uppdatera via callback
-function Good({ user, onUpdate }: { user: User; onUpdate: (u: User) => void }) {
-  const handleChange = () => {
-    onUpdate({ ...user, name: "Changed" });
-  };
-  return <button onClick={handleChange}>Change Name</button>;
-}
-```
+## Vanliga fel och losningar
 
-### Problem 2: Prop Drilling
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| `Cannot assign to props` | Forsok att mutera props | Props ar read-only, anvand callback |
+| `undefined is not a function` | Callback saknas | Lagg till optional chaining `onClick?.()` |
+| `Prop drilling hell` | For manga nivaer | Anvand Context eller state management |
+| `Type error on props` | Fel prop-typ | Kontrollera TypeScript interface |
 
-```tsx
-// ❌ Problem: Skicka props genom många nivåer
-<App user={user}>
-  <Layout user={user}>
-    <Sidebar user={user}>
-      <UserMenu user={user} />  // Äntligen används!
-    </Sidebar>
-  </Layout>
-</App>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// ✅ Lösning: Context (nästa modul) eller composition
-<App>
-  <Layout sidebar={<Sidebar><UserMenu user={user} /></Sidebar>}>
-    <MainContent />
-  </Layout>
-</App>
-```
+## Key Takeaways
 
----
+| Punkt | Forklaring |
+|-------|------------|
+| **Unidirectional** | Data nedat, events uppat |
+| **Immutable** | Mutera aldrig props |
+| **TypeScript** | Definiera props med interfaces |
+| **Defaults** | Anvand default-varden for optional props |
 
-## 🎮 Praktisk Övning
+**Kom ihag:**
 
-Bygg ett flexibelt Alert-system:
-
-```tsx
-interface AlertProps {
-  type: 'success' | 'warning' | 'error' | 'info';
-  title: string;
-  message?: string;
-  onDismiss?: () => void;
-  children?: React.ReactNode;
-}
-
-function Alert({ type, title, message, onDismiss, children }: AlertProps) {
-  const icons = {
-    success: '✅',
-    warning: '⚠️',
-    error: '❌',
-    info: 'ℹ️'
-  };
-
-  const colors = {
-    success: 'bg-green-100 border-green-500',
-    warning: 'bg-yellow-100 border-yellow-500',
-    error: 'bg-red-100 border-red-500',
-    info: 'bg-blue-100 border-blue-500'
-  };
-
-  return (
-    <div className={`alert ${colors[type]}`} role="alert">
-      <span className="alert-icon">{icons[type]}</span>
-      <div className="alert-content">
-        <strong>{title}</strong>
-        {message && <p>{message}</p>}
-        {children}
-      </div>
-      {onDismiss && (
-        <button onClick={onDismiss} className="alert-dismiss">
-          ×
-        </button>
-      )}
-    </div>
-  );
-}
-
-// Användning
-<Alert
-  type="success"
-  title="Deployment Complete!"
-  message="Version 2.3.1 is now live"
-  onDismiss={() => setShowAlert(false)}
-/>
-
-<Alert type="error" title="Build Failed">
-  <ul>
-    <li>TypeScript error in src/App.tsx</li>
-    <li>Missing dependency: react-query</li>
-  </ul>
-</Alert>
-```
-
----
-
-## ✅ Sammanfattning
-
-- **Props** flödar nedåt (parent → child)
-- **children** är en speciell prop för nested JSX
-- **Default values** med `=` i destructuring
-- **Callback props** för child → parent communication
-- **Props är immutable** - mutera aldrig!
-- Undvik **prop drilling** med Context eller composition
+- Props ar som funktionsargument - read-only
+- Children ar en speciell prop for nested JSX
+- Callbacks later children kommunicera med parents
+- Undvik prop drilling med Context eller composition
 """,
 }
 

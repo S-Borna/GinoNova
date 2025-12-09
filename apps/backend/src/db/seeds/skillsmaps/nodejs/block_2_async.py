@@ -1,5 +1,5 @@
 # =============================================================================
-# BLOCK 2: ASYNC PROGRAMMING (Noder 5-8)
+# BLOCK 2: ASYNC PROGRAMMING (Noder 5-8) - V3 FORMAT
 # =============================================================================
 
 NODE_05_EVENT_LOOP = {
@@ -12,45 +12,70 @@ NODE_05_EVENT_LOOP = {
     "content": '''
 # Event Loop
 
-Hjärtat av Node.js async-modell.
+Hjartat av Node.js async-modell.
 
-## Vad är Event Loop?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```yaml
-Definition:
-  - Hanterar async operations
-  - Single-threaded men non-blocking
-  - Köar callbacks för exekvering
+## Vad ar Event Loop?
 
-Varför viktigt:
-  - Hög concurrency
-  - Effektiv I/O
-  - Responsiv applikation
-```
+Event Loop ar den mekanism som gor att Node.js kan hantera tusentals samtidiga operationer trots att det ar single-threaded.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Funktion | Hanterar async operations |
+| Modell | Single-threaded men non-blocking |
+| Process | Koar callbacks for exekvering |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Skalbarhet | Hog concurrency utan extra tradar |
+| Prestanda | Effektiv I/O-hantering |
+| Responsivitet | Applikationen blockeras inte |
+| Resursanvandning | Lagt minnesavtryck per anslutning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Koncept | Beskrivning | Nar det kors |
+|---------|-------------|--------------|
+| process.nextTick | Microtask queue | Direkt efter nuvarande operation |
+| Promise.then | Microtask queue | Efter nextTick |
+| setTimeout | Timers phase | I timers-fasen |
+| setImmediate | Check phase | I check-fasen |
+| I/O callbacks | Poll phase | I poll-fasen |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Event Loop Phases
 
 ```
    ┌───────────────────────────┐
-┌─►│           timers          │ (setTimeout, setInterval)
+┌─>│           timers          │  setTimeout, setInterval
 │  └─────────────┬─────────────┘
-│  ┌─────────────▼─────────────┐
-│  │     pending callbacks     │ (I/O callbacks)
+│  ┌─────────────┴─────────────┐
+│  │     pending callbacks     │  I/O callbacks
 │  └─────────────┬─────────────┘
-│  ┌─────────────▼─────────────┐
-│  │       idle, prepare       │ (internal)
+│  ┌─────────────┴─────────────┐
+│  │       idle, prepare       │  intern anvandning
 │  └─────────────┬─────────────┘
-│  ┌─────────────▼─────────────┐
-│  │           poll            │ (I/O, network)
+│  ┌─────────────┴─────────────┐
+│  │           poll            │  I/O, network
 │  └─────────────┬─────────────┘
-│  ┌─────────────▼─────────────┐
-│  │           check           │ (setImmediate)
+│  ┌─────────────┴─────────────┐
+│  │           check           │  setImmediate
 │  └─────────────┬─────────────┘
-│  ┌─────────────▼─────────────┐
-│  │      close callbacks      │ (socket.on('close'))
+│  ┌─────────────┴─────────────┐
+│  │      close callbacks      │  socket.on('close')
 │  └─────────────┬─────────────┘
-└──────────────◄─┘
+└───────────────<┘
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Exekveringsordning
 
@@ -80,36 +105,41 @@ console.log('6: Script end');
 // 6: Script end
 // 5: nextTick       (microtask queue)
 // 4: Promise        (microtask queue)
-// 2: setTimeout     (timers phase) *
-// 3: setImmediate   (check phase) *
-// * ordning kan variera
+// 2: setTimeout     (timers phase)
+// 3: setImmediate   (check phase)
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Microtasks vs Macrotasks
 
 ```javascript
-// Microtasks (körs först)
+// Microtasks (kors forst)
 process.nextTick(() => console.log('nextTick'));
 Promise.resolve().then(() => console.log('Promise'));
 queueMicrotask(() => console.log('queueMicrotask'));
 
-// Macrotasks (körs i faser)
+// Macrotasks (kors i faser)
 setTimeout(() => console.log('setTimeout'));
 setInterval(() => console.log('setInterval'));
 setImmediate(() => console.log('setImmediate'));
-// I/O callbacks
-
-// Prioritet:
-// 1. nextTick (högst)
-// 2. Microtasks (Promises)
-// 3. Macrotasks (timers, I/O)
 ```
+
+Prioritetsordning:
+
+| Prioritet | Typ | Exempel |
+|-----------|-----|---------|
+| 1 (hogst) | nextTick | process.nextTick |
+| 2 | Microtasks | Promise.then |
+| 3 | Macrotasks | setTimeout, I/O |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## process.nextTick
 
 ```javascript
-// Körs direkt efter current operation
-// Innan event loop fortsätter
+// Kors direkt efter nuvarande operation
+// Innan event loop fortsatter
 
 function asyncOperation(callback) {
   // Garantera async
@@ -118,15 +148,16 @@ function asyncOperation(callback) {
   });
 }
 
-// Användning
+// Anvandning
 asyncOperation((err, result) => {
   console.log(result);
 });
-console.log('After call');  // Loggas först!
-
-// OBS: För många nextTick kan blockera I/O
-// Använd setImmediate för CPU-intensivt
+console.log('After call');  // Loggas forst!
 ```
+
+Viktigt: For manga nextTick kan blockera I/O. Anvand setImmediate for CPU-intensivt arbete.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## setImmediate vs setTimeout
 
@@ -137,28 +168,29 @@ console.log('After call');  // Loggas först!
 // I main script: ordning odefinierad
 setTimeout(() => console.log('timeout'), 0);
 setImmediate(() => console.log('immediate'));
-// Kan vara antingen ordning
 
-// I I/O callback: setImmediate alltid först
+// I I/O callback: setImmediate alltid forst
 const fs = require('fs');
 
 fs.readFile('file.txt', () => {
   setTimeout(() => console.log('timeout'), 0);
   setImmediate(() => console.log('immediate'));
-  // Alltid: immediate först, sedan timeout
+  // Alltid: immediate forst, sedan timeout
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Blocking Event Loop
 
 ```javascript
-// DÅLIGT: Blockerar event loop
+// DALIGT: Blockerar event loop
 app.get('/compute', (req, res) => {
   const result = heavyComputation();  // Blockerar!
   res.json({ result });
 });
 
-// BÄTTRE: Dela upp arbetet
+// BATTRE: Dela upp arbetet
 function computeInChunks(data, callback) {
   const chunks = splitIntoChunks(data);
   let index = 0;
@@ -176,14 +208,16 @@ function computeInChunks(data, callback) {
   processNext();
 }
 
-// BÄST: Worker threads för CPU-intensivt
+// BAST: Worker threads for CPU-intensivt
 const { Worker } = require('worker_threads');
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Monitoring Event Loop
 
 ```javascript
-// Mät event loop lag
+// Mat event loop lag
 let lastCheck = Date.now();
 
 setInterval(() => {
@@ -191,30 +225,49 @@ setInterval(() => {
   const lag = now - lastCheck - 1000;
 
   if (lag > 100) {
-    console.warn(`Event loop lag: ${lag}ms`);
+    console.warn('Event loop lag: ' + lag + 'ms');
   }
 
   lastCheck = now;
 }, 1000);
 
-// Eller använd paket
+// Eller anvand paket
 const blocked = require('blocked-at');
 
 blocked((time, stack) => {
-  console.log(`Blocked for ${time}ms`);
+  console.log('Blocked for ' + time + 'ms');
   console.log(stack);
 });
 ```
 
-| Funktion | Queue | När |
-|----------|-------|-----|
-| process.nextTick | Microtask | Direkt |
-| Promise.then | Microtask | Direkt |
-| setTimeout | Timers | Timers phase |
-| setImmediate | Check | Check phase |
-| I/O callbacks | Poll | Poll phase |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 6 - Async/Await
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Blockerad event loop | Synkron CPU-intensiv kod | Anvand Worker threads |
+| Memory leaks | For manga nextTick | Begransat antal, anvand setImmediate |
+| Oforutsagbar ordning | Blanda timers i main | Var medveten om fasernas ordning |
+| Callback hell | Djupt nastlade callbacks | Anvand async/await |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Viktigt att komma ihag |
+|---------|------------------------|
+| Single-threaded | Node.js kor JavaScript i en trad |
+| Non-blocking | I/O-operationer blockerar inte |
+| Faser | Event loop har specifika faser |
+| Prioritet | nextTick > Promises > Timers |
+
+Kom ihag:
+- Event loop ar hjartat av Node.js asynkrona modell
+- Microtasks kors fore macrotasks
+- Undvik att blockera event loop med synkron kod
+- Anvand Worker threads for CPU-intensivt arbete
+- Overvaka event loop lag i produktion
 ''',
 }
 
@@ -226,14 +279,50 @@ NODE_06_ASYNC = {
     "xp_reward": 145,
     "prerequisites": [5],
     "content": '''
-# Promises & Async/Await
+# Promises och Async/Await
 
-Modern asynkron programmering.
+Modern asynkron programmering i Node.js.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Promises?
+
+Promises ar ett satt att hantera asynkrona operationer utan djupt nastlade callbacks.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Pending | Operationen pagar |
+| Fulfilled | Operationen lyckades |
+| Rejected | Operationen misslyckades |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| CI/CD Scripts | Hantera asynkrona build-steg |
+| API-anrop | Parallella requests till tjanster |
+| Filoperationer | Lasa/skriva konfigurationsfiler |
+| Databasoperationer | Hantera queries effektivt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Metod | Anvandning | Beteende |
+|-------|------------|----------|
+| Promise.all | Alla maste lyckas | Returnerar array |
+| Promise.allSettled | Alla oavsett resultat | Returnerar status |
+| Promise.race | Forsta som blir klar | Returnerar forsta |
+| Promise.any | Forsta som lyckas | Ignorerar rejects |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Callbacks (Legacy)
 
 ```javascript
-// Callback hell
+// Callback hell - undvik detta
 fs.readFile('file1.txt', (err, data1) => {
   if (err) return handleError(err);
 
@@ -248,6 +337,8 @@ fs.readFile('file1.txt', (err, data1) => {
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Promises
 
 ```javascript
@@ -261,7 +352,7 @@ function readFileAsync(path) {
   });
 }
 
-// Använd Promise
+// Anvand Promise
 readFileAsync('file.txt')
   .then(data => console.log(data.toString()))
   .catch(err => console.error(err))
@@ -277,10 +368,12 @@ readFileAsync('file1.txt')
   .catch(err => console.error(err));
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Promise Utilities
 
 ```javascript
-// Promise.all - alla måste lyckas
+// Promise.all - alla maste lyckas
 const results = await Promise.all([
   fetchUser(1),
   fetchUser(2),
@@ -298,18 +391,20 @@ const results = await Promise.allSettled([
 //   { status: 'rejected', reason: Error }
 // ]
 
-// Promise.race - första som blir klar
+// Promise.race - forsta som blir klar
 const result = await Promise.race([
   fetch(primaryUrl),
   fetch(backupUrl)
 ]);
 
-// Promise.any - första som lyckas
+// Promise.any - forsta som lyckas
 const result = await Promise.any([
   fetch(url1),
-  fetch(url2)  // Om url1 failar
+  fetch(url2)
 ]);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Async/Await
 
@@ -344,10 +439,12 @@ async function parallel() {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Common Patterns
 
 ```javascript
-// Sequential (en åt gången)
+// Sequential (en at gangen)
 async function sequential(ids) {
   const results = [];
   for (const id of ids) {
@@ -387,6 +484,8 @@ const results = await Promise.all(
   ids.map(id => limit(() => fetchItem(id)))
 );
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Error Handling
 
@@ -434,6 +533,8 @@ async function withRetry(fn, retries = 3, delay = 1000) {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Promisify
 
 ```javascript
@@ -444,24 +545,44 @@ import fs from 'node:fs';
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-// Användning
+// Anvandning
 const data = await readFile('file.txt');
 
-// Eller använd fs/promises
+// Eller anvand fs/promises
 import { readFile, writeFile } from 'node:fs/promises';
 
 const data = await readFile('file.txt');
 ```
 
-| Pattern | Use Case |
-|---------|----------|
-| Sequential | Dependent operations |
-| Promise.all | Independent, all required |
-| Promise.allSettled | Independent, partial OK |
-| Promise.race | First response wins |
-| Promise.any | First success wins |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 7 - Event Emitter
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Unhandled rejection | Saknar catch | Lagg till catch eller try/catch |
+| Sequential istallet for parallel | await i loop | Anvand Promise.all |
+| Memory issues | For manga parallella | Begransat concurrency med p-limit |
+| Lost errors | Ignorerar rejected | Anvand Promise.allSettled |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Pattern | Anvandningsfall |
+|---------|-----------------|
+| Sequential | Beroende operationer |
+| Promise.all | Oberoende, alla kravs |
+| Promise.allSettled | Oberoende, partiellt OK |
+| Promise.race | Forsta svaret vinner |
+| Promise.any | Forsta framgang vinner |
+
+Kom ihag:
+- Async/await ar syntaktiskt socker over Promises
+- Anvand alltid try/catch for felhantering
+- Promise.all for parallella oberoende operationer
+- Undvik await i loopar om operationerna ar oberoende
+- Promisify konverterar callback-funktioner till Promises
 ''',
 }
 
@@ -477,6 +598,43 @@ NODE_07_EVENTS = {
 
 Event-driven arkitektur i Node.js.
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Event Emitter?
+
+Event Emitter ar ett designmonster som tillater objekt att kommunicera genom att skicka och lyssna pa events.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Publisher | Skickar events med emit() |
+| Subscriber | Lyssnar pa events med on() |
+| Decoupling | Losar koppling mellan komponenter |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Logging | Event-baserad loggning |
+| Monitoring | Reagera pa systemhandelser |
+| Webhooks | Hantera inkommande events |
+| Microservices | Kommunikation mellan tjanster |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Metod | Beskrivning | Anvandning |
+|-------|-------------|------------|
+| on() | Lagg till listener | Lyssna pa events |
+| once() | Lyssna en gang | Engangshandelser |
+| emit() | Trigga event | Skicka data |
+| off() | Ta bort listener | Cleanup |
+| removeAllListeners() | Ta bort alla | Full cleanup |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Basics
 
 ```javascript
@@ -484,7 +642,7 @@ import { EventEmitter } from 'node:events';
 
 const emitter = new EventEmitter();
 
-// Lyssna på event
+// Lyssna pa event
 emitter.on('message', (data) => {
   console.log('Received:', data);
 });
@@ -495,11 +653,13 @@ emitter.emit('message', 'Hello World');
 
 // Flera argument
 emitter.on('user', (name, age) => {
-  console.log(`${name} is ${age} years old`);
+  console.log(name + ' is ' + age + ' years old');
 });
 
 emitter.emit('user', 'Alice', 30);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Event Methods
 
@@ -509,7 +669,7 @@ const emitter = new EventEmitter();
 // on() - Lyssna (alias: addListener)
 emitter.on('event', handler);
 
-// once() - Lyssna en gång
+// once() - Lyssna en gang
 emitter.once('connect', () => {
   console.log('Connected!');
 });
@@ -528,6 +688,8 @@ emitter.listenerCount('event');
 emitter.listeners('event');
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Custom Event Emitter
 
 ```javascript
@@ -540,7 +702,6 @@ class Database extends EventEmitter {
   }
 
   async connect() {
-    // Simulate connection
     await new Promise(r => setTimeout(r, 1000));
     this.connected = true;
     this.emit('connected');
@@ -564,7 +725,7 @@ class Database extends EventEmitter {
   }
 }
 
-// Användning
+// Anvandning
 const db = new Database();
 
 db.on('connected', () => console.log('DB connected!'));
@@ -576,6 +737,8 @@ await db.query('SELECT * FROM users');
 db.disconnect();
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Error Events
 
 ```javascript
@@ -584,19 +747,24 @@ const emitter = new EventEmitter();
 // Om ingen lyssnare: kraschar processen
 emitter.emit('error', new Error('Something failed'));
 
-// Lägg alltid till error handler
+// Lagg alltid till error handler
 emitter.on('error', (error) => {
   console.error('Error occurred:', error.message);
 });
 
 emitter.emit('error', new Error('Something failed'));
-// Hanteras nu säkert
+// Hanteras nu sakert
 ```
+
+Viktigt: Lagg ALLTID till en error-lyssnare for att undvika processkrasch.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Async Events
 
 ```javascript
 import { EventEmitter } from 'node:events';
+import { once } from 'node:events';
 
 const emitter = new EventEmitter();
 
@@ -606,21 +774,18 @@ emitter.on('process', async (data) => {
   console.log('Processing complete');
 });
 
-// Await inte automatiskt!
+// Emit vantar inte automatiskt
 emitter.emit('process', myData);
 console.log('After emit');  // Loggas direkt
 
-// För att vänta på async listeners
-import { once } from 'node:events';
-
-const emitter = new EventEmitter();
-
-// Vänta på specifikt event
+// For att vanta pa specifikt event
 setTimeout(() => emitter.emit('ready', 'data'), 1000);
 
 const [data] = await once(emitter, 'ready');
 console.log('Received:', data);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Event Emitter i Streams
 
@@ -661,16 +826,15 @@ server.on('error', (err) => {
 server.listen(3000);
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Best Practices
 
 ```javascript
-// Sätt max listeners (default: 10)
+// Satt max listeners (default: 10)
 emitter.setMaxListeners(20);
 
-// Warning vid för många
-// (MaxListenersExceededWarning)
-
-// Rensa listeners för att undvika memory leaks
+// Rensa listeners for att undvika memory leaks
 class MyClass extends EventEmitter {
   constructor() {
     super();
@@ -688,20 +852,40 @@ class MyClass extends EventEmitter {
   }
 }
 
-// prepend listener (körs först)
+// prepend listener (kors forst)
 emitter.prependListener('event', handler);
 emitter.prependOnceListener('event', handler);
 ```
 
-| Method | Beskrivning |
-|--------|-------------|
-| on() | Lägg till listener |
-| once() | Lyssna en gång |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| MaxListenersExceeded | For manga listeners | Oka limit eller rensa |
+| Memory leak | Listeners ej borttagna | Anvand off() i cleanup |
+| Uncaught error | Ingen error listener | Lagg alltid till error handler |
+| Lost events | Listener tillagd sent | Registrera fore emit |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Metod | Beskrivning |
+|-------|-------------|
+| on() | Lagg till listener |
+| once() | Lyssna en gang |
 | emit() | Trigga event |
 | off() | Ta bort listener |
 | removeAllListeners() | Ta bort alla |
 
-**Nästa steg:** Node 8 - Streams
+Kom ihag:
+- Event Emitter ar grunden for Node.js I/O
+- Lagg alltid till error-lyssnare
+- Rensa listeners for att undvika memory leaks
+- Anvand once() for engangshandelser
+- Streams och HTTP-server ar EventEmitters
 ''',
 }
 
@@ -713,14 +897,50 @@ NODE_08_STREAMS = {
     "xp_reward": 160,
     "prerequisites": [7],
     "content": '''
-# Streams & Buffers
+# Streams och Buffers
 
-Effektiv hantering av stora datamängder.
+Effektiv hantering av stora datamangder.
 
-## Varför Streams?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Streams?
+
+Streams ar ett satt att hantera data i bitar istallet for att ladda allt i minnet.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Chunked | Data behandlas i bitar |
+| Memory-efficient | Lagt minnesavtryck |
+| Pipeable | Kan kedjas ihop |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Log processing | Hantera stora loggfiler |
+| File transfers | Effektiv filoverforing |
+| Data pipelines | ETL-processer |
+| Video streaming | Media-leverans |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Stream-typ | Metod | Anvandning |
+|------------|-------|------------|
+| Readable | pipe() | Lasa filer, HTTP req |
+| Writable | write() | Skriva filer, HTTP res |
+| Transform | pipe() | Kompression, parsing |
+| Duplex | pipe() | Sockets |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor Streams?
 
 ```javascript
-// DÅLIGT: Läser hela filen i minnet
+// DALIGT: Laser hela filen i minnet
 import { readFile } from 'node:fs/promises';
 
 const data = await readFile('huge-file.csv');
@@ -735,29 +955,18 @@ stream.on('data', (chunk) => {
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Stream Types
 
-```yaml
-Readable:
-  - Läsa data
-  - fs.createReadStream
-  - http request
+| Typ | Beskrivning | Exempel |
+|-----|-------------|---------|
+| Readable | Lasa data | fs.createReadStream, http request |
+| Writable | Skriva data | fs.createWriteStream, http response |
+| Duplex | Lasa och skriva | TCP socket, WebSocket |
+| Transform | Modifiera data | zlib (compression), crypto |
 
-Writable:
-  - Skriva data
-  - fs.createWriteStream
-  - http response
-
-Duplex:
-  - Läsa och skriva
-  - TCP socket
-  - WebSocket
-
-Transform:
-  - Modifiera data
-  - zlib (compression)
-  - crypto
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Readable Streams
 
@@ -789,7 +998,7 @@ class CounterStream extends Readable {
 
   _read() {
     if (this.current <= this.max) {
-      this.push(String(this.current++) + '\\n');
+      this.push(String(this.current++) + '\n');
     } else {
       this.push(null);  // Signalera slut
     }
@@ -800,6 +1009,8 @@ const counter = new CounterStream(100);
 counter.pipe(process.stdout);
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Writable Streams
 
 ```javascript
@@ -809,9 +1020,9 @@ import { Writable } from 'node:stream';
 // Fil stream
 const writeStream = createWriteStream('output.txt');
 
-writeStream.write('Hello\\n');
-writeStream.write('World\\n');
-writeStream.end('Goodbye\\n');
+writeStream.write('Hello\n');
+writeStream.write('World\n');
+writeStream.end('Goodbye\n');
 
 writeStream.on('finish', () => {
   console.log('Write complete');
@@ -821,7 +1032,7 @@ writeStream.on('finish', () => {
 class LoggerStream extends Writable {
   _write(chunk, encoding, callback) {
     const line = chunk.toString();
-    console.log(`[LOG] ${new Date().toISOString()}: ${line}`);
+    console.log('[LOG] ' + new Date().toISOString() + ': ' + line);
     callback();  // Signalera klar
   }
 }
@@ -830,6 +1041,8 @@ const logger = new LoggerStream();
 logger.write('Message 1');
 logger.write('Message 2');
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Piping
 
@@ -868,6 +1081,8 @@ http.createServer((req, res) => {
 }).listen(3000);
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Transform Streams
 
 ```javascript
@@ -896,7 +1111,7 @@ class CSVParser extends Transform {
   }
 
   _transform(chunk, encoding, callback) {
-    const lines = chunk.toString().split('\\n');
+    const lines = chunk.toString().split('\n');
 
     for (const line of lines) {
       if (!line.trim()) continue;
@@ -917,6 +1132,8 @@ class CSVParser extends Transform {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Buffers
 
 ```javascript
@@ -925,14 +1142,14 @@ class CSVParser extends Transform {
 // Skapa buffer
 const buf1 = Buffer.from('Hello');
 const buf2 = Buffer.alloc(10);  // 10 bytes, fyllt med 0
-const buf3 = Buffer.allocUnsafe(10);  // Snabbare, ej nollställd
+const buf3 = Buffer.allocUnsafe(10);  // Snabbare, ej nollstalld
 
 // Konvertera
 const str = buf1.toString('utf8');
 const hex = buf1.toString('hex');
 const base64 = buf1.toString('base64');
 
-// Från olika format
+// Fran olika format
 const fromHex = Buffer.from('48656c6c6f', 'hex');
 const fromBase64 = Buffer.from('SGVsbG8=', 'base64');
 
@@ -943,14 +1160,34 @@ const copied = Buffer.alloc(5);
 buf1.copy(copied);
 ```
 
-| Stream Type | Metod | Use Case |
-|-------------|-------|----------|
-| Readable | pipe() | Läsa filer, HTTP req |
-| Writable | write() | Skriva filer, HTTP res |
-| Transform | pipe() | Kompression, parsing |
-| Duplex | pipe() | Sockets |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 9 - HTTP Server
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Memory spike | Laser hela filen | Anvand streams |
+| Backpressure | Skriver snabbare an lasning | Hantera drain event |
+| Data loss | Pipe error | Anvand pipeline() |
+| Encoding issues | Fel encoding | Ange encoding explicit |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Streams | Hantera data i chunks |
+| Buffers | Raw binary data |
+| Pipeline | Sakert satt att kedja streams |
+| Transform | Modifiera data on-the-fly |
+
+Kom ihag:
+- Anvand streams for stora filer
+- Pipeline ar sakrare an pipe
+- Buffers ar for raa binardata
+- Transform streams for databearbetning
+- Hantera alltid error-events pa streams
 ''',
 }
 

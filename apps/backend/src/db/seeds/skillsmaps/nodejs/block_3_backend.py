@@ -1,5 +1,5 @@
 # =============================================================================
-# BLOCK 3: BACKEND DEVELOPMENT (Noder 9-12)
+# BLOCK 3: BACKEND DEVELOPMENT (Noder 9-12) - V3 FORMAT
 # =============================================================================
 
 NODE_09_HTTP = {
@@ -13,6 +13,43 @@ NODE_09_HTTP = {
 # HTTP Server
 
 Skapa web servers med Node.js.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar HTTP Server?
+
+HTTP Server ar grunden for webbapplikationer - den tar emot requests och skickar responses.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Request | Inkommande forfragan fran klient |
+| Response | Svar tillbaka till klient |
+| Routing | Dirigera requests till ratt handler |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| API-utveckling | Bygga backend-tjanster |
+| Microservices | Sjalvstandiga tjanster |
+| Health checks | Overvakning av tjanster |
+| Reverse proxy | Lastbalansering och routing |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Metod | HTTP Status | Anvandning |
+|-------|-------------|------------|
+| res.statusCode | Satt status | 200, 404, 500 |
+| res.setHeader() | Lagg till header | Content-Type |
+| res.writeHead() | Status + headers | Kombinerat |
+| res.write() | Skriv body | Delvis svar |
+| res.end() | Avsluta response | Slutfor svar |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Basic HTTP Server
 
@@ -35,6 +72,8 @@ server.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Request Handling
 
@@ -71,6 +110,8 @@ const server = http.createServer((req, res) => {
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## URL Parsing
 
 ```javascript
@@ -78,7 +119,7 @@ import { URL } from 'node:url';
 
 const server = http.createServer((req, res) => {
   // Parse URL
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const url = new URL(req.url, 'http://' + req.headers.host);
 
   console.log(url.pathname);    // /users
   console.log(url.searchParams.get('id'));  // ?id=123
@@ -87,10 +128,12 @@ const server = http.createServer((req, res) => {
   const match = url.pathname.match(/^\\/users\\/(\\d+)$/);
   if (match) {
     const userId = match[1];
-    res.end(`User ID: ${userId}`);
+    res.end('User ID: ' + userId);
   }
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## HTTPS Server
 
@@ -112,6 +155,8 @@ server.listen(443, () => {
   console.log('HTTPS Server running');
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## HTTP Client
 
@@ -139,7 +184,9 @@ http.get('http://api.example.com/users', (res) => {
 });
 ```
 
-## Keep-Alive & Connection Pooling
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Keep-Alive och Connection Pooling
 
 ```javascript
 import http from 'node:http';
@@ -162,6 +209,8 @@ http.get(options, (res) => {
   // Handle response
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Server Events
 
@@ -195,15 +244,34 @@ process.on('SIGTERM', () => {
 });
 ```
 
-| Metod | HTTP Status |
-|-------|-------------|
-| res.statusCode | Sätt status |
-| res.setHeader() | Lägg till header |
-| res.writeHead() | Status + headers |
-| res.write() | Skriv body |
-| res.end() | Avsluta response |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 10 - Express.js
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| EADDRINUSE | Port upptagen | Anvand annan port |
+| Connection refused | Server inte startad | Kontrollera server |
+| Timeout | For lang responstid | Oka timeout |
+| CORS error | Cross-origin blockad | Lagg till CORS headers |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| createServer | Skapa HTTP server |
+| Request | Inkommande data |
+| Response | Utgaende data |
+| Events | request, error, close |
+
+Kom ihag:
+- HTTP-modulen ar grunden for alla Node.js webbservrar
+- Hantera alltid error-events
+- Implementera graceful shutdown
+- Anvand HTTPS i produktion
+- Connection pooling forbattrar prestanda
 ''',
 }
 
@@ -217,7 +285,44 @@ NODE_10_EXPRESS = {
     "content": '''
 # Express.js Framework
 
-Det populäraste Node.js web framework.
+Det popularaste Node.js web framework.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Express.js?
+
+Express ar ett minimalistiskt web framework som forenklar byggandet av webbapplikationer och APIer.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Routing | Enkel URL-hantering |
+| Middleware | Kedjade request handlers |
+| Flexibilitet | Minimalt men utbyggbart |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| API-utveckling | Snabb prototyping |
+| Microservices | Lattviksservrar |
+| Middleware | Logging, auth, monitoring |
+| Skalbarhet | Horisontell skalning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Middleware | Syfte |
+|------------|-------|
+| express.json() | Parse JSON body |
+| cors | Cross-origin requests |
+| helmet | Security headers |
+| morgan | Request logging |
+| compression | Gzip responses |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Setup
 
@@ -231,7 +336,7 @@ import express from 'express';
 
 const app = express();
 
-// Middleware för JSON parsing
+// Middleware for JSON parsing
 app.use(express.json());
 
 // Routes
@@ -243,6 +348,8 @@ app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Routing
 
@@ -273,6 +380,8 @@ app.get('/users/:userId/posts/:postId', (req, res) => {
   res.json({ userId, postId });
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Router
 
@@ -306,12 +415,14 @@ app.use('/api/users', userRoutes);
 // POST /api/users
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Middleware
 
 ```javascript
 // Application-level middleware
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
+  console.log(req.method + ' ' + req.url);
   next();
 });
 
@@ -341,6 +452,8 @@ app.use(express.json());        // Parse JSON body
 app.use(express.urlencoded({ extended: true }));  // Parse form data
 app.use(express.static('public'));  // Serve static files
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Error Handling
 
@@ -384,7 +497,9 @@ app.use((req, res) => {
 });
 ```
 
-## Request & Response
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Request och Response
 
 ```javascript
 // Request object
@@ -414,6 +529,8 @@ app.get('/users', (req, res) => {
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Popular Middleware
 
 ```javascript
@@ -438,15 +555,34 @@ app.use(morgan('dev'));
 app.use(compression());
 ```
 
-| Middleware | Syfte |
-|------------|-------|
-| express.json() | Parse JSON body |
-| cors | Cross-origin requests |
-| helmet | Security headers |
-| morgan | Request logging |
-| compression | Gzip responses |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 11 - REST API Design
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Cannot GET /path | Route saknas | Definiera route |
+| 404 pa POST | express.json() saknas | Lagg till middleware |
+| CORS error | CORS ej konfigurerat | Anvand cors middleware |
+| Unhandled rejection | Saknar error handler | Lagg till asyncHandler |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Routing | URL till handler |
+| Middleware | Request pipeline |
+| Router | Modulara routes |
+| Error handling | Centraliserad felhantering |
+
+Kom ihag:
+- Express ar minimalistiskt och flexibelt
+- Middleware kor i ordning de definieras
+- Error middleware har 4 parametrar
+- Anvand Router for modulara routes
+- asyncHandler for async/await felhantering
 ''',
 }
 
@@ -460,26 +596,58 @@ NODE_11_REST = {
     "content": '''
 # REST API Design
 
-Bygg professionella APIs.
+Bygg professionella APIer.
 
-## REST Principles
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```yaml
-Resources:
-  - Noun-based URLs
-  - /users, /posts, /comments
+## Vad ar REST?
 
-HTTP Methods:
-  GET: Läs
-  POST: Skapa
-  PUT: Ersätt
-  PATCH: Uppdatera delvis
-  DELETE: Ta bort
+REST (Representational State Transfer) ar en arkitekturstil for att designa nattverksbaserade applikationer.
 
-Stateless:
-  - Ingen server-side session
-  - Varje request är komplett
-```
+| Princip | Beskrivning |
+|---------|-------------|
+| Stateless | Ingen server-side session |
+| Resources | Noun-baserade URLer |
+| HTTP Methods | GET, POST, PUT, DELETE |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| API Gateway | Centraliserad API-hantering |
+| Microservices | Standardiserad kommunikation |
+| Dokumentation | OpenAPI/Swagger |
+| Testning | Latt att automatisera |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Status Code | Anvandning |
+|-------------|------------|
+| 200 | OK |
+| 201 | Created |
+| 204 | No Content |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not Found |
+| 422 | Validation Error |
+| 500 | Server Error |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## REST Principer
+
+| Princip | Beskrivning |
+|---------|-------------|
+| Resources | Noun-baserade URLer: /users, /posts |
+| HTTP Methods | GET=Las, POST=Skapa, PUT=Ersatt, DELETE=Ta bort |
+| Stateless | Ingen server-side session |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## API Structure
 
@@ -557,6 +725,8 @@ router.delete('/:id', async (req, res) => {
 export default router;
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Validation
 
 ```javascript
@@ -609,6 +779,8 @@ const validateZod = (schema) => (req, res, next) => {
 router.post('/', validateZod(userSchema), createUser);
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Response Format
 
 ```javascript
@@ -640,6 +812,8 @@ const paginate = (data, page, limit, total) => ({
   }
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Authentication
 
@@ -687,6 +861,8 @@ router.get('/me', auth, (req, res) => {
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## API Versioning
 
 ```javascript
@@ -702,19 +878,34 @@ const versionMiddleware = (req, res, next) => {
 };
 ```
 
-| Status Code | Användning |
-|-------------|------------|
-| 200 | OK |
-| 201 | Created |
-| 204 | No Content |
-| 400 | Bad Request |
-| 401 | Unauthorized |
-| 403 | Forbidden |
-| 404 | Not Found |
-| 422 | Validation Error |
-| 500 | Server Error |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 12 - Database Integration
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| 401 vs 403 | Forvirring | 401=ej inloggad, 403=ej behörighet |
+| Inkonsistent format | Olika response-struktur | Standardisera responses |
+| Saknar pagination | Stora dataset | Implementera pagination |
+| Ingen versioning | API-andringar | Anvand URL-versioning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Resources | Noun-baserade URLer |
+| Status codes | Ratt kod for ratt situation |
+| Validation | Validera all input |
+| Pagination | For stora dataset |
+
+Kom ihag:
+- Anvand ratt HTTP-metod for varje operation
+- Validera all inkommande data
+- Returnera konsistenta response-format
+- Implementera pagination for listor
+- Versionera ditt API fran borjan
 ''',
 }
 
@@ -729,6 +920,42 @@ NODE_12_DATABASE = {
 # Database Integration
 
 Anslut Node.js till databaser.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Database Integration?
+
+Database integration handlar om att koppla din Node.js-applikation till databaser for att lagra och hamta data.
+
+| Typ | Beskrivning |
+|-----|-------------|
+| SQL | Relationsdata (PostgreSQL, MySQL) |
+| NoSQL | Flexibelt schema (MongoDB) |
+| Key-Value | Caching (Redis) |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Migrations | Versionshanterade schemaandringar |
+| Connection pooling | Effektiv resursanvandning |
+| Backup | Automatiserad datasakerhet |
+| Monitoring | Prestandaovervakning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Database | ORM/Driver | Bast for |
+|----------|-----------|----------|
+| MongoDB | Mongoose | Flexibelt schema |
+| PostgreSQL | Prisma, pg | Relationsdata |
+| Redis | redis | Caching, sessions |
+| MySQL | mysql2, Prisma | Relationsdata |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## MongoDB med Mongoose
 
@@ -757,7 +984,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 8,
-    select: false  // Exkludera från queries
+    select: false  // Exkludera fran queries
   },
   role: {
     type: String,
@@ -789,6 +1016,8 @@ userSchema.statics.findByEmail = function(email) {
 
 const User = mongoose.model('User', userSchema);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Mongoose CRUD
 
@@ -825,6 +1054,8 @@ const users = await User.find({ role: 'admin' })
   .limit(10)
   .skip(0);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## PostgreSQL med Prisma
 
@@ -906,6 +1137,8 @@ const [user, post] = await prisma.$transaction([
 ]);
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Redis
 
 ```javascript
@@ -936,14 +1169,16 @@ const tags = await redis.sMembers('tags');
 
 // Caching pattern
 async function getCachedUser(id) {
-  const cached = await redis.get(`user:${id}`);
+  const cached = await redis.get('user:' + id);
   if (cached) return JSON.parse(cached);
 
   const user = await User.findById(id);
-  await redis.set(`user:${id}`, JSON.stringify(user), { EX: 3600 });
+  await redis.set('user:' + id, JSON.stringify(user), { EX: 3600 });
   return user;
 }
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Connection Pooling
 
@@ -966,14 +1201,34 @@ const pool = new pg.Pool({
 const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
 ```
 
-| Database | ORM/Driver | Best For |
-|----------|-----------|----------|
-| MongoDB | Mongoose | Flexible schema |
-| PostgreSQL | Prisma, pg | Relational data |
-| Redis | redis | Caching, sessions |
-| MySQL | mysql2, Prisma | Relational data |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 13 - Authentication & Security
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Connection timeout | Databas ej atkomlig | Kontrollera natverket |
+| Pool exhausted | For manga anslutningar | Oka pool size |
+| N+1 queries | Ineffektiva queries | Anvand populate/include |
+| Slow queries | Saknar index | Lagg till index |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| ORM | Abstraktionslager for databas |
+| Connection pool | Ateranvand anslutningar |
+| Migrations | Versionshanterat schema |
+| Caching | Redis for snabb atkomst |
+
+Kom ihag:
+- Valj ratt databas for anvandningsfallet
+- Anvand alltid connection pooling
+- Implementera caching med Redis
+- Kor migrations i CI/CD-pipeline
+- Overvaka query-prestanda
 ''',
 }
 

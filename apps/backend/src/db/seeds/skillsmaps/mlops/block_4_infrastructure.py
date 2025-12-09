@@ -15,7 +15,26 @@ BLOCK_4_NODES = [
         "difficulty": "hard",
         "node_type": "practice",
         "prerequisites": ["mlops-hyperparameter-tuning"],
-        "content": '''# CI/CD for Machine Learning
+        "content": '''# CI/CD for ML Pipelines
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Scenario | Varfor CI/CD for ML ar viktigt |
+|----------|-------------------------------|
+| **Reproducerbarhet** | Saker pa att modeller kan aterskapas |
+| **Kvalitetskontroll** | Automatiserade tester for modellprestanda |
+| **Snabbare iteration** | Kortare tid fran experiment till produktion |
+| **Teamsamarbete** | Standardiserade processer for ML-team |
+
+Du maste forsta:
+
+- **ML-specifika pipelines** - skiljer sig fran traditionell CI/CD
+- **Data- och modellvalidering** - kvalitetsportar for ML
+- **Experiment tracking** - spara och jamfor modeller
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## ML CI/CD vs Traditional CI/CD
 
@@ -363,13 +382,45 @@ class TestModelIntegrity:
         assert 'merchant_risk_score' in top_features
 ```
 
-## Best Practices
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. **Separate pipelines** för code, data, och modell
-2. **Quality gates** - automatisk validering
-3. **Canary deployments** - gradvis utrullning
-4. **Rollback capability** - snabb återställning
-5. **Comprehensive testing** - unit, integration, model tests
+## Snabbreferens
+
+| Term | Beskrivning |
+|------|-------------|
+| **CI/CD for ML** | Automatiserade pipelines for modelltraning och deploy |
+| **Quality Gate** | Automatisk validering av modellprestanda |
+| **DVC** | Data Version Control - versionshantering for data |
+| **CML** | Continuous Machine Learning - rapporter i PR |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Model training timeout | For lang traningstid | Oka runner timeout eller optimera |
+| Data validation failed | Schema andrat | Uppdatera schema eller fixa data |
+| Model accuracy drop | Datadrift eller bugg | Analysera data och modell |
+| Deploy failed | Container/endpoint fel | Kolla loggar och resurser |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **ML CI/CD** | Hanterar kod, data OCH modeller |
+| **Quality gates** | Stoppa daliga modeller automatiskt |
+| **DVC** | Versionshantera stora datafiler |
+| **Testing** | Unit, integration och modelltester |
+
+**Kom ihag:**
+
+- ML-pipelines har fler triggers an vanlig CI/CD
+- Data- och modellvalidering ar kritiskt
+- Automatisera sa mycket som mojligt
+- Ha alltid rollback-mojlighet
 '''
     },
 
@@ -385,6 +436,25 @@ class TestModelIntegrity:
         "node_type": "practice",
         "prerequisites": ["mlops-cicd"],
         "content": '''# ML Pipeline Orchestration
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Scenario | Varfor orkestration ar viktigt |
+|----------|-------------------------------|
+| **Komplexa pipelines** | Hantera beroenden mellan steg |
+| **Schemalagd traning** | Automatisk omtraning |
+| **Felhantering** | Retry och alerting |
+| **Skalbarhet** | Parallell exekvering |
+
+Du maste forsta:
+
+- **DAGs** - Directed Acyclic Graphs for arbetsfloden
+- **Schedulering** - nar och hur pipelines kors
+- **Monitoring** - overvakning av pipeline-halsa
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Orchestration Tools
 
@@ -736,13 +806,45 @@ compiler.Compiler().compile(
 )
 ```
 
-## Best Practices
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. **Idempotent tasks** - kan köras om säkert
-2. **Clear dependencies** - explicit DAG
-3. **Monitoring** - alerts och dashboards
-4. **Parameterization** - konfigurerbara pipelines
-5. **Testing** - unit tester för tasks
+## Snabbreferens
+
+| Verktyg | Anvandning |
+|---------|------------|
+| **Airflow** | General-purpose orkestration |
+| **Prefect** | Modern Python-first orkestrator |
+| **Kubeflow** | ML-pipelines pa Kubernetes |
+| **Dagster** | Data-aware orkestration |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Task timeout | For lang exekvering | Oka timeout eller optimera |
+| Dependency failed | Upstream task misslyckades | Kolla upstream loggar |
+| Resource exhaustion | For manga parallella tasks | Begranser concurrency |
+| Scheduler lag | For manga DAGs | Optimera scheduler config |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **DAG** | Definiera beroenden mellan tasks |
+| **Idempotens** | Tasks ska kunna koras om sakert |
+| **Monitoring** | Overvaka pipeline-halsa |
+| **Parametrisering** | Gor pipelines konfigurerbara |
+
+**Kom ihag:**
+
+- Valj orkestrator baserat pa teamets behov
+- Borja enkelt, skala upp vid behov
+- Testa tasks individuellt
+- Ha bra felhantering och alerting
 '''
     },
 
@@ -750,14 +852,33 @@ compiler.Compiler().compile(
     {
         "id": "mlops-serving",
         "slug": "model-serving",
-        "title": "Model Serving & Inference",
+        "title": "Model Serving och Inference",
         "order_index": 15,
         "estimated_minutes": 40,
         "xp_reward": 110,
         "difficulty": "hard",
         "node_type": "practice",
         "prerequisites": ["mlops-orchestration"],
-        "content": '''# Model Serving & Inference
+        "content": '''# Model Serving och Inference
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Scenario | Varfor model serving ar viktigt |
+|----------|--------------------------------|
+| **Produktion** | Gor modeller tillgangliga for applikationer |
+| **Skalbarhet** | Hantera hog last och manga requests |
+| **Latency** | Saker pa snabba svarstider |
+| **Reliability** | Modeller maste alltid vara tillgangliga |
+
+Du maste forsta:
+
+- **Serving patterns** - online, batch, streaming
+- **API design** - REST/gRPC for modeller
+- **Skalning** - hantera varierande last
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Serving Patterns
 
@@ -775,6 +896,8 @@ compiler.Compiler().compile(
 │  └─────────────┘  └─────────────┘  └─────────────┘                  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## FastAPI Model Server
 
@@ -1068,6 +1191,46 @@ async def predict(request: TransactionRequest):
 
     return {"prediction": result, "model_version": model_version}
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Verktyg | Anvandning |
+|---------|------------|
+| **FastAPI** | Snabb Python API-server |
+| **Triton** | NVIDIA:s inference server |
+| **SageMaker** | AWS managed ML-platform |
+| **KServe** | Kubernetes ML serving |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| High latency | Modell for stor/langsam | Optimera eller byt modell |
+| OOM errors | For lite minne | Oka resurser eller batcha |
+| Cold start | Modell ej laddad | Warmup requests |
+| Version mismatch | Fel modellversion | Kontrollera deployment |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Online vs Batch** | Valj baserat pa latency-krav |
+| **Skalning** | Autoscaling baserat pa last |
+| **A/B testing** | Jamfor modellversioner i produktion |
+| **Monitoring** | Overvaka latency och errors |
+
+**Kom ihag:**
+
+- Ha alltid health checks
+- Overvaka inference latency
+- Implementera graceful degradation
+- Testa med realistisk last
 '''
     },
 
@@ -1083,6 +1246,25 @@ async def predict(request: TransactionRequest):
         "node_type": "practice",
         "prerequisites": ["mlops-serving"],
         "content": '''# ML Containerization
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Scenario | Varfor containerization ar viktigt |
+|----------|-----------------------------------|
+| **Reproducerbarhet** | Samma miljo overallt |
+| **Portabilitet** | Kor pa vilken plattform som helst |
+| **Isolation** | Separera dependencies |
+| **Skalning** | Enkel horisontell skalning |
+
+Du maste forsta:
+
+- **ML-specifika images** - GPU-stod, stora modeller
+- **Multi-stage builds** - separera training och inference
+- **Optimering** - minimera image-storlek
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Training Container
 
@@ -1359,14 +1541,45 @@ spec:
           averageValue: "100"
 ```
 
-## Best Practices
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. **Slim base images** - minska attack surface
-2. **Multi-stage builds** - separera build från runtime
-3. **Pin versions** - reproducerbarhet
-4. **Non-root user** - säkerhet
-5. **Health checks** - container orchestration
-6. **Resource limits** - förutsägbart beteende
+## Snabbreferens
+
+| Term | Beskrivning |
+|------|-------------|
+| **Multi-stage build** | Separera build och runtime |
+| **Distroless** | Minimal base image utan shell |
+| **GPU images** | CUDA-baserade images for ML |
+| **HPA** | Horizontal Pod Autoscaler |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Image too large | For manga lager/dependencies | Multi-stage build |
+| CUDA mismatch | Fel CUDA-version | Matcha host GPU drivers |
+| OOMKilled | For lite minne | Oka memory limits |
+| Slow startup | Stor modell att ladda | Warmup eller preload |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Slim images** | Minska storlek och attack surface |
+| **Multi-stage** | Separera build fran runtime |
+| **Health checks** | Nodvandigt for orchestration |
+| **Resource limits** | Forutsagbart beteende |
+
+**Kom ihag:**
+
+- Pinning av versioner ar kritiskt for reproducerbarhet
+- Kor aldrig som root i produktion
+- Testa images lokalt innan deploy
+- Overvaka resource-anvandning
 '''
     },
 ]

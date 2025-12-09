@@ -23,12 +23,12 @@ from .terraform import MODULE as TERRAFORM_MODULE
 from .ansible import MODULE as ANSIBLE_MODULE
 from .cicd import MODULE as CICD_MODULE
 from .aws import MODULE as AWS_MODULE
+from .azure import MODULE as AZURE_MODULE
 
 # =============================================================================
 # LEGACY-MODULER (väntar på omskrivning till Linux-mallen)
 # =============================================================================
 from ..modules_v3 import (
-    MODULE_AZURE_MASTERY_V2,
     MODULE_PYTHON_DEVOPS,
     MODULE_SYSTEM_DESIGN,
     MODULE_SQL_MASTERY,
@@ -47,7 +47,7 @@ from ..modules_v3 import (
 # ALLA MODULER (22 st) - används av SkillsMaps
 # =============================================================================
 ALL_MODULES = [
-    # Refaktorerade (9 st)
+    # Refaktorerade (10 st)
     LINUX_MODULE,
     DOCKER_MODULE,
     KUBERNETES_MODULE,
@@ -57,8 +57,8 @@ ALL_MODULES = [
     ANSIBLE_MODULE,
     CICD_MODULE,
     AWS_MODULE,
-    # Legacy (13 st)
-    MODULE_AZURE_MASTERY_V2,
+    AZURE_MODULE,
+    # Legacy (12 st)
     MODULE_PYTHON_DEVOPS,
     MODULE_SYSTEM_DESIGN,
     MODULE_SQL_MASTERY,
@@ -86,7 +86,7 @@ CAMP_DEVOPS_SLUGS = [
     "terraform-mastery",
     "ansible-mastery",
     "aws-mastery",
-    "azure-mastery-v2",      # Legacy - väntar på omskrivning
+    "azure-mastery-v2",
     "python-devops",         # Legacy - väntar på omskrivning
     "system-design",         # Legacy - väntar på omskrivning
     "sql-mastery",           # Legacy - väntar på omskrivning
@@ -127,4 +127,3 @@ def get_module_count():
 def get_total_tasks():
     """Totalt antal tasks."""
     return sum(len(m.get("tasks", [])) for m in ALL_MODULES)
-    return sum(len(m.get("tasks", [])) for m in get_all_modules())

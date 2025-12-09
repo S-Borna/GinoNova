@@ -1,5 +1,5 @@
 # =============================================================================
-# BLOCK 4: ADVANCED PATTERNS (Noder 13-16)
+# BLOCK 4: ADVANCED PATTERNS (Noder 13-16) - V3 FORMAT
 # =============================================================================
 
 NODE_13_AUTH = {
@@ -10,9 +10,46 @@ NODE_13_AUTH = {
     "xp_reward": 180,
     "prerequisites": [12],
     "content": '''
-# Authentication & Security
+# Authentication och Security
 
-Säker autentisering i Node.js.
+Saker autentisering i Node.js.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Authentication?
+
+Authentication handlar om att verifiera vem anvandaren ar och skydda applikationen mot attacker.
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Autentisering | Vem ar du? |
+| Auktorisering | Vad far du gora? |
+| Tokens | Identitetsbevaring |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Sakerhet | Skydda data och system |
+| Compliance | Uppfyll krav (GDPR) |
+| Audit trails | Sparbarhet |
+| Zero trust | Verifiera alltid |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Koncept | Implementering |
+|---------|----------------|
+| Password hashing | bcrypt/argon2 |
+| Tokens | JWT |
+| Sessions | express-session + Redis |
+| OAuth | Passport.js |
+| Rate limiting | express-rate-limit |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## JWT Authentication
 
@@ -24,7 +61,7 @@ import bcrypt from 'bcrypt';
 export async function register(req, res) {
   const { email, password, name } = req.body;
 
-  // Kolla om användare finns
+  // Kolla om anvandare finns
   const existing = await User.findOne({ email });
   if (existing) {
     return res.status(400).json({ error: 'Email already registered' });
@@ -33,7 +70,7 @@ export async function register(req, res) {
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  // Skapa användare
+  // Skapa anvandare
   const user = await User.create({
     email,
     password: hashedPassword,
@@ -50,7 +87,7 @@ export async function register(req, res) {
 export async function login(req, res) {
   const { email, password } = req.body;
 
-  // Hitta användare
+  // Hitta anvandare
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials' });
@@ -98,6 +135,8 @@ export function authenticate(req, res, next) {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Refresh Tokens
 
 ```javascript
@@ -118,7 +157,7 @@ export async function login(req, res) {
   );
 
   // Spara refresh token
-  await redis.set(`refresh:${user.id}`, refreshToken, { EX: 7 * 24 * 3600 });
+  await redis.set('refresh:' + user.id, refreshToken, { EX: 7 * 24 * 3600 });
 
   res.json({ accessToken, refreshToken });
 }
@@ -130,8 +169,8 @@ export async function refresh(req, res) {
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
 
-    // Verifiera att token fortfarande är giltig
-    const storedToken = await redis.get(`refresh:${decoded.id}`);
+    // Verifiera att token fortfarande ar giltig
+    const storedToken = await redis.get('refresh:' + decoded.id);
     if (storedToken !== refreshToken) {
       return res.status(401).json({ error: 'Invalid refresh token' });
     }
@@ -150,6 +189,8 @@ export async function refresh(req, res) {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## OAuth 2.0 / Passport
 
 ```javascript
@@ -162,7 +203,7 @@ passport.use(new GoogleStrategy({
   callbackURL: '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    // Hitta eller skapa användare
+    // Hitta eller skapa anvandare
     let user = await User.findOne({ googleId: profile.id });
 
     if (!user) {
@@ -188,10 +229,12 @@ app.get('/auth/google/callback',
   passport.authenticate('google', { session: false }),
   (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`/app?token=${token}`);
+    res.redirect('/app?token=' + token);
   }
 );
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Security Best Practices
 
@@ -213,7 +256,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Stricter limit för auth
+// Stricter limit for auth
 const authLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,  // 1h
   max: 5,
@@ -237,6 +280,8 @@ app.use(cors({
   credentials: true
 }));
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Password Security
 
@@ -268,10 +313,12 @@ const hash = await argon2.hash(password, {
 const isValid = await argon2.verify(hash, password);
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## RBAC (Role-Based Access Control)
 
 ```javascript
-// Roles & permissions
+// Roles och permissions
 const permissions = {
   admin: ['read', 'write', 'delete', 'manage'],
   editor: ['read', 'write'],
@@ -295,7 +342,7 @@ export function authorize(...requiredPermissions) {
   };
 }
 
-// Användning
+// Anvandning
 app.delete('/users/:id',
   authenticate,
   authorize('delete', 'manage'),
@@ -303,15 +350,34 @@ app.delete('/users/:id',
 );
 ```
 
-| Koncept | Implementering |
-|---------|----------------|
-| Password hashing | bcrypt/argon2 |
-| Tokens | JWT |
-| Sessions | express-session + Redis |
-| OAuth | Passport.js |
-| Rate limiting | express-rate-limit |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 14 - File Handling
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Token expired | Kort livstid | Implementera refresh tokens |
+| Password leak | Ingen hashing | Anvand bcrypt/argon2 |
+| Brute force | Ingen rate limiting | Implementera rate limit |
+| XSS attack | Ingen sanitering | Anvand helmet och xss-clean |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| JWT | Stateless tokens |
+| Refresh tokens | Fornyelse utan inloggning |
+| RBAC | Rollbaserad behorighet |
+| Rate limiting | Skydd mot brute force |
+
+Kom ihag:
+- Hasha alltid losenord med bcrypt eller argon2
+- Anvand refresh tokens for battre sakerhet
+- Implementera rate limiting pa alla endpoints
+- Anvand helmet for security headers
+- Validera och sanera all input
 ''',
 }
 
@@ -325,7 +391,43 @@ NODE_14_FILES = {
     "content": '''
 # File Handling
 
-Läs, skriv och hantera filer i Node.js.
+Las, skriv och hantera filer i Node.js.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar File Handling?
+
+File handling ar operationer for att lasa, skriva och manipulera filer pa filsystemet.
+
+| Operation | Beskrivning |
+|-----------|-------------|
+| Read | Lasa filinnehall |
+| Write | Skriva till fil |
+| Stream | Hantera stora filer |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Log files | Lasa och analysera loggar |
+| Config files | Hantera konfiguration |
+| Uploads | Hantera filuppladdningar |
+| Backups | Automatiserade backuper |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Metod | Sync | Async (Promises) |
+|-------|------|------------------|
+| Lasa | readFileSync | readFile |
+| Skriva | writeFileSync | writeFile |
+| Kopiera | copyFileSync | copyFile |
+| Stats | statSync | stat |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## File System Module
 
@@ -333,7 +435,7 @@ Läs, skriv och hantera filer i Node.js.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-// Läs fil
+// Las fil
 const content = await fs.readFile('file.txt', 'utf-8');
 console.log(content);
 
@@ -341,7 +443,7 @@ console.log(content);
 await fs.writeFile('output.txt', 'Hello World');
 
 // Append
-await fs.appendFile('log.txt', 'New line\\n');
+await fs.appendFile('log.txt', 'New line\n');
 
 // Kolla om fil finns
 try {
@@ -359,6 +461,8 @@ console.log(stats.isDirectory());
 console.log(stats.mtime);       // modified time
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Directory Operations
 
 ```javascript
@@ -370,9 +474,9 @@ console.log(files);
 const entries = await fs.readdir('./src', { withFileTypes: true });
 for (const entry of entries) {
   if (entry.isDirectory()) {
-    console.log(`Dir: ${entry.name}`);
+    console.log('Dir: ' + entry.name);
   } else {
-    console.log(`File: ${entry.name}`);
+    console.log('File: ' + entry.name);
   }
 }
 
@@ -389,6 +493,8 @@ await fs.cp('src', 'backup', { recursive: true });
 await fs.rename('old.txt', 'new.txt');
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Streams
 
 ```javascript
@@ -396,14 +502,14 @@ import { createReadStream, createWriteStream } from 'node:fs';
 import { pipeline } from 'node:stream/promises';
 import { createGzip, createGunzip } from 'node:zlib';
 
-// Läsa stora filer
+// Lasa stora filer
 const stream = createReadStream('large-file.txt', {
   encoding: 'utf-8',
   highWaterMark: 64 * 1024  // 64KB chunks
 });
 
 stream.on('data', (chunk) => {
-  console.log(`Received ${chunk.length} bytes`);
+  console.log('Received ' + chunk.length + ' bytes');
 });
 
 stream.on('end', () => {
@@ -431,6 +537,8 @@ await pipeline(
 );
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## File Upload (Multer)
 
 ```javascript
@@ -443,7 +551,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const uniqueName = Date.now() + '-' + Math.random().toString(36).slice(2);
     cb(null, uniqueName + path.extname(file.originalname));
   }
 });
@@ -479,6 +587,8 @@ app.post('/upload-multiple', upload.array('files', 5), (req, res) => {
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Cloud Storage (S3)
 
 ```javascript
@@ -495,7 +605,7 @@ const s3 = new S3Client({
 
 // Upload
 async function uploadToS3(file) {
-  const key = `uploads/${Date.now()}-${file.originalname}`;
+  const key = 'uploads/' + Date.now() + '-' + file.originalname;
 
   await s3.send(new PutObjectCommand({
     Bucket: process.env.S3_BUCKET,
@@ -507,7 +617,7 @@ async function uploadToS3(file) {
   return key;
 }
 
-// Signed URL för nedladdning
+// Signed URL for download
 async function getDownloadUrl(key) {
   const command = new GetObjectCommand({
     Bucket: process.env.S3_BUCKET,
@@ -525,6 +635,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   res.json({ key });
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Path Module
 
@@ -548,14 +660,34 @@ path.extname('/home/user/file.txt');   // .txt
 path.normalize('/foo/bar//baz/');      // /foo/bar/baz
 ```
 
-| Metod | Sync | Async (Promises) |
-|-------|------|------------------|
-| Läsa | readFileSync | readFile |
-| Skriva | writeFileSync | writeFile |
-| Kopiera | copyFileSync | copyFile |
-| Stats | statSync | stat |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 15 - WebSockets
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| ENOENT | Fil finns inte | Kontrollera path |
+| EACCES | Behorighetsfel | Kontrollera permissions |
+| EMFILE | For manga oppna filer | Anvand streams |
+| Memory overflow | Stor fil i minnet | Anvand streams |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| fs/promises | Async filoperationer |
+| Streams | For stora filer |
+| Multer | Filuppladdningar |
+| Path | Hantera filsokvagar |
+
+Kom ihag:
+- Anvand alltid fs/promises for async
+- Streams for stora filer
+- Validera filtyper vid uppladdning
+- Anvand path.join for platformoberoende sokvagar
+- Cloud storage for produktion
 ''',
 }
 
@@ -570,6 +702,43 @@ NODE_15_WEBSOCKETS = {
 # WebSockets
 
 Real-time kommunikation med WebSockets.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar WebSockets?
+
+WebSockets ar ett protokoll for tvavagskommunikation mellan klient och server i realtid.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Bidirectional | Bada kan skicka nar som helst |
+| Persistent | Oppet connection |
+| Low latency | Minimal fordrojning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Real-time dashboards | Live metriker |
+| Log streaming | Direkta loggar |
+| Notifications | Push-meddelanden |
+| Chat/Collaboration | Teamkommunikation |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Feature | ws | Socket.IO |
+|---------|-------|-----------|
+| Protocol | WebSocket | WebSocket + fallbacks |
+| Rooms | Manual | Built-in |
+| Events | data/binary | Custom events |
+| Reconnection | Manual | Automatic |
+| Broadcasting | Manual | Built-in |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Native WebSocket (ws)
 
@@ -612,6 +781,8 @@ function broadcast(data) {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Integration med Express
 
 ```javascript
@@ -641,7 +812,7 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Heartbeat för att detektera döda connections
+// Heartbeat for att detektera doda connections
 const interval = setInterval(() => {
   wss.clients.forEach((ws) => {
     if (!ws.isAlive) return ws.terminate();
@@ -656,6 +827,8 @@ wss.on('close', () => {
 
 server.listen(3000);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Socket.IO
 
@@ -686,10 +859,10 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.user.id}`);
+  console.log('User connected: ' + socket.user.id);
 
   // Join room
-  socket.join(`user:${socket.user.id}`);
+  socket.join('user:' + socket.user.id);
 
   // Event handlers
   socket.on('message', (data) => {
@@ -708,17 +881,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`User disconnected: ${socket.user.id}`);
+    console.log('User disconnected: ' + socket.user.id);
   });
 });
 
 // Emit from anywhere
 function notifyUser(userId, event, data) {
-  io.to(`user:${userId}`).emit(event, data);
+  io.to('user:' + userId).emit(event, data);
 }
 
 server.listen(3000);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Socket.IO Client
 
@@ -754,7 +929,9 @@ socket.on('disconnect', (reason) => {
 });
 ```
 
-## Rooms & Namespaces
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Rooms och Namespaces
 
 ```javascript
 // Namespaces
@@ -787,6 +964,8 @@ io.to('room').emit('event', data);          // Specific room
 socket.to('room').emit('event', data);      // Room except sender
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Real-time Chat Example
 
 ```javascript
@@ -818,15 +997,34 @@ io.on('connection', (socket) => {
 });
 ```
 
-| Feature | ws | Socket.IO |
-|---------|-------|-----------|
-| Protocol | WebSocket | WebSocket + fallbacks |
-| Rooms | Manual | Built-in |
-| Events | data/binary | Custom events |
-| Reconnection | Manual | Automatic |
-| Broadcasting | Manual | Built-in |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 16 - Worker Threads
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Connection refused | Server ej startad | Kontrollera server |
+| CORS error | CORS ej konfigurerat | Konfigurera cors i Socket.IO |
+| Memory leak | Listeners ej borttagna | Rensa vid disconnect |
+| Stale connections | Ingen heartbeat | Implementera ping/pong |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| WebSocket | Raw protocol |
+| Socket.IO | Abstraction med extras |
+| Rooms | Gruppera connections |
+| Namespaces | Separera logik |
+
+Kom ihag:
+- WebSockets for tvavagskommunikation
+- Socket.IO for produktionsapplikationer
+- Implementera heartbeat for connection health
+- Anvand rooms for att gruppera klienter
+- Hantera reconnection gracefully
 ''',
 }
 
@@ -840,7 +1038,45 @@ NODE_16_WORKERS = {
     "content": '''
 # Worker Threads
 
-Parallell körning för CPU-intensiva uppgifter.
+Parallell korning for CPU-intensiva uppgifter.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Worker Threads?
+
+Worker Threads gor det mojligt att kora JavaScript i parallella tradar for CPU-intensivt arbete.
+
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Parallellism | Flera tradar samtidigt |
+| CPU-bound | For tunga berakningar |
+| Isolation | Separat minne per worker |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Build tools | Parallella builds |
+| Data processing | Tunga berakningar |
+| Image processing | Bild-/videobearbetning |
+| Encryption | Kryptografiska operationer |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| isMainThread | Boolean - ar vi i main thread? |
+| parentPort | Kommunicera med parent |
+| workerData | Initial data till worker |
+| postMessage | Skicka meddelande |
+| SharedArrayBuffer | Delat minne |
+| Atomics | Thread-safe operations |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Basic Worker
 
@@ -863,7 +1099,7 @@ if (isMainThread) {
   });
 
   worker.on('exit', (code) => {
-    console.log(`Worker exited with code ${code}`);
+    console.log('Worker exited with code ' + code);
   });
 } else {
   // Worker thread
@@ -872,6 +1108,8 @@ if (isMainThread) {
   parentPort.postMessage(sum);
 }
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Worker i samma fil
 
@@ -902,7 +1140,7 @@ if (isMainThread) {
   const { task, n } = workerData;
 
   if (task === 'compute') {
-    // CPU-intensiv beräkning
+    // CPU-intensiv berakning
     let sum = 0;
     for (let i = 0; i < n; i++) {
       sum += Math.sqrt(i);
@@ -911,6 +1149,8 @@ if (isMainThread) {
   }
 }
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Worker Pool
 
@@ -982,7 +1222,7 @@ class WorkerPool {
   }
 }
 
-// Användning
+// Anvandning
 const pool = new WorkerPool('./cpu-worker.js', 4);
 
 const results = await Promise.all([
@@ -993,6 +1233,8 @@ const results = await Promise.all([
 
 await pool.close();
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## SharedArrayBuffer
 
@@ -1013,7 +1255,7 @@ if (isMainThread) {
     }));
   }
 
-  // Vänta på alla workers
+  // Vanta pa alla workers
   await Promise.all(workers.map(w =>
     new Promise(resolve => w.on('exit', resolve))
   ));
@@ -1029,6 +1271,8 @@ if (isMainThread) {
   }
 }
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## MessageChannel
 
@@ -1054,38 +1298,52 @@ port2.postMessage('Hello via channel');
 parentPort.on('message', ({ type, port }) => {
   if (type === 'init') {
     port.on('message', (msg) => {
-      port.postMessage(`Echo: ${msg}`);
+      port.postMessage('Echo: ' + msg);
     });
   }
 });
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Use Cases
 
-```yaml
-Bra för:
-  - CPU-intensiva beräkningar
-  - Image/video processing
-  - Kryptering/hashing
-  - Data transformation
-  - Parsing stora filer
+| Bra for | Inte bra for |
+|---------|--------------|
+| CPU-intensiva berakningar | I/O operations |
+| Image/video processing | Enkla uppgifter |
+| Kryptering/hashing | Real-time communication |
+| Data transformation | Simpla tasks (overhead) |
+| Parsing stora filer | |
 
-Inte bra för:
-  - I/O operations (använd async/await)
-  - Simple tasks (overhead)
-  - Real-time communication
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Worker crash | Uncaught error | Lagg till error handler |
+| Slow communication | Stora meddelanden | Anvand SharedArrayBuffer |
+| Memory leak | Workers ej terminerade | Anropa terminate() |
+| Race conditions | Delat minne | Anvand Atomics |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
 
 | Koncept | Beskrivning |
 |---------|-------------|
-| isMainThread | Boolean - är vi i main thread? |
-| parentPort | Kommunicera med parent |
-| workerData | Initial data till worker |
-| postMessage | Skicka meddelande |
+| Worker Threads | Parallella tradar |
+| Worker Pool | Ateranvand workers |
 | SharedArrayBuffer | Delat minne |
 | Atomics | Thread-safe operations |
 
-**Nästa steg:** Node 17 - Testing
+Kom ihag:
+- Anvand workers for CPU-intensivt arbete
+- Worker pools for effektivitet
+- SharedArrayBuffer for delat minne
+- Atomics for thread-safe operationer
+- Undvik workers for I/O-operationer
 ''',
 }
 

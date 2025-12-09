@@ -21,22 +21,26 @@ DOTNET_NODE_9_ASPNET_INTRO = {
         "aspnet core", "web api", "minimal api", "project structure",
         "kestrel", "hosting", "program.cs"
     ],
-    "content": """
-# ASP.NET Core Introduction
+    "content": """# ASP.NET Core Introduction
 
-> *"ASP.NET Core is a cross-platform, high-performance framework for building modern web applications."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor ASP.NET Core ar viktigt |
+|----------|-------------------------------|
+| **Performance** | #1 pa TechEmpower benchmarks |
+| **Cross-platform** | Windows, Linux, macOS |
+| **Cloud-native** | Perfekt for containerization |
+| **Unified** | Web, API, real-time, microservices |
 
-ASP.NET Core är ett av de snabbaste web frameworks:
-- **#1 på TechEmpower benchmarks** i flera kategorier
-- **Cross-platform** - kör på Windows, Linux, macOS
-- **Unified** - web, API, real-time, microservices
-- **Cloud-optimized** - perfekt för containerization
+Du maste forsta:
 
----
+- **Kestrel** - inbyggd high-performance server
+- **Middleware pipeline** - request/response flow
+- **Minimal API vs Controllers** - nar anvanda vilken
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 ASP.NET Core Architecture
 
@@ -322,15 +326,45 @@ builder.Services.AddCors(options =>
 app.UseCors();
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Minimal API** för enkla endpoints
-- **Controllers** för komplex struktur
-- **Kestrel** är inbyggd high-performance server
-- **Results** helper för HTTP responses
-- **Swagger** genereras automatiskt
+| Kommando | Beskrivning |
+|----------|-------------|
+| `dotnet new webapi` | Skapa Web API projekt |
+| `dotnet run` | Starta applikationen |
+| `app.MapGet()` | Definiera GET endpoint |
+| `Results.Ok()` | Returnera 200 OK |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|--------|
+| Port already in use | Annan process | Andra port i launchSettings.json |
+| CORS error | Saknad policy | Lagg till CORS middleware |
+| 404 Not Found | Fel route | Kontrollera routing |
+| 500 Internal Error | Exception | Kolla loggar |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Minimal API** | For enkla endpoints |
+| **Controllers** | For komplex struktur |
+| **Kestrel** | Inbyggd high-perf server |
+| **Swagger** | Genereras automatiskt |
+
+**Kom ihag:**
+
+- Minimal API for enkla CRUD-operationer
+- Controllers for komplex logik och attribut
+- Swagger UI pa /swagger for testning
+- Kestrel ar production-ready
 """,
 }
 
@@ -351,19 +385,26 @@ DOTNET_NODE_10_ROUTING = {
         "routing", "route parameters", "constraints", "route groups",
         "endpoint filters", "model binding"
     ],
-    "content": """
-# Routing & Endpoints
+    "content": """# Routing och Endpoints
 
-> *"Good routing is like good signage - users always know where they're going."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor routing ar viktigt |
+|----------|---------------------------|
+| **Clean URLs** | /api/users/123 istallet for ?id=123 |
+| **RESTful** | Verbs via HTTP methods |
+| **Discoverability** | Sjalvbeskrivande endpoints |
+| **Versioning** | /api/v1/users vs /api/v2/users |
 
-Routing är fundamentalt för REST API design:
-- **Clean URLs** - `/api/users/123` istället för `?id=123`
-- **RESTful conventions** - verbs via HTTP methods
-- **Discoverability** - självbeskrivande endpoints
+Du maste forsta:
+
+- **Route parameters** - {id} for dynamiska segment
+- **Constraints** - :int, :guid for validering
+- **Route groups** - organisera relaterade endpoints
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ---
 
@@ -612,15 +653,45 @@ app.MapGet("/api/users/{id:int}", (int id) => ...);  // Sedan (constraint)
 // /api/Users == /api/users == /API/USERS
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Route parameters** `{id}` för dynamiska segment
-- **Constraints** `:int`, `:guid` för validering
-- **Route groups** organiserar relaterade endpoints
-- **Model binding** automatisk deserialisering
-- **Filters** för cross-cutting concerns
+| Syntax | Beskrivning |
+|--------|-------------|
+| `{id}` | Route parameter |
+| `{id:int}` | Med constraint |
+| `{id?}` | Optional parameter |
+| `{*catchAll}` | Catch-all parameter |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|--------|
+| Route conflict | Tvetydiga routes | Anvand constraints |
+| 404 Not Found | Fel parameter-typ | Kontrollera constraint |
+| Model binding failed | Fel format | Validera input |
+| Wrong method | GET vs POST | Kontrollera HTTP verb |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Route parameters** | {id} for dynamiska segment |
+| **Constraints** | :int, :guid for validering |
+| **Route groups** | Organiserar endpoints |
+| **Model binding** | Automatisk deserialisering |
+
+**Kom ihag:**
+
+- Anvand constraints for typsakerhet
+- Literal routes for specifika matchar
+- Route groups for gemensam prefix/middleware
+- Case-insensitive by default
 """,
 }
 
@@ -641,23 +712,26 @@ DOTNET_NODE_11_MIDDLEWARE = {
         "middleware", "request pipeline", "custom middleware",
         "exception handling", "logging", "cors"
     ],
-    "content": """
-# Middleware Pipeline
+    "content": """# Middleware Pipeline
 
-> *"Middleware is like an assembly line - each station processes the request."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor middleware ar viktigt |
+|----------|------------------------------|
+| **Authentication** | Vem ar du? |
+| **Authorization** | Far du gora detta? |
+| **Logging** | Vad hander? |
+| **Error handling** | Vad gick fel? |
 
-Middleware hanterar cross-cutting concerns:
-- **Authentication** - vem är du?
-- **Authorization** - får du göra detta?
-- **Logging** - vad händer?
-- **Error handling** - vad gick fel?
-- **CORS** - tillåt cross-origin requests
+Du maste forsta:
 
----
+- **Pipeline order** - ordningen ar kritisk
+- **Use vs Run** - middleware chain vs terminal
+- **Custom middleware** - reusable logic
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Middleware Pipeline
 
@@ -982,15 +1056,45 @@ if (!context.Response.HasStarted)
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Middleware order** är kritisk
-- **Use** för middleware som anropar next
-- **Run** för terminal middleware
-- **Custom middleware** för reusable logic
-- **Exception middleware** först i pipeline
+| Metod | Beskrivning |
+|-------|-------------|
+| `Use()` | Middleware som anropar next |
+| `Run()` | Terminal middleware |
+| `Map()` | Branch pipeline |
+| `UseWhen()` | Conditional middleware |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| CORS fails | Fel ordning | CORS fore Authorization |
+| Response started | Skriver for sent | Checka HasStarted |
+| Missing next | Glomde await | await _next(context) |
+| Wrong order | Authn efter Authz | Authn fore Authz |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Middleware order** | Kritiskt for korrekt beteende |
+| **Use** | Anropar next i chain |
+| **Run** | Terminal middleware |
+| **Custom middleware** | Reusable logic |
+
+**Kom ihag:**
+
+- Exception middleware forst i pipeline
+- CORS fore Authentication
+- Authentication fore Authorization
+- Routing nara slutet
 """,
 }
 
@@ -1011,22 +1115,26 @@ DOTNET_NODE_12_CONFIG = {
         "configuration", "appsettings", "environment", "options pattern",
         "dependency injection", "service lifetimes"
     ],
-    "content": """
-# Configuration & Dependency Injection
+    "content": """# Configuration och Dependency Injection
 
-> *"Configuration should be easy to change without recompiling."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor config/DI ar viktigt |
+|----------|----------------------------|
+| **Environment-specific** | dev vs staging vs prod |
+| **Secrets management** | Hall hemligheter sakra |
+| **Testability** | Byt ut beroenden enkelt |
+| **Loose coupling** | Flexibel arkitektur |
 
-Konfiguration och DI är centrala för:
-- **Environment-specific settings** - dev vs prod
-- **Secrets management** - håll hemligheter säkra
-- **Testability** - byt ut beroenden enkelt
-- **Loose coupling** - flexibel arkitektur
+Du maste forsta:
 
----
+- **Configuration sources** - prioritetsordning
+- **Options pattern** - strongly-typed config
+- **DI lifetimes** - Transient, Scoped, Singleton
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Configuration Sources
 

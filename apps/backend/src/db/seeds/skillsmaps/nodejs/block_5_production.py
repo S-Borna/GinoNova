@@ -1,5 +1,5 @@
 # =============================================================================
-# BLOCK 5: PRODUCTION (Noder 17-20)
+# BLOCK 5: PRODUCTION (Noder 17-20) - V3 FORMAT
 # =============================================================================
 
 NODE_17_TESTING = {
@@ -12,24 +12,47 @@ NODE_17_TESTING = {
     "content": '''
 # Testing
 
-Testa Node.js applikationer effektivt.
+Testa Node.js-applikationer med Jest.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Testing?
+
+Testing ar processen att verifiera att koden fungerar som forvantat och upptacka buggar innan produktion.
+
+| Testtyp | Beskrivning |
+|---------|-------------|
+| Unit tests | Testar enskilda funktioner |
+| Integration | Testar komponenter tillsammans |
+| E2E | Testar hela flodet |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| CI/CD | Automatiserad kvalitetskontroll |
+| Regression | Fanga buggar tidigt |
+| Refactoring | Modifiera kod sakert |
+| Dokumentation | Tester visar hur koden ska anvandas |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Jest-funktion | Beskrivning |
+|---------------|-------------|
+| describe | Gruppera tester |
+| it / test | Enskilt testfall |
+| expect | Assertion |
+| beforeEach | Kor fore varje test |
+| afterAll | Kor efter alla tester |
+| jest.mock | Mocka modul |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Jest Setup
-
-```bash
-npm install -D jest @types/jest
-```
-
-```json
-// package.json
-{
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
-  }
-}
-```
 
 ```javascript
 // jest.config.js
@@ -39,17 +62,27 @@ export default {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
+  coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/**/*.test.js'
-  ]
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80
+    }
+  }
 };
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Unit Tests
 
 ```javascript
-// utils/math.js
+// math.js
 export function add(a, b) {
   return a + b;
 }
@@ -59,142 +92,125 @@ export function divide(a, b) {
   return a / b;
 }
 
-// utils/math.test.js
+// math.test.js
 import { add, divide } from './math.js';
 
-describe('Math utils', () => {
+describe('Math functions', () => {
   describe('add', () => {
-    test('adds two positive numbers', () => {
-      expect(add(1, 2)).toBe(3);
+    it('should add two positive numbers', () => {
+      expect(add(2, 3)).toBe(5);
     });
 
-    test('adds negative numbers', () => {
-      expect(add(-1, -2)).toBe(-3);
+    it('should handle negative numbers', () => {
+      expect(add(-1, 1)).toBe(0);
     });
   });
 
   describe('divide', () => {
-    test('divides two numbers', () => {
+    it('should divide two numbers', () => {
       expect(divide(10, 2)).toBe(5);
     });
 
-    test('throws on division by zero', () => {
+    it('should throw on division by zero', () => {
       expect(() => divide(10, 0)).toThrow('Division by zero');
     });
   });
 });
 ```
 
-## Async Testing
-
-```javascript
-// services/user.js
-export async function getUser(id) {
-  const response = await fetch(`/api/users/${id}`);
-  if (!response.ok) throw new Error('User not found');
-  return response.json();
-}
-
-// services/user.test.js
-import { getUser } from './user.js';
-
-describe('User service', () => {
-  test('returns user data', async () => {
-    const user = await getUser(1);
-    expect(user).toHaveProperty('id');
-    expect(user).toHaveProperty('email');
-  });
-
-  test('throws for non-existent user', async () => {
-    await expect(getUser(999)).rejects.toThrow('User not found');
-  });
-});
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Mocking
 
 ```javascript
-import { jest } from '@jest/globals';
-import { UserService } from './user-service.js';
-import { db } from './database.js';
+// userService.js
+export async function getUser(id) {
+  const response = await fetch('/api/users/' + id);
+  return response.json();
+}
 
-// Mock hela modulen
-jest.mock('./database.js');
+// userService.test.js
+import { getUser } from './userService.js';
 
-describe('UserService', () => {
+// Mock fetch globalt
+global.fetch = jest.fn();
+
+describe('getUser', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    fetch.mockClear();
   });
 
-  test('creates user', async () => {
-    const mockUser = { id: 1, name: 'Alice' };
-    db.users.create.mockResolvedValue(mockUser);
+  it('should fetch user by id', async () => {
+    const mockUser = { id: 1, name: 'Test User' };
+    fetch.mockResolvedValueOnce({
+      json: () => Promise.resolve(mockUser)
+    });
 
-    const result = await UserService.create({ name: 'Alice' });
+    const user = await getUser(1);
 
-    expect(db.users.create).toHaveBeenCalledWith({ name: 'Alice' });
-    expect(result).toEqual(mockUser);
+    expect(fetch).toHaveBeenCalledWith('/api/users/1');
+    expect(user).toEqual(mockUser);
+  });
+
+  it('should handle errors', async () => {
+    fetch.mockRejectedValueOnce(new Error('Network error'));
+
+    await expect(getUser(1)).rejects.toThrow('Network error');
   });
 });
 
-// Mock specifik funktion
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+// Mock en hel modul
+jest.mock('./database.js', () => ({
+  query: jest.fn()
+}));
 
-test('fetches data', async () => {
-  mockFetch.mockResolvedValue({
-    ok: true,
-    json: () => Promise.resolve({ data: 'test' })
-  });
+import { query } from './database.js';
 
-  const result = await fetchData();
-
-  expect(mockFetch).toHaveBeenCalledWith('/api/data');
-  expect(result).toEqual({ data: 'test' });
+test('mocked database', async () => {
+  query.mockResolvedValue([{ id: 1 }]);
+  const result = await query('SELECT * FROM users');
+  expect(result).toEqual([{ id: 1 }]);
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## API Testing (Supertest)
 
 ```javascript
 import request from 'supertest';
-import { app } from './app.js';
+import app from './app.js';
 
-describe('User API', () => {
+describe('API Tests', () => {
   describe('GET /api/users', () => {
-    test('returns list of users', async () => {
+    it('should return all users', async () => {
       const response = await request(app)
         .get('/api/users')
         .expect('Content-Type', /json/)
         .expect(200);
 
-      expect(response.body).toHaveProperty('data');
-      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body).toBeInstanceOf(Array);
     });
   });
 
   describe('POST /api/users', () => {
-    test('creates a new user', async () => {
-      const userData = {
-        email: 'test@example.com',
-        name: 'Test User'
-      };
+    it('should create a user', async () => {
+      const newUser = { name: 'Test', email: 'test@test.com' };
 
       const response = await request(app)
         .post('/api/users')
-        .send(userData)
+        .send(newUser)
         .expect(201);
 
-      expect(response.body.data.email).toBe(userData.email);
+      expect(response.body.name).toBe('Test');
+      expect(response.body.id).toBeDefined();
     });
 
-    test('returns 400 for invalid data', async () => {
-      const response = await request(app)
+    it('should validate required fields', async () => {
+      await request(app)
         .post('/api/users')
-        .send({ name: '' })
+        .send({})
         .expect(400);
-
-      expect(response.body).toHaveProperty('errors');
     });
   });
 
@@ -202,215 +218,287 @@ describe('User API', () => {
     let token;
 
     beforeAll(async () => {
-      // Login för att få token
       const res = await request(app)
-        .post('/api/auth/login')
-        .send({ email: 'admin@example.com', password: 'password' });
+        .post('/auth/login')
+        .send({ email: 'test@test.com', password: 'password' });
       token = res.body.token;
     });
 
-    test('GET /api/me requires auth', async () => {
+    it('should access protected route with token', async () => {
       await request(app)
-        .get('/api/me')
-        .expect(401);
+        .get('/api/profile')
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200);
     });
 
-    test('GET /api/me with token', async () => {
-      const response = await request(app)
-        .get('/api/me')
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200);
-
-      expect(response.body.data.email).toBe('admin@example.com');
+    it('should reject without token', async () => {
+      await request(app)
+        .get('/api/profile')
+        .expect(401);
     });
   });
 });
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Test Database
 
 ```javascript
-// test/setup.js
-import { PrismaClient } from '@prisma/client';
-import { beforeAll, afterAll, beforeEach } from '@jest/globals';
+// testSetup.js
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
 
-const prisma = new PrismaClient();
+let mongod;
 
-beforeAll(async () => {
-  // Migrate test database
-  await prisma.$executeRaw`TRUNCATE TABLE users CASCADE`;
-});
+export async function setupTestDB() {
+  mongod = await MongoMemoryServer.create();
+  const uri = mongod.getUri();
+  await mongoose.connect(uri);
+}
 
-beforeEach(async () => {
-  // Seed test data
-  await prisma.user.createMany({
-    data: [
-      { email: 'admin@example.com', name: 'Admin' },
-      { email: 'user@example.com', name: 'User' }
-    ]
+export async function teardownTestDB() {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongod.stop();
+}
+
+export async function clearTestDB() {
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    await collections[key].deleteMany({});
+  }
+}
+
+// I tester
+describe('User model', () => {
+  beforeAll(async () => {
+    await setupTestDB();
+  });
+
+  afterAll(async () => {
+    await teardownTestDB();
+  });
+
+  beforeEach(async () => {
+    await clearTestDB();
+  });
+
+  it('should create a user', async () => {
+    const user = await User.create({
+      name: 'Test',
+      email: 'test@test.com'
+    });
+
+    expect(user.id).toBeDefined();
+    expect(user.name).toBe('Test');
   });
 });
-
-afterEach(async () => {
-  // Clean up
-  await prisma.user.deleteMany();
-});
-
-afterAll(async () => {
-  await prisma.$disconnect();
-});
 ```
 
-## Test Matchers
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```javascript
-// Equality
-expect(value).toBe(expected);           // ===
-expect(value).toEqual(expected);        // Deep equality
-expect(value).toStrictEqual(expected);  // Deep + type
+## Coverage
 
-// Truthiness
-expect(value).toBeTruthy();
-expect(value).toBeFalsy();
-expect(value).toBeNull();
-expect(value).toBeUndefined();
-expect(value).toBeDefined();
+```bash
+# Kor tester med coverage
+npm test -- --coverage
 
-// Numbers
-expect(value).toBeGreaterThan(3);
-expect(value).toBeLessThanOrEqual(5);
-expect(value).toBeCloseTo(0.3, 5);
+# Watch mode
+npm test -- --watch
 
-// Strings
-expect(value).toMatch(/pattern/);
-expect(value).toContain('substring');
+# Specifik fil
+npm test -- users.test.js
 
-// Arrays
-expect(array).toContain(item);
-expect(array).toHaveLength(3);
-
-// Objects
-expect(obj).toHaveProperty('key');
-expect(obj).toMatchObject({ key: 'value' });
-
-// Exceptions
-expect(() => fn()).toThrow();
-expect(() => fn()).toThrow('message');
+# Match pattern
+npm test -- --testNamePattern="should create"
 ```
 
-| Test Type | Verktyg | Syfte |
-|-----------|---------|-------|
-| Unit | Jest | Testa funktioner |
-| Integration | Supertest | Testa API endpoints |
-| E2E | Playwright | Testa hela flöden |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 18 - Security
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Timeout | Async ej hanterad | await och done() |
+| Mock ej aterstald | Saknas clearMocks | beforeEach med mockClear |
+| DB state | Delad data mellan tester | beforeEach cleanup |
+| Flaky tests | Timing issues | Anvand waitFor/retry |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Jest | Testramverk |
+| Mocking | Simulera beroenden |
+| Supertest | API-tester |
+| Coverage | Mat testtackning |
+
+Kom ihag:
+- Skriv tester for kritisk logik
+- Mocka externa beroenden
+- Anvand test-database for integrationstester
+- Sikta pa 80%+ coverage
+- Kor tester i CI/CD
 ''',
 }
 
 NODE_18_SECURITY = {
     "node_id": 18,
     "title": "Security Best Practices",
-    "slug": "security",
+    "slug": "security-practices",
     "estimated_minutes": 55,
     "xp_reward": 165,
     "prerequisites": [13],
     "content": '''
 # Security Best Practices
 
-Säkra Node.js applikationer.
+Skydda din Node.js-applikation mot vanliga attacker.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Security?
+
+Security handlar om att skydda applikationen mot attacker, datalackage och andra hot.
+
+| Attacktyp | Beskrivning |
+|-----------|-------------|
+| Injection | Skadlig kod i input |
+| XSS | Script i webbsidor |
+| CSRF | Forgad request |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Data protection | Skydda anvandardata |
+| Compliance | GDPR, SOC2 |
+| Reputation | Undvik intrång |
+| Cost | Sakerhetsincidenter ar dyra |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Skydd | Verktyg/Metod |
+|-------|---------------|
+| Headers | helmet |
+| Rate limiting | express-rate-limit |
+| Input validation | joi, zod |
+| SQL Injection | Parameterized queries |
+| XSS | DOMPurify, escape output |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Input Validation
 
 ```javascript
-import { z } from 'zod';
-import sanitizeHtml from 'sanitize-html';
+import Joi from 'joi';
 
-// Schema validation med Zod
-const userSchema = z.object({
-  email: z.string().email().toLowerCase(),
-  password: z.string()
-    .min(8)
-    .regex(/[A-Z]/, 'Must contain uppercase')
-    .regex(/[0-9]/, 'Must contain number'),
-  name: z.string().min(1).max(100).trim()
+// Schema definition
+const userSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).pattern(/[A-Z]/).pattern(/[0-9]/).required(),
+  age: Joi.number().integer().min(18).max(120),
+  role: Joi.string().valid('user', 'admin').default('user')
 });
 
-// Validering middleware
-function validate(schema) {
+// Validation middleware
+export function validate(schema) {
   return (req, res, next) => {
-    try {
-      req.body = schema.parse(req.body);
-      next();
-    } catch (error) {
-      res.status(400).json({
-        error: 'Validation failed',
-        details: error.errors
-      });
+    const { error, value } = schema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true
+    });
+
+    if (error) {
+      const errors = error.details.map(d => ({
+        field: d.path.join('.'),
+        message: d.message
+      }));
+      return res.status(400).json({ errors });
     }
+
+    req.body = value;
+    next();
   };
 }
 
-// Sanitize HTML
-const cleanHtml = sanitizeHtml(userInput, {
-  allowedTags: ['b', 'i', 'em', 'strong', 'a'],
-  allowedAttributes: {
-    'a': ['href']
-  }
-});
+// Anvandning
+app.post('/users', validate(userSchema), createUser);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## SQL Injection Prevention
 
 ```javascript
-// ALDRIG gör detta:
-const query = `SELECT * FROM users WHERE id = ${id}`;  // ❌
+// FARLIGT - SQL Injection
+const query = "SELECT * FROM users WHERE email = '" + email + "'";
 
-// Använd parameterized queries:
-// Med pg
-const result = await pool.query(
-  'SELECT * FROM users WHERE id = $1',
-  [id]
+// SAKERT - Parameterized queries
+// PostgreSQL (pg)
+const result = await client.query(
+  'SELECT * FROM users WHERE email = $1',
+  [email]
 );
 
-// Med Prisma (automatiskt säkert)
-const user = await prisma.user.findUnique({
-  where: { id }
-});
+// MySQL
+const [rows] = await connection.execute(
+  'SELECT * FROM users WHERE email = ?',
+  [email]
+);
 
-// Med Mongoose (automatiskt säkert)
-const user = await User.findById(id);
+// ORM (Prisma)
+const user = await prisma.user.findUnique({
+  where: { email }
+});
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## XSS Prevention
 
 ```javascript
+import createDOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
+import escape from 'lodash/escape.js';
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+
+// Sanera HTML-input
+function sanitizeHtml(dirty) {
+  return DOMPurify.sanitize(dirty, {
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p'],
+    ALLOWED_ATTR: ['href']
+  });
+}
+
+// Escape for rendering
+function escapeForHtml(text) {
+  return escape(text);
+}
+
+// Content Security Policy
 import helmet from 'helmet';
-import xssClean from 'xss-clean';
 
-// Security headers
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
-    }
-  },
-  xssFilter: true,
-  noSniff: true,
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", "data:", "https:"],
+    connectSrc: ["'self'", "https://api.example.com"]
+  }
 }));
-
-// XSS clean middleware
-app.use(xssClean());
-
-// Output encoding
-import { encode } from 'html-entities';
-
-const safeOutput = encode(userInput);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## CSRF Protection
 
@@ -419,21 +507,33 @@ import csrf from 'csurf';
 import cookieParser from 'cookie-parser';
 
 app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
-const csrfProtection = csrf({ cookie: true });
-
-// Applicera på state-changing routes
-app.get('/form', csrfProtection, (req, res) => {
-  res.render('form', { csrfToken: req.csrfToken() });
+// Skicka token till frontend
+app.get('/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
 });
 
-app.post('/submit', csrfProtection, (req, res) => {
-  // Hanterar request om token är valid
+// Error handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ error: 'Invalid CSRF token' });
+  }
+  next(err);
 });
 
-// För API:er med JWT är CSRF inte nödvändigt
-// eftersom tokens skickas i headers, inte cookies
+// Frontend: inkludera token i requests
+fetch('/api/data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'CSRF-Token': csrfToken
+  },
+  body: JSON.stringify(data)
+});
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Rate Limiting
 
@@ -444,10 +544,11 @@ import { createClient } from 'redis';
 
 const redis = createClient();
 
-// General limiter
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,  // 15 min
+// Global rate limit
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minuter
   max: 100,
+  message: { error: 'Too many requests, try again later' },
   standardHeaders: true,
   legacyHeaders: false,
   store: new RedisStore({
@@ -455,113 +556,136 @@ const generalLimiter = rateLimit({
   })
 });
 
-// Strict limiter för auth
+app.use(globalLimiter);
+
+// Striktare for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,  // 1 timme
   max: 5,
   skipSuccessfulRequests: true,
-  message: { error: 'Too many login attempts, try again later' }
+  message: { error: 'Too many login attempts' }
 });
 
-app.use(generalLimiter);
-app.use('/api/auth', authLimiter);
+app.use('/auth/login', authLimiter);
+app.use('/auth/register', authLimiter);
+
+// Per-user rate limiting
+const userLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  keyGenerator: (req) => req.user?.id || req.ip
+});
 ```
 
-## Secure Dependencies
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Secure Headers (Helmet)
+
+```javascript
+import helmet from 'helmet';
+
+app.use(helmet());
+
+// Eller med custom config
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+}));
+
+// Manuella headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Environment Security
+
+```javascript
+// .env - ALDRIG i git
+DATABASE_URL=postgres://user:pass@host/db
+JWT_SECRET=super-secret-key
+API_KEY=external-api-key
+
+// Validera env
+import { z } from 'zod';
+
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'test', 'production']),
+  DATABASE_URL: z.string().url(),
+  JWT_SECRET: z.string().min(32),
+  PORT: z.coerce.number().default(3000)
+});
+
+const env = envSchema.parse(process.env);
+
+// Secrets i produktion
+// - AWS Secrets Manager
+// - HashiCorp Vault
+// - Kubernetes Secrets
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Dependency Security
 
 ```bash
-# Scanna för vulnerabilities
+# Kontrollera sarbarheter
 npm audit
 
 # Fixa automatiskt
 npm audit fix
 
 # Uppdatera dependencies
-npm update
+npx npm-check-updates -u
 
-# Kolla outdated packages
-npm outdated
+# Renovate/Dependabot for automatiska PRs
 ```
 
-```javascript
-// Använd Snyk
-// npm install -g snyk
-// snyk test
-// snyk monitor
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Renovate/Dependabot för automatiska updates
-```
+## Vanliga fel och losningar
 
-## Environment Variables
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| SQL Injection | Osaner input | Parameterized queries |
+| XSS | Osaner output | CSP + sanitering |
+| Secrets leaked | Hardkodade | Environment variables |
+| Brute force | Ingen limit | Rate limiting |
 
-```javascript
-import dotenv from 'dotenv';
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Ladda .env (endast i development)
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
-}
+## Key Takeaways
 
-// Validera required env vars
-const requiredEnvVars = [
-  'DATABASE_URL',
-  'JWT_SECRET',
-  'REDIS_URL'
-];
+| Koncept | Beskrivning |
+|---------|-------------|
+| Validation | Validera all input |
+| Sanitization | Sanera output |
+| Rate limiting | Begransar requests |
+| Headers | Skyddande HTTP-headers |
 
-for (const envVar of requiredEnvVars) {
-  if (!process.env[envVar]) {
-    console.error(`Missing required environment variable: ${envVar}`);
-    process.exit(1);
-  }
-}
-
-// Aldrig logga secrets
-console.log(process.env);  // ❌
-
-// .gitignore
-// .env
-// .env.local
-// .env.*.local
-```
-
-## Security Checklist
-
-```yaml
-Authentication:
-  - [ ] Använd bcrypt/argon2 för passwords
-  - [ ] Implementera rate limiting på login
-  - [ ] Använd secure, httpOnly cookies
-  - [ ] Implementera token rotation
-
-Headers:
-  - [ ] Använd Helmet.js
-  - [ ] Sätt Content-Security-Policy
-  - [ ] Aktivera HSTS
-  - [ ] Disable X-Powered-By
-
-Input:
-  - [ ] Validera all input
-  - [ ] Sanitize output
-  - [ ] Använd parameterized queries
-  - [ ] Begränsa request body size
-
-Dependencies:
-  - [ ] Kör npm audit regelbundet
-  - [ ] Uppdatera dependencies
-  - [ ] Använd lock files
-  - [ ] Scanna med Snyk/Dependabot
-```
-
-| Attack | Prevention |
-|--------|------------|
-| SQL Injection | Parameterized queries |
-| XSS | Input validation, CSP |
-| CSRF | CSRF tokens, SameSite cookies |
-| Brute Force | Rate limiting |
-| Secrets Exposure | Environment variables |
-
-**Nästa steg:** Node 19 - Deployment
+Kom ihag:
+- Validera och sanera all input
+- Anvand parameterized queries
+- Implementera rate limiting
+- Anvand helmet for security headers
+- Kor npm audit regelbundet
 ''',
 }
 
@@ -569,33 +693,59 @@ NODE_19_DEPLOYMENT = {
     "node_id": 19,
     "title": "Deployment",
     "slug": "deployment",
-    "estimated_minutes": 55,
-    "xp_reward": 160,
+    "estimated_minutes": 65,
+    "xp_reward": 180,
     "prerequisites": [17, 18],
     "content": '''
 # Deployment
 
-Deploya Node.js applikationer till produktion.
+Deploya Node.js-applikationer till produktion.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Deployment?
+
+Deployment ar processen att gora din applikation tillganglig for anvandare i en produktionsmiljo.
+
+| Metod | Beskrivning |
+|-------|-------------|
+| Traditional | VPS/Server |
+| Container | Docker/K8s |
+| Serverless | Functions |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Automation | Konsekvent deployment |
+| Reliability | Minimera driftstopp |
+| Scalability | Hantera last |
+| Rollback | Aterga vid problem |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Plattform | Typ | Best for |
+|-----------|-----|----------|
+| Railway | PaaS | Snabb start |
+| Render | PaaS | Full-stack |
+| AWS ECS | Container | Skalbarhet |
+| Vercel | Serverless | Frontend + API |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## PM2 Process Manager
 
-```bash
-npm install -g pm2
-
-# Starta app
-pm2 start app.js --name my-app
-
-# Med ecosystem file
-pm2 ecosystem
-```
-
 ```javascript
-// ecosystem.config.js
+// ecosystem.config.cjs
 module.exports = {
   apps: [{
-    name: 'my-app',
+    name: 'api',
     script: './src/index.js',
-    instances: 'max',  // Använd alla CPU cores
+    instances: 'max',  // Cluster mode
     exec_mode: 'cluster',
     env: {
       NODE_ENV: 'development'
@@ -603,28 +753,41 @@ module.exports = {
     env_production: {
       NODE_ENV: 'production'
     },
-    max_memory_restart: '1G',
-    error_file: './logs/err.log',
+    // Logging
+    log_file: './logs/combined.log',
     out_file: './logs/out.log',
+    error_file: './logs/error.log',
     log_date_format: 'YYYY-MM-DD HH:mm:ss',
+    // Auto-restart
     watch: false,
-    ignore_watch: ['node_modules', 'logs']
+    max_memory_restart: '1G',
+    // Graceful shutdown
+    kill_timeout: 5000,
+    wait_ready: true,
+    listen_timeout: 10000
   }]
 };
 ```
 
 ```bash
-# Kommandon
-pm2 start ecosystem.config.js --env production
-pm2 stop my-app
-pm2 restart my-app
-pm2 reload my-app     # Zero-downtime reload
-pm2 delete my-app
-pm2 logs my-app
+# Starta
+pm2 start ecosystem.config.cjs --env production
+
+# Reload utan downtime
+pm2 reload api
+
+# Monitoring
 pm2 monit
-pm2 save              # Spara process lista
-pm2 startup           # Auto-start vid boot
+
+# Cluster scaling
+pm2 scale api 4
+
+# Startup script
+pm2 startup
+pm2 save
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Docker
 
@@ -633,33 +796,27 @@ pm2 startup           # Auto-start vid boot
 FROM node:20-alpine AS builder
 
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm ci --only=production
 
-COPY . .
-RUN npm run build
-
-# Production image
 FROM node:20-alpine
 
 WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY . .
 
-# Skapa non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
-
-COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
-
+# Non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
 USER nodejs
 
+ENV NODE_ENV=production
 EXPOSE 3000
 
-ENV NODE_ENV=production
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "src/index.js"]
 ```
 
 ```yaml
@@ -667,87 +824,41 @@ CMD ["node", "dist/index.js"]
 version: '3.8'
 
 services:
-  app:
+  api:
     build: .
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgres://user:pass@db:5432/mydb
-      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgres://postgres:password@db/app
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
     restart: unless-stopped
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
 
   db:
     image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=mydb
-
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
-  redis_data:
 ```
 
-## Cloud Platforms
-
-```yaml
-# Railway (railway.toml)
-[build]
-builder = "NIXPACKS"
-
-[deploy]
-startCommand = "npm start"
-healthcheckPath = "/health"
-healthcheckTimeout = 100
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 3
-```
-
-```yaml
-# Render (render.yaml)
-services:
-  - type: web
-    name: my-app
-    env: node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    healthCheckPath: /health
-    envVars:
-      - key: NODE_ENV
-        value: production
-```
-
-```yaml
-# Fly.io (fly.toml)
-app = "my-app"
-primary_region = "arn"
-
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 1
-
-[checks]
-  [checks.health]
-    port = 3000
-    type = "http"
-    interval = "15s"
-    timeout = "5s"
-    path = "/health"
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## CI/CD (GitHub Actions)
 
@@ -764,7 +875,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -772,151 +882,277 @@ jobs:
 
       - run: npm ci
       - run: npm test
-      - run: npm run build
+      - run: npm run lint
 
-  deploy:
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # Docker build & push
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker image
+        run: docker build -t myapp:${{ github.sha }} .
 
-      - uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+      - name: Push to registry
+        run: |
+          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login -u ${{ secrets.REGISTRY_USER }} --password-stdin
+          docker push myapp:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to production
+        run: |
+          curl -X POST ${{ secrets.DEPLOY_WEBHOOK }} \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_TOKEN }}" \
+            -d '{"image": "myapp:${{ github.sha }}"}'
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Health Checks
 
 ```javascript
-// Health endpoint
-app.get('/health', async (req, res) => {
-  const health = {
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    checks: {}
+// Grundlaggande health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+// Detaljerad health check
+app.get('/health/ready', async (req, res) => {
+  const checks = {
+    database: false,
+    redis: false,
+    memory: true
   };
 
-  // Database check
   try {
-    await prisma.$queryRaw`SELECT 1`;
-    health.checks.database = 'ok';
-  } catch {
-    health.checks.database = 'error';
-    health.status = 'degraded';
+    // Database check
+    await db.query('SELECT 1');
+    checks.database = true;
+  } catch (e) {
+    console.error('Database check failed:', e);
   }
 
-  // Redis check
   try {
+    // Redis check
     await redis.ping();
-    health.checks.redis = 'ok';
-  } catch {
-    health.checks.redis = 'error';
-    health.status = 'degraded';
+    checks.redis = true;
+  } catch (e) {
+    console.error('Redis check failed:', e);
   }
 
-  const statusCode = health.status === 'ok' ? 200 : 503;
-  res.status(statusCode).json(health);
+  // Memory check
+  const used = process.memoryUsage().heapUsed / 1024 / 1024;
+  checks.memory = used < 500;  // Under 500MB
+
+  const healthy = Object.values(checks).every(Boolean);
+
+  res.status(healthy ? 200 : 503).json({
+    status: healthy ? 'healthy' : 'unhealthy',
+    checks,
+    uptime: process.uptime()
+  });
+});
+
+// Liveness (ar processen igång?)
+app.get('/health/live', (req, res) => {
+  res.status(200).send('OK');
 });
 ```
 
-| Platform | Best For |
-|----------|----------|
-| Railway | Simple deploys |
-| Render | Static + API |
-| Fly.io | Edge deployment |
-| AWS/GCP | Enterprise scale |
-| Vercel | Serverless API |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 20 - Monitoring & Logging
+## Graceful Shutdown
+
+```javascript
+import { createServer } from 'node:http';
+
+const server = createServer(app);
+let isShuttingDown = false;
+
+// Signaler for shutdown
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
+
+async function gracefulShutdown(signal) {
+  console.log('Received ' + signal + ', shutting down gracefully');
+  isShuttingDown = true;
+
+  // Stoppa nya requests
+  server.close(async () => {
+    console.log('HTTP server closed');
+
+    // Stang databaskopplingar
+    await db.end();
+    await redis.quit();
+
+    console.log('All connections closed');
+    process.exit(0);
+  });
+
+  // Force shutdown efter timeout
+  setTimeout(() => {
+    console.error('Forced shutdown');
+    process.exit(1);
+  }, 10000);
+}
+
+// Middleware for att avvisa nya requests under shutdown
+app.use((req, res, next) => {
+  if (isShuttingDown) {
+    res.set('Connection', 'close');
+    return res.status(503).json({ error: 'Server is shutting down' });
+  }
+  next();
+});
+
+// PM2 ready signal
+process.send?.('ready');
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Container crashar | Out of memory | Satt memory limits |
+| Slow startup | Tunga dependencies | Multi-stage build |
+| Downtime vid deploy | Ingen graceful shutdown | Implementera shutdown |
+| Lost requests | Ingen health check | Lagg till readiness probe |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| PM2 | Process manager |
+| Docker | Containerisering |
+| CI/CD | Automatiserad deploy |
+| Health checks | Overvakning |
+
+Kom ihag:
+- Anvand PM2 eller container orchestration
+- Implementera health checks
+- Graceful shutdown ar kritiskt
+- Automatisera med CI/CD
+- Testa i staging fore produktion
 ''',
 }
 
 NODE_20_MONITORING = {
     "node_id": 20,
     "title": "Monitoring & Logging",
-    "slug": "monitoring",
-    "estimated_minutes": 55,
-    "xp_reward": 165,
+    "slug": "monitoring-logging",
+    "estimated_minutes": 60,
+    "xp_reward": 175,
     "prerequisites": [19],
     "content": '''
-# Monitoring & Logging
+# Monitoring och Logging
 
-Övervaka och felsök Node.js applikationer.
+Overvaka och logga din Node.js-applikation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Monitoring?
+
+Monitoring och logging handlar om att samla in data om applikationens halsa, prestanda och fel.
+
+| Typ | Beskrivning |
+|-----|-------------|
+| Logs | Text-baserade handelser |
+| Metrics | Numerisk data over tid |
+| Traces | Request-floden |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Debugging | Hitta problem snabbt |
+| Performance | Identifiera flaskhalsar |
+| Alerting | Reagera pa problem |
+| Capacity | Planera skalning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Verktyg | Anvandning |
+|---------|------------|
+| Pino | Snabb logging |
+| Sentry | Error tracking |
+| Prometheus | Metriker |
+| Grafana | Visualisering |
+| OpenTelemetry | Distributed tracing |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Structured Logging (Pino)
 
 ```javascript
 import pino from 'pino';
 
-// Skapa logger
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
-  transport: process.env.NODE_ENV !== 'production'
+  transport: process.env.NODE_ENV === 'development'
     ? { target: 'pino-pretty' }
     : undefined,
   base: {
-    env: process.env.NODE_ENV,
+    service: 'api',
     version: process.env.npm_package_version
-  }
+  },
+  redact: ['password', 'token', 'authorization']
 });
 
-// Användning
+// Anvandning
 logger.info('Server started');
-logger.info({ port: 3000 }, 'Listening on port');
-logger.warn({ userId: 123 }, 'Rate limit exceeded');
-logger.error({ err: error }, 'Database connection failed');
+logger.info({ port: 3000 }, 'Listening');
 
-// Child logger med kontext
-const requestLogger = logger.child({
-  requestId: req.id,
-  userId: req.user?.id
-});
-requestLogger.info('Processing request');
+logger.error({ err: error, userId }, 'Failed to process request');
+
+logger.debug({ query, params }, 'Database query');
+
+// Child logger med context
+const reqLogger = logger.child({ requestId: req.id });
+reqLogger.info('Processing request');
 ```
 
-## Express Integration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Request Logging
 
 ```javascript
-import pino from 'pino';
 import pinoHttp from 'pino-http';
 
-const logger = pino();
-
-// HTTP request logging
-app.use(pinoHttp({
+const httpLogger = pinoHttp({
   logger,
-  customProps: (req) => ({
-    userId: req.user?.id
-  }),
-  serializers: {
-    req: (req) => ({
-      method: req.method,
-      url: req.url,
-      headers: {
-        'user-agent': req.headers['user-agent']
-      }
-    }),
-    res: (res) => ({
-      statusCode: res.statusCode
-    })
+  genReqId: (req) => req.headers['x-request-id'] || crypto.randomUUID(),
+  customLogLevel: (req, res, err) => {
+    if (res.statusCode >= 500 || err) return 'error';
+    if (res.statusCode >= 400) return 'warn';
+    return 'info';
+  },
+  customSuccessMessage: (req, res) => {
+    return req.method + ' ' + req.url + ' ' + res.statusCode;
+  },
+  customErrorMessage: (req, res, err) => {
+    return 'Request failed: ' + err.message;
+  },
+  // Exkludera health checks
+  autoLogging: {
+    ignore: (req) => req.url === '/health'
   }
-}));
-
-// Access logger i routes
-app.get('/users', (req, res) => {
-  req.log.info('Fetching users');
-  // ...
 });
+
+app.use(httpLogger);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Error Tracking (Sentry)
 
@@ -927,80 +1163,89 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN,
   environment: process.env.NODE_ENV,
   release: process.env.npm_package_version,
-  tracesSampleRate: 0.1,  // 10% av requests
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
-    new Sentry.Integrations.Express({ app }),
-    new Sentry.Integrations.Prisma({ client: prisma })
+    new Sentry.Integrations.Express({ app })
   ]
 });
 
-// Request handler först
+// Request handler FORST
 app.use(Sentry.Handlers.requestHandler());
-
-// Tracing
 app.use(Sentry.Handlers.tracingHandler());
 
-// Routes
-app.use('/api', routes);
+// Routes...
 
-// Error handler sist
+// Error handler SIST
 app.use(Sentry.Handlers.errorHandler());
 
-// Custom error capture
+// Manual capture
 try {
   await riskyOperation();
 } catch (error) {
   Sentry.captureException(error, {
     tags: { feature: 'payment' },
-    extra: { userId: user.id }
+    extra: { userId, orderId }
   });
+  throw error;
 }
+
+// Breadcrumbs
+Sentry.addBreadcrumb({
+  category: 'user',
+  message: 'User logged in',
+  level: 'info'
+});
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Metrics (Prometheus)
 
 ```javascript
-import { Registry, Counter, Histogram, collectDefaultMetrics } from 'prom-client';
+import promClient from 'prom-client';
 
-const register = new Registry();
-
-// Default Node.js metrics
-collectDefaultMetrics({ register });
+// Default metrics
+promClient.collectDefaultMetrics();
 
 // Custom metrics
-const httpRequestsTotal = new Counter({
-  name: 'http_requests_total',
-  help: 'Total HTTP requests',
-  labelNames: ['method', 'path', 'status'],
-  registers: [register]
+const httpRequestDuration = new promClient.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests',
+  labelNames: ['method', 'route', 'status'],
+  buckets: [0.01, 0.05, 0.1, 0.5, 1, 5]
 });
 
-const httpRequestDuration = new Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'HTTP request duration',
-  labelNames: ['method', 'path'],
-  buckets: [0.1, 0.3, 0.5, 1, 3, 5],
-  registers: [register]
+const httpRequestsTotal = new promClient.Counter({
+  name: 'http_requests_total',
+  help: 'Total HTTP requests',
+  labelNames: ['method', 'route', 'status']
+});
+
+const activeConnections = new promClient.Gauge({
+  name: 'active_connections',
+  help: 'Number of active connections'
 });
 
 // Middleware
 app.use((req, res, next) => {
   const start = Date.now();
+  activeConnections.inc();
 
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
-
-    httpRequestsTotal.inc({
-      method: req.method,
-      path: req.route?.path || req.path,
-      status: res.statusCode
-    });
+    const route = req.route?.path || req.path;
 
     httpRequestDuration.observe(
-      { method: req.method, path: req.route?.path || req.path },
+      { method: req.method, route, status: res.statusCode },
       duration
     );
+
+    httpRequestsTotal.inc(
+      { method: req.method, route, status: res.statusCode }
+    );
+
+    activeConnections.dec();
   });
 
   next();
@@ -1008,43 +1253,53 @@ app.use((req, res, next) => {
 
 // Metrics endpoint
 app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', register.contentType);
-  res.send(await register.metrics());
+  res.set('Content-Type', promClient.register.contentType);
+  res.send(await promClient.register.metrics());
 });
 ```
 
-## APM (Application Performance Monitoring)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## OpenTelemetry (Distributed Tracing)
 
 ```javascript
-// OpenTelemetry
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 
 const sdk = new NodeSDK({
+  serviceName: 'api',
   traceExporter: new OTLPTraceExporter({
     url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT
   }),
-  instrumentations: [getNodeAutoInstrumentations()],
+  instrumentations: [getNodeAutoInstrumentations()]
 });
 
 sdk.start();
 
-// Custom spans
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  sdk.shutdown()
+    .then(() => console.log('Tracing terminated'))
+    .catch((err) => console.error('Error terminating tracing', err))
+    .finally(() => process.exit(0));
+});
+
+// Manual spans
 import { trace } from '@opentelemetry/api';
 
-const tracer = trace.getTracer('my-app');
+const tracer = trace.getTracer('my-service');
 
 async function processOrder(orderId) {
-  const span = tracer.startSpan('process-order');
-  span.setAttribute('order.id', orderId);
+  const span = tracer.startSpan('processOrder');
+  span.setAttribute('orderId', orderId);
 
   try {
-    await validateOrder(orderId);
-    await chargePayment(orderId);
-    span.setStatus({ code: SpanStatusCode.OK });
+    // Process...
+    span.setStatus({ code: 1 });
   } catch (error) {
-    span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+    span.setStatus({ code: 2, message: error.message });
+    span.recordException(error);
     throw error;
   } finally {
     span.end();
@@ -1052,79 +1307,75 @@ async function processOrder(orderId) {
 }
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Alerting
 
-```yaml
-# Prometheus alerting rules
-groups:
-  - name: nodejs
-    rules:
-      - alert: HighErrorRate
-        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: High error rate detected
-
-      - alert: SlowResponses
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: 95th percentile response time > 1s
-```
-
-## Debugging Tips
-
 ```javascript
-// Memory debugging
-process.memoryUsage();
-// { rss, heapTotal, heapUsed, external, arrayBuffers }
+// Slack integration
+async function sendAlert(message, severity = 'warning') {
+  await fetch(process.env.SLACK_WEBHOOK, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text: '[' + severity.toUpperCase() + '] ' + message,
+      attachments: [{
+        color: severity === 'error' ? 'danger' : 'warning',
+        fields: [
+          { title: 'Service', value: 'api', short: true },
+          { title: 'Environment', value: process.env.NODE_ENV, short: true }
+        ]
+      }]
+    })
+  });
+}
 
-// CPU profiling
-node --prof app.js
-node --prof-process isolate-*.log
+// Alert pa error rate
+let errorCount = 0;
+const ERROR_THRESHOLD = 10;
+const WINDOW_MS = 60000;
 
-// Heap snapshot
-import v8 from 'node:v8';
-import fs from 'node:fs';
+setInterval(() => {
+  if (errorCount > ERROR_THRESHOLD) {
+    sendAlert('High error rate: ' + errorCount + ' errors/minute', 'error');
+  }
+  errorCount = 0;
+}, WINDOW_MS);
 
-const snapshot = v8.writeHeapSnapshot();
-console.log(`Heap snapshot written to ${snapshot}`);
-
-// Debug logs
-DEBUG=app:* node app.js
-
-import debug from 'debug';
-const log = debug('app:server');
-log('Server started');
+app.use((err, req, res, next) => {
+  errorCount++;
+  next(err);
+});
 ```
 
-| Tool | Purpose |
-|------|---------|
-| Pino | Structured logging |
-| Sentry | Error tracking |
-| Prometheus | Metrics |
-| Grafana | Dashboards |
-| OpenTelemetry | Distributed tracing |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Node.js SkillsMap Complete! 🎉
+## Vanliga fel och losningar
 
-Du har nu lärt dig:
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Logging overhead | Synkron logging | Anvand async (Pino) |
+| Missing context | Ingen request ID | Propagera trace ID |
+| Alert fatigue | For manga alerts | Justera thresholds |
+| Log flooding | Debug i produktion | Konfigurera log levels |
 
-1. **Fundamentals** - Runtime, modules, npm
-2. **Async** - Event loop, promises, timers
-3. **Backend** - HTTP, Express, REST APIs
-4. **Advanced** - Auth, files, WebSockets, workers
-5. **Production** - Testing, security, deployment, monitoring
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Fortsätt med:
-- Microservices Architecture
-- GraphQL APIs
-- Serverless Functions
-- Real-time Applications
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Structured logging | JSON-format |
+| Metrics | Numerisk data |
+| Tracing | Request-floden |
+| Alerting | Proaktiv notifiering |
+
+Kom ihag:
+- Anvand structured logging (Pino)
+- Sentry for error tracking
+- Prometheus for metriker
+- OpenTelemetry for distributed tracing
+- Satt upp alerts for kritiska problem
 ''',
 }
 

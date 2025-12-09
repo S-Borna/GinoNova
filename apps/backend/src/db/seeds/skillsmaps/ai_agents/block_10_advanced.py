@@ -1,121 +1,100 @@
-"""
-AI Agents SkillsMap - Block 10: Advanced & Future
-Nodes 19-20: Autonomous Agents, The Future
-"""
+# =============================================================================
+# AI AGENTS - BLOCK 10: ADVANCED (Noder 19-20) - V3 FORMAT
+# =============================================================================
 
-BLOCK_10_NODES = [
-    {
-        "id": "ai-agents-19",
-        "slug": "autonomous-agents",
-        "title": "Autonomous Agents",
-        "order_index": 19,
-        "estimated_minutes": 45,
-        "xp_reward": 130,
-        "difficulty": "expert",
-        "node_type": "concept",
-        "prerequisites": ["ai-agents-18"],
-        "content": """# Autonomous Agents
+NODE_19_AUTONOMOUS_AGENTS = {
+    "node_id": 19,
+    "title": "Autonoma Agenter",
+    "slug": "autonomous-agents",
+    "estimated_minutes": 55,
+    "xp_reward": 150,
+    "prerequisites": [18],
+    "content": '''
+# Autonoma Agenter
 
-## Varför detta är viktigt
+Bygga agenter som arbetar sjalvstandigt.
 
-Autonomous agents representerar nästa steg i AI-evolution — agenter som kan:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Planera långsiktigt** utan ständig human input
-- **Lära sig** från erfarenhet och förbättras över tid
-- **Hantera osäkerhet** och ta beslut under ambiguitet
-- **Samarbeta** med andra agenter och människor
+## Vad ar Autonoma Agenter?
 
-Men autonomi kommer med risker. Denna modul balanserar möjligheterna med säkerhet.
+Autonoma agenter arbetar sjalvstandigt mot mal utan konstant manniskointeraktion. De planerar, utfor och anpassar sig.
 
-## Vad du kommer lära dig
+| Egenskap | Beskrivning |
+|----------|-------------|
+| Self-direction | Bestammer egna steg |
+| Persistence | Fortsatter over tid |
+| Learning | Anpassar sig fran feedback |
+| Goal-oriented | Arbetar mot definierade mal |
 
-Efter denna modul kommer du kunna:
-- ✅ Förstå skillnaden mellan assistants och autonomous agents
-- ✅ Implementera long-term planning systems
-- ✅ Bygga self-improving agents
-- ✅ Designa safety guardrails för autonoma system
-- ✅ Utvärdera när autonomi är lämpligt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Kärnkoncept
+## Varfor viktigt for DevOps?
 
-### Autonomy Spectrum
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Automation | Handsfree operations |
+| Efficiency | 24/7 arbete utan trotthet |
+| Scale | Hantera manga tasks |
+| Consistency | Samma kvalitet varje gang |
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      AUTONOMY SPECTRUM                                       │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  Level 0          Level 1          Level 2          Level 3          Level 4│
-│  ─────────────────────────────────────────────────────────────────────────► │
-│                                                                              │
-│  CHATBOT          ASSISTANT        AGENT            AUTONOMOUS       FULLY   │
-│                                                     AGENT            AGI     │
-│                                                                              │
-│  • Responds       • Task-based     • Multi-step     • Self-directed  • ???  │
-│    to prompts       execution        planning         goals                  │
-│  • No memory      • Simple tools   • Tool chains    • Learning              │
-│  • No planning    • Human          • Limited        • Long-term             │
-│  • Stateless        approval         autonomy         planning              │
-│                                                     • Self-                  │
-│                                                       correction            │
-│                                                                              │
-│  Example:         Example:         Example:         Example:                │
-│  Basic ChatGPT    GitHub Copilot   AutoGPT          Research Agent          │
-│                                                                              │
-│  Risk: Low        Risk: Medium     Risk: High       Risk: Very High         │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Autonomous Agent Architecture
+## Snabbreferens - Autonomy Levels
+
+| Level | Beskrivning | Exempel |
+|-------|-------------|---------|
+| Level 1 | Tool use | ChatGPT med plugins |
+| Level 2 | Task completion | Simple agents |
+| Level 3 | Multi-step planning | AutoGPT-style |
+| Level 4 | Self-improvement | Research frontier |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Autonomous Agent Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                  AUTONOMOUS AGENT ARCHITECTURE                               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                         GOAL SYSTEM                                   │   │
-│  │  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐         │   │
-│  │  │ Primary Goal    │ │ Sub-Goals       │ │ Constraints     │         │   │
-│  │  │ (User-defined)  │ │ (Self-derived)  │ │ (Safety bounds) │         │   │
-│  │  └─────────────────┘ └─────────────────┘ └─────────────────┘         │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                    │                                         │
-│                                    ▼                                         │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                       PLANNING SYSTEM                                 │   │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │   │
-│  │  │  Strategic   │  │   Tactical   │  │ Operational  │                │   │
-│  │  │  Planner     │  │   Planner    │  │  Planner     │                │   │
-│  │  │  (Long-term) │  │  (Sessions)  │  │  (Actions)   │                │   │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘                │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                    │                                         │
-│                                    ▼                                         │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                      EXECUTION SYSTEM                                 │   │
-│  │  ┌──────────────────┐  ┌──────────────────┐                          │   │
-│  │  │  Action Engine   │  │  Safety Monitor  │◄─── Guardrails           │   │
-│  │  │  (Runs plans)    │  │  (Validates all) │                          │   │
-│  │  └──────────────────┘  └──────────────────┘                          │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                    │                                         │
-│                                    ▼                                         │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                      LEARNING SYSTEM                                  │   │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │   │
-│  │  │   Memory     │  │  Reflection  │  │   Skill      │                │   │
-│  │  │   (Long-term)│  │  (Evaluate)  │  │   Acquisition│                │   │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘                │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                  AUTONOMOUS AGENT                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                    GOAL SYSTEM                             │ │
+│  │  - Long-term goals                                         │ │
+│  │  - Sub-goal decomposition                                  │ │
+│  │  - Priority management                                     │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                           │                                      │
+│                           v                                      │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                    PLANNING ENGINE                         │ │
+│  │  - Task breakdown                                          │ │
+│  │  - Dependency analysis                                     │ │
+│  │  - Resource estimation                                     │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                           │                                      │
+│                           v                                      │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                   EXECUTION ENGINE                         │ │
+│  │  - Tool execution                                          │ │
+│  │  - Progress tracking                                       │ │
+│  │  - Error recovery                                          │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                           │                                      │
+│                           v                                      │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                   LEARNING SYSTEM                          │ │
+│  │  - Reflection                                              │ │
+│  │  - Strategy adjustment                                     │ │
+│  │  - Knowledge accumulation                                  │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-## Steg-för-steg: Bygga Autonomous Agent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### 1. Goal System
+## Goal System
 
 ```python
 from dataclasses import dataclass, field
@@ -127,1004 +106,689 @@ class GoalStatus(Enum):
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
-    BLOCKED = "blocked"
     FAILED = "failed"
-
-class GoalPriority(Enum):
-    CRITICAL = 1
-    HIGH = 2
-    MEDIUM = 3
-    LOW = 4
+    BLOCKED = "blocked"
 
 @dataclass
 class Goal:
-    id: str
     description: str
-    priority: GoalPriority
+    priority: int = 0
     status: GoalStatus = GoalStatus.PENDING
-    parent_id: Optional[str] = None
+    parent_goal: Optional[str] = None
     sub_goals: list[str] = field(default_factory=list)
-    constraints: list[str] = field(default_factory=list)
     deadline: Optional[datetime] = None
     progress: float = 0.0
 
-    def is_achievable(self, context: dict) -> bool:
-        \"\"\"Check if goal can be achieved given current context.\"\"\"
-        # Check constraints
-        for constraint in self.constraints:
-            if not self._check_constraint(constraint, context):
-                return False
-        return True
-
-    def _check_constraint(self, constraint: str, context: dict) -> bool:
-        # Simple constraint checking
-        if "budget" in constraint:
-            return context.get("remaining_budget", 0) > 0
-        if "time" in constraint:
-            return self.deadline is None or datetime.now() < self.deadline
-        return True
-
-
 class GoalManager:
-    \"\"\"Manages hierarchical goals for autonomous agent.\"\"\"
+    """Manage hierarchical goals."""
 
-    def __init__(self):
+    def __init__(self, client):
+        self.client = client
         self.goals: dict[str, Goal] = {}
-        self.client = OpenAI()
 
-    def set_primary_goal(self, description: str, constraints: list[str] = None) -> Goal:
-        \"\"\"Set the agent's primary objective.\"\"\"
-        goal = Goal(
-            id="primary",
-            description=description,
-            priority=GoalPriority.CRITICAL,
-            constraints=constraints or []
-        )
-        self.goals["primary"] = goal
-        return goal
+    def add_goal(self, goal_id: str, goal: Goal) -> None:
+        self.goals[goal_id] = goal
 
-    async def decompose_goal(self, goal_id: str) -> list[Goal]:
-        \"\"\"Break down a goal into sub-goals using LLM.\"\"\"
+        if goal.parent_goal and goal.parent_goal in self.goals:
+            self.goals[goal.parent_goal].sub_goals.append(goal_id)
+
+    def decompose_goal(self, goal_id: str) -> list[Goal]:
         goal = self.goals[goal_id]
 
         response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": \"\"\"
-                Break down the given goal into 3-5 concrete sub-goals.
-                Return JSON: {"sub_goals": [{"description": "...", "priority": "high|medium|low"}]}
-                \"\"\"},
-                {"role": "user", "content": f"Goal: {goal.description}\\nConstraints: {goal.constraints}"}
-            ]
+            model="gpt-4o-mini",
+            messages=[{
+                "role": "user",
+                "content": f"""
+                Bryt ner detta mal i 3-5 konkreta sub-mal:
+                {goal.description}
+
+                Returnera JSON:
+                {{"sub_goals": [{{"description": "...", "priority": 1-5}}]}}
+                """
+            }],
+            response_format={"type": "json_object"}
         )
 
         import json
-        sub_goals_data = json.loads(response.choices[0].message.content)
+        data = json.loads(response.choices[0].message.content)
 
         sub_goals = []
-        for i, sg_data in enumerate(sub_goals_data["sub_goals"]):
-            sg = Goal(
-                id=f"{goal_id}_sub_{i}",
-                description=sg_data["description"],
-                priority=GoalPriority[sg_data["priority"].upper()],
-                parent_id=goal_id,
-                constraints=goal.constraints  # Inherit constraints
+        for i, sg in enumerate(data.get("sub_goals", [])):
+            sub_goal = Goal(
+                description=sg["description"],
+                priority=sg.get("priority", goal.priority),
+                parent_goal=goal_id
             )
-            self.goals[sg.id] = sg
-            sub_goals.append(sg)
-            goal.sub_goals.append(sg.id)
+            sub_goal_id = f"{goal_id}_sub_{i}"
+            self.add_goal(sub_goal_id, sub_goal)
+            sub_goals.append(sub_goal)
 
         return sub_goals
 
-    def get_next_goal(self) -> Optional[Goal]:
-        \"\"\"Get the highest priority actionable goal.\"\"\"
-        actionable = [
-            g for g in self.goals.values()
+    def get_next_goal(self) -> Optional[tuple[str, Goal]]:
+        pending = [
+            (gid, g) for gid, g in self.goals.items()
             if g.status == GoalStatus.PENDING
-            and (not g.sub_goals or all(
+            and all(
                 self.goals[sg].status == GoalStatus.COMPLETED
-                for sg in g.sub_goals
-            ))
+                for sg in self.goals.get(g.parent_goal, Goal("")).sub_goals
+                if sg != gid
+            )
         ]
 
-        if not actionable:
+        if not pending:
             return None
 
-        return min(actionable, key=lambda g: g.priority.value)
-
-    def update_progress(self, goal_id: str, progress: float, status: GoalStatus = None):
-        \"\"\"Update goal progress and propagate to parent.\"\"\"
-        goal = self.goals[goal_id]
-        goal.progress = progress
-
-        if status:
-            goal.status = status
-
-        # Update parent progress
-        if goal.parent_id and goal.parent_id in self.goals:
-            parent = self.goals[goal.parent_id]
-            if parent.sub_goals:
-                parent.progress = sum(
-                    self.goals[sg].progress for sg in parent.sub_goals
-                ) / len(parent.sub_goals)
+        pending.sort(key=lambda x: x[1].priority, reverse=True)
+        return pending[0]
 ```
 
-### 2. Long-term Planning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Planning Engine
 
 ```python
-from dataclasses import dataclass
-from typing import Callable
-
 @dataclass
 class Plan:
-    id: str
-    goal_id: str
     steps: list[dict]
-    estimated_duration: float
-    risk_level: str
-    alternatives: list['Plan'] = field(default_factory=list)
+    estimated_time: float
+    resources_needed: list[str]
+    risks: list[str]
 
-class StrategicPlanner:
-    \"\"\"Creates and manages long-term plans.\"\"\"
+class PlanningEngine:
+    """Generate and manage execution plans."""
 
-    def __init__(self):
-        self.client = OpenAI()
-        self.plans: dict[str, Plan] = {}
+    def __init__(self, client, available_tools: list[str]):
+        self.client = client
+        self.available_tools = available_tools
 
-    async def create_plan(
-        self,
-        goal: Goal,
-        context: dict,
-        available_tools: list[str]
-    ) -> Plan:
-        \"\"\"Create a strategic plan for achieving a goal.\"\"\"
+    def create_plan(self, goal: Goal) -> Plan:
         response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": f\"\"\"
-                Create a detailed plan to achieve the goal.
-                Available tools: {available_tools}
+            model="gpt-4o-mini",
+            messages=[{
+                "role": "user",
+                "content": f"""
+                Skapa en plan for att uppna detta mal:
+                {goal.description}
 
-                Return JSON:
+                Tillgangliga verktyg: {self.available_tools}
+
+                Returnera JSON:
                 {{
                     "steps": [
-                        {{
-                            "id": "step_1",
-                            "description": "...",
-                            "tool": "tool_name or null",
-                            "dependencies": ["step_ids"],
-                            "estimated_minutes": 10,
-                            "can_fail": true/false
-                        }}
+                        {{"action": "...", "tool": "...", "inputs": {{}}, "expected_output": "..."}}
                     ],
-                    "total_duration_minutes": 60,
-                    "risk_level": "low|medium|high",
-                    "success_criteria": "..."
+                    "estimated_minutes": N,
+                    "resources": ["..."],
+                    "risks": ["..."]
                 }}
-                \"\"\"},
-                {"role": "user", "content": f\"\"\"
-                Goal: {goal.description}
-                Constraints: {goal.constraints}
-                Current context: {context}
-                \"\"\"}
-            ]
+                """
+            }],
+            response_format={"type": "json_object"}
         )
 
         import json
-        plan_data = json.loads(response.choices[0].message.content)
+        data = json.loads(response.choices[0].message.content)
 
-        plan = Plan(
-            id=f"plan_{goal.id}",
-            goal_id=goal.id,
-            steps=plan_data["steps"],
-            estimated_duration=plan_data["total_duration_minutes"],
-            risk_level=plan_data["risk_level"]
+        return Plan(
+            steps=data.get("steps", []),
+            estimated_time=data.get("estimated_minutes", 0),
+            resources_needed=data.get("resources", []),
+            risks=data.get("risks", [])
         )
 
-        self.plans[plan.id] = plan
-        return plan
-
-    async def adapt_plan(self, plan_id: str, failure_info: dict) -> Plan:
-        \"\"\"Adapt plan based on failure or changed circumstances.\"\"\"
-        plan = self.plans[plan_id]
-
+    def replan(self, goal: Goal, failed_step: dict, error: str) -> Plan:
         response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": \"\"\"
-                The current plan encountered an issue. Adapt it.
-                Return the modified plan in the same JSON format.
-                \"\"\"},
-                {"role": "user", "content": f\"\"\"
-                Original plan: {json.dumps(plan.steps)}
-                Failure info: {failure_info}
-                What should we do differently?
-                \"\"\"}
-            ]
+            model="gpt-4o-mini",
+            messages=[{
+                "role": "user",
+                "content": f"""
+                Omplanera efter fel:
+
+                Mal: {goal.description}
+                Misslyckat steg: {failed_step}
+                Fel: {error}
+
+                Returnera ny plan i samma JSON-format.
+                """
+            }],
+            response_format={"type": "json_object"}
         )
 
-        new_plan_data = json.loads(response.choices[0].message.content)
-
-        adapted_plan = Plan(
-            id=f"{plan.id}_v2",
-            goal_id=plan.goal_id,
-            steps=new_plan_data["steps"],
-            estimated_duration=new_plan_data["total_duration_minutes"],
-            risk_level=new_plan_data["risk_level"]
+        import json
+        data = json.loads(response.choices[0].message.content)
+        return Plan(
+            steps=data.get("steps", []),
+            estimated_time=data.get("estimated_minutes", 0),
+            resources_needed=data.get("resources", []),
+            risks=data.get("risks", [])
         )
-
-        self.plans[adapted_plan.id] = adapted_plan
-        return adapted_plan
 ```
 
-### 3. Self-Improvement System
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Execution Engine
 
 ```python
-@dataclass
-class Experience:
-    task: str
-    approach: str
-    outcome: str  # success/failure
-    lessons: list[str]
-    timestamp: datetime
-
-class LearningSystem:
-    \"\"\"Enables agent to learn from experience.\"\"\"
-
-    def __init__(self):
-        self.client = OpenAI()
-        self.experiences: list[Experience] = []
-        self.skills: dict[str, float] = {}  # skill -> proficiency (0-1)
-        self.semantic_memory = SemanticMemory("learning")
-
-    async def learn_from_outcome(
-        self,
-        task: str,
-        approach: str,
-        outcome: str,
-        feedback: str = None
-    ):
-        \"\"\"Extract lessons from an experience.\"\"\"
-        # Analyze what happened
-        response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": \"\"\"
-                Analyze this experience and extract lessons learned.
-                Return JSON: {"lessons": ["lesson 1", "lesson 2"], "skills_used": ["skill1"]}
-                \"\"\"},
-                {"role": "user", "content": f\"\"\"
-                Task: {task}
-                Approach: {approach}
-                Outcome: {outcome}
-                Feedback: {feedback}
-                \"\"\"}
-            ]
-        )
-
-        analysis = json.loads(response.choices[0].message.content)
-
-        # Store experience
-        exp = Experience(
-            task=task,
-            approach=approach,
-            outcome=outcome,
-            lessons=analysis["lessons"],
-            timestamp=datetime.now()
-        )
-        self.experiences.append(exp)
-
-        # Store in semantic memory for future retrieval
-        for lesson in analysis["lessons"]:
-            self.semantic_memory.store(
-                f"Lesson from {task}: {lesson}",
-                task_type=task,
-                outcome=outcome
-            )
-
-        # Update skill proficiency
-        for skill in analysis["skills_used"]:
-            if skill not in self.skills:
-                self.skills[skill] = 0.1
-
-            if outcome == "success":
-                self.skills[skill] = min(1.0, self.skills[skill] + 0.1)
-            else:
-                self.skills[skill] = max(0.0, self.skills[skill] - 0.05)
-
-    async def get_relevant_lessons(self, task: str) -> list[str]:
-        \"\"\"Retrieve lessons relevant to a new task.\"\"\"
-        memories = self.semantic_memory.search(task, top_k=5)
-        return [m.content for m in memories]
-
-    async def suggest_approach(self, task: str) -> dict:
-        \"\"\"Suggest an approach based on past experiences.\"\"\"
-        lessons = await self.get_relevant_lessons(task)
-
-        response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": \"\"\"
-                Based on past lessons, suggest the best approach for this task.
-                Return JSON: {"approach": "...", "confidence": 0.0-1.0, "reasoning": "..."}
-                \"\"\"},
-                {"role": "user", "content": f\"\"\"
-                Task: {task}
-                Relevant lessons from past: {lessons}
-                My skill levels: {self.skills}
-                \"\"\"}
-            ]
-        )
-
-        return json.loads(response.choices[0].message.content)
-```
-
-### 4. Safety Guardrails
-
-```python
+import asyncio
 from typing import Callable
-from enum import Enum
 
-class RiskLevel(Enum):
-    SAFE = 0
-    LOW = 1
-    MEDIUM = 2
-    HIGH = 3
-    CRITICAL = 4
+class ExecutionEngine:
+    """Execute plans with error handling and recovery."""
 
-class SafetyGuardrails:
-    \"\"\"Safety system for autonomous agents.\"\"\"
+    def __init__(self, tool_executor: Callable, planner: PlanningEngine):
+        self.tool_executor = tool_executor
+        self.planner = planner
+        self.execution_log = []
 
-    def __init__(self):
-        self.client = OpenAI()
-        self.blocked_actions: set[str] = set()
-        self.require_approval: set[str] = set()
-        self.action_history: list[dict] = []
+    async def execute_plan(self, goal: Goal, plan: Plan, max_retries: int = 3) -> dict:
+        results = []
 
-        # Default dangerous actions
-        self.blocked_actions = {
-            "delete_production_data",
-            "modify_security_settings",
-            "access_financial_systems"
-        }
+        for i, step in enumerate(plan.steps):
+            retry_count = 0
 
-        self.require_approval = {
-            "deploy_to_production",
-            "send_external_email",
-            "modify_user_permissions"
-        }
+            while retry_count < max_retries:
+                try:
+                    result = await self._execute_step(step)
+                    results.append({"step": i, "result": result, "status": "success"})
+                    self._log(f"Step {i} completed: {step['action']}")
+                    break
 
-    async def evaluate_action(self, action: str, context: dict) -> dict:
-        \"\"\"Evaluate if an action is safe to perform.\"\"\"
-        # Check explicit blocks
-        if action in self.blocked_actions:
-            return {
-                "allowed": False,
-                "reason": "Action is explicitly blocked",
-                "risk_level": RiskLevel.CRITICAL
-            }
+                except Exception as e:
+                    retry_count += 1
+                    self._log(f"Step {i} failed (attempt {retry_count}): {e}")
 
-        # Check if approval required
-        if action in self.require_approval:
-            return {
-                "allowed": False,
-                "reason": "Action requires human approval",
-                "risk_level": RiskLevel.HIGH,
-                "approval_required": True
-            }
+                    if retry_count >= max_retries:
+                        # Forsok omplanera
+                        new_plan = self.planner.replan(goal, step, str(e))
+                        return await self.execute_plan(goal, new_plan, max_retries=1)
 
-        # LLM-based risk assessment
-        response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": \"\"\"
-                Evaluate the safety risk of this action.
-                Return JSON: {
-                    "risk_level": "safe|low|medium|high|critical",
-                    "concerns": ["concern 1"],
-                    "mitigation": "how to reduce risk"
-                }
-                \"\"\"},
-                {"role": "user", "content": f\"\"\"
-                Action: {action}
-                Context: {context}
-                Recent actions: {self.action_history[-10:]}
-                \"\"\"}
-            ]
-        )
-
-        assessment = json.loads(response.choices[0].message.content)
-        risk = RiskLevel[assessment["risk_level"].upper()]
-
-        # Record action
-        self.action_history.append({
-            "action": action,
-            "risk_level": risk.name,
-            "timestamp": datetime.now().isoformat()
-        })
+                    await asyncio.sleep(2 ** retry_count)
 
         return {
-            "allowed": risk.value <= RiskLevel.MEDIUM.value,
-            "risk_level": risk,
-            "concerns": assessment["concerns"],
-            "mitigation": assessment["mitigation"]
+            "status": "completed",
+            "results": results,
+            "log": self.execution_log
         }
 
-    def detect_anomaly(self) -> Optional[str]:
-        \"\"\"Detect anomalous behavior patterns.\"\"\"
-        if len(self.action_history) < 10:
-            return None
+    async def _execute_step(self, step: dict) -> dict:
+        tool_name = step.get("tool")
+        inputs = step.get("inputs", {})
 
-        recent = self.action_history[-20:]
+        result = await asyncio.to_thread(
+            self.tool_executor,
+            tool_name,
+            inputs
+        )
 
-        # Check for repeated failures
-        failures = [a for a in recent if a.get("outcome") == "failure"]
-        if len(failures) > 5:
-            return "High failure rate detected - agent may be stuck"
+        return result
 
-        # Check for escalating risk
-        risk_levels = [RiskLevel[a["risk_level"]].value for a in recent]
-        if sum(risk_levels[-5:]) > sum(risk_levels[:5]):
-            return "Risk level escalation detected"
-
-        return None
-
-    def emergency_stop(self):
-        \"\"\"Emergency stop the agent.\"\"\"
-        # In production: actually stop the agent
-        print("🚨 EMERGENCY STOP TRIGGERED")
-        raise SystemExit("Emergency stop triggered by safety system")
+    def _log(self, message: str) -> None:
+        self.execution_log.append({
+            "timestamp": datetime.now().isoformat(),
+            "message": message
+        })
 ```
 
-### 5. Complete Autonomous Agent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Autonomous Agent
 
 ```python
 class AutonomousAgent:
-    \"\"\"Fully autonomous agent with goal-driven behavior.\"\"\"
+    """Fully autonomous agent with planning and learning."""
 
-    def __init__(self, name: str, tools: list):
-        self.name = name
-        self.tools = {t.name: t for t in tools}
+    def __init__(self, client, tools, tool_executor):
+        self.client = client
+        self.goal_manager = GoalManager(client)
+        self.planner = PlanningEngine(client, list(tools.keys()))
+        self.executor = ExecutionEngine(tool_executor, self.planner)
+        self.knowledge_base = []
+        self.running = False
 
-        self.goal_manager = GoalManager()
-        self.planner = StrategicPlanner()
-        self.learning = LearningSystem()
-        self.safety = SafetyGuardrails()
+    async def run(self, initial_goal: str, max_runtime_hours: float = 1.0) -> dict:
+        start_time = datetime.now()
+        max_runtime = timedelta(hours=max_runtime_hours)
 
-        self._running = False
+        # Lagg till initial goal
+        self.goal_manager.add_goal("main", Goal(description=initial_goal, priority=10))
+        self.goal_manager.decompose_goal("main")
 
-    async def run(self, primary_goal: str, constraints: list[str] = None):
-        \"\"\"Run the agent autonomously towards a goal.\"\"\"
-        self._running = True
+        self.running = True
+        results = []
 
-        # Set primary goal
-        goal = self.goal_manager.set_primary_goal(primary_goal, constraints)
-
-        # Decompose into sub-goals
-        await self.goal_manager.decompose_goal("primary")
-
-        while self._running:
-            # Safety check
-            anomaly = self.safety.detect_anomaly()
-            if anomaly:
-                print(f"⚠️ Anomaly detected: {anomaly}")
-                # Could pause and request human review here
-
-            # Get next goal
-            current_goal = self.goal_manager.get_next_goal()
-
-            if not current_goal:
-                print("✅ All goals completed!")
+        while self.running:
+            # Kolla timeout
+            if datetime.now() - start_time > max_runtime:
+                self._log("Max runtime reached")
                 break
 
-            print(f"📎 Working on: {current_goal.description}")
+            # Hamta nasta goal
+            next_item = self.goal_manager.get_next_goal()
+            if not next_item:
+                self._log("All goals completed")
+                break
 
-            # Get advice from past experience
-            advice = await self.learning.suggest_approach(current_goal.description)
-            print(f"💡 Suggested approach (confidence: {advice['confidence']:.0%})")
+            goal_id, goal = next_item
+            goal.status = GoalStatus.IN_PROGRESS
 
-            # Create plan
-            plan = await self.planner.create_plan(
-                current_goal,
-                context={"advice": advice},
-                available_tools=list(self.tools.keys())
-            )
+            # Planera och exekvera
+            plan = self.planner.create_plan(goal)
+            result = await self.executor.execute_plan(goal, plan)
 
-            # Execute plan
-            success = await self._execute_plan(plan)
+            # Uppdatera status
+            if result["status"] == "completed":
+                goal.status = GoalStatus.COMPLETED
+                goal.progress = 1.0
+            else:
+                goal.status = GoalStatus.FAILED
 
-            # Learn from outcome
-            await self.learning.learn_from_outcome(
-                task=current_goal.description,
-                approach=str(plan.steps),
-                outcome="success" if success else "failure"
-            )
+            results.append({
+                "goal_id": goal_id,
+                "goal": goal.description,
+                "result": result
+            })
 
-            # Update goal status
-            self.goal_manager.update_progress(
-                current_goal.id,
-                progress=1.0 if success else current_goal.progress,
-                status=GoalStatus.COMPLETED if success else GoalStatus.BLOCKED
-            )
+            # Lardomar
+            self._learn_from_execution(goal, result)
 
-    async def _execute_plan(self, plan: Plan) -> bool:
-        \"\"\"Execute a plan step by step.\"\"\"
-        for step in plan.steps:
-            # Safety check
-            evaluation = await self.safety.evaluate_action(
-                step["description"],
-                {"step": step, "plan_id": plan.id}
-            )
+        return {
+            "status": "completed",
+            "results": results,
+            "knowledge_gained": len(self.knowledge_base)
+        }
 
-            if not evaluation["allowed"]:
-                if evaluation.get("approval_required"):
-                    # Request human approval
-                    approved = await self._request_approval(step)
-                    if not approved:
-                        return False
-                else:
-                    print(f"❌ Action blocked: {evaluation['reason']}")
-                    return False
+    def _learn_from_execution(self, goal: Goal, result: dict) -> None:
+        if result["status"] == "completed":
+            self.knowledge_base.append({
+                "goal_type": goal.description[:50],
+                "successful_approach": result.get("results", [])
+            })
 
-            # Execute step
-            if step.get("tool"):
-                tool = self.tools.get(step["tool"])
-                if tool:
-                    result = await tool.execute(step.get("args", {}))
-                    if not result.success and not step.get("can_fail"):
-                        return False
-
-            print(f"  ✓ Completed: {step['description']}")
-
-        return True
-
-    async def _request_approval(self, step: dict) -> bool:
-        \"\"\"Request human approval for risky action.\"\"\"
-        print(f"\\n🔐 APPROVAL REQUIRED")
-        print(f"Action: {step['description']}")
-        response = input("Approve? (y/n): ")
-        return response.lower() == 'y'
-
-    def stop(self):
-        self._running = False
-
-# Usage
-agent = AutonomousAgent(
-    name="DevOps Autonomous Agent",
-    tools=[deploy_tool, monitor_tool, scale_tool]
-)
-
-await agent.run(
-    primary_goal="Migrate auth-service to new Kubernetes cluster",
-    constraints=[
-        "Zero downtime",
-        "Budget max $100",
-        "Complete within 24 hours"
-    ]
-)
+    def stop(self) -> None:
+        self.running = False
 ```
 
-## Praktisk övning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Uppgift:** Implementera Goal Prioritization
+## Vanliga fel och losningar
 
-Se slutet av modulen för övningsuppgift.
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Goal drift | Forlorar fokus | Regelbound goal review |
+| Resource exhaustion | Ingen budget | Cost limits |
+| Infinite loops | Datta planering | Max iterations |
+| Unsafe actions | Ingen granskning | Human-in-the-loop |
 
-## Sammanfattning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- ✅ **Goal systems** för autonomous behavior
-- ✅ **Strategic planning** för long-term tasks
-- ✅ **Learning systems** för improvement over time
-- ✅ **Safety guardrails** — KRITISKT för autonoma agenter
+## Key Takeaways
 
-## Nästa steg
+| Koncept | Beskrivning |
+|---------|-------------|
+| Goal system | Hierarkiska mal med prioritet |
+| Planning | Automatisk task breakdown |
+| Execution | Robust med retries och replan |
+| Learning | Ackumulera kunskap over tid |
 
-- **Node 20:** The Future of AI Agents
+Kom ihag:
+- Satt alltid tidsgranser
+- Implementera human-in-the-loop for kritiska beslut
+- Logga allt for att forsta agentens beteende
+- Borja med begransad autonomi
+'''
+}
 
----
-*Pro tip: Autonomi är ett spektrum — börja med lite autonomi och öka gradvis!*
-"""
-    },
-    {
-        "id": "ai-agents-20",
-        "slug": "future-of-ai-agents",
-        "title": "The Future of AI Agents",
-        "order_index": 20,
-        "estimated_minutes": 35,
-        "xp_reward": 100,
-        "difficulty": "medium",
-        "node_type": "concept",
-        "prerequisites": ["ai-agents-19"],
-        "content": """# The Future of AI Agents
+NODE_20_FUTURE_AGENTS = {
+    "node_id": 20,
+    "title": "Framtidens AI-Agenter",
+    "slug": "future-ai-agents",
+    "estimated_minutes": 40,
+    "xp_reward": 100,
+    "prerequisites": [19],
+    "content": '''
+# Framtidens AI-Agenter
 
-## Varför detta är viktigt
+Utforska vad som kommer nast inom AI-agenter.
 
-AI-agenter utvecklas snabbare än något annat område inom tech. Att förstå
-trenderna hjälper dig:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Förbereda** din infrastruktur för kommande capabilities
-- **Investera rätt** i teknologier med staying power
-- **Undvika** dead ends och hype cycles
-- **Positionera** dig för framtidens möjligheter
+## Vad kommer nast?
 
-## Vad du kommer lära dig
+AI-agenter utvecklas snabbt. Har ar de viktigaste trenderna att folja.
 
-Efter denna modul kommer du kunna:
-- ✅ Identifiera emerging trends inom AI agents
-- ✅ Förstå teknologiska milstolpar på vägen
-- ✅ Utvärdera nya frameworks och verktyg
-- ✅ Planera för framtida agent capabilities
-- ✅ Förstå ethical och societal implications
+| Trend | Tidshorisont |
+|-------|--------------|
+| Multimodal agents | Nu - 1 ar |
+| Specialized agents | 1-2 ar |
+| Agent ecosystems | 2-3 ar |
+| AGI-level agents | 5+ ar |
 
-## Emerging Trends
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### 1. Agentic AI Wave
+## Varfor viktigt for DevOps?
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    AGENTIC AI EVOLUTION                                      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  2022                2023                2024                2025+          │
-│  ─────────────────────────────────────────────────────────────────────────► │
-│                                                                              │
-│  ChatGPT             LangChain          OpenAI Swarm        Multi-Agent     │
-│  (Conversational)    (Chains)           (Native agents)     Ecosystems      │
-│                                                                              │
-│                      AutoGPT            Claude Computer     Agent-to-Agent  │
-│                      (Autonomous)       Use (UI Control)    Marketplaces    │
-│                                                                              │
-│                      BabyAGI            Devin               Specialized     │
-│                      (Task agents)      (Coding agent)      Agent Teams     │
-│                                                                              │
-│  Key Shifts:                                                                │
-│  • From prompts → to tools → to planning                                   │
-│  • From single model → to orchestrated systems                             │
-│  • From human-in-loop → to supervised autonomy                             │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Framtidssaker | Forbereda for nya mojligheter |
+| Karriar | Efterfragade kompetenser |
+| Innovation | Forsta vad som ar mojligt |
+| Strategi | Planera long-term |
 
-### 2. Capability Roadmap
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens - Emerging Technologies
+
+| Teknologi | Beskrivning | Impact |
+|-----------|-------------|--------|
+| Computer use | Agenter som anvander UI | Hog |
+| MCP | Model Context Protocol | Hog |
+| Reasoning models | O1, O3 | Transformativ |
+| Agent protocols | Standardisering | Medium |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Evolution of AI Agents
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    CAPABILITY ROADMAP                                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  NOW (2024)                                                                 │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  ✅ Function calling & tool use                                     │   │
-│  │  ✅ Multi-step reasoning (ReAct, CoT)                               │   │
-│  │  ✅ RAG & document understanding                                    │   │
-│  │  ✅ Code generation & execution                                     │   │
-│  │  ✅ Basic multi-agent coordination                                  │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  NEAR-TERM (2025)                                                           │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  🔄 Computer/browser use (clicking, typing)                         │   │
-│  │  🔄 Long-term memory & personalization                              │   │
-│  │  🔄 Multi-modal agents (vision + audio + text)                      │   │
-│  │  🔄 Native planning without prompt engineering                      │   │
-│  │  🔄 Self-debugging & correction                                     │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  MID-TERM (2026-2027)                                                       │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  🔮 True multi-agent collaboration at scale                         │   │
-│  │  🔮 Domain expert agents (legal, medical, engineering)              │   │
-│  │  🔮 Continuous learning without fine-tuning                         │   │
-│  │  🔮 Agent-to-agent marketplaces                                     │   │
-│  │  🔮 Formal verification of agent behavior                           │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  LONG-TERM (2028+)                                                          │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  🌟 General-purpose autonomous agents                               │   │
-│  │  🌟 Scientific discovery agents                                     │   │
-│  │  🌟 Self-improving agent systems                                    │   │
-│  │  🌟 ???                                                             │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                  AGENT EVOLUTION                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  2023: Basic Tool Use                                           │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  LLM + Simple Tools (search, calculator)                  │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                           │                                      │
+│                           v                                      │
+│  2024: Agentic Workflows                                        │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Multi-step reasoning, Planning, Memory                   │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                           │                                      │
+│                           v                                      │
+│  2025: Multi-Agent Systems                                      │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Specialized agents, Collaboration, Orchestration         │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                           │                                      │
+│                           v                                      │
+│  2026+: Autonomous Systems                                      │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Self-improving, Long-term memory, Complex reasoning      │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### 3. Architecture Evolution
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    ARCHITECTURE EVOLUTION                                    │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  TODAY: Monolithic Agents                                                   │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │     ┌─────────────────────────────────────────────┐                 │   │
-│  │     │               SINGLE AGENT                  │                 │   │
-│  │     │   LLM + Tools + Memory + Planning          │                 │   │
-│  │     │         (Everything in one)                 │                 │   │
-│  │     └─────────────────────────────────────────────┘                 │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  EMERGING: Modular Agent Architecture                                       │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │     ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐        │   │
-│  │     │  Planner  │ │  Executor │ │  Memory   │ │  Learner  │        │   │
-│  │     │  Service  │ │  Service  │ │  Service  │ │  Service  │        │   │
-│  │     └─────┬─────┘ └─────┬─────┘ └─────┬─────┘ └─────┬─────┘        │   │
-│  │           └─────────────┴─────────────┴─────────────┘               │   │
-│  │                              │                                       │   │
-│  │                    ┌─────────▼─────────┐                            │   │
-│  │                    │   Orchestrator    │                            │   │
-│  │                    └───────────────────┘                            │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  FUTURE: Agent Mesh                                                         │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │         Agent A ◄────────────────► Agent B                          │   │
-│  │            ▲                           ▲                             │   │
-│  │            │                           │                             │   │
-│  │            │     ┌─────────────────┐   │                             │   │
-│  │            └────►│   Agent Mesh    │◄──┘                             │   │
-│  │                  │   (Discovery,   │                                 │   │
-│  │                  │    Routing,     │                                 │   │
-│  │            ┌────►│    Trust)       │◄──┐                             │   │
-│  │            │     └─────────────────┘   │                             │   │
-│  │            │                           │                             │   │
-│  │            ▼                           ▼                             │   │
-│  │         Agent C ◄────────────────► Agent D                          │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Key Technologies to Watch
-
-### Model Context Protocol (MCP)
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    MODEL CONTEXT PROTOCOL (MCP)                              │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  Problem: Every agent framework has its own tool integration format        │
-│                                                                              │
-│  Solution: Universal protocol for LLM ↔ Tool communication                 │
-│                                                                              │
-│  ┌─────────────────┐    MCP     ┌─────────────────┐                        │
-│  │     Claude      │◄──────────►│    Tool Server  │                        │
-│  └─────────────────┘            │  (GitHub, Slack │                        │
-│                                 │   Database...)  │                        │
-│  ┌─────────────────┐    MCP     └─────────────────┘                        │
-│  │     GPT-4       │◄──────────►│                                          │
-│  └─────────────────┘            │                                          │
-│                                                                              │
-│  Benefits:                                                                   │
-│  • Write tool once, use with any LLM                                       │
-│  • Standardized security model                                             │
-│  • Growing ecosystem of MCP servers                                        │
-│                                                                              │
-│  Example MCP Server:                                                        │
-│  ```python                                                                  │
-│  @mcp.tool()                                                                │
-│  def search_codebase(query: str) -> list[CodeResult]:                      │
-│      \"\"\"Search codebase for relevant code.\"\"\"                            │
-│      return search_engine.search(query)                                    │
-│  ```                                                                        │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Computer Use / UI Agents
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    COMPUTER USE AGENTS                                       │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  Instead of: Writing code to integrate with APIs                           │
-│  Future: Agent uses apps like a human would                                │
-│                                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │     ┌───────────────────────────────────────────────────────────┐   │   │
-│  │     │   [Chrome Browser - Jira]                                 │   │   │
-│  │     │   ┌─────────────────────────────────────────────────────┐ │   │   │
-│  │     │   │  Create New Issue                                   │ │   │   │
-│  │     │   │  Title: [_________________]  ◄── Agent types here   │ │   │   │
-│  │     │   │  Description: [___________]                         │ │   │   │
-│  │     │   │  [Create Issue] ◄── Agent clicks here               │ │   │   │
-│  │     │   └─────────────────────────────────────────────────────┘ │   │   │
-│  │     └───────────────────────────────────────────────────────────┘   │   │
-│  │                                                                      │   │
-│  │     Agent Vision: "I see a form with Title and Description fields"  │   │
-│  │     Agent Action: type("Title", "Fix login bug")                    │   │
-│  │                   click("Create Issue")                             │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  Implications:                                                               │
-│  • No API integration needed for any app                                   │
-│  • Works with legacy systems                                               │
-│  • Security concerns (agent has UI access)                                 │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Preparing Your Architecture
-
-### Future-Proof Design Principles
+## Multimodal Agents
 
 ```python
-\"\"\"
-Design principles for future-proof agent systems.
-\"\"\"
+# Framtida multimodal agent
+class MultimodalAgent:
+    """Agent som hanterar text, bild, ljud och video."""
 
-# 1. MODULAR ARCHITECTURE
-# Don't build monolithic agents - separate concerns
+    def __init__(self, client):
+        self.client = client
+        self.modalities = ["text", "image", "audio", "video"]
 
-class ModularAgent:
+    async def process(self, inputs: dict) -> dict:
+        # Analysera alla modaliteter
+        analyses = {}
+
+        if "image" in inputs:
+            analyses["image"] = await self._analyze_image(inputs["image"])
+
+        if "audio" in inputs:
+            analyses["audio"] = await self._transcribe_audio(inputs["audio"])
+
+        if "text" in inputs:
+            analyses["text"] = inputs["text"]
+
+        # Kombinera insikter
+        combined = await self._synthesize(analyses)
+
+        return combined
+
+    async def _analyze_image(self, image_data: bytes) -> str:
+        # Vision API
+        response = await self.client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "Beskriv denna bild"},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_data}"}}
+                ]
+            }]
+        )
+        return response.choices[0].message.content
+
+    async def _synthesize(self, analyses: dict) -> dict:
+        prompt = "Kombinera dessa analyser till en sammanhangande forstaelse:\\n"
+        for modality, analysis in analyses.items():
+            prompt += f"\\n{modality}: {analysis}"
+
+        response = await self.client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        return {"synthesis": response.choices[0].message.content}
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Computer Use Agents
+
+```python
+# Anthropic Computer Use style
+class ComputerUseAgent:
+    """Agent som kan anvanda datorns UI."""
+
+    def __init__(self, client):
+        self.client = client
+        self.screen_reader = None  # Hypothetical
+        self.mouse_controller = None  # Hypothetical
+
+    async def execute_task(self, task: str) -> dict:
+        steps = []
+        max_steps = 20
+
+        for _ in range(max_steps):
+            # Ta screenshot
+            screenshot = await self._capture_screen()
+
+            # Analysera och bestam action
+            action = await self._decide_action(task, screenshot, steps)
+
+            if action["type"] == "complete":
+                return {"status": "completed", "steps": steps}
+
+            # Utfor action
+            await self._execute_action(action)
+            steps.append(action)
+
+        return {"status": "max_steps_reached", "steps": steps}
+
+    async def _decide_action(self, task: str, screenshot: bytes, history: list) -> dict:
+        response = await self.client.chat.completions.create(
+            model="computer-use-model",  # Hypothetical
+            messages=[{
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": f"Task: {task}\\nHistory: {history}\\nWhat action should I take?"},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{screenshot}"}}
+                ]
+            }]
+        )
+
+        # Parse action from response
+        return {"type": "click", "x": 100, "y": 200}
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Model Context Protocol (MCP)
+
+```python
+# MCP Server implementation
+from dataclasses import dataclass
+
+@dataclass
+class MCPResource:
+    uri: str
+    name: str
+    description: str
+    mime_type: str
+
+@dataclass
+class MCPTool:
+    name: str
+    description: str
+    input_schema: dict
+
+class MCPServer:
+    """MCP server som exponerar resurser och tools."""
+
     def __init__(self):
-        self.planner = PlannerModule()      # Swappable
-        self.executor = ExecutorModule()     # Swappable
-        self.memory = MemoryModule()         # Swappable
-        self.safety = SafetyModule()         # Swappable
+        self.resources = []
+        self.tools = []
 
-    # Easy to upgrade individual components
+    def register_resource(self, resource: MCPResource) -> None:
+        self.resources.append(resource)
 
-# 2. ABSTRACTION LAYERS
-# Don't couple to specific LLM providers
+    def register_tool(self, tool: MCPTool) -> None:
+        self.tools.append(tool)
 
-class LLMInterface(Protocol):
-    async def complete(self, messages: list[dict]) -> str:
-        ...
+    async def handle_request(self, request: dict) -> dict:
+        method = request.get("method")
 
-    async def stream(self, messages: list[dict]) -> AsyncIterator[str]:
-        ...
+        if method == "resources/list":
+            return {"resources": [vars(r) for r in self.resources]}
 
-# Can swap OpenAI for Anthropic, local models, etc.
+        elif method == "tools/list":
+            return {"tools": [vars(t) for t in self.tools]}
 
-# 3. TOOL STANDARD
-# Use emerging standards like MCP
+        elif method == "tools/call":
+            tool_name = request["params"]["name"]
+            args = request["params"]["arguments"]
+            return await self._execute_tool(tool_name, args)
 
-from mcp import MCPServer, tool
+        return {"error": "Unknown method"}
 
-@tool
-def my_tool(param: str) -> dict:
-    \"\"\"Works with any MCP-compatible agent.\"\"\"
-    pass
+    async def _execute_tool(self, name: str, args: dict) -> dict:
+        # Find and execute tool
+        for tool in self.tools:
+            if tool.name == name:
+                # Execute tool logic
+                return {"result": f"Executed {name}"}
+        return {"error": f"Tool {name} not found"}
+```
 
-# 4. OBSERVABILITY FIRST
-# Build in tracing, metrics, logging from day 1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-class ObservableAgent:
-    @traced
-    @metered
-    async def process(self, input: str):
-        # All calls are automatically tracked
-        pass
+## Agent Protocols och Standards
 
-# 5. SAFETY BY DESIGN
-# Don't add safety as an afterthought
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  AGENT INTEROPERABILITY                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                    STANDARD PROTOCOLS                      │ │
+│  │                                                            │ │
+│  │  MCP (Model Context Protocol)                             │ │
+│  │  - Tool definitions                                        │ │
+│  │  - Resource access                                         │ │
+│  │  - Prompt templates                                        │ │
+│  │                                                            │ │
+│  │  OpenAPI for AI                                            │ │
+│  │  - REST endpoints                                          │ │
+│  │  - Schema definitions                                      │ │
+│  │  - Authentication                                          │ │
+│  │                                                            │ │
+│  │  Agent Communication                                       │ │
+│  │  - Message formats                                         │ │
+│  │  - Handshake protocols                                     │ │
+│  │  - State synchronization                                   │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                           │                                      │
+│                           v                                      │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                   AGENT MARKETPLACE                        │ │
+│  │  - Discover agents                                         │ │
+│  │  - Compose workflows                                       │ │
+│  │  - Share capabilities                                      │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-class SafeAgent:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Forbereda for Framtiden
+
+```python
+# Best practices for future-proof agents
+class FutureProofAgent:
+    """Agent designad for framtida utvidgning."""
+
     def __init__(self):
-        self.guardrails = SafetyGuardrails()  # Always on
-        self.audit_log = AuditLog()           # Always logging
-        self.rate_limiter = RateLimiter()     # Always enforced
+        # Modular architecture
+        self.components = {
+            "reasoning": None,  # Swappable
+            "memory": None,     # Swappable
+            "tools": [],        # Extensible
+            "protocols": []     # Pluggable
+        }
+
+    def register_component(self, type: str, component) -> None:
+        if type in ["reasoning", "memory"]:
+            self.components[type] = component
+        elif type == "tool":
+            self.components["tools"].append(component)
+        elif type == "protocol":
+            self.components["protocols"].append(component)
+
+    # Design principles:
+    # 1. Loose coupling - components can be replaced
+    # 2. Protocol-first - use standards like MCP
+    # 3. Observable - everything can be monitored
+    # 4. Safe by default - human approval for risky actions
 ```
 
-## Ethical Considerations
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    ETHICAL CONSIDERATIONS                                    │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  TRANSPARENCY                                                               │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • Users should know when they're talking to an agent               │   │
-│  │  • Agent decisions should be explainable                            │   │
-│  │  • Audit trails for all autonomous actions                          │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  ACCOUNTABILITY                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • Who is responsible when an agent makes a mistake?                │   │
-│  │  • Clear ownership of agent behavior                                │   │
-│  │  • Insurance and liability frameworks                               │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  SAFETY                                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • Prevent agents from causing harm                                 │   │
-│  │  • Graceful degradation when uncertain                              │   │
-│  │  • Human override always available                                  │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  JOB IMPACT                                                                 │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • Augment humans, don't just replace                               │   │
-│  │  • Reskilling programs                                              │   │
-│  │  • Thoughtful deployment                                            │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+## Vanliga fel och losningar
 
-## Your Next Steps
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Lock-in | Proprietary APIs | Abstraktionslager |
+| Sakerhetsrisk | For mycket autonomi | Gradvis okning |
+| Technical debt | Snabb iteration | Clean architecture |
+| Kostnad | Nya modeller dyra | Cost monitoring |
 
-### Learning Path Forward
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    YOUR LEARNING PATH                                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  1. BUILD: Create a production agent                                        │
-│     • Pick a real use case at work                                         │
-│     • Implement with proper safety, monitoring                             │
-│     • Learn from production issues                                         │
-│                                                                              │
-│  2. EXPERIMENT: Try new frameworks                                          │
-│     • LangGraph for stateful agents                                        │
-│     • CrewAI for multi-agent                                               │
-│     • MCP for tool integration                                             │
-│                                                                              │
-│  3. CONTRIBUTE: Join the community                                          │
-│     • Open source agent frameworks                                         │
-│     • Share learnings via blog/talks                                       │
-│     • Build tools others can use                                           │
-│                                                                              │
-│  4. STAY CURRENT: Follow developments                                       │
-│     • LLM release notes                                                    │
-│     • Research papers (especially from labs)                               │
-│     • Community discussions                                                │
-│                                                                              │
-│  Resources:                                                                  │
-│  • Simon Willison's blog (simonwillison.net)                              │
-│  • Latent Space podcast                                                    │
-│  • AI Engineer Summit talks                                                │
-│  • Papers with Code - Agents                                               │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+## Key Takeaways
 
-## Final Thoughts
+| Trend | Forberedelse |
+|-------|--------------|
+| Multimodal | Bygg for flera input-typer |
+| Computer use | Forstall UI-baserade workflows |
+| MCP | Implementera standarder nu |
+| Autonomi | Gradvis okning med guardrails |
 
-AI agents represent one of the most exciting frontiers in software development.
-The field is moving fast, but the fundamentals you've learned in this course will
-serve you well:
+Kom ihag:
+- Folj utvecklingen aktivt
+- Bygg modulart for att byta komponenter
+- Sakerhet forst, autonomi sen
+- Standarder sparar tid pa sikt
+'''
+}
 
-- **Reasoning patterns** (ReAct, CoT) are here to stay
-- **Tool use** is becoming standardized
-- **Safety** will only become more important
-- **Multi-agent** systems are the future
-
-Most importantly: **Build things**. The best way to learn is by doing.
-
----
-
-## 🎉 Grattis!
-
-Du har slutfört AI Agents SkillsMap!
-
-Du har lärt dig:
-- ✅ LLM fundamentals och hur agenter tänker
-- ✅ Tool design och function calling
-- ✅ Agent frameworks (LangChain, LlamaIndex, AutoGen)
-- ✅ Memory och state management
-- ✅ Multi-agent orchestration
-- ✅ Production deployment
-- ✅ Monitoring och observability
-- ✅ Autonomous agents och framtiden
-
-**Vad händer nu?**
-
-1. **Bygg en agent** för ett riktigt problem
-2. **Dela dina lärdomar** med communityn
-3. **Fortsätt lära** — fältet utvecklas snabbt!
-
----
-*"The best way to predict the future is to build it." — Alan Kay*
-"""
-    }
-]
+BLOCK_10_NODES = [NODE_19_AUTONOMOUS_AGENTS, NODE_20_FUTURE_AGENTS]
