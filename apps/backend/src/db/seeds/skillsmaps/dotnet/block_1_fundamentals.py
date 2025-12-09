@@ -21,24 +21,26 @@ DOTNET_NODE_1_INTRO = {
         "dotnet cli", "visual studio", "vs code", "hello world",
         "project structure", "compilation", "runtime"
     ],
-    "content": """
-# C# Introduction & Setup
+    "content": """# C# Introduction och Setup
 
-> *"C# combines the power of C++ with the simplicity of Visual Basic."*
-> — Anders Hejlsberg, Creator of C#
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor C# ar viktigt |
+|----------|---------------------|
+| **Enterprise backend** | Azure Functions, ASP.NET Core |
+| **Cross-platform** | Samma kod pa Windows, macOS, Linux |
+| **Cloud-native** | Forstaklassigt Azure-stod |
+| **Performance** | Nara native-prestanda med JIT |
 
-C# är ett av världens mest använda programmeringsspråk:
+Du maste forsta:
 
-- **#5 på TIOBE Index** - Miljarder rader kod i produktion
-- **Microsoft ecosystem** - Azure, Windows, Xbox, Unity
-- **Moderna features** - Async/await, LINQ, pattern matching
-- **Cross-platform** - Kör på Windows, macOS, Linux
+- **.NET ekosystemet** - runtime, SDK, CLI
+- **Projektstruktur** - csproj, solution, namespaces
+- **Verktyg** - VS Code, Visual Studio, dotnet CLI
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 .NET Ecosystem
 
@@ -271,14 +273,45 @@ double result = op switch
 Console.WriteLine($"Result: {num1} {op} {num2} = {result}");
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **.NET 8** är LTS - använd det för nya projekt
-- **Top-level statements** förenklar koden
-- **dotnet CLI** för allt: `new`, `run`, `build`, `publish`
-- **Cross-platform** - samma kod körs överallt
+| Kommando | Beskrivning |
+|----------|-------------|
+| `dotnet new console` | Skapa console-projekt |
+| `dotnet run` | Bygg och kor |
+| `dotnet build` | Bygg utan att kora |
+| `dotnet publish` | Publicera for deployment |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| dotnet: command not found | PATH ej satt | Lagg till .dotnet i PATH |
+| SDK version mismatch | Fel SDK-version | Skapa global.json |
+| NuGet restore failed | Saknade paket | dotnet restore |
+| Build errors | Syntaxfel | Kolla felmeddelanden |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **.NET 8** | LTS-version, anvand for nya projekt |
+| **Top-level statements** | Modern enklare syntax |
+| **dotnet CLI** | Allt via kommandoraden |
+| **Cross-platform** | Samma kod overallt |
+
+**Kom ihag:**
+
+- Installera .NET SDK, inte bara runtime
+- Anvand modern top-level syntax for nya projekt
+- global.json laser SDK-version per projekt
+- VS Code + C# Dev Kit ar gratis alternativ till Visual Studio
 """,
 }
 
@@ -299,21 +332,26 @@ DOTNET_NODE_2_TYPES = {
         "value types", "reference types", "nullable", "var", "const",
         "strings", "arrays", "type conversion"
     ],
-    "content": """
-# Variables & Data Types
+    "content": """# Variables och Data Types
 
-> *"C# has a unified type system. All types ultimately derive from object."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor typsystemet ar viktigt |
+|----------|------------------------------|
+| **Type safety** | Fangar fel vid kompilering |
+| **Performance** | Value types vs reference types |
+| **Null safety** | Undvik NullReferenceException |
+| **API-design** | Tydliga kontrakt |
 
-Att förstå C#:s typsystem är fundamentalt:
-- **Type safety** - fångar fel vid kompilering
-- **Performance** - value types vs reference types
-- **Nullability** - undvik NullReferenceException
+Du maste forsta:
 
----
+- **Value vs Reference types** - var data lagras
+- **Nullable types** - hantera null sakert
+- **Type conversion** - casta och parsa
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Type System Overview
 
@@ -562,15 +600,47 @@ for (int i = 0; i < 10000; i++)
 string result = sb.ToString();
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Value types** på stack, kopieras by value
-- **Reference types** på heap, kopieras by reference
-- **var** för implicit typing (fortfarande statiskt typat)
-- **Nullable** (`?`) för null-säkra value types
-- **StringBuilder** för många string-operationer
+| Typ | Storlek | Anvandning |
+|-----|---------|------------|
+| `int` | 32 bit | Heltal (default) |
+| `long` | 64 bit | Stora heltal |
+| `double` | 64 bit | Decimaltal (default) |
+| `decimal` | 128 bit | Pengar, hog precision |
+| `bool` | 1 bit | Sant/falskt |
+| `string` | Variabel | Text |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| NullReferenceException | Null-access | Anvand null-conditional (?.) |
+| Slow string concat | Loop med += | Anvand StringBuilder |
+| Overflow | For stort varde | Anvand checked eller storre typ |
+| Parse exception | Ogiltig input | Anvand TryParse |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Value types** | Pa stack, kopieras by value |
+| **Reference types** | Pa heap, kopieras by reference |
+| **var** | Implicit typing, fortfarande statiskt typat |
+| **Nullable** | ? for null-sakra value types |
+
+**Kom ihag:**
+
+- Anvand decimal for pengar, inte double
+- TryParse ar sakrare an Parse
+- StringBuilder for manga string-operationer
+- Nullable reference types (C# 8+) forhindrar null-buggar
 """,
 }
 
@@ -591,21 +661,26 @@ DOTNET_NODE_3_CONTROL_FLOW = {
         "if else", "switch", "pattern matching", "for", "foreach",
         "while", "break", "continue"
     ],
-    "content": """
-# Control Flow & Loops
+    "content": """# Control Flow och Loops
 
-> *"Pattern matching in C# has evolved into one of its most powerful features."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor kontrollflode ar viktigt |
+|----------|--------------------------------|
+| **Villkorlig logik** | Olika beteende baserat pa tillstand |
+| **Databearbetning** | Iterera over samlingar |
+| **Pattern matching** | Typsakra beslut |
+| **Felhantering** | Validering och guards |
 
-Kontrollflöde är hjärtat i all programmering:
-- **Beslut** - if/else, switch
-- **Iteration** - for, foreach, while
-- **Pattern Matching** - modern C# super power
+Du maste forsta:
 
----
+- **if/else och switch** - villkorlig exekvering
+- **Loops** - for, foreach, while
+- **Pattern matching** - modern C# superkraft
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 💻 If/Else
 
@@ -869,14 +944,47 @@ switch (value)
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Switch expressions** - moderna, kortare syntax
-- **Pattern matching** - kraftfullt för type checking
-- **foreach** föredras över for för collections
-- **LINQ** för deklarativ data-manipulation
+| Konstruktion | Anvandning |
+|--------------|------------|
+| `if/else` | Enkel villkorlig logik |
+| `switch` | Multipla villkor |
+| `switch expression` | Modern kortare syntax |
+| `for` | Nar du behover index |
+| `foreach` | Iterera over samlingar |
+| `while` | Loop tills villkor falskt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Off-by-one | i <= length | Anvand i < length |
+| IndexOutOfRange | Fel index | Anvand foreach |
+| Missing break | Glom break i switch | Lagg till break |
+| Infinite loop | Villkor aldrig falskt | Kontrollera loop-variabel |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Switch expressions** | Moderna, kortare syntax |
+| **Pattern matching** | Kraftfullt for type checking |
+| **foreach** | Foredrags over for for collections |
+| **LINQ** | Deklarativ data-manipulation |
+
+**Kom ihag:**
+
+- Anvand switch expression for enklare kod
+- foreach ar sakrare an for for iteration
+- Pattern matching ersatter manga if-satser
+- LINQ ar kraftfullt men lar dig grunderna forst
 """,
 }
 
@@ -897,21 +1005,26 @@ DOTNET_NODE_4_METHODS = {
         "methods", "parameters", "return types", "ref", "out",
         "optional parameters", "lambda", "delegates"
     ],
-    "content": """
-# Methods & Functions
+    "content": """# Methods och Functions
 
-> *"Methods are the verbs of your program - they describe what your code does."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🎯 Why This Matters
+| Scenario | Varfor metoder ar viktigt |
+|----------|--------------------------|
+| **Code reuse** | Skriv en gang, anvand overallt |
+| **Abstraction** | Gom komplexitet |
+| **Testing** | Isolerade enheter att testa |
+| **Maintainability** | Enklare att forstaa och andra |
 
-Metoder är grundläggande för:
-- **Code reuse** - skriv en gång, använd överallt
-- **Abstraction** - gömma komplexitet
-- **Testing** - isolerade enheter att testa
+Du maste forsta:
 
----
+- **Method signatures** - parametrar och returtyper
+- **ref/out/in** - pass by reference
+- **Lambda expressions** - anonyma funktioner
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🧠 Method Anatomy
 
@@ -1182,15 +1295,46 @@ Console.WriteLine(StringUtils.IsPalindrome("A man a plan a canal Panama"));  // 
 Console.WriteLine(StringUtils.Truncate("Hello World", 8));  // Hello...
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **ref** - modifiera original variabel
-- **out** - returnera flera värden
-- **params** - variabel antal argument
-- **Lambda** - kortfattade anonyma funktioner
-- **Overloading** - samma namn, olika parametrar
+| Keyword | Beskrivning |
+|---------|-------------|
+| `ref` | Pass by reference, kan modifieras |
+| `out` | Maste tilldelas i metoden |
+| `in` | Readonly reference |
+| `params` | Variabel antal argument |
+| `=>` | Expression-bodied method/lambda |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Unintended modification | Reference type modifierad | Skapa kopia |
+| NullReferenceException | Null parameter | Validera input |
+| Wrong overload called | Tvetydig overload | Explicit cast |
+| out not assigned | Glom tilldela out | Tilldela alltid |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **ref** | Modifiera original variabel |
+| **out** | Returnera flera varden |
+| **params** | Variabel antal argument |
+| **Lambda** | Kortfattade anonyma funktioner |
+
+**Kom ihag:**
+
+- Anvand expression-bodied for enkla metoder
+- Lambda ar kraftfullt med LINQ
+- Validera alltid input-parametrar
+- Overloading ger flexibla API:er
 """,
 }
 

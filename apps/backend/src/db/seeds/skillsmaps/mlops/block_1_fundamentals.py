@@ -1,6 +1,7 @@
 """
 MLOps SkillsMap - Block 1: Fundamentals
-Nodes 1-4: Programming, Version Control, Cloud, Containers
+Nodes 1-4: Introduction, Python for ML, Version Control, Cloud Computing
+V3 Format - Swedish, No Emojis
 """
 
 BLOCK_1_NODES = [
@@ -8,45 +9,80 @@ BLOCK_1_NODES = [
     {
         "id": "mlops-intro",
         "slug": "mlops-introduction",
-        "title": "Introduction to MLOps",
+        "title": "Introduktion till MLOps",
         "order_index": 1,
         "estimated_minutes": 25,
         "xp_reward": 50,
         "difficulty": "easy",
         "node_type": "concept",
         "prerequisites": [],
-        "content": """# Introduction to MLOps
+        "content": """# Introduktion till MLOps
 
-## Vad är MLOps?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-MLOps (Machine Learning Operations) är praktiker och verktyg för att automatisera och effektivisera hela ML-livscykeln - från experiment till produktion.
+## Vad ar MLOps?
 
-## Varför MLOps?
+MLOps (Machine Learning Operations) ar en uppsattning praktiker och verktyg for att automatisera och effektivisera hela ML-livscykeln - fran experiment till produktion.
 
-### Utan MLOps (ML-skuld)
+MLOps kombinerar:
+- Maskininlarning (ML)
+- DevOps-principer
+- Datahantering
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Automation | Automatiserar hela ML-livscykeln fran data till produktion |
+| Reproducerbarhet | Garanterar att experiment kan aterupprepas exakt |
+| Skalbarhet | Mojliggor skalning av ML-system i produktion |
+| Samarbete | Forbattrar samarbetet mellan data scientists och DevOps |
+| Kvalitet | Sakertstaller kvalitet genom automatiserade tester |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Begrepp | Definition |
+|---------|------------|
+| MLOps | Praktiker for ML-livscykelhantering |
+| ML Pipeline | Automatiserat arbetsflode for ML |
+| Model Registry | Central lagring for ML-modeller |
+| Feature Store | Central lagring for ML-features |
+| CT | Continuous Training - automatisk omtraning |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Utan MLOps vs Med MLOps
+
+Utan MLOps (ML-skuld):
+
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Data Scientist's Laptop                                │
+│  Data Scientists Laptop                                 │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │ Notebook    │→ │ model.pkl   │→ │ "It works!" │     │
-│  │ experiment  │  │ (local)     │  │             │     │
+│  │ Notebook    │─>│ model.pkl   │─>│ Det funkar! │     │
+│  │ experiment  │  │ (lokal)     │  │             │     │
 │  └─────────────┘  └─────────────┘  └─────────────┘     │
 │                                                         │
-│  Månader senare: "Vilken version? Vilken data?"        │
+│  Manader senare: Vilken version? Vilken data?          │
 └─────────────────────────────────────────────────────────┘
 ```
 
-### Med MLOps
+Med MLOps:
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    MLOps Pipeline                        │
 │                                                          │
 │  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────────┐    │
-│  │ Data   │→ │ Train  │→ │ Test   │→ │ Deploy     │    │
+│  │ Data   │─>│ Train  │─>│ Test   │─>│ Deploy     │    │
 │  │ Ingest │  │ Model  │  │ Valid. │  │ Monitor    │    │
 │  └────────┘  └────────┘  └────────┘  └────────────┘    │
 │       │          │           │             │            │
-│       ▼          ▼           ▼             ▼            │
+│       v          v           v             v            │
 │  ┌─────────────────────────────────────────────────┐   │
 │  │        Version Control + Experiment Tracking     │   │
 │  │        Model Registry + Feature Store            │   │
@@ -54,35 +90,41 @@ MLOps (Machine Learning Operations) är praktiker och verktyg för att automatis
 └─────────────────────────────────────────────────────────┘
 ```
 
-## MLOps Maturity Levels
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Level 0: Manual
+## MLOps Mognadsnivaar
+
+### Level 0: Manuell
 - Jupyter notebooks
 - Manuell deployment
 - Ingen versionshantering av modeller
 - Ingen automatiserad testning
 
 ### Level 1: ML Pipeline Automation
-- Automatiserade tränings-pipelines
+- Automatiserade tranings-pipelines
 - Experiment tracking
 - Model registry
 - Continuous Training (CT)
 
 ### Level 2: CI/CD Pipeline Automation
-- Automatiserad CI/CD för ML
+- Automatiserad CI/CD for ML
 - A/B-testning
 - Continuous Monitoring
-- Automated retraining
+- Automatiserad omtraning
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## MLOps vs DevOps
 
 | Aspekt | DevOps | MLOps |
 |--------|--------|-------|
-| **Artefakt** | Code | Code + Data + Model |
-| **Testning** | Unit/Integration | + Data validation, Model validation |
-| **Deployment** | Application | Model serving |
-| **Monitoring** | App metrics | + Data drift, Model drift |
-| **Versioning** | Code | Code + Data + Model |
+| Artefakt | Kod | Kod + Data + Modell |
+| Testning | Unit/Integration | + Datavalidering, Modellvalidering |
+| Deployment | Applikation | Model serving |
+| Monitoring | App metrics | + Data drift, Model drift |
+| Versioning | Kod | Kod + Data + Modell |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## MLOps Komponenter
 
@@ -96,7 +138,7 @@ MLOps (Machine Learning Operations) är praktiker och verktyg för att automatis
 ├─────────────────────────────────────────────────────────┤
 │  Orchestration  │ Airflow, Kubeflow, Prefect, Dagster   │
 ├─────────────────────────────────────────────────────────┤
-│  Experiment     │ MLflow, Weights & Biases, Neptune     │
+│  Experiment     │ MLflow, Weights and Biases, Neptune   │
 │  Tracking       │                                       │
 ├─────────────────────────────────────────────────────────┤
 │  Feature Store  │ Feast, Tecton, Hopsworks              │
@@ -107,54 +149,44 @@ MLOps (Machine Learning Operations) är praktiker och verktyg för att automatis
 └─────────────────────────────────────────────────────────┘
 ```
 
-## Karriärvägar i MLOps
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. **ML Engineer** - Fokus på modellträning och optimering
-2. **MLOps Engineer** - Fokus på infrastruktur och pipelines
-3. **Data Engineer** - Fokus på data pipelines
-4. **Platform Engineer** - Bygger ML-plattformar
+## Karriarvagar i MLOps
 
-## Praktisk övning
+| Roll | Fokus |
+|------|-------|
+| ML Engineer | Modelltraning och optimering |
+| MLOps Engineer | Infrastruktur och pipelines |
+| Data Engineer | Data pipelines |
+| Platform Engineer | Bygger ML-plattformar |
 
-Identifiera MLOps-mognadsnivån för ett projekt:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```python
-def assess_mlops_maturity():
-    checklist = {
-        "level_0": [
-            "Manual model training",
-            "No version control for models",
-            "Manual deployment",
-        ],
-        "level_1": [
-            "Automated training pipeline",
-            "Experiment tracking (MLflow etc)",
-            "Model registry",
-            "Continuous Training",
-        ],
-        "level_2": [
-            "CI/CD for ML pipelines",
-            "Automated testing (data + model)",
-            "Continuous monitoring",
-            "Automated retraining triggers",
-        ],
-    }
+## Vanliga fel och losningar
 
-    # Evaluate your project
-    for level, items in checklist.items():
-        print(f"\\n{level.upper()}:")
-        for item in items:
-            status = "✅" if check_item(item) else "❌"
-            print(f"  {status} {item}")
-```
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Modell fungerar lokalt men inte i prod | Miljoskillnader | Anvand containers och standardiserade miljoer |
+| Kan inte reproducera resultat | Saknar versionshantering | Implementera DVC och MLflow |
+| Modellen presterar samre over tid | Data drift | Implementera kontinuerlig monitoring |
+| Lang tid till produktion | Manuella processer | Automatisera med CI/CD pipelines |
 
-## Nästa steg
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-I denna SkillsMap kommer du lära dig:
-1. **Data Engineering** - Pipelines och Feature Stores
-2. **ML Fundamentals** - Träning och experiment tracking
-3. **MLOps Core** - CI/CD och orchestration
-4. **Production** - Monitoring och scaling
+## Key Takeaways
+
+| Punkt | Beskrivning |
+|-------|-------------|
+| MLOps | Kombinerar ML med DevOps-principer |
+| Automation | Nyckeln till skalbar ML |
+| Reproducerbarhet | Kritiskt for produktionskvalitet |
+| Monitoring | Modeller maste overvakas kontinuerligt |
+
+### Kom ihag
+- MLOps ar mer an bara deployment - det ar hela livscykeln
+- Borja enkelt och bygg ut gradvis
+- Versionshantera allt: kod, data och modeller
+- Automatisera sa mycket som mojligt
 """
     },
 
@@ -171,9 +203,36 @@ I denna SkillsMap kommer du lära dig:
         "prerequisites": ["mlops-intro"],
         "content": """# Python for Machine Learning
 
-## Förutsättningar
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Du bör redan kunna grundläggande Python. Här fokuserar vi på ML-specifika bibliotek och mönster.
+## Vad ar Python for ML?
+
+Python ar det dominerande spraket for maskininlarning tack vare sitt rika ekosystem av bibliotek och verktyg. Har fokuserar vi pa ML-specifika bibliotek och monster.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Standardisering | Python ar industristandard for ML |
+| Ekosystem | Rikt utbud av bibliotek och verktyg |
+| Integration | Enkelt att integrera med DevOps-verktyg |
+| Reproducerbarhet | Bra stod for miljohantering |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Bibliotek | Anvandning |
+|-----------|------------|
+| NumPy | Numeriska berakningar |
+| Pandas | Datahantering |
+| scikit-learn | Klassisk ML |
+| PyTorch | Deep Learning |
+| MLflow | Experiment tracking |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## ML Python Stack
 
@@ -193,9 +252,12 @@ Du bör redan kunna grundläggande Python. Här fokuserar vi på ML-specifika bi
 └─────────────────────────────────────────────────────────┘
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Environment Management
 
 ### pyproject.toml (Rekommenderat)
+
 ```toml
 [project]
 name = "ml-project"
@@ -223,36 +285,36 @@ select = ["E", "F", "I"]
 ```
 
 ### UV (Snabb pakethanterare)
+
 ```bash
 # Installera UV
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Skapa virtuell miljö
+# Skapa virtuell miljo
 uv venv
 
 # Installera dependencies
 uv pip install -r requirements.txt
-
-# Sync från pyproject.toml
-uv pip sync
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## NumPy Essentials
 
 ```python
 import numpy as np
 
-# Vektoroperationer (snabbare än Python-loopar)
+# Vektoroperationer (snabbare an Python-loopar)
 X = np.random.randn(1000, 10)  # 1000 samples, 10 features
 y = np.random.randint(0, 2, 1000)  # Binary labels
 
 # Broadcasting - automatisk dimension-matchning
 weights = np.array([0.1, 0.2, 0.3])
 data = np.array([[1, 2, 3], [4, 5, 6]])
-result = data * weights  # Varje rad multipliceras med weights
+result = data * weights
 
 # Effektiva operationer
-mean = X.mean(axis=0)  # Medelvärde per kolumn
+mean = X.mean(axis=0)  # Medelvarde per kolumn
 std = X.std(axis=0)    # Standardavvikelse per kolumn
 X_normalized = (X - mean) / std  # Normalisering
 
@@ -261,7 +323,9 @@ W = np.random.randn(10, 5)  # Weight matrix
 output = X @ W  # Matrix multiplication
 ```
 
-## Pandas för Data Prep
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Pandas for Data Prep
 
 ```python
 import pandas as pd
@@ -274,27 +338,18 @@ print(df.isnull().sum())
 
 # Feature engineering pipeline
 def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
-    '''Reproducerbar feature engineering'''
     df = df.copy()
-
-    # Hantera missing values
     df['age'] = df['age'].fillna(df['age'].median())
-
-    # Skapa nya features
     df['age_bucket'] = pd.cut(df['age'], bins=[0, 18, 35, 50, 100],
                               labels=['young', 'adult', 'middle', 'senior'])
-
-    # One-hot encoding
     df = pd.get_dummies(df, columns=['category'], prefix='cat')
-
-    # Log-transform skewed features
     df['income_log'] = np.log1p(df['income'])
-
     return df
 
-# Applicera pipeline
 df_processed = prepare_features(df)
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Scikit-learn Pipeline
 
@@ -305,11 +360,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 
-# Definiera features
 numeric_features = ['age', 'income', 'credit_score']
 categorical_features = ['occupation', 'education']
 
-# Preprocessing pipeline
 preprocessor = ColumnTransformer(
     transformers=[
         ('num', StandardScaler(), numeric_features),
@@ -317,38 +370,33 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Full pipeline med modell
 pipeline = Pipeline([
     ('preprocessor', preprocessor),
     ('classifier', RandomForestClassifier(n_estimators=100, random_state=42))
 ])
 
-# Train/test split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# Träna och evaluera
 pipeline.fit(X_train, y_train)
 scores = cross_val_score(pipeline, X_train, y_train, cv=5)
 print(f"CV Score: {scores.mean():.3f} (+/- {scores.std():.3f})")
 
-# Spara pipeline
 import joblib
 joblib.dump(pipeline, 'models/pipeline.joblib')
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## PyTorch Basics
 
 ```python
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
 
-# Device setup
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Enkel neural network
 class SimpleNN(nn.Module):
     def __init__(self, input_dim: int, hidden_dim: int, output_dim: int):
         super().__init__()
@@ -365,54 +413,48 @@ class SimpleNN(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.layers(x)
 
-# Training loop
 def train_model(model, train_loader, criterion, optimizer, epochs=10):
     model.train()
     for epoch in range(epochs):
         total_loss = 0
         for batch_X, batch_y in train_loader:
             batch_X, batch_y = batch_X.to(device), batch_y.to(device)
-
             optimizer.zero_grad()
             outputs = model(batch_X)
             loss = criterion(outputs, batch_y)
             loss.backward()
             optimizer.step()
-
             total_loss += loss.item()
-
-        avg_loss = total_loss / len(train_loader)
-        print(f"Epoch {epoch+1}/{epochs}, Loss: {avg_loss:.4f}")
+        print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(train_loader):.4f}")
 ```
 
-## Type Hints för ML-kod
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```python
-from typing import Tuple, Optional
-import numpy as np
-import pandas as pd
-from numpy.typing import NDArray
+## Vanliga fel och losningar
 
-def prepare_data(
-    df: pd.DataFrame,
-    target_col: str,
-    test_size: float = 0.2
-) -> Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.int64], NDArray[np.int64]]:
-    '''Prepare data for ML training with proper type hints'''
-    X = df.drop(columns=[target_col]).values
-    y = df[target_col].values
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| ImportError | Saknad dependency | Kontrollera requirements.txt |
+| Version conflict | Inkompatibla versioner | Anvand virtuell miljo |
+| Memory error | For stor data | Anvand chunking eller Dask |
+| Slow training | Ej optimerad kod | Anvand vektoroperationer |
 
-    # Split data
-    from sklearn.model_selection import train_test_split
-    return train_test_split(X, y, test_size=test_size, random_state=42)
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Nästa steg
+## Key Takeaways
 
-Med solid Python-grund går vi vidare till:
-- Git och versionshantering för ML
-- Cloud computing för ML-workloads
-- Containerisering av ML-modeller
+| Punkt | Beskrivning |
+|-------|-------------|
+| Environment | Anvand alltid virtuella miljoer |
+| Pipelines | Bygg reproducerbara pipelines |
+| Typing | Anvand type hints for battre kod |
+| Vectorization | Undvik Python-loopar for numerik |
+
+### Kom ihag
+- Versionera dina dependencies exakt
+- Anvand scikit-learn pipelines for reproducerbarhet
+- Testa din kod med pytest
+- Dokumentera dina funktioner
 """
     },
 
@@ -429,128 +471,105 @@ Med solid Python-grund går vi vidare till:
         "prerequisites": ["mlops-python"],
         "content": """# Version Control for ML
 
-## Varför är ML-versionshantering speciell?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar ML Version Control?
+
+ML-versionshantering ar speciell eftersom du maste hantera mer an bara kod - du behover ocksa versionera data och modeller.
 
 ```
 Traditional Software:
-  Code → Application
+  Kod -> Applikation
 
 Machine Learning:
-  Code + Data + Config + Model → ML System
+  Kod + Data + Config + Modell -> ML System
 
-  Alla måste versionshanteras!
+  Alla maste versionshanteras!
 ```
 
-## Git för ML-projekt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Rekommenderad projektstruktur
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Reproducerbarhet | Aterskapa exakt samma resultat |
+| Sparbarhet | Spara och jamfor experiment |
+| Samarbete | Team kan dela data och modeller |
+| Rollback | Aterstall tidigare versioner vid problem |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Verktyg | Anvandning |
+|---------|------------|
+| Git | Kod-versionshantering |
+| DVC | Data och modell-versionshantering |
+| MLflow | Experiment tracking |
+| Git LFS | Stora filer i Git |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Rekommenderad projektstruktur
+
 ```
 ml-project/
 ├── .git/
 ├── .gitignore
-├── .dvc/                    # DVC config
+├── .dvc/
 ├── pyproject.toml
 ├── README.md
-├── configs/                 # Hydra/YAML configs
+├── configs/
 │   ├── config.yaml
-│   ├── model/
-│   │   ├── random_forest.yaml
-│   │   └── xgboost.yaml
-│   └── data/
-│       └── preprocessing.yaml
+│   └── model/
 ├── data/
-│   ├── raw/                 # → Tracked by DVC
-│   ├── processed/           # → Tracked by DVC
-│   └── .gitkeep
-├── models/                  # → Tracked by DVC
-│   └── .gitkeep
-├── notebooks/               # Exploratory notebooks
-│   └── eda.ipynb
+│   ├── raw/          # Tracked by DVC
+│   └── processed/    # Tracked by DVC
+├── models/           # Tracked by DVC
+├── notebooks/
 ├── src/
-│   ├── __init__.py
 │   ├── data/
-│   │   ├── __init__.py
-│   │   └── preprocessing.py
 │   ├── features/
-│   │   ├── __init__.py
-│   │   └── build_features.py
 │   ├── models/
-│   │   ├── __init__.py
-│   │   ├── train.py
-│   │   └── predict.py
 │   └── evaluation/
-│       ├── __init__.py
-│       └── metrics.py
 ├── tests/
-│   ├── test_data.py
-│   └── test_model.py
-└── dvc.yaml                 # DVC pipeline
+└── dvc.yaml
 ```
 
-### .gitignore för ML
-```gitignore
-# Data och modeller (hanteras av DVC)
-data/raw/
-data/processed/
-models/*.pkl
-models/*.pt
-models/*.onnx
-
-# Experiment outputs
-outputs/
-mlruns/
-wandb/
-
-# Notebooks checkpoints
-.ipynb_checkpoints/
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-
-# IDE
-.vscode/
-.idea/
-
-# System
-.DS_Store
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## DVC - Data Version Control
 
 ### Installation och setup
+
 ```bash
-# Installera DVC
-pip install dvc dvc-s3  # eller dvc-gcs, dvc-azure
-
-# Initiera i git-repo
+pip install dvc dvc-s3
 dvc init
-
-# Konfigurera remote storage
 dvc remote add -d myremote s3://my-bucket/dvc-storage
 ```
 
-### Versionhantera data och modeller
-```bash
-# Lägg till data under DVC
-dvc add data/raw/training_data.csv
-# Skapar: data/raw/training_data.csv.dvc
+### Versionhantera data
 
-# Git-committa .dvc-filen (inte datan!)
-git add data/raw/training_data.csv.dvc data/raw/.gitignore
+```bash
+# Lagg till data under DVC
+dvc add data/raw/training_data.csv
+
+# Git-committa .dvc-filen
+git add data/raw/training_data.csv.dvc
 git commit -m "Add training data v1"
 
 # Pusha data till remote
 dvc push
 
-# Andra kan hämta datan
-git pull
+# Hamta data
 dvc pull
 ```
 
-### DVC Pipeline
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## DVC Pipeline
+
 ```yaml
 # dvc.yaml
 stages:
@@ -562,9 +581,6 @@ stages:
     outs:
       - data/processed/train.csv
       - data/processed/test.csv
-    params:
-      - preprocessing.test_size
-      - preprocessing.random_state
 
   train:
     cmd: python src/models/train.py
@@ -573,9 +589,6 @@ stages:
       - data/processed/train.csv
     outs:
       - models/model.pkl
-    params:
-      - model.type
-      - model.hyperparameters
     metrics:
       - metrics/train_metrics.json:
           cache: false
@@ -583,34 +596,17 @@ stages:
   evaluate:
     cmd: python src/evaluation/evaluate.py
     deps:
-      - src/evaluation/evaluate.py
       - models/model.pkl
       - data/processed/test.csv
     metrics:
       - metrics/test_metrics.json:
           cache: false
-    plots:
-      - plots/confusion_matrix.png
 ```
 
-### Kör pipeline
-```bash
-# Kör hela pipelinen
-dvc repro
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Se DAG
-dvc dag
+## Git Branching for ML
 
-# Jämför metrics mellan branches
-dvc metrics diff
-
-# Se experiment-resultat
-dvc exp show
-```
-
-## Git Branching för ML
-
-### Rekommenderad strategi
 ```
 main
   │
@@ -619,93 +615,51 @@ main
   │     ├── feature/new-feature-engineering
   │     │
   │     ├── experiment/xgboost-tuning
-  │     │     (kan mergas om bättre metrics)
   │     │
   │     └── experiment/transformer-model
-  │           (kasta om dåliga resultat)
   │
   └── release/v1.2
 ```
 
-### Experiment tracking i Git
-```bash
-# Skapa experiment-branch
-git checkout -b experiment/bert-embeddings
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# Kör experiment
-python train.py
-
-# Spara resultat
-git add metrics/ models/*.dvc
-git commit -m "exp: BERT embeddings - accuracy 0.92"
-
-# Jämför med main
-git diff main -- metrics/
-dvc metrics diff main
-
-# Om bra resultat → merge
-git checkout develop
-git merge experiment/bert-embeddings
-```
-
-## Semantic Versioning för Modeller
+## Semantic Versioning for Modeller
 
 ```
 model-name-v{MAJOR}.{MINOR}.{PATCH}
 
 MAJOR: Breaking API changes, ny modellarkitektur
-MINOR: Ny träningsdata, hyperparameter-tuning
+MINOR: Ny traningsdata, hyperparameter-tuning
 PATCH: Bugfixar, minor improvements
-
-Exempel:
-  fraud-detector-v1.0.0  # Initial release
-  fraud-detector-v1.1.0  # Trained on new data
-  fraud-detector-v1.1.1  # Fixed preprocessing bug
-  fraud-detector-v2.0.0  # Changed from RF to XGBoost
 ```
 
-## Praktiskt exempel
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```bash
-# 1. Setup nytt ML-projekt
-mkdir ml-project && cd ml-project
-git init
-dvc init
+## Vanliga fel och losningar
 
-# 2. Lägg till data
-dvc add data/raw/dataset.csv
-git add data/raw/dataset.csv.dvc .gitignore
-git commit -m "Add initial dataset"
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Data inte synkad | Glomde dvc pull | Kor dvc pull efter git pull |
+| Stor .git folder | Data i git | Flytta till DVC |
+| Kan inte reproducera | Saknar params | Lagg till params i dvc.yaml |
+| Merge conflicts | Binara filer | Anvand DVC for stora filer |
 
-# 3. Skapa experiment
-git checkout -b experiment/baseline
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# 4. Träna modell
-python train.py --model random_forest
+## Key Takeaways
 
-# 5. Spara resultat
-dvc add models/model.pkl
-git add models/model.pkl.dvc metrics/
-git commit -m "exp: baseline RF model - acc 0.85"
+| Punkt | Beskrivning |
+|-------|-------------|
+| DVC | Anvand for data och modeller |
+| Git | Anvand for kod och config |
+| Branching | Experiment i separata branches |
+| Versioning | Semantic versioning for modeller |
 
-# 6. Prova ny approach
-git checkout -b experiment/xgboost
-python train.py --model xgboost
-
-# 7. Jämför
-dvc metrics diff experiment/baseline
-# accuracy: 0.85 → 0.91
-
-# 8. Merge bästa experiment
-git checkout main
-git merge experiment/xgboost
-```
-
-## Nästa steg
-
-Med versionshantering på plats går vi vidare till:
-- Cloud computing för ML
-- Containerisering av modeller
+### Kom ihag
+- Git for kod, DVC for data och modeller
+- Tagg releases med semantic versioning
+- Dokumentera varje experiment
+- Automatisera med DVC pipelines
 """
     },
 
@@ -722,7 +676,11 @@ Med versionshantering på plats går vi vidare till:
         "prerequisites": ["mlops-version-control"],
         "content": """# Cloud Computing for ML
 
-## Varför Cloud för ML?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Cloud for ML?
+
+Cloud computing ger tillgang till skalbar berakningskraft och lagringskapacitet for att trana och kora ML-modeller.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -730,41 +688,50 @@ Med versionshantering på plats går vi vidare till:
 │  ┌─────────────────┐       ┌─────────────────┐         │
 │  │ Laptop GPU      │       │ 8x A100 80GB    │         │
 │  │ 8GB VRAM        │       │ 640GB VRAM      │         │
-│  │ Days to train   │   →   │ Hours to train  │         │
-│  │ $2000 hardware  │       │ Pay per use     │         │
+│  │ Dagar att trana │  ->   │ Timmar att trana│         │
 │  └─────────────────┘       └─────────────────┘         │
 └─────────────────────────────────────────────────────────┘
 ```
 
-## Cloud ML Services Comparison
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Skalbarhet | Skala upp vid behov, skala ner nar klart |
+| Kostnadseffektivitet | Betala endast for anvandning |
+| Tillganglighet | Tillgang till kraftfull GPU overallt |
+| Managed Services | Fardiga tjanster for ML |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
 
 | Service | AWS | GCP | Azure |
 |---------|-----|-----|-------|
-| **ML Platform** | SageMaker | Vertex AI | Azure ML |
-| **Compute** | EC2, EKS | GCE, GKE | AKS, VMs |
-| **GPU** | p4d, g5 | A2, L4 | NC, ND |
-| **Storage** | S3 | GCS | Blob |
-| **Feature Store** | SageMaker FS | Vertex FS | - |
-| **Notebooks** | SageMaker | Workbench | ML Studio |
+| ML Platform | SageMaker | Vertex AI | Azure ML |
+| Compute | EC2, EKS | GCE, GKE | AKS, VMs |
+| GPU | p4d, g5 | A2, L4 | NC, ND |
+| Storage | S3 | GCS | Blob |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## AWS SageMaker
 
-### Training Job
 ```python
 import sagemaker
 from sagemaker.pytorch import PyTorch
 
-# Konfigurera session
 session = sagemaker.Session()
 role = sagemaker.get_execution_role()
 
-# Definiera training job
 estimator = PyTorch(
     entry_point='train.py',
     source_dir='src/',
     role=role,
     instance_count=1,
-    instance_type='ml.p3.2xlarge',  # V100 GPU
+    instance_type='ml.p3.2xlarge',
     framework_version='2.0',
     py_version='py310',
     hyperparameters={
@@ -775,58 +742,43 @@ estimator = PyTorch(
     output_path=f's3://{bucket}/models/',
 )
 
-# Starta träning
 estimator.fit({
     'train': f's3://{bucket}/data/train/',
     'validation': f's3://{bucket}/data/validation/',
 })
-```
 
-### Deploy Model
-```python
-# Deploy till endpoint
 predictor = estimator.deploy(
     initial_instance_count=1,
     instance_type='ml.m5.large',
 )
-
-# Gör predictions
-result = predictor.predict(data)
-
-# Cleanup
-predictor.delete_endpoint()
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## GCP Vertex AI
 
-### Training med Custom Container
 ```python
 from google.cloud import aiplatform
 
-# Initiera
 aiplatform.init(
     project='my-project',
     location='us-central1',
     staging_bucket='gs://my-bucket/staging'
 )
 
-# Definiera training job
 job = aiplatform.CustomContainerTrainingJob(
     display_name='my-training-job',
     container_uri='gcr.io/my-project/training:latest',
     model_serving_container_image_uri='gcr.io/my-project/serving:latest',
 )
 
-# Kör träning
 model = job.run(
     replica_count=1,
     machine_type='n1-standard-8',
     accelerator_type='NVIDIA_TESLA_V100',
     accelerator_count=1,
-    base_output_dir='gs://my-bucket/output',
 )
 
-# Deploy
 endpoint = model.deploy(
     machine_type='n1-standard-4',
     min_replica_count=1,
@@ -834,121 +786,44 @@ endpoint = model.deploy(
 )
 ```
 
-## Spot/Preemptible Instances (Kostnadsoptimering)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### AWS Spot Instances
-```python
-# SageMaker med Spot
-estimator = PyTorch(
-    # ... andra params
-    use_spot_instances=True,
-    max_wait=7200,  # Max 2h väntetid
-    max_run=3600,   # Max 1h körning
-    checkpoint_s3_uri=f's3://{bucket}/checkpoints/',
-)
-```
+## Kostnadsoptimering
 
-### GCP Preemptible
-```yaml
-# Vertex AI config
-machineSpec:
-  machineType: n1-standard-8
-  acceleratorType: NVIDIA_TESLA_V100
-  acceleratorCount: 1
-scheduling:
-  preemptible: true  # 60-91% billigare!
-```
+| Tips | Besparing |
+|------|-----------|
+| Spot/Preemptible | 60-90% |
+| Right-size instances | 20-50% |
+| Auto-shutdown | 30-70% |
+| Ratt storage tier | 50-90% |
 
-## Multi-Cloud Storage Strategy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```python
-# Abstraktion för multi-cloud storage
-from abc import ABC, abstractmethod
+## Vanliga fel och losningar
 
-class CloudStorage(ABC):
-    @abstractmethod
-    def upload(self, local_path: str, remote_path: str) -> None:
-        pass
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Hog kostnad | Glommda resurser | Implementera auto-shutdown |
+| Spot avbrott | Preemption | Anvand checkpointing |
+| Lag prestanda | Fel instance type | Right-size baserat pa workload |
+| Data transfer cost | Regioner | Halla data i samma region |
 
-    @abstractmethod
-    def download(self, remote_path: str, local_path: str) -> None:
-        pass
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-class S3Storage(CloudStorage):
-    def __init__(self, bucket: str):
-        import boto3
-        self.s3 = boto3.client('s3')
-        self.bucket = bucket
+## Key Takeaways
 
-    def upload(self, local_path: str, remote_path: str) -> None:
-        self.s3.upload_file(local_path, self.bucket, remote_path)
+| Punkt | Beskrivning |
+|-------|-------------|
+| Spot instances | Anvand for traning, spara 60-90% |
+| Managed services | Forenklar MLOps |
+| Auto-scaling | Skala efter behov |
+| Cost monitoring | Overvaka kostnader kontinuerligt |
 
-    def download(self, remote_path: str, local_path: str) -> None:
-        self.s3.download_file(self.bucket, remote_path, local_path)
-
-class GCSStorage(CloudStorage):
-    def __init__(self, bucket: str):
-        from google.cloud import storage
-        self.client = storage.Client()
-        self.bucket = self.client.bucket(bucket)
-
-    def upload(self, local_path: str, remote_path: str) -> None:
-        blob = self.bucket.blob(remote_path)
-        blob.upload_from_filename(local_path)
-
-    def download(self, remote_path: str, local_path: str) -> None:
-        blob = self.bucket.blob(remote_path)
-        blob.download_to_filename(local_path)
-
-# Användning
-storage = S3Storage('my-ml-bucket') if USE_AWS else GCSStorage('my-ml-bucket')
-storage.upload('model.pkl', 'models/v1/model.pkl')
-```
-
-## Kostnadsoptimering Tips
-
-1. **Använd Spot/Preemptible** för träning (60-90% rabatt)
-2. **Right-size instances** - börja litet, skala upp vid behov
-3. **Auto-shutdown** notebooks och endpoints
-4. **Checkpoint regelbundet** för Spot-tolerans
-5. **Komprimera data** innan upload
-6. **Använd rätt storage tier** (Glacier för arkivering)
-
-```python
-# Exempel: Auto-shutdown idle resources
-import datetime
-
-def check_and_shutdown_idle_endpoints():
-    '''Stäng av endpoints utan trafik senaste 24h'''
-    import boto3
-
-    sm = boto3.client('sagemaker')
-    cw = boto3.client('cloudwatch')
-
-    endpoints = sm.list_endpoints()['Endpoints']
-
-    for ep in endpoints:
-        # Kolla invocations senaste 24h
-        response = cw.get_metric_statistics(
-            Namespace='AWS/SageMaker',
-            MetricName='Invocations',
-            Dimensions=[{'Name': 'EndpointName', 'Value': ep['EndpointName']}],
-            StartTime=datetime.datetime.utcnow() - datetime.timedelta(days=1),
-            EndTime=datetime.datetime.utcnow(),
-            Period=86400,
-            Statistics=['Sum']
-        )
-
-        if not response['Datapoints'] or response['Datapoints'][0]['Sum'] == 0:
-            print(f"Shutting down idle endpoint: {ep['EndpointName']}")
-            sm.delete_endpoint(EndpointName=ep['EndpointName'])
-```
-
-## Nästa steg
-
-Med cloud-grunderna på plats går vi vidare till:
-- Data Engineering för ML
-- Containerisering av ML-workloads
+### Kom ihag
+- Anvand Spot/Preemptible for traning
+- Implementera checkpointing for fault tolerance
+- Stang av resurser nar de inte anvands
+- Overvaka kostnader med budgetalarm
 """
     },
 ]

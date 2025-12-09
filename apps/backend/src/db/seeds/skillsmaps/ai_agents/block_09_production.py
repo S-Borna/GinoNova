@@ -1,414 +1,224 @@
-"""
-AI Agents SkillsMap - Block 09: Production
-Nodes 17-18: Deployment, Monitoring & Observability
-"""
+# =============================================================================
+# AI AGENTS - BLOCK 09: PRODUCTION (Noder 17-18) - V3 FORMAT
+# =============================================================================
 
-BLOCK_09_NODES = [
-    {
-        "id": "ai-agents-17",
-        "slug": "agent-production-deployment",
-        "title": "Production Deployment",
-        "order_index": 17,
-        "estimated_minutes": 45,
-        "xp_reward": 120,
-        "difficulty": "hard",
-        "node_type": "practice",
-        "prerequisites": ["ai-agents-16"],
-        "content": """# Agent Production Deployment
+NODE_17_DEPLOYMENT = {
+    "node_id": 17,
+    "title": "Agent Deployment",
+    "slug": "agent-deployment",
+    "estimated_minutes": 55,
+    "xp_reward": 140,
+    "prerequisites": [16],
+    "content": '''
+# Agent Deployment
 
-## Varför detta är viktigt
+Deploya AI-agenter till produktion.
 
-Att bygga en agent som fungerar lokalt är lätt. Att deploya den till produktion
-med tusentals användare, hög tillgänglighet och rimliga kostnader — det är svårt.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Denna modul täcker allt du behöver för att ta din agent från laptop till prod.
+## Vad ar Agent Deployment?
 
-## Vad du kommer lära dig
+Deployment ar processen att ta en agent fran utveckling till produktion. Det inkluderar containerisering, skalning och sakerhet.
 
-Efter denna modul kommer du kunna:
-- ✅ Designa skalbar agent-arkitektur
-- ✅ Implementera rate limiting och cost controls
-- ✅ Hantera concurrent requests
-- ✅ Bygga för high availability
-- ✅ Implementera graceful degradation
+| Steg | Beskrivning |
+|------|-------------|
+| Containerize | Packa agent i Docker |
+| Configure | Miljövariabler, secrets |
+| Deploy | Kubernetes, serverless |
+| Scale | Auto-scaling policies |
 
-## Kärnkoncept
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Production Architecture
+## Varfor viktigt for DevOps?
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                   PRODUCTION AGENT ARCHITECTURE                              │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                          LOAD BALANCER                                │   │
-│  │                    (nginx / AWS ALB / CloudFlare)                     │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                           │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │                          API GATEWAY                                  │   │
-│  │  • Authentication        • Rate Limiting       • Request Validation  │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                           │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │                       AGENT SERVICE (Replicated)                      │   │
-│  │  ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐            │   │
-│  │  │  Agent 1  │ │  Agent 2  │ │  Agent 3  │ │  Agent N  │            │   │
-│  │  │  (Pod)    │ │  (Pod)    │ │  (Pod)    │ │  (Pod)    │            │   │
-│  │  └─────┬─────┘ └─────┬─────┘ └─────┬─────┘ └─────┬─────┘            │   │
-│  │        └─────────────┴─────────────┴─────────────┘                   │   │
-│  │                              │                                        │   │
-│  └──────────────────────────────┼───────────────────────────────────────┘   │
-│                                 │                                            │
-│        ┌────────────────────────┼────────────────────────┐                  │
-│        ▼                        ▼                        ▼                  │
-│  ┌───────────────┐       ┌───────────────┐       ┌───────────────┐         │
-│  │    Redis      │       │   Postgres    │       │  Vector DB    │         │
-│  │  (Sessions,   │       │  (User data,  │       │  (Embeddings, │         │
-│  │   Cache)      │       │   Logs)       │       │   RAG)        │         │
-│  └───────────────┘       └───────────────┘       └───────────────┘         │
-│                                                                              │
-│  External APIs:                                                              │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                   │
-│  │   OpenAI      │  │   Anthropic   │  │  Tool APIs    │                   │
-│  │   (LLM)       │  │   (Fallback)  │  │  (Integrations)│                  │
-│  └───────────────┘  └───────────────┘  └───────────────┘                   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Tillganglighet | Agents maste vara uppe |
+| Skalbarhet | Hantera last-toppar |
+| Sakerhet | Skydda API-nycklar |
+| Kostnad | Optimera resurser |
 
-### Deployment Patterns
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens - Deployment Options
+
+| Platform | Bast for | Komplexitet |
+|----------|----------|-------------|
+| Docker + K8s | Full kontroll | Hog |
+| AWS Lambda | Serverless | Medium |
+| Cloud Run | Container serverless | Lag |
+| Modal | ML-fokuserat | Lag |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Deployment Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    DEPLOYMENT PATTERNS                                       │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  1. STATELESS AGENTS (Recommended)                                          │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • State stored externally (Redis/DB)                               │   │
-│  │  • Any instance can handle any request                              │   │
-│  │  • Easy horizontal scaling                                          │   │
-│  │  • Simple failover                                                  │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  2. QUEUE-BASED PROCESSING                                                  │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  Request ──► Queue ──► Worker Pool ──► Response                     │   │
-│  │              (RabbitMQ/SQS)                                         │   │
-│  │                                                                      │   │
-│  │  Benefits:                                                          │   │
-│  │  • Handles burst traffic                                            │   │
-│  │  • Natural rate limiting                                            │   │
-│  │  • Retry built-in                                                   │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  3. STREAMING RESPONSES                                                     │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  Request ──► Agent ══► SSE/WebSocket ══► Client                    │   │
-│  │                   (streaming tokens)                                │   │
-│  │                                                                      │   │
-│  │  Benefits:                                                          │   │
-│  │  • Better UX (immediate feedback)                                   │   │
-│  │  • Lower perceived latency                                          │   │
-│  │  • Can cancel mid-response                                          │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                  PRODUCTION ARCHITECTURE                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                    LOAD BALANCER                           │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                           │                                      │
+│           ┌───────────────┼───────────────┐                     │
+│           v               v               v                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │  API POD 1  │  │  API POD 2  │  │  API POD N  │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│           │               │               │                      │
+│           └───────────────┼───────────────┘                     │
+│                           v                                      │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                    MESSAGE QUEUE                           │ │
+│  │                  (Redis / RabbitMQ)                        │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                           │                                      │
+│           ┌───────────────┼───────────────┐                     │
+│           v               v               v                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
+│  │ AGENT POD 1 │  │ AGENT POD 2 │  │ AGENT POD N │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                           │                                      │
+│                           v                                      │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                   EXTERNAL SERVICES                        │ │
+│  │          OpenAI / Anthropic / Vector DB / etc              │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-## Steg-för-steg: Production Setup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### 1. Stateless Agent Service
+## Dockerfile
+
+```dockerfile
+# Dockerfile for AI Agent
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application
+COPY src/ ./src/
+COPY config/ ./config/
+
+# Create non-root user
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \\
+    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
+
+# Run
+ENV PYTHONUNBUFFERED=1
+CMD ["python", "-m", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## FastAPI Application
 
 ```python
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
-from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-import redis.asyncio as redis
-import json
-import uuid
-from typing import AsyncGenerator
-
-app = FastAPI()
-
-# External state store
-redis_client = redis.from_url("redis://localhost:6379")
-
-class ChatRequest(BaseModel):
-    session_id: str
-    message: str
-
-class AgentService:
-    \"\"\"Stateless agent service.\"\"\"
-
-    def __init__(self):
-        from openai import AsyncOpenAI
-        self.client = AsyncOpenAI()
-
-    async def get_session_state(self, session_id: str) -> dict:
-        \"\"\"Load state from Redis.\"\"\"
-        data = await redis_client.get(f"session:{session_id}")
-        if data:
-            return json.loads(data)
-        return {"messages": [], "context": {}}
-
-    async def save_session_state(self, session_id: str, state: dict):
-        \"\"\"Save state to Redis with TTL.\"\"\"
-        await redis_client.setex(
-            f"session:{session_id}",
-            3600,  # 1 hour TTL
-            json.dumps(state)
-        )
-
-    async def process_message(
-        self,
-        session_id: str,
-        message: str
-    ) -> AsyncGenerator[str, None]:
-        \"\"\"Process message and stream response.\"\"\"
-        # Load state
-        state = await self.get_session_state(session_id)
-
-        # Add user message
-        state["messages"].append({"role": "user", "content": message})
-
-        # Prepare messages for LLM
-        messages = [
-            {"role": "system", "content": "You are a helpful DevOps assistant."},
-            *state["messages"][-10:]  # Last 10 messages
-        ]
-
-        # Stream response
-        full_response = ""
-        async for chunk in await self.client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=messages,
-            stream=True
-        ):
-            if chunk.choices[0].delta.content:
-                content = chunk.choices[0].delta.content
-                full_response += content
-                yield content
-
-        # Save updated state
-        state["messages"].append({"role": "assistant", "content": full_response})
-        await self.save_session_state(session_id, state)
-
-agent_service = AgentService()
-
-@app.post("/chat")
-async def chat(request: ChatRequest):
-    \"\"\"Non-streaming chat endpoint.\"\"\"
-    response_parts = []
-    async for chunk in agent_service.process_message(
-        request.session_id,
-        request.message
-    ):
-        response_parts.append(chunk)
-
-    return {"response": "".join(response_parts)}
-
-@app.post("/chat/stream")
-async def chat_stream(request: ChatRequest):
-    \"\"\"Streaming chat endpoint.\"\"\"
-    async def generate():
-        async for chunk in agent_service.process_message(
-            request.session_id,
-            request.message
-        ):
-            yield f"data: {json.dumps({'content': chunk})}\\n\\n"
-        yield "data: [DONE]\\n\\n"
-
-    return StreamingResponse(
-        generate(),
-        media_type="text/event-stream"
-    )
-```
-
-### 2. Rate Limiting
-
-```python
-from fastapi import Request, HTTPException
-from datetime import datetime, timedelta
-import asyncio
-
-class RateLimiter:
-    \"\"\"Token bucket rate limiter with Redis backend.\"\"\"
-
-    def __init__(
-        self,
-        requests_per_minute: int = 60,
-        tokens_per_minute: int = 100000  # LLM tokens
-    ):
-        self.requests_per_minute = requests_per_minute
-        self.tokens_per_minute = tokens_per_minute
-
-    async def check_rate_limit(self, user_id: str) -> dict:
-        \"\"\"Check if user is within rate limits.\"\"\"
-        key = f"ratelimit:{user_id}"
-        now = datetime.now().timestamp()
-        window_start = now - 60
-
-        # Get current usage
-        pipe = redis_client.pipeline()
-        pipe.zremrangebyscore(key, 0, window_start)  # Remove old entries
-        pipe.zcard(key)  # Count entries in window
-        pipe.get(f"tokens:{user_id}")  # Get token usage
-
-        results = await pipe.execute()
-        request_count = results[1]
-        token_usage = int(results[2] or 0)
-
-        if request_count >= self.requests_per_minute:
-            return {
-                "allowed": False,
-                "reason": "Request rate limit exceeded",
-                "retry_after": 60
-            }
-
-        if token_usage >= self.tokens_per_minute:
-            return {
-                "allowed": False,
-                "reason": "Token rate limit exceeded",
-                "retry_after": 60
-            }
-
-        # Record this request
-        await redis_client.zadd(key, {str(now): now})
-        await redis_client.expire(key, 120)
-
-        return {
-            "allowed": True,
-            "remaining_requests": self.requests_per_minute - request_count - 1,
-            "remaining_tokens": self.tokens_per_minute - token_usage
-        }
-
-    async def record_token_usage(self, user_id: str, tokens: int):
-        \"\"\"Record token usage.\"\"\"
-        key = f"tokens:{user_id}"
-        await redis_client.incrby(key, tokens)
-        await redis_client.expire(key, 60)
-
-rate_limiter = RateLimiter()
-
-# Middleware
-@app.middleware("http")
-async def rate_limit_middleware(request: Request, call_next):
-    user_id = request.headers.get("X-User-ID", "anonymous")
-
-    result = await rate_limiter.check_rate_limit(user_id)
-
-    if not result["allowed"]:
-        raise HTTPException(
-            status_code=429,
-            detail=result["reason"],
-            headers={"Retry-After": str(result["retry_after"])}
-        )
-
-    response = await call_next(request)
-
-    # Add rate limit headers
-    response.headers["X-RateLimit-Remaining"] = str(result.get("remaining_requests", 0))
-
-    return response
-```
-
-### 3. Cost Controls
-
-```python
-from dataclasses import dataclass
 from typing import Optional
-import tiktoken
+import os
 
-@dataclass
-class CostConfig:
-    input_cost_per_1k: float = 0.0015  # GPT-4o-mini input
-    output_cost_per_1k: float = 0.0060  # GPT-4o-mini output
-    max_input_tokens: int = 8000
-    max_output_tokens: int = 4000
-    daily_budget_usd: float = 100.0
+app = FastAPI(title="AI Agent Service")
 
-class CostController:
-    \"\"\"Control and track LLM costs.\"\"\"
+# Configuration
+class Settings:
+    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
+    max_concurrent_tasks: int = int(os.getenv("MAX_CONCURRENT_TASKS", "10"))
+    redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379")
 
-    def __init__(self, config: CostConfig = None):
-        self.config = config or CostConfig()
-        self.encoder = tiktoken.encoding_for_model("gpt-4o-mini")
+settings = Settings()
 
-    def estimate_cost(self, messages: list[dict], max_output: int = None) -> dict:
-        \"\"\"Estimate cost before making a call.\"\"\"
-        input_tokens = sum(
-            len(self.encoder.encode(m["content"]))
-            for m in messages
-        )
+# Request/Response models
+class AgentRequest(BaseModel):
+    message: str
+    session_id: Optional[str] = None
+    max_iterations: int = 10
 
-        max_output = max_output or self.config.max_output_tokens
+class AgentResponse(BaseModel):
+    response: str
+    session_id: str
+    iterations: int
+    tokens_used: int
 
-        input_cost = (input_tokens / 1000) * self.config.input_cost_per_1k
-        max_output_cost = (max_output / 1000) * self.config.output_cost_per_1k
+# Health check
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "version": "1.0.0"}
 
-        return {
-            "input_tokens": input_tokens,
-            "max_output_tokens": max_output,
-            "estimated_min_cost": input_cost,
-            "estimated_max_cost": input_cost + max_output_cost
-        }
+# Agent endpoint
+@app.post("/agent/run", response_model=AgentResponse)
+async def run_agent(request: AgentRequest, background_tasks: BackgroundTasks):
+    from src.agent import Agent
 
-    async def check_budget(self, user_id: str, estimated_cost: float) -> bool:
-        \"\"\"Check if user has budget for this request.\"\"\"
-        key = f"daily_cost:{user_id}:{datetime.now().strftime('%Y-%m-%d')}"
-        current_cost = float(await redis_client.get(key) or 0)
+    agent = Agent(api_key=settings.openai_api_key)
+    result = await agent.run(
+        message=request.message,
+        session_id=request.session_id,
+        max_iterations=request.max_iterations
+    )
 
-        return (current_cost + estimated_cost) <= self.config.daily_budget_usd
+    # Log usage in background
+    background_tasks.add_task(log_usage, result)
 
-    async def record_cost(self, user_id: str, input_tokens: int, output_tokens: int):
-        \"\"\"Record actual cost after request.\"\"\"
-        cost = (
-            (input_tokens / 1000) * self.config.input_cost_per_1k +
-            (output_tokens / 1000) * self.config.output_cost_per_1k
-        )
+    return AgentResponse(
+        response=result["output"],
+        session_id=result["session_id"],
+        iterations=result["iterations"],
+        tokens_used=result["tokens"]
+    )
 
-        key = f"daily_cost:{user_id}:{datetime.now().strftime('%Y-%m-%d')}"
-        await redis_client.incrbyfloat(key, cost)
-        await redis_client.expire(key, 86400 * 2)  # Keep 2 days
-
-        return cost
-
-cost_controller = CostController()
+async def log_usage(result: dict):
+    # Logga till metrics system
+    pass
 ```
 
-### 4. Kubernetes Deployment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kubernetes Deployment
 
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agent-service
+  name: ai-agent
+  labels:
+    app: ai-agent
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: agent-service
+      app: ai-agent
   template:
     metadata:
       labels:
-        app: agent-service
+        app: ai-agent
     spec:
       containers:
       - name: agent
-        image: your-registry/agent-service:latest
+        image: ai-agent:latest
         ports:
         - containerPort: 8000
         resources:
           requests:
             memory: "512Mi"
-            cpu: "500m"
+            cpu: "250m"
           limits:
             memory: "1Gi"
-            cpu: "1000m"
+            cpu: "500m"
         env:
         - name: OPENAI_API_KEY
           valueFrom:
@@ -416,40 +226,41 @@ spec:
               name: agent-secrets
               key: openai-api-key
         - name: REDIS_URL
-          value: "redis://redis-service:6379"
+          value: "redis://redis:6379"
         livenessProbe:
           httpGet:
             path: /health
             port: 8000
           initialDelaySeconds: 10
-          periodSeconds: 10
+          periodSeconds: 30
         readinessProbe:
           httpGet:
-            path: /ready
+            path: /health
             port: 8000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: agent-service
+  name: ai-agent-service
 spec:
   selector:
-    app: agent-service
+    app: ai-agent
   ports:
   - port: 80
     targetPort: 8000
+  type: LoadBalancer
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: agent-service-hpa
+  name: ai-agent-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: agent-service
+    name: ai-agent
   minReplicas: 2
   maxReplicas: 10
   metrics:
@@ -461,255 +272,288 @@ spec:
         averageUtilization: 70
 ```
 
-### 5. Health Checks
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Secrets Management
 
 ```python
-from fastapi import FastAPI
-from datetime import datetime
+# secrets.py
+import os
+from dataclasses import dataclass
+from typing import Optional
 
-@app.get("/health")
-async def health():
-    \"\"\"Liveness probe.\"\"\"
-    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+@dataclass
+class SecretManager:
+    """Hantera hemligheter sakert."""
 
-@app.get("/ready")
-async def ready():
-    \"\"\"Readiness probe.\"\"\"
-    checks = {
-        "redis": await check_redis(),
-        "openai": await check_openai()
-    }
+    @staticmethod
+    def get_secret(name: str, default: str = None) -> Optional[str]:
+        # 1. Forst kolla miljovariabel
+        value = os.getenv(name)
+        if value:
+            return value
 
-    all_healthy = all(checks.values())
+        # 2. Sedan kolla fil (for Docker secrets)
+        secret_path = f"/run/secrets/{name.lower()}"
+        if os.path.exists(secret_path):
+            with open(secret_path, "r") as f:
+                return f.read().strip()
 
-    if not all_healthy:
-        raise HTTPException(status_code=503, detail=checks)
+        # 3. Slutligen, returnera default
+        return default
 
-    return {"status": "ready", "checks": checks}
+    @staticmethod
+    def validate_required_secrets() -> None:
+        required = ["OPENAI_API_KEY"]
+        missing = [s for s in required if not SecretManager.get_secret(s)]
 
-async def check_redis() -> bool:
-    try:
-        await redis_client.ping()
+        if missing:
+            raise ValueError(f"Missing required secrets: {missing}")
+
+# Vid startup
+SecretManager.validate_required_secrets()
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Rate Limiting
+
+```python
+from fastapi import HTTPException, Request
+from functools import wraps
+import time
+from collections import defaultdict
+
+class RateLimiter:
+    def __init__(self, requests_per_minute: int = 60):
+        self.rpm = requests_per_minute
+        self.requests = defaultdict(list)
+
+    def check(self, client_id: str) -> bool:
+        now = time.time()
+        minute_ago = now - 60
+
+        # Rensa gamla requests
+        self.requests[client_id] = [
+            t for t in self.requests[client_id]
+            if t > minute_ago
+        ]
+
+        if len(self.requests[client_id]) >= self.rpm:
+            return False
+
+        self.requests[client_id].append(now)
         return True
-    except:
-        return False
 
-async def check_openai() -> bool:
-    try:
-        # Light check - just verify API key works
-        from openai import AsyncOpenAI
-        client = AsyncOpenAI()
-        await client.models.list()
-        return True
-    except:
-        return False
+rate_limiter = RateLimiter(requests_per_minute=60)
+
+def rate_limit():
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(request: Request, *args, **kwargs):
+            client_id = request.client.host
+
+            if not rate_limiter.check(client_id):
+                raise HTTPException(
+                    status_code=429,
+                    detail="Rate limit exceeded"
+                )
+
+            return await func(request, *args, **kwargs)
+        return wrapper
+    return decorator
 ```
 
-## Vanliga problem
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Problem: "High latency under load"
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Cold start | Ingen warmup | Preload models |
+| OOM | For lite minne | Resource limits |
+| API key leak | Dalig secret handling | Secret manager |
+| Scaling lag | Langsam HPA | Custom metrics |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Containerize | Docker for portabilitet |
+| Kubernetes | Orchestrering i skala |
+| Secrets | Aldrig i kod eller images |
+| Rate limit | Skydda mot overbelastning |
+
+Kom ihag:
+- Health checks ar kritiska
+- Secrets aldrig i plain text
+- HPA for automatisk skalning
+- Logg allt for debugging
+'''
+}
+
+NODE_18_MONITORING = {
+    "node_id": 18,
+    "title": "Agent Monitoring",
+    "slug": "agent-monitoring",
+    "estimated_minutes": 50,
+    "xp_reward": 130,
+    "prerequisites": [17],
+    "content": '''
+# Agent Monitoring
+
+Overvaka och optimera AI-agenter i produktion.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vad ar Agent Monitoring?
+
+Monitoring ar processen att samla in, analysera och agera pa data om agentens beteende och prestanda.
+
+| Aspekt | Exempel |
+|--------|---------|
+| Performance | Latency, throughput |
+| Cost | Tokens, API calls |
+| Quality | Accuracy, relevance |
+| Health | Errors, uptime |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Visibility | Forsta vad som hander |
+| Alerting | Snabb reaktion pa problem |
+| Optimization | Hitta flaskhalsar |
+| Cost control | Spara API-kostnader |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens - Key Metrics
+
+| Metric | Typ | Alert threshold |
+|--------|-----|-----------------|
+| Response time | Performance | > 5s |
+| Error rate | Health | > 1% |
+| Token usage | Cost | > budget |
+| Iterations | Quality | > max |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Monitoring Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  MONITORING ARCHITECTURE                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                    AI AGENT                                │ │
+│  │  ┌─────────────────────────────────────────────────────┐  │ │
+│  │  │  Instrumentation (metrics, logs, traces)            │  │ │
+│  │  └─────────────────────────────────────────────────────┘  │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│           │                   │                   │              │
+│           v                   v                   v              │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐       │
+│  │  METRICS    │     │    LOGS     │     │   TRACES    │       │
+│  │ Prometheus  │     │    Loki     │     │   Jaeger    │       │
+│  └─────────────┘     └─────────────┘     └─────────────┘       │
+│           │                   │                   │              │
+│           └───────────────────┼───────────────────┘             │
+│                               v                                  │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │                      GRAFANA                               │ │
+│  │  Dashboards | Alerts | Correlations                       │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Metrics Collection
 
 ```python
-# Lösning: Connection pooling och async
-import httpx
+from prometheus_client import Counter, Histogram, Gauge, start_http_server
+import time
+from functools import wraps
 
-class OptimizedLLMClient:
-    def __init__(self):
-        self.client = httpx.AsyncClient(
-            limits=httpx.Limits(
-                max_connections=100,
-                max_keepalive_connections=20
-            ),
-            timeout=httpx.Timeout(60.0)
-        )
+# Define metrics
+AGENT_REQUESTS = Counter(
+    "agent_requests_total",
+    "Total agent requests",
+    ["agent_name", "status"]
+)
+
+AGENT_LATENCY = Histogram(
+    "agent_latency_seconds",
+    "Agent response latency",
+    ["agent_name"],
+    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 30.0]
+)
+
+TOKENS_USED = Counter(
+    "agent_tokens_total",
+    "Total tokens used",
+    ["agent_name", "model"]
+)
+
+ACTIVE_SESSIONS = Gauge(
+    "agent_active_sessions",
+    "Number of active sessions",
+    ["agent_name"]
+)
+
+ITERATIONS_HISTOGRAM = Histogram(
+    "agent_iterations",
+    "Number of iterations per request",
+    ["agent_name"],
+    buckets=[1, 2, 3, 5, 7, 10, 15, 20]
+)
+
+def track_metrics(agent_name: str):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            start_time = time.time()
+
+            try:
+                result = await func(*args, **kwargs)
+
+                AGENT_REQUESTS.labels(agent_name=agent_name, status="success").inc()
+                TOKENS_USED.labels(agent_name=agent_name, model="gpt-4o-mini").inc(
+                    result.get("tokens", 0)
+                )
+                ITERATIONS_HISTOGRAM.labels(agent_name=agent_name).observe(
+                    result.get("iterations", 1)
+                )
+
+                return result
+
+            except Exception as e:
+                AGENT_REQUESTS.labels(agent_name=agent_name, status="error").inc()
+                raise
+
+            finally:
+                latency = time.time() - start_time
+                AGENT_LATENCY.labels(agent_name=agent_name).observe(latency)
+
+        return wrapper
+    return decorator
 ```
 
-### Problem: "Costs spiraling out of control"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```python
-# Lösning: Hard limits och alerts
-async def enforce_hard_limit(user_id: str, estimated_cost: float):
-    if estimated_cost > 1.0:  # $1 per request max
-        raise HTTPException(400, "Request too expensive")
-
-    daily_total = await get_daily_cost(user_id)
-    if daily_total > 50:  # $50/day max
-        raise HTTPException(429, "Daily budget exceeded")
-```
-
-## Praktisk övning
-
-**Uppgift:** Implementera Graceful Degradation
-
-```python
-\"\"\"
-TODO: Bygg ett fallback-system som:
-
-1. Primär: GPT-4o för komplexa queries
-2. Fallback 1: GPT-4o-mini om GPT-4o är nere/slow
-3. Fallback 2: Cached responses om alla LLMs är nere
-4. Fallback 3: "Vi upplever problem" message
-
-Implementera:
-- CircuitBreaker för varje provider
-- Automatic failover
-- Cost-aware routing (billigare modell om budget låg)
-\"\"\"
-
-class ResilientAgent:
-    def __init__(self):
-        # Din kod här
-        pass
-
-    async def chat(self, message: str, user_id: str) -> str:
-        # Din kod här
-        pass
-
-# Test
-agent = ResilientAgent()
-# Ska fungera även om OpenAI är nere
-response = await agent.chat("Hello", "user_123")
-```
-
-## Sammanfattning
-
-- ✅ **Stateless design** för enkel skalning
-- ✅ **Rate limiting** för kostnadskontroll
-- ✅ **Health checks** för K8s integration
-- ✅ **Graceful degradation** för resiliens
-
-## Nästa steg
-
-- **Node 18:** Monitoring & Observability
-- **Node 19:** Autonomous Agents
-
----
-*Pro tip: Börja med rate limiting DAG 1 — det är svårare att lägga till senare!*
-"""
-    },
-    {
-        "id": "ai-agents-18",
-        "slug": "agent-monitoring-observability",
-        "title": "Monitoring & Observability",
-        "order_index": 18,
-        "estimated_minutes": 40,
-        "xp_reward": 110,
-        "difficulty": "medium",
-        "node_type": "concept",
-        "prerequisites": ["ai-agents-17"],
-        "content": """# Agent Monitoring & Observability
-
-## Varför detta är viktigt
-
-Agenter är som black boxes — utan ordentlig observability vet du inte:
-
-- **Varför** agenten tog ett visst beslut
-- **Hur mycket** det kostade
-- **Var** bottlenecks finns
-- **När** något börjar gå fel
-
-God observability gör skillnaden mellan "det funkar inte" och "jag vet exakt vad som är fel".
-
-## Vad du kommer lära dig
-
-Efter denna modul kommer du kunna:
-- ✅ Implementera structured logging för agenter
-- ✅ Bygga metrics dashboards
-- ✅ Tracing för multi-agent systems
-- ✅ Alerting för anomalier
-- ✅ Cost tracking och reporting
-
-## Kärnkoncept
-
-### Observability Stack
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    OBSERVABILITY STACK                                       │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                           AGENT                                       │   │
-│  │  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐              │   │
-│  │  │    LOGS       │ │    METRICS    │ │    TRACES     │              │   │
-│  │  │  (Structured) │ │  (Counters,   │ │  (Distributed)│              │   │
-│  │  │               │ │   Gauges)     │ │               │              │   │
-│  │  └───────┬───────┘ └───────┬───────┘ └───────┬───────┘              │   │
-│  └──────────┼─────────────────┼─────────────────┼────────────────────────┘   │
-│             │                 │                 │                            │
-│             ▼                 ▼                 ▼                            │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                    │
-│  │    Loki /     │  │  Prometheus   │  │    Jaeger /   │                    │
-│  │  Elasticsearch│  │               │  │    Tempo      │                    │
-│  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘                    │
-│          │                  │                  │                             │
-│          └──────────────────┴──────────────────┘                             │
-│                             │                                                │
-│                             ▼                                                │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                         GRAFANA                                       │   │
-│  │  ┌───────────────────────────────────────────────────────────────┐   │   │
-│  │  │  • Agent Performance Dashboard                                │   │   │
-│  │  │  • Cost Tracking Dashboard                                    │   │   │
-│  │  │  • Error Rate Alerts                                          │   │   │
-│  │  │  • Token Usage Graphs                                         │   │   │
-│  │  └───────────────────────────────────────────────────────────────┘   │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Key Metrics
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    KEY AGENT METRICS                                         │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  LATENCY METRICS                                                            │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • agent_response_time_seconds (histogram)                          │   │
-│  │  • llm_request_duration_seconds (histogram)                         │   │
-│  │  • tool_execution_duration_seconds (histogram)                      │   │
-│  │  • time_to_first_token_seconds (histogram)                          │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  COST METRICS                                                               │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • llm_input_tokens_total (counter)                                 │   │
-│  │  • llm_output_tokens_total (counter)                                │   │
-│  │  • estimated_cost_usd_total (counter)                               │   │
-│  │  • cost_per_conversation (histogram)                                │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  ERROR METRICS                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • agent_errors_total (counter, by type)                            │   │
-│  │  • llm_request_failures_total (counter, by error)                   │   │
-│  │  • tool_execution_errors_total (counter, by tool)                   │   │
-│  │  • rate_limit_hits_total (counter)                                  │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  USAGE METRICS                                                              │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  • active_sessions (gauge)                                          │   │
-│  │  • messages_per_session (histogram)                                 │   │
-│  │  • tool_calls_per_request (histogram)                               │   │
-│  │  • conversations_completed_total (counter)                          │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Steg-för-steg: Implementera Observability
-
-### 1. Structured Logging
+## Structured Logging
 
 ```python
 import structlog
-from datetime import datetime
-import json
 from typing import Any
+from datetime import datetime
 
 # Configure structlog
 structlog.configure(
@@ -720,450 +564,247 @@ structlog.configure(
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.JSONRenderer()
     ],
-    wrapper_class=structlog.stdlib.BoundLogger,
     context_class=dict,
-    logger_factory=structlog.stdlib.LoggerFactory()
+    logger_factory=structlog.stdlib.LoggerFactory(),
 )
 
 logger = structlog.get_logger()
 
 class AgentLogger:
-    \"\"\"Structured logging for agent interactions.\"\"\"
+    """Structured logging for agents."""
 
-    def __init__(self, agent_id: str):
-        self.agent_id = agent_id
-        self.log = logger.bind(agent_id=agent_id)
+    def __init__(self, agent_name: str):
+        self.agent_name = agent_name
+        self.log = logger.bind(agent=agent_name)
 
-    def log_request(self, session_id: str, message: str, metadata: dict = None):
+    def request_start(self, session_id: str, message: str) -> None:
         self.log.info(
-            "agent_request_received",
+            "agent_request_start",
             session_id=session_id,
-            message_length=len(message),
-            message_preview=message[:100],
-            **(metadata or {})
+            message_length=len(message)
         )
 
-    def log_llm_call(
-        self,
-        session_id: str,
-        model: str,
-        input_tokens: int,
-        output_tokens: int,
-        duration_ms: float,
-        cost_usd: float
-    ):
+    def tool_call(self, tool_name: str, args: dict, duration_ms: float) -> None:
         self.log.info(
-            "llm_call_completed",
-            session_id=session_id,
-            model=model,
-            input_tokens=input_tokens,
-            output_tokens=output_tokens,
-            total_tokens=input_tokens + output_tokens,
-            duration_ms=duration_ms,
-            cost_usd=cost_usd
+            "agent_tool_call",
+            tool=tool_name,
+            args=args,
+            duration_ms=duration_ms
         )
 
-    def log_tool_call(
-        self,
-        session_id: str,
-        tool_name: str,
-        success: bool,
-        duration_ms: float,
-        error: str = None
-    ):
-        level = "info" if success else "error"
-        getattr(self.log, level)(
-            "tool_call_completed",
-            session_id=session_id,
-            tool_name=tool_name,
-            success=success,
-            duration_ms=duration_ms,
-            error=error
-        )
-
-    def log_response(
-        self,
-        session_id: str,
-        response_length: int,
-        total_duration_ms: float,
-        tool_calls: int,
-        llm_calls: int
-    ):
+    def iteration_complete(self, iteration: int, action: str) -> None:
         self.log.info(
-            "agent_response_sent",
-            session_id=session_id,
-            response_length=response_length,
-            total_duration_ms=total_duration_ms,
-            tool_calls=tool_calls,
-            llm_calls=llm_calls
+            "agent_iteration",
+            iteration=iteration,
+            action=action
         )
 
-    def log_error(
-        self,
-        session_id: str,
-        error_type: str,
-        error_message: str,
-        stack_trace: str = None
-    ):
+    def request_complete(self, session_id: str, iterations: int, tokens: int) -> None:
+        self.log.info(
+            "agent_request_complete",
+            session_id=session_id,
+            iterations=iterations,
+            tokens=tokens
+        )
+
+    def error(self, error: Exception, context: dict = None) -> None:
         self.log.error(
             "agent_error",
-            session_id=session_id,
-            error_type=error_type,
-            error_message=error_message,
-            stack_trace=stack_trace
+            error=str(error),
+            error_type=type(error).__name__,
+            context=context or {}
         )
-
-# Usage
-agent_logger = AgentLogger("devops-agent-1")
-
-agent_logger.log_request("sess_123", "Deploy auth-service to prod")
-agent_logger.log_llm_call(
-    session_id="sess_123",
-    model="gpt-4o-mini",
-    input_tokens=500,
-    output_tokens=200,
-    duration_ms=1200,
-    cost_usd=0.003
-)
 ```
 
-### 2. Prometheus Metrics
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```python
-from prometheus_client import Counter, Histogram, Gauge, generate_latest
-from fastapi import Response
-
-# Define metrics
-AGENT_REQUEST_DURATION = Histogram(
-    'agent_request_duration_seconds',
-    'Time spent processing agent requests',
-    ['agent_id', 'status'],
-    buckets=[0.1, 0.5, 1, 2, 5, 10, 30, 60]
-)
-
-LLM_TOKENS = Counter(
-    'llm_tokens_total',
-    'Total LLM tokens used',
-    ['agent_id', 'model', 'token_type']  # input/output
-)
-
-LLM_COST = Counter(
-    'llm_cost_usd_total',
-    'Total LLM cost in USD',
-    ['agent_id', 'model']
-)
-
-TOOL_CALLS = Counter(
-    'tool_calls_total',
-    'Total tool calls',
-    ['agent_id', 'tool_name', 'status']  # success/failure
-)
-
-ACTIVE_SESSIONS = Gauge(
-    'active_sessions',
-    'Number of active sessions',
-    ['agent_id']
-)
-
-ERROR_COUNT = Counter(
-    'agent_errors_total',
-    'Total agent errors',
-    ['agent_id', 'error_type']
-)
-
-class MetricsCollector:
-    \"\"\"Collect and expose Prometheus metrics.\"\"\"
-
-    def __init__(self, agent_id: str):
-        self.agent_id = agent_id
-
-    def record_request(self, duration: float, status: str):
-        AGENT_REQUEST_DURATION.labels(
-            agent_id=self.agent_id,
-            status=status
-        ).observe(duration)
-
-    def record_llm_usage(
-        self,
-        model: str,
-        input_tokens: int,
-        output_tokens: int,
-        cost: float
-    ):
-        LLM_TOKENS.labels(
-            agent_id=self.agent_id,
-            model=model,
-            token_type="input"
-        ).inc(input_tokens)
-
-        LLM_TOKENS.labels(
-            agent_id=self.agent_id,
-            model=model,
-            token_type="output"
-        ).inc(output_tokens)
-
-        LLM_COST.labels(
-            agent_id=self.agent_id,
-            model=model
-        ).inc(cost)
-
-    def record_tool_call(self, tool_name: str, success: bool):
-        TOOL_CALLS.labels(
-            agent_id=self.agent_id,
-            tool_name=tool_name,
-            status="success" if success else "failure"
-        ).inc()
-
-    def set_active_sessions(self, count: int):
-        ACTIVE_SESSIONS.labels(agent_id=self.agent_id).set(count)
-
-    def record_error(self, error_type: str):
-        ERROR_COUNT.labels(
-            agent_id=self.agent_id,
-            error_type=error_type
-        ).inc()
-
-# Endpoint for Prometheus to scrape
-@app.get("/metrics")
-async def metrics():
-    return Response(
-        generate_latest(),
-        media_type="text/plain"
-    )
-```
-
-### 3. Distributed Tracing
+## Distributed Tracing
 
 ```python
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.jaeger.thrift import JaegerExporter
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
 
 # Setup tracer
 trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+
+# Export to Jaeger
 jaeger_exporter = JaegerExporter(
-    agent_host_name="jaeger",
-    agent_port=6831
+    agent_host_name="localhost",
+    agent_port=6831,
 )
 trace.get_tracer_provider().add_span_processor(
     BatchSpanProcessor(jaeger_exporter)
 )
 
-tracer = trace.get_tracer(__name__)
-
-# Instrument FastAPI
-FastAPIInstrumentor.instrument_app(app)
+# Auto-instrument HTTP requests
+RequestsInstrumentor().instrument()
 
 class TracedAgent:
-    \"\"\"Agent with distributed tracing.\"\"\"
+    """Agent with distributed tracing."""
 
-    def __init__(self, agent_id: str):
-        self.agent_id = agent_id
-        self.tracer = trace.get_tracer(f"agent.{agent_id}")
+    def __init__(self, agent):
+        self.agent = agent
+        self.tracer = tracer
 
-    async def process_message(self, session_id: str, message: str):
-        with self.tracer.start_as_current_span("process_message") as span:
-            span.set_attribute("session_id", session_id)
-            span.set_attribute("message_length", len(message))
+    async def run(self, message: str, session_id: str) -> dict:
+        with self.tracer.start_as_current_span("agent.run") as span:
+            span.set_attribute("agent.name", self.agent.config.name)
+            span.set_attribute("session.id", session_id)
+            span.set_attribute("message.length", len(message))
 
-            # Think step
-            with self.tracer.start_span("think") as think_span:
-                decision = await self._think(message)
-                think_span.set_attribute("decision", decision["action"])
+            try:
+                with self.tracer.start_span("agent.reasoning") as reasoning_span:
+                    result = await self.agent.run({"message": message})
+                    reasoning_span.set_attribute("iterations", result.get("iterations", 0))
 
-            # Tool execution
-            if decision["action"] == "use_tool":
-                with self.tracer.start_span("execute_tool") as tool_span:
-                    tool_span.set_attribute("tool", decision["tool"])
-                    result = await self._execute_tool(decision["tool"], decision["args"])
-                    tool_span.set_attribute("success", result["success"])
+                span.set_attribute("tokens.used", result.get("tokens", 0))
+                span.set_attribute("status", "success")
 
-            # Generate response
-            with self.tracer.start_span("generate_response") as resp_span:
-                response = await self._generate_response(decision)
-                resp_span.set_attribute("response_length", len(response))
+                return result
 
-            return response
+            except Exception as e:
+                span.set_attribute("status", "error")
+                span.set_attribute("error.message", str(e))
+                span.record_exception(e)
+                raise
 ```
 
-### 4. Dashboard (Grafana JSON)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```json
-{
-  "dashboard": {
-    "title": "Agent Monitoring",
-    "panels": [
-      {
-        "title": "Request Rate",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "rate(agent_request_duration_seconds_count[5m])",
-            "legendFormat": "{{agent_id}}"
-          }
-        ]
-      },
-      {
-        "title": "Response Time (p95)",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "histogram_quantile(0.95, rate(agent_request_duration_seconds_bucket[5m]))",
-            "legendFormat": "p95"
-          }
-        ]
-      },
-      {
-        "title": "Daily Cost",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "sum(increase(llm_cost_usd_total[24h]))",
-            "legendFormat": "Cost (USD)"
-          }
-        ]
-      },
-      {
-        "title": "Error Rate",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "rate(agent_errors_total[5m])",
-            "legendFormat": "{{error_type}}"
-          }
-        ],
-        "alert": {
-          "conditions": [
-            {
-              "evaluator": {"type": "gt", "params": [0.1]},
-              "operator": {"type": "and"},
-              "query": {"params": ["A", "5m", "now"]}
-            }
-          ]
-        }
-      },
-      {
-        "title": "Token Usage by Model",
-        "type": "piechart",
-        "targets": [
-          {
-            "expr": "sum(increase(llm_tokens_total[24h])) by (model)",
-            "legendFormat": "{{model}}"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### 5. Alerting Rules
+## Alerting Rules
 
 ```yaml
 # prometheus-rules.yaml
 groups:
   - name: agent-alerts
     rules:
-      - alert: HighErrorRate
-        expr: rate(agent_errors_total[5m]) > 0.1
-        for: 2m
+      # High error rate
+      - alert: AgentHighErrorRate
+        expr: |
+          rate(agent_requests_total{status="error"}[5m])
+          / rate(agent_requests_total[5m]) > 0.01
+        for: 5m
         labels:
-          severity: warning
+          severity: critical
         annotations:
-          summary: "High error rate detected"
-          description: "Agent {{ $labels.agent_id }} has error rate > 10%"
+          summary: "High agent error rate"
+          description: "Error rate is above 1%"
 
-      - alert: HighLatency
-        expr: histogram_quantile(0.95, rate(agent_request_duration_seconds_bucket[5m])) > 10
+      # High latency
+      - alert: AgentHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(agent_latency_seconds_bucket[5m])) > 5
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "High latency detected"
-          description: "p95 latency > 10s for agent {{ $labels.agent_id }}"
+          summary: "High agent latency"
+          description: "95th percentile latency is above 5 seconds"
 
-      - alert: DailyCostExceeded
-        expr: sum(increase(llm_cost_usd_total[24h])) > 100
-        labels:
-          severity: critical
-        annotations:
-          summary: "Daily cost limit exceeded"
-          description: "Daily LLM cost exceeded $100"
-
-      - alert: LLMServiceDown
-        expr: up{job="llm-proxy"} == 0
+      # Token budget alert
+      - alert: AgentTokenBudgetWarning
+        expr: |
+          increase(agent_tokens_total[1h]) > 100000
         for: 1m
         labels:
-          severity: critical
+          severity: warning
         annotations:
-          summary: "LLM service is down"
+          summary: "High token usage"
+          description: "Token usage exceeds 100k per hour"
+
+      # Too many iterations
+      - alert: AgentHighIterations
+        expr: |
+          histogram_quantile(0.9, rate(agent_iterations_bucket[5m])) > 8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Agent using many iterations"
+          description: "90th percentile iterations above 8"
 ```
 
-## Praktisk övning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Uppgift:** Bygg ett Custom Dashboard
+## Cost Tracking
 
 ```python
-\"\"\"
-TODO: Bygg en real-time monitoring dashboard med:
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 
-1. Metrics endpoint som returnerar:
-   - Current active sessions
-   - Requests per minute
-   - Average response time
-   - Error rate
-   - Cost per hour
+@dataclass
+class CostTracker:
+    """Track and alert on API costs."""
 
-2. WebSocket endpoint för real-time updates
+    daily_budget_usd: float = 100.0
 
-3. Health score beräkning:
-   health_score = 100 - (error_rate * 50) - (p95_latency_penalty)
-\"\"\"
+    # Pricing per 1M tokens (approximate)
+    PRICING = {
+        "gpt-4o-mini": {"input": 0.15, "output": 0.60},
+        "gpt-4o": {"input": 2.50, "output": 10.00},
+        "gpt-4-turbo": {"input": 10.00, "output": 30.00}
+    }
 
-from fastapi import WebSocket
+    def __init__(self):
+        self.usage = []
 
-class AgentDashboard:
-    def __init__(self, metrics: MetricsCollector):
-        # Din kod här
-        pass
+    def record(self, model: str, input_tokens: int, output_tokens: int) -> None:
+        cost = self._calculate_cost(model, input_tokens, output_tokens)
+        self.usage.append({
+            "timestamp": datetime.now(),
+            "model": model,
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "cost_usd": cost
+        })
 
-    async def get_dashboard_data(self) -> dict:
-        # Din kod här
-        pass
+    def _calculate_cost(self, model: str, input_t: int, output_t: int) -> float:
+        pricing = self.PRICING.get(model, self.PRICING["gpt-4o-mini"])
+        return (input_t * pricing["input"] + output_t * pricing["output"]) / 1_000_000
 
-    async def stream_updates(self, websocket: WebSocket):
-        # Din kod här
-        pass
+    def get_daily_cost(self) -> float:
+        today = datetime.now().date()
+        return sum(
+            u["cost_usd"] for u in self.usage
+            if u["timestamp"].date() == today
+        )
 
-    def calculate_health_score(self) -> float:
-        # Din kod här
-        pass
-
-# Mount on FastAPI
-dashboard = AgentDashboard(metrics_collector)
-
-@app.get("/dashboard")
-async def dashboard_data():
-    return await dashboard.get_dashboard_data()
+    def is_over_budget(self) -> bool:
+        return self.get_daily_cost() > self.daily_budget_usd
 ```
 
-## Sammanfattning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- ✅ **Structured logging** med context
-- ✅ **Prometheus metrics** för alla key indicators
-- ✅ **Distributed tracing** för debugging
-- ✅ **Grafana dashboards** för visualization
-- ✅ **Alerting** för proaktiv monitoring
+## Vanliga fel och losningar
 
-## Nästa steg
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Metrics explosion | For manga labels | Begrana cardinality |
+| Log flooding | For verbose | Log sampling |
+| Trace gaps | Missing instrumentation | Auto-instrument |
+| Alert fatigue | For kansliga alerts | Tune thresholds |
 
-- **Node 19:** Autonomous Agents
-- **Node 20:** Future of AI Agents
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-*Pro tip: Log ALLT i början — du kan alltid filtrera senare, men du kan inte logga det du missade!*
-"""
-    }
-]
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Metrics | Prometheus for numerisk data |
+| Logs | Strukturerad JSON logging |
+| Traces | Distributed tracing for flows |
+| Alerts | Actionable, inte noise |
+
+Kom ihag:
+- Tre pillars: metrics, logs, traces
+- Alerts ska vara actionable
+- Track tokens for cost control
+- Dashboards for visibility
+'''
+}
+
+BLOCK_09_NODES = [NODE_17_DEPLOYMENT, NODE_18_MONITORING]

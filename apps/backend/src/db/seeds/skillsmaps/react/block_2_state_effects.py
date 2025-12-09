@@ -24,21 +24,22 @@ REACT_NODE_05_USESTATE = {
     "content": """
 # useState - Local State
 
-> *"State is how React remembers things between renders."*
+State ar det som gor React-appar interaktiva. Utan state ar komponenter statiska.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-State är det som gör React-appar interaktiva. Utan state är komponenter statiska - de kan inte svara på användarinput eller uppdatera sig själva.
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Dashboard state** | Realtidsdata som uppdateras kontinuerligt |
+| **Form handling** | Konfigurationsformular for deployment |
+| **UI state** | Modals, alerts, loading states i operations UI |
+| **Filter state** | Filtrera loggar, metrics, och alerts |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Core Concepts
-
-### Vad är State?
-
-State är data som kan ändras över tid och påverkar vad som renderas:
+## State vs Props
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -47,22 +48,24 @@ State är data som kan ändras över tid och påverkar vad som renderas:
 │                                                                  │
 │  PROPS                          STATE                           │
 │  ─────                          ─────                           │
-│  • Kommer från parent          • Ägs av komponenten själv       │
-│  • Read-only                   • Kan ändras via setter          │
-│  • Kan inte ändras             • Triggar re-render vid ändring  │
-│  • Flödar nedåt                • Privat till komponenten        │
+│  Kommer fran parent             Ags av komponenten sjalv        │
+│  Read-only                      Kan andras via setter           │
+│  Kan inte andras                Triggar re-render vid andring   │
+│  Flodar nedat                   Privat till komponenten         │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### useState Hook
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useState Hook
 
 ```tsx
 import { useState } from 'react';
 
 function Counter() {
-  // useState returnerar [värde, setterFunktion]
-  const [count, setCount] = useState(0);  // 0 är initial value
+  // useState returnerar [varde, setterFunktion]
+  const [count, setCount] = useState(0);  // 0 ar initial value
 
   return (
     <div>
@@ -75,21 +78,23 @@ function Counter() {
 }
 ```
 
-### Functional Updates
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-När ny state beror på föregående state, använd functional update:
+## Functional Updates
+
+Nar ny state beror pa foregaende state, anvand functional update:
 
 ```tsx
 function Counter() {
   const [count, setCount] = useState(0);
 
-  // ❌ Problem: Om du klickar snabbt kanske inte alla klick räknas
+  // FEL: Om du klickar snabbt kanske inte alla klick raknas
   const incrementBad = () => setCount(count + 1);
 
-  // ✅ Lösning: Functional update garanterar senaste värde
+  // RATT: Functional update garanterar senaste varde
   const incrementGood = () => setCount(prev => prev + 1);
 
-  // Användbart för batch-operationer
+  // Anvandbart for batch-operationer
   const addThree = () => {
     setCount(prev => prev + 1);
     setCount(prev => prev + 1);
@@ -102,7 +107,9 @@ function Counter() {
 }
 ```
 
-### Object State
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Object State
 
 ```tsx
 interface User {
@@ -124,12 +131,12 @@ function UserSettings() {
     }
   });
 
-  // ❌ FEL: Mutera aldrig state direkt
+  // FEL: Mutera aldrig state direkt
   const badUpdate = () => {
     user.name = 'New Name';  // Detta triggar INTE re-render!
   };
 
-  // ✅ RÄTT: Skapa nytt objekt med spread
+  // RATT: Skapa nytt objekt med spread
   const updateName = (name: string) => {
     setUser({ ...user, name });
   };
@@ -151,20 +158,14 @@ function UserSettings() {
         value={user.name}
         onChange={(e) => updateName(e.target.value)}
       />
-      <label>
-        <input
-          type="checkbox"
-          checked={user.preferences.notifications}
-          onChange={toggleNotifications}
-        />
-        Enable notifications
-      </label>
     </form>
   );
 }
 ```
 
-### Array State
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Array State
 
 ```tsx
 interface Task {
@@ -176,14 +177,14 @@ interface Task {
 function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  // ADD - Lägg till i slutet
+  // ADD - Lagg till i slutet
   const addTask = (title: string) => {
     const newTask: Task = {
       id: crypto.randomUUID(),
       title,
       completed: false
     };
-    setTasks([...tasks, newTask]);  // Spread + new item
+    setTasks([...tasks, newTask]);
   };
 
   // REMOVE - Filtrera bort
@@ -197,13 +198,6 @@ function TaskList() {
       task.id === id
         ? { ...task, completed: !task.completed }
         : task
-    ));
-  };
-
-  // REORDER - Sortera
-  const sortByCompleted = () => {
-    setTasks([...tasks].sort((a, b) =>
-      Number(a.completed) - Number(b.completed)
     ));
   };
 
@@ -225,185 +219,46 @@ function TaskList() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 State Management Patterns
+## Snabbreferens
 
-### Multiple State Variables vs Object
+| Koncept | Beskrivning |
+|---------|-------------|
+| **useState** | Hook som returnerar [value, setter] |
+| **Initial value** | Argument till useState |
+| **Setter function** | Uppdaterar state och triggar re-render |
+| **Functional update** | `prev => prev + 1` for state baserat pa previous |
+| **Immutability** | Skapa nya objekt/arrayer, mutera aldrig |
 
-```tsx
-// Option 1: Separata state-variabler (ofta bättre)
-function Form() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [age, setAge] = useState(0);
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  // Fördel: Enkelt att uppdatera individuellt
-  // Nackdel: Många useState-calls
-}
+## Vanliga fel och losningar
 
-// Option 2: Object state (för relaterad data)
-function Form() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    age: 0
-  });
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| State uppdateras inte direkt | State ar asynkront | Anvand useEffect for att reagera pa andring |
+| Stale closure | Gammal closure fangar initialt varde | Anvand functional update `prev => prev + 1` |
+| Re-render sker inte | Mutering av state | Skapa nytt objekt med spread |
+| For manga re-renders | useState i loop | Flytta useState till top level |
 
-  const updateField = (field: string, value: string | number) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  // Fördel: All relaterad data tillsammans
-  // Nackdel: Måste alltid spread'a
-}
-```
+## Key Takeaways
 
-### Lazy Initial State
+| Punkt | Forklaring |
+|-------|------------|
+| **Immutability** | Mutera aldrig state, skapa nya objekt/arrayer |
+| **Functional updates** | Anvand nar ny state beror pa previous |
+| **Lazy initial state** | Anvand funktion for dyra berakningar |
+| **Batching** | React batchar flera setters i samma event |
 
-```tsx
-// ❌ Körs varje render (onödigt)
-const [items, setItems] = useState(
-  JSON.parse(localStorage.getItem('items') || '[]')
-);
+**Kom ihag:**
 
-// ✅ Körs bara första gången (lazy)
-const [items, setItems] = useState(() => {
-  const saved = localStorage.getItem('items');
-  return saved ? JSON.parse(saved) : [];
-});
-```
-
----
-
-## ⚠️ Vanliga Problem
-
-### Problem 1: State uppdateras inte direkt
-
-```tsx
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  const handleClick = () => {
-    setCount(count + 1);
-    console.log(count);  // Fortfarande 0! State uppdateras inte synkront
-  };
-
-  // State är nytt nästa render, inte direkt efter setCount
-}
-```
-
-### Problem 2: Stale closure
-
-```tsx
-function Timer() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      // ❌ count är alltid 0 (stale closure)
-      setCount(count + 1);
-    }, 1000);
-
-    return () => clearInterval(id);
-  }, []);  // Tom dependency array = count fångas vid mount
-
-  // ✅ Lösning: Functional update
-  useEffect(() => {
-    const id = setInterval(() => {
-      setCount(prev => prev + 1);  // Alltid senaste värdet
-    }, 1000);
-    return () => clearInterval(id);
-  }, []);
-}
-```
-
----
-
-## 🎮 Praktisk Övning
-
-Bygg en shopping cart:
-
-```tsx
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-}
-
-interface CartItem extends Product {
-  quantity: number;
-}
-
-function ShoppingCart() {
-  const [cart, setCart] = useState<CartItem[]>([]);
-
-  const addToCart = (product: Product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (productId: string) => {
-    setCart(prev => prev.filter(item => item.id !== productId));
-  };
-
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
-    setCart(prev =>
-      prev.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  return (
-    <div>
-      <h2>Shopping Cart</h2>
-      {cart.map(item => (
-        <div key={item.id} className="cart-item">
-          <span>{item.name}</span>
-          <input
-            type="number"
-            value={item.quantity}
-            onChange={(e) => updateQuantity(item.id, Number(e.target.value))}
-            min={0}
-          />
-          <span>${(item.price * item.quantity).toFixed(2)}</span>
-          <button onClick={() => removeFromCart(item.id)}>Remove</button>
-        </div>
-      ))}
-      <p className="total">Total: ${total.toFixed(2)}</p>
-    </div>
-  );
-}
-```
-
----
-
-## ✅ Sammanfattning
-
-- **useState** returnerar `[value, setter]`
-- **Functional updates** (`prev => prev + 1`) för state som beror på föregående
-- **Immutability** - mutera aldrig state, skapa nya objekt/arrayer
-- **Lazy initial state** med function för dyra beräkningar
-- State-uppdateringar är **asynkrona** och batch'as
+- useState returnerar [value, setter]
+- Functional updates garanterar senaste varde
+- Mutera aldrig state direkt - skapa nya objekt
+- State-uppdateringar ar asynkrona och batchas
 """,
 }
 
@@ -427,87 +282,90 @@ REACT_NODE_06_USEEFFECT = {
     "content": """
 # useEffect - Side Effects
 
-> *"Effects let you run code after rendering, outside React's pure render phase."*
+useEffect hanterar kod som kor efter rendering - API-anrop, subscriptions, DOM-manipulation.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-De flesta React-appar behöver göra mer än att bara rendera UI:
-- Hämta data från API:er
-- Sätta upp event listeners
-- Manipulera DOM direkt
-- Synka med externa system
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Data fetching** | Hamta metrics, loggar, deployment status |
+| **WebSocket** | Realtidsuppdateringar fran servrar |
+| **Polling** | Periodisk kontroll av system health |
+| **Cleanup** | Forhindra memory leaks vid unmount |
 
-useEffect är hur du hanterar dessa "side effects".
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## 🧠 Core Concepts
-
-### Vad är en Side Effect?
+## Pure vs Side Effects
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                      PURE vs SIDE EFFECTS                        │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  PURE RENDER (Reacts jobb)          SIDE EFFECTS (useEffect)   │
-│  ─────────────────────────          ────────────────────────   │
-│  • Beräkna JSX från props/state    • API-anrop                 │
-│  • Deterministiskt                 • DOM-manipulation          │
-│  • Inga externa beroenden          • Event listeners           │
-│  • Samma input = samma output      • Timers/intervals          │
-│                                    • LocalStorage              │
-│                                    • WebSocket connections      │
+│  PURE RENDER                        SIDE EFFECTS                │
+│  ───────────                        ────────────                │
+│  Berakna JSX fran props/state       API-anrop                   │
+│  Deterministiskt                    DOM-manipulation            │
+│  Inga externa beroenden             Event listeners             │
+│  Samma input = samma output         Timers/intervals            │
+│                                     LocalStorage                │
+│                                     WebSocket connections        │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### useEffect Syntax
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useEffect Syntax
 
 ```tsx
 import { useEffect } from 'react';
 
 function Component() {
   useEffect(() => {
-    // Din side effect-kod här
-    console.log('Effect körs');
+    // Din side effect-kod har
+    console.log('Effect kors');
 
     // Cleanup function (valfri)
     return () => {
-      console.log('Cleanup körs');
+      console.log('Cleanup kors');
     };
   }, [/* dependencies */]);
 }
 ```
 
-### Dependency Array
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Dependency Array
 
 ```tsx
-// Körs efter VARJE render
+// Kors efter VARJE render
 useEffect(() => {
-  console.log('Körs varje gång');
+  console.log('Kors varje gang');
 });
 
-// Körs bara vid MOUNT (och cleanup vid UNMOUNT)
+// Kors bara vid MOUNT (och cleanup vid UNMOUNT)
 useEffect(() => {
-  console.log('Körs en gång');
+  console.log('Kors en gang');
   return () => console.log('Cleanup vid unmount');
 }, []);
 
-// Körs när specifika värden ÄNDRAS
+// Kors nar specifika varden ANDRAS
 useEffect(() => {
-  console.log('userId ändrades till:', userId);
+  console.log('userId andrades till:', userId);
 }, [userId]);
 
 // Flera dependencies
 useEffect(() => {
-  console.log('userId eller filter ändrades');
+  console.log('userId eller filter andrades');
 }, [userId, filter]);
 ```
 
-### Data Fetching
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Data Fetching
 
 ```tsx
 interface User {
@@ -522,11 +380,9 @@ function UserProfile({ userId }: { userId: string }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Reset state när userId ändras
     setLoading(true);
     setError(null);
 
-    // AbortController för att kunna avbryta fetch
     const controller = new AbortController();
 
     async function fetchUser() {
@@ -552,7 +408,7 @@ function UserProfile({ userId }: { userId: string }) {
 
     fetchUser();
 
-    // Cleanup: Avbryt pågående request om userId ändras
+    // Cleanup: Avbryt pagaende request om userId andras
     return () => controller.abort();
   }, [userId]);
 
@@ -569,7 +425,9 @@ function UserProfile({ userId }: { userId: string }) {
 }
 ```
 
-### Event Listeners
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Event Listeners
 
 ```tsx
 function WindowSize() {
@@ -586,27 +444,27 @@ function WindowSize() {
       });
     }
 
-    // Lägg till listener
     window.addEventListener('resize', handleResize);
 
     // CLEANUP: Ta bort listener vid unmount
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);  // Tom array = körs bara vid mount/unmount
+  }, []);
 
   return <p>Window: {size.width} x {size.height}</p>;
 }
 ```
 
-### Subscriptions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## WebSocket Subscription
 
 ```tsx
 function LiveStatus({ serverId }: { serverId: string }) {
   const [status, setStatus] = useState<'online' | 'offline'>('offline');
 
   useEffect(() => {
-    // Skapa WebSocket-anslutning
     const ws = new WebSocket(`wss://api.example.com/status/${serverId}`);
 
     ws.onmessage = (event) => {
@@ -616,7 +474,7 @@ function LiveStatus({ serverId }: { serverId: string }) {
 
     ws.onerror = () => setStatus('offline');
 
-    // CLEANUP: Stäng anslutning
+    // CLEANUP: Stang anslutning
     return () => {
       ws.close();
     };
@@ -630,195 +488,51 @@ function LiveStatus({ serverId }: { serverId: string }) {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Advanced Patterns
+## Snabbreferens
 
-### Sync med Local Storage
+| Dependency Array | Beteende |
+|------------------|----------|
+| **Ingen array** | Kors efter varje render |
+| **Tom array []** | Kors bara vid mount |
+| **[dep1, dep2]** | Kors nar dep1 eller dep2 andras |
 
-```tsx
-function useLocalStorage<T>(key: string, initialValue: T) {
-  const [value, setValue] = useState<T>(() => {
-    const saved = localStorage.getItem(key);
-    return saved ? JSON.parse(saved) : initialValue;
-  });
+| Cleanup Pattern | Anvandning |
+|-----------------|------------|
+| **return () => {}** | Kors vid unmount eller innan nasta effect |
+| **AbortController** | Avbryt pagaende fetch |
+| **clearInterval** | Stoppa timers |
+| **ws.close()** | Stang WebSocket |
 
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  return [value, setValue] as const;
-}
+## Vanliga fel och losningar
 
-// Användning
-function Settings() {
-  const [theme, setTheme] = useLocalStorage('theme', 'light');
-  // theme sparas automatiskt till localStorage
-}
-```
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Infinite loop | Saknar dependency array | Lagg till tom array [] |
+| Missing dependency | ESLint varning | Inkludera alla dependencies |
+| Memory leak | Cleanup missas | Returnera cleanup-funktion |
+| Stale data | Race condition | Anvand AbortController |
 
-### Document Title
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```tsx
-function useDocumentTitle(title: string) {
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = title;
+## Key Takeaways
 
-    return () => {
-      document.title = previousTitle;
-    };
-  }, [title]);
-}
+| Punkt | Forklaring |
+|-------|------------|
+| **Dependency array** | Styr nar effect kors |
+| **Cleanup function** | Stada upp listeners, timers, subscriptions |
+| **Tom array** | [] = kors bara vid mount |
+| **AbortController** | Avbryt fetch-requests vid unmount |
 
-// Användning
-function ProfilePage({ user }: { user: User }) {
-  useDocumentTitle(`${user.name} - Profile`);
-  return <div>...</div>;
-}
-```
+**Kom ihag:**
 
----
-
-## ⚠️ Vanliga Problem
-
-### Problem 1: Infinite loop
-
-```tsx
-// ❌ INFINITE LOOP!
-function Bad() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch('/api/data')
-      .then(res => res.json())
-      .then(setData);
-  });  // SAKNAR dependency array!
-}
-
-// ✅ RÄTT
-function Good() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch('/api/data')
-      .then(res => res.json())
-      .then(setData);
-  }, []);  // Tom array = körs bara en gång
-}
-```
-
-### Problem 2: Missing dependencies
-
-```tsx
-// ❌ ESLint varnar: Missing dependency 'userId'
-useEffect(() => {
-  fetchUser(userId);
-}, []);
-
-// ✅ Inkludera alla dependencies
-useEffect(() => {
-  fetchUser(userId);
-}, [userId]);
-```
-
-### Problem 3: Cleanup missas
-
-```tsx
-// ❌ Memory leak - interval fortsätter efter unmount
-useEffect(() => {
-  setInterval(() => {
-    setCount(c => c + 1);
-  }, 1000);
-}, []);
-
-// ✅ Cleanup stoppar interval
-useEffect(() => {
-  const id = setInterval(() => {
-    setCount(c => c + 1);
-  }, 1000);
-
-  return () => clearInterval(id);
-}, []);
-```
-
----
-
-## 🎮 Praktisk Övning
-
-Bygg en real-time search med debouncing:
-
-```tsx
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-
-function Search() {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  // Debounce search query med 300ms delay
-  const debouncedQuery = useDebounce(query, 300);
-
-  useEffect(() => {
-    if (!debouncedQuery) {
-      setResults([]);
-      return;
-    }
-
-    const controller = new AbortController();
-    setLoading(true);
-
-    fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`, {
-      signal: controller.signal
-    })
-      .then(res => res.json())
-      .then(setResults)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-
-    return () => controller.abort();
-  }, [debouncedQuery]);
-
-  return (
-    <div>
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search..."
-      />
-      {loading && <p>Searching...</p>}
-      <ul>
-        {results.map((result, i) => (
-          <li key={i}>{result}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-```
-
----
-
-## ✅ Sammanfattning
-
-- **useEffect** för kod som körs efter render
-- **Dependency array** styr när effect körs
-- **Cleanup function** för att städa upp (listeners, timers, subscriptions)
-- **Tom array** `[]` = körs bara vid mount
-- **Alltid cleanup** för subscriptions och listeners
-- Använd **AbortController** för fetch-requests
+- useEffect for kod som kors efter render
+- Alltid cleanup for subscriptions och listeners
+- Tom array [] = kors bara en gang
+- Inkludera alla dependencies i arrayen
 """,
 }
 
@@ -831,7 +545,7 @@ REACT_NODE_07_FORMS = {
     "node_id": 7,
     "title": "Forms - User Input",
     "slug": "react-forms",
-    "description": "Hantera formulär och användarinput i React",
+    "description": "Hantera formular och anvandarinput i React",
     "difficulty": "intermediate",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -842,19 +556,22 @@ REACT_NODE_07_FORMS = {
     "content": """
 # Forms - User Input
 
-> *"Forms are the primary way users interact with web applications."*
+Formular ar det primara sattet anvandare interagerar med webbapplikationer.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Formulär finns överallt - login, registrering, checkout, settings. Att hantera forms korrekt i React är en kärnkompetens.
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Config forms** | Deployment-konfiguration, env variables |
+| **Search/filter** | Filtrera loggar, metrics, alerts |
+| **Settings** | System-installningar, user preferences |
+| **Validation** | Forhindra felaktiga konfigurationer |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Core Concepts
-
-### Controlled vs Uncontrolled Components
+## Controlled vs Uncontrolled
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -863,16 +580,18 @@ Formulär finns överallt - login, registrering, checkout, settings. Att hantera
 │                                                                  │
 │  CONTROLLED                       UNCONTROLLED                  │
 │  ──────────                       ────────────                  │
-│  • React styr värdet             • DOM styr värdet              │
-│  • value + onChange              • ref + defaultValue           │
-│  • Fullständig kontroll          • Enklare för enkla formulär   │
-│  • Kan validera i realtid        • Mindre kod                   │
-│  • Mer kod                       • Svårare att kontrollera      │
+│  React styr vardet               DOM styr vardet                │
+│  value + onChange                ref + defaultValue             │
+│  Fullstandig kontroll            Enklare for enkla formular     │
+│  Kan validera i realtid          Mindre kod                     │
+│  Mer kod                         Svarare att kontrollera        │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Controlled Component
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Controlled Component
 
 ```tsx
 function LoginForm() {
@@ -904,7 +623,9 @@ function LoginForm() {
 }
 ```
 
-### Uncontrolled Component
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Uncontrolled Component
 
 ```tsx
 function LoginFormUncontrolled() {
@@ -939,7 +660,9 @@ function LoginFormUncontrolled() {
 }
 ```
 
-### Form with Validation
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Form with Validation
 
 ```tsx
 interface FormData {
@@ -986,7 +709,6 @@ function RegistrationForm() {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -994,13 +716,11 @@ function RegistrationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     setIsSubmitting(true);
     try {
       await registerUser(formData);
-      // Success!
     } catch (err) {
       setErrors({ email: 'Email already exists' });
     } finally {
@@ -1047,16 +767,15 @@ function RegistrationForm() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 React Hook Form (Recommended)
+## React Hook Form + Zod
 
 ```tsx
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-// Schema with Zod
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email'),
@@ -1103,114 +822,46 @@ function RegistrationForm() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Snabbreferens
 
-### Problem 1: preventDefault glöms
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Controlled** | React styr vardet via state |
+| **Uncontrolled** | DOM styr, React laser via ref |
+| **preventDefault** | Stoppa default form submission |
+| **register** | React Hook Form for input binding |
+| **zodResolver** | Schema-baserad validering |
 
-```tsx
-// ❌ Sidan laddas om!
-const handleSubmit = () => {
-  console.log('Submitting...');
-};
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// ✅ Förhindra default form submission
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  console.log('Submitting...');
-};
-```
+## Vanliga fel och losningar
 
-### Problem 2: Checkbox/Radio controlled
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Sidan laddas om | preventDefault saknas | Lagg till e.preventDefault() |
+| Checkbox fungerar inte | value istallet for checked | Anvand checked={isChecked} |
+| Input uppdateras inte | Saknar onChange | Lagg till onChange handler |
+| Validering triggas inte | Fel form event | Anvand onSubmit pa form-taggen |
 
-```tsx
-// ❌ FEL - value istället för checked
-<input type="checkbox" value={isChecked} />
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// ✅ RÄTT - checked för boolean inputs
-<input
-  type="checkbox"
-  checked={isChecked}
-  onChange={(e) => setIsChecked(e.target.checked)}
-/>
-```
+## Key Takeaways
 
----
+| Punkt | Forklaring |
+|-------|------------|
+| **Controlled** | React styr vardet via state och onChange |
+| **preventDefault** | Alltid i onSubmit for att stoppa page reload |
+| **React Hook Form** | Rekommenderat for produktionsformular |
+| **Zod** | Schema-baserad validering med TypeScript |
 
-## 🎮 Praktisk Övning
+**Kom ihag:**
 
-Bygg ett komplett kontaktformulär:
-
-```tsx
-const contactSchema = z.object({
-  name: z.string().min(2, 'Name too short'),
-  email: z.string().email('Invalid email'),
-  subject: z.enum(['support', 'sales', 'general']),
-  message: z.string().min(10, 'Message too short').max(1000),
-  priority: z.enum(['low', 'medium', 'high']),
-  subscribe: z.boolean().default(false),
-});
-
-type ContactForm = z.infer<typeof contactSchema>;
-
-function ContactPage() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } =
-    useForm<ContactForm>({
-      resolver: zodResolver(contactSchema),
-      defaultValues: {
-        subject: 'general',
-        priority: 'medium',
-        subscribe: false,
-      }
-    });
-
-  const onSubmit = async (data: ContactForm) => {
-    await fetch('/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-    alert('Message sent!');
-  };
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Input {...register('name')} error={errors.name?.message} label="Name" />
-      <Input {...register('email')} error={errors.email?.message} label="Email" type="email" />
-
-      <Select {...register('subject')} label="Subject">
-        <option value="support">Support</option>
-        <option value="sales">Sales</option>
-        <option value="general">General</option>
-      </Select>
-
-      <Textarea {...register('message')} error={errors.message?.message} label="Message" />
-
-      <RadioGroup {...register('priority')} label="Priority">
-        <Radio value="low">Low</Radio>
-        <Radio value="medium">Medium</Radio>
-        <Radio value="high">High</Radio>
-      </RadioGroup>
-
-      <Checkbox {...register('subscribe')} label="Subscribe to newsletter" />
-
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Sending...' : 'Send Message'}
-      </Button>
-    </form>
-  );
-}
-```
-
----
-
-## ✅ Sammanfattning
-
-- **Controlled components** - React styr värdet via state
-- **Uncontrolled components** - DOM styr, React läser via ref
-- **Alltid `e.preventDefault()`** i onSubmit
-- **React Hook Form + Zod** för produktionsformulär
-- **Validera både client och server-side**
+- Controlled components ger full kontroll over input
+- Alltid e.preventDefault() i onSubmit
+- React Hook Form + Zod for produktionsformular
+- Validera bade client och server-side
 """,
 }
 
@@ -1223,7 +874,7 @@ REACT_NODE_08_CUSTOM_HOOKS = {
     "node_id": 8,
     "title": "Custom Hooks - Reusable Logic",
     "slug": "custom-hooks",
-    "description": "Skapa egna hooks för återanvändbar logik",
+    "description": "Skapa egna hooks for ateranvandbar logik",
     "difficulty": "intermediate",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -1234,30 +885,29 @@ REACT_NODE_08_CUSTOM_HOOKS = {
     "content": """
 # Custom Hooks - Reusable Logic
 
-> *"Custom hooks let you extract component logic into reusable functions."*
+Custom hooks later dig extrahera komponentlogik till ateranvandbara funktioner.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Custom hooks är ett av Reacts mest kraftfulla patterns. De låter dig:
-- Återanvända stateful logic mellan komponenter
-- Hålla komponenter rena och läsbara
-- Bygga ett bibliotek av återanvändbara verktyg
+| Aspekt | Betydelse |
+|--------|-----------|
+| **useFetch** | Ateranvandbar data-hamtning for alla API:er |
+| **usePolling** | Periodisk uppdatering av metrics/status |
+| **useWebSocket** | Realtidsanslutningar for monitoring |
+| **useLocalStorage** | Persistent state for user preferences |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Core Concepts
+## Vad ar en Custom Hook?
 
-### Vad är en Custom Hook?
-
-En custom hook är en funktion som:
-1. Börjar med `use` prefix
-2. Kan använda andra hooks
+En custom hook ar en funktion som:
+1. Borjar med use prefix
+2. Kan anvanda andra hooks
 3. Returnerar data och/eller funktioner
 
 ```tsx
-// Custom hook
 function useCounter(initialValue = 0) {
   const [count, setCount] = useState(initialValue);
 
@@ -1268,7 +918,7 @@ function useCounter(initialValue = 0) {
   return { count, increment, decrement, reset };
 }
 
-// Användning
+// Anvandning
 function Counter() {
   const { count, increment, decrement, reset } = useCounter(10);
 
@@ -1283,7 +933,9 @@ function Counter() {
 }
 ```
 
-### useLocalStorage
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useLocalStorage
 
 ```tsx
 function useLocalStorage<T>(key: string, initialValue: T) {
@@ -1311,23 +963,22 @@ function useLocalStorage<T>(key: string, initialValue: T) {
   return [storedValue, setValue] as const;
 }
 
-// Användning
+// Anvandning
 function Settings() {
   const [theme, setTheme] = useLocalStorage('theme', 'light');
-  const [language, setLanguage] = useLocalStorage('language', 'en');
 
   return (
-    <div>
-      <select value={theme} onChange={e => setTheme(e.target.value)}>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
+    <select value={theme} onChange={e => setTheme(e.target.value)}>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
   );
 }
 ```
 
-### useFetch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useFetch
 
 ```tsx
 interface UseFetchResult<T> {
@@ -1365,7 +1016,7 @@ function useFetch<T>(url: string): UseFetchResult<T> {
   return { data, loading, error, refetch: fetchData };
 }
 
-// Användning
+// Anvandning
 function UserList() {
   const { data: users, loading, error, refetch } = useFetch<User[]>('/api/users');
 
@@ -1380,7 +1031,9 @@ function UserList() {
 }
 ```
 
-### useDebounce
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useDebounce
 
 ```tsx
 function useDebounce<T>(value: T, delay: number): T {
@@ -1394,7 +1047,7 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-// Användning
+// Anvandning
 function SearchBox() {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 300);
@@ -1412,167 +1065,67 @@ function SearchBox() {
 }
 ```
 
-### useMediaQuery
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```tsx
-function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    setMatches(media.matches);
-
-    const listener = (e: MediaQueryListEvent) => setMatches(e.matches);
-    media.addEventListener('change', listener);
-
-    return () => media.removeEventListener('change', listener);
-  }, [query]);
-
-  return matches;
-}
-
-// Användning
-function ResponsiveNav() {
-  const isMobile = useMediaQuery('(max-width: 768px)');
-
-  return isMobile ? <MobileMenu /> : <DesktopNav />;
-}
-```
-
-### useOnClickOutside
-
-```tsx
-function useOnClickOutside(
-  ref: RefObject<HTMLElement>,
-  handler: () => void
-) {
-  useEffect(() => {
-    const listener = (event: MouseEvent | TouchEvent) => {
-      if (!ref.current || ref.current.contains(event.target as Node)) {
-        return;
-      }
-      handler();
-    };
-
-    document.addEventListener('mousedown', listener);
-    document.addEventListener('touchstart', listener);
-
-    return () => {
-      document.removeEventListener('mousedown', listener);
-      document.removeEventListener('touchstart', listener);
-    };
-  }, [ref, handler]);
-}
-
-// Användning
-function Dropdown() {
-  const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useOnClickOutside(ref, () => setIsOpen(false));
-
-  return (
-    <div ref={ref}>
-      <button onClick={() => setIsOpen(true)}>Open</button>
-      {isOpen && <DropdownMenu />}
-    </div>
-  );
-}
-```
-
----
-
-## 💻 Hook Rules
+## Hook Rules
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                       RULES OF HOOKS                             │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  1. ✅ Anropa hooks på TOP LEVEL                                │
+│  1. Anropa hooks pa TOP LEVEL                                   │
 │     Aldrig i loops, conditions, eller nested functions          │
 │                                                                  │
-│  2. ✅ Anropa hooks bara från REACT FUNCTIONS                   │
+│  2. Anropa hooks bara fran REACT FUNCTIONS                      │
 │     React function components eller custom hooks                 │
 │                                                                  │
-│  3. ✅ Custom hooks börjar alltid med "use"                     │
+│  3. Custom hooks borjar alltid med "use"                        │
 │     useCounter, useFetch, useLocalStorage                       │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-```tsx
-// ❌ FEL - Hook i condition
-function Bad({ shouldFetch }) {
-  if (shouldFetch) {
-    const data = useFetch('/api/data');  // ALDRIG!
-  }
-}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// ✅ RÄTT - Alltid anropa, villkora användningen
-function Good({ shouldFetch }) {
-  const data = useFetch(shouldFetch ? '/api/data' : null);
-}
-```
+## Snabbreferens
 
----
+| Hook | Anvandning |
+|------|------------|
+| **useLocalStorage** | Persistent state i localStorage |
+| **useFetch** | Data fetching med loading/error |
+| **useDebounce** | Fordrojd uppdatering av varde |
+| **useMediaQuery** | Responsiv design baserat pa skarmstorlek |
+| **useOnClickOutside** | Detektera klick utanfor element |
 
-## 🎮 Praktisk Övning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Bygg ett useToggle hook-bibliotek:
+## Vanliga fel och losningar
 
-```tsx
-// hooks/useToggle.ts
-function useToggle(initialValue = false) {
-  const [value, setValue] = useState(initialValue);
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Invalid hook call | Hook i condition/loop | Flytta till top level |
+| Hook inte definierad | Saknar use prefix | Lagg till use i namnet |
+| Oandlig loop | useEffect saknar deps | Lagg till dependencies |
+| Stale closure | Gammal referens | Anvand useCallback |
 
-  const toggle = useCallback(() => setValue(v => !v), []);
-  const setTrue = useCallback(() => setValue(true), []);
-  const setFalse = useCallback(() => setValue(false), []);
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  return { value, toggle, setTrue, setFalse };
-}
+## Key Takeaways
 
-// hooks/useBoolean.ts (utökad version)
-function useBoolean(initialValue = false) {
-  const [value, setValue] = useState(initialValue);
+| Punkt | Forklaring |
+|-------|------------|
+| **use prefix** | Custom hooks borjar alltid med use |
+| **Ateranvandbar logik** | Extrahera stateful logic till hooks |
+| **Hook rules** | Alltid top-level, bara i React functions |
+| **Composition** | Bygg komplexa hooks fran enkla |
 
-  const callbacks = useMemo(() => ({
-    toggle: () => setValue(v => !v),
-    on: () => setValue(true),
-    off: () => setValue(false),
-    set: setValue,
-  }), []);
+**Kom ihag:**
 
-  return [value, callbacks] as const;
-}
-
-// Användning
-function Modal() {
-  const [isOpen, { on: open, off: close }] = useBoolean(false);
-
-  return (
-    <>
-      <button onClick={open}>Open Modal</button>
-      {isOpen && (
-        <Dialog onClose={close}>
-          <p>Modal content</p>
-        </Dialog>
-      )}
-    </>
-  );
-}
-```
-
----
-
-## ✅ Sammanfattning
-
-- **Custom hooks** börjar med `use` och kan använda andra hooks
-- **Återanvänd stateful logic** utan att kopiera kod
-- **Följ hook rules** - alltid top-level, bara i React functions
-- **Komponera hooks** - bygg komplexa hooks från enkla
-- **Testa hooks** med @testing-library/react-hooks
+- Custom hooks borjar med use och kan anvanda andra hooks
+- Ateranvand stateful logic utan att kopiera kod
+- Folj hook rules - alltid top-level
+- Komponera hooks - bygg komplexa fran enkla
 """,
 }
 

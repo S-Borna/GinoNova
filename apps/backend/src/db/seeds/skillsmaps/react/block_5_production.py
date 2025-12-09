@@ -24,44 +24,63 @@ REACT_NODE_17_TESTING = {
     "content": """
 # Testing React Apps
 
-> *"Tests give you confidence to ship. Without tests, every deploy is a gamble."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar React Testing?
 
-## 🎯 Why This Matters
+Tester ger dig sjalvfortroende att deploya. Utan tester ar varje deploy ett hasardspel.
 
-Tester är inte optional i professionell utveckling:
-- Fånga buggar innan produktion
-- Dokumentera förväntad funktionalitet
-- Möjliggör säker refactoring
-- CI/CD kräver tester
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🧠 Testing Library Philosophy
+| Aspekt | Beskrivning |
+|--------|-------------|
+| CI/CD | Tester ar gateway for deployment pipelines |
+| Kvalitet | Fanga buggar innan produktion |
+| Dokumentation | Tester dokumenterar forvantad funktionalitet |
+| Refactoring | Mojliggor sakra kodandringar |
+| Coverage | Metrics for testning av kodbasen |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Testing Library Philosophy
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │           TESTING LIBRARY GUIDING PRINCIPLE                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  "The more your tests resemble the way your software is used,   │
-│   the more confidence they can give you."                       │
+│  Ju mer dina tester liknar hur din mjukvara anvands,            │
+│  desto mer sjalvfortroende ger de dig.                          │
 │                                                                  │
-│  ✅ Testa BETEENDEn, inte implementation                        │
-│  ✅ Query elements som användare ser dem                         │
-│  ❌ Testa inte interna state-variabler                          │
-│  ❌ Testa inte implementation detaljer                          │
+│  - Testa BETEENDE, inte implementation                          │
+│  - Query element som anvandare ser dem                          │
+│  - Testa INTE interna state-variabler                           │
+│  - Testa INTE implementation detaljer                           │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Setup
+## Snabbreferens
+
+| Query | Anvandning | Async |
+|-------|------------|-------|
+| getBy | Element finns, failar annars | Nej |
+| queryBy | Element kanske finns | Nej |
+| findBy | Vanta pa element | Ja |
+| getByRole | Accessibility role | Nej |
+| getByLabelText | Form labels | Nej |
+| getByText | Textinnehall | Nej |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Setup
 
 ```bash
-# Redan inkluderat i Next.js, för Vite:
+# For Vite-projekt:
 npm install -D @testing-library/react @testing-library/jest-dom @testing-library/user-event vitest jsdom
 ```
 
@@ -83,9 +102,9 @@ export default defineConfig({
 import '@testing-library/jest-dom';
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Basic Component Test
+## Komponent Test Exempel
 
 ```tsx
 // src/components/Button.tsx
@@ -109,45 +128,44 @@ import userEvent from '@testing-library/user-event';
 import { Button } from './Button';
 
 describe('Button', () => {
-  it('renders children', () => {
-    render(<Button onClick={() => {}}>Click me</Button>);
-    expect(screen.getByText('Click me')).toBeInTheDocument();
+  it('renderar children', () => {
+    render(<Button onClick={() => {}}>Klicka mig</Button>);
+    expect(screen.getByText('Klicka mig')).toBeInTheDocument();
   });
 
-  it('calls onClick when clicked', async () => {
+  it('anropar onClick vid klick', async () => {
     const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
+    render(<Button onClick={handleClick}>Klicka mig</Button>);
 
     await userEvent.click(screen.getByRole('button'));
 
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  it('is disabled when disabled prop is true', () => {
-    render(<Button onClick={() => {}} disabled>Click me</Button>);
+  it('ar disabled nar disabled prop ar true', () => {
+    render(<Button onClick={() => {}} disabled>Klicka mig</Button>);
     expect(screen.getByRole('button')).toBeDisabled();
   });
 });
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Testing Forms
+## Testa Formular
 
 ```tsx
-// src/components/LoginForm.test.tsx
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from './LoginForm';
 
 describe('LoginForm', () => {
-  it('submits with email and password', async () => {
+  it('submittar med email och losenord', async () => {
     const handleSubmit = vi.fn();
     render(<LoginForm onSubmit={handleSubmit} />);
 
     await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com');
-    await userEvent.type(screen.getByLabelText(/password/i), 'password123');
-    await userEvent.click(screen.getByRole('button', { name: /submit/i }));
+    await userEvent.type(screen.getByLabelText(/losenord/i), 'password123');
+    await userEvent.click(screen.getByRole('button', { name: /skicka/i }));
 
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
@@ -157,20 +175,20 @@ describe('LoginForm', () => {
     });
   });
 
-  it('shows validation error for invalid email', async () => {
+  it('visar valideringsfel for ogiltig email', async () => {
     render(<LoginForm onSubmit={() => {}} />);
 
-    await userEvent.type(screen.getByLabelText(/email/i), 'invalid');
-    await userEvent.click(screen.getByRole('button', { name: /submit/i }));
+    await userEvent.type(screen.getByLabelText(/email/i), 'ogiltig');
+    await userEvent.click(screen.getByRole('button', { name: /skicka/i }));
 
-    expect(await screen.findByText(/invalid email/i)).toBeInTheDocument();
+    expect(await screen.findByText(/ogiltig email/i)).toBeInTheDocument();
   });
 });
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Mocking
+## Mocking
 
 ```tsx
 // Mocka fetch
@@ -185,7 +203,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-it('fetches and displays users', async () => {
+it('hamtar och visar anvandare', async () => {
   render(<UserList />);
 
   expect(await screen.findByText('John')).toBeInTheDocument();
@@ -197,7 +215,37 @@ vi.mock('../lib/api', () => ({
 }));
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Element not found | Element finns inte an | Anvand findBy for async |
+| act() warning | State uppdateras utanfor act | Wrappa i waitFor |
+| Mock fungerar inte | Fel mock-path | Kontrollera relativa paths |
+| Test timeout | Async operation tar for lang tid | Oka timeout eller mocka |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Testing Library | Testa beteende, inte implementation |
+| userEvent | Realistisk anvandarinteraktion |
+| findBy | For asynkrona element |
+| Mock | Isolera externa beroenden |
+| getByRole | Foredras over getByTestId |
+
+### Kom ihag
+- Tester ar obligatoriska i professionell utveckling
+- Testa vad komponenten GOR, inte hur
+- Anvand findBy for element som laddas asynkront
+- Mocka externa API:er for snabba, stabila tester
+- getByRole forbattrar bade tester och accessibility
+""",
+}
 
 ## ✅ Sammanfattning
 
@@ -229,11 +277,40 @@ REACT_NODE_18_STATE_MANAGEMENT = {
     "content": """
 # State Management Libraries
 
-> *"Choose the right tool for the job. Sometimes Context is enough, sometimes you need more."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar State Management?
 
-## 🎯 When to Use What
+Valj ratt verktyg for jobbet. Ibland racker Context, ibland behover du mer.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Performance | Ratt state-losning paverkar rendering och bundle size |
+| Debugging | Devtools mojliggor time-travel debugging |
+| Persistence | State kan sparas for offline-stod |
+| Testing | Isolerat state forenklar testning |
+| Scalability | Ratt arkitektur skalar med teamet |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Losning | Anvandning | Bundle Size |
+|---------|------------|-------------|
+| useState | Komponent-lokal | 0 (inbyggt) |
+| Context | Tema, auth, settings | 0 (inbyggt) |
+| Zustand | Global state, enkel | ~1KB |
+| Jotai | Atomic state | ~2KB |
+| Redux Toolkit | Komplex app | ~11KB |
+| TanStack Query | Server state | ~12KB |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## State Management Val
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -241,19 +318,19 @@ REACT_NODE_18_STATE_MANAGEMENT = {
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  Local State (useState)                                         │
-│  └─ Component-specific, enkelt                                  │
+│  └─ Komponent-specifikt, enkelt                                 │
 │                                                                  │
 │  Context API                                                    │
-│  └─ Tema, auth, settings (sällan uppdateras)                   │
+│  └─ Tema, auth, settings (sallan uppdateras)                    │
 │                                                                  │
-│  Zustand ⭐                                                      │
+│  Zustand (Rekommenderat)                                        │
 │  └─ Global state, enkel API, liten bundle                       │
 │                                                                  │
 │  Jotai                                                          │
 │  └─ Atomic state, finkorning, React Suspense                    │
 │                                                                  │
 │  Redux Toolkit                                                  │
-│  └─ Complex apps, time-travel debugging, middleware             │
+│  └─ Komplex app, time-travel debugging, middleware              │
 │                                                                  │
 │  TanStack Query                                                 │
 │  └─ Server state (API-data, caching, syncing)                   │
@@ -261,9 +338,9 @@ REACT_NODE_18_STATE_MANAGEMENT = {
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Zustand (Rekommenderat)
+## Zustand (Rekommenderat)
 
 ```tsx
 // stores/useStore.ts
@@ -293,12 +370,12 @@ export const useStore = create<AppState>()(
       })),
     }),
     {
-      name: 'app-storage',  // localStorage key
+      name: 'app-storage',
     }
   )
 );
 
-// Användning i komponenter
+// Anvandning i komponenter
 function Profile() {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
@@ -312,9 +389,9 @@ function ThemeToggle() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Jotai (Atomic)
+## Jotai (Atomic)
 
 ```tsx
 // atoms/user.ts
@@ -340,7 +417,7 @@ export const countWithValidation = atom(
 // Persisted atom
 export const themeAtom = atomWithStorage('theme', 'light');
 
-// Användning
+// Anvandning
 function Counter() {
   const [count, setCount] = useAtom(countAtom);
   const doubleCount = useAtomValue(doubleCountAtom);
@@ -355,9 +432,9 @@ function Counter() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Redux Toolkit
+## Redux Toolkit
 
 ```tsx
 // store/slices/userSlice.ts
@@ -409,7 +486,7 @@ export const store = configureStore({
   },
 });
 
-// Användning
+// Anvandning
 function Profile() {
   const user = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
@@ -422,14 +499,35 @@ function Profile() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Vanliga fel och losningar
 
-- **Zustand** - enkel, minimal, bra default-val
-- **Jotai** - atomic state, React-native
-- **Redux Toolkit** - komplex app, middleware, devtools
-- **Välj baserat på komplexitet** - inte "bara för att"
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Re-renders for mycket | Hela store selekteras | Selektera bara det du behover |
+| State persisteras inte | Saknar persist middleware | Lagg till persist i Zustand/Jotai |
+| Redux boilerplate | For mycket kod | Anvand Redux Toolkit createSlice |
+| Circular dependency | Store importerar components | Separera store-logik |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Zustand | Enkel, minimal, bra default-val |
+| Jotai | Atomic state, React-native |
+| Redux Toolkit | Komplex app, middleware, devtools |
+| Val | Basera pa komplexitet, inte hype |
+| Server State | TanStack Query for API-data |
+
+### Kom ihag
+- Borja med useState och Context
+- Zustand ar basta default for global state
+- Redux Toolkit for stora team och komplex logik
+- TanStack Query for server state
+- Over-engineera inte state management
 """,
 }
 
@@ -453,22 +551,50 @@ REACT_NODE_19_DEPLOYMENT = {
     "content": """
 # Deployment & Production
 
-> *"A feature isn't done until it's in production."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar Deployment?
 
-## 🎯 Deployment Options
+En feature ar inte klar forrn den ar i produktion.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| CI/CD | Automatiserade deployments minskar risk |
+| Environment | Hantera config mellan miljoer |
+| Monitoring | Overvaka prestanda och fel |
+| Scaling | Hantera trafik och last |
+| Rollback | Snabb atergag vid problem |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Platform | Bast for | Kostnad |
+|----------|---------|---------|
+| Vercel | Next.js | Free tier |
+| Netlify | Statiska sites | Free tier |
+| AWS Amplify | AWS-integration | Pay-as-you-go |
+| Railway | Full-stack | Free tier |
+| Docker | Full kontroll | Varierar |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Deployment Platforms
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                  DEPLOYMENT PLATFORMS                            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  Vercel (Rekommenderat för Next.js)                             │
+│  Vercel (Rekommenderat for Next.js)                             │
 │  └─ Git push = deploy, preview URLs, edge functions             │
 │                                                                  │
 │  Netlify                                                        │
-│  └─ Bra för statiska sites, edge functions                      │
+│  └─ Bra for statiska sites, edge functions                      │
 │                                                                  │
 │  AWS Amplify                                                    │
 │  └─ AWS integration, CI/CD                                      │
@@ -479,18 +605,18 @@ REACT_NODE_19_DEPLOYMENT = {
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Vercel Deployment
+## Vercel Deployment
 
 ```bash
-# Install Vercel CLI
+# Installera Vercel CLI
 npm i -g vercel
 
 # Deploy
 vercel
 
-# Deploy to production
+# Deploy till produktion
 vercel --prod
 ```
 
@@ -508,12 +634,12 @@ vercel --prod
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Environment Variables
+## Environment Variables
 
 ```bash
-# .env.local (lokal utveckling - ALDRIG commit!)
+# .env.local (lokal utveckling - ALDRIG committa!)
 DATABASE_URL=postgresql://localhost:5432/mydb
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 
@@ -522,20 +648,19 @@ NEXT_PUBLIC_API_URL=https://api.myapp.com
 ```
 
 ```tsx
-// Använda env variables
-// NEXT_PUBLIC_ prefix = tillgänglig i browser
+// Anvanda env variables
+// NEXT_PUBLIC_ prefix = tillganglig i browser
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 // Server-only (utan NEXT_PUBLIC_)
-const dbUrl = process.env.DATABASE_URL;  // Endast i Server Components
+const dbUrl = process.env.DATABASE_URL;
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Docker Deployment
+## Docker Deployment
 
 ```dockerfile
-# Dockerfile
 FROM node:20-alpine AS base
 
 FROM base AS deps
@@ -570,41 +695,62 @@ CMD ["node", "server.js"]
 ```js
 // next.config.js
 module.exports = {
-  output: 'standalone',  // För Docker
+  output: 'standalone',
 };
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Production Checklist
+## Production Checklist
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │              PRODUCTION CHECKLIST                                │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  ✅ Environment variables konfigurerade                         │
-│  ✅ HTTPS aktiverat                                              │
-│  ✅ Error tracking (Sentry)                                     │
-│  ✅ Analytics (Vercel Analytics, Plausible)                     │
-│  ✅ Performance monitoring                                      │
-│  ✅ Logging                                                     │
-│  ✅ Security headers                                            │
-│  ✅ Rate limiting                                               │
-│  ✅ Database backups                                            │
-│  ✅ CI/CD pipeline                                              │
+│  - Environment variables konfigurerade                          │
+│  - HTTPS aktiverat                                              │
+│  - Error tracking (Sentry)                                      │
+│  - Analytics (Vercel Analytics, Plausible)                      │
+│  - Performance monitoring                                       │
+│  - Logging                                                      │
+│  - Security headers                                             │
+│  - Rate limiting                                                │
+│  - Database backups                                             │
+│  - CI/CD pipeline                                               │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Vanliga fel och losningar
 
-- **Vercel** är bästa valet för Next.js
-- **Environment variables** för konfiguration
-- **Docker** för full kontroll och portabilitet
-- **Monitoring & logging** är kritiskt i produktion
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Build failar | Saknade env vars | Konfigurera i Vercel/Netlify |
+| 500 error | Server-side fel | Kontrollera logs och error tracking |
+| Slow load | Stora bundles | Analysera med next/bundle-analyzer |
+| CORS errors | Fel API-konfiguration | Konfigurera headers i middleware |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| Vercel | Basta valet for Next.js |
+| Env vars | Separera config fran kod |
+| Docker | Portabilitet och full kontroll |
+| Monitoring | Kritiskt i produktion |
+| CI/CD | Automatisera deployments |
+
+### Kom ihag
+- Commita aldrig hemligheter till git
+- Anvand preview deployments for code review
+- Satt upp monitoring fran dag ett
+- Ha en rollback-plan
+- Testa i staging innan produktion
 """,
 }
 
@@ -628,22 +774,51 @@ REACT_NODE_20_CAPSTONE = {
     "content": """
 # Capstone: Full-Stack Dashboard
 
-> *"Time to put everything together. Build something real."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Projektbeskrivning
 
-## 🎯 Project Overview
+Dags att satta ihop allt. Bygg nagot riktigt.
 
-Bygg en **DevOps Dashboard** med:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Integration | Praktisk erfarenhet av fullstack-utveckling |
+| Deployment | End-to-end deployment pipeline |
+| Monitoring | Bygg dashboard for overvakning |
+| Best Practices | Tillampning av produktionsklar kod |
+| Portfolio | Konkret projekt att visa upp |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Steg | Uppgift | Tid |
+|------|---------|-----|
+| 1 | Setup projekt | 30 min |
+| 2 | Auth implementation | 45 min |
+| 3 | Dashboard UI | 45 min |
+| 4 | API routes | 30 min |
+| 5 | Real-time features | 20 min |
+| 6 | Deployment | 10 min |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Project Overview
+
+Bygg en DevOps Dashboard med:
 - Authentication (NextAuth.js)
 - Database (Prisma + PostgreSQL)
 - Real-time updates
 - Charts och visualiseringar
 - Deploy till Vercel
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Tech Stack
+## Tech Stack
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -663,11 +838,11 @@ Bygg en **DevOps Dashboard** med:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Project Structure
+## Projektstruktur
 
-```bash
+```
 devops-dashboard/
 ├── src/
 │   ├── app/
@@ -699,9 +874,9 @@ devops-dashboard/
 └── tests/
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Database Schema
+## Database Schema
 
 ```prisma
 // prisma/schema.prisma
@@ -736,30 +911,14 @@ model Deployment {
   createdAt DateTime         @default(now())
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum ServerStatus {
-  ONLINE
-  OFFLINE
-  MAINTENANCE
-}
-
-enum DeploymentStatus {
-  PENDING
-  BUILDING
-  DEPLOYED
-  FAILED
-}
+enum Role { USER ADMIN }
+enum ServerStatus { ONLINE OFFLINE MAINTENANCE }
+enum DeploymentStatus { PENDING BUILDING DEPLOYED FAILED }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Key Features to Implement
-
-### 1. Authentication
+## Authentication
 
 ```tsx
 // lib/auth.ts
@@ -773,14 +932,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        // Validate and return user
+        // Validera och returnera anvandare
       },
     }),
   ],
 });
 ```
 
-### 2. Dashboard Page
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Dashboard Page
 
 ```tsx
 // app/(dashboard)/page.tsx
@@ -806,7 +967,9 @@ export default async function DashboardPage() {
 }
 ```
 
-### 3. Real-time Updates
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Real-time Updates
 
 ```tsx
 // hooks/useServerStatus.ts
@@ -816,64 +979,89 @@ export function useServerStatus() {
   return useQuery({
     queryKey: ['servers'],
     queryFn: () => fetch('/api/servers').then(r => r.json()),
-    refetchInterval: 5000,  // Poll every 5 seconds
+    refetchInterval: 5000,
   });
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎮 Implementation Steps
+## Implementation Steps
 
-1. **Setup Project**
-   - `npx create-next-app@latest devops-dashboard`
-   - Install dependencies
+1. Setup Project
+   - npx create-next-app@latest devops-dashboard
+   - Installera dependencies
    - Setup Prisma + PostgreSQL
 
-2. **Build Authentication**
-   - Configure NextAuth
-   - Create login/register forms
-   - Protected routes
+2. Build Authentication
+   - Konfigurera NextAuth
+   - Skapa login/register formuler
+   - Skyddade routes
 
-3. **Create Dashboard UI**
-   - Layout with sidebar
+3. Create Dashboard UI
+   - Layout med sidebar
    - Stats cards
    - Charts (Recharts)
 
-4. **Implement API Routes**
+4. Implement API Routes
    - CRUD for deployments
    - Server management
    - User settings
 
-5. **Add Real-time Features**
+5. Add Real-time Features
    - Server status polling
    - Deployment progress
-   - Notifications
+   - Notifikationer
 
-6. **Testing**
-   - Unit tests för komponenter
-   - Integration tests för forms
-   - E2E tests med Playwright
+6. Testing och Deployment
+   - Unit tests for komponenter
+   - Integration tests
+   - Deploy till Vercel
 
-7. **Deploy**
-   - Setup Vercel project
-   - Configure env variables
-   - Deploy och monitor
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vanliga fel och losningar
 
-## ✅ Sammanfattning
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Auth failar | Session-konfiguration | Kontrollera NextAuth setup |
+| Prisma fel | Schema mismatch | Kor prisma db push |
+| Charts renderar inte | Data-format | Validera data-strukturen |
+| Build failar | TypeScript errors | Fixa typer innan deploy |
 
-Du har nu lärt dig allt du behöver för att bygga produktionsklara React/Next.js-applikationer:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- ⚛️ React fundamentals (components, state, effects)
-- 🪝 Hooks och custom hooks
-- 📦 State management
-- 🚀 Next.js (App Router, RSC, data fetching)
-- 🧪 Testing
-- 🌐 Deployment
+## Key Takeaways
 
-**Grattis! Du är redo att bygga professionella React-applikationer!** 🎉
+| Koncept | Beskrivning |
+|---------|-------------|
+| Full-stack | Next.js hanterar bade frontend och backend |
+| Auth | NextAuth ger sakerhet med minimal setup |
+| Database | Prisma forenklar databasoperationer |
+| Real-time | TanStack Query med polling |
+| Deployment | Vercel for somlost deploy |
+
+### Kom ihag
+- Borja enkelt och bygg ut gradvis
+- Testa varje del innan du gar vidare
+- Anvand TypeScript for sakerhet
+- Deploya tidigt for att hitta problem
+- Dokumentera ditt arbete
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Grattis!
+
+Du har nu lart dig allt du behover for att bygga produktionsklara React/Next.js-applikationer:
+
+- React fundamentals (components, state, effects)
+- Hooks och custom hooks
+- State management
+- Next.js (App Router, RSC, data fetching)
+- Testing
+- Deployment
+
+Du ar redo att bygga professionella React-applikationer!
 """,
 }
 

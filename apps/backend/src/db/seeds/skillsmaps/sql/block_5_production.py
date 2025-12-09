@@ -9,62 +9,95 @@ NODE_17_DB_DESIGN = {
     "estimated_minutes": 60,
     "xp_reward": 165,
     "prerequisites": [3],
-    "content": '''# 🏛️ Database Design
+    "content": '''# Database Design
 
-## Varför detta är kritiskt
-> "Ett dåligt schema kan inte fixas med index. Database design är grunden - gör det rätt från början eller lev med teknisk skuld för evigt."
+Bra databasdesign ar grunden for allt - prestanda, skalbarhet och underhallbarhet. Ett daligt schema kan inte fixas med index eller kraftfullare servrar.
 
-## Vad du kommer lära dig
-- ✅ Normalisering (1NF, 2NF, 3NF)
-- ✅ Relationships (1:1, 1:N, M:N)
-- ✅ Naming conventions
-- ✅ Denormalisering för performance
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Normalization
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    DATABASE DESIGN IMPACT                       │
+├─────────────────────────────────────────────────────────────────┤
+│  BRA DESIGN:                                                    │
+│  - Queries ar enkla att skriva och forsta                      │
+│  - Index fungerar effektivt                                    │
+│  - Data ar konsistent utan manuell validering                  │
+│  - Schema ar sjalvdokumenterande                               │
+├─────────────────────────────────────────────────────────────────┤
+│  DALIGT DESIGN:                                                 │
+│  - Komplexa queries for enkla fragor                           │
+│  - Duplicerad data som blir inkonsistent                       │
+│  - Ingen referentiell integritet                               │
+│  - Evigt teknisk skuld                                         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Normalisering
+
+Normalisering eliminerar redundans och beroenden:
+
+```
+┌──────────┬────────────────────────────────────────────────────────┐
+│ 1NF      │ Atomiska varden - inga listor i en kolumn             │
+│          │ Varje rad ar unik (har primary key)                   │
+├──────────┼────────────────────────────────────────────────────────┤
+│ 2NF      │ Inga partial dependencies                              │
+│          │ Alla non-key kolumner beror pa HELA primary key       │
+├──────────┼────────────────────────────────────────────────────────┤
+│ 3NF      │ Inga transitive dependencies                           │
+│          │ Non-key kolumner beror BARA pa primary key            │
+└──────────┴────────────────────────────────────────────────────────┘
+```
 
 ```sql
--- 1NF: Atomic values, no repeating groups
--- Dåligt
-CREATE TABLE servers (
-    id SERIAL,
+-- BRYTER 1NF - lista i en kolumn
+CREATE TABLE servers_bad (
+    id SERIAL PRIMARY KEY,
     hostname VARCHAR(100),
-    ips VARCHAR(255)  -- "10.0.0.1,10.0.0.2"
+    ip_addresses VARCHAR(255)  -- "10.0.0.1,10.0.0.2,10.0.0.3"
 );
 
--- Bra (1NF)
+-- UPPFYLLER 1NF - separat tabell for IP-adresser
 CREATE TABLE servers (
     id SERIAL PRIMARY KEY,
-    hostname VARCHAR(100)
-);
-CREATE TABLE server_ips (
-    server_id INTEGER REFERENCES servers(id),
-    ip_address INET
+    hostname VARCHAR(100) NOT NULL
 );
 
--- 2NF: Bort med partial dependencies
--- 3NF: Bort med transitive dependencies
+CREATE TABLE server_ips (
+    id SERIAL PRIMARY KEY,
+    server_id INTEGER REFERENCES servers(id) ON DELETE CASCADE,
+    ip_address INET NOT NULL,
+    is_primary BOOLEAN DEFAULT false
+);
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Relationships
 
 ```sql
--- One-to-Many
+-- ONE-TO-MANY: Ett team har manga servrar
 CREATE TABLE teams (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100)
+    name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE servers (
     id SERIAL PRIMARY KEY,
-    team_id INTEGER REFERENCES teams(id),
-    hostname VARCHAR(100)
+    hostname VARCHAR(100) NOT NULL,
+    team_id INTEGER REFERENCES teams(id) ON DELETE SET NULL
 );
 
--- Many-to-Many
-CREATE TABLE servers (id SERIAL PRIMARY KEY, hostname VARCHAR);
-CREATE TABLE tags (id SERIAL PRIMARY KEY, name VARCHAR);
+-- MANY-TO-MANY: Servrar kan ha manga tags, tags kan finnas pa manga servrar
+CREATE TABLE tags (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
 
 CREATE TABLE server_tags (
     server_id INTEGER REFERENCES servers(id) ON DELETE CASCADE,
@@ -72,121 +105,132 @@ CREATE TABLE server_tags (
     PRIMARY KEY (server_id, tag_id)
 );
 
--- One-to-One
+-- ONE-TO-ONE: En server har exakt en detaljerad config
 CREATE TABLE server_configs (
-    server_id INTEGER PRIMARY KEY REFERENCES servers(id),
-    config_data JSONB
+    server_id INTEGER PRIMARY KEY REFERENCES servers(id) ON DELETE CASCADE,
+    config_data JSONB NOT NULL,
+    last_updated TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## Naming Conventions
 
-```sql
--- Snake_case för allt
--- Singular för tabeller
--- Plural för junction tables
+```
+TABELLER:
+  - snake_case
+  - Singular (server, deployment, team)
+  - Junction tables: plural (server_tags)
 
--- Tabeller
-CREATE TABLE server (...);
-CREATE TABLE deployment (...);
+KOLUMNER:
+  - snake_case
+  - Beskrivande (created_at, ip_address, hostname)
+  - Foreign keys: <tabell>_id (team_id, server_id)
 
--- Junction
-CREATE TABLE server_tags (...);
+INDEX:
+  - idx_<tabell>_<kolumner>
+  - idx_servers_status
+  - idx_deployments_server_created
 
--- Kolumner
-hostname
-ip_address
-created_at
-updated_at
-
--- Foreign keys
-server_id
-team_id
-
--- Index
-idx_servers_status
-idx_deployments_server_id
-
--- Constraints
-servers_pkey
-servers_hostname_unique
-servers_team_id_fkey
+CONSTRAINTS:
+  - <tabell>_<kolumn>_<typ>
+  - servers_hostname_unique
+  - deployments_server_id_fkey
 ```
 
-## Common Patterns
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga Patterns
 
 ```sql
--- Soft delete
+-- SOFT DELETE
 ALTER TABLE servers ADD COLUMN deleted_at TIMESTAMPTZ;
 
-CREATE INDEX idx_servers_active
-ON servers(id) WHERE deleted_at IS NULL;
+-- Partial index for aktiva poster
+CREATE INDEX idx_servers_active ON servers(id)
+WHERE deleted_at IS NULL;
 
--- Timestamps
+-- TIMESTAMPS (pa alla tabeller)
 CREATE TABLE servers (
     id SERIAL PRIMARY KEY,
-    hostname VARCHAR(100),
+    hostname VARCHAR(100) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Status enum
+-- STATUS SOM ENUM
 CREATE TYPE server_status AS ENUM (
     'pending', 'active', 'maintenance', 'offline', 'deleted'
 );
 
 ALTER TABLE servers ADD COLUMN status server_status DEFAULT 'pending';
 
--- UUID primary key
+-- UUID SOM PRIMARY KEY (for distribuerade system)
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE sessions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INTEGER,
-    data JSONB
+    user_id INTEGER NOT NULL,
+    data JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
-## Schema Organization
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Schema Organisation
 
 ```sql
--- Separata schemas
+-- Separata schemas for olika domanomraden
 CREATE SCHEMA core;
 CREATE SCHEMA monitoring;
 CREATE SCHEMA billing;
+CREATE SCHEMA audit;
 
+-- Tabeller i respektive schema
 CREATE TABLE core.servers (...);
+CREATE TABLE core.teams (...);
 CREATE TABLE monitoring.metrics (...);
+CREATE TABLE monitoring.alerts (...);
 CREATE TABLE billing.invoices (...);
+CREATE TABLE audit.changes (...);
 
--- Search path
+-- Satt search path for applikationen
 SET search_path TO core, monitoring, public;
 ```
 
-## Anti-patterns
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Anti-patterns att undvika
 
 ```sql
--- ❌ EAV (Entity-Attribute-Value)
-CREATE TABLE attributes (
-    entity_id INTEGER,
-    attribute_name VARCHAR,
-    attribute_value VARCHAR
+-- ANTI-PATTERN: Entity-Attribute-Value (EAV)
+CREATE TABLE server_attributes (
+    server_id INTEGER,
+    attribute_name VARCHAR(100),
+    attribute_value TEXT
 );
--- Svårt att query, ingen type safety
+-- Problem: Ingen type safety, svarjoined queries
 
--- ✅ Istället: Proper columns eller JSONB
+-- BATTRE: Riktiga kolumner eller JSONB
+ALTER TABLE servers ADD COLUMN metadata JSONB DEFAULT '{}';
 
--- ❌ Polymorphic associations
+-- ANTI-PATTERN: Polymorphic associations
 CREATE TABLE comments (
-    id SERIAL,
-    commentable_type VARCHAR,  -- 'server' or 'deployment'
-    commentable_id INTEGER
+    id SERIAL PRIMARY KEY,
+    commentable_type VARCHAR(50),  -- 'server' eller 'deployment'
+    commentable_id INTEGER,
+    content TEXT
 );
--- Ingen referential integrity
+-- Problem: Ingen referentiell integritet
 
--- ✅ Istället: Separate foreign keys
+-- BATTRE: Separata foreign keys med CHECK constraint
 CREATE TABLE comments (
-    id SERIAL,
+    id SERIAL PRIMARY KEY,
     server_id INTEGER REFERENCES servers(id),
     deployment_id INTEGER REFERENCES deployments(id),
+    content TEXT NOT NULL,
     CHECK (
         (server_id IS NOT NULL AND deployment_id IS NULL) OR
         (server_id IS NULL AND deployment_id IS NOT NULL)
@@ -194,13 +238,119 @@ CREATE TABLE comments (
 );
 ```
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
 | Normal Form | Regel |
 |-------------|-------|
-| 1NF | Atomiska värden |
-| 2NF | Inga partial dependencies |
+| 1NF | Atomiska varden, unika rader |
+| 2NF | Inga partial dependencies pa composite key |
 | 3NF | Inga transitive dependencies |
 
-**Nästa steg:** Node 18 - Migrations
+| Relationship | Implementation |
+|--------------|----------------|
+| 1:1 | Foreign key som ar PRIMARY KEY |
+| 1:N | Foreign key i "many"-tabellen |
+| M:N | Junction table med composite key |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+### Ingen ON DELETE-strategi
+
+```sql
+-- FEL - vad hander nar team raderas?
+CREATE TABLE servers (
+    team_id INTEGER REFERENCES teams(id)  -- Default: NO ACTION
+);
+-- DELETE fran teams failar om servrar finns
+
+-- ALTERNATIV:
+ON DELETE CASCADE    -- Radera servrar automatiskt
+ON DELETE SET NULL   -- Satt team_id till NULL
+ON DELETE RESTRICT   -- Samma som NO ACTION (explicit)
+```
+
+### Over-normalisering
+
+```sql
+-- FEL - separat tabell for status
+CREATE TABLE server_statuses (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20)
+);
+-- Onodigt for statisk lista
+
+-- BATTRE - anvand ENUM
+CREATE TYPE server_status AS ENUM ('active', 'inactive', 'maintenance');
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktisk ovning
+
+```sql
+-- Design: Server inventory system
+
+-- Teams som ager servrar
+CREATE TABLE teams (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Servrar med metadata
+CREATE TABLE servers (
+    id SERIAL PRIMARY KEY,
+    hostname VARCHAR(100) NOT NULL UNIQUE,
+    ip_address INET,
+    team_id INTEGER REFERENCES teams(id) ON DELETE SET NULL,
+    environment VARCHAR(20) NOT NULL,
+    status server_status DEFAULT 'pending',
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Tags for kategorisering (M:N)
+CREATE TABLE tags (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE server_tags (
+    server_id INTEGER REFERENCES servers(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    PRIMARY KEY (server_id, tag_id)
+);
+
+-- Index
+CREATE INDEX idx_servers_team ON servers(team_id);
+CREATE INDEX idx_servers_env ON servers(environment);
+CREATE INDEX idx_servers_active ON servers(id) WHERE deleted_at IS NULL;
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+Kom ihag:
+
+- Normalisera till 3NF som standard - denormalisera endast med mattning
+- Anvand konsekvent namngivning - snake_case, singular, beskrivande
+- Alla tabeller ska ha created_at/updated_at timestamps
+- Anvand ENUM for statiska varden, JSONB for flexibel metadata
+- Implementera soft delete med deleted_at nar data maste bevaras
+- Definiera alltid ON DELETE-strategi for foreign keys
+- Separata schemas for olika domanomraden
+- Undvik EAV och polymorphic associations - de ger problem pa sikt
+- UUID for distribuerade system, SERIAL for enkla applikationer
+- Dokumentera design decisions - du kommer tacka dig sjalv senare
+
+Nasta steg: Node 18 - Migrations
 ''',
 }
 
@@ -211,138 +361,203 @@ NODE_18_MIGRATIONS = {
     "estimated_minutes": 50,
     "xp_reward": 145,
     "prerequisites": [17],
-    "content": '''# 🔄 Migrations
+    "content": '''# Migrations
 
-## Varför detta är kritiskt
-> "Ingen ändrar schemat manuellt i prod. Migrations är den enda vägen - versionshanterad, granskad, och rollback-redo."
+Migrations ar versionshanterade schema-andringar. Aldrig gor manuella andringar i produktion - allt gar genom migrations som ar granskade, testade och kan rullas tillbaka.
 
-## Vad du kommer lära dig
-- ✅ Migration tools (Alembic, Flyway, golang-migrate)
-- ✅ Safe vs dangerous operations
-- ✅ Expand-Contract pattern
-- ✅ Zero-downtime schema changes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MIGRATIONS BENEFITS                          │
+├─────────────────────────────────────────────────────────────────┤
+│  - Versionskontroll: Schema-andringar ar sparbara i Git        │
+│  - Code review: Andringar granskas innan deploy                │
+│  - Reproducerbarhet: Samma schema i dev, staging, prod         │
+│  - Rollback: Kan angra misslyckade andringar                   │
+│  - Audit trail: Vet vem som andrade vad och nar                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Migration Basics
 
-```sql
--- En migration är en fil med:
--- UP: Applicera change
--- DOWN: Rollback change
+Varje migration har UP (apply) och DOWN (rollback):
 
--- Migrationshistorik sparas i databas
+```sql
+-- Migrationshistorik sparas i databasen
 CREATE TABLE schema_migrations (
     version VARCHAR(14) PRIMARY KEY,
     applied_at TIMESTAMPTZ DEFAULT NOW()
 );
-```
 
-## SQL Migration Files
+-- Migration-filnamn: <timestamp>_<beskrivning>.sql
+-- 20240115120000_create_servers.sql
+```
 
 ```sql
 -- 20240115120000_create_servers.up.sql
 CREATE TABLE servers (
     id SERIAL PRIMARY KEY,
-    hostname VARCHAR(100) NOT NULL,
+    hostname VARCHAR(100) NOT NULL UNIQUE,
     ip_address INET,
+    environment VARCHAR(20) NOT NULL,
     status VARCHAR(20) DEFAULT 'pending',
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX idx_servers_status ON servers(status);
+CREATE INDEX idx_servers_environment ON servers(environment);
 
 -- 20240115120000_create_servers.down.sql
+DROP INDEX IF EXISTS idx_servers_environment;
+DROP INDEX IF EXISTS idx_servers_status;
 DROP TABLE IF EXISTS servers;
 ```
 
-## Safe Migrations
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Sakra Migrations
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│  SAKERT (minimal lock, kan rullas tillbaka)                   │
+├───────────────────────────────────────────────────────────────┤
+│  - ADD COLUMN (nullable)                                      │
+│  - ADD COLUMN med DEFAULT (PG11+)                            │
+│  - DROP COLUMN                                                │
+│  - CREATE INDEX CONCURRENTLY                                  │
+│  - DROP INDEX CONCURRENTLY                                    │
+│  - ADD CONSTRAINT (check, foreign key med NOT VALID)         │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│  FARLIGT (lang lock, kraver planering)                        │
+├───────────────────────────────────────────────────────────────┤
+│  - ADD COLUMN med NOT NULL utan default                      │
+│  - ALTER COLUMN TYPE                                          │
+│  - RENAME COLUMN                                              │
+│  - CREATE INDEX (utan CONCURRENTLY)                          │
+│  - ADD CONSTRAINT (med immediate validation)                  │
+└───────────────────────────────────────────────────────────────┘
+```
 
 ```sql
--- ✅ Add column (safe)
-ALTER TABLE servers ADD COLUMN environment VARCHAR(20);
+-- SAKERT: Lagg till nullable kolumn
+ALTER TABLE servers ADD COLUMN region VARCHAR(50);
 
--- ✅ Add nullable column with default
-ALTER TABLE servers ADD COLUMN region VARCHAR(20) DEFAULT 'us-east-1';
+-- SAKERT: Lagg till kolumn med default (PG11+, instant)
+ALTER TABLE servers ADD COLUMN is_active BOOLEAN DEFAULT true;
 
--- ⚠️ Adding NOT NULL requires default or backfill
--- Steg 1: Add nullable
+-- FARLIGT: NOT NULL utan default
+ALTER TABLE servers ADD COLUMN team_id INTEGER NOT NULL;
+-- ERROR: kolumn kan inte vara NOT NULL utan default
+
+-- SAKERT: Tre-stegs approach for NOT NULL
+-- Steg 1: Nullable
 ALTER TABLE servers ADD COLUMN team_id INTEGER;
 
--- Steg 2: Backfill
+-- Steg 2: Backfill (kan ta tid, gor i batches)
 UPDATE servers SET team_id = 1 WHERE team_id IS NULL;
 
--- Steg 3: Add constraint
+-- Steg 3: Lagg till constraint
 ALTER TABLE servers ALTER COLUMN team_id SET NOT NULL;
 ```
 
-## Dangerous Operations
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```sql
--- ❌ Rename column (breaks application)
-ALTER TABLE servers RENAME COLUMN ip TO ip_address;
+## Expand-Contract Pattern
 
--- ✅ Expand-Contract pattern:
--- 1. Add new column
-ALTER TABLE servers ADD COLUMN ip_address INET;
--- 2. Dual-write i application
--- 3. Migrate data
-UPDATE servers SET ip_address = ip WHERE ip_address IS NULL;
--- 4. Switch reads to new column
--- 5. Stop writing to old
--- 6. Drop old column (later migration)
-ALTER TABLE servers DROP COLUMN ip;
+For faror operationer som RENAME COLUMN:
 
--- ❌ Change column type (locks table)
-ALTER TABLE servers ALTER COLUMN status TYPE VARCHAR(50);
-
--- ✅ For large tables, use new column approach
+```
+┌──────────────────────────────────────────────────────────────┐
+│  1. EXPAND: Lagg till ny kolumn                              │
+│  2. MIGRATE: Kopiera data, dual-write                        │
+│  3. CONTRACT: Ta bort gammal kolumn                          │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-## Index Operations
+```sql
+-- Byt namn pa "ip" till "ip_address"
+
+-- Migration 1: EXPAND
+ALTER TABLE servers ADD COLUMN ip_address INET;
+
+-- Applikationen uppdateras for att skriva till BADA kolumner
+-- dual_write = True
+
+-- Migration 2: MIGRATE
+UPDATE servers SET ip_address = ip WHERE ip_address IS NULL;
+
+-- Applikationen uppdateras for att lasa fran ip_address
+-- read_from = 'ip_address'
+
+-- Migration 3: CONTRACT (veckor/manader senare)
+ALTER TABLE servers DROP COLUMN ip;
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Index-operationer
 
 ```sql
--- ❌ CREATE INDEX locks table
+-- FARLIGT: Lasar tabellen under skapandet
 CREATE INDEX idx_servers_hostname ON servers(hostname);
+-- Pa stor tabell: minuter till timmar av lock!
 
--- ✅ CONCURRENTLY doesn't lock
+-- SAKERT: Skapar utan lock (men tar langre tid)
 CREATE INDEX CONCURRENTLY idx_servers_hostname ON servers(hostname);
 
--- Same for drop
-DROP INDEX CONCURRENTLY idx_servers_hostname;
+-- OBSERVERA: CONCURRENTLY kan inte koras i transaktion
+-- Maste koras utanfor BEGIN/COMMIT
+
+-- Ta bort index sakert
+DROP INDEX CONCURRENTLY IF EXISTS idx_servers_hostname;
 ```
 
-## Migration Tools
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Migration-verktyg
 
 ```bash
 # golang-migrate
 migrate create -ext sql -dir migrations -seq create_servers
-migrate -path migrations -database "postgresql://..." up
-migrate -path migrations -database "postgresql://..." down 1
+migrate -path migrations -database "postgresql://user:pass@host/db" up
+migrate -path migrations -database "postgresql://user:pass@host/db" down 1
 
 # Alembic (Python)
+alembic init alembic
 alembic revision -m "create_servers"
 alembic upgrade head
 alembic downgrade -1
 
-# Flyway (Java)
+# Flyway (Java/generell)
 flyway migrate
+flyway info
 flyway undo
 ```
 
-## Alembic Example
+Alembic exempel (Python):
 
 ```python
 # alembic/versions/20240115_create_servers.py
 from alembic import op
 import sqlalchemy as sa
 
+revision = '20240115'
+down_revision = None
+
 def upgrade():
     op.create_table(
         'servers',
         sa.Column('id', sa.Integer(), primary_key=True),
         sa.Column('hostname', sa.String(100), nullable=False),
-        sa.Column('status', sa.String(20), default='pending'),
+        sa.Column('status', sa.String(20), server_default='pending'),
         sa.Column('created_at', sa.DateTime(), server_default=sa.func.now())
     )
     op.create_index('idx_servers_status', 'servers', ['status'])
@@ -352,37 +567,119 @@ def downgrade():
     op.drop_table('servers')
 ```
 
-## Migration Checklist
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```yaml
-Pre-deploy:
-  - [ ] Test migration on staging
-  - [ ] Estimate lock time
-  - [ ] Check disk space
-  - [ ] Plan rollback
+## Snabbreferens
 
-Deploy:
-  - [ ] Take backup
-  - [ ] Run migration
-  - [ ] Verify data integrity
-  - [ ] Monitor performance
+| Operation | Saker? | Lock-tid |
+|-----------|--------|----------|
+| ADD COLUMN (nullable) | Ja | Kort |
+| ADD COLUMN med DEFAULT | Ja | Kort (PG11+) |
+| DROP COLUMN | Ja | Kort |
+| CREATE INDEX | Nej | Lang |
+| CREATE INDEX CONCURRENTLY | Ja | Ingen |
+| RENAME COLUMN | Nej | Kort (bryter app) |
+| ALTER COLUMN TYPE | Nej | Lang |
+| ADD NOT NULL | Nej | Kort (kraver data) |
 
-Post-deploy:
-  - [ ] ANALYZE updated tables
-  - [ ] Check slow queries
-  - [ ] Document changes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+### Index utan CONCURRENTLY
+
+```sql
+-- FEL - lasar tabellen i produktion
+CREATE INDEX idx_logs_timestamp ON logs(timestamp);
+
+-- RATT - ingen lock
+CREATE INDEX CONCURRENTLY idx_logs_timestamp ON logs(timestamp);
 ```
 
-| Operation | Safe? | Lock? |
-|-----------|-------|-------|
-| ADD COLUMN | Ja | Kort |
-| DROP COLUMN | Ja | Kort |
-| ADD INDEX | Nej* | Lång |
-| ADD INDEX CONCURRENTLY | Ja | Nej |
-| RENAME COLUMN | Nej | Kort |
-| CHANGE TYPE | Nej | Lång |
+### Glommer down-migration
 
-**Nästa steg:** Node 19 - Backup & Recovery
+```sql
+-- up.sql finns men down.sql saknas
+-- Problem: Kan inte rulla tillbaka vid fel!
+
+-- Skriv ALLTID bada
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Migration Checklist
+
+```
+PRE-DEPLOY:
+[ ] Testat pa staging med produktions-liknande data
+[ ] Estimerat lock-tid
+[ ] Kontrollerat diskutrymme
+[ ] Planerat rollback-strategi
+[ ] Code review godkand
+
+DEPLOY:
+[ ] Tagit backup
+[ ] Kort driftfonstret
+[ ] Kort migration
+[ ] Verifierat data-integritet
+[ ] Monitorerat prestanda
+
+POST-DEPLOY:
+[ ] Kort ANALYZE pa andrande tabeller
+[ ] Kontrollerat slow query log
+[ ] Dokumenterat andringar
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Praktisk ovning
+
+```sql
+-- Migration: Lagg till deployments-tabell
+
+-- 20240116_create_deployments.up.sql
+CREATE TABLE deployments (
+    id SERIAL PRIMARY KEY,
+    server_id INTEGER NOT NULL REFERENCES servers(id) ON DELETE CASCADE,
+    version VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    deployed_by INTEGER,
+    deployed_at TIMESTAMPTZ DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+
+-- Index CONCURRENTLY for att undvika lock
+-- Maste koras separat, utanfor transaktion
+CREATE INDEX CONCURRENTLY idx_deployments_server
+ON deployments(server_id);
+
+CREATE INDEX CONCURRENTLY idx_deployments_status
+ON deployments(status);
+
+-- 20240116_create_deployments.down.sql
+DROP INDEX CONCURRENTLY IF EXISTS idx_deployments_status;
+DROP INDEX CONCURRENTLY IF EXISTS idx_deployments_server;
+DROP TABLE IF EXISTS deployments;
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+Kom ihag:
+
+- Aldrig manuella schema-andringar i produktion - alltid migrations
+- Varje migration har UP och DOWN - maste kunna rullas tillbaka
+- CONCURRENTLY for alla index-operationer i produktion
+- Expand-Contract for farliga andringar (rename, type change)
+- Tre-stegs approach for NOT NULL: nullable -> backfill -> constraint
+- Testa migrations pa staging med produktions-liknande datamangd
+- Ta backup innan migration i produktion
+- Koda defensivt: IF EXISTS, IF NOT EXISTS
+- Gor migrations sma - lattare att rulla tillbaka
+- Lock-tid ar kritisk - estimera och kommunicera
+
+Nasta steg: Node 19 - Backup och Recovery
 ''',
 }
 
@@ -393,189 +690,337 @@ NODE_19_BACKUP = {
     "estimated_minutes": 55,
     "xp_reward": 155,
     "prerequisites": [18],
-    "content": '''# 💾 Backup & Recovery
+    "content": '''# Backup och Recovery
 
-## Varför detta är kritiskt
-> "Backups du aldrig testat är inte backups - de är falsk trygghet. En dag kommer du behöva dem, och då är det för sent att upptäcka att de inte fungerar."
+Backups ar din forsakring mot katastrofer. En backup du aldrig testat ar inte en backup - det ar falsk trygghet. Testa restore regelbundet!
 
-## Vad du kommer lära dig
-- ✅ pg_dump/pg_restore
-- ✅ Physical vs Logical backups
-- ✅ Point-in-Time Recovery (PITR)
-- ✅ Cloud backup strategies
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-## Backup Types
+## Varfor viktigt for DevOps?
 
 ```
-Logical Backup:
-- SQL-format
-- Portabelt
-- Långsammare restore
-- Mindre flexibelt för PITR
-
-Physical Backup:
-- Binära filer
-- Snabbare restore
-- Kräver samma version
-- Stödjer PITR
+┌─────────────────────────────────────────────────────────────────┐
+│                    BACKUP SCENARIOS                             │
+├─────────────────────────────────────────────────────────────────┤
+│  - Hardvaruhaveri: Disk kraschar                               │
+│  - Manskliga fel: Nagon kor DELETE utan WHERE                  │
+│  - Ransomware: Data krypteras av angripare                     │
+│  - Korruption: Data blir ogiltig                               │
+│  - Compliance: Krav pa databevarande                           │
+├─────────────────────────────────────────────────────────────────┤
+│  UTAN BACKUP: Foretaget stannar, data ar borta for alltid      │
+│  MED BACKUP: Stundtals nedtid, men data aterhamtas             │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-## pg_dump
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Backup-typer
+
+```
+┌─────────────────┬────────────────────────────────────────────────┐
+│ LOGICAL BACKUP  │ SQL-statements eller data-export               │
+│ (pg_dump)       │ + Portabelt mellan versioner                  │
+│                 │ + Kan aterstalla enskilda tabeller            │
+│                 │ - Langsammare backup/restore                  │
+│                 │ - Ingen Point-in-Time Recovery                │
+├─────────────────┼────────────────────────────────────────────────┤
+│ PHYSICAL BACKUP │ Binara datafiler                               │
+│ (pg_basebackup) │ + Snabbare backup/restore                     │
+│                 │ + Stodjer PITR                                │
+│                 │ - Kraver samma PostgreSQL-version             │
+│                 │ - Allt-eller-inget restore                    │
+└─────────────────┴────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## pg_dump - Logical Backup
 
 ```bash
-# Full database dump
+# Full database backup (SQL-format)
 pg_dump -h localhost -U postgres mydb > backup.sql
 
-# Custom format (komprimerad)
-pg_dump -Fc mydb > backup.dump
+# Custom format (komprimerad, flexibel restore)
+pg_dump -Fc -h localhost -U postgres mydb > backup.dump
 
-# Endast schema
+# Directory format (parallell, battre for stora databaser)
+pg_dump -Fd -j 4 -h localhost -U postgres mydb -f backup_dir/
+
+# Endast schema (inga data)
 pg_dump --schema-only mydb > schema.sql
 
-# Endast data
+# Endast data (inget schema)
 pg_dump --data-only mydb > data.sql
 
 # Specifik tabell
-pg_dump -t servers mydb > servers.sql
+pg_dump -t servers -t deployments mydb > tables.sql
 
-# Exkludera tabeller
-pg_dump --exclude-table=logs mydb > backup.sql
-
-# Parallell dump
-pg_dump -Fd -j 4 mydb -f backup_dir/
+# Exkludera tabeller (t.ex. logs)
+pg_dump --exclude-table='logs*' mydb > backup_no_logs.sql
 ```
 
-## pg_restore
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## pg_restore - Aterstallning
 
 ```bash
-# Från custom format
+# Fran custom format
 pg_restore -d mydb backup.dump
 
-# Skapa databas först
+# Skapa ny databas och aterstall
 createdb mydb_restored
 pg_restore -d mydb_restored backup.dump
 
-# Parallell restore
+# Parallell restore (snabbare)
 pg_restore -j 4 -d mydb backup_dir/
 
-# Specifik tabell
+# Endast specifik tabell
 pg_restore -t servers -d mydb backup.dump
 
-# List contents
+# Lista innehall i backup
 pg_restore -l backup.dump
+
+# Fran SQL-format (anvand psql)
+psql -d mydb -f backup.sql
 ```
 
-## pg_dumpall
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## pg_dumpall - Alla databaser
 
 ```bash
-# Alla databaser + roles
-pg_dumpall > full_backup.sql
+# Alla databaser + roller + tablespaces
+pg_dumpall -h localhost -U postgres > full_cluster.sql
 
-# Endast roles
+# Endast roller (users)
 pg_dumpall --roles-only > roles.sql
 
-# Restore
-psql -f full_backup.sql postgres
+# Endast tablespaces
+pg_dumpall --tablespaces-only > tablespaces.sql
+
+# Aterstall
+psql -f full_cluster.sql postgres
 ```
 
-## Physical Backup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## pg_basebackup - Physical Backup
 
 ```bash
-# pg_basebackup
-pg_basebackup -h localhost -D /backups/base -Fp -Xs -P
+# Standard basebackup
+pg_basebackup -h localhost -U replication_user \
+    -D /backups/base \
+    -Fp -Xs -P
 
-# Med komprimering
-pg_basebackup -h localhost -D /backups/base -Ft -z -Xs -P
+# Med komprimering (tar.gz)
+pg_basebackup -h localhost -U replication_user \
+    -D /backups/base \
+    -Ft -z -Xs -P
 
-# Restore:
-# 1. Stoppa PostgreSQL
-# 2. Kopiera backup till data directory
-# 3. Skapa recovery.signal
-# 4. Starta PostgreSQL
+# Flaggor:
+# -Fp = plain format (fil-kopior)
+# -Ft = tar format
+# -z = gzip komprimering
+# -Xs = stream WAL under backup
+# -P = visa progress
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Point-in-Time Recovery (PITR)
 
+Aterstall till exakt tidpunkt:
+
 ```bash
 # 1. Aktivera WAL archiving (postgresql.conf)
+wal_level = replica
 archive_mode = on
-archive_command = 'cp %p /archive/%f'
+archive_command = 'cp %p /var/lib/pgsql/archive/%f'
 
 # 2. Ta basebackup
-pg_basebackup -D /backups/base -Ft -z -Xs -P
+pg_basebackup -D /backups/base -Fp -Xs -P
 
-# 3. Vid recovery, specificera target
-# postgresql.conf / recovery.signal
-restore_command = 'cp /archive/%f %p'
+# 3. Vid behov av recovery, skapa recovery.signal
+touch /var/lib/pgsql/data/recovery.signal
+
+# 4. Konfigurera recovery (postgresql.conf)
+restore_command = 'cp /var/lib/pgsql/archive/%f %p'
 recovery_target_time = '2024-01-15 10:30:00'
+
+# 5. Starta PostgreSQL - den aterhamtar till angiven tid
 ```
 
-## Backup Script
+PITR ar kritiskt for att aterstalla fran "oops"-moment:
+- DELETE utan WHERE
+- DROP TABLE
+- Bad migration
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Backup-script
 
 ```bash
 #!/bin/bash
-# backup.sh
+# backup.sh - Daglig backup med retention
 
 DB_NAME="production"
 BACKUP_DIR="/backups"
 DATE=$(date +%Y%m%d_%H%M%S)
 RETENTION_DAYS=30
 
-# Create backup
-pg_dump -Fc $DB_NAME > "$BACKUP_DIR/${DB_NAME}_${DATE}.dump"
+# Skapa backup
+echo "Starting backup of $DB_NAME..."
+pg_dump -Fc "$DB_NAME" > "$BACKUP_DIR/${DB_NAME}_${DATE}.dump"
 
-# Verify
-if [ $? -eq 0 ]; then
+# Verifiera att backup skapades
+if [ $? -eq 0 ] && [ -s "$BACKUP_DIR/${DB_NAME}_${DATE}.dump" ]; then
     echo "Backup successful: ${DB_NAME}_${DATE}.dump"
 
-    # Remove old backups
-    find $BACKUP_DIR -name "*.dump" -mtime +$RETENTION_DAYS -delete
+    # Kontrollera storlek
+    SIZE=$(du -h "$BACKUP_DIR/${DB_NAME}_${DATE}.dump" | cut -f1)
+    echo "Backup size: $SIZE"
+
+    # Ta bort gamla backups
+    find "$BACKUP_DIR" -name "${DB_NAME}_*.dump" -mtime +$RETENTION_DAYS -delete
+    echo "Removed backups older than $RETENTION_DAYS days"
 else
-    echo "Backup failed!" >&2
+    echo "ERROR: Backup failed!" >&2
     exit 1
 fi
 ```
 
-## Verify Backup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Testa Backup (KRITISKT!)
 
 ```bash
-# Lista innehåll
+# 1. Lista innehall
 pg_restore -l backup.dump
 
-# Test restore till annan databas
+# 2. Aterstall till test-databas
 createdb test_restore
 pg_restore -d test_restore backup.dump
 
-# Verifiera data
-psql -d test_restore -c "SELECT COUNT(*) FROM servers;"
+# 3. Verifiera data
+psql -d test_restore -c "
+    SELECT
+        (SELECT COUNT(*) FROM servers) AS servers,
+        (SELECT COUNT(*) FROM deployments) AS deployments,
+        (SELECT MAX(created_at) FROM servers) AS latest_server;
+"
 
-# Cleanup
+# 4. Jamfor med produktion
+# Ska vara samma antal rader, senaste timestamps
+
+# 5. Rensa
 dropdb test_restore
 ```
+
+REGEL: Testa restore minst en gang per manad!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Cloud Backup
 
 ```bash
-# Till S3
-pg_dump -Fc mydb | aws s3 cp - s3://bucket/backup.dump
+# Till AWS S3
+pg_dump -Fc mydb | aws s3 cp - s3://mybucket/backups/db_$(date +%Y%m%d).dump
 
-# Från S3
-aws s3 cp s3://bucket/backup.dump - | pg_restore -d mydb
+# Fran S3
+aws s3 cp s3://mybucket/backups/db_20240115.dump - | pg_restore -d mydb
 
-# Med gzip
-pg_dump mydb | gzip | aws s3 cp - s3://bucket/backup.sql.gz
+# Med gzip (mindre storlek)
+pg_dump mydb | gzip | aws s3 cp - s3://mybucket/backups/db_$(date +%Y%m%d).sql.gz
+
+# Till Google Cloud Storage
+pg_dump -Fc mydb | gsutil cp - gs://mybucket/backups/db_$(date +%Y%m%d).dump
+
+# Till Azure Blob
+pg_dump -Fc mydb | az storage blob upload --data @- \
+    --container backups --name db_$(date +%Y%m%d).dump
 ```
 
-| Backup Type | Speed | Size | PITR |
-|-------------|-------|------|------|
-| pg_dump SQL | Slow | Large | No |
-| pg_dump Custom | Medium | Small | No |
-| pg_basebackup | Fast | Large | Yes |
-| WAL Archiving | N/A | Medium | Yes |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Nästa steg:** Node 20 - Monitoring & Best Practices
+## Snabbreferens
+
+| Backup-typ | Hastighet | Storlek | PITR | Flexibilitet |
+|------------|-----------|---------|------|--------------|
+| pg_dump SQL | Langsam | Stor | Nej | Hog |
+| pg_dump Custom | Medium | Liten | Nej | Hog |
+| pg_dump Dir | Snabb | Medium | Nej | Hog |
+| pg_basebackup | Snabb | Stor | Ja | Lag |
+| WAL Archiving | N/A | Medium | Ja | N/A |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+### Backup utan verifiering
+
+```bash
+# FEL - bara skapa backup utan att testa
+pg_dump mydb > backup.sql
+# Aldrig testad - kanske korrupt!
+
+# RATT - alltid verifiera
+pg_dump -Fc mydb > backup.dump
+pg_restore -l backup.dump  # Lista innehall
+# Periodiskt: full restore till test-db
+```
+
+### Ingen PITR-setup
+
+```
+# FEL - bara dagliga backups
+# Om nagon kor DELETE kl 14:00, och backup ar fran kl 02:00,
+# forlorar du 12 timmar data!
+
+# RATT - WAL archiving for PITR
+archive_mode = on
+archive_command = 'cp %p /archive/%f'
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Backup Checklist
+
+```
+DAGLIGEN:
+[ ] Backup kor automatiskt (cron/scheduler)
+[ ] Backup-storlek ar rimlig (inte 0 bytes)
+[ ] Notifiering vid misslyckande
+
+VECKOVIS:
+[ ] Verifiera att restore fungerar
+[ ] Kontrollera diskutrymme for backups
+[ ] Granska retention policy
+
+MANATLIGEN:
+[ ] Full restore-test till separat server
+[ ] Granska och uppdatera backup-strategi
+[ ] Dokumentera RTO/RPO (Recovery Time/Point Objective)
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+Kom ihag:
+
+- Backup du aldrig testat ar inte en backup - testa restore regelbundet!
+- pg_dump -Fc (custom format) ar bast for de flesta fall
+- pg_basebackup + WAL archiving for Point-in-Time Recovery
+- 3-2-1 regeln: 3 kopior, 2 mediatyper, 1 offsite
+- Automatisera backups med schemalagda jobb
+- Monitorera backup-status och storlek
+- Dokumentera och testa din recovery-procedur
+- RTO (Recovery Time Objective): Hur snabbt maste du vara uppe?
+- RPO (Recovery Point Objective): Hur mycket data kan du forlora?
+- Spara backups offsite (cloud) - skyddar mot datacenter-katastrofer
+
+Nasta steg: Node 20 - Monitoring och Best Practices
 ''',
 }
 
@@ -586,227 +1031,391 @@ NODE_20_MONITORING = {
     "estimated_minutes": 55,
     "xp_reward": 160,
     "prerequisites": [14, 19],
-    "content": '''# 📊 Monitoring & Best Practices
+    "content": '''# Monitoring och Best Practices
 
-## Varför detta är kritiskt
-> "En databas utan monitoring är som att köra bil med ögonbindel. Du märker problemen först när du kraschar - och då är det redan för sent."
+Monitoring ger dig insikt i databashalsan. Utan monitoring ser du problemen forst nar anvandare klagar - da ar det ofta for sent.
 
-## Vad du kommer lära dig
-- ✅ Key PostgreSQL metrics
-- ✅ pg_stat_statements analysis
-- ✅ Connection pooling
-- ✅ Production checklist
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## Key Metrics
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MONITORING BENEFITS                          │
+├─────────────────────────────────────────────────────────────────┤
+│  - Upptack problem INNAN anvandare marker                      │
+│  - Kapacitetsplanering: nar behover vi skala?                  │
+│  - Prestandaanalys: vilka queries ar langsamma?                │
+│  - Sakerhet: upptack onormala monster                          │
+│  - Postmortem: forsta vad som hande vid incident               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Nyckelmetriker
 
 ```sql
 -- Aktiva connections
-SELECT count(*) FROM pg_stat_activity;
-
--- Connections per database
-SELECT datname, count(*)
+SELECT
+    count(*) AS total_connections,
+    count(*) FILTER (WHERE state = 'active') AS active,
+    count(*) FILTER (WHERE state = 'idle') AS idle,
+    count(*) FILTER (WHERE state = 'idle in transaction') AS idle_in_transaction
 FROM pg_stat_activity
-GROUP BY datname;
+WHERE datname = current_database();
 
--- Slow queries (behöver pg_stat_statements)
-SELECT
-    query,
-    calls,
-    mean_exec_time,
-    total_exec_time
-FROM pg_stat_statements
-ORDER BY mean_exec_time DESC
-LIMIT 10;
+-- Connections per databas
+SELECT datname, count(*) AS connections
+FROM pg_stat_activity
+GROUP BY datname
+ORDER BY connections DESC;
 
--- Table sizes
+-- Database-storlek
 SELECT
-    relname AS table_name,
-    pg_size_pretty(pg_total_relation_size(relid)) AS total_size
+    datname,
+    pg_size_pretty(pg_database_size(datname)) AS size
+FROM pg_database
+WHERE datname NOT IN ('template0', 'template1')
+ORDER BY pg_database_size(datname) DESC;
+
+-- Tabell-storlekar
+SELECT
+    schemaname || '.' || relname AS table_name,
+    pg_size_pretty(pg_total_relation_size(relid)) AS total_size,
+    pg_size_pretty(pg_relation_size(relid)) AS table_size,
+    pg_size_pretty(pg_indexes_size(relid)) AS index_size
 FROM pg_catalog.pg_statio_user_tables
-ORDER BY pg_total_relation_size(relid) DESC;
+ORDER BY pg_total_relation_size(relid) DESC
+LIMIT 20;
 ```
 
-## Locks & Blocking
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## pg_stat_statements - Query Analysis
 
 ```sql
--- Blocked queries
+-- Aktivera extension
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
+-- Langsamma queries (hogst mean time)
+SELECT
+    substring(query, 1, 100) AS query_preview,
+    calls,
+    round(mean_exec_time::numeric, 2) AS mean_ms,
+    round(total_exec_time::numeric, 2) AS total_ms,
+    rows
+FROM pg_stat_statements
+ORDER BY mean_exec_time DESC
+LIMIT 20;
+
+-- Mest resurskravande (total tid)
+SELECT
+    substring(query, 1, 100) AS query_preview,
+    calls,
+    round(total_exec_time::numeric / 1000, 2) AS total_seconds,
+    round(mean_exec_time::numeric, 2) AS mean_ms
+FROM pg_stat_statements
+ORDER BY total_exec_time DESC
+LIMIT 20;
+
+-- Reset statistik
+SELECT pg_stat_statements_reset();
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Lock Monitoring
+
+```sql
+-- Visa blockerade queries
 SELECT
     blocked.pid AS blocked_pid,
+    blocked.usename AS blocked_user,
     blocked.query AS blocked_query,
     blocking.pid AS blocking_pid,
-    blocking.query AS blocking_query
+    blocking.usename AS blocking_user,
+    blocking.query AS blocking_query,
+    now() - blocked.query_start AS blocked_duration
 FROM pg_stat_activity blocked
 JOIN pg_locks blocked_locks ON blocked.pid = blocked_locks.pid
-JOIN pg_locks blocking_locks ON blocked_locks.locktype = blocking_locks.locktype
+JOIN pg_locks blocking_locks
+    ON blocked_locks.locktype = blocking_locks.locktype
     AND blocked_locks.relation = blocking_locks.relation
+    AND blocked_locks.pid != blocking_locks.pid
 JOIN pg_stat_activity blocking ON blocking_locks.pid = blocking.pid
 WHERE NOT blocked_locks.granted
   AND blocking_locks.granted;
 
--- Kill blocking query
-SELECT pg_terminate_backend(12345);
+-- Doda blockerande query (forsiktigt!)
+SELECT pg_terminate_backend(12345);  -- Ersatt med blocking_pid
+
+-- Langkorda queries
+SELECT
+    pid,
+    now() - query_start AS duration,
+    state,
+    substring(query, 1, 100) AS query
+FROM pg_stat_activity
+WHERE state != 'idle'
+  AND query_start < now() - interval '5 minutes'
+ORDER BY query_start;
 ```
 
-## Performance Views
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Index Health
 
 ```sql
--- Index usage
+-- Index-anvandning
 SELECT
     schemaname,
-    relname AS table,
-    indexrelname AS index,
-    idx_scan AS scans,
-    idx_tup_read AS tuples_read
+    relname AS table_name,
+    indexrelname AS index_name,
+    idx_scan AS times_used,
+    pg_size_pretty(pg_relation_size(indexrelid)) AS size
 FROM pg_stat_user_indexes
 ORDER BY idx_scan DESC;
 
--- Unused indexes
+-- OANVANDA index (kandidater for borttagning)
 SELECT
-    schemaname || '.' || relname AS table,
-    indexrelname AS index,
-    pg_size_pretty(pg_relation_size(i.indexrelid)) AS size
-FROM pg_stat_user_indexes ui
-JOIN pg_index i ON ui.indexrelid = i.indexrelid
-WHERE NOT indisunique
-  AND idx_scan = 0
-ORDER BY pg_relation_size(i.indexrelid) DESC;
+    schemaname || '.' || relname AS table_name,
+    indexrelname AS index_name,
+    pg_size_pretty(pg_relation_size(indexrelid)) AS size
+FROM pg_stat_user_indexes
+WHERE idx_scan = 0
+  AND indexrelname NOT LIKE '%_pkey'
+ORDER BY pg_relation_size(indexrelid) DESC;
 
--- Table bloat
+-- Index bloat (fragmentation)
 SELECT
     schemaname,
-    relname,
-    n_dead_tup,
-    n_live_tup,
-    ROUND(100.0 * n_dead_tup / NULLIF(n_live_tup + n_dead_tup, 0), 2) AS dead_pct
+    relname AS table_name,
+    indexrelname AS index_name,
+    pg_size_pretty(pg_relation_size(indexrelid)) AS index_size,
+    idx_scan
+FROM pg_stat_user_indexes
+ORDER BY pg_relation_size(indexrelid) DESC
+LIMIT 20;
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Table Health
+
+```sql
+-- Dead tuples (behover VACUUM)
+SELECT
+    schemaname,
+    relname AS table_name,
+    n_live_tup AS live_rows,
+    n_dead_tup AS dead_rows,
+    round(100.0 * n_dead_tup / nullif(n_live_tup + n_dead_tup, 0), 2) AS dead_pct,
+    last_vacuum,
+    last_autovacuum
 FROM pg_stat_user_tables
 WHERE n_dead_tup > 1000
 ORDER BY n_dead_tup DESC;
+
+-- Tabeller som inte vacuumats nyligen
+SELECT
+    schemaname || '.' || relname AS table_name,
+    last_vacuum,
+    last_autovacuum,
+    n_dead_tup
+FROM pg_stat_user_tables
+WHERE (last_vacuum IS NULL OR last_vacuum < now() - interval '7 days')
+  AND (last_autovacuum IS NULL OR last_autovacuum < now() - interval '7 days')
+  AND n_dead_tup > 100
+ORDER BY n_dead_tup DESC;
 ```
 
-## Connection Pooling
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```yaml
-# PgBouncer config
+## Connection Pooling (PgBouncer)
+
+```ini
+# pgbouncer.ini
+
 [databases]
-mydb = host=localhost dbname=mydb
+mydb = host=localhost port=5432 dbname=mydb
 
 [pgbouncer]
 listen_port = 6432
 listen_addr = *
 auth_type = md5
 auth_file = /etc/pgbouncer/userlist.txt
-pool_mode = transaction
-max_client_conn = 1000
-default_pool_size = 20
+
+# Pool-lage
+pool_mode = transaction    # Rekommenderat
+
+# Begransningar
+max_client_conn = 1000     # Max klient-connections
+default_pool_size = 20     # Connections per db/user
+min_pool_size = 5          # Minsta antal connections
+reserve_pool_size = 5      # Extra vid behov
 ```
 
-## Query Guidelines
+Pool modes:
+- **session**: En connection per session (minst effektiv)
+- **transaction**: En connection per transaktion (rekommenderat)
+- **statement**: En connection per statement (mest aggressiv)
 
-```sql
--- ✅ Use specific columns
-SELECT id, hostname FROM servers;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
--- ❌ Avoid SELECT *
-SELECT * FROM servers;
+## PostgreSQL Configuration
 
--- ✅ Limit results
-SELECT * FROM logs ORDER BY timestamp DESC LIMIT 100;
+```ini
+# postgresql.conf - viktiga parametrar
 
--- ✅ Use prepared statements
-PREPARE get_server(int) AS
-SELECT * FROM servers WHERE id = $1;
-EXECUTE get_server(1);
+# Minne
+shared_buffers = 256MB           # 25% av RAM (max 8-16GB)
+effective_cache_size = 768MB     # 75% av RAM
+work_mem = 64MB                  # Per operation/sort
+maintenance_work_mem = 256MB     # For VACUUM, INDEX
 
--- ✅ Batch inserts
-INSERT INTO logs (message, timestamp)
-VALUES
-    ('msg1', NOW()),
-    ('msg2', NOW()),
-    ('msg3', NOW());
+# Connections
+max_connections = 100            # Anvand connection pooler!
+
+# WAL
+wal_level = replica              # For PITR
+max_wal_size = 1GB
+min_wal_size = 80MB
+
+# Checkpoints
+checkpoint_completion_target = 0.9
+
+# Logging
+log_min_duration_statement = 1000  # Logga queries over 1 sekund
+log_statement = 'ddl'              # Logga schema-andringar
+log_lock_waits = on                # Logga lock-vantan
+
+# Autovacuum
+autovacuum = on
+autovacuum_vacuum_scale_factor = 0.1
+autovacuum_analyze_scale_factor = 0.05
 ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Maintenance
 
 ```sql
--- Vacuum - reclaim space
+-- VACUUM: Atervinn utrymme fran raderade rader
 VACUUM servers;
 
--- Vacuum analyze - reclaim + update stats
+-- VACUUM ANALYZE: Atervinn + uppdatera statistik
 VACUUM ANALYZE servers;
 
--- Full vacuum - compact (locks table!)
+-- VACUUM FULL: Komprimera tabellen (LASAR TABELLEN!)
+-- Anvand endast vid extremt bloat
 VACUUM FULL servers;
 
--- Reindex
-REINDEX TABLE servers;
-REINDEX INDEX CONCURRENTLY idx_servers_status;
-
--- Update statistics
+-- ANALYZE: Uppdatera endast statistik
 ANALYZE servers;
+
+-- REINDEX: Bygg om index
+REINDEX TABLE servers;
+REINDEX INDEX CONCURRENTLY idx_servers_status;  -- Utan lock
+
+-- Cluster: Fysiskt ordna tabell efter index
+CLUSTER servers USING idx_servers_created;
 ```
 
-## Configuration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```ini
-# postgresql.conf essentials
+## Snabbreferens - Alertgranser
 
-# Memory
-shared_buffers = 256MB          # 25% of RAM
-effective_cache_size = 768MB    # 75% of RAM
-work_mem = 64MB                 # Per operation
-maintenance_work_mem = 256MB    # For VACUUM, INDEX
+| Metrik | Varning | Kritisk |
+|--------|---------|---------|
+| Connections | 80% av max | 95% av max |
+| Disk space | 80% | 90% |
+| Replication lag | 30 sekunder | 5 minuter |
+| Long queries | 30 sekunder | 5 minuter |
+| Dead tuples | 10% av live | 25% av live |
+| Cache hit ratio | < 95% | < 90% |
 
-# Connections
-max_connections = 100
-
-# WAL
-wal_level = replica
-max_wal_size = 1GB
-min_wal_size = 80MB
-
-# Logging
-log_min_duration_statement = 1000  # Log slow queries (ms)
-log_statement = 'ddl'               # Log DDL statements
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Monitoring Checklist
 
-```yaml
-Continuous:
-  - [ ] Active connections
-  - [ ] Query response time
-  - [ ] Replication lag
-  - [ ] Disk space
+```
+KONTINUERLIGT (var minut):
+[ ] Connection count och state
+[ ] Aktiva/langkorda queries
+[ ] Replication lag (om replica)
+[ ] Diskutrymme
 
-Daily:
-  - [ ] Slow query log
-  - [ ] Table bloat
-  - [ ] Unused indexes
+DAGLIGEN:
+[ ] Granska slow query log
+[ ] Kolla table bloat (dead tuples)
+[ ] Index usage statistik
+[ ] Backup-status
 
-Weekly:
-  - [ ] Backup verification
-  - [ ] Index usage stats
-  - [ ] Connection pool stats
+VECKOVIS:
+[ ] Verifiera backup restore
+[ ] Kolla oanvanda index
+[ ] Granska connection pool stats
+[ ] Kapacitetsplanering
+
+MANATLIGEN:
+[ ] Full performance review
+[ ] Schema-optimering
+[ ] Uppdatera dokumentation
 ```
 
-| Metric | Warning | Critical |
-|--------|---------|----------|
-| Connections | 80% max | 95% max |
-| Disk | 80% | 90% |
-| Replication lag | 30s | 5min |
-| Long queries | 30s | 5min |
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Praktisk ovning - Monitoring Query
 
-🎉 **Grattis!** Du har slutfört SQL SkillsMap!
+```sql
+-- Komplett halsocheck
+WITH stats AS (
+    SELECT
+        (SELECT count(*) FROM pg_stat_activity) AS total_connections,
+        (SELECT count(*) FROM pg_stat_activity WHERE state = 'active') AS active_queries,
+        (SELECT count(*) FROM pg_stat_activity WHERE state = 'idle in transaction') AS idle_in_tx,
+        (SELECT pg_size_pretty(pg_database_size(current_database()))) AS db_size,
+        (SELECT round(100.0 * sum(heap_blks_hit) / nullif(sum(heap_blks_hit) + sum(heap_blks_read), 0), 2)
+         FROM pg_statio_user_tables) AS cache_hit_ratio,
+        (SELECT count(*) FROM pg_stat_user_tables WHERE n_dead_tup > n_live_tup * 0.1) AS bloated_tables,
+        (SELECT count(*) FROM pg_stat_user_indexes WHERE idx_scan = 0) AS unused_indexes
+)
+SELECT * FROM stats;
+```
 
-Du har lärt dig:
-- SQL grundläggande syntax
-- Avancerade queries och joins
-- Performance optimization
-- Production best practices
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+Kom ihag:
+
+- Monitorera kontinuerligt: connections, queries, disk, replication
+- pg_stat_statements ar ditt viktigaste verktyg for query-analys
+- Anvand connection pooler (PgBouncer) - PostgreSQL skapar en process per connection
+- Konfigurera alerting for kritiska metriker
+- VACUUM regelbudet - autovacuum ar bra men inte alltid tillrackligt
+- Kolla oanvanda index - de kostar vid writes
+- Log slow queries - log_min_duration_statement
+- Cache hit ratio bor vara over 95%
+- Testa backup restore - inte bara att backup kor
+- Dokumentera din monitoring-setup och eskaleringsprocess
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GRATTIS! Du har slutfort SQL SkillsMap!
+
+Du beharkskar nu:
+
+- SQL syntax och queries
+- Avancerade tekniker: CTEs, Window Functions, JSONB
+- Databasdesign och normalisering
+- Prestandaoptimering med index och EXPLAIN
+- Migrations och schema-hantering
+- Backup, recovery och PITR
+- Monitoring och best practices for produktion
+
+Nasta steg: Applicera kunskapen i verkliga DevOps-scenarier!
 ''',
 }
 

@@ -13,7 +13,7 @@ REACT_NODE_13_NEXTJS_INTRO = {
     "node_id": 13,
     "title": "Next.js Introduction",
     "slug": "nextjs-introduction",
-    "description": "Komma igång med Next.js App Router",
+    "description": "Komma igang med Next.js App Router",
     "difficulty": "intermediate",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -24,13 +24,11 @@ REACT_NODE_13_NEXTJS_INTRO = {
     "content": """
 # Next.js Introduction
 
-> *"Next.js is React framework for production - with everything you need built-in."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar Next.js?
 
-## 🎯 Why Next.js?
-
-Next.js löser problem som vanilla React inte hanterar:
+Next.js ar ett React-ramverk for produktion som ger dig allt du behover inbyggt.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -39,62 +37,82 @@ Next.js löser problem som vanilla React inte hanterar:
 │                                                                  │
 │  Vanilla React (Vite)              Next.js                      │
 │  ────────────────────              ───────                      │
-│  • Client-side rendering          • Server + Client rendering   │
-│  • Manual routing (react-router)  • File-based routing built-in│
-│  • Manual code splitting          • Automatic code splitting    │
-│  • Manual SEO                     • Built-in SEO & metadata     │
-│  • Manual API setup               • API routes built-in         │
-│  • Manual image optimization      • next/image optimization     │
+│  - Client-side rendering           - Server + Client rendering  │
+│  - Manual routing (react-router)   - File-based routing inbyggt │
+│  - Manual code splitting           - Automatisk code splitting  │
+│  - Manual SEO                      - Inbyggd SEO & metadata     │
+│  - Manual API setup                - API routes inbyggt         │
+│  - Manual bildoptimering           - next/image optimering      │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Project Setup
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| CI/CD | Next.js har forstaklassigt stod for Vercel, Netlify och containerisering |
+| Performance | Inbyggd optimering minskar infrastrukturkostnader |
+| SSR/SSG | Server-side rendering ger battre SEO och snabbare initial load |
+| Edge Functions | Stod for edge computing nara anvandarna |
+| Monitoring | Inbyggt stod for analytics och performance monitoring |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Project Setup
 
 ```bash
 # Skapa Next.js-projekt
 npx create-next-app@latest my-app
 
-# Välj options:
-# ✔ TypeScript? Yes
-# ✔ ESLint? Yes
-# ✔ Tailwind CSS? Yes
-# ✔ src/ directory? Yes
-# ✔ App Router? Yes (VIKTIGT!)
-# ✔ Turbopack? Yes
+# Valj options:
+# TypeScript? Yes
+# ESLint? Yes
+# Tailwind CSS? Yes
+# src/ directory? Yes
+# App Router? Yes (VIKTIGT!)
+# Turbopack? Yes
 
 cd my-app
 npm run dev
 ```
 
-### Project Structure (App Router)
+### Projektstruktur (App Router)
 
-```bash
-my-app/
-├── src/
-│   ├── app/                    # App Router
-│   │   ├── layout.tsx          # Root layout
-│   │   ├── page.tsx            # Home page (/)
-│   │   ├── globals.css
-│   │   ├── about/
-│   │   │   └── page.tsx        # /about
-│   │   ├── blog/
-│   │   │   ├── page.tsx        # /blog
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx    # /blog/my-post
-│   │   └── api/
-│   │       └── hello/
-│   │           └── route.ts    # API: /api/hello
-│   ├── components/
-│   └── lib/
-├── public/                      # Static files
-├── next.config.js
-└── package.json
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  PROJECT STRUCTURE                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  my-app/                                                        │
+│  ├── src/                                                       │
+│  │   ├── app/                     # App Router                  │
+│  │   │   ├── layout.tsx           # Root layout                 │
+│  │   │   ├── page.tsx             # Home page (/)               │
+│  │   │   ├── globals.css                                        │
+│  │   │   ├── about/                                             │
+│  │   │   │   └── page.tsx         # /about                      │
+│  │   │   ├── blog/                                              │
+│  │   │   │   ├── page.tsx         # /blog                       │
+│  │   │   │   └── [slug]/                                        │
+│  │   │   │       └── page.tsx     # /blog/my-post               │
+│  │   │   └── api/                                               │
+│  │   │       └── hello/                                         │
+│  │   │           └── route.ts     # API: /api/hello             │
+│  │   ├── components/                                            │
+│  │   └── lib/                                                   │
+│  ├── public/                       # Statiska filer             │
+│  ├── next.config.js                                             │
+│  └── package.json                                               │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Root Layout
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Root Layout
 
 ```tsx
 // src/app/layout.tsx
@@ -127,33 +145,23 @@ export default function RootLayout({
 }
 ```
 
-### Page Component
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-```tsx
-// src/app/page.tsx
-export default function HomePage() {
-  return (
-    <div>
-      <h1>Welcome to Next.js!</h1>
-      <p>This is the home page.</p>
-    </div>
-  );
-}
+## Snabbreferens
 
-// src/app/about/page.tsx
-export default function AboutPage() {
-  return (
-    <div>
-      <h1>About Us</h1>
-      <p>Learn more about our company.</p>
-    </div>
-  );
-}
-```
+| Koncept | Syntax | Anvandning |
+|---------|--------|------------|
+| Page | `page.tsx` | Definierar en route |
+| Layout | `layout.tsx` | Delad layout for barn |
+| Loading | `loading.tsx` | Loading UI |
+| Error | `error.tsx` | Error boundary |
+| Dynamic Route | `[slug]` | Variabel i URL |
+| Catch-all | `[...slug]` | Multipla segment |
+| Route Group | `(group)` | Organisering utan URL |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 File-based Routing
+## File-based Routing
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -163,13 +171,13 @@ export default function AboutPage() {
 │  src/app/page.tsx              →  /                             │
 │  src/app/about/page.tsx        →  /about                        │
 │  src/app/blog/page.tsx         →  /blog                         │
-│  src/app/blog/[slug]/page.tsx  →  /blog/my-post (dynamic)       │
+│  src/app/blog/[slug]/page.tsx  →  /blog/my-post (dynamisk)      │
 │  src/app/shop/[...slug]/page.tsx → /shop/a/b/c (catch-all)      │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Dynamic Routes
+### Dynamiska Routes
 
 ```tsx
 // src/app/blog/[slug]/page.tsx
@@ -181,18 +189,39 @@ export default function BlogPost({ params }: BlogPostProps) {
   return <h1>Blog Post: {params.slug}</h1>;
 }
 
-// URL: /blog/hello-world → params.slug = "hello-world"
+// URL: /blog/hello-world -> params.slug = "hello-world"
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Vanliga fel och losningar
 
-- **Next.js** är React-ramverket för produktion
-- **App Router** är den moderna routern (från Next.js 13+)
-- **File-based routing** - filstruktur = URL-struktur
-- **Layouts** delas mellan sidor
-- **Metadata** för SEO built-in
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| 404 page not found | Fil heter inte page.tsx | Byt namn till page.tsx |
+| Layout renderas inte | Saknar layout.tsx i app/ | Skapa root layout.tsx |
+| Metadata visas inte | metadata exporteras inte | Lagg till export const metadata |
+| Hydration mismatch | Server/client renderar olika | Se till att initialt innehall matchar |
+| Module not found | Fel import-path | Kontrollera src/ och alias i tsconfig |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| App Router | Moderna routing-systemet fran Next.js 13+ |
+| File-based | Filstruktur = URL-struktur automatiskt |
+| Layout | Delade komponenter mellan routes |
+| Metadata | Inbyggt SEO-stod |
+| Dynamiska routes | [slug] for variabla URL-segment |
+
+### Kom ihag
+- Next.js ar React-ramverket for produktion
+- App Router ar den rekommenderade routern
+- Varje page.tsx blir en route
+- layout.tsx delas mellan barn-routes
+- Metadata exporteras for SEO
 """,
 }
 
@@ -205,7 +234,7 @@ REACT_NODE_14_RSC = {
     "node_id": 14,
     "title": "React Server Components",
     "slug": "server-components",
-    "description": "Förstå Server vs Client Components",
+    "description": "Forsta Server vs Client Components",
     "difficulty": "advanced",
     "estimated_minutes": 75,
     "xp_reward": 120,
@@ -216,42 +245,60 @@ REACT_NODE_14_RSC = {
     "content": """
 # React Server Components
 
-> *"Server Components let you render components on the server - no JavaScript sent to the client."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar Server Components?
 
-## 🎯 Why This Matters
+Server Components lat dig rendera komponenter pa servern utan att skicka JavaScript till klienten.
 
-Server Components är en paradigmskift - de reducerar JavaScript-bundle drastiskt och gör data fetching enklare.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🧠 Server vs Client Components
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Bundle Size | Drastiskt mindre JS att ladda - snabbare sidor |
+| Server Load | Mer rendering pa server, planera kapacitet |
+| Caching | RSC kan cachas effektivt pa CDN |
+| Monitoring | Behover overvaka bade server och client metrics |
+| Deployment | Kraver Node.js runtime, inte statiskt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Server vs Client Components
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │              SERVER vs CLIENT COMPONENTS                         │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  SERVER COMPONENTS (default)      CLIENT COMPONENTS ('use client')│
-│  ──────────────────────          ──────────────────────────────│
-│  • Körs på servern               • Körs i browsern              │
-│  • Ingen JS till client          • JS skickas till client       │
-│  • Kan fetcha data direkt        • Använder hooks (useState)    │
-│  • Kan accessa backend direkt    • Hanterar interaktivitet      │
-│  • Snabbare initial load         • Event handlers               │
-│  • Bättre SEO                    • Browser APIs                 │
-│                                                                  │
-│  ✅ Använd för:                  ✅ Använd för:                 │
-│  • Statiskt content              • Interaktiva formulär         │
-│  • Data fetching                 • useState, useEffect          │
-│  • Markdown rendering            • onClick, onChange            │
-│  • Databas-queries               • Animations                   │
+│  SERVER COMPONENTS (default)      CLIENT COMPONENTS              │
+│  ──────────────────────          ──────────────────────────────  │
+│  - Kors pa servern                - Kors i browsern              │
+│  - Ingen JS till client           - JS skickas till client       │
+│  - Kan fetcha data direkt         - Anvander hooks (useState)    │
+│  - Kan accessa backend direkt     - Hanterar interaktivitet      │
+│  - Snabbare initial load          - Event handlers               │
+│  - Battre SEO                     - Browser APIs                 │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Server Component (Default)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Typ | Direktiv | Anvandning |
+|-----|----------|------------|
+| Server Component | (default) | Data fetching, statiskt innehall |
+| Client Component | 'use client' | Hooks, events, interaktivitet |
+| Async Component | async function | Direkt await i komponenten |
+| Suspense | `<Suspense>` | Loading states for streaming |
+| Mixed | Kombinera | Server wrapper med Client children |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Server Component Exempel
 
 ```tsx
 // src/app/users/page.tsx
@@ -259,13 +306,13 @@ Server Components är en paradigmskift - de reducerar JavaScript-bundle drastisk
 
 async function getUsers() {
   const res = await fetch('https://api.example.com/users', {
-    cache: 'no-store' // eller 'force-cache'
+    cache: 'no-store'
   });
   return res.json();
 }
 
 export default async function UsersPage() {
-  const users = await getUsers();  // Direkt async!
+  const users = await getUsers();  // Direkt async
 
   return (
     <div>
@@ -280,16 +327,18 @@ export default async function UsersPage() {
 }
 ```
 
-### Client Component
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Client Component Exempel
 
 ```tsx
 // src/components/Counter.tsx
-'use client';  // ← Gör detta till Client Component
+'use client';
 
 import { useState } from 'react';
 
 export function Counter() {
-  const [count, setCount] = useState(0);  // hooks fungerar här
+  const [count, setCount] = useState(0);
 
   return (
     <div>
@@ -302,14 +351,15 @@ export function Counter() {
 }
 ```
 
-### Combining Server + Client
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Kombinera Server + Client
 
 ```tsx
 // src/app/dashboard/page.tsx (Server Component)
 import { Counter } from '@/components/Counter';
 
 async function getData() {
-  // Server-side fetch
   return fetch('/api/stats').then(r => r.json());
 }
 
@@ -319,22 +369,22 @@ export default async function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Total users: {stats.users}</p>  {/* Server rendered */}
-      <Counter />  {/* Client Component för interaktivitet */}
+      <p>Total users: {stats.users}</p>
+      <Counter />  {/* Client Component */}
     </div>
   );
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Streaming with Suspense
+## Streaming med Suspense
 
 ```tsx
 import { Suspense } from 'react';
 
 async function SlowComponent() {
-  const data = await slowFetch();  // Tar 3 sekunder
+  const data = await slowFetch();
   return <div>{data}</div>;
 }
 
@@ -342,42 +392,43 @@ export default function Page() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <Suspense fallback={<p>Loading stats...</p>}>
-        <SlowComponent />  {/* Streamas när redo */}
+      <Suspense fallback={<p>Laddar...</p>}>
+        <SlowComponent />
       </Suspense>
     </div>
   );
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Vanliga fel och losningar
 
-```tsx
-// ❌ FEL: useState i Server Component
-export default function Page() {
-  const [count, setCount] = useState(0);  // ERROR!
-  return <div>{count}</div>;
-}
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| useState i Server Component | Hooks fungerar inte pa server | Lagg till 'use client' |
+| async i Client Component | Client components kan inte vara async | Flytta data fetching till server |
+| Importing Client in Server | Fungerar - men hela tradet blir client | Var specifik med 'use client' |
+| Hydration mismatch | Server/client renderar olika | Anvand useEffect for client-only kod |
 
-// ✅ RÄTT: Markera som Client Component
-'use client';
-export default function Page() {
-  const [count, setCount] = useState(0);  // OK!
-  return <div>{count}</div>;
-}
-```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Key Takeaways
 
-## ✅ Sammanfattning
+| Koncept | Beskrivning |
+|---------|-------------|
+| Server Components | Default i App Router - ingen JS till client |
+| Client Components | 'use client' for hooks och interaktivitet |
+| Async Components | Fetcha data direkt med await |
+| Suspense | Streaming och loading states |
+| Kombinera | Server for data, Client for interaktion |
 
-- **Server Components** (default) - körs på servern, ingen JS till client
-- **Client Components** (`'use client'`) - för interaktivitet och hooks
-- **Async components** - fetcha data direkt i komponenten
-- **Suspense** - streaming och loading states
-- **Kombinera** server och client där det passar bäst
+### Kom ihag
+- Server Components ar default i Next.js 13+
+- Lagg till 'use client' endast nar du behover hooks
+- Haller JavaScript-bundle minimal
+- Suspense mojliggor progressiv rendering
+- Kombinera bada for optimal prestanda
 """,
 }
 
@@ -390,7 +441,7 @@ REACT_NODE_15_DATA_FETCHING = {
     "node_id": 15,
     "title": "Data Fetching in Next.js",
     "slug": "nextjs-data-fetching",
-    "description": "Olika sätt att hämta data i Next.js",
+    "description": "Olika satt att hamta data i Next.js",
     "difficulty": "intermediate",
     "estimated_minutes": 60,
     "xp_reward": 100,
@@ -401,20 +452,41 @@ REACT_NODE_15_DATA_FETCHING = {
     "content": """
 # Data Fetching in Next.js
 
-> *"Next.js extends fetch with caching and revalidation superpowers."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar Data Fetching i Next.js?
 
-## 🎯 Why This Matters
+Next.js utvidgar fetch med kraftfulla caching- och revalideringsfunktioner.
 
-Rätt data-fetching strategi påverkar prestanda, SEO, och användarupplevelse dramatiskt.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Varfor viktigt for DevOps?
 
-## 🧠 Fetching in Server Components
+| Aspekt | Beskrivning |
+|--------|-------------|
+| Caching | Minskar API-anrop och serverbelastning |
+| ISR | Incremental Static Regeneration - balans mellan statiskt och dynamiskt |
+| CDN | Statisk data kan distribueras globalt |
+| Monitoring | Spara latency och cache hit rates |
+| Kostnader | Ratt strategi minskar infrastrukturkostnader |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Strategi | Cache Option | Anvandning |
+|----------|--------------|------------|
+| Static | `cache: 'force-cache'` | Data som aldrig andras |
+| Dynamic | `cache: 'no-store'` | Alltid farsk data |
+| ISR | `next: { revalidate: 60 }` | Revalidera efter N sekunder |
+| On-demand | `revalidatePath()` | Manuell revalidering |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Fetching i Server Components
 
 ```tsx
-// Static Data (cached forever)
+// Static Data (cachad for alltid)
 async function getStaticData() {
   const res = await fetch('https://api.example.com/posts', {
     cache: 'force-cache'  // Default - statiskt
@@ -465,6 +537,12 @@ export default async function UsersPage() {
 
 Mutate data utan API routes:
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Server Actions
+
+Mutera data utan API routes:
+
 ```tsx
 // src/app/actions.ts
 'use server';
@@ -480,7 +558,7 @@ export async function createPost(formData: FormData) {
     data: { title, content }
   });
 
-  revalidatePath('/posts');  // Uppdatera cache
+  revalidatePath('/posts');
 }
 
 // src/app/posts/new/page.tsx
@@ -489,15 +567,17 @@ import { createPost } from '../actions';
 export default function NewPostPage() {
   return (
     <form action={createPost}>
-      <input name="title" placeholder="Title" required />
-      <textarea name="content" placeholder="Content" required />
-      <button type="submit">Create Post</button>
+      <input name="title" placeholder="Titel" required />
+      <textarea name="content" placeholder="Innehall" required />
+      <button type="submit">Skapa Post</button>
     </form>
   );
 }
 ```
 
-### Server Action with useFormState
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useFormState for Feedback
 
 ```tsx
 'use client';
@@ -509,7 +589,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <button type="submit" disabled={pending}>
-      {pending ? 'Creating...' : 'Create Post'}
+      {pending ? 'Skapar...' : 'Skapa Post'}
     </button>
   );
 }
@@ -528,14 +608,14 @@ export default function NewPostForm() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Loading & Error States
+## Loading och Error States
 
 ```tsx
 // src/app/posts/loading.tsx
 export default function Loading() {
-  return <div>Loading posts...</div>;
+  return <div>Laddar inlagg...</div>;
 }
 
 // src/app/posts/error.tsx
@@ -550,23 +630,43 @@ export default function Error({
 }) {
   return (
     <div>
-      <h2>Something went wrong!</h2>
+      <h2>Nagot gick fel!</h2>
       <p>{error.message}</p>
-      <button onClick={reset}>Try again</button>
+      <button onClick={reset}>Forsok igen</button>
     </div>
   );
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Vanliga fel och losningar
 
-- **cache: 'force-cache'** - statisk data (default)
-- **cache: 'no-store'** - dynamisk data
-- **next: { revalidate: N }** - ISR (Incremental Static Regeneration)
-- **Server Actions** - mutate data utan API routes
-- **loading.tsx/error.tsx** - automatiska loading/error states
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Stale data efter mutation | Glom revalidatePath | Lagg till revalidatePath('/path') |
+| Cache uppdateras inte | Fel cache-strategi | Anvand no-store for dynamisk data |
+| Server Action fungerar inte | Saknar 'use server' | Lagg till 'use server' i filen |
+| Form submittar ej | action ar inte async | Kontrollera Server Action signaturen |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| force-cache | Statisk data, cachad permanent |
+| no-store | Dynamisk data, hamtas varje gang |
+| revalidate | ISR - uppdateras efter N sekunder |
+| Server Actions | Mutera data utan API routes |
+| loading.tsx | Automatisk loading UI |
+
+### Kom ihag
+- Valj caching-strategi baserat pa data-behov
+- ISR ar bra for innehall som uppdateras sallsynt
+- Server Actions forenklar data mutations
+- loading.tsx och error.tsx ger automatiska UI states
+- revalidatePath() for manuell cache-invalidering
 """,
 }
 
@@ -590,11 +690,40 @@ REACT_NODE_16_ROUTING = {
     "content": """
 # Routing & Navigation
 
-> *"Next.js routing is file-system based - your folders define your URLs."*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## Vad ar Routing i Next.js?
 
-## 🎯 File-based Routing Deep Dive
+Next.js routing ar filsystemsbaserat - dina mappar definierar dina URL:er.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Varfor viktigt for DevOps?
+
+| Aspekt | Beskrivning |
+|--------|-------------|
+| URL Design | Rena URLs forbattrar SEO och anvandbarhet |
+| Auth | Middleware skyddar routes pa edge |
+| Performance | Link prefetchar for snabb navigation |
+| Redirects | Hanteras i middleware eller config |
+| A/B Testing | Middleware mojliggor route-baserad testing |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Snabbreferens
+
+| Pattern | Syntax | Exempel URL |
+|---------|--------|-------------|
+| Static | `page.tsx` | /about |
+| Dynamic | `[slug]` | /blog/hello-world |
+| Catch-all | `[...slug]` | /docs/a/b/c |
+| Optional | `[[...slug]]` | / eller /a/b |
+| Group | `(group)` | (paverkar inte URL) |
+| Parallel | `@modal` | Renderas parallellt |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Routing Conventions
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -614,7 +743,9 @@ REACT_NODE_16_ROUTING = {
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Dynamic Routes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Dynamiska Routes
 
 ```tsx
 // app/blog/[slug]/page.tsx
@@ -626,14 +757,16 @@ export default function BlogPost({ params }: Props) {
   return <h1>Post: {params.slug}</h1>;
 }
 
-// Generate static params för SSG
+// Generate static params for SSG
 export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map(post => ({ slug: post.slug }));
 }
 ```
 
-### Catch-all Routes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Catch-all Routes
 
 ```tsx
 // app/docs/[...slug]/page.tsx
@@ -642,18 +775,16 @@ interface Props {
 }
 
 export default function DocsPage({ params }: Props) {
-  // /docs/getting-started → slug = ['getting-started']
-  // /docs/api/users → slug = ['api', 'users']
+  // /docs/getting-started -> slug = ['getting-started']
+  // /docs/api/users -> slug = ['api', 'users']
 
   return <h1>Docs: {params.slug.join('/')}</h1>;
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Navigation
-
-### Link Component
+## Navigation med Link
 
 ```tsx
 import Link from 'next/link';
@@ -661,25 +792,27 @@ import Link from 'next/link';
 export function Navigation() {
   return (
     <nav>
-      <Link href="/">Home</Link>
-      <Link href="/about">About</Link>
-      <Link href="/blog/hello-world">Blog Post</Link>
+      <Link href="/">Hem</Link>
+      <Link href="/about">Om oss</Link>
+      <Link href="/blog/hello-world">Blogginlagg</Link>
 
-      {/* Prefetch disabled */}
+      {/* Prefetch avstangd */}
       <Link href="/heavy-page" prefetch={false}>
-        Heavy Page
+        Tung Sida
       </Link>
 
-      {/* Replace history */}
+      {/* Ersatt historik */}
       <Link href="/new-page" replace>
-        Replace Current
+        Ersatt Nuvarande
       </Link>
     </nav>
   );
 }
 ```
 
-### useRouter (Client Components)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## useRouter (Client Components)
 
 ```tsx
 'use client';
@@ -706,7 +839,9 @@ export function SearchForm() {
 }
 ```
 
-### redirect (Server)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Server Redirect
 
 ```tsx
 import { redirect } from 'next/navigation';
@@ -715,16 +850,16 @@ export default async function ProtectedPage() {
   const session = await getSession();
 
   if (!session) {
-    redirect('/login');  // Server-side redirect
+    redirect('/login');
   }
 
-  return <div>Protected content</div>;
+  return <div>Skyddat innehall</div>;
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Middleware
+## Middleware
 
 ```tsx
 // middleware.ts (i root)
@@ -732,36 +867,52 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Auth check
   const token = request.cookies.get('token');
 
   if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Add headers
   const response = NextResponse.next();
   response.headers.set('x-custom-header', 'my-value');
 
   return response;
 }
 
-// Matcha specifika paths
 export const config = {
   matcher: ['/dashboard/:path*', '/api/:path*'],
 };
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Vanliga fel och losningar
 
-- **File-based routing** - mappar = URL-segment
-- **Dynamic routes** `[slug]` för variabla segment
-- **Catch-all** `[...slug]` för multipla segment
-- **Link** för client-side navigation med prefetching
-- **useRouter** för programmatisk navigation
-- **Middleware** för auth, redirects, headers
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Link prefetchar for mycket | Default beteende | Satt prefetch={false} |
+| useRouter i Server Component | Hook fungerar inte pa server | Anvand redirect() istallet |
+| Middleware kors inte | Fel plats eller matcher | Lagg middleware.ts i root |
+| Dynamisk route matchar inte | Fel mappstruktur | Kontrollera [slug] syntax |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Koncept | Beskrivning |
+|---------|-------------|
+| File-based | Mappar = URL-segment automatiskt |
+| [slug] | Dynamiska routes med parametrar |
+| [...slug] | Catch-all for multipla segment |
+| Link | Client-side navigation med prefetch |
+| Middleware | Edge-baserad auth och redirects |
+
+### Kom ihag
+- Filsystemet definierar URL-strukturen
+- Link-komponenten ger snabb navigation
+- useRouter for programmatisk navigation i client
+- redirect() for server-side redirects
+- Middleware kors pa edge for bast prestanda
 """,
 }
 

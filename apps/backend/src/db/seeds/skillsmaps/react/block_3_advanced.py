@@ -24,19 +24,22 @@ REACT_NODE_09_CONTEXT = {
     "content": """
 # Context API - Global State
 
-> *"Context provides a way to pass data through the component tree without having to pass props down manually at every level."*
+Context gor data tillganglig for alla komponenter i ett trad utan prop drilling.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Prop drilling blir snabbt ohållbart i stora appar. Context löser detta genom att göra data tillgänglig för alla komponenter i ett träd.
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Auth context** | Anvandarsession for hela appen |
+| **Theme context** | Dark/light mode globalt |
+| **Config context** | Miljovariabler och feature flags |
+| **Notification** | Global toast/alert system |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Core Concepts
-
-### Creating Context
+## Creating Context
 
 ```tsx
 import { createContext, useContext, useState, ReactNode } from 'react';
@@ -96,7 +99,9 @@ function App() {
 }
 ```
 
-### Auth Context (Real World Example)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Auth Context
 
 ```tsx
 interface User {
@@ -119,7 +124,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check session on mount
   useEffect(() => {
     checkAuth().then(setUser).finally(() => setIsLoading(false));
   }, []);
@@ -166,12 +170,11 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Multiple Contexts
+## Multiple Contexts
 
 ```tsx
-// Combine multiple providers
 function AppProviders({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
@@ -195,53 +198,45 @@ function App() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ⚠️ Vanliga Problem
+## Snabbreferens
 
-### Problem: Unnecessary re-renders
+| Koncept | Beskrivning |
+|---------|-------------|
+| **createContext** | Skapar context med default value |
+| **Provider** | Ger value till alla children |
+| **useContext** | Konsumerar context value |
+| **Custom hook** | useTheme, useAuth for saker consumption |
 
-```tsx
-// ❌ Alla consumers re-renderas vid varje state-ändring
-function BadProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState('light');
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  // Nytt objekt varje render = alla consumers re-renderas
-  return (
-    <AppContext.Provider value={{ user, setUser, theme, setTheme }}>
-      {children}
-    </AppContext.Provider>
-  );
-}
+## Vanliga fel och losningar
 
-// ✅ Memoize value eller splitta contexts
-function GoodProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState('light');
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Context is undefined | Saknar Provider | Wrap med Provider |
+| Alla re-renderas | Nytt value-objekt varje render | useMemo pa value |
+| Hook utanfor Provider | Komponent inte wrapped | Lagg till Provider hogre upp |
+| Default value null | Saknar check | Kasta error i custom hook |
 
-  const value = useMemo(
-    () => ({ user, setUser, theme, setTheme }),
-    [user, theme]
-  );
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
-  );
-}
-```
+## Key Takeaways
 
----
+| Punkt | Forklaring |
+|-------|------------|
+| **Eliminera prop drilling** | Data tillganglig overallt |
+| **createContext + Provider** | Trion for context |
+| **Custom hook** | Saker consumption med error handling |
+| **Splitta contexts** | Undvik onodig re-renders |
 
-## ✅ Sammanfattning
+**Kom ihag:**
 
-- **Context** eliminerar prop drilling
-- **createContext + Provider + useContext** trion
-- **Custom hook** för säker consumption
-- **Splitta contexts** för att undvika onödiga re-renders
-- **Memoize value** om context har flera värden
+- Context eliminerar prop drilling
+- createContext + Provider + useContext
+- Custom hook for saker consumption
+- Memoize value for att undvika re-renders
 """,
 }
 
@@ -265,19 +260,22 @@ REACT_NODE_10_USEREDUCER = {
     "content": """
 # useReducer - Complex State
 
-> *"useReducer is usually preferable to useState when you have complex state logic."*
+useReducer ar att foredra framfor useState nar du har komplex state-logik.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-När state-logik blir komplex (flera relaterade värden, komplexa uppdateringar), blir useReducer mer läsbart och testbart än många useState-calls.
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Form state** | Komplexa formular med manga falt |
+| **Workflow state** | Multi-step deployment wizards |
+| **Data tables** | Sorting, filtering, pagination |
+| **State machines** | Pipeline status transitions |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Core Concepts
-
-### useReducer vs useState
+## useState vs useReducer
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -286,18 +284,19 @@ När state-logik blir komplex (flera relaterade värden, komplexa uppdateringar)
 │                                                                  │
 │  useState                         useReducer                    │
 │  ────────                         ──────────                    │
-│  • Enkelt state                  • Komplex state                │
-│  • Få uppdateringar              • Många relaterade ändringar   │
-│  • Inline logic OK               • Logic bör vara testbar       │
-│  • Enskilda värden               • State machine patterns       │
+│  Enkelt state                     Komplex state                 │
+│  Fa uppdateringar                 Manga relaterade andringar    │
+│  Inline logic OK                  Logic bor vara testbar        │
+│  Enskilda varden                  State machine patterns        │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Basic useReducer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Basic useReducer
 
 ```tsx
-// Types
 interface State {
   count: number;
   step: number;
@@ -351,7 +350,9 @@ function Counter() {
 }
 ```
 
-### Todo App with useReducer
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Todo App med useReducer
 
 ```tsx
 interface Todo {
@@ -369,8 +370,7 @@ type TodoAction =
   | { type: 'ADD_TODO'; payload: string }
   | { type: 'TOGGLE_TODO'; payload: string }
   | { type: 'DELETE_TODO'; payload: string }
-  | { type: 'SET_FILTER'; payload: TodoState['filter'] }
-  | { type: 'CLEAR_COMPLETED' };
+  | { type: 'SET_FILTER'; payload: TodoState['filter'] };
 
 function todoReducer(state: TodoState, action: TodoAction): TodoState {
   switch (action.type) {
@@ -402,58 +402,17 @@ function todoReducer(state: TodoState, action: TodoAction): TodoState {
     case 'SET_FILTER':
       return { ...state, filter: action.payload };
 
-    case 'CLEAR_COMPLETED':
-      return {
-        ...state,
-        todos: state.todos.filter(todo => !todo.completed)
-      };
-
     default:
       return state;
   }
 }
-
-function TodoApp() {
-  const [state, dispatch] = useReducer(todoReducer, {
-    todos: [],
-    filter: 'all'
-  });
-
-  const filteredTodos = state.todos.filter(todo => {
-    if (state.filter === 'active') return !todo.completed;
-    if (state.filter === 'completed') return todo.completed;
-    return true;
-  });
-
-  return (
-    <div>
-      <AddTodoForm onAdd={(text) => dispatch({ type: 'ADD_TODO', payload: text })} />
-
-      <FilterButtons
-        current={state.filter}
-        onChange={(filter) => dispatch({ type: 'SET_FILTER', payload: filter })}
-      />
-
-      <TodoList
-        todos={filteredTodos}
-        onToggle={(id) => dispatch({ type: 'TOGGLE_TODO', payload: id })}
-        onDelete={(id) => dispatch({ type: 'DELETE_TODO', payload: id })}
-      />
-
-      <button onClick={() => dispatch({ type: 'CLEAR_COMPLETED' })}>
-        Clear completed
-      </button>
-    </div>
-  );
-}
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 useReducer + Context
+## useReducer + Context
 
 ```tsx
-// Global state med useReducer + Context
 const TodoContext = createContext<{
   state: TodoState;
   dispatch: React.Dispatch<TodoAction>;
@@ -475,22 +434,52 @@ function useTodos() {
   return context;
 }
 
-// Nu kan vilken komponent som helst använda
+// Nu kan vilken komponent som helst anvanda
 function DeepNestedComponent() {
   const { state, dispatch } = useTodos();
   // ...
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **useReducer** för komplex eller relaterad state
-- **Reducer** är en pure function: (state, action) => newState
-- **dispatch** skickar actions till reducern
-- **Actions** beskriver vad som hände (type + payload)
-- **Kombinera med Context** för global state
+| Koncept | Beskrivning |
+|---------|-------------|
+| **Reducer** | Pure function: (state, action) => newState |
+| **Action** | Objekt med type och optional payload |
+| **dispatch** | Funktion som skickar action till reducer |
+| **Initial state** | Startvardet for state |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| State muteras | Direkt mutation i reducer | Returnera alltid nytt objekt |
+| Action ignoreras | Saknar case i switch | Lagg till case eller default |
+| Undefined state | Fel initial state | Kontrollera initial value |
+| Type error | Fel action type | Anvand TypeScript discriminated unions |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Komplex state** | useReducer for relaterade state-andringar |
+| **Pure reducer** | (state, action) => newState utan side effects |
+| **dispatch** | Skickar actions till reducern |
+| **Context combo** | useReducer + Context for global state |
+
+**Kom ihag:**
+
+- useReducer for komplex eller relaterad state
+- Reducer ar en pure function
+- dispatch skickar actions till reducern
+- Kombinera med Context for global state
 """,
 }
 
@@ -514,24 +503,27 @@ REACT_NODE_11_PERFORMANCE = {
     "content": """
 # Performance Optimization
 
-> *"Premature optimization is the root of all evil. But when you need it, know your tools."*
+React ar snabbt som default, men vid skala behovs forstaelse for memoization och optimering.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-React är snabbt som default, men vid skala behöver du förstå hur du undviker onödiga re-renders och optimerar tunga beräkningar.
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Stora listor** | Loggar, metrics, events |
+| **Dashboards** | Manga widgets med olika data |
+| **Real-time** | Frekventa uppdateringar utan lag |
+| **Code splitting** | Snabbare initial load |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Core Concepts
+## React.memo
 
-### React.memo
-
-Förhindrar re-render om props inte ändrats:
+Forhindrar re-render om props inte andrats:
 
 ```tsx
-// Utan memo: re-renderas varje gång parent renderas
+// Utan memo: re-renderas varje gang parent renderas
 function ExpensiveList({ items }: { items: Item[] }) {
   console.log('ExpensiveList rendered');
   return (
@@ -541,7 +533,7 @@ function ExpensiveList({ items }: { items: Item[] }) {
   );
 }
 
-// Med memo: re-renderas bara om items ändras
+// Med memo: re-renderas bara om items andras
 const MemoizedList = React.memo(function ExpensiveList({ items }: { items: Item[] }) {
   console.log('MemoizedList rendered');
   return (
@@ -553,23 +545,24 @@ const MemoizedList = React.memo(function ExpensiveList({ items }: { items: Item[
 
 // Custom comparison
 const MemoizedWithCompare = React.memo(ExpensiveList, (prevProps, nextProps) => {
-  // Return true om props är "lika" (skip re-render)
   return prevProps.items.length === nextProps.items.length;
 });
 ```
 
-### useMemo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Cacha dyra beräkningar:
+## useMemo
+
+Cacha dyra berakningar:
 
 ```tsx
 function Dashboard({ users, filter }: { users: User[]; filter: string }) {
-  // ❌ Beräknas varje render
+  // FEL: Beraknas varje render
   const filteredUsers = users.filter(u =>
     u.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  // ✅ Cacha resultat, beräkna bara när dependencies ändras
+  // RATT: Cacha resultat, berakna bara nar dependencies andras
   const filteredUsers = useMemo(() => {
     console.log('Filtering users...');
     return users.filter(u =>
@@ -581,20 +574,22 @@ function Dashboard({ users, filter }: { users: User[]; filter: string }) {
 }
 ```
 
-### useCallback
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Cacha funktioner (viktigt för memo'd children):
+## useCallback
+
+Cacha funktioner (viktigt for memo'd children):
 
 ```tsx
 function Parent() {
   const [count, setCount] = useState(0);
 
-  // ❌ Ny funktion varje render → Child re-renderas
+  // FEL: Ny funktion varje render -> Child re-renderas
   const handleClick = () => {
     console.log('clicked');
   };
 
-  // ✅ Samma funktionsreferens mellan renders
+  // RATT: Samma funktionsreferens mellan renders
   const handleClick = useCallback(() => {
     console.log('clicked');
   }, []);
@@ -614,38 +609,40 @@ const MemoizedChild = React.memo(function Child({ onClick }: { onClick: () => vo
 });
 ```
 
-### När ska man använda dem?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Nar ska du anvanda dem?
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │              OPTIMIZATION DECISION TREE                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  Använd React.memo när:                                         │
-│  • Komponenten renderas ofta med samma props                    │
-│  • Komponenten är "tung" (många children, komplex render)       │
-│  • Parent re-renderas ofta av andra anledningar                 │
+│  Anvand React.memo nar:                                         │
+│  - Komponenten renderas ofta med samma props                    │
+│  - Komponenten ar tung (manga children, komplex render)         │
+│  - Parent re-renderas ofta av andra anledningar                 │
 │                                                                  │
-│  Använd useMemo när:                                            │
-│  • Beräkningen är dyr (filtering, sorting, mapping stora arr)   │
-│  • Resultatet används i dependency array för andra hooks        │
-│  • Du skapar objekt/arrayer som skickas till memo'd children    │
+│  Anvand useMemo nar:                                            │
+│  - Berakningen ar dyr (filtering, sorting stora arrayer)        │
+│  - Resultatet anvands i dependency array for andra hooks        │
+│  - Du skapar objekt/arrayer som skickas till memo'd children    │
 │                                                                  │
-│  Använd useCallback när:                                        │
-│  • Funktionen skickas till memo'd children                      │
-│  • Funktionen är dependency för useEffect                       │
+│  Anvand useCallback nar:                                        │
+│  - Funktionen skickas till memo'd children                      │
+│  - Funktionen ar dependency for useEffect                       │
 │                                                                  │
-│  ANVÄND INTE för:                                               │
-│  • Enkla komponenter                                            │
-│  • Simpla beräkningar                                           │
-│  • "Just in case" - mätning först!                              │
+│  ANVAND INTE for:                                               │
+│  - Enkla komponenter                                            │
+│  - Simpla berakningar                                           │
+│  - "Just in case" - matning forst!                              │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Code Splitting
+## Code Splitting
 
 ```tsx
 import { lazy, Suspense } from 'react';
@@ -673,15 +670,45 @@ function App() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **React.memo** - förhindrar re-render om props inte ändras
-- **useMemo** - cachar dyra beräkningar
-- **useCallback** - cachar funktioner
-- **Mät först** med React DevTools Profiler
-- **Lazy/Suspense** för code splitting
+| Verktyg | Anvandning |
+|---------|------------|
+| **React.memo** | Forhindra re-render om props inte andras |
+| **useMemo** | Cacha dyra berakningar |
+| **useCallback** | Cacha funktioner |
+| **lazy/Suspense** | Code splitting |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Memo hjalper inte | Ny funktion/objekt som prop | Anvand useCallback/useMemo |
+| Over-optimization | Memoize allt | Mat forst med Profiler |
+| Stale data | Tom dependency array | Lagg till alla dependencies |
+| Ingen effekt | Prop andras faktiskt | Kontrollera vad som andras |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **React.memo** | Wrap komponenter som far samma props ofta |
+| **useMemo** | Cacha dyra berakningar |
+| **useCallback** | Cacha funktioner for memo'd children |
+| **Mat forst** | Anvand React DevTools Profiler |
+
+**Kom ihag:**
+
+- React.memo forhindrar re-render om props inte andras
+- useMemo cachar dyra berakningar
+- useCallback cachar funktioner
+- Mat forst med React DevTools Profiler
 """,
 }
 
@@ -694,7 +721,7 @@ REACT_NODE_12_PATTERNS = {
     "node_id": 12,
     "title": "Advanced Patterns",
     "slug": "advanced-patterns",
-    "description": "Kraftfulla React-patterns för skalbarhet",
+    "description": "Kraftfulla React-patterns for skalbarhet",
     "difficulty": "advanced",
     "estimated_minutes": 75,
     "xp_reward": 120,
@@ -705,22 +732,27 @@ REACT_NODE_12_PATTERNS = {
     "content": """
 # Advanced Patterns
 
-> *"Patterns are proven solutions to recurring problems."*
+Dessa patterns loser vanliga problem i storre React-appar och gor din kod mer flexibel.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🎯 Why This Matters
+## Varfor viktigt for DevOps?
 
-Dessa patterns löser vanliga problem i större React-appar och gör din kod mer flexibel och återanvändbar.
+| Aspekt | Betydelse |
+|--------|-----------|
+| **Compound Components** | Flexibla UI-komponenter for dashboards |
+| **Render Props** | Delbar logik for data fetching |
+| **HOC** | Ateranvandbar auth/permission logic |
+| **Portals** | Modals, tooltips, notifications |
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 🧠 Compound Components
+## Compound Components
 
 Komponenter som arbetar tillsammans med implicit state-delning:
 
 ```tsx
-// Användning (slutresultat)
+// Anvandning
 <Tabs defaultValue="tab1">
   <Tabs.List>
     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
@@ -773,48 +805,9 @@ Tabs.Content = function TabsContent({ value, children }: { value: string; childr
 };
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Render Props
-
-Dela logik via en funktion som prop:
-
-```tsx
-interface MousePosition {
-  x: number;
-  y: number;
-}
-
-interface MouseTrackerProps {
-  render: (position: MousePosition) => ReactNode;
-}
-
-function MouseTracker({ render }: MouseTrackerProps) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, []);
-
-  return <>{render(position)}</>;
-}
-
-// Användning
-<MouseTracker
-  render={({ x, y }) => (
-    <div>Mouse: {x}, {y}</div>
-  )}
-/>
-```
-
----
-
-## 💻 Higher-Order Components (HOC)
+## Higher-Order Components (HOC)
 
 Funktion som tar en komponent och returnerar en ny:
 
@@ -832,7 +825,7 @@ function withAuth<P extends object>(
   };
 }
 
-// Användning
+// Anvandning
 const ProtectedDashboard = withAuth(Dashboard);
 
 function App() {
@@ -840,11 +833,11 @@ function App() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 💻 Portals
+## Portals
 
-Rendera utanför parent DOM-hierarkin:
+Rendera utanfor parent DOM-hierarkin:
 
 ```tsx
 import { createPortal } from 'react-dom';
@@ -853,7 +846,7 @@ function Modal({ children, onClose }: { children: ReactNode; onClose: () => void
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose}>×</button>
+        <button onClick={onClose}>x</button>
         {children}
       </div>
     </div>,
@@ -861,7 +854,7 @@ function Modal({ children, onClose }: { children: ReactNode; onClose: () => void
   );
 }
 
-// Användning
+// Anvandning
 function App() {
   const [showModal, setShowModal] = useState(false);
 
@@ -878,14 +871,45 @@ function App() {
 }
 ```
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ✅ Sammanfattning
+## Snabbreferens
 
-- **Compound Components** - flexibel API med implicit state
-- **Render Props** - dela logik via render function
-- **HOC** - återanvändbar komponent-logik (legacy, föredra hooks)
-- **Portals** - rendera utanför DOM-hierarkin
+| Pattern | Anvandning |
+|---------|------------|
+| **Compound Components** | Flexibel API med implicit state |
+| **HOC** | Ateranvandbar komponent-logik |
+| **Render Props** | Dela logik via render function |
+| **Portals** | Rendera utanfor DOM-hierarkin |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Vanliga fel och losningar
+
+| Fel | Orsak | Losning |
+|-----|-------|---------|
+| Context undefined | Komponent utanfor Provider | Wrap med Provider |
+| HOC namn saknas | displayName inte satt | Lagg till displayName |
+| Portal renderas inte | modal-root saknas | Lagg till div i HTML |
+| Render prop re-renders | Inline function | useCallback eller flytta ut |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Key Takeaways
+
+| Punkt | Forklaring |
+|-------|------------|
+| **Compound Components** | Flexibel API med implicit state |
+| **HOC** | Legacy pattern, foredra hooks |
+| **Portals** | Modals, tooltips utanfor parent |
+| **Render Props** | Dela logik, delvis ersatt av hooks |
+
+**Kom ihag:**
+
+- Compound Components for flexibel API med implicit state
+- HOC for ateranvandbar komponent-logik (legacy)
+- Portals for att rendera utanfor DOM-hierarkin
+- Render Props delvis ersatt av custom hooks
 """,
 }
 
