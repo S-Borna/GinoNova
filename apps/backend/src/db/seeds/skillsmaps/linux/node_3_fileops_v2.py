@@ -39,16 +39,16 @@ LINUX_NODE_3_FILEOPS_V2 = {
                         "title": "Hard Links vs Soft Links",
                         "explanation": "Hard link = samma inode, fil överlever om original tas bort. Soft link (symlink) = pekare till path, går sönder om original försvinner.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ HARD LINK                                   │
-│ file1.txt ──┐                               │
-│             ├──→ [inode 12345] → data      │
-│ file2.txt ──┘                               │
-├─────────────────────────────────────────────┤
-│ SOFT LINK (symlink)                         │
-│ link.txt ──→ "path/to/original.txt"        │
-│ (om original tas bort = broken link)        │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| HARD LINK                                   |
+| file1.txt --+                               |
+|             +---> [inode 12345] -> data      |
+| file2.txt --+                               |
++---------------------------------------------+
+| SOFT LINK (symlink)                         |
+| link.txt ---> "path/to/original.txt"        |
+| (om original tas bort = broken link)        |
++---------------------------------------------+""",
                         "pro_tip": "Soft links fungerar över filsystem, hard links gör inte det.",
                         "common_mistake": "Att ta bort original-filen och undra varför symlinken är bruten."
                     },
@@ -56,15 +56,15 @@ LINUX_NODE_3_FILEOPS_V2 = {
                         "title": "cp och mv flaggor",
                         "explanation": "-r (recursive), -p (preserve permissions), -i (interactive/bekräfta), -f (force), -v (verbose).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ FLAG │ BETYDELSE                            │
-├─────────────────────────────────────────────┤
-│ -r   │ Recursive (för kataloger)           │
-│ -p   │ Preserve permissions/timestamps     │
-│ -i   │ Fråga innan överskrivning           │
-│ -f   │ Force (ingen bekräftelse)           │
-│ -v   │ Verbose (visa vad som händer)       │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| FLAG | BETYDELSE                            |
++---------------------------------------------+
+| -r   | Recursive (för kataloger)           |
+| -p   | Preserve permissions/timestamps     |
+| -i   | Fråga innan överskrivning           |
+| -f   | Force (ingen bekräftelse)           |
+| -v   | Verbose (visa vad som händer)       |
++---------------------------------------------+""",
                         "pro_tip": "Använd alltid -i med rm tills du är 100% säker.",
                         "common_mistake": "rm -rf / utan att tänka. Många har förlorat hela system."
                     }
@@ -148,7 +148,7 @@ LINUX_NODE_3_FILEOPS_V2 = {
                 "requirements": [
                     "Skapa struktur: /app/releases/v1.0, v2.0, v3.0",
                     "Kopiera sample app till v3.0",
-                    "Skapa symlink /app/current → /app/releases/v3.0",
+                    "Skapa symlink /app/current -> /app/releases/v3.0",
                     "Ta bort gamla releases (v1.0) säkert"
                 ],
                 "hints": [

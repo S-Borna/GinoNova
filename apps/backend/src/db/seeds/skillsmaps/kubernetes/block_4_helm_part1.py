@@ -23,77 +23,77 @@ Helm är "apt/yum för Kubernetes". Det gör det enkelt att paketera, distribuer
 ### Varför Helm?
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      UTAN HELM VS MED HELM                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  UTAN HELM (kubectl apply)                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Problem:                                                        │   │
-│  │  • Manuell hantering av 10+ YAML-filer per app                  │   │
-│  │  • Copy-paste för varje miljö (dev/staging/prod)                │   │
-│  │  • Ingen versionering                                           │   │
-│  │  • Svårt att rollback                                           │   │
-│  │  • Ingen dependency management                                   │   │
-│  │                                                                  │   │
-│  │  deployment.yaml    service.yaml    configmap.yaml               │   │
-│  │  secret.yaml        ingress.yaml    pdb.yaml                    │   │
-│  │  hpa.yaml           serviceaccount.yaml   networkpolicy.yaml    │   │
-│  │       │                  │                      │                │   │
-│  │       └──────────────────┼──────────────────────┘                │   │
-│  │                          │                                       │   │
-│  │                    kubectl apply -f .                            │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  MED HELM                                                                │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Fördelar:                                                       │   │
-│  │  • En command för hela applikationen                            │   │
-│  │  • Versionering och rollback                                    │   │
-│  │  • Templating för olika miljöer                                 │   │
-│  │  • Dependency management                                         │   │
-│  │  • Release management                                           │   │
-│  │                                                                  │   │
-│  │  ┌────────────────────────────────────────────────────────┐     │   │
-│  │  │            myapp-chart (v1.2.3)                        │     │   │
-│  │  │   templates/     +     values.yaml    →  K8s Resources │     │   │
-│  │  └────────────────────────────────────────────────────────┘     │   │
-│  │                          │                                       │   │
-│  │                   helm install myapp ./myapp-chart               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      UTAN HELM VS MED HELM                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  UTAN HELM (kubectl apply)                                               |
+|  +-----------------------------------------------------------------+   |
+|  |  Problem:                                                        |   |
+|  |  • Manuell hantering av 10+ YAML-filer per app                  |   |
+|  |  • Copy-paste för varje miljö (dev/staging/prod)                |   |
+|  |  • Ingen versionering                                           |   |
+|  |  • Svårt att rollback                                           |   |
+|  |  • Ingen dependency management                                   |   |
+|  |                                                                  |   |
+|  |  deployment.yaml    service.yaml    configmap.yaml               |   |
+|  |  secret.yaml        ingress.yaml    pdb.yaml                    |   |
+|  |  hpa.yaml           serviceaccount.yaml   networkpolicy.yaml    |   |
+|  |       |                  |                      |                |   |
+|  |       +------------------+----------------------+                |   |
+|  |                          |                                       |   |
+|  |                    kubectl apply -f .                            |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  MED HELM                                                                |
+|  +-----------------------------------------------------------------+   |
+|  |  Fördelar:                                                       |   |
+|  |  • En command för hela applikationen                            |   |
+|  |  • Versionering och rollback                                    |   |
+|  |  • Templating för olika miljöer                                 |   |
+|  |  • Dependency management                                         |   |
+|  |  • Release management                                           |   |
+|  |                                                                  |   |
+|  |  +--------------------------------------------------------+     |   |
+|  |  |            myapp-chart (v1.2.3)                        |     |   |
+|  |  |   templates/     +     values.yaml    ->  K8s Resources |     |   |
+|  |  +--------------------------------------------------------+     |   |
+|  |                          |                                       |   |
+|  |                   helm install myapp ./myapp-chart               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Helm Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      HELM ARCHITECTURE                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                        HELM CLIENT                               │   │
-│  │                    (Lokalt på din maskin)                        │   │
-│  └───────────────────────────┬─────────────────────────────────────┘   │
-│                              │                                          │
-│                              │ 1. helm install/upgrade                  │
-│                              │                                          │
-│  ┌───────────────────────────▼─────────────────────────────────────┐   │
-│  │                      KUBERNETES API                              │   │
-│  └───────────────────────────┬─────────────────────────────────────┘   │
-│                              │                                          │
-│         ┌────────────────────┼────────────────────┐                    │
-│         │                    │                    │                     │
-│         ▼                    ▼                    ▼                     │
-│  ┌────────────┐      ┌────────────┐      ┌────────────┐               │
-│  │ Deployment │      │  Service   │      │ ConfigMap  │               │
-│  └────────────┘      └────────────┘      └────────────┘               │
-│                                                                          │
-│  RELEASE STATE: Lagras som Secrets i kubernetes                         │
-│  (helm-release-v1.myapp.v1, helm-release-v1.myapp.v2, ...)             │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      HELM ARCHITECTURE                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +-----------------------------------------------------------------+   |
+|  |                        HELM CLIENT                               |   |
+|  |                    (Lokalt på din maskin)                        |   |
+|  +---------------------------+-------------------------------------+   |
+|                              |                                          |
+|                              | 1. helm install/upgrade                  |
+|                              |                                          |
+|  +---------------------------▼-------------------------------------+   |
+|  |                      KUBERNETES API                              |   |
+|  +---------------------------+-------------------------------------+   |
+|                              |                                          |
+|         +--------------------+--------------------+                    |
+|         |                    |                    |                     |
+|         ▼                    ▼                    ▼                     |
+|  +------------+      +------------+      +------------+               |
+|  | Deployment |      |  Service   |      | ConfigMap  |               |
+|  +------------+      +------------+      +------------+               |
+|                                                                          |
+|  RELEASE STATE: Lagras som Secrets i kubernetes                         |
+|  (helm-release-v1.myapp.v1, helm-release-v1.myapp.v2, ...)             |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Installation & Setup
@@ -252,63 +252,63 @@ helm install my-nginx bitnami/nginx --dry-run --debug
 ## 6. Values Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      VALUES HIERARCHY (Prioritet)                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  HÖGST PRIORITET                                                         │
-│       ▲                                                                  │
-│       │  4. --set flag                                                   │
-│       │     helm install ... --set replicaCount=5                       │
-│       │                                                                  │
-│       │  3. --set-file flag                                             │
-│       │     helm install ... --set-file ca.crt=./ca.crt                 │
-│       │                                                                  │
-│       │  2. -f (values file)                                            │
-│       │     helm install ... -f prod-values.yaml -f secrets.yaml        │
-│       │     (senare filer har högre prioritet)                          │
-│       │                                                                  │
-│       │  1. Chart default values.yaml                                   │
-│       ▼     (inbyggda i chart)                                          │
-│  LÄGST PRIORITET                                                         │
-│                                                                          │
-│  EXEMPEL:                                                                │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  chart/values.yaml:        replicaCount: 1                              │
-│  prod-values.yaml:         replicaCount: 3                              │
-│  --set replicaCount=5:     replicaCount: 5  ← VINNARE                  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      VALUES HIERARCHY (Prioritet)                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  HÖGST PRIORITET                                                         |
+|       ▲                                                                  |
+|       |  4. --set flag                                                   |
+|       |     helm install ... --set replicaCount=5                       |
+|       |                                                                  |
+|       |  3. --set-file flag                                             |
+|       |     helm install ... --set-file ca.crt=./ca.crt                 |
+|       |                                                                  |
+|       |  2. -f (values file)                                            |
+|       |     helm install ... -f prod-values.yaml -f secrets.yaml        |
+|       |     (senare filer har högre prioritet)                          |
+|       |                                                                  |
+|       |  1. Chart default values.yaml                                   |
+|       ▼     (inbyggda i chart)                                          |
+|  LÄGST PRIORITET                                                         |
+|                                                                          |
+|  EXEMPEL:                                                                |
+|  ---------------------------------------------------------------------  |
+|  chart/values.yaml:        replicaCount: 1                              |
+|  prod-values.yaml:         replicaCount: 3                              |
+|  --set replicaCount=5:     replicaCount: 5  <- VINNARE                  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      HELM BEST PRACTICES                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Version Control                                                      │
-│     □ Versionshantera values-filer (Git)                               │
-│     □ Använd semantic versioning för charts                            │
-│     □ Dokumentera ändringar i CHANGELOG                                │
-│                                                                          │
-│  ✅ Environment Separation                                              │
-│     □ Separata values-filer per miljö                                  │
-│     □ values-dev.yaml, values-staging.yaml, values-prod.yaml           │
-│     □ Secrets hanteras separat (Sealed Secrets, Vault)                 │
-│                                                                          │
-│  ✅ Release Naming                                                      │
-│     □ Konsistent naming convention                                     │
-│     □ Inkludera miljö: myapp-prod, myapp-staging                       │
-│     □ Använd --generate-name sparsamt                                  │
-│                                                                          │
-│  ✅ Testing                                                             │
-│     □ Alltid dry-run före install/upgrade                              │
-│     □ helm lint för chart validation                                   │
-│     □ helm test för release testing                                    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      HELM BEST PRACTICES                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Version Control                                                      |
+|     □ Versionshantera values-filer (Git)                               |
+|     □ Använd semantic versioning för charts                            |
+|     □ Dokumentera ändringar i CHANGELOG                                |
+|                                                                          |
+|  ✅ Environment Separation                                              |
+|     □ Separata values-filer per miljö                                  |
+|     □ values-dev.yaml, values-staging.yaml, values-prod.yaml           |
+|     □ Secrets hanteras separat (Sealed Secrets, Vault)                 |
+|                                                                          |
+|  ✅ Release Naming                                                      |
+|     □ Konsistent naming convention                                     |
+|     □ Inkludera miljö: myapp-prod, myapp-staging                       |
+|     □ Använd --generate-name sparsamt                                  |
+|                                                                          |
+|  ✅ Testing                                                             |
+|     □ Alltid dry-run före install/upgrade                              |
+|     □ helm lint för chart validation                                   |
+|     □ helm test för release testing                                    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Sammanfattning & Task
@@ -325,7 +325,7 @@ helm install my-nginx bitnami/nginx --dry-run --debug
 
 ---
 
-**Nästa Node:** Helm Charts →
+**Nästa Node:** Helm Charts ->
 ''',
     "xp_reward": 150,
     "estimated_minutes": 50,
@@ -351,37 +351,37 @@ Nu när du kan använda Helm, är det dags att skapa egna Charts. En Chart är e
 ### Chart Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      HELM CHART STRUCTURE                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  myapp/                                                                  │
-│  ├── Chart.yaml             # Chart metadata                            │
-│  ├── Chart.lock             # Dependency lock file                      │
-│  ├── values.yaml            # Default values                            │
-│  ├── values.schema.json     # Schema för values validation              │
-│  ├── .helmignore            # Files att ignorera                        │
-│  │                                                                       │
-│  ├── charts/                # Subdirectory för dependencies             │
-│  │   └── postgresql/                                                    │
-│  │                                                                       │
-│  ├── templates/             # Template filer                            │
-│  │   ├── NOTES.txt          # Post-install notes                        │
-│  │   ├── _helpers.tpl       # Template helpers/partials                 │
-│  │   ├── deployment.yaml                                                │
-│  │   ├── service.yaml                                                   │
-│  │   ├── configmap.yaml                                                 │
-│  │   ├── secret.yaml                                                    │
-│  │   ├── ingress.yaml                                                   │
-│  │   ├── hpa.yaml                                                       │
-│  │   └── serviceaccount.yaml                                            │
-│  │                                                                       │
-│  ├── crds/                  # Custom Resource Definitions               │
-│  │                                                                       │
-│  └── tests/                 # Helm tests                                │
-│      └── test-connection.yaml                                           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      HELM CHART STRUCTURE                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  myapp/                                                                  |
+|  +-- Chart.yaml             # Chart metadata                            |
+|  +-- Chart.lock             # Dependency lock file                      |
+|  +-- values.yaml            # Default values                            |
+|  +-- values.schema.json     # Schema för values validation              |
+|  +-- .helmignore            # Files att ignorera                        |
+|  |                                                                       |
+|  +-- charts/                # Subdirectory för dependencies             |
+|  |   +-- postgresql/                                                    |
+|  |                                                                       |
+|  +-- templates/             # Template filer                            |
+|  |   +-- NOTES.txt          # Post-install notes                        |
+|  |   +-- _helpers.tpl       # Template helpers/partials                 |
+|  |   +-- deployment.yaml                                                |
+|  |   +-- service.yaml                                                   |
+|  |   +-- configmap.yaml                                                 |
+|  |   +-- secret.yaml                                                    |
+|  |   +-- ingress.yaml                                                   |
+|  |   +-- hpa.yaml                                                       |
+|  |   +-- serviceaccount.yaml                                            |
+|  |                                                                       |
+|  +-- crds/                  # Custom Resource Definitions               |
+|  |                                                                       |
+|  +-- tests/                 # Helm tests                                |
+|      +-- test-connection.yaml                                           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Chart.yaml
@@ -737,77 +737,77 @@ helm install myapi-prod myapi
 ## 6. Template Functions
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   COMMON TEMPLATE FUNCTIONS                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  STRING FUNCTIONS                                                        │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  {{ .Values.name | quote }}          # "value"                          │
-│  {{ .Values.name | upper }}          # VALUE                            │
-│  {{ .Values.name | lower }}          # value                            │
-│  {{ .Values.name | title }}          # Value                            │
-│  {{ .Values.name | trunc 63 }}       # Truncate to 63 chars             │
-│  {{ .Values.name | trimSuffix "-" }} # Remove trailing -                │
-│  {{ "hello" | b64enc }}              # Base64 encode                    │
-│                                                                          │
-│  FLOW CONTROL                                                            │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  {{- if .Values.enabled }}                                              │
-│  {{- else if .Values.other }}                                           │
-│  {{- else }}                                                            │
-│  {{- end }}                                                             │
-│                                                                          │
-│  {{- with .Values.nodeSelector }}                                       │
-│    {{- toYaml . | nindent 8 }}                                          │
-│  {{- end }}                                                             │
-│                                                                          │
-│  {{- range .Values.servers }}                                           │
-│    - {{ . }}                                                            │
-│  {{- end }}                                                             │
-│                                                                          │
-│  YAML/JSON                                                              │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  {{ .Values.data | toYaml }}         # Convert to YAML                  │
-│  {{ .Values.data | toJson }}         # Convert to JSON                  │
-│  {{ .Values.data | nindent 4 }}      # Indent 4 spaces                  │
-│                                                                          │
-│  DEFAULTS                                                               │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  {{ .Values.tag | default "latest" }}                                   │
-│  {{ .Values.port | default 8080 }}                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   COMMON TEMPLATE FUNCTIONS                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  STRING FUNCTIONS                                                        |
+|  ---------------------------------------------------------------------  |
+|  {{ .Values.name | quote }}          # "value"                          |
+|  {{ .Values.name | upper }}          # VALUE                            |
+|  {{ .Values.name | lower }}          # value                            |
+|  {{ .Values.name | title }}          # Value                            |
+|  {{ .Values.name | trunc 63 }}       # Truncate to 63 chars             |
+|  {{ .Values.name | trimSuffix "-" }} # Remove trailing -                |
+|  {{ "hello" | b64enc }}              # Base64 encode                    |
+|                                                                          |
+|  FLOW CONTROL                                                            |
+|  ---------------------------------------------------------------------  |
+|  {{- if .Values.enabled }}                                              |
+|  {{- else if .Values.other }}                                           |
+|  {{- else }}                                                            |
+|  {{- end }}                                                             |
+|                                                                          |
+|  {{- with .Values.nodeSelector }}                                       |
+|    {{- toYaml . | nindent 8 }}                                          |
+|  {{- end }}                                                             |
+|                                                                          |
+|  {{- range .Values.servers }}                                           |
+|    - {{ . }}                                                            |
+|  {{- end }}                                                             |
+|                                                                          |
+|  YAML/JSON                                                              |
+|  ---------------------------------------------------------------------  |
+|  {{ .Values.data | toYaml }}         # Convert to YAML                  |
+|  {{ .Values.data | toJson }}         # Convert to JSON                  |
+|  {{ .Values.data | nindent 4 }}      # Indent 4 spaces                  |
+|                                                                          |
+|  DEFAULTS                                                               |
+|  ---------------------------------------------------------------------  |
+|  {{ .Values.tag | default "latest" }}                                   |
+|  {{ .Values.port | default 8080 }}                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   CHART BEST PRACTICES                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Structure                                                            │
-│     □ Använd helm create som startpunkt                                 │
-│     □ Inkludera NOTES.txt med användningsinstruktioner                  │
-│     □ Dokumentera values i values.yaml med kommentarer                  │
-│                                                                          │
-│  ✅ Templates                                                            │
-│     □ Använd _helpers.tpl för återanvändbara functions                  │
-│     □ Följ naming conventions (include "chart.fullname")               │
-│     □ Undvik hårdkodade värden                                          │
-│                                                                          │
-│  ✅ Values                                                               │
-│     □ Ge sane defaults                                                  │
-│     □ Använd nested structure för relaterade values                     │
-│     □ Inkludera .Values.schema.json för validation                      │
-│                                                                          │
-│  ✅ Testing                                                             │
-│     □ helm lint före varje release                                      │
-│     □ helm template för debugging                                       │
-│     □ Inkludera tests/ med helm test                                    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   CHART BEST PRACTICES                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Structure                                                            |
+|     □ Använd helm create som startpunkt                                 |
+|     □ Inkludera NOTES.txt med användningsinstruktioner                  |
+|     □ Dokumentera values i values.yaml med kommentarer                  |
+|                                                                          |
+|  ✅ Templates                                                            |
+|     □ Använd _helpers.tpl för återanvändbara functions                  |
+|     □ Följ naming conventions (include "chart.fullname")               |
+|     □ Undvik hårdkodade värden                                          |
+|                                                                          |
+|  ✅ Values                                                               |
+|     □ Ge sane defaults                                                  |
+|     □ Använd nested structure för relaterade values                     |
+|     □ Inkludera .Values.schema.json för validation                      |
+|                                                                          |
+|  ✅ Testing                                                             |
+|     □ helm lint före varje release                                      |
+|     □ helm template för debugging                                       |
+|     □ Inkludera tests/ med helm test                                    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Sammanfattning & Task
@@ -815,34 +815,34 @@ helm install myapi-prod myapi
 ### Chart Development Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                                                                          │
-│  1. helm create myapp                                                   │
-│           │                                                              │
-│           ▼                                                              │
-│  2. Edit Chart.yaml, values.yaml, templates/                            │
-│           │                                                              │
-│           ▼                                                              │
-│  3. helm lint myapp                                                     │
-│           │                                                              │
-│           ▼                                                              │
-│  4. helm template myapp                                                 │
-│           │                                                              │
-│           ▼                                                              │
-│  5. helm install --dry-run                                              │
-│           │                                                              │
-│           ▼                                                              │
-│  6. helm install                                                        │
-│           │                                                              │
-│           ▼                                                              │
-│  7. helm test                                                           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                                                                          |
+|  1. helm create myapp                                                   |
+|           |                                                              |
+|           ▼                                                              |
+|  2. Edit Chart.yaml, values.yaml, templates/                            |
+|           |                                                              |
+|           ▼                                                              |
+|  3. helm lint myapp                                                     |
+|           |                                                              |
+|           ▼                                                              |
+|  4. helm template myapp                                                 |
+|           |                                                              |
+|           ▼                                                              |
+|  5. helm install --dry-run                                              |
+|           |                                                              |
+|           ▼                                                              |
+|  6. helm install                                                        |
+|           |                                                              |
+|           ▼                                                              |
+|  7. helm test                                                           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ---
 
-**Nästa Node:** Network Policies →
+**Nästa Node:** Network Policies ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 65,

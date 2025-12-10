@@ -26,7 +26,7 @@ AZURE_NODE_17_ENTRA = {
 
 > *"Identity is the new perimeter."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,46 +37,46 @@ AZURE_NODE_17_ENTRA = {
 | Access control | Alla har samma access | Finkornig RBAC |
 | Audit | Ingen sparbarhet | Full audit trail |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Identity Concepts
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE ENTRA ID                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  IDENTITY TYPES:                                                │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │                                                          │    │
-│  │  USER                SERVICE           MANAGED           │    │
-│  │  IDENTITY            PRINCIPAL         IDENTITY          │    │
-│  │  ┌─────┐            ┌─────┐           ┌─────┐           │    │
-│  │  │ 👤  │            │ 🤖  │           │ 🔐  │           │    │
-│  │  └─────┘            └─────┘           └─────┘           │    │
-│  │  Human user         App/service       Azure resource    │    │
-│  │  Interactive        Client ID +       Auto-managed      │    │
-│  │  login              Secret/Cert       No credentials    │    │
-│  │                                                          │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  AUTHENTICATION FLOW:                                           │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │                                                          │    │
-│  │  Client → Entra ID → Token → Resource (Graph, Azure)    │    │
-│  │                                                          │    │
-│  │  OAuth 2.0 / OpenID Connect flows:                      │    │
-│  │  - Authorization Code (web apps)                        │    │
-│  │  - Client Credentials (service-to-service)              │    │
-│  │  - Device Code (CLI/IoT)                                │    │
-│  │  - Implicit (deprecated)                                │    │
-│  │                                                          │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE ENTRA ID                                |
++-----------------------------------------------------------------+
+|                                                                  |
+|  IDENTITY TYPES:                                                |
+|  +---------------------------------------------------------+    |
+|  |                                                          |    |
+|  |  USER                SERVICE           MANAGED           |    |
+|  |  IDENTITY            PRINCIPAL         IDENTITY          |    |
+|  |  +-----+            +-----+           +-----+           |    |
+|  |  | 👤  |            | 🤖  |           | 🔐  |           |    |
+|  |  +-----+            +-----+           +-----+           |    |
+|  |  Human user         App/service       Azure resource    |    |
+|  |  Interactive        Client ID +       Auto-managed      |    |
+|  |  login              Secret/Cert       No credentials    |    |
+|  |                                                          |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
+|  AUTHENTICATION FLOW:                                           |
+|  +---------------------------------------------------------+    |
+|  |                                                          |    |
+|  |  Client -> Entra ID -> Token -> Resource (Graph, Azure)    |    |
+|  |                                                          |    |
+|  |  OAuth 2.0 / OpenID Connect flows:                      |    |
+|  |  - Authorization Code (web apps)                        |    |
+|  |  - Client Credentials (service-to-service)              |    |
+|  |  - Device Code (CLI/IoT)                                |    |
+|  |  - Implicit (deprecated)                                |    |
+|  |                                                          |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service Principal
 
@@ -107,7 +107,7 @@ az ad sp list --display-name "sp-myapp" --output table
 az ad sp credential reset --id <appId>
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Managed Identity
 
@@ -139,7 +139,7 @@ az vm identity assign \\
     --identities /subscriptions/xxx/resourceGroups/rg-demo/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-myapp
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Anvanda Managed Identity
 
@@ -183,7 +183,7 @@ await foreach (var container in blobServiceClient.GetBlobContainersAsync())
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## RBAC (Role-Based Access Control)
 
@@ -217,7 +217,7 @@ az role assignment list \\
     --output table
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Conditional Access
 
@@ -241,7 +241,7 @@ az role assignment list \\
 # - Require approved client app
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## App Registration
 
@@ -262,7 +262,7 @@ az ad app permission add \\
 az ad app permission admin-consent --id <app-id>
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -278,7 +278,7 @@ az ad app show --id <app-id>
 # - AzureADandPersonalMicrosoftAccount: alla + personliga
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -320,7 +320,7 @@ AZURE_NODE_18_KEYVAULT = {
 
 > *"Never store secrets in code. Ever."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -331,49 +331,49 @@ AZURE_NODE_18_KEYVAULT = {
 | Audit | Ingen sparbarhet | Full access logging |
 | Compliance | Svar att bevisa kontroll | RBAC + HSM-stod |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Vault Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE KEY VAULT                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  KEY VAULT: kv-myapp                                            │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                                                           │   │
-│  │  SECRETS                 KEYS                CERTS       │   │
-│  │  ┌─────────────┐        ┌─────────────┐     ┌─────────┐ │   │
-│  │  │ db-password │        │ encryption- │     │ ssl-cert│ │   │
-│  │  │ api-key     │        │ key         │     │ sign-   │ │   │
-│  │  │ conn-string │        │ signing-key │     │ cert    │ │   │
-│  │  └─────────────┘        └─────────────┘     └─────────┘ │   │
-│  │                                                           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  ACCESS CONTROL:                                                │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                                                           │   │
-│  │  Option 1: Access Policies (vault-level)                 │   │
-│  │  ├── User A: Get, List secrets                          │   │
-│  │  └── App B: Get secrets, Sign with keys                 │   │
-│  │                                                           │   │
-│  │  Option 2: RBAC (Azure RBAC, recommended)               │   │
-│  │  ├── Key Vault Secrets User (read secrets)              │   │
-│  │  ├── Key Vault Secrets Officer (manage secrets)         │   │
-│  │  └── Key Vault Administrator (full access)              │   │
-│  │                                                           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  TIERS:                                                         │
-│  - Standard: Software-backed keys                               │
-│  - Premium: HSM-backed keys (FIPS 140-2 Level 2)               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE KEY VAULT                               |
++-----------------------------------------------------------------+
+|                                                                  |
+|  KEY VAULT: kv-myapp                                            |
+|  +----------------------------------------------------------+   |
+|  |                                                           |   |
+|  |  SECRETS                 KEYS                CERTS       |   |
+|  |  +-------------+        +-------------+     +---------+ |   |
+|  |  | db-password |        | encryption- |     | ssl-cert| |   |
+|  |  | api-key     |        | key         |     | sign-   | |   |
+|  |  | conn-string |        | signing-key |     | cert    | |   |
+|  |  +-------------+        +-------------+     +---------+ |   |
+|  |                                                           |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
+|  ACCESS CONTROL:                                                |
+|  +----------------------------------------------------------+   |
+|  |                                                           |   |
+|  |  Option 1: Access Policies (vault-level)                 |   |
+|  |  +-- User A: Get, List secrets                          |   |
+|  |  +-- App B: Get secrets, Sign with keys                 |   |
+|  |                                                           |   |
+|  |  Option 2: RBAC (Azure RBAC, recommended)               |   |
+|  |  +-- Key Vault Secrets User (read secrets)              |   |
+|  |  +-- Key Vault Secrets Officer (manage secrets)         |   |
+|  |  +-- Key Vault Administrator (full access)              |   |
+|  |                                                           |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
+|  TIERS:                                                         |
+|  - Standard: Software-backed keys                               |
+|  - Premium: HSM-backed keys (FIPS 140-2 Level 2)               |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa Key Vault
 
@@ -396,7 +396,7 @@ az keyvault create \\
     --enable-purge-protection true
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hantera Secrets
 
@@ -445,7 +445,7 @@ az keyvault secret recover \\
     --name "db-password"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Access med RBAC
 
@@ -465,7 +465,7 @@ az role assignment create \\
 # - Key Vault Reader: read metadata only
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Anvanda i Kod
 
@@ -505,7 +505,7 @@ KeyVaultSecret secret = await client.GetSecretAsync("db-password");
 Console.WriteLine($"Password: {secret.Value}");
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Integration med App Service
 
@@ -521,7 +521,7 @@ az webapp config appsettings set \\
 # App Service Managed Identity måste ha "Key Vault Secrets User" roll!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Integration med Azure DevOps
 
@@ -529,7 +529,7 @@ az webapp config appsettings set \\
 # azure-pipelines.yml
 # Koppla Key Vault till Variable Group
 
-# 1. Project Settings → Library → Variable group
+# 1. Project Settings -> Library -> Variable group
 # 2. "Link secrets from an Azure key vault"
 # 3. Välj Service Connection och Key Vault
 # 4. Authorize och välj secrets
@@ -545,7 +545,7 @@ steps:
       DB_PASSWORD: $(db-password)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Private Endpoint
 
@@ -566,7 +566,7 @@ az network private-endpoint create \\
     --connection-name kv-connection
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -583,7 +583,7 @@ az role assignment list \\
 az keyvault show --name kv-myapp --query properties.enableRbacAuthorization
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -625,7 +625,7 @@ AZURE_NODE_19_DEFENDER = {
 
 > *"Security that keeps pace with your cloud."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -636,49 +636,49 @@ AZURE_NODE_19_DEFENDER = {
 | Compliance | Manuell audit | Automatiserad compliance check |
 | Threat detection | Reaktiv hantering | Real-time alerts |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Defender Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│               MICROSOFT DEFENDER FOR CLOUD                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  FREE TIER (CSPM Basic):                                        │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │ • Secure Score                                            │   │
-│  │ • Security recommendations                                │   │
-│  │ • Azure security best practices                          │   │
-│  │ • Basic asset inventory                                  │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  PAID PLANS (CWPP):                                             │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                                                           │   │
-│  │  Defender for:                                           │   │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐        │   │
-│  │  │   Servers   │ │    SQL      │ │ Containers  │        │   │
-│  │  │   ~$15/mo   │ │   ~$15/mo   │ │  ~$7/node   │        │   │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘        │   │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐        │   │
-│  │  │   Storage   │ │ App Service │ │  Key Vault  │        │   │
-│  │  │  ~$0.02/10k │ │  ~$15/inst  │ │ ~$0.02/10k  │        │   │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘        │   │
-│  │                                                           │   │
-│  │  Features:                                               │   │
-│  │  • Just-In-Time VM access                               │   │
-│  │  • Adaptive application controls                        │   │
-│  │  • File integrity monitoring                            │   │
-│  │  • Vulnerability assessment                             │   │
-│  │  • Security alerts                                      │   │
-│  │                                                           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|               MICROSOFT DEFENDER FOR CLOUD                       |
++-----------------------------------------------------------------+
+|                                                                  |
+|  FREE TIER (CSPM Basic):                                        |
+|  +----------------------------------------------------------+   |
+|  | • Secure Score                                            |   |
+|  | • Security recommendations                                |   |
+|  | • Azure security best practices                          |   |
+|  | • Basic asset inventory                                  |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
+|  PAID PLANS (CWPP):                                             |
+|  +----------------------------------------------------------+   |
+|  |                                                           |   |
+|  |  Defender for:                                           |   |
+|  |  +-------------+ +-------------+ +-------------+        |   |
+|  |  |   Servers   | |    SQL      | | Containers  |        |   |
+|  |  |   ~$15/mo   | |   ~$15/mo   | |  ~$7/node   |        |   |
+|  |  +-------------+ +-------------+ +-------------+        |   |
+|  |  +-------------+ +-------------+ +-------------+        |   |
+|  |  |   Storage   | | App Service | |  Key Vault  |        |   |
+|  |  |  ~$0.02/10k | |  ~$15/inst  | | ~$0.02/10k  |        |   |
+|  |  +-------------+ +-------------+ +-------------+        |   |
+|  |                                                           |   |
+|  |  Features:                                               |   |
+|  |  • Just-In-Time VM access                               |   |
+|  |  • Adaptive application controls                        |   |
+|  |  • File integrity monitoring                            |   |
+|  |  • Vulnerability assessment                             |   |
+|  |  • Security alerts                                      |   |
+|  |                                                           |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Aktivera Defender
 
@@ -710,7 +710,7 @@ az security pricing create \\
 az security pricing list --query "[?pricingTier=='Standard']" --output table
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secure Score
 
@@ -729,7 +729,7 @@ az security secure-score-control list --output table
 # - Enable audit logs
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Recommendations
 
@@ -749,7 +749,7 @@ az security recommendation list \\
 # - "MFA should be enabled on accounts with owner permissions"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Alerts
 
@@ -774,7 +774,7 @@ az security alert update \\
     --status "Dismissed"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Just-In-Time (JIT) VM Access
 
@@ -811,7 +811,7 @@ az security jit-policy initiate \\
     }]'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Compliance
 
@@ -833,7 +833,7 @@ az security regulatory-compliance-controls list \\
 # - HIPAA
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Export till SIEM
 
@@ -859,7 +859,7 @@ az security automation create \\
 # | summarize count() by AlertSeverity
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -870,10 +870,10 @@ az security automation create \\
 # Recommendations kan ta längre tid att refresha
 
 # Tvinga rescan (via Portal):
-# Defender for Cloud → Recommendations → Refresh
+# Defender for Cloud -> Recommendations -> Refresh
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -915,7 +915,7 @@ AZURE_NODE_20_GOVERNANCE = {
 
 > *"Control without constraints, compliance without complexity."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -926,47 +926,47 @@ AZURE_NODE_20_GOVERNANCE = {
 | Standardisering | Varje team gor olika | Blueprints for consistency |
 | Oavsiktlig radering | Kritiska resurser raderas | Resource Locks |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Governance Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE GOVERNANCE HIERARCHY                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                     ┌──────────────────┐                        │
-│                     │   ROOT TENANT    │                        │
-│                     │  (Entra ID)      │                        │
-│                     └────────┬─────────┘                        │
-│                              │                                   │
-│                     ┌────────▼─────────┐                        │
-│                     │ MANAGEMENT GROUP │ ← Policies apply here  │
-│                     │   (Organization) │                        │
-│                     └────────┬─────────┘                        │
-│                              │                                   │
-│            ┌─────────────────┼─────────────────┐                │
-│            │                 │                 │                │
-│   ┌────────▼───────┐ ┌──────▼──────┐ ┌───────▼──────┐         │
-│   │ MANAGEMENT     │ │ MANAGEMENT  │ │ MANAGEMENT   │         │
-│   │ GROUP (Dev)    │ │ GROUP (Prod)│ │ GROUP (Shared)│         │
-│   └───────┬────────┘ └──────┬──────┘ └──────┬───────┘         │
-│           │                 │               │                   │
-│   ┌───────▼────────┐ ┌─────▼─────┐  ┌─────▼─────┐             │
-│   │ SUBSCRIPTION   │ │SUBSCRIPTION│  │SUBSCRIPTION│             │
-│   │ (Dev-Team-A)   │ │ (Prod)     │  │ (Networking)│             │
-│   └───────┬────────┘ └─────┬─────┘  └─────┬─────┘             │
-│           │                │              │                     │
-│   ┌───────▼────────┐ ┌─────▼─────┐  ┌─────▼─────┐             │
-│   │RESOURCE GROUPS │ │  RGs      │  │   RGs     │             │
-│   └────────────────┘ └───────────┘  └───────────┘             │
-│                                                                  │
-│  POLICY INHERITANCE: Top → Down (Management Group → Sub → RG)  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE GOVERNANCE HIERARCHY                    |
++-----------------------------------------------------------------+
+|                                                                  |
+|                     +------------------+                        |
+|                     |   ROOT TENANT    |                        |
+|                     |  (Entra ID)      |                        |
+|                     +--------+---------+                        |
+|                              |                                   |
+|                     +--------▼---------+                        |
+|                     | MANAGEMENT GROUP | <- Policies apply here  |
+|                     |   (Organization) |                        |
+|                     +--------+---------+                        |
+|                              |                                   |
+|            +-----------------+-----------------+                |
+|            |                 |                 |                |
+|   +--------▼-------+ +------▼------+ +-------▼------+         |
+|   | MANAGEMENT     | | MANAGEMENT  | | MANAGEMENT   |         |
+|   | GROUP (Dev)    | | GROUP (Prod)| | GROUP (Shared)|         |
+|   +-------+--------+ +------+------+ +------+-------+         |
+|           |                 |               |                   |
+|   +-------▼--------+ +-----▼-----+  +-----▼-----+             |
+|   | SUBSCRIPTION   | |SUBSCRIPTION|  |SUBSCRIPTION|             |
+|   | (Dev-Team-A)   | | (Prod)     |  | (Networking)|             |
+|   +-------+--------+ +-----+-----+  +-----+-----+             |
+|           |                |              |                     |
+|   +-------▼--------+ +-----▼-----+  +-----▼-----+             |
+|   |RESOURCE GROUPS | |  RGs      |  |   RGs     |             |
+|   +----------------+ +-----------+  +-----------+             |
+|                                                                  |
+|  POLICY INHERITANCE: Top -> Down (Management Group -> Sub -> RG)  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure Policy
 
@@ -1001,7 +1001,7 @@ az policy assignment create \\
     --enforcement-mode Default  # Deny!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Custom Policy
 
@@ -1046,7 +1046,7 @@ az policy assignment create \\
     --scope "/subscriptions/xxx"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Management Groups
 
@@ -1070,7 +1070,7 @@ az policy assignment create \\
 # Nu gäller policyn för ALLA subscriptions under mg-organization!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Resource Locks
 
@@ -1102,7 +1102,7 @@ az lock list --resource-group rg-production --output table
 az lock delete --name "no-delete" --resource-group rg-production
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cost Management
 
@@ -1135,7 +1135,7 @@ az consumption budget create \\
     }]'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tags
 
@@ -1167,7 +1167,7 @@ az policy assignment create \\
     --params '{ "tagName": { "value": "Environment" } }'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure Blueprints (Preview)
 
@@ -1176,7 +1176,7 @@ az policy assignment create \\
 # Innehåller: Policies + RBAC + ARM templates
 
 # Skapa blueprint (via Portal rekommenderat)
-# 1. All services → Blueprints → Create blueprint
+# 1. All services -> Blueprints -> Create blueprint
 # 2. Lägg till artifacts: Policy, Role assignment, ARM template
 # 3. Publish blueprint
 # 4. Assign blueprint till subscription
@@ -1188,7 +1188,7 @@ az blueprint create \\
     --management-group "mg-organization"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -1209,7 +1209,7 @@ az policy exemption create \\
     --scope "/subscriptions/xxx/resourceGroups/rg-demo"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

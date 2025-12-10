@@ -63,24 +63,24 @@ Som DevOps-ingenjör är Python ditt viktigaste verktyg. Ansible är skrivet i P
 > "Python is the Swiss Army knife of DevOps. Ansible is Python. AWS Lambda loves Python. Kubernetes operators use Python. It's readable, powerful, and everywhere."
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                    PYTHON I DEVOPS-EKOSYSTEMET                         │
-├────────────────────────────────────────────────────────────────────────┤
-│                                                                        │
-│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐       │
-│   │ Ansible  │    │   AWS    │    │ Kubernetes│   │ Terraform│       │
-│   │  YAML+   │    │  Lambda  │    │ Operators │   │ Providers│       │
-│   │ Python   │    │  Python  │    │  Python   │   │  Python  │       │
-│   └────┬─────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘       │
-│        │               │               │               │              │
-│        └───────────────┴───────┬───────┴───────────────┘              │
-│                                │                                       │
-│                    ┌───────────▼───────────┐                          │
-│                    │      PYTHON CORE      │                          │
-│                    │   (Your Foundation)   │                          │
-│                    └───────────────────────┘                          │
-│                                                                        │
-└────────────────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------------+
+|                    PYTHON I DEVOPS-EKOSYSTEMET                         |
++------------------------------------------------------------------------+
+|                                                                        |
+|   +----------+    +----------+    +----------+    +----------+       |
+|   | Ansible  |    |   AWS    |    | Kubernetes|   | Terraform|       |
+|   |  YAML+   |    |  Lambda  |    | Operators |   | Providers|       |
+|   | Python   |    |  Python  |    |  Python   |   |  Python  |       |
+|   +----+-----+    +----+-----+    +----+-----+    +----+-----+       |
+|        |               |               |               |              |
+|        +---------------+-------+-------+---------------+              |
+|                                |                                       |
+|                    +-----------▼-----------+                          |
+|                    |      PYTHON CORE      |                          |
+|                    |   (Your Foundation)   |                          |
+|                    +-----------------------+                          |
+|                                                                        |
++------------------------------------------------------------------------+
 ```
 
 ---
@@ -6340,18 +6340,18 @@ NODE_20_PACKAGING: Dict[str, Any] = {
 
 ```
 my-devops-tool/
-├── pyproject.toml          # Modern config (ersätter setup.py)
-├── README.md
-├── LICENSE
-├── src/
-│   └── devops_tool/
-│       ├── __init__.py
-│       ├── cli.py
-│       ├── utils.py
-│       └── config.py
-└── tests/
-    ├── __init__.py
-    └── test_utils.py
++-- pyproject.toml          # Modern config (ersätter setup.py)
++-- README.md
++-- LICENSE
++-- src/
+|   +-- devops_tool/
+|       +-- __init__.py
+|       +-- cli.py
+|       +-- utils.py
+|       +-- config.py
++-- tests/
+    +-- __init__.py
+    +-- test_utils.py
 ```
 
 ---

@@ -13,28 +13,28 @@ NODE_09_CTE_WINDOW = {
 
 CTEs (Common Table Expressions) och window functions ar tva av de mest kraftfulla verktygen i modern SQL for att skriva lasbara och effektiva queries.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CTE & WINDOW USE CASES                       │
-├─────────────────────────────────────────────────────────────────┤
-│  CTEs:                                                          │
-│  - Bryt ner komplexa queries i lasbara steg                    │
-│  - Rekursiva hierarkier (org-struktur, dependencies)           │
-│  - Atervand subqueries utan upprepning                         │
-├─────────────────────────────────────────────────────────────────┤
-│  Window Functions:                                              │
-│  - Ranka servrar efter performance                             │
-│  - Running totals for deployments over tid                     │
-│  - Jamfor varje rad mot genomsnitt                             │
-│  - Berakna forandringar mellan rader                           │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CTE & WINDOW USE CASES                       |
++-----------------------------------------------------------------+
+|  CTEs:                                                          |
+|  - Bryt ner komplexa queries i lasbara steg                    |
+|  - Rekursiva hierarkier (org-struktur, dependencies)           |
+|  - Atervand subqueries utan upprepning                         |
++-----------------------------------------------------------------+
+|  Window Functions:                                              |
+|  - Ranka servrar efter performance                             |
+|  - Running totals for deployments over tid                     |
+|  - Jamfor varje rad mot genomsnitt                             |
+|  - Berakna forandringar mellan rader                           |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Common Table Expressions (CTE)
 
@@ -72,7 +72,7 @@ WHERE deploy_count > 10;
 
 Varje CTE kan referera till tidigare definierade CTEs.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Recursive CTE
 
@@ -121,20 +121,20 @@ WITH RECURSIVE deps AS (
 SELECT DISTINCT depends_on_id, depth FROM deps;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Window Functions - Grunderna
 
 Window functions beraknar varden over en "fonster" av rader utan att gruppera:
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│  function() OVER (                                           │
-│      [PARTITION BY col1, col2]   -- Dela upp i grupper      │
-│      [ORDER BY col3]             -- Ordning inom grupp      │
-│      [frame_clause]              -- Vilka rader i fonstret  │
-│  )                                                           │
-└──────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------+
+|  function() OVER (                                           |
+|      [PARTITION BY col1, col2]   -- Dela upp i grupper      |
+|      [ORDER BY col3]             -- Ordning inom grupp      |
+|      [frame_clause]              -- Vilka rader i fonstret  |
+|  )                                                           |
++--------------------------------------------------------------+
 ```
 
 ```sql
@@ -156,7 +156,7 @@ SELECT
 FROM servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Ranking Functions
 
@@ -173,20 +173,20 @@ FROM servers;
 ```
 
 ```
-┌─────────────────┬───────────┬──────────┬──────┬────────────┐
-│ request_count   │ ROW_NUM   │ RANK     │ DENSE_RANK      │
-├─────────────────┼───────────┼──────────┼─────────────────┤
-│ 100             │ 1         │ 1        │ 1               │
-│ 100             │ 2         │ 1        │ 1               │
-│ 80              │ 3         │ 3        │ 2               │
-│ 70              │ 4         │ 4        │ 3               │
-└─────────────────┴───────────┴──────────┴─────────────────┘
++-----------------+-----------+----------+------+------------+
+| request_count   | ROW_NUM   | RANK     | DENSE_RANK      |
++-----------------+-----------+----------+-----------------+
+| 100             | 1         | 1        | 1               |
+| 100             | 2         | 1        | 1               |
+| 80              | 3         | 3        | 2               |
+| 70              | 4         | 4        | 3               |
++-----------------+-----------+----------+-----------------+
   ROW_NUMBER: Alltid unik
   RANK: Ties far samma, hoppar over nasta
   DENSE_RANK: Ties far samma, hoppar INTE over
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Aggregate Window Functions
 
@@ -222,7 +222,7 @@ SELECT
 FROM daily_metrics;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## LAG och LEAD
 
@@ -255,7 +255,7 @@ SELECT
 FROM servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## FIRST_VALUE och LAST_VALUE
 
@@ -278,7 +278,7 @@ FROM servers;
 
 VIKTIGT: LAST_VALUE kraver explicit frame for att fungera korrekt!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -295,7 +295,7 @@ VIKTIGT: LAST_VALUE kraver explicit frame for att fungera korrekt!
 | LAST_VALUE() | Sista i fonster | Max within group |
 | NTILE(n) | Dela i n buckets | Percentiler |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -329,7 +329,7 @@ WITH numbered AS (
 SELECT * FROM numbered WHERE rn <= 10;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -368,7 +368,7 @@ WHERE daily_rank <= 5
 ORDER BY date DESC, daily_rank;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -399,27 +399,27 @@ NODE_10_VIEWS = {
 
 Views ar sparade queries som beter sig som tabeller. De abstraherar komplexitet och ger ett konsistent granssnitt till underliggande data.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    VIEW ANVANDNINGAR                            │
-├─────────────────────────────────────────────────────────────────┤
-│  Regular Views:                                                 │
-│  - Forenkla komplexa JOINs for dashboards                      │
-│  - Dolja kanslig data (kolumn-maskning)                        │
-│  - Konsistent API mot foranderliga tabellstrukturer            │
-├─────────────────────────────────────────────────────────────────┤
-│  Materialized Views:                                            │
-│  - Cacha dyra aggregeringar for dashboards                     │
-│  - Pre-berakna rapporter som kors periodiskt                   │
-│  - Snabba upp read-heavy workloads                             │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    VIEW ANVANDNINGAR                            |
++-----------------------------------------------------------------+
+|  Regular Views:                                                 |
+|  - Forenkla komplexa JOINs for dashboards                      |
+|  - Dolja kanslig data (kolumn-maskning)                        |
+|  - Konsistent API mot foranderliga tabellstrukturer            |
++-----------------------------------------------------------------+
+|  Materialized Views:                                            |
+|  - Cacha dyra aggregeringar for dashboards                     |
+|  - Pre-berakna rapporter som kors periodiskt                   |
+|  - Snabba upp read-heavy workloads                             |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Regular Views
 
@@ -473,7 +473,7 @@ SELECT
 FROM daily;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Updaterbara Views
 
@@ -504,7 +504,7 @@ SET status = 'inactive'  -- ERROR!
 WHERE id = 1;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Hantera Views
 
@@ -525,7 +525,7 @@ DROP VIEW server_stats CASCADE;
 SELECT pg_get_viewdef('active_servers', true);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Materialized Views
 
@@ -559,7 +559,7 @@ ON mv_deployment_stats(date, environment);
 REFRESH MATERIALIZED VIEW CONCURRENTLY mv_deployment_stats;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DevOps Dashboard Materialized View
 
@@ -594,7 +594,7 @@ SELECT cron.schedule(
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -608,7 +608,7 @@ SELECT cron.schedule(
 | Indexering | Nej | Ja |
 | UPDATE/INSERT | Ja (enkla views) | Nej |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -639,7 +639,7 @@ SELECT * FROM v_server_basics
 JOIN v_deployment_stats USING (server_id);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -674,7 +674,7 @@ GROUP BY DATE_TRUNC('week', deployed_at), environment;
 CREATE UNIQUE INDEX mv_weekly_idx ON mv_weekly_report(week, environment);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -705,46 +705,46 @@ NODE_11_TRANSACTIONS = {
 
 Transactions garanterar att en grupp databasoperationer antingen genomfors helt eller inte alls. ACID-principerna ar grundlaggande for dataintegritet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    TRANSACTION USE CASES                        │
-├─────────────────────────────────────────────────────────────────┤
-│  - Deployment registration: server + deployment maste lyckas   │
-│  - Rollback vid fel: ingen halvfardid data                     │
-│  - Job queues: hamta och lasa jobb atomiskt                    │
-│  - Audit logging: operation + logg i samma transaktion         │
-│  - Config updates: flera tabeller maste uppdateras tillsammans │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    TRANSACTION USE CASES                        |
++-----------------------------------------------------------------+
+|  - Deployment registration: server + deployment maste lyckas   |
+|  - Rollback vid fel: ingen halvfardid data                     |
+|  - Job queues: hamta och lasa jobb atomiskt                    |
+|  - Audit logging: operation + logg i samma transaktion         |
+|  - Config updates: flera tabeller maste uppdateras tillsammans |
++-----------------------------------------------------------------+
 ```
 
 Utan transactions kan ett avbrott lamna databasen i inkonsistent tillstand - t.ex. deployment registrerad men server inte uppdaterad.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ACID-principerna
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  A - Atomicity     Allt eller inget                            │
-│                    Alla operationer lyckas eller alla rullas   │
-│                    tillbaka                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  C - Consistency   Alltid giltigt tillstand                    │
-│                    Constraints, triggers, regler foljs         │
-├─────────────────────────────────────────────────────────────────┤
-│  I - Isolation     Transaktioner paverkar inte varandra        │
-│                    Som om de kors sekventiellt                 │
-├─────────────────────────────────────────────────────────────────┤
-│  D - Durability    Committed data overlever crash              │
-│                    Skrivet till disk innan COMMIT returnerar   │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  A - Atomicity     Allt eller inget                            |
+|                    Alla operationer lyckas eller alla rullas   |
+|                    tillbaka                                     |
++-----------------------------------------------------------------+
+|  C - Consistency   Alltid giltigt tillstand                    |
+|                    Constraints, triggers, regler foljs         |
++-----------------------------------------------------------------+
+|  I - Isolation     Transaktioner paverkar inte varandra        |
+|                    Som om de kors sekventiellt                 |
++-----------------------------------------------------------------+
+|  D - Durability    Committed data overlever crash              |
+|                    Skrivet till disk innan COMMIT returnerar   |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Basic Transaction
 
@@ -782,7 +782,7 @@ UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 ROLLBACK;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Savepoints
 
@@ -808,22 +808,22 @@ UPDATE servers SET status = 'active' WHERE id = 1;
 COMMIT;  -- Endast maintenance->active sparas, DELETE angrad
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Isolation Levels
 
 Hur mycket transaktioner "ser" av varandras andringar:
 
 ```
-┌──────────────────────┬─────────┬──────────────┬─────────┐
-│ Isolation Level      │ Dirty   │ Non-repeat   │ Phantom │
-│                      │ Read    │ Read         │ Read    │
-├──────────────────────┼─────────┼──────────────┼─────────┤
-│ Read Uncommitted     │ Ja      │ Ja           │ Ja      │
-│ Read Committed *     │ Nej     │ Ja           │ Ja      │
-│ Repeatable Read      │ Nej     │ Nej          │ Ja      │
-│ Serializable         │ Nej     │ Nej          │ Nej     │
-└──────────────────────┴─────────┴──────────────┴─────────┘
++----------------------+---------+--------------+---------+
+| Isolation Level      | Dirty   | Non-repeat   | Phantom |
+|                      | Read    | Read         | Read    |
++----------------------+---------+--------------+---------+
+| Read Uncommitted     | Ja      | Ja           | Ja      |
+| Read Committed *     | Nej     | Ja           | Ja      |
+| Repeatable Read      | Nej     | Nej          | Ja      |
+| Serializable         | Nej     | Nej          | Nej     |
++----------------------+---------+--------------+---------+
   * PostgreSQL default
 ```
 
@@ -842,7 +842,7 @@ COMMIT;
 
 DevOps-tumregel: Read Committed racker for de flesta fall. Anvand SERIALIZABLE for kritiska berakningar som maste vara 100% korrekta.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Row-Level Locking
 
@@ -872,7 +872,7 @@ LIMIT 1
 FOR UPDATE SKIP LOCKED;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Job Queue Pattern
 
@@ -906,7 +906,7 @@ SET status = 'completed',
 WHERE id = <job_id>;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Advisory Locks
 
@@ -930,7 +930,7 @@ SELECT pg_try_advisory_lock(12345);  -- Returnerar true/false
 
 Anvandning: Forhindra att flera processer kor samma batch-jobb samtidigt.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Deadlock Prevention
 
@@ -959,7 +959,7 @@ SET lock_timeout = '5s';
 SELECT * FROM servers WHERE id = 1 FOR UPDATE NOWAIT;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -976,7 +976,7 @@ SELECT * FROM servers WHERE id = 1 FOR UPDATE NOWAIT;
 | NOWAIT | Misslyckas om laset |
 | pg_advisory_lock(id) | Applikationslas |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1006,7 +1006,7 @@ COMMIT;
 -- Alltid: ORDER BY id, lasa i stigande ordning
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1036,7 +1036,7 @@ WHERE id = 1;
 COMMIT;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1068,47 +1068,47 @@ NODE_12_STORED_PROCS = {
 
 Functions och procedures flyttar logik till databasen - minskar natverksrundturer, centraliserar affarslogik och mojliggor triggers for automatisering.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              FUNCTIONS & PROCEDURES USE CASES                   │
-├─────────────────────────────────────────────────────────────────┤
-│  Functions:                                                     │
-│  - Berakna deployment success rate                             │
-│  - Hamta server health metrics                                 │
-│  - Validera input data                                         │
-├─────────────────────────────────────────────────────────────────┤
-│  Procedures:                                                    │
-│  - Utfor deployment med flera steg                             │
-│  - Rensa gamla loggar och data                                 │
-│  - Batch-uppdateringar med commit-punkter                      │
-├─────────────────────────────────────────────────────────────────┤
-│  Triggers:                                                      │
-│  - Automatisk audit logging                                    │
-│  - Uppdatera updated_at timestamp                              │
-│  - Validera data fore INSERT/UPDATE                            │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              FUNCTIONS & PROCEDURES USE CASES                   |
++-----------------------------------------------------------------+
+|  Functions:                                                     |
+|  - Berakna deployment success rate                             |
+|  - Hamta server health metrics                                 |
+|  - Validera input data                                         |
++-----------------------------------------------------------------+
+|  Procedures:                                                    |
+|  - Utfor deployment med flera steg                             |
+|  - Rensa gamla loggar och data                                 |
+|  - Batch-uppdateringar med commit-punkter                      |
++-----------------------------------------------------------------+
+|  Triggers:                                                      |
+|  - Automatisk audit logging                                    |
+|  - Uppdatera updated_at timestamp                              |
+|  - Validera data fore INSERT/UPDATE                            |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Function vs Procedure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  FUNCTION                      │  PROCEDURE (PostgreSQL 11+)   │
-├────────────────────────────────┼────────────────────────────────┤
-│  Returnerar varde/tabell       │  Returnerar void               │
-│  Kan anvandas i SELECT         │  Anropas med CALL              │
-│  Kan INTE COMMIT/ROLLBACK      │  KAN COMMIT/ROLLBACK           │
-│  For berakningar och queries   │  For side effects och batch    │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  FUNCTION                      |  PROCEDURE (PostgreSQL 11+)   |
++--------------------------------+--------------------------------+
+|  Returnerar varde/tabell       |  Returnerar void               |
+|  Kan anvandas i SELECT         |  Anropas med CALL              |
+|  Kan INTE COMMIT/ROLLBACK      |  KAN COMMIT/ROLLBACK           |
+|  For berakningar och queries   |  For side effects och batch    |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Basic Functions
 
@@ -1142,7 +1142,7 @@ $$ LANGUAGE plpgsql;
 SELECT get_server_count_by_env('production');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Table-Returning Functions
 
@@ -1191,7 +1191,7 @@ $$ LANGUAGE plpgsql;
 SELECT * FROM get_deployment_stats(1);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Procedures (PostgreSQL 11+)
 
@@ -1233,7 +1233,7 @@ $$;
 CALL deploy_to_server(1, 'v2.0.0', 42);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Trigger Functions
 
@@ -1258,7 +1258,7 @@ FOR EACH ROW EXECUTE FUNCTION update_modified_column();
 UPDATE servers SET status = 'active' WHERE id = 1;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Audit Trigger
 
@@ -1304,7 +1304,7 @@ AFTER INSERT OR UPDATE OR DELETE ON deployments
 FOR EACH ROW EXECUTE FUNCTION audit_trigger();
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Error Handling
 
@@ -1346,7 +1346,7 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Dynamic SQL
 
@@ -1373,7 +1373,7 @@ SELECT get_table_count('deployments');
 
 VARNING: Anvand ALLTID format() med %I for tabellnamn for att undvika SQL injection!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1394,7 +1394,7 @@ VARNING: Anvand ALLTID format() med %I for tabellnamn for att undvika SQL inject
 | RAISE EXCEPTION | Kasta fel |
 | RAISE NOTICE | Logga meddelande |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1427,7 +1427,7 @@ EXECUTE 'SELECT * FROM ' || p_table_name;  -- FARLIGT!
 EXECUTE format('SELECT * FROM %I', p_table_name);  -- SAKERT
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1479,7 +1479,7 @@ SELECT * FROM check_server_health(1);
 CALL cleanup_old_logs(60);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 

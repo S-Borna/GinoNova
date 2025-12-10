@@ -24,13 +24,13 @@ REACT_NODE_17_TESTING = {
     "content": """
 # Testing React Apps
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar React Testing?
 
 Tester ger dig sjalvfortroende att deploya. Utan tester ar varje deploy ett hasardspel.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -42,27 +42,27 @@ Tester ger dig sjalvfortroende att deploya. Utan tester ar varje deploy ett hasa
 | Refactoring | Mojliggor sakra kodandringar |
 | Coverage | Metrics for testning av kodbasen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Testing Library Philosophy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│           TESTING LIBRARY GUIDING PRINCIPLE                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Ju mer dina tester liknar hur din mjukvara anvands,            │
-│  desto mer sjalvfortroende ger de dig.                          │
-│                                                                  │
-│  - Testa BETEENDE, inte implementation                          │
-│  - Query element som anvandare ser dem                          │
-│  - Testa INTE interna state-variabler                           │
-│  - Testa INTE implementation detaljer                           │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|           TESTING LIBRARY GUIDING PRINCIPLE                      |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Ju mer dina tester liknar hur din mjukvara anvands,            |
+|  desto mer sjalvfortroende ger de dig.                          |
+|                                                                  |
+|  - Testa BETEENDE, inte implementation                          |
+|  - Query element som anvandare ser dem                          |
+|  - Testa INTE interna state-variabler                           |
+|  - Testa INTE implementation detaljer                           |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -75,7 +75,7 @@ Tester ger dig sjalvfortroende att deploya. Utan tester ar varje deploy ett hasa
 | getByLabelText | Form labels | Nej |
 | getByText | Textinnehall | Nej |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Setup
 
@@ -102,7 +102,7 @@ export default defineConfig({
 import '@testing-library/jest-dom';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komponent Test Exempel
 
@@ -149,7 +149,7 @@ describe('Button', () => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Testa Formular
 
@@ -186,7 +186,7 @@ describe('LoginForm', () => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Mocking
 
@@ -215,7 +215,7 @@ vi.mock('../lib/api', () => ({
 }));
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -226,7 +226,7 @@ vi.mock('../lib/api', () => ({
 | Mock fungerar inte | Fel mock-path | Kontrollera relativa paths |
 | Test timeout | Async operation tar for lang tid | Oka timeout eller mocka |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -244,16 +244,14 @@ vi.mock('../lib/api', () => ({
 - Anvand findBy for element som laddas asynkront
 - Mocka externa API:er for snabba, stabila tester
 - getByRole forbattrar bade tester och accessibility
-""",
-}
 
-## ✅ Sammanfattning
+## Sammanfattning
 
 - **Testing Library** - testa beteende, inte implementation
-- **userEvent** för realistisk användarinteraktion
-- **findBy** för asynkrona element
+- **userEvent** for realistisk anvandarinteraktion
+- **findBy** for asynkrona element
 - **Mock** externa beroenden (fetch, API)
-- **screen.getByRole** föredras över getByTestId
+- **screen.getByRole** foredras over getByTestId
 """,
 }
 
@@ -277,13 +275,13 @@ REACT_NODE_18_STATE_MANAGEMENT = {
     "content": """
 # State Management Libraries
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar State Management?
 
 Valj ratt verktyg for jobbet. Ibland racker Context, ibland behover du mer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -295,7 +293,7 @@ Valj ratt verktyg for jobbet. Ibland racker Context, ibland behover du mer.
 | Testing | Isolerat state forenklar testning |
 | Scalability | Ratt arkitektur skalar med teamet |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -308,37 +306,37 @@ Valj ratt verktyg for jobbet. Ibland racker Context, ibland behover du mer.
 | Redux Toolkit | Komplex app | ~11KB |
 | TanStack Query | Server state | ~12KB |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## State Management Val
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                STATE MANAGEMENT CHOICES                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Local State (useState)                                         │
-│  └─ Komponent-specifikt, enkelt                                 │
-│                                                                  │
-│  Context API                                                    │
-│  └─ Tema, auth, settings (sallan uppdateras)                    │
-│                                                                  │
-│  Zustand (Rekommenderat)                                        │
-│  └─ Global state, enkel API, liten bundle                       │
-│                                                                  │
-│  Jotai                                                          │
-│  └─ Atomic state, finkorning, React Suspense                    │
-│                                                                  │
-│  Redux Toolkit                                                  │
-│  └─ Komplex app, time-travel debugging, middleware              │
-│                                                                  │
-│  TanStack Query                                                 │
-│  └─ Server state (API-data, caching, syncing)                   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                STATE MANAGEMENT CHOICES                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Local State (useState)                                         |
+|  +- Komponent-specifikt, enkelt                                 |
+|                                                                  |
+|  Context API                                                    |
+|  +- Tema, auth, settings (sallan uppdateras)                    |
+|                                                                  |
+|  Zustand (Rekommenderat)                                        |
+|  +- Global state, enkel API, liten bundle                       |
+|                                                                  |
+|  Jotai                                                          |
+|  +- Atomic state, finkorning, React Suspense                    |
+|                                                                  |
+|  Redux Toolkit                                                  |
+|  +- Komplex app, time-travel debugging, middleware              |
+|                                                                  |
+|  TanStack Query                                                 |
+|  +- Server state (API-data, caching, syncing)                   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Zustand (Rekommenderat)
 
@@ -389,7 +387,7 @@ function ThemeToggle() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jotai (Atomic)
 
@@ -432,7 +430,7 @@ function Counter() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Redux Toolkit
 
@@ -499,7 +497,7 @@ function Profile() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -510,7 +508,7 @@ function Profile() {
 | Redux boilerplate | For mycket kod | Anvand Redux Toolkit createSlice |
 | Circular dependency | Store importerar components | Separera store-logik |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -551,13 +549,13 @@ REACT_NODE_19_DEPLOYMENT = {
     "content": """
 # Deployment & Production
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Deployment?
 
 En feature ar inte klar forrn den ar i produktion.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -569,7 +567,7 @@ En feature ar inte klar forrn den ar i produktion.
 | Scaling | Hantera trafik och last |
 | Rollback | Snabb atergag vid problem |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -581,31 +579,31 @@ En feature ar inte klar forrn den ar i produktion.
 | Railway | Full-stack | Free tier |
 | Docker | Full kontroll | Varierar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Deployment Platforms
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  DEPLOYMENT PLATFORMS                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Vercel (Rekommenderat for Next.js)                             │
-│  └─ Git push = deploy, preview URLs, edge functions             │
-│                                                                  │
-│  Netlify                                                        │
-│  └─ Bra for statiska sites, edge functions                      │
-│                                                                  │
-│  AWS Amplify                                                    │
-│  └─ AWS integration, CI/CD                                      │
-│                                                                  │
-│  Docker + Railway/Fly.io                                        │
-│  └─ Full kontroll, containers                                   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  DEPLOYMENT PLATFORMS                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Vercel (Rekommenderat for Next.js)                             |
+|  +- Git push = deploy, preview URLs, edge functions             |
+|                                                                  |
+|  Netlify                                                        |
+|  +- Bra for statiska sites, edge functions                      |
+|                                                                  |
+|  AWS Amplify                                                    |
+|  +- AWS integration, CI/CD                                      |
+|                                                                  |
+|  Docker + Railway/Fly.io                                        |
+|  +- Full kontroll, containers                                   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vercel Deployment
 
@@ -634,7 +632,7 @@ vercel --prod
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environment Variables
 
@@ -656,7 +654,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 const dbUrl = process.env.DATABASE_URL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker Deployment
 
@@ -699,30 +697,30 @@ module.exports = {
 };
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Production Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              PRODUCTION CHECKLIST                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  - Environment variables konfigurerade                          │
-│  - HTTPS aktiverat                                              │
-│  - Error tracking (Sentry)                                      │
-│  - Analytics (Vercel Analytics, Plausible)                      │
-│  - Performance monitoring                                       │
-│  - Logging                                                      │
-│  - Security headers                                             │
-│  - Rate limiting                                                │
-│  - Database backups                                             │
-│  - CI/CD pipeline                                               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              PRODUCTION CHECKLIST                                |
++-----------------------------------------------------------------+
+|                                                                  |
+|  - Environment variables konfigurerade                          |
+|  - HTTPS aktiverat                                              |
+|  - Error tracking (Sentry)                                      |
+|  - Analytics (Vercel Analytics, Plausible)                      |
+|  - Performance monitoring                                       |
+|  - Logging                                                      |
+|  - Security headers                                             |
+|  - Rate limiting                                                |
+|  - Database backups                                             |
+|  - CI/CD pipeline                                               |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -733,7 +731,7 @@ module.exports = {
 | Slow load | Stora bundles | Analysera med next/bundle-analyzer |
 | CORS errors | Fel API-konfiguration | Konfigurera headers i middleware |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -774,13 +772,13 @@ REACT_NODE_20_CAPSTONE = {
     "content": """
 # Capstone: Full-Stack Dashboard
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Projektbeskrivning
 
 Dags att satta ihop allt. Bygg nagot riktigt.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -792,7 +790,7 @@ Dags att satta ihop allt. Bygg nagot riktigt.
 | Best Practices | Tillampning av produktionsklar kod |
 | Portfolio | Konkret projekt att visa upp |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -805,7 +803,7 @@ Dags att satta ihop allt. Bygg nagot riktigt.
 | 5 | Real-time features | 20 min |
 | 6 | Deployment | 10 min |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Project Overview
 
@@ -816,65 +814,65 @@ Bygg en DevOps Dashboard med:
 - Charts och visualiseringar
 - Deploy till Vercel
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tech Stack
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      TECH STACK                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Frontend: Next.js 14, React 18, TypeScript                     │
-│  Styling: Tailwind CSS, shadcn/ui                               │
-│  State: Zustand + TanStack Query                                │
-│  Database: PostgreSQL + Prisma                                  │
-│  Auth: NextAuth.js                                              │
-│  Charts: Recharts                                               │
-│  Forms: React Hook Form + Zod                                   │
-│  Testing: Vitest + Testing Library                              │
-│  Deploy: Vercel                                                 │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      TECH STACK                                  |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Frontend: Next.js 14, React 18, TypeScript                     |
+|  Styling: Tailwind CSS, shadcn/ui                               |
+|  State: Zustand + TanStack Query                                |
+|  Database: PostgreSQL + Prisma                                  |
+|  Auth: NextAuth.js                                              |
+|  Charts: Recharts                                               |
+|  Forms: React Hook Form + Zod                                   |
+|  Testing: Vitest + Testing Library                              |
+|  Deploy: Vercel                                                 |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Projektstruktur
 
 ```
 devops-dashboard/
-├── src/
-│   ├── app/
-│   │   ├── (auth)/
-│   │   │   ├── login/page.tsx
-│   │   │   └── register/page.tsx
-│   │   ├── (dashboard)/
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx
-│   │   │   ├── deployments/page.tsx
-│   │   │   ├── servers/page.tsx
-│   │   │   └── settings/page.tsx
-│   │   ├── api/
-│   │   │   ├── auth/[...nextauth]/route.ts
-│   │   │   ├── deployments/route.ts
-│   │   │   └── servers/route.ts
-│   │   └── layout.tsx
-│   ├── components/
-│   │   ├── ui/
-│   │   ├── charts/
-│   │   └── forms/
-│   ├── lib/
-│   │   ├── db.ts
-│   │   └── auth.ts
-│   └── stores/
-│       └── useStore.ts
-├── prisma/
-│   └── schema.prisma
-└── tests/
++-- src/
+|   +-- app/
+|   |   +-- (auth)/
+|   |   |   +-- login/page.tsx
+|   |   |   +-- register/page.tsx
+|   |   +-- (dashboard)/
+|   |   |   +-- layout.tsx
+|   |   |   +-- page.tsx
+|   |   |   +-- deployments/page.tsx
+|   |   |   +-- servers/page.tsx
+|   |   |   +-- settings/page.tsx
+|   |   +-- api/
+|   |   |   +-- auth/[...nextauth]/route.ts
+|   |   |   +-- deployments/route.ts
+|   |   |   +-- servers/route.ts
+|   |   +-- layout.tsx
+|   +-- components/
+|   |   +-- ui/
+|   |   +-- charts/
+|   |   +-- forms/
+|   +-- lib/
+|   |   +-- db.ts
+|   |   +-- auth.ts
+|   +-- stores/
+|       +-- useStore.ts
++-- prisma/
+|   +-- schema.prisma
++-- tests/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Database Schema
 
@@ -916,7 +914,7 @@ enum ServerStatus { ONLINE OFFLINE MAINTENANCE }
 enum DeploymentStatus { PENDING BUILDING DEPLOYED FAILED }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Authentication
 
@@ -939,7 +937,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dashboard Page
 
@@ -967,7 +965,7 @@ export default async function DashboardPage() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Real-time Updates
 
@@ -984,7 +982,7 @@ export function useServerStatus() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Implementation Steps
 
@@ -1018,7 +1016,7 @@ export function useServerStatus() {
    - Integration tests
    - Deploy till Vercel
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1029,7 +1027,7 @@ export function useServerStatus() {
 | Charts renderar inte | Data-format | Validera data-strukturen |
 | Build failar | TypeScript errors | Fixa typer innan deploy |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1048,7 +1046,7 @@ export function useServerStatus() {
 - Deploya tidigt for att hitta problem
 - Dokumentera ditt arbete
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grattis!
 

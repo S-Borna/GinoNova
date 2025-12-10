@@ -37,28 +37,28 @@ LINUX_NODE_13_DNS_V2 = {
                 "concepts": [
                     {
                         "title": "DNS Resolution Flow",
-                        "explanation": "DNS översätter hostname till IP. Systemet kollar: /etc/hosts → lokal cache → DNS resolver → internet.",
+                        "explanation": "DNS översätter hostname till IP. Systemet kollar: /etc/hosts -> lokal cache -> DNS resolver -> internet.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DNS RESOLUTION FLOW                                 │
-├─────────────────────────────────────────────────────┤
-│ User: "google.com"                                  │
-│        │                                            │
-│        ▼                                            │
-│ 1. /etc/hosts         (lokal override)             │
-│        │ (not found)                               │
-│        ▼                                            │
-│ 2. Local DNS cache    (tidigare lookups)           │
-│        │ (not found)                               │
-│        ▼                                            │
-│ 3. DNS resolver       (/etc/resolv.conf)           │
-│        │                                            │
-│        ▼                                            │
-│ 4. Internet: Root → .com → google.com              │
-│        │                                            │
-│        ▼                                            │
-│ 5. Return IP: 142.250.185.78                       │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DNS RESOLUTION FLOW                                 |
++-----------------------------------------------------+
+| User: "google.com"                                  |
+|        |                                            |
+|        ▼                                            |
+| 1. /etc/hosts         (lokal override)             |
+|        | (not found)                               |
+|        ▼                                            |
+| 2. Local DNS cache    (tidigare lookups)           |
+|        | (not found)                               |
+|        ▼                                            |
+| 3. DNS resolver       (/etc/resolv.conf)           |
+|        |                                            |
+|        ▼                                            |
+| 4. Internet: Root -> .com -> google.com              |
+|        |                                            |
+|        ▼                                            |
+| 5. Return IP: 142.250.185.78                       |
++-----------------------------------------------------+""",
                         "pro_tip": "/etc/hosts har högst prioritet - perfekt för lokala overrides!",
                         "common_mistake": "Att glömma att cache kan ge gamla svar - flush cache vid problem."
                     },
@@ -66,17 +66,17 @@ LINUX_NODE_13_DNS_V2 = {
                         "title": "DNS Record Types",
                         "explanation": "Olika records har olika syften: A=IPv4, AAAA=IPv6, CNAME=alias, MX=mail, TXT=verifiering, NS=nameservers.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DNS RECORD TYPES                                    │
-├─────────────────────────────────────────────────────┤
-│ A     │ example.com → 93.184.216.34    (IPv4)      │
-│ AAAA  │ example.com → 2606:2800:...    (IPv6)      │
-│ CNAME │ www.example.com → example.com  (alias)     │
-│ MX    │ example.com → mail.example.com (mail)      │
-│ TXT   │ SPF, DKIM, verifiering records             │
-│ NS    │ example.com → ns1.example.com  (nameserv)  │
-│ PTR   │ IP → hostname (reverse lookup)             │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DNS RECORD TYPES                                    |
++-----------------------------------------------------+
+| A     | example.com -> 93.184.216.34    (IPv4)      |
+| AAAA  | example.com -> 2606:2800:...    (IPv6)      |
+| CNAME | www.example.com -> example.com  (alias)     |
+| MX    | example.com -> mail.example.com (mail)      |
+| TXT   | SPF, DKIM, verifiering records             |
+| NS    | example.com -> ns1.example.com  (nameserv)  |
+| PTR   | IP -> hostname (reverse lookup)             |
++-----------------------------------------------------+""",
                         "pro_tip": "TXT records används för domänverifiering (Google, AWS, etc.)",
                         "common_mistake": "Att glömma att CNAME inte kan finnas på apex domain (example.com)."
                     },
@@ -84,18 +84,18 @@ LINUX_NODE_13_DNS_V2 = {
                         "title": "dig - DNS Swiss Army Knife",
                         "explanation": "dig är det kraftfullaste DNS-verktyget. +short för bara svaret, specifik record-typ med A/MX/TXT etc.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DIG KOMMANDON                                       │
-├─────────────────────────────────────────────────────┤
-│ dig example.com          │ Full DNS lookup         │
-│ dig +short example.com   │ Bara IP-svaret          │
-│ dig example.com A        │ Bara A-records          │
-│ dig example.com MX       │ Mail servers            │
-│ dig example.com TXT      │ TXT records             │
-│ dig +trace example.com   │ Visa hela resolution    │
-│ dig @8.8.8.8 example.com │ Fråga specifik DNS      │
-│ dig -x 8.8.8.8           │ Reverse lookup          │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DIG KOMMANDON                                       |
++-----------------------------------------------------+
+| dig example.com          | Full DNS lookup         |
+| dig +short example.com   | Bara IP-svaret          |
+| dig example.com A        | Bara A-records          |
+| dig example.com MX       | Mail servers            |
+| dig example.com TXT      | TXT records             |
+| dig +trace example.com   | Visa hela resolution    |
+| dig @8.8.8.8 example.com | Fråga specifik DNS      |
+| dig -x 8.8.8.8           | Reverse lookup          |
++-----------------------------------------------------+""",
                         "pro_tip": "@8.8.8.8 låter dig testa mot specifik DNS - perfekt för att jämföra!",
                         "common_mistake": "Att tro att DNS ändras direkt - TTL kan göra att gamla svar cachas."
                     }
@@ -132,7 +132,7 @@ LINUX_NODE_13_DNS_V2 = {
                         "task": "Reverse lookup",
                         "instruction": "Hitta hostname för IP 8.8.8.8",
                         "expected_command": "dig -x 8.8.8.8",
-                        "hint": "-x gör reverse lookup (IP → hostname)"
+                        "hint": "-x gör reverse lookup (IP -> hostname)"
                     }
                 ],
                 "estimated_time": "10 min",

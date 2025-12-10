@@ -23,7 +23,7 @@ REACT_NODE_01_INTRODUCTION = {
     ],
     "content": """# React Introduktion och Setup
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -40,66 +40,66 @@ Du maste forsta:
 - **Hur komponenter fungerar** - for att forsta applikationsstruktur
 - **Build-processen** - for att optimera CI/CD pipelines
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar React?
 
 React ar ett **deklarativt** UI-bibliotek fran Meta (Facebook). Istallet for att saga *hur* UI ska uppdateras, beskriver du *vad* du vill se.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    IMPERATIV vs DEKLARATIV                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  IMPERATIV (vanilla JS):              DEKLARATIV (React):       │
-│  ─────────────────────                ────────────────────      │
-│  const btn = document.                function Counter() {      │
-│    createElement('button');             const [count, setCount] │
-│  btn.textContent = count;               = useState(0);          │
-│  btn.onclick = () => {                  return (                │
-│    count++;                               <button onClick={      │
-│    btn.textContent = count;                () => setCount(c+1)  │
-│  };                                       }>                     │
-│  document.body.appendChild(btn);           {count}               │
-│                                          </button>               │
-│                                        );                        │
-│                                       }                          │
-│                                                                  │
-│  Problem: Manuell DOM-manipulation     Losning: React hanterar  │
-│  blir komplex och buggig               DOM automatiskt          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    IMPERATIV vs DEKLARATIV                       |
++-----------------------------------------------------------------+
+|                                                                  |
+|  IMPERATIV (vanilla JS):              DEKLARATIV (React):       |
+|  ---------------------                --------------------      |
+|  const btn = document.                function Counter() {      |
+|    createElement('button');             const [count, setCount] |
+|  btn.textContent = count;               = useState(0);          |
+|  btn.onclick = () => {                  return (                |
+|    count++;                               <button onClick={      |
+|    btn.textContent = count;                () => setCount(c+1)  |
+|  };                                       }>                     |
+|  document.body.appendChild(btn);           {count}               |
+|                                          </button>               |
+|                                        );                        |
+|                                       }                          |
+|                                                                  |
+|  Problem: Manuell DOM-manipulation     Losning: React hanterar  |
+|  blir komplex och buggig               DOM automatiskt          |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Virtual DOM
 
 React anvander en **Virtual DOM** for effektiva uppdateringar:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     REACT RENDERING CYCLE                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  1. State andras                                                 │
-│     │                                                            │
-│     ▼                                                            │
-│  2. React skapar ny Virtual DOM                                  │
-│     │                                                            │
-│     ▼                                                            │
-│  3. Diffing: Jamfor gammal vs ny Virtual DOM                     │
-│     │                                                            │
-│     ▼                                                            │
-│  4. Reconciliation: Berakna minimala andringar                   │
-│     │                                                            │
-│     ▼                                                            │
-│  5. Commit: Uppdatera bara det som andrats i riktiga DOM         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     REACT RENDERING CYCLE                        |
++-----------------------------------------------------------------+
+|                                                                  |
+|  1. State andras                                                 |
+|     |                                                            |
+|     ▼                                                            |
+|  2. React skapar ny Virtual DOM                                  |
+|     |                                                            |
+|     ▼                                                            |
+|  3. Diffing: Jamfor gammal vs ny Virtual DOM                     |
+|     |                                                            |
+|     ▼                                                            |
+|  4. Reconciliation: Berakna minimala andringar                   |
+|     |                                                            |
+|     ▼                                                            |
+|  5. Commit: Uppdatera bara det som andrats i riktiga DOM         |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon och Installation
 
@@ -138,33 +138,33 @@ npm run dev
 # Output: Local: http://localhost:3000/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Projektstruktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    VITE REACT PROJEKTSTRUKTUR                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  my-react-app/                                                   │
-│  ├── public/                  # Statiska filer                   │
-│  │   └── vite.svg                                                │
-│  ├── src/                     # Kallkod                          │
-│  │   ├── assets/              # Bilder, fonts                    │
-│  │   ├── App.tsx              # Huvudkomponent                   │
-│  │   ├── App.css              # Komponent-styles                 │
-│  │   ├── main.tsx             # Entry point                      │
-│  │   └── index.css            # Global CSS                       │
-│  ├── index.html               # HTML template                    │
-│  ├── package.json             # Dependencies                     │
-│  ├── tsconfig.json            # TypeScript config                │
-│  └── vite.config.ts           # Vite config                      │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    VITE REACT PROJEKTSTRUKTUR                    |
++-----------------------------------------------------------------+
+|                                                                  |
+|  my-react-app/                                                   |
+|  +-- public/                  # Statiska filer                   |
+|  |   +-- vite.svg                                                |
+|  +-- src/                     # Kallkod                          |
+|  |   +-- assets/              # Bilder, fonts                    |
+|  |   +-- App.tsx              # Huvudkomponent                   |
+|  |   +-- App.css              # Komponent-styles                 |
+|  |   +-- main.tsx             # Entry point                      |
+|  |   +-- index.css            # Global CSS                       |
+|  +-- index.html               # HTML template                    |
+|  +-- package.json             # Dependencies                     |
+|  +-- tsconfig.json            # TypeScript config                |
+|  +-- vite.config.ts           # Vite config                      |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel
 
@@ -196,7 +196,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -209,7 +209,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 | **Vite** | Modern, snabb build-tool for React |
 | **Next.js** | React-framework med SSR och routing |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -220,7 +220,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 | `JSX element has no corresponding closing tag` | Obalanserade taggar | Kontrollera JSX-syntax |
 | `'React' must be in scope` | Gammal React-version | Uppgradera eller lagg till `import React` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -259,7 +259,7 @@ REACT_NODE_02_JSX = {
     ],
     "content": """# JSX - JavaScript XML
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -276,32 +276,32 @@ Du maste forsta:
 - **Expressions** - for att visa dynamisk data
 - **Listor och keys** - for att rendera collections effektivt
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar JSX?
 
 JSX ar en syntaxextension for JavaScript som later dig skriva HTML-liknande kod:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    JSX TRANSFORMATION                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  JSX (vad du skriver):                                           │
-│  ─────────────────────                                           │
-│  const element = <h1>Hello, World!</h1>;                         │
-│                                                                  │
-│                        │                                         │
-│                        ▼  (kompileras av Babel/TypeScript)       │
-│                                                                  │
-│  JavaScript (vad som kors):                                      │
-│  ──────────────────────────                                      │
-│  const element = React.createElement('h1', null, 'Hello!');      │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    JSX TRANSFORMATION                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  JSX (vad du skriver):                                           |
+|  ---------------------                                           |
+|  const element = <h1>Hello, World!</h1>;                         |
+|                                                                  |
+|                        |                                         |
+|                        ▼  (kompileras av Babel/TypeScript)       |
+|                                                                  |
+|  JavaScript (vad som kors):                                      |
+|  --------------------------                                      |
+|  const element = React.createElement('h1', null, 'Hello!');      |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## JSX Syntax
 
@@ -314,7 +314,7 @@ JSX ar en syntaxextension for JavaScript som later dig skriva HTML-liknande kod:
 | `<></>` | Fragment (ingen wrapper) | Returnera flera element |
 | `key` | Unik identifierare i listor | `key={item.id}` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Exempel
 
@@ -428,7 +428,7 @@ function DefinitionList({ items }) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -441,7 +441,7 @@ function DefinitionList({ items }) {
 | **key** | Unik ID for list-element |
 | **Ternary** | `condition ? true : false` for villkor |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -452,7 +452,7 @@ function DefinitionList({ items }) {
 | `Each child should have unique key` | Saknar key i lista | Lagg till `key={uniqueId}` |
 | `Objects are not valid as React child` | Renderar objekt direkt | Konvertera till string eller mappa |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -491,7 +491,7 @@ REACT_NODE_03_COMPONENTS = {
     ],
     "content": """# Komponenter - Byggstenar
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -508,40 +508,40 @@ Du maste forsta:
 - **Composition** - bygg komplext fran enkelt
 - **Separation of concerns** - varje komponent gor en sak
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en komponent?
 
 En komponent ar en funktion som returnerar JSX:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    KOMPONENT-ANATOMI                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  function Button({ label, onClick }) {  // Props (input)         │
-│    const [clicked, setClicked] = useState(false);  // State      │
-│                                                                  │
-│    const handleClick = () => {  // Event handler                 │
-│      setClicked(true);                                           │
-│      onClick?.();                                                │
-│    };                                                            │
-│                                                                  │
-│    return (                    // JSX (output)                   │
-│      <button onClick={handleClick}>                              │
-│        {label}                                                   │
-│      </button>                                                   │
-│    );                                                            │
-│  }                                                               │
-│                                                                  │
-│  INPUT: Props (data fran parent)                                 │
-│  INTERN: State (lokal data)                                      │
-│  OUTPUT: JSX (UI att rendera)                                    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    KOMPONENT-ANATOMI                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|  function Button({ label, onClick }) {  // Props (input)         |
+|    const [clicked, setClicked] = useState(false);  // State      |
+|                                                                  |
+|    const handleClick = () => {  // Event handler                 |
+|      setClicked(true);                                           |
+|      onClick?.();                                                |
+|    };                                                            |
+|                                                                  |
+|    return (                    // JSX (output)                   |
+|      <button onClick={handleClick}>                              |
+|        {label}                                                   |
+|      </button>                                                   |
+|    );                                                            |
+|  }                                                               |
+|                                                                  |
+|  INPUT: Props (data fran parent)                                 |
+|  INTERN: State (lokal data)                                      |
+|  OUTPUT: JSX (UI att rendera)                                    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komponent-typer
 
@@ -552,7 +552,7 @@ En komponent ar en funktion som returnerar JSX:
 | **Container** | Logik och datahamtning | Sidor, wrappers |
 | **Compound** | Flexibla sub-komponenter | Card.Header, Card.Body |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Exempel
 
@@ -608,29 +608,29 @@ function UserCard({ user }: { user: User }) {
 ### Komponent-hierarki
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     KOMPONENT-TRAD                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                          App                                     │
-│                           │                                      │
-│         ┌─────────────────┼─────────────────┐                    │
-│         │                 │                 │                    │
-│      Header            Main             Footer                   │
-│         │                 │                                      │
-│    ┌────┴────┐      ┌────┴────┐                                  │
-│    │         │      │         │                                  │
-│   Logo    NavBar  Sidebar   Content                              │
-│              │                 │                                 │
-│         ┌────┴────┐       ServerList                             │
-│         │         │           │                                  │
-│      NavItem  NavItem    ServerCard                              │
-│                              │                                   │
-│                         ┌────┴────┐                              │
-│                         │         │                              │
-│                      Status    Actions                           │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     KOMPONENT-TRAD                               |
++-----------------------------------------------------------------+
+|                                                                  |
+|                          App                                     |
+|                           |                                      |
+|         +-----------------+-----------------+                    |
+|         |                 |                 |                    |
+|      Header            Main             Footer                   |
+|         |                 |                                      |
+|    +----+----+      +----+----+                                  |
+|    |         |      |         |                                  |
+|   Logo    NavBar  Sidebar   Content                              |
+|              |                 |                                 |
+|         +----+----+       ServerList                             |
+|         |         |           |                                  |
+|      NavItem  NavItem    ServerCard                              |
+|                              |                                   |
+|                         +----+----+                              |
+|                         |         |                              |
+|                      Status    Actions                           |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ### Container vs Presentation
@@ -679,7 +679,7 @@ function ServerListContainer() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -691,7 +691,7 @@ function ServerListContainer() {
 | **Composition** | Bygga komplext fran enkelt |
 | **PascalCase** | Komponentnamn borjar med stor bokstav |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -702,7 +702,7 @@ function ServerListContainer() {
 | `Too many re-renders` | State-uppdatering i render | Flytta till useEffect |
 | `Cannot read property of undefined` | Props saknas | Lagg till default-varden |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -741,7 +741,7 @@ REACT_NODE_04_PROPS = {
     ],
     "content": """# Props - Komponentkommunikation
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -758,35 +758,35 @@ Du maste forsta:
 - **Callbacks** - events gar uppat
 - **Prop drilling** - och hur man undviker det
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dataflode i React
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    UNIDIRECTIONAL DATA FLOW                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                        Parent                                    │
-│                     [state: servers]                             │
-│                          │                                       │
-│              props       │       callback                        │
-│              (data)      ▼       (events)                        │
-│         ┌────────────────┴────────────────┐                      │
-│         │                                 │                      │
-│         ▼                                 ▼                      │
-│      Child A                          Child B                    │
-│   <ServerList                     <AddServerForm                 │
-│     servers={servers}               onAdd={handleAdd}            │
-│   />                              />                             │
-│                                                                  │
-│  Data flodar NEDAT via props                                     │
-│  Events flodar UPPAT via callbacks                               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    UNIDIRECTIONAL DATA FLOW                      |
++-----------------------------------------------------------------+
+|                                                                  |
+|                        Parent                                    |
+|                     [state: servers]                             |
+|                          |                                       |
+|              props       |       callback                        |
+|              (data)      ▼       (events)                        |
+|         +----------------+----------------+                      |
+|         |                                 |                      |
+|         ▼                                 ▼                      |
+|      Child A                          Child B                    |
+|   <ServerList                     <AddServerForm                 |
+|     servers={servers}               onAdd={handleAdd}            |
+|   />                              />                             |
+|                                                                  |
+|  Data flodar NEDAT via props                                     |
+|  Events flodar UPPAT via callbacks                               |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Props-typer
 
@@ -799,7 +799,7 @@ Du maste forsta:
 | **Children** | Nested JSX | `<Card>content</Card>` |
 | **Optional** | Med `?` i TypeScript | `title?: string` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Exempel
 
@@ -949,7 +949,7 @@ function Input({ label, error, ...inputProps }: InputProps) {
 />
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -961,7 +961,7 @@ function Input({ label, error, ...inputProps }: InputProps) {
 | **Destructuring** | `{ name, age }` istallet for `props.name` |
 | **Spread** | `{...props}` for att vidarebefordra alla props |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -972,7 +972,7 @@ function Input({ label, error, ...inputProps }: InputProps) {
 | `Prop drilling hell` | For manga nivaer | Anvand Context eller state management |
 | `Type error on props` | Fel prop-typ | Kontrollera TypeScript interface |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

@@ -84,9 +84,9 @@ Gå till Studyflow i menyn för att starta en session!"""
         ["hur får jag xp", "vad är xp", "hur fungerar poäng", "level"],
         """**XP-systemet** belönar ditt lärande!
 
-• Slutför tasks → Få XP
-• Svara rätt på quiz → Bonus XP
-• Håll streaks → Extra belöningar
+• Slutför tasks -> Få XP
+• Svara rätt på quiz -> Bonus XP
+• Håll streaks -> Extra belöningar
 
 Din XP syns på Dashboard och i din profil. Ju mer du lär dig, desto högre level!"""
     ),
@@ -110,7 +110,7 @@ Ställ en fråga så hjälper jag dig hitta rätt!"""
     (
         ["process", "processer", "ps", "top", "htop", "kill", "signal"],
         ["process", "processer", "hur dödar jag process", "visa processer", "ps aux"],
-        """**Process Management** täcks i Linux Mastery → Node 1.
+        """**Process Management** täcks i Linux Mastery -> Node 1.
 
 Innehåll:
 • `ps`, `top`, `htop` - Visa processer
@@ -119,13 +119,13 @@ Innehåll:
 • Signals (SIGTERM, SIGKILL)
 • Background/foreground jobs
 
-Gå till: **SkillsMaps → Linux Mastery → Process Management**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Process Management**"""
     ),
 
     (
         ["fil", "filer", "katalog", "mapp", "ls", "cd", "pwd", "find", "locate"],
         ["navigera filer", "hitta filer", "ls kommando", "cd kommando", "find"],
-        """**Filsystemnavigering** täcks i Linux Mastery → Node 2.
+        """**Filsystemnavigering** täcks i Linux Mastery -> Node 2.
 
 Innehåll:
 • `ls`, `cd`, `pwd` - Grundläggande navigering
@@ -133,13 +133,13 @@ Innehåll:
 • Filsystemets struktur (/etc, /var, /home)
 • Relativa vs absoluta sökvägar
 
-Gå till: **SkillsMaps → Linux Mastery → File System Navigation**"""
+Gå till: **SkillsMaps -> Linux Mastery -> File System Navigation**"""
     ),
 
     (
         ["cp", "mv", "rm", "mkdir", "touch", "kopiera", "flytta", "ta bort"],
         ["kopiera fil", "flytta fil", "ta bort fil", "skapa mapp", "cp mv rm"],
-        """**Filoperationer** täcks i Linux Mastery → Node 3.
+        """**Filoperationer** täcks i Linux Mastery -> Node 3.
 
 Innehåll:
 • `cp` - Kopiera filer och mappar
@@ -147,13 +147,13 @@ Innehåll:
 • `rm` - Ta bort (VARNING: ingen papperskorg!)
 • `mkdir`, `touch` - Skapa mappar och filer
 
-Gå till: **SkillsMaps → Linux Mastery → File Operations**"""
+Gå till: **SkillsMaps -> Linux Mastery -> File Operations**"""
     ),
 
     (
         ["chmod", "chown", "permission", "rättighet", "behörighet", "rwx", "755", "644"],
         ["chmod", "permissions", "filrättigheter", "hur ändrar jag rättigheter", "rwx"],
-        """**Filrättigheter** täcks i Linux Mastery → Node 4.
+        """**Filrättigheter** täcks i Linux Mastery -> Node 4.
 
 Innehåll:
 • `r`, `w`, `x` - Read, Write, Execute
@@ -162,13 +162,13 @@ Innehåll:
 • Speciella: SUID, SGID, Sticky bit
 • Säkerhet: Varför 777 är farligt
 
-Gå till: **SkillsMaps → Linux Mastery → File Permissions**"""
+Gå till: **SkillsMaps -> Linux Mastery -> File Permissions**"""
     ),
 
     (
         ["grep", "sed", "awk", "cut", "sort", "uniq", "text", "söka"],
         ["grep", "söka i filer", "sed", "awk", "texthantering"],
-        """**Textbearbetning** täcks i Linux Mastery → Node 5.
+        """**Textbearbetning** täcks i Linux Mastery -> Node 5.
 
 Innehåll:
 • `grep` - Sök i text (regex!)
@@ -176,13 +176,13 @@ Innehåll:
 • `awk` - Kraftfull textanalys
 • `cut`, `sort`, `uniq` - Manipulera output
 
-Gå till: **SkillsMaps → Linux Mastery → Text Processing**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Text Processing**"""
     ),
 
     (
         ["vim", "nano", "vi", "editor", "textredigera"],
         ["vim", "nano", "hur använder jag vim", "texteditor i terminal"],
-        """**Texteditorer** täcks i Linux Mastery → Node 6.
+        """**Texteditorer** täcks i Linux Mastery -> Node 6.
 
 Innehåll:
 • `vim` - Kraftfull men brant inlärningskurva
@@ -190,13 +190,13 @@ Innehåll:
 • vim-lägen: Normal, Insert, Visual
 • Spara och avsluta (:wq, :q!)
 
-Gå till: **SkillsMaps → Linux Mastery → Text Editors**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Text Editors**"""
     ),
 
     (
         ["redirect", "pipe", "|", ">", ">>", "<", "stdin", "stdout", "stderr"],
         ["redirect", "pipe", "omdirigera output", "stdout stderr"],
-        """**I/O Redirection** täcks i Linux Mastery → Node 7.
+        """**I/O Redirection** täcks i Linux Mastery -> Node 7.
 
 Innehåll:
 • `>` - Skriv till fil (överskriver)
@@ -205,13 +205,13 @@ Innehåll:
 • `2>&1` - Redirect stderr
 • `/dev/null` - Kasta output
 
-Gå till: **SkillsMaps → Linux Mastery → I/O Redirection**"""
+Gå till: **SkillsMaps -> Linux Mastery -> I/O Redirection**"""
     ),
 
     (
         ["user", "användare", "grupp", "useradd", "passwd", "sudo", "root"],
         ["skapa användare", "useradd", "sudo", "root", "grupper"],
-        """**Användarhantering** täcks i Linux Mastery → Node 8.
+        """**Användarhantering** täcks i Linux Mastery -> Node 8.
 
 Innehåll:
 • `useradd`, `userdel` - Skapa/ta bort användare
@@ -220,13 +220,13 @@ Innehåll:
 • `sudo` - Köra som root
 • `/etc/passwd`, `/etc/shadow`
 
-Gå till: **SkillsMaps → Linux Mastery → User Management**"""
+Gå till: **SkillsMaps -> Linux Mastery -> User Management**"""
     ),
 
     (
         ["apt", "yum", "dnf", "paket", "install", "package", "brew"],
         ["installera paket", "apt install", "yum", "pakethantering"],
-        """**Pakethantering** täcks i Linux Mastery → Node 9.
+        """**Pakethantering** täcks i Linux Mastery -> Node 9.
 
 Innehåll:
 • `apt` (Debian/Ubuntu)
@@ -235,13 +235,13 @@ Innehåll:
 • Uppdatera system
 • Repositories
 
-Gå till: **SkillsMaps → Linux Mastery → Package Management**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Package Management**"""
     ),
 
     (
         ["systemd", "service", "systemctl", "tjänst", "daemon", "start", "stop", "enable"],
         ["systemctl", "starta tjänst", "service", "daemon"],
-        """**Tjänstehantering** täcks i Linux Mastery → Node 10.
+        """**Tjänstehantering** täcks i Linux Mastery -> Node 10.
 
 Innehåll:
 • `systemctl start/stop/restart`
@@ -250,13 +250,13 @@ Innehåll:
 • journalctl för loggar
 • Boot targets
 
-Gå till: **SkillsMaps → Linux Mastery → Service Management**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Service Management**"""
     ),
 
     (
         ["disk", "partition", "mount", "df", "du", "fdisk", "lvm", "lagring"],
         ["disk", "partition", "mount", "hur mycket plats", "df du"],
-        """**Disk & Lagring** täcks i Linux Mastery → Node 11.
+        """**Disk & Lagring** täcks i Linux Mastery -> Node 11.
 
 Innehåll:
 • `df`, `du` - Diskutrymme
@@ -265,13 +265,13 @@ Innehåll:
 • LVM - Logical Volume Manager
 • RAID-koncept
 
-Gå till: **SkillsMaps → Linux Mastery → Disk & Storage**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Disk & Storage**"""
     ),
 
     (
         ["nätverk", "network", "ip", "ifconfig", "netstat", "ss", "ping", "traceroute", "subnet", "subnetting", "cidr"],
         ["nätverk", "ip adress", "subnetting", "subnet", "ping", "nätverksproblem"],
-        """**Nätverk** täcks i Linux Mastery → Node 12.
+        """**Nätverk** täcks i Linux Mastery -> Node 12.
 
 Innehåll:
 • `ip addr`, `ifconfig` - Visa nätverksinfo
@@ -280,13 +280,13 @@ Innehåll:
 • **Subnetting & CIDR** - IP-beräkning
 • Nätverkskonfiguration
 
-Gå till: **SkillsMaps → Linux Mastery → Networking**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Networking**"""
     ),
 
     (
         ["dns", "nslookup", "dig", "host", "resolv", "domän"],
         ["dns", "nslookup", "domänuppslagning", "dig"],
-        """**DNS** täcks i Linux Mastery → Node 13.
+        """**DNS** täcks i Linux Mastery -> Node 13.
 
 Innehåll:
 • Hur DNS fungerar
@@ -295,13 +295,13 @@ Innehåll:
 • `/etc/hosts`
 • DNS-felsökning
 
-Gå till: **SkillsMaps → Linux Mastery → DNS**"""
+Gå till: **SkillsMaps -> Linux Mastery -> DNS**"""
     ),
 
     (
         ["firewall", "brandvägg", "iptables", "ufw", "firewalld", "port"],
         ["firewall", "öppna port", "iptables", "ufw", "brandvägg"],
-        """**Brandvägg** täcks i Linux Mastery → Node 14.
+        """**Brandvägg** täcks i Linux Mastery -> Node 14.
 
 Innehåll:
 • `iptables` - Lågnivå brandvägg
@@ -310,13 +310,13 @@ Innehåll:
 • Öppna/stänga portar
 • Chains och regler
 
-Gå till: **SkillsMaps → Linux Mastery → Firewall**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Firewall**"""
     ),
 
     (
         ["ssh", "scp", "sftp", "nyckel", "key", "remote", "anslut"],
         ["ssh", "ansluta remote", "ssh nyckel", "scp"],
-        """**SSH** täcks i Linux Mastery → Node 15.
+        """**SSH** täcks i Linux Mastery -> Node 15.
 
 Innehåll:
 • SSH-anslutning: `ssh user@host`
@@ -325,13 +325,13 @@ Innehåll:
 • SSH config-fil
 • Port forwarding & tunnlar
 
-Gå till: **SkillsMaps → Linux Mastery → SSH**"""
+Gå till: **SkillsMaps -> Linux Mastery -> SSH**"""
     ),
 
     (
         ["tar", "gzip", "zip", "arkiv", "komprimera", "packa"],
         ["tar", "zip", "packa filer", "komprimera", "arkivera"],
-        """**Arkivering** täcks i Linux Mastery → Node 16.
+        """**Arkivering** täcks i Linux Mastery -> Node 16.
 
 Innehåll:
 • `tar` - Skapa arkiv
@@ -339,13 +339,13 @@ Innehåll:
 • `tar -czvf` - Packa och komprimera
 • `unzip`, `tar -xzvf` - Packa upp
 
-Gå till: **SkillsMaps → Linux Mastery → Archiving**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Archiving**"""
     ),
 
     (
         ["cron", "crontab", "schemalägg", "automatisk", "jobb"],
         ["cron", "crontab", "schemalägg kommando", "automatisera"],
-        """**Cron Jobs** täcks i Linux Mastery → Node 17.
+        """**Cron Jobs** täcks i Linux Mastery -> Node 17.
 
 Innehåll:
 • `crontab -e` - Redigera cron
@@ -354,13 +354,13 @@ Innehåll:
 • Logga cron-output
 • systemd timers
 
-Gå till: **SkillsMaps → Linux Mastery → Cron & Scheduling**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Cron & Scheduling**"""
     ),
 
     (
         ["log", "logg", "syslog", "journalctl", "loggar", "dmesg"],
         ["loggar", "var finns loggar", "journalctl", "syslog"],
-        """**Logghantering** täcks i Linux Mastery → Node 18.
+        """**Logghantering** täcks i Linux Mastery -> Node 18.
 
 Innehåll:
 • `/var/log/` - Var loggar finns
@@ -369,13 +369,13 @@ Innehåll:
 • `tail -f` - Följa loggar live
 • Log rotation
 
-Gå till: **SkillsMaps → Linux Mastery → Log Management**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Log Management**"""
     ),
 
     (
         ["performance", "prestanda", "cpu", "minne", "memory", "ram", "vmstat", "iostat"],
         ["prestanda", "cpu användning", "minnesanvändning", "slow", "långsamt"],
-        """**Prestanda** täcks i Linux Mastery → Node 19.
+        """**Prestanda** täcks i Linux Mastery -> Node 19.
 
 Innehåll:
 • `top`, `htop` - CPU/minne live
@@ -384,13 +384,13 @@ Innehåll:
 • Load average
 • Flaskhalsar
 
-Gå till: **SkillsMaps → Linux Mastery → Performance Monitoring**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Performance Monitoring**"""
     ),
 
     (
         ["troubleshoot", "felsök", "problem", "debug", "fungerar inte"],
         ["felsökning", "något fungerar inte", "debug", "troubleshoot"],
-        """**Felsökning** täcks i Linux Mastery → Node 20.
+        """**Felsökning** täcks i Linux Mastery -> Node 20.
 
 Innehåll:
 • Systematisk felsökning
@@ -399,7 +399,7 @@ Innehåll:
 • Diskproblem
 • Serviceproblem
 
-Gå till: **SkillsMaps → Linux Mastery → Troubleshooting**"""
+Gå till: **SkillsMaps -> Linux Mastery -> Troubleshooting**"""
     ),
 
     # ==========================================================================
@@ -420,7 +420,7 @@ Gå till: **SkillsMaps → Linux Mastery → Troubleshooting**"""
 • Multi-stage builds
 • Security best practices
 
-Gå till: **SkillsMaps → Docker Mastery**"""
+Gå till: **SkillsMaps -> Docker Mastery**"""
     ),
 
     (
@@ -435,7 +435,7 @@ Innehåll:
 • .dockerignore
 • Image layers och caching
 
-Gå till: **SkillsMaps → Docker Mastery → Images**"""
+Gå till: **SkillsMaps -> Docker Mastery -> Images**"""
     ),
 
     (
@@ -450,7 +450,7 @@ Innehåll:
 • Environment variables
 • Depends_on och healthchecks
 
-Gå till: **SkillsMaps → Docker Mastery → Compose**"""
+Gå till: **SkillsMaps -> Docker Mastery -> Compose**"""
     ),
 
     (
@@ -464,7 +464,7 @@ Innehåll:
 • Backup och restore
 • Volume drivers
 
-Gå till: **SkillsMaps → Docker Mastery → Volumes**"""
+Gå till: **SkillsMaps -> Docker Mastery -> Volumes**"""
     ),
 
     (
@@ -479,7 +479,7 @@ Innehåll:
 • Port mapping (-p)
 • Network isolation
 
-Gå till: **SkillsMaps → Docker Mastery → Networking**"""
+Gå till: **SkillsMaps -> Docker Mastery -> Networking**"""
     ),
 
     # ==========================================================================
@@ -500,7 +500,7 @@ Gå till: **SkillsMaps → Docker Mastery → Networking**"""
 • Scaling och rollouts
 • Production best practices
 
-Gå till: **SkillsMaps → Kubernetes Mastery**"""
+Gå till: **SkillsMaps -> Kubernetes Mastery**"""
     ),
 
     (
@@ -515,7 +515,7 @@ Innehåll:
 • Pod lifecycle
 • kubectl get/describe pods
 
-Gå till: **SkillsMaps → Kubernetes Mastery → Pods**"""
+Gå till: **SkillsMaps -> Kubernetes Mastery -> Pods**"""
     ),
 
     (
@@ -530,7 +530,7 @@ Innehåll:
 • Rollbacks
 • Scaling
 
-Gå till: **SkillsMaps → Kubernetes Mastery → Deployments**"""
+Gå till: **SkillsMaps -> Kubernetes Mastery -> Deployments**"""
     ),
 
     (
@@ -545,7 +545,7 @@ Vanliga kommandon:
 • kubectl exec -it <pod> -- bash
 • kubectl apply -f manifest.yaml
 
-Gå till: **SkillsMaps → Kubernetes Mastery**"""
+Gå till: **SkillsMaps -> Kubernetes Mastery**"""
     ),
 
     (
@@ -560,7 +560,7 @@ Innehåll:
 • values.yaml
 • Helm repositories
 
-Gå till: **SkillsMaps → Kubernetes Mastery → Helm**"""
+Gå till: **SkillsMaps -> Kubernetes Mastery -> Helm**"""
     ),
 
     (
@@ -575,7 +575,7 @@ Innehåll:
 • Path-based routing
 • Host-based routing
 
-Gå till: **SkillsMaps → Kubernetes Mastery → Ingress**"""
+Gå till: **SkillsMaps -> Kubernetes Mastery -> Ingress**"""
     ),
 
     # ==========================================================================
@@ -594,7 +594,7 @@ Innehåll:
 • Git workflows (GitFlow, trunk-based)
 • GitHub Actions
 
-Gå till: **SkillsMaps → Git & GitHub**"""
+Gå till: **SkillsMaps -> Git & GitHub**"""
     ),
 
     (
@@ -609,7 +609,7 @@ Innehåll:
 • git rebase
 • Branch strategies
 
-Gå till: **SkillsMaps → Git & GitHub → Branching**"""
+Gå till: **SkillsMaps -> Git & GitHub -> Branching**"""
     ),
 
     (
@@ -624,7 +624,7 @@ Innehåll:
 • git mergetool
 • Aborta merge
 
-Gå till: **SkillsMaps → Git & GitHub → Merging**"""
+Gå till: **SkillsMaps -> Git & GitHub -> Merging**"""
     ),
 
     (
@@ -639,7 +639,7 @@ Innehåll:
 • När man ska använda rebase
 • Golden rule (aldrig rebase public)
 
-Gå till: **SkillsMaps → Git & GitHub → Rebase**"""
+Gå till: **SkillsMaps -> Git & GitHub -> Rebase**"""
     ),
 
     (
@@ -654,8 +654,8 @@ Innehåll:
 • Jobs och steps
 • Secrets och variables
 
-Gå till: **SkillsMaps → Git & GitHub → GitHub Actions**
-eller **SkillsMaps → CI/CD Pipelines**"""
+Gå till: **SkillsMaps -> Git & GitHub -> GitHub Actions**
+eller **SkillsMaps -> CI/CD Pipelines**"""
     ),
 
     # ==========================================================================
@@ -676,7 +676,7 @@ eller **SkillsMaps → CI/CD Pipelines**"""
 • ECS/EKS - Containers
 • CloudFormation - IaC
 
-Gå till: **SkillsMaps → AWS**"""
+Gå till: **SkillsMaps -> AWS**"""
     ),
 
     (
@@ -692,7 +692,7 @@ Innehåll:
 • AMIs
 • Auto Scaling
 
-Gå till: **SkillsMaps → AWS → EC2**"""
+Gå till: **SkillsMaps -> AWS -> EC2**"""
     ),
 
     (
@@ -708,7 +708,7 @@ Innehåll:
 • Access policies
 • Static website hosting
 
-Gå till: **SkillsMaps → AWS → S3**"""
+Gå till: **SkillsMaps -> AWS -> S3**"""
     ),
 
     (
@@ -723,7 +723,7 @@ Innehåll:
 • MFA
 • Cross-account access
 
-Gå till: **SkillsMaps → AWS → IAM**"""
+Gå till: **SkillsMaps -> AWS -> IAM**"""
     ),
 
     (
@@ -739,7 +739,7 @@ Innehåll:
 • Route tables
 • Security Groups vs NACLs
 
-Gå till: **SkillsMaps → AWS → VPC**"""
+Gå till: **SkillsMaps -> AWS -> VPC**"""
     ),
 
     (
@@ -754,7 +754,7 @@ Innehåll:
 • Layers
 • Pricing model
 
-Gå till: **SkillsMaps → AWS → Lambda**"""
+Gå till: **SkillsMaps -> AWS -> Lambda**"""
     ),
 
     # ==========================================================================
@@ -775,7 +775,7 @@ Gå till: **SkillsMaps → AWS → Lambda**"""
 • Workspaces
 • Best practices
 
-Gå till: **SkillsMaps → Terraform**"""
+Gå till: **SkillsMaps -> Terraform**"""
     ),
 
     (
@@ -789,7 +789,7 @@ Innehåll:
 • Expressions och functions
 • Loops och conditionals
 
-Gå till: **SkillsMaps → Terraform → HCL Basics**"""
+Gå till: **SkillsMaps -> Terraform -> HCL Basics**"""
     ),
 
     (
@@ -804,7 +804,7 @@ Innehåll:
 • terraform import
 • terraform state mv/rm
 
-Gå till: **SkillsMaps → Terraform → State Management**"""
+Gå till: **SkillsMaps -> Terraform -> State Management**"""
     ),
 
     (
@@ -819,7 +819,7 @@ Innehåll:
 • Module registry
 • Best practices
 
-Gå till: **SkillsMaps → Terraform → Modules**"""
+Gå till: **SkillsMaps -> Terraform -> Modules**"""
     ),
 
     # ==========================================================================
@@ -839,7 +839,7 @@ Gå till: **SkillsMaps → Terraform → Modules**"""
 • Testing i pipelines
 • Deployment strategies
 
-Gå till: **SkillsMaps → CI/CD Pipelines**"""
+Gå till: **SkillsMaps -> CI/CD Pipelines**"""
     ),
 
     (
@@ -854,7 +854,7 @@ Innehåll:
 • Plugins
 • Agents och executors
 
-Gå till: **SkillsMaps → CI/CD Pipelines → Jenkins**"""
+Gå till: **SkillsMaps -> CI/CD Pipelines -> Jenkins**"""
     ),
 
     (
@@ -869,7 +869,7 @@ Innehåll:
 • Artifacts
 • Environments
 
-Gå till: **SkillsMaps → CI/CD Pipelines → GitLab CI**"""
+Gå till: **SkillsMaps -> CI/CD Pipelines -> GitLab CI**"""
     ),
 
     (
@@ -884,7 +884,7 @@ Innehåll:
 • Sync policies
 • Rollbacks
 
-Gå till: **SkillsMaps → CI/CD Pipelines → ArgoCD**"""
+Gå till: **SkillsMaps -> CI/CD Pipelines -> ArgoCD**"""
     ),
 
     # ==========================================================================
@@ -905,7 +905,7 @@ Gå till: **SkillsMaps → CI/CD Pipelines → ArgoCD**"""
 • API-anrop (requests)
 • Testa med pytest
 
-Gå till: **SkillsMaps → Python for DevOps**"""
+Gå till: **SkillsMaps -> Python for DevOps**"""
     ),
 
     (
@@ -920,7 +920,7 @@ Innehåll:
 • IAM-hantering
 • Error handling
 
-Gå till: **SkillsMaps → Python for DevOps → boto3**"""
+Gå till: **SkillsMaps -> Python for DevOps -> boto3**"""
     ),
 
     (
@@ -935,7 +935,7 @@ Innehåll:
 • Error handling
 • Säkerhet (shell injection)
 
-Gå till: **SkillsMaps → Python for DevOps → System Commands**"""
+Gå till: **SkillsMaps -> Python for DevOps -> System Commands**"""
     ),
 
     # ==========================================================================
@@ -956,7 +956,7 @@ Gå till: **SkillsMaps → Python for DevOps → System Commands**"""
 • Error handling
 • Best practices
 
-Gå till: **SkillsMaps → Shell/Bash** eller **Camp DevOps → Shell Scripting**"""
+Gå till: **SkillsMaps -> Shell/Bash** eller **Camp DevOps -> Shell Scripting**"""
     ),
 
     # ==========================================================================

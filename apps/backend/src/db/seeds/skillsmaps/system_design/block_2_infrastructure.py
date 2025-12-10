@@ -25,19 +25,19 @@ NODE_05_LOAD_BALANCING = {
 ## Vad är Load Balancing?
 
 ```
-                    ┌─────────────┐
-                    │   Client    │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │Load Balancer│
-                    └──────┬──────┘
-           ┌───────────────┼───────────────┐
-           │               │               │
-    ┌──────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐
-    │  Server 1   │ │  Server 2   │ │  Server 3   │
-    │  (25%)      │ │  (50%)      │ │  (25%)      │
-    └─────────────┘ └─────────────┘ └─────────────┘
+                    +-------------+
+                    |   Client    |
+                    +------+------+
+                           |
+                    +------▼------+
+                    |Load Balancer|
+                    +------+------+
+           +---------------+---------------+
+           |               |               |
+    +------▼------+ +------▼------+ +------▼------+
+    |  Server 1   | |  Server 2   | |  Server 3   |
+    |  (25%)      | |  (50%)      | |  (25%)      |
+    +-------------+ +-------------+ +-------------+
 ```
 
 ## Load Balancing Algorithms
@@ -61,7 +61,7 @@ Least Response Time:
   - Bäst för UX
 
 IP Hash:
-  - Hash av client IP → specifik server
+  - Hash av client IP -> specifik server
   - Sticky sessions utan cookies
 
 Random:
@@ -169,7 +169,7 @@ Problem:
 
 Lösningar:
   Sticky Sessions:
-    - Cookie/IP hash → samma server
+    - Cookie/IP hash -> samma server
     - Enkelt men obalanserat
 
   Shared Session Store:
@@ -186,22 +186,22 @@ Lösningar:
 ## Load Balancer HA
 
 ```
-           ┌─────────────────────┐
-           │      Clients        │
-           └──────────┬──────────┘
-                      │
-        ┌─────────────┴─────────────┐
-        │                           │
-   ┌────▼────┐                 ┌────▼────┐
-   │   LB1   │◄───heartbeat───►│   LB2   │
-   │ (Active)│                 │(Passive)│
-   └────┬────┘                 └────┬────┘
-        │                           │
-        └─────────────┬─────────────┘
-                      │
-              ┌───────┴───────┐
-              │   Servers     │
-              └───────────────┘
+           +---------------------+
+           |      Clients        |
+           +----------+----------+
+                      |
+        +-------------+-------------+
+        |                           |
+   +----▼----+                 +----▼----+
+   |   LB1   |◄---heartbeat---►|   LB2   |
+   | (Active)|                 |(Passive)|
+   +----+----+                 +----+----+
+        |                           |
+        +-------------+-------------+
+                      |
+              +-------+-------+
+              |   Servers     |
+              +---------------+
 ```
 
 ## Cloud Load Balancers
@@ -256,11 +256,11 @@ NODE_06_CDN = {
 
 ```
 Utan CDN:
-User (Sydney) ──────────────────► Origin (Stockholm)
+User (Sydney) ------------------► Origin (Stockholm)
                  300ms latency
 
 Med CDN:
-User (Sydney) ────► Edge (Sydney) ────► Origin (Stockholm)
+User (Sydney) ----► Edge (Sydney) ----► Origin (Stockholm)
                 5ms (cache hit)
 
 ```
@@ -268,23 +268,23 @@ User (Sydney) ────► Edge (Sydney) ────► Origin (Stockholm)
 ## Hur CDN Fungerar
 
 ```
-         ┌─────────────────────────────────────┐
-         │            Internet                 │
-         └─────────────────────────────────────┘
-                          │
-    ┌─────────────────────┼─────────────────────┐
-    │                     │                     │
-┌───▼───┐            ┌───▼───┐            ┌───▼───┐
-│ Edge  │            │ Edge  │            │ Edge  │
-│(Europe)│           │(Asia) │            │(US)   │
-└───┬───┘            └───┬───┘            └───┬───┘
-    │                    │                    │
-    └────────────────────┼────────────────────┘
-                         │
-                  ┌──────▼──────┐
-                  │   Origin    │
-                  │   Server    │
-                  └─────────────┘
+         +-------------------------------------+
+         |            Internet                 |
+         +-------------------------------------+
+                          |
+    +---------------------+---------------------+
+    |                     |                     |
++---▼---+            +---▼---+            +---▼---+
+| Edge  |            | Edge  |            | Edge  |
+|(Europe)|           |(Asia) |            |(US)   |
++---+---+            +---+---+            +---+---+
+    |                    |                    |
+    +--------------------+--------------------+
+                         |
+                  +------▼------+
+                  |   Origin    |
+                  |   Server    |
+                  +-------------+
 ```
 
 ## Push vs Pull CDN
@@ -370,7 +370,7 @@ Purge:
   - Kan ta tid att propagera
 
 Versioned URLs:
-  - /css/style.v1.css → /css/style.v2.css
+  - /css/style.v1.css -> /css/style.v2.css
   - Ingen invalidering behövs
   - Bäst för statiskt content
 ```
@@ -472,24 +472,24 @@ NODE_07_DNS = {
 
 ```
 1. User: "example.com"
-           │
+           |
            ▼
-2. Browser Cache ──(miss)──► 3. OS Cache
-                                    │
-                              (miss)│
+2. Browser Cache --(miss)--► 3. OS Cache
+                                    |
+                              (miss)|
                                     ▼
-4. Recursive Resolver (ISP) ◄───────┘
-           │
-           │ (miss)
+4. Recursive Resolver (ISP) ◄-------+
+           |
+           | (miss)
            ▼
 5. Root Name Server (.): "Ask .com TLD"
-           │
+           |
            ▼
 6. TLD Name Server (.com): "Ask example.com NS"
-           │
+           |
            ▼
 7. Authoritative Name Server: "93.184.216.34"
-           │
+           |
            ▼
 8. Response cached, returned to user
 ```
@@ -499,20 +499,20 @@ NODE_07_DNS = {
 ```yaml
 A Record:
   - Maps domain to IPv4
-  - example.com → 93.184.216.34
+  - example.com -> 93.184.216.34
 
 AAAA Record:
   - Maps domain to IPv6
-  - example.com → 2606:2800:220:1:248:1893:25c8:1946
+  - example.com -> 2606:2800:220:1:248:1893:25c8:1946
 
 CNAME Record:
   - Alias to another domain
-  - www.example.com → example.com
+  - www.example.com -> example.com
   - Kan inte vara på root domain
 
 NS Record:
   - Nameserver för domain
-  - example.com NS → ns1.provider.com
+  - example.com NS -> ns1.provider.com
 
 MX Record:
   - Mail server
@@ -563,8 +563,8 @@ Weighted DNS (Route 53):
   example.com A 1.2.3.5 weight=30
 
 Geolocation DNS:
-  EU users → eu.example.com
-  US users → us.example.com
+  EU users -> eu.example.com
+  US users -> us.example.com
 
 Latency-based DNS:
   Routing till närmaste region
@@ -587,7 +587,7 @@ Secondary (Passive):
   Health Check: HTTP /health
   Failover: SECONDARY
 
-# Vid primary failure → traffic går till secondary
+# Vid primary failure -> traffic går till secondary
 ```
 
 ## DNS Security
@@ -611,24 +611,24 @@ DNS over TLS (DoT):
 ## DNS i System Design
 
 ```
-┌────────────────────────────────────────────────────┐
-│                  Internet                          │
-└────────────────────────────────────────────────────┘
-                      │
++----------------------------------------------------+
+|                  Internet                          |
++----------------------------------------------------+
+                      |
                       ▼
-            ┌─────────────────┐
-            │   Route 53      │
-            │ (Geolocation)   │
-            └────────┬────────┘
-         ┌───────────┴───────────┐
-         │                       │
-    ┌────▼────┐             ┌────▼────┐
-    │  EU LB  │             │  US LB  │
-    └────┬────┘             └────┬────┘
-         │                       │
-    ┌────▼────┐             ┌────▼────┐
-    │EU Cluster│            │US Cluster│
-    └─────────┘             └─────────┘
+            +-----------------+
+            |   Route 53      |
+            | (Geolocation)   |
+            +--------+--------+
+         +-----------+-----------+
+         |                       |
+    +----▼----+             +----▼----+
+    |  EU LB  |             |  US LB  |
+    +----+----+             +----+----+
+         |                       |
+    +----▼----+             +----▼----+
+    |EU Cluster|            |US Cluster|
+    +---------+             +---------+
 ```
 
 ## DNS Providers
@@ -685,13 +685,13 @@ NODE_08_PROXY = {
 
 ```yaml
 Forward Proxy:
-  Client → Forward Proxy → Internet → Server
+  Client -> Forward Proxy -> Internet -> Server
   - Döljer client
   - Corporate firewalls
   - Caching för clients
 
 Reverse Proxy:
-  Client → Internet → Reverse Proxy → Server
+  Client -> Internet -> Reverse Proxy -> Server
   - Döljer server
   - Load balancing
   - SSL termination
@@ -700,15 +700,15 @@ Reverse Proxy:
 
 ```
 Forward Proxy:
-┌────────┐     ┌─────────┐     ┌────────┐
-│ Client ├────►│  Proxy  ├────►│ Server │
-└────────┘     └─────────┘     └────────┘
++--------+     +---------+     +--------+
+| Client +----►|  Proxy  +----►| Server |
++--------+     +---------+     +--------+
   (känd)        (döljer client)  (ser proxy)
 
 Reverse Proxy:
-┌────────┐     ┌─────────┐     ┌────────┐
-│ Client ├────►│  Proxy  ├────►│ Server │
-└────────┘     └─────────┘     └────────┘
++--------+     +---------+     +--------+
+| Client +----►|  Proxy  +----►| Server |
++--------+     +---------+     +--------+
   (ser proxy)   (döljer server)  (dold)
 ```
 
@@ -789,20 +789,20 @@ Features:
 ```
 
 ```
-                    ┌─────────────────┐
-                    │   API Gateway   │
-                    │                 │
-                    │  - Auth         │
-                    │  - Rate limit   │
-                    │  - Transform    │
-                    │  - Route        │
-                    └────────┬────────┘
-         ┌───────────────────┼───────────────────┐
-         │                   │                   │
-    ┌────▼────┐         ┌────▼────┐         ┌────▼────┐
-    │ Users   │         │ Orders  │         │Products │
-    │ Service │         │ Service │         │ Service │
-    └─────────┘         └─────────┘         └─────────┘
+                    +-----------------+
+                    |   API Gateway   |
+                    |                 |
+                    |  - Auth         |
+                    |  - Rate limit   |
+                    |  - Transform    |
+                    |  - Route        |
+                    +--------+--------+
+         +-------------------+-------------------+
+         |                   |                   |
+    +----▼----+         +----▼----+         +----▼----+
+    | Users   |         | Orders  |         |Products |
+    | Service |         | Service |         | Service |
+    +---------+         +---------+         +---------+
 ```
 
 ## API Gateway Features
@@ -870,13 +870,13 @@ Envoy:
 
 ```yaml
 API Gateway:
-  - North-South traffic (external → internal)
+  - North-South traffic (external -> internal)
   - External clients
   - Authentication
   - Rate limiting
 
 Service Mesh:
-  - East-West traffic (service → service)
+  - East-West traffic (service -> service)
   - Internal communication
   - mTLS
   - Observability
@@ -884,17 +884,17 @@ Service Mesh:
 
 ```
                 External
-                   │
-            ┌──────▼──────┐
-            │ API Gateway │  ◄── North-South
-            └──────┬──────┘
-    ┌──────────────┼──────────────┐
-    │              │              │
-┌───▼───┐      ┌───▼───┐      ┌───▼───┐
-│Svc A  │◄────►│Svc B  │◄────►│Svc C  │
-└───────┘      └───────┘      └───────┘
+                   |
+            +------▼------+
+            | API Gateway |  ◄-- North-South
+            +------+------+
+    +--------------+--------------+
+    |              |              |
++---▼---+      +---▼---+      +---▼---+
+|Svc A  |◄----►|Svc B  |◄----►|Svc C  |
++-------+      +-------+      +-------+
           ▲                ▲
-          └────────────────┘
+          +----------------+
              East-West (Service Mesh)
 ```
 

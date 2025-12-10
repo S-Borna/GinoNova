@@ -13,11 +13,11 @@ NODE_3 = {
     "difficulty": "easy",
     "content": r'''# Globbing & Pattern Matching
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Globbing ar Bashs satt att matcha filnamn med mönster. Att beharska wildcards och pattern matching gor dig snabbare och mer precis i terminalen.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -35,31 +35,31 @@ Du maste forsta:
 - **Ingen match = literal string** - Om inget matchar, behalles monstret
 - **Dolda filer** - Kraver explicit hantering
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Wildcards
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      WILDCARDS SNABBREFERENS                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  WILDCARD │ MATCHAR                    │ EXEMPEL                        │
-│  ─────────┼────────────────────────────┼────────────────────────────────│
-│  *        │ Noll eller flera tecken    │ *.txt → alla .txt-filer       │
-│  ?        │ Exakt ett tecken           │ file?.txt → file1.txt         │
-│  [...]    │ Ett tecken fran set        │ file[123].txt → file1.txt     │
-│  [!...]   │ Ett tecken INTE i set      │ file[!0-9].txt → filea.txt    │
-│  [a-z]    │ Range av tecken            │ [a-z]*.sh → alla .sh a-z      │
-│  {a,b,c}  │ Alternativ (brace exp)     │ file.{txt,log} → bada filer   │
-│                                                                          │
-│  EXEMPEL:                                                                │
-│  ls *.log                    # Alla .log-filer                          │
-│  rm file?.txt                # file1.txt, file2.txt, etc               │
-│  cp config.[ch] backup/      # config.c och config.h                    │
-│  mv report_{jan,feb,mar}.pdf archive/  # Tre specifika filer           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      WILDCARDS SNABBREFERENS                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  WILDCARD | MATCHAR                    | EXEMPEL                        |
+|  ---------+----------------------------+--------------------------------|
+|  *        | Noll eller flera tecken    | *.txt -> alla .txt-filer       |
+|  ?        | Exakt ett tecken           | file?.txt -> file1.txt         |
+|  [...]    | Ett tecken fran set        | file[123].txt -> file1.txt     |
+|  [!...]   | Ett tecken INTE i set      | file[!0-9].txt -> filea.txt    |
+|  [a-z]    | Range av tecken            | [a-z]*.sh -> alla .sh a-z      |
+|  {a,b,c}  | Alternativ (brace exp)     | file.{txt,log} -> bada filer   |
+|                                                                          |
+|  EXEMPEL:                                                                |
+|  ls *.log                    # Alla .log-filer                          |
+|  rm file?.txt                # file1.txt, file2.txt, etc               |
+|  cp config.[ch] backup/      # config.c och config.h                    |
+|  mv report_{jan,feb,mar}.pdf archive/  # Tre specifika filer           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 | Wildcard | Beskrivning | Matchar | Matchar inte |
@@ -84,28 +84,28 @@ shopt -s globstar                # Aktivera globstar
 ls **/*.py                       # Alla Python-filer rekursivt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Brace Expansion
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      BRACE EXPANSION                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Brace expansion sker FORE glob expansion!                              │
-│  Skapar multipla strings fran ett monster.                              │
-│                                                                          │
-│  SYNTAX          │ RESULTAT                                             │
-│  ────────────────┼───────────────────────────────────────────────────── │
-│  {a,b,c}         │ a b c                                                │
-│  {1..5}          │ 1 2 3 4 5                                            │
-│  {a..z}          │ a b c ... z                                          │
-│  {01..10}        │ 01 02 03 ... 10 (med padding)                        │
-│  {1..10..2}      │ 1 3 5 7 9 (steg 2)                                   │
-│  pre{a,b}post    │ preapost prebpost                                    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      BRACE EXPANSION                                     |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Brace expansion sker FORE glob expansion!                              |
+|  Skapar multipla strings fran ett monster.                              |
+|                                                                          |
+|  SYNTAX          | RESULTAT                                             |
+|  ----------------+----------------------------------------------------- |
+|  {a,b,c}         | a b c                                                |
+|  {1..5}          | 1 2 3 4 5                                            |
+|  {a..z}          | a b c ... z                                          |
+|  {01..10}        | 01 02 03 ... 10 (med padding)                        |
+|  {1..10..2}      | 1 3 5 7 9 (steg 2)                                   |
+|  pre{a,b}post    | preapost prebpost                                    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -133,7 +133,7 @@ for env in {dev,staging,prod}; do
 done
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Extended Globbing
 
@@ -160,7 +160,7 @@ rm !(keep_this|and_this).txt
 ls +([0-9]).log                  # Filer som 123.log, 1.log
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dolda Filer (Dotfiles)
 
@@ -186,7 +186,7 @@ cp -r source/* destination/
 shopt -u dotglob
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Nullglob och Failglob
 
@@ -216,7 +216,7 @@ done
 shopt -u nullglob
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -230,7 +230,7 @@ shopt -u nullglob
 | `{a,b}` | Expansion till a och b |
 | `**` | Rekursiv (med globstar) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -241,7 +241,7 @@ shopt -u nullglob
 | Ovaentad expansion | Spaces i filnamn | Quoting (se nasta nod) |
 | Pattern literal | Ingen match | Kontrollera shopt-installningar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -272,11 +272,11 @@ NODE_4 = {
     "difficulty": "medium",
     "content": r'''# Quoting & Escaping - Protect Your Data
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Quoting ar en av de viktigaste och mest missforstadda delarna av Bash. Fel quoting leder till buggar, sakerhetshal och ovaentat beteende. Denna nod gor dig till en quoting-expert.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -294,31 +294,31 @@ Du maste forsta:
 - **Tre typer** - Single, double, och escape har olika beteende
 - **Ordning spelar roll** - Shellen processar i specifik ordning
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## De Tre Quoting-typerna
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        QUOTING JAMFORELSE                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  TYP             │ SYNTAX    │ EXPANDERAR        │ EXEMPEL              │
-│  ────────────────┼───────────┼───────────────────┼───────────────────── │
-│  Single quotes   │ 'text'    │ INGET             │ '$HOME' → $HOME      │
-│  Double quotes   │ "text"    │ $, `, \, !, "     │ "$HOME" → /home/user│
-│  Backslash       │ \x        │ Nastaende tecken  │ \$ → $               │
-│  $'...'          │ $'text'   │ Escape sequences  │ $'\n' → newline      │
-│                                                                          │
-│  MINNESREGEL:                                                           │
-│  'Single' = LITERAL (exakt som skrivet)                                 │
-│  "Double" = SMART (variabler expanderas)                                │
-│  \Escape  = SKIPPA nasta tecken                                         │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        QUOTING JAMFORELSE                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  TYP             | SYNTAX    | EXPANDERAR        | EXEMPEL              |
+|  ----------------+-----------+-------------------+--------------------- |
+|  Single quotes   | 'text'    | INGET             | '$HOME' -> $HOME      |
+|  Double quotes   | "text"    | $, `, \, !, "     | "$HOME" -> /home/user|
+|  Backslash       | \x        | Nastaende tecken  | \$ -> $               |
+|  $'...'          | $'text'   | Escape sequences  | $'\n' -> newline      |
+|                                                                          |
+|  MINNESREGEL:                                                           |
+|  'Single' = LITERAL (exakt som skrivet)                                 |
+|  "Double" = SMART (variabler expanderas)                                |
+|  \Escape  = SKIPPA nasta tecken                                         |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Single Quotes - Literal Text
 
@@ -347,7 +347,7 @@ ssh server 'ps aux | grep nginx' # Kommando ska koras pa server
 awk '{print $1}'                 # Awk-skript
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Double Quotes - Smart Expansion
 
@@ -388,7 +388,7 @@ cat << EOF
 EOF
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## $'...' - ANSI-C Quoting
 
@@ -418,7 +418,7 @@ touch $'file\twith\ttabs'
 touch $'file\nwith\nnewlines'   # Ja, det gar!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Escaping med Backslash
 
@@ -448,25 +448,25 @@ ls "file with spaces.txt"       # Battre: anvand quotes
 ls "$filename"                  # Bast: variabel med quotes
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Nestlade Quotes
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      NESTLADE QUOTES STRATEGIER                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SCENARIO                    │ LOSNING                                  │
-│  ────────────────────────────┼──────────────────────────────────────── │
-│  Double inom single          │ 'say "hello"'    → say "hello"          │
-│  Single inom double          │ "it's fine"      → it's fine            │
-│  Double inom double          │ "say \"hi\""     → say "hi"             │
-│  Single inom single          │ 'it'\''s'        → it's                 │
-│  Command i double            │ "date: $(date)"  → expanderas           │
-│  Command i single            │ 'date: $(date)'  → literal              │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      NESTLADE QUOTES STRATEGIER                          |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SCENARIO                    | LOSNING                                  |
+|  ----------------------------+---------------------------------------- |
+|  Double inom single          | 'say "hello"'    -> say "hello"          |
+|  Single inom double          | "it's fine"      -> it's fine            |
+|  Double inom double          | "say \"hi\""     -> say "hi"             |
+|  Single inom single          | 'it'\''s'        -> it's                 |
+|  Command i double            | "date: $(date)"  -> expanderas           |
+|  Command i single            | 'date: $(date)'  -> literal              |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -492,7 +492,7 @@ json='{"name": "'"$USER"'", "home": "'"$HOME"'"}'
 printf '{"name": "%s", "home": "%s"}\n' "$USER" "$HOME"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Exempel
 
@@ -522,7 +522,7 @@ cmd='echo "Hello World"'
 eval "$cmd"                      # Med quotes for sakerhet
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -533,7 +533,7 @@ eval "$cmd"                      # Med quotes for sakerhet
 | `\` | Nasta tecken | Enskilda specialtecken |
 | `$'...'` | Escape seq | \n, \t, unicode |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -544,7 +544,7 @@ eval "$cmd"                      # Med quotes for sakerhet
 | Glob expansion | Okvoterad * eller ? | Anvand quotes |
 | `command not found` | Space i kommando | Kontrollera quoting |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

@@ -23,35 +23,35 @@ Optimerade Docker builds reducerar CI/CD tid dramatiskt. Denna guide täcker ava
 ### Optimization Impact
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    BUILD OPTIMIZATION IMPACT                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  BEFORE OPTIMIZATION:                                                    │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Build time: 15 minutes                                                  │
-│  Image size: 1.2 GB                                                      │
-│  Cache hits: 20%                                                         │
-│                                                                          │
-│  AFTER OPTIMIZATION:                                                     │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Build time: 2 minutes (87% reduction)                                   │
-│  Image size: 150 MB (88% reduction)                                      │
-│  Cache hits: 85%                                                         │
-│                                                                          │
-│  OPTIMIZATION TECHNIQUES:                                                │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ┌────────────────────┬──────────────┬────────────────────────────┐    │
-│  │ Technique          │ Impact       │ Implementation             │    │
-│  ├────────────────────┼──────────────┼────────────────────────────┤    │
-│  │ Layer ordering     │ 50% faster   │ Dependencies first         │    │
-│  │ Multi-stage        │ 80% smaller  │ Build vs runtime           │    │
-│  │ BuildKit cache     │ 70% faster   │ --mount=type=cache         │    │
-│  │ .dockerignore      │ 30% faster   │ Exclude unnecessary        │    │
-│  │ Parallel builds    │ 40% faster   │ Buildx bake                │    │
-│  └────────────────────┴──────────────┴────────────────────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    BUILD OPTIMIZATION IMPACT                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  BEFORE OPTIMIZATION:                                                    |
+|  ---------------------------------------------------------------------  |
+|  Build time: 15 minutes                                                  |
+|  Image size: 1.2 GB                                                      |
+|  Cache hits: 20%                                                         |
+|                                                                          |
+|  AFTER OPTIMIZATION:                                                     |
+|  ---------------------------------------------------------------------  |
+|  Build time: 2 minutes (87% reduction)                                   |
+|  Image size: 150 MB (88% reduction)                                      |
+|  Cache hits: 85%                                                         |
+|                                                                          |
+|  OPTIMIZATION TECHNIQUES:                                                |
+|  ---------------------------------------------------------------------  |
+|  +--------------------+--------------+----------------------------+    |
+|  | Technique          | Impact       | Implementation             |    |
+|  +--------------------+--------------+----------------------------+    |
+|  | Layer ordering     | 50% faster   | Dependencies first         |    |
+|  | Multi-stage        | 80% smaller  | Build vs runtime           |    |
+|  | BuildKit cache     | 70% faster   | --mount=type=cache         |    |
+|  | .dockerignore      | 30% faster   | Exclude unnecessary        |    |
+|  | Parallel builds    | 40% faster   | Buildx bake                |    |
+|  +--------------------+--------------+----------------------------+    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. BuildKit Features
@@ -296,7 +296,7 @@ CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
 
 ---
 
-**Nasta Node:** Healthchecks →
+**Nasta Node:** Healthchecks ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 70,
@@ -322,40 +322,40 @@ Healthchecks gor det mojligt for Docker att overvaka container-halsa och automat
 ### Healthcheck States
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    CONTAINER HEALTH STATES                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│                       Container Start                                    │
-│                            │                                             │
-│                            ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                       STARTING                                   │   │
-│  │               (Within start_period)                              │   │
-│  │                                                                  │   │
-│  │  Healthcheck runs but failures dont count                       │   │
-│  └────────────────────────┬────────────────────────────────────────┘   │
-│                           │                                             │
-│              First successful check                                     │
-│                           │                                             │
-│                           ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                       HEALTHY                                    │   │
-│  │                                                                  │   │
-│  │  Healthcheck passes - container operational                     │   │
-│  └─────┬──────────────────────────────────────────────────┬────────┘   │
-│        │                                                  │             │
-│   Check passes                                   retries failures      │
-│        │                                                  │             │
-│        ▼                                                  ▼             │
-│  ┌──────────┐                                    ┌──────────────────┐  │
-│  │ HEALTHY  │◄───────────────────────────────────│   UNHEALTHY      │  │
-│  │          │        Check passes again          │                  │  │
-│  └──────────┘                                    │  Orchestrator    │  │
-│                                                  │  may restart     │  │
-│                                                  └──────────────────┘  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    CONTAINER HEALTH STATES                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|                       Container Start                                    |
+|                            |                                             |
+|                            ▼                                             |
+|  +-----------------------------------------------------------------+   |
+|  |                       STARTING                                   |   |
+|  |               (Within start_period)                              |   |
+|  |                                                                  |   |
+|  |  Healthcheck runs but failures dont count                       |   |
+|  +------------------------+----------------------------------------+   |
+|                           |                                             |
+|              First successful check                                     |
+|                           |                                             |
+|                           ▼                                             |
+|  +-----------------------------------------------------------------+   |
+|  |                       HEALTHY                                    |   |
+|  |                                                                  |   |
+|  |  Healthcheck passes - container operational                     |   |
+|  +-----+--------------------------------------------------+--------+   |
+|        |                                                  |             |
+|   Check passes                                   retries failures      |
+|        |                                                  |             |
+|        ▼                                                  ▼             |
+|  +----------+                                    +------------------+  |
+|  | HEALTHY  |◄-----------------------------------|   UNHEALTHY      |  |
+|  |          |        Check passes again          |                  |  |
+|  +----------+                                    |  Orchestrator    |  |
+|                                                  |  may restart     |  |
+|                                                  +------------------+  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Dockerfile HEALTHCHECK
@@ -621,7 +621,7 @@ docker events --filter event=health_status
 
 ---
 
-**Nasta Node:** Docker Swarm →
+**Nasta Node:** Docker Swarm ->
 ''',
     "xp_reward": 165,
     "estimated_minutes": 65,

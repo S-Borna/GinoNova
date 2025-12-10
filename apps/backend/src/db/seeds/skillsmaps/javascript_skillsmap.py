@@ -3,7 +3,7 @@ JavaScript SkillsMap — Modern JavaScript for DevOps & Full-Stack
 ================================================================
 
 20 nodes covering JavaScript from fundamentals to production patterns.
-Akhilesh-style pedagogy: Hook → Concept → Code → Pro Tips → Hands-on Task
+Akhilesh-style pedagogy: Hook -> Concept -> Code -> Pro Tips -> Hands-on Task
 
 Block 1 (Nodes 1-3): JS Basics
 Block 2 (Nodes 4-6): Control Flow
@@ -76,7 +76,7 @@ console.log(greet("Engineer"));
 ### Running JavaScript
 
 ```bash
-# In browser (F12 → Console)
+# In browser (F12 -> Console)
 # In Node.js
 node script.js
 
@@ -117,12 +117,12 @@ npm init -y
 
 # Project structure
 my-project/
-├── package.json
-├── src/
-│   └── index.js
-├── test/
-│   └── index.test.js
-└── README.md
++-- package.json
++-- src/
+|   +-- index.js
++-- test/
+|   +-- index.test.js
++-- README.md
 ```
 
 ### package.json Basics
@@ -1543,7 +1543,7 @@ Master arrays = master JavaScript.
 const servers = ["web01", "web02", "db01"];
 
 // Constructor (rarely needed)
-const arr = new Array(3);  // [empty × 3]
+const arr = new Array(3);  // [empty x 3]
 const filled = Array(3).fill(0);  // [0, 0, 0]
 
 // Array.from - convert iterables
@@ -3168,28 +3168,28 @@ console.log("3");
 ### The Event Loop
 
 ```
-┌───────────────────────────┐
-│        Call Stack         │
-│   (Synchronous Code)      │
-└───────────┬───────────────┘
-            │
++---------------------------+
+|        Call Stack         |
+|   (Synchronous Code)      |
++-----------+---------------+
+            |
             ▼
-┌───────────────────────────┐
-│      Web APIs / Node      │
-│  (setTimeout, fetch, fs)  │
-└───────────┬───────────────┘
-            │
++---------------------------+
+|      Web APIs / Node      |
+|  (setTimeout, fetch, fs)  |
++-----------+---------------+
+            |
             ▼
-┌───────────────────────────┐
-│     Callback Queue        │
-│   (Task Queue / Macrotask)│
-└───────────┬───────────────┘
-            │
++---------------------------+
+|     Callback Queue        |
+|   (Task Queue / Macrotask)|
++-----------+---------------+
+            |
             ▼
-┌───────────────────────────┐
-│    Microtask Queue        │
-│  (Promises, queueMicrotask)│
-└───────────────────────────┘
++---------------------------+
+|    Microtask Queue        |
+|  (Promises, queueMicrotask)|
++---------------------------+
 
 Event Loop: Continuously checks if Call Stack is empty,
 then processes Microtasks, then one Macrotask
@@ -3333,7 +3333,7 @@ operation((err, result) => {
 
 ### 2. Understand Event Loop Order
 ```javascript
-// Sync → Microtasks → Macrotasks
+// Sync -> Microtasks -> Macrotasks
 ```
 
 ---
@@ -3396,9 +3396,9 @@ Promises provide:
 const promise = new Promise((resolve, reject) => {
     // Async operation
     if (success) {
-        resolve(value);  // → fulfilled
+        resolve(value);  // -> fulfilled
     } else {
-        reject(error);   // → rejected
+        reject(error);   // -> rejected
     }
 });
 ```
@@ -4643,7 +4643,7 @@ function parseEnvValue(value) {
 }
 
 // APP_PORT=3000, APP_DEBUG=true
-// → { port: 3000, debug: true }
+// -> { port: 3000, debug: true }
 ```
 
 ---
@@ -4789,7 +4789,7 @@ console.log(response.statusText); // "OK", "Not Found", etc.
 console.log(response.headers.get('Content-Type'));
 
 // Parse response body (pick one)
-const json = await response.json();   // JSON → Object
+const json = await response.json();   // JSON -> Object
 const text = await response.text();   // Plain text
 const blob = await response.blob();   // Binary data
 const buffer = await response.arrayBuffer();
@@ -5657,23 +5657,23 @@ This project combines everything:
 
 ```
 devops-dashboard/
-├── package.json
-├── .env
-├── src/
-│   ├── index.js          # Entry point
-│   ├── config.js         # Configuration loader
-│   ├── services/
-│   │   ├── HealthChecker.js
-│   │   ├── MetricsCollector.js
-│   │   └── AlertSender.js
-│   ├── reporters/
-│   │   ├── ConsoleReporter.js
-│   │   └── JsonReporter.js
-│   └── utils/
-│       ├── http.js
-│       └── logger.js
-└── tests/
-    └── health.test.js
++-- package.json
++-- .env
++-- src/
+|   +-- index.js          # Entry point
+|   +-- config.js         # Configuration loader
+|   +-- services/
+|   |   +-- HealthChecker.js
+|   |   +-- MetricsCollector.js
+|   |   +-- AlertSender.js
+|   +-- reporters/
+|   |   +-- ConsoleReporter.js
+|   |   +-- JsonReporter.js
+|   +-- utils/
+|       +-- http.js
+|       +-- logger.js
++-- tests/
+    +-- health.test.js
 ```
 
 ---

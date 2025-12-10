@@ -182,7 +182,7 @@ DO:
   ✅ Håll det under ~500 tokens
 
 DON'T:
-  ❌ Skriv romaner (för lång → ignoreras)
+  ❌ Skriv romaner (för lång -> ignoreras)
   ❌ Motsägelsefulla instruktioner
   ❌ Vag eller tvetydig formulering
   ❌ Upprepa samma sak
@@ -267,7 +267,7 @@ Den enklaste CoT: lägg till "Let's think step by step"
 "Om Anna har 3 äpplen och köper 5 till, sedan ger
 bort hälften, hur många har hon kvar?"
 
-→ "4" (kan vara fel)
+-> "4" (kan vara fel)
 
 ✅ Med CoT:
 "Om Anna har 3 äpplen och köper 5 till, sedan ger
@@ -275,7 +275,7 @@ bort hälften, hur många har hon kvar?
 
 Let's think step by step."
 
-→ "1. Anna börjar med 3 äpplen
+-> "1. Anna börjar med 3 äpplen
    2. Hon köper 5 till: 3 + 5 = 8
    3. Hon ger bort hälften: 8 / 2 = 4
    4. Svar: Anna har 4 äpplen kvar"
@@ -301,7 +301,7 @@ Q: Det finns 3 bilar. Varje bil har 4 hjul.
 A: Låt mig tänka steg för steg.
    - Vi har 3 bilar
    - Varje bil har 4 hjul
-   - 3 × 4 = 12 hjul totalt
+   - 3 x 4 = 12 hjul totalt
    Svaret är 12.
 
 Q: En affär har 20 äpplen. 8 säljs på morgonen och
@@ -348,7 +348,7 @@ Process:
   3. Välj det svar som förekommer oftast
 
 Varför:
-  - Olika resonemang → samma korrekta svar
+  - Olika resonemang -> samma korrekta svar
   - Minskar slumpmässiga fel
 ```
 
@@ -397,7 +397,7 @@ när används den?
 Steg 2: Applicera formeln på en bil (m=1000 kg,
 v=100 km/h). Glöm inte enhetskonvertering."
 
-→ AI förklarar E = ½mv², konverterar till m/s,
+-> AI förklarar E = ½mv², konverterar till m/s,
    och beräknar korrekt
 ```
 
@@ -488,19 +488,19 @@ Ursprung:
 
 ```text
               [Problem]
-                  │
-        ┌─────────┼─────────┐
+                  |
+        +---------+---------+
         ▼         ▼         ▼
     [Idé A]   [Idé B]   [Idé C]
-        │         │         │
+        |         |         |
      [Eval]    [Eval]    [Eval]
-        │         │         │
+        |         |         |
    Lovande?   Lovande?   Lovande?
-        │         ✗         │
+        |         ✗         |
         ▼                   ▼
   [Fördjupa]          [Fördjupa]
-        │                   │
-        └───────┬───────────┘
+        |                   |
+        +-------+-----------+
                 ▼
           [Bästa lösning]
 ```
@@ -741,20 +741,20 @@ Användning:
 ## ReAct Loop
 
 ```text
-┌──────────────────────────────────────────────┐
-│                 ReAct LOOP                   │
-│                                              │
-│  ┌─────────┐    ┌─────────┐    ┌─────────┐  │
-│  │ THOUGHT │ → │ ACTION  │ → │OBSERVE  │  │
-│  │         │    │         │    │         │  │
-│  │ Vad bör │    │ Gör det │    │ Se      │  │
-│  │ jag     │    │         │    │ resultat│  │
-│  │ göra?   │    │         │    │         │  │
-│  └─────────┘    └─────────┘    └─────────┘  │
-│       ▲                              │       │
-│       └──────────────────────────────┘       │
-│              (upprepa tills klart)           │
-└──────────────────────────────────────────────┘
++----------------------------------------------+
+|                 ReAct LOOP                   |
+|                                              |
+|  +---------+    +---------+    +---------+  |
+|  | THOUGHT | -> | ACTION  | -> |OBSERVE  |  |
+|  |         |    |         |    |         |  |
+|  | Vad bör |    | Gör det |    | Se      |  |
+|  | jag     |    |         |    | resultat|  |
+|  | göra?   |    |         |    |         |  |
+|  +---------+    +---------+    +---------+  |
+|       ▲                              |       |
+|       +------------------------------+       |
+|              (upprepa tills klart)           |
++----------------------------------------------+
 ```
 
 ## ReAct Format
@@ -841,7 +841,7 @@ Thought 2: Nu behöver jag det nuvarande priset.
 Action 2: search[NVIDIA stock price December 2024]
 Observation 2: NVIDIA handlas på ~$140 (efter 10:1 split).
 
-Thought 3: Jag måste justera för splitten. $140 × 10 = $1400
+Thought 3: Jag måste justera för splitten. $140 x 10 = $1400
 jämfört med $495. Det är en ökning på ca 183%.
 
 Thought 4: Nu behöver jag förstå varför.

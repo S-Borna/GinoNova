@@ -3,7 +3,7 @@ Shell/Bash SkillsMap — Complete Bash Mastery for DevOps
 ========================================================
 
 20 nodes covering everything from basics to production-ready scripting.
-Akhilesh-style pedagogy: Hook → Concept → Commands → Pro Tips → Hands-on Task
+Akhilesh-style pedagogy: Hook -> Concept -> Commands -> Pro Tips -> Hands-on Task
 
 Block 1 (Nodes 1-5): Fundamentals
 Block 2 (Nodes 6-10): I/O & Text Processing
@@ -3356,12 +3356,12 @@ DevOps relies on scheduled tasks:
 ### Cron Syntax
 
 ```
-# ┌───────────── minute (0 - 59)
-# │ ┌───────────── hour (0 - 23)
-# │ │ ┌───────────── day of month (1 - 31)
-# │ │ │ ┌───────────── month (1 - 12)
-# │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday = 0)
-# │ │ │ │ │
+# +------------- minute (0 - 59)
+# | +------------- hour (0 - 23)
+# | | +------------- day of month (1 - 31)
+# | | | +------------- month (1 - 12)
+# | | | | +------------- day of week (0 - 6) (Sunday = 0)
+# | | | | |
 # * * * * * command
 
 # Examples
@@ -4007,22 +4007,22 @@ main "$@"
 
 ```
 project/
-├── bin/
-│   ├── deploy.sh
-│   ├── backup.sh
-│   └── monitor.sh
-├── lib/
-│   ├── common.sh      # Shared utilities
-│   ├── logging.sh     # Log functions
-│   ├── config.sh      # Config loading
-│   └── validation.sh  # Input validation
-├── conf/
-│   ├── default.conf
-│   └── production.conf
-├── tests/
-│   ├── test_common.sh
-│   └── test_logging.sh
-└── README.md
++-- bin/
+|   +-- deploy.sh
+|   +-- backup.sh
+|   +-- monitor.sh
++-- lib/
+|   +-- common.sh      # Shared utilities
+|   +-- logging.sh     # Log functions
+|   +-- config.sh      # Config loading
+|   +-- validation.sh  # Input validation
++-- conf/
+|   +-- default.conf
+|   +-- production.conf
++-- tests/
+|   +-- test_common.sh
+|   +-- test_logging.sh
++-- README.md
 ```
 
 ### Logging Library

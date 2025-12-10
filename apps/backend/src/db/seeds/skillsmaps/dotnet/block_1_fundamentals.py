@@ -23,7 +23,7 @@ DOTNET_NODE_1_INTRO = {
     ],
     "content": """# C# Introduction och Setup
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -40,37 +40,37 @@ Du maste forsta:
 - **Projektstruktur** - csproj, solution, namespaces
 - **Verktyg** - VS Code, Visual Studio, dotnet CLI
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 .NET Ecosystem
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      .NET ECOSYSTEM                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                    YOUR C# CODE                           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                            ▼                                     │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │              ROSLYN COMPILER (C# → IL)                    │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                            ▼                                     │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                .NET RUNTIME (CLR)                         │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐            │   │
-│  │  │    JIT     │ │   GC       │ │  Security  │            │   │
-│  │  │ Compiler   │ │ Collector  │ │  Manager   │            │   │
-│  │  └────────────┘ └────────────┘ └────────────┘            │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                            ▼                                     │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                 OPERATING SYSTEM                          │   │
-│  │          Windows  │  macOS  │  Linux                      │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      .NET ECOSYSTEM                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +----------------------------------------------------------+   |
+|  |                    YOUR C# CODE                           |   |
+|  +----------------------------------------------------------+   |
+|                            ▼                                     |
+|  +----------------------------------------------------------+   |
+|  |              ROSLYN COMPILER (C# -> IL)                    |   |
+|  +----------------------------------------------------------+   |
+|                            ▼                                     |
+|  +----------------------------------------------------------+   |
+|  |                .NET RUNTIME (CLR)                         |   |
+|  |  +------------+ +------------+ +------------+            |   |
+|  |  |    JIT     | |   GC       | |  Security  |            |   |
+|  |  | Compiler   | | Collector  | |  Manager   |            |   |
+|  |  +------------+ +------------+ +------------+            |   |
+|  +----------------------------------------------------------+   |
+|                            ▼                                     |
+|  +----------------------------------------------------------+   |
+|  |                 OPERATING SYSTEM                          |   |
+|  |          Windows  |  macOS  |  Linux                      |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ### .NET Versions
@@ -128,9 +128,9 @@ cd HelloWorld
 
 # Projektstruktur
 HelloWorld/
-├── HelloWorld.csproj    # Projektfil (dependencies, settings)
-├── Program.cs           # Din kod
-└── obj/                 # Byggfiler
++-- HelloWorld.csproj    # Projektfil (dependencies, settings)
++-- Program.cs           # Din kod
++-- obj/                 # Byggfiler
 ```
 
 ### Program.cs (Modern Top-Level Statements)
@@ -273,7 +273,7 @@ double result = op switch
 Console.WriteLine($"Result: {num1} {op} {num2} = {result}");
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -284,7 +284,7 @@ Console.WriteLine($"Result: {num1} {op} {num2} = {result}");
 | `dotnet build` | Bygg utan att kora |
 | `dotnet publish` | Publicera for deployment |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -295,7 +295,7 @@ Console.WriteLine($"Result: {num1} {op} {num2} = {result}");
 | NuGet restore failed | Saknade paket | dotnet restore |
 | Build errors | Syntaxfel | Kolla felmeddelanden |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -334,7 +334,7 @@ DOTNET_NODE_2_TYPES = {
     ],
     "content": """# Variables och Data Types
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -351,36 +351,36 @@ Du maste forsta:
 - **Nullable types** - hantera null sakert
 - **Type conversion** - casta och parsa
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Type System Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    C# TYPE SYSTEM                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                        object                                    │
-│                          │                                       │
-│            ┌─────────────┴─────────────┐                        │
-│            │                           │                         │
-│      Value Types               Reference Types                   │
-│            │                           │                         │
-│  ┌─────────┼─────────┐      ┌─────────┼─────────┐              │
-│  │         │         │      │         │         │               │
-│ struct   enum    primitives class  interface  array             │
-│  │                   │                │                          │
-│  │    int, bool,    │        string, object,                    │
-│  │    double, etc   │        custom classes                      │
-│                                                                  │
-│  ══════════════════════════════════════════════════════════     │
-│  VALUE TYPES        │  REFERENCE TYPES                          │
-│  - Stored on stack  │  - Stored on heap                         │
-│  - Copied by value  │  - Copied by reference                    │
-│  - Cannot be null*  │  - Can be null                            │
-│  ══════════════════════════════════════════════════════════     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    C# TYPE SYSTEM                                |
++-----------------------------------------------------------------+
+|                                                                  |
+|                        object                                    |
+|                          |                                       |
+|            +-------------+-------------+                        |
+|            |                           |                         |
+|      Value Types               Reference Types                   |
+|            |                           |                         |
+|  +---------+---------+      +---------+---------+              |
+|  |         |         |      |         |         |               |
+| struct   enum    primitives class  interface  array             |
+|  |                   |                |                          |
+|  |    int, bool,    |        string, object,                    |
+|  |    double, etc   |        custom classes                      |
+|                                                                  |
+|  ══════════════════════════════════════════════════════════     |
+|  VALUE TYPES        |  REFERENCE TYPES                          |
+|  - Stored on stack  |  - Stored on heap                         |
+|  - Copied by value  |  - Copied by reference                    |
+|  - Cannot be null*  |  - Can be null                            |
+|  ══════════════════════════════════════════════════════════     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -547,8 +547,8 @@ string definitelyNotNull = name!;  // Trust me compiler, it's not null
 ```csharp
 // Implicit conversion (safe, no data loss)
 int i = 100;
-long l = i;           // int → long OK
-double d = i;         // int → double OK
+long l = i;           // int -> long OK
+double d = i;         // int -> double OK
 
 // Explicit conversion (cast - potential data loss)
 double pi = 3.14159;
@@ -600,7 +600,7 @@ for (int i = 0; i < 10000; i++)
 string result = sb.ToString();
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -613,7 +613,7 @@ string result = sb.ToString();
 | `bool` | 1 bit | Sant/falskt |
 | `string` | Variabel | Text |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -624,7 +624,7 @@ string result = sb.ToString();
 | Overflow | For stort varde | Anvand checked eller storre typ |
 | Parse exception | Ogiltig input | Anvand TryParse |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -663,7 +663,7 @@ DOTNET_NODE_3_CONTROL_FLOW = {
     ],
     "content": """# Control Flow och Loops
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -680,7 +680,7 @@ Du maste forsta:
 - **Loops** - for, foreach, while
 - **Pattern matching** - modern C# superkraft
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 💻 If/Else
 
@@ -944,7 +944,7 @@ switch (value)
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -957,7 +957,7 @@ switch (value)
 | `foreach` | Iterera over samlingar |
 | `while` | Loop tills villkor falskt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -968,7 +968,7 @@ switch (value)
 | Missing break | Glom break i switch | Lagg till break |
 | Infinite loop | Villkor aldrig falskt | Kontrollera loop-variabel |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1007,7 +1007,7 @@ DOTNET_NODE_4_METHODS = {
     ],
     "content": """# Methods och Functions
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1024,25 +1024,25 @@ Du maste forsta:
 - **ref/out/in** - pass by reference
 - **Lambda expressions** - anonyma funktioner
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Method Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      METHOD ANATOMY                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   public static int Add(int a, int b)                           │
-│   ──────  ────── ───  ─── ─────────────                         │
-│     │       │     │    │        │                                │
-│     │       │     │    │        └── Parameters                   │
-│     │       │     │    └── Method name                          │
-│     │       │     └── Return type                                │
-│     │       └── Optional modifier (static = no instance needed) │
-│     └── Access modifier (public, private, protected, internal)  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      METHOD ANATOMY                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|   public static int Add(int a, int b)                           |
+|   ------  ------ ---  --- -------------                         |
+|     |       |     |    |        |                                |
+|     |       |     |    |        +-- Parameters                   |
+|     |       |     |    +-- Method name                          |
+|     |       |     +-- Return type                                |
+|     |       +-- Optional modifier (static = no instance needed) |
+|     +-- Access modifier (public, private, protected, internal)  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1295,7 +1295,7 @@ Console.WriteLine(StringUtils.IsPalindrome("A man a plan a canal Panama"));  // 
 Console.WriteLine(StringUtils.Truncate("Hello World", 8));  // Hello...
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1307,7 +1307,7 @@ Console.WriteLine(StringUtils.Truncate("Hello World", 8));  // Hello...
 | `params` | Variabel antal argument |
 | `=>` | Expression-bodied method/lambda |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1318,7 +1318,7 @@ Console.WriteLine(StringUtils.Truncate("Hello World", 8));  // Hello...
 | Wrong overload called | Tvetydig overload | Explicit cast |
 | out not assigned | Glom tilldela out | Tilldela alltid |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

@@ -1,6 +1,6 @@
 # =============================================================================
 # KUBERNETES SKILLSMAP - 20 NODER
-# Akhilesh Pedagogical Style: Intro → Koncept → Kommandon → Tips → Task
+# Akhilesh Pedagogical Style: Intro -> Koncept -> Kommandon -> Tips -> Task
 # =============================================================================
 
 KUBERNETES_SKILLSMAP_INFO = {
@@ -44,19 +44,19 @@ Kubernetes (K8s) är industristandard för container orchestration.
 ## Arkitektur
 
 ```
-┌─────────────────────────────────────────┐
-│            Control Plane                │
-├─────────┬─────────┬─────────┬──────────┤
-│ API     │ etcd    │Scheduler│Controller│
-│ Server  │         │         │ Manager  │
-└────┬────┴────┬────┴────┬────┴────┬─────┘
-     │         │         │         │
-┌────▼────┬────▼────┬────▼────┬────▼─────┐
-│ Node 1  │ Node 2  │ Node 3  │ Node N   │
-├─────────┼─────────┼─────────┼──────────┤
-│ kubelet │ kubelet │ kubelet │ kubelet  │
-│ pods    │ pods    │ pods    │ pods     │
-└─────────┴─────────┴─────────┴──────────┘
++-----------------------------------------+
+|            Control Plane                |
++---------+---------+---------+----------+
+| API     | etcd    |Scheduler|Controller|
+| Server  |         |         | Manager  |
++----+----+----+----+----+----+----+-----+
+     |         |         |         |
++----▼----+----▼----+----▼----+----▼-----+
+| Node 1  | Node 2  | Node 3  | Node N   |
++---------+---------+---------+----------+
+| kubelet | kubelet | kubelet | kubelet  |
+| pods    | pods    | pods    | pods     |
++---------+---------+---------+----------+
 ```
 
 ## Lokalt Kluster
@@ -246,7 +246,7 @@ spec:
 ## Pod Lifecycle
 
 ```
-Pending → Running → Succeeded/Failed
+Pending -> Running -> Succeeded/Failed
               ↓
           CrashLoopBackOff
 ```
@@ -1191,15 +1191,15 @@ Bygg egna charts.
 helm create myapp
 
 myapp/
-├── Chart.yaml
-├── values.yaml
-├── templates/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   ├── ingress.yaml
-│   ├── _helpers.tpl
-│   └── NOTES.txt
-└── charts/
++-- Chart.yaml
++-- values.yaml
++-- templates/
+|   +-- deployment.yaml
+|   +-- service.yaml
+|   +-- ingress.yaml
+|   +-- _helpers.tpl
+|   +-- NOTES.txt
++-- charts/
 ```
 
 ## Chart.yaml

@@ -23,39 +23,39 @@ Containers är ephemeral - när de tas bort försvinner all data. Docker Volumes
 ### Storage Types Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER STORAGE TYPES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  HOST                              DOCKER                                │
-│  ════                              ══════                                │
-│                                                                          │
-│  ┌─────────────┐                   ┌─────────────────────────────┐     │
-│  │ /host/path  │◄──────────────────│     BIND MOUNT              │     │
-│  │  (file)     │   Host path       │     Direct mapping          │     │
-│  └─────────────┘   mounted         │     Development use         │     │
-│                                    └─────────────────────────────┘     │
-│                                                                          │
-│  ┌─────────────┐                   ┌─────────────────────────────┐     │
-│  │ /var/lib/   │◄──────────────────│     NAMED VOLUME            │     │
-│  │ docker/     │   Docker          │     Docker-managed          │     │
-│  │ volumes/    │   managed         │     Production use          │     │
-│  └─────────────┘                   └─────────────────────────────┘     │
-│                                                                          │
-│                                    ┌─────────────────────────────┐     │
-│                                    │     TMPFS MOUNT             │     │
-│                                    │     Memory only             │     │
-│                                    │     Sensitive data          │     │
-│                                    └─────────────────────────────┘     │
-│                                                                          │
-│  COMPARISON:                                                             │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Type          │ Managed │ Portable │ Performance │ Use Case           │
-│  Bind Mount    │ No      │ No       │ Native      │ Development        │
-│  Named Volume  │ Yes     │ Yes      │ Native      │ Production         │
-│  tmpfs         │ Yes     │ No       │ Fast (RAM)  │ Secrets, temp      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER STORAGE TYPES                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  HOST                              DOCKER                                |
+|  ════                              ══════                                |
+|                                                                          |
+|  +-------------+                   +-----------------------------+     |
+|  | /host/path  |◄------------------|     BIND MOUNT              |     |
+|  |  (file)     |   Host path       |     Direct mapping          |     |
+|  +-------------+   mounted         |     Development use         |     |
+|                                    +-----------------------------+     |
+|                                                                          |
+|  +-------------+                   +-----------------------------+     |
+|  | /var/lib/   |◄------------------|     NAMED VOLUME            |     |
+|  | docker/     |   Docker          |     Docker-managed          |     |
+|  | volumes/    |   managed         |     Production use          |     |
+|  +-------------+                   +-----------------------------+     |
+|                                                                          |
+|                                    +-----------------------------+     |
+|                                    |     TMPFS MOUNT             |     |
+|                                    |     Memory only             |     |
+|                                    |     Sensitive data          |     |
+|                                    +-----------------------------+     |
+|                                                                          |
+|  COMPARISON:                                                             |
+|  ---------------------------------------------------------------------  |
+|  Type          | Managed | Portable | Performance | Use Case           |
+|  Bind Mount    | No      | No       | Native      | Development        |
+|  Named Volume  | Yes     | Yes      | Native      | Production         |
+|  tmpfs         | Yes     | No       | Fast (RAM)  | Secrets, temp      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Named Volumes
@@ -170,8 +170,8 @@ docker run -d \
   node:20 npm run dev
 
 # Förklaring:
-# -v $(pwd):/app        → Mappa hela projektet
-# -v /app/node_modules  → Anonymous volume för node_modules
+# -v $(pwd):/app        -> Mappa hela projektet
+# -v /app/node_modules  -> Anonymous volume för node_modules
 #                         (förhindrar att host's node_modules överskrivs)
 ```
 
@@ -204,30 +204,30 @@ docker run -d \
 ## 5. Volume Drivers & Plugins
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    VOLUME DRIVERS                                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DRIVER          │ USE CASE                                              │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  local           │ Default, lokal disk                                  │
-│  nfs             │ Network File System                                  │
-│  ceph            │ Distributed storage                                  │
-│  aws-ebs         │ Amazon EBS volumes                                   │
-│  azure-file      │ Azure File Storage                                   │
-│  gcs             │ Google Cloud Storage                                 │
-│                                                                          │
-│  EXEMPEL NFS:                                                           │
-│  ─────────────────────────────────────────────────────────────────────  │
-│                                                                          │
-│  docker volume create \                                                  │
-│    --driver local \                                                     │
-│    --opt type=nfs \                                                     │
-│    --opt o=addr=192.168.1.10,rw \                                      │
-│    --opt device=:/export/data \                                        │
-│    nfs-data                                                             │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    VOLUME DRIVERS                                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DRIVER          | USE CASE                                              |
+|  ---------------------------------------------------------------------  |
+|  local           | Default, lokal disk                                  |
+|  nfs             | Network File System                                  |
+|  ceph            | Distributed storage                                  |
+|  aws-ebs         | Amazon EBS volumes                                   |
+|  azure-file      | Azure File Storage                                   |
+|  gcs             | Google Cloud Storage                                 |
+|                                                                          |
+|  EXEMPEL NFS:                                                           |
+|  ---------------------------------------------------------------------  |
+|                                                                          |
+|  docker volume create \                                                  |
+|    --driver local \                                                     |
+|    --opt type=nfs \                                                     |
+|    --opt o=addr=192.168.1.10,rw \                                      |
+|    --opt device=:/export/data \                                        |
+|    nfs-data                                                             |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Backup & Restore
@@ -330,7 +330,7 @@ docker run -d \
 
 # Verifiera att data finns kvar
 docker exec -it postgres-new psql -U admin -d myapp -c "SELECT * FROM users;"
-# → Visar 'Test User' - data persistent!
+# -> Visar 'Test User' - data persistent!
 ```
 
 ## 8. Praktiska Övningar
@@ -398,7 +398,7 @@ docker run --rm \
 
 ---
 
-**Nästa Node:** Docker Networking →
+**Nästa Node:** Docker Networking ->
 ''',
     "xp_reward": 165,
     "estimated_minutes": 70,
@@ -424,65 +424,65 @@ Docker networking möjliggör kommunikation mellan containers, med host, och med
 ### Network Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER NETWORK ARCHITECTURE                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│    EXTERNAL                        HOST                                  │
-│    ════════                        ════                                  │
-│                                                                          │
-│    Internet ◄───────────────────► eth0: 192.168.1.10                    │
-│                                     │                                    │
-│                                     │ NAT                                │
-│                                     │                                    │
-│    ┌────────────────────────────────┴────────────────────────────────┐  │
-│    │                      docker0: 172.17.0.1                         │  │
-│    │                      (DEFAULT BRIDGE)                            │  │
-│    │                                                                  │  │
-│    │   ┌─────────────────┐    ┌─────────────────┐                   │  │
-│    │   │   Container A   │    │   Container B   │                   │  │
-│    │   │   172.17.0.2    │◄──►│   172.17.0.3    │                   │  │
-│    │   └─────────────────┘    └─────────────────┘                   │  │
-│    │                                                                  │  │
-│    └──────────────────────────────────────────────────────────────────┘  │
-│                                                                          │
-│    ┌──────────────────────────────────────────────────────────────────┐  │
-│    │                    app-network: 172.18.0.0/16                    │  │
-│    │                    (USER-DEFINED BRIDGE)                         │  │
-│    │                                                                  │  │
-│    │   ┌─────────────────┐    ┌─────────────────┐                   │  │
-│    │   │   web: 172.18.0.2│◄──►│   db: 172.18.0.3│                   │  │
-│    │   │   DNS: "web"     │    │   DNS: "db"     │                   │  │
-│    │   └─────────────────┘    └─────────────────┘                   │  │
-│    │                                                                  │  │
-│    │   Container "web" kan nå "db" via hostname!                     │  │
-│    │   curl http://db:5432 ✓                                         │  │
-│    │                                                                  │  │
-│    └──────────────────────────────────────────────────────────────────┘  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER NETWORK ARCHITECTURE                           |
++-------------------------------------------------------------------------+
+|                                                                          |
+|    EXTERNAL                        HOST                                  |
+|    ════════                        ════                                  |
+|                                                                          |
+|    Internet ◄-------------------► eth0: 192.168.1.10                    |
+|                                     |                                    |
+|                                     | NAT                                |
+|                                     |                                    |
+|    +--------------------------------+--------------------------------+  |
+|    |                      docker0: 172.17.0.1                         |  |
+|    |                      (DEFAULT BRIDGE)                            |  |
+|    |                                                                  |  |
+|    |   +-----------------+    +-----------------+                   |  |
+|    |   |   Container A   |    |   Container B   |                   |  |
+|    |   |   172.17.0.2    |◄--►|   172.17.0.3    |                   |  |
+|    |   +-----------------+    +-----------------+                   |  |
+|    |                                                                  |  |
+|    +------------------------------------------------------------------+  |
+|                                                                          |
+|    +------------------------------------------------------------------+  |
+|    |                    app-network: 172.18.0.0/16                    |  |
+|    |                    (USER-DEFINED BRIDGE)                         |  |
+|    |                                                                  |  |
+|    |   +-----------------+    +-----------------+                   |  |
+|    |   |   web: 172.18.0.2|◄--►|   db: 172.18.0.3|                   |  |
+|    |   |   DNS: "web"     |    |   DNS: "db"     |                   |  |
+|    |   +-----------------+    +-----------------+                   |  |
+|    |                                                                  |  |
+|    |   Container "web" kan nå "db" via hostname!                     |  |
+|    |   curl http://db:5432 ✓                                         |  |
+|    |                                                                  |  |
+|    +------------------------------------------------------------------+  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Network Types
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      DOCKER NETWORK DRIVERS                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DRIVER        │ ISOLATION │ DNS  │ USE CASE                            │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  bridge        │ Yes       │ No*  │ Default, single host               │
-│  user bridge   │ Yes       │ Yes  │ Production, multi-container        │
-│  host          │ No        │ N/A  │ Performance, direct network        │
-│  none          │ Total     │ No   │ Security, custom networking        │
-│  overlay       │ Yes       │ Yes  │ Multi-host (Swarm/K8s)             │
-│  macvlan       │ Yes       │ No   │ Legacy apps, direct MAC            │
-│  ipvlan        │ Yes       │ No   │ L2/L3 network integration          │
-│                                                                          │
-│  * Default bridge har DNS men endast via --link (deprecated)            │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      DOCKER NETWORK DRIVERS                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DRIVER        | ISOLATION | DNS  | USE CASE                            |
+|  ---------------------------------------------------------------------  |
+|  bridge        | Yes       | No*  | Default, single host               |
+|  user bridge   | Yes       | Yes  | Production, multi-container        |
+|  host          | No        | N/A  | Performance, direct network        |
+|  none          | Total     | No   | Security, custom networking        |
+|  overlay       | Yes       | Yes  | Multi-host (Swarm/K8s)             |
+|  macvlan       | Yes       | No   | Legacy apps, direct MAC            |
+|  ipvlan        | Yes       | No   | L2/L3 network integration          |
+|                                                                          |
+|  * Default bridge har DNS men endast via --link (deprecated)            |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Network Commands
@@ -595,45 +595,45 @@ docker port mycontainer
 ## 5. DNS & Service Discovery
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER DNS RESOLUTION                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  USER-DEFINED BRIDGE NETWORK:                                           │
-│  ═══════════════════════════════════════════════════════════════════   │
-│                                                                          │
-│  docker network create app-net                                          │
-│  docker run -d --name api --network app-net myapi                       │
-│  docker run -d --name db --network app-net postgres                     │
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                    app-net (172.20.0.0/16)                       │   │
-│  │                                                                   │   │
-│  │   ┌──────────────┐           ┌──────────────┐                   │   │
-│  │   │     api      │───DNS────►│      db      │                   │   │
-│  │   │ 172.20.0.2   │           │ 172.20.0.3   │                   │   │
-│  │   └──────────────┘           └──────────────┘                   │   │
-│  │                                                                   │   │
-│  │   # Från api container:                                          │   │
-│  │   ping db          ✓  → 172.20.0.3                              │   │
-│  │   curl http://db   ✓                                            │   │
-│  │   psql -h db       ✓                                            │   │
-│  │                                                                   │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  CONTAINER ALIASES:                                                      │
-│  ═══════════════════════════════════════════════════════════════════   │
-│                                                                          │
-│  docker run -d \                                                        │
-│    --name postgres \                                                    │
-│    --network app-net \                                                  │
-│    --network-alias db \                                                 │
-│    --network-alias database \                                           │
-│    postgres:15                                                          │
-│                                                                          │
-│  # Nu nåbar via: postgres, db, database                                 │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER DNS RESOLUTION                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  USER-DEFINED BRIDGE NETWORK:                                           |
+|  ═══════════════════════════════════════════════════════════════════   |
+|                                                                          |
+|  docker network create app-net                                          |
+|  docker run -d --name api --network app-net myapi                       |
+|  docker run -d --name db --network app-net postgres                     |
+|                                                                          |
+|  +-----------------------------------------------------------------+   |
+|  |                    app-net (172.20.0.0/16)                       |   |
+|  |                                                                   |   |
+|  |   +--------------+           +--------------+                   |   |
+|  |   |     api      |---DNS----►|      db      |                   |   |
+|  |   | 172.20.0.2   |           | 172.20.0.3   |                   |   |
+|  |   +--------------+           +--------------+                   |   |
+|  |                                                                   |   |
+|  |   # Från api container:                                          |   |
+|  |   ping db          ✓  -> 172.20.0.3                              |   |
+|  |   curl http://db   ✓                                            |   |
+|  |   psql -h db       ✓                                            |   |
+|  |                                                                   |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  CONTAINER ALIASES:                                                      |
+|  ═══════════════════════════════════════════════════════════════════   |
+|                                                                          |
+|  docker run -d \                                                        |
+|    --name postgres \                                                    |
+|    --network app-net \                                                  |
+|    --network-alias db \                                                 |
+|    --network-alias database \                                           |
+|    postgres:15                                                          |
+|                                                                          |
+|  # Nu nåbar via: postgres, db, database                                 |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Multi-Container Example
@@ -776,7 +776,7 @@ docker network rm frontend-net backend-net
 
 ---
 
-**Nästa Node:** Docker Compose Basics →
+**Nästa Node:** Docker Compose Basics ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 75,

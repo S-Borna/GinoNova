@@ -64,24 +64,24 @@ AZURE_NODE_3_V2 = {
 | `G + D` | Go to Dashboard |
 | `G + R` | Go to Resource Groups |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│               AZURE PORTAL LAYOUT               │
-├─────────────────────────────────────────────────┤
-│  ┌──────┐ ┌─────────────────────────────────┐   │
-│  │ ☰    │ │ 🔍 Search resources, services   │   │
-│  │ Home │ └─────────────────────────────────┘   │
-│  │ Dash │                                       │
-│  │ All  │  ┌─────────────────────────────────┐  │
-│  │ RGs  │  │      DASHBOARD / CONTENT        │  │
-│  │ Subs │  │                                 │  │
-│  │ Cost │  │  ┌─────┐ ┌─────┐ ┌─────┐       │  │
-│  │ ...  │  │  │ VM  │ │ DB  │ │ App │       │  │
-│  │      │  │  │Tile │ │Tile │ │Tile │       │  │
-│  │ ⭐    │  │  └─────┘ └─────┘ └─────┘       │  │
-│  │Favs  │  │                                 │  │
-│  └──────┘  └─────────────────────────────────┘  │
-│               🔔 Notifications    👤 Profile    │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|               AZURE PORTAL LAYOUT               |
++-------------------------------------------------+
+|  +------+ +---------------------------------+   |
+|  | ☰    | | 🔍 Search resources, services   |   |
+|  | Home | +---------------------------------+   |
+|  | Dash |                                       |
+|  | All  |  +---------------------------------+  |
+|  | RGs  |  |      DASHBOARD / CONTENT        |  |
+|  | Subs |  |                                 |  |
+|  | Cost |  |  +-----+ +-----+ +-----+       |  |
+|  | ...  |  |  | VM  | | DB  | | App |       |  |
+|  |      |  |  |Tile | |Tile | |Tile |       |  |
+|  | ⭐    |  |  +-----+ +-----+ +-----+       |  |
+|  |Favs  |  |                                 |  |
+|  +------+  +---------------------------------+  |
+|               🔔 Notifications    👤 Profile    |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd 'G + /' för global search - snabbare än att klicka igenom menyer.",
             "common_mistake": "Att försöka göra allt i Portal. Det fungerar för utforskning, men repetitiva uppgifter = CLI."
@@ -125,27 +125,27 @@ az login
 # Öppnar webbläsare för autentisering
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           AZURE CLI INSTALLATION                │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   macOS     →  brew install azure-cli          │
-│   Ubuntu    →  curl script | sudo bash         │
-│   Windows   →  winget install                  │
-│   Docker    →  docker run -it az-cli           │
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │  $ az --version                         │   │
-│   │  azure-cli    2.55.0                    │   │
-│   │  core         2.55.0                    │   │
-│   │  telemetry    1.1.0                     │   │
-│   │                                         │   │
-│   │  $ az login                             │   │
-│   │  Opening browser for authentication...  │   │
-│   │  ✓ Logged in as user@company.com        │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           AZURE CLI INSTALLATION                |
++-------------------------------------------------+
+|                                                 |
+|   macOS     ->  brew install azure-cli          |
+|   Ubuntu    ->  curl script | sudo bash         |
+|   Windows   ->  winget install                  |
+|   Docker    ->  docker run -it az-cli           |
+|                                                 |
+|   +-----------------------------------------+   |
+|   |  $ az --version                         |   |
+|   |  azure-cli    2.55.0                    |   |
+|   |  core         2.55.0                    |   |
+|   |  telemetry    1.1.0                     |   |
+|   |                                         |   |
+|   |  $ az login                             |   |
+|   |  Opening browser for authentication...  |   |
+|   |  ✓ Logged in as user@company.com        |   |
+|   +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd Docker-versionen om du inte vill installera något permanent eller jobbar på en delad maskin.",
             "common_mistake": "Att köra 'az login' på en server utan webbläsare. Använd 'az login --use-device-code' istället."
@@ -163,12 +163,12 @@ az <group> <subgroup> <action> --<parameter> <value>
 **Exempel:**
 ```bash
 az vm create --name myvm --resource-group myrg
-│   │  │       │           │
-│   │  │       │           └── Parameter med värde
-│   │  │       └── Parameter med värde
-│   │  └── Action (create, list, show, delete)
-│   └── Resource type (vm, storage, network)
-└── Azure CLI
+|   |  |       |           |
+|   |  |       |           +-- Parameter med värde
+|   |  |       +-- Parameter med värde
+|   |  +-- Action (create, list, show, delete)
+|   +-- Resource type (vm, storage, network)
++-- Azure CLI
 
 # Jämför med AWS CLI:
 # aws ec2 run-instances --instance-type t2.micro
@@ -193,27 +193,27 @@ az find "create vm"          # Sök efter command
 az interactive               # Interaktivt läge!
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              CLI COMMAND STRUCTURE              │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   az   group   create   --name rg   --loc neu  │
-│   │      │       │         │           │        │
-│   │      │       │         │           └── Value│
-│   │      │       │         └── Parameter        │
-│   │      │       └── Action                     │
-│   │      └── Resource type                      │
-│   └── CLI prefix                                │
-│                                                 │
-│   COMMON PATTERNS:                              │
-│   ┌─────────────────────────────────────────┐   │
-│   │  az <type> list                         │   │
-│   │  az <type> show --name X --resource-group Y │
-│   │  az <type> create --name X [options]    │   │
-│   │  az <type> delete --name X --yes        │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              CLI COMMAND STRUCTURE              |
++-------------------------------------------------+
+|                                                 |
+|   az   group   create   --name rg   --loc neu  |
+|   |      |       |         |           |        |
+|   |      |       |         |           +-- Value|
+|   |      |       |         +-- Parameter        |
+|   |      |       +-- Action                     |
+|   |      +-- Resource type                      |
+|   +-- CLI prefix                                |
+|                                                 |
+|   COMMON PATTERNS:                              |
+|   +-----------------------------------------+   |
+|   |  az <type> list                         |   |
+|   |  az <type> show --name X --resource-group Y |
+|   |  az <type> create --name X [options]    |   |
+|   |  az <type> delete --name X --yes        |   |
+|   +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd 'az interactive' för auto-complete och inline dokumentation. Perfekt när du lär dig.",
             "common_mistake": "Att inte använda --yes på delete-kommandon i scripts. Scriptet hänger sig och väntar på bekräftelse."
@@ -259,31 +259,31 @@ VM_IP=$(az vm show -g myRG -n myVM --query publicIps -o tsv)
 | `[?tag=='x']` | Filtrera |
 | `{N:name,L:location}` | Välj och rename |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              OUTPUT FORMATS                      │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  --output json (default)                        │
-│  ┌─────────────────────────────────────────┐   │
-│  │ [{"name":"vm-1","location":"northeu"}, │   │
-│  │  {"name":"vm-2","location":"westeu"}]  │   │
-│  └─────────────────────────────────────────┘   │
-│                                                 │
-│  --output table                                 │
-│  ┌─────────────────────────────────────────┐   │
-│  │ Name    Location                        │   │
-│  │ ------  -----------                     │   │
-│  │ vm-1    northeurope                     │   │
-│  │ vm-2    westeurope                      │   │
-│  └─────────────────────────────────────────┘   │
-│                                                 │
-│  --query "[].name" --output tsv                 │
-│  ┌─────────────────────────────────────────┐   │
-│  │ vm-1                                    │   │
-│  │ vm-2                                    │   │
-│  └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              OUTPUT FORMATS                      |
++-------------------------------------------------+
+|                                                 |
+|  --output json (default)                        |
+|  +-----------------------------------------+   |
+|  | [{"name":"vm-1","location":"northeu"}, |   |
+|  |  {"name":"vm-2","location":"westeu"}]  |   |
+|  +-----------------------------------------+   |
+|                                                 |
+|  --output table                                 |
+|  +-----------------------------------------+   |
+|  | Name    Location                        |   |
+|  | ------  -----------                     |   |
+|  | vm-1    northeurope                     |   |
+|  | vm-2    westeurope                      |   |
+|  +-----------------------------------------+   |
+|                                                 |
+|  --query "[].name" --output tsv                 |
+|  +-----------------------------------------+   |
+|  | vm-1                                    |   |
+|  | vm-2                                    |   |
+|  +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd 'tsv' output när du sparar till variabler: VM=$(az vm show ... -o tsv). Ingen parsing behövs.",
             "common_mistake": "Att använda json output och sedan grep/sed för att extrahera data. JMESPath är mycket säkrare."
@@ -326,33 +326,33 @@ cd ~/clouddrive
 ls
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              AZURE CLOUD SHELL                  │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │  🌐 shell.azure.com                     │   │
-│   │                                         │   │
-│   │  Bash ○  PowerShell ●                  │   │
-│   │                                         │   │
-│   │  user@Azure:~$ az account show          │   │
-│   │  {                                      │   │
-│   │    "name": "My Subscription",           │   │
-│   │    "state": "Enabled"                   │   │
-│   │  }                                      │   │
-│   │                                         │   │
-│   │  user@Azure:~$ kubectl get nodes        │   │
-│   │  NAME        STATUS   ROLES             │   │
-│   │  aks-node1   Ready    agent             │   │
-│   │                                         │   │
-│   │  [Upload] [Download] [Settings] [⚙️]    │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   INCLUDED TOOLS:                               │
-│   az, kubectl, terraform, ansible, git,         │
-│   python, node, docker, helm, vault...          │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              AZURE CLOUD SHELL                  |
++-------------------------------------------------+
+|                                                 |
+|   +-----------------------------------------+   |
+|   |  🌐 shell.azure.com                     |   |
+|   |                                         |   |
+|   |  Bash ○  PowerShell ●                  |   |
+|   |                                         |   |
+|   |  user@Azure:~$ az account show          |   |
+|   |  {                                      |   |
+|   |    "name": "My Subscription",           |   |
+|   |    "state": "Enabled"                   |   |
+|   |  }                                      |   |
+|   |                                         |   |
+|   |  user@Azure:~$ kubectl get nodes        |   |
+|   |  NAME        STATUS   ROLES             |   |
+|   |  aks-node1   Ready    agent             |   |
+|   |                                         |   |
+|   |  [Upload] [Download] [Settings] [⚙️]    |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   INCLUDED TOOLS:                               |
+|   az, kubectl, terraform, ansible, git,         |
+|   python, node, docker, helm, vault...          |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd Cloud Shell när du snabbt behöver köra az-kommandon från en dator utan CLI installerat.",
             "common_mistake": "Att förlita sig 100% på Cloud Shell. Timeout på 20 min kan avbryta långa operationer."

@@ -37,19 +37,19 @@ AZURE_NODE_20_GOVERNANCE_V2 = {
                 "concepts": [
                     {
                         "title": "Management Groups Hierarchy",
-                        "explanation": "Root Tenant → Management Groups → Subscriptions → Resource Groups → Resources. Policies och RBAC ärvs nedåt.",
+                        "explanation": "Root Tenant -> Management Groups -> Subscriptions -> Resource Groups -> Resources. Policies och RBAC ärvs nedåt.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ ROOT TENANT                                 │
-│ └── MG: Organization                        │
-│     ├── MG: Production   ← Strict policies │
-│     │   └── Sub: Prod-1                    │
-│     ├── MG: Development  ← Relaxed policies│
-│     │   └── Sub: Dev-1                     │
-│     └── MG: Shared                          │
-│         └── Sub: Networking                 │
-└─────────────────────────────────────────────┘
-Policy inheritance: Top → Down""",
++---------------------------------------------+
+| ROOT TENANT                                 |
+| +-- MG: Organization                        |
+|     +-- MG: Production   <- Strict policies |
+|     |   +-- Sub: Prod-1                    |
+|     +-- MG: Development  <- Relaxed policies|
+|     |   +-- Sub: Dev-1                     |
+|     +-- MG: Shared                          |
+|         +-- Sub: Networking                 |
++---------------------------------------------+
+Policy inheritance: Top -> Down""",
                         "pro_tip": "Använd MG för att skilja prod/dev policy strictness.",
                         "common_mistake": "Att inte planera MG-struktur innan du börjar - svårt att ändra efteråt."
                     },
@@ -57,15 +57,15 @@ Policy inheritance: Top → Down""",
                         "title": "Azure Policy Effects",
                         "explanation": "Disabled (ingen effekt), Audit (logga), Deny (blockera), DeployIfNotExists (auto-remediate), Modify (ändra).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ POLICY EFFECTS                              │
-├─────────────────────────────────────────────┤
-│ Disabled          │ Policy inactive        │
-│ Audit             │ Log non-compliance     │
-│ Deny              │ Block deployment       │
-│ DeployIfNotExists │ Auto-create resources  │
-│ Modify            │ Change resource config │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| POLICY EFFECTS                              |
++---------------------------------------------+
+| Disabled          | Policy inactive        |
+| Audit             | Log non-compliance     |
+| Deny              | Block deployment       |
+| DeployIfNotExists | Auto-create resources  |
+| Modify            | Change resource config |
++---------------------------------------------+""",
                         "pro_tip": "Börja med Audit, byt till Deny när du verifierat impact.",
                         "common_mistake": "Att sätta Deny direkt - kan blockera legitima deployments."
                     }
@@ -111,7 +111,7 @@ Policy inheritance: Top → Down""",
                 "questions": {
                     "flashcards": [
                         {"front": "Vad är skillnaden mellan Audit och Deny effect?", "back": "Audit loggar non-compliance men tillåter deployment. Deny blockerar deployment helt."},
-                        {"front": "Hur ärvs policies i Azure?", "back": "Top-down: Management Group → Subscription → Resource Group → Resource"},
+                        {"front": "Hur ärvs policies i Azure?", "back": "Top-down: Management Group -> Subscription -> Resource Group -> Resource"},
                         {"front": "Vad gör Resource Locks?", "back": "ReadOnly = kan ej modifiera, CanNotDelete = kan modifiera men ej ta bort"}
                     ],
                     "multiple_choice": [
@@ -177,7 +177,7 @@ az policy assignment create --name require-env-tag \\
     --scope /providers/Microsoft.Management/managementGroups/mg-production \\
     --params '{"tagName": {"value": "Environment"}}'
 
-# 6. Budget med alert (Portal: Cost Management → Budgets)""",
+# 6. Budget med alert (Portal: Cost Management -> Budgets)""",
                 "estimated_time": "10 min",
                 "xp_reward": 20
             }

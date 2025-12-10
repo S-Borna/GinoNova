@@ -14,7 +14,7 @@ NODE_19_AUTONOMOUS_AGENTS = {
 
 Bygga agenter som arbetar sjalvstandigt.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Autonoma Agenter?
 
@@ -27,7 +27,7 @@ Autonoma agenter arbetar sjalvstandigt mot mal utan konstant manniskointeraktion
 | Learning | Anpassar sig fran feedback |
 | Goal-oriented | Arbetar mot definierade mal |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ Autonoma agenter arbetar sjalvstandigt mot mal utan konstant manniskointeraktion
 | Scale | Hantera manga tasks |
 | Consistency | Samma kvalitet varje gang |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Autonomy Levels
 
@@ -49,50 +49,50 @@ Autonoma agenter arbetar sjalvstandigt mot mal utan konstant manniskointeraktion
 | Level 3 | Multi-step planning | AutoGPT-style |
 | Level 4 | Self-improvement | Research frontier |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Autonomous Agent Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  AUTONOMOUS AGENT                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                    GOAL SYSTEM                             │ │
-│  │  - Long-term goals                                         │ │
-│  │  - Sub-goal decomposition                                  │ │
-│  │  - Priority management                                     │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│                           v                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                    PLANNING ENGINE                         │ │
-│  │  - Task breakdown                                          │ │
-│  │  - Dependency analysis                                     │ │
-│  │  - Resource estimation                                     │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│                           v                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                   EXECUTION ENGINE                         │ │
-│  │  - Tool execution                                          │ │
-│  │  - Progress tracking                                       │ │
-│  │  - Error recovery                                          │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│                           v                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                   LEARNING SYSTEM                          │ │
-│  │  - Reflection                                              │ │
-│  │  - Strategy adjustment                                     │ │
-│  │  - Knowledge accumulation                                  │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  AUTONOMOUS AGENT                                |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +-----------------------------------------------------------+ |
+|  |                    GOAL SYSTEM                             | |
+|  |  - Long-term goals                                         | |
+|  |  - Sub-goal decomposition                                  | |
+|  |  - Priority management                                     | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|                           v                                      |
+|  +-----------------------------------------------------------+ |
+|  |                    PLANNING ENGINE                         | |
+|  |  - Task breakdown                                          | |
+|  |  - Dependency analysis                                     | |
+|  |  - Resource estimation                                     | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|                           v                                      |
+|  +-----------------------------------------------------------+ |
+|  |                   EXECUTION ENGINE                         | |
+|  |  - Tool execution                                          | |
+|  |  - Progress tracking                                       | |
+|  |  - Error recovery                                          | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|                           v                                      |
+|  +-----------------------------------------------------------+ |
+|  |                   LEARNING SYSTEM                          | |
+|  |  - Reflection                                              | |
+|  |  - Strategy adjustment                                     | |
+|  |  - Knowledge accumulation                                  | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Goal System
 
@@ -184,7 +184,7 @@ class GoalManager:
         return pending[0]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Planning Engine
 
@@ -266,7 +266,7 @@ class PlanningEngine:
         )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Execution Engine
 
@@ -331,7 +331,7 @@ class ExecutionEngine:
         })
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Autonomous Agent
 
@@ -410,7 +410,7 @@ class AutonomousAgent:
         self.running = False
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -421,7 +421,7 @@ class AutonomousAgent:
 | Infinite loops | Datta planering | Max iterations |
 | Unsafe actions | Ingen granskning | Human-in-the-loop |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -452,7 +452,7 @@ NODE_20_FUTURE_AGENTS = {
 
 Utforska vad som kommer nast inom AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad kommer nast?
 
@@ -465,7 +465,7 @@ AI-agenter utvecklas snabbt. Har ar de viktigaste trenderna att folja.
 | Agent ecosystems | 2-3 ar |
 | AGI-level agents | 5+ ar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -476,7 +476,7 @@ AI-agenter utvecklas snabbt. Har ar de viktigaste trenderna att folja.
 | Innovation | Forsta vad som ar mojligt |
 | Strategi | Planera long-term |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Emerging Technologies
 
@@ -487,42 +487,42 @@ AI-agenter utvecklas snabbt. Har ar de viktigaste trenderna att folja.
 | Reasoning models | O1, O3 | Transformativ |
 | Agent protocols | Standardisering | Medium |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Evolution of AI Agents
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  AGENT EVOLUTION                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  2023: Basic Tool Use                                           │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  LLM + Simple Tools (search, calculator)                  │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                           │                                      │
-│                           v                                      │
-│  2024: Agentic Workflows                                        │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  Multi-step reasoning, Planning, Memory                   │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                           │                                      │
-│                           v                                      │
-│  2025: Multi-Agent Systems                                      │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  Specialized agents, Collaboration, Orchestration         │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                           │                                      │
-│                           v                                      │
-│  2026+: Autonomous Systems                                      │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  Self-improving, Long-term memory, Complex reasoning      │  │
-│  └──────────────────────────────────────────────────────────┘  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  AGENT EVOLUTION                                 |
++-----------------------------------------------------------------+
+|                                                                  |
+|  2023: Basic Tool Use                                           |
+|  +----------------------------------------------------------+  |
+|  |  LLM + Simple Tools (search, calculator)                  |  |
+|  +----------------------------------------------------------+  |
+|                           |                                      |
+|                           v                                      |
+|  2024: Agentic Workflows                                        |
+|  +----------------------------------------------------------+  |
+|  |  Multi-step reasoning, Planning, Memory                   |  |
+|  +----------------------------------------------------------+  |
+|                           |                                      |
+|                           v                                      |
+|  2025: Multi-Agent Systems                                      |
+|  +----------------------------------------------------------+  |
+|  |  Specialized agents, Collaboration, Orchestration         |  |
+|  +----------------------------------------------------------+  |
+|                           |                                      |
+|                           v                                      |
+|  2026+: Autonomous Systems                                      |
+|  +----------------------------------------------------------+  |
+|  |  Self-improving, Long-term memory, Complex reasoning      |  |
+|  +----------------------------------------------------------+  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multimodal Agents
 
@@ -580,7 +580,7 @@ class MultimodalAgent:
         return {"synthesis": response.choices[0].message.content}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Computer Use Agents
 
@@ -630,7 +630,7 @@ class ComputerUseAgent:
         return {"type": "click", "x": 100, "y": 200}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Model Context Protocol (MCP)
 
@@ -689,46 +689,46 @@ class MCPServer:
         return {"error": f"Tool {name} not found"}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent Protocols och Standards
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  AGENT INTEROPERABILITY                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                    STANDARD PROTOCOLS                      │ │
-│  │                                                            │ │
-│  │  MCP (Model Context Protocol)                             │ │
-│  │  - Tool definitions                                        │ │
-│  │  - Resource access                                         │ │
-│  │  - Prompt templates                                        │ │
-│  │                                                            │ │
-│  │  OpenAPI for AI                                            │ │
-│  │  - REST endpoints                                          │ │
-│  │  - Schema definitions                                      │ │
-│  │  - Authentication                                          │ │
-│  │                                                            │ │
-│  │  Agent Communication                                       │ │
-│  │  - Message formats                                         │ │
-│  │  - Handshake protocols                                     │ │
-│  │  - State synchronization                                   │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│                           v                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                   AGENT MARKETPLACE                        │ │
-│  │  - Discover agents                                         │ │
-│  │  - Compose workflows                                       │ │
-│  │  - Share capabilities                                      │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  AGENT INTEROPERABILITY                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +-----------------------------------------------------------+ |
+|  |                    STANDARD PROTOCOLS                      | |
+|  |                                                            | |
+|  |  MCP (Model Context Protocol)                             | |
+|  |  - Tool definitions                                        | |
+|  |  - Resource access                                         | |
+|  |  - Prompt templates                                        | |
+|  |                                                            | |
+|  |  OpenAPI for AI                                            | |
+|  |  - REST endpoints                                          | |
+|  |  - Schema definitions                                      | |
+|  |  - Authentication                                          | |
+|  |                                                            | |
+|  |  Agent Communication                                       | |
+|  |  - Message formats                                         | |
+|  |  - Handshake protocols                                     | |
+|  |  - State synchronization                                   | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|                           v                                      |
+|  +-----------------------------------------------------------+ |
+|  |                   AGENT MARKETPLACE                        | |
+|  |  - Discover agents                                         | |
+|  |  - Compose workflows                                       | |
+|  |  - Share capabilities                                      | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Forbereda for Framtiden
 
@@ -761,7 +761,7 @@ class FutureProofAgent:
     # 4. Safe by default - human approval for risky actions
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -772,7 +772,7 @@ class FutureProofAgent:
 | Technical debt | Snabb iteration | Clean architecture |
 | Kostnad | Nya modeller dyra | Cost monitoring |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

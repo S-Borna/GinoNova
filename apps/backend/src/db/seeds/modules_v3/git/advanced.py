@@ -17,11 +17,11 @@ TASKS_ADVANCED = [
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -48,17 +48,17 @@ TASKS_ADVANCED = [
 
 ```
 FÖRE:
-main:    A → B → C
+main:    A -> B -> C
               ↘
-feature:       D → E
+feature:       D -> E
 
 EFTER MERGE:
-main:    A → B → C ────→ M (merge commit)
+main:    A -> B -> C -----> M (merge commit)
               ↘       ↗
-feature:       D → E
+feature:       D -> E
 
 EFTER REBASE:
-main:    A → B → C → D' → E' (linjär historik)
+main:    A -> B -> C -> D' -> E' (linjär historik)
 ```
 
 ### Fördelar med Rebase
@@ -88,7 +88,7 @@ git rebase main
 
 # Vad händer:
 # - Dina commits "flyttas" till efter main
-# - Commit-hashes ändras (D → D', E → E')
+# - Commit-hashes ändras (D -> D', E -> E')
 
 # 4. Vid konflikter
 git add .
@@ -154,18 +154,18 @@ pick abc123 First (nu andra)
 ## ⚠️ Rebase Golden Rule
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    REBASE GOLDEN RULE                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ALDRIG rebasa commits som är pushade och delade!             │
-│                                                                 │
-│   ✅ OK: Rebasa lokala commits                                 │
-│   ✅ OK: Rebasa din egna feature branch (före PR merge)        │
-│   ❌ NEJ: Rebasa main/develop                                  │
-│   ❌ NEJ: Rebasa efter någon annan börjat jobba på branchen    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    REBASE GOLDEN RULE                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|   ALDRIG rebasa commits som är pushade och delade!             |
+|                                                                 |
+|   ✅ OK: Rebasa lokala commits                                 |
+|   ✅ OK: Rebasa din egna feature branch (före PR merge)        |
+|   ❌ NEJ: Rebasa main/develop                                  |
+|   ❌ NEJ: Rebasa efter någon annan börjat jobba på branchen    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -225,11 +225,11 @@ git rebase -i HEAD~3
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -257,14 +257,14 @@ Kopiera en specifik commit till din nuvarande branch.
 
 ```
 FÖRE:
-main:    A → B → C
+main:    A -> B -> C
               ↘
-feature:       D → E → F (du vill ha E)
+feature:       D -> E -> F (du vill ha E)
 
 EFTER cherry-pick E:
-main:    A → B → C → E'
+main:    A -> B -> C -> E'
               ↘
-feature:       D → E → F
+feature:       D -> E -> F
 ```
 
 ### Användning
@@ -347,12 +347,12 @@ git bisect run ./test-script.sh
 
 ```
                               ✓ good
-v1.0: A → B → C → D → E → F → G → H (bad)
+v1.0: A -> B -> C -> D -> E -> F -> G -> H (bad)
               ↑
           Bisect startar här (mitt)
 
-Om D är good → sök E-H
-Om D är bad → sök A-C
+Om D är good -> sök E-H
+Om D är bad -> sök A-C
 ```
 
 ---
@@ -412,11 +412,11 @@ git bisect start HEAD HEAD~10
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -441,22 +441,22 @@ git bisect start HEAD HEAD~10
 Temporär förvaring av uncommitted changes.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        GIT STASH                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Scenario: Du jobbar på feature, måste fixa urgent bug        │
-│                                                                 │
-│   Working Directory ──stash──> Stash Stack                     │
-│   (ändringar)                  [0] WIP on feature              │
-│                                [1] Previous stash              │
-│                                                                 │
-│   ... fixa bug ...                                             │
-│                                                                 │
-│   Stash Stack ──stash pop──> Working Directory                 │
-│   (tom)                       (ändringar tillbaka)             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                        GIT STASH                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Scenario: Du jobbar på feature, måste fixa urgent bug        |
+|                                                                 |
+|   Working Directory --stash--> Stash Stack                     |
+|   (ändringar)                  [0] WIP on feature              |
+|                                [1] Previous stash              |
+|                                                                 |
+|   ... fixa bug ...                                             |
+|                                                                 |
+|   Stash Stack --stash pop--> Working Directory                 |
+|   (tom)                       (ändringar tillbaka)             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -604,11 +604,11 @@ git stash apply stash@{1}  # Första
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -634,22 +634,22 @@ git stash apply stash@{1}  # Första
 Scripts som körs automatiskt vid Git-events.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      GIT HOOKS                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   git commit ─────────────────────────────────────────────>    │
-│        │                                                        │
-│        ├── pre-commit    (lint, test, format)                  │
-│        ├── prepare-commit-msg                                  │
-│        ├── commit-msg    (validera meddelande)                 │
-│        └── post-commit   (notifieringar)                       │
-│                                                                 │
-│   git push ───────────────────────────────────────────────>    │
-│        │                                                        │
-│        └── pre-push      (tester före push)                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      GIT HOOKS                                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|   git commit --------------------------------------------->    |
+|        |                                                        |
+|        +-- pre-commit    (lint, test, format)                  |
+|        +-- prepare-commit-msg                                  |
+|        +-- commit-msg    (validera meddelande)                 |
+|        +-- post-commit   (notifieringar)                       |
+|                                                                 |
+|   git push ----------------------------------------------->    |
+|        |                                                        |
+|        +-- pre-push      (tester före push)                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Vanliga Hooks
@@ -1083,11 +1083,11 @@ detect-secrets scan
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1112,22 +1112,22 @@ detect-secrets scan
 ### Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        GIT FLOW                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  main ────●─────────────────────────────●───────●──────────>   │
-│           │                             ↑       │               │
-│           │                             │       │               │
-│  hotfix   └─────────────●───────────────┘       │               │
-│                         │                       │               │
-│  release ───────────────┼───────●───────────────┘               │
-│                         │       ↑                               │
-│  develop ●──────●───────┼───────┼───●───●───●───────────────>  │
-│          │      │       │       │   │   │   │                   │
-│  feature └──────┘       └───────┘   └───┘   └──────────────>   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                        GIT FLOW                                 |
++-----------------------------------------------------------------+
+|                                                                 |
+|  main ----●-----------------------------●-------●---------->   |
+|           |                             ↑       |               |
+|           |                             |       |               |
+|  hotfix   +-------------●---------------+       |               |
+|                         |                       |               |
+|  release ---------------+-------●---------------+               |
+|                         |       ↑                               |
+|  develop ●------●-------+-------+---●---●---●--------------->  |
+|          |      |       |       |   |   |   |                   |
+|  feature +------+       +-------+   +---+   +-------------->   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Branches
@@ -1179,12 +1179,12 @@ git merge --no-ff hotfix/1.2.1
 ### Enklare modell
 
 ```
-main ────●───●───●───●───●───●───●───●──────────────────────>
-         │       │       │       │
-         │       │       │       └── feature-4 (PR merge)
-         │       │       └────────── feature-3 (PR merge)
-         │       └────────────────── feature-2 (PR merge)
-         └────────────────────────── feature-1 (PR merge)
+main ----●---●---●---●---●---●---●---●---------------------->
+         |       |       |       |
+         |       |       |       +-- feature-4 (PR merge)
+         |       |       +---------- feature-3 (PR merge)
+         |       +------------------ feature-2 (PR merge)
+         +-------------------------- feature-1 (PR merge)
 ```
 
 ### Regler
@@ -1222,10 +1222,10 @@ git push -u origin feature/user-profile
 ### Minimal branching
 
 ```
-main/trunk ────●───●───●───●───●───●───●───●───●───●──────>
-                   │       │
-                   │       └── short-lived branch (max 1-2 dagar)
-                   └────────── another short branch
+main/trunk ----●---●---●---●---●---●---●---●---●---●------>
+                   |       |
+                   |       +-- short-lived branch (max 1-2 dagar)
+                   +---------- another short branch
 ```
 
 ### Principer
@@ -1279,10 +1279,10 @@ git push
 ### Rekommendationer
 
 ```
-Startup/litet team → GitHub Flow eller Trunk-Based
-Enterprise med scheduled releases → Git Flow
-Hög deployment-frekvens → Trunk-Based
-Open source → GitHub Flow
+Startup/litet team -> GitHub Flow eller Trunk-Based
+Enterprise med scheduled releases -> Git Flow
+Hög deployment-frekvens -> Trunk-Based
+Open source -> GitHub Flow
 ```
 
 ---
@@ -1331,11 +1331,11 @@ git pull
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1362,17 +1362,17 @@ git pull
 
 ```
 company-monorepo/
-├── apps/
-│   ├── web/
-│   ├── mobile/
-│   └── api/
-├── packages/
-│   ├── ui/
-│   ├── utils/
-│   └── shared/
-├── tools/
-│   └── scripts/
-└── package.json
++-- apps/
+|   +-- web/
+|   +-- mobile/
+|   +-- api/
++-- packages/
+|   +-- ui/
+|   +-- utils/
+|   +-- shared/
++-- tools/
+|   +-- scripts/
++-- package.json
 ```
 
 ### Fördelar Monorepo
@@ -1575,11 +1575,11 @@ ls packages/
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig

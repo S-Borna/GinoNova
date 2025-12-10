@@ -23,38 +23,38 @@ En Pod är den minsta deployerbara enheten i Kubernetes. Medan du kanske tänker
 ### Pod Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         POD CONCEPT                                      │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Container World          Kubernetes World                               │
-│  ===============          ================                               │
-│                                                                          │
-│  ┌─────────────┐         ┌─────────────────────────────────┐            │
-│  │  Container  │         │            POD                   │            │
-│  │   (nginx)   │   ──▶  │  ┌─────────────┐                │            │
-│  └─────────────┘         │  │  Container  │                │            │
-│                          │  │   (nginx)   │                │            │
-│                          │  └─────────────┘                │            │
-│                          │  • Shared network namespace     │            │
-│                          │  • Shared storage volumes       │            │
-│                          │  • Shared lifecycle             │            │
-│                          └─────────────────────────────────┘            │
-│                                                                          │
-│  Multi-Container Pod:                                                    │
-│  ┌─────────────────────────────────────────────────────────┐            │
-│  │                        POD                               │            │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐                 │            │
-│  │  │   App   │  │ Sidecar │  │  Init   │                 │            │
-│  │  │Container│  │Container│  │Container│                 │            │
-│  │  └─────────┘  └─────────┘  └─────────┘                 │            │
-│  │       │             │            │                      │            │
-│  │       └─────────────┴────────────┘                      │            │
-│  │              localhost (127.0.0.1)                      │            │
-│  │              shared volumes                             │            │
-│  └─────────────────────────────────────────────────────────┘            │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         POD CONCEPT                                      |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Container World          Kubernetes World                               |
+|  ===============          ================                               |
+|                                                                          |
+|  +-------------+         +---------------------------------+            |
+|  |  Container  |         |            POD                   |            |
+|  |   (nginx)   |   --▶  |  +-------------+                |            |
+|  +-------------+         |  |  Container  |                |            |
+|                          |  |   (nginx)   |                |            |
+|                          |  +-------------+                |            |
+|                          |  • Shared network namespace     |            |
+|                          |  • Shared storage volumes       |            |
+|                          |  • Shared lifecycle             |            |
+|                          +---------------------------------+            |
+|                                                                          |
+|  Multi-Container Pod:                                                    |
+|  +---------------------------------------------------------+            |
+|  |                        POD                               |            |
+|  |  +---------+  +---------+  +---------+                 |            |
+|  |  |   App   |  | Sidecar |  |  Init   |                 |            |
+|  |  |Container|  |Container|  |Container|                 |            |
+|  |  +---------+  +---------+  +---------+                 |            |
+|  |       |             |            |                      |            |
+|  |       +-------------+------------+                      |            |
+|  |              localhost (127.0.0.1)                      |            |
+|  |              shared volumes                             |            |
+|  +---------------------------------------------------------+            |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Teknisk Djupdykning
@@ -162,47 +162,47 @@ spec:
 ### Pod Lifecycle
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         POD LIFECYCLE                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Pod Created                                                             │
-│      │                                                                   │
-│      ▼                                                                   │
-│  ┌─────────┐                                                            │
-│  │ Pending │ ◀── Väntar på scheduling, image pull, etc.                │
-│  └────┬────┘                                                            │
-│       │                                                                  │
-│       ▼                                                                  │
-│  ┌──────────────────────────────────────────────────────────────┐       │
-│  │                    Init Containers                            │       │
-│  │  ┌─────────┐    ┌─────────┐    ┌─────────┐                  │       │
-│  │  │ init-1  │───▶│ init-2  │───▶│ init-3  │                  │       │
-│  │  └─────────┘    └─────────┘    └─────────┘                  │       │
-│  │       │              │              │                         │       │
-│  │    Success       Success        Success                       │       │
-│  └──────────────────────────────────────────────────────────────┘       │
-│       │                                                                  │
-│       ▼                                                                  │
-│  ┌─────────┐                                                            │
-│  │ Running │ ◀── Alla containers kör                                   │
-│  └────┬────┘                                                            │
-│       │                                                                  │
-│       ├───────────────┬────────────────┐                                │
-│       ▼               ▼                ▼                                 │
-│  ┌──────────┐   ┌──────────┐   ┌───────────┐                           │
-│  │Succeeded │   │  Failed  │   │  Unknown  │                           │
-│  │ (Jobs)   │   │ (Crash)  │   │(Node lost)│                           │
-│  └──────────┘   └──────────┘   └───────────┘                           │
-│                                                                          │
-│  Pod Phases:                                                             │
-│  • Pending:   Accepterad, väntar på scheduling                          │
-│  • Running:   Bound till node, minst en container kör                   │
-│  • Succeeded: Alla containers avslutade OK (exit 0)                     │
-│  • Failed:    Minst en container avslutade med fel                      │
-│  • Unknown:   Kan inte hämta status (oftast node-problem)               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         POD LIFECYCLE                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Pod Created                                                             |
+|      |                                                                   |
+|      ▼                                                                   |
+|  +---------+                                                            |
+|  | Pending | ◀-- Väntar på scheduling, image pull, etc.                |
+|  +----+----+                                                            |
+|       |                                                                  |
+|       ▼                                                                  |
+|  +--------------------------------------------------------------+       |
+|  |                    Init Containers                            |       |
+|  |  +---------+    +---------+    +---------+                  |       |
+|  |  | init-1  |---▶| init-2  |---▶| init-3  |                  |       |
+|  |  +---------+    +---------+    +---------+                  |       |
+|  |       |              |              |                         |       |
+|  |    Success       Success        Success                       |       |
+|  +--------------------------------------------------------------+       |
+|       |                                                                  |
+|       ▼                                                                  |
+|  +---------+                                                            |
+|  | Running | ◀-- Alla containers kör                                   |
+|  +----+----+                                                            |
+|       |                                                                  |
+|       +---------------+----------------+                                |
+|       ▼               ▼                ▼                                 |
+|  +----------+   +----------+   +-----------+                           |
+|  |Succeeded |   |  Failed  |   |  Unknown  |                           |
+|  | (Jobs)   |   | (Crash)  |   |(Node lost)|                           |
+|  +----------+   +----------+   +-----------+                           |
+|                                                                          |
+|  Pod Phases:                                                             |
+|  • Pending:   Accepterad, väntar på scheduling                          |
+|  • Running:   Bound till node, minst en container kör                   |
+|  • Succeeded: Alla containers avslutade OK (exit 0)                     |
+|  • Failed:    Minst en container avslutade med fel                      |
+|  • Unknown:   Kan inte hämta status (oftast node-problem)               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Pod-typer
@@ -563,84 +563,84 @@ kubectl get pvc
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      POD BEST PRACTICES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Design                                                               │
-│     □ En container per pod (såvida inte sidecar)                        │
-│     □ Stateless om möjligt                                              │
-│     □ Graceful shutdown (SIGTERM handling)                              │
-│     □ Logs till stdout/stderr                                           │
-│                                                                          │
-│  ✅ Resources                                                           │
-│     □ ALLTID sätt requests och limits                                   │
-│     □ Requests = genomsnittlig användning                               │
-│     □ Limits = maximal användning                                       │
-│     □ Undvik limit >> request (bursting)                                │
-│                                                                          │
-│  ✅ Health Checks                                                       │
-│     □ ALLTID definiera liveness och readiness probes                    │
-│     □ Readiness: Redo att ta emot trafik                                │
-│     □ Liveness: Behöver omstartas?                                      │
-│     □ Startup probe för långsamma startups                              │
-│                                                                          │
-│  ✅ Security                                                            │
-│     □ runAsNonRoot: true                                                │
-│     □ readOnlyRootFilesystem: true                                      │
-│     □ Undvik privileged: true                                           │
-│     □ Använd securityContext                                            │
-│                                                                          │
-│  ✅ Labels & Annotations                                                │
-│     □ app: applikationsnamn                                             │
-│     □ version: v1.0.0                                                   │
-│     □ environment: production                                           │
-│     □ team: platform                                                    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      POD BEST PRACTICES                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Design                                                               |
+|     □ En container per pod (såvida inte sidecar)                        |
+|     □ Stateless om möjligt                                              |
+|     □ Graceful shutdown (SIGTERM handling)                              |
+|     □ Logs till stdout/stderr                                           |
+|                                                                          |
+|  ✅ Resources                                                           |
+|     □ ALLTID sätt requests och limits                                   |
+|     □ Requests = genomsnittlig användning                               |
+|     □ Limits = maximal användning                                       |
+|     □ Undvik limit >> request (bursting)                                |
+|                                                                          |
+|  ✅ Health Checks                                                       |
+|     □ ALLTID definiera liveness och readiness probes                    |
+|     □ Readiness: Redo att ta emot trafik                                |
+|     □ Liveness: Behöver omstartas?                                      |
+|     □ Startup probe för långsamma startups                              |
+|                                                                          |
+|  ✅ Security                                                            |
+|     □ runAsNonRoot: true                                                |
+|     □ readOnlyRootFilesystem: true                                      |
+|     □ Undvik privileged: true                                           |
+|     □ Använd securityContext                                            |
+|                                                                          |
+|  ✅ Labels & Annotations                                                |
+|     □ app: applikationsnamn                                             |
+|     □ version: v1.0.0                                                   |
+|     □ environment: production                                           |
+|     □ team: platform                                                    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8. Resource Requests vs Limits
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   RESOURCE REQUESTS VS LIMITS                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Requests: Garanterad resurs. Scheduler använder för placement.         │
-│  Limits: Maximum resurs. Överskridande → throttling/OOMKill            │
-│                                                                          │
-│  CPU (millicores):                                                       │
-│  ┌──────────────────────────────────────────────────────┐               │
-│  │                                                       │               │
-│  │  request: 100m         limit: 500m                   │               │
-│  │      │                     │                          │               │
-│  │      ▼                     ▼                          │               │
-│  │  ┌───────────────────────────────────────────────┐   │               │
-│  │  │████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│        │               │
-│  │  │100m    │                              500m│        │               │
-│  │  │garanterad         kan bursta till      │        │               │
-│  │  └───────────────────────────────────────────────┘   │               │
-│  │                                                       │               │
-│  │  Om över limit: CPU throttling (långsammare)         │               │
-│  └──────────────────────────────────────────────────────┘               │
-│                                                                          │
-│  Memory (bytes):                                                         │
-│  ┌──────────────────────────────────────────────────────┐               │
-│  │                                                       │               │
-│  │  request: 128Mi        limit: 256Mi                  │               │
-│  │      │                     │                          │               │
-│  │      ▼                     ▼                          │               │
-│  │  ┌───────────────────────────────────────────────┐   │               │
-│  │  │████████████████░░░░░░░░░░░░░░░░░░░░░│            │               │
-│  │  │128Mi          │                    256Mi│            │               │
-│  │  │garanterad     kan använda mer          │            │               │
-│  │  └───────────────────────────────────────────────┘   │               │
-│  │                                                       │               │
-│  │  Om över limit: OOMKilled (container dödas)          │               │
-│  └──────────────────────────────────────────────────────┘               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   RESOURCE REQUESTS VS LIMITS                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Requests: Garanterad resurs. Scheduler använder för placement.         |
+|  Limits: Maximum resurs. Överskridande -> throttling/OOMKill            |
+|                                                                          |
+|  CPU (millicores):                                                       |
+|  +------------------------------------------------------+               |
+|  |                                                       |               |
+|  |  request: 100m         limit: 500m                   |               |
+|  |      |                     |                          |               |
+|  |      ▼                     ▼                          |               |
+|  |  +-----------------------------------------------+   |               |
+|  |  |########░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░|        |               |
+|  |  |100m    |                              500m|        |               |
+|  |  |garanterad         kan bursta till      |        |               |
+|  |  +-----------------------------------------------+   |               |
+|  |                                                       |               |
+|  |  Om över limit: CPU throttling (långsammare)         |               |
+|  +------------------------------------------------------+               |
+|                                                                          |
+|  Memory (bytes):                                                         |
+|  +------------------------------------------------------+               |
+|  |                                                       |               |
+|  |  request: 128Mi        limit: 256Mi                  |               |
+|  |      |                     |                          |               |
+|  |      ▼                     ▼                          |               |
+|  |  +-----------------------------------------------+   |               |
+|  |  |################░░░░░░░░░░░░░░░░░░░░░|            |               |
+|  |  |128Mi          |                    256Mi|            |               |
+|  |  |garanterad     kan använda mer          |            |               |
+|  |  +-----------------------------------------------+   |               |
+|  |                                                       |               |
+|  |  Om över limit: OOMKilled (container dödas)          |               |
+|  +------------------------------------------------------+               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9. Verkliga Scenarion
@@ -761,7 +761,7 @@ spec:
 | **Containers** | En eller flera per pod |
 | **Resources** | requests & limits |
 | **Probes** | liveness, readiness, startup |
-| **Lifecycle** | Pending → Running → Succeeded/Failed |
+| **Lifecycle** | Pending -> Running -> Succeeded/Failed |
 
 ### Praktisk Task
 
@@ -778,7 +778,7 @@ kubectl get pod -o yaml | grep -A20 spec
 
 ---
 
-**Nästa Node:** Deployments - Replica Management →
+**Nästa Node:** Deployments - Replica Management ->
 ''',
     "xp_reward": 155,
     "estimated_minutes": 60,
@@ -804,35 +804,35 @@ Deployments är den rekommenderade metoden för att hantera stateless applikatio
 ### Deployment vs Pod
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     DEPLOYMENT VS POD                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Direkt Pod:                                                             │
-│  ┌─────────────────────────────────────────┐                            │
-│  │               POD                        │                            │
-│  │  • Ingen self-healing                   │                            │
-│  │  • Ingen skalning                       │                            │
-│  │  • Ingen rolling updates                │                            │
-│  │  • Pod dör → Stay dead                  │                            │
-│  └─────────────────────────────────────────┘                            │
-│                                                                          │
-│  Via Deployment:                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                      DEPLOYMENT                                  │   │
-│  │  ┌───────────────────────────────────────────────────────────┐  │   │
-│  │  │                    REPLICASET                              │  │   │
-│  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐                   │  │   │
-│  │  │  │  POD 1  │  │  POD 2  │  │  POD 3  │                   │  │   │
-│  │  │  └─────────┘  └─────────┘  └─────────┘                   │  │   │
-│  │  └───────────────────────────────────────────────────────────┘  │   │
-│  │  • Self-healing (pod dör → ny skapas)                           │   │
-│  │  • Skalning (replicas: 3 → 10)                                  │   │
-│  │  • Rolling updates (zero downtime)                              │   │
-│  │  • Rollback (kubectl rollout undo)                              │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     DEPLOYMENT VS POD                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Direkt Pod:                                                             |
+|  +-----------------------------------------+                            |
+|  |               POD                        |                            |
+|  |  • Ingen self-healing                   |                            |
+|  |  • Ingen skalning                       |                            |
+|  |  • Ingen rolling updates                |                            |
+|  |  • Pod dör -> Stay dead                  |                            |
+|  +-----------------------------------------+                            |
+|                                                                          |
+|  Via Deployment:                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |                      DEPLOYMENT                                  |   |
+|  |  +-----------------------------------------------------------+  |   |
+|  |  |                    REPLICASET                              |  |   |
+|  |  |  +---------+  +---------+  +---------+                   |  |   |
+|  |  |  |  POD 1  |  |  POD 2  |  |  POD 3  |                   |  |   |
+|  |  |  +---------+  +---------+  +---------+                   |  |   |
+|  |  +-----------------------------------------------------------+  |   |
+|  |  • Self-healing (pod dör -> ny skapas)                           |   |
+|  |  • Skalning (replicas: 3 -> 10)                                  |   |
+|  |  • Rolling updates (zero downtime)                              |   |
+|  |  • Rollback (kubectl rollout undo)                              |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Deployment Anatomy
@@ -909,69 +909,69 @@ spec:
 ### RollingUpdate (Default)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ROLLING UPDATE STRATEGY                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Initial State (v1):                                                     │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │ Pod v1  │  │ Pod v1  │  │ Pod v1  │                                 │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-│  Step 1: Skapa ny pod (maxSurge: 1)                                     │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐                    │
-│  │ Pod v1  │  │ Pod v1  │  │ Pod v1  │  │ Pod v2  │ ← Creating         │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────┘                    │
-│                                                                          │
-│  Step 2: Ta bort gammal pod                                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │ Pod v1  │  │ Pod v1  │  │ Pod v2  │                                 │
-│  └─────────┘  └─────────┘  └─────────┘  (v1 terminated)                │
-│                                                                          │
-│  Step 3-4: Upprepa                                                      │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │ Pod v2  │  │ Pod v2  │  │ Pod v2  │                                 │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-│  Configuration:                                                          │
-│  strategy:                                                               │
-│    type: RollingUpdate                                                  │
-│    rollingUpdate:                                                       │
-│      maxSurge: 25%        # 25% extra pods under update                │
-│      maxUnavailable: 25%  # 25% kan vara unavailable                   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ROLLING UPDATE STRATEGY                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Initial State (v1):                                                     |
+|  +---------+  +---------+  +---------+                                 |
+|  | Pod v1  |  | Pod v1  |  | Pod v1  |                                 |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
+|  Step 1: Skapa ny pod (maxSurge: 1)                                     |
+|  +---------+  +---------+  +---------+  +---------+                    |
+|  | Pod v1  |  | Pod v1  |  | Pod v1  |  | Pod v2  | <- Creating         |
+|  +---------+  +---------+  +---------+  +---------+                    |
+|                                                                          |
+|  Step 2: Ta bort gammal pod                                             |
+|  +---------+  +---------+  +---------+                                 |
+|  | Pod v1  |  | Pod v1  |  | Pod v2  |                                 |
+|  +---------+  +---------+  +---------+  (v1 terminated)                |
+|                                                                          |
+|  Step 3-4: Upprepa                                                      |
+|  +---------+  +---------+  +---------+                                 |
+|  | Pod v2  |  | Pod v2  |  | Pod v2  |                                 |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
+|  Configuration:                                                          |
+|  strategy:                                                               |
+|    type: RollingUpdate                                                  |
+|    rollingUpdate:                                                       |
+|      maxSurge: 25%        # 25% extra pods under update                |
+|      maxUnavailable: 25%  # 25% kan vara unavailable                   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### Recreate Strategy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      RECREATE STRATEGY                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Initial State:                                                          │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │ Pod v1  │  │ Pod v1  │  │ Pod v1  │                                 │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-│  Step 1: Terminera alla (DOWNTIME!)                                     │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │Terminat │  │Terminat │  │Terminat │                                 │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-│  Step 2: Skapa nya                                                       │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │ Pod v2  │  │ Pod v2  │  │ Pod v2  │                                 │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-│  ⚠️  Användning: Endast när man INTE kan ha flera versioner samtidigt   │
-│                                                                          │
-│  Configuration:                                                          │
-│  strategy:                                                               │
-│    type: Recreate                                                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      RECREATE STRATEGY                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Initial State:                                                          |
+|  +---------+  +---------+  +---------+                                 |
+|  | Pod v1  |  | Pod v1  |  | Pod v1  |                                 |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
+|  Step 1: Terminera alla (DOWNTIME!)                                     |
+|  +---------+  +---------+  +---------+                                 |
+|  |Terminat |  |Terminat |  |Terminat |                                 |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
+|  Step 2: Skapa nya                                                       |
+|  +---------+  +---------+  +---------+                                 |
+|  | Pod v2  |  | Pod v2  |  | Pod v2  |                                 |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
+|  ⚠️  Användning: Endast när man INTE kan ha flera versioner samtidigt   |
+|                                                                          |
+|  Configuration:                                                          |
+|  strategy:                                                               |
+|    type: Recreate                                                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 4. Deployment Operations
@@ -1044,42 +1044,42 @@ kubectl rollout restart deployment/api-server
 ## 5. ReplicaSet Relationship
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                DEPLOYMENT → REPLICASET → PODS                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  kubectl get all -l app=api-server                                      │
-│                                                                          │
-│  NAME                             READY   STATUS    RESTARTS   AGE      │
-│  pod/api-server-7d9f8c6b5-abc12  1/1     Running   0          5m       │
-│  pod/api-server-7d9f8c6b5-def34  1/1     Running   0          5m       │
-│  pod/api-server-7d9f8c6b5-ghi56  1/1     Running   0          5m       │
-│                                                                          │
-│  NAME                        READY   UP-TO-DATE   AVAILABLE   AGE      │
-│  deployment.apps/api-server  3/3     3            3           10m      │
-│                                                                          │
-│  NAME                                   DESIRED   CURRENT   READY  AGE │
-│  replicaset.apps/api-server-7d9f8c6b5  3         3         3      5m  │
-│  replicaset.apps/api-server-6c7d5e4f3  0         0         0      10m │
-│                   ↑                                                     │
-│                   │ Gammal ReplicaSet (för rollback)                   │
-│                                                                          │
-│  Hierarki:                                                              │
-│  ┌──────────────┐                                                       │
-│  │  Deployment  │ ──── Hanterar ReplicaSets                            │
-│  └──────┬───────┘                                                       │
-│         │                                                               │
-│         ▼                                                               │
-│  ┌──────────────┐                                                       │
-│  │  ReplicaSet  │ ──── Hanterar Pods (aktuell version)                 │
-│  └──────┬───────┘                                                       │
-│         │                                                               │
-│         ▼                                                               │
-│  ┌─────┐ ┌─────┐ ┌─────┐                                               │
-│  │ Pod │ │ Pod │ │ Pod │                                               │
-│  └─────┘ └─────┘ └─────┘                                               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                DEPLOYMENT -> REPLICASET -> PODS                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  kubectl get all -l app=api-server                                      |
+|                                                                          |
+|  NAME                             READY   STATUS    RESTARTS   AGE      |
+|  pod/api-server-7d9f8c6b5-abc12  1/1     Running   0          5m       |
+|  pod/api-server-7d9f8c6b5-def34  1/1     Running   0          5m       |
+|  pod/api-server-7d9f8c6b5-ghi56  1/1     Running   0          5m       |
+|                                                                          |
+|  NAME                        READY   UP-TO-DATE   AVAILABLE   AGE      |
+|  deployment.apps/api-server  3/3     3            3           10m      |
+|                                                                          |
+|  NAME                                   DESIRED   CURRENT   READY  AGE |
+|  replicaset.apps/api-server-7d9f8c6b5  3         3         3      5m  |
+|  replicaset.apps/api-server-6c7d5e4f3  0         0         0      10m |
+|                   ↑                                                     |
+|                   | Gammal ReplicaSet (för rollback)                   |
+|                                                                          |
+|  Hierarki:                                                              |
+|  +--------------+                                                       |
+|  |  Deployment  | ---- Hanterar ReplicaSets                            |
+|  +------+-------+                                                       |
+|         |                                                               |
+|         ▼                                                               |
+|  +--------------+                                                       |
+|  |  ReplicaSet  | ---- Hanterar Pods (aktuell version)                 |
+|  +------+-------+                                                       |
+|         |                                                               |
+|         ▼                                                               |
+|  +-----+ +-----+ +-----+                                               |
+|  | Pod | | Pod | | Pod |                                               |
+|  +-----+ +-----+ +-----+                                               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Praktiska Övningar
@@ -1268,33 +1268,33 @@ kubectl run debug --image=busybox -it --rm -- sh
 ## 8. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DEPLOYMENT BEST PRACTICES                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Replicas & Availability                                             │
-│     □ Minst 2 replicas för produktion                                   │
-│     □ Använd PodDisruptionBudget                                        │
-│     □ Sprid pods över noder (podAntiAffinity)                           │
-│     □ Sätt revisionHistoryLimit (default 10)                            │
-│                                                                          │
-│  ✅ Updates                                                             │
-│     □ Använd RollingUpdate (default)                                    │
-│     □ maxSurge: 25%, maxUnavailable: 25%                               │
-│     □ Alltid readiness probes                                           │
-│     □ Sätt minReadySeconds (30-60s för stabilitet)                      │
-│                                                                          │
-│  ✅ Rollbacks                                                           │
-│     □ Annotera deployments (change-cause)                               │
-│     □ Testa rollback-procedur                                           │
-│     □ Behåll tillräcklig revision history                               │
-│                                                                          │
-│  ✅ Images                                                              │
-│     □ Använd specifika tags, ALDRIG :latest                             │
-│     □ Använd image digest för reproducerbarhet                          │
-│     □ imagePullPolicy: IfNotPresent                                     │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DEPLOYMENT BEST PRACTICES                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Replicas & Availability                                             |
+|     □ Minst 2 replicas för produktion                                   |
+|     □ Använd PodDisruptionBudget                                        |
+|     □ Sprid pods över noder (podAntiAffinity)                           |
+|     □ Sätt revisionHistoryLimit (default 10)                            |
+|                                                                          |
+|  ✅ Updates                                                             |
+|     □ Använd RollingUpdate (default)                                    |
+|     □ maxSurge: 25%, maxUnavailable: 25%                               |
+|     □ Alltid readiness probes                                           |
+|     □ Sätt minReadySeconds (30-60s för stabilitet)                      |
+|                                                                          |
+|  ✅ Rollbacks                                                           |
+|     □ Annotera deployments (change-cause)                               |
+|     □ Testa rollback-procedur                                           |
+|     □ Behåll tillräcklig revision history                               |
+|                                                                          |
+|  ✅ Images                                                              |
+|     □ Använd specifika tags, ALDRIG :latest                             |
+|     □ Använd image digest för reproducerbarhet                          |
+|     □ imagePullPolicy: IfNotPresent                                     |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9. Production Deployment Example
@@ -1451,7 +1451,7 @@ kubectl autoscale deployment myapp --min=3 --max=10 --cpu-percent=70
 
 ---
 
-**Nästa Node:** Services - Networking & Load Balancing →
+**Nästa Node:** Services - Networking & Load Balancing ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 65,

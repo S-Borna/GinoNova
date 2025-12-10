@@ -14,7 +14,7 @@ NODE_13_MEMORY_SYSTEMS = {
 
 Ge agenter formagan att minnas och lara sig.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Agent Memory?
 
@@ -27,7 +27,7 @@ Memory later agenter behalla information mellan interaktioner. Det gor dem mer i
 | Episodic | Specifika events | Tidigare interaktioner |
 | Semantic | Fakta | Larad kunskap |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ Memory later agenter behalla information mellan interaktioner. Det gor dem mer i
 | Effektivitet | Undviker upprepade fragor |
 | Intelligens | Battre beslut med historik |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Memory Types
 
@@ -49,44 +49,44 @@ Memory later agenter behalla information mellan interaktioner. Det gor dem mer i
 | Vector | Embedding database | Hog |
 | Hybrid | Kombination | Varierar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Memory Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   MEMORY ARCHITECTURE                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                    WORKING MEMORY                          │ │
-│  │  Current conversation, recent context                      │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│           ┌───────────────┼───────────────┐                     │
-│           v               v               v                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │ SHORT-TERM │  │  LONG-TERM  │  │  SEMANTIC   │             │
-│  │   MEMORY   │  │   MEMORY    │  │   MEMORY    │             │
-│  │            │  │             │  │             │              │
-│  │ - Buffer   │  │ - Vector DB │  │ - Knowledge │             │
-│  │ - Last N   │  │ - Summaries │  │ - Facts     │             │
-│  │ - Session  │  │ - Episodes  │  │ - Relations │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│         │                │                │                      │
-│         └────────────────┼────────────────┘                     │
-│                          v                                       │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                   MEMORY RETRIEVAL                         │ │
-│  │  - Recency weighting                                       │ │
-│  │  - Relevance scoring                                       │ │
-│  │  - Importance filtering                                    │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   MEMORY ARCHITECTURE                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +-----------------------------------------------------------+ |
+|  |                    WORKING MEMORY                          | |
+|  |  Current conversation, recent context                      | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|           +---------------+---------------+                     |
+|           v               v               v                      |
+|  +-------------+  +-------------+  +-------------+             |
+|  | SHORT-TERM |  |  LONG-TERM  |  |  SEMANTIC   |             |
+|  |   MEMORY   |  |   MEMORY    |  |   MEMORY    |             |
+|  |            |  |             |  |             |              |
+|  | - Buffer   |  | - Vector DB |  | - Knowledge |             |
+|  | - Last N   |  | - Summaries |  | - Facts     |             |
+|  | - Session  |  | - Episodes  |  | - Relations |             |
+|  +-------------+  +-------------+  +-------------+             |
+|         |                |                |                      |
+|         +----------------+----------------+                     |
+|                          v                                       |
+|  +-----------------------------------------------------------+ |
+|  |                   MEMORY RETRIEVAL                         | |
+|  |  - Recency weighting                                       | |
+|  |  - Relevance scoring                                       | |
+|  |  - Importance filtering                                    | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Buffer Memory
 
@@ -128,7 +128,7 @@ class BufferMemory:
         ])
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Summary Memory
 
@@ -176,7 +176,7 @@ class SummaryMemory:
         return recent
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vector Memory
 
@@ -241,7 +241,7 @@ class VectorMemory:
         return 1.0 / (1.0 + hours_ago)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hybrid Memory
 
@@ -281,7 +281,7 @@ class HybridMemory:
         """
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -292,7 +292,7 @@ class HybridMemory:
 | Irrelevant recall | Dalig similarity | Justera retrieval scoring |
 | Langsam search | For manga entries | Implementera index |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -323,7 +323,7 @@ NODE_14_STATE_MANAGEMENT = {
 
 Hantera agentens tillstand genom komplexa workflows.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Agent State?
 
@@ -336,7 +336,7 @@ State ar all information agenten behover for att fatta beslut. Det inkluderar ko
 | Memory | Historik, learnings |
 | System | Config, permissions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -347,7 +347,7 @@ State ar all information agenten behover for att fatta beslut. Det inkluderar ko
 | Skalbarhet | Stateless workers |
 | Recovery | Aterstall fran fel |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - State Patterns
 
@@ -358,47 +358,47 @@ State ar all information agenten behover for att fatta beslut. Det inkluderar ko
 | Graph-based | Komplexa workflows | Medium |
 | Checkpointed | Long-running | Medium |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## State Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    STATE ARCHITECTURE                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                    AGENT STATE                             │ │
-│  ├───────────────────────────────────────────────────────────┤ │
-│  │  conversation_state:                                       │ │
-│  │    - messages[]                                            │ │
-│  │    - current_turn                                          │ │
-│  │                                                            │ │
-│  │  task_state:                                               │ │
-│  │    - current_goal                                          │ │
-│  │    - completed_steps[]                                     │ │
-│  │    - pending_actions[]                                     │ │
-│  │                                                            │ │
-│  │  memory_state:                                             │ │
-│  │    - short_term                                            │ │
-│  │    - long_term_ref                                         │ │
-│  │                                                            │ │
-│  │  system_state:                                             │ │
-│  │    - config                                                │ │
-│  │    - permissions                                           │ │
-│  │    - rate_limits                                           │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│                           v                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                   STATE STORE                              │ │
-│  │  Redis / PostgreSQL / File System                         │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    STATE ARCHITECTURE                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +-----------------------------------------------------------+ |
+|  |                    AGENT STATE                             | |
+|  +-----------------------------------------------------------+ |
+|  |  conversation_state:                                       | |
+|  |    - messages[]                                            | |
+|  |    - current_turn                                          | |
+|  |                                                            | |
+|  |  task_state:                                               | |
+|  |    - current_goal                                          | |
+|  |    - completed_steps[]                                     | |
+|  |    - pending_actions[]                                     | |
+|  |                                                            | |
+|  |  memory_state:                                             | |
+|  |    - short_term                                            | |
+|  |    - long_term_ref                                         | |
+|  |                                                            | |
+|  |  system_state:                                             | |
+|  |    - config                                                | |
+|  |    - permissions                                           | |
+|  |    - rate_limits                                           | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|                           v                                      |
+|  +-----------------------------------------------------------+ |
+|  |                   STATE STORE                              | |
+|  |  Redis / PostgreSQL / File System                         | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Immutable State
 
@@ -455,7 +455,7 @@ class AgentState:
         }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Event-Sourced State
 
@@ -517,7 +517,7 @@ class EventSourcedState:
             self.errors.append(event.payload)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Checkpointed State
 
@@ -570,7 +570,7 @@ class CheckpointManager:
         )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## State Machine
 
@@ -612,7 +612,7 @@ class StateMachine:
         return to_state in self.TRANSITIONS.get(self.state, [])
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -623,7 +623,7 @@ class StateMachine:
 | Invalid transition | Dold state logic | Anvand state machine |
 | Memory leak | Ingen cleanup | Implementera TTL |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

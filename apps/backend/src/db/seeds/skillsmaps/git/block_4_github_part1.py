@@ -21,42 +21,42 @@ NODE_13_GITHUB_PLATFORM = {
 ## GitHub Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       GITHUB ECOSYSTEM                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                    REPOSITORY                                   │   │
-│   ├─────────────────────────────────────────────────────────────────┤   │
-│   │                                                                 │   │
-│   │  CODE              ISSUES           PULL REQUESTS               │   │
-│   │  ────              ──────           ─────────────               │   │
-│   │  • Branches        • Bug reports    • Code review               │   │
-│   │  • Commits         • Features       • Discussion                │   │
-│   │  • Tags/Releases   • Tasks          • CI checks                 │   │
-│   │  • File browser    • Labels         • Merge options             │   │
-│   │                                                                 │   │
-│   │  ACTIONS           PROJECTS         WIKI/DOCS                   │   │
-│   │  ───────           ────────         ─────────                   │   │
-│   │  • CI/CD           • Kanban         • Documentation             │   │
-│   │  • Automation      • Roadmap        • Guides                    │   │
-│   │  • Workflows       • Sprints        • API docs                  │   │
-│   │                                                                 │   │
-│   │  SECURITY          INSIGHTS         SETTINGS                    │   │
-│   │  ────────          ────────         ────────                    │   │
-│   │  • Dependabot      • Contributors   • Branch rules              │   │
-│   │  • Code scanning   • Traffic        • Webhooks                  │   │
-│   │  • Secret scanning • Commits        • Integrations              │   │
-│   │                                                                 │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   ORGANIZATION FEATURES:                                                │
-│   • Teams & permissions                                                 │
-│   • Enterprise security                                                 │
-│   • Audit logs                                                          │
-│   • SAML/SSO                                                            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       GITHUB ECOSYSTEM                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   +-----------------------------------------------------------------+   |
+|   |                    REPOSITORY                                   |   |
+|   +-----------------------------------------------------------------+   |
+|   |                                                                 |   |
+|   |  CODE              ISSUES           PULL REQUESTS               |   |
+|   |  ----              ------           -------------               |   |
+|   |  • Branches        • Bug reports    • Code review               |   |
+|   |  • Commits         • Features       • Discussion                |   |
+|   |  • Tags/Releases   • Tasks          • CI checks                 |   |
+|   |  • File browser    • Labels         • Merge options             |   |
+|   |                                                                 |   |
+|   |  ACTIONS           PROJECTS         WIKI/DOCS                   |   |
+|   |  -------           --------         ---------                   |   |
+|   |  • CI/CD           • Kanban         • Documentation             |   |
+|   |  • Automation      • Roadmap        • Guides                    |   |
+|   |  • Workflows       • Sprints        • API docs                  |   |
+|   |                                                                 |   |
+|   |  SECURITY          INSIGHTS         SETTINGS                    |   |
+|   |  --------          --------         --------                    |   |
+|   |  • Dependabot      • Contributors   • Branch rules              |   |
+|   |  • Code scanning   • Traffic        • Webhooks                  |   |
+|   |  • Secret scanning • Commits        • Integrations              |   |
+|   |                                                                 |   |
+|   +-----------------------------------------------------------------+   |
+|                                                                         |
+|   ORGANIZATION FEATURES:                                                |
+|   • Teams & permissions                                                 |
+|   • Enterprise security                                                 |
+|   • Audit logs                                                          |
+|   • SAML/SSO                                                            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -82,7 +82,7 @@ gh repo create my-project --private
 ### Initial Setup
 
 ```bash
-# Local project → GitHub
+# Local project -> GitHub
 git init
 git add .
 git commit -m "Initial commit"
@@ -94,36 +94,36 @@ git push -u origin main
 ### Repository Settings
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    REPOSITORY SETTINGS                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   GENERAL:                                                              │
-│   ├── Default branch: main                                              │
-│   ├── Features: Issues ✓, Projects ✓, Wiki ✓                            │
-│   └── Pull Requests:                                                    │
-│       ├── Allow merge commits ✓                                         │
-│       ├── Allow squash merging ✓                                        │
-│       └── Allow rebase merging ✓                                        │
-│                                                                         │
-│   BRANCH PROTECTION (Settings → Branches):                              │
-│   ├── Require PR before merging                                         │
-│   ├── Require status checks                                             │
-│   ├── Require review (1-2 approvals)                                    │
-│   ├── Dismiss stale reviews                                             │
-│   └── Require linear history (optional)                                 │
-│                                                                         │
-│   COLLABORATORS:                                                        │
-│   ├── Settings → Collaborators                                          │
-│   ├── Add by username or email                                          │
-│   └── Permission levels:                                                │
-│       ├── Read      - Clone, pull                                       │
-│       ├── Triage    - Manage issues                                     │
-│       ├── Write     - Push, merge                                       │
-│       ├── Maintain  - Manage repo (no delete)                           │
-│       └── Admin     - Full access                                       │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    REPOSITORY SETTINGS                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   GENERAL:                                                              |
+|   +-- Default branch: main                                              |
+|   +-- Features: Issues ✓, Projects ✓, Wiki ✓                            |
+|   +-- Pull Requests:                                                    |
+|       +-- Allow merge commits ✓                                         |
+|       +-- Allow squash merging ✓                                        |
+|       +-- Allow rebase merging ✓                                        |
+|                                                                         |
+|   BRANCH PROTECTION (Settings -> Branches):                              |
+|   +-- Require PR before merging                                         |
+|   +-- Require status checks                                             |
+|   +-- Require review (1-2 approvals)                                    |
+|   +-- Dismiss stale reviews                                             |
+|   +-- Require linear history (optional)                                 |
+|                                                                         |
+|   COLLABORATORS:                                                        |
+|   +-- Settings -> Collaborators                                          |
+|   +-- Add by username or email                                          |
+|   +-- Permission levels:                                                |
+|       +-- Read      - Clone, pull                                       |
+|       +-- Triage    - Manage issues                                     |
+|       +-- Write     - Push, merge                                       |
+|       +-- Maintain  - Manage repo (no delete)                           |
+|       +-- Admin     - Full access                                       |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -156,7 +156,7 @@ ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 cat ~/.ssh/id_ed25519.pub | pbcopy  # macOS
 cat ~/.ssh/id_ed25519.pub | xclip   # Linux
 
-# Go to: GitHub → Settings → SSH and GPG keys → New SSH key
+# Go to: GitHub -> Settings -> SSH and GPG keys -> New SSH key
 # Paste the key
 
 # Test connection
@@ -306,7 +306,7 @@ MIT © Your Name
 ### GitHub Pages
 
 ```yaml
-# Enable in Settings → Pages
+# Enable in Settings -> Pages
 # Source: Branch (main) / Folder (/docs or /)
 
 # Jekyll config (_config.yml)
@@ -356,7 +356,7 @@ gh release create v1.0.0 --generate-notes
    - .github/workflows/
    - Standard config files
 
-3. Settings → ✓ Template repository
+3. Settings -> ✓ Template repository
 ```
 
 ### Issue Templates
@@ -426,7 +426,7 @@ updates:
 
 ```
 Automatically enabled for public repos
-Enable in Settings → Security → Secret scanning
+Enable in Settings -> Security -> Secret scanning
 
 GitHub scans for:
 - API keys
@@ -443,9 +443,9 @@ GitHub scans for:
 | Feature | Purpose | Access |
 |---------|---------|--------|
 | Repository | Code hosting | github.com |
-| Issues | Bug tracking | Repo → Issues |
-| Actions | CI/CD | Repo → Actions |
-| Pages | Static hosting | Settings → Pages |
+| Issues | Bug tracking | Repo -> Issues |
+| Actions | CI/CD | Repo -> Actions |
+| Pages | Static hosting | Settings -> Pages |
 | Packages | Package registry | Packages tab |
 | Security | Vulnerability alerts | Security tab |
 
@@ -476,52 +476,52 @@ NODE_14_PULL_REQUESTS = {
 ## Pull Request Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       PULL REQUEST STRUCTURE                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │ Title: feat: implement user authentication                      │   │
-│   ├─────────────────────────────────────────────────────────────────┤   │
-│   │                                                                 │   │
-│   │ DESCRIPTION                                                     │   │
-│   │ ───────────                                                     │   │
-│   │ ## What                                                         │   │
-│   │ Adds OAuth2 login with Google provider                          │   │
-│   │                                                                 │   │
-│   │ ## Why                                                          │   │
-│   │ Users requested social login (Issue #123)                       │   │
-│   │                                                                 │   │
-│   │ ## How                                                          │   │
-│   │ - Added passport-google-oauth20                                 │   │
-│   │ - Created auth routes                                           │   │
-│   │ - Updated user model                                            │   │
-│   │                                                                 │   │
-│   │ ## Testing                                                      │   │
-│   │ - [ ] Unit tests pass                                           │   │
-│   │ - [ ] Manual testing done                                       │   │
-│   │ - [ ] Tested logout flow                                        │   │
-│   │                                                                 │   │
-│   │ Closes #123                                                     │   │
-│   │                                                                 │   │
-│   ├─────────────────────────────────────────────────────────────────┤   │
-│   │ Reviewers: @teammate1, @teammate2                               │   │
-│   │ Labels: feature, auth, needs-review                             │   │
-│   │ Project: Sprint 12                                              │   │
-│   │ Milestone: v2.0                                                 │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   TABS:                                                                 │
-│   [Conversation] [Commits] [Checks] [Files changed]                     │
-│                                                                         │
-│   STATUS CHECKS:                                                        │
-│   ✓ Build passing                                                       │
-│   ✓ Tests (142/142)                                                     │
-│   ✓ Lint                                                                │
-│   ✓ Security scan                                                       │
-│   ⏳ Review required (0/2)                                              │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       PULL REQUEST STRUCTURE                            |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   +-----------------------------------------------------------------+   |
+|   | Title: feat: implement user authentication                      |   |
+|   +-----------------------------------------------------------------+   |
+|   |                                                                 |   |
+|   | DESCRIPTION                                                     |   |
+|   | -----------                                                     |   |
+|   | ## What                                                         |   |
+|   | Adds OAuth2 login with Google provider                          |   |
+|   |                                                                 |   |
+|   | ## Why                                                          |   |
+|   | Users requested social login (Issue #123)                       |   |
+|   |                                                                 |   |
+|   | ## How                                                          |   |
+|   | - Added passport-google-oauth20                                 |   |
+|   | - Created auth routes                                           |   |
+|   | - Updated user model                                            |   |
+|   |                                                                 |   |
+|   | ## Testing                                                      |   |
+|   | - [ ] Unit tests pass                                           |   |
+|   | - [ ] Manual testing done                                       |   |
+|   | - [ ] Tested logout flow                                        |   |
+|   |                                                                 |   |
+|   | Closes #123                                                     |   |
+|   |                                                                 |   |
+|   +-----------------------------------------------------------------+   |
+|   | Reviewers: @teammate1, @teammate2                               |   |
+|   | Labels: feature, auth, needs-review                             |   |
+|   | Project: Sprint 12                                              |   |
+|   | Milestone: v2.0                                                 |   |
+|   +-----------------------------------------------------------------+   |
+|                                                                         |
+|   TABS:                                                                 |
+|   [Conversation] [Commits] [Checks] [Files changed]                     |
+|                                                                         |
+|   STATUS CHECKS:                                                        |
+|   ✓ Build passing                                                       |
+|   ✓ Tests (142/142)                                                     |
+|   ✓ Lint                                                                |
+|   ✓ Security scan                                                       |
+|   ⏳ Review required (0/2)                                              |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -588,64 +588,64 @@ gh pr create --draft
 ### As Author
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    PR AUTHOR CHECKLIST                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   BEFORE REQUESTING REVIEW:                                             │
-│   ├── ✓ Self-review your diff                                           │
-│   ├── ✓ Ensure CI passes                                                │
-│   ├── ✓ Write clear description                                         │
-│   ├── ✓ Keep PR small (< 400 lines ideal)                               │
-│   ├── ✓ Separate refactoring from features                              │
-│   └── ✓ Respond to feedback promptly                                    │
-│                                                                         │
-│   GOOD PR HYGIENE:                                                      │
-│   ├── One feature per PR                                                │
-│   ├── Descriptive commit messages                                       │
-│   ├── No commented-out code                                             │
-│   ├── No debug statements                                               │
-│   └── Tests included                                                    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    PR AUTHOR CHECKLIST                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   BEFORE REQUESTING REVIEW:                                             |
+|   +-- ✓ Self-review your diff                                           |
+|   +-- ✓ Ensure CI passes                                                |
+|   +-- ✓ Write clear description                                         |
+|   +-- ✓ Keep PR small (< 400 lines ideal)                               |
+|   +-- ✓ Separate refactoring from features                              |
+|   +-- ✓ Respond to feedback promptly                                    |
+|                                                                         |
+|   GOOD PR HYGIENE:                                                      |
+|   +-- One feature per PR                                                |
+|   +-- Descriptive commit messages                                       |
+|   +-- No commented-out code                                             |
+|   +-- No debug statements                                               |
+|   +-- Tests included                                                    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### As Reviewer
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    REVIEWER CHECKLIST                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   CODE QUALITY:                                                         │
-│   ├── [ ] Logic is correct                                              │
-│   ├── [ ] No obvious bugs                                               │
-│   ├── [ ] Error handling present                                        │
-│   └── [ ] Edge cases handled                                            │
-│                                                                         │
-│   DESIGN:                                                               │
-│   ├── [ ] Follows project patterns                                      │
-│   ├── [ ] No unnecessary complexity                                     │
-│   ├── [ ] Good naming                                                   │
-│   └── [ ] Single responsibility                                         │
-│                                                                         │
-│   SECURITY:                                                             │
-│   ├── [ ] No hardcoded secrets                                          │
-│   ├── [ ] Input validation                                              │
-│   ├── [ ] No SQL injection                                              │
-│   └── [ ] Auth/authz correct                                            │
-│                                                                         │
-│   PERFORMANCE:                                                          │
-│   ├── [ ] No N+1 queries                                                │
-│   ├── [ ] Reasonable time complexity                                    │
-│   └── [ ] No memory leaks                                               │
-│                                                                         │
-│   TESTING:                                                              │
-│   ├── [ ] Tests exist                                                   │
-│   ├── [ ] Tests are meaningful                                          │
-│   └── [ ] Edge cases tested                                             │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    REVIEWER CHECKLIST                                   |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   CODE QUALITY:                                                         |
+|   +-- [ ] Logic is correct                                              |
+|   +-- [ ] No obvious bugs                                               |
+|   +-- [ ] Error handling present                                        |
+|   +-- [ ] Edge cases handled                                            |
+|                                                                         |
+|   DESIGN:                                                               |
+|   +-- [ ] Follows project patterns                                      |
+|   +-- [ ] No unnecessary complexity                                     |
+|   +-- [ ] Good naming                                                   |
+|   +-- [ ] Single responsibility                                         |
+|                                                                         |
+|   SECURITY:                                                             |
+|   +-- [ ] No hardcoded secrets                                          |
+|   +-- [ ] Input validation                                              |
+|   +-- [ ] No SQL injection                                              |
+|   +-- [ ] Auth/authz correct                                            |
+|                                                                         |
+|   PERFORMANCE:                                                          |
+|   +-- [ ] No N+1 queries                                                |
+|   +-- [ ] Reasonable time complexity                                    |
+|   +-- [ ] No memory leaks                                               |
+|                                                                         |
+|   TESTING:                                                              |
+|   +-- [ ] Tests exist                                                   |
+|   +-- [ ] Tests are meaningful                                          |
+|   +-- [ ] Edge cases tested                                             |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -692,39 +692,39 @@ if (!user) {
 ## Merge Strategies
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                       MERGE STRATEGIES                             │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   MERGE COMMIT (--no-ff)                                           │
-│   ──────────────────────                                           │
-│   main:     A ─── B ─────────── M                                  │
-│                   │            /│                                  │
-│   feature:        └─── C ─── D─┘                                   │
-│                                                                    │
-│   • Preserves complete history                                     │
-│   • Clear when feature was merged                                  │
-│   • Extra merge commits                                            │
-│                                                                    │
-│   SQUASH AND MERGE                                                 │
-│   ────────────────                                                 │
-│   main:     A ─── B ─── S                                          │
-│                                                                    │
-│   feature:        └─── C ─── D (discarded)                         │
-│                                                                    │
-│   • Single commit for entire PR                                    │
-│   • Clean main history                                             │
-│   • Lose individual commit history                                 │
-│                                                                    │
-│   REBASE AND MERGE                                                 │
-│   ────────────────                                                 │
-│   main:     A ─── B ─── C' ─── D'                                  │
-│                                                                    │
-│   • Linear history                                                 │
-│   • Individual commits preserved                                   │
-│   • No merge commits                                               │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                       MERGE STRATEGIES                             |
++--------------------------------------------------------------------+
+|                                                                    |
+|   MERGE COMMIT (--no-ff)                                           |
+|   ----------------------                                           |
+|   main:     A --- B ----------- M                                  |
+|                   |            /|                                  |
+|   feature:        +--- C --- D-+                                   |
+|                                                                    |
+|   • Preserves complete history                                     |
+|   • Clear when feature was merged                                  |
+|   • Extra merge commits                                            |
+|                                                                    |
+|   SQUASH AND MERGE                                                 |
+|   ----------------                                                 |
+|   main:     A --- B --- S                                          |
+|                                                                    |
+|   feature:        +--- C --- D (discarded)                         |
+|                                                                    |
+|   • Single commit for entire PR                                    |
+|   • Clean main history                                             |
+|   • Lose individual commit history                                 |
+|                                                                    |
+|   REBASE AND MERGE                                                 |
+|   ----------------                                                 |
+|   main:     A --- B --- C' --- D'                                  |
+|                                                                    |
+|   • Linear history                                                 |
+|   • Individual commits preserved                                   |
+|   • No merge commits                                               |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Merge Commands
@@ -822,7 +822,7 @@ gh pr ready 123
 
 ```yaml
 # Enable in repo settings
-Settings → General → Allow auto-merge
+Settings -> General -> Allow auto-merge
 
 # Set up via CLI
 gh pr merge 123 --auto --squash
@@ -866,31 +866,31 @@ jobs:
 ## Multi-reviewer Flow
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    MULTI-REVIEWER FLOW                             │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   Author creates PR                                                │
-│         │                                                          │
-│         ▼                                                          │
-│   ┌─────────────┐    ┌─────────────┐                               │
-│   │ Reviewer 1  │    │ Reviewer 2  │                               │
-│   │ (Domain)    │    │ (Security)  │                               │
-│   └─────────────┘    └─────────────┘                               │
-│         │                   │                                      │
-│         ▼                   ▼                                      │
-│   Request changes     Approve                                      │
-│         │                                                          │
-│         ▼                                                          │
-│   Author fixes                                                     │
-│         │                                                          │
-│         ▼                                                          │
-│   Re-review                                                        │
-│         │                                                          │
-│         ▼                                                          │
-│   Both approve → Merge                                             │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                    MULTI-REVIEWER FLOW                             |
++--------------------------------------------------------------------+
+|                                                                    |
+|   Author creates PR                                                |
+|         |                                                          |
+|         ▼                                                          |
+|   +-------------+    +-------------+                               |
+|   | Reviewer 1  |    | Reviewer 2  |                               |
+|   | (Domain)    |    | (Security)  |                               |
+|   +-------------+    +-------------+                               |
+|         |                   |                                      |
+|         ▼                   ▼                                      |
+|   Request changes     Approve                                      |
+|         |                                                          |
+|         ▼                                                          |
+|   Author fixes                                                     |
+|         |                                                          |
+|         ▼                                                          |
+|   Re-review                                                        |
+|         |                                                          |
+|         ▼                                                          |
+|   Both approve -> Merge                                             |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ---

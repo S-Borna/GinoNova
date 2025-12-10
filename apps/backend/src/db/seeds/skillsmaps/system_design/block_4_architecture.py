@@ -42,17 +42,17 @@ Fördelar med queues:
 
 ```
 Message Queue (Point-to-Point):
-                    ┌─────────────┐
-Producer ──────────►│    Queue    │───────► Consumer
-                    └─────────────┘
+                    +-------------+
+Producer ----------►|    Queue    |-------► Consumer
+                    +-------------+
   - En consumer per message
   - Load balancing möjlig
 
 Pub/Sub (Fan-out):
-                    ┌─────────────┐
-Publisher ─────────►│    Topic    │───┬──► Subscriber 1
-                    └─────────────┘   ├──► Subscriber 2
-                                      └──► Subscriber 3
+                    +-------------+
+Publisher ---------►|    Topic    |---+--► Subscriber 1
+                    +-------------+   +--► Subscriber 2
+                                      +--► Subscriber 3
   - Alla subscribers får message
   - Event notification
 ```
@@ -115,15 +115,15 @@ Redis Streams:
 ## Kafka Architecture
 
 ```
-                    ┌─────────────────────────────────┐
-                    │          Kafka Cluster          │
-                    │  ┌─────────────────────────┐    │
-Producer ──────────►│  │    Topic: orders        │    │
-                    │  │  ┌───┐ ┌───┐ ┌───┐      │    │
-                    │  │  │P0 │ │P1 │ │P2 │      │    │◄─── Consumer Group
-                    │  │  └───┘ └───┘ └───┘      │    │
-                    │  └─────────────────────────┘    │
-                    └─────────────────────────────────┘
+                    +---------------------------------+
+                    |          Kafka Cluster          |
+                    |  +-------------------------+    |
+Producer ----------►|  |    Topic: orders        |    |
+                    |  |  +---+ +---+ +---+      |    |
+                    |  |  |P0 | |P1 | |P2 |      |    |◄--- Consumer Group
+                    |  |  +---+ +---+ +---+      |    |
+                    |  +-------------------------+    |
+                    +---------------------------------+
 
 Partitions:
   - Ordered within partition
@@ -263,21 +263,21 @@ NODE_14_MICROSERVICES = {
 
 ```yaml
 Monolith:
-  ┌────────────────────────────────┐
-  │          Application           │
-  │  ┌──────┐ ┌──────┐ ┌──────┐   │
-  │  │Users │ │Orders│ │Payment│  │
-  │  └──────┘ └──────┘ └──────┘   │
-  │         Single Deploy          │
-  └────────────────────────────────┘
+  +--------------------------------+
+  |          Application           |
+  |  +------+ +------+ +------+   |
+  |  |Users | |Orders| |Payment|  |
+  |  +------+ +------+ +------+   |
+  |         Single Deploy          |
+  +--------------------------------+
 
 Microservices:
-  ┌────────┐   ┌────────┐   ┌────────┐
-  │ Users  │   │ Orders │   │Payment │
-  │Service │   │Service │   │Service │
-  └───┬────┘   └───┬────┘   └───┬────┘
-      │            │            │
-      └────────────┴────────────┘
+  +--------+   +--------+   +--------+
+  | Users  |   | Orders |   |Payment |
+  |Service |   |Service |   |Service |
+  +---+----+   +---+----+   +---+----+
+      |            |            |
+      +------------+------------+
            Independent Deploys
 ```
 
@@ -335,39 +335,39 @@ Asynchronous:
 
 ```yaml
 Client-Side Discovery:
-  Client → Registry → Get address → Call service
+  Client -> Registry -> Get address -> Call service
 
   Tools: Eureka, Consul
 
 Server-Side Discovery:
-  Client → Load Balancer → Service
+  Client -> Load Balancer -> Service
   LB queries registry internally
 
   Tools: Kubernetes, AWS ALB
 
 DNS-Based:
-  Client → DNS → IP → Service
+  Client -> DNS -> IP -> Service
 
   Tools: Route53, CoreDNS
 ```
 
 ```
-┌────────────────────────────────────────────┐
-│              Service Registry              │
-│  ┌──────────────────────────────────────┐  │
-│  │ users-service:                       │  │
-│  │   - 10.0.0.1:8080                    │  │
-│  │   - 10.0.0.2:8080                    │  │
-│  │ orders-service:                      │  │
-│  │   - 10.0.1.1:8080                    │  │
-│  └──────────────────────────────────────┘  │
-└────────────────────────────────────────────┘
-         ▲                    │
-         │ Register           │ Discover
-         │                    ▼
-    ┌─────────┐          ┌─────────┐
-    │Service A│─────────►│Service B│
-    └─────────┘          └─────────┘
++--------------------------------------------+
+|              Service Registry              |
+|  +--------------------------------------+  |
+|  | users-service:                       |  |
+|  |   - 10.0.0.1:8080                    |  |
+|  |   - 10.0.0.2:8080                    |  |
+|  | orders-service:                      |  |
+|  |   - 10.0.1.1:8080                    |  |
+|  +--------------------------------------+  |
++--------------------------------------------+
+         ▲                    |
+         | Register           | Discover
+         |                    ▼
+    +---------+          +---------+
+    |Service A|---------►|Service B|
+    +---------+          +---------+
 ```
 
 ## API Gateway Pattern
@@ -423,7 +423,7 @@ Saga:
   - Compensating transactions on failure
 
 Choreography:
-  Service A → Event → Service B → Event → Service C
+  Service A -> Event -> Service B -> Event -> Service C
 
 Orchestration:
   Saga Orchestrator coordinates all services
@@ -433,18 +433,18 @@ Orchestration:
 Order Saga (Choreography):
 
 1. Order Service: Create order (pending)
-         │
+         |
          ▼ OrderCreated event
 2. Payment Service: Process payment
-         │
-         ├── PaymentSucceeded → 3. Inventory Service
-         │                            │
-         │                            ▼
-         │                      ReserveStock
-         │                            │
-         │                      InventoryReserved → Complete order
-         │
-         └── PaymentFailed → Compensate: Cancel order
+         |
+         +-- PaymentSucceeded -> 3. Inventory Service
+         |                            |
+         |                            ▼
+         |                      ReserveStock
+         |                            |
+         |                      InventoryReserved -> Complete order
+         |
+         +-- PaymentFailed -> Compensate: Cancel order
 ```
 
 ## Challenges
@@ -767,24 +767,24 @@ NODE_16_SECURITY = {
 ## Defense in Depth
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    Network                          │
-│  ┌───────────────────────────────────────────────┐  │
-│  │               WAF / DDoS                      │  │
-│  │  ┌─────────────────────────────────────────┐  │  │
-│  │  │           Load Balancer                 │  │  │
-│  │  │  ┌───────────────────────────────────┐  │  │  │
-│  │  │  │         API Gateway               │  │  │  │
-│  │  │  │  ┌─────────────────────────────┐  │  │  │  │
-│  │  │  │  │        Application          │  │  │  │  │
-│  │  │  │  │  ┌───────────────────────┐  │  │  │  │  │
-│  │  │  │  │  │      Database         │  │  │  │  │  │
-│  │  │  │  │  └───────────────────────┘  │  │  │  │  │
-│  │  │  │  └─────────────────────────────┘  │  │  │  │
-│  │  │  └───────────────────────────────────┘  │  │  │
-│  │  └─────────────────────────────────────────┘  │  │
-│  └───────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|                    Network                          |
+|  +-----------------------------------------------+  |
+|  |               WAF / DDoS                      |  |
+|  |  +-----------------------------------------+  |  |
+|  |  |           Load Balancer                 |  |  |
+|  |  |  +-----------------------------------+  |  |  |
+|  |  |  |         API Gateway               |  |  |  |
+|  |  |  |  +-----------------------------+  |  |  |  |
+|  |  |  |  |        Application          |  |  |  |  |
+|  |  |  |  |  +-----------------------+  |  |  |  |  |
+|  |  |  |  |  |      Database         |  |  |  |  |  |
+|  |  |  |  |  +-----------------------+  |  |  |  |  |
+|  |  |  |  +-----------------------------+  |  |  |  |
+|  |  |  +-----------------------------------+  |  |  |
+|  |  +-----------------------------------------+  |  |
+|  +-----------------------------------------------+  |
++-----------------------------------------------------+
 ```
 
 ## Authentication
@@ -848,7 +848,7 @@ def verify_token(token):
 
 ```yaml
 RBAC (Role-Based):
-  - User → Role → Permissions
+  - User -> Role -> Permissions
   - Admin, Editor, Viewer
 
 ABAC (Attribute-Based):

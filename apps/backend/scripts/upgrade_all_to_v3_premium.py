@@ -63,29 +63,29 @@ TOPIC_ENHANCEMENTS = {
         "explanation": """Providers i Terraform är plugins som kommunicerar med APIs. Varje molntjänst (AWS, Azure, GCP),
 SaaS-plattform (GitHub, Datadog), eller infrastrukturtjänst (Kubernetes, Helm) har sin egen provider.""",
         "ascii": """
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM PROVIDER ARCHITECTURE                   │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   ┌──────────────┐                                                   │
-│   │  Terraform   │                                                   │
-│   │    Core      │                                                   │
-│   └──────┬───────┘                                                   │
-│          │                                                           │
-│          ▼                                                           │
-│   ┌──────────────────────────────────────────────────────────┐      │
-│   │                  Provider Plugins                         │      │
-│   ├─────────────┬─────────────┬─────────────┬───────────────┤      │
-│   │   AWS       │   Azure     │   GCP       │   Kubernetes  │      │
-│   │   Provider  │   Provider  │   Provider  │   Provider    │      │
-│   └──────┬──────┴──────┬──────┴──────┬──────┴───────┬───────┘      │
-│          │             │             │              │               │
-│          ▼             ▼             ▼              ▼               │
-│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐         │
-│   │ AWS API  │  │Azure API │  │ GCP API  │  │ K8s API    │         │
-│   └──────────┘  └──────────┘  └──────────┘  └────────────┘         │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM PROVIDER ARCHITECTURE                   |
++---------------------------------------------------------------------+
+|                                                                      |
+|   +--------------+                                                   |
+|   |  Terraform   |                                                   |
+|   |    Core      |                                                   |
+|   +------+-------+                                                   |
+|          |                                                           |
+|          ▼                                                           |
+|   +----------------------------------------------------------+      |
+|   |                  Provider Plugins                         |      |
+|   +-------------+-------------+-------------+---------------+      |
+|   |   AWS       |   Azure     |   GCP       |   Kubernetes  |      |
+|   |   Provider  |   Provider  |   Provider  |   Provider    |      |
+|   +------+------+------+------+------+------+-------+-------+      |
+|          |             |             |              |               |
+|          ▼             ▼             ▼              ▼               |
+|   +----------+  +----------+  +----------+  +------------+         |
+|   | AWS API  |  |Azure API |  | GCP API  |  | K8s API    |         |
+|   +----------+  +----------+  +----------+  +------------+         |
+|                                                                      |
++---------------------------------------------------------------------+
 """,
         "objectives": [
             "Konfigurera providers för AWS, Azure och GCP",
@@ -100,34 +100,34 @@ SaaS-plattform (GitHub, Datadog), eller infrastrukturtjänst (Kubernetes, Helm) 
         "explanation": """State-filen är Terraforms databas över din infrastruktur. Den mappar HCL-resurser till verkliga molnresurser
 och sparar attribut som IDs, ARNs, och IP-adresser. Rätt state management är skillnaden mellan kaos och kontroll.""",
         "ascii": """
-┌─────────────────────────────────────────────────────────────────────┐
-│                    STATE MANAGEMENT FLOW                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   terraform plan                                                     │
-│        │                                                             │
-│        ▼                                                             │
-│   ┌─────────────────┐    ┌─────────────────┐                        │
-│   │  Configuration  │    │   State File    │                        │
-│   │    (.tf files)  │    │ (terraform.tfstate)                      │
-│   └────────┬────────┘    └────────┬────────┘                        │
-│            │                      │                                  │
-│            └──────────┬───────────┘                                  │
-│                       │                                              │
-│                       ▼                                              │
-│              ┌─────────────────┐                                     │
-│              │   DIFF ENGINE   │                                     │
-│              │  Compare Config │                                     │
-│              │   vs Reality    │                                     │
-│              └────────┬────────┘                                     │
-│                       │                                              │
-│            ┌──────────┼──────────┐                                   │
-│            ▼          ▼          ▼                                   │
-│       ┌────────┐ ┌────────┐ ┌────────┐                              │
-│       │ CREATE │ │ UPDATE │ │ DELETE │                              │
-│       └────────┘ └────────┘ └────────┘                              │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    STATE MANAGEMENT FLOW                             |
++---------------------------------------------------------------------+
+|                                                                      |
+|   terraform plan                                                     |
+|        |                                                             |
+|        ▼                                                             |
+|   +-----------------+    +-----------------+                        |
+|   |  Configuration  |    |   State File    |                        |
+|   |    (.tf files)  |    | (terraform.tfstate)                      |
+|   +--------+--------+    +--------+--------+                        |
+|            |                      |                                  |
+|            +----------+-----------+                                  |
+|                       |                                              |
+|                       ▼                                              |
+|              +-----------------+                                     |
+|              |   DIFF ENGINE   |                                     |
+|              |  Compare Config |                                     |
+|              |   vs Reality    |                                     |
+|              +--------+--------+                                     |
+|                       |                                              |
+|            +----------+----------+                                   |
+|            ▼          ▼          ▼                                   |
+|       +--------+ +--------+ +--------+                              |
+|       | CREATE | | UPDATE | | DELETE |                              |
+|       +--------+ +--------+ +--------+                              |
+|                                                                      |
++---------------------------------------------------------------------+
 """,
         "objectives": [
             "Konfigurera remote state backends (S3, Azure Blob, GCS)",
@@ -143,29 +143,29 @@ och sparar attribut som IDs, ARNs, och IP-adresser. Rätt state management är s
         "explanation": """Input variables är nyckeln till DRY (Don't Repeat Yourself) Terraform-kod.
 Outputs låter dig exponera värden för andra system, moduler, eller automatisering.""",
         "ascii": """
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM DATA FLOW                               │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   INPUTS                        CORE                      OUTPUTS   │
-│   ══════                        ════                      ═══════   │
-│                                                                      │
-│   ┌─────────────┐         ┌─────────────┐         ┌─────────────┐   │
-│   │  Variables  │         │             │         │   Outputs   │   │
-│   │  (.tfvars)  │────────▶│   Terraform │────────▶│   (values)  │   │
-│   └─────────────┘         │   Config    │         └─────────────┘   │
-│                           │             │                           │
-│   ┌─────────────┐         │   ┌─────┐   │                           │
-│   │ Environment │────────▶│   │Local│   │                           │
-│   │  TF_VAR_*   │         │   │vars │   │                           │
-│   └─────────────┘         │   └─────┘   │                           │
-│                           │             │                           │
-│   ┌─────────────┐         └─────────────┘                           │
-│   │  CLI Flags  │────────▶                                          │
-│   │  -var=...   │                                                   │
-│   └─────────────┘                                                   │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM DATA FLOW                               |
++---------------------------------------------------------------------+
+|                                                                      |
+|   INPUTS                        CORE                      OUTPUTS   |
+|   ══════                        ════                      ═══════   |
+|                                                                      |
+|   +-------------+         +-------------+         +-------------+   |
+|   |  Variables  |         |             |         |   Outputs   |   |
+|   |  (.tfvars)  |--------▶|   Terraform |--------▶|   (values)  |   |
+|   +-------------+         |   Config    |         +-------------+   |
+|                           |             |                           |
+|   +-------------+         |   +-----+   |                           |
+|   | Environment |--------▶|   |Local|   |                           |
+|   |  TF_VAR_*   |         |   |vars |   |                           |
+|   +-------------+         |   +-----+   |                           |
+|                           |             |                           |
+|   +-------------+         +-------------+                           |
+|   |  CLI Flags  |--------▶                                          |
+|   |  -var=...   |                                                   |
+|   +-------------+                                                   |
+|                                                                      |
++---------------------------------------------------------------------+
 """,
         "objectives": [
             "Definiera input variables med validering",
@@ -181,29 +181,29 @@ Outputs låter dig exponera värden för andra system, moduler, eller automatise
         "explanation": """Data sources i Terraform hämtar information om existerande resurser eller extern data.
 Detta är kritiskt för att referera till infrastruktur som inte hanteras av din Terraform-konfiguration.""",
         "ascii": """
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DATA SOURCE TYPES                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   ┌─────────────────────────────────────────────────────────────┐   │
-│   │                    DATA SOURCES                              │   │
-│   ├─────────────────┬─────────────────┬─────────────────────────┤   │
-│   │   Provider      │   Remote        │   External              │   │
-│   │   Data          │   State         │   Data                  │   │
-│   ├─────────────────┼─────────────────┼─────────────────────────┤   │
-│   │ aws_ami         │ terraform_      │ http                    │   │
-│   │ aws_vpc         │ remote_state    │ external (scripts)      │   │
-│   │ aws_caller_id   │                 │ template_file           │   │
-│   │ aws_region      │                 │ local_file              │   │
-│   └─────────────────┴─────────────────┴─────────────────────────┘   │
-│                                                                      │
-│   Användning:                                                        │
-│   • Hitta senaste AMI automatiskt                                   │
-│   • Referera till VPC skapad av annat team                         │
-│   • Hämta secrets från Vault                                        │
-│   • Läsa outputs från andra Terraform projects                     │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DATA SOURCE TYPES                                 |
++---------------------------------------------------------------------+
+|                                                                      |
+|   +-------------------------------------------------------------+   |
+|   |                    DATA SOURCES                              |   |
+|   +-----------------+-----------------+-------------------------+   |
+|   |   Provider      |   Remote        |   External              |   |
+|   |   Data          |   State         |   Data                  |   |
+|   +-----------------+-----------------+-------------------------+   |
+|   | aws_ami         | terraform_      | http                    |   |
+|   | aws_vpc         | remote_state    | external (scripts)      |   |
+|   | aws_caller_id   |                 | template_file           |   |
+|   | aws_region      |                 | local_file              |   |
+|   +-----------------+-----------------+-------------------------+   |
+|                                                                      |
+|   Användning:                                                        |
+|   • Hitta senaste AMI automatiskt                                   |
+|   • Referera till VPC skapad av annat team                         |
+|   • Hämta secrets från Vault                                        |
+|   • Läsa outputs från andra Terraform projects                     |
+|                                                                      |
++---------------------------------------------------------------------+
 """,
         "objectives": [
             "Använda AWS data sources (ami, vpc, subnets)",
@@ -218,33 +218,33 @@ Detta är kritiskt för att referera till infrastruktur som inte hanteras av din
         "explanation": """Terraform modules är containers för relaterade resurser. De låter dig skapa abstraktioner,
 dela kod mellan projekt, och bygga en intern module registry för ditt team.""",
         "ascii": """
-┌─────────────────────────────────────────────────────────────────────┐
-│                    MODULE ARCHITECTURE                               │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   Root Module (main.tf)                                             │
-│   ┌─────────────────────────────────────────────────────────────┐   │
-│   │                                                              │   │
-│   │  module "vpc" {                                              │   │
-│   │    source = "./modules/vpc"                                  │   │
-│   │    ...                                                       │   │
-│   │  }                                                           │   │
-│   │               │                                              │   │
-│   │               ▼                                              │   │
-│   │  ┌────────────────────────────────────────┐                 │   │
-│   │  │  Child Module (modules/vpc/)           │                 │   │
-│   │  │  ├── main.tf                           │                 │   │
-│   │  │  ├── variables.tf                      │                 │   │
-│   │  │  ├── outputs.tf                        │                 │   │
-│   │  │  └── versions.tf                       │                 │   │
-│   │  │                                        │                 │   │
-│   │  │  Creates: VPC, Subnets, IGW, NAT      │                 │   │
-│   │  │  Outputs: vpc_id, subnet_ids          │                 │   │
-│   │  └────────────────────────────────────────┘                 │   │
-│   │                                                              │   │
-│   └─────────────────────────────────────────────────────────────┘   │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    MODULE ARCHITECTURE                               |
++---------------------------------------------------------------------+
+|                                                                      |
+|   Root Module (main.tf)                                             |
+|   +-------------------------------------------------------------+   |
+|   |                                                              |   |
+|   |  module "vpc" {                                              |   |
+|   |    source = "./modules/vpc"                                  |   |
+|   |    ...                                                       |   |
+|   |  }                                                           |   |
+|   |               |                                              |   |
+|   |               ▼                                              |   |
+|   |  +----------------------------------------+                 |   |
+|   |  |  Child Module (modules/vpc/)           |                 |   |
+|   |  |  +-- main.tf                           |                 |   |
+|   |  |  +-- variables.tf                      |                 |   |
+|   |  |  +-- outputs.tf                        |                 |   |
+|   |  |  +-- versions.tf                       |                 |   |
+|   |  |                                        |                 |   |
+|   |  |  Creates: VPC, Subnets, IGW, NAT      |                 |   |
+|   |  |  Outputs: vpc_id, subnet_ids          |                 |   |
+|   |  +----------------------------------------+                 |   |
+|   |                                                              |   |
+|   +-------------------------------------------------------------+   |
+|                                                                      |
++---------------------------------------------------------------------+
 """,
         "objectives": [
             "Skapa egna modules med best practices",
@@ -325,7 +325,7 @@ def enhance_task_content(content: str, task_title: str, module_name: str) -> str
 
     # Check if already has V3 elements
     has_varfor = any(marker in content for marker in ["## Varför", "## Why This", "Varför detta"])
-    has_ascii = any(marker in content for marker in ["┌", "│", "└", "├"])
+    has_ascii = any(marker in content for marker in ["+", "|", "+", "+"])
     has_pro_tip = any(marker in content for marker in ["Pro Tip", "💡"])
 
     # If already premium, return as-is

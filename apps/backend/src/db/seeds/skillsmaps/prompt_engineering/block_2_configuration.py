@@ -23,12 +23,12 @@ sannolikheter till varje möjligt ord:
 Prompt: "The cat sat on the"
 
 Nästa token-sannolikheter:
-  mat     → 0.35 (35%)
-  floor   → 0.25 (25%)
-  couch   → 0.15 (15%)
-  roof    → 0.10 (10%)
-  table   → 0.08 (8%)
-  ...     → 0.07 (7%)
+  mat     -> 0.35 (35%)
+  floor   -> 0.25 (25%)
+  couch   -> 0.15 (15%)
+  roof    -> 0.10 (10%)
+  table   -> 0.08 (8%)
+  ...     -> 0.07 (7%)
 
 Sampling-parametrar styr hur vi väljer från dessa.
 ```
@@ -44,7 +44,7 @@ Skala: 0.0 - 2.0 (typiskt)
 
 temperature: 0.0
   - Alltid välj högst sannolikhet
-  - Deterministiskt (samma input → samma output)
+  - Deterministiskt (samma input -> samma output)
   - Bra för: fakta, kod, matematik
 
 temperature: 0.7 (default ofta)
@@ -81,17 +81,17 @@ Definition:
   utgör P% av sannolikhetsmassan.
 
 Exempel med top_p: 0.9 (90%):
-  mat     → 0.35  ✓ (kumulativ: 0.35)
-  floor   → 0.25  ✓ (kumulativ: 0.60)
-  couch   → 0.15  ✓ (kumulativ: 0.75)
-  roof    → 0.10  ✓ (kumulativ: 0.85)
-  table   → 0.08  ✓ (kumulativ: 0.93 > 0.90 → stopp)
-  övriga  → ❌ (exkluderas)
+  mat     -> 0.35  ✓ (kumulativ: 0.35)
+  floor   -> 0.25  ✓ (kumulativ: 0.60)
+  couch   -> 0.15  ✓ (kumulativ: 0.75)
+  roof    -> 0.10  ✓ (kumulativ: 0.85)
+  table   -> 0.08  ✓ (kumulativ: 0.93 > 0.90 -> stopp)
+  övriga  -> ❌ (exkluderas)
 
 Värden:
-  top_p: 1.0 → alla tokens (default)
-  top_p: 0.9 → säkra val
-  top_p: 0.5 → mycket begränsat
+  top_p: 1.0 -> alla tokens (default)
+  top_p: 0.9 -> säkra val
+  top_p: 0.5 -> mycket begränsat
 ```
 
 ## Top-K
@@ -101,15 +101,15 @@ Definition:
   Begränsar till de K mest sannolika tokens.
 
 Exempel med top_k: 3:
-  mat     → 0.35  ✓
-  floor   → 0.25  ✓
-  couch   → 0.15  ✓
-  övriga  → ❌
+  mat     -> 0.35  ✓
+  floor   -> 0.25  ✓
+  couch   -> 0.15  ✓
+  övriga  -> ❌
 
 Typiska värden:
-  top_k: 50  → standard för många modeller
-  top_k: 10  → mer fokuserad
-  top_k: 1   → greedy decoding (alltid bästa)
+  top_k: 50  -> standard för många modeller
+  top_k: 10  -> mer fokuserad
+  top_k: 1   -> greedy decoding (alltid bästa)
 ```
 
 ## Temperature vs Top-P vs Top-K
@@ -216,9 +216,9 @@ Definition:
   Användbart för att kontrollera format.
 
 Exempel:
-  stop=["\\n\\n"]  → Stoppa vid dubbel newline
-  stop=["END"]    → Stoppa vid ordet END
-  stop=["```"]    → Stoppa efter kodblock
+  stop=["\\n\\n"]  -> Stoppa vid dubbel newline
+  stop=["END"]    -> Stoppa vid ordet END
+  stop=["```"]    -> Stoppa efter kodblock
 ```
 
 ```python
@@ -393,8 +393,8 @@ Definition:
   Modellen förlitar sig på sin träningsdata.
 
 Zero-Shot = "Noll exempel"
-  → Beskriv bara vad du vill ha
-  → Lita på modellens förkunskap
+  -> Beskriv bara vad du vill ha
+  -> Lita på modellens förkunskap
 ```
 
 ## Basic Zero-Shot
@@ -665,7 +665,7 @@ Regler:
 
   2. Korrekta:
      - Dubbelkolla alla exempel
-     - Felaktiga exempel → felaktig output
+     - Felaktiga exempel -> felaktig output
 
   3. Konsekventa:
      - Samma format i alla exempel

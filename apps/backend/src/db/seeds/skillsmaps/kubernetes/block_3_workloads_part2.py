@@ -23,78 +23,78 @@ DaemonSets säkerställer att en kopia av en Pod körs på varje (eller utvalda)
 ### DaemonSet vs Deployment
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DAEMONSET VS DEPLOYMENT                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DEPLOYMENT                                                              │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  replicas: 3                                                     │   │
-│  │  Scheduler väljer vilka noder som får pods                       │   │
-│  │                                                                  │   │
-│  │  Node 1     Node 2     Node 3     Node 4     Node 5              │   │
-│  │  ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐           │   │
-│  │  │ Pod │    │     │    │ Pod │    │     │    │ Pod │           │   │
-│  │  └─────┘    └─────┘    └─────┘    └─────┘    └─────┘           │   │
-│  │                                                                  │   │
-│  │  Pods distribueras baserat på resources och scheduling          │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  DAEMONSET                                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  En pod per node (automatiskt)                                   │   │
-│  │  Ny node? → Pod skapas automatiskt                              │   │
-│  │                                                                  │   │
-│  │  Node 1     Node 2     Node 3     Node 4     Node 5              │   │
-│  │  ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐           │   │
-│  │  │ Pod │    │ Pod │    │ Pod │    │ Pod │    │ Pod │           │   │
-│  │  └─────┘    └─────┘    └─────┘    └─────┘    └─────┘           │   │
-│  │                                                                  │   │
-│  │  Varje node får exakt en pod                                    │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DAEMONSET VS DEPLOYMENT                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DEPLOYMENT                                                              |
+|  +-----------------------------------------------------------------+   |
+|  |  replicas: 3                                                     |   |
+|  |  Scheduler väljer vilka noder som får pods                       |   |
+|  |                                                                  |   |
+|  |  Node 1     Node 2     Node 3     Node 4     Node 5              |   |
+|  |  +-----+    +-----+    +-----+    +-----+    +-----+           |   |
+|  |  | Pod |    |     |    | Pod |    |     |    | Pod |           |   |
+|  |  +-----+    +-----+    +-----+    +-----+    +-----+           |   |
+|  |                                                                  |   |
+|  |  Pods distribueras baserat på resources och scheduling          |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  DAEMONSET                                                               |
+|  +-----------------------------------------------------------------+   |
+|  |  En pod per node (automatiskt)                                   |   |
+|  |  Ny node? -> Pod skapas automatiskt                              |   |
+|  |                                                                  |   |
+|  |  Node 1     Node 2     Node 3     Node 4     Node 5              |   |
+|  |  +-----+    +-----+    +-----+    +-----+    +-----+           |   |
+|  |  | Pod |    | Pod |    | Pod |    | Pod |    | Pod |           |   |
+|  |  +-----+    +-----+    +-----+    +-----+    +-----+           |   |
+|  |                                                                  |   |
+|  |  Varje node får exakt en pod                                    |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Typiska Användningsfall
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DAEMONSET USE CASES                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  1. LOG COLLECTION                                                       │
-│     ┌──────────────────────────────────────────┐                        │
-│     │  Fluentd / Fluent Bit / Filebeat         │                        │
-│     │  • Samlar logs från varje node           │                        │
-│     │  • Mountar /var/log                       │                        │
-│     │  • Skickar till centralt system          │                        │
-│     └──────────────────────────────────────────┘                        │
-│                                                                          │
-│  2. NODE MONITORING                                                      │
-│     ┌──────────────────────────────────────────┐                        │
-│     │  node-exporter / cAdvisor                │                        │
-│     │  • Exponerar node metrics                 │                        │
-│     │  • CPU, memory, disk, network            │                        │
-│     │  • Prometheus scraper                     │                        │
-│     └──────────────────────────────────────────┘                        │
-│                                                                          │
-│  3. CLUSTER NETWORKING                                                   │
-│     ┌──────────────────────────────────────────┐                        │
-│     │  CNI plugins (Calico, Weave, Cilium)     │                        │
-│     │  • Nätverksconfig per node               │                        │
-│     │  • Pod networking                         │                        │
-│     │  • Network policies                       │                        │
-│     └──────────────────────────────────────────┘                        │
-│                                                                          │
-│  4. STORAGE DAEMONS                                                      │
-│     ┌──────────────────────────────────────────┐                        │
-│     │  glusterd / Ceph OSD                      │                        │
-│     │  • Distributed storage                   │                        │
-│     │  • Accessar node disks                   │                        │
-│     └──────────────────────────────────────────┘                        │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DAEMONSET USE CASES                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  1. LOG COLLECTION                                                       |
+|     +------------------------------------------+                        |
+|     |  Fluentd / Fluent Bit / Filebeat         |                        |
+|     |  • Samlar logs från varje node           |                        |
+|     |  • Mountar /var/log                       |                        |
+|     |  • Skickar till centralt system          |                        |
+|     +------------------------------------------+                        |
+|                                                                          |
+|  2. NODE MONITORING                                                      |
+|     +------------------------------------------+                        |
+|     |  node-exporter / cAdvisor                |                        |
+|     |  • Exponerar node metrics                 |                        |
+|     |  • CPU, memory, disk, network            |                        |
+|     |  • Prometheus scraper                     |                        |
+|     +------------------------------------------+                        |
+|                                                                          |
+|  3. CLUSTER NETWORKING                                                   |
+|     +------------------------------------------+                        |
+|     |  CNI plugins (Calico, Weave, Cilium)     |                        |
+|     |  • Nätverksconfig per node               |                        |
+|     |  • Pod networking                         |                        |
+|     |  • Network policies                       |                        |
+|     +------------------------------------------+                        |
+|                                                                          |
+|  4. STORAGE DAEMONS                                                      |
+|     +------------------------------------------+                        |
+|     |  glusterd / Ceph OSD                      |                        |
+|     |  • Distributed storage                   |                        |
+|     |  • Accessar node disks                   |                        |
+|     +------------------------------------------+                        |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. DaemonSet Anatomy
@@ -316,65 +316,65 @@ kubectl get pods -l app=compute-agent -o wide
 ## 6. Update Strategies
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DAEMONSET UPDATE STRATEGIES                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ROLLINGUPDATE (default)                                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Uppdaterar pods en i taget                                      │   │
-│  │                                                                  │   │
-│  │  maxUnavailable: 1                                               │   │
-│  │  maxSurge: 0 (kan inte vara > 0 för DaemonSet)                  │   │
-│  │                                                                  │   │
-│  │  Node 1 ─▶ Update ─▶ Ready ─▶                                   │   │
-│  │  Node 2                    ─▶ Update ─▶ Ready ─▶                │   │
-│  │  Node 3                                        ─▶ Update ─▶     │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  ONDELETE                                                                │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Manuell kontroll                                                │   │
-│  │  Ny pod skapas först när gammal raderas                          │   │
-│  │                                                                  │   │
-│  │  1. Ändra DaemonSet spec                                        │   │
-│  │  2. Inget händer automatiskt                                    │   │
-│  │  3. kubectl delete pod på nod                                   │   │
-│  │  4. Ny pod med ny spec skapas                                   │   │
-│  │                                                                  │   │
-│  │  Användning: Kritiska system-pods                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DAEMONSET UPDATE STRATEGIES                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ROLLINGUPDATE (default)                                                 |
+|  +-----------------------------------------------------------------+   |
+|  |  Uppdaterar pods en i taget                                      |   |
+|  |                                                                  |   |
+|  |  maxUnavailable: 1                                               |   |
+|  |  maxSurge: 0 (kan inte vara > 0 för DaemonSet)                  |   |
+|  |                                                                  |   |
+|  |  Node 1 -▶ Update -▶ Ready -▶                                   |   |
+|  |  Node 2                    -▶ Update -▶ Ready -▶                |   |
+|  |  Node 3                                        -▶ Update -▶     |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  ONDELETE                                                                |
+|  +-----------------------------------------------------------------+   |
+|  |  Manuell kontroll                                                |   |
+|  |  Ny pod skapas först när gammal raderas                          |   |
+|  |                                                                  |   |
+|  |  1. Ändra DaemonSet spec                                        |   |
+|  |  2. Inget händer automatiskt                                    |   |
+|  |  3. kubectl delete pod på nod                                   |   |
+|  |  4. Ny pod med ny spec skapas                                   |   |
+|  |                                                                  |   |
+|  |  Användning: Kritiska system-pods                               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DAEMONSET BEST PRACTICES                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Resource Management                                                  │
-│     □ Sätt resource limits (DaemonSets körs på ALLA noder!)            │
-│     □ Prioritera minimala images                                        │
-│     □ Undvik resource-heavy operationer                                 │
-│                                                                          │
-│  ✅ Tolerations                                                         │
-│     □ Inkludera control-plane tolerations om nödvändigt                │
-│     □ Hantera custom taints                                             │
-│                                                                          │
-│  ✅ Updates                                                              │
-│     □ Använd RollingUpdate för de flesta fall                           │
-│     □ OnDelete för kritiska system-komponenter                          │
-│     □ Testa updates i staging först                                     │
-│                                                                          │
-│  ✅ Security                                                            │
-│     □ Minimera hostPath mounts                                          │
-│     □ Använd read-only där möjligt                                      │
-│     □ Kör som non-root om möjligt                                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DAEMONSET BEST PRACTICES                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Resource Management                                                  |
+|     □ Sätt resource limits (DaemonSets körs på ALLA noder!)            |
+|     □ Prioritera minimala images                                        |
+|     □ Undvik resource-heavy operationer                                 |
+|                                                                          |
+|  ✅ Tolerations                                                         |
+|     □ Inkludera control-plane tolerations om nödvändigt                |
+|     □ Hantera custom taints                                             |
+|                                                                          |
+|  ✅ Updates                                                              |
+|     □ Använd RollingUpdate för de flesta fall                           |
+|     □ OnDelete för kritiska system-komponenter                          |
+|     □ Testa updates i staging först                                     |
+|                                                                          |
+|  ✅ Security                                                            |
+|     □ Minimera hostPath mounts                                          |
+|     □ Använd read-only där möjligt                                      |
+|     □ Kör som non-root om möjligt                                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Sammanfattning & Task
@@ -390,7 +390,7 @@ kubectl get pods -l app=compute-agent -o wide
 
 ---
 
-**Nästa Node:** RBAC - Security →
+**Nästa Node:** RBAC - Security ->
 ''',
     "xp_reward": 140,
     "estimated_minutes": 45,
@@ -416,77 +416,77 @@ RBAC (Role-Based Access Control) är Kubernetes säkerhetsmodell för att kontro
 ### RBAC Components
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      RBAC COMPONENTS                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────────┐          ┌─────────────────┐                       │
-│  │    SUBJECT      │          │      ROLE       │                       │
-│  │  (Vem)          │          │  (Rättigheter)  │                       │
-│  ├─────────────────┤          ├─────────────────┤                       │
-│  │ • User          │          │ • Role          │                       │
-│  │ • Group         │───────▶  │   (namespace)   │                       │
-│  │ • ServiceAccount│          │ • ClusterRole   │                       │
-│  └─────────────────┘          │   (cluster-wide)│                       │
-│           │                   └─────────────────┘                       │
-│           │                            │                                 │
-│           │         ┌──────────────────┘                                │
-│           │         │                                                    │
-│           ▼         ▼                                                    │
-│  ┌──────────────────────────────┐                                       │
-│  │       ROLEBINDING            │                                       │
-│  │  (Kopplar Subject till Role) │                                       │
-│  ├──────────────────────────────┤                                       │
-│  │ • RoleBinding (namespace)    │                                       │
-│  │ • ClusterRoleBinding         │                                       │
-│  │   (cluster-wide)             │                                       │
-│  └──────────────────────────────┘                                       │
-│                                                                          │
-│  FLOW:                                                                   │
-│  User "alice" ──▶ RoleBinding ──▶ Role "developer" ──▶ Can GET pods    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      RBAC COMPONENTS                                     |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +-----------------+          +-----------------+                       |
+|  |    SUBJECT      |          |      ROLE       |                       |
+|  |  (Vem)          |          |  (Rättigheter)  |                       |
+|  +-----------------+          +-----------------+                       |
+|  | • User          |          | • Role          |                       |
+|  | • Group         |-------▶  |   (namespace)   |                       |
+|  | • ServiceAccount|          | • ClusterRole   |                       |
+|  +-----------------+          |   (cluster-wide)|                       |
+|           |                   +-----------------+                       |
+|           |                            |                                 |
+|           |         +------------------+                                |
+|           |         |                                                    |
+|           ▼         ▼                                                    |
+|  +------------------------------+                                       |
+|  |       ROLEBINDING            |                                       |
+|  |  (Kopplar Subject till Role) |                                       |
+|  +------------------------------+                                       |
+|  | • RoleBinding (namespace)    |                                       |
+|  | • ClusterRoleBinding         |                                       |
+|  |   (cluster-wide)             |                                       |
+|  +------------------------------+                                       |
+|                                                                          |
+|  FLOW:                                                                   |
+|  User "alice" --▶ RoleBinding --▶ Role "developer" --▶ Can GET pods    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Role vs ClusterRole
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   ROLE VS CLUSTERROLE                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ROLE (Namespace-scoped)                                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  • Gäller endast inom ett namespace                              │   │
-│  │  • Kan inte accessa cluster-resources                            │   │
-│  │                                                                  │   │
-│  │  ┌─────────────────────────────────────────────────────────┐    │   │
-│  │  │ Namespace: development                                   │    │   │
-│  │  │ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────────┐ ┌──────────┐      │    │   │
-│  │  │ │Pods │ │Svcs │ │CMs  │ │Secrets  │ │Deployments│      │    │   │
-│  │  │ └──▲──┘ └──▲──┘ └──▲──┘ └────▲────┘ └─────▲────┘      │    │   │
-│  │  │    └───────┴───────┴─────────┴────────────┘            │    │   │
-│  │  │                    Role: developer                      │    │   │
-│  │  └─────────────────────────────────────────────────────────┘    │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  CLUSTERROLE (Cluster-scoped)                                            │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  • Gäller i hela klustret                                        │   │
-│  │  • Kan accessa cluster-resources (nodes, namespaces, etc.)       │   │
-│  │  • Kan användas med RoleBinding (i ett namespace)               │   │
-│  │                                                                  │   │
-│  │  ┌─────────────────────────────────────────────────────────┐    │   │
-│  │  │ Cluster-wide                                             │    │   │
-│  │  │ ┌─────┐ ┌──────────┐ ┌───┐ ┌────────────────┐          │    │   │
-│  │  │ │Nodes│ │Namespaces│ │PVs│ │StorageClasses  │          │    │   │
-│  │  │ └──▲──┘ └────▲─────┘ └─▲─┘ └───────▲────────┘          │    │   │
-│  │  │    └─────────┴─────────┴───────────┘                    │    │   │
-│  │  │              ClusterRole: cluster-admin                  │    │   │
-│  │  └─────────────────────────────────────────────────────────┘    │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   ROLE VS CLUSTERROLE                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ROLE (Namespace-scoped)                                                 |
+|  +-----------------------------------------------------------------+   |
+|  |  • Gäller endast inom ett namespace                              |   |
+|  |  • Kan inte accessa cluster-resources                            |   |
+|  |                                                                  |   |
+|  |  +---------------------------------------------------------+    |   |
+|  |  | Namespace: development                                   |    |   |
+|  |  | +-----+ +-----+ +-----+ +---------+ +----------+      |    |   |
+|  |  | |Pods | |Svcs | |CMs  | |Secrets  | |Deployments|      |    |   |
+|  |  | +--▲--+ +--▲--+ +--▲--+ +----▲----+ +-----▲----+      |    |   |
+|  |  |    +-------+-------+---------+------------+            |    |   |
+|  |  |                    Role: developer                      |    |   |
+|  |  +---------------------------------------------------------+    |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  CLUSTERROLE (Cluster-scoped)                                            |
+|  +-----------------------------------------------------------------+   |
+|  |  • Gäller i hela klustret                                        |   |
+|  |  • Kan accessa cluster-resources (nodes, namespaces, etc.)       |   |
+|  |  • Kan användas med RoleBinding (i ett namespace)               |   |
+|  |                                                                  |   |
+|  |  +---------------------------------------------------------+    |   |
+|  |  | Cluster-wide                                             |    |   |
+|  |  | +-----+ +----------+ +---+ +----------------+          |    |   |
+|  |  | |Nodes| |Namespaces| |PVs| |StorageClasses  |          |    |   |
+|  |  | +--▲--+ +----▲-----+ +-▲-+ +-------▲--------+          |    |   |
+|  |  |    +---------+---------+-----------+                    |    |   |
+|  |  |              ClusterRole: cluster-admin                  |    |   |
+|  |  +---------------------------------------------------------+    |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. RBAC Resources
@@ -601,36 +601,36 @@ roleRef:
 ## 4. RBAC Verbs
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        RBAC VERBS                                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  VERB              │ DESCRIPTION                  │ HTTP EQUIVALENT      │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  get               │ Läs enskild resurs           │ GET (single)         │
-│  list              │ Lista resurser               │ GET (collection)     │
-│  watch             │ Watch för ändringar          │ GET (watch)          │
-│  create            │ Skapa ny resurs              │ POST                 │
-│  update            │ Fullständig update           │ PUT                  │
-│  patch             │ Partiell update              │ PATCH                │
-│  delete            │ Radera resurs                │ DELETE               │
-│  deletecollection  │ Radera collection            │ DELETE (collection)  │
-│                                                                          │
-│  SPECIAL VERBS:                                                          │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  impersonate       │ Impersonate users/groups     │ (special)            │
-│  bind              │ Skapa RoleBindings           │ (special)            │
-│  escalate          │ Escalate privileges          │ (special)            │
-│                                                                          │
-│  SUBRESOURCES:                                                           │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  pods/log          │ kubectl logs                 │                      │
-│  pods/exec         │ kubectl exec                 │                      │
-│  pods/portforward  │ kubectl port-forward         │                      │
-│  pods/status       │ Pod status subresource       │                      │
-│  deployments/scale │ kubectl scale                │                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        RBAC VERBS                                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  VERB              | DESCRIPTION                  | HTTP EQUIVALENT      |
+|  ---------------------------------------------------------------------  |
+|  get               | Läs enskild resurs           | GET (single)         |
+|  list              | Lista resurser               | GET (collection)     |
+|  watch             | Watch för ändringar          | GET (watch)          |
+|  create            | Skapa ny resurs              | POST                 |
+|  update            | Fullständig update           | PUT                  |
+|  patch             | Partiell update              | PATCH                |
+|  delete            | Radera resurs                | DELETE               |
+|  deletecollection  | Radera collection            | DELETE (collection)  |
+|                                                                          |
+|  SPECIAL VERBS:                                                          |
+|  ---------------------------------------------------------------------  |
+|  impersonate       | Impersonate users/groups     | (special)            |
+|  bind              | Skapa RoleBindings           | (special)            |
+|  escalate          | Escalate privileges          | (special)            |
+|                                                                          |
+|  SUBRESOURCES:                                                           |
+|  ---------------------------------------------------------------------  |
+|  pods/log          | kubectl logs                 |                      |
+|  pods/exec         | kubectl exec                 |                      |
+|  pods/portforward  | kubectl port-forward         |                      |
+|  pods/status       | Pod status subresource       |                      |
+|  deployments/scale | kubectl scale                |                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 5. Praktiska Övningar
@@ -731,67 +731,67 @@ kubectl api-resources --verbs=list --namespaced=true
 ## 6. Built-in ClusterRoles
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   BUILT-IN CLUSTERROLES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  cluster-admin                                                           │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Full access till ALLT i klustret                                │   │
-│  │  ⚠️ ANVÄND SPARSAMT                                              │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  admin                                                                   │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Full access inom namespace                                      │   │
-│  │  Kan skapa Roles/RoleBindings                                   │   │
-│  │  Kan INTE modifiera namespace/quota                             │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  edit                                                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Read/write access till de flesta namespace-resurser            │   │
-│  │  Kan INTE se Roles/RoleBindings                                 │   │
-│  │  Kan INTE accessa Secrets (default)                             │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  view                                                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Read-only access till namespace-resurser                       │   │
-│  │  Kan INTE se Secrets eller Roles                                │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   BUILT-IN CLUSTERROLES                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  cluster-admin                                                           |
+|  +-----------------------------------------------------------------+   |
+|  |  Full access till ALLT i klustret                                |   |
+|  |  ⚠️ ANVÄND SPARSAMT                                              |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  admin                                                                   |
+|  +-----------------------------------------------------------------+   |
+|  |  Full access inom namespace                                      |   |
+|  |  Kan skapa Roles/RoleBindings                                   |   |
+|  |  Kan INTE modifiera namespace/quota                             |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  edit                                                                    |
+|  +-----------------------------------------------------------------+   |
+|  |  Read/write access till de flesta namespace-resurser            |   |
+|  |  Kan INTE se Roles/RoleBindings                                 |   |
+|  |  Kan INTE accessa Secrets (default)                             |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  view                                                                    |
+|  +-----------------------------------------------------------------+   |
+|  |  Read-only access till namespace-resurser                       |   |
+|  |  Kan INTE se Secrets eller Roles                                |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     RBAC BEST PRACTICES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Principle of Least Privilege                                        │
-│     □ Ge minimala rättigheter som behövs                               │
-│     □ Börja restrictive, öppna vid behov                               │
-│     □ Använd namespace-scoped Roles där möjligt                        │
-│                                                                          │
-│  ✅ ServiceAccounts                                                     │
-│     □ Skapa dedikerade SA per applikation                              │
-│     □ Undvik default ServiceAccount                                    │
-│     □ Disable automounting om ej nödvändigt                            │
-│                                                                          │
-│  ✅ Auditing                                                            │
-│     □ Logga RBAC-relaterade API-anrop                                  │
-│     □ Granska bindings regelbundet                                     │
-│     □ Använd kubectl auth can-i för testing                            │
-│                                                                          │
-│  ✅ Organization                                                        │
-│     □ Använd Groups istället för individuella users                    │
-│     □ Standardisera role-namn                                          │
-│     □ Dokumentera custom roles                                         │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     RBAC BEST PRACTICES                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Principle of Least Privilege                                        |
+|     □ Ge minimala rättigheter som behövs                               |
+|     □ Börja restrictive, öppna vid behov                               |
+|     □ Använd namespace-scoped Roles där möjligt                        |
+|                                                                          |
+|  ✅ ServiceAccounts                                                     |
+|     □ Skapa dedikerade SA per applikation                              |
+|     □ Undvik default ServiceAccount                                    |
+|     □ Disable automounting om ej nödvändigt                            |
+|                                                                          |
+|  ✅ Auditing                                                            |
+|     □ Logga RBAC-relaterade API-anrop                                  |
+|     □ Granska bindings regelbundet                                     |
+|     □ Använd kubectl auth can-i för testing                            |
+|                                                                          |
+|  ✅ Organization                                                        |
+|     □ Använd Groups istället för individuella users                    |
+|     □ Standardisera role-namn                                          |
+|     □ Dokumentera custom roles                                         |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Sammanfattning & Task
@@ -817,7 +817,7 @@ kubectl api-resources --verbs=list --namespaced=true
 
 ---
 
-**Nästa Node:** Helm Basics →
+**Nästa Node:** Helm Basics ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 55,

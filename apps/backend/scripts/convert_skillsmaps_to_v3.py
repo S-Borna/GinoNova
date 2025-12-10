@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 =============================================================================
-SKILLSMAPS → BOOTCAMP V3 CONVERTER
+SKILLSMAPS -> BOOTCAMP V3 CONVERTER
 =============================================================================
 
 Converts all skillsmap files (node-based format) to bootcamp_v3 format
@@ -450,7 +450,7 @@ def get_task_count():
 def main():
     """Main conversion process."""
     print("=" * 70)
-    print("SKILLSMAPS → BOOTCAMP V3 CONVERTER")
+    print("SKILLSMAPS -> BOOTCAMP V3 CONVERTER")
     print("=" * 70)
 
     # Paths
@@ -472,7 +472,7 @@ def main():
     print("Processing single-file skillsmaps...")
     for filepath in sorted(skillsmaps_path.glob("*_skillsmap.py")):
         name = filepath.stem.replace("_skillsmap", "")
-        print(f"  → {name}...", end=" ")
+        print(f"  -> {name}...", end=" ")
 
         data = parse_single_file_skillsmap(filepath)
         if data:
@@ -494,7 +494,7 @@ def main():
     for dirpath in sorted(skillsmaps_path.iterdir()):
         if dirpath.is_dir() and dirpath.name != "__pycache__":
             name = dirpath.name
-            print(f"  → {name}/...", end=" ")
+            print(f"  -> {name}/...", end=" ")
 
             data = parse_directory_skillsmap(dirpath)
             if data:
@@ -541,7 +541,7 @@ Bootcamp v3 Modules - Auto-converted from Skillsmaps
     print("=" * 70)
     print(f"\n✅ Converted: {len(converted)} modules")
     for item in converted:
-        print(f"   • {item['name']}: {item['tasks']} tasks → {item['file']}")
+        print(f"   • {item['name']}: {item['tasks']} tasks -> {item['file']}")
 
     if failed:
         print(f"\n❌ Failed: {len(failed)} modules")

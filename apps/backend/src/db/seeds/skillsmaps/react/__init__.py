@@ -3,7 +3,7 @@ React & Next.js SkillsMap — Modern Frontend Development
 ========================================================
 
 20 nodes covering React from fundamentals to production-ready Next.js apps.
-Akhilesh-style pedagogy: Hook → Concept → Code → Pro Tips → Hands-on Task
+Akhilesh-style pedagogy: Hook -> Concept -> Code -> Pro Tips -> Hands-on Task
 
 Block 1 (Nodes 1-4): React Fundamentals
 Block 2 (Nodes 5-8): State & Effects

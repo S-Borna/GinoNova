@@ -14,7 +14,7 @@ NODE_09_ADVANCED_TOOL_DESIGN = {
 
 Bygga robusta, skalbara och sakra tools for AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Avancerad Tool Design?
 
@@ -27,7 +27,7 @@ Professionella tools kraver mer an bara funktionalitet. De maste vara robusta, s
 | Sakerhet | Ingen | Input sanitation |
 | Dokumentation | Minimal | Full schema |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ Professionella tools kraver mer an bara funktionalitet. De maste vara robusta, s
 | Skalbarhet | Valdesignade tools ar atervandningsbara |
 | Sakerhet | Forhindrar injection och missbruk |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Tool Components
 
@@ -49,53 +49,53 @@ Professionella tools kraver mer an bara funktionalitet. De maste vara robusta, s
 | Executor | Utfor handlingen | Python function |
 | Error handler | Hanterar fel | Retries, fallback |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tool Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    TOOL ARCHITECTURE                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  LLM Request                                                    │
-│  │                                                               │
-│  v                                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  INPUT VALIDATOR                                           │ │
-│  │  - JSON Schema validation                                  │ │
-│  │  - Type coercion                                           │ │
-│  │  - Constraint checking                                     │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│  │                                                               │
-│  v                                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  SECURITY LAYER                                            │ │
-│  │  - Input sanitization                                      │ │
-│  │  - Rate limiting                                           │ │
-│  │  - Permission checks                                       │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│  │                                                               │
-│  v                                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  EXECUTOR                                                  │ │
-│  │  - Actual tool logic                                       │ │
-│  │  - With retry mechanism                                    │ │
-│  │  - Timeout handling                                        │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│  │                                                               │
-│  v                                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  OUTPUT FORMATTER                                          │ │
-│  │  - Standardize response                                    │ │
-│  │  - Error wrapping                                          │ │
-│  │  - Truncation if needed                                    │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    TOOL ARCHITECTURE                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|  LLM Request                                                    |
+|  |                                                               |
+|  v                                                               |
+|  +-----------------------------------------------------------+ |
+|  |  INPUT VALIDATOR                                           | |
+|  |  - JSON Schema validation                                  | |
+|  |  - Type coercion                                           | |
+|  |  - Constraint checking                                     | |
+|  +-----------------------------------------------------------+ |
+|  |                                                               |
+|  v                                                               |
+|  +-----------------------------------------------------------+ |
+|  |  SECURITY LAYER                                            | |
+|  |  - Input sanitization                                      | |
+|  |  - Rate limiting                                           | |
+|  |  - Permission checks                                       | |
+|  +-----------------------------------------------------------+ |
+|  |                                                               |
+|  v                                                               |
+|  +-----------------------------------------------------------+ |
+|  |  EXECUTOR                                                  | |
+|  |  - Actual tool logic                                       | |
+|  |  - With retry mechanism                                    | |
+|  |  - Timeout handling                                        | |
+|  +-----------------------------------------------------------+ |
+|  |                                                               |
+|  v                                                               |
+|  +-----------------------------------------------------------+ |
+|  |  OUTPUT FORMATTER                                          | |
+|  |  - Standardize response                                    | |
+|  |  - Error wrapping                                          | |
+|  |  - Truncation if needed                                    | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Advanced Tool Framework
 
@@ -185,7 +185,7 @@ class Tool(Generic[T, R]):
                 time.sleep(2 ** attempt)  # Exponential backoff
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Input Validation
 
@@ -227,7 +227,7 @@ class SearchInput(BaseModel):
         return {k: v for k, v in v.items() if k in allowed_keys}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Layer
 
@@ -263,7 +263,7 @@ class SecurityLayer:
         return True
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Composite Tools
 
@@ -307,7 +307,7 @@ class CompositeTool:
         return resolved
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -318,7 +318,7 @@ class CompositeTool:
 | Rate limit | For manga requests | SecurityLayer med rate limit |
 | Injection | Osanerad input | sanitize_input() |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -349,7 +349,7 @@ NODE_10_ACTION_PATTERNS = {
 
 Designmonster for olika typer av agent-actions.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Action Patterns?
 
@@ -362,7 +362,7 @@ Action patterns ar beprövade designmonster for hur agenter ska utfora olika typ
 | Saga | Multi-step transactions |
 | Observer | Event-driven actions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -373,7 +373,7 @@ Action patterns ar beprövade designmonster for hur agenter ska utfora olika typ
 | Skalbarhet | Ratt pattern for ratt scenario |
 | Felhantering | Inbyggd recovery |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Pattern Selection
 
@@ -384,37 +384,37 @@ Action patterns ar beprövade designmonster for hur agenter ska utfora olika typ
 | Boka resa | Saga | Flyg + hotell + hyrbil |
 | Monitor | Observer | Logga alla events |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pattern Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   ACTION PATTERNS                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  FIRE-AND-FORGET           REQUEST-RESPONSE                     │
-│  ┌───────┐                 ┌───────┐                            │
-│  │ Agent │──────>          │ Agent │◄─────►                     │
-│  └───────┘      │          └───────┘       │                    │
-│           ┌─────v─────┐              ┌─────┴─────┐              │
-│           │  Service  │              │  Service  │              │
-│           └───────────┘              └───────────┘              │
-│                                                                  │
-│  SAGA                      OBSERVER                             │
-│  ┌───────┐                 ┌───────┐                            │
-│  │ Agent │──┬──┬──┐        │ Agent │                            │
-│  └───────┘  │  │  │        └───┬───┘                            │
-│        ┌────┘  │  └────┐       │                                │
-│        v       v       v       v                                │
-│     ┌────┐  ┌────┐  ┌────┐  ┌─────────┐                        │
-│     │ S1 │  │ S2 │  │ S3 │  │ Events  │                        │
-│     └────┘  └────┘  └────┘  └─────────┘                        │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   ACTION PATTERNS                                |
++-----------------------------------------------------------------+
+|                                                                  |
+|  FIRE-AND-FORGET           REQUEST-RESPONSE                     |
+|  +-------+                 +-------+                            |
+|  | Agent |------>          | Agent |◄-----►                     |
+|  +-------+      |          +-------+       |                    |
+|           +-----v-----+              +-----+-----+              |
+|           |  Service  |              |  Service  |              |
+|           +-----------+              +-----------+              |
+|                                                                  |
+|  SAGA                      OBSERVER                             |
+|  +-------+                 +-------+                            |
+|  | Agent |--+--+--+        | Agent |                            |
+|  +-------+  |  |  |        +---+---+                            |
+|        +----+  |  +----+       |                                |
+|        v       v       v       v                                |
+|     +----+  +----+  +----+  +---------+                        |
+|     | S1 |  | S2 |  | S3 |  | Events  |                        |
+|     +----+  +----+  +----+  +---------+                        |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Fire-and-Forget
 
@@ -453,7 +453,7 @@ slack_action = FireAndForgetAction(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Request-Response
 
@@ -494,7 +494,7 @@ weather_action = RequestResponseAction(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Saga Pattern
 
@@ -567,7 +567,7 @@ booking_saga = Saga([
 ])
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Observer Pattern
 
@@ -617,7 +617,7 @@ class LoggingObserver:
         print(f"[ERROR] {name}: {error}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Action Coordinator
 
@@ -658,7 +658,7 @@ class ActionCoordinator:
         return next((a for a in actions if a.name == name), None)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -669,7 +669,7 @@ class ActionCoordinator:
 | Miss events | Observer inte registrerad | Logga registreringar |
 | Deadlock | Cirkulara dependencies | Asynkron exekvering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

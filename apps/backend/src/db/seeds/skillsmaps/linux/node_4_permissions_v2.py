@@ -39,18 +39,18 @@ LINUX_NODE_4_PERMISSIONS_V2 = {
                         "title": "rwx för User/Group/Other",
                         "explanation": "r=4 (read), w=2 (write), x=1 (execute). Tre kategorier: owner (u), group (g), others (o). 755 = rwxr-xr-x.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ -rwxr-xr-x   1   user   group   file.sh     │
-│  │││││││││                                  │
-│  │││││││││                                  │
-│  │││└┴┴┴┴┴─── others: r-x (5)              │
-│  │││                                        │
-│  │└┴┴────── group: r-x (5)                 │
-│  │                                          │
-│  └───────── owner: rwx (7)                 │
-│                                             │
-│ Numeriskt: 755                              │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| -rwxr-xr-x   1   user   group   file.sh     |
+|  |||||||||                                  |
+|  |||||||||                                  |
+|  |||++++++--- others: r-x (5)              |
+|  |||                                        |
+|  |+++------ group: r-x (5)                 |
+|  |                                          |
+|  +--------- owner: rwx (7)                 |
+|                                             |
+| Numeriskt: 755                              |
++---------------------------------------------+""",
                         "pro_tip": "777 = alla kan allt. Använd ALDRIG på config-filer eller scripts.",
                         "common_mistake": "chmod 777 för att 'fixa' permission-problem. Det är en säkerhetsrisk."
                     },
@@ -58,17 +58,17 @@ LINUX_NODE_4_PERMISSIONS_V2 = {
                         "title": "Special Permissions",
                         "explanation": "SUID (4xxx) = kör som ägare. SGID (2xxx) = kör som grupp / inherit grupp. Sticky (1xxx) = endast ägare kan ta bort.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ SPECIAL PERMISSIONS                         │
-├─────────────────────────────────────────────┤
-│ SUID (4xxx) │ -rwsr-xr-x │ Kör som owner   │
-│ SGID (2xxx) │ -rwxr-sr-x │ Kör som group   │
-│ Sticky(1xxx)│ drwxrwxrwt │ Endast owner rm │
-├─────────────────────────────────────────────┤
-│ Exempel:                                    │
-│ /usr/bin/passwd = SUID (ändrar /etc/shadow)│
-│ /tmp           = Sticky (alla kan skapa)   │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| SPECIAL PERMISSIONS                         |
++---------------------------------------------+
+| SUID (4xxx) | -rwsr-xr-x | Kör som owner   |
+| SGID (2xxx) | -rwxr-sr-x | Kör som group   |
+| Sticky(1xxx)| drwxrwxrwt | Endast owner rm |
++---------------------------------------------+
+| Exempel:                                    |
+| /usr/bin/passwd = SUID (ändrar /etc/shadow)|
+| /tmp           = Sticky (alla kan skapa)   |
++---------------------------------------------+""",
                         "pro_tip": "SUID på user scripts är en säkerhetsrisk. Audit med: find / -perm -4000",
                         "common_mistake": "Att sätta SUID utan att förstå implikationerna."
                     }

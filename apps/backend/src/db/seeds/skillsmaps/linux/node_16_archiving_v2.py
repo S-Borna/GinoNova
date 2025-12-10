@@ -16,7 +16,7 @@ LINUX_NODE_16_ARCHIVING_V2 = {
             "type": "intro",
             "title": "Archiving & Compression",
             "content": {
-                "headline": "10GB loggfil → 500MB komprimerad",
+                "headline": "10GB loggfil -> 500MB komprimerad",
                 "hook": "Backups, deployments, logrotation - allt involverar arkiv. En 10GB loggfil blir 500MB komprimerad. Att kunna tar är obligatoriskt för varje sysadmin.",
                 "learning_objectives": [
                     "Skapa och extrahera tar-arkiv",
@@ -39,23 +39,23 @@ LINUX_NODE_16_ARCHIVING_V2 = {
                         "title": "tar - Tape Archive",
                         "explanation": "tar samlar filer till ETT arkiv. Kombineras med kompression: -z=gzip, -j=bzip2, -J=xz. Minns: -c=create, -x=extract, -v=verbose, -f=file.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ TAR KOMMANDON                                       │
-├─────────────────────────────────────────────────────┤
-│ SKAPA:                                              │
-│ tar -cvf archive.tar folder/      │ Bara arkiv     │
-│ tar -czvf archive.tar.gz folder/  │ Med gzip       │
-│ tar -cjvf archive.tar.bz2 folder/ │ Med bzip2      │
-│ tar -cJvf archive.tar.xz folder/  │ Med xz         │
-├─────────────────────────────────────────────────────┤
-│ EXTRAHERA:                                          │
-│ tar -xvf archive.tar              │ Extrahera      │
-│ tar -xzvf archive.tar.gz          │ Extrahera gzip │
-│ tar -xzvf archive.tar.gz -C /dest │ Till katalog   │
-├─────────────────────────────────────────────────────┤
-│ LISTA:                                              │
-│ tar -tvf archive.tar.gz           │ Visa innehåll  │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| TAR KOMMANDON                                       |
++-----------------------------------------------------+
+| SKAPA:                                              |
+| tar -cvf archive.tar folder/      | Bara arkiv     |
+| tar -czvf archive.tar.gz folder/  | Med gzip       |
+| tar -cjvf archive.tar.bz2 folder/ | Med bzip2      |
+| tar -cJvf archive.tar.xz folder/  | Med xz         |
++-----------------------------------------------------+
+| EXTRAHERA:                                          |
+| tar -xvf archive.tar              | Extrahera      |
+| tar -xzvf archive.tar.gz          | Extrahera gzip |
+| tar -xzvf archive.tar.gz -C /dest | Till katalog   |
++-----------------------------------------------------+
+| LISTA:                                              |
+| tar -tvf archive.tar.gz           | Visa innehåll  |
++-----------------------------------------------------+""",
                         "pro_tip": "Minns CVFZ: Create Verbose File Zip",
                         "common_mistake": "Glömma -f flaggan - tar vet inte var arkivet ska"
                     },
@@ -63,18 +63,18 @@ LINUX_NODE_16_ARCHIVING_V2 = {
                         "title": "Komprimeringsformat",
                         "explanation": "gzip=snabb/ok kompression, bzip2=bättre/långsammare, xz=bäst/långsammast. Välj efter behov!",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ KOMPRIMERING JÄMFÖRELSE                             │
-├─────────────────────────────────────────────────────┤
-│ Format   │ Ext      │ Kompression │ Hastighet      │
-│──────────│──────────│─────────────│────────────────│
-│ gzip     │ .gz      │ ★★★☆☆      │ ★★★★★ Snabb    │
-│ bzip2    │ .bz2     │ ★★★★☆      │ ★★★☆☆ Medium   │
-│ xz       │ .xz      │ ★★★★★      │ ★★☆☆☆ Långsam  │
-│ zip      │ .zip     │ ★★★☆☆      │ ★★★★☆ Windows  │
-├─────────────────────────────────────────────────────┤
-│ Tumregel: gzip för dagliga backups, xz för arkiv   │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| KOMPRIMERING JÄMFÖRELSE                             |
++-----------------------------------------------------+
+| Format   | Ext      | Kompression | Hastighet      |
+|----------|----------|-------------|----------------|
+| gzip     | .gz      | ★★★☆☆      | ★★★★★ Snabb    |
+| bzip2    | .bz2     | ★★★★☆      | ★★★☆☆ Medium   |
+| xz       | .xz      | ★★★★★      | ★★☆☆☆ Långsam  |
+| zip      | .zip     | ★★★☆☆      | ★★★★☆ Windows  |
++-----------------------------------------------------+
+| Tumregel: gzip för dagliga backups, xz för arkiv   |
++-----------------------------------------------------+""",
                         "pro_tip": "Använd gzip för snabba dagliga backups, xz för långtidsarkivering",
                         "common_mistake": "Att komprimera redan komprimerade filer (jpg, mp3) - ingen vinst!"
                     },
@@ -82,22 +82,22 @@ LINUX_NODE_16_ARCHIVING_V2 = {
                         "title": "Praktiska Backup-mönster",
                         "explanation": "Kombinera tar med datum, exclude-mönster och piping för effektiva backups.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ BACKUP PATTERNS                                     │
-├─────────────────────────────────────────────────────┤
-│ # Daglig backup med datum                           │
-│ tar -czvf backup_$(date +%Y%m%d).tar.gz /var/www/  │
-│                                                     │
-│ # Exkludera filer                                   │
-│ tar -czvf app.tar.gz \\                            │
-│     --exclude='*.log' \\                           │
-│     --exclude='node_modules' \\                    │
-│     --exclude='.git' \\                            │
-│     ./app/                                          │
-│                                                     │
-│ # Extrahera specifik fil                            │
-│ tar -xzvf backup.tar.gz path/to/file.txt           │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| BACKUP PATTERNS                                     |
++-----------------------------------------------------+
+| # Daglig backup med datum                           |
+| tar -czvf backup_$(date +%Y%m%d).tar.gz /var/www/  |
+|                                                     |
+| # Exkludera filer                                   |
+| tar -czvf app.tar.gz \\                            |
+|     --exclude='*.log' \\                           |
+|     --exclude='node_modules' \\                    |
+|     --exclude='.git' \\                            |
+|     ./app/                                          |
+|                                                     |
+| # Extrahera specifik fil                            |
+| tar -xzvf backup.tar.gz path/to/file.txt           |
++-----------------------------------------------------+""",
                         "pro_tip": "--exclude-from=file.txt låter dig lista excludes i en fil",
                         "common_mistake": "Att glömma trailing slash på source-katalog påverkar strukturen"
                     }

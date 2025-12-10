@@ -3,7 +3,7 @@ TypeScript SkillsMap — Type-Safe JavaScript for DevOps
 ======================================================
 
 20 nodes covering TypeScript from basics to advanced patterns.
-Akhilesh-style pedagogy: Hook → Concept → Code → Pro Tips → Hands-on
+Akhilesh-style pedagogy: Hook -> Concept -> Code -> Pro Tips -> Hands-on
 
 Block 1 (1-2): Introduction & Annotations
 Block 2 (3-4): Basic Types & Inference
@@ -2848,22 +2848,22 @@ import { ApiService } from "@services/api";
 
 ```bash
 src/
-├── index.ts              # Entry point
-├── types/
-│   ├── index.ts          # Barrel export
-│   ├── user.ts
-│   └── config.ts
-├── services/
-│   ├── index.ts
-│   ├── api.service.ts
-│   └── cache.service.ts
-├── utils/
-│   ├── index.ts
-│   ├── date.ts
-│   └── string.ts
-└── config/
-    ├── index.ts
-    └── database.ts
++-- index.ts              # Entry point
++-- types/
+|   +-- index.ts          # Barrel export
+|   +-- user.ts
+|   +-- config.ts
++-- services/
+|   +-- index.ts
+|   +-- api.service.ts
+|   +-- cache.service.ts
++-- utils/
+|   +-- index.ts
+|   +-- date.ts
+|   +-- string.ts
++-- config/
+    +-- index.ts
+    +-- database.ts
 ```
 
 ```typescript

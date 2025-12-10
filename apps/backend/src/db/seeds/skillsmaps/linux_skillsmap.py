@@ -3,7 +3,7 @@ Linux SkillsMap - 20 Consolidated Nodes
 Version: 1.0
 Date: 2025-12-01
 
-Pedagogical Style: Akhilesh (Intro → Concept → Commands → Pro Tips → Task)
+Pedagogical Style: Akhilesh (Intro -> Concept -> Commands -> Pro Tips -> Task)
 Each node covers 5-10 related topics in depth.
 
 Structure:
@@ -293,10 +293,10 @@ När du kopplar in en disk i Linux dyker den upp som en fil i `/dev` - men du ka
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 # sda      8:0    0   100G  0 disk
-# ├─sda1   8:1    0    99G  0 part /
-# └─sda2   8:2    0     1G  0 part [SWAP]
+# +-sda1   8:1    0    99G  0 part /
+# +-sda2   8:2    0     1G  0 part [SWAP]
 # sdb      8:16   0   500G  0 disk
-# └─sdb1   8:17   0   500G  0 part
+# +-sdb1   8:17   0   500G  0 part
 #
 # lsblk listar alla blockenheter (diskar)
 # sda är första disken, sdb är andra
@@ -1049,8 +1049,8 @@ find /var/log -name "*.log.*.gz" -mtime +30 -delete
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 # sda      8:0    0   100G  0 disk
-# ├─sda1   8:1    0    99G  0 part /
-# └─sda2   8:2    0     1G  0 part [SWAP]
+# +-sda1   8:1    0    99G  0 part /
+# +-sda2   8:2    0     1G  0 part [SWAP]
 # sdb      8:16   0   500G  0 disk
 #
 # Visar alla diskar och partitioner
@@ -1242,17 +1242,17 @@ kill 1234
 
 ```bash
 pstree
-# systemd─┬─sshd───sshd───bash───pstree
-#         ├─nginx─┬─nginx
-#         │       └─nginx
-#         └─mysqld
+# systemd-+-sshd---sshd---bash---pstree
+#         +-nginx-+-nginx
+#         |       +-nginx
+#         +-mysqld
 #
 # Visar hur processer hänger ihop
 # systemd (PID 1) är föräldern till allt
 # sshd startade en bash som kör pstree
 
 pstree -p
-# systemd(1)─┬─sshd(1234)───sshd(5678)───bash(5680)───pstree(5690)
+# systemd(1)-+-sshd(1234)---sshd(5678)---bash(5680)---pstree(5690)
 #
 # -p visar PID för varje process
 # Användbart för att hitta vilken process som startade vad
@@ -2191,11 +2191,11 @@ ps -p 1
 # Alla andra processer är barn eller barnbarn till denna
 
 pstree -p 1 | head -20
-# systemd(1)─┬─agetty(456)
-#            ├─cron(789)
-#            ├─nginx(1234)─┬─nginx(1235)
-#            │             └─nginx(1236)
-#            └─sshd(2345)───sshd(3456)───bash(3457)
+# systemd(1)-+-agetty(456)
+#            +-cron(789)
+#            +-nginx(1234)-+-nginx(1235)
+#            |             +-nginx(1236)
+#            +-sshd(2345)---sshd(3456)---bash(3457)
 #
 # Visar hur alla processer härstammar från systemd
 # Om en tjänst kraschar kan systemd starta om den
@@ -2265,10 +2265,10 @@ systemctl show nginx.service --property=FragmentPath
 # Vad beror nginx på?
 systemctl list-dependencies nginx.service
 # nginx.service
-# ├─system.slice
-# └─sysinit.target
-#   ├─dev-hugepages.mount
-#   └─...
+# +-system.slice
+# +-sysinit.target
+#   +-dev-hugepages.mount
+#   +-...
 #
 # nginx beror på att sysinit.target är klar
 # systemd startar dependencies först
@@ -2321,16 +2321,16 @@ Systemd använder Linux cgroups för att isolera och begränsa resurser:
 ```bash
 systemd-cgls
 # Control group /:
-# ├─1 /sbin/init
-# ├─user.slice
-# │ └─user-1000.slice
-# │   └─session-1.scope
-# │     ├─3456 sshd: user@pts/0
-# │     └─3457 -bash
-# └─system.slice
-#   ├─nginx.service
-#   │ ├─1234 nginx: master process
-#   │ └─1235 nginx: worker process
+# +-1 /sbin/init
+# +-user.slice
+# | +-user-1000.slice
+# |   +-session-1.scope
+# |     +-3456 sshd: user@pts/0
+# |     +-3457 -bash
+# +-system.slice
+#   +-nginx.service
+#   | +-1234 nginx: master process
+#   | +-1235 nginx: worker process
 #
 # Visar process-hierarkin organiserad i cgroups
 # Varje tjänst kör i sin egen grupp
@@ -2695,9 +2695,9 @@ systemctl status nginx
 #     Tasks: 3 (limit: 4915)
 #    Memory: 12.5M
 #    CGroup: /system.slice/nginx.service
-#            ├─1234 nginx: master process /usr/sbin/nginx
-#            ├─1235 nginx: worker process
-#            └─1236 nginx: worker process
+#            +-1234 nginx: master process /usr/sbin/nginx
+#            +-1235 nginx: worker process
+#            +-1236 nginx: worker process
 #
 # Visar:
 # - Om tjänsten körs (active/running)
@@ -2729,7 +2729,7 @@ systemctl show nginx --property=MainPID
 ```bash
 sudo systemctl enable nginx
 # Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service
-# → /lib/systemd/system/nginx.service
+# -> /lib/systemd/system/nginx.service
 #
 # Tjänsten startar nu automatiskt vid boot
 # Skapar en symlink i target-katalogen
@@ -2789,7 +2789,7 @@ systemctl list-unit-files --type=service
 
 ```bash
 sudo systemctl mask apache2
-# Created symlink /etc/systemd/system/apache2.service → /dev/null
+# Created symlink /etc/systemd/system/apache2.service -> /dev/null
 #
 # Tjänsten kan INTE startas alls
 # Inte ens manuellt
@@ -3079,7 +3079,7 @@ reboot
 
 ## Key Takeaways
 
-1. **Boot-sekvens**: BIOS → GRUB → Kernel → initramfs → systemd
+1. **Boot-sekvens**: BIOS -> GRUB -> Kernel -> initramfs -> systemd
 2. **Targets** = systemtillstånd (multi-user = server-standard)
 3. **set-default** = ändra boot-target
 4. **rescue.target** = felsökning med minimal system

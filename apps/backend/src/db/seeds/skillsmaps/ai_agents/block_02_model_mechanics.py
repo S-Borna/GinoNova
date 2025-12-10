@@ -14,7 +14,7 @@ NODE_03_GENERATION_CONTROLS = {
 
 Kontrollera hur LLMs genererar text med temperature, top-p och andra parametrar.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Generation Controls?
 
@@ -27,7 +27,7 @@ Generation controls ar parametrar som paverkar hur LLM valjer nasta token. De be
 | Frequency penalty | Straffar upprepade tokens |
 | Presence penalty | Uppmanar nya amnen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ Generation controls ar parametrar som paverkar hur LLM valjer nasta token. De be
 | Debugging | Inkonsistenta svar ar svara att fixa |
 | Kvalitet | Ratt settings = batter output |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -49,39 +49,39 @@ Generation controls ar parametrar som paverkar hur LLM valjer nasta token. De be
 | frequency_penalty | -2.0-2.0 | 0.0 | Straffa upprepade tokens |
 | presence_penalty | -2.0-2.0 | 0.0 | Uppmana nya amnen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hur Temperature Fungerar
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   TEMPERATURE EFFECT                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  INPUT: "The capital of France is"                              │
-│                                                                  │
-│  Model outputs LOGITS (raw scores):                             │
-│  "Paris": 8.5 │ "Lyon": 3.2 │ "Berlin": 1.1 │ "London": 0.8    │
-│                                                                  │
-│  After TEMPERATURE division:                                     │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  Temp = 0.5 (mer fokuserat):                              │ │
-│  │    "Paris" 99.9% │ "Lyon" 0.1% │ others ~0%               │ │
-│  │                                                            │ │
-│  │  Temp = 1.0 (default):                                    │ │
-│  │    "Paris" 95% │ "Lyon" 4% │ others ~1%                   │ │
-│  │                                                            │ │
-│  │  Temp = 2.0 (mer random):                                 │ │
-│  │    "Paris" 70% │ "Lyon" 15% │ others ~15%                 │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  temp=0 -> Alltid hogsta sannolikhet (deterministisk)           │
-│  temp=2 -> Mer uniform, allt kan handa                          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   TEMPERATURE EFFECT                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|  INPUT: "The capital of France is"                              |
+|                                                                  |
+|  Model outputs LOGITS (raw scores):                             |
+|  "Paris": 8.5 | "Lyon": 3.2 | "Berlin": 1.1 | "London": 0.8    |
+|                                                                  |
+|  After TEMPERATURE division:                                     |
+|  +-----------------------------------------------------------+ |
+|  |  Temp = 0.5 (mer fokuserat):                              | |
+|  |    "Paris" 99.9% | "Lyon" 0.1% | others ~0%               | |
+|  |                                                            | |
+|  |  Temp = 1.0 (default):                                    | |
+|  |    "Paris" 95% | "Lyon" 4% | others ~1%                   | |
+|  |                                                            | |
+|  |  Temp = 2.0 (mer random):                                 | |
+|  |    "Paris" 70% | "Lyon" 15% | others ~15%                 | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
+|  temp=0 -> Alltid hogsta sannolikhet (deterministisk)           |
+|  temp=2 -> Mer uniform, allt kan handa                          |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rekommenderade Installningar
 
@@ -94,7 +94,7 @@ Generation controls ar parametrar som paverkar hur LLM valjer nasta token. De be
 | Kreativ skrivning | 0.8-1.0 | 0.95 | 0.5 |
 | Brainstorming | 1.0-1.2 | 1.0 | 0.7 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Experimentera med Temperature
 
@@ -132,7 +132,7 @@ for temp in [0.0, 0.5, 1.0, 1.5]:
     print(f"Temp {temp}: {unique}/3 unika svar")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Deterministiska Svar
 
@@ -154,7 +154,7 @@ DETERMINISTIC_CONFIG = {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Anti-Repetition
 
@@ -175,7 +175,7 @@ DIVERSITY_CONFIG = {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Stop Sequences
 
@@ -196,7 +196,7 @@ print(f"Svar: '{response.choices[0].message.content}'")
 print(f"Stop reason: {response.choices[0].finish_reason}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -207,7 +207,7 @@ print(f"Stop reason: {response.choices[0].finish_reason}")
 | For random/nonsens | For hog temp | Sank temperature och top_p |
 | Inkonsistent JSON | Temperature > 0 | Anvand temperature=0 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -238,7 +238,7 @@ NODE_04_OPEN_VS_CLOSED = {
 
 Valj mellan proprietara och open-source modeller for dina AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Open vs Closed Models?
 
@@ -250,7 +250,7 @@ Open-weight modeller har vikter som kan laddas ner, medan closed modeller endast
 | Open-weight | Nedladdningsbara | Delvis | Llama, Mistral |
 | Open-source | Nedladdningsbara | Full | OLMo, BLOOM |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -261,7 +261,7 @@ Open-weight modeller har vikter som kan laddas ner, medan closed modeller endast
 | Latens | Lokalt = 50ms vs API = 500ms |
 | Vendor lock-in | Undvik beroende av en leverantor |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Modeller 2024
 
@@ -273,33 +273,33 @@ Open-weight modeller har vikter som kan laddas ner, medan closed modeller endast
 | Llama 3.1 70B | Open-weight | 70B | 128K | Llama License |
 | Mixtral 8x22B | Open-weight | 141B | 64K | Apache 2.0 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kostnadsjamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              KOSTNAD FOR 1M TOKENS/DAG                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  OPTION 1: Closed API (GPT-4o)                                  │
-│  ├─ Input:  500K x $5/1M = $2.50/dag                           │
-│  ├─ Output: 500K x $15/1M = $7.50/dag                          │
-│  └─ Total: ~$300/manad                                          │
-│                                                                  │
-│  OPTION 2: Managed Open API (Together.ai)                       │
-│  ├─ Llama 3.1 70B: ~$0.90/1M                                   │
-│  └─ Total: ~$27/manad (10x billigare)                          │
-│                                                                  │
-│  OPTION 3: Self-hosted (Llama 3.1 70B)                         │
-│  ├─ GPU: 2x A100 80GB = ~$2,880/manad                          │
-│  ├─ Ops overhead: ~$500/manad                                   │
-│  └─ Total: ~$3,000/manad (lonar sig vid > 100M tokens/dag)     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              KOSTNAD FOR 1M TOKENS/DAG                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  OPTION 1: Closed API (GPT-4o)                                  |
+|  +- Input:  500K x $5/1M = $2.50/dag                           |
+|  +- Output: 500K x $15/1M = $7.50/dag                          |
+|  +- Total: ~$300/manad                                          |
+|                                                                  |
+|  OPTION 2: Managed Open API (Together.ai)                       |
+|  +- Llama 3.1 70B: ~$0.90/1M                                   |
+|  +- Total: ~$27/manad (10x billigare)                          |
+|                                                                  |
+|  OPTION 3: Self-hosted (Llama 3.1 70B)                         |
+|  +- GPU: 2x A100 80GB = ~$2,880/manad                          |
+|  +- Ops overhead: ~$500/manad                                   |
+|  +- Total: ~$3,000/manad (lonar sig vid > 100M tokens/dag)     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Licensjamforelse
 
@@ -309,7 +309,7 @@ Open-weight modeller har vikter som kan laddas ner, medan closed modeller endast
 | Llama 3.1 | Ja (MAU < 700M) | Ja | Llama 3.x |
 | Proprietary | Via API | Nej | GPT-4, Claude |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Anvand Managed API (Together.ai)
 
@@ -329,7 +329,7 @@ response = together_client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lokal Inference med Ollama
 
@@ -356,7 +356,7 @@ response = ollama.chat(
 print(response['message']['content'])
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## OpenAI-kompatibel Server med vLLM
 
@@ -384,7 +384,7 @@ response = local_client.chat.completions.create(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Batter Prompts for Open Models
 
@@ -410,7 +410,7 @@ response = client.chat.completions.create(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -421,7 +421,7 @@ response = client.chat.completions.create(
 | Licensproblem | Fel licens for use case | Kontrollera licens innan deployment |
 | GPU out of memory | For stor modell | Kvantisera eller mindre modell |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

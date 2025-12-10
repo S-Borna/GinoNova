@@ -17,36 +17,36 @@ NODE_13 = {
 ## CI/CD Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM CI/CD PIPELINE                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌─────────┐    ┌─────────────────────────────────────────────────┐    │
-│  │ Develop │───▶│              PULL REQUEST                       │    │
-│  │  Code   │    │  ┌────────┐  ┌────────┐  ┌────────┐  ┌───────┐ │    │
-│  └─────────┘    │  │  Lint  │─▶│Validate│─▶│  Plan  │─▶│Comment│ │    │
-│                 │  └────────┘  └────────┘  └────────┘  └───────┘ │    │
-│                 └─────────────────────────────────────────────────┘    │
-│                                    │                                    │
-│                                    │ Approved & Merged                  │
-│                                    ▼                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                         MAIN BRANCH                              │   │
-│  │  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  ┌───────────┐ │   │
-│  │  │  Init  │─▶│  Plan  │─▶│ Approve│─▶│ Apply  │─▶│ Notify    │ │   │
-│  │  └────────┘  └────────┘  └────────┘  └────────┘  └───────────┘ │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│  STAGES:                                                               │
-│  1. Lint & Format - terraform fmt, tflint                             │
-│  2. Validate - terraform validate                                     │
-│  3. Security - tfsec, checkov                                         │
-│  4. Plan - terraform plan                                             │
-│  5. Manual Approval (prod)                                            │
-│  6. Apply - terraform apply                                           │
-│  7. Tests - Integration tests                                         │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM CI/CD PIPELINE                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  +---------+    +-------------------------------------------------+    |
+|  | Develop |---▶|              PULL REQUEST                       |    |
+|  |  Code   |    |  +--------+  +--------+  +--------+  +-------+ |    |
+|  +---------+    |  |  Lint  |-▶|Validate|-▶|  Plan  |-▶|Comment| |    |
+|                 |  +--------+  +--------+  +--------+  +-------+ |    |
+|                 +-------------------------------------------------+    |
+|                                    |                                    |
+|                                    | Approved & Merged                  |
+|                                    ▼                                    |
+|  +-----------------------------------------------------------------+   |
+|  |                         MAIN BRANCH                              |   |
+|  |  +--------+  +--------+  +--------+  +--------+  +-----------+ |   |
+|  |  |  Init  |-▶|  Plan  |-▶| Approve|-▶| Apply  |-▶| Notify    | |   |
+|  |  +--------+  +--------+  +--------+  +--------+  +-----------+ |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
+|  STAGES:                                                               |
+|  1. Lint & Format - terraform fmt, tflint                             |
+|  2. Validate - terraform validate                                     |
+|  3. Security - tfsec, checkov                                         |
+|  4. Plan - terraform plan                                             |
+|  5. Manual Approval (prod)                                            |
+|  6. Apply - terraform apply                                           |
+|  7. Tests - Integration tests                                         |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -490,36 +490,36 @@ jobs:
 ## Security Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    CI/CD SECURITY BEST PRACTICES                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. USE OIDC FOR CLOUD AUTH                                            │
-│     • No long-lived credentials                                        │
-│     • AWS: role-to-assume                                              │
-│     • GCP: workload_identity_provider                                  │
-│                                                                         │
-│  2. SEPARATE ROLES PER ENVIRONMENT                                     │
-│     • dev: Limited permissions                                         │
-│     • prod: Stricter controls                                          │
-│                                                                         │
-│  3. REQUIRE APPROVAL FOR PRODUCTION                                    │
-│     • GitHub Environments                                              │
-│     • Manual gates                                                     │
-│                                                                         │
-│  4. SCAN FOR SECRETS                                                   │
-│     • gitleaks, truffleHog                                            │
-│     • Block commits with secrets                                       │
-│                                                                         │
-│  5. SECURITY SCANNING                                                  │
-│     • tfsec for Terraform                                              │
-│     • Checkov for compliance                                           │
-│                                                                         │
-│  6. LEAST PRIVILEGE                                                    │
-│     • Minimal IAM permissions                                          │
-│     • Time-limited credentials                                         │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    CI/CD SECURITY BEST PRACTICES                        |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. USE OIDC FOR CLOUD AUTH                                            |
+|     • No long-lived credentials                                        |
+|     • AWS: role-to-assume                                              |
+|     • GCP: workload_identity_provider                                  |
+|                                                                         |
+|  2. SEPARATE ROLES PER ENVIRONMENT                                     |
+|     • dev: Limited permissions                                         |
+|     • prod: Stricter controls                                          |
+|                                                                         |
+|  3. REQUIRE APPROVAL FOR PRODUCTION                                    |
+|     • GitHub Environments                                              |
+|     • Manual gates                                                     |
+|                                                                         |
+|  4. SCAN FOR SECRETS                                                   |
+|     • gitleaks, truffleHog                                            |
+|     • Block commits with secrets                                       |
+|                                                                         |
+|  5. SECURITY SCANNING                                                  |
+|     • tfsec for Terraform                                              |
+|     • Checkov for compliance                                           |
+|                                                                         |
+|  6. LEAST PRIVILEGE                                                    |
+|     • Minimal IAM permissions                                          |
+|     • Time-limited credentials                                         |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -545,7 +545,7 @@ jobs:
 
 ---
 
-**Nästa Node:** Terraform Testing →
+**Nästa Node:** Terraform Testing ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 70,
@@ -571,37 +571,37 @@ NODE_14 = {
 ## Testing Pyramid for IaC
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    IAC TESTING PYRAMID                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│                          ┌──────────────┐                              │
-│                         /│  End-to-End  │\                             │
-│                        / │    Tests     │ \                            │
-│                       /  │  (Terratest) │  \                           │
-│                      /   └──────────────┘   \                          │
-│                     /                        \                          │
-│                    /  ┌────────────────────┐  \                        │
-│                   /   │  Integration Tests │   \                       │
-│                  /    │ (terraform test)   │    \                      │
-│                 /     └────────────────────┘     \                     │
-│                /                                  \                     │
-│               /    ┌──────────────────────────┐    \                   │
-│              /     │      Unit Tests          │     \                  │
-│             /      │  (validate, tflint)      │      \                 │
-│            /       └──────────────────────────┘       \                │
-│           /                                            \               │
-│          /   ┌────────────────────────────────────────┐ \              │
-│         /    │           Static Analysis              │  \             │
-│        /     │    (fmt, tfsec, checkov, sentinel)     │   \            │
-│       /      └────────────────────────────────────────┘    \           │
-│      └──────────────────────────────────────────────────────┘          │
-│                                                                         │
-│  SPEED  ◀───────────────────────────────────────────────▶  CONFIDENCE │
-│  FAST                                                        SLOW     │
-│  CHEAP                                                       EXPENSIVE│
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    IAC TESTING PYRAMID                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|                          +--------------+                              |
+|                         /|  End-to-End  |\                             |
+|                        / |    Tests     | \                            |
+|                       /  |  (Terratest) |  \                           |
+|                      /   +--------------+   \                          |
+|                     /                        \                          |
+|                    /  +--------------------+  \                        |
+|                   /   |  Integration Tests |   \                       |
+|                  /    | (terraform test)   |    \                      |
+|                 /     +--------------------+     \                     |
+|                /                                  \                     |
+|               /    +--------------------------+    \                   |
+|              /     |      Unit Tests          |     \                  |
+|             /      |  (validate, tflint)      |      \                 |
+|            /       +--------------------------+       \                |
+|           /                                            \               |
+|          /   +----------------------------------------+ \              |
+|         /    |           Static Analysis              |  \             |
+|        /     |    (fmt, tfsec, checkov, sentinel)     |   \            |
+|       /      +----------------------------------------+    \           |
+|      +------------------------------------------------------+          |
+|                                                                         |
+|  SPEED  ◀-----------------------------------------------▶  CONFIDENCE |
+|  FAST                                                        SLOW     |
+|  CHEAP                                                       EXPENSIVE|
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -704,16 +704,16 @@ checkov -d . --skip-check CKV_AWS_18,CKV_AWS_21
 
 ```
 project/
-├── main.tf
-├── variables.tf
-├── outputs.tf
-└── tests/
-    ├── setup/
-    │   └── main.tf        # Shared test fixtures
-    ├── unit/
-    │   └── variables.tftest.hcl
-    └── integration/
-        └── vpc.tftest.hcl
++-- main.tf
++-- variables.tf
++-- outputs.tf
++-- tests/
+    +-- setup/
+    |   +-- main.tf        # Shared test fixtures
+    +-- unit/
+    |   +-- variables.tftest.hcl
+    +-- integration/
+        +-- vpc.tftest.hcl
 ```
 
 ### Basic Test
@@ -1109,7 +1109,7 @@ mkdir -p tests/{unit,integration}
 
 ---
 
-**Nästa Node:** Terraform Security →
+**Nästa Node:** Terraform Security ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 70,

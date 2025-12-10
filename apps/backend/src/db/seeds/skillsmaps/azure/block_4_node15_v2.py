@@ -39,15 +39,15 @@ AZURE_NODE_15_BICEP_V2 = {
                         "title": "ARM vs Bicep",
                         "explanation": "ARM är JSON-baserat (verbose), Bicep är DSL som kompileras till ARM. Bicep har enklare syntax, typsäkerhet och IntelliSense.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ ARM Template (JSON)  │ Bicep (.bicep)       │
-├─────────────────────────────────────────────┤
-│ Verbose, 100+ lines  │ Koncis, 30 lines     │
-│ Svårt att läsa       │ Lätt att läsa        │
-│ Ingen IntelliSense   │ Full IntelliSense    │
-│ Ingen moduler        │ Moduler för reuse    │
-└─────────────────────────────────────────────┘
-Bicep kompileras → ARM JSON → Azure deployment""",
++---------------------------------------------+
+| ARM Template (JSON)  | Bicep (.bicep)       |
++---------------------------------------------+
+| Verbose, 100+ lines  | Koncis, 30 lines     |
+| Svårt att läsa       | Lätt att läsa        |
+| Ingen IntelliSense   | Full IntelliSense    |
+| Ingen moduler        | Moduler för reuse    |
++---------------------------------------------+
+Bicep kompileras -> ARM JSON -> Azure deployment""",
                         "pro_tip": "Använd ALLTID Bicep för nya projekt - ARM är legacy.",
                         "common_mistake": "Att skriva ARM JSON manuellt - Bicep är mycket enklare."
                     },
@@ -55,17 +55,17 @@ Bicep kompileras → ARM JSON → Azure deployment""",
                         "title": "Bicep Modules",
                         "explanation": "Moduler bryter upp templates i återanvändbara komponenter. En modul = en .bicep fil som kan anropas från main.bicep.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ main.bicep                                  │
-│ ├── modules/storage.bicep                   │
-│ ├── modules/network.bicep                   │
-│ └── modules/webapp.bicep                    │
-├─────────────────────────────────────────────┤
-│ module storage 'modules/storage.bicep' = {  │
-│   name: 'storage-deploy'                    │
-│   params: { ... }                           │
-│ }                                           │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| main.bicep                                  |
+| +-- modules/storage.bicep                   |
+| +-- modules/network.bicep                   |
+| +-- modules/webapp.bicep                    |
++---------------------------------------------+
+| module storage 'modules/storage.bicep' = {  |
+|   name: 'storage-deploy'                    |
+|   params: { ... }                           |
+| }                                           |
++---------------------------------------------+""",
                         "pro_tip": "Skapa ett library av modules för vanliga patterns.",
                         "common_mistake": "Att inte använda outputs från modules - de kopplar ihop resurser."
                     }

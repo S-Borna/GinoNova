@@ -35,41 +35,41 @@ Roles transformerar Ansible från "scripts som kör tasks" till "infrastructure 
 ## Role Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          ROLE STRUCTURE                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  roles/                                                                 │
-│  └── nginx/                        ← Role name                          │
-│      │                                                                  │
-│      ├── defaults/                 ← Default variables (LOWEST prio)    │
-│      │   └── main.yml                                                   │
-│      │                                                                  │
-│      ├── vars/                     ← Role variables (HIGH prio)         │
-│      │   └── main.yml                                                   │
-│      │                                                                  │
-│      ├── tasks/                    ← Main logic                         │
-│      │   ├── main.yml              ← Entry point                        │
-│      │   ├── install.yml                                                │
-│      │   ├── configure.yml                                              │
-│      │   └── service.yml                                                │
-│      │                                                                  │
-│      ├── handlers/                 ← Event handlers                     │
-│      │   └── main.yml                                                   │
-│      │                                                                  │
-│      ├── templates/                ← Jinja2 templates                   │
-│      │   ├── nginx.conf.j2                                              │
-│      │   └── vhost.conf.j2                                              │
-│      │                                                                  │
-│      ├── files/                    ← Static files                       │
-│      │   └── ssl/                                                       │
-│      │                                                                  │
-│      ├── meta/                     ← Dependencies & metadata            │
-│      │   └── main.yml                                                   │
-│      │                                                                  │
-│      └── README.md                 ← Documentation                      │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                          ROLE STRUCTURE                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  roles/                                                                 |
+|  +-- nginx/                        <- Role name                          |
+|      |                                                                  |
+|      +-- defaults/                 <- Default variables (LOWEST prio)    |
+|      |   +-- main.yml                                                   |
+|      |                                                                  |
+|      +-- vars/                     <- Role variables (HIGH prio)         |
+|      |   +-- main.yml                                                   |
+|      |                                                                  |
+|      +-- tasks/                    <- Main logic                         |
+|      |   +-- main.yml              <- Entry point                        |
+|      |   +-- install.yml                                                |
+|      |   +-- configure.yml                                              |
+|      |   +-- service.yml                                                |
+|      |                                                                  |
+|      +-- handlers/                 <- Event handlers                     |
+|      |   +-- main.yml                                                   |
+|      |                                                                  |
+|      +-- templates/                <- Jinja2 templates                   |
+|      |   +-- nginx.conf.j2                                              |
+|      |   +-- vhost.conf.j2                                              |
+|      |                                                                  |
+|      +-- files/                    <- Static files                       |
+|      |   +-- ssl/                                                       |
+|      |                                                                  |
+|      +-- meta/                     <- Dependencies & metadata            |
+|      |   +-- main.yml                                                   |
+|      |                                                                  |
+|      +-- README.md                 <- Documentation                      |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Directory Purpose
@@ -96,22 +96,22 @@ ansible-galaxy init roles/nginx
 
 # Output
 roles/nginx/
-├── README.md
-├── defaults/
-│   └── main.yml
-├── files/
-├── handlers/
-│   └── main.yml
-├── meta/
-│   └── main.yml
-├── tasks/
-│   └── main.yml
-├── templates/
-├── tests/
-│   ├── inventory
-│   └── test.yml
-└── vars/
-    └── main.yml
++-- README.md
++-- defaults/
+|   +-- main.yml
++-- files/
++-- handlers/
+|   +-- main.yml
++-- meta/
+|   +-- main.yml
++-- tasks/
+|   +-- main.yml
++-- templates/
++-- tests/
+|   +-- inventory
+|   +-- test.yml
++-- vars/
+    +-- main.yml
 ```
 
 ### Manual Creation
@@ -539,20 +539,20 @@ Templates tar EN fil och genererar hundratals anpassade versioner.
 ## Jinja2 Syntax
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        JINJA2 BASICS                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  {{ variable }}              Output variable value                      │
-│  {% statement %}             Logic (if, for, etc)                       │
-│  {# comment #}               Comments (not in output)                   │
-│                                                                         │
-│  {{ name }}                  → "web01"                                  │
-│  {{ port | default(80) }}    → 80 (if port undefined)                  │
-│  {% if ssl %}...{% endif %}  → Conditional content                      │
-│  {% for x in list %}...{% endfor %}  → Loop                            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        JINJA2 BASICS                                    |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  {{ variable }}              Output variable value                      |
+|  {% statement %}             Logic (if, for, etc)                       |
+|  {# comment #}               Comments (not in output)                   |
+|                                                                         |
+|  {{ name }}                  -> "web01"                                  |
+|  {{ port | default(80) }}    -> 80 (if port undefined)                  |
+|  {% if ssl %}...{% endif %}  -> Conditional content                      |
+|  {% for x in list %}...{% endfor %}  -> Loop                            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -684,11 +684,11 @@ ADMIN_USERS = {{ users | join(',') }}
 {% endfor %}
 
 # Loop variables:
-# loop.index      → 1-indexed (1, 2, 3...)
-# loop.index0     → 0-indexed (0, 1, 2...)
-# loop.first      → True for first iteration
-# loop.last       → True for last iteration
-# loop.length     → Total items
+# loop.index      -> 1-indexed (1, 2, 3...)
+# loop.index0     -> 0-indexed (0, 1, 2...)
+# loop.first      -> True for first iteration
+# loop.last       -> True for last iteration
+# loop.length     -> Total items
 ```
 
 ### Loop with Dictionaries
@@ -730,48 +730,48 @@ upstream backend {
 ### String Filters
 
 ```jinja2
-{{ name | upper }}           → "MYAPP"
-{{ name | lower }}           → "myapp"
-{{ name | capitalize }}      → "Myapp"
-{{ name | title }}           → "My App"
-{{ text | trim }}            → Remove whitespace
-{{ name | replace('_', '-') }} → "my-app"
+{{ name | upper }}           -> "MYAPP"
+{{ name | lower }}           -> "myapp"
+{{ name | capitalize }}      -> "Myapp"
+{{ name | title }}           -> "My App"
+{{ text | trim }}            -> Remove whitespace
+{{ name | replace('_', '-') }} -> "my-app"
 {{ name | regex_replace('^web', 'srv') }}
 ```
 
 ### List Filters
 
 ```jinja2
-{{ packages | join(', ') }}           → "nginx, curl, vim"
-{{ packages | first }}                → "nginx"
-{{ packages | last }}                 → "vim"
-{{ packages | length }}               → 3
-{{ packages | sort }}                 → Sorted list
-{{ packages | unique }}               → Remove duplicates
-{{ packages | reverse | list }}       → Reversed
-{{ numbers | max }}                   → Maximum value
-{{ numbers | min }}                   → Minimum value
-{{ numbers | sum }}                   → Total
+{{ packages | join(', ') }}           -> "nginx, curl, vim"
+{{ packages | first }}                -> "nginx"
+{{ packages | last }}                 -> "vim"
+{{ packages | length }}               -> 3
+{{ packages | sort }}                 -> Sorted list
+{{ packages | unique }}               -> Remove duplicates
+{{ packages | reverse | list }}       -> Reversed
+{{ numbers | max }}                   -> Maximum value
+{{ numbers | min }}                   -> Minimum value
+{{ numbers | sum }}                   -> Total
 ```
 
 ### Type Conversion
 
 ```jinja2
-{{ "true" | bool }}                   → true
-{{ "42" | int }}                      → 42
-{{ 3.14 | string }}                   → "3.14"
-{{ {'a': 1} | to_json }}              → '{"a": 1}'
-{{ data | to_yaml }}                  → YAML format
-{{ data | to_nice_json(indent=2) }}   → Pretty JSON
+{{ "true" | bool }}                   -> true
+{{ "42" | int }}                      -> 42
+{{ 3.14 | string }}                   -> "3.14"
+{{ {'a': 1} | to_json }}              -> '{"a": 1}'
+{{ data | to_yaml }}                  -> YAML format
+{{ data | to_nice_json(indent=2) }}   -> Pretty JSON
 ```
 
 ### Path Filters
 
 ```jinja2
-{{ "/etc/nginx/nginx.conf" | basename }}    → "nginx.conf"
-{{ "/etc/nginx/nginx.conf" | dirname }}     → "/etc/nginx"
-{{ "config" | path_join("nginx.conf") }}    → "config/nginx.conf"
-{{ path | expanduser }}                     → Expand ~
+{{ "/etc/nginx/nginx.conf" | basename }}    -> "nginx.conf"
+{{ "/etc/nginx/nginx.conf" | dirname }}     -> "/etc/nginx"
+{{ "config" | path_join("nginx.conf") }}    -> "config/nginx.conf"
+{{ path | expanduser }}                     -> Expand ~
 ```
 
 ### Security Filters
@@ -792,8 +792,8 @@ decoded: {{ encoded_data | b64decode }}
 
 ```jinja2
 # IP address manipulation
-{{ '192.168.1.0/24' | ipaddr('network') }}    → "192.168.1.0"
-{{ '192.168.1.0/24' | ipaddr('netmask') }}    → "255.255.255.0"
+{{ '192.168.1.0/24' | ipaddr('network') }}    -> "192.168.1.0"
+{{ '192.168.1.0/24' | ipaddr('netmask') }}    -> "255.255.255.0"
 {{ ansible_all_ipv4_addresses | ipaddr('192.168.0.0/16') }}
 
 # Regex
@@ -1025,28 +1025,28 @@ NODE_11_ANSIBLE_GALAXY = {
 ## Galaxy Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         GALAXY ECOSYSTEM                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ROLES (Legacy)                    COLLECTIONS (Modern)                 │
-│  ─────────────                     ──────────────────                   │
-│  Single-purpose                    Multi-purpose                        │
-│  Namespace.rolename                Namespace.collection                 │
-│  galaxy.ansible.com                galaxy.ansible.com                   │
-│                                                                         │
-│  Example:                          Example:                             │
-│  geerlingguy.docker                community.docker                     │
-│  geerlingguy.nginx                 amazon.aws                           │
-│                                    kubernetes.core                      │
-│                                                                         │
-│  COLLECTION INNEHÅLLER:                                                 │
-│  ├── Roles                                                              │
-│  ├── Modules                                                            │
-│  ├── Plugins                                                            │
-│  └── Playbooks                                                          │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         GALAXY ECOSYSTEM                                |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ROLES (Legacy)                    COLLECTIONS (Modern)                 |
+|  -------------                     ------------------                   |
+|  Single-purpose                    Multi-purpose                        |
+|  Namespace.rolename                Namespace.collection                 |
+|  galaxy.ansible.com                galaxy.ansible.com                   |
+|                                                                         |
+|  Example:                          Example:                             |
+|  geerlingguy.docker                community.docker                     |
+|  geerlingguy.nginx                 amazon.aws                           |
+|                                    kubernetes.core                      |
+|                                                                         |
+|  COLLECTION INNEHÅLLER:                                                 |
+|  +-- Roles                                                              |
+|  +-- Modules                                                            |
+|  +-- Plugins                                                            |
+|  +-- Playbooks                                                          |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1346,13 +1346,13 @@ ansible-galaxy collection init my_namespace.my_collection
 
 # Struktur
 my_namespace/my_collection/
-├── docs/
-├── galaxy.yml
-├── plugins/
-│   ├── modules/
-│   └── lookup/
-├── roles/
-└── README.md
++-- docs/
++-- galaxy.yml
++-- plugins/
+|   +-- modules/
+|   +-- lookup/
++-- roles/
++-- README.md
 ```
 
 ### galaxy.yml
@@ -1463,28 +1463,28 @@ NODE_12_ANSIBLE_VAULT = {
 ## Vault Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        ANSIBLE VAULT FLOW                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   PLAINTEXT                 ENCRYPTION                VAULT FILE        │
-│   ─────────                 ──────────                ──────────        │
-│   db_password: secret123    ───────────►    $ANSIBLE_VAULT;1.2;AES256   │
-│                                             6238...encrypted...data     │
-│                                                                         │
-│                                                                         │
-│   DECRYPTION METHODS:                                                   │
-│   ┌─────────────────┬────────────────────┬─────────────────────────┐    │
-│   │ --ask-vault-pass│ --vault-password-  │ ANSIBLE_VAULT_PASSWORD_ │    │
-│   │ (interactive)   │ file (automation)  │ FILE env var            │    │
-│   └─────────────────┴────────────────────┴─────────────────────────┘    │
-│                                                                         │
-│   VAULT IDs:                                                            │
-│   ├── dev@dev_vault_pass                                                │
-│   ├── staging@staging_vault_pass                                        │
-│   └── prod@prod_vault_pass                                              │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        ANSIBLE VAULT FLOW                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   PLAINTEXT                 ENCRYPTION                VAULT FILE        |
+|   ---------                 ----------                ----------        |
+|   db_password: secret123    -----------►    $ANSIBLE_VAULT;1.2;AES256   |
+|                                             6238...encrypted...data     |
+|                                                                         |
+|                                                                         |
+|   DECRYPTION METHODS:                                                   |
+|   +-----------------+--------------------+-------------------------+    |
+|   | --ask-vault-pass| --vault-password-  | ANSIBLE_VAULT_PASSWORD_ |    |
+|   | (interactive)   | file (automation)  | FILE env var            |    |
+|   +-----------------+--------------------+-------------------------+    |
+|                                                                         |
+|   VAULT IDs:                                                            |
+|   +-- dev@dev_vault_pass                                                |
+|   +-- staging@staging_vault_pass                                        |
+|   +-- prod@prod_vault_pass                                              |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1671,24 +1671,24 @@ vault_identity_list = dev@.vault_pass_dev, prod@.vault_pass_prod
 
 ```
 project/
-├── ansible.cfg
-├── .vault_pass              # ❌ ALDRIG I GIT
-├── .gitignore               # Exkludera .vault_pass
-├── inventory/
-│   ├── production
-│   └── staging
-├── group_vars/
-│   ├── all/
-│   │   ├── vars.yml         # Ej krypterat
-│   │   └── vault.yml        # Krypterat (secrets)
-│   ├── production/
-│   │   ├── vars.yml         # Environment-specific vars
-│   │   └── vault.yml        # Environment-specific secrets
-│   └── staging/
-│       ├── vars.yml
-│       └── vault.yml
-├── playbooks/
-└── roles/
++-- ansible.cfg
++-- .vault_pass              # ❌ ALDRIG I GIT
++-- .gitignore               # Exkludera .vault_pass
++-- inventory/
+|   +-- production
+|   +-- staging
++-- group_vars/
+|   +-- all/
+|   |   +-- vars.yml         # Ej krypterat
+|   |   +-- vault.yml        # Krypterat (secrets)
+|   +-- production/
+|   |   +-- vars.yml         # Environment-specific vars
+|   |   +-- vault.yml        # Environment-specific secrets
+|   +-- staging/
+|       +-- vars.yml
+|       +-- vault.yml
++-- playbooks/
++-- roles/
 ```
 
 ### Separera vars och vault

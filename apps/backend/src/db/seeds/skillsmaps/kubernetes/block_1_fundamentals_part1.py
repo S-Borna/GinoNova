@@ -43,23 +43,23 @@ Kubernetes kommer från grekiskans κυβερνήτης (kybernetes) som betyder
 ### Historisk Kontext
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    CONTAINER ORCHESTRATION EVOLUTION                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  2000s          2010s              2014          2015         Nu        │
-│    │              │                  │             │           │         │
-│    ▼              ▼                  ▼             ▼           ▼         │
-│  ┌─────┐     ┌─────────┐      ┌──────────┐  ┌─────────┐  ┌─────────┐   │
-│  │Borg │     │ Docker  │      │Kubernetes│  │  CNCF   │  │K8s 1.30+│   │
-│  │@Goog│────▶│Container│─────▶│ Open     │─▶│Graduated│─▶│Industry │   │
-│  │le   │     │  2013   │      │ Source   │  │ 2018    │  │Standard │   │
-│  └─────┘     └─────────┘      └──────────┘  └─────────┘  └─────────┘   │
-│                                                                          │
-│  Legacy VM     Container        Container    Cloud Native   Multi-Cloud │
-│  Management    Revolution       Orchestration Foundation    Standard    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    CONTAINER ORCHESTRATION EVOLUTION                     |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  2000s          2010s              2014          2015         Nu        |
+|    |              |                  |             |           |         |
+|    ▼              ▼                  ▼             ▼           ▼         |
+|  +-----+     +---------+      +----------+  +---------+  +---------+   |
+|  |Borg |     | Docker  |      |Kubernetes|  |  CNCF   |  |K8s 1.30+|   |
+|  |@Goog|----▶|Container|-----▶| Open     |-▶|Graduated|-▶|Industry |   |
+|  |le   |     |  2013   |      | Source   |  | 2018    |  |Standard |   |
+|  +-----+     +---------+      +----------+  +---------+  +---------+   |
+|                                                                          |
+|  Legacy VM     Container        Container    Cloud Native   Multi-Cloud |
+|  Management    Revolution       Orchestration Foundation    Standard    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Teknisk Djupdykning
@@ -82,24 +82,24 @@ Kubernetes kommer från grekiskans κυβερνήτης (kybernetes) som betyder
 ### Kubernetes vs Alternativ
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│              CONTAINER ORCHESTRATION COMPARISON                       │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                       │
-│  Feature          │ Kubernetes │ Docker Swarm │ Nomad  │ ECS         │
-│  ─────────────────┼────────────┼──────────────┼────────┼─────────────│
-│  Complexity       │ High       │ Low          │ Medium │ Medium      │
-│  Scalability      │ Excellent  │ Good         │ Good   │ Good        │
-│  Learning Curve   │ Steep      │ Gentle       │ Medium │ Medium      │
-│  Community        │ Massive    │ Declining    │ Growing│ AWS-focused │
-│  Multi-cloud      │ Yes        │ Limited      │ Yes    │ AWS only    │
-│  Auto-scaling     │ Advanced   │ Basic        │ Good   │ Good        │
-│  Service Mesh     │ Excellent  │ Limited      │ Good   │ App Mesh    │
-│  Ecosystem        │ Huge       │ Small        │ Growing│ AWS-only    │
-│                                                                       │
-│  Recommendation: Kubernetes för production, Docker Swarm för dev     │
-│                                                                       │
-└──────────────────────────────────────────────────────────────────────┘
++----------------------------------------------------------------------+
+|              CONTAINER ORCHESTRATION COMPARISON                       |
++----------------------------------------------------------------------+
+|                                                                       |
+|  Feature          | Kubernetes | Docker Swarm | Nomad  | ECS         |
+|  -----------------+------------+--------------+--------+-------------|
+|  Complexity       | High       | Low          | Medium | Medium      |
+|  Scalability      | Excellent  | Good         | Good   | Good        |
+|  Learning Curve   | Steep      | Gentle       | Medium | Medium      |
+|  Community        | Massive    | Declining    | Growing| AWS-focused |
+|  Multi-cloud      | Yes        | Limited      | Yes    | AWS only    |
+|  Auto-scaling     | Advanced   | Basic        | Good   | Good        |
+|  Service Mesh     | Excellent  | Limited      | Good   | App Mesh    |
+|  Ecosystem        | Huge       | Small        | Growing| AWS-only    |
+|                                                                       |
+|  Recommendation: Kubernetes för production, Docker Swarm för dev     |
+|                                                                       |
++----------------------------------------------------------------------+
 ```
 
 ## 3. Arkitektur & Komponenter
@@ -107,132 +107,132 @@ Kubernetes kommer från grekiskans κυβερνήτης (kybernetes) som betyder
 ### Control Plane (Master) Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        KUBERNETES CONTROL PLANE                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                      CONTROL PLANE                               │    │
-│  │  ┌────────────────┐  ┌────────────────┐  ┌────────────────────┐ │    │
-│  │  │   kube-api-    │  │     etcd       │  │   kube-scheduler   │ │    │
-│  │  │    server      │  │                │  │                    │ │    │
-│  │  │                │  │  ┌──────────┐  │  │  ┌──────────────┐  │ │    │
-│  │  │  ┌──────────┐  │  │  │ Key-Value│  │  │  │ Pod Placement│  │ │    │
-│  │  │  │  REST    │  │  │  │  Store   │  │  │  │ Algorithm    │  │ │    │
-│  │  │  │  API     │  │  │  │          │  │  │  │              │  │ │    │
-│  │  │  │ Gateway  │  │  │  │ Cluster  │  │  │  │ Node Select  │  │ │    │
-│  │  │  └──────────┘  │  │  │  State   │  │  │  │ Affinity     │  │ │    │
-│  │  │                │  │  └──────────┘  │  │  └──────────────┘  │ │    │
-│  │  └───────┬────────┘  └───────┬────────┘  └─────────┬──────────┘ │    │
-│  │          │                   │                     │            │    │
-│  │          └───────────────────┼─────────────────────┘            │    │
-│  │                              │                                   │    │
-│  │  ┌───────────────────────────▼────────────────────────────────┐ │    │
-│  │  │              kube-controller-manager                        │ │    │
-│  │  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐   │ │    │
-│  │  │  │ Deployment  │ │ ReplicaSet  │ │   Node Controller   │   │ │    │
-│  │  │  │ Controller  │ │ Controller  │ │                     │   │ │    │
-│  │  │  └─────────────┘ └─────────────┘ └─────────────────────┘   │ │    │
-│  │  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐   │ │    │
-│  │  │  │   Service   │ │  Endpoint   │ │  ServiceAccount     │   │ │    │
-│  │  │  │ Controller  │ │ Controller  │ │  Controller         │   │ │    │
-│  │  │  └─────────────┘ └─────────────┘ └─────────────────────┘   │ │    │
-│  │  └────────────────────────────────────────────────────────────┘ │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        KUBERNETES CONTROL PLANE                          |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +-----------------------------------------------------------------+    |
+|  |                      CONTROL PLANE                               |    |
+|  |  +----------------+  +----------------+  +--------------------+ |    |
+|  |  |   kube-api-    |  |     etcd       |  |   kube-scheduler   | |    |
+|  |  |    server      |  |                |  |                    | |    |
+|  |  |                |  |  +----------+  |  |  +--------------+  | |    |
+|  |  |  +----------+  |  |  | Key-Value|  |  |  | Pod Placement|  | |    |
+|  |  |  |  REST    |  |  |  |  Store   |  |  |  | Algorithm    |  | |    |
+|  |  |  |  API     |  |  |  |          |  |  |  |              |  | |    |
+|  |  |  | Gateway  |  |  |  | Cluster  |  |  |  | Node Select  |  | |    |
+|  |  |  +----------+  |  |  |  State   |  |  |  | Affinity     |  | |    |
+|  |  |                |  |  +----------+  |  |  +--------------+  | |    |
+|  |  +-------+--------+  +-------+--------+  +---------+----------+ |    |
+|  |          |                   |                     |            |    |
+|  |          +-------------------+---------------------+            |    |
+|  |                              |                                   |    |
+|  |  +---------------------------▼--------------------------------+ |    |
+|  |  |              kube-controller-manager                        | |    |
+|  |  |  +-------------+ +-------------+ +---------------------+   | |    |
+|  |  |  | Deployment  | | ReplicaSet  | |   Node Controller   |   | |    |
+|  |  |  | Controller  | | Controller  | |                     |   | |    |
+|  |  |  +-------------+ +-------------+ +---------------------+   | |    |
+|  |  |  +-------------+ +-------------+ +---------------------+   | |    |
+|  |  |  |   Service   | |  Endpoint   | |  ServiceAccount     |   | |    |
+|  |  |  | Controller  | | Controller  | |  Controller         |   | |    |
+|  |  |  +-------------+ +-------------+ +---------------------+   | |    |
+|  |  +------------------------------------------------------------+ |    |
+|  +-----------------------------------------------------------------+    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### Worker Node Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          KUBERNETES WORKER NODE                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                         WORKER NODE                              │    │
-│  │                                                                  │    │
-│  │  ┌────────────────────────────────────────────────────────────┐ │    │
-│  │  │                        kubelet                              │ │    │
-│  │  │  • Registrerar noden med API server                        │ │    │
-│  │  │  • Hanterar pod lifecycle                                  │ │    │
-│  │  │  • Rapporterar node status                                 │ │    │
-│  │  │  • Monterar volumes                                        │ │    │
-│  │  │  • Kör container probes (liveness/readiness)               │ │    │
-│  │  └────────────────────────────────────────────────────────────┘ │    │
-│  │                                                                  │    │
-│  │  ┌────────────────────────────────────────────────────────────┐ │    │
-│  │  │                      kube-proxy                             │ │    │
-│  │  │  • Hanterar network rules (iptables/IPVS)                  │ │    │
-│  │  │  • Service load balancing                                  │ │    │
-│  │  │  • ClusterIP, NodePort, LoadBalancer                       │ │    │
-│  │  └────────────────────────────────────────────────────────────┘ │    │
-│  │                                                                  │    │
-│  │  ┌────────────────────────────────────────────────────────────┐ │    │
-│  │  │                  Container Runtime                          │ │    │
-│  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐       │ │    │
-│  │  │  │containerd│  │  CRI-O  │  │ Docker  │  │  Other  │       │ │    │
-│  │  │  └─────────┘  └─────────┘  └─────────┘  └─────────┘       │ │    │
-│  │  └────────────────────────────────────────────────────────────┘ │    │
-│  │                                                                  │    │
-│  │  ┌──────────────────┐  ┌──────────────────┐                     │    │
-│  │  │      Pod 1       │  │      Pod 2       │                     │    │
-│  │  │  ┌────┐ ┌────┐  │  │  ┌────┐          │                     │    │
-│  │  │  │ C1 │ │ C2 │  │  │  │ C1 │          │                     │    │
-│  │  │  └────┘ └────┘  │  │  └────┘          │                     │    │
-│  │  └──────────────────┘  └──────────────────┘                     │    │
-│  │                                                                  │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                          KUBERNETES WORKER NODE                          |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +-----------------------------------------------------------------+    |
+|  |                         WORKER NODE                              |    |
+|  |                                                                  |    |
+|  |  +------------------------------------------------------------+ |    |
+|  |  |                        kubelet                              | |    |
+|  |  |  • Registrerar noden med API server                        | |    |
+|  |  |  • Hanterar pod lifecycle                                  | |    |
+|  |  |  • Rapporterar node status                                 | |    |
+|  |  |  • Monterar volumes                                        | |    |
+|  |  |  • Kör container probes (liveness/readiness)               | |    |
+|  |  +------------------------------------------------------------+ |    |
+|  |                                                                  |    |
+|  |  +------------------------------------------------------------+ |    |
+|  |  |                      kube-proxy                             | |    |
+|  |  |  • Hanterar network rules (iptables/IPVS)                  | |    |
+|  |  |  • Service load balancing                                  | |    |
+|  |  |  • ClusterIP, NodePort, LoadBalancer                       | |    |
+|  |  +------------------------------------------------------------+ |    |
+|  |                                                                  |    |
+|  |  +------------------------------------------------------------+ |    |
+|  |  |                  Container Runtime                          | |    |
+|  |  |  +---------+  +---------+  +---------+  +---------+       | |    |
+|  |  |  |containerd|  |  CRI-O  |  | Docker  |  |  Other  |       | |    |
+|  |  |  +---------+  +---------+  +---------+  +---------+       | |    |
+|  |  +------------------------------------------------------------+ |    |
+|  |                                                                  |    |
+|  |  +------------------+  +------------------+                     |    |
+|  |  |      Pod 1       |  |      Pod 2       |                     |    |
+|  |  |  +----+ +----+  |  |  +----+          |                     |    |
+|  |  |  | C1 | | C2 |  |  |  | C1 |          |                     |    |
+|  |  |  +----+ +----+  |  |  +----+          |                     |    |
+|  |  +------------------+  +------------------+                     |    |
+|  |                                                                  |    |
+|  +-----------------------------------------------------------------+    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 4. Fullständig Kluster-arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES CLUSTER ARCHITECTURE                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│     USERS/CLIENTS                           EXTERNAL SYSTEMS                 │
-│     ┌─────────┐                             ┌─────────────┐                  │
-│     │ kubectl │                             │  CI/CD      │                  │
-│     │   CLI   │                             │  (Jenkins,  │                  │
-│     └────┬────┘                             │   GitLab)   │                  │
-│          │                                  └──────┬──────┘                  │
-│          │                                         │                         │
-│          ▼                                         ▼                         │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                          CONTROL PLANE                                 │  │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌──────────────┐ ┌────────────────┐  │  │
-│  │  │ API Server  │ │    etcd     │ │  Scheduler   │ │ Controller Mgr │  │  │
-│  │  │  Port 6443  │ │ Port 2379   │ │              │ │                │  │  │
-│  │  └──────┬──────┘ └─────────────┘ └──────────────┘ └────────────────┘  │  │
-│  │         │                                                              │  │
-│  └─────────┼──────────────────────────────────────────────────────────────┘  │
-│            │                                                                  │
-│            │                   INTERNAL NETWORK                              │
-│  ┌─────────┴─────────────────────────────────────────────────────────────┐  │
-│  │                                                                        │  │
-│  │   ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐   │  │
-│  │   │   WORKER NODE 1  │  │   WORKER NODE 2  │  │   WORKER NODE 3  │   │  │
-│  │   │                  │  │                  │  │                  │   │  │
-│  │   │  ┌────────────┐  │  │  ┌────────────┐  │  │  ┌────────────┐  │   │  │
-│  │   │  │  kubelet   │  │  │  │  kubelet   │  │  │  │  kubelet   │  │   │  │
-│  │   │  │ kube-proxy │  │  │  │ kube-proxy │  │  │  │ kube-proxy │  │   │  │
-│  │   │  │ containerd │  │  │  │ containerd │  │  │  │ containerd │  │   │  │
-│  │   │  └────────────┘  │  │  └────────────┘  │  │  └────────────┘  │   │  │
-│  │   │                  │  │                  │  │                  │   │  │
-│  │   │  ┌─────┐┌─────┐  │  │  ┌─────┐┌─────┐  │  │  ┌─────┐┌─────┐  │   │  │
-│  │   │  │Pod1 ││Pod2 │  │  │  │Pod3 ││Pod4 │  │  │  │Pod5 ││Pod6 │  │   │  │
-│  │   │  └─────┘└─────┘  │  │  └─────┘└─────┘  │  │  └─────┘└─────┘  │   │  │
-│  │   │                  │  │                  │  │                  │   │  │
-│  │   └──────────────────┘  └──────────────────┘  └──────────────────┘   │  │
-│  │                                                                        │  │
-│  └────────────────────────────────────────────────────────────────────────┘  │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                    KUBERNETES CLUSTER ARCHITECTURE                           |
++-----------------------------------------------------------------------------+
+|                                                                              |
+|     USERS/CLIENTS                           EXTERNAL SYSTEMS                 |
+|     +---------+                             +-------------+                  |
+|     | kubectl |                             |  CI/CD      |                  |
+|     |   CLI   |                             |  (Jenkins,  |                  |
+|     +----+----+                             |   GitLab)   |                  |
+|          |                                  +------+------+                  |
+|          |                                         |                         |
+|          ▼                                         ▼                         |
+|  +-----------------------------------------------------------------------+  |
+|  |                          CONTROL PLANE                                 |  |
+|  |  +-------------+ +-------------+ +--------------+ +----------------+  |  |
+|  |  | API Server  | |    etcd     | |  Scheduler   | | Controller Mgr |  |  |
+|  |  |  Port 6443  | | Port 2379   | |              | |                |  |  |
+|  |  +------+------+ +-------------+ +--------------+ +----------------+  |  |
+|  |         |                                                              |  |
+|  +---------+--------------------------------------------------------------+  |
+|            |                                                                  |
+|            |                   INTERNAL NETWORK                              |
+|  +---------+-------------------------------------------------------------+  |
+|  |                                                                        |  |
+|  |   +------------------+  +------------------+  +------------------+   |  |
+|  |   |   WORKER NODE 1  |  |   WORKER NODE 2  |  |   WORKER NODE 3  |   |  |
+|  |   |                  |  |                  |  |                  |   |  |
+|  |   |  +------------+  |  |  +------------+  |  |  +------------+  |   |  |
+|  |   |  |  kubelet   |  |  |  |  kubelet   |  |  |  |  kubelet   |  |   |  |
+|  |   |  | kube-proxy |  |  |  | kube-proxy |  |  |  | kube-proxy |  |   |  |
+|  |   |  | containerd |  |  |  | containerd |  |  |  | containerd |  |   |  |
+|  |   |  +------------+  |  |  +------------+  |  |  +------------+  |   |  |
+|  |   |                  |  |                  |  |                  |   |  |
+|  |   |  +-----++-----+  |  |  +-----++-----+  |  |  +-----++-----+  |   |  |
+|  |   |  |Pod1 ||Pod2 |  |  |  |Pod3 ||Pod4 |  |  |  |Pod5 ||Pod6 |  |   |  |
+|  |   |  +-----++-----+  |  |  +-----++-----+  |  |  +-----++-----+  |   |  |
+|  |   |                  |  |                  |  |                  |   |  |
+|  |   +------------------+  +------------------+  +------------------+   |  |
+|  |                                                                        |  |
+|  +------------------------------------------------------------------------+  |
+|                                                                              |
++-----------------------------------------------------------------------------+
 ```
 
 ## 5. Lokalt Utvecklingskluster
@@ -379,31 +379,31 @@ kubectl config view
 ## 8. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                 KUBERNETES BEST PRACTICES CHECKLISTA                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Lokalt Utveckling                                                   │
-│     □ Använd Minikube eller Kind för utveckling                         │
-│     □ Matcha K8s-version med produktion                                 │
-│     □ Testa manifests lokalt innan deploy                               │
-│     □ Använd namespace per projekt                                      │
-│                                                                          │
-│  ✅ Produktion                                                          │
-│     □ Minst 3 control plane noder (HA)                                  │
-│     □ Separera etcd på egna noder                                       │
-│     □ Använd managed K8s (EKS, GKE, AKS) om möjligt                     │
-│     □ Aktivera RBAC                                                     │
-│     □ Sätt resource requests/limits                                     │
-│     □ Implementera NetworkPolicies                                      │
-│                                                                          │
-│  ✅ Säkerhet                                                            │
-│     □ Uppdatera K8s regelbundet                                         │
-│     □ Scanna container images                                           │
-│     □ Använd Pod Security Standards                                     │
-│     □ Kryptera secrets at rest                                          │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                 KUBERNETES BEST PRACTICES CHECKLISTA                     |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Lokalt Utveckling                                                   |
+|     □ Använd Minikube eller Kind för utveckling                         |
+|     □ Matcha K8s-version med produktion                                 |
+|     □ Testa manifests lokalt innan deploy                               |
+|     □ Använd namespace per projekt                                      |
+|                                                                          |
+|  ✅ Produktion                                                          |
+|     □ Minst 3 control plane noder (HA)                                  |
+|     □ Separera etcd på egna noder                                       |
+|     □ Använd managed K8s (EKS, GKE, AKS) om möjligt                     |
+|     □ Aktivera RBAC                                                     |
+|     □ Sätt resource requests/limits                                     |
+|     □ Implementera NetworkPolicies                                      |
+|                                                                          |
+|  ✅ Säkerhet                                                            |
+|     □ Uppdatera K8s regelbundet                                         |
+|     □ Scanna container images                                           |
+|     □ Använd Pod Security Standards                                     |
+|     □ Kryptera secrets at rest                                          |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9. Verkliga Scenarion
@@ -411,41 +411,41 @@ kubectl config view
 ### Scenario: Migrera från VMs till Kubernetes
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     VM → KUBERNETES MIGRATION PATH                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  BEFORE (Traditional VMs)           AFTER (Kubernetes)                  │
-│  ========================           ===================                  │
-│                                                                          │
-│  ┌─────────────────────┐           ┌─────────────────────┐              │
-│  │   VM 1: Frontend    │           │    Deployment:      │              │
-│  │   - nginx           │           │    frontend         │              │
-│  │   - 4 CPU, 8GB RAM  │    ──▶   │    replicas: 3      │              │
-│  │   - Manual scaling  │           │    autoscaling: on  │              │
-│  └─────────────────────┘           └─────────────────────┘              │
-│                                                                          │
-│  ┌─────────────────────┐           ┌─────────────────────┐              │
-│  │   VM 2: Backend     │           │    Deployment:      │              │
-│  │   - node.js         │           │    backend          │              │
-│  │   - 8 CPU, 16GB RAM │    ──▶   │    replicas: 5      │              │
-│  │   - Load balancer   │           │    HPA: 3-10 pods   │              │
-│  └─────────────────────┘           └─────────────────────┘              │
-│                                                                          │
-│  ┌─────────────────────┐           ┌─────────────────────┐              │
-│  │   VM 3: Database    │           │    StatefulSet:     │              │
-│  │   - PostgreSQL      │           │    postgres         │              │
-│  │   - Backup scripts  │    ──▶   │    PV: 100Gi        │              │
-│  │   - Manual failover │           │    Auto-failover    │              │
-│  └─────────────────────┘           └─────────────────────┘              │
-│                                                                          │
-│  Benefits:                                                               │
-│  • 60% cost reduction (efficient resource usage)                        │
-│  • 99.99% uptime (self-healing)                                         │
-│  • 5-minute deployments (was 2 hours)                                   │
-│  • Instant rollback capability                                          │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     VM -> KUBERNETES MIGRATION PATH                       |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  BEFORE (Traditional VMs)           AFTER (Kubernetes)                  |
+|  ========================           ===================                  |
+|                                                                          |
+|  +---------------------+           +---------------------+              |
+|  |   VM 1: Frontend    |           |    Deployment:      |              |
+|  |   - nginx           |           |    frontend         |              |
+|  |   - 4 CPU, 8GB RAM  |    --▶   |    replicas: 3      |              |
+|  |   - Manual scaling  |           |    autoscaling: on  |              |
+|  +---------------------+           +---------------------+              |
+|                                                                          |
+|  +---------------------+           +---------------------+              |
+|  |   VM 2: Backend     |           |    Deployment:      |              |
+|  |   - node.js         |           |    backend          |              |
+|  |   - 8 CPU, 16GB RAM |    --▶   |    replicas: 5      |              |
+|  |   - Load balancer   |           |    HPA: 3-10 pods   |              |
+|  +---------------------+           +---------------------+              |
+|                                                                          |
+|  +---------------------+           +---------------------+              |
+|  |   VM 3: Database    |           |    StatefulSet:     |              |
+|  |   - PostgreSQL      |           |    postgres         |              |
+|  |   - Backup scripts  |    --▶   |    PV: 100Gi        |              |
+|  |   - Manual failover |           |    Auto-failover    |              |
+|  +---------------------+           +---------------------+              |
+|                                                                          |
+|  Benefits:                                                               |
+|  • 60% cost reduction (efficient resource usage)                        |
+|  • 99.99% uptime (self-healing)                                         |
+|  • 5-minute deployments (was 2 hours)                                   |
+|  • Instant rollback capability                                          |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 10. Integration & Kopplingar
@@ -453,31 +453,31 @@ kubectl config view
 ### Kubernetes i DevOps Pipeline
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES DEVOPS INTEGRATION                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│    Developer        CI/CD              Kubernetes      Monitoring        │
-│        │              │                    │               │             │
-│        │ git push     │                    │               │             │
-│        ├─────────────▶│                    │               │             │
-│        │              │ build & test       │               │             │
-│        │              ├───────────────────▶│               │             │
-│        │              │ kubectl apply      │               │             │
-│        │              ├───────────────────▶│               │             │
-│        │              │                    │ metrics       │             │
-│        │              │                    ├──────────────▶│             │
-│        │              │                    │               │             │
-│        │◀─────────────┼────────────────────┼───────────────┤             │
-│        │    alerts/feedback               │               │             │
-│                                                                          │
-│  Tools:                                                                  │
-│  • GitLab CI / GitHub Actions / Jenkins                                 │
-│  • ArgoCD / Flux (GitOps)                                               │
-│  • Prometheus / Grafana (Monitoring)                                    │
-│  • Istio / Linkerd (Service Mesh)                                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    KUBERNETES DEVOPS INTEGRATION                         |
++-------------------------------------------------------------------------+
+|                                                                          |
+|    Developer        CI/CD              Kubernetes      Monitoring        |
+|        |              |                    |               |             |
+|        | git push     |                    |               |             |
+|        +-------------▶|                    |               |             |
+|        |              | build & test       |               |             |
+|        |              +-------------------▶|               |             |
+|        |              | kubectl apply      |               |             |
+|        |              +-------------------▶|               |             |
+|        |              |                    | metrics       |             |
+|        |              |                    +--------------▶|             |
+|        |              |                    |               |             |
+|        |◀-------------+--------------------+---------------+             |
+|        |    alerts/feedback               |               |             |
+|                                                                          |
+|  Tools:                                                                  |
+|  • GitLab CI / GitHub Actions / Jenkins                                 |
+|  • ArgoCD / Flux (GitOps)                                               |
+|  • Prometheus / Grafana (Monitoring)                                    |
+|  • Istio / Linkerd (Service Mesh)                                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 11. Sammanfattning
@@ -566,7 +566,7 @@ d) Inget behov av kubectl
 
 ---
 
-**Nästa Node:** kubectl Mastery - CLI Deep Dive →
+**Nästa Node:** kubectl Mastery - CLI Deep Dive ->
 ''',
     "xp_reward": 150,
     "estimated_minutes": 60,
@@ -592,17 +592,17 @@ kubectl (kube-control) är command-line verktyget för att interagera med Kubern
 ### Uttal & Bakgrund
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         KUBECTL PRONUNCIATION                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  "kube-control"     "kube-c-t-l"      "kube-cuddle"     "kubectl"       │
-│       ↓                  ↓                 ↓               ↓             │
-│  [officiellt]      [bokstaverat]      [skämt]         [vanligast]       │
-│                                                                          │
-│  Alla varianter är accepterade i communityn!                            │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         KUBECTL PRONUNCIATION                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  "kube-control"     "kube-c-t-l"      "kube-cuddle"     "kubectl"       |
+|       ↓                  ↓                 ↓               ↓             |
+|  [officiellt]      [bokstaverat]      [skämt]         [vanligast]       |
+|                                                                          |
+|  Alla varianter är accepterade i communityn!                            |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Teknisk Djupdykning
@@ -610,71 +610,71 @@ kubectl (kube-control) är command-line verktyget för att interagera med Kubern
 ### kubectl Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      KUBECTL ARCHITECTURE                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│   ┌─────────────┐                                                        │
-│   │   kubectl   │                                                        │
-│   │   command   │                                                        │
-│   └──────┬──────┘                                                        │
-│          │                                                               │
-│          ▼                                                               │
-│   ┌─────────────────────────────────────────────────┐                   │
-│   │              ~/.kube/config                      │                   │
-│   │  ┌─────────────────────────────────────────┐    │                   │
-│   │  │ clusters:                                │    │                   │
-│   │  │   - cluster:                             │    │                   │
-│   │  │       server: https://192.168.49.2:8443 │    │                   │
-│   │  │       certificate-authority: ca.crt      │    │                   │
-│   │  │ users:                                   │    │                   │
-│   │  │   - user:                                │    │                   │
-│   │  │       client-certificate: client.crt    │    │                   │
-│   │  │ contexts:                                │    │                   │
-│   │  │   - context:                             │    │                   │
-│   │  │       cluster: minikube                  │    │                   │
-│   │  │       user: minikube                     │    │                   │
-│   │  └─────────────────────────────────────────┘    │                   │
-│   └──────────────────────┬──────────────────────────┘                   │
-│                          │                                               │
-│                          │ HTTPS/TLS                                    │
-│                          ▼                                               │
-│   ┌─────────────────────────────────────────────────┐                   │
-│   │              kube-apiserver                      │                   │
-│   │  ┌─────────────────────────────────────────┐    │                   │
-│   │  │ 1. Authentication (certs, tokens)       │    │                   │
-│   │  │ 2. Authorization (RBAC)                 │    │                   │
-│   │  │ 3. Admission Control                    │    │                   │
-│   │  │ 4. Validation                           │    │                   │
-│   │  │ 5. Persist to etcd                      │    │                   │
-│   │  └─────────────────────────────────────────┘    │                   │
-│   └─────────────────────────────────────────────────┘                   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      KUBECTL ARCHITECTURE                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|   +-------------+                                                        |
+|   |   kubectl   |                                                        |
+|   |   command   |                                                        |
+|   +------+------+                                                        |
+|          |                                                               |
+|          ▼                                                               |
+|   +-------------------------------------------------+                   |
+|   |              ~/.kube/config                      |                   |
+|   |  +-----------------------------------------+    |                   |
+|   |  | clusters:                                |    |                   |
+|   |  |   - cluster:                             |    |                   |
+|   |  |       server: https://192.168.49.2:8443 |    |                   |
+|   |  |       certificate-authority: ca.crt      |    |                   |
+|   |  | users:                                   |    |                   |
+|   |  |   - user:                                |    |                   |
+|   |  |       client-certificate: client.crt    |    |                   |
+|   |  | contexts:                                |    |                   |
+|   |  |   - context:                             |    |                   |
+|   |  |       cluster: minikube                  |    |                   |
+|   |  |       user: minikube                     |    |                   |
+|   |  +-----------------------------------------+    |                   |
+|   +----------------------+--------------------------+                   |
+|                          |                                               |
+|                          | HTTPS/TLS                                    |
+|                          ▼                                               |
+|   +-------------------------------------------------+                   |
+|   |              kube-apiserver                      |                   |
+|   |  +-----------------------------------------+    |                   |
+|   |  | 1. Authentication (certs, tokens)       |    |                   |
+|   |  | 2. Authorization (RBAC)                 |    |                   |
+|   |  | 3. Admission Control                    |    |                   |
+|   |  | 4. Validation                           |    |                   |
+|   |  | 5. Persist to etcd                      |    |                   |
+|   |  +-----------------------------------------+    |                   |
+|   +-------------------------------------------------+                   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### Kommando-struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    KUBECTL COMMAND STRUCTURE                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  kubectl  [command]  [TYPE]  [NAME]  [flags]                            │
-│     │        │         │       │        │                                │
-│     │        │         │       │        └── -o yaml, --namespace dev    │
-│     │        │         │       └── nginx-deployment, pod/mypod          │
-│     │        │         └── pods, deployments, services, nodes           │
-│     │        └── get, create, apply, delete, describe, logs             │
-│     └── The CLI binary                                                  │
-│                                                                          │
-│  Examples:                                                               │
-│  kubectl get pods -n production -o wide                                 │
-│  kubectl describe deployment nginx -n staging                           │
-│  kubectl logs -f pod/api-server -c sidecar                              │
-│  kubectl exec -it pod/debug -- /bin/bash                                │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    KUBECTL COMMAND STRUCTURE                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  kubectl  [command]  [TYPE]  [NAME]  [flags]                            |
+|     |        |         |       |        |                                |
+|     |        |         |       |        +-- -o yaml, --namespace dev    |
+|     |        |         |       +-- nginx-deployment, pod/mypod          |
+|     |        |         +-- pods, deployments, services, nodes           |
+|     |        +-- get, create, apply, delete, describe, logs             |
+|     +-- The CLI binary                                                  |
+|                                                                          |
+|  Examples:                                                               |
+|  kubectl get pods -n production -o wide                                 |
+|  kubectl describe deployment nginx -n staging                           |
+|  kubectl logs -f pod/api-server -c sidecar                              |
+|  kubectl exec -it pod/debug -- /bin/bash                                |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Essential Commands Reference
@@ -1010,35 +1010,35 @@ kubectl get all -l app=nginx            # Sök via label
 ## 8. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    KUBECTL BEST PRACTICES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Kommandorad                                                         │
-│     □ Använd aliaser för vanliga kommandon                              │
-│     □ Aktivera shell completion                                          │
-│     □ Installera krew för plugins                                       │
-│     □ Använd -o wide/yaml för mer info                                  │
-│                                                                          │
-│  ✅ Säkerhet                                                            │
-│     □ Undvik --all-namespaces i produktion                              │
-│     □ Dubbelkolla context innan kubectl delete                          │
-│     □ Använd dry-run för kritiska ändringar                             │
-│     □ Versionshantera kubeconfig                                        │
-│                                                                          │
-│  ✅ Workflow                                                            │
-│     □ Använd kubectl apply (declarativ) för produktion                  │
-│     □ Spara manifests i Git                                             │
-│     □ Använd kubectl diff innan apply                                   │
-│     □ Logga kritiska kommandon                                          │
-│                                                                          │
-│  ✅ Debugging                                                           │
-│     □ Starta med kubectl get events                                     │
-│     □ Använd kubectl describe för detaljer                              │
-│     □ Kör kubectl logs -f för realtidslogging                           │
-│     □ Använd kubectl exec för interaktiv debug                          │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    KUBECTL BEST PRACTICES                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Kommandorad                                                         |
+|     □ Använd aliaser för vanliga kommandon                              |
+|     □ Aktivera shell completion                                          |
+|     □ Installera krew för plugins                                       |
+|     □ Använd -o wide/yaml för mer info                                  |
+|                                                                          |
+|  ✅ Säkerhet                                                            |
+|     □ Undvik --all-namespaces i produktion                              |
+|     □ Dubbelkolla context innan kubectl delete                          |
+|     □ Använd dry-run för kritiska ändringar                             |
+|     □ Versionshantera kubeconfig                                        |
+|                                                                          |
+|  ✅ Workflow                                                            |
+|     □ Använd kubectl apply (declarativ) för produktion                  |
+|     □ Spara manifests i Git                                             |
+|     □ Använd kubectl diff innan apply                                   |
+|     □ Logga kritiska kommandon                                          |
+|                                                                          |
+|  ✅ Debugging                                                           |
+|     □ Starta med kubectl get events                                     |
+|     □ Använd kubectl describe för detaljer                              |
+|     □ Kör kubectl logs -f för realtidslogging                           |
+|     □ Använd kubectl exec för interaktiv debug                          |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9. Verkliga Scenarion
@@ -1073,31 +1073,31 @@ kubectl get pods -l app=api-server
 ## 10. Integration & Kopplingar
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    KUBECTL ECOSYSTEM INTEGRATION                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  kubectl ──────┬──────────────────────────────────────────────────      │
-│                │                                                         │
-│                ├──▶ k9s (Terminal UI)                                   │
-│                │    └── Interaktiv resurshantering                      │
-│                │                                                         │
-│                ├──▶ Lens (Desktop UI)                                   │
-│                │    └── Full IDE för Kubernetes                         │
-│                │                                                         │
-│                ├──▶ kubectx/kubens                                      │
-│                │    └── Snabbt context/namespace-byte                   │
-│                │                                                         │
-│                ├──▶ stern                                               │
-│                │    └── Multi-pod log tailing                           │
-│                │                                                         │
-│                ├──▶ kubectl plugins (krew)                              │
-│                │    └── Utökad funktionalitet                           │
-│                │                                                         │
-│                └──▶ CI/CD Integration                                   │
-│                     └── GitLab, GitHub Actions, Jenkins                 │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    KUBECTL ECOSYSTEM INTEGRATION                         |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  kubectl ------+--------------------------------------------------      |
+|                |                                                         |
+|                +--▶ k9s (Terminal UI)                                   |
+|                |    +-- Interaktiv resurshantering                      |
+|                |                                                         |
+|                +--▶ Lens (Desktop UI)                                   |
+|                |    +-- Full IDE för Kubernetes                         |
+|                |                                                         |
+|                +--▶ kubectx/kubens                                      |
+|                |    +-- Snabbt context/namespace-byte                   |
+|                |                                                         |
+|                +--▶ stern                                               |
+|                |    +-- Multi-pod log tailing                           |
+|                |                                                         |
+|                +--▶ kubectl plugins (krew)                              |
+|                |    +-- Utökad funktionalitet                           |
+|                |                                                         |
+|                +--▶ CI/CD Integration                                   |
+|                     +-- GitLab, GitHub Actions, Jenkins                 |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 11. Sammanfattning
@@ -1168,7 +1168,7 @@ d) kubectl switch namespace production
 
 ---
 
-**Nästa Node:** Pods - K8s Minsta Deployment Unit →
+**Nästa Node:** Pods - K8s Minsta Deployment Unit ->
 ''',
     "xp_reward": 145,
     "estimated_minutes": 55,

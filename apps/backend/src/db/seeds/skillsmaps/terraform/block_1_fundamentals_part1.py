@@ -19,30 +19,30 @@ NODE_1 = {
 Infrastructure as Code (IaC) har revolutionerat hur vi hanterar infrastruktur. Terraform från HashiCorp är ledande inom detta område och används av tusentals organisationer världen över.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM ECOSYSTEM OVERVIEW                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│    ┌──────────────┐     ┌──────────────┐     ┌──────────────┐         │
-│    │    CODE      │────▶│   TERRAFORM  │────▶│   CLOUD      │         │
-│    │   (.tf)      │     │   ENGINE     │     │  PROVIDERS   │         │
-│    └──────────────┘     └──────────────┘     └──────────────┘         │
-│           │                    │                    │                   │
-│           │                    ▼                    │                   │
-│           │            ┌──────────────┐            │                   │
-│           │            │    STATE     │            │                   │
-│           │            │  (.tfstate)  │            │                   │
-│           │            └──────────────┘            │                   │
-│           │                    │                    │                   │
-│           ▼                    ▼                    ▼                   │
-│    ┌─────────────────────────────────────────────────────────────┐    │
-│    │                     INFRASTRUCTURE                          │    │
-│    │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐       │    │
-│    │  │   AWS   │  │  AZURE  │  │   GCP   │  │  K8S    │       │    │
-│    │  └─────────┘  └─────────┘  └─────────┘  └─────────┘       │    │
-│    └─────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM ECOSYSTEM OVERVIEW                         |
++-------------------------------------------------------------------------+
+|                                                                         |
+|    +--------------+     +--------------+     +--------------+         |
+|    |    CODE      |----▶|   TERRAFORM  |----▶|   CLOUD      |         |
+|    |   (.tf)      |     |   ENGINE     |     |  PROVIDERS   |         |
+|    +--------------+     +--------------+     +--------------+         |
+|           |                    |                    |                   |
+|           |                    ▼                    |                   |
+|           |            +--------------+            |                   |
+|           |            |    STATE     |            |                   |
+|           |            |  (.tfstate)  |            |                   |
+|           |            +--------------+            |                   |
+|           |                    |                    |                   |
+|           ▼                    ▼                    ▼                   |
+|    +-------------------------------------------------------------+    |
+|    |                     INFRASTRUCTURE                          |    |
+|    |  +---------+  +---------+  +---------+  +---------+       |    |
+|    |  |   AWS   |  |  AZURE  |  |   GCP   |  |  K8S    |       |    |
+|    |  +---------+  +---------+  +---------+  +---------+       |    |
+|    +-------------------------------------------------------------+    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -52,39 +52,39 @@ Infrastructure as Code (IaC) har revolutionerat hur vi hanterar infrastruktur. T
 ### Traditionell vs Modern Infrastructure Management
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│           TRADITIONELL APPROACH                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   Developer  ──▶  Ticket  ──▶  Ops Team  ──▶  Manual Config            │
-│       │              │            │               │                     │
-│       │    Dagar     │   Veckor   │    Timmar     │                     │
-│       ▼              ▼            ▼               ▼                     │
-│   ┌───────────────────────────────────────────────────────┐            │
-│   │  • Inkonsistent konfiguration                         │            │
-│   │  • Svårt att reproducera                              │            │
-│   │  • Dokumentation blir outdated                        │            │
-│   │  • Mänskliga misstag                                  │            │
-│   │  • Svårt att audita                                   │            │
-│   └───────────────────────────────────────────────────────┘            │
-│                                                                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│           IAC APPROACH (TERRAFORM)                                      │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   Developer  ──▶  Code  ──▶  PR Review  ──▶  CI/CD  ──▶  Apply        │
-│       │            │           │              │            │            │
-│       │   Minuter  │  Timmar   │   Minuter    │  Sekunder  │            │
-│       ▼            ▼           ▼              ▼            ▼            │
-│   ┌───────────────────────────────────────────────────────┐            │
-│   │  ✓ Versionskontrollerad                               │            │
-│   │  ✓ Reproducerbar                                      │            │
-│   │  ✓ Självdokumenterande                                │            │
-│   │  ✓ Testbar                                            │            │
-│   │  ✓ Auditbar                                           │            │
-│   └───────────────────────────────────────────────────────┘            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|           TRADITIONELL APPROACH                                         |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   Developer  --▶  Ticket  --▶  Ops Team  --▶  Manual Config            |
+|       |              |            |               |                     |
+|       |    Dagar     |   Veckor   |    Timmar     |                     |
+|       ▼              ▼            ▼               ▼                     |
+|   +-------------------------------------------------------+            |
+|   |  • Inkonsistent konfiguration                         |            |
+|   |  • Svårt att reproducera                              |            |
+|   |  • Dokumentation blir outdated                        |            |
+|   |  • Mänskliga misstag                                  |            |
+|   |  • Svårt att audita                                   |            |
+|   +-------------------------------------------------------+            |
+|                                                                         |
++-------------------------------------------------------------------------+
+|           IAC APPROACH (TERRAFORM)                                      |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   Developer  --▶  Code  --▶  PR Review  --▶  CI/CD  --▶  Apply        |
+|       |            |           |              |            |            |
+|       |   Minuter  |  Timmar   |   Minuter    |  Sekunder  |            |
+|       ▼            ▼           ▼              ▼            ▼            |
+|   +-------------------------------------------------------+            |
+|   |  ✓ Versionskontrollerad                               |            |
+|   |  ✓ Reproducerbar                                      |            |
+|   |  ✓ Självdokumenterande                                |            |
+|   |  ✓ Testbar                                            |            |
+|   |  ✓ Auditbar                                           |            |
+|   +-------------------------------------------------------+            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -104,24 +104,24 @@ Infrastructure as Code (IaC) har revolutionerat hur vi hanterar infrastruktur. T
 | **Community** | Enormt | AWS-fokuserat | Växande | Enormt |
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM SWEET SPOT                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   Configuration                                                         │
-│   Management ────────┐                                                  │
-│   (Ansible)          │                                                  │
-│                      │     ┌─────────────────┐                         │
-│                      ├────▶│   TERRAFORM     │◀────┐                   │
-│   Infrastructure     │     │  Multi-Cloud    │     │                   │
-│   Provisioning ──────┘     │  Orchestration  │     │                   │
-│                            └─────────────────┘     │                   │
-│                                   ▲                │                   │
-│   Application        ─────────────┘                │                   │
-│   Deployment                                       │                   │
-│   (Kubernetes)  ───────────────────────────────────┘                   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM SWEET SPOT                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   Configuration                                                         |
+|   Management --------+                                                  |
+|   (Ansible)          |                                                  |
+|                      |     +-----------------+                         |
+|                      +----▶|   TERRAFORM     |◀----+                   |
+|   Infrastructure     |     |  Multi-Cloud    |     |                   |
+|   Provisioning ------+     |  Orchestration  |     |                   |
+|                            +-----------------+     |                   |
+|                                   ▲                |                   |
+|   Application        -------------+                |                   |
+|   Deployment                                       |                   |
+|   (Kubernetes)  -----------------------------------+                   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -206,11 +206,11 @@ echo "1.6.4" > .terraform-version
 
 ```
 my-first-terraform/
-├── main.tf          # Huvudkonfiguration
-├── variables.tf     # Variabeldeklarationer
-├── outputs.tf       # Output-värden
-├── providers.tf     # Provider-konfiguration
-└── terraform.tfvars # Variabelvärden (känsligt!)
++-- main.tf          # Huvudkonfiguration
++-- variables.tf     # Variabeldeklarationer
++-- outputs.tf       # Output-värden
++-- providers.tf     # Provider-konfiguration
++-- terraform.tfvars # Variabelvärden (känsligt!)
 ```
 
 ### providers.tf - Provider Setup
@@ -372,32 +372,32 @@ output "security_group_id" {
 ## Terraform Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM CORE WORKFLOW                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   1. INIT                    2. PLAN                   3. APPLY        │
-│   ────────────────           ────────────────          ────────────    │
-│                                                                         │
-│   ┌─────────────┐           ┌─────────────┐          ┌─────────────┐  │
-│   │  Download   │    ──▶    │   Generate  │   ──▶    │   Execute   │  │
-│   │  Providers  │           │   Plan      │          │   Changes   │  │
-│   │  & Modules  │           │   (Diff)    │          │             │  │
-│   └─────────────┘           └─────────────┘          └─────────────┘  │
-│         │                         │                        │           │
-│         ▼                         ▼                        ▼           │
-│   ┌─────────────┐           ┌─────────────┐          ┌─────────────┐  │
-│   │   .terraform/│           │  Execution │          │   State     │  │
-│   │   directory  │           │    Plan    │          │   Updated   │  │
-│   └─────────────┘           └─────────────┘          └─────────────┘  │
-│                                                                         │
-│   4. (Optional) DESTROY                                                │
-│   ─────────────────────                                                │
-│   ┌─────────────────────────────────────────┐                         │
-│   │  Remove all resources managed by state  │                         │
-│   └─────────────────────────────────────────┘                         │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM CORE WORKFLOW                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   1. INIT                    2. PLAN                   3. APPLY        |
+|   ----------------           ----------------          ------------    |
+|                                                                         |
+|   +-------------+           +-------------+          +-------------+  |
+|   |  Download   |    --▶    |   Generate  |   --▶    |   Execute   |  |
+|   |  Providers  |           |   Plan      |          |   Changes   |  |
+|   |  & Modules  |           |   (Diff)    |          |             |  |
+|   +-------------+           +-------------+          +-------------+  |
+|         |                         |                        |           |
+|         ▼                         ▼                        ▼           |
+|   +-------------+           +-------------+          +-------------+  |
+|   |   .terraform/|           |  Execution |          |   State     |  |
+|   |   directory  |           |    Plan    |          |   Updated   |  |
+|   +-------------+           +-------------+          +-------------+  |
+|                                                                         |
+|   4. (Optional) DESTROY                                                |
+|   ---------------------                                                |
+|   +-----------------------------------------+                         |
+|   |  Remove all resources managed by state  |                         |
+|   +-----------------------------------------+                         |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Detaljerade Kommandon
@@ -551,7 +551,7 @@ terraform state show local_file.hello
 
 ---
 
-**Nästa Node:** HCL Syntax Deep Dive →
+**Nästa Node:** HCL Syntax Deep Dive ->
 ''',
     "xp_reward": 150,
     "estimated_minutes": 60,
@@ -579,34 +579,34 @@ NODE_2 = {
 HashiCorp Configuration Language (HCL) är designat för att vara både människo-läsbart och maskin-vänligt. Det kombinerar det bästa från JSON (strukturerad data) med programmeringsspråksfunktioner.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         HCL LANGUAGE OVERVIEW                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌─────────────────┐                                                  │
-│   │   BLOCKS        │  ← Grundläggande byggstenar                      │
-│   │   ─────────     │     resource, variable, output, module           │
-│   │   type "label" {│                                                  │
-│   │     attribute   │                                                  │
-│   │   }             │                                                  │
-│   └─────────────────┘                                                  │
-│           │                                                             │
-│           ▼                                                             │
-│   ┌─────────────────┐                                                  │
-│   │   ATTRIBUTES    │  ← Nyckel-värde par                              │
-│   │   ──────────    │     name = "value"                               │
-│   │   key = value   │     count = 5                                    │
-│   └─────────────────┘                                                  │
-│           │                                                             │
-│           ▼                                                             │
-│   ┌─────────────────┐                                                  │
-│   │   EXPRESSIONS   │  ← Dynamiska värden                              │
-│   │   ───────────   │     var.name, local.value                        │
-│   │   references,   │     functions, conditionals                      │
-│   │   functions     │                                                  │
-│   └─────────────────┘                                                  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         HCL LANGUAGE OVERVIEW                           |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   +-----------------+                                                  |
+|   |   BLOCKS        |  <- Grundläggande byggstenar                      |
+|   |   ---------     |     resource, variable, output, module           |
+|   |   type "label" {|                                                  |
+|   |     attribute   |                                                  |
+|   |   }             |                                                  |
+|   +-----------------+                                                  |
+|           |                                                             |
+|           ▼                                                             |
+|   +-----------------+                                                  |
+|   |   ATTRIBUTES    |  <- Nyckel-värde par                              |
+|   |   ----------    |     name = "value"                               |
+|   |   key = value   |     count = 5                                    |
+|   +-----------------+                                                  |
+|           |                                                             |
+|           ▼                                                             |
+|   +-----------------+                                                  |
+|   |   EXPRESSIONS   |  <- Dynamiska värden                              |
+|   |   -----------   |     var.name, local.value                        |
+|   |   references,   |     functions, conditionals                      |
+|   |   functions     |                                                  |
+|   +-----------------+                                                  |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -795,41 +795,41 @@ resource "aws_instance" "web" {
 ## Data Types
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         HCL DATA TYPES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  PRIMITIVE TYPES                                                        │
-│  ───────────────                                                        │
-│  ┌──────────┬─────────────────────────────────────────────┐            │
-│  │ string   │ "hello", "world-${var.env}"                │            │
-│  │ number   │ 42, 3.14159                                 │            │
-│  │ bool     │ true, false                                 │            │
-│  └──────────┴─────────────────────────────────────────────┘            │
-│                                                                         │
-│  COLLECTION TYPES                                                       │
-│  ────────────────                                                       │
-│  ┌──────────┬─────────────────────────────────────────────┐            │
-│  │ list     │ ["a", "b", "c"]  - Ordered, same type      │            │
-│  │ set      │ toset(["a", "b"]) - Unique, unordered      │            │
-│  │ map      │ { key = "value" } - Key-value pairs        │            │
-│  └──────────┴─────────────────────────────────────────────┘            │
-│                                                                         │
-│  STRUCTURAL TYPES                                                       │
-│  ────────────────                                                       │
-│  ┌──────────┬─────────────────────────────────────────────┐            │
-│  │ object   │ object({ name = string, port = number })   │            │
-│  │ tuple    │ tuple([string, number, bool])               │            │
-│  └──────────┴─────────────────────────────────────────────┘            │
-│                                                                         │
-│  SPECIAL TYPES                                                          │
-│  ─────────────                                                          │
-│  ┌──────────┬─────────────────────────────────────────────┐            │
-│  │ any      │ Accepts any type (use sparingly)            │            │
-│  │ null     │ Represents absence of value                 │            │
-│  └──────────┴─────────────────────────────────────────────┘            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         HCL DATA TYPES                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  PRIMITIVE TYPES                                                        |
+|  ---------------                                                        |
+|  +----------+---------------------------------------------+            |
+|  | string   | "hello", "world-${var.env}"                |            |
+|  | number   | 42, 3.14159                                 |            |
+|  | bool     | true, false                                 |            |
+|  +----------+---------------------------------------------+            |
+|                                                                         |
+|  COLLECTION TYPES                                                       |
+|  ----------------                                                       |
+|  +----------+---------------------------------------------+            |
+|  | list     | ["a", "b", "c"]  - Ordered, same type      |            |
+|  | set      | toset(["a", "b"]) - Unique, unordered      |            |
+|  | map      | { key = "value" } - Key-value pairs        |            |
+|  +----------+---------------------------------------------+            |
+|                                                                         |
+|  STRUCTURAL TYPES                                                       |
+|  ----------------                                                       |
+|  +----------+---------------------------------------------+            |
+|  | object   | object({ name = string, port = number })   |            |
+|  | tuple    | tuple([string, number, bool])               |            |
+|  +----------+---------------------------------------------+            |
+|                                                                         |
+|  SPECIAL TYPES                                                          |
+|  -------------                                                          |
+|  +----------+---------------------------------------------+            |
+|  | any      | Accepts any type (use sparingly)            |            |
+|  | null     | Represents absence of value                 |            |
+|  +----------+---------------------------------------------+            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Type Constraints i Praktiken
@@ -1010,79 +1010,79 @@ ips = try(aws_instance.web[*].public_ip, [])
 ## Functions Reference
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM BUILT-IN FUNCTIONS                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  STRING FUNCTIONS                                                       │
-│  ────────────────                                                       │
-│  format("Hello, %s!", "World")        → "Hello, World!"                │
-│  join(", ", ["a", "b", "c"])          → "a, b, c"                      │
-│  split(",", "a,b,c")                  → ["a", "b", "c"]                │
-│  replace("hello", "l", "L")           → "heLLo"                        │
-│  lower("HELLO")                       → "hello"                        │
-│  upper("hello")                       → "HELLO"                        │
-│  trim("  hello  ")                    → "hello"                        │
-│  substr("hello", 0, 3)                → "hel"                          │
-│                                                                         │
-│  COLLECTION FUNCTIONS                                                   │
-│  ────────────────────                                                   │
-│  length(["a", "b", "c"])              → 3                              │
-│  element(["a", "b", "c"], 1)          → "b"                            │
-│  concat([1, 2], [3, 4])               → [1, 2, 3, 4]                   │
-│  flatten([[1, 2], [3, 4]])            → [1, 2, 3, 4]                   │
-│  distinct([1, 2, 1, 3])               → [1, 2, 3]                      │
-│  sort(["b", "a", "c"])                → ["a", "b", "c"]                │
-│  reverse([1, 2, 3])                   → [3, 2, 1]                      │
-│  contains(["a", "b"], "a")            → true                           │
-│  lookup({a="1"}, "a", "default")      → "1"                            │
-│  merge({a=1}, {b=2})                  → {a=1, b=2}                     │
-│  keys({a=1, b=2})                     → ["a", "b"]                     │
-│  values({a=1, b=2})                   → [1, 2]                         │
-│  zipmap(["a","b"], [1, 2])            → {a=1, b=2}                     │
-│                                                                         │
-│  NUMERIC FUNCTIONS                                                      │
-│  ─────────────────                                                      │
-│  min(1, 2, 3)                         → 1                              │
-│  max(1, 2, 3)                         → 3                              │
-│  abs(-5)                              → 5                              │
-│  ceil(4.1)                            → 5                              │
-│  floor(4.9)                           → 4                              │
-│                                                                         │
-│  TYPE CONVERSION                                                        │
-│  ───────────────                                                        │
-│  tostring(123)                        → "123"                          │
-│  tonumber("123")                      → 123                            │
-│  tobool("true")                       → true                           │
-│  tolist(toset([1, 2]))               → [1, 2]                         │
-│  toset([1, 1, 2])                     → [1, 2]                         │
-│  tomap({a = "b"})                     → {a = "b"}                      │
-│                                                                         │
-│  ENCODING FUNCTIONS                                                     │
-│  ──────────────────                                                     │
-│  jsonencode({a = 1})                  → '{"a":1}'                      │
-│  jsondecode('{"a":1}')                → {a = 1}                        │
-│  yamlencode({a = 1})                  → "a: 1\\n"                      │
-│  yamldecode("a: 1")                   → {a = 1}                        │
-│  base64encode("hello")                → "aGVsbG8="                     │
-│  base64decode("aGVsbG8=")             → "hello"                        │
-│                                                                         │
-│  FILESYSTEM FUNCTIONS                                                   │
-│  ────────────────────                                                   │
-│  file("./file.txt")                   → file contents                  │
-│  fileexists("./file.txt")             → true/false                     │
-│  templatefile("./tpl.txt", {v=1})    → rendered template              │
-│  abspath("./relative")                → "/absolute/path"               │
-│  dirname("/path/to/file.txt")         → "/path/to"                     │
-│  basename("/path/to/file.txt")        → "file.txt"                     │
-│                                                                         │
-│  HASH & CRYPTO FUNCTIONS                                                │
-│  ───────────────────────                                                │
-│  md5("hello")                         → "5d41402abc4b2a76..."          │
-│  sha256("hello")                      → "2cf24dba5fb0a30e..."          │
-│  uuid()                               → random UUID                    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM BUILT-IN FUNCTIONS                         |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  STRING FUNCTIONS                                                       |
+|  ----------------                                                       |
+|  format("Hello, %s!", "World")        -> "Hello, World!"                |
+|  join(", ", ["a", "b", "c"])          -> "a, b, c"                      |
+|  split(",", "a,b,c")                  -> ["a", "b", "c"]                |
+|  replace("hello", "l", "L")           -> "heLLo"                        |
+|  lower("HELLO")                       -> "hello"                        |
+|  upper("hello")                       -> "HELLO"                        |
+|  trim("  hello  ")                    -> "hello"                        |
+|  substr("hello", 0, 3)                -> "hel"                          |
+|                                                                         |
+|  COLLECTION FUNCTIONS                                                   |
+|  --------------------                                                   |
+|  length(["a", "b", "c"])              -> 3                              |
+|  element(["a", "b", "c"], 1)          -> "b"                            |
+|  concat([1, 2], [3, 4])               -> [1, 2, 3, 4]                   |
+|  flatten([[1, 2], [3, 4]])            -> [1, 2, 3, 4]                   |
+|  distinct([1, 2, 1, 3])               -> [1, 2, 3]                      |
+|  sort(["b", "a", "c"])                -> ["a", "b", "c"]                |
+|  reverse([1, 2, 3])                   -> [3, 2, 1]                      |
+|  contains(["a", "b"], "a")            -> true                           |
+|  lookup({a="1"}, "a", "default")      -> "1"                            |
+|  merge({a=1}, {b=2})                  -> {a=1, b=2}                     |
+|  keys({a=1, b=2})                     -> ["a", "b"]                     |
+|  values({a=1, b=2})                   -> [1, 2]                         |
+|  zipmap(["a","b"], [1, 2])            -> {a=1, b=2}                     |
+|                                                                         |
+|  NUMERIC FUNCTIONS                                                      |
+|  -----------------                                                      |
+|  min(1, 2, 3)                         -> 1                              |
+|  max(1, 2, 3)                         -> 3                              |
+|  abs(-5)                              -> 5                              |
+|  ceil(4.1)                            -> 5                              |
+|  floor(4.9)                           -> 4                              |
+|                                                                         |
+|  TYPE CONVERSION                                                        |
+|  ---------------                                                        |
+|  tostring(123)                        -> "123"                          |
+|  tonumber("123")                      -> 123                            |
+|  tobool("true")                       -> true                           |
+|  tolist(toset([1, 2]))               -> [1, 2]                         |
+|  toset([1, 1, 2])                     -> [1, 2]                         |
+|  tomap({a = "b"})                     -> {a = "b"}                      |
+|                                                                         |
+|  ENCODING FUNCTIONS                                                     |
+|  ------------------                                                     |
+|  jsonencode({a = 1})                  -> '{"a":1}'                      |
+|  jsondecode('{"a":1}')                -> {a = 1}                        |
+|  yamlencode({a = 1})                  -> "a: 1\\n"                      |
+|  yamldecode("a: 1")                   -> {a = 1}                        |
+|  base64encode("hello")                -> "aGVsbG8="                     |
+|  base64decode("aGVsbG8=")             -> "hello"                        |
+|                                                                         |
+|  FILESYSTEM FUNCTIONS                                                   |
+|  --------------------                                                   |
+|  file("./file.txt")                   -> file contents                  |
+|  fileexists("./file.txt")             -> true/false                     |
+|  templatefile("./tpl.txt", {v=1})    -> rendered template              |
+|  abspath("./relative")                -> "/absolute/path"               |
+|  dirname("/path/to/file.txt")         -> "/path/to"                     |
+|  basename("/path/to/file.txt")        -> "file.txt"                     |
+|                                                                         |
+|  HASH & CRYPTO FUNCTIONS                                                |
+|  -----------------------                                                |
+|  md5("hello")                         -> "5d41402abc4b2a76..."          |
+|  sha256("hello")                      -> "2cf24dba5fb0a30e..."          |
+|  uuid()                               -> random UUID                    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Praktiska Funktionsexempel
@@ -1223,7 +1223,7 @@ resource "aws_security_group" "example" {
 
 ---
 
-**Nästa Node:** Providers Deep Dive →
+**Nästa Node:** Providers Deep Dive ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 65,

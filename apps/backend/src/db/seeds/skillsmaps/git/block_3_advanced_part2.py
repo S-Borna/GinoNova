@@ -27,43 +27,43 @@ NODE_11_SECURITY_COMPLIANCE = {
 ## Security Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      GIT SECURITY LAYERS                                    │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   LAYER 1: AUTHENTICATION & ACCESS                                          │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐   │  │
-│   │  │ SSH Keys    │ │ PAT Tokens  │ │    SSO     │ │    2FA      │   │  │
-│   │  │ Ed25519     │ │ Fine-grained│ │   SAML     │ │   TOTP      │   │  │
-│   │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘   │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   LAYER 2: CODE SECURITY                                                    │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐   │  │
-│   │  │ Secret Scan │ │  CodeQL     │ │ Dependabot  │ │ SAST/DAST   │   │  │
-│   │  │ Pre-commit  │ │  Analysis   │ │  Alerts     │ │  Scanning   │   │  │
-│   │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘   │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   LAYER 3: COMMIT INTEGRITY                                                 │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐   │  │
-│   │  │ GPG Signing │ │  Verified   │ │  Branch     │ │  Required   │   │  │
-│   │  │   Commits   │ │  Commits    │ │ Protection  │ │  Reviews    │   │  │
-│   │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘   │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   LAYER 4: AUDIT & COMPLIANCE                                               │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐   │  │
-│   │  │ Audit Logs  │ │ Compliance  │ │  Security   │ │  Access     │   │  │
-│   │  │  History    │ │  Reports    │ │  Alerts     │ │  Reviews    │   │  │
-│   │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘   │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                      GIT SECURITY LAYERS                                    |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   LAYER 1: AUTHENTICATION & ACCESS                                          |
+|   +---------------------------------------------------------------------+  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   |  | SSH Keys    | | PAT Tokens  | |    SSO     | |    2FA      |   |  |
+|   |  | Ed25519     | | Fine-grained| |   SAML     | |   TOTP      |   |  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   LAYER 2: CODE SECURITY                                                    |
+|   +---------------------------------------------------------------------+  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   |  | Secret Scan | |  CodeQL     | | Dependabot  | | SAST/DAST   |   |  |
+|   |  | Pre-commit  | |  Analysis   | |  Alerts     | |  Scanning   |   |  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   LAYER 3: COMMIT INTEGRITY                                                 |
+|   +---------------------------------------------------------------------+  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   |  | GPG Signing | |  Verified   | |  Branch     | |  Required   |   |  |
+|   |  |   Commits   | |  Commits    | | Protection  | |  Reviews    |   |  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   LAYER 4: AUDIT & COMPLIANCE                                               |
+|   +---------------------------------------------------------------------+  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   |  | Audit Logs  | | Compliance  | |  Security   | |  Access     |   |  |
+|   |  |  History    | |  Reports    | |  Alerts     | |  Reviews    |   |  |
+|   |  +-------------+ +-------------+ +-------------+ +-------------+   |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -94,7 +94,7 @@ gpg --list-secret-keys --keyid-format=long
 # Export public key
 gpg --armor --export 3AA5C34371567BD2
 
-# Add to GitHub: Settings → SSH and GPG keys → New GPG key
+# Add to GitHub: Settings -> SSH and GPG keys -> New GPG key
 ```
 
 ### Configure Git
@@ -287,35 +287,35 @@ git clone git@github.com-work:company/repo.git
 ### Fine-grained Personal Access Tokens
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    FINE-GRAINED PAT CONFIGURATION                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Token Name: ci-deployment-token                                           │
-│   Expiration: 90 days                                                       │
-│                                                                             │
-│   REPOSITORY ACCESS:                                                        │
-│   ├── ○ All repositories                                                   │
-│   └── ● Selected repositories                                              │
-│       └── myorg/myrepo                                                      │
-│                                                                             │
-│   PERMISSIONS:                                                              │
-│   ├── Repository:                                                           │
-│   │   ├── Contents: Read and write                                          │
-│   │   ├── Metadata: Read-only (mandatory)                                   │
-│   │   ├── Pull requests: Read and write                                     │
-│   │   └── Workflows: Read and write                                         │
-│   │                                                                         │
-│   └── Account:                                                              │
-│       └── (none selected)                                                   │
-│                                                                             │
-│   BEST PRACTICES:                                                           │
-│   • Minimal permissions needed                                              │
-│   • Short expiration (30-90 days)                                           │
-│   • Rotate regularly                                                        │
-│   • Use specific repos, not all                                             │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                    FINE-GRAINED PAT CONFIGURATION                           |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Token Name: ci-deployment-token                                           |
+|   Expiration: 90 days                                                       |
+|                                                                             |
+|   REPOSITORY ACCESS:                                                        |
+|   +-- ○ All repositories                                                   |
+|   +-- ● Selected repositories                                              |
+|       +-- myorg/myrepo                                                      |
+|                                                                             |
+|   PERMISSIONS:                                                              |
+|   +-- Repository:                                                           |
+|   |   +-- Contents: Read and write                                          |
+|   |   +-- Metadata: Read-only (mandatory)                                   |
+|   |   +-- Pull requests: Read and write                                     |
+|   |   +-- Workflows: Read and write                                         |
+|   |                                                                         |
+|   +-- Account:                                                              |
+|       +-- (none selected)                                                   |
+|                                                                             |
+|   BEST PRACTICES:                                                           |
+|   • Minimal permissions needed                                              |
+|   • Short expiration (30-90 days)                                           |
+|   • Rotate regularly                                                        |
+|   • Use specific repos, not all                                             |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -527,37 +527,37 @@ NODE_12_MONOREPO_SCALE = {
 ## Monorepo Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                       MONOREPO vs POLYREPO                                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   POLYREPO (Multiple Repositories):                                         │
-│   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐                       │
-│   │ frontend-app │ │ backend-api  │ │shared-utils  │                       │
-│   │    .git      │ │    .git      │ │    .git      │                       │
-│   │   package/   │ │   package/   │ │   package/   │                       │
-│   └──────────────┘ └──────────────┘ └──────────────┘                       │
-│   + Independent versioning         - Dependency management complex          │
-│   + Clear ownership                - Cross-repo changes hard                │
-│   - Duplicated config              - Inconsistent tooling                   │
-│                                                                             │
-│   MONOREPO (Single Repository):                                             │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │                         company-platform                            │  │
-│   │                              .git                                   │  │
-│   │  ┌──────────────┬──────────────┬──────────────┬──────────────┐     │  │
-│   │  │    apps/     │  packages/   │   tools/     │    docs/     │     │  │
-│   │  ├──────────────┼──────────────┼──────────────┼──────────────┤     │  │
-│   │  │ frontend/    │ ui/          │ cli/         │ api-docs/    │     │  │
-│   │  │ backend/     │ utils/       │ scripts/     │ guides/      │     │  │
-│   │  │ mobile/      │ config/      │ generators/  │              │     │  │
-│   │  └──────────────┴──────────────┴──────────────┴──────────────┘     │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│   + Atomic cross-package changes   - Larger clone size                      │
-│   + Shared tooling                 - Complex CI/CD                          │
-│   + Consistent dependencies        - Permission management                  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                       MONOREPO vs POLYREPO                                  |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   POLYREPO (Multiple Repositories):                                         |
+|   +--------------+ +--------------+ +--------------+                       |
+|   | frontend-app | | backend-api  | |shared-utils  |                       |
+|   |    .git      | |    .git      | |    .git      |                       |
+|   |   package/   | |   package/   | |   package/   |                       |
+|   +--------------+ +--------------+ +--------------+                       |
+|   + Independent versioning         - Dependency management complex          |
+|   + Clear ownership                - Cross-repo changes hard                |
+|   - Duplicated config              - Inconsistent tooling                   |
+|                                                                             |
+|   MONOREPO (Single Repository):                                             |
+|   +---------------------------------------------------------------------+  |
+|   |                         company-platform                            |  |
+|   |                              .git                                   |  |
+|   |  +--------------+--------------+--------------+--------------+     |  |
+|   |  |    apps/     |  packages/   |   tools/     |    docs/     |     |  |
+|   |  +--------------+--------------+--------------+--------------+     |  |
+|   |  | frontend/    | ui/          | cli/         | api-docs/    |     |  |
+|   |  | backend/     | utils/       | scripts/     | guides/      |     |  |
+|   |  | mobile/      | config/      | generators/  |              |     |  |
+|   |  +--------------+--------------+--------------+--------------+     |  |
+|   +---------------------------------------------------------------------+  |
+|   + Atomic cross-package changes   - Larger clone size                      |
+|   + Shared tooling                 - Complex CI/CD                          |
+|   + Consistent dependencies        - Permission management                  |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -572,17 +572,17 @@ npx create-turbo@latest
 
 # Directory structure
 company-platform/
-├── apps/
-│   ├── web/           # Next.js app
-│   ├── mobile/        # React Native
-│   └── api/           # Node.js backend
-├── packages/
-│   ├── ui/            # Shared React components
-│   ├── config/        # Shared configs (ESLint, TS)
-│   └── utils/         # Shared utilities
-├── package.json       # Root package.json
-├── turbo.json         # Turborepo config
-└── pnpm-workspace.yaml
++-- apps/
+|   +-- web/           # Next.js app
+|   +-- mobile/        # React Native
+|   +-- api/           # Node.js backend
++-- packages/
+|   +-- ui/            # Shared React components
+|   +-- config/        # Shared configs (ESLint, TS)
+|   +-- utils/         # Shared utilities
++-- package.json       # Root package.json
++-- turbo.json         # Turborepo config
++-- pnpm-workspace.yaml
 ```
 
 ```json

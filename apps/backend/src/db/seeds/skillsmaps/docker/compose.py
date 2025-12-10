@@ -253,15 +253,15 @@ docker compose run --rm api npm test
 
 ```
 myproject/
-├── docker-compose.yml
-├── api/
-│   ├── Dockerfile
-│   ├── package.json
-│   └── src/
-├── frontend/
-│   ├── Dockerfile
-│   └── src/
-└── .env
++-- docker-compose.yml
++-- api/
+|   +-- Dockerfile
+|   +-- package.json
+|   +-- src/
++-- frontend/
+|   +-- Dockerfile
+|   +-- src/
++-- .env
 ```
 
 ### docker-compose.yml
@@ -478,9 +478,9 @@ services:
 
 ```bash
 myproject/
-├── docker-compose.yml          # Base config
-├── docker-compose.override.yml # Dev (auto-loaded)
-└── docker-compose.prod.yml     # Production
++-- docker-compose.yml          # Base config
++-- docker-compose.override.yml # Dev (auto-loaded)
++-- docker-compose.prod.yml     # Production
 ```
 
 ### docker-compose.yml (base)

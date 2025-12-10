@@ -14,7 +14,7 @@ NODE_05_WHAT_ARE_AGENTS = {
 
 Forsta skillnaden mellan LLMs, chatbots och riktiga AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en AI Agent?
 
@@ -27,7 +27,7 @@ En AI-agent ar ett system som kan planera, agera, observera och anpassa sig auto
 | Memory | Minns kontext och historik |
 | Perception | Tar emot information |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ En AI-agent ar ett system som kan planera, agera, observera och anpassa sig auto
 | Skalbarhet | Hanterar manga uppgifter parallellt |
 | Flexibilitet | Anpassar sig till nya situationer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Autonominiva
 
@@ -51,75 +51,75 @@ En AI-agent ar ett system som kan planera, agera, observera och anpassa sig auto
 | 4 | Agentic System | Multi-step reasoning |
 | 5 | Autonomous | Minimal human intervention |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent vs Chatbot vs RAG
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   AI APPLICATION SPECTRUM                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  LEVEL 0: Basic LLM                                             │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  User -> LLM -> Response                                   │ │
-│  │  - Single turn, no memory, no tools                        │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  LEVEL 1: Chatbot                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  User -> LLM (+ history) -> Response                       │ │
-│  │  - Multi-turn, session memory                              │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  LEVEL 2: RAG Application                                       │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  User -> Retriever -> LLM (+ context) -> Response          │ │
-│  │  - External knowledge, no autonomous actions               │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  LEVEL 3-4: Agent                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  User -> Plan -> Action -> Observe -> Reflect -> Done      │ │
-│  │  - Multi-step reasoning, tool use, self-correction         │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   AI APPLICATION SPECTRUM                        |
++-----------------------------------------------------------------+
+|                                                                  |
+|  LEVEL 0: Basic LLM                                             |
+|  +-----------------------------------------------------------+ |
+|  |  User -> LLM -> Response                                   | |
+|  |  - Single turn, no memory, no tools                        | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
+|  LEVEL 1: Chatbot                                               |
+|  +-----------------------------------------------------------+ |
+|  |  User -> LLM (+ history) -> Response                       | |
+|  |  - Multi-turn, session memory                              | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
+|  LEVEL 2: RAG Application                                       |
+|  +-----------------------------------------------------------+ |
+|  |  User -> Retriever -> LLM (+ context) -> Response          | |
+|  |  - External knowledge, no autonomous actions               | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
+|  LEVEL 3-4: Agent                                               |
+|  +-----------------------------------------------------------+ |
+|  |  User -> Plan -> Action -> Observe -> Reflect -> Done      | |
+|  |  - Multi-step reasoning, tool use, self-correction         | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## De Fyra Karnkomponenterna
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   AGENT CORE COMPONENTS                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                      ┌─────────────────┐                        │
-│                      │    BRAIN        │                        │
-│                      │   (LLM/Model)   │                        │
-│                      │                 │                        │
-│                      │  - Reasoning    │                        │
-│                      │  - Planning     │                        │
-│                      │  - Decisions    │                        │
-│                      └────────┬────────┘                        │
-│                               │                                  │
-│         ┌─────────────────────┼─────────────────────┐           │
-│         │                     │                     │           │
-│         v                     v                     v           │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐       │
-│  │ PERCEPTION  │     │   TOOLS     │     │   MEMORY    │       │
-│  │             │     │             │     │             │       │
-│  │ - User input│     │ - Code exec │     │ - Short-term│       │
-│  │ - File read │     │ - Web search│     │ - Long-term │       │
-│  │ - API resp  │     │ - Database  │     │ - Semantic  │       │
-│  └─────────────┘     └─────────────┘     └─────────────┘       │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   AGENT CORE COMPONENTS                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|                      +-----------------+                        |
+|                      |    BRAIN        |                        |
+|                      |   (LLM/Model)   |                        |
+|                      |                 |                        |
+|                      |  - Reasoning    |                        |
+|                      |  - Planning     |                        |
+|                      |  - Decisions    |                        |
+|                      +--------+--------+                        |
+|                               |                                  |
+|         +---------------------+---------------------+           |
+|         |                     |                     |           |
+|         v                     v                     v           |
+|  +-------------+     +-------------+     +-------------+       |
+|  | PERCEPTION  |     |   TOOLS     |     |   MEMORY    |       |
+|  |             |     |             |     |             |       |
+|  | - User input|     | - Code exec |     | - Short-term|       |
+|  | - File read |     | - Web search|     | - Long-term |       |
+|  | - API resp  |     | - Database  |     | - Semantic  |       |
+|  +-------------+     +-------------+     +-------------+       |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent Use Cases
 
@@ -131,7 +131,7 @@ En AI-agent ar ett system som kan planera, agera, observera och anpassa sig auto
 | DevOps automation | 4 | Shell, Cloud APIs | Hog |
 | Autonomous coding | 4-5 | Full miljoaccess | Mycket hog |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Din Forsta Agent
 
@@ -176,7 +176,7 @@ def get_weather(city: str) -> str:
 TOOL_FUNCTIONS = {"get_weather": get_weather}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent Loop
 
@@ -219,7 +219,7 @@ def run_agent(user_message: str, max_iterations: int = 5) -> str:
 print(run_agent("Vad ar vadret i Stockholm?"))
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Guard Rails
 
@@ -242,7 +242,7 @@ class AgentGuards:
         return True
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -253,7 +253,7 @@ class AgentGuards:
 | Hallucinerar resultat | Saknar validering | Validera tool results |
 | For langsamt | For manga iterationer | Begrans max_iterations |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -284,7 +284,7 @@ NODE_06_AGENT_TOOLS = {
 
 Bygg verktyg som ger agenter superkrafter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Agent Tools?
 
@@ -297,7 +297,7 @@ Tools ar funktioner som agenten kan anropa for att interagera med omvarlden. Ope
 | Computation | execute_code, calculate | Medium |
 | Integration | slack_message, github_action | Hog |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -308,7 +308,7 @@ Tools ar funktioner som agenten kan anropa for att interagera med omvarlden. Ope
 | Effektivitet | Automatisera repetitiva uppgifter |
 | Flexibilitet | Lagg till nya verktyg efter behov |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Tool Schema
 
@@ -319,45 +319,45 @@ Tools ar funktioner som agenten kan anropa for att interagera med omvarlden. Ope
 | parameters | JSON Schema for input |
 | required | Obligatoriska falt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tool Schema Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   TOOL/FUNCTION SCHEMA                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  {                                                               │
-│    "type": "function",                                           │
-│    "function": {                                                 │
-│      "name": "search_products",                                  │
-│      "description": "Sok efter produkter i databasen",          │
-│      "parameters": {                                             │
-│        "type": "object",                                         │
-│        "properties": {                                           │
-│          "query": {                                              │
-│            "type": "string",                                     │
-│            "description": "Sokterm"                              │
-│          },                                                      │
-│          "category": {                                           │
-│            "type": "string",                                     │
-│            "enum": ["electronics", "clothing"]                   │
-│          },                                                      │
-│          "max_results": {                                        │
-│            "type": "integer",                                    │
-│            "default": 10                                         │
-│          }                                                       │
-│        },                                                        │
-│        "required": ["query"]                                     │
-│      }                                                           │
-│    }                                                             │
-│  }                                                               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   TOOL/FUNCTION SCHEMA                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  {                                                               |
+|    "type": "function",                                           |
+|    "function": {                                                 |
+|      "name": "search_products",                                  |
+|      "description": "Sok efter produkter i databasen",          |
+|      "parameters": {                                             |
+|        "type": "object",                                         |
+|        "properties": {                                           |
+|          "query": {                                              |
+|            "type": "string",                                     |
+|            "description": "Sokterm"                              |
+|          },                                                      |
+|          "category": {                                           |
+|            "type": "string",                                     |
+|            "enum": ["electronics", "clothing"]                   |
+|          },                                                      |
+|          "max_results": {                                        |
+|            "type": "integer",                                    |
+|            "default": 10                                         |
+|          }                                                       |
+|        },                                                        |
+|        "required": ["query"]                                     |
+|      }                                                           |
+|    }                                                             |
+|  }                                                               |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Base Tool Pattern
 
@@ -412,7 +412,7 @@ class BaseTool(ABC):
         }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Konkreta Verktyg
 
@@ -490,7 +490,7 @@ class CalculatorTool(BaseTool):
             return ToolResult(success=False, data=None, error=str(e))
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tool Registry
 
@@ -529,7 +529,7 @@ response = client.chat.completions.create(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hantera Tool Calls
 
@@ -558,7 +558,7 @@ def process_tool_calls(response, registry: ToolRegistry) -> list[dict]:
     return tool_results
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Battre Tool Beskrivningar
 
@@ -581,7 +581,7 @@ class ImprovedSearchTool(BaseTool):
         """
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Validering med Pydantic
 
@@ -605,7 +605,7 @@ def execute(self, **kwargs) -> ToolResult:
     # Fortsatt med validerade params
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -616,7 +616,7 @@ def execute(self, **kwargs) -> ToolResult:
 | Parallella calls misslyckas | Synkron kod | Anvand asyncio |
 | Sakerhetsproblem | Ingen input-sanering | Validera all input |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

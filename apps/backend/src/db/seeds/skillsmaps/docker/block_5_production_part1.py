@@ -23,38 +23,38 @@ Docker Swarm ar Dockers inbyggda orchestration-losning. Den gor det mojligt att 
 ### Swarm Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER SWARM ARCHITECTURE                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│                        MANAGER NODES                                     │
-│                   (Raft Consensus Group)                                │
-│                                                                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                  │
-│  │   Manager 1  │  │   Manager 2  │  │   Manager 3  │                  │
-│  │   (Leader)   │◄─►│  (Follower)  │◄─►│  (Follower)  │                  │
-│  │              │  │              │  │              │                  │
-│  │  - API       │  │  - API       │  │  - API       │                  │
-│  │  - Scheduler │  │  - Standby   │  │  - Standby   │                  │
-│  │  - Raft      │  │  - Raft      │  │  - Raft      │                  │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘                  │
-│         │                 │                 │                           │
-│         └─────────────────┼─────────────────┘                           │
-│                           │                                             │
-│                    WORKER NODES                                         │
-│                                                                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                  │
-│  │   Worker 1   │  │   Worker 2   │  │   Worker 3   │                  │
-│  │              │  │              │  │              │                  │
-│  │  ┌────────┐  │  │  ┌────────┐  │  │  ┌────────┐  │                  │
-│  │  │Task 1.1│  │  │  │Task 1.2│  │  │  │Task 2.1│  │                  │
-│  │  └────────┘  │  │  └────────┘  │  │  └────────┘  │                  │
-│  │  ┌────────┐  │  │  ┌────────┐  │  │  ┌────────┐  │                  │
-│  │  │Task 2.2│  │  │  │Task 3.1│  │  │  │Task 3.2│  │                  │
-│  │  └────────┘  │  │  └────────┘  │  │  └────────┘  │                  │
-│  └──────────────┘  └──────────────┘  └──────────────┘                  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER SWARM ARCHITECTURE                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|                        MANAGER NODES                                     |
+|                   (Raft Consensus Group)                                |
+|                                                                          |
+|  +--------------+  +--------------+  +--------------+                  |
+|  |   Manager 1  |  |   Manager 2  |  |   Manager 3  |                  |
+|  |   (Leader)   |◄-►|  (Follower)  |◄-►|  (Follower)  |                  |
+|  |              |  |              |  |              |                  |
+|  |  - API       |  |  - API       |  |  - API       |                  |
+|  |  - Scheduler |  |  - Standby   |  |  - Standby   |                  |
+|  |  - Raft      |  |  - Raft      |  |  - Raft      |                  |
+|  +------+-------+  +------+-------+  +------+-------+                  |
+|         |                 |                 |                           |
+|         +-----------------+-----------------+                           |
+|                           |                                             |
+|                    WORKER NODES                                         |
+|                                                                          |
+|  +--------------+  +--------------+  +--------------+                  |
+|  |   Worker 1   |  |   Worker 2   |  |   Worker 3   |                  |
+|  |              |  |              |  |              |                  |
+|  |  +--------+  |  |  +--------+  |  |  +--------+  |                  |
+|  |  |Task 1.1|  |  |  |Task 1.2|  |  |  |Task 2.1|  |                  |
+|  |  +--------+  |  |  +--------+  |  |  +--------+  |                  |
+|  |  +--------+  |  |  +--------+  |  |  +--------+  |                  |
+|  |  |Task 2.2|  |  |  |Task 3.1|  |  |  |Task 3.2|  |                  |
+|  |  +--------+  |  |  +--------+  |  |  +--------+  |                  |
+|  +--------------+  +--------------+  +--------------+                  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Swarm Setup
@@ -341,7 +341,7 @@ docker config rm nginx_config
 
 ---
 
-**Nasta Node:** Production Patterns →
+**Nasta Node:** Production Patterns ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 85,
@@ -367,38 +367,38 @@ Production Docker deployments kraver robusta patterns for sakkerhet, skalbarhet 
 ### Production Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    PRODUCTION READINESS CHECKLIST                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SECURITY                                                                │
-│  □ Non-root user in containers                                          │
-│  □ Read-only filesystem where possible                                  │
-│  □ Secrets management (not env vars)                                    │
-│  □ Image vulnerability scanning                                         │
-│  □ Network segmentation                                                 │
-│  □ Resource limits set                                                  │
-│                                                                          │
-│  RELIABILITY                                                             │
-│  □ Health checks configured                                             │
-│  □ Restart policies defined                                             │
-│  □ Graceful shutdown handling                                           │
-│  □ Rolling updates configured                                           │
-│  □ Rollback strategy defined                                            │
-│                                                                          │
-│  OBSERVABILITY                                                           │
-│  □ Structured logging (JSON)                                            │
-│  □ Metrics exposed                                                      │
-│  □ Distributed tracing                                                  │
-│  □ Log aggregation                                                      │
-│                                                                          │
-│  PERFORMANCE                                                             │
-│  □ Optimized images (multi-stage)                                       │
-│  □ Resource limits tuned                                                │
-│  □ Connection pooling                                                   │
-│  □ Caching strategies                                                   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    PRODUCTION READINESS CHECKLIST                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SECURITY                                                                |
+|  □ Non-root user in containers                                          |
+|  □ Read-only filesystem where possible                                  |
+|  □ Secrets management (not env vars)                                    |
+|  □ Image vulnerability scanning                                         |
+|  □ Network segmentation                                                 |
+|  □ Resource limits set                                                  |
+|                                                                          |
+|  RELIABILITY                                                             |
+|  □ Health checks configured                                             |
+|  □ Restart policies defined                                             |
+|  □ Graceful shutdown handling                                           |
+|  □ Rolling updates configured                                           |
+|  □ Rollback strategy defined                                            |
+|                                                                          |
+|  OBSERVABILITY                                                           |
+|  □ Structured logging (JSON)                                            |
+|  □ Metrics exposed                                                      |
+|  □ Distributed tracing                                                  |
+|  □ Log aggregation                                                      |
+|                                                                          |
+|  PERFORMANCE                                                             |
+|  □ Optimized images (multi-stage)                                       |
+|  □ Resource limits tuned                                                |
+|  □ Connection pooling                                                   |
+|  □ Caching strategies                                                   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Production Compose
@@ -731,7 +731,7 @@ services:
 
 ---
 
-**Nasta Node:** Docker Monitoring →
+**Nasta Node:** Docker Monitoring ->
 ''',
     "xp_reward": 185,
     "estimated_minutes": 90,

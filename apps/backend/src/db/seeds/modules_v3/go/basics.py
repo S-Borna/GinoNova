@@ -17,11 +17,11 @@ TASKS_BASICS = [
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -63,10 +63,10 @@ Go (Golang) skapades av Google 2009 för att lösa problem med:
 ### Vem använder Go?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  Docker, Kubernetes, Terraform, Prometheus, Grafana, Hugo      │
-│  Cloudflare, Uber, Twitch, Dropbox, SoundCloud, Netflix        │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  Docker, Kubernetes, Terraform, Prometheus, Grafana, Hugo      |
+|  Cloudflare, Uber, Twitch, Dropbox, SoundCloud, Netflix        |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -122,12 +122,12 @@ go mod init github.com/username/myproject
 
 # Struktur
 myproject/
-├── go.mod          # Dependencies
-├── go.sum          # Checksums
-├── main.go         # Entry point
-├── internal/       # Private packages
-├── pkg/            # Public packages
-└── cmd/            # Multiple binaries
++-- go.mod          # Dependencies
++-- go.sum          # Checksums
++-- main.go         # Entry point
++-- internal/       # Private packages
++-- pkg/            # Public packages
++-- cmd/            # Multiple binaries
 ```
 
 ### go.mod
@@ -220,11 +220,11 @@ go run main.go
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -439,11 +439,11 @@ func main() {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -651,11 +651,11 @@ for i := 1; i <= 100; i++ {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -854,11 +854,11 @@ fmt.Println(add(10, 5))  // 15
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -942,20 +942,20 @@ fmt.Println(rect.Area())  // 200
 ### Value vs Pointer Receiver
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 RECEIVER GUIDELINES                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Använd POINTER receiver när:                                 │
-│   • Method ska modifiera struct                                │
-│   • Struct är stor (undvik kopiering)                         │
-│   • Konsistens (om en method använder pointer)                │
-│                                                                 │
-│   Använd VALUE receiver när:                                   │
-│   • Struct är liten och immutable                              │
-│   • Method läser bara data                                     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 RECEIVER GUIDELINES                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Använd POINTER receiver när:                                 |
+|   • Method ska modifiera struct                                |
+|   • Struct är stor (undvik kopiering)                         |
+|   • Konsistens (om en method använder pointer)                |
+|                                                                 |
+|   Använd VALUE receiver när:                                   |
+|   • Struct är liten och immutable                              |
+|   • Method läser bara data                                     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1069,11 +1069,11 @@ func (a BankAccount) String() string {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1279,11 +1279,11 @@ fmt.Println(p)  // "Alice (30 years)"
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1467,11 +1467,11 @@ func fetchUser(id int) (*User, error) {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1532,27 +1532,27 @@ nums = append(nums, other...)
 ### Slice Internals
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     SLICE STRUCTURE                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   slice := []int{1, 2, 3, 4, 5}                                │
-│                                                                 │
-│   ┌─────────────┐                                              │
-│   │   pointer   │────> [1][2][3][4][5]  (underlying array)    │
-│   │   length: 5 │                                              │
-│   │   capacity:5│                                              │
-│   └─────────────┘                                              │
-│                                                                 │
-│   sub := slice[1:3]                                            │
-│                                                                 │
-│   ┌─────────────┐                                              │
-│   │   pointer   │─────────> [2][3]                            │
-│   │   length: 2 │                                              │
-│   │   capacity:4│      (delar samma underlying array!)        │
-│   └─────────────┘                                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     SLICE STRUCTURE                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|   slice := []int{1, 2, 3, 4, 5}                                |
+|                                                                 |
+|   +-------------+                                              |
+|   |   pointer   |----> [1][2][3][4][5]  (underlying array)    |
+|   |   length: 5 |                                              |
+|   |   capacity:5|                                              |
+|   +-------------+                                              |
+|                                                                 |
+|   sub := slice[1:3]                                            |
+|                                                                 |
+|   +-------------+                                              |
+|   |   pointer   |---------> [2][3]                            |
+|   |   length: 2 |                                              |
+|   |   capacity:4|      (delar samma underlying array!)        |
+|   +-------------+                                              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1662,11 +1662,11 @@ for _, n := range nums {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1713,18 +1713,18 @@ func sayHello(name string) {
 ### Goroutines vs Threads
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│               GOROUTINES vs OS THREADS                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Goroutines:                   OS Threads:                    │
-│   • ~2KB stack                  • ~1MB stack                   │
-│   • Managed by Go runtime       • Managed by OS                │
-│   • Cooperative scheduling      • Preemptive                   │
-│   • Millions möjliga            • Tusentals max                │
-│   • Snabba att skapa            • Dyra att skapa               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|               GOROUTINES vs OS THREADS                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Goroutines:                   OS Threads:                    |
+|   • ~2KB stack                  • ~1MB stack                   |
+|   • Managed by Go runtime       • Managed by OS                |
+|   • Cooperative scheduling      • Preemptive                   |
+|   • Millions möjliga            • Tusentals max                |
+|   • Snabba att skapa            • Dyra att skapa               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1862,11 +1862,11 @@ func main() {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1913,21 +1913,21 @@ func receive(ch <-chan int) { // Receive-only
 ## 🔄 Unbuffered vs Buffered
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CHANNEL TYPES                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   UNBUFFERED:                                                  │
-│   • Synkron - sender blockerar tills receiver tar emot         │
-│   • Garanterar leverans                                        │
-│   ch := make(chan int)                                         │
-│                                                                 │
-│   BUFFERED:                                                    │
-│   • Asynkron upp till buffer-storlek                          │
-│   • Sender blockerar endast när buffer är full                │
-│   ch := make(chan int, 10)                                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CHANNEL TYPES                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|   UNBUFFERED:                                                  |
+|   • Synkron - sender blockerar tills receiver tar emot         |
+|   • Garanterar leverans                                        |
+|   ch := make(chan int)                                         |
+|                                                                 |
+|   BUFFERED:                                                    |
+|   • Asynkron upp till buffer-storlek                          |
+|   • Sender blockerar endast när buffer är full                |
+|   ch := make(chan int, 10)                                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ```go

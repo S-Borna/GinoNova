@@ -229,18 +229,18 @@ NODE_18_ORCHESTRATION = {
 ### Utmaningar med Docker på skala
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│               PRODUCTION CHALLENGES                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  • Hur startar vi om crashed containers?                        │
-│  • Hur skalar vi över flera servrar?                           │
-│  • Hur gör vi rolling updates utan downtime?                   │
-│  • Hur load-balancear vi trafik?                               │
-│  • Hur hanterar vi secrets säkert?                             │
-│  • Hur övervakar vi hundratals containers?                     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|               PRODUCTION CHALLENGES                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  • Hur startar vi om crashed containers?                        |
+|  • Hur skalar vi över flera servrar?                           |
+|  • Hur gör vi rolling updates utan downtime?                   |
+|  • Hur load-balancear vi trafik?                               |
+|  • Hur hanterar vi secrets säkert?                             |
+|  • Hur övervakar vi hundratals containers?                     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---

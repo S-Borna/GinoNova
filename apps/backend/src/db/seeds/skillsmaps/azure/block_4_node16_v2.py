@@ -37,20 +37,20 @@ AZURE_NODE_16_PIPELINES_V2 = {
                 "concepts": [
                     {
                         "title": "Pipeline Struktur",
-                        "explanation": "Pipeline → Stages → Jobs → Steps. Stages (Build, Deploy-Dev, Deploy-Prod) innehåller Jobs som kör på agents. Steps är enskilda tasks.",
+                        "explanation": "Pipeline -> Stages -> Jobs -> Steps. Stages (Build, Deploy-Dev, Deploy-Prod) innehåller Jobs som kör på agents. Steps är enskilda tasks.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ Pipeline                                    │
-│ ├── Stage: Build                            │
-│ │   └── Job: BuildApp                       │
-│ │       ├── Step: Checkout                  │
-│ │       ├── Step: npm install               │
-│ │       └── Step: npm build                 │
-│ ├── Stage: Deploy-Dev                       │
-│ │   └── Job: DeployDev                      │
-│ └── Stage: Deploy-Prod (with approval)      │
-│     └── Job: DeployProd                     │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| Pipeline                                    |
+| +-- Stage: Build                            |
+| |   +-- Job: BuildApp                       |
+| |       +-- Step: Checkout                  |
+| |       +-- Step: npm install               |
+| |       +-- Step: npm build                 |
+| +-- Stage: Deploy-Dev                       |
+| |   +-- Job: DeployDev                      |
+| +-- Stage: Deploy-Prod (with approval)      |
+|     +-- Job: DeployProd                     |
++---------------------------------------------+""",
                         "pro_tip": "Använd dependsOn för stage-ordning och conditions för conditional execution.",
                         "common_mistake": "Att köra allt i ett stage - separera build, test och deploy."
                     },
@@ -58,19 +58,19 @@ AZURE_NODE_16_PIPELINES_V2 = {
                         "title": "Triggers & Environments",
                         "explanation": "Triggers startar pipeline (push, PR, schedule). Environments representerar deploy targets med approvals och checks.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ TRIGGERS                                    │
-├─────────────────────────────────────────────┤
-│ trigger: [main]         # Push to main      │
-│ pr: [main, develop]     # PR to branches    │
-│ schedules: cron         # Scheduled runs    │
-├─────────────────────────────────────────────┤
-│ ENVIRONMENTS                                │
-├─────────────────────────────────────────────┤
-│ dev      │ Auto-deploy                      │
-│ staging  │ Auto-deploy                      │
-│ prod     │ Manual approval required         │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| TRIGGERS                                    |
++---------------------------------------------+
+| trigger: [main]         # Push to main      |
+| pr: [main, develop]     # PR to branches    |
+| schedules: cron         # Scheduled runs    |
++---------------------------------------------+
+| ENVIRONMENTS                                |
++---------------------------------------------+
+| dev      | Auto-deploy                      |
+| staging  | Auto-deploy                      |
+| prod     | Manual approval required         |
++---------------------------------------------+""",
                         "pro_tip": "Kräv alltid approval för produktion - ingen auto-deploy!",
                         "common_mistake": "Att inte använda environments - deployment history går förlorad."
                     }

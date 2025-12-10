@@ -41,14 +41,14 @@ AZURE_NODE_10_SQL_V2 = {
                         "title": "Azure SQL Options",
                         "explanation": "Azure SQL Database (PaaS single DB), Elastic Pool (delad kapacitet för SaaS), Managed Instance (närmast on-prem SQL Server), SQL Server på VM (IaaS full kontroll).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│         AZURE SQL OPTIONS                   │
-├─────────────────────────────────────────────┤
-│ SQL Database    │ Enklast, per-databas pris │
-│ Elastic Pool    │ Dela resurser, SaaS       │
-│ Managed Instance│ Lift-and-shift migration  │
-│ SQL on VM       │ Full kontroll, IaaS       │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+|         AZURE SQL OPTIONS                   |
++---------------------------------------------+
+| SQL Database    | Enklast, per-databas pris |
+| Elastic Pool    | Dela resurser, SaaS       |
+| Managed Instance| Lift-and-shift migration  |
+| SQL on VM       | Full kontroll, IaaS       |
++---------------------------------------------+""",
                         "pro_tip": "Serverless-läge för SQL Database auto-pausar och sparar pengar på dev/test.",
                         "common_mistake": "Att välja Managed Instance när SQL Database räcker - MI kostar mycket mer."
                     },
@@ -56,14 +56,14 @@ AZURE_NODE_10_SQL_V2 = {
                         "title": "Pricing Tiers",
                         "explanation": "DTU-modell (Basic/Standard/Premium) bundlar resurser enkelt. vCore-modell (General Purpose/Business Critical) ger mer flexibilitet med separata CPU/storage-inställningar.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ DTU Model       │ vCore Model               │
-├─────────────────────────────────────────────┤
-│ Bundled CPU/IO  │ Separate CPU & Storage    │
-│ Enklare prissätt│ Mer flexibelt             │
-│ Från ~$5/mån    │ Från ~$30/mån             │
-│ Basic/Std/Prem  │ GenPurpose/BusinessCrit   │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| DTU Model       | vCore Model               |
++---------------------------------------------+
+| Bundled CPU/IO  | Separate CPU & Storage    |
+| Enklare prissätt| Mer flexibelt             |
+| Från ~$5/mån    | Från ~$30/mån             |
+| Basic/Std/Prem  | GenPurpose/BusinessCrit   |
++---------------------------------------------+""",
                         "pro_tip": "DTU S0 (~$15/mån) räcker för de flesta små appar.",
                         "common_mistake": "Att välja för stor tier från början - skala upp när behov finns."
                     }

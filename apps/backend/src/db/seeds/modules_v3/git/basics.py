@@ -28,29 +28,29 @@ Git är ett **distribuerat versionshanteringssystem** skapat av Linus Torvalds 2
 ### Varför Git?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    UTAN VERSIONSHANTERING                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   projekt_v1.zip                                                │
-│   projekt_v2_final.zip                                          │
-│   projekt_v2_final_FINAL.zip                                    │
-│   projekt_v2_final_FINAL_fixed.zip        ← Kaos!              │
-│   projekt_backup_jan15.zip                                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    UTAN VERSIONSHANTERING                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|   projekt_v1.zip                                                |
+|   projekt_v2_final.zip                                          |
+|   projekt_v2_final_FINAL.zip                                    |
+|   projekt_v2_final_FINAL_fixed.zip        <- Kaos!              |
+|   projekt_backup_jan15.zip                                      |
+|                                                                 |
++-----------------------------------------------------------------+
 
-┌─────────────────────────────────────────────────────────────────┐
-│                      MED GIT                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   .git/                                                         │
-│   ├── Full historik                                             │
-│   ├── Alla versioner                   ← Ordning!              │
-│   ├── Vem ändrade vad                                          │
-│   └── Enkelt samarbete                                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      MED GIT                                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|   .git/                                                         |
+|   +-- Full historik                                             |
+|   +-- Alla versioner                   <- Ordning!              |
+|   +-- Vem ändrade vad                                          |
+|   +-- Enkelt samarbete                                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Git vs Andra System
@@ -237,19 +237,19 @@ git config --global alias.unstage "reset HEAD --"
 ## 📖 Git's Tre Områden
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                       GIT WORKFLOW                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
-│  │   Working    │───>│   Staging    │───>│  Repository  │      │
-│  │  Directory   │    │    Area      │    │   (.git)     │      │
-│  └──────────────┘    └──────────────┘    └──────────────┘      │
-│         │                   │                   │               │
-│    Dina filer         git add           git commit              │
-│    (ändringar)       (välj vad)        (spara snapshot)        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                       GIT WORKFLOW                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +--------------+    +--------------+    +--------------+      |
+|  |   Working    |--->|   Staging    |--->|  Repository  |      |
+|  |  Directory   |    |    Area      |    |   (.git)     |      |
+|  +--------------+    +--------------+    +--------------+      |
+|         |                   |                   |               |
+|    Dina filer         git add           git commit              |
+|    (ändringar)       (välj vad)        (spara snapshot)        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Varför Staging Area?
@@ -281,7 +281,7 @@ Initialized empty Git repository in /path/my-project/.git/
 
 # Verifiera
 ls -la
-# .git/  ← Git's databas
+# .git/  <- Git's databas
 ```
 
 ### Klona befintligt
@@ -564,11 +564,11 @@ git log --oneline
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -681,11 +681,11 @@ git show HEAD^2
 
 ```
 HEAD~3   HEAD~2   HEAD~1   HEAD
-   │        │        │       │
+   |        |        |       |
    ▼        ▼        ▼       ▼
-┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐
-│ A   │──│ B   │──│ C   │──│ D   │
-└─────┘  └─────┘  └─────┘  └─────┘
++-----+  +-----+  +-----+  +-----+
+| A   |--| B   |--| C   |--| D   |
++-----+  +-----+  +-----+  +-----+
 ```
 
 ---
@@ -873,11 +873,11 @@ git log -S "myFunction" --oneline
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -948,27 +948,27 @@ git reset HEAD
 ### Diagram: Ångra operationer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     ÅNGRA OPERATIONER                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Repository ──────────────────────────────────────────────────  │
-│       │                                                         │
-│       │ git reset --soft HEAD~1 (behåll staging)               │
-│       │ git reset HEAD~1 (unstage, behåll working)             │
-│       │ git reset --hard HEAD~1 (radera allt) ⚠️               │
-│       ▼                                                         │
-│  Staging ────────────────────────────────────────────────────   │
-│       │                                                         │
-│       │ git restore --staged file.txt                          │
-│       ▼                                                         │
-│  Working ────────────────────────────────────────────────────   │
-│       │                                                         │
-│       │ git restore file.txt                                   │
-│       ▼                                                         │
-│  (Ändringar borta)                                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     ÅNGRA OPERATIONER                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Repository --------------------------------------------------  |
+|       |                                                         |
+|       | git reset --soft HEAD~1 (behåll staging)               |
+|       | git reset HEAD~1 (unstage, behåll working)             |
+|       | git reset --hard HEAD~1 (radera allt) ⚠️               |
+|       ▼                                                         |
+|  Staging ----------------------------------------------------   |
+|       |                                                         |
+|       | git restore --staged file.txt                          |
+|       ▼                                                         |
+|  Working ----------------------------------------------------   |
+|       |                                                         |
+|       | git restore file.txt                                   |
+|       ▼                                                         |
+|  (Ändringar borta)                                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1000,7 +1000,7 @@ git commit --amend -m "Updated commit"
 abc123 Original commit
 
 # Efter amend
-def456 Amended commit  ← Ny hash!
+def456 Amended commit  <- Ny hash!
 ```
 
 ---
@@ -1072,11 +1072,11 @@ git commit -m "Revert last 3 commits"
 ```bash
 # Reset - ändrar historik (farligt för delade branches)
 git reset --hard HEAD~1
-# Historik: A → B → C → D  blir  A → B → C
+# Historik: A -> B -> C -> D  blir  A -> B -> C
 
 # Revert - lägger till ny commit (säkert)
 git revert HEAD
-# Historik: A → B → C → D  blir  A → B → C → D → D'
+# Historik: A -> B -> C -> D  blir  A -> B -> C -> D -> D'
 # D' ångrar D
 ```
 
@@ -1170,20 +1170,20 @@ git reset --hard HEAD@{1}  # Återställ
 En branch är en **pekare till en commit**. Det är allt!
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      BRANCHES                                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│                          feature ──┐                            │
-│                                    ▼                            │
-│    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐                    │
-│    │ A   │───>│ B   │───>│ C   │───>│ D   │                    │
-│    └─────┘    └─────┘    └─────┘    └─────┘                    │
-│                            ▲          ▲                         │
-│                            │          └── HEAD                  │
-│                          main                                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      BRANCHES                                   |
++-----------------------------------------------------------------+
+|                                                                 |
+|                          feature --+                            |
+|                                    ▼                            |
+|    +-----+    +-----+    +-----+    +-----+                    |
+|    | A   |--->| B   |--->| C   |--->| D   |                    |
+|    +-----+    +-----+    +-----+    +-----+                    |
+|                            ▲          ▲                         |
+|                            |          +-- HEAD                  |
+|                          main                                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Varför Branches?
@@ -1278,22 +1278,22 @@ git checkout abc123
 ### Detached HEAD State
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DETACHED HEAD                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Normal:         HEAD → main → commit C                        │
-│                                                                 │
-│  Detached:       HEAD → commit B (direkt)                      │
-│                  main → commit C                                │
-│                                                                 │
-│    ┌─────┐    ┌─────┐    ┌─────┐                               │
-│    │ A   │───>│ B   │───>│ C   │                               │
-│    └─────┘    └─────┘    └─────┘                               │
-│                 ▲          ▲                                    │
-│                HEAD       main                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DETACHED HEAD                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Normal:         HEAD -> main -> commit C                        |
+|                                                                 |
+|  Detached:       HEAD -> commit B (direkt)                      |
+|                  main -> commit C                                |
+|                                                                 |
+|    +-----+    +-----+    +-----+                               |
+|    | A   |--->| B   |--->| C   |                               |
+|    +-----+    +-----+    +-----+                               |
+|                 ▲          ▲                                    |
+|                HEAD       main                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 
 # Fixa detached HEAD - skapa branch
 git switch -c save-my-work
@@ -1438,11 +1438,11 @@ git branch --merged main | grep -v "main" | xargs git branch -d
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1471,12 +1471,12 @@ När target branch inte har nya commits:
 
 ```
 FÖRE:
-    main: A → B → C
+    main: A -> B -> C
                    ↘
-    feature:        D → E
+    feature:        D -> E
 
 EFTER git merge feature:
-    main: A → B → C → D → E ← (fast-forward, inga merge commits)
+    main: A -> B -> C -> D -> E <- (fast-forward, inga merge commits)
 ```
 
 ```bash
@@ -1492,14 +1492,14 @@ När båda branches har unika commits:
 
 ```
 FÖRE:
-    main: A → B → C → F
+    main: A -> B -> C -> F
                    ↘
-    feature:        D → E
+    feature:        D -> E
 
 EFTER git merge feature:
-    main: A → B → C → F → M (merge commit)
+    main: A -> B -> C -> F -> M (merge commit)
                    ↘   ↗
-    feature:        D → E
+    feature:        D -> E
 ```
 
 ```bash
@@ -1545,12 +1545,12 @@ git merge --abort
 
 ```bash
 # Fast-forward (svårt att se var feature började/slutade)
-A → B → C → D → E → F
+A -> B -> C -> D -> E -> F
 
 # --no-ff (tydlig feature-historik)
-A → B → C ────────→ M
+A -> B -> C ---------> M
          ↘       ↗
-          D → E → F
+          D -> E -> F
 ```
 
 ---
@@ -1629,12 +1629,12 @@ git rebase main
 
 ```
 MERGE:
-main:    A → B → C ────────→ M
+main:    A -> B -> C ---------> M
               ↘           ↗
-feature:       D → E → F
+feature:       D -> E -> F
 
 REBASE:
-main:    A → B → C → D' → E' → F'
+main:    A -> B -> C -> D' -> E' -> F'
               ↑
          (feature rebased)
 ```
@@ -1701,11 +1701,11 @@ git merge conflict-a  # Konflikt!
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1729,20 +1729,20 @@ git merge conflict-a  # Konflikt!
 ## 📖 Lokalt vs Remote
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  LOCAL vs REMOTE                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Din dator                          GitHub/GitLab              │
-│  ┌──────────────────┐              ┌──────────────────┐        │
-│  │  Local Repo      │    push ──>  │  Remote Repo     │        │
-│  │  .git/           │    <── pull  │  origin          │        │
-│  │                  │              │                  │        │
-│  │  main            │              │  main            │        │
-│  │  feature/login   │              │  feature/login   │        │
-│  └──────────────────┘              └──────────────────┘        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  LOCAL vs REMOTE                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Din dator                          GitHub/GitLab              |
+|  +------------------+              +------------------+        |
+|  |  Local Repo      |    push -->  |  Remote Repo     |        |
+|  |  .git/           |    <-- pull  |  origin          |        |
+|  |                  |              |                  |        |
+|  |  main            |              |  main            |        |
+|  |  feature/login   |              |  feature/login   |        |
+|  +------------------+              +------------------+        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1874,12 +1874,12 @@ git config --global pull.rebase true
 
 ```
 FETCH:
-Local:  A → B → C (main)
-Remote: A → B → C → D → E (origin/main)
+Local:  A -> B -> C (main)
+Remote: A -> B -> C -> D -> E (origin/main)
 Efter fetch: origin/main uppdaterad, main oförändrad
 
 PULL:
-Local:  A → B → C → D → E (main, mergad)
+Local:  A -> B -> C -> D -> E (main, mergad)
 ```
 
 ---
@@ -2015,11 +2015,11 @@ git pull
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2079,7 +2079,7 @@ cat ~/.ssh/id_ed25519.pub | xclip   # Linux
 cat ~/.ssh/id_ed25519.pub
 ```
 
-1. Gå till GitHub → Settings → SSH and GPG keys
+1. Gå till GitHub -> Settings -> SSH and GPG keys
 2. Klicka "New SSH key"
 3. Klistra in public key
 4. Testa: `ssh -T git@github.com`

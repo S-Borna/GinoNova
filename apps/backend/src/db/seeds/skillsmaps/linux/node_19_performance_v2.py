@@ -39,24 +39,24 @@ LINUX_NODE_19_PERFORMANCE_V2 = {
                         "title": "top/htop - Process Overview",
                         "explanation": "top visar processer sorterade efter CPU/minne. htop är bättre med färger och mus-stöd. Load average < CPU-kärnor = OK.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ LOAD AVERAGE TOLKNING                               │
-├─────────────────────────────────────────────────────┤
-│ $ uptime                                            │
-│ load average: 0.52, 0.58, 0.59                     │
-│               1min  5min  15min                    │
-├─────────────────────────────────────────────────────┤
-│ TUMREGEL (för 4-kärnig server):                    │
-│ < 4.0  │ OK, systemet har kapacitet                │
-│ = 4.0  │ 100% belastat, ingen marginal             │
-│ > 4.0  │ Överbelastat, processer köar              │
-├─────────────────────────────────────────────────────┤
-│ TOP SHORTCUTS:                                      │
-│ P │ Sortera på CPU                                 │
-│ M │ Sortera på minne                               │
-│ k │ Döda process (ange PID)                        │
-│ q │ Avsluta                                        │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| LOAD AVERAGE TOLKNING                               |
++-----------------------------------------------------+
+| $ uptime                                            |
+| load average: 0.52, 0.58, 0.59                     |
+|               1min  5min  15min                    |
++-----------------------------------------------------+
+| TUMREGEL (för 4-kärnig server):                    |
+| < 4.0  | OK, systemet har kapacitet                |
+| = 4.0  | 100% belastat, ingen marginal             |
+| > 4.0  | Överbelastat, processer köar              |
++-----------------------------------------------------+
+| TOP SHORTCUTS:                                      |
+| P | Sortera på CPU                                 |
+| M | Sortera på minne                               |
+| k | Döda process (ange PID)                        |
+| q | Avsluta                                        |
++-----------------------------------------------------+""",
                         "pro_tip": "Installera htop - mycket bättre interface än top!",
                         "common_mistake": "Att jämföra load average utan att veta antal CPU-kärnor"
                     },
@@ -64,24 +64,24 @@ LINUX_NODE_19_PERFORMANCE_V2 = {
                         "title": "free & vmstat - Minnesanalys",
                         "explanation": "free visar minnesanvändning. VIKTIGT: titta på 'available', inte 'free' - buff/cache kan frigöras.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ FREE OUTPUT                                         │
-├─────────────────────────────────────────────────────┤
-│ $ free -h                                           │
-│             total   used   free   shared buff/cache │
-│ Mem:         16G    8.2G   1.2G   512M     5.8G    │
-│ Swap:         4G      0G     4G                    │
-│                                                     │
-│ available: 6.5G  ← DENNA är viktig!                │
-├─────────────────────────────────────────────────────┤
-│ buff/cache = används för disk-cache, kan frigöras  │
-│ available = vad som faktiskt kan användas          │
-│ swap used > 0 = systemet har ont om RAM            │
-├─────────────────────────────────────────────────────┤
-│ VMSTAT:                                             │
-│ vmstat 2    # Snapshot var 2:a sekund              │
-│ si/so > 0   # Swap in/out = RAM-problem            │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| FREE OUTPUT                                         |
++-----------------------------------------------------+
+| $ free -h                                           |
+|             total   used   free   shared buff/cache |
+| Mem:         16G    8.2G   1.2G   512M     5.8G    |
+| Swap:         4G      0G     4G                    |
+|                                                     |
+| available: 6.5G  <- DENNA är viktig!                |
++-----------------------------------------------------+
+| buff/cache = används för disk-cache, kan frigöras  |
+| available = vad som faktiskt kan användas          |
+| swap used > 0 = systemet har ont om RAM            |
++-----------------------------------------------------+
+| VMSTAT:                                             |
+| vmstat 2    # Snapshot var 2:a sekund              |
+| si/so > 0   # Swap in/out = RAM-problem            |
++-----------------------------------------------------+""",
                         "pro_tip": "Om swap används konstant - lägg till mer RAM!",
                         "common_mistake": "Att panika över lågt 'free' - Linux använder RAM som disk-cache"
                     },
@@ -89,23 +89,23 @@ LINUX_NODE_19_PERFORMANCE_V2 = {
                         "title": "iostat & iotop - Disk I/O",
                         "explanation": "iostat visar disk-statistik. await > 20ms = disken är flaskhals. %util > 80% = disken är mättad.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ IOSTAT OUTPUT                                       │
-├─────────────────────────────────────────────────────┤
-│ $ iostat -xz 1                                      │
-│ Device  r/s    w/s   rkB/s  wkB/s await  %util     │
-│ sda    10.5   45.2   420    1808   8.5   25.3     │
-├─────────────────────────────────────────────────────┤
-│ KOLUMNER:                                           │
-│ r/s, w/s    │ Reads/writes per sekund              │
-│ rkB/s, wkB/s│ KB lästa/skrivna per sekund          │
-│ await       │ Genomsnittlig väntetid (ms)          │
-│ %util       │ Disk-användning i procent            │
-├─────────────────────────────────────────────────────┤
-│ VARNING:                                            │
-│ await > 20ms  │ Disken är långsam                  │
-│ %util > 80%   │ Disken är mättad                   │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| IOSTAT OUTPUT                                       |
++-----------------------------------------------------+
+| $ iostat -xz 1                                      |
+| Device  r/s    w/s   rkB/s  wkB/s await  %util     |
+| sda    10.5   45.2   420    1808   8.5   25.3     |
++-----------------------------------------------------+
+| KOLUMNER:                                           |
+| r/s, w/s    | Reads/writes per sekund              |
+| rkB/s, wkB/s| KB lästa/skrivna per sekund          |
+| await       | Genomsnittlig väntetid (ms)          |
+| %util       | Disk-användning i procent            |
++-----------------------------------------------------+
+| VARNING:                                            |
+| await > 20ms  | Disken är långsam                  |
+| %util > 80%   | Disken är mättad                   |
++-----------------------------------------------------+""",
                         "pro_tip": "iotop -o visar vilka processer som gör disk I/O just nu",
                         "common_mistake": "Att ignorera iowait i top - hög iowait = disk-problem, inte CPU"
                     }
@@ -206,7 +206,7 @@ LINUX_NODE_19_PERFORMANCE_V2 = {
                 "solution": """# 1. System overview
 uptime
 # load average: 8.5, 7.2, 6.8
-# Om > antal kärnor → överbelastat
+# Om > antal kärnor -> överbelastat
 
 nproc
 # 4 (antal CPU-kärnor)
@@ -240,9 +240,9 @@ ps aux --sort=-%mem | head -10
 sudo iotop -o
 
 # DIAGNOS:
-# - Hög load + låg CPU idle = CPU-bunden → skala horisontellt
-# - Hög swap usage = RAM-brist → lägg till minne
-# - Hög await/util = disk-bunden → snabbare disk (SSD)
+# - Hög load + låg CPU idle = CPU-bunden -> skala horisontellt
+# - Hög swap usage = RAM-brist -> lägg till minne
+# - Hög await/util = disk-bunden -> snabbare disk (SSD)
 # - Hög iowait i top = applikation gör för mycket disk I/O""",
                 "estimated_time": "10 min",
                 "xp_reward": 20

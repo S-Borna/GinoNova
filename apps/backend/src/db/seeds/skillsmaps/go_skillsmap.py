@@ -3,7 +3,7 @@ Go (Golang) SkillsMap — Systems Programming for DevOps
 ======================================================
 
 20 nodes covering Go from basics to DevOps tooling.
-Akhilesh-style pedagogy: Hook → Concept → Code → Pro Tips → Hands-on
+Akhilesh-style pedagogy: Hook -> Concept -> Code -> Pro Tips -> Hands-on
 
 Block 1: Introduction
 Block 2: Variables & Types
@@ -1477,14 +1477,14 @@ Good structure:
 
 ```
 myproject/
-├── go.mod
-├── main.go
-├── internal/
-│   └── config/
-│       └── config.go
-└── pkg/
-    └── k8s/
-        └── client.go
++-- go.mod
++-- main.go
++-- internal/
+|   +-- config/
+|       +-- config.go
++-- pkg/
+    +-- k8s/
+        +-- client.go
 ```
 
 ```go
@@ -1542,18 +1542,18 @@ type client struct { }
 
 ```
 cmd/           - Entry points
-├── server/
-│   └── main.go
-└── cli/
-    └── main.go
++-- server/
+|   +-- main.go
++-- cli/
+    +-- main.go
 
 internal/      - Private packages
-├── config/
-└── handlers/
++-- config/
++-- handlers/
 
 pkg/           - Public packages
-├── api/
-└── client/
++-- api/
++-- client/
 
 go.mod
 go.sum
@@ -2977,23 +2977,23 @@ Build **DevOps Commander** - a CLI tool that:
 
 ```
 devops-cmd/
-├── cmd/
-│   └── root.go
-│   └── deploy.go
-│   └── status.go
-├── internal/
-│   ├── k8s/
-│   │   └── client.go
-│   ├── health/
-│   │   └── checker.go
-│   └── config/
-│       └── loader.go
-├── pkg/
-│   └── types/
-│       └── types.go
-├── main.go
-├── go.mod
-└── Makefile
++-- cmd/
+|   +-- root.go
+|   +-- deploy.go
+|   +-- status.go
++-- internal/
+|   +-- k8s/
+|   |   +-- client.go
+|   +-- health/
+|   |   +-- checker.go
+|   +-- config/
+|       +-- loader.go
++-- pkg/
+|   +-- types/
+|       +-- types.go
++-- main.go
++-- go.mod
++-- Makefile
 ```
 
 ---

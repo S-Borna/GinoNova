@@ -30,7 +30,7 @@ MODULE = {
             "xp_reward": 70,
             "content": """# Python Fundamentals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -48,32 +48,32 @@ Som DevOps-ingenjor maste du forsta:
 - **Variabler och typer** sa du hanterar data korrekt
 - **Virtual environments** sa du isolerar dependencies
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Python i DevOps-ekosystemet
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                PYTHON I DEVOPS                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │ Ansible  │  │  AWS     │  │Kubernetes│  │ Terraform│   │
-│  │ YAML +   │  │  Lambda  │  │ Operators│  │ Providers│   │
-│  │ Python   │  │  Python  │  │  Python  │  │  Python  │   │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘   │
-│       │             │             │             │          │
-│       └─────────────┴──────┬──────┴─────────────┘          │
-│                            │                               │
-│                 ┌──────────▼──────────┐                    │
-│                 │    PYTHON CORE      │                    │
-│                 │  (Din grund)        │                    │
-│                 └─────────────────────┘                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                PYTHON I DEVOPS                              |
++-------------------------------------------------------------+
+|                                                             |
+|  +----------+  +----------+  +----------+  +----------+   |
+|  | Ansible  |  |  AWS     |  |Kubernetes|  | Terraform|   |
+|  | YAML +   |  |  Lambda  |  | Operators|  | Providers|   |
+|  | Python   |  |  Python  |  |  Python  |  |  Python  |   |
+|  +----+-----+  +----+-----+  +----+-----+  +----+-----+   |
+|       |             |             |             |          |
+|       +-------------+------+------+-------------+          |
+|                            |                               |
+|                 +----------▼----------+                    |
+|                 |    PYTHON CORE      |                    |
+|                 |  (Din grund)        |                    |
+|                 +---------------------+                    |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation och Setup
 
@@ -99,7 +99,7 @@ which python
 deactivate
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Variabler och Datatyper
 
@@ -142,7 +142,7 @@ API_BASE_URL = "https://api.example.com"
 # - reserverade ord (class, def, return, etc.)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Strings
 
@@ -198,7 +198,7 @@ server_list = servers.split(",")  # ["web-01", "web-02", "web-03"]
 rejoined = "-".join(server_list)  # "web-01-web-02-web-03"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Numbers och Berakningar
 
@@ -227,7 +227,7 @@ print(round(cpu, 1))  # 67.9
 print(int(cpu))       # 67 (trunkerar)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Booleans och Jamforelser
 
@@ -259,7 +259,7 @@ if can_deploy and should_skip:
     print("Ready for deployment")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Type Conversion
 
@@ -289,7 +289,7 @@ timeout_str = os.environ.get("TIMEOUT", "30")
 timeout = int(timeout_str)  # Konvertera till int for anvandning
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Grundlaggande Syntax
 
@@ -303,7 +303,7 @@ timeout = int(timeout_str)  # Konvertera till int for anvandning
 | Type check | `isinstance(x, int)` |
 | Konvertera | `int("8080")` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -315,7 +315,7 @@ timeout = int(timeout_str)  # Konvertera till int for anvandning
 | `IndentationError` | Fel indentering | Anvand 4 spaces konsekvent |
 | `ValueError: invalid literal` | Kan ej konvertera | Validera input forst |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -346,7 +346,7 @@ timeout = int(timeout_str)  # Konvertera till int for anvandning
             "xp_reward": 75,
             "content": """# Collections - Lists, Dicts, Sets
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -364,43 +364,43 @@ Som DevOps-ingenjor maste du forsta:
 - **Dicts** sa du kan lagra key-value data
 - **Sets** sa du kan hitta unika varden
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Collection Types Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 PYTHON COLLECTIONS                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  LIST (ordnad, mutabel)                                    │
-│  ┌─────┬─────┬─────┬─────┬─────┐                          │
-│  │  0  │  1  │  2  │  3  │  4  │  <- index                │
-│  │web-1│web-2│web-3│db-1 │db-2 │                          │
-│  └─────┴─────┴─────┴─────┴─────┘                          │
-│                                                             │
-│  DICT (key-value, mutabel)                                 │
-│  ┌──────────────────────────────────────┐                  │
-│  │ "hostname" -> "prod-web-01"          │                  │
-│  │ "port"     -> 8080                   │                  │
-│  │ "env"      -> "production"           │                  │
-│  └──────────────────────────────────────┘                  │
-│                                                             │
-│  SET (unika varden, oordnad)                               │
-│  ┌─────────────────────────────┐                           │
-│  │ { "us-east", "eu-west",     │                           │
-│  │   "ap-south" }              │  <- inga dubletter       │
-│  └─────────────────────────────┘                           │
-│                                                             │
-│  TUPLE (ordnad, IMMUTABEL)                                 │
-│  ┌─────┬─────┬─────┐                                       │
-│  │ "192.168.1.1" │ 22 │ "ssh" │  <- kan ej andras        │
-│  └─────┴─────┴─────┘                                       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 PYTHON COLLECTIONS                          |
++-------------------------------------------------------------+
+|                                                             |
+|  LIST (ordnad, mutabel)                                    |
+|  +-----+-----+-----+-----+-----+                          |
+|  |  0  |  1  |  2  |  3  |  4  |  <- index                |
+|  |web-1|web-2|web-3|db-1 |db-2 |                          |
+|  +-----+-----+-----+-----+-----+                          |
+|                                                             |
+|  DICT (key-value, mutabel)                                 |
+|  +--------------------------------------+                  |
+|  | "hostname" -> "prod-web-01"          |                  |
+|  | "port"     -> 8080                   |                  |
+|  | "env"      -> "production"           |                  |
+|  +--------------------------------------+                  |
+|                                                             |
+|  SET (unika varden, oordnad)                               |
+|  +-----------------------------+                           |
+|  | { "us-east", "eu-west",     |                           |
+|  |   "ap-south" }              |  <- inga dubletter       |
+|  +-----------------------------+                           |
+|                                                             |
+|  TUPLE (ordnad, IMMUTABEL)                                 |
+|  +-----+-----+-----+                                       |
+|  | "192.168.1.1" | 22 | "ssh" |  <- kan ej andras        |
+|  +-----+-----+-----+                                       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lists
 
@@ -470,7 +470,7 @@ upper_servers = [s.upper() for s in servers]
 # ["WEB-01", "WEB-02", "DB-01", "DB-02"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dictionaries
 
@@ -556,7 +556,7 @@ string_values = {k: v for k, v in config.items() if isinstance(v, str)}
 # {"HOST": "0.0.0.0"}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Sets
 
@@ -619,7 +619,7 @@ print(f"Added: {added}")
 print(f"Removed: {removed}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tuples
 
@@ -649,7 +649,7 @@ print(web.hostname)  # "web-01"
 print(web.port)      # 8080
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Iteration
 
@@ -684,7 +684,7 @@ for host, ip in zip(hosts, ips):
     print(f"{host}: {ip}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Collections
 
@@ -698,7 +698,7 @@ for host, ip in zip(hosts, ips):
 | Ordnad | Ja | Ja (3.7+) | Nej |
 | Dubletter | Ja | Keys unika | Nej |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -710,7 +710,7 @@ for host, ip in zip(hosts, ips):
 | Tom iteration | Tom collection | Kolla `if collection:` |
 | Modify during iteration | Andrar under loop | Iterera over kopia |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -741,7 +741,7 @@ for host, ip in zip(hosts, ips):
             "xp_reward": 70,
             "content": """# Control Flow
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -759,7 +759,7 @@ Som DevOps-ingenjor maste du forsta:
 - **for/while** sa du kan iterera
 - **break/continue** sa du kontrollerar loopar
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## If/Elif/Else
 
@@ -851,7 +851,7 @@ elif result:
     print(f"Status: {result}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## For Loops
 
@@ -903,7 +903,7 @@ for hostname, ip, port in zip(hostnames, ips, ports):
     print(f"{hostname}: {ip}:{port}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## While Loops
 
@@ -959,7 +959,7 @@ while True:
         time.sleep(10)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Break, Continue, Else
 
@@ -1005,7 +1005,7 @@ else:
     print(f"{target} not found in server list")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Patterns
 
@@ -1069,7 +1069,7 @@ def process_in_batches(items, batch_size=10):
         print(f"Progress: {processed}/{total} ({processed/total*100:.1f}%)")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ternary Operator
 
@@ -1089,7 +1089,7 @@ port = int(port_str) if port_str else 8080
 servers = server_list if server_list else ["localhost"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Control Flow
 
@@ -1103,7 +1103,7 @@ servers = server_list if server_list else ["localhost"]
 | `else` pa loop | Kors om ingen break |
 | `x if c else y` | Ternary operator |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1115,7 +1115,7 @@ servers = server_list if server_list else ["localhost"]
 | Wrong indentation | Fel block | Konsekvent 4 spaces |
 | Missing colon | Glom : efter if/for | Lagg till : |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1146,7 +1146,7 @@ servers = server_list if server_list else ["localhost"]
             "xp_reward": 75,
             "content": """# Functions
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1165,7 +1165,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Return** sa du kan returnera varden
 - **Args/kwargs** sa du hanterar dynamiska argument
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Definiera Functions
 
@@ -1221,7 +1221,7 @@ metrics = get_server_metrics("web-01")
 print(f"CPU: {metrics['cpu']}%")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parametrar
 
@@ -1297,7 +1297,7 @@ setup_deployment(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docstrings
 
@@ -1336,7 +1336,7 @@ help(check_service_health)
 print(check_service_health.__doc__)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lambda Functions
 
@@ -1366,7 +1366,7 @@ names = list(map(lambda s: s["name"], servers))
 # ["web-01", "web-02", "web-03"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Scope
 
@@ -1394,7 +1394,7 @@ def make_request(count):
 request_count = make_request(request_count)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska DevOps Functions
 
@@ -1491,7 +1491,7 @@ def build_config(
 config = build_config("my-api", "prod", replicas=5, custom_setting="value")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Functions
 
@@ -1506,7 +1506,7 @@ config = build_config("my-api", "prod", replicas=5, custom_setting="value")
 | Lambda | `lambda x: x * 2` |
 | Docstring | `\"\"\"Description\"\"\"` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1518,7 +1518,7 @@ config = build_config("my-api", "prod", replicas=5, custom_setting="value")
 | Scope confusion | Modifiera global | Anvand return |
 | Recursion limit | For djup rekursion | Iterativ losning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1549,7 +1549,7 @@ config = build_config("my-api", "prod", replicas=5, custom_setting="value")
             "xp_reward": 70,
             "content": """# File I/O
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1567,7 +1567,7 @@ Som DevOps-ingenjor maste du forsta:
 - **with statement** sa resurser stangs korrekt
 - **pathlib** sa du hanterar sokvagar portabelt
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lasa Filer
 
@@ -1607,7 +1607,7 @@ with open("legacy.txt", "r", encoding="latin-1") as f:
     content = f.read()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skriva Filer
 
@@ -1658,7 +1658,7 @@ except FileExistsError:
     print("File already exists!")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pathlib (Modern Python)
 
@@ -1742,7 +1742,7 @@ empty_dir = Path("temp_dir")
 empty_dir.rmdir()  # Endast tom katalog
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Exempel
 
@@ -1840,7 +1840,7 @@ def save_inventory(inventory, path):
             f.write("\\n")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tempfiler
 
@@ -1871,7 +1871,7 @@ def deploy_with_temp_config(config_data):
         run_deployment(f.name)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - File I/O
 
@@ -1886,7 +1886,7 @@ def deploy_with_temp_config(config_data):
 | Glob | `path.glob("*.log")` |
 | Parent | `path.parent` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1898,7 +1898,7 @@ def deploy_with_temp_config(config_data):
 | `IsADirectoryError` | Oppnar dir som fil | Kolla `is_file()` |
 | File not closed | Glom stanga | Anvand `with` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1929,7 +1929,7 @@ def deploy_with_temp_config(config_data):
             "xp_reward": 80,
             "content": """# Error Handling
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1948,7 +1948,7 @@ Som DevOps-ingenjor maste du forsta:
 - **raise** sa du kan skapa egna fel
 - **finally** sa cleanup alltid sker
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Try/Except Grunderna
 
@@ -1984,26 +1984,26 @@ except Exception as e:
 
 ```
 BaseException
-├── SystemExit
-├── KeyboardInterrupt
-└── Exception
-    ├── StopIteration
-    ├── ArithmeticError
-    │   ├── ZeroDivisionError
-    │   └── OverflowError
-    ├── LookupError
-    │   ├── KeyError
-    │   └── IndexError
-    ├── OSError
-    │   ├── FileNotFoundError
-    │   ├── PermissionError
-    │   └── ConnectionError
-    ├── ValueError
-    ├── TypeError
-    └── RuntimeError
++-- SystemExit
++-- KeyboardInterrupt
++-- Exception
+    +-- StopIteration
+    +-- ArithmeticError
+    |   +-- ZeroDivisionError
+    |   +-- OverflowError
+    +-- LookupError
+    |   +-- KeyError
+    |   +-- IndexError
+    +-- OSError
+    |   +-- FileNotFoundError
+    |   +-- PermissionError
+    |   +-- ConnectionError
+    +-- ValueError
+    +-- TypeError
+    +-- RuntimeError
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Else och Finally
 
@@ -2038,7 +2038,7 @@ def process_deployment_file(path):
             file.close()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Raise Exceptions
 
@@ -2095,7 +2095,7 @@ except ServiceUnavailableError as e:
     send_alert(e.message)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Context Managers
 
@@ -2128,7 +2128,7 @@ with deployment_lock("api"):
     deploy_service("api")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Patterns
 
@@ -2229,7 +2229,7 @@ def get_server_metrics(servers):
     return results, errors
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Logging Errors
 
@@ -2263,7 +2263,7 @@ def deploy_service(service_name):
         raise
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Exceptions
 
@@ -2278,7 +2278,7 @@ def deploy_service(service_name):
 | `ConnectionError` | Natverksfel |
 | `TimeoutError` | Timeout |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -2290,7 +2290,7 @@ def deploy_service(service_name):
 | Unhandled | Inget except-block | Lagg till error handling |
 | Wrong order | General fore specifik | Specifik forst |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2321,7 +2321,7 @@ def deploy_service(service_name):
             "xp_reward": 90,
             "content": """# Object-Oriented Programming
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2339,7 +2339,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Inheritance** sa du kan utoka funktionalitet
 - **Methods** sa du kan definiera beteenden
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Classes och Objects
 
@@ -2414,7 +2414,7 @@ print(Server.all_servers)  # [Server(...), Server(...)]
 db = Server.from_string("db-01:192.168.1.10")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inheritance
 
@@ -2471,7 +2471,7 @@ for server in servers:
     print(server.get_info())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Properties
 
@@ -2514,7 +2514,7 @@ print(container.is_running)   # True
 container.status = "invalid"  # ValueError
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dataclasses (Python 3.7+)
 
@@ -2561,7 +2561,7 @@ deploy = Deployment("api", 3, "myapp:latest")
 deploy.scale(5)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Abstract Base Classes
 
@@ -2617,7 +2617,7 @@ for provider in providers:
     provider.create_vm("web-01", "medium")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Resource Manager
 
@@ -2684,7 +2684,7 @@ class ContainerManager(ResourceManager):
         return True
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - OOP
 
@@ -2700,7 +2700,7 @@ class ContainerManager(ResourceManager):
 | Super | `super().__init__()` |
 | Abstract | `from abc import ABC` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -2712,7 +2712,7 @@ class ContainerManager(ResourceManager):
 | Circular import | Classes importerar varandra | Refaktorera |
 | Wrong inheritance | Fel parent | Kolla hierarki |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2743,7 +2743,7 @@ class ContainerManager(ResourceManager):
             "xp_reward": 85,
             "content": """# OS & System Interaction
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2761,7 +2761,7 @@ Som DevOps-ingenjor maste du forsta:
 - **platform** for plattformsinformation
 - **shutil** for filoperationer
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environment Variables
 
@@ -2814,7 +2814,7 @@ class Config:
         return os.environ.get("ENV") == "production"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Filsystem med os
 
@@ -2856,7 +2856,7 @@ name, ext = os.path.splitext("app.log")          # ("app", ".log")
 abs_path = os.path.abspath("./config.yaml")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## os.walk - Traversera kataloger
 
@@ -2898,7 +2898,7 @@ def get_dir_size(path):
     return total
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## shutil - Filoperationer
 
@@ -2933,7 +2933,7 @@ shutil.make_archive("backup", "gztar", "/var/log")   # backup.tar.gz
 shutil.unpack_archive("backup.zip", "extracted/")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## sys - Interpreter Info
 
@@ -2966,7 +2966,7 @@ sys.stdout.write("Hello\\n")
 sys.stderr.write("Error\\n")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## platform - Systeminformation
 
@@ -2996,7 +2996,7 @@ else:
     config_path = "C:\\\\ProgramData\\\\myapp"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: System Info Script
 
@@ -3046,7 +3046,7 @@ if __name__ == "__main__":
     print(json.dumps(info, indent=2))
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - OS & System
 
@@ -3063,7 +3063,7 @@ if __name__ == "__main__":
 | Python version | `sys.version_info` |
 | Plattform | `platform.system()` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3074,7 +3074,7 @@ if __name__ == "__main__":
 | OSError | Diverse OS-fel | Try/except |
 | KeyError environ | Env var saknas | Anvand .get() |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3105,7 +3105,7 @@ if __name__ == "__main__":
             "xp_reward": 85,
             "content": """# Subprocess & Shell Commands
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3123,7 +3123,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Output capture** for att fanga resultat
 - **Error handling** for att hantera misslyckanden
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## subprocess.run() - Grundlaggande
 
@@ -3171,7 +3171,7 @@ except subprocess.CalledProcessError as e:
     print(f"Error: {e.stderr}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Shell Commands
 
@@ -3204,7 +3204,7 @@ print(result.stdout.strip())
 subprocess.run(["echo", user_input])  # SAKERT
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pipes mellan processer
 
@@ -3239,7 +3239,7 @@ result = subprocess.run(
 print(result.stdout)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Timeout och Environment
 
@@ -3277,7 +3277,7 @@ result = subprocess.run(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Input till processer
 
@@ -3305,7 +3305,7 @@ stdout, stderr = process.communicate(input="Hello World\\n")
 print(stdout)  # "Hello World"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: DevOps Utilities
 
@@ -3389,7 +3389,7 @@ if __name__ == "__main__":
     print(f"Commit: {info['commit_hash']} - {info['commit_msg']}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - subprocess
 
@@ -3404,7 +3404,7 @@ if __name__ == "__main__":
 | Input | `input="data"` |
 | Shell | `shell=True` (undvik om mojligt) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3415,7 +3415,7 @@ if __name__ == "__main__":
 | TimeoutExpired | For langsamt | Oka timeout |
 | Shell injection | User input i shell | Undvik shell=True |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3446,7 +3446,7 @@ if __name__ == "__main__":
             "xp_reward": 80,
             "content": """# JSON & YAML Handling
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3464,7 +3464,7 @@ Som DevOps-ingenjor maste du forsta:
 - **YAML** for konfigurationsfiler
 - **Konvertering** mellan formaten
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## JSON - Grundlaggande
 
@@ -3515,7 +3515,7 @@ config = json.loads(config_path.read_text())
 config_path.write_text(json.dumps(config, indent=2))
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## JSON - Avancerat
 
@@ -3558,7 +3558,7 @@ server = Server("web-01", "192.168.1.1", 8080)
 json_data = json.dumps(asdict(server), indent=2)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## YAML - Grundlaggande
 
@@ -3622,7 +3622,7 @@ config_path = Path("k8s/deployment.yaml")
 deployment = yaml.safe_load(config_path.read_text())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## YAML - Avancerat
 
@@ -3676,7 +3676,7 @@ config = yaml.safe_load(yaml_anchors)
 print(config["production"]["host"])  # "localhost"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Config Manager
 
@@ -3733,7 +3733,7 @@ db_config = manager.load("database.json")
 manager.convert("kubernetes.yaml", "kubernetes.json")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - JSON & YAML
 
@@ -3745,7 +3745,7 @@ manager.convert("kubernetes.yaml", "kubernetes.json")
 | Skriv fil | `json.dump(d, f)` | `yaml.dump(d, f)` |
 | Pretty print | `indent=2` | `default_flow_style=False` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3756,7 +3756,7 @@ manager.convert("kubernetes.yaml", "kubernetes.json")
 | UnicodeDecodeError | Fel encoding | encoding="utf-8" |
 | KeyError | Nyckel saknas | Anvand .get() |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3787,7 +3787,7 @@ manager.convert("kubernetes.yaml", "kubernetes.json")
             "xp_reward": 90,
             "content": """# HTTP & REST APIs
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3805,7 +3805,7 @@ Som DevOps-ingenjor maste du forsta:
 - **REST** metoder (GET, POST, PUT, DELETE)
 - **Authentication** och headers
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## requests - Grundlaggande
 
@@ -3865,7 +3865,7 @@ response = requests.put(
 response = requests.delete("https://api.example.com/containers/123")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Headers och Authentication
 
@@ -3906,7 +3906,7 @@ response = requests.get(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Timeout och Error Handling
 
@@ -3950,7 +3950,7 @@ if response:
     print(response.json())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Sessions och Connection Pooling
 
@@ -3992,7 +3992,7 @@ session.mount("https://", adapter)
 session.mount("http://", adapter)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: API Client
 
@@ -4067,7 +4067,7 @@ if __name__ == "__main__":
         print(f"- {branch['name']}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Health Check Script
 
@@ -4111,7 +4111,7 @@ for r in results:
     print(f"{r['url']}: {r['status']}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - HTTP & REST
 
@@ -4126,7 +4126,7 @@ for r in results:
 | Error check | `response.raise_for_status()` |
 | Session | `requests.Session()` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -4138,7 +4138,7 @@ for r in results:
 | 429 Too Many | Rate limiting | Implementera backoff |
 | ConnectionError | Natverk/DNS | Kolla URL |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4169,7 +4169,7 @@ for r in results:
             "xp_reward": 100,
             "content": """# AWS SDK (Boto3)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4187,7 +4187,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Resources** for high-level OOP
 - **Sessions** for credentials
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Setup och Credentials
 
@@ -4217,7 +4217,7 @@ s3 = session.client("s3")
 # export AWS_DEFAULT_REGION="eu-west-1"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## S3 - Simple Storage Service
 
@@ -4284,7 +4284,7 @@ bucket.upload_file("local.txt", "remote.txt")
 bucket.download_file("remote.txt", "local.txt")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## EC2 - Elastic Compute Cloud
 
@@ -4334,7 +4334,7 @@ instances = ec2_resource.create_instances(
 print(f"Created: {instances[0].id}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lambda och CloudWatch
 
@@ -4386,7 +4386,7 @@ cloudwatch.put_metric_data(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: EC2 Manager
 
@@ -4476,7 +4476,7 @@ if __name__ == "__main__":
     manager.stop_by_environment("development")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Boto3
 
@@ -4488,7 +4488,7 @@ if __name__ == "__main__":
 | CloudWatch | `boto3.client("cloudwatch")` | - |
 | IAM | `boto3.client("iam")` | `boto3.resource("iam")` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -4499,7 +4499,7 @@ if __name__ == "__main__":
 | InvalidParameterValue | Fel region/ami | Verifiera resurser |
 | ClientError | API fel | Kolla exception.response |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4530,7 +4530,7 @@ if __name__ == "__main__":
             "xp_reward": 95,
             "content": """# Azure SDK
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4548,7 +4548,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Management clients** for resurser
 - **DefaultAzureCredential** for enkel auth
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation och Setup
 
@@ -4580,7 +4580,7 @@ subscription_id = "your-subscription-id"
 # subscription_id = os.environ["AZURE_SUBSCRIPTION_ID"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Resource Management
 
@@ -4614,7 +4614,7 @@ delete_async = resource_client.resource_groups.begin_delete("my-devops-rg")
 delete_async.wait()  # Vanta pa completion
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Virtual Machines
 
@@ -4657,7 +4657,7 @@ async_restart = compute_client.virtual_machines.begin_restart("my-rg", "my-vm")
 async_restart.wait()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Blob Storage
 
@@ -4704,7 +4704,7 @@ for blob in container_client.list_blobs(name_starts_with="logs/"):
 blob_client.delete_blob()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Azure Resource Manager
 
@@ -4806,7 +4806,7 @@ if __name__ == "__main__":
             print(f"  {vm['name']}: {vm['state']}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Azure SDK
 
@@ -4818,7 +4818,7 @@ if __name__ == "__main__":
 | Network | azure-mgmt-network | NetworkManagementClient |
 | KeyVault | azure-keyvault-secrets | SecretClient |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -4829,7 +4829,7 @@ if __name__ == "__main__":
 | ClientAuthenticationError | RBAC permission | Kolla role assignments |
 | HttpResponseError | API error | Kolla error.message |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4860,7 +4860,7 @@ if __name__ == "__main__":
             "xp_reward": 90,
             "content": """# Docker SDK
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4878,7 +4878,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Container** och **Image** management
 - **Volumes** och **Networks**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation och Setup
 
@@ -4901,7 +4901,7 @@ print(client.ping())
 # client = docker.DockerClient(base_url="tcp://localhost:2375")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container Management
 
@@ -4956,7 +4956,7 @@ container.remove()
 container.remove(force=True)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Management
 
@@ -5001,7 +5001,7 @@ image.remove()
 client.images.prune()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Volumes och Networks
 
@@ -5048,7 +5048,7 @@ client.volumes.prune()
 client.networks.prune()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container Stats och Health
 
@@ -5088,7 +5088,7 @@ print(f"State: {info['State']['Status']}")
 print(f"IP: {info['NetworkSettings']['IPAddress']}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Container Manager
 
@@ -5208,7 +5208,7 @@ if __name__ == "__main__":
         print(f"Started: {c.name}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Docker SDK
 
@@ -5223,7 +5223,7 @@ if __name__ == "__main__":
 | Pull | `client.images.pull(image)` |
 | Build | `client.images.build(path=".")` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -5234,7 +5234,7 @@ if __name__ == "__main__":
 | ImageNotFound | Image finns ej lokalt | pull forst |
 | PermissionError | Ingen docker-access | Lagg till user i docker-grupp |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -5265,7 +5265,7 @@ if __name__ == "__main__":
             "xp_reward": 80,
             "content": """# Logging & Monitoring
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5283,7 +5283,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Log levels** for filtrering
 - **Handlers** for olika destinations
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande logging
 
@@ -5320,7 +5320,7 @@ except Exception:
     logging.error("Division failed", exc_info=True)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Logger per modul
 
@@ -5352,7 +5352,7 @@ if __name__ == "__main__":
     logging.getLogger("requests").setLevel(logging.WARNING)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Handlers - Logga till olika destinations
 
@@ -5396,7 +5396,7 @@ logger.info("This goes to console and file")
 logger.debug("This only goes to file")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## JSON Logging
 
@@ -5448,7 +5448,7 @@ logger.info("User logged in", extra={"user_id": "123", "ip": "192.168.1.1"})
 #  "message": "User logged in", "user_id": "123", "ip": "192.168.1.1", ...}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Structured Logging med structlog
 
@@ -5487,7 +5487,7 @@ except Exception:
     logger.exception("request_failed")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Logger Setup
 
@@ -5564,7 +5564,7 @@ if __name__ == "__main__":
     logger.info("Application started")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Logging
 
@@ -5577,7 +5577,7 @@ if __name__ == "__main__":
 | Exception | `logger.error("msg", exc_info=True)` |
 | Extra data | `logger.info("msg", extra={"key": "value"})` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -5588,7 +5588,7 @@ if __name__ == "__main__":
 | Missing exc | Ingen exc_info | Lagg till exc_info=True |
 | Fil error | Permission | Kolla rattigheter |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -5619,7 +5619,7 @@ if __name__ == "__main__":
             "xp_reward": 90,
             "content": """# Testing with Pytest
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5637,7 +5637,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Fixtures** for setup/teardown
 - **Mocking** for externa beroenden
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande pytest
 
@@ -5669,7 +5669,7 @@ pytest -k "add"             # Filter pa namn
 pytest --tb=short           # Kortare traceback
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Test Classes och Organization
 
@@ -5703,20 +5703,20 @@ class TestConnection:
 
 ```
 project/
-├── src/
-│   └── myapp/
-│       ├── __init__.py
-│       └── server.py
-├── tests/
-│   ├── __init__.py
-│   ├── conftest.py        # Shared fixtures
-│   ├── test_server.py
-│   └── test_connection.py
-├── pyproject.toml
-└── pytest.ini
++-- src/
+|   +-- myapp/
+|       +-- __init__.py
+|       +-- server.py
++-- tests/
+|   +-- __init__.py
+|   +-- conftest.py        # Shared fixtures
+|   +-- test_server.py
+|   +-- test_connection.py
++-- pyproject.toml
++-- pytest.ini
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Fixtures
 
@@ -5771,7 +5771,7 @@ def test_server_config(config):
 @pytest.fixture(scope="session")    # Per pytest session
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parametriserade tester
 
@@ -5804,7 +5804,7 @@ def test_multiply(x, y):
     assert x * y == x * y
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Mocking
 
@@ -5847,7 +5847,7 @@ def test_api_key():
     assert os.environ["API_KEY"] == "test-key"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Markers och Skip
 
@@ -5893,7 +5893,7 @@ pytest -m "not slow"
 pytest -m "integration and not slow"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Testing en Server
 
@@ -5961,7 +5961,7 @@ class TestServer:
             Server("localhost", port)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## pytest.ini / pyproject.toml
 
@@ -5989,7 +5989,7 @@ markers = [
 ]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - pytest
 
@@ -6003,7 +6003,7 @@ markers = [
 | Stop on fail | `pytest -x` |
 | Last failed | `pytest --lf` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -6014,7 +6014,7 @@ markers = [
 | Fixture not found | Fel scope | Kolla conftest.py |
 | Mock not applied | Fel path | Mock where used |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -6045,7 +6045,7 @@ markers = [
             "xp_reward": 100,
             "content": """# Async Programming
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -6063,7 +6063,7 @@ Som DevOps-ingenjor maste du forsta:
 - **asyncio** event loop
 - **Concurrent** execution
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande async/await
 
@@ -6114,7 +6114,7 @@ async def main():
 asyncio.run(main())  # Tar 2.5 sekunder
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parallell korning med gather
 
@@ -6183,7 +6183,7 @@ async def main():
 asyncio.run(main())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tasks och create_task
 
@@ -6224,7 +6224,7 @@ async def main():
     result2 = await task2
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Timeout och Semaphores
 
@@ -6265,7 +6265,7 @@ async def main():
     print(results)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## aiohttp for async HTTP
 
@@ -6294,7 +6294,7 @@ async def main():
 asyncio.run(main())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Async Health Checker
 
@@ -6369,7 +6369,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Async
 
@@ -6384,7 +6384,7 @@ if __name__ == "__main__":
 | Semaphore | `asyncio.Semaphore(n)` |
 | Sleep | `await asyncio.sleep(1)` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -6395,7 +6395,7 @@ if __name__ == "__main__":
 | Blocking call | Sync I/O i async | Anvand async bibliotek |
 | Task cancelled | Timeout/cancel | Hantera CancelledError |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -6426,7 +6426,7 @@ if __name__ == "__main__":
             "xp_reward": 95,
             "content": """# Decorators & Context Managers
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -6444,7 +6444,7 @@ Som DevOps-ingenjor maste du forsta:
 - **Context managers** for resource management
 - **functools** for decorator-verktyg
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Decorators - Grundlaggande
 
@@ -6497,7 +6497,7 @@ def slow_function():
 slow_function()  # "slow_function took 1.0012 seconds"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Decorators med argument
 
@@ -6563,7 +6563,7 @@ def fetch_user(user_id):
     return db.get_user(user_id)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Context Managers - Grundlaggande
 
@@ -6628,7 +6628,7 @@ with database_transaction(db_conn) as conn:
 # Auto-commit or rollback
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska DevOps Decorators
 
@@ -6694,7 +6694,7 @@ def old_function():
     pass
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Context Managers
 
@@ -6753,7 +6753,7 @@ with env_override(DEBUG="true", LOG_LEVEL="DEBUG"):
 # Ursprungliga varden aterstalds
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Decorators & Context Managers
 
@@ -6766,7 +6766,7 @@ with env_override(DEBUG="true", LOG_LEVEL="DEBUG"):
 | Context func | `@contextmanager` |
 | Built-in cache | `@functools.lru_cache` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -6777,7 +6777,7 @@ with env_override(DEBUG="true", LOG_LEVEL="DEBUG"):
 | Exit not called | Exception | finally: block |
 | Nested issue | Decorator order | Kolla ordning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -6808,7 +6808,7 @@ with env_override(DEBUG="true", LOG_LEVEL="DEBUG"):
             "xp_reward": 85,
             "content": """# Type Hints & Mypy
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -6826,7 +6826,7 @@ Som DevOps-ingenjor maste du forsta:
 - **typing** modulen
 - **mypy** for statisk analys
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Type Hints
 
@@ -6852,7 +6852,7 @@ def create_server(host: str, port: int = 8080) -> dict:
     return {"host": host, "port": port}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Collections
 
@@ -6882,7 +6882,7 @@ servers: list[str] = ["web-01", "web-02"]
 config: dict[str, str] = {"host": "localhost"}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Optional och Union
 
@@ -6907,7 +6907,7 @@ def get_port(default: int | None = None) -> int | None:
     return os.environ.get("PORT") or default
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Callable och TypeVar
 
@@ -6939,7 +6939,7 @@ def first(items: List[T]) -> T:
 # first([1, 2, 3]) returnerar int
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## TypedDict och dataclass
 
@@ -6980,7 +6980,7 @@ class Server:
 server = Server("web-01", "192.168.1.1", 8080)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Literal och Final
 
@@ -7008,7 +7008,7 @@ LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR"]
 DEFAULT_LEVEL: Final[LogLevel] = "INFO"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Mypy - Statisk typkontroll
 
@@ -7049,7 +7049,7 @@ disallow_untyped_defs = true
 ignore_missing_imports = true
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Typed DevOps Code
 
@@ -7111,7 +7111,7 @@ result = manager.deploy(["web"], "production")
 print(result.message)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Type Hints
 
@@ -7129,7 +7129,7 @@ print(result.message)
 | Callable | `Callable[[int], str]` |
 | Any | `Any` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -7140,7 +7140,7 @@ print(result.message)
 | Missing return | Saknar return type | Lagg till -> Type |
 | Generic needed | List utan type | List[str] |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -7171,7 +7171,7 @@ print(result.message)
             "xp_reward": 95,
             "content": """# Packaging & Distribution
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -7189,25 +7189,25 @@ Som DevOps-ingenjor maste du forsta:
 - **pip** och **wheel** for distribution
 - **Private PyPI** for interna paket
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Projekt struktur
 
 ```
 mypackage/
-├── pyproject.toml          # Huvudkonfiguration
-├── README.md
-├── LICENSE
-├── src/
-│   └── mypackage/
-│       ├── __init__.py
-│       ├── core.py
-│       └── utils.py
-├── tests/
-│   ├── __init__.py
-│   └── test_core.py
-└── scripts/
-    └── cli.py
++-- pyproject.toml          # Huvudkonfiguration
++-- README.md
++-- LICENSE
++-- src/
+|   +-- mypackage/
+|       +-- __init__.py
+|       +-- core.py
+|       +-- utils.py
++-- tests/
+|   +-- __init__.py
+|   +-- test_core.py
++-- scripts/
+    +-- cli.py
 ```
 
 ### __init__.py
@@ -7224,7 +7224,7 @@ from .utils import load_config
 __all__ = ["Server", "deploy", "load_config"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## pyproject.toml
 
@@ -7291,7 +7291,7 @@ where = ["src"]
 mypackage = ["py.typed", "data/*.yaml"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Bygga och installera
 
@@ -7317,7 +7317,7 @@ pip install -e ".[dev,aws]"
 pip install dist/devops_toolkit-1.0.0-py3-none-any.whl
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CLI Entry Points
 
@@ -7360,7 +7360,7 @@ devops-cli deploy staging --dry-run
 devops-cli status --all
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Publicering till PyPI
 
@@ -7386,7 +7386,7 @@ export TWINE_PASSWORD=pypi-xxxx...
 twine upload dist/*
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Private PyPI Server
 
@@ -7412,7 +7412,7 @@ pyyaml>=6.0
 company-internal-lib>=1.0.0
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Version Management
 
@@ -7449,7 +7449,7 @@ git push origin v1.0.0
 VERSION=$(git describe --tags --abbrev=0)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CI/CD Pipeline for Publishing
 
@@ -7486,7 +7486,7 @@ jobs:
         run: twine upload dist/*
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktisk Checklista
 
@@ -7503,7 +7503,7 @@ jobs:
 [ ] Version uppdaterad innan release
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Packaging
 
@@ -7515,7 +7515,7 @@ jobs:
 | Upload prod | `twine upload dist/*` |
 | Check | `twine check dist/*` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -7526,7 +7526,7 @@ jobs:
 | Invalid metadata | pyproject.toml fel | Validera med twine check |
 | Import error | Circular import | Refaktorera imports |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

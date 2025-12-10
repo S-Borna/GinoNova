@@ -23,46 +23,46 @@ Docker security är kritiskt för production deployments. Felkonfigurerade conta
 ### Security Layers
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER SECURITY LAYERS                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │ LAYER 5: RUNTIME SECURITY                                        │   │
-│  │ • Read-only filesystem                                           │   │
-│  │ • Dropped capabilities                                           │   │
-│  │ • Seccomp profiles                                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                          ▲                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │ LAYER 4: CONTAINER CONFIG                                        │   │
-│  │ • Non-root user                                                  │   │
-│  │ • Resource limits                                                │   │
-│  │ • Network isolation                                              │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                          ▲                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │ LAYER 3: IMAGE SECURITY                                          │   │
-│  │ • Vulnerability scanning                                         │   │
-│  │ • Trusted base images                                            │   │
-│  │ • Image signing                                                  │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                          ▲                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │ LAYER 2: DOCKERFILE SECURITY                                     │   │
-│  │ • Minimal packages                                               │   │
-│  │ • No secrets in image                                            │   │
-│  │ • Specific versions                                              │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                          ▲                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │ LAYER 1: HOST SECURITY                                           │   │
-│  │ • Docker daemon config                                           │   │
-│  │ • User namespace remapping                                       │   │
-│  │ • AppArmor/SELinux                                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER SECURITY LAYERS                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +-----------------------------------------------------------------+   |
+|  | LAYER 5: RUNTIME SECURITY                                        |   |
+|  | • Read-only filesystem                                           |   |
+|  | • Dropped capabilities                                           |   |
+|  | • Seccomp profiles                                               |   |
+|  +-----------------------------------------------------------------+   |
+|                          ▲                                               |
+|  +-----------------------------------------------------------------+   |
+|  | LAYER 4: CONTAINER CONFIG                                        |   |
+|  | • Non-root user                                                  |   |
+|  | • Resource limits                                                |   |
+|  | • Network isolation                                              |   |
+|  +-----------------------------------------------------------------+   |
+|                          ▲                                               |
+|  +-----------------------------------------------------------------+   |
+|  | LAYER 3: IMAGE SECURITY                                          |   |
+|  | • Vulnerability scanning                                         |   |
+|  | • Trusted base images                                            |   |
+|  | • Image signing                                                  |   |
+|  +-----------------------------------------------------------------+   |
+|                          ▲                                               |
+|  +-----------------------------------------------------------------+   |
+|  | LAYER 2: DOCKERFILE SECURITY                                     |   |
+|  | • Minimal packages                                               |   |
+|  | • No secrets in image                                            |   |
+|  | • Specific versions                                              |   |
+|  +-----------------------------------------------------------------+   |
+|                          ▲                                               |
+|  +-----------------------------------------------------------------+   |
+|  | LAYER 1: HOST SECURITY                                           |   |
+|  | • Docker daemon config                                           |   |
+|  | • User namespace remapping                                       |   |
+|  | • AppArmor/SELinux                                               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Non-root User
@@ -324,37 +324,37 @@ CMD ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
 ## 8. Security Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER SECURITY CHECKLIST                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  IMAGE SECURITY:                                                         │
-│  □ Use official/verified base images                                    │
-│  □ Pin specific image versions (not :latest)                            │
-│  □ Scan images for vulnerabilities                                      │
-│  □ Use minimal base images (slim/alpine/distroless)                    │
-│  □ Sign images with Docker Content Trust                                │
-│                                                                          │
-│  DOCKERFILE:                                                             │
-│  □ Run as non-root USER                                                 │
-│  □ Don't store secrets in images                                        │
-│  □ Use COPY instead of ADD                                              │
-│  □ Set HEALTHCHECK                                                      │
-│  □ Use multi-stage builds                                               │
-│                                                                          │
-│  RUNTIME:                                                                │
-│  □ Drop unnecessary capabilities                                        │
-│  □ Use read-only filesystem where possible                              │
-│  □ Set resource limits (memory, CPU, PIDs)                              │
-│  □ Use security-opt no-new-privileges                                   │
-│  □ Use Docker secrets for sensitive data                                │
-│                                                                          │
-│  NETWORK:                                                                │
-│  □ Use user-defined networks                                            │
-│  □ Don't expose unnecessary ports                                       │
-│  □ Use internal networks for backend services                           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER SECURITY CHECKLIST                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  IMAGE SECURITY:                                                         |
+|  □ Use official/verified base images                                    |
+|  □ Pin specific image versions (not :latest)                            |
+|  □ Scan images for vulnerabilities                                      |
+|  □ Use minimal base images (slim/alpine/distroless)                    |
+|  □ Sign images with Docker Content Trust                                |
+|                                                                          |
+|  DOCKERFILE:                                                             |
+|  □ Run as non-root USER                                                 |
+|  □ Don't store secrets in images                                        |
+|  □ Use COPY instead of ADD                                              |
+|  □ Set HEALTHCHECK                                                      |
+|  □ Use multi-stage builds                                               |
+|                                                                          |
+|  RUNTIME:                                                                |
+|  □ Drop unnecessary capabilities                                        |
+|  □ Use read-only filesystem where possible                              |
+|  □ Set resource limits (memory, CPU, PIDs)                              |
+|  □ Use security-opt no-new-privileges                                   |
+|  □ Use Docker secrets for sensitive data                                |
+|                                                                          |
+|  NETWORK:                                                                |
+|  □ Use user-defined networks                                            |
+|  □ Don't expose unnecessary ports                                       |
+|  □ Use internal networks for backend services                           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9-14. Sammanfattning
@@ -370,7 +370,7 @@ CMD ["python", "-m", "gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
 
 ---
 
-**Nästa Node:** Docker Registry →
+**Nästa Node:** Docker Registry ->
 ''',
     "xp_reward": 175,
     "estimated_minutes": 75,
@@ -396,71 +396,71 @@ Docker Registry är tjänster för att lagra och distribuera Docker images. För
 ### Registry Ecosystem
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER REGISTRY ECOSYSTEM                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  PUBLIC REGISTRIES:                                                      │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐           │
-│  │   Docker Hub    │ │   GitHub GHCR   │ │  Quay.io        │           │
-│  │   docker.io     │ │   ghcr.io       │ │  quay.io        │           │
-│  │   (default)     │ │                 │ │                 │           │
-│  └─────────────────┘ └─────────────────┘ └─────────────────┘           │
-│                                                                          │
-│  CLOUD PROVIDER REGISTRIES:                                             │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐           │
-│  │     AWS ECR     │ │   Google GCR    │ │   Azure ACR     │           │
-│  │ xxx.dkr.ecr.    │ │   gcr.io/       │ │   xxx.azurecr.  │           │
-│  │ region.amazon.. │ │   project/      │ │   io/           │           │
-│  └─────────────────┘ └─────────────────┘ └─────────────────┘           │
-│                                                                          │
-│  SELF-HOSTED:                                                           │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐           │
-│  │ Docker Registry │ │    Harbor       │ │   GitLab        │           │
-│  │  (Official)     │ │  (Enterprise)   │ │  Registry       │           │
-│  └─────────────────┘ └─────────────────┘ └─────────────────┘           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER REGISTRY ECOSYSTEM                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  PUBLIC REGISTRIES:                                                      |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  +-----------------+ +-----------------+ +-----------------+           |
+|  |   Docker Hub    | |   GitHub GHCR   | |  Quay.io        |           |
+|  |   docker.io     | |   ghcr.io       | |  quay.io        |           |
+|  |   (default)     | |                 | |                 |           |
+|  +-----------------+ +-----------------+ +-----------------+           |
+|                                                                          |
+|  CLOUD PROVIDER REGISTRIES:                                             |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  +-----------------+ +-----------------+ +-----------------+           |
+|  |     AWS ECR     | |   Google GCR    | |   Azure ACR     |           |
+|  | xxx.dkr.ecr.    | |   gcr.io/       | |   xxx.azurecr.  |           |
+|  | region.amazon.. | |   project/      | |   io/           |           |
+|  +-----------------+ +-----------------+ +-----------------+           |
+|                                                                          |
+|  SELF-HOSTED:                                                           |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  +-----------------+ +-----------------+ +-----------------+           |
+|  | Docker Registry | |    Harbor       | |   GitLab        |           |
+|  |  (Official)     | |  (Enterprise)   | |  Registry       |           |
+|  +-----------------+ +-----------------+ +-----------------+           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Image Naming
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    IMAGE NAMING CONVENTION                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  FULL FORMAT:                                                            │
-│  [registry/][namespace/]repository[:tag][@digest]                       │
-│                                                                          │
-│  EXAMPLES:                                                               │
-│  ─────────────────────────────────────────────────────────────────────  │
-│                                                                          │
-│  nginx                                                                   │
-│  → docker.io/library/nginx:latest                                       │
-│                                                                          │
-│  nginx:1.24-alpine                                                      │
-│  → docker.io/library/nginx:1.24-alpine                                  │
-│                                                                          │
-│  myuser/myapp:v1.0.0                                                    │
-│  → docker.io/myuser/myapp:v1.0.0                                        │
-│                                                                          │
-│  ghcr.io/myorg/myapp:latest                                             │
-│  → GitHub Container Registry                                            │
-│                                                                          │
-│  123456789.dkr.ecr.eu-west-1.amazonaws.com/myapp:v1                     │
-│  → AWS ECR                                                              │
-│                                                                          │
-│  gcr.io/my-project/myapp:latest                                         │
-│  → Google Container Registry                                            │
-│                                                                          │
-│  myregistry.azurecr.io/myapp:latest                                     │
-│  → Azure Container Registry                                             │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    IMAGE NAMING CONVENTION                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  FULL FORMAT:                                                            |
+|  [registry/][namespace/]repository[:tag][@digest]                       |
+|                                                                          |
+|  EXAMPLES:                                                               |
+|  ---------------------------------------------------------------------  |
+|                                                                          |
+|  nginx                                                                   |
+|  -> docker.io/library/nginx:latest                                       |
+|                                                                          |
+|  nginx:1.24-alpine                                                      |
+|  -> docker.io/library/nginx:1.24-alpine                                  |
+|                                                                          |
+|  myuser/myapp:v1.0.0                                                    |
+|  -> docker.io/myuser/myapp:v1.0.0                                        |
+|                                                                          |
+|  ghcr.io/myorg/myapp:latest                                             |
+|  -> GitHub Container Registry                                            |
+|                                                                          |
+|  123456789.dkr.ecr.eu-west-1.amazonaws.com/myapp:v1                     |
+|  -> AWS ECR                                                              |
+|                                                                          |
+|  gcr.io/my-project/myapp:latest                                         |
+|  -> Google Container Registry                                            |
+|                                                                          |
+|  myregistry.azurecr.io/myapp:latest                                     |
+|  -> Azure Container Registry                                             |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Registry Operations
@@ -521,36 +521,36 @@ docker manifest inspect nginx:latest
 ## 4. Tagging Strategy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    IMAGE TAGGING STRATEGY                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SEMANTIC VERSIONING:                                                    │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  myapp:1.0.0              # Specific version                            │
-│  myapp:1.0                # Minor version (rolling)                     │
-│  myapp:1                  # Major version (rolling)                     │
-│  myapp:latest             # Latest release                              │
-│                                                                          │
-│  GIT-BASED:                                                              │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  myapp:abc1234            # Git short SHA                               │
-│  myapp:main-abc1234       # Branch + SHA                                │
-│  myapp:pr-123             # Pull request                                │
-│                                                                          │
-│  ENVIRONMENT:                                                            │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  myapp:dev                # Development                                 │
-│  myapp:staging            # Staging                                     │
-│  myapp:prod               # Production                                  │
-│                                                                          │
-│  COMBINED (Recommended):                                                 │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  myapp:v1.2.3             # Release version                             │
-│  myapp:v1.2.3-abc1234     # Version + commit                            │
-│  myapp:latest             # Most recent                                 │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    IMAGE TAGGING STRATEGY                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SEMANTIC VERSIONING:                                                    |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  myapp:1.0.0              # Specific version                            |
+|  myapp:1.0                # Minor version (rolling)                     |
+|  myapp:1                  # Major version (rolling)                     |
+|  myapp:latest             # Latest release                              |
+|                                                                          |
+|  GIT-BASED:                                                              |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  myapp:abc1234            # Git short SHA                               |
+|  myapp:main-abc1234       # Branch + SHA                                |
+|  myapp:pr-123             # Pull request                                |
+|                                                                          |
+|  ENVIRONMENT:                                                            |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  myapp:dev                # Development                                 |
+|  myapp:staging            # Staging                                     |
+|  myapp:prod               # Production                                  |
+|                                                                          |
+|  COMBINED (Recommended):                                                 |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  myapp:v1.2.3             # Release version                             |
+|  myapp:v1.2.3-abc1234     # Version + commit                            |
+|  myapp:latest             # Most recent                                 |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 5. Self-hosted Registry
@@ -712,7 +712,7 @@ jobs:
 
 ---
 
-**Nästa Node:** Docker in CI/CD →
+**Nästa Node:** Docker in CI/CD ->
 ''',
     "xp_reward": 165,
     "estimated_minutes": 70,

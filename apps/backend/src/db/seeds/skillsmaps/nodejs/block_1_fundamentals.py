@@ -12,32 +12,32 @@ NODE_01_INTRO = {
     "content": '''
 # Introduction to Node.js
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Node.js?
 
 Node.js ar en JavaScript runtime byggd pa V8-motorn som lat dig kora JavaScript pa servern.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    NODE.JS OVERVIEW                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Definition:                                                    │
-│  - JavaScript runtime byggd pa V8                               │
-│  - Server-side JavaScript                                       │
-│  - Event-driven, non-blocking I/O                               │
-│                                                                  │
-│  Historia:                                                      │
-│  - 2009: Ryan Dahl skapar Node.js                               │
-│  - 2010: npm lanseras                                           │
-│  - 2015: io.js merge, Node.js Foundation                        │
-│  - 2019: OpenJS Foundation                                      │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    NODE.JS OVERVIEW                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Definition:                                                    |
+|  - JavaScript runtime byggd pa V8                               |
+|  - Server-side JavaScript                                       |
+|  - Event-driven, non-blocking I/O                               |
+|                                                                  |
+|  Historia:                                                      |
+|  - 2009: Ryan Dahl skapar Node.js                               |
+|  - 2010: npm lanseras                                           |
+|  - 2015: io.js merge, Node.js Foundation                        |
+|  - 2019: OpenJS Foundation                                      |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -49,7 +49,7 @@ Node.js ar en JavaScript runtime byggd pa V8-motorn som lat dig kora JavaScript 
 | Full-stack | Samma sprak frontend och backend |
 | Automation | Byggverktyg, scripts, CLI-tools |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -62,7 +62,7 @@ Node.js ar en JavaScript runtime byggd pa V8-motorn som lat dig kora JavaScript 
 | process.env | Miljovanriabler |
 | process.cwd() | Aktuell katalog |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Node.js vs Browser
 
@@ -81,7 +81,7 @@ console, setTimeout, JSON, fetch (Node 18+)
 // Node.js: global (eller globalThis)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation
 
@@ -103,7 +103,7 @@ node --version
 npm --version
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hello World
 
@@ -115,7 +115,7 @@ console.log('Hello, Node.js!');
 // $ node hello.js
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Process Object
 
@@ -140,25 +140,25 @@ process.exit(0);  // Success
 process.exit(1);  // Error
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Node.js Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Node.js Application                           │
-├─────────────────────────────────────────────────────────────────┤
-│                     Node.js APIs                                 │
-│         (http, fs, path, crypto, events, etc.)                  │
-├─────────────────────────────────────────────────────────────────┤
-│                    Node.js Bindings                              │
-├──────────────────────────┬──────────────────────────────────────┤
-│           V8             │           libuv                       │
-│    (JavaScript Engine)   │    (Async I/O, Event Loop)           │
-└──────────────────────────┴──────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Node.js Application                           |
++-----------------------------------------------------------------+
+|                     Node.js APIs                                 |
+|         (http, fs, path, crypto, events, etc.)                  |
++-----------------------------------------------------------------+
+|                    Node.js Bindings                              |
++--------------------------+--------------------------------------+
+|           V8             |           libuv                       |
+|    (JavaScript Engine)   |    (Async I/O, Event Loop)           |
++--------------------------+--------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -169,7 +169,7 @@ process.exit(1);  // Error
 | Version mismatch | Fel Node-version | nvm use <version> |
 | Module not found | Saknar dependencies | npm install |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -200,13 +200,13 @@ NODE_02_MODULES = {
     "content": '''
 # Modules: CommonJS & ESM
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Modules?
 
 Organisera kod i ateranvandbara moduler for battre struktur och underhall.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -218,7 +218,7 @@ Organisera kod i ateranvandbara moduler for battre struktur och underhall.
 | Tree-shaking | ESM mojliggor borttagning av oanvand kod |
 | Dependency | Tydliga beroenden mellan komponenter |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -228,7 +228,7 @@ Organisera kod i ateranvandbara moduler for battre struktur och underhall.
 | ESM | import | export |
 | Dynamic | await import() | - |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CommonJS (CJS)
 
@@ -283,7 +283,7 @@ import * as math from './math.mjs';
 math.add(2, 3);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Aktivera ESM
 
@@ -301,27 +301,27 @@ math.add(2, 3);
 // file.cjs = CommonJS
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CJS vs ESM
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CJS vs ESM                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  CommonJS:                      ESM:                            │
-│  - require() / module.exports   - import / export               │
-│  - Synkron laddning             - Asynkron laddning             │
-│  - Runtime                      - Compile time (statisk)        │
-│  - Default i legacy Node        - Default i browser, modern Node│
-│                                                                  │
-│  Rekommendation: Anvand ESM for nya projekt                     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CJS vs ESM                                    |
++-----------------------------------------------------------------+
+|                                                                  |
+|  CommonJS:                      ESM:                            |
+|  - require() / module.exports   - import / export               |
+|  - Synkron laddning             - Asynkron laddning             |
+|  - Runtime                      - Compile time (statisk)        |
+|  - Default i legacy Node        - Default i browser, modern Node|
+|                                                                  |
+|  Rekommendation: Anvand ESM for nya projekt                     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inbyggda Moduler
 
@@ -337,7 +337,7 @@ import url from 'node:url';
 import util from 'node:util';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## __dirname och __filename
 
@@ -354,7 +354,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dynamic Import
 
@@ -371,7 +371,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -382,7 +382,7 @@ if (process.env.NODE_ENV === 'development') {
 | ERR_REQUIRE_ESM | CJS importerar ESM | Anvand dynamic import |
 | Circular dependency | Moduler refererar varandra | Refaktorera strukturen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -413,13 +413,13 @@ NODE_03_NPM = {
     "content": '''
 # npm & Package Management
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar npm?
 
 Node Package Manager ar varldens storsta register av mjukvarupaket.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -431,7 +431,7 @@ Node Package Manager ar varldens storsta register av mjukvarupaket.
 | Caching | Snabba builds med cache |
 | Scripts | Standardiserade kommandon for team |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -444,7 +444,7 @@ Node Package Manager ar varldens storsta register av mjukvarupaket.
 | npm run <script> | Kor npm script |
 | npm audit | Kontrollera sarbarheter |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## npm Basics
 
@@ -472,7 +472,7 @@ npm update
 npm update express
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## package.json
 
@@ -502,30 +502,30 @@ npm update express
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Semantic Versioning
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 SEMANTIC VERSIONING                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Format: MAJOR.MINOR.PATCH (ex: 4.18.2)                         │
-│                                                                  │
-│  MAJOR: Breaking changes      (4.x.x -> 5.0.0)                  │
-│  MINOR: Nya features          (4.18.x -> 4.19.0)                │
-│  PATCH: Bug fixes             (4.18.2 -> 4.18.3)                │
-│                                                                  │
-│  Ranges:                                                        │
-│  "^4.18.2" = 4.18.2 - 4.x.x  (MINOR + PATCH)                   │
-│  "~4.18.2" = 4.18.2 - 4.18.x (Endast PATCH)                    │
-│  "4.18.2"  = Exakt version                                      │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 SEMANTIC VERSIONING                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Format: MAJOR.MINOR.PATCH (ex: 4.18.2)                         |
+|                                                                  |
+|  MAJOR: Breaking changes      (4.x.x -> 5.0.0)                  |
+|  MINOR: Nya features          (4.18.x -> 4.19.0)                |
+|  PATCH: Bug fixes             (4.18.2 -> 4.18.3)                |
+|                                                                  |
+|  Ranges:                                                        |
+|  "^4.18.2" = 4.18.2 - 4.x.x  (MINOR + PATCH)                   |
+|  "~4.18.2" = 4.18.2 - 4.18.x (Endast PATCH)                    |
+|  "4.18.2"  = Exakt version                                      |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## npm Scripts
 
@@ -558,29 +558,29 @@ npm test           # "test" behover inte "run"
 npm run test -- --watch
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## package-lock.json
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 PACKAGE-LOCK.JSON                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Syfte:                                                         │
-│  - Laser exakta versioner                                       │
-│  - Reproducerbara builds                                        │
-│  - Snabbare installation                                        │
-│                                                                  │
-│  Viktigt:                                                       │
-│  - Committa till git                                            │
-│  - Genereras automatiskt                                        │
-│  - Uppdateras vid npm install                                   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 PACKAGE-LOCK.JSON                                |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Syfte:                                                         |
+|  - Laser exakta versioner                                       |
+|  - Reproducerbara builds                                        |
+|  - Snabbare installation                                        |
+|                                                                  |
+|  Viktigt:                                                       |
+|  - Committa till git                                            |
+|  - Genereras automatiskt                                        |
+|  - Uppdateras vid npm install                                   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## npm Alternativ
 
@@ -590,7 +590,7 @@ npm run test -- --watch
 | yarn | Snabbare, workspaces | yarn add |
 | pnpm | Effektivt diskutrymme | pnpm add |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Workspaces (Monorepo)
 
@@ -613,7 +613,7 @@ npm run test -w packages/api
 npm run test --workspaces
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## npx
 
@@ -630,7 +630,7 @@ npx node@18 app.js
 npx eslint .
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -641,7 +641,7 @@ npx eslint .
 | ENOENT | Fil saknas | npm install fran scratch |
 | audit vulns | Sarbarheter | npm audit fix |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -672,13 +672,13 @@ NODE_04_ERRORS = {
     "content": '''
 # Error Handling
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Error Handling?
 
 Korrekt felhantering ar kritiskt for stabila och debuggbara applikationer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -690,7 +690,7 @@ Korrekt felhantering ar kritiskt for stabila och debuggbara applikationer.
 | Recovery | Automatisk restart vid fatala fel |
 | Logs | Strukturerade fel i centraliserad logging |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -702,7 +702,7 @@ Korrekt felhantering ar kritiskt for stabila och debuggbara applikationer.
 | Async/await | try-catch |
 | Uncaught | process.on('uncaughtException') |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Error Types
 
@@ -721,7 +721,7 @@ new ReferenceError('Variable not defined');
 // EADDRINUSE: Port in use
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Try-Catch
 
@@ -745,7 +745,7 @@ try {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Custom Errors
 
@@ -783,7 +783,7 @@ try {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Async Error Handling
 
@@ -814,7 +814,7 @@ async function readFile() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Graceful Shutdown
 
@@ -845,7 +845,7 @@ process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Uncaught Exceptions
 
@@ -866,7 +866,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // Best practice: graceful shutdown
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Error Middleware (Express)
 
@@ -901,7 +901,7 @@ app.use((error, req, res, next) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -912,7 +912,7 @@ app.use((error, req, res, next) => {
 | Crash loop | Uncaught exception | Implementera graceful shutdown |
 | Silent failure | Error svaljd | Logga och re-throw |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

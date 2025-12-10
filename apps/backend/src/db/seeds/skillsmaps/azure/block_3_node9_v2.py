@@ -16,7 +16,7 @@ AZURE_NODE_9_V2 = {
         "headline": "Lagra vad som helst, hur mycket som helst",
         "hook": "Blob Storage är Azures S3 - oändlig lagring för bilder, videos, backups och big data.",
         "learning_objectives": [
-            "Förstå Storage Account-hierarkin (Account → Container → Blob)",
+            "Förstå Storage Account-hierarkin (Account -> Container -> Blob)",
             "Välja rätt access tier (Hot, Cool, Archive)",
             "Konfigurera access med SAS-tokens och policies",
             "Implementera lifecycle management för kostnadsoptimering",
@@ -53,27 +53,27 @@ AZURE_NODE_9_V2 = {
 | Append Blob | Loggar (append-only) | 195 GB |
 | Page Blob | VM-diskar, random I/O | 8 TB |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│         STORAGE ACCOUNT HIERARCHY               │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   Storage Account: stproddata12345              │
-│   ├── Container: images/                        │
-│   │   ├── logo.png                             │
-│   │   ├── banner.jpg                           │
-│   │   └── products/                            │
-│   │       ├── product-1.png                    │
-│   │       └── product-2.png                    │
-│   │                                             │
-│   ├── Container: backups/                       │
-│   │   ├── db-2024-12-01.sql.gz                 │
-│   │   └── db-2024-12-02.sql.gz                 │
-│   │                                             │
-│   └── Container: logs/                          │
-│       ├── app-2024-12-01.log                   │
-│       └── app-2024-12-02.log                   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|         STORAGE ACCOUNT HIERARCHY               |
++-------------------------------------------------+
+|                                                 |
+|   Storage Account: stproddata12345              |
+|   +-- Container: images/                        |
+|   |   +-- logo.png                             |
+|   |   +-- banner.jpg                           |
+|   |   +-- products/                            |
+|   |       +-- product-1.png                    |
+|   |       +-- product-2.png                    |
+|   |                                             |
+|   +-- Container: backups/                       |
+|   |   +-- db-2024-12-01.sql.gz                 |
+|   |   +-- db-2024-12-02.sql.gz                 |
+|   |                                             |
+|   +-- Container: logs/                          |
+|       +-- app-2024-12-01.log                   |
+|       +-- app-2024-12-02.log                   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd virtual directories med / i blob-namn. 'images/products/item.png' fungerar som mappar.",
             "common_mistake": "Att tro att containers är mappar. De är flat - 'mapp-strukturen' är bara blob-namnkonvention."
@@ -108,34 +108,34 @@ AZURE_NODE_9_V2 = {
 | Archive | $0.002 | $5.00 | $0.10 |
 
 **Rekommendation:**
-- Aktiv data → Hot
-- >30 dagar utan access → Cool
-- >180 dagar → Archive""",
+- Aktiv data -> Hot
+- >30 dagar utan access -> Cool
+- >180 dagar -> Archive""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│            ACCESS TIER COMPARISON               │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   STORAGE COST         ACCESS COST              │
-│   (per GB/month)       (per operation)          │
-│                                                 │
-│   HOT      ████████    █                        │
-│            $0.021      Low                      │
-│                                                 │
-│   COOL     ████        ███                      │
-│            $0.01       Medium                   │
-│                                                 │
-│   ARCHIVE  █           ████████████████         │
-│            $0.002      High + rehydration       │
-│                                                 │
-│   USE CASE:                                     │
-│   HOT     → Active data, frequent access        │
-│   COOL    → Backups, monthly reports            │
-│   ARCHIVE → Compliance, yearly archives         │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|            ACCESS TIER COMPARISON               |
++-------------------------------------------------+
+|                                                 |
+|   STORAGE COST         ACCESS COST              |
+|   (per GB/month)       (per operation)          |
+|                                                 |
+|   HOT      ########    #                        |
+|            $0.021      Low                      |
+|                                                 |
+|   COOL     ####        ###                      |
+|            $0.01       Medium                   |
+|                                                 |
+|   ARCHIVE  #           ################         |
+|            $0.002      High + rehydration       |
+|                                                 |
+|   USE CASE:                                     |
+|   HOT     -> Active data, frequent access        |
+|   COOL    -> Backups, monthly reports            |
+|   ARCHIVE -> Compliance, yearly archives         |
+|                                                 |
++-------------------------------------------------+
 """,
-            "pro_tip": "Använd Lifecycle Management för automatisk tier-övergång. Blob som inte accessas på 30 dagar → Cool.",
+            "pro_tip": "Använd Lifecycle Management för automatisk tier-övergång. Blob som inte accessas på 30 dagar -> Cool.",
             "common_mistake": "Att lagra allt på Hot tier. 80% av data accessas aldrig efter 30 dagar."
         },
         {
@@ -177,30 +177,30 @@ sv=2021-06-08           # API version
 &sig=xxxxx              # Signature
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           ACCESS CONTROL METHODS                │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   METHOD              SECURITY    USE CASE      │
-│   ─────────────────────────────────────────────│
-│                                                 │
-│   Storage Key         ⚠️ LOW      Admin only    │
-│   [Full Access]       Never share publicly!    │
-│                                                 │
-│   SAS Token           ✅ MEDIUM   External users│
-│   [Time-limited]      Upload links, downloads  │
-│                                                 │
-│   Azure AD + RBAC     ✅✅ HIGH   Applications  │
-│   [Managed Identity]  No keys to manage!       │
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │ BEST PRACTICE:                          │   │
-│   │ • Apps: Managed Identity                │   │
-│   │ • External: User Delegation SAS         │   │
-│   │ • NEVER: Storage keys in code           │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           ACCESS CONTROL METHODS                |
++-------------------------------------------------+
+|                                                 |
+|   METHOD              SECURITY    USE CASE      |
+|   ---------------------------------------------|
+|                                                 |
+|   Storage Key         ⚠️ LOW      Admin only    |
+|   [Full Access]       Never share publicly!    |
+|                                                 |
+|   SAS Token           ✅ MEDIUM   External users|
+|   [Time-limited]      Upload links, downloads  |
+|                                                 |
+|   Azure AD + RBAC     ✅✅ HIGH   Applications  |
+|   [Managed Identity]  No keys to manage!       |
+|                                                 |
+|   +-----------------------------------------+   |
+|   | BEST PRACTICE:                          |   |
+|   | • Apps: Managed Identity                |   |
+|   | • External: User Delegation SAS         |   |
+|   | • NEVER: Storage keys in code           |   |
+|   +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd User Delegation SAS med Azure AD - säkrare än Account SAS och kan revokeras.",
             "common_mistake": "Att hardcoda storage keys i kod. Använd Managed Identity eller Key Vault!"
@@ -249,29 +249,29 @@ sv=2021-06-08           # API version
 | User uploads | Cool efter 60d, Archive 180d |
 | Compliance | Archive efter 1d, Keep 7 years |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│          LIFECYCLE MANAGEMENT FLOW              │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   Day 0          Day 30        Day 90    Day 365│
-│   ─────────────────────────────────────────────│
-│                                                 │
-│   ┌─────┐       ┌─────┐      ┌───────┐   🗑️    │
-│   │ HOT │ ────▶ │COOL │ ───▶ │ARCHIVE│ ─▶ DEL  │
-│   └─────┘       └─────┘      └───────┘         │
-│   $0.021/GB     $0.01/GB     $0.002/GB         │
-│                                                 │
-│   AUTOMATIC TRANSITIONS:                        │
-│   • No manual intervention needed              │
-│   • Runs daily                                 │
-│   • Can be filtered by prefix, tags, etc.      │
-│                                                 │
-│   SAVINGS EXAMPLE (1TB logs/month):             │
-│   Without policy: $252/year (all Hot)          │
-│   With policy:    $52/year                     │
-│   SAVINGS:        $200/year (80%)              │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|          LIFECYCLE MANAGEMENT FLOW              |
++-------------------------------------------------+
+|                                                 |
+|   Day 0          Day 30        Day 90    Day 365|
+|   ---------------------------------------------|
+|                                                 |
+|   +-----+       +-----+      +-------+   🗑️    |
+|   | HOT | ----▶ |COOL | ---▶ |ARCHIVE| -▶ DEL  |
+|   +-----+       +-----+      +-------+         |
+|   $0.021/GB     $0.01/GB     $0.002/GB         |
+|                                                 |
+|   AUTOMATIC TRANSITIONS:                        |
+|   • No manual intervention needed              |
+|   • Runs daily                                 |
+|   • Can be filtered by prefix, tags, etc.      |
+|                                                 |
+|   SAVINGS EXAMPLE (1TB logs/month):             |
+|   Without policy: $252/year (all Hot)          |
+|   With policy:    $52/year                     |
+|   SAVINGS:        $200/year (80%)              |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Kombinera lifecycle med blob index tags. Tagga med 'retention=7years' och ha policy baserad på tag.",
             "common_mistake": "Att glömma lifecycle policies. Data ackumuleras och kostnaderna exploderar."
@@ -328,7 +328,7 @@ sv=2021-06-08           # API version
                 "hint": "Använd 'az storage blob set-tier'",
                 "expected_command": "az storage blob set-tier --account-name stdemoblob12345 --container-name images --name logo.png --tier Cool",
                 "expected_output": """(Success - no output)""",
-                "explanation": "Tier-byte är gratis från Hot→Cool. Cool→Hot har en liten kostnad.",
+                "explanation": "Tier-byte är gratis från Hot->Cool. Cool->Hot har en liten kostnad.",
                 "xp": 5
             },
             {
@@ -360,7 +360,7 @@ logo.png  Cool    12543""",
             {
                 "id": "mc1",
                 "question": "Du har 10TB loggar som accessas dagligen första veckan, sedan aldrig. Bästa strategi?",
-                "options": ["Allt på Hot tier", "Lifecycle policy: Hot→Cool efter 7d→Archive efter 30d", "Direkt till Archive", "Radera efter 7 dagar"],
+                "options": ["Allt på Hot tier", "Lifecycle policy: Hot->Cool efter 7d->Archive efter 30d", "Direkt till Archive", "Radera efter 7 dagar"],
                 "correct_answer": 1,
                 "explanation": "Lifecycle policy automatiserar tier-övergångar baserat på access patterns. Sparar 80%+ på lagring."
             },
@@ -388,7 +388,7 @@ logo.png  Cool    12543""",
         "requirements": [
             "Storage Account med containers: uploads, processed, thumbnails, archive",
             "SAS-policy för säker upload utan att exponera keys",
-            "Lifecycle policy: processed→Cool 30d, →Archive 90d",
+            "Lifecycle policy: processed->Cool 30d, ->Archive 90d",
             "Event Grid trigger för blob-upload notifications",
             "Dokumentera kostnadsuppskattning"
         ],

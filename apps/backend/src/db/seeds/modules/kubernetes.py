@@ -30,7 +30,7 @@ MODULE = {
             "xp_reward": 80,
             "content": """# Kubernetes Architecture & Core Concepts
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -43,46 +43,46 @@ MODULE = {
 
 Kubernetes ar STANDARD for container-orkestrering - du MASTE kunna det.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kubernetes Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES CLUSTER                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  CONTROL PLANE                                                  │
-│  ─────────────                                                  │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │
-│  │  API Server   │  │   Scheduler   │  │  Controller   │       │
-│  │               │  │               │  │   Manager     │       │
-│  │  All traffic  │  │  Pod placement│  │  Reconcile    │       │
-│  │  goes here    │  │  on nodes     │  │  desired state│       │
-│  └───────────────┘  └───────────────┘  └───────────────┘       │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌───────────────┐                                              │
-│  │     etcd      │  Distributed key-value store                │
-│  │               │  Cluster state & config                      │
-│  └───────────────┘                                              │
-│                                                                 │
-│  WORKER NODES                                                   │
-│  ────────────                                                   │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Node 1                        Node 2                    │   │
-│  │  ┌─────────┐ ┌─────────┐      ┌─────────┐ ┌─────────┐  │   │
-│  │  │ kubelet │ │  Pods   │      │ kubelet │ │  Pods   │  │   │
-│  │  └─────────┘ └─────────┘      └─────────┘ └─────────┘  │   │
-│  │  ┌─────────┐                  ┌─────────┐              │   │
-│  │  │kube-proxy│                  │kube-proxy│              │   │
-│  │  └─────────┘                  └─────────┘              │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    KUBERNETES CLUSTER                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  CONTROL PLANE                                                  |
+|  -------------                                                  |
+|  +---------------+  +---------------+  +---------------+       |
+|  |  API Server   |  |   Scheduler   |  |  Controller   |       |
+|  |               |  |               |  |   Manager     |       |
+|  |  All traffic  |  |  Pod placement|  |  Reconcile    |       |
+|  |  goes here    |  |  on nodes     |  |  desired state|       |
+|  +---------------+  +---------------+  +---------------+       |
+|           |                                                     |
+|           ▼                                                     |
+|  +---------------+                                              |
+|  |     etcd      |  Distributed key-value store                |
+|  |               |  Cluster state & config                      |
+|  +---------------+                                              |
+|                                                                 |
+|  WORKER NODES                                                   |
+|  ------------                                                   |
+|  +---------------------------------------------------------+   |
+|  |  Node 1                        Node 2                    |   |
+|  |  +---------+ +---------+      +---------+ +---------+  |   |
+|  |  | kubelet | |  Pods   |      | kubelet | |  Pods   |  |   |
+|  |  +---------+ +---------+      +---------+ +---------+  |   |
+|  |  +---------+                  +---------+              |   |
+|  |  |kube-proxy|                  |kube-proxy|              |   |
+|  |  +---------+                  +---------+              |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Control Plane - Hjarnan i klustret
 
@@ -196,7 +196,7 @@ journalctl -u kubelet -f
 # Här ser du varför pods inte startar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -208,7 +208,7 @@ journalctl -u kubelet -f
 | etcd                      | Kritisk databas - backup ar livsviktig              |
 | kubelet                   | Agent pa varje node som kor containers              |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -227,7 +227,7 @@ journalctl -u kubelet -f
             "xp_reward": 75,
             "content": """# Pods - Smallest Deployable Unit
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -240,39 +240,39 @@ journalctl -u kubelet -f
 
 Pods ar det DU deployer - allt annat ar abstraktion ovanpa.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Pod Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                          POD                                    │
-├─────────────────────────────────────────────────────────────────┤
-│  Pod IP: 10.244.1.5                                             │
-│                                                                 │
-│  ┌─────────────────┐  ┌─────────────────┐                      │
-│  │   Container 1   │  │   Container 2   │                      │
-│  │   (main app)    │  │   (sidecar)     │                      │
-│  │   Port: 8080    │  │   Port: 9090    │                      │
-│  └────────┬────────┘  └────────┬────────┘                      │
-│           │                    │                                │
-│           └────────┬───────────┘                                │
-│                    │                                            │
-│           ┌────────▼────────┐                                   │
-│           │  Shared Volume  │                                   │
-│           │    /data        │                                   │
-│           └─────────────────┘                                   │
-│                                                                 │
-│  Containers i samma pod:                                        │
-│  - Delar natverk (localhost)                                    │
-│  - Delar storage (volumes)                                      │
-│  - Schemalaggas pa samma node                                   │
-│  - Startar/stoppas tillsammans                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                          POD                                    |
++-----------------------------------------------------------------+
+|  Pod IP: 10.244.1.5                                             |
+|                                                                 |
+|  +-----------------+  +-----------------+                      |
+|  |   Container 1   |  |   Container 2   |                      |
+|  |   (main app)    |  |   (sidecar)     |                      |
+|  |   Port: 8080    |  |   Port: 9090    |                      |
+|  +--------+--------+  +--------+--------+                      |
+|           |                    |                                |
+|           +--------+-----------+                                |
+|                    |                                            |
+|           +--------▼--------+                                   |
+|           |  Shared Volume  |                                   |
+|           |    /data        |                                   |
+|           +-----------------+                                   |
+|                                                                 |
+|  Containers i samma pod:                                        |
+|  - Delar natverk (localhost)                                    |
+|  - Delar storage (volumes)                                      |
+|  - Schemalaggas pa samma node                                   |
+|  - Startar/stoppas tillsammans                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 Pods är den minsta enheten i Kubernetes. Du deployar inte containers direkt - du deployar pods. Som DevOps behöver du förstå:
 
@@ -433,7 +433,7 @@ kubectl exec -it <pod-name> -c <container-name> -- /bin/sh
 # Testa sh om bash inte finns
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -445,7 +445,7 @@ kubectl exec -it <pod-name> -c <container-name> -- /bin/sh
 | kubectl logs --previous   | Livraddare vid CrashLoopBackOff                     |
 | Efemara pods              | De kan do och aterskapas nar som helst              |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -464,7 +464,7 @@ kubectl exec -it <pod-name> -c <container-name> -- /bin/sh
             "xp_reward": 85,
             "content": """# ReplicaSets & Deployments
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -477,40 +477,40 @@ kubectl exec -it <pod-name> -c <container-name> -- /bin/sh
 
 Du kor ALDRIG nakna pods i produktion - alltid Deployments.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Deployment Hierarki
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DEPLOYMENT HIERARCHY                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DEPLOYMENT (web-app)                                           │
-│  ─────────────────────                                          │
-│  replicas: 3                                                    │
-│  strategy: RollingUpdate                                        │
-│       │                                                         │
-│       ▼                                                         │
-│  REPLICASET (web-app-7d9f8b6c4)                                │
-│  ────────────────────────────                                   │
-│  desired: 3, current: 3, ready: 3                               │
-│       │                                                         │
-│       ├────────────┬────────────┐                               │
-│       ▼            ▼            ▼                               │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                         │
-│  │  POD 1  │  │  POD 2  │  │  POD 3  │                         │
-│  │ nginx   │  │ nginx   │  │ nginx   │                         │
-│  │ 1.21    │  │ 1.21    │  │ 1.21    │                         │
-│  └─────────┘  └─────────┘  └─────────┘                         │
-│                                                                 │
-│  Du skapar: Deployment                                          │
-│  K8s skapar: ReplicaSet → Pods                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DEPLOYMENT HIERARCHY                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DEPLOYMENT (web-app)                                           |
+|  ---------------------                                          |
+|  replicas: 3                                                    |
+|  strategy: RollingUpdate                                        |
+|       |                                                         |
+|       ▼                                                         |
+|  REPLICASET (web-app-7d9f8b6c4)                                |
+|  ----------------------------                                   |
+|  desired: 3, current: 3, ready: 3                               |
+|       |                                                         |
+|       +------------+------------+                               |
+|       ▼            ▼            ▼                               |
+|  +---------+  +---------+  +---------+                         |
+|  |  POD 1  |  |  POD 2  |  |  POD 3  |                         |
+|  | nginx   |  | nginx   |  | nginx   |                         |
+|  | 1.21    |  | 1.21    |  | 1.21    |                         |
+|  +---------+  +---------+  +---------+                         |
+|                                                                 |
+|  Du skapar: Deployment                                          |
+|  K8s skapar: ReplicaSet -> Pods                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa en Deployment
 
@@ -664,7 +664,7 @@ kubectl get pods --show-labels
 # Kubernetes använder detta för att matcha pods
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -676,11 +676,11 @@ kubectl get pods --show-labels
 | Rollbacks                 | kubectl rollout undo for snabb aterstallning        |
 | Skalning                  | --replicas manuellt eller HPA for automatik         |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
-- Deployment → ReplicaSet → Pods (hierarkin)
+- Deployment -> ReplicaSet -> Pods (hierarkin)
 - Aldrig redigera ReplicaSets direkt - lat Deployment hantera
 - rollout history visar alla revisioner for rollback
 - HPA kraver metrics-server for att fungera
@@ -695,7 +695,7 @@ kubectl get pods --show-labels
             "xp_reward": 90,
             "content": """# Services & Networking
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -708,37 +708,37 @@ kubectl get pods --show-labels
 
 Services ger STABIL endpoint trots att pods ar efemara.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Service Typer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES SERVICES                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  CLUSTERIP (default)           NODEPORT                         │
-│  ──────────────────           ────────                          │
-│  ┌─────────────┐              ┌─────────────┐                   │
-│  │ 10.96.0.100 │              │ NodeIP:30080│                   │
-│  │   :80       │              │   :30080    │                   │
-│  └──────┬──────┘              └──────┬──────┘                   │
-│         │                            │                          │
-│    Intern endast               Extern via node IP               │
-│                                                                 │
-│  LOADBALANCER                  EXTERNALNAME                     │
-│  ────────────                  ────────────                     │
-│  ┌─────────────┐              ┌─────────────┐                   │
-│  │ 34.56.78.90 │              │ CNAME:      │                   │
-│  │   :80       │              │ db.aws.com  │                   │
-│  └──────┬──────┘              └─────────────┘                   │
-│         │                                                       │
-│    Cloud LB                    DNS alias                        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    KUBERNETES SERVICES                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  CLUSTERIP (default)           NODEPORT                         |
+|  ------------------           --------                          |
+|  +-------------+              +-------------+                   |
+|  | 10.96.0.100 |              | NodeIP:30080|                   |
+|  |   :80       |              |   :30080    |                   |
+|  +------+------+              +------+------+                   |
+|         |                            |                          |
+|    Intern endast               Extern via node IP               |
+|                                                                 |
+|  LOADBALANCER                  EXTERNALNAME                     |
+|  ------------                  ------------                     |
+|  +-------------+              +-------------+                   |
+|  | 34.56.78.90 |              | CNAME:      |                   |
+|  |   :80       |              | db.aws.com  |                   |
+|  +------+------+              +-------------+                   |
+|         |                                                       |
+|    Cloud LB                    DNS alias                        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ClusterIP - Intern kommunikation
 
@@ -920,7 +920,7 @@ nslookup db-headless
 # StatefulSets använder ofta headless services
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -932,7 +932,7 @@ nslookup db-headless
 | DNS                       | Services nas via namn, inte IP                      |
 | Endpoints                 | Lista over pods som matchar selector                |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -951,7 +951,7 @@ nslookup db-headless
             "xp_reward": 80,
             "content": """# ConfigMaps & Secrets
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -964,37 +964,37 @@ nslookup db-headless
 
 Separation av config fran kod ar KRITISK for sakerhet och flexibilitet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ConfigMaps vs Secrets
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CONFIGMAPS VS SECRETS                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  CONFIGMAPS                        SECRETS                      │
-│  ──────────                        ───────                      │
-│  - Plain text                      - Base64 encoded             │
-│  - Icke-kanslig data               - Kanslig data               │
-│  - LOG_LEVEL=debug                 - DB_PASSWORD=xxx            │
-│  - Max 1 MB                        - Max 1 MB                   │
-│                                                                 │
-│  ANVANDNING:                       ANVANDNING:                  │
-│  - App config                      - Losenord                   │
-│  - Feature flags                   - API-nycklar                │
-│  - Endpoints                       - TLS-certifikat             │
-│                                                                 │
-│  MONTERING:                                                     │
-│  ┌─────────────────────────────────────────────┐               │
-│  │  ENV VARS        eller        VOLUME MOUNT  │               │
-│  │  DB_HOST=xxx                  /etc/config/  │               │
-│  └─────────────────────────────────────────────┘               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CONFIGMAPS VS SECRETS                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  CONFIGMAPS                        SECRETS                      |
+|  ----------                        -------                      |
+|  - Plain text                      - Base64 encoded             |
+|  - Icke-kanslig data               - Kanslig data               |
+|  - LOG_LEVEL=debug                 - DB_PASSWORD=xxx            |
+|  - Max 1 MB                        - Max 1 MB                   |
+|                                                                 |
+|  ANVANDNING:                       ANVANDNING:                  |
+|  - App config                      - Losenord                   |
+|  - Feature flags                   - API-nycklar                |
+|  - Endpoints                       - TLS-certifikat             |
+|                                                                 |
+|  MONTERING:                                                     |
+|  +---------------------------------------------+               |
+|  |  ENV VARS        eller        VOLUME MOUNT  |               |
+|  |  DB_HOST=xxx                  /etc/config/  |               |
+|  +---------------------------------------------+               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa ConfigMaps
 
@@ -1193,7 +1193,7 @@ kubectl exec secure-app -- cat /etc/secrets/API_KEY
 # Säkrare än miljövariabler för vissa användningsfall
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1205,7 +1205,7 @@ kubectl exec secure-app -- cat /etc/secrets/API_KEY
 | volumeMounts              | Montera som filer i container                       |
 | Produktion                | Anvand extern secrets manager (Vault, AWS SM)       |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -1224,7 +1224,7 @@ kubectl exec secure-app -- cat /etc/secrets/API_KEY
             "xp_reward": 70,
             "content": """# Namespaces & Resource Organization
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1237,37 +1237,37 @@ kubectl exec secure-app -- cat /etc/secrets/API_KEY
 
 Namespaces ar GRUNDLAGGANDE for kluster-organisation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Namespace Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES NAMESPACES                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SYSTEM NAMESPACES                                              │
-│  ─────────────────                                              │
-│  kube-system      Kubernetes komponenter (CoreDNS, etc)         │
-│  kube-public      Publikt lasbar data                          │
-│  kube-node-lease  Node heartbeats                               │
-│  default          Resurser utan explicit namespace              │
-│                                                                 │
-│  USER NAMESPACES                                                │
-│  ───────────────                                                │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │ development │  │   staging   │  │ production  │             │
-│  │ - web-app   │  │ - web-app   │  │ - web-app   │             │
-│  │ - api       │  │ - api       │  │ - api       │             │
-│  │ - db        │  │ - db        │  │ - db        │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                 │
-│  Samma namn, olika namespaces = isolerade resurser              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    KUBERNETES NAMESPACES                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SYSTEM NAMESPACES                                              |
+|  -----------------                                              |
+|  kube-system      Kubernetes komponenter (CoreDNS, etc)         |
+|  kube-public      Publikt lasbar data                          |
+|  kube-node-lease  Node heartbeats                               |
+|  default          Resurser utan explicit namespace              |
+|                                                                 |
+|  USER NAMESPACES                                                |
+|  ---------------                                                |
+|  +-------------+  +-------------+  +-------------+             |
+|  | development |  |   staging   |  | production  |             |
+|  | - web-app   |  | - web-app   |  | - web-app   |             |
+|  | - api       |  | - api       |  | - api       |             |
+|  | - db        |  | - db        |  | - db        |             |
+|  +-------------+  +-------------+  +-------------+             |
+|                                                                 |
+|  Samma namn, olika namespaces = isolerade resurser              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Standardnamespaces
 
@@ -1469,7 +1469,7 @@ kubectl get svc -A | grep backend
 # Hjälper att hitta rätt service att prata med
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1481,7 +1481,7 @@ kubectl get svc -A | grep backend
 | LimitRanges               | Satter default limits for containers                |
 | Cross-namespace DNS       | service.namespace.svc.cluster.local                 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -1500,7 +1500,7 @@ kubectl get svc -A | grep backend
             "xp_reward": 65,
             "content": """# Labels, Selectors & Annotations
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1513,37 +1513,37 @@ kubectl get svc -A | grep backend
 
 Labels ar LIMET som haller ihop Kubernetes-resurser.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Labels vs Annotations
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LABELS VS ANNOTATIONS                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  LABELS                            ANNOTATIONS                  │
-│  ──────                            ───────────                  │
-│  - Key-value pairs                 - Key-value pairs            │
-│  - Identifiera objekt              - Metadata/information       │
-│  - Anvands av selectors            - INTE for selektion         │
-│  - Max 63 chars value              - Storre varden (4KB)        │
-│                                                                 │
-│  EXEMPEL:                          EXEMPEL:                     │
-│  app: nginx                        build-timestamp: "2024-01"   │
-│  environment: prod                 git-commit: "abc123"         │
-│  version: v1.2.3                   description: "Main web"      │
-│  team: platform                    contact: "ops@company.com"   │
-│                                                                 │
-│  ANVANDNING:                       ANVANDNING:                  │
-│  kubectl get pods -l app=nginx     Tooling (Helm, ArgoCD)       │
-│  Service selector                  Audit information            │
-│  Deployment matchLabels            Dokumentation                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LABELS VS ANNOTATIONS                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  LABELS                            ANNOTATIONS                  |
+|  ------                            -----------                  |
+|  - Key-value pairs                 - Key-value pairs            |
+|  - Identifiera objekt              - Metadata/information       |
+|  - Anvands av selectors            - INTE for selektion         |
+|  - Max 63 chars value              - Storre varden (4KB)        |
+|                                                                 |
+|  EXEMPEL:                          EXEMPEL:                     |
+|  app: nginx                        build-timestamp: "2024-01"   |
+|  environment: prod                 git-commit: "abc123"         |
+|  version: v1.2.3                   description: "Main web"      |
+|  team: platform                    contact: "ops@company.com"   |
+|                                                                 |
+|  ANVANDNING:                       ANVANDNING:                  |
+|  kubectl get pods -l app=nginx     Tooling (Helm, ArgoCD)       |
+|  Service selector                  Audit information            |
+|  Deployment matchLabels            Dokumentation                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Lagga till Labels
 
@@ -1745,7 +1745,7 @@ kubectl get pods -l 'app.kubernetes.io/part-of=e-commerce'
 # Ger konsistens i stora organisationer
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1757,7 +1757,7 @@ kubectl get pods -l 'app.kubernetes.io/part-of=e-commerce'
 | Komma-separator           | AND-logik (app=web,env=prod)                        |
 | in() operator             | OR-logik (env in (dev,staging))                     |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -1776,7 +1776,7 @@ kubectl get pods -l 'app.kubernetes.io/part-of=e-commerce'
             "xp_reward": 90,
             "content": """# Ingress Controllers & Routing
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1789,49 +1789,49 @@ kubectl get pods -l 'app.kubernetes.io/part-of=e-commerce'
 
 Ingress ar KOSTNADSEFFEKTIVT och KRAFTFULLT for HTTP-routing.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Ingress Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INGRESS TRAFFIC FLOW                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  INTERNET                                                       │
-│     │                                                           │
-│     ▼                                                           │
-│  ┌─────────────────────────────────────────┐                   │
-│  │        CLOUD LOAD BALANCER              │                   │
-│  │        (AWS ALB / GCP LB)               │                   │
-│  └────────────────┬────────────────────────┘                   │
-│                   │                                             │
-│                   ▼                                             │
-│  ┌─────────────────────────────────────────┐                   │
-│  │      INGRESS CONTROLLER (NGINX)         │                   │
-│  │                                         │                   │
-│  │  Regler:                                │                   │
-│  │  - api.example.com  → api-service       │                   │
-│  │  - www.example.com  → web-service       │                   │
-│  │  - /api/*           → backend-service   │                   │
-│  │                                         │                   │
-│  └───────┬─────────────┬───────────────────┘                   │
-│          │             │                                        │
-│          ▼             ▼                                        │
-│     ┌─────────┐   ┌─────────┐                                  │
-│     │api-svc  │   │web-svc  │                                  │
-│     │ClusterIP│   │ClusterIP│                                  │
-│     └────┬────┘   └────┬────┘                                  │
-│          │             │                                        │
-│          ▼             ▼                                        │
-│     ┌─────────┐   ┌─────────┐                                  │
-│     │API Pods │   │Web Pods │                                  │
-│     └─────────┘   └─────────┘                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    INGRESS TRAFFIC FLOW                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  INTERNET                                                       |
+|     |                                                           |
+|     ▼                                                           |
+|  +-----------------------------------------+                   |
+|  |        CLOUD LOAD BALANCER              |                   |
+|  |        (AWS ALB / GCP LB)               |                   |
+|  +----------------+------------------------+                   |
+|                   |                                             |
+|                   ▼                                             |
+|  +-----------------------------------------+                   |
+|  |      INGRESS CONTROLLER (NGINX)         |                   |
+|  |                                         |                   |
+|  |  Regler:                                |                   |
+|  |  - api.example.com  -> api-service       |                   |
+|  |  - www.example.com  -> web-service       |                   |
+|  |  - /api/*           -> backend-service   |                   |
+|  |                                         |                   |
+|  +-------+-------------+-------------------+                   |
+|          |             |                                        |
+|          ▼             ▼                                        |
+|     +---------+   +---------+                                  |
+|     |api-svc  |   |web-svc  |                                  |
+|     |ClusterIP|   |ClusterIP|                                  |
+|     +----+----+   +----+----+                                  |
+|          |             |                                        |
+|          ▼             ▼                                        |
+|     +---------+   +---------+                                  |
+|     |API Pods |   |Web Pods |                                  |
+|     +---------+   +---------+                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Installera Ingress Controller
 
@@ -2088,7 +2088,7 @@ kubectl apply -f ingress-certmanager.yaml
 # Kräver att ClusterIssuer är konfigurerad först
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2100,7 +2100,7 @@ kubectl apply -f ingress-certmanager.yaml
 | TLS                       | Termineras vid Ingress, certifikat i Secrets        |
 | cert-manager              | Automatiserar Let's Encrypt certifikat              |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2119,7 +2119,7 @@ kubectl apply -f ingress-certmanager.yaml
             "xp_reward": 85,
             "content": """# Persistent Volumes & Storage
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2132,46 +2132,46 @@ kubectl apply -f ingress-certmanager.yaml
 
 Persistent Volumes ar OBLIGATORISKT for produktionsdatabaser.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Storage Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES STORAGE                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  POD                              STORAGE BACKEND               │
-│  ───                              ───────────────               │
-│  ┌─────────────────┐                                           │
-│  │   Container     │              ┌─────────────────┐          │
-│  │   ┌─────────┐   │              │  AWS EBS        │          │
-│  │   │ /data   │◄──┼──────────────┤  GCP PD         │          │
-│  │   └─────────┘   │              │  Azure Disk     │          │
-│  └─────────────────┘              │  NFS            │          │
-│          ▲                        │  Local          │          │
-│          │                        └─────────────────┘          │
-│          │                                 ▲                    │
-│  ┌───────┴───────┐                        │                    │
-│  │      PVC      │                        │                    │
-│  │ "10Gi RWO"    │────────────────────────┘                    │
-│  └───────────────┘                                              │
-│          ▲                                                      │
-│          │                                                      │
-│  ┌───────┴───────┐     ┌─────────────────┐                     │
-│  │      PV       │     │  StorageClass   │                     │
-│  │ "aws-ebs-10"  │◄────│  "gp2"          │                     │
-│  └───────────────┘     │  provisioner:   │                     │
-│                        │  aws-ebs        │                     │
-│                        └─────────────────┘                     │
-│                                                                 │
-│  PVC = Vad du behover   PV = Specifik disk                     │
-│  StorageClass = Hur det skapas automatiskt                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    KUBERNETES STORAGE                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  POD                              STORAGE BACKEND               |
+|  ---                              ---------------               |
+|  +-----------------+                                           |
+|  |   Container     |              +-----------------+          |
+|  |   +---------+   |              |  AWS EBS        |          |
+|  |   | /data   |◄--+--------------+  GCP PD         |          |
+|  |   +---------+   |              |  Azure Disk     |          |
+|  +-----------------+              |  NFS            |          |
+|          ▲                        |  Local          |          |
+|          |                        +-----------------+          |
+|          |                                 ▲                    |
+|  +-------+-------+                        |                    |
+|  |      PVC      |                        |                    |
+|  | "10Gi RWO"    |------------------------+                    |
+|  +---------------+                                              |
+|          ▲                                                      |
+|          |                                                      |
+|  +-------+-------+     +-----------------+                     |
+|  |      PV       |     |  StorageClass   |                     |
+|  | "aws-ebs-10"  |◄----|  "gp2"          |                     |
+|  +---------------+     |  provisioner:   |                     |
+|                        |  aws-ebs        |                     |
+|                        +-----------------+                     |
+|                                                                 |
+|  PVC = Vad du behover   PV = Specifik disk                     |
+|  StorageClass = Hur det skapas automatiskt                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## PersistentVolume (PV) - Tillganglig lagring
 
@@ -2364,7 +2364,7 @@ kubectl get pvc database-storage -w
 # Nar klart: ny capacity visas
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2376,7 +2376,7 @@ kubectl get pvc database-storage -w
 | Access Modes              | RWO (en pod), ROX/RWX (manga pods)                  |
 | Reclaim Policy            | Retain (spara), Delete (ta bort vid PVC-borttagning)|
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2395,7 +2395,7 @@ kubectl get pvc database-storage -w
             "xp_reward": 90,
             "content": """# StatefulSets for Stateful Applications
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2408,40 +2408,40 @@ kubectl get pvc database-storage -w
 
 StatefulSets ar OBLIGATORISKT for databaser och klustrade system.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## StatefulSet Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    STATEFULSET PATTERN                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  HEADLESS SERVICE: mysql-headless                               │
-│  ────────────────────────────────                               │
-│  DNS: mysql-0.mysql-headless.default.svc.cluster.local          │
-│       mysql-1.mysql-headless.default.svc.cluster.local          │
-│       mysql-2.mysql-headless.default.svc.cluster.local          │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │  mysql-0    │  │  mysql-1    │  │  mysql-2    │             │
-│  │  (master)   │  │  (replica)  │  │  (replica)  │             │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘             │
-│         │                │                │                     │
-│         ▼                ▼                ▼                     │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │  PVC: data- │  │  PVC: data- │  │  PVC: data- │             │
-│  │  mysql-0    │  │  mysql-1    │  │  mysql-2    │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                 │
-│  Startup order: mysql-0 → mysql-1 → mysql-2                     │
-│  Shutdown order: mysql-2 → mysql-1 → mysql-0                    │
-│  Varje pod behaller sin PVC aven vid omstart                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    STATEFULSET PATTERN                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  HEADLESS SERVICE: mysql-headless                               |
+|  --------------------------------                               |
+|  DNS: mysql-0.mysql-headless.default.svc.cluster.local          |
+|       mysql-1.mysql-headless.default.svc.cluster.local          |
+|       mysql-2.mysql-headless.default.svc.cluster.local          |
+|                                                                 |
+|  +-------------+  +-------------+  +-------------+             |
+|  |  mysql-0    |  |  mysql-1    |  |  mysql-2    |             |
+|  |  (master)   |  |  (replica)  |  |  (replica)  |             |
+|  +------+------+  +------+------+  +------+------+             |
+|         |                |                |                     |
+|         ▼                ▼                ▼                     |
+|  +-------------+  +-------------+  +-------------+             |
+|  |  PVC: data- |  |  PVC: data- |  |  PVC: data- |             |
+|  |  mysql-0    |  |  mysql-1    |  |  mysql-2    |             |
+|  +-------------+  +-------------+  +-------------+             |
+|                                                                 |
+|  Startup order: mysql-0 -> mysql-1 -> mysql-2                     |
+|  Shutdown order: mysql-2 -> mysql-1 -> mysql-0                    |
+|  Varje pod behaller sin PVC aven vid omstart                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## StatefulSet vs Deployment
 
@@ -2459,7 +2459,7 @@ StatefulSets ar OBLIGATORISKT for databaser och klustrade system.
 # Ordnade namn, forutsagbara, persistenta
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa en StatefulSet
 
@@ -2656,7 +2656,7 @@ kubectl patch statefulset mysql -p '{"spec":{"updateStrategy":{"rollingUpdate":{
 # Säker canary-deploy för stateful apps
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2668,7 +2668,7 @@ kubectl patch statefulset mysql -p '{"spec":{"updateStrategy":{"rollingUpdate":{
 | volumeClaimTemplates      | Automatisk PVC per pod                              |
 | Update order              | Sista forst, sakert for master-slave                |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2687,7 +2687,7 @@ kubectl patch statefulset mysql -p '{"spec":{"updateStrategy":{"rollingUpdate":{
             "xp_reward": 75,
             "content": """# DaemonSets & Node-level Operations
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2700,32 +2700,32 @@ kubectl patch statefulset mysql -p '{"spec":{"updateStrategy":{"rollingUpdate":{
 
 DaemonSets garanterar EN pod per node - perfekt for infra-komponenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DaemonSet vs Deployment
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DAEMONSET PATTERN                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DEPLOYMENT (replicas: 3)     DAEMONSET                         │
-│  ────────────────────────     ─────────                         │
-│                                                                 │
-│  Node 1: [pod] [pod]          Node 1: [pod]                     │
-│  Node 2: [pod]                Node 2: [pod]                     │
-│  Node 3: (inga pods)          Node 3: [pod]                     │
-│                                                                 │
-│  Scheduler valjer noder       EN pod per node (garanterat)      │
-│  Kan vara ojamnt fordelat     Alltid en, aldrig fler            │
-│                                                                 │
-│  NY NODE LAGGS TILL:                                            │
-│  Deployment: kanske far pod   DaemonSet: far ALLTID pod         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DAEMONSET PATTERN                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DEPLOYMENT (replicas: 3)     DAEMONSET                         |
+|  ------------------------     ---------                         |
+|                                                                 |
+|  Node 1: [pod] [pod]          Node 1: [pod]                     |
+|  Node 2: [pod]                Node 2: [pod]                     |
+|  Node 3: (inga pods)          Node 3: [pod]                     |
+|                                                                 |
+|  Scheduler valjer noder       EN pod per node (garanterat)      |
+|  Kan vara ojamnt fordelat     Alltid en, aldrig fler            |
+|                                                                 |
+|  NY NODE LAGGS TILL:                                            |
+|  Deployment: kanske far pod   DaemonSet: far ALLTID pod         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa en DaemonSet
 
@@ -2926,7 +2926,7 @@ kubectl rollout history daemonset fluentd
 # Samma workflow som Deployments
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga DaemonSet-anvandningsfall
 
@@ -2950,7 +2950,7 @@ kubectl get daemonsets -n kube-system
 # Ror aldrig dessa utan att veta vad du gor!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2962,7 +2962,7 @@ kubectl get daemonsets -n kube-system
 | tolerations               | Tillater korning pa taintade noder                  |
 | Vanliga fall              | Logging, monitoring, networking, storage            |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2981,7 +2981,7 @@ kubectl get daemonsets -n kube-system
             "xp_reward": 70,
             "content": """# Jobs & CronJobs
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2994,40 +2994,40 @@ kubectl get daemonsets -n kube-system
 
 Jobs/CronJobs ar for BATCH-processer, inte langtkorande tjanster.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Job vs CronJob
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    JOBS VS CRONJOBS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  JOB                              CRONJOB                       │
-│  ───                              ───────                       │
-│  Kor ENGNG                       Kor pa SCHEMA                  │
-│  Manuellt triggas                 Automatiskt triggas           │
-│  Ex: migration                    Ex: backup varje natt         │
-│                                                                 │
-│  JOB LIVSCYKEL:                                                 │
-│  ┌──────┐    ┌─────────┐    ┌───────────┐                      │
-│  │Create│───►│ Running │───►│ Completed │                      │
-│  └──────┘    └─────────┘    └───────────┘                      │
-│                  │                                              │
-│                  ▼ (vid fel)                                    │
-│             ┌─────────┐                                         │
-│             │  Retry  │ (backoffLimit ganger)                   │
-│             └─────────┘                                         │
-│                                                                 │
-│  CRONJOB SKAPAR JOBS:                                           │
-│  CronJob ──► Job 1 (00:00)                                      │
-│          ──► Job 2 (01:00)                                      │
-│          ──► Job 3 (02:00)                                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    JOBS VS CRONJOBS                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  JOB                              CRONJOB                       |
+|  ---                              -------                       |
+|  Kor ENGNG                       Kor pa SCHEMA                  |
+|  Manuellt triggas                 Automatiskt triggas           |
+|  Ex: migration                    Ex: backup varje natt         |
+|                                                                 |
+|  JOB LIVSCYKEL:                                                 |
+|  +------+    +---------+    +-----------+                      |
+|  |Create|---►| Running |---►| Completed |                      |
+|  +------+    +---------+    +-----------+                      |
+|                  |                                              |
+|                  ▼ (vid fel)                                    |
+|             +---------+                                         |
+|             |  Retry  | (backoffLimit ganger)                   |
+|             +---------+                                         |
+|                                                                 |
+|  CRONJOB SKAPAR JOBS:                                           |
+|  CronJob --► Job 1 (00:00)                                      |
+|          --► Job 2 (01:00)                                      |
+|          --► Job 3 (02:00)                                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa ett Job
 
@@ -3242,7 +3242,7 @@ spec:
 # Bra for debugging men rensa automatiskt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Hantera CronJobs
 
@@ -3266,7 +3266,7 @@ kubectl get jobs --sort-by=.metadata.creationTimestamp
 # Kombinera med grep for specifik CronJob
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3278,7 +3278,7 @@ kubectl get jobs --sort-by=.metadata.creationTimestamp
 | CronJob                   | Schemalagda jobs med cron-syntax                    |
 | concurrencyPolicy         | Hantera overlappande korningar                      |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -3297,7 +3297,7 @@ kubectl get jobs --sort-by=.metadata.creationTimestamp
             "xp_reward": 80,
             "content": """# Resource Management & Limits
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3310,43 +3310,43 @@ kubectl get jobs --sort-by=.metadata.creationTimestamp
 
 Resource management ar KRITISKT for stabil produktion.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Requests vs Limits
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    REQUESTS VS LIMITS                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  REQUESTS                         LIMITS                        │
-│  ────────                         ──────                        │
-│  "Vad jag BEHOVER"                "Max jag FAR anvanda"         │
-│  Garanteras av scheduler          Hard cap                      │
-│  Anvands for placement            CPU throttlas, Memory OOMKill │
-│                                                                 │
-│  EXEMPEL:                                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Pod: app                                                │   │
-│  │  requests:           limits:                             │   │
-│  │    cpu: 100m           cpu: 500m                         │   │
-│  │    memory: 128Mi       memory: 256Mi                     │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  BETEENDE:                                                      │
-│  - Pod far minst 100m CPU och 128Mi memory                     │
-│  - Pod kan anvanda upp till 500m CPU (throttlas darofter)      │
-│  - Pod som tar >256Mi memory = OOMKilled                       │
-│                                                                 │
-│  QoS CLASSES:                                                   │
-│  Guaranteed: requests = limits (hogst prioritet)                │
-│  Burstable:  requests < limits                                  │
-│  BestEffort: inga requests/limits (lagst prioritet)            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    REQUESTS VS LIMITS                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  REQUESTS                         LIMITS                        |
+|  --------                         ------                        |
+|  "Vad jag BEHOVER"                "Max jag FAR anvanda"         |
+|  Garanteras av scheduler          Hard cap                      |
+|  Anvands for placement            CPU throttlas, Memory OOMKill |
+|                                                                 |
+|  EXEMPEL:                                                       |
+|  +---------------------------------------------------------+   |
+|  |  Pod: app                                                |   |
+|  |  requests:           limits:                             |   |
+|  |    cpu: 100m           cpu: 500m                         |   |
+|  |    memory: 128Mi       memory: 256Mi                     |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  BETEENDE:                                                      |
+|  - Pod far minst 100m CPU och 128Mi memory                     |
+|  - Pod kan anvanda upp till 500m CPU (throttlas darofter)      |
+|  - Pod som tar >256Mi memory = OOMKilled                       |
+|                                                                 |
+|  QoS CLASSES:                                                   |
+|  Guaranteed: requests = limits (hogst prioritet)                |
+|  Burstable:  requests < limits                                  |
+|  BestEffort: inga requests/limits (lagst prioritet)            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Requests vs Limits YAML
 
@@ -3583,7 +3583,7 @@ kubectl top pods --sort-by=memory
 # Kor regelbundet for kapacitetsplanering
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3595,7 +3595,7 @@ kubectl top pods --sort-by=memory
 | Memory                    | OOMKill vid limit (pod dor)                         |
 | QoS classes               | Guaranteed > Burstable > BestEffort                 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -3614,7 +3614,7 @@ kubectl top pods --sort-by=memory
             "xp_reward": 80,
             "content": """# Health Checks & Probes
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3627,47 +3627,47 @@ kubectl top pods --sort-by=memory
 
 Probes ar KRITISKA for produktions-stabilitet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Probe Typer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    KUBERNETES PROBES                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  STARTUP PROBE           (kor forst)                            │
-│  ─────────────                                                  │
-│  "Har containern startat?"                                      │
-│  - Vanta pa langsamma startups                                  │
-│  - Disablar liveness/readiness tills klar                       │
-│  - Fel → restarta containern                                    │
-│                                                                 │
-│           │ success                                             │
-│           ▼                                                     │
-│  LIVENESS PROBE          (kontinuerligt)                        │
-│  ──────────────                                                 │
-│  "Lever containern?"                                            │
-│  - Detekterar deadlocks, hangs                                  │
-│  - Fel → restarta containern                                    │
-│                                                                 │
-│  READINESS PROBE         (kontinuerligt)                        │
-│  ───────────────                                                │
-│  "Kan containern ta emot trafik?"                               │
-│  - Temporary unavailability                                     │
-│  - Fel → ta bort fran Service endpoints                        │
-│  - Restartar INTE containern                                    │
-│                                                                 │
-│  PROBE METODER:                                                 │
-│  - httpGet:    HTTP GET request                                 │
-│  - tcpSocket:  TCP connection                                   │
-│  - exec:       Kor kommando i container                         │
-│  - grpc:       gRPC health check                                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    KUBERNETES PROBES                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  STARTUP PROBE           (kor forst)                            |
+|  -------------                                                  |
+|  "Har containern startat?"                                      |
+|  - Vanta pa langsamma startups                                  |
+|  - Disablar liveness/readiness tills klar                       |
+|  - Fel -> restarta containern                                    |
+|                                                                 |
+|           | success                                             |
+|           ▼                                                     |
+|  LIVENESS PROBE          (kontinuerligt)                        |
+|  --------------                                                 |
+|  "Lever containern?"                                            |
+|  - Detekterar deadlocks, hangs                                  |
+|  - Fel -> restarta containern                                    |
+|                                                                 |
+|  READINESS PROBE         (kontinuerligt)                        |
+|  ---------------                                                |
+|  "Kan containern ta emot trafik?"                               |
+|  - Temporary unavailability                                     |
+|  - Fel -> ta bort fran Service endpoints                        |
+|  - Restartar INTE containern                                    |
+|                                                                 |
+|  PROBE METODER:                                                 |
+|  - httpGet:    HTTP GET request                                 |
+|  - tcpSocket:  TCP connection                                   |
+|  - exec:       Kor kommando i container                         |
+|  - grpc:       gRPC health check                                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Liveness Probe
 
@@ -3935,7 +3935,7 @@ kubectl logs <pod-name> --previous
             "xp_reward": 100,
             "content": """# RBAC & Security
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3948,19 +3948,19 @@ kubectl logs <pod-name> --previous
 
 RBAC (Role-Based Access Control) binder Subjects (anvandare/serviceaccounts) till Roles (uppsattning permissions) via RoleBindings. Det ar som att ge nycklar - du bestammer vem som far vilka nycklar och vilka dorrar nycklarna oppnar.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Subject   │◀───▶│ RoleBinding │◀───▶│    Role     │
-│ (vem)       │     │ (koppling)  │     │ (vad)       │
-└─────────────┘     └─────────────┘     └─────────────┘
-      │                   │                   │
++-------------+     +-------------+     +-------------+
+|   Subject   |◀---▶| RoleBinding |◀---▶|    Role     |
+| (vem)       |     | (koppling)  |     | (vad)       |
++-------------+     +-------------+     +-------------+
+      |                   |                   |
       ▼                   ▼                   ▼
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ User        │     │ namespace   │     │ pods: get   │
-│ Group       │     │ eller       │     │ pods: list  │
-│ ServiceAcct │     │ cluster     │     │ pods: watch │
-└─────────────┘     └─────────────┘     └─────────────┘
++-------------+     +-------------+     +-------------+
+| User        |     | namespace   |     | pods: get   |
+| Group       |     | eller       |     | pods: list  |
+| ServiceAcct |     | cluster     |     | pods: watch |
++-------------+     +-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -4247,7 +4247,7 @@ kubectl get networkpolicies -n production
             "xp_reward": 85,
             "content": """# Helm Package Manager
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4260,19 +4260,19 @@ kubectl get networkpolicies -n production
 
 Helm ar Kubernetes pakethanterare. Ett chart ar ett paket med alla YAML-filer for en app. Values ar variabler som anpassar chartet. Nar du installerar skapas en release - en specifik installation av ett chart.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│    Chart    │  +  │   Values    │  =  │   Release   │
-│  (template) │     │  (config)   │     │  (instance) │
-└─────────────┘     └─────────────┘     └─────────────┘
-      │                   │                   │
++-------------+     +-------------+     +-------------+
+|    Chart    |  +  |   Values    |  =  |   Release   |
+|  (template) |     |  (config)   |     |  (instance) |
++-------------+     +-------------+     +-------------+
+      |                   |                   |
       ▼                   ▼                   ▼
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ Deployment  │     │ replicaCount│     │  my-nginx   │
-│ Service     │     │ image.tag   │     │  revision 1 │
-│ ConfigMap   │     │ resources   │     │  Running    │
-└─────────────┘     └─────────────┘     └─────────────┘
++-------------+     +-------------+     +-------------+
+| Deployment  |     | replicaCount|     |  my-nginx   |
+| Service     |     | image.tag   |     |  revision 1 |
+| ConfigMap   |     | resources   |     |  Running    |
++-------------+     +-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -4511,7 +4511,7 @@ spec:
             "xp_reward": 85,
             "content": """# Monitoring & Observability
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4524,18 +4524,18 @@ spec:
 
 Observability = metrics + logs + traces. Du kan inte fixa det du inte kan se. Prometheus scrapar metrics, Loki samlar loggar, Grafana visualiserar - tillsammans ger de fullstandig insyn i klustret.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Metrics   │────▶│  Prometheus │────▶│   Grafana   │
-│   Server    │     │   (scrape)  │     │   (visas)   │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                   │                   ▲
-       ▼                   ▼                   │
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  kubectl    │     │   Loki      │────▶│  Dashboards │
-│    top      │     │   (logs)    │     │   Alerts    │
-└─────────────┘     └─────────────┘     └─────────────┘
++-------------+     +-------------+     +-------------+
+|   Metrics   |----▶|  Prometheus |----▶|   Grafana   |
+|   Server    |     |   (scrape)  |     |   (visas)   |
++-------------+     +-------------+     +-------------+
+       |                   |                   ▲
+       ▼                   ▼                   |
++-------------+     +-------------+     +-------------+
+|  kubectl    |     |   Loki      |----▶|  Dashboards |
+|    top      |     |   (logs)    |     |   Alerts    |
++-------------+     +-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -4779,7 +4779,7 @@ kubectl get servicemonitors -n monitoring
             "xp_reward": 95,
             "content": """# Troubleshooting Kubernetes
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4792,17 +4792,17 @@ kubectl get servicemonitors -n monitoring
 
 Saker gar fel - det ar inte "om" utan "nar". Effektiv felsokning foljer ordningen: Nodes -> Pods -> Containers -> Logs -> Events. Borja brett och zooma in. De flesta problem ligger i pods som inte startar eller containers som crashar.
 
-┌───────────────────────────────────────────────────────────┐
-│              TROUBLESHOOTING WORKFLOW                      │
-├───────────────────────────────────────────────────────────┤
-│  1. kubectl get nodes          - Ar alla noder Ready?      │
-│  2. kubectl get pods           - Vilka pods har problem?   │
-│  3. kubectl describe pod       - Vad sager Events?         │
-│  4. kubectl logs --previous    - Varfor crashade den?      │
-│  5. kubectl exec -it           - Debugga inifran           │
-└───────────────────────────────────────────────────────────┘
++-----------------------------------------------------------+
+|              TROUBLESHOOTING WORKFLOW                      |
++-----------------------------------------------------------+
+|  1. kubectl get nodes          - Ar alla noder Ready?      |
+|  2. kubectl get pods           - Vilka pods har problem?   |
+|  3. kubectl describe pod       - Vad sager Events?         |
+|  4. kubectl logs --previous    - Varfor crashade den?      |
+|  5. kubectl exec -it           - Debugga inifran           |
++-----------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -5056,7 +5056,7 @@ kubectl describe pvc <pvc>     # Events
             "xp_reward": 95,
             "content": """# GitOps & Continuous Deployment
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5069,19 +5069,19 @@ kubectl describe pvc <pvc>     # Events
 
 GitOps vander pa deployment-processen. Istallet for att pusha till klustret, pullar klustret fran Git. En operator (ArgoCD, Flux) overvakar repot och synkroniserar andringar automatiskt. Git = single source of truth.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Developer  │────▶│    Git      │────▶│   ArgoCD    │
-│  (commit)   │     │   (repo)    │     │  (watch)    │
-└─────────────┘     └─────────────┘     └─────────────┘
-                                               │
-                           ┌───────────────────┘
++-------------+     +-------------+     +-------------+
+|  Developer  |----▶|    Git      |----▶|   ArgoCD    |
+|  (commit)   |     |   (repo)    |     |  (watch)    |
++-------------+     +-------------+     +-------------+
+                                               |
+                           +-------------------+
                            ▼
-                    ┌─────────────┐     ┌─────────────┐
-                    │  Kubernetes │◀────│    Sync     │
-                    │  (cluster)  │     │  (apply)    │
-                    └─────────────┘     └─────────────┘
+                    +-------------+     +-------------+
+                    |  Kubernetes |◀----|    Sync     |
+                    |  (cluster)  |     |  (apply)    |
+                    +-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -5180,18 +5180,18 @@ argocd app list
 ```bash
 # Recommended repo structure:
 my-app-config/
-├── base/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── kustomization.yaml
-├── overlays/
-│   ├── dev/
-│   │   └── kustomization.yaml
-│   ├── staging/
-│   │   └── kustomization.yaml
-│   └── production/
-│       └── kustomization.yaml
-└── README.md
++-- base/
+|   +-- deployment.yaml
+|   +-- service.yaml
+|   +-- kustomization.yaml
++-- overlays/
+|   +-- dev/
+|   |   +-- kustomization.yaml
+|   +-- staging/
+|   |   +-- kustomization.yaml
+|   +-- production/
+|       +-- kustomization.yaml
++-- README.md
 
 # base/ innehåller grundläggande YAML
 # overlays/ har miljö-specifika ändringar
@@ -5361,7 +5361,7 @@ kubectl apply -f sealed-secret.yaml
             "xp_reward": 90,
             "content": """# Kubernetes Best Practices
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5374,18 +5374,18 @@ kubectl apply -f sealed-secret.yaml
 
 Kubernetes ar flexibelt - det finns manga satt att gora saker. Best practices hjalper dig bygga for produktion fran dag ett, undvika vanliga misstag och skapa system som skalar med behoven.
 
-┌─────────────────────────────────────────────────────────────┐
-│               PRODUCTION-READY CHECKLIST                     │
-├─────────────────────────────────────────────────────────────┤
-│ [ ] Resource requests OCH limits satta                       │
-│ [ ] Liveness OCH readiness probes konfigurerade             │
-│ [ ] Specifik image tag (ALDRIG :latest)                      │
-│ [ ] SecurityContext med non-root, readOnlyRootFilesystem    │
-│ [ ] NetworkPolicies for trafikbegransning                   │
-│ [ ] PodDisruptionBudget for HA                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|               PRODUCTION-READY CHECKLIST                     |
++-------------------------------------------------------------+
+| [ ] Resource requests OCH limits satta                       |
+| [ ] Liveness OCH readiness probes konfigurerade             |
+| [ ] Specifik image tag (ALDRIG :latest)                      |
+| [ ] SecurityContext med non-root, readOnlyRootFilesystem    |
+| [ ] NetworkPolicies for trafikbegransning                   |
+| [ ] PodDisruptionBudget for HA                              |
++-------------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 

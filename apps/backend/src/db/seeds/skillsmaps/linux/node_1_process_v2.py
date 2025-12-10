@@ -39,15 +39,15 @@ LINUX_NODE_1_PROCESS_V2 = {
                         "title": "Process States",
                         "explanation": "R (Running), S (Sleeping), D (Disk sleep - kan EJ dödas), Z (Zombie - avslutad men ej städad), T (Stopped/pausad).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ PROCESS STATES                              │
-├─────────────────────────────────────────────┤
-│ R - Running     │ Kör på CPU               │
-│ S - Sleeping    │ Väntar på I/O            │
-│ D - Disk Sleep  │ Uninterruptible (farlig!) │
-│ Z - Zombie      │ Död men ej städad        │
-│ T - Stopped     │ Pausad (Ctrl+Z)          │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| PROCESS STATES                              |
++---------------------------------------------+
+| R - Running     | Kör på CPU               |
+| S - Sleeping    | Väntar på I/O            |
+| D - Disk Sleep  | Uninterruptible (farlig!) |
+| Z - Zombie      | Död men ej städad        |
+| T - Stopped     | Pausad (Ctrl+Z)          |
++---------------------------------------------+""",
                         "pro_tip": "D-state processer kan INTE dödas med kill -9. De väntar på hardware.",
                         "common_mistake": "Att köra kill -9 direkt istället för SIGTERM först."
                     },
@@ -55,15 +55,15 @@ LINUX_NODE_1_PROCESS_V2 = {
                         "title": "Signaler",
                         "explanation": "SIGTERM (15) = snäll avslutning, SIGKILL (9) = tvingad död, SIGHUP (1) = reload config, SIGINT (2) = Ctrl+C.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ SIGNAL   │ NR  │ ANVÄNDNING               │
-├─────────────────────────────────────────────┤
-│ SIGTERM  │ 15  │ Snäll avslutning (default)│
-│ SIGKILL  │  9  │ Tvingad död (sista utväg) │
-│ SIGHUP   │  1  │ Reload config             │
-│ SIGSTOP  │ 19  │ Pausa process             │
-│ SIGCONT  │ 18  │ Fortsätt pausad           │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| SIGNAL   | NR  | ANVÄNDNING               |
++---------------------------------------------+
+| SIGTERM  | 15  | Snäll avslutning (default)|
+| SIGKILL  |  9  | Tvingad död (sista utväg) |
+| SIGHUP   |  1  | Reload config             |
+| SIGSTOP  | 19  | Pausa process             |
+| SIGCONT  | 18  | Fortsätt pausad           |
++---------------------------------------------+""",
                         "pro_tip": "Alltid SIGTERM först, vänta, sen SIGKILL om nödvändigt.",
                         "common_mistake": "Kill -9 städar inte upp - temporärfiler kan bli korrupta."
                     }

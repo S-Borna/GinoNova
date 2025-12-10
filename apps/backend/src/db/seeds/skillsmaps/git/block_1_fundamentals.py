@@ -27,37 +27,37 @@ NODE_01_GIT_INTRODUCTION = {
 ## Git Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         GIT ARCHITECTURE                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   WORKING DIRECTORY          STAGING AREA           REPOSITORY          │
-│   (Your files)               (Index)                (.git folder)       │
-│   ┌─────────────┐           ┌─────────────┐        ┌─────────────────┐  │
-│   │ file1.py    │           │             │        │ Commit History  │  │
-│   │ file2.js    │  git add  │ file1.py    │ commit │                 │  │
-│   │ README.md   │ ────────► │ file2.js    │ ─────► │  ┌───┐   ┌───┐  │  │
-│   │ (modified)  │           │ (staged)    │        │  │ A │◄──│ B │  │  │
-│   └─────────────┘           └─────────────┘        │  └───┘   └───┘  │  │
-│         │                         │                │     ▲          │  │
-│         │        git checkout     │                │     │          │  │
-│         │◄────────────────────────┼────────────────│     └── HEAD   │  │
-│                                                    └─────────────────┘  │
-│                                                                         │
-│   STATE TRANSITIONS:                                                    │
-│   ────────────────────────────────────────────────────────────────      │
-│   Untracked  ─► Staged  ─► Committed  ─► (repeat)                       │
-│       │            │           │                                        │
-│       └── git add ─┘           │                                        │
-│                    └── git commit ─┘                                    │
-│                                                                         │
-│   OBJECT TYPES:                                                         │
-│   ├── blob    = file content (compressed)                               │
-│   ├── tree    = directory structure                                     │
-│   ├── commit  = snapshot + metadata + parent pointer                    │
-│   └── tag     = named pointer to commit                                 │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         GIT ARCHITECTURE                                |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   WORKING DIRECTORY          STAGING AREA           REPOSITORY          |
+|   (Your files)               (Index)                (.git folder)       |
+|   +-------------+           +-------------+        +-----------------+  |
+|   | file1.py    |           |             |        | Commit History  |  |
+|   | file2.js    |  git add  | file1.py    | commit |                 |  |
+|   | README.md   | --------► | file2.js    | -----► |  +---+   +---+  |  |
+|   | (modified)  |           | (staged)    |        |  | A |◄--| B |  |  |
+|   +-------------+           +-------------+        |  +---+   +---+  |  |
+|         |                         |                |     ▲          |  |
+|         |        git checkout     |                |     |          |  |
+|         |◄------------------------+----------------|     +-- HEAD   |  |
+|                                                    +-----------------+  |
+|                                                                         |
+|   STATE TRANSITIONS:                                                    |
+|   ----------------------------------------------------------------      |
+|   Untracked  -► Staged  -► Committed  -► (repeat)                       |
+|       |            |           |                                        |
+|       +-- git add -+           |                                        |
+|                    +-- git commit -+                                    |
+|                                                                         |
+|   OBJECT TYPES:                                                         |
+|   +-- blob    = file content (compressed)                               |
+|   +-- tree    = directory structure                                     |
+|   +-- commit  = snapshot + metadata + parent pointer                    |
+|   +-- tag     = named pointer to commit                                 |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -205,20 +205,20 @@ git status
 
 ```
 .git/
-├── HEAD              # Pointer till current branch
-├── config            # Repository-specific config
-├── description       # GitWeb description
-├── hooks/            # Pre/post commit scripts
-│   ├── pre-commit.sample
-│   └── pre-push.sample
-├── info/
-│   └── exclude       # Local .gitignore
-├── objects/          # All content (blobs, trees, commits)
-│   ├── info/
-│   └── pack/
-└── refs/
-    ├── heads/        # Branch pointers
-    └── tags/         # Tag pointers
++-- HEAD              # Pointer till current branch
++-- config            # Repository-specific config
++-- description       # GitWeb description
++-- hooks/            # Pre/post commit scripts
+|   +-- pre-commit.sample
+|   +-- pre-push.sample
++-- info/
+|   +-- exclude       # Local .gitignore
++-- objects/          # All content (blobs, trees, commits)
+|   +-- info/
+|   +-- pack/
++-- refs/
+    +-- heads/        # Branch pointers
+    +-- tags/         # Tag pointers
 ```
 
 ### Klona Befintligt Repository
@@ -244,7 +244,7 @@ git clone -b develop https://github.com/user/repo.git
 
 ## Grundläggande Workflow
 
-### Add → Commit → Push
+### Add -> Commit -> Push
 
 ```bash
 # 1. Kolla status
@@ -302,35 +302,35 @@ Closes #123"
 ### Understanding States
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                      FILE LIFECYCLE IN GIT                         │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   UNTRACKED                                                        │
-│   ──────────                                                       │
-│   • Ny fil som Git inte känner till                               │
-│   • Visas i `git status` under "Untracked files"                  │
-│   • Övergång: git add → STAGED                                    │
-│                                                                    │
-│   UNMODIFIED                                                       │
-│   ──────────                                                       │
-│   • Tracked fil utan ändringar                                    │
-│   • Samma som senaste commit                                      │
-│   • Visas INTE i `git status` (clean)                             │
-│                                                                    │
-│   MODIFIED                                                         │
-│   ──────────                                                       │
-│   • Tracked fil med ändringar                                     │
-│   • Visas under "Changes not staged for commit"                   │
-│   • Övergång: git add → STAGED                                    │
-│                                                                    │
-│   STAGED                                                           │
-│   ──────────                                                       │
-│   • Redo för commit                                               │
-│   • Visas under "Changes to be committed"                         │
-│   • Övergång: git commit → UNMODIFIED (committed)                 │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                      FILE LIFECYCLE IN GIT                         |
++--------------------------------------------------------------------+
+|                                                                    |
+|   UNTRACKED                                                        |
+|   ----------                                                       |
+|   • Ny fil som Git inte känner till                               |
+|   • Visas i `git status` under "Untracked files"                  |
+|   • Övergång: git add -> STAGED                                    |
+|                                                                    |
+|   UNMODIFIED                                                       |
+|   ----------                                                       |
+|   • Tracked fil utan ändringar                                    |
+|   • Samma som senaste commit                                      |
+|   • Visas INTE i `git status` (clean)                             |
+|                                                                    |
+|   MODIFIED                                                         |
+|   ----------                                                       |
+|   • Tracked fil med ändringar                                     |
+|   • Visas under "Changes not staged for commit"                   |
+|   • Övergång: git add -> STAGED                                    |
+|                                                                    |
+|   STAGED                                                           |
+|   ----------                                                       |
+|   • Redo för commit                                               |
+|   • Visas under "Changes to be committed"                         |
+|   • Övergång: git commit -> UNMODIFIED (committed)                 |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Praktiska Kommandon
@@ -599,35 +599,35 @@ NODE_02_GIT_CORE_OPERATIONS = {
 ## Commit Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         COMMIT ANATOMY                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   commit 7a8b9c2d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b                       │
-│   ├── tree    d4e5f6a7b8c9...  ─┐                                       │
-│   │                             │ Pointer to project snapshot           │
-│   │   ┌─────────────────────────┘                                       │
-│   │   │   tree d4e5f6a7...                                              │
-│   │   │   ├── blob abc123  README.md                                    │
-│   │   │   ├── blob def456  app.py                                       │
-│   │   │   └── tree 789abc  src/                                         │
-│   │   │       ├── blob 111aaa  main.py                                  │
-│   │   │       └── blob 222bbb  utils.py                                 │
-│   │                                                                     │
-│   ├── parent  1a2b3c4d5e6f...  ← Previous commit (chain)                │
-│   │                                                                     │
-│   ├── author    Said <said@dev.se>  Mon Dec 4 10:00:00 2024             │
-│   ├── committer Said <said@dev.se>  Mon Dec 4 10:00:00 2024             │
-│   │                                                                     │
-│   └── message                                                           │
-│       feat: implement user authentication                               │
-│                                                                         │
-│   SHA-1 HASH:                                                           │
-│   • Calculated from: tree + parent + author + message                   │
-│   • Unique identifier (collision impossible)                            │
-│   • If ANY byte changes, hash changes completely                        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         COMMIT ANATOMY                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   commit 7a8b9c2d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b                       |
+|   +-- tree    d4e5f6a7b8c9...  -+                                       |
+|   |                             | Pointer to project snapshot           |
+|   |   +-------------------------+                                       |
+|   |   |   tree d4e5f6a7...                                              |
+|   |   |   +-- blob abc123  README.md                                    |
+|   |   |   +-- blob def456  app.py                                       |
+|   |   |   +-- tree 789abc  src/                                         |
+|   |   |       +-- blob 111aaa  main.py                                  |
+|   |   |       +-- blob 222bbb  utils.py                                 |
+|   |                                                                     |
+|   +-- parent  1a2b3c4d5e6f...  <- Previous commit (chain)                |
+|   |                                                                     |
+|   +-- author    Said <said@dev.se>  Mon Dec 4 10:00:00 2024             |
+|   +-- committer Said <said@dev.se>  Mon Dec 4 10:00:00 2024             |
+|   |                                                                     |
+|   +-- message                                                           |
+|       feat: implement user authentication                               |
+|                                                                         |
+|   SHA-1 HASH:                                                           |
+|   • Calculated from: tree + parent + author + message                   |
+|   • Unique identifier (collision impossible)                            |
+|   • If ANY byte changes, hash changes completely                        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -690,27 +690,27 @@ git add -p
 ### Diff Types
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                         DIFF COMPARISONS                           │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   Working Directory    Staging (Index)    Last Commit (HEAD)       │
-│   ─────────────────    ──────────────     ─────────────────        │
-│                                                                    │
-│         │                    │                    │                │
-│         │   git diff         │  git diff --staged │                │
-│         │◄──────────────────►│◄──────────────────►│                │
-│         │                    │                    │                │
-│         │            git diff HEAD                │                │
-│         │◄─────────────────────────────────────────►                │
-│                                                                    │
-│   git diff             = Working vs Staged                         │
-│   git diff --staged    = Staged vs Last Commit                     │
-│   git diff HEAD        = Working vs Last Commit                    │
-│   git diff abc..def    = Between two commits                       │
-│   git diff branch1 branch2 = Between branches                      │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                         DIFF COMPARISONS                           |
++--------------------------------------------------------------------+
+|                                                                    |
+|   Working Directory    Staging (Index)    Last Commit (HEAD)       |
+|   -----------------    --------------     -----------------        |
+|                                                                    |
+|         |                    |                    |                |
+|         |   git diff         |  git diff --staged |                |
+|         |◄------------------►|◄------------------►|                |
+|         |                    |                    |                |
+|         |            git diff HEAD                |                |
+|         |◄-----------------------------------------►                |
+|                                                                    |
+|   git diff             = Working vs Staged                         |
+|   git diff --staged    = Staged vs Last Commit                     |
+|   git diff HEAD        = Working vs Last Commit                    |
+|   git diff abc..def    = Between two commits                       |
+|   git diff branch1 branch2 = Between branches                      |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Practical Diff Commands
@@ -753,14 +753,14 @@ git diff --shortstat
 ```diff
 diff --git a/file.py b/file.py
 index abc123..def456 100644
---- a/file.py                  ← Old version
-+++ b/file.py                  ← New version
-@@ -10,7 +10,8 @@ def function():   ← Hunk header (line numbers)
-     existing line              ← Context (unchanged)
--    removed line               ← Deletion (red)
-+    added line                 ← Addition (green)
-+    another new line           ← Addition
-     more context               ← Context
+--- a/file.py                  <- Old version
++++ b/file.py                  <- New version
+@@ -10,7 +10,8 @@ def function():   <- Hunk header (line numbers)
+     existing line              <- Context (unchanged)
+-    removed line               <- Deletion (red)
++    added line                 <- Addition (green)
++    another new line           <- Addition
+     more context               <- Context
 ```
 
 ---
@@ -770,38 +770,38 @@ index abc123..def456 100644
 ### Reset Modes
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         RESET MODES                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   --soft            --mixed (default)        --hard                     │
-│   ──────            ─────────────────        ──────                     │
-│                                                                         │
-│   HEAD: ✓ Moves     HEAD: ✓ Moves            HEAD: ✓ Moves              │
-│   Index: ✗ Keeps    Index: ✓ Resets          Index: ✓ Resets            │
-│   Working: ✗ Keeps  Working: ✗ Keeps         Working: ✓ DELETES         │
-│                                                                         │
-│   Use case:         Use case:                Use case:                  │
-│   Redo commit       Unstage changes          Complete undo              │
-│   Squash commits    Start fresh staging      ⚠️ DESTRUCTIVE             │
-│                                                                         │
-│   Example:                                                              │
-│   ─────────                                                             │
-│   Before: A ─ B ─ C ─ D (HEAD)                                          │
-│                                                                         │
-│   git reset --soft B                                                    │
-│   Result: A ─ B (HEAD)                                                  │
-│           C and D changes staged                                        │
-│                                                                         │
-│   git reset --mixed B                                                   │
-│   Result: A ─ B (HEAD)                                                  │
-│           C and D changes in working dir                                │
-│                                                                         │
-│   git reset --hard B                                                    │
-│   Result: A ─ B (HEAD)                                                  │
-│           C and D changes GONE                                          │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         RESET MODES                                     |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   --soft            --mixed (default)        --hard                     |
+|   ------            -----------------        ------                     |
+|                                                                         |
+|   HEAD: ✓ Moves     HEAD: ✓ Moves            HEAD: ✓ Moves              |
+|   Index: ✗ Keeps    Index: ✓ Resets          Index: ✓ Resets            |
+|   Working: ✗ Keeps  Working: ✗ Keeps         Working: ✓ DELETES         |
+|                                                                         |
+|   Use case:         Use case:                Use case:                  |
+|   Redo commit       Unstage changes          Complete undo              |
+|   Squash commits    Start fresh staging      ⚠️ DESTRUCTIVE             |
+|                                                                         |
+|   Example:                                                              |
+|   ---------                                                             |
+|   Before: A - B - C - D (HEAD)                                          |
+|                                                                         |
+|   git reset --soft B                                                    |
+|   Result: A - B (HEAD)                                                  |
+|           C and D changes staged                                        |
+|                                                                         |
+|   git reset --mixed B                                                   |
+|   Result: A - B (HEAD)                                                  |
+|           C and D changes in working dir                                |
+|                                                                         |
+|   git reset --hard B                                                    |
+|   Result: A - B (HEAD)                                                  |
+|           C and D changes GONE                                          |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Reset Commands
@@ -852,30 +852,30 @@ git branch recovered-feature def456
 ### Stash Workflow
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                      STASH WORKFLOW                                │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   Working Directory                    Stash Stack                 │
-│   (with changes)                       ─────────────               │
-│   ┌─────────────┐                      ┌─────────────┐             │
-│   │ modified    │     git stash        │ stash@{0}   │             │
-│   │ files       │ ──────────────────►  │ stash@{1}   │             │
-│   └─────────────┘                      │ stash@{2}   │             │
-│         │                              └─────────────┘             │
-│         │                                    │                     │
-│         │◄───────────────────────────────────┘                     │
-│              git stash pop                                         │
-│                                                                    │
-│   OPERATIONS:                                                      │
-│   git stash              = Save and clean working dir              │
-│   git stash pop          = Restore and remove from stack           │
-│   git stash apply        = Restore but keep in stack               │
-│   git stash list         = Show all stashes                        │
-│   git stash drop         = Remove top stash                        │
-│   git stash clear        = Remove ALL stashes                      │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                      STASH WORKFLOW                                |
++--------------------------------------------------------------------+
+|                                                                    |
+|   Working Directory                    Stash Stack                 |
+|   (with changes)                       -------------               |
+|   +-------------+                      +-------------+             |
+|   | modified    |     git stash        | stash@{0}   |             |
+|   | files       | ------------------►  | stash@{1}   |             |
+|   +-------------+                      | stash@{2}   |             |
+|         |                              +-------------+             |
+|         |                                    |                     |
+|         |◄-----------------------------------+                     |
+|              git stash pop                                         |
+|                                                                    |
+|   OPERATIONS:                                                      |
+|   git stash              = Save and clean working dir              |
+|   git stash pop          = Restore and remove from stack           |
+|   git stash apply        = Restore but keep in stack               |
+|   git stash list         = Show all stashes                        |
+|   git stash drop         = Remove top stash                        |
+|   git stash clear        = Remove ALL stashes                      |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Stash Commands
@@ -1066,39 +1066,39 @@ NODE_03_BRANCHING_MERGING = {
 ## Branch Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       BRANCH CONCEPTUAL MODEL                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│                                                                         │
-│   main:        A ─── B ─── C ─────────────── G ─── H                    │
-│                           │                 ▲                           │
-│                           │                 │ merge                     │
-│   feature:                └─── D ─── E ─── F                            │
-│                                                                         │
-│                                                                         │
-│   WHAT IS A BRANCH?                                                     │
-│   ──────────────────                                                    │
-│   • Just a pointer (40-byte file!) to a commit                          │
-│   • .git/refs/heads/main contains: abc123...                            │
-│   • Creating branch = creating new pointer                              │
-│   • Super fast (no file copying)                                        │
-│                                                                         │
-│   HEAD:                                                                 │
-│   ──────                                                                │
-│   • Pointer to current branch (or commit in detached state)             │
-│   • .git/HEAD contains: ref: refs/heads/main                            │
-│   • Moves when you commit or checkout                                   │
-│                                                                         │
-│   BRANCH NAMING:                                                        │
-│   ──────────────                                                        │
-│   feature/     → new features (feature/user-auth)                       │
-│   bugfix/      → bug fixes (bugfix/login-crash)                         │
-│   hotfix/      → production fixes (hotfix/security-patch)               │
-│   release/     → release prep (release/v2.0)                            │
-│   experiment/  → experiments (experiment/new-algorithm)                 │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       BRANCH CONCEPTUAL MODEL                           |
++-------------------------------------------------------------------------+
+|                                                                         |
+|                                                                         |
+|   main:        A --- B --- C --------------- G --- H                    |
+|                           |                 ▲                           |
+|                           |                 | merge                     |
+|   feature:                +--- D --- E --- F                            |
+|                                                                         |
+|                                                                         |
+|   WHAT IS A BRANCH?                                                     |
+|   ------------------                                                    |
+|   • Just a pointer (40-byte file!) to a commit                          |
+|   • .git/refs/heads/main contains: abc123...                            |
+|   • Creating branch = creating new pointer                              |
+|   • Super fast (no file copying)                                        |
+|                                                                         |
+|   HEAD:                                                                 |
+|   ------                                                                |
+|   • Pointer to current branch (or commit in detached state)             |
+|   • .git/HEAD contains: ref: refs/heads/main                            |
+|   • Moves when you commit or checkout                                   |
+|                                                                         |
+|   BRANCH NAMING:                                                        |
+|   --------------                                                        |
+|   feature/     -> new features (feature/user-auth)                       |
+|   bugfix/      -> bug fixes (bugfix/login-crash)                         |
+|   hotfix/      -> production fixes (hotfix/security-patch)               |
+|   release/     -> release prep (release/v2.0)                            |
+|   experiment/  -> experiments (experiment/new-algorithm)                 |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1173,26 +1173,26 @@ git push origin --delete old-name
 ### Fast-Forward Merge
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    FAST-FORWARD MERGE                              │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   BEFORE:                                                          │
-│   main:     A ─── B ─── C                                          │
-│                         │                                          │
-│   feature:              └─── D ─── E                               │
-│                                   HEAD                              │
-│                                                                    │
-│   AFTER git merge feature (on main):                               │
-│   main:     A ─── B ─── C ─── D ─── E                              │
-│                                   HEAD                              │
-│                                                                    │
-│   • No new commit created                                          │
-│   • main pointer just moves forward                                │
-│   • Linear history preserved                                       │
-│   • Happens when no commits on main since branch                   │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                    FAST-FORWARD MERGE                              |
++--------------------------------------------------------------------+
+|                                                                    |
+|   BEFORE:                                                          |
+|   main:     A --- B --- C                                          |
+|                         |                                          |
+|   feature:              +--- D --- E                               |
+|                                   HEAD                              |
+|                                                                    |
+|   AFTER git merge feature (on main):                               |
+|   main:     A --- B --- C --- D --- E                              |
+|                                   HEAD                              |
+|                                                                    |
+|   • No new commit created                                          |
+|   • main pointer just moves forward                                |
+|   • Linear history preserved                                       |
+|   • Happens when no commits on main since branch                   |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ```bash
@@ -1207,26 +1207,26 @@ git merge --no-ff feature-x
 ### Three-Way Merge
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    THREE-WAY MERGE                                 │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   BEFORE:                                                          │
-│   main:     A ─── B ─── C ─── F                                    │
-│                         │     HEAD                                  │
-│   feature:              └─── D ─── E                               │
-│                                                                    │
-│   AFTER git merge feature (on main):                               │
-│   main:     A ─── B ─── C ─── F ─── G (merge commit)               │
-│                         │           │                              │
-│   feature:              └─── D ─── E┘                              │
-│                                                                    │
-│   • Creates new merge commit (G)                                   │
-│   • G has TWO parents (F and E)                                    │
-│   • Uses "common ancestor" (C) to resolve                          │
-│   • Non-linear but shows true history                              │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                    THREE-WAY MERGE                                 |
++--------------------------------------------------------------------+
+|                                                                    |
+|   BEFORE:                                                          |
+|   main:     A --- B --- C --- F                                    |
+|                         |     HEAD                                  |
+|   feature:              +--- D --- E                               |
+|                                                                    |
+|   AFTER git merge feature (on main):                               |
+|   main:     A --- B --- C --- F --- G (merge commit)               |
+|                         |           |                              |
+|   feature:              +--- D --- E+                              |
+|                                                                    |
+|   • Creates new merge commit (G)                                   |
+|   • G has TWO parents (F and E)                                    |
+|   • Uses "common ancestor" (C) to resolve                          |
+|   • Non-linear but shows true history                              |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ```bash
@@ -1247,27 +1247,27 @@ git log --merges
 ### Conflict Anatomy
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    MERGE CONFLICT                                  │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   File content during conflict:                                    │
-│   ──────────────────────────────                                   │
-│                                                                    │
-│   Some code that's fine                                            │
-│   <<<<<<< HEAD                                                     │
-│   This is from current branch (main)                               │
-│   =======                                                          │
-│   This is from incoming branch (feature)                           │
-│   >>>>>>> feature-x                                                │
-│   More code that's fine                                            │
-│                                                                    │
-│   RESOLUTION:                                                      │
-│   1. Edit file - remove markers, keep desired code                 │
-│   2. git add file                                                  │
-│   3. git commit (merge commit message pre-filled)                  │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                    MERGE CONFLICT                                  |
++--------------------------------------------------------------------+
+|                                                                    |
+|   File content during conflict:                                    |
+|   ------------------------------                                   |
+|                                                                    |
+|   Some code that's fine                                            |
+|   <<<<<<< HEAD                                                     |
+|   This is from current branch (main)                               |
+|   =======                                                          |
+|   This is from incoming branch (feature)                           |
+|   >>>>>>> feature-x                                                |
+|   More code that's fine                                            |
+|                                                                    |
+|   RESOLUTION:                                                      |
+|   1. Edit file - remove markers, keep desired code                 |
+|   2. git add file                                                  |
+|   3. git commit (merge commit message pre-filled)                  |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Resolving Conflicts
@@ -1314,35 +1314,35 @@ git mergetool
 ### Rebase Concept
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       REBASE VISUALIZATION                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   BEFORE REBASE:                                                        │
-│   main:     A ─── B ─── C ─── F                                         │
-│                         │                                               │
-│   feature:              └─── D ─── E                                    │
-│                                   HEAD                                  │
-│                                                                         │
-│   git rebase main (while on feature):                                   │
-│   ─────────────────────────────────────                                 │
-│                                                                         │
-│   AFTER REBASE:                                                         │
-│   main:     A ─── B ─── C ─── F                                         │
-│                               │                                         │
-│   feature:                    └─── D' ─── E'                            │
-│                                          HEAD                           │
-│                                                                         │
-│   • D and E are REPLAYED on top of F                                    │
-│   • Creates NEW commits (D', E') with different hashes                  │
-│   • Original D and E still exist but unreferenced                       │
-│   • Results in LINEAR history                                           │
-│                                                                         │
-│   ⚠️ GOLDEN RULE:                                                       │
-│   Never rebase commits that have been pushed to shared branches!        │
-│   (Rewrites history = confuses collaborators)                           │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       REBASE VISUALIZATION                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   BEFORE REBASE:                                                        |
+|   main:     A --- B --- C --- F                                         |
+|                         |                                               |
+|   feature:              +--- D --- E                                    |
+|                                   HEAD                                  |
+|                                                                         |
+|   git rebase main (while on feature):                                   |
+|   -------------------------------------                                 |
+|                                                                         |
+|   AFTER REBASE:                                                         |
+|   main:     A --- B --- C --- F                                         |
+|                               |                                         |
+|   feature:                    +--- D' --- E'                            |
+|                                          HEAD                           |
+|                                                                         |
+|   • D and E are REPLAYED on top of F                                    |
+|   • Creates NEW commits (D', E') with different hashes                  |
+|   • Original D and E still exist but unreferenced                       |
+|   • Results in LINEAR history                                           |
+|                                                                         |
+|   ⚠️ GOLDEN RULE:                                                       |
+|   Never rebase commits that have been pushed to shared branches!        |
+|   (Rewrites history = confuses collaborators)                           |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Rebase Commands
@@ -1456,52 +1456,52 @@ git cherry-pick specific-feature-commit
 ### Git Flow
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                      GIT FLOW                                      │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   main     ────●───────────────────●───────────────●──             │
-│               │                   ▲               ▲                │
-│               │                   │ hotfix        │                │
-│   hotfix      │                ───●───            │                │
-│               │                                   │                │
-│   release     │           ────●────●──────────────┘                │
-│               │          ▲                                         │
-│               │          │                                         │
-│   develop  ───●──────●───●──────────────●──────────                │
-│               │      ▲              ▲                              │
-│               │      │              │                              │
-│   feature     └──●───┘     ●────●───┘                              │
-│                                                                    │
-│   Branches:                                                        │
-│   main     = production code only                                  │
-│   develop  = integration branch                                    │
-│   feature/ = new features                                          │
-│   release/ = release preparation                                   │
-│   hotfix/  = emergency production fixes                            │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                      GIT FLOW                                      |
++--------------------------------------------------------------------+
+|                                                                    |
+|   main     ----●-------------------●---------------●--             |
+|               |                   ▲               ▲                |
+|               |                   | hotfix        |                |
+|   hotfix      |                ---●---            |                |
+|               |                                   |                |
+|   release     |           ----●----●--------------+                |
+|               |          ▲                                         |
+|               |          |                                         |
+|   develop  ---●------●---●--------------●----------                |
+|               |      ▲              ▲                              |
+|               |      |              |                              |
+|   feature     +--●---+     ●----●---+                              |
+|                                                                    |
+|   Branches:                                                        |
+|   main     = production code only                                  |
+|   develop  = integration branch                                    |
+|   feature/ = new features                                          |
+|   release/ = release preparation                                   |
+|   hotfix/  = emergency production fixes                            |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Trunk-Based Development
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                  TRUNK-BASED DEVELOPMENT                           │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   main     ────●────●────●────●────●────●────●────                 │
-│               │    │    │    │                                     │
-│   feature     └●───┘    └●───┘                                     │
-│               (short-lived)                                        │
-│                                                                    │
-│   Principles:                                                      │
-│   • Very short-lived feature branches (1-2 days)                   │
-│   • Merge to main frequently                                       │
-│   • Feature flags for incomplete features                          │
-│   • Requires good CI/CD                                            │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                  TRUNK-BASED DEVELOPMENT                           |
++--------------------------------------------------------------------+
+|                                                                    |
+|   main     ----●----●----●----●----●----●----●----                 |
+|               |    |    |    |                                     |
+|   feature     +●---+    +●---+                                     |
+|               (short-lived)                                        |
+|                                                                    |
+|   Principles:                                                      |
+|   • Very short-lived feature branches (1-2 days)                   |
+|   • Merge to main frequently                                       |
+|   • Feature flags for incomplete features                          |
+|   • Requires good CI/CD                                            |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ---
@@ -1581,34 +1581,34 @@ NODE_04_REMOTE_REPOSITORIES = {
 ## Remote Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       REMOTE ARCHITECTURE                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   LOCAL MACHINE                      REMOTE SERVER                      │
-│   ─────────────                      ─────────────                      │
-│                                                                         │
-│   Working Dir                                                           │
-│   ┌─────────┐      git push         ┌──────────────────────┐            │
-│   │ files   │ ───────────────────►  │ origin/main          │            │
-│   └─────────┘                       │ origin/develop       │            │
-│       │                             │ origin/feature-x     │            │
-│   ┌─────────┐      git fetch        └──────────────────────┘            │
-│   │ .git    │ ◄───────────────────           │                          │
-│   │ local   │                                │ github.com               │
-│   │ refs    │                                │ gitlab.com               │
-│   └─────────┘                                │ bitbucket.org            │
-│       │                                                                 │
-│   LOCAL BRANCHES:        REMOTE-TRACKING BRANCHES:                      │
-│   main                   origin/main                                    │
-│   develop               origin/develop                                  │
-│   feature-x              origin/feature-x                               │
-│                                                                         │
-│   MULTIPLE REMOTES:                                                     │
-│   origin   → Your fork (read/write)                                     │
-│   upstream → Original repo (usually read-only)                          │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       REMOTE ARCHITECTURE                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   LOCAL MACHINE                      REMOTE SERVER                      |
+|   -------------                      -------------                      |
+|                                                                         |
+|   Working Dir                                                           |
+|   +---------+      git push         +----------------------+            |
+|   | files   | -------------------►  | origin/main          |            |
+|   +---------+                       | origin/develop       |            |
+|       |                             | origin/feature-x     |            |
+|   +---------+      git fetch        +----------------------+            |
+|   | .git    | ◄-------------------           |                          |
+|   | local   |                                | github.com               |
+|   | refs    |                                | gitlab.com               |
+|   +---------+                                | bitbucket.org            |
+|       |                                                                 |
+|   LOCAL BRANCHES:        REMOTE-TRACKING BRANCHES:                      |
+|   main                   origin/main                                    |
+|   develop               origin/develop                                  |
+|   feature-x              origin/feature-x                               |
+|                                                                         |
+|   MULTIPLE REMOTES:                                                     |
+|   origin   -> Your fork (read/write)                                     |
+|   upstream -> Original repo (usually read-only)                          |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1664,26 +1664,26 @@ git remote set-url origin git@github.com:user/repo.git
 ### Git Fetch
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                        GIT FETCH                                   │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   BEFORE:                                                          │
-│   Local:   main ─── A ─── B                                        │
-│   origin/main ─── A ─── B                                          │
-│                                                                    │
-│   Remote (has new commits):                                        │
-│   origin: main ─── A ─── B ─── C ─── D                             │
-│                                                                    │
-│   AFTER git fetch:                                                 │
-│   Local:   main ─── A ─── B                                        │
-│   origin/main ─── A ─── B ─── C ─── D                              │
-│                                                                    │
-│   • Downloads commits but doesn't merge                            │
-│   • Updates remote-tracking branches                               │
-│   • Safe operation (no changes to working dir)                     │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                        GIT FETCH                                   |
++--------------------------------------------------------------------+
+|                                                                    |
+|   BEFORE:                                                          |
+|   Local:   main --- A --- B                                        |
+|   origin/main --- A --- B                                          |
+|                                                                    |
+|   Remote (has new commits):                                        |
+|   origin: main --- A --- B --- C --- D                             |
+|                                                                    |
+|   AFTER git fetch:                                                 |
+|   Local:   main --- A --- B                                        |
+|   origin/main --- A --- B --- C --- D                              |
+|                                                                    |
+|   • Downloads commits but doesn't merge                            |
+|   • Updates remote-tracking branches                               |
+|   • Safe operation (no changes to working dir)                     |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ```bash
@@ -1829,32 +1829,32 @@ git remote set-url origin git@github.com:user/repo.git
 ### Fork Workflow
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                       FORK WORKFLOW                                │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│   ORIGINAL REPO (upstream)                                         │
-│   github.com/company/project                                       │
-│        │                 ▲                                         │
-│        │ fork            │ Pull Request                            │
-│        ▼                 │                                         │
-│   YOUR FORK (origin)                                               │
-│   github.com/you/project                                           │
-│        │                 ▲                                         │
-│        │ clone           │ push                                    │
-│        ▼                 │                                         │
-│   LOCAL REPOSITORY                                                 │
-│   ~/code/project                                                   │
-│                                                                    │
-│   WORKFLOW:                                                        │
-│   1. Fork on GitHub                                                │
-│   2. Clone your fork                                               │
-│   3. Add upstream remote                                           │
-│   4. Create feature branch                                         │
-│   5. Make changes, push to origin                                  │
-│   6. Create Pull Request to upstream                               │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                       FORK WORKFLOW                                |
++--------------------------------------------------------------------+
+|                                                                    |
+|   ORIGINAL REPO (upstream)                                         |
+|   github.com/company/project                                       |
+|        |                 ▲                                         |
+|        | fork            | Pull Request                            |
+|        ▼                 |                                         |
+|   YOUR FORK (origin)                                               |
+|   github.com/you/project                                           |
+|        |                 ▲                                         |
+|        | clone           | push                                    |
+|        ▼                 |                                         |
+|   LOCAL REPOSITORY                                                 |
+|   ~/code/project                                                   |
+|                                                                    |
+|   WORKFLOW:                                                        |
+|   1. Fork on GitHub                                                |
+|   2. Clone your fork                                               |
+|   3. Add upstream remote                                           |
+|   4. Create feature branch                                         |
+|   5. Make changes, push to origin                                  |
+|   6. Create Pull Request to upstream                               |
+|                                                                    |
++--------------------------------------------------------------------+
 ```
 
 ### Sync Commands

@@ -314,10 +314,10 @@ brew install --cask iterm2
 - **Shell integration**: Markerar kommandon och deras output
 
 ### Rekommenderade inställningar
-1. Öppna Preferences → Profiles → Colors
+1. Öppna Preferences -> Profiles -> Colors
 2. Välj ett mörkt tema (rekommenderat: **Solarized Dark** eller **One Dark**)
-3. Gå till Terminal-fliken → Aktivera "Unlimited scrollback"
-4. Gå till Keys → Hotkey → Aktivera med t.ex. `Ctrl+Space`
+3. Gå till Terminal-fliken -> Aktivera "Unlimited scrollback"
+4. Gå till Keys -> Hotkey -> Aktivera med t.ex. `Ctrl+Space`
 
 ### Viktiga kortkommandon
 | Kommando | Funktion |
@@ -337,7 +337,7 @@ brew tap homebrew/cask-fonts
 brew install --cask font-jetbrains-mono-nerd-font
 ```
 
-Ändra sedan i iTerm2: Preferences → Profiles → Text → Font → "JetBrainsMono Nerd Font"
+Ändra sedan i iTerm2: Preferences -> Profiles -> Text -> Font -> "JetBrainsMono Nerd Font"
 
 ### Alternativ: Alacritty (GPU-accelererad)
 Om du vill ha maximal prestanda:
@@ -363,7 +363,7 @@ winget install Microsoft.WindowsTerminal
 
 ### Konfiguration för WSL2
 1. Öppna Windows Terminal
-2. Klicka på dropdown-pilen → Settings
+2. Klicka på dropdown-pilen -> Settings
 3. Under "Default profile" välj din WSL-distribution (Ubuntu)
 4. Under "Startup" sätt "Default terminal application" till "Windows Terminal"
 
@@ -392,7 +392,7 @@ Tryck `Ctrl+Shift+,` för att öppna settings.json:
 | Ctrl+Shift+T | Ny flik |
 | Ctrl+Shift+W | Stäng flik |
 | Alt+Shift+D | Dela panel |
-| Alt+←/→ | Växla mellan paneler |
+| Alt+<-/-> | Växla mellan paneler |
 | Ctrl+Shift+F | Sök |
 | Ctrl+, | Inställningar |
 | Ctrl+Shift+Space | Öppna dropdown |
@@ -409,7 +409,7 @@ fc-cache -fv
 ```
 
 ### Tips: Gör WSL till standard-shell
-I Windows Terminal Settings → Startup → Default profile → Välj "Ubuntu"
+I Windows Terminal Settings -> Startup -> Default profile -> Välj "Ubuntu"
 <!-- /OS:windows -->
 
 <!-- OS:linux -->
@@ -429,7 +429,7 @@ unzip JetBrainsMono.zip
 rm JetBrainsMono.zip
 fc-cache -fv
 
-# Öppna sedan GNOME Terminal → Preferences → Profiles
+# Öppna sedan GNOME Terminal -> Preferences -> Profiles
 # Ändra typsnitt till "JetBrainsMono Nerd Font"
 # Ändra färgschema till "Solarized Dark"
 ```
@@ -1316,7 +1316,7 @@ code --install-extension streetsidesoftware.code-spell-checker
 
 ## Rekommenderade inställningar
 
-Öppna Settings JSON: `Cmd+Shift+P` (Mac) / `Ctrl+Shift+P` (Win/Linux) → "Preferences: Open Settings (JSON)"
+Öppna Settings JSON: `Cmd+Shift+P` (Mac) / `Ctrl+Shift+P` (Win/Linux) -> "Preferences: Open Settings (JSON)"
 
 ```json
 {
@@ -1363,7 +1363,7 @@ code --install-extension streetsidesoftware.code-spell-checker
 | Sök i projekt | Cmd+Shift+F | Ctrl+Shift+F |
 | Dela editor | Cmd+\\ | Ctrl+\\ |
 | Gå till definition | F12 | F12 |
-| Gå tillbaka | Ctrl+- | Alt+← |
+| Gå tillbaka | Ctrl+- | Alt+<- |
 
 ## Övning
 1. Installera VS Code för ditt OS
@@ -1392,7 +1392,7 @@ Docker låter dig köra applikationer i **containers** — isolerade miljöer so
 - Köra din första container
 
 ## Varför containers?
-- **Konsistens**: "Fungerar på min maskin" → "Fungerar överallt"
+- **Konsistens**: "Fungerar på min maskin" -> "Fungerar överallt"
 - **Isolering**: Varje app har sina egna dependencies
 - **Effektivitet**: Delar OS-kernel, lättare än VMs
 - **Portabilitet**: Samma container körs lokalt och i produktion
@@ -1424,7 +1424,7 @@ docker run hello-world
 ```
 
 ### Rekommenderade inställningar
-1. Klicka på Docker-ikonen → Settings
+1. Klicka på Docker-ikonen -> Settings
 2. **Resources**:
    - Memory: Minst 4GB (8GB om du kör Kubernetes)
    - CPUs: Minst 2
@@ -1465,9 +1465,9 @@ Docker Desktop på Windows använder WSL2 som backend för bäst prestanda.
 2. **Installera och starta om Windows**
 
 3. **Konfigurera WSL2-backend**:
-   - Öppna Docker Desktop → Settings
+   - Öppna Docker Desktop -> Settings
    - Under "General": Aktivera "Use the WSL 2 based engine"
-   - Under "Resources" → "WSL Integration": Aktivera för din Ubuntu-distribution
+   - Under "Resources" -> "WSL Integration": Aktivera för din Ubuntu-distribution
 
 ### Verifiera i WSL2
 Öppna din WSL2-terminal (Ubuntu):
@@ -1487,7 +1487,7 @@ docker run hello-world
 - Docker-volymer i WSL2 är mycket snabbare än Windows-volymer
 
 ### Rekommenderade inställningar
-1. Docker Desktop → Settings → Resources
+1. Docker Desktop -> Settings -> Resources
    - Memory: 4-8 GB
    - CPUs: 2-4
 2. WSL Integration: Aktivera för Ubuntu
@@ -2056,8 +2056,8 @@ aws-cli/2.15.0 Python/3.11.6 Linux/6.5.0 source/x86_64
 
 ### Steg 2: Skapa AWS Access Keys
 
-1. Logga in på AWS Console → IAM → Users
-2. Välj din användare → Security credentials
+1. Logga in på AWS Console -> IAM -> Users
+2. Välj din användare -> Security credentials
 3. Klicka "Create access key"
 4. Välj "Command Line Interface (CLI)"
 5. Spara Access Key ID och Secret Access Key säkert!
@@ -2461,8 +2461,8 @@ source ~/.zshrc
 
 ### Docker Desktop Kubernetes i WSL2
 Om du har Docker Desktop på Windows med Kubernetes aktiverat:
-1. Öppna Docker Desktop → Settings
-2. Gå till Kubernetes → Aktivera "Enable Kubernetes"
+1. Öppna Docker Desktop -> Settings
+2. Gå till Kubernetes -> Aktivera "Enable Kubernetes"
 3. kubectl i WSL2 ska automatiskt kunna ansluta
 <!-- /OS:windows -->
 
@@ -2542,7 +2542,7 @@ source ~/.zshrc
 ## Konfigurera ett lokalt kluster
 
 ### Med Docker Desktop Kubernetes
-1. Öppna Docker Desktop → Settings → Kubernetes
+1. Öppna Docker Desktop -> Settings -> Kubernetes
 2. Aktivera "Enable Kubernetes"
 3. Vänta på att Kubernetes startar
 
@@ -3087,7 +3087,7 @@ cat ~/.ssh/id_ed25519.pub
 
 ## Lägg till nyckel på GitHub
 
-1. Gå till GitHub → Settings → SSH and GPG keys
+1. Gå till GitHub -> Settings -> SSH and GPG keys
 2. Klicka "New SSH key"
 3. Ge nyckeln ett beskrivande namn (t.ex. "MacBook Pro 2024")
 4. Klistra in innehållet från `~/.ssh/id_ed25519.pub`
@@ -3368,7 +3368,7 @@ git config --global gpg.program gpg
 
 ## Lägg till GPG-nyckel på GitHub
 
-1. Gå till GitHub → Settings → SSH and GPG keys
+1. Gå till GitHub -> Settings -> SSH and GPG keys
 2. Klicka "New GPG key"
 3. Klistra in din public key (från `gpg --armor --export`)
 4. Klicka "Add GPG key"
@@ -3460,7 +3460,7 @@ Rekommenderade appar (välj EN):
 
 ## Steg 2: Aktivera MFA på GitHub
 
-1. GitHub → Settings → Password and authentication
+1. GitHub -> Settings -> Password and authentication
 2. Klicka "Enable two-factor authentication"
 3. Välj "Set up using an app"
 4. Skanna QR-koden med din authenticator
@@ -3468,8 +3468,8 @@ Rekommenderade appar (välj EN):
 
 ## Steg 3: Aktivera MFA på AWS
 
-1. AWS Console → IAM → Users → Ditt användarnamn
-2. Security credentials → Assigned MFA device → Assign MFA device
+1. AWS Console -> IAM -> Users -> Ditt användarnamn
+2. Security credentials -> Assigned MFA device -> Assign MFA device
 3. Välj "Authenticator app"
 4. Skanna QR-koden
 5. Ange två på varandra följande koder för att verifiera
@@ -3531,13 +3531,13 @@ gpg -d ~/.recovery-codes/all-codes.gpg
 ## Steg 5: Aktivera MFA på andra tjänster
 
 **GitLab:**
-Settings → Account → Two-Factor Authentication
+Settings -> Account -> Two-Factor Authentication
 
 **Docker Hub:**
-Account Settings → Security → Two-Factor Authentication
+Account Settings -> Security -> Two-Factor Authentication
 
 **Cloudflare:**
-My Profile → Authentication → Two-Factor Authentication
+My Profile -> Authentication -> Two-Factor Authentication
 
 ## AWS CLI med MFA
 
@@ -4571,24 +4571,24 @@ The Filesystem Hierarchy Standard defines the directory structure on Linux syste
 
 ```
 /
-├── bin/      → Essential user binaries (ls, cp, mv)
-├── boot/     → Boot loader files, kernel
-├── dev/      → Device files
-├── etc/      → System configuration files
-├── home/     → User home directories
-├── lib/      → Essential shared libraries
-├── media/    → Mount point for removable media
-├── mnt/      → Temporary mount points
-├── opt/      → Optional/third-party software
-├── proc/     → Virtual filesystem for process info
-├── root/     → Root user's home directory
-├── run/      → Runtime data (PIDs, sockets)
-├── sbin/     → System binaries (systemctl, fdisk)
-├── srv/      → Service data
-├── sys/      → Virtual filesystem for kernel/hardware
-├── tmp/      → Temporary files (cleared on reboot)
-├── usr/      → User programs and data
-└── var/      → Variable data (logs, databases)
++-- bin/      -> Essential user binaries (ls, cp, mv)
++-- boot/     -> Boot loader files, kernel
++-- dev/      -> Device files
++-- etc/      -> System configuration files
++-- home/     -> User home directories
++-- lib/      -> Essential shared libraries
++-- media/    -> Mount point for removable media
++-- mnt/      -> Temporary mount points
++-- opt/      -> Optional/third-party software
++-- proc/     -> Virtual filesystem for process info
++-- root/     -> Root user's home directory
++-- run/      -> Runtime data (PIDs, sockets)
++-- sbin/     -> System binaries (systemctl, fdisk)
++-- srv/      -> Service data
++-- sys/      -> Virtual filesystem for kernel/hardware
++-- tmp/      -> Temporary files (cleared on reboot)
++-- usr/      -> User programs and data
++-- var/      -> Variable data (logs, databases)
 ```
 
 ## Key Directories for DevOps
@@ -4607,7 +4607,7 @@ The Filesystem Hierarchy Standard defines the directory structure on Linux syste
 /var/log/                  # System and app logs
 /var/lib/docker/           # Docker data
 /var/www/                  # Web server files
-/var/run/ → /run/          # Runtime data (symlink)
+/var/run/ -> /run/          # Runtime data (symlink)
 ```
 
 ### /usr - User Programs
@@ -4650,12 +4650,12 @@ In Linux, **everything is a file** - including hardware devices!
 
 ### Device Files Location: /dev
 ```bash
-/dev/sda      → First SATA/SCSI disk
-/dev/sda1     → First partition on sda
-/dev/nvme0n1  → First NVMe drive
-/dev/null     → Discards all data written to it
-/dev/zero     → Returns zeros when read
-/dev/random   → Random number generator
+/dev/sda      -> First SATA/SCSI disk
+/dev/sda1     -> First partition on sda
+/dev/nvme0n1  -> First NVMe drive
+/dev/null     -> Discards all data written to it
+/dev/zero     -> Returns zeros when read
+/dev/random   -> Random number generator
 ```
 
 ## Block vs Character Devices
@@ -4926,10 +4926,10 @@ lsblk
 # Output:
 # NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 # sda      8:0    0  100G  0 disk
-# ├─sda1   8:1    0   99G  0 part /
-# └─sda2   8:2    0    1G  0 part [SWAP]
+# +-sda1   8:1    0   99G  0 part /
+# +-sda2   8:2    0    1G  0 part [SWAP]
 # sdb      8:16   0  500G  0 disk
-# └─sdb1   8:17   0  500G  0 part /data
+# +-sdb1   8:17   0  500G  0 part /data
 ```
 
 ## fdisk - Partitionshantering (VARNING: Destruktivt!)
@@ -4953,7 +4953,7 @@ sudo fdisk /dev/sdb
 LVM ger flexibel diskhantering:
 
 ```
-Physical Volumes (PV) → Volume Groups (VG) → Logical Volumes (LV)
+Physical Volumes (PV) -> Volume Groups (VG) -> Logical Volumes (LV)
    /dev/sda1              vg_data              lv_app
    /dev/sdb1                                   lv_logs
 ```
@@ -5021,11 +5021,11 @@ Every file has three permission sets for three user categories:
 ```bash
 ls -la file.txt
 -rw-r--r-- 1 owner group 1234 Nov 27 10:00 file.txt
-│└┬┘└┬┘└┬┘
-│ │  │  └── Others (everyone else)
-│ │  └───── Group
-│ └──────── Owner/User
-└────────── File type (- = file, d = directory, l = link)
+|+++++++++
+| |  |  +-- Others (everyone else)
+| |  +----- Group
+| +-------- Owner/User
++---------- File type (- = file, d = directory, l = link)
 ```
 
 ### Permission Types
@@ -5174,9 +5174,9 @@ A **process** is a running instance of a program. Every process has:
 ## Process States
 
 ```
-RUNNING (R)     ←→   INTERRUPTIBLE SLEEP (S)
+RUNNING (R)     <-->   INTERRUPTIBLE SLEEP (S)
      ↓                        ↓
-STOPPED (T)     ←→   UNINTERRUPTIBLE SLEEP (D)
+STOPPED (T)     <-->   UNINTERRUPTIBLE SLEEP (D)
      ↓
 ZOMBIE (Z)
 ```
@@ -5206,8 +5206,8 @@ ps aux
 ```bash
 # When you run a command:
 $ ls
-# Shell calls fork() → creates child process
-# Child calls exec() → replaces itself with 'ls'
+# Shell calls fork() -> creates child process
+# Child calls exec() -> replaces itself with 'ls'
 ```
 
 ### 2. Running
@@ -5235,10 +5235,10 @@ ps aux | grep Z
 pstree -p
 
 # Output:
-# systemd(1)─┬─sshd(1234)───sshd(5678)───bash(9012)───vim(3456)
-#            ├─nginx(2345)─┬─nginx(2346)
-#            │             └─nginx(2347)
-#            └─docker(3456)───containerd(4567)
+# systemd(1)-+-sshd(1234)---sshd(5678)---bash(9012)---vim(3456)
+#            +-nginx(2345)-+-nginx(2346)
+#            |             +-nginx(2347)
+#            +-docker(3456)---containerd(4567)
 ```
 
 ## Key Process Facts
@@ -5976,15 +5976,15 @@ Systemd är:
 ## Systemd komponenter
 
 ```
-┌─────────────────────────────────────┐
-│            systemctl                │  ← Admin CLI
-├─────────────────────────────────────┤
-│   systemd (PID 1)                   │  ← Huvudprocessen
-├───────┬───────┬───────┬────────────┤
-│journald│logind│resolved│networkd   │  ← Daemons
-├───────┴───────┴───────┴────────────┤
-│       Unit Files (konfiguration)    │
-└─────────────────────────────────────┘
++-------------------------------------+
+|            systemctl                |  <- Admin CLI
++-------------------------------------+
+|   systemd (PID 1)                   |  <- Huvudprocessen
++-------+-------+-------+------------+
+|journald|logind|resolved|networkd   |  <- Daemons
++-------+-------+-------+------------+
+|       Unit Files (konfiguration)    |
++-------------------------------------+
 ```
 
 | Komponent | Ansvar |
@@ -6467,8 +6467,8 @@ Output:
      Memory: 10.0M
         CPU: 50ms
      CGroup: /system.slice/nginx.service
-             ├─1234 "nginx: master process /usr/sbin/nginx"
-             └─1235 "nginx: worker process"
+             +-1234 "nginx: master process /usr/sbin/nginx"
+             +-1235 "nginx: worker process"
 ```
 
 ### Status-fält förklaring
@@ -6635,30 +6635,30 @@ Att förstå bootprocessen hjälper dig felsöka startproblem och förstå varf�
 ## Boot-sekvensen
 
 ```
-┌─────────────────────────────────┐
-│  1. BIOS/UEFI                   │  Hårdvaruinitiering
-│     - POST (Power-On Self-Test) │
-│     - Hitta bootdisk            │
-├─────────────────────────────────┤
-│  2. Bootloader (GRUB2)          │  Välj kernel
-│     - grub.cfg                  │
-│     - Visa boot-meny            │
-├─────────────────────────────────┤
-│  3. Kernel                       │  Linux startar
-│     - Decompress                 │
-│     - Initiera drivrutiner      │
-│     - Montera initramfs         │
-├─────────────────────────────────┤
-│  4. initramfs                    │  Tidig userspace
-│     - Ladda moduler             │
-│     - Hitta root filesystem     │
-├─────────────────────────────────┤
-│  5. systemd (PID 1)             │  Init system
-│     - default.target            │
-│     - Starta services           │
-├─────────────────────────────────┤
-│  6. Login                        │  Klar!
-└─────────────────────────────────┘
++---------------------------------+
+|  1. BIOS/UEFI                   |  Hårdvaruinitiering
+|     - POST (Power-On Self-Test) |
+|     - Hitta bootdisk            |
++---------------------------------+
+|  2. Bootloader (GRUB2)          |  Välj kernel
+|     - grub.cfg                  |
+|     - Visa boot-meny            |
++---------------------------------+
+|  3. Kernel                       |  Linux startar
+|     - Decompress                 |
+|     - Initiera drivrutiner      |
+|     - Montera initramfs         |
++---------------------------------+
+|  4. initramfs                    |  Tidig userspace
+|     - Ladda moduler             |
+|     - Hitta root filesystem     |
++---------------------------------+
+|  5. systemd (PID 1)             |  Init system
+|     - default.target            |
+|     - Starta services           |
++---------------------------------+
+|  6. Login                        |  Klar!
++---------------------------------+
 ```
 
 ## Systemd Targets
@@ -6679,11 +6679,11 @@ Targets är grupper av units som representerar systemtillstånd.
 ### Target-hierarki
 ```
 graphical.target
-    └── multi-user.target
-            └── basic.target
-                    └── sysinit.target
-                            └── local-fs.target
-                                    └── ...
+    +-- multi-user.target
+            +-- basic.target
+                    +-- sysinit.target
+                            +-- local-fs.target
+                                    +-- ...
 ```
 
 ## Hantera targets
@@ -7460,24 +7460,24 @@ PAM = Pluggable Authentication Modules
 Ett ramverk som separerar applikationer från autentiseringsmekanismer.
 
 ```
-┌─────────────┐     ┌─────────┐     ┌──────────────┐
-│ Application │ ──> │   PAM   │ ──> │ Auth Backend │
-│ (sshd, su)  │     │ Library │     │ (passwd, LDAP)│
-└─────────────┘     └─────────┘     └──────────────┘
++-------------+     +---------+     +--------------+
+| Application | --> |   PAM   | --> | Auth Backend |
+| (sshd, su)  |     | Library |     | (passwd, LDAP)|
++-------------+     +---------+     +--------------+
 ```
 
 ## PAM-konfigurationsfiler
 
 ```bash
 /etc/pam.d/
-├── common-auth        # Gemensam auth
-├── common-account     # Gemensam account
-├── common-password    # Gemensam password
-├── common-session     # Gemensam session
-├── sshd               # SSH-specifik
-├── sudo               # sudo-specifik
-├── login              # Console login
-└── ...
++-- common-auth        # Gemensam auth
++-- common-account     # Gemensam account
++-- common-password    # Gemensam password
++-- common-session     # Gemensam session
++-- sshd               # SSH-specifik
++-- sudo               # sudo-specifik
++-- login              # Console login
++-- ...
 ```
 
 ## PAM-fil syntax
@@ -7965,25 +7965,25 @@ sudo ufw allow 'Nginx Full'
 Mer kraftfullt men komplexare. Jobbar med kedjor (chains):
 
 ```
-┌──────────────┐
-│   INCOMING   │
-└──────┬───────┘
++--------------+
+|   INCOMING   |
++------+-------+
        ↓
-┌──────────────┐
-│    INPUT     │ ──> Lokala processer
-└──────────────┘
++--------------+
+|    INPUT     | --> Lokala processer
++--------------+
 
-┌──────────────┐
-│   OUTPUT     │ <── Lokala processer
-└──────────────┘
++--------------+
+|   OUTPUT     | <-- Lokala processer
++--------------+
        ↓
-┌──────────────┐
-│   OUTGOING   │
-└──────────────┘
++--------------+
+|   OUTGOING   |
++--------------+
 
-┌──────────────┐
-│   FORWARD    │ ──> Routade paket
-└──────────────┘
++--------------+
+|   FORWARD    | --> Routade paket
++--------------+
 ```
 
 ### Visa regler
@@ -9875,62 +9875,62 @@ Vim finns på ALLA Linux-servrar, även minimala containers. När SSH-anslutning
 Du startar alltid här. Tryck `ESC` för att återgå.
 
 ```
-h j k l    → Vänster, Ner, Upp, Höger
-w          → Nästa ord
-b          → Föregående ord
-0          → Början av rad
-$          → Slutet av rad
-gg         → Första raden
-G          → Sista raden
-10G        → Gå till rad 10
+h j k l    -> Vänster, Ner, Upp, Höger
+w          -> Nästa ord
+b          -> Föregående ord
+0          -> Början av rad
+$          -> Slutet av rad
+gg         -> Första raden
+G          -> Sista raden
+10G        -> Gå till rad 10
 ```
 
 ### 2. Insert Mode
 Tryck `i` för att skriva. Tryck `ESC` för att gå tillbaka.
 
 ```
-i          → Insert före cursor
-a          → Insert efter cursor
-I          → Insert i början av rad
-A          → Insert i slutet av rad
-o          → Ny rad under
-O          → Ny rad över
+i          -> Insert före cursor
+a          -> Insert efter cursor
+I          -> Insert i början av rad
+A          -> Insert i slutet av rad
+o          -> Ny rad under
+O          -> Ny rad över
 ```
 
 ### 3. Visual Mode
 För att markera text.
 
 ```
-v          → Markera tecken
-V          → Markera rad
-Ctrl+v     → Block-markering
+v          -> Markera tecken
+V          -> Markera rad
+Ctrl+v     -> Block-markering
 ```
 
 ### 4. Command Mode
 Tryck `:` för kommandon.
 
 ```
-:w              → Spara
-:q              → Avsluta
-:wq             → Spara och avsluta
-:e filename     → Öppna fil
-:set number     → Visa radnummer
+:w              -> Spara
+:q              -> Avsluta
+:wq             -> Spara och avsluta
+:e filename     -> Öppna fil
+:set number     -> Visa radnummer
 ```
 
 ## Redigering i Normal Mode
 
 ```
-x          → Radera tecken
-dd         → Radera rad
-dw         → Radera ord
-D          → Radera till slutet av rad
-yy         → Kopiera rad
-yw         → Kopiera ord
-p          → Klistra in efter
-P          → Klistra in före
-u          → Undo
-Ctrl+r     → Redo
-.          → Upprepa senaste kommando
+x          -> Radera tecken
+dd         -> Radera rad
+dw         -> Radera ord
+D          -> Radera till slutet av rad
+yy         -> Kopiera rad
+yw         -> Kopiera ord
+p          -> Klistra in efter
+P          -> Klistra in före
+u          -> Undo
+Ctrl+r     -> Redo
+.          -> Upprepa senaste kommando
 ```
 
 ## Sök och ersätt
@@ -10102,7 +10102,7 @@ Längst ner ser du:
 |---------|----------|
 | Ctrl+O | Spara (Write Out) |
 | Ctrl+X | Avsluta |
-| Ctrl+X → Y → Enter | Spara och avsluta |
+| Ctrl+X -> Y -> Enter | Spara och avsluta |
 
 ### Navigering
 | Tangent | Funktion |
@@ -10159,13 +10159,13 @@ EOF
 
 ```bash
 # Sök (Ctrl+W)
-Ctrl+W → skriv sökterm → Enter
+Ctrl+W -> skriv sökterm -> Enter
 
 # Nästa träff
-Ctrl+W → Enter
+Ctrl+W -> Enter
 
 # Ersätt (Ctrl+\)
-Ctrl+\ → gammal text → Enter → ny text → Enter
+Ctrl+\ -> gammal text -> Enter -> ny text -> Enter
 # Välj: Y (ja), N (nej), A (alla)
 ```
 
@@ -10175,7 +10175,7 @@ Ctrl+\ → gammal text → Enter → ny text → Enter
 ```bash
 sudo nano /etc/ssh/sshd_config
 # Gör ändringar
-# Ctrl+O → Enter (spara)
+# Ctrl+O -> Enter (spara)
 # Ctrl+X (avsluta)
 ```
 
@@ -10489,7 +10489,7 @@ I produktion kör många processer samtidigt. Med nice-värden kan du prioritera
 ## Nice-värden förklarade
 
 ```
-Nice-värde: -20 ←――――――――――――――→ +19
+Nice-värde: -20 <-――――――――――――――-> +19
             HÖG prioritet    LÅG prioritet
 
 -20 = Mest prioriterad (kräver root)
@@ -10669,11 +10669,11 @@ Swap är "overflow" för RAM. När minnet tar slut kan systemet använda disk so
 ## Vad är Swap?
 
 ```
-┌─────────────┐     ┌─────────────┐
-│    RAM      │────▶│   Swap      │
-│ (snabbt)    │     │  (disk)     │
-│ 16GB        │     │  4GB        │
-└─────────────┘     └─────────────┘
++-------------+     +-------------+
+|    RAM      |----▶|   Swap      |
+| (snabbt)    |     |  (disk)     |
+| 16GB        |     |  4GB        |
++-------------+     +-------------+
                     När RAM är fullt
                     flyttas inaktiva
                     sidor till swap
@@ -11025,21 +11025,21 @@ time cp /home/user/bigvideo.mkv /mnt/xfs/
 ## Välja Filesystem
 
 ```
-┌─────────────────────────────────────────────────┐
-│                   Vad behöver du?               │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Generellt / Root partition → ext4             │
-│                                                 │
-│  Databas / Stora filer → xfs                    │
-│                                                 │
-│  Snapshots / Backup → btrfs                     │
-│                                                 │
-│  Container storage → xfs eller btrfs            │
-│                                                 │
-│  Boot partition → ext4 (alltid)                 │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|                   Vad behöver du?               |
++-------------------------------------------------+
+|                                                 |
+|  Generellt / Root partition -> ext4             |
+|                                                 |
+|  Databas / Stora filer -> xfs                    |
+|                                                 |
+|  Snapshots / Backup -> btrfs                     |
+|                                                 |
+|  Container storage -> xfs eller btrfs            |
+|                                                 |
+|  Boot partition -> ext4 (alltid)                 |
+|                                                 |
++-------------------------------------------------+
 ```
 
 ## Praktiska exempel
@@ -11113,7 +11113,7 @@ SCP och SFTP är standardmetoder för att överföra filer säkert över nätver
 scp [options] source destination
 ```
 
-### Kopiera lokalt → remote
+### Kopiera lokalt -> remote
 ```bash
 # En fil
 scp file.txt user@server:/path/
@@ -11128,7 +11128,7 @@ scp -P 2222 file.txt user@server:/path/
 scp -r folder/ user@server:/path/
 ```
 
-### Kopiera remote → lokalt
+### Kopiera remote -> lokalt
 ```bash
 # En fil
 scp user@server:/path/file.txt .
@@ -11137,7 +11137,7 @@ scp user@server:/path/file.txt .
 scp -r user@server:/path/folder/ .
 ```
 
-### Kopiera remote → remote
+### Kopiera remote -> remote
 ```bash
 scp user1@server1:/path/file.txt user2@server2:/path/
 ```
@@ -11369,17 +11369,17 @@ Att förstå hur processer skapas och ärver egenskaper är grundläggande för 
 När en process skapar en annan process kallas det fork:
 
 ```
-┌─────────────┐
-│   Parent    │
-│   PID=100   │
-└──────┬──────┘
-       │ fork()
++-------------+
+|   Parent    |
+|   PID=100   |
++------+------+
+       | fork()
        ▼
-┌──────────────────┐
-│     Child        │
-│   PID=101        │
-│   PPID=100       │
-└──────────────────┘
++------------------+
+|     Child        |
+|   PID=101        |
+|   PPID=100       |
++------------------+
 ```
 
 ### Vad händer vid fork?
@@ -11406,13 +11406,13 @@ pstree -u www-data
 
 ### Exempel på output
 ```
-systemd(1)─┬─sshd(500)───sshd(1000)───bash(1001)───vim(1002)
-           ├─nginx(600)─┬─nginx(601)
-           │            ├─nginx(602)
-           │            └─nginx(603)
-           └─postgres(700)─┬─postgres(701)
-                           ├─postgres(702)
-                           └─postgres(703)
+systemd(1)-+-sshd(500)---sshd(1000)---bash(1001)---vim(1002)
+           +-nginx(600)-+-nginx(601)
+           |            +-nginx(602)
+           |            +-nginx(603)
+           +-postgres(700)-+-postgres(701)
+                           +-postgres(702)
+                           +-postgres(703)
 ```
 
 ## Parent-Child Relationer
@@ -11445,7 +11445,7 @@ ps -eo stat,pid,ppid,cmd | grep -w Z
 1. Child avslutas (exit)
 2. Kernel behåller exit-status i processtabellen
 3. Parent ska köra wait() för att läsa status
-4. Om parent inte gör wait() → zombie!
+4. Om parent inte gör wait() -> zombie!
 ```
 
 ### Lösa zombie-problem
@@ -11453,7 +11453,7 @@ ps -eo stat,pid,ppid,cmd | grep -w Z
 # Du kan inte döda en zombie direkt (redan död!)
 kill -9 1234  # Funkar inte!
 
-# Döda parent istället → init tar över → städar
+# Döda parent istället -> init tar över -> städar
 kill -TERM $(ps -o ppid= -p 1234)
 ```
 
@@ -11511,10 +11511,10 @@ kill -l
 ### Webserver-modell (Apache prefork)
 ```
 Apache Parent (PID 100)
-├── Worker (PID 101) ← Hanterar request 1
-├── Worker (PID 102) ← Hanterar request 2
-├── Worker (PID 103) ← Hanterar request 3
-└── Worker (PID 104) ← Väntar på request
++-- Worker (PID 101) <- Hanterar request 1
++-- Worker (PID 102) <- Hanterar request 2
++-- Worker (PID 103) <- Hanterar request 3
++-- Worker (PID 104) <- Väntar på request
 ```
 
 ### Container-modell
@@ -11819,14 +11819,14 @@ Snap är Canonicals universella paketformat. Det används för att distribuera a
 ## Vad är Snap?
 
 ```
-┌─────────────────────────────────────────┐
-│               Snap Package               │
-├─────────────────────────────────────────┤
-│  Application                            │
-│  Dependencies                           │
-│  Runtime libraries                      │
-│  → Allt i ett isolerat paket            │
-└─────────────────────────────────────────┘
++-----------------------------------------+
+|               Snap Package               |
++-----------------------------------------+
+|  Application                            |
+|  Dependencies                           |
+|  Runtime libraries                      |
+|  -> Allt i ett isolerat paket            |
++-----------------------------------------+
 ```
 
 ### Fördelar
@@ -12039,34 +12039,34 @@ RAID (Redundant Array of Independent Disks) ger redundans och/eller prestanda ge
 
 ```
 RAID 0 (Stripe)
-┌─────┐ ┌─────┐
-│ A1  │ │ A2  │  → Data delas över diskar
-│ A3  │ │ A4  │  → Snabbt, ingen redundans
-└─────┘ └─────┘  → En disk död = allt borta
++-----+ +-----+
+| A1  | | A2  |  -> Data delas över diskar
+| A3  | | A4  |  -> Snabbt, ingen redundans
++-----+ +-----+  -> En disk död = allt borta
 
 RAID 1 (Mirror)
-┌─────┐ ┌─────┐
-│ A1  │ │ A1  │  → Identiska kopior
-│ A2  │ │ A2  │  → 50% kapacitet, full redundans
-└─────┘ └─────┘  → En disk kan gå sönder
++-----+ +-----+
+| A1  | | A1  |  -> Identiska kopior
+| A2  | | A2  |  -> 50% kapacitet, full redundans
++-----+ +-----+  -> En disk kan gå sönder
 
 RAID 5 (Stripe + Parity)
-┌─────┐ ┌─────┐ ┌─────┐
-│ A1  │ │ A2  │ │ Ap  │  → Data + paritet
-│ B1  │ │ Bp  │ │ B2  │  → N-1 kapacitet
-│ Cp  │ │ C1  │ │ C2  │  → Tolererar 1 diskfel
-└─────┘ └─────┘ └─────┘
++-----+ +-----+ +-----+
+| A1  | | A2  | | Ap  |  -> Data + paritet
+| B1  | | Bp  | | B2  |  -> N-1 kapacitet
+| Cp  | | C1  | | C2  |  -> Tolererar 1 diskfel
++-----+ +-----+ +-----+
 
 RAID 6 (Stripe + Dual Parity)
-→ Som RAID 5 men tolererar 2 diskfel
-→ N-2 kapacitet
+-> Som RAID 5 men tolererar 2 diskfel
+-> N-2 kapacitet
 
 RAID 10 (1+0, Mirror + Stripe)
-┌───────────┐ ┌───────────┐
-│ ┌───┬───┐ │ │ ┌───┬───┐ │
-│ │A1 │A1 │ │ │ │A2 │A2 │ │  → Mirror + stripe
-│ └───┴───┘ │ │ └───┴───┘ │  → Bäst prestanda + redundans
-└───────────┘ └───────────┘  → 50% kapacitet
++-----------+ +-----------+
+| +---+---+ | | +---+---+ |
+| |A1 |A1 | | | |A2 |A2 | |  -> Mirror + stripe
+| +---+---+ | | +---+---+ |  -> Bäst prestanda + redundans
++-----------+ +-----------+  -> 50% kapacitet
 ```
 
 ## Jämförelse
@@ -12266,15 +12266,15 @@ Network bonding kombinerar flera nätverksgränssnitt för redundans och/eller �
 ## Vad är Bonding?
 
 ```
-┌─────────────┐
-│   Server    │
-├─────────────┤
-│   bond0     │  ← Virtuellt interface
-├──────┬──────┤
-│ eth0 │ eth1 │  ← Fysiska interface
-└──────┴──────┘
-       │   │
-       └───┴───→ Switch(ar)
++-------------+
+|   Server    |
++-------------+
+|   bond0     |  <- Virtuellt interface
++------+------+
+| eth0 | eth1 |  <- Fysiska interface
++------+------+
+       |   |
+       +---+----> Switch(ar)
 ```
 
 ## Bonding Modes
@@ -12293,12 +12293,12 @@ Network bonding kombinerar flera nätverksgränssnitt för redundans och/eller �
 
 ```
 Mode 1 (active-backup)
-→ Enklast, ingen switch-config
-→ Bara redundans, ingen extra bandbredd
+-> Enklast, ingen switch-config
+-> Bara redundans, ingen extra bandbredd
 
 Mode 4 (802.3ad LACP)
-→ Kräver switch som stödjer LACP
-→ Ger redundans + aggregerad bandbredd
+-> Kräver switch som stödjer LACP
+-> Ger redundans + aggregerad bandbredd
 ```
 
 ## Konfigurera med systemd-networkd
@@ -18234,12 +18234,12 @@ Version control är grunden för all modern mjukvaruutveckling. Utan det skulle 
 ### "Final" syndrome
 ```
 projekt/
-├── script.sh
-├── script_v2.sh
-├── script_v2_final.sh
-├── script_v2_final_FINAL.sh
-├── script_v2_final_FINAL_fixed.sh
-└── script_v2_final_FINAL_fixed_johns_version.sh
++-- script.sh
++-- script_v2.sh
++-- script_v2_final.sh
++-- script_v2_final_FINAL.sh
++-- script_v2_final_FINAL_fixed.sh
++-- script_v2_final_FINAL_fixed_johns_version.sh
 
 Vilket är den senaste? Vad ändrades? Vem ändrade?
 ```
@@ -18251,7 +18251,7 @@ Alice och Bob redigerar samma fil samtidigt.
 - Bob sparar kl 14:05 (skriver över Alices ändringar!)
 - Alices arbete är förlorat
 
-Med version control: Merge conflict → båda bidragen bevaras
+Med version control: Merge conflict -> båda bidragen bevaras
 ```
 
 ## Vad version control ger dig
@@ -18269,11 +18269,11 @@ Med version control: Merge conflict → båda bidragen bevaras
 
 ### Centralized (äldre)
 ```
-       ┌─────────────┐
-       │   Server    │  ← Single source of truth
-       │ (SVN, CVS)  │
-       └──────┬──────┘
-         ┌────┴────┐
+       +-------------+
+       |   Server    |  <- Single source of truth
+       | (SVN, CVS)  |
+       +------+------+
+         +----+----+
          ▼         ▼
       Alice      Bob
 
@@ -18282,17 +18282,17 @@ Problem: Server offline = ingen kan arbeta
 
 ### Distributed (modern - Git)
 ```
-       ┌─────────────┐
-       │   Remote    │  ← GitHub/GitLab
-       │  (origin)   │
-       └──────┬──────┘
-         ┌────┴────┐
+       +-------------+
+       |   Remote    |  <- GitHub/GitLab
+       |  (origin)   |
+       +------+------+
+         +----+----+
          ▼         ▼
-   ┌─────────┐ ┌─────────┐
-   │ Alice's │ │  Bob's  │
-   │  Full   │ │  Full   │  ← Komplett historia lokalt
-   │  Clone  │ │  Clone  │
-   └─────────┘ └─────────┘
+   +---------+ +---------+
+   | Alice's | |  Bob's  |
+   |  Full   | |  Full   |  <- Komplett historia lokalt
+   |  Clone  | |  Clone  |
+   +---------+ +---------+
 
 Fördel: Offline-arbete, snabbare, redundant
 ```
@@ -18314,7 +18314,7 @@ git blame main.tf
 
 ### GitOps
 ```
-Code changes → Git commit → CI/CD → Production
+Code changes -> Git commit -> CI/CD -> Production
 
 Git blir "source of truth" för:
 - Applikationskod
@@ -18354,7 +18354,7 @@ git init
 
 # Vad händer?
 ls -la
-# .git/  ← Git-databasen skapas
+# .git/  <- Git-databasen skapas
 
 # Eller klona befintligt
 git clone https://github.com/user/repo.git
@@ -18415,11 +18415,11 @@ git commit --amend -m "Better message"
 ## Arbetsflödet
 
 ```
-Working Directory → Staging Area → Repository
-      │                  │              │
-    git add ────────────►│              │
-                         │  git commit ─►│
-      │                  │              │
+Working Directory -> Staging Area -> Repository
+      |                  |              |
+    git add ------------►|              |
+                         |  git commit -►|
+      |                  |              |
    Untracked/         Staged         Committed
    Modified                          (safe)
 ```
@@ -18519,28 +18519,28 @@ Remotes gör Git distribuerat. De möjliggör samarbete, backup, och CI/CD. GitH
 ## Remote koncept
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    GitHub (origin)                       │
-│                                                         │
-│    main: A ─── B ─── C ─── D                            │
-└─────────────────────────────────────────────────────────┘
-                         │
-                         │ git clone / git fetch / git pull
++---------------------------------------------------------+
+|                    GitHub (origin)                       |
+|                                                         |
+|    main: A --- B --- C --- D                            |
++---------------------------------------------------------+
+                         |
+                         | git clone / git fetch / git pull
                          ▼
-┌─────────────────────────────────────────────────────────┐
-│                  Your Local Machine                      │
-│                                                         │
-│  origin/main: A ─── B ─── C ─── D  (remote-tracking)   │
-│                                                         │
-│        main: A ─── B ─── C ─── D ─── E  (local)        │
-│                                     └── din nya commit  │
-└─────────────────────────────────────────────────────────┘
-                         │
-                         │ git push
++---------------------------------------------------------+
+|                  Your Local Machine                      |
+|                                                         |
+|  origin/main: A --- B --- C --- D  (remote-tracking)   |
+|                                                         |
+|        main: A --- B --- C --- D --- E  (local)        |
+|                                     +-- din nya commit  |
++---------------------------------------------------------+
+                         |
+                         | git push
                          ▼
-┌─────────────────────────────────────────────────────────┐
-│    main: A ─── B ─── C ─── D ─── E  (uppdaterad!)      │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|    main: A --- B --- C --- D --- E  (uppdaterad!)      |
++---------------------------------------------------------+
 ```
 
 ## Hantera remotes
@@ -18713,23 +18713,23 @@ För att verkligen förstå Git måste du förstå dess interna datamodell. Git 
 ## De fyra objekttyperna
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              GIT OBJECT TYPES                                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  BLOB (Binary Large Object)                                     │
-│  └── Filinnehåll (ingen metadata, bara data)                   │
-│                                                                 │
-│  TREE                                                           │
-│  └── Katalogstruktur (pekar på blobs och andra trees)          │
-│                                                                 │
-│  COMMIT                                                         │
-│  └── Snapshot + metadata (author, message, parent)             │
-│                                                                 │
-│  TAG (annotated)                                                │
-│  └── Namngiven pekare till commit med metadata                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              GIT OBJECT TYPES                                   |
++-----------------------------------------------------------------+
+|                                                                 |
+|  BLOB (Binary Large Object)                                     |
+|  +-- Filinnehåll (ingen metadata, bara data)                   |
+|                                                                 |
+|  TREE                                                           |
+|  +-- Katalogstruktur (pekar på blobs och andra trees)          |
+|                                                                 |
+|  COMMIT                                                         |
+|  +-- Snapshot + metadata (author, message, parent)             |
+|                                                                 |
+|  TAG (annotated)                                                |
+|  +-- Namngiven pekare till commit med metadata                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Blob - Filinnehåll
@@ -18785,32 +18785,32 @@ git cat-file -p HEAD
 # Add hello.txt
 
 # Strukturen:
-# tree     → pekar på root tree för detta snapshot
-# parent   → pekar på föräldra-commit(s)
-# author   → vem skrev koden
-# committer→ vem committade (kan vara annan vid cherry-pick)
-# message  → commit-meddelande
+# tree     -> pekar på root tree för detta snapshot
+# parent   -> pekar på föräldra-commit(s)
+# author   -> vem skrev koden
+# committer-> vem committade (kan vara annan vid cherry-pick)
+# message  -> commit-meddelande
 ```
 
 ## Hur objekt hänger ihop
 
 ```
                     COMMIT (abc123)
-                    ├── tree: def456
-                    ├── parent: 789xyz
-                    ├── author: Alice
-                    └── message: "Add feature"
-                           │
+                    +-- tree: def456
+                    +-- parent: 789xyz
+                    +-- author: Alice
+                    +-- message: "Add feature"
+                           |
                            ▼
                     TREE (def456)
-                    ├── blob a1b2c3  README.md
-                    ├── blob d4e5f6  main.py
-                    └── tree g7h8i9  src/
-                                │
+                    +-- blob a1b2c3  README.md
+                    +-- blob d4e5f6  main.py
+                    +-- tree g7h8i9  src/
+                                |
                                 ▼
                          TREE (g7h8i9)
-                         ├── blob j0k1l2  app.py
-                         └── blob m3n4o5  utils.py
+                         +-- blob j0k1l2  app.py
+                         +-- blob m3n4o5  utils.py
 ```
 
 ## Content-addressable storage
@@ -18858,7 +18858,7 @@ ls .git/objects/
 - Samma innehåll = samma hash (deduplicering)
 
 ## Nästa steg
-→ References and HEAD
+-> References and HEAD
 """
             },
             {"title": "References and HEAD", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -18871,27 +18871,27 @@ SHA-1 hashar som `a5c19667710c39c44b97c1f10df7f66615c63b62` är omöjliga att ko
 ## Typer av references
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              REFERENCE TYPES                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  BRANCHES (refs/heads/)                                         │
-│  └── Flyttbar pekare till senaste commit på en branch          │
-│      main → abc123                                              │
-│      feature/login → def456                                     │
-│                                                                 │
-│  TAGS (refs/tags/)                                              │
-│  └── Fast pekare till specifik commit                          │
-│      v1.0.0 → 789xyz (rör sig aldrig)                          │
-│                                                                 │
-│  REMOTES (refs/remotes/)                                        │
-│  └── Lokala kopior av remote branches                          │
-│      origin/main → abc123                                       │
-│                                                                 │
-│  HEAD                                                           │
-│  └── Pekar på aktuell branch (eller commit vid detached)       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              REFERENCE TYPES                                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|  BRANCHES (refs/heads/)                                         |
+|  +-- Flyttbar pekare till senaste commit på en branch          |
+|      main -> abc123                                              |
+|      feature/login -> def456                                     |
+|                                                                 |
+|  TAGS (refs/tags/)                                              |
+|  +-- Fast pekare till specifik commit                          |
+|      v1.0.0 -> 789xyz (rör sig aldrig)                          |
+|                                                                 |
+|  REMOTES (refs/remotes/)                                        |
+|  +-- Lokala kopior av remote branches                          |
+|      origin/main -> abc123                                       |
+|                                                                 |
+|  HEAD                                                           |
+|  +-- Pekar på aktuell branch (eller commit vid detached)       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## HEAD - Var du är nu
@@ -18958,11 +18958,11 @@ v1.0.0^   # Parent till tagged commit
 ## Detached HEAD
 
 ```bash
-# Normal: HEAD → branch → commit
+# Normal: HEAD -> branch -> commit
 cat .git/HEAD
 # ref: refs/heads/main
 
-# Detached: HEAD → commit direkt
+# Detached: HEAD -> commit direkt
 git checkout a5c1966
 # You are in 'detached HEAD' state...
 
@@ -19038,7 +19038,7 @@ git reset --hard ORIG_HEAD  # Ångra!
 - `^` och `~` för relativa referenser
 
 ## Nästa steg
-→ Index (staging area)
+-> Index (staging area)
 """
             },
             {"title": "Index (staging area)", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -19051,26 +19051,26 @@ Index (även kallat staging area eller cache) är mellansteget mellan working di
 ## Tre tillstånd
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              GIT'S THREE TREES                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  WORKING DIRECTORY        INDEX              HEAD               │
-│  (Working Tree)           (Staging Area)     (Repository)       │
-│                                                                 │
-│  ┌───────────────┐       ┌───────────────┐  ┌───────────────┐  │
-│  │ Dina filer    │ ──▶   │ Förberedda    │  │ Senaste       │  │
-│  │ på disk       │ add   │ ändringar     │  │ commit        │  │
-│  │               │       │               │  │               │  │
-│  └───────────────┘       └───────────────┘  └───────────────┘  │
-│                                    │ commit      │              │
-│                                    └─────────────┘              │
-│                                                                 │
-│  git add         → Working → Index                              │
-│  git commit      → Index → HEAD                                 │
-│  git checkout    → HEAD → Working                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              GIT'S THREE TREES                                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|  WORKING DIRECTORY        INDEX              HEAD               |
+|  (Working Tree)           (Staging Area)     (Repository)       |
+|                                                                 |
+|  +---------------+       +---------------+  +---------------+  |
+|  | Dina filer    | --▶   | Förberedda    |  | Senaste       |  |
+|  | på disk       | add   | ändringar     |  | commit        |  |
+|  |               |       |               |  |               |  |
+|  +---------------+       +---------------+  +---------------+  |
+|                                    | commit      |              |
+|                                    +-------------+              |
+|                                                                 |
+|  git add         -> Working -> Index                              |
+|  git commit      -> Index -> HEAD                                 |
+|  git checkout    -> HEAD -> Working                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Index-filen
@@ -19211,14 +19211,14 @@ git update-index --no-skip-worktree config/secrets.yaml
 
 ## Sammanfattning
 - **Index** = mellansteg mellan working dir och repo
-- `git add` = working dir → index
-- `git commit` = index → repository
+- `git add` = working dir -> index
+- `git commit` = index -> repository
 - `git add -p` = partial staging (välj hunks)
 - `git diff --staged` = visa vad som kommer committas
 - Stage-nummer 1/2/3 vid merge-konflikter
 
 ## Nästa steg
-→ Packfiles and garbage collection
+-> Packfiles and garbage collection
 """
             },
             {"title": "Packfiles and garbage collection", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -19231,23 +19231,23 @@ Git lagrar initialt varje objekt som en separat fil (loose objects). Med tiden b
 ## Loose Objects vs Packfiles
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              OBJECT STORAGE                                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  LOOSE OBJECTS                   PACKFILES                      │
-│  .git/objects/                   .git/objects/pack/             │
-│  ├── a5/                         ├── pack-abc123.pack           │
-│  │   └── c19667...               └── pack-abc123.idx            │
-│  ├── b6/                                                        │
-│  │   └── d2a77e...               Innehåller många objekt        │
-│  └── c7/                         komprimerade tillsammans       │
-│      └── e3b88a...               med delta-encoding             │
-│                                                                 │
-│  En fil per objekt               Tusentals objekt per fil       │
-│  Snabbt att skriva               Snabbt att läsa                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              OBJECT STORAGE                                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  LOOSE OBJECTS                   PACKFILES                      |
+|  .git/objects/                   .git/objects/pack/             |
+|  +-- a5/                         +-- pack-abc123.pack           |
+|  |   +-- c19667...               +-- pack-abc123.idx            |
+|  +-- b6/                                                        |
+|  |   +-- d2a77e...               Innehåller många objekt        |
+|  +-- c7/                         komprimerade tillsammans       |
+|      +-- e3b88a...               med delta-encoding             |
+|                                                                 |
+|  En fil per objekt               Tusentals objekt per fil       |
+|  Snabbt att skriva               Snabbt att läsa                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Delta Encoding
@@ -19392,15 +19392,15 @@ git lfs track "*.psd"
 ```bash
 # Komplett struktur
 .git/objects/
-├── 00/                    # Första 2 tecken av hash
-│   └── abc123...          # Resten av hash (loose object)
-├── a5/
-│   └── c19667...
-├── info/
-│   └── packs              # Lista över packfiles
-└── pack/
-    ├── pack-abc123.idx    # Index (binär)
-    └── pack-abc123.pack   # Data (komprimerad)
++-- 00/                    # Första 2 tecken av hash
+|   +-- abc123...          # Resten av hash (loose object)
++-- a5/
+|   +-- c19667...
++-- info/
+|   +-- packs              # Lista över packfiles
++-- pack/
+    +-- pack-abc123.idx    # Index (binär)
+    +-- pack-abc123.pack   # Data (komprimerad)
 ```
 
 ## Sammanfattning
@@ -19412,7 +19412,7 @@ git lfs track "*.psd"
 - **Reflog** = håller objekt levande 90 dagar
 
 ## Nästa steg
-→ Feature branches
+-> Feature branches
 """
             },
             {"title": "Feature branches", "difficulty": "easy", "estimated_minutes": 20, "xp_reward": 35,
@@ -19576,7 +19576,7 @@ git merge origin/main
 - Använd Pull Requests för code review
 
 ## Nästa steg
-→ GitFlow workflow
+-> GitFlow workflow
 """
             },
             {"title": "GitFlow workflow", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -19594,17 +19594,17 @@ GitFlow är en strikt branching-modell som passar projekt med:
 
 ```
 main (production)
-│
-├── develop (integration)
-│   │
-│   ├── feature/login
-│   ├── feature/dashboard
-│   └── feature/api
-│
-├── release/1.0
-├── release/1.1
-│
-└── hotfix/security-patch
+|
++-- develop (integration)
+|   |
+|   +-- feature/login
+|   +-- feature/dashboard
+|   +-- feature/api
+|
++-- release/1.0
++-- release/1.1
+|
++-- hotfix/security-patch
 ```
 
 ## Permanenta branches
@@ -19755,19 +19755,19 @@ git flow hotfix finish payment-crash
 ## Visualisering
 
 ```
-main:    ──●────────────────●───────●──────●──
-           │                ↑       ↑      ↑
-           │                │       │      │
-release:   │         ──●────●       │      │
-           │         ↑              │      │
-           │         │              │      │
-hotfix:    │         │              │  ────●
-           │         │              │  ↑
-           ↓         │              │  │
-develop: ──●────●────●──────────────●──●────
+main:    --●----------------●-------●------●--
+           |                ↑       ↑      ↑
+           |                |       |      |
+release:   |         --●----●       |      |
+           |         ↑              |      |
+           |         |              |      |
+hotfix:    |         |              |  ----●
+           |         |              |  ↑
+           ↓         |              |  |
+develop: --●----●----●--------------●--●----
                ↑
-               │
-feature:   ────●
+               |
+feature:   ----●
 ```
 
 ## När använda GitFlow?
@@ -19793,7 +19793,7 @@ feature:   ────●
 - Använd `--no-ff` för merge-commits
 
 ## Nästa steg
-→ Trunk-based development
+-> Trunk-based development
 """
             },
             {"title": "Trunk-based development", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -20042,7 +20042,7 @@ git push origin v1.5.0
 - Passar continuous deployment
 
 ## Nästa steg
-→ Release branches
+-> Release branches
 """
             },
             {"title": "Release branches", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -20279,7 +20279,7 @@ gh release create v2.0.0 \
 - Ta bort branch efter release
 
 ## Nästa steg
-→ Hotfix management
+-> Hotfix management
 """
             },
             {"title": "Hotfix management", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -20537,7 +20537,7 @@ curl -X POST $SLACK_WEBHOOK -H 'Content-type: application/json' \
 - Dokumentera och kommunicera
 
 ## Nästa steg
-→ Interactive rebase
+-> Interactive rebase
 """
             },
             {"title": "Interactive rebase", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -20793,7 +20793,7 @@ git log --oneline
 - ⚠️ Ändra ALDRIG delad historik!
 
 ## Nästa steg
-→ Cherry-picking
+-> Cherry-picking
 """
             },
             {"title": "Cherry-picking", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -21001,7 +21001,7 @@ git push origin release/1.x --tags
 - Lös konflikter som vid vanlig merge
 
 ## Nästa steg
-→ Bisect for debugging
+-> Bisect for debugging
 """
             },
             {"title": "Bisect for debugging", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -21236,7 +21236,7 @@ git bisect run ./test-login.sh
 - `git bisect reset` avslutar och återställer
 
 ## Nästa steg
-→ Reflog and recovery
+-> Reflog and recovery
 """
             },
             {"title": "Reflog and recovery", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -21481,7 +21481,7 @@ git reset --hard ORIG_HEAD
 - `git fsck` hittar dangling commits
 
 ## Nästa steg
-→ Submodules and subtrees
+-> Submodules and subtrees
 """
             },
             {"title": "Submodules and subtrees", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -21658,7 +21658,7 @@ git push library-remote library-split:main
 
 ```
                     Submodule             Subtree
-──────────────────────────────────────────────────────
+------------------------------------------------------
 Struktur            Referens (.gitmodules) Kopierad kod
 Klona               Kräver --recurse       Automatiskt
 Uppdatera           Explicit submodule cmd git subtree pull
@@ -21729,7 +21729,7 @@ git commit -m "Update shared-ui"
 - Kopierar kod direkt
 
 ## Nästa steg
-→ Pull requests and code review
+-> Pull requests and code review
 """
             },
             {"title": "Pull requests and code review", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -21993,7 +21993,7 @@ Dockerfile @devops-team
 - Använd PR-templates och CODEOWNERS
 
 ## Nästa steg
-→ Branch protection rules
+-> Branch protection rules
 """
             },
             {"title": "Branch protection rules", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -22231,7 +22231,7 @@ git push origin main
 - Enforce för admins också!
 
 ## Nästa steg
-→ Merge strategies
+-> Merge strategies
 """
             },
             {"title": "Merge strategies (merge, squash, rebase)", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -22464,7 +22464,7 @@ Closes #100, #101, #102
 | Rebase | Linjär, alla commits | Små team, atomic commits |
 
 ## Nästa steg
-→ Conflict resolution
+-> Conflict resolution
 """
             },
             {"title": "Conflict resolution", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -22716,7 +22716,7 @@ git push --force-with-lease
 - Förebygg med små branches och kommunikation
 
 ## Nästa steg
-→ Git hooks
+-> Git hooks
 """
             },
             {"title": "Git hooks", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -22735,19 +22735,19 @@ Git hooks är scripts som körs automatiskt vid Git-events:
 ```bash
 # Client-side hooks (körs lokalt)
 .git/hooks/
-├── pre-commit        # Innan commit skapas
-├── prepare-commit-msg # Före commit message editor
-├── commit-msg        # Validera commit message
-├── post-commit       # Efter commit
-├── pre-push          # Innan push
-├── pre-rebase        # Innan rebase
-├── post-merge        # Efter merge
-├── post-checkout     # Efter checkout
++-- pre-commit        # Innan commit skapas
++-- prepare-commit-msg # Före commit message editor
++-- commit-msg        # Validera commit message
++-- post-commit       # Efter commit
++-- pre-push          # Innan push
++-- pre-rebase        # Innan rebase
++-- post-merge        # Efter merge
++-- post-checkout     # Efter checkout
 
 # Server-side hooks (på Git-server)
-├── pre-receive       # Innan refs uppdateras
-├── update            # Per branch som uppdateras
-├── post-receive      # Efter refs uppdateras
++-- pre-receive       # Innan refs uppdateras
++-- update            # Per branch som uppdateras
++-- post-receive      # Efter refs uppdateras
 ```
 
 ## Skapa en hook
@@ -23027,7 +23027,7 @@ git commit -m "chore: add git hooks with husky"
 - `--no-verify` för nödfall
 
 ## Nästa steg
-→ GitHub Issues and Projects
+-> GitHub Issues and Projects
 """
             },
             {"title": "GitHub Issues and Projects", "difficulty": "easy", "estimated_minutes": 25, "xp_reward": 35,
@@ -23327,7 +23327,7 @@ gh project item-add 1 --owner "@me" --url "https://github.com/org/repo/issues/12
 - Automations sparar tid
 
 ## Nästa steg
-→ GitHub Actions basics
+-> GitHub Actions basics
 """
             },
             {"title": "GitHub Actions basics", "difficulty": "medium", "estimated_minutes": 35, "xp_reward": 55,
@@ -23649,7 +23649,7 @@ steps:
 - Secrets för känslig data
 
 ## Nästa steg
-→ GitHub CLI
+-> GitHub CLI
 """
             },
             {"title": "GitHub CLI", "difficulty": "easy", "estimated_minutes": 20, "xp_reward": 35,
@@ -23932,7 +23932,7 @@ gh pr merge --squash --delete-branch
 - `gh api` - direkta API-anrop
 
 ## Nästa steg
-→ Lab: Git Internals Exploration
+-> Lab: Git Internals Exploration
 """
             },
         ],
@@ -23978,30 +23978,30 @@ Du kan redan Bash och Shell-scripting. **Varför behöver du Python?** Svaret ä
 ## Bash vs Python: När använder du vad?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    BASH vs PYTHON                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ANVÄND BASH NÄR:                ANVÄND PYTHON NÄR:             │
-│  ───────────────                 ──────────────────             │
-│                                                                 │
-│  ✅ Enkla file operations        ✅ API-integrationer            │
-│  ✅ Köra system commands         ✅ Komplex logik                │
-│  ✅ Snabba one-liners            ✅ Data parsing (JSON, YAML)    │
-│  ✅ Pipeline chaining            ✅ Error handling               │
-│  ✅ < 50 rader                   ✅ Unit testing                 │
-│                                  ✅ Objektorienterad design      │
-│                                  ✅ Cloud SDK (boto3, etc)       │
-│                                                                 │
-│  EXEMPEL BASH:                   EXEMPEL PYTHON:                │
-│  ────────────                    ──────────────                 │
-│  grep error /var/log/syslog      AWS Lambda functions           │
-│  for f in *.txt; do mv...        Terraform wrappers             │
-│  curl | jq                       Kubernetes operators           │
-│  cron job wrapper                Monitoring/alerting            │
-│                                  CI/CD pipeline tools           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    BASH vs PYTHON                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ANVÄND BASH NÄR:                ANVÄND PYTHON NÄR:             |
+|  ---------------                 ------------------             |
+|                                                                 |
+|  ✅ Enkla file operations        ✅ API-integrationer            |
+|  ✅ Köra system commands         ✅ Komplex logik                |
+|  ✅ Snabba one-liners            ✅ Data parsing (JSON, YAML)    |
+|  ✅ Pipeline chaining            ✅ Error handling               |
+|  ✅ < 50 rader                   ✅ Unit testing                 |
+|                                  ✅ Objektorienterad design      |
+|                                  ✅ Cloud SDK (boto3, etc)       |
+|                                                                 |
+|  EXEMPEL BASH:                   EXEMPEL PYTHON:                |
+|  ------------                    --------------                 |
+|  grep error /var/log/syslog      AWS Lambda functions           |
+|  for f in *.txt; do mv...        Terraform wrappers             |
+|  curl | jq                       Kubernetes operators           |
+|  cron job wrapper                Monitoring/alerting            |
+|                                  CI/CD pipeline tools           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Varför Python dominerar DevOps
@@ -24068,35 +24068,35 @@ for reservation in response['Reservations']:
 ### 4. Real-world DevOps Python användning
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 PYTHON I DEVOPS-VÄRLDEN                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  AUTOMATION SCRIPTS                                             │
-│  ├── Rotera secrets i Vault                                     │
-│  ├── Cleanup gamla ECR images                                   │
-│  ├── Synka DNS records                                          │
-│  └── Backup verification                                        │
-│                                                                 │
-│  CUSTOM TOOLING                                                 │
-│  ├── Internal CLI tools (Click, Typer)                          │
-│  ├── Slack bots för on-call                                     │
-│  ├── Cost reporting dashboards                                  │
-│  └── Deployment pipelines                                       │
-│                                                                 │
-│  INFRASTRUCTURE                                                 │
-│  ├── AWS CDK (Python)                                           │
-│  ├── Pulumi (Python)                                            │
-│  ├── Custom Terraform wrappers                                  │
-│  └── Kubernetes operators                                       │
-│                                                                 │
-│  OBSERVABILITY                                                  │
-│  ├── Log parsing och aggregation                                │
-│  ├── Custom Prometheus exporters                                │
-│  ├── Alert enrichment                                           │
-│  └── Runbook automation                                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 PYTHON I DEVOPS-VÄRLDEN                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  AUTOMATION SCRIPTS                                             |
+|  +-- Rotera secrets i Vault                                     |
+|  +-- Cleanup gamla ECR images                                   |
+|  +-- Synka DNS records                                          |
+|  +-- Backup verification                                        |
+|                                                                 |
+|  CUSTOM TOOLING                                                 |
+|  +-- Internal CLI tools (Click, Typer)                          |
+|  +-- Slack bots för on-call                                     |
+|  +-- Cost reporting dashboards                                  |
+|  +-- Deployment pipelines                                       |
+|                                                                 |
+|  INFRASTRUCTURE                                                 |
+|  +-- AWS CDK (Python)                                           |
+|  +-- Pulumi (Python)                                            |
+|  +-- Custom Terraform wrappers                                  |
+|  +-- Kubernetes operators                                       |
+|                                                                 |
+|  OBSERVABILITY                                                  |
+|  +-- Log parsing och aggregation                                |
+|  +-- Custom Prometheus exporters                                |
+|  +-- Alert enrichment                                           |
+|  +-- Runbook automation                                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vad du kommer lära dig i denna modul
@@ -26835,72 +26835,72 @@ Enligt NIST (National Institute of Standards and Technology):
 ### Fem essentiella egenskaper
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 CLOUD COMPUTING EGENSKAPER                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. ON-DEMAND SELF-SERVICE                                      │
-│     Provisioning utan mänsklig interaktion                      │
-│     "Klicka och få resurser inom sekunder"                      │
-│                                                                 │
-│  2. BROAD NETWORK ACCESS                                        │
-│     Tillgängligt över nätverket via standardmekanismer          │
-│     "Från laptop, mobil, eller annan molntjänst"                │
-│                                                                 │
-│  3. RESOURCE POOLING                                            │
-│     Delade resurser, multi-tenant modell                        │
-│     "Du vet inte exakt vilken fysisk server du använder"        │
-│                                                                 │
-│  4. RAPID ELASTICITY                                            │
-│     Skala upp/ner snabbt efter behov                            │
-│     "Black Friday? 10x kapacitet på 5 minuter"                  │
-│                                                                 │
-│  5. MEASURED SERVICE                                            │
-│     Pay-as-you-go, betala för vad du använder                   │
-│     "Stäng av servrar på natten, betala 0 kr"                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 CLOUD COMPUTING EGENSKAPER                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. ON-DEMAND SELF-SERVICE                                      |
+|     Provisioning utan mänsklig interaktion                      |
+|     "Klicka och få resurser inom sekunder"                      |
+|                                                                 |
+|  2. BROAD NETWORK ACCESS                                        |
+|     Tillgängligt över nätverket via standardmekanismer          |
+|     "Från laptop, mobil, eller annan molntjänst"                |
+|                                                                 |
+|  3. RESOURCE POOLING                                            |
+|     Delade resurser, multi-tenant modell                        |
+|     "Du vet inte exakt vilken fysisk server du använder"        |
+|                                                                 |
+|  4. RAPID ELASTICITY                                            |
+|     Skala upp/ner snabbt efter behov                            |
+|     "Black Friday? 10x kapacitet på 5 minuter"                  |
+|                                                                 |
+|  5. MEASURED SERVICE                                            |
+|     Pay-as-you-go, betala för vad du använder                   |
+|     "Stäng av servrar på natten, betala 0 kr"                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Service Models: IaaS, PaaS, SaaS
 
 ```
-                    ABSTRAKTION →
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│  ON-PREMISES     IaaS          PaaS          SaaS               │
-│  ───────────     ────          ────          ────               │
-│                                                                 │
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐    │
-│  │Application│  │Application│  │Application│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │  Data     │  │  Data     │  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │  Runtime  │  │  Runtime  │  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │ Middleware│  │ Middleware│  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │   OS      │  │███████████│  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │ Virtualis.│  │███████████│  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │  Servers  │  │███████████│  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │  Storage  │  │███████████│  │███████████│  │███████████│    │
-│  ├───────────┤  ├───────────┤  ├───────────┤  ├───────────┤    │
-│  │ Networking│  │███████████│  │███████████│  │███████████│    │
-│  └───────────┘  └───────────┘  └───────────┘  └───────────┘    │
-│                                                                 │
-│  Du hanterar      Du hanterar    Du hanterar    Leverantören    │
-│  ALLT             App + Data     Bara App       hanterar ALLT   │
-│                                                                 │
-│  Exempel:         Exempel:       Exempel:       Exempel:        │
-│  - Eget DC        - AWS EC2      - Heroku       - Gmail         │
-│                   - Azure VMs    - AWS Lambda   - Salesforce    │
-│                                  - App Engine   - Office 365    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-████ = Hanteras av molnleverantören
+                    ABSTRAKTION ->
++-----------------------------------------------------------------+
+|                                                                 |
+|  ON-PREMISES     IaaS          PaaS          SaaS               |
+|  -----------     ----          ----          ----               |
+|                                                                 |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  |Application|  |Application|  |Application|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  |  Data     |  |  Data     |  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  |  Runtime  |  |  Runtime  |  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  | Middleware|  | Middleware|  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  |   OS      |  |###########|  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  | Virtualis.|  |###########|  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  |  Servers  |  |###########|  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  |  Storage  |  |###########|  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|  | Networking|  |###########|  |###########|  |###########|    |
+|  +-----------+  +-----------+  +-----------+  +-----------+    |
+|                                                                 |
+|  Du hanterar      Du hanterar    Du hanterar    Leverantören    |
+|  ALLT             App + Data     Bara App       hanterar ALLT   |
+|                                                                 |
+|  Exempel:         Exempel:       Exempel:       Exempel:        |
+|  - Eget DC        - AWS EC2      - Heroku       - Gmail         |
+|                   - Azure VMs    - AWS Lambda   - Salesforce    |
+|                                  - App Engine   - Office 365    |
+|                                                                 |
++-----------------------------------------------------------------+
+#### = Hanteras av molnleverantören
 ```
 
 ## Deployment Models
@@ -26916,11 +26916,11 @@ Enligt NIST (National Institute of Standards and Technology):
 
 ```
                      ON-PREMISES                    CLOUD
-                     ───────────                    ─────
-CAPEX               ████████████████████           ░░░░
+                     -----------                    -----
+CAPEX               ####################           ░░░░
 (Initialkostnad)    Köpa servrar, DC
 
-OPEX                ████████                       ████████████████
+OPEX                ########                       ################
 (Driftkostnad)      Personal, el, underhåll       Pay-as-you-go
 
 Time to Market      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ▓▓▓▓
@@ -26929,10 +26929,10 @@ Time to Market      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 Skalning            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓                ▓▓
                     Planera, köpa, installera     API-anrop
 
-Kontroll            ████████████████████          ████████████
+Kontroll            ####################          ############
                     Full kontroll                 Begränsad
 
-Compliance          ████████████████████          ████████████████
+Compliance          ####################          ################
                     Du äger allt                  Shared responsibility
 ```
 
@@ -26941,19 +26941,19 @@ Compliance          ████████████████████
 AWS erbjuder alla tre service models:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        AWS TJÄNSTER                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  IaaS               PaaS                  "Managed Services"    │
-│  ────               ────                  ─────────────────     │
-│  EC2                Lambda                RDS                   │
-│  EBS                Elastic Beanstalk     DynamoDB              │
-│  VPC                App Runner            ElastiCache           │
-│  S3 (storage)       Fargate               OpenSearch            │
-│                                           SQS, SNS              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                        AWS TJÄNSTER                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  IaaS               PaaS                  "Managed Services"    |
+|  ----               ----                  -----------------     |
+|  EC2                Lambda                RDS                   |
+|  EBS                Elastic Beanstalk     DynamoDB              |
+|  VPC                App Runner            ElastiCache           |
+|  S3 (storage)       Fargate               OpenSearch            |
+|                                           SQS, SNS              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Övning
@@ -27005,30 +27005,30 @@ AWS global infrastruktur är grunden för all molnarkitektur. Att välja rätt r
 ## AWS Global Infrastructure Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AWS GLOBAL INFRASTRUCTURE                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  REGION (eu-north-1, Stockholm)                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                                                         │   │
-│  │  AVAILABILITY ZONE 1     AZ 2           AZ 3            │   │
-│  │  ┌─────────────────┐  ┌─────────────┐  ┌─────────────┐  │   │
-│  │  │ Data Center(s)  │  │ Data Center │  │ Data Center │  │   │
-│  │  │ ┌───┐ ┌───┐    │  │ ┌───┐ ┌───┐ │  │ ┌───┐ ┌───┐ │  │   │
-│  │  │ │EC2│ │RDS│    │  │ │EC2│ │RDS│ │  │ │EC2│ │RDS│ │  │   │
-│  │  │ └───┘ └───┘    │  │ └───┘ └───┘ │  │ └───┘ └───┘ │  │   │
-│  │  └────────┬───────┘  └──────┬──────┘  └──────┬──────┘  │   │
-│  │           │                 │                │         │   │
-│  │           └────── Hög-hastighets fiber ──────┘         │   │
-│  │                   (< 2ms latens mellan AZs)            │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  EDGE LOCATIONS (200+ globalt)                                  │
-│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐                               │
-│  │ CDN │ │ CDN │ │ CDN │ │ CDN │  ← CloudFront, Route 53       │
-│  └─────┘ └─────┘ └─────┘ └─────┘                               │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AWS GLOBAL INFRASTRUCTURE                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|  REGION (eu-north-1, Stockholm)                                 |
+|  +---------------------------------------------------------+   |
+|  |                                                         |   |
+|  |  AVAILABILITY ZONE 1     AZ 2           AZ 3            |   |
+|  |  +-----------------+  +-------------+  +-------------+  |   |
+|  |  | Data Center(s)  |  | Data Center |  | Data Center |  |   |
+|  |  | +---+ +---+    |  | +---+ +---+ |  | +---+ +---+ |  |   |
+|  |  | |EC2| |RDS|    |  | |EC2| |RDS| |  | |EC2| |RDS| |  |   |
+|  |  | +---+ +---+    |  | +---+ +---+ |  | +---+ +---+ |  |   |
+|  |  +--------+-------+  +------+------+  +------+------+  |   |
+|  |           |                 |                |         |   |
+|  |           +------ Hög-hastighets fiber ------+         |   |
+|  |                   (< 2ms latens mellan AZs)            |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  EDGE LOCATIONS (200+ globalt)                                  |
+|  +-----+ +-----+ +-----+ +-----+                               |
+|  | CDN | | CDN | | CDN | | CDN |  <- CloudFront, Route 53       |
+|  +-----+ +-----+ +-----+ +-----+                               |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg
@@ -27081,18 +27081,18 @@ aws ec2 describe-availability-zones --region eu-north-1 --output table
 
 ```
 Region naming convention:
-─────────────────────────
+-------------------------
 eu-north-1
-│  │     │
-│  │     └── Nummer (1, 2, 3...)
-│  └──────── Geografisk riktning (north, west, central)
-└─────────── Kontinent (eu, us, ap, sa, af, me)
+|  |     |
+|  |     +-- Nummer (1, 2, 3...)
+|  +-------- Geografisk riktning (north, west, central)
++----------- Kontinent (eu, us, ap, sa, af, me)
 
 AZ naming:
-──────────
+----------
 eu-north-1a
-          │
-          └── Zon-suffix (a, b, c, d...)
+          |
+          +-- Zon-suffix (a, b, c, d...)
 
 OBS: AZ-suffix är KONTO-SPECIFIKA!
      Din "eu-north-1a" kan vara ett annat datacenter
@@ -27103,9 +27103,9 @@ OBS: AZ-suffix är KONTO-SPECIFIKA!
 
 | Faktor | Fråga att ställa | Exempel |
 |--------|------------------|---------|
-| **Latens** | Var är dina användare? | Svenska användare → eu-north-1 |
-| **Compliance** | Var måste data lagras? | GDPR → EU-region |
-| **Tjänster** | Finns tjänsten i regionen? | Nya tjänster → us-east-1 först |
+| **Latens** | Var är dina användare? | Svenska användare -> eu-north-1 |
+| **Compliance** | Var måste data lagras? | GDPR -> EU-region |
+| **Tjänster** | Finns tjänsten i regionen? | Nya tjänster -> us-east-1 först |
 | **Kostnad** | Hur mycket kostar det? | us-east-1 ofta billigast |
 | **Disaster Recovery** | Behöver du multi-region? | Välj regioner långt isär |
 
@@ -27121,32 +27121,32 @@ aws ssm get-parameters-by-path \\
 ## Multi-AZ Design Pattern
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    HIGH AVAILABILITY SETUP                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│                    ┌──────────────────┐                         │
-│                    │  Load Balancer   │                         │
-│                    │     (ALB)        │                         │
-│                    └────────┬─────────┘                         │
-│                             │                                   │
-│              ┌──────────────┼──────────────┐                    │
-│              │              │              │                    │
-│              ▼              ▼              ▼                    │
-│         ┌────────┐    ┌────────┐    ┌────────┐                  │
-│         │  EC2   │    │  EC2   │    │  EC2   │                  │
-│         │ AZ-1a  │    │ AZ-1b  │    │ AZ-1c  │                  │
-│         └────────┘    └────────┘    └────────┘                  │
-│                                                                 │
-│  Om en AZ går ner → Trafik dirigeras automatiskt till andra     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    HIGH AVAILABILITY SETUP                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|                    +------------------+                         |
+|                    |  Load Balancer   |                         |
+|                    |     (ALB)        |                         |
+|                    +--------+---------+                         |
+|                             |                                   |
+|              +--------------+--------------+                    |
+|              |              |              |                    |
+|              ▼              ▼              ▼                    |
+|         +--------+    +--------+    +--------+                  |
+|         |  EC2   |    |  EC2   |    |  EC2   |                  |
+|         | AZ-1a  |    | AZ-1b  |    | AZ-1c  |                  |
+|         +--------+    +--------+    +--------+                  |
+|                                                                 |
+|  Om en AZ går ner -> Trafik dirigeras automatiskt till andra     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
 
 ### Problem: "Region not enabled"
-**Lösning:** Vissa regioner är opt-in. Aktivera i AWS Console → Account → Regions.
+**Lösning:** Vissa regioner är opt-in. Aktivera i AWS Console -> Account -> Regions.
 
 ### Problem: Hög latens trots rätt region
 **Lösning:** Använd CloudFront Edge Locations för statiskt content.
@@ -27171,7 +27171,7 @@ Du ska se: `"available"` för båda regionerna.
 - Designa alltid för multi-AZ för hög tillgänglighet
 
 ## Nästa steg
-→ Account setup and Organizations
+-> Account setup and Organizations
 """
             },
             {"title": "Account setup and Organizations", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -27195,32 +27195,32 @@ Ett enda AWS-konto för allt är ett recept för katastrof. AWS Organizations l�
 ### Root User vs IAM User
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AWS ACCOUNT STRUKTUR                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ROOT USER (email + lösenord)                                   │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  ⚠️  FULL ACCESS - KAN GÖRA ALLT                        │   │
-│  │  • Ändra betalningsinformation                          │   │
-│  │  • Stänga kontot                                        │   │
-│  │  • Ändra support-plan                                   │   │
-│  │                                                         │   │
-│  │  🔒 ANVÄND ENDAST FÖR:                                  │   │
-│  │  • Initial setup                                        │   │
-│  │  • Nödsituationer                                       │   │
-│  │  • Tasks som KRÄVER root                                │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                         │                                       │
-│                         ▼                                       │
-│  IAM USERS (för dagligt arbete)                                │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  👤 Admin-user     → AdministratorAccess                │   │
-│  │  👤 Developer-user → PowerUserAccess                    │   │
-│  │  👤 Readonly-user  → ReadOnlyAccess                     │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AWS ACCOUNT STRUKTUR                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ROOT USER (email + lösenord)                                   |
+|  +---------------------------------------------------------+   |
+|  |  ⚠️  FULL ACCESS - KAN GÖRA ALLT                        |   |
+|  |  • Ändra betalningsinformation                          |   |
+|  |  • Stänga kontot                                        |   |
+|  |  • Ändra support-plan                                   |   |
+|  |                                                         |   |
+|  |  🔒 ANVÄND ENDAST FÖR:                                  |   |
+|  |  • Initial setup                                        |   |
+|  |  • Nödsituationer                                       |   |
+|  |  • Tasks som KRÄVER root                                |   |
+|  +---------------------------------------------------------+   |
+|                         |                                       |
+|                         ▼                                       |
+|  IAM USERS (för dagligt arbete)                                |
+|  +---------------------------------------------------------+   |
+|  |  👤 Admin-user     -> AdministratorAccess                |   |
+|  |  👤 Developer-user -> PowerUserAccess                    |   |
+|  |  👤 Readonly-user  -> ReadOnlyAccess                     |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Säkra ditt konto
@@ -27230,7 +27230,7 @@ Ett enda AWS-konto för allt är ett recept för katastrof. AWS Organizations l�
 ```bash
 # Detta måste göras via Console
 # 1. Logga in som root på console.aws.amazon.com
-# 2. Gå till: Account → Security credentials
+# 2. Gå till: Account -> Security credentials
 # 3. Klicka "Assign MFA device"
 # 4. Välj "Authenticator app"
 # 5. Skanna QR-kod med Google Authenticator / Authy
@@ -27289,49 +27289,49 @@ aws sns subscribe \\
 ### Varför multi-account?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 SINGLE ACCOUNT (DÅLIGT)                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌───────────────────────────────────────────────────────┐     │
-│  │                    ETT KONTO                          │     │
-│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐     │     │
-│  │  │   DEV   │ │ STAGING │ │  PROD   │ │ SANDBOX │     │     │
-│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘     │     │
-│  │                                                       │     │
-│  │  ❌ Svårt att separera kostnader                      │     │
-│  │  ❌ En bugg i dev kan påverka prod                    │     │
-│  │  ❌ Komplexa IAM-policies                             │     │
-│  │  ❌ Svårt att ge begränsad access                     │     │
-│  └───────────────────────────────────────────────────────┘     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 SINGLE ACCOUNT (DÅLIGT)                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +-------------------------------------------------------+     |
+|  |                    ETT KONTO                          |     |
+|  |  +---------+ +---------+ +---------+ +---------+     |     |
+|  |  |   DEV   | | STAGING | |  PROD   | | SANDBOX |     |     |
+|  |  +---------+ +---------+ +---------+ +---------+     |     |
+|  |                                                       |     |
+|  |  ❌ Svårt att separera kostnader                      |     |
+|  |  ❌ En bugg i dev kan påverka prod                    |     |
+|  |  ❌ Komplexa IAM-policies                             |     |
+|  |  ❌ Svårt att ge begränsad access                     |     |
+|  +-------------------------------------------------------+     |
+|                                                                 |
++-----------------------------------------------------------------+
 
-┌─────────────────────────────────────────────────────────────────┐
-│              MULTI-ACCOUNT MED ORGANIZATIONS (BRA)              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Management Account (root)                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  • Billing                                                │ │
-│  │  • Organization policies                                  │ │
-│  │  • Inget annat!                                           │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│              │                                                  │
-│    ┌─────────┴─────────┬─────────────────┐                     │
-│    │                   │                 │                     │
-│    ▼                   ▼                 ▼                     │
-│  ┌─────────┐     ┌─────────┐       ┌─────────┐                 │
-│  │   DEV   │     │ STAGING │       │  PROD   │                 │
-│  │ Account │     │ Account │       │ Account │                 │
-│  └─────────┘     └─────────┘       └─────────┘                 │
-│                                                                 │
-│  ✅ Tydlig kostnadsseparation                                   │
-│  ✅ Blast radius begränsad                                      │
-│  ✅ Enkel access control                                        │
-│  ✅ Consolidated billing                                        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              MULTI-ACCOUNT MED ORGANIZATIONS (BRA)              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Management Account (root)                                      |
+|  +-----------------------------------------------------------+ |
+|  |  • Billing                                                | |
+|  |  • Organization policies                                  | |
+|  |  • Inget annat!                                           | |
+|  +-----------------------------------------------------------+ |
+|              |                                                  |
+|    +---------+---------+-----------------+                     |
+|    |                   |                 |                     |
+|    ▼                   ▼                 ▼                     |
+|  +---------+     +---------+       +---------+                 |
+|  |   DEV   |     | STAGING |       |  PROD   |                 |
+|  | Account |     | Account |       | Account |                 |
+|  +---------+     +---------+       +---------+                 |
+|                                                                 |
+|  ✅ Tydlig kostnadsseparation                                   |
+|  ✅ Blast radius begränsad                                      |
+|  ✅ Enkel access control                                        |
+|  ✅ Consolidated billing                                        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Skapa Organization
@@ -27359,21 +27359,21 @@ aws organizations create-account \\
 
 ```
 Root
-├── Security OU
-│   ├── Log Archive Account (centrala loggar)
-│   └── Security Tooling Account (GuardDuty, Security Hub)
-├── Infrastructure OU
-│   ├── Network Account (Transit Gateway, DNS)
-│   └── Shared Services Account (CI/CD, Artifact repos)
-├── Workloads OU
-│   ├── Development OU
-│   │   └── Dev Account
-│   ├── Staging OU
-│   │   └── Staging Account
-│   └── Production OU
-│       └── Prod Account
-└── Sandbox OU
-    └── Sandbox Account (experimenterande)
++-- Security OU
+|   +-- Log Archive Account (centrala loggar)
+|   +-- Security Tooling Account (GuardDuty, Security Hub)
++-- Infrastructure OU
+|   +-- Network Account (Transit Gateway, DNS)
+|   +-- Shared Services Account (CI/CD, Artifact repos)
++-- Workloads OU
+|   +-- Development OU
+|   |   +-- Dev Account
+|   +-- Staging OU
+|   |   +-- Staging Account
+|   +-- Production OU
+|       +-- Prod Account
++-- Sandbox OU
+    +-- Sandbox Account (experimenterande)
 ```
 
 ## Vanliga problem
@@ -27404,7 +27404,7 @@ aws organizations list-accounts --query 'Accounts[].{Name:Name,Id:Id,Status:Stat
 - Separera miljöer i olika konton för säkerhet och kostnadskontroll
 
 ## Nästa steg
-→ Cost management and budgets
+-> Cost management and budgets
 """
             },
             {"title": "Cost management and budgets", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -27426,62 +27426,62 @@ AWS fakturerar per sekund/timme för resurser. Utan övervakning kan en bortglö
 ## AWS Pricing Model
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AWS PRISMODELL                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  PAY-AS-YOU-GO                                                  │
-│  ─────────────                                                  │
-│  • Betala för vad du använder                                   │
-│  • Ingen förskottsbetalning                                     │
-│  • Sluta använda = sluta betala                                 │
-│                                                                 │
-│  VANLIGA PRISKOMPONENTER:                                       │
-│  ┌──────────────┬────────────────────────────────────────────┐ │
-│  │ Compute      │ EC2: per sekund/timme                      │ │
-│  │              │ Lambda: per request + compute time         │ │
-│  ├──────────────┼────────────────────────────────────────────┤ │
-│  │ Storage      │ S3: per GB lagrat + requests               │ │
-│  │              │ EBS: per GB-månad                          │ │
-│  ├──────────────┼────────────────────────────────────────────┤ │
-│  │ Data Transfer│ IN: Gratis                                 │ │
-│  │              │ UT: $0.09/GB (varierar per region)         │ │
-│  │              │ Mellan AZs: $0.01/GB                       │ │
-│  ├──────────────┼────────────────────────────────────────────┤ │
-│  │ Requests     │ API-anrop, S3 requests, etc.               │ │
-│  └──────────────┴────────────────────────────────────────────┘ │
-│                                                                 │
-│  💡 Data Transfer UT är ofta den dolda kostnaden!               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AWS PRISMODELL                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  PAY-AS-YOU-GO                                                  |
+|  -------------                                                  |
+|  • Betala för vad du använder                                   |
+|  • Ingen förskottsbetalning                                     |
+|  • Sluta använda = sluta betala                                 |
+|                                                                 |
+|  VANLIGA PRISKOMPONENTER:                                       |
+|  +--------------+--------------------------------------------+ |
+|  | Compute      | EC2: per sekund/timme                      | |
+|  |              | Lambda: per request + compute time         | |
+|  +--------------+--------------------------------------------+ |
+|  | Storage      | S3: per GB lagrat + requests               | |
+|  |              | EBS: per GB-månad                          | |
+|  +--------------+--------------------------------------------+ |
+|  | Data Transfer| IN: Gratis                                 | |
+|  |              | UT: $0.09/GB (varierar per region)         | |
+|  |              | Mellan AZs: $0.01/GB                       | |
+|  +--------------+--------------------------------------------+ |
+|  | Requests     | API-anrop, S3 requests, etc.               | |
+|  +--------------+--------------------------------------------+ |
+|                                                                 |
+|  💡 Data Transfer UT är ofta den dolda kostnaden!               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Free Tier - Vad ingår?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AWS FREE TIER                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  12 MÅNADER GRATIS (från konto-skapande):                       │
-│  • EC2: 750 timmar t2.micro/månad                               │
-│  • S3: 5 GB storage                                             │
-│  • RDS: 750 timmar db.t2.micro                                  │
-│  • Data Transfer: 15 GB ut                                      │
-│                                                                 │
-│  ALLTID GRATIS:                                                 │
-│  • Lambda: 1M requests/månad                                    │
-│  • DynamoDB: 25 GB storage                                      │
-│  • CloudWatch: 10 custom metrics                                │
-│  • SNS: 1M publishes                                            │
-│                                                                 │
-│  ⚠️  VANLIGA FÄLLOR:                                            │
-│  • t2.micro i FEL REGION → kostar!                              │
-│  • Elastic IP utan kopplad instans → $3.65/månad                │
-│  • EBS snapshots glöms → ackumulerar kostnad                    │
-│  • NAT Gateway → $32/månad + datatrafik                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AWS FREE TIER                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  12 MÅNADER GRATIS (från konto-skapande):                       |
+|  • EC2: 750 timmar t2.micro/månad                               |
+|  • S3: 5 GB storage                                             |
+|  • RDS: 750 timmar db.t2.micro                                  |
+|  • Data Transfer: 15 GB ut                                      |
+|                                                                 |
+|  ALLTID GRATIS:                                                 |
+|  • Lambda: 1M requests/månad                                    |
+|  • DynamoDB: 25 GB storage                                      |
+|  • CloudWatch: 10 custom metrics                                |
+|  • SNS: 1M publishes                                            |
+|                                                                 |
+|  ⚠️  VANLIGA FÄLLOR:                                            |
+|  • t2.micro i FEL REGION -> kostar!                              |
+|  • Elastic IP utan kopplad instans -> $3.65/månad                |
+|  • EBS snapshots glöms -> ackumulerar kostnad                    |
+|  • NAT Gateway -> $32/månad + datatrafik                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg
@@ -27490,7 +27490,7 @@ AWS fakturerar per sekund/timme för resurser. Utan övervakning kan en bortglö
 
 ```bash
 # Cost Explorer aktiveras via Console
-# Billing → Cost Explorer → Enable
+# Billing -> Cost Explorer -> Enable
 
 # När aktiverat, använd CLI:
 aws ce get-cost-and-usage \\
@@ -27568,32 +27568,32 @@ aws ec2 describe-instances \\
 ## Cost Optimization Strategies
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                KOSTNADSOPTIMERING                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. RIGHT-SIZING                                                │
-│     Använd rätt instansstorlek för workload                     │
-│     t3.medium → t3.small om CPU < 20%                           │
-│                                                                 │
-│  2. RESERVED INSTANCES / SAVINGS PLANS                          │
-│     1-3 års åtagande → upp till 72% rabatt                      │
-│     Bra för steady-state workloads                              │
-│                                                                 │
-│  3. SPOT INSTANCES                                              │
-│     Upp till 90% rabatt                                         │
-│     Kan avbrytas med 2 min varning                              │
-│     Bra för: batch jobs, CI/CD, dev/test                        │
-│                                                                 │
-│  4. AUTO SCALING                                                │
-│     Skala ner på nätter/helger                                  │
-│     Matcha kapacitet mot behov                                  │
-│                                                                 │
-│  5. STORAGE TIERING                                             │
-│     S3 Standard → S3 IA → Glacier                               │
-│     Automatisera med lifecycle policies                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                KOSTNADSOPTIMERING                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. RIGHT-SIZING                                                |
+|     Använd rätt instansstorlek för workload                     |
+|     t3.medium -> t3.small om CPU < 20%                           |
+|                                                                 |
+|  2. RESERVED INSTANCES / SAVINGS PLANS                          |
+|     1-3 års åtagande -> upp till 72% rabatt                      |
+|     Bra för steady-state workloads                              |
+|                                                                 |
+|  3. SPOT INSTANCES                                              |
+|     Upp till 90% rabatt                                         |
+|     Kan avbrytas med 2 min varning                              |
+|     Bra för: batch jobs, CI/CD, dev/test                        |
+|                                                                 |
+|  4. AUTO SCALING                                                |
+|     Skala ner på nätter/helger                                  |
+|     Matcha kapacitet mot behov                                  |
+|                                                                 |
+|  5. STORAGE TIERING                                             |
+|     S3 Standard -> S3 IA -> Glacier                               |
+|     Automatisera med lifecycle policies                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Automatisk taggning för kostnadsallokering
@@ -27605,7 +27605,7 @@ aws ec2 create-tags \\
   --tags Key=Project,Value=DevOpsHub Key=Environment,Value=Production Key=Owner,Value=teamA
 
 # Aktivera Cost Allocation Tags (via Console)
-# Billing → Cost Allocation Tags → Activate
+# Billing -> Cost Allocation Tags -> Activate
 ```
 
 ## Vanliga problem
@@ -27643,7 +27643,7 @@ aws ce get-cost-and-usage \\
 - Data Transfer ut är ofta den dolda kostnaden
 
 ## Nästa steg
-→ Well-Architected Framework intro
+-> Well-Architected Framework intro
 """
             },
             {"title": "Well-Architected Framework intro", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -27664,27 +27664,27 @@ Well-Architected Framework är AWS best practices destillerade till 6 pelare. De
 ## De 6 pelarna
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              AWS WELL-ARCHITECTED FRAMEWORK                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │
-│  │   SECURITY    │  │  RELIABILITY  │  │  PERFORMANCE  │       │
-│  │       🔒      │  │       🛡️      │  │      ⚡       │       │
-│  │  Skydda data  │  │  Återhämtning │  │   Effektiv    │       │
-│  │  och system   │  │  från fel     │  │   resurs-     │       │
-│  │               │  │               │  │   användning  │       │
-│  └───────────────┘  └───────────────┘  └───────────────┘       │
-│                                                                 │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │
-│  │     COST      │  │  OPERATIONAL  │  │SUSTAINABILITY │       │
-│  │       💰      │  │  EXCELLENCE   │  │      🌱       │       │
-│  │  Undvik       │  │       📊      │  │  Minimera     │       │
-│  │  onödiga      │  │  Drift och    │  │  miljö-       │       │
-│  │  kostnader    │  │  förbättring  │  │  påverkan     │       │
-│  └───────────────┘  └───────────────┘  └───────────────┘       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              AWS WELL-ARCHITECTED FRAMEWORK                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +---------------+  +---------------+  +---------------+       |
+|  |   SECURITY    |  |  RELIABILITY  |  |  PERFORMANCE  |       |
+|  |       🔒      |  |       🛡️      |  |      ⚡       |       |
+|  |  Skydda data  |  |  Återhämtning |  |   Effektiv    |       |
+|  |  och system   |  |  från fel     |  |   resurs-     |       |
+|  |               |  |               |  |   användning  |       |
+|  +---------------+  +---------------+  +---------------+       |
+|                                                                 |
+|  +---------------+  +---------------+  +---------------+       |
+|  |     COST      |  |  OPERATIONAL  |  |SUSTAINABILITY |       |
+|  |       💰      |  |  EXCELLENCE   |  |      🌱       |       |
+|  |  Undvik       |  |       📊      |  |  Minimera     |       |
+|  |  onödiga      |  |  Drift och    |  |  miljö-       |       |
+|  |  kostnader    |  |  förbättring  |  |  påverkan     |       |
+|  +---------------+  +---------------+  +---------------+       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## 1. Security (Säkerhet)
@@ -27692,31 +27692,31 @@ Well-Architected Framework är AWS best practices destillerade till 6 pelare. De
 **Nyckelprincip:** Implement strong identity foundation, enable traceability, apply security at all layers.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SECURITY PELARE                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DESIGN PRINCIPLES:                                             │
-│  ✓ Least privilege - ge minimal nödvändig access               │
-│  ✓ Aktivera spårbarhet (CloudTrail)                            │
-│  ✓ Säkerhet på alla lager (nätverk, OS, app)                   │
-│  ✓ Automatisera säkerhetsbest practices                        │
-│  ✓ Skydda data i transit och at rest                           │
-│                                                                 │
-│  KEY SERVICES:                                                  │
-│  • IAM - Identity & Access Management                          │
-│  • KMS - Encryption keys                                       │
-│  • WAF - Web Application Firewall                              │
-│  • CloudTrail - API logging                                    │
-│  • GuardDuty - Threat detection                                │
-│                                                                 │
-│  ANTI-PATTERN:                                                  │
-│  ❌ Root user för dagligt arbete                                │
-│  ❌ Hardcoded credentials i kod                                 │
-│  ❌ Publika S3 buckets                                          │
-│  ❌ Security groups med 0.0.0.0/0 till SSH                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SECURITY PELARE                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DESIGN PRINCIPLES:                                             |
+|  ✓ Least privilege - ge minimal nödvändig access               |
+|  ✓ Aktivera spårbarhet (CloudTrail)                            |
+|  ✓ Säkerhet på alla lager (nätverk, OS, app)                   |
+|  ✓ Automatisera säkerhetsbest practices                        |
+|  ✓ Skydda data i transit och at rest                           |
+|                                                                 |
+|  KEY SERVICES:                                                  |
+|  • IAM - Identity & Access Management                          |
+|  • KMS - Encryption keys                                       |
+|  • WAF - Web Application Firewall                              |
+|  • CloudTrail - API logging                                    |
+|  • GuardDuty - Threat detection                                |
+|                                                                 |
+|  ANTI-PATTERN:                                                  |
+|  ❌ Root user för dagligt arbete                                |
+|  ❌ Hardcoded credentials i kod                                 |
+|  ❌ Publika S3 buckets                                          |
+|  ❌ Security groups med 0.0.0.0/0 till SSH                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## 2. Reliability (Tillförlitlighet)
@@ -27724,32 +27724,32 @@ Well-Architected Framework är AWS best practices destillerade till 6 pelare. De
 **Nyckelprincip:** Recover from failures, handle change, scale to meet demand.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   RELIABILITY PELARE                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DESIGN PRINCIPLES:                                             │
-│  ✓ Testa återställningsprocedurer                              │
-│  ✓ Automatisk återhämtning från fel                            │
-│  ✓ Skala horisontellt för tillgänglighet                       │
-│  ✓ Sluta gissa kapacitet - auto scale                          │
-│  ✓ Hantera förändring via automation                           │
-│                                                                 │
-│  MULTI-AZ PATTERN:                                              │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │    AZ-A     │    │    AZ-B     │    │    AZ-C     │         │
-│  │  ┌───────┐  │    │  ┌───────┐  │    │  ┌───────┐  │         │
-│  │  │  EC2  │  │    │  │  EC2  │  │    │  │  EC2  │  │         │
-│  │  └───────┘  │    │  └───────┘  │    │  └───────┘  │         │
-│  │  ┌───────┐  │    │  ┌───────┐  │    │  ┌───────┐  │         │
-│  │  │  RDS  │◄─┼────┼──│  RDS  │  │    │  │  RDS  │  │         │
-│  │  │Primary│  │    │  │Standby│  │    │  │Replica│  │         │
-│  │  └───────┘  │    │  └───────┘  │    │  └───────┘  │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-│                                                                 │
-│  Om AZ-A failar → Automatisk failover till AZ-B                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   RELIABILITY PELARE                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DESIGN PRINCIPLES:                                             |
+|  ✓ Testa återställningsprocedurer                              |
+|  ✓ Automatisk återhämtning från fel                            |
+|  ✓ Skala horisontellt för tillgänglighet                       |
+|  ✓ Sluta gissa kapacitet - auto scale                          |
+|  ✓ Hantera förändring via automation                           |
+|                                                                 |
+|  MULTI-AZ PATTERN:                                              |
+|  +-------------+    +-------------+    +-------------+         |
+|  |    AZ-A     |    |    AZ-B     |    |    AZ-C     |         |
+|  |  +-------+  |    |  +-------+  |    |  +-------+  |         |
+|  |  |  EC2  |  |    |  |  EC2  |  |    |  |  EC2  |  |         |
+|  |  +-------+  |    |  +-------+  |    |  +-------+  |         |
+|  |  +-------+  |    |  +-------+  |    |  +-------+  |         |
+|  |  |  RDS  |◄-+----+--|  RDS  |  |    |  |  RDS  |  |         |
+|  |  |Primary|  |    |  |Standby|  |    |  |Replica|  |         |
+|  |  +-------+  |    |  +-------+  |    |  +-------+  |         |
+|  +-------------+    +-------------+    +-------------+         |
+|                                                                 |
+|  Om AZ-A failar -> Automatisk failover till AZ-B                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## 3. Performance Efficiency
@@ -27794,30 +27794,30 @@ TOOLS:
 **Nyckelprincip:** Run and monitor systems, continually improve processes.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              OPERATIONAL EXCELLENCE                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  INFRASTRUCTURE AS CODE                                         │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  main.tf  →  terraform apply  →  AWS Resources          │   │
-│  │  ✓ Version controlled                                   │   │
-│  │  ✓ Reproducible                                         │   │
-│  │  ✓ Code review för ändringar                            │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  OBSERVABILITY                                                  │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Metrics (CloudWatch) + Logs + Traces (X-Ray)           │   │
-│  │  → Dashboard → Alerts → Runbooks                        │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  CONTINUOUS IMPROVEMENT                                         │
-│  • Post-incident reviews                                       │
-│  • Game days (chaos engineering)                               │
-│  • Regular architecture reviews                                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              OPERATIONAL EXCELLENCE                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  INFRASTRUCTURE AS CODE                                         |
+|  +---------------------------------------------------------+   |
+|  |  main.tf  ->  terraform apply  ->  AWS Resources          |   |
+|  |  ✓ Version controlled                                   |   |
+|  |  ✓ Reproducible                                         |   |
+|  |  ✓ Code review för ändringar                            |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  OBSERVABILITY                                                  |
+|  +---------------------------------------------------------+   |
+|  |  Metrics (CloudWatch) + Logs + Traces (X-Ray)           |   |
+|  |  -> Dashboard -> Alerts -> Runbooks                        |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  CONTINUOUS IMPROVEMENT                                         |
+|  • Post-incident reviews                                       |
+|  • Game days (chaos engineering)                               |
+|  • Regular architecture reviews                                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## 6. Sustainability
@@ -27900,7 +27900,7 @@ OPERATIONS:
 - Infrastructure as Code möjliggör Operational Excellence
 
 ## Nästa steg
-→ IAM users, groups, roles
+-> IAM users, groups, roles
 """
             },
             {"title": "IAM users, groups, roles", "difficulty": "medium", "estimated_minutes": 35, "xp_reward": 55,
@@ -27922,64 +27922,64 @@ IAM (Identity and Access Management) är säkerhetsfundamentet i AWS. Varje API-
 ## IAM Grundkoncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    IAM IDENTITETER                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  USER (Användare)                                               │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  • Representerar EN person eller applikation            │   │
-│  │  • Har permanenta credentials (password/access keys)    │   │
-│  │  • Exempel: alice@example.com, ci-cd-bot                │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  GROUP (Grupp)                                                  │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  • Samling av users                                     │   │
-│  │  • Förenklar permission management                      │   │
-│  │  • Exempel: Developers, Admins, ReadOnly                │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  ROLE (Roll)                                                    │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  • Tillfälliga credentials (STS tokens)                 │   │
-│  │  • Kan "antas" av users, services, andra konton         │   │
-│  │  • Exempel: EC2 instance role, Lambda execution role    │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    IAM IDENTITETER                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  USER (Användare)                                               |
+|  +---------------------------------------------------------+   |
+|  |  • Representerar EN person eller applikation            |   |
+|  |  • Har permanenta credentials (password/access keys)    |   |
+|  |  • Exempel: alice@example.com, ci-cd-bot                |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  GROUP (Grupp)                                                  |
+|  +---------------------------------------------------------+   |
+|  |  • Samling av users                                     |   |
+|  |  • Förenklar permission management                      |   |
+|  |  • Exempel: Developers, Admins, ReadOnly                |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  ROLE (Roll)                                                    |
+|  +---------------------------------------------------------+   |
+|  |  • Tillfälliga credentials (STS tokens)                 |   |
+|  |  • Kan "antas" av users, services, andra konton         |   |
+|  |  • Exempel: EC2 instance role, Lambda execution role    |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Visualisering: Users vs Groups vs Roles
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│   USERS                    GROUPS                               │
-│   ─────                    ──────                               │
-│   👤 Alice ───────────────► ┌─────────────┐                     │
-│   👤 Bob ─────────────────► │ Developers  │──► Policy: Dev      │
-│   👤 Charlie ─────────────► └─────────────┘                     │
-│                                                                 │
-│   👤 Diana ───────────────► ┌─────────────┐                     │
-│                            │   Admins    │──► Policy: Admin    │
-│                            └─────────────┘                     │
-│                                                                 │
-│   ROLES                                                         │
-│   ─────                                                         │
-│   ┌──────────────────┐                                          │
-│   │ EC2InstanceRole  │ ← EC2 instanser "antar" denna roll      │
-│   │ Trust: ec2.aws   │   för att få access till S3, etc.       │
-│   │ Policy: S3Read   │                                          │
-│   └──────────────────┘                                          │
-│                                                                 │
-│   ┌──────────────────┐                                          │
-│   │ LambdaExecRole   │ ← Lambda funktioner använder denna      │
-│   │ Trust: lambda    │                                          │
-│   │ Policy: DynamoDB │                                          │
-│   └──────────────────┘                                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                                                                 |
+|   USERS                    GROUPS                               |
+|   -----                    ------                               |
+|   👤 Alice ---------------► +-------------+                     |
+|   👤 Bob -----------------► | Developers  |--► Policy: Dev      |
+|   👤 Charlie -------------► +-------------+                     |
+|                                                                 |
+|   👤 Diana ---------------► +-------------+                     |
+|                            |   Admins    |--► Policy: Admin    |
+|                            +-------------+                     |
+|                                                                 |
+|   ROLES                                                         |
+|   -----                                                         |
+|   +------------------+                                          |
+|   | EC2InstanceRole  | <- EC2 instanser "antar" denna roll      |
+|   | Trust: ec2.aws   |   för att få access till S3, etc.       |
+|   | Policy: S3Read   |                                          |
+|   +------------------+                                          |
+|                                                                 |
+|   +------------------+                                          |
+|   | LambdaExecRole   | <- Lambda funktioner använder denna      |
+|   | Trust: lambda    |                                          |
+|   | Policy: DynamoDB |                                          |
+|   +------------------+                                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg
@@ -28082,28 +28082,28 @@ aws sts assume-role \\
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  IAM BEST PRACTICES                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DO:                                                         │
-│  ───────                                                        │
-│  • Använd groups för permissions (aldrig direkt på users)      │
-│  • Använd roles för services (EC2, Lambda, etc.)               │
-│  • Aktivera MFA för alla users                                 │
-│  • Rotera access keys regelbundet                              │
-│  • Använd IAM Access Analyzer                                  │
-│  • Följ least privilege                                        │
-│                                                                 │
-│  ❌ DON'T:                                                      │
-│  ───────                                                        │
-│  • Använd root user för dagligt arbete                         │
-│  • Hardcoda credentials i kod                                  │
-│  • Ge * (alla) permissions                                     │
-│  • Dela access keys mellan personer                            │
-│  • Glöm att ta bort gamla users/keys                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  IAM BEST PRACTICES                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DO:                                                         |
+|  -------                                                        |
+|  • Använd groups för permissions (aldrig direkt på users)      |
+|  • Använd roles för services (EC2, Lambda, etc.)               |
+|  • Aktivera MFA för alla users                                 |
+|  • Rotera access keys regelbundet                              |
+|  • Använd IAM Access Analyzer                                  |
+|  • Följ least privilege                                        |
+|                                                                 |
+|  ❌ DON'T:                                                      |
+|  -------                                                        |
+|  • Använd root user för dagligt arbete                         |
+|  • Hardcoda credentials i kod                                  |
+|  • Ge * (alla) permissions                                     |
+|  • Dela access keys mellan personer                            |
+|  • Glöm att ta bort gamla users/keys                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## När använda User vs Role?
@@ -28163,7 +28163,7 @@ aws iam list-groups-for-user --user-name developer-alice
 - MFA på alla human users!
 
 ## Nästa steg
-→ IAM policies (managed, inline, custom)
+-> IAM policies (managed, inline, custom)
 """
             },
             {"title": "IAM policies (managed, inline, custom)", "difficulty": "hard", "estimated_minutes": 40, "xp_reward": 60,
@@ -28181,36 +28181,36 @@ IAM policies är hjärtat i AWS säkerhet. De bestämmer exakt vad varje identit
 ## Policy Types
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    IAM POLICY TYPER                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  AWS MANAGED POLICIES                                           │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  • Skapade och underhållna av AWS                       │   │
-│  │  • Täcker vanliga use cases                             │   │
-│  │  • Uppdateras automatiskt av AWS                        │   │
-│  │  • Exempel: AdministratorAccess, PowerUserAccess        │   │
-│  │  • ARN: arn:aws:iam::aws:policy/PolicyName              │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  CUSTOMER MANAGED POLICIES                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  • Skapade av dig i ditt konto                          │   │
-│  │  • Kan kopplas till flera users/groups/roles            │   │
-│  │  • Versionskontrollerade (max 5 versioner)              │   │
-│  │  • Best practice för custom permissions                 │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  INLINE POLICIES                                                │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  • Bäddas direkt i user/group/role                      │   │
-│  │  • 1:1 relation - raderas med identiteten               │   │
-│  │  • Svårare att underhålla                               │   │
-│  │  • Använd endast för unika, strikta permissions         │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    IAM POLICY TYPER                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  AWS MANAGED POLICIES                                           |
+|  +---------------------------------------------------------+   |
+|  |  • Skapade och underhållna av AWS                       |   |
+|  |  • Täcker vanliga use cases                             |   |
+|  |  • Uppdateras automatiskt av AWS                        |   |
+|  |  • Exempel: AdministratorAccess, PowerUserAccess        |   |
+|  |  • ARN: arn:aws:iam::aws:policy/PolicyName              |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  CUSTOMER MANAGED POLICIES                                      |
+|  +---------------------------------------------------------+   |
+|  |  • Skapade av dig i ditt konto                          |   |
+|  |  • Kan kopplas till flera users/groups/roles            |   |
+|  |  • Versionskontrollerade (max 5 versioner)              |   |
+|  |  • Best practice för custom permissions                 |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  INLINE POLICIES                                                |
+|  +---------------------------------------------------------+   |
+|  |  • Bäddas direkt i user/group/role                      |   |
+|  |  • 1:1 relation - raderas med identiteten               |   |
+|  |  • Svårare att underhålla                               |   |
+|  |  • Använd endast för unika, strikta permissions         |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Policy Anatomy
@@ -28361,7 +28361,7 @@ aws iam simulate-principal-policy \\
 - Conditions ger granulär kontroll
 
 ## Nästa steg
-→ Policy evaluation logic
+-> Policy evaluation logic
 """
             },
             {"title": "Policy evaluation logic", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 55,
@@ -28379,47 +28379,47 @@ När en IAM-principal gör ett API-anrop utvärderas ALLA relevanta policies. At
 ## Evaluation Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              IAM POLICY EVALUATION ORDER                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  API Request: "s3:GetObject on bucket-x"                        │
-│                         │                                       │
-│                         ▼                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │ 1. EXPLICIT DENY?                                       │   │
-│  │    Finns det en policy med Effect: Deny?                │   │
-│  │    JA → ❌ DENIED (slut)                                 │   │
-│  │    NEJ → fortsätt                                       │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                         │                                       │
-│                         ▼                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │ 2. SERVICE CONTROL POLICY (SCP)?                        │   │
-│  │    (Endast om AWS Organizations används)                │   │
-│  │    Tillåter SCP denna action?                           │   │
-│  │    NEJ → ❌ DENIED                                       │   │
-│  │    JA → fortsätt                                        │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                         │                                       │
-│                         ▼                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │ 3. RESOURCE-BASED POLICY?                               │   │
-│  │    (S3 bucket policy, SQS queue policy, etc.)           │   │
-│  │    Tillåter resource policy denna principal?            │   │
-│  │    JA → ✅ ALLOWED (för cross-account)                  │   │
-│  │    NEJ → fortsätt                                       │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                         │                                       │
-│                         ▼                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │ 4. IDENTITY-BASED POLICY (Allow)?                       │   │
-│  │    User/Group/Role policy med Effect: Allow?            │   │
-│  │    JA → ✅ ALLOWED                                       │   │
-│  │    NEJ → ❌ IMPLICIT DENY                                │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              IAM POLICY EVALUATION ORDER                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  API Request: "s3:GetObject on bucket-x"                        |
+|                         |                                       |
+|                         ▼                                       |
+|  +---------------------------------------------------------+   |
+|  | 1. EXPLICIT DENY?                                       |   |
+|  |    Finns det en policy med Effect: Deny?                |   |
+|  |    JA -> ❌ DENIED (slut)                                 |   |
+|  |    NEJ -> fortsätt                                       |   |
+|  +---------------------------------------------------------+   |
+|                         |                                       |
+|                         ▼                                       |
+|  +---------------------------------------------------------+   |
+|  | 2. SERVICE CONTROL POLICY (SCP)?                        |   |
+|  |    (Endast om AWS Organizations används)                |   |
+|  |    Tillåter SCP denna action?                           |   |
+|  |    NEJ -> ❌ DENIED                                       |   |
+|  |    JA -> fortsätt                                        |   |
+|  +---------------------------------------------------------+   |
+|                         |                                       |
+|                         ▼                                       |
+|  +---------------------------------------------------------+   |
+|  | 3. RESOURCE-BASED POLICY?                               |   |
+|  |    (S3 bucket policy, SQS queue policy, etc.)           |   |
+|  |    Tillåter resource policy denna principal?            |   |
+|  |    JA -> ✅ ALLOWED (för cross-account)                  |   |
+|  |    NEJ -> fortsätt                                       |   |
+|  +---------------------------------------------------------+   |
+|                         |                                       |
+|                         ▼                                       |
+|  +---------------------------------------------------------+   |
+|  | 4. IDENTITY-BASED POLICY (Allow)?                       |   |
+|  |    User/Group/Role policy med Effect: Allow?            |   |
+|  |    JA -> ✅ ALLOWED                                       |   |
+|  |    NEJ -> ❌ IMPLICIT DENY                                |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 
 SAMMANFATTNING:
 • Explicit Deny ALLTID vinner
@@ -28430,30 +28430,30 @@ SAMMANFATTNING:
 ## Exempel: Policy Conflicts
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  USER "alice" har följande policies:                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Group Policy (Developers):                                     │
-│  {                                                              │
-│    "Effect": "Allow",                                           │
-│    "Action": "s3:*",                                            │
-│    "Resource": "*"                                              │
-│  }                                                              │
-│                                                                 │
-│  Inline Policy på User:                                         │
-│  {                                                              │
-│    "Effect": "Deny",                                            │
-│    "Action": "s3:DeleteBucket",                                 │
-│    "Resource": "*"                                              │
-│  }                                                              │
-│                                                                 │
-│  RESULTAT:                                                      │
-│  ✅ s3:GetObject     → Allowed (group policy)                   │
-│  ✅ s3:PutObject     → Allowed (group policy)                   │
-│  ❌ s3:DeleteBucket  → DENIED (explicit deny vinner!)           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  USER "alice" har följande policies:                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Group Policy (Developers):                                     |
+|  {                                                              |
+|    "Effect": "Allow",                                           |
+|    "Action": "s3:*",                                            |
+|    "Resource": "*"                                              |
+|  }                                                              |
+|                                                                 |
+|  Inline Policy på User:                                         |
+|  {                                                              |
+|    "Effect": "Deny",                                            |
+|    "Action": "s3:DeleteBucket",                                 |
+|    "Resource": "*"                                              |
+|  }                                                              |
+|                                                                 |
+|  RESULTAT:                                                      |
+|  ✅ s3:GetObject     -> Allowed (group policy)                   |
+|  ✅ s3:PutObject     -> Allowed (group policy)                   |
+|  ❌ s3:DeleteBucket  -> DENIED (explicit deny vinner!)           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Debugga Access Denied
@@ -28491,31 +28491,31 @@ aws accessanalyzer list-findings --analyzer-arn <analyzer-arn>
 ## Permission Boundaries
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                PERMISSION BOUNDARIES                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Permission Boundary = MAX permissions en identity kan få       │
-│                                                                 │
-│  ┌─────────────────┐                                            │
-│  │   Identity      │                                            │
-│  │   Policy        │                                            │
-│  │  ┌───────────┐  │  ┌─────────────────┐                       │
-│  │  │  Allow:   │  │  │   Permission    │                       │
-│  │  │  s3:*     │──┼──│   Boundary:     │                       │
-│  │  │  ec2:*    │  │  │   s3:Get*       │                       │
-│  │  │  rds:*    │  │  │   s3:List*      │                       │
-│  │  └───────────┘  │  └─────────────────┘                       │
-│  └─────────────────┘                                            │
-│                                                                 │
-│  Effective permissions = INTERSECTION                           │
-│  ✅ s3:GetObject  (i båda)                                      │
-│  ✅ s3:ListBucket (i båda)                                      │
-│  ❌ s3:PutObject  (ej i boundary)                               │
-│  ❌ ec2:*         (ej i boundary)                               │
-│  ❌ rds:*         (ej i boundary)                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                PERMISSION BOUNDARIES                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Permission Boundary = MAX permissions en identity kan få       |
+|                                                                 |
+|  +-----------------+                                            |
+|  |   Identity      |                                            |
+|  |   Policy        |                                            |
+|  |  +-----------+  |  +-----------------+                       |
+|  |  |  Allow:   |  |  |   Permission    |                       |
+|  |  |  s3:*     |--+--|   Boundary:     |                       |
+|  |  |  ec2:*    |  |  |   s3:Get*       |                       |
+|  |  |  rds:*    |  |  |   s3:List*      |                       |
+|  |  +-----------+  |  +-----------------+                       |
+|  +-----------------+                                            |
+|                                                                 |
+|  Effective permissions = INTERSECTION                           |
+|  ✅ s3:GetObject  (i båda)                                      |
+|  ✅ s3:ListBucket (i båda)                                      |
+|  ❌ s3:PutObject  (ej i boundary)                               |
+|  ❌ ec2:*         (ej i boundary)                               |
+|  ❌ rds:*         (ej i boundary)                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
@@ -28536,7 +28536,7 @@ aws accessanalyzer list-findings --analyzer-arn <analyzer-arn>
 - CloudTrail för audit
 
 ## Nästa steg
-→ Cross-account access
+-> Cross-account access
 """
             },
             {"title": "Cross-account access", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 55,
@@ -28554,32 +28554,32 @@ I multi-account setups behöver resurser i ett konto ofta access till resurser i
 ## Cross-Account Methods
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│             CROSS-ACCOUNT ACCESS METODER                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. IAM ROLE MED TRUST POLICY (rekommenderat)                   │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Account A (Trusting)      Account B (Trusted)          │   │
-│  │  ┌─────────────┐           ┌─────────────┐              │   │
-│  │  │  S3 Bucket  │◄──access──│  IAM User   │              │   │
-│  │  └─────────────┘           └──────┬──────┘              │   │
-│  │        ▲                          │                     │   │
-│  │        │                   sts:AssumeRole               │   │
-│  │  ┌─────┴──────┐                   │                     │   │
-│  │  │  IAM Role  │◄──────────────────┘                     │   │
-│  │  │ "S3Access" │                                         │   │
-│  │  │ Trust: B   │                                         │   │
-│  │  └────────────┘                                         │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  2. RESOURCE-BASED POLICY                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  S3 bucket policy tillåter principal från annat konto   │   │
-│  │  Fungerar för: S3, SQS, SNS, Lambda, KMS                │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|             CROSS-ACCOUNT ACCESS METODER                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. IAM ROLE MED TRUST POLICY (rekommenderat)                   |
+|  +---------------------------------------------------------+   |
+|  |  Account A (Trusting)      Account B (Trusted)          |   |
+|  |  +-------------+           +-------------+              |   |
+|  |  |  S3 Bucket  |◄--access--|  IAM User   |              |   |
+|  |  +-------------+           +------+------+              |   |
+|  |        ▲                          |                     |   |
+|  |        |                   sts:AssumeRole               |   |
+|  |  +-----+------+                   |                     |   |
+|  |  |  IAM Role  |◄------------------+                     |   |
+|  |  | "S3Access" |                                         |   |
+|  |  | Trust: B   |                                         |   |
+|  |  +------------+                                         |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  2. RESOURCE-BASED POLICY                                       |
+|  +---------------------------------------------------------+   |
+|  |  S3 bucket policy tillåter principal från annat konto   |   |
+|  |  Fungerar för: S3, SQS, SNS, Lambda, KMS                |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Cross-Account Role
@@ -28702,21 +28702,21 @@ aws s3 ls s3://bucket-in-account-a/
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│           CROSS-ACCOUNT BEST PRACTICES                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ Använd External ID för third-party access                   │
-│  ✅ Begränsa trust till specifika principals, ej root           │
-│  ✅ Logga AssumeRole-anrop i CloudTrail                         │
-│  ✅ Sätt session duration (default 1h, max 12h)                 │
-│  ✅ Använd MFA condition för känsliga roller                    │
-│                                                                 │
-│  ❌ Trust:ed hela kontot ("AWS": "222222222222")                 │
-│  ❌ Inga conditions på AssumeRole                               │
-│  ❌ Långvariga credentials istället för roles                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|           CROSS-ACCOUNT BEST PRACTICES                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ Använd External ID för third-party access                   |
+|  ✅ Begränsa trust till specifika principals, ej root           |
+|  ✅ Logga AssumeRole-anrop i CloudTrail                         |
+|  ✅ Sätt session duration (default 1h, max 12h)                 |
+|  ✅ Använd MFA condition för känsliga roller                    |
+|                                                                 |
+|  ❌ Trust:ed hela kontot ("AWS": "222222222222")                 |
+|  ❌ Inga conditions på AssumeRole                               |
+|  ❌ Långvariga credentials istället för roles                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Verifiera
@@ -28739,7 +28739,7 @@ aws iam list-roles \\
 - Logga alltid AssumeRole i CloudTrail
 
 ## Nästa steg
-→ VPC CIDR planning
+-> VPC CIDR planning
 """
             },
             {"title": "VPC CIDR planning", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -28757,71 +28757,71 @@ CIDR-planering är fundamentet för din AWS-nätverksarkitektur. Fel planering l
 ## CIDR Basics
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CIDR NOTATION                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  10.0.0.0/16                                                    │
-│  ────────────                                                   │
-│  │        │                                                     │
-│  │        └── /16 = Subnet mask (hur många bits för nätverk)   │
-│  └─────────── Network address                                   │
-│                                                                 │
-│  /16 = 255.255.0.0   = 65,536 IPs                              │
-│  /24 = 255.255.255.0 = 256 IPs                                 │
-│  /28 = 255.255.255.240 = 16 IPs                                │
-│                                                                 │
-│  FORMEL: 2^(32 - prefix) = antal IPs                           │
-│  /16: 2^(32-16) = 2^16 = 65,536                                │
-│  /24: 2^(32-24) = 2^8 = 256                                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CIDR NOTATION                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  10.0.0.0/16                                                    |
+|  ------------                                                   |
+|  |        |                                                     |
+|  |        +-- /16 = Subnet mask (hur många bits för nätverk)   |
+|  +----------- Network address                                   |
+|                                                                 |
+|  /16 = 255.255.0.0   = 65,536 IPs                              |
+|  /24 = 255.255.255.0 = 256 IPs                                 |
+|  /28 = 255.255.255.240 = 16 IPs                                |
+|                                                                 |
+|  FORMEL: 2^(32 - prefix) = antal IPs                           |
+|  /16: 2^(32-16) = 2^16 = 65,536                                |
+|  /24: 2^(32-24) = 2^8 = 256                                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## AWS VPC Constraints
 
 ```
 VPC CIDR: /16 (largest) to /28 (smallest)
-├── Min: /28 = 16 IPs (11 usable efter AWS reservationer)
-└── Max: /16 = 65,536 IPs
++-- Min: /28 = 16 IPs (11 usable efter AWS reservationer)
++-- Max: /16 = 65,536 IPs
 
 AWS RESERVERAR 5 IPs per subnet:
-├── .0   = Network address
-├── .1   = VPC router
-├── .2   = DNS server
-├── .3   = Future use
-└── .255 = Broadcast
++-- .0   = Network address
++-- .1   = VPC router
++-- .2   = DNS server
++-- .3   = Future use
++-- .255 = Broadcast
 
 Exempel: 10.0.1.0/24 (256 IPs)
-├── Reserverade: 5
-└── Tillgängliga: 251
++-- Reserverade: 5
++-- Tillgängliga: 251
 ```
 
 ## Recommended CIDR Ranges
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              PRIVATA IP-RANGES (RFC 1918)                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  10.0.0.0/8     = 16 miljoner IPs  (rekommenderat för AWS)     │
-│  172.16.0.0/12  = 1 miljon IPs                                 │
-│  192.168.0.0/16 = 65,536 IPs       (undvik - hemmanätverk)     │
-│                                                                 │
-│  ENTERPRISE PATTERN:                                            │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  10.{env}.{region}.0/16                                 │   │
-│  │                                                         │   │
-│  │  env: 0=shared, 1=dev, 2=staging, 3=prod               │   │
-│  │  region: 0=eu-north-1, 1=eu-west-1, 2=us-east-1        │   │
-│  │                                                         │   │
-│  │  Exempel:                                               │   │
-│  │  10.1.0.0/16 = Dev, eu-north-1                         │   │
-│  │  10.3.0.0/16 = Prod, eu-north-1                        │   │
-│  │  10.3.2.0/16 = Prod, us-east-1                         │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              PRIVATA IP-RANGES (RFC 1918)                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  10.0.0.0/8     = 16 miljoner IPs  (rekommenderat för AWS)     |
+|  172.16.0.0/12  = 1 miljon IPs                                 |
+|  192.168.0.0/16 = 65,536 IPs       (undvik - hemmanätverk)     |
+|                                                                 |
+|  ENTERPRISE PATTERN:                                            |
+|  +---------------------------------------------------------+   |
+|  |  10.{env}.{region}.0/16                                 |   |
+|  |                                                         |   |
+|  |  env: 0=shared, 1=dev, 2=staging, 3=prod               |   |
+|  |  region: 0=eu-north-1, 1=eu-west-1, 2=us-east-1        |   |
+|  |                                                         |   |
+|  |  Exempel:                                               |   |
+|  |  10.1.0.0/16 = Dev, eu-north-1                         |   |
+|  |  10.3.0.0/16 = Prod, eu-north-1                        |   |
+|  |  10.3.2.0/16 = Prod, us-east-1                         |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Planera VPC
@@ -28833,10 +28833,10 @@ Exempel: 10.0.1.0/24 (256 IPs)
 # Dela upp i subnets:
 
 # VPC: 10.0.0.0/16
-# ├── Public subnets:  10.0.0.0/20  (4,096 IPs x 3 AZs)
-# ├── Private subnets: 10.0.48.0/20 (4,096 IPs x 3 AZs)
-# ├── Database subnets: 10.0.96.0/20 (4,096 IPs x 3 AZs)
-# └── Reserved: 10.0.144.0/20 (för framtida behov)
+# +-- Public subnets:  10.0.0.0/20  (4,096 IPs x 3 AZs)
+# +-- Private subnets: 10.0.48.0/20 (4,096 IPs x 3 AZs)
+# +-- Database subnets: 10.0.96.0/20 (4,096 IPs x 3 AZs)
+# +-- Reserved: 10.0.144.0/20 (för framtida behov)
 ```
 
 ### Steg 2: Skapa VPC med CLI
@@ -28896,7 +28896,7 @@ aws ec2 associate-vpc-cidr-block \\
 - Dokumentera din IP-plan
 
 ## Nästa steg
-→ Subnets (public, private)
+-> Subnets (public, private)
 """
             },
             {"title": "Subnets (public, private)", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -28914,58 +28914,58 @@ Subnet-design är grunden för nätverkssäkerhet i AWS. Public subnets exponera
 ## Public vs Private Subnets
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 PUBLIC vs PRIVATE SUBNETS                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  PUBLIC SUBNET                    PRIVATE SUBNET                │
-│  ──────────────                   ──────────────                │
-│  • Route till Internet Gateway    • Ingen direkt internet-route │
-│  • Public IP på instanser         • Endast private IPs          │
-│  • Exponerad mot internet         • Skyddad från internet       │
-│                                                                 │
-│  Lämpligt för:                    Lämpligt för:                 │
-│  ✓ Load Balancers                 ✓ Application servers         │
-│  ✓ Bastion hosts                  ✓ Databases                   │
-│  ✓ NAT Gateways                   ✓ Cache servers               │
-│  ✓ VPN endpoints                  ✓ Backend services            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 PUBLIC vs PRIVATE SUBNETS                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  PUBLIC SUBNET                    PRIVATE SUBNET                |
+|  --------------                   --------------                |
+|  • Route till Internet Gateway    • Ingen direkt internet-route |
+|  • Public IP på instanser         • Endast private IPs          |
+|  • Exponerad mot internet         • Skyddad från internet       |
+|                                                                 |
+|  Lämpligt för:                    Lämpligt för:                 |
+|  ✓ Load Balancers                 ✓ Application servers         |
+|  ✓ Bastion hosts                  ✓ Databases                   |
+|  ✓ NAT Gateways                   ✓ Cache servers               |
+|  ✓ VPN endpoints                  ✓ Backend services            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Three-Tier Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         INTERNET                                │
-│                            │                                    │
-│                    ┌───────┴───────┐                            │
-│                    │ Internet GW   │                            │
-│                    └───────┬───────┘                            │
-│  ┌─────────────────────────┼─────────────────────────┐          │
-│  │                    VPC  │                         │          │
-│  │  ┌──────────────────────┼──────────────────────┐  │          │
-│  │  │  PUBLIC SUBNETS      │                      │  │          │
-│  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐     │  │          │
-│  │  │  │   ALB   │  │   ALB   │  │   ALB   │     │  │          │
-│  │  │  │  AZ-1a  │  │  AZ-1b  │  │  AZ-1c  │     │  │          │
-│  │  │  └────┬────┘  └────┬────┘  └────┬────┘     │  │          │
-│  │  └───────┼────────────┼───────────┼───────────┘  │          │
-│  │  ┌───────┼────────────┼───────────┼───────────┐  │          │
-│  │  │  PRIVATE SUBNETS (APP)                     │  │          │
-│  │  │  ┌────┴────┐  ┌────┴────┐  ┌────┴────┐     │  │          │
-│  │  │  │   EC2   │  │   EC2   │  │   EC2   │     │  │          │
-│  │  │  └────┬────┘  └────┬────┘  └────┬────┘     │  │          │
-│  │  └───────┼────────────┼───────────┼───────────┘  │          │
-│  │  ┌───────┼────────────┼───────────┼───────────┐  │          │
-│  │  │  PRIVATE SUBNETS (DB)                      │  │          │
-│  │  │  ┌────┴────┐  ┌────┴────┐  ┌────┴────┐     │  │          │
-│  │  │  │   RDS   │  │   RDS   │  │   RDS   │     │  │          │
-│  │  │  │ Primary │  │ Standby │  │ Replica │     │  │          │
-│  │  │  └─────────┘  └─────────┘  └─────────┘     │  │          │
-│  │  └────────────────────────────────────────────┘  │          │
-│  └──────────────────────────────────────────────────┘          │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                         INTERNET                                |
+|                            |                                    |
+|                    +-------+-------+                            |
+|                    | Internet GW   |                            |
+|                    +-------+-------+                            |
+|  +-------------------------+-------------------------+          |
+|  |                    VPC  |                         |          |
+|  |  +----------------------+----------------------+  |          |
+|  |  |  PUBLIC SUBNETS      |                      |  |          |
+|  |  |  +---------+  +---------+  +---------+     |  |          |
+|  |  |  |   ALB   |  |   ALB   |  |   ALB   |     |  |          |
+|  |  |  |  AZ-1a  |  |  AZ-1b  |  |  AZ-1c  |     |  |          |
+|  |  |  +----+----+  +----+----+  +----+----+     |  |          |
+|  |  +-------+------------+-----------+-----------+  |          |
+|  |  +-------+------------+-----------+-----------+  |          |
+|  |  |  PRIVATE SUBNETS (APP)                     |  |          |
+|  |  |  +----+----+  +----+----+  +----+----+     |  |          |
+|  |  |  |   EC2   |  |   EC2   |  |   EC2   |     |  |          |
+|  |  |  +----+----+  +----+----+  +----+----+     |  |          |
+|  |  +-------+------------+-----------+-----------+  |          |
+|  |  +-------+------------+-----------+-----------+  |          |
+|  |  |  PRIVATE SUBNETS (DB)                      |  |          |
+|  |  |  +----+----+  +----+----+  +----+----+     |  |          |
+|  |  |  |   RDS   |  |   RDS   |  |   RDS   |     |  |          |
+|  |  |  | Primary |  | Standby |  | Replica |     |  |          |
+|  |  |  +---------+  +---------+  +---------+     |  |          |
+|  |  +--------------------------------------------+  |          |
+|  +--------------------------------------------------+          |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Skapa Subnets
@@ -29044,7 +29044,7 @@ aws ec2 describe-subnets \\
 - Tagga subnets tydligt
 
 ## Nästa steg
-→ Internet Gateway
+-> Internet Gateway
 """
             },
             {"title": "Internet Gateway", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -29061,36 +29061,36 @@ Internet Gateway är bron mellan din VPC och internet. Utan den kan ingenting i 
 ## Hur Internet Gateway fungerar
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INTERNET GATEWAY                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│            INTERNET                                             │
-│               │                                                 │
-│       ┌───────┴───────┐                                         │
-│       │ Internet GW   │  ← Horizontally scaled, HA, managed    │
-│       │   (igw-xxx)   │  ← No bandwidth constraints            │
-│       └───────┬───────┘                                         │
-│               │                                                 │
-│  ┌────────────┼────────────┐                                    │
-│  │    VPC     │            │                                    │
-│  │            │            │                                    │
-│  │  ┌─────────┴──────────┐ │                                    │
-│  │  │   Route Table      │ │                                    │
-│  │  │ 0.0.0.0/0 → igw-xx │ │  ← "Skicka internet-trafik till │ │
-│  │  └─────────┬──────────┘ │     Internet Gateway"              │
-│  │            │            │                                    │
-│  │  ┌─────────┴──────────┐ │                                    │
-│  │  │   Public Subnet    │ │                                    │
-│  │  │   ┌───────────┐    │ │                                    │
-│  │  │   │    EC2    │    │ │  ← Behöver public IP              │
-│  │  │   │ 10.0.1.5  │    │ │                                    │
-│  │  │   │ 54.x.x.x  │    │ │  ← IGW gör NAT: 10.0.1.5 ↔ 54.x │
-│  │  │   └───────────┘    │ │                                    │
-│  │  └────────────────────┘ │                                    │
-│  └─────────────────────────┘                                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    INTERNET GATEWAY                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|            INTERNET                                             |
+|               |                                                 |
+|       +-------+-------+                                         |
+|       | Internet GW   |  <- Horizontally scaled, HA, managed    |
+|       |   (igw-xxx)   |  <- No bandwidth constraints            |
+|       +-------+-------+                                         |
+|               |                                                 |
+|  +------------+------------+                                    |
+|  |    VPC     |            |                                    |
+|  |            |            |                                    |
+|  |  +---------+----------+ |                                    |
+|  |  |   Route Table      | |                                    |
+|  |  | 0.0.0.0/0 -> igw-xx | |  <- "Skicka internet-trafik till | |
+|  |  +---------+----------+ |     Internet Gateway"              |
+|  |            |            |                                    |
+|  |  +---------+----------+ |                                    |
+|  |  |   Public Subnet    | |                                    |
+|  |  |   +-----------+    | |                                    |
+|  |  |   |    EC2    |    | |  <- Behöver public IP              |
+|  |  |   | 10.0.1.5  |    | |                                    |
+|  |  |   | 54.x.x.x  |    | |  <- IGW gör NAT: 10.0.1.5 ↔ 54.x |
+|  |  |   +-----------+    | |                                    |
+|  |  +--------------------+ |                                    |
+|  +-------------------------+                                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg
@@ -29160,19 +29160,19 @@ aws ec2 describe-route-tables \\
 ### Problem: EC2 kan inte nå internet trots IGW
 **Checklista:**
 1. ✅ IGW attached till VPC?
-2. ✅ Route table har 0.0.0.0/0 → igw?
+2. ✅ Route table har 0.0.0.0/0 -> igw?
 3. ✅ Route table associerad med subnet?
 4. ✅ EC2 har public IP?
 5. ✅ Security Group tillåter outbound?
 
 ## Sammanfattning
 - IGW = bron till internet
-- Kräver route (0.0.0.0/0 → igw)
+- Kräver route (0.0.0.0/0 -> igw)
 - Kräver public IP på instanser
 - Managed, HA, ingen extra kostnad
 
 ## Nästa steg
-→ NAT Gateway/Instance
+-> NAT Gateway/Instance
 """
             },
             {"title": "NAT Gateway/Instance", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -29189,59 +29189,59 @@ Instanser i private subnets behöver ofta nå internet (för updates, API-anrop,
 ## NAT Gateway vs NAT Instance
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│          NAT GATEWAY vs NAT INSTANCE                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  NAT GATEWAY (Rekommenderat)      NAT INSTANCE (Legacy)         │
-│  ────────────────────────────     ─────────────────────         │
-│  ✓ Managed av AWS                 ✗ Du hanterar EC2             │
-│  ✓ Highly available i AZ          ✗ Single point of failure    │
-│  ✓ Upp till 45 Gbps               ✗ Begränsad av instanstyp    │
-│  ✓ Autoscaling                    ✗ Manuell skalning           │
-│  ✓ Inget OS att patcha            ✗ Du patchar OS              │
-│                                                                 │
-│  Kostnad: ~$32/mån + $0.045/GB    Kostnad: EC2-pris + EIP      │
-│                                                                 │
-│  Använd NAT Gateway om du inte    Använd NAT Instance om:       │
-│  har specifika skäl att inte      • Labbmiljö/lärande          │
-│  göra det.                        • Extremt låg budget          │
-│                                   • Behöver port forwarding     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|          NAT GATEWAY vs NAT INSTANCE                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  NAT GATEWAY (Rekommenderat)      NAT INSTANCE (Legacy)         |
+|  ----------------------------     ---------------------         |
+|  ✓ Managed av AWS                 ✗ Du hanterar EC2             |
+|  ✓ Highly available i AZ          ✗ Single point of failure    |
+|  ✓ Upp till 45 Gbps               ✗ Begränsad av instanstyp    |
+|  ✓ Autoscaling                    ✗ Manuell skalning           |
+|  ✓ Inget OS att patcha            ✗ Du patchar OS              |
+|                                                                 |
+|  Kostnad: ~$32/mån + $0.045/GB    Kostnad: EC2-pris + EIP      |
+|                                                                 |
+|  Använd NAT Gateway om du inte    Använd NAT Instance om:       |
+|  har specifika skäl att inte      • Labbmiljö/lärande          |
+|  göra det.                        • Extremt låg budget          |
+|                                   • Behöver port forwarding     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                          INTERNET                               │
-│                              │                                  │
-│                      ┌───────┴───────┐                          │
-│                      │  Internet GW  │                          │
-│                      └───────┬───────┘                          │
-│  ┌───────────────────────────┼───────────────────────┐          │
-│  │                    VPC    │                       │          │
-│  │  ┌────────────────────────┼─────────────────────┐ │          │
-│  │  │  PUBLIC SUBNET         │                     │ │          │
-│  │  │  ┌─────────────────────┴──────────────────┐  │ │          │
-│  │  │  │           NAT Gateway                  │  │ │          │
-│  │  │  │         (nat-0xxx)                     │  │ │          │
-│  │  │  │         EIP: 54.x.x.x                  │  │ │          │
-│  │  │  └─────────────────────┬──────────────────┘  │ │          │
-│  │  └────────────────────────┼─────────────────────┘ │          │
-│  │  ┌────────────────────────┼─────────────────────┐ │          │
-│  │  │  PRIVATE SUBNET        │                     │ │          │
-│  │  │  ┌─────────────────────┴──────────────────┐  │ │          │
-│  │  │  │    EC2 (10.0.10.5)                     │  │ │          │
-│  │  │  │    Route: 0.0.0.0/0 → nat-0xxx         │  │ │          │
-│  │  │  │                                        │  │ │          │
-│  │  │  │    Kan nå internet ✓                   │  │ │          │
-│  │  │  │    Kan INTE nås från internet ✓        │  │ │          │
-│  │  │  └────────────────────────────────────────┘  │ │          │
-│  │  └──────────────────────────────────────────────┘ │          │
-│  └───────────────────────────────────────────────────┘          │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                          INTERNET                               |
+|                              |                                  |
+|                      +-------+-------+                          |
+|                      |  Internet GW  |                          |
+|                      +-------+-------+                          |
+|  +---------------------------+-----------------------+          |
+|  |                    VPC    |                       |          |
+|  |  +------------------------+---------------------+ |          |
+|  |  |  PUBLIC SUBNET         |                     | |          |
+|  |  |  +---------------------+------------------+  | |          |
+|  |  |  |           NAT Gateway                  |  | |          |
+|  |  |  |         (nat-0xxx)                     |  | |          |
+|  |  |  |         EIP: 54.x.x.x                  |  | |          |
+|  |  |  +---------------------+------------------+  | |          |
+|  |  +------------------------+---------------------+ |          |
+|  |  +------------------------+---------------------+ |          |
+|  |  |  PRIVATE SUBNET        |                     | |          |
+|  |  |  +---------------------+------------------+  | |          |
+|  |  |  |    EC2 (10.0.10.5)                     |  | |          |
+|  |  |  |    Route: 0.0.0.0/0 -> nat-0xxx         |  | |          |
+|  |  |  |                                        |  | |          |
+|  |  |  |    Kan nå internet ✓                   |  | |          |
+|  |  |  |    Kan INTE nås från internet ✓        |  | |          |
+|  |  |  +----------------------------------------+  | |          |
+|  |  +----------------------------------------------+ |          |
+|  +---------------------------------------------------+          |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Skapa NAT Gateway
@@ -29303,13 +29303,13 @@ aws ec2 create-nat-gateway --subnet-id subnet-public-1b --allocation-id eipalloc
 
 ```
 NAT Gateway kostnad (eu-north-1):
-├── Timkostnad: $0.045/h × 730h = $32.85/mån
-├── Data processing: $0.045/GB
-└── Data transfer: Standard EC2 rates
++-- Timkostnad: $0.045/h x 730h = $32.85/mån
++-- Data processing: $0.045/GB
++-- Data transfer: Standard EC2 rates
 
 Exempel: 100 GB/mån utgående
-├── NAT Gateway: $32.85 + (100 × $0.045) = $37.35
-└── Plus data transfer ut: 100 × $0.09 = $9
++-- NAT Gateway: $32.85 + (100 x $0.045) = $37.35
++-- Plus data transfer ut: 100 x $0.09 = $9
 Total: ~$46/mån
 
 Tips: Använd VPC Endpoints för AWS-tjänster (S3, DynamoDB)
@@ -29322,7 +29322,7 @@ Tips: Använd VPC Endpoints för AWS-tjänster (S3, DynamoDB)
 **Lösning:** Vänta 1-2 minuter, det tar tid att provisionera.
 
 ### Problem: Private instans kan inte nå internet
-**Lösning:** Kolla route table har 0.0.0.0/0 → nat-xxx
+**Lösning:** Kolla route table har 0.0.0.0/0 -> nat-xxx
 
 ## Sammanfattning
 - NAT Gateway = managed, HA, rekommenderat
@@ -29332,7 +29332,7 @@ Tips: Använd VPC Endpoints för AWS-tjänster (S3, DynamoDB)
 - Använd en per AZ för HA
 
 ## Nästa steg
-→ Route tables
+-> Route tables
 """
             },
             {"title": "Route tables", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -29350,50 +29350,50 @@ Route tables bestämmer var nätverkstrafik ska skickas. Fel routing = instanser
 ## Route Table Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ROUTE TABLE                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Route Table: rtb-0abc123                                       │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Destination      Target          Status    Propagated  │   │
-│  ├─────────────────────────────────────────────────────────┤   │
-│  │  10.0.0.0/16      local           active    No          │   │
-│  │  0.0.0.0/0        igw-xxx         active    No          │   │
-│  │  172.16.0.0/16    pcx-xxx         active    No          │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  ROUTING LOGIC:                                                 │
-│  1. Mest specifik route vinner                                 │
-│  2. local route kan inte tas bort                              │
-│  3. 0.0.0.0/0 = default route (internet)                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    ROUTE TABLE                                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Route Table: rtb-0abc123                                       |
+|  +---------------------------------------------------------+   |
+|  |  Destination      Target          Status    Propagated  |   |
+|  +---------------------------------------------------------+   |
+|  |  10.0.0.0/16      local           active    No          |   |
+|  |  0.0.0.0/0        igw-xxx         active    No          |   |
+|  |  172.16.0.0/16    pcx-xxx         active    No          |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|  ROUTING LOGIC:                                                 |
+|  1. Mest specifik route vinner                                 |
+|  2. local route kan inte tas bort                              |
+|  3. 0.0.0.0/0 = default route (internet)                       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Typisk Routing Setup
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              PUBLIC ROUTE TABLE                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  10.0.0.0/16    →  local     (VPC-intern trafik)        │   │
-│  │  0.0.0.0/0      →  igw-xxx   (Internet via IGW)         │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│              PRIVATE ROUTE TABLE                                │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  10.0.0.0/16    →  local     (VPC-intern trafik)        │   │
-│  │  0.0.0.0/0      →  nat-xxx   (Internet via NAT GW)      │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│              DATABASE ROUTE TABLE                               │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  10.0.0.0/16    →  local     (Endast VPC-intern)        │   │
-│  │  (ingen 0.0.0.0/0 route - ingen internet-access)        │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              PUBLIC ROUTE TABLE                                 |
+|  +---------------------------------------------------------+   |
+|  |  10.0.0.0/16    ->  local     (VPC-intern trafik)        |   |
+|  |  0.0.0.0/0      ->  igw-xxx   (Internet via IGW)         |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|              PRIVATE ROUTE TABLE                                |
+|  +---------------------------------------------------------+   |
+|  |  10.0.0.0/16    ->  local     (VPC-intern trafik)        |   |
+|  |  0.0.0.0/0      ->  nat-xxx   (Internet via NAT GW)      |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
+|              DATABASE ROUTE TABLE                               |
+|  +---------------------------------------------------------+   |
+|  |  10.0.0.0/16    ->  local     (Endast VPC-intern)        |   |
+|  |  (ingen 0.0.0.0/0 route - ingen internet-access)        |   |
+|  +---------------------------------------------------------+   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg
@@ -29467,7 +29467,7 @@ aws ec2 describe-route-tables \\
 - Associera explicit för säkerhet
 
 ## Nästa steg
-→ Security Groups vs NACLs
+-> Security Groups vs NACLs
 """
             },
             {"title": "Security Groups vs NACLs", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 55,
@@ -29485,55 +29485,55 @@ AWS har två lager av nätverkssäkerhet: Security Groups (SG) och Network ACLs 
 ## Jämförelse
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│    SECURITY GROUPS vs NETWORK ACLs - KOMPLETT JÄMFÖRELSE       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ASPEKT           SECURITY GROUP        NETWORK ACL            │
-│  ──────────────   ──────────────────    ──────────────────     │
-│  Nivå             Instans (ENI)         Subnet                 │
-│  State            Stateful              Stateless              │
-│  Default          Deny all inbound      Allow all              │
-│                   Allow all outbound                           │
-│  Regler           Allow only            Allow + Deny           │
-│  Utvärdering      Alla regler           Lägsta nummer först   │
-│  Return traffic   Automatiskt           Explicit regel krävs   │
-│                                                                 │
-│  ╔═════════════════════════════════════════════════════════╗   │
-│  ║  STATEFUL vs STATELESS - Kritisk skillnad!              ║   │
-│  ╠═════════════════════════════════════════════════════════╣   │
-│  ║  Security Group:                                        ║   │
-│  ║  Om inbound HTTP (80) tillåts → Return traffic OK       ║   │
-│  ║                                                          ║   │
-│  ║  NACL:                                                   ║   │
-│  ║  Inbound HTTP (80) + Outbound ephemeral (1024-65535)    ║   │
-│  ║  BÅDA måste explicit tillåtas!                          ║   │
-│  ╚═════════════════════════════════════════════════════════╝   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|    SECURITY GROUPS vs NETWORK ACLs - KOMPLETT JÄMFÖRELSE       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ASPEKT           SECURITY GROUP        NETWORK ACL            |
+|  --------------   ------------------    ------------------     |
+|  Nivå             Instans (ENI)         Subnet                 |
+|  State            Stateful              Stateless              |
+|  Default          Deny all inbound      Allow all              |
+|                   Allow all outbound                           |
+|  Regler           Allow only            Allow + Deny           |
+|  Utvärdering      Alla regler           Lägsta nummer först   |
+|  Return traffic   Automatiskt           Explicit regel krävs   |
+|                                                                 |
+|  ╔═════════════════════════════════════════════════════════╗   |
+|  ║  STATEFUL vs STATELESS - Kritisk skillnad!              ║   |
+|  ╠═════════════════════════════════════════════════════════╣   |
+|  ║  Security Group:                                        ║   |
+|  ║  Om inbound HTTP (80) tillåts -> Return traffic OK       ║   |
+|  ║                                                          ║   |
+|  ║  NACL:                                                   ║   |
+|  ║  Inbound HTTP (80) + Outbound ephemeral (1024-65535)    ║   |
+|  ║  BÅDA måste explicit tillåtas!                          ║   |
+|  ╚═════════════════════════════════════════════════════════╝   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Visualisering
 
 ```
                     INTERNET
-                        │
-                ┌───────┴───────┐
-                │    NACL       │  ← 1st check (subnet-level)
-                │  Allow/Deny   │
-                └───────┬───────┘
-                        │
-                ┌───────┴───────┐
-                │ Security Grp  │  ← 2nd check (instance-level)
-                │  Allow only   │
-                └───────┬───────┘
-                        │
-                ┌───────┴───────┐
-                │   EC2 (ENI)   │
-                └───────────────┘
+                        |
+                +-------+-------+
+                |    NACL       |  <- 1st check (subnet-level)
+                |  Allow/Deny   |
+                +-------+-------+
+                        |
+                +-------+-------+
+                | Security Grp  |  <- 2nd check (instance-level)
+                |  Allow only   |
+                +-------+-------+
+                        |
+                +-------+-------+
+                |   EC2 (ENI)   |
+                +---------------+
 
-  INBOUND:  NACL → Security Group → Instance
-  OUTBOUND: Instance → Security Group → NACL
+  INBOUND:  NACL -> Security Group -> Instance
+  OUTBOUND: Instance -> Security Group -> NACL
 ```
 
 ## Security Group Konfiguration
@@ -29626,28 +29626,28 @@ aws ec2 create-network-acl-entry \\
 ## Best Practice Rekommendationer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                BEST PRACTICES                                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Security Groups (primärt skydd):                              │
-│  ✓ Använd för all instans-specifik filtrering                  │
-│  ✓ Referera andra SGs istället för IP-ranges                   │
-│  ✓ Namnge tydligt: {tier}-{app}-{purpose}-sg                   │
-│  ✓ En SG per "roll" (web, app, db, bastion)                    │
-│                                                                 │
-│  NACLs (extra lager):                                          │
-│  ✓ Använd som subnet-wide "guardrails"                         │
-│  ✓ Blockera kända bad actors (IP blocklists)                   │
-│  ✓ Håll simpla - komplexitet → misstag                         │
-│  ✓ Kom ihåg ephemeral ports för return traffic                 │
-│                                                                 │
-│  ⚠️  UNDVIK:                                                    │
-│  ✗ Öppna 0.0.0.0/0 på SSH/RDP                                  │
-│  ✗ Blanda explicit deny i SG (de är allow-only)                │
-│  ✗ Glömma ephemeral ports i NACL                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                BEST PRACTICES                                   |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Security Groups (primärt skydd):                              |
+|  ✓ Använd för all instans-specifik filtrering                  |
+|  ✓ Referera andra SGs istället för IP-ranges                   |
+|  ✓ Namnge tydligt: {tier}-{app}-{purpose}-sg                   |
+|  ✓ En SG per "roll" (web, app, db, bastion)                    |
+|                                                                 |
+|  NACLs (extra lager):                                          |
+|  ✓ Använd som subnet-wide "guardrails"                         |
+|  ✓ Blockera kända bad actors (IP blocklists)                   |
+|  ✓ Håll simpla - komplexitet -> misstag                         |
+|  ✓ Kom ihåg ephemeral ports för return traffic                 |
+|                                                                 |
+|  ⚠️  UNDVIK:                                                    |
+|  ✗ Öppna 0.0.0.0/0 på SSH/RDP                                  |
+|  ✗ Blanda explicit deny i SG (de är allow-only)                |
+|  ✗ Glömma ephemeral ports i NACL                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
@@ -29668,7 +29668,7 @@ aws ec2 create-network-acl-entry \\
 - Glöm inte ephemeral ports i NACL!
 
 ## Nästa steg
-→ VPC Peering
+-> VPC Peering
 """
             },
             {"title": "VPC Peering", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -29686,28 +29686,28 @@ VPC Peering låter dig koppla ihop två VPCs så instanser kan kommunicera via p
 ## VPC Peering Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    VPC PEERING                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌────────────────┐     Peering     ┌────────────────┐         │
-│  │  VPC-A (Prod)  │  Connection     │  VPC-B (Dev)   │         │
-│  │  10.0.0.0/16   │◄═══════════════►│  10.1.0.0/16   │         │
-│  │                │    pcx-xxx      │                │         │
-│  │  ┌──────────┐  │                 │  ┌──────────┐  │         │
-│  │  │ EC2      │  │  Private IP     │  │ EC2      │  │         │
-│  │  │10.0.1.5  │◄───────────────────►│10.1.1.10  │  │         │
-│  │  └──────────┘  │  Communication  │  └──────────┘  │         │
-│  └────────────────┘                 └────────────────┘         │
-│                                                                 │
-│  REGLER:                                                        │
-│  ✓ Privat kommunikation (ingen internet)                       │
-│  ✓ Samma region eller cross-region                             │
-│  ✓ Samma account eller cross-account                           │
-│  ✗ CIDR får INTE överlappa                                     │
-│  ✗ Ingen transitiv routing (A↔B↔C ≠ A↔C)                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    VPC PEERING                                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +----------------+     Peering     +----------------+         |
+|  |  VPC-A (Prod)  |  Connection     |  VPC-B (Dev)   |         |
+|  |  10.0.0.0/16   |◄═══════════════►|  10.1.0.0/16   |         |
+|  |                |    pcx-xxx      |                |         |
+|  |  +----------+  |                 |  +----------+  |         |
+|  |  | EC2      |  |  Private IP     |  | EC2      |  |         |
+|  |  |10.0.1.5  |◄-------------------►|10.1.1.10  |  |         |
+|  |  +----------+  |  Communication  |  +----------+  |         |
+|  +----------------+                 +----------------+         |
+|                                                                 |
+|  REGLER:                                                        |
+|  ✓ Privat kommunikation (ingen internet)                       |
+|  ✓ Samma region eller cross-region                             |
+|  ✓ Samma account eller cross-account                           |
+|  ✗ CIDR får INTE överlappa                                     |
+|  ✗ Ingen transitiv routing (A↔B↔C ≠ A↔C)                       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Samma Account
@@ -29779,8 +29779,8 @@ aws ec2 accept-vpc-peering-connection \\
 ```
             VPC-A                VPC-B                VPC-C
           10.0.0.0/16          10.1.0.0/16          10.2.0.0/16
-              │                    │                    │
-              └────────pcx-1───────┘────────pcx-2───────┘
+              |                    |                    |
+              +--------pcx-1-------+--------pcx-2-------+
 
        ⚠️ VPC-A kan INTE nå VPC-C via VPC-B!
 
@@ -29807,7 +29807,7 @@ aws ec2 accept-vpc-peering-connection \\
 - Cross-account kräver accept
 
 ## Nästa steg
-→ VPC Endpoints
+-> VPC Endpoints
 """
             },
             {"title": "VPC Endpoints", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -29825,31 +29825,31 @@ VPC Endpoints låter dig ansluta till AWS-tjänster (S3, DynamoDB, etc.) UTAN at
 ## Två Typer av Endpoints
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              VPC ENDPOINTS - TVÅ TYPER                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  GATEWAY ENDPOINT                 INTERFACE ENDPOINT            │
-│  (S3, DynamoDB endast)            (150+ AWS tjänster)           │
-│  ─────────────────────            ────────────────────          │
-│                                                                 │
-│  ┌─────────────────┐              ┌─────────────────┐          │
-│  │  Route Table    │              │   ENI (privat   │          │
-│  │  Entry          │              │   IP i subnet)  │          │
-│  │  pl-xxx → vpce  │              │   10.0.1.99     │          │
-│  └────────┬────────┘              └────────┬────────┘          │
-│           │                                │                    │
-│           ▼                                ▼                    │
-│  ┌─────────────────┐              ┌─────────────────┐          │
-│  │      S3 /       │              │  SSM, Secrets   │          │
-│  │   DynamoDB      │              │  Manager, EC2   │          │
-│  └─────────────────┘              │  API, etc.      │          │
-│                                   └─────────────────┘          │
-│                                                                 │
-│  Kostnad: GRATIS! ✓               Kostnad: $0.01/h + data      │
-│  PrivateLink: Nej                 PrivateLink: Ja              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              VPC ENDPOINTS - TVÅ TYPER                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  GATEWAY ENDPOINT                 INTERFACE ENDPOINT            |
+|  (S3, DynamoDB endast)            (150+ AWS tjänster)           |
+|  ---------------------            --------------------          |
+|                                                                 |
+|  +-----------------+              +-----------------+          |
+|  |  Route Table    |              |   ENI (privat   |          |
+|  |  Entry          |              |   IP i subnet)  |          |
+|  |  pl-xxx -> vpce  |              |   10.0.1.99     |          |
+|  +--------+--------+              +--------+--------+          |
+|           |                                |                    |
+|           ▼                                ▼                    |
+|  +-----------------+              +-----------------+          |
+|  |      S3 /       |              |  SSM, Secrets   |          |
+|  |   DynamoDB      |              |  Manager, EC2   |          |
+|  +-----------------+              |  API, etc.      |          |
+|                                   +-----------------+          |
+|                                                                 |
+|  Kostnad: GRATIS! ✓               Kostnad: $0.01/h + data      |
+|  PrivateLink: Nej                 PrivateLink: Ja              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Gateway Endpoint för S3
@@ -29866,7 +29866,7 @@ aws ec2 describe-route-tables \\
   --route-table-ids rtb-private-xxx \\
   --query 'RouteTables[0].Routes[?GatewayId!=`null`]'
 
-# Output visar: pl-xxx (prefix list) → vpce-xxx
+# Output visar: pl-xxx (prefix list) -> vpce-xxx
 ```
 
 ## Interface Endpoint (t.ex. SSM)
@@ -29917,27 +29917,27 @@ aws ec2 modify-vpc-endpoint \\
 ## Kostnadskalkyl
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                KOSTNADSBESPARINGAR                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Scenario: 1 TB/mån S3-trafik från private subnet              │
-│                                                                 │
-│  UTAN Gateway Endpoint:                                        │
-│  NAT Gateway processing: 1000 GB × $0.045 = $45                │
-│  NAT Gateway hourly:     730h × $0.045    = $32.85             │
-│  Total:                                   = $77.85/mån         │
-│                                                                 │
-│  MED Gateway Endpoint:                                          │
-│  S3 Gateway Endpoint:                     = $0/mån (GRATIS!)   │
-│                                                                 │
-│  BESPARING: $77.85/mån = ~$934/år                              │
-│                                                                 │
-│  Interface Endpoints (per tjänst):                             │
-│  $0.01/h × 730h × 2 AZs = $14.60/mån per endpoint             │
-│  Plus data: $0.01/GB processed                                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                KOSTNADSBESPARINGAR                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Scenario: 1 TB/mån S3-trafik från private subnet              |
+|                                                                 |
+|  UTAN Gateway Endpoint:                                        |
+|  NAT Gateway processing: 1000 GB x $0.045 = $45                |
+|  NAT Gateway hourly:     730h x $0.045    = $32.85             |
+|  Total:                                   = $77.85/mån         |
+|                                                                 |
+|  MED Gateway Endpoint:                                          |
+|  S3 Gateway Endpoint:                     = $0/mån (GRATIS!)   |
+|                                                                 |
+|  BESPARING: $77.85/mån = ~$934/år                              |
+|                                                                 |
+|  Interface Endpoints (per tjänst):                             |
+|  $0.01/h x 730h x 2 AZs = $14.60/mån per endpoint             |
+|  Plus data: $0.01/GB processed                                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
@@ -29956,7 +29956,7 @@ aws ec2 modify-vpc-endpoint \\
 - Private DNS gör endpoint transparent för apps
 
 ## Nästa steg
-→ EC2 instance types and selection
+-> EC2 instance types and selection
 """
             },
             {"title": "EC2 instance types and selection", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -29974,64 +29974,64 @@ Att välja rätt instanstyp är balansen mellan prestanda och kostnad. Fel val =
 ## Instans Naming Convention
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              EC2 INSTANCE NAMING                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│     m   5   d   .   xlarge                                      │
-│     │   │   │       │                                           │
-│     │   │   │       └─── Size: nano, micro, small, medium,     │
-│     │   │   │                  large, xlarge, 2xlarge...        │
-│     │   │   │                                                   │
-│     │   │   └─────── Additional features:                       │
-│     │   │            d = NVMe SSD storage                       │
-│     │   │            n = Network optimized                      │
-│     │   │            a = AMD processor                          │
-│     │   │            g = Graviton (ARM)                         │
-│     │   │                                                       │
-│     │   └─────────── Generation (higher = newer)                │
-│     │                                                           │
-│     └─────────────── Family:                                    │
-│                      m = General purpose                        │
-│                      c = Compute optimized                      │
-│                      r = Memory optimized                       │
-│                      t = Burstable                              │
-│                      p/g = GPU                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              EC2 INSTANCE NAMING                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|     m   5   d   .   xlarge                                      |
+|     |   |   |       |                                           |
+|     |   |   |       +--- Size: nano, micro, small, medium,     |
+|     |   |   |                  large, xlarge, 2xlarge...        |
+|     |   |   |                                                   |
+|     |   |   +------- Additional features:                       |
+|     |   |            d = NVMe SSD storage                       |
+|     |   |            n = Network optimized                      |
+|     |   |            a = AMD processor                          |
+|     |   |            g = Graviton (ARM)                         |
+|     |   |                                                       |
+|     |   +----------- Generation (higher = newer)                |
+|     |                                                           |
+|     +--------------- Family:                                    |
+|                      m = General purpose                        |
+|                      c = Compute optimized                      |
+|                      r = Memory optimized                       |
+|                      t = Burstable                              |
+|                      p/g = GPU                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Instansfamiljer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  FAMILY    USE CASE                    EXAMPLES                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  T-series  Development, small apps     t3.micro, t3.medium     │
-│            Burstable performance       t4g.small (Graviton)     │
-│            Kostnadseffektiv            ↳ Gratis tier: t2.micro │
-│                                                                 │
-│  M-series  Balanced workloads          m5.large, m6i.xlarge    │
-│            Web servers, containers     m7g.medium (Graviton)    │
-│            Generella applikationer     ↳ Bäst pris/prestanda   │
-│                                                                 │
-│  C-series  Compute intensive           c5.xlarge, c6i.2xlarge  │
-│            Batch processing            c7g.large (Graviton)     │
-│            Gaming servers              ↳ Högsta CPU/kostnad    │
-│                                                                 │
-│  R-series  Memory intensive            r5.large, r6i.xlarge    │
-│            In-memory caching           r7g.medium (Graviton)    │
-│            Real-time analytics         ↳ Upp till 24 TB RAM    │
-│                                                                 │
-│  P/G-ser   Machine learning            p4d.24xlarge (8×A100)   │
-│            GPU workloads               g5.xlarge (inference)    │
-│            Video rendering             ↳ Dyra men kraftfulla  │
-│                                                                 │
-│  I-series  Storage optimized           i3.large, i4i.xlarge    │
-│            Databases (NoSQL)           ↳ Höga IOPS, låg latens │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  FAMILY    USE CASE                    EXAMPLES                 |
++-----------------------------------------------------------------+
+|                                                                 |
+|  T-series  Development, small apps     t3.micro, t3.medium     |
+|            Burstable performance       t4g.small (Graviton)     |
+|            Kostnadseffektiv            ↳ Gratis tier: t2.micro |
+|                                                                 |
+|  M-series  Balanced workloads          m5.large, m6i.xlarge    |
+|            Web servers, containers     m7g.medium (Graviton)    |
+|            Generella applikationer     ↳ Bäst pris/prestanda   |
+|                                                                 |
+|  C-series  Compute intensive           c5.xlarge, c6i.2xlarge  |
+|            Batch processing            c7g.large (Graviton)     |
+|            Gaming servers              ↳ Högsta CPU/kostnad    |
+|                                                                 |
+|  R-series  Memory intensive            r5.large, r6i.xlarge    |
+|            In-memory caching           r7g.medium (Graviton)    |
+|            Real-time analytics         ↳ Upp till 24 TB RAM    |
+|                                                                 |
+|  P/G-ser   Machine learning            p4d.24xlarge (8xA100)   |
+|            GPU workloads               g5.xlarge (inference)    |
+|            Video rendering             ↳ Dyra men kraftfulla  |
+|                                                                 |
+|  I-series  Storage optimized           i3.large, i4i.xlarge    |
+|            Databases (NoSQL)           ↳ Höga IOPS, låg latens |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Decision Framework
@@ -30052,28 +30052,28 @@ aws pricing get-products \\
 ## Beslutsguide
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  FRÅGA DIG SJÄLV:                                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Utveckling/Test?                                               │
-│  └─► t3.micro/t3.small (burstable, billigt)                    │
-│                                                                 │
-│  Web/API server?                                                │
-│  └─► m6i.large eller m7g.medium (Graviton 20% billigare)       │
-│                                                                 │
-│  Database (PostgreSQL, MySQL)?                                  │
-│  └─► r6i.large (memory optimized)                              │
-│                                                                 │
-│  Batch/Data processing?                                         │
-│  └─► c6i.xlarge (compute optimized)                            │
-│                                                                 │
-│  Machine Learning?                                              │
-│  └─► p4d eller g5 (GPU)                                        │
-│                                                                 │
-│  ⚡ PRO TIP: Börja med t3/m6i, optimera senare med data!       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  FRÅGA DIG SJÄLV:                                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Utveckling/Test?                                               |
+|  +-► t3.micro/t3.small (burstable, billigt)                    |
+|                                                                 |
+|  Web/API server?                                                |
+|  +-► m6i.large eller m7g.medium (Graviton 20% billigare)       |
+|                                                                 |
+|  Database (PostgreSQL, MySQL)?                                  |
+|  +-► r6i.large (memory optimized)                              |
+|                                                                 |
+|  Batch/Data processing?                                         |
+|  +-► c6i.xlarge (compute optimized)                            |
+|                                                                 |
+|  Machine Learning?                                              |
+|  +-► p4d eller g5 (GPU)                                        |
+|                                                                 |
+|  ⚡ PRO TIP: Börja med t3/m6i, optimera senare med data!       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Prismodeller
@@ -30109,7 +30109,7 @@ Savings Plans: Flexible commitment, 66% rabatt
 - Optimera baserat på CloudWatch metrics
 
 ## Nästa steg
-→ AMIs (Amazon Machine Images)
+-> AMIs (Amazon Machine Images)
 """
             },
             {"title": "AMIs (Amazon Machine Images)", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -30127,27 +30127,27 @@ AMI är mallen för din EC2-instans - OS, programvara, konfiguration. Förstå A
 ## AMI Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AMI STRUCTURE                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  AMI (ami-0abc123...)                                          │
-│  │                                                              │
-│  ├── Root Volume Snapshot                                       │
-│  │   └── OS + installerad programvara                          │
-│  │                                                              │
-│  ├── Block Device Mapping                                       │
-│  │   └── Vilka EBS volumes som ska attachas                    │
-│  │                                                              │
-│  ├── Launch Permissions                                         │
-│  │   └── Public / Private / Shared with accounts               │
-│  │                                                              │
-│  └── Metadata                                                   │
-│      └── Architecture (x86_64/arm64)                           │
-│      └── Virtualization type (hvm/pv)                          │
-│      └── Root device type (ebs/instance-store)                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AMI STRUCTURE                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  AMI (ami-0abc123...)                                          |
+|  |                                                              |
+|  +-- Root Volume Snapshot                                       |
+|  |   +-- OS + installerad programvara                          |
+|  |                                                              |
+|  +-- Block Device Mapping                                       |
+|  |   +-- Vilka EBS volumes som ska attachas                    |
+|  |                                                              |
+|  +-- Launch Permissions                                         |
+|  |   +-- Public / Private / Shared with accounts               |
+|  |                                                              |
+|  +-- Metadata                                                   |
+|      +-- Architecture (x86_64/arm64)                           |
+|      +-- Virtualization type (hvm/pv)                          |
+|      +-- Root device type (ebs/instance-store)                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Hitta AMIs
@@ -30202,35 +30202,35 @@ aws ec2 wait image-available --image-ids ami-new-xxx
 ## Golden Image Strategy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              GOLDEN IMAGE PIPELINE                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  BASE AMI (Amazon Linux 2023)                                   │
-│       │                                                         │
-│       ▼                                                         │
-│  ┌─────────────────────────────────────┐                       │
-│  │  Packer Build                       │                       │
-│  │  + Security hardening               │                       │
-│  │  + CloudWatch agent                 │                       │
-│  │  + SSM agent                        │                       │
-│  │  + Company certificates             │                       │
-│  └─────────────────┬───────────────────┘                       │
-│                    │                                            │
-│                    ▼                                            │
-│  HARDENED BASE AMI (ami-hardened-xxx)                          │
-│       │                                                         │
-│       ├─────────────┬─────────────────┐                        │
-│       ▼             ▼                 ▼                        │
-│  WEB AMI       APP AMI          DB AMI                         │
-│  + nginx       + java           + monitoring                    │
-│  + certbot     + app code       + backup agent                 │
-│                                                                 │
-│  ✅ Konsistent baseline                                         │
-│  ✅ Snabba deployments                                          │
-│  ✅ Versionshantering                                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              GOLDEN IMAGE PIPELINE                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  BASE AMI (Amazon Linux 2023)                                   |
+|       |                                                         |
+|       ▼                                                         |
+|  +-------------------------------------+                       |
+|  |  Packer Build                       |                       |
+|  |  + Security hardening               |                       |
+|  |  + CloudWatch agent                 |                       |
+|  |  + SSM agent                        |                       |
+|  |  + Company certificates             |                       |
+|  +-----------------+-------------------+                       |
+|                    |                                            |
+|                    ▼                                            |
+|  HARDENED BASE AMI (ami-hardened-xxx)                          |
+|       |                                                         |
+|       +-------------+-----------------+                        |
+|       ▼             ▼                 ▼                        |
+|  WEB AMI       APP AMI          DB AMI                         |
+|  + nginx       + java           + monitoring                    |
+|  + certbot     + app code       + backup agent                 |
+|                                                                 |
+|  ✅ Konsistent baseline                                         |
+|  ✅ Snabba deployments                                          |
+|  ✅ Versionshantering                                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## AMI Sharing
@@ -30265,7 +30265,7 @@ aws ec2 copy-image \\
 - Automatisera med Packer
 
 ## Nästa steg
-→ Key pairs and SSH
+-> Key pairs and SSH
 """
             },
             {"title": "Key pairs and SSH", "difficulty": "easy", "estimated_minutes": 15, "xp_reward": 30,
@@ -30283,27 +30283,27 @@ SSH key pairs är hur du autentiserar till EC2-instanser. Felhantering av nyckla
 ## Key Pair Basics
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              SSH KEY PAIR                                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────────────┐    ┌─────────────────────┐            │
-│  │  PRIVATE KEY        │    │  PUBLIC KEY         │            │
-│  │  (.pem fil)         │    │  (på EC2 instans)   │            │
-│  │                     │    │                     │            │
-│  │  Du behåller denna  │    │  AWS lägger denna   │            │
-│  │  lokalt, säkert     │    │  i ~/.ssh/          │            │
-│  │                     │    │  authorized_keys    │            │
-│  └──────────┬──────────┘    └──────────┬──────────┘            │
-│             │                          │                        │
-│             └──────────────────────────┘                        │
-│                       │                                         │
-│                       ▼                                         │
-│             SSH Authentication                                  │
-│             "Bevisar att du äger                                │
-│              motsvarande public key"                            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              SSH KEY PAIR                                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +---------------------+    +---------------------+            |
+|  |  PRIVATE KEY        |    |  PUBLIC KEY         |            |
+|  |  (.pem fil)         |    |  (på EC2 instans)   |            |
+|  |                     |    |                     |            |
+|  |  Du behåller denna  |    |  AWS lägger denna   |            |
+|  |  lokalt, säkert     |    |  i ~/.ssh/          |            |
+|  |                     |    |  authorized_keys    |            |
+|  +----------+----------+    +----------+----------+            |
+|             |                          |                        |
+|             +--------------------------+                        |
+|                       |                                         |
+|                       ▼                                         |
+|             SSH Authentication                                  |
+|             "Bevisar att du äger                                |
+|              motsvarande public key"                            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Skapa Key Pair
@@ -30412,7 +30412,7 @@ ssh -i key.pem ec2-user@i-xxx \\
 - Rotera nycklar regelbundet
 
 ## Nästa steg
-→ User data scripts
+-> User data scripts
 """
             },
             {"title": "User data scripts", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -30430,24 +30430,24 @@ User data kör automatiskt vid instansstart - perfekt för bootstrap, konfigurat
 ## User Data Basics
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              USER DATA EXECUTION                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  EC2 Launch                                                     │
-│      │                                                          │
-│      ▼                                                          │
-│  ┌─────────────────────────────────────────────────┐           │
-│  │  1. Instance startar                            │           │
-│  │  2. cloud-init körs                             │           │
-│  │  3. User data scriptet exekveras (som root)     │           │
-│  │  4. Endast vid FÖRSTA start (default)           │           │
-│  └─────────────────────────────────────────────────┘           │
-│                                                                 │
-│  ⚠️  User data körs ENDAST vid första launch!                  │
-│      (kan ändras med cloud-init config)                        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              USER DATA EXECUTION                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  EC2 Launch                                                     |
+|      |                                                          |
+|      ▼                                                          |
+|  +-------------------------------------------------+           |
+|  |  1. Instance startar                            |           |
+|  |  2. cloud-init körs                             |           |
+|  |  3. User data scriptet exekveras (som root)     |           |
+|  |  4. Endast vid FÖRSTA start (default)           |           |
+|  +-------------------------------------------------+           |
+|                                                                 |
+|  ⚠️  User data körs ENDAST vid första launch!                  |
+|      (kan ändras med cloud-init config)                        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Exempel: Web Server Setup
@@ -30582,7 +30582,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-da
 - Använd cloud-init format för komplext
 
 ## Nästa steg
-→ EBS volumes
+-> EBS volumes
 """
             },
             {"title": "EBS volumes", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -30600,37 +30600,37 @@ EBS är persistent block storage för EC2. Förstå volymtyper, provisioning, oc
 ## EBS Volume Typer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              EBS VOLUME TYPES                                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  TYPE         USE CASE              IOPS        $/GB/mån       │
-│  ──────────   ──────────────────    ─────────   ──────────     │
-│                                                                 │
-│  gp3          General purpose       3000-16000   $0.08         │
-│  (DEFAULT)    Boot volumes, apps    (baseline)   ✓ Mest flexibel│
-│                                                                 │
-│  gp2          Legacy general        Burst till   $0.10         │
-│               purpose               3000         Migrerar till gp3│
-│                                                                 │
-│  io2          High performance      Up to        $0.125        │
-│               Databases             64000 IOPS   + $0.065/IOPS │
-│               Critical apps                                     │
-│                                                                 │
-│  st1          Throughput opt.       500 MiB/s    $0.045        │
-│               Big data, logs        Sequential   ✗ Ej boot vol │
-│                                                                 │
-│  sc1          Cold storage          250 MiB/s    $0.015        │
-│               Infrequent access     Sequential   ✗ Ej boot vol │
-│                                                                 │
-│  ═══════════════════════════════════════════════════════════   │
-│  REKOMMENDATION:                                                │
-│  • Boot volumes → gp3                                           │
-│  • Database → io2 (kritisk) eller gp3 (standard)               │
-│  • Big data → st1                                               │
-│  • Archive → sc1                                                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              EBS VOLUME TYPES                                   |
++-----------------------------------------------------------------+
+|                                                                 |
+|  TYPE         USE CASE              IOPS        $/GB/mån       |
+|  ----------   ------------------    ---------   ----------     |
+|                                                                 |
+|  gp3          General purpose       3000-16000   $0.08         |
+|  (DEFAULT)    Boot volumes, apps    (baseline)   ✓ Mest flexibel|
+|                                                                 |
+|  gp2          Legacy general        Burst till   $0.10         |
+|               purpose               3000         Migrerar till gp3|
+|                                                                 |
+|  io2          High performance      Up to        $0.125        |
+|               Databases             64000 IOPS   + $0.065/IOPS |
+|               Critical apps                                     |
+|                                                                 |
+|  st1          Throughput opt.       500 MiB/s    $0.045        |
+|               Big data, logs        Sequential   ✗ Ej boot vol |
+|                                                                 |
+|  sc1          Cold storage          250 MiB/s    $0.015        |
+|               Infrequent access     Sequential   ✗ Ej boot vol |
+|                                                                 |
+|  ═══════════════════════════════════════════════════════════   |
+|  REKOMMENDATION:                                                |
+|  • Boot volumes -> gp3                                           |
+|  • Database -> io2 (kritisk) eller gp3 (standard)               |
+|  • Big data -> st1                                               |
+|  • Archive -> sc1                                                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Skapa och Attacha Volume
@@ -30697,25 +30697,25 @@ aws ec2 copy-snapshot \\
 ## Encryption
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              EBS ENCRYPTION                                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✓ Data at rest encrypted (AES-256)                            │
-│  ✓ Data in transit mellan EC2 och EBS                          │
-│  ✓ Snapshots automatiskt krypterade                            │
-│  ✓ Minimal performance impact (~1%)                            │
-│                                                                 │
-│  DEFAULT ENCRYPTION (rekommenderat):                            │
-│  aws ec2 enable-ebs-encryption-by-default                       │
-│                                                                 │
-│  KRYPTERA EXISTERANDE VOLUME:                                   │
-│  1. Skapa snapshot                                              │
-│  2. Kopiera snapshot med encryption                             │
-│  3. Skapa ny volume från krypterad snapshot                     │
-│  4. Attacha nya volymen                                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              EBS ENCRYPTION                                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✓ Data at rest encrypted (AES-256)                            |
+|  ✓ Data in transit mellan EC2 och EBS                          |
+|  ✓ Snapshots automatiskt krypterade                            |
+|  ✓ Minimal performance impact (~1%)                            |
+|                                                                 |
+|  DEFAULT ENCRYPTION (rekommenderat):                            |
+|  aws ec2 enable-ebs-encryption-by-default                       |
+|                                                                 |
+|  KRYPTERA EXISTERANDE VOLUME:                                   |
+|  1. Skapa snapshot                                              |
+|  2. Kopiera snapshot med encryption                             |
+|  3. Skapa ny volume från krypterad snapshot                     |
+|  4. Attacha nya volymen                                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ```bash
@@ -30734,7 +30734,7 @@ aws ec2 copy-snapshot \\
 
 ### Problem: "Volume is in wrong AZ"
 **Orsak:** Volume och EC2 måste vara i samma AZ
-**Lösning:** Snapshot → Create volume i rätt AZ
+**Lösning:** Snapshot -> Create volume i rätt AZ
 
 ### Problem: Disk är full
 **Lösning:** Expand volymen online med `modify-volume`
@@ -30754,7 +30754,7 @@ sudo xfs_growfs /data
 - Snapshots för backup och DR
 
 ## Nästa steg
-→ ALB, NLB, CLB differences
+-> ALB, NLB, CLB differences
 """
             },
             {"title": "ALB, NLB, CLB differences", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -30772,41 +30772,41 @@ AWS har tre typer av Elastic Load Balancers. Fel val = suboptimal prestanda elle
 ## Jämförelse
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│          LOAD BALANCER COMPARISON                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ASPEKT         ALB              NLB              CLB          │
-│  ──────────     ─────────────    ─────────────    ─────────    │
-│  Layer          7 (HTTP/S)       4 (TCP/UDP)      4 & 7        │
-│  Protokoll      HTTP, HTTPS,     TCP, UDP, TLS    TCP, SSL,    │
-│                 gRPC, WebSocket                   HTTP, HTTPS   │
-│  Latency        Milliseconds     Microseconds     Milliseconds │
-│  Static IP      Nej (*)          Ja               Nej          │
-│  Path routing   Ja               Nej              Nej          │
-│  Host routing   Ja               Nej              Nej          │
-│  SSL Offload    Ja               Ja (TLS)         Ja           │
-│  Price          $$ (per rule)    $ (per flow)     Legacy       │
-│                                                                 │
-│  (*) ALB kan använda Global Accelerator för static IP          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|          LOAD BALANCER COMPARISON                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ASPEKT         ALB              NLB              CLB          |
+|  ----------     -------------    -------------    ---------    |
+|  Layer          7 (HTTP/S)       4 (TCP/UDP)      4 & 7        |
+|  Protokoll      HTTP, HTTPS,     TCP, UDP, TLS    TCP, SSL,    |
+|                 gRPC, WebSocket                   HTTP, HTTPS   |
+|  Latency        Milliseconds     Microseconds     Milliseconds |
+|  Static IP      Nej (*)          Ja               Nej          |
+|  Path routing   Ja               Nej              Nej          |
+|  Host routing   Ja               Nej              Nej          |
+|  SSL Offload    Ja               Ja (TLS)         Ja           |
+|  Price          $$ (per rule)    $ (per flow)     Legacy       |
+|                                                                 |
+|  (*) ALB kan använda Global Accelerator för static IP          |
+|                                                                 |
++-----------------------------------------------------------------+
 
 USE CASES:
-┌─────────────────────────────────────────────────────────────────┐
-│  ALB:  • Web applications (HTTP/HTTPS)                          │
-│        • Microservices med path-based routing                   │
-│        • Container workloads (ECS, EKS)                         │
-│        • Multiple domains på samma LB                           │
-│                                                                 │
-│  NLB:  • Extreme performance / low latency                      │
-│        • TCP/UDP protocols (gaming, IoT)                        │
-│        • Static IP requirement                                  │
-│        • Preserve client IP                                     │
-│                                                                 │
-│  CLB:  • Legacy - migrera till ALB/NLB                          │
-│        • EC2-Classic (deprecated)                               │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  ALB:  • Web applications (HTTP/HTTPS)                          |
+|        • Microservices med path-based routing                   |
+|        • Container workloads (ECS, EKS)                         |
+|        • Multiple domains på samma LB                           |
+|                                                                 |
+|  NLB:  • Extreme performance / low latency                      |
+|        • TCP/UDP protocols (gaming, IoT)                        |
+|        • Static IP requirement                                  |
+|        • Preserve client IP                                     |
+|                                                                 |
+|  CLB:  • Legacy - migrera till ALB/NLB                          |
+|        • EC2-Classic (deprecated)                               |
++-----------------------------------------------------------------+
 ```
 
 ## ALB - Application Load Balancer
@@ -30839,23 +30839,23 @@ aws elbv2 create-listener \\
 ## Path-based Routing (ALB)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              ALB PATH-BASED ROUTING                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│                     ALB (my-app.com)                            │
-│                          │                                      │
-│         ┌────────────────┼────────────────┐                    │
-│         │                │                │                    │
-│      /api/*          /static/*        /* (default)             │
-│         │                │                │                    │
-│         ▼                ▼                ▼                    │
-│  ┌────────────┐   ┌────────────┐   ┌────────────┐             │
-│  │ API Target │   │ S3 Bucket  │   │ Web Target │             │
-│  │   Group    │   │            │   │   Group    │             │
-│  └────────────┘   └────────────┘   └────────────┘             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              ALB PATH-BASED ROUTING                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|                     ALB (my-app.com)                            |
+|                          |                                      |
+|         +----------------+----------------+                    |
+|         |                |                |                    |
+|      /api/*          /static/*        /* (default)             |
+|         |                |                |                    |
+|         ▼                ▼                ▼                    |
+|  +------------+   +------------+   +------------+             |
+|  | API Target |   | S3 Bucket  |   | Web Target |             |
+|  |   Group    |   |            |   |   Group    |             |
+|  +------------+   +------------+   +------------+             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## NLB - Network Load Balancer
@@ -30895,7 +30895,7 @@ aws elbv2 create-load-balancer \\
 - Välj baserat på protokoll och routing-behov
 
 ## Nästa steg
-→ Target groups and health checks
+-> Target groups and health checks
 """
             },
             {"title": "Target groups and health checks", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -30913,32 +30913,32 @@ Target Groups bestämmer VILKA instanser som tar emot trafik. Health Checks best
 ## Target Group Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TARGET GROUP ARCHITECTURE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│       Load Balancer                                             │
-│            │                                                    │
-│   ┌────────┴────────┐                                          │
-│   │   Listener      │                                          │
-│   │   :443 HTTPS    │                                          │
-│   └────────┬────────┘                                          │
-│            │                                                    │
-│   ┌────────┴────────┐                                          │
-│   │  Target Group   │                                          │
-│   │  ┌───────────┐  │                                          │
-│   │  │ Target 1  │◄─┤──── Health Check ────────►               │
-│   │  │ i-xxx:80  │  │     GET /health           ✓ Healthy      │
-│   │  │ healthy   │  │     Interval: 30s                        │
-│   │  └───────────┘  │     Timeout: 5s                          │
-│   │  ┌───────────┐  │     Threshold: 3                         │
-│   │  │ Target 2  │◄─┤──── Health Check ────────►               │
-│   │  │ i-yyy:80  │  │                           ✗ Unhealthy    │
-│   │  │ unhealthy │  │     → Får ingen trafik                   │
-│   │  └───────────┘  │                                          │
-│   └─────────────────┘                                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TARGET GROUP ARCHITECTURE                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|       Load Balancer                                             |
+|            |                                                    |
+|   +--------+--------+                                          |
+|   |   Listener      |                                          |
+|   |   :443 HTTPS    |                                          |
+|   +--------+--------+                                          |
+|            |                                                    |
+|   +--------+--------+                                          |
+|   |  Target Group   |                                          |
+|   |  +-----------+  |                                          |
+|   |  | Target 1  |◄-+---- Health Check --------►               |
+|   |  | i-xxx:80  |  |     GET /health           ✓ Healthy      |
+|   |  | healthy   |  |     Interval: 30s                        |
+|   |  +-----------+  |     Timeout: 5s                          |
+|   |  +-----------+  |     Threshold: 3                         |
+|   |  | Target 2  |◄-+---- Health Check --------►               |
+|   |  | i-yyy:80  |  |                           ✗ Unhealthy    |
+|   |  | unhealthy |  |     -> Får ingen trafik                   |
+|   |  +-----------+  |                                          |
+|   +-----------------+                                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Skapa Target Group
@@ -30989,28 +30989,28 @@ aws elbv2 deregister-targets \\
 ## Health Check Tuning
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              HEALTH CHECK PARAMETERS                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Parameter                  Default    Rekommendation          │
-│  ───────────────────────    ───────    ─────────────────────   │
-│  Interval                   30s        10-30s beroende på load │
-│  Timeout                    5s         < Interval              │
-│  Healthy Threshold          5          2 (snabbare recovery)   │
-│  Unhealthy Threshold        2          3 (undvik flapping)     │
-│  Path (HTTP/HTTPS)          /          /health eller /ready    │
-│  Success Codes              200        200-299                 │
-│                                                                 │
-│  FORMELN FÖR "TIME TO UNHEALTHY":                              │
-│  Interval × Unhealthy Threshold = Max detection time           │
-│  30s × 3 = 90 sekunder                                         │
-│                                                                 │
-│  ⚠️  Trade-off:                                                 │
-│  Snabbare detection = mer load balancer trafik                 │
-│  Långsammare = längre outage vid problem                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              HEALTH CHECK PARAMETERS                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Parameter                  Default    Rekommendation          |
+|  -----------------------    -------    ---------------------   |
+|  Interval                   30s        10-30s beroende på load |
+|  Timeout                    5s         < Interval              |
+|  Healthy Threshold          5          2 (snabbare recovery)   |
+|  Unhealthy Threshold        2          3 (undvik flapping)     |
+|  Path (HTTP/HTTPS)          /          /health eller /ready    |
+|  Success Codes              200        200-299                 |
+|                                                                 |
+|  FORMELN FÖR "TIME TO UNHEALTHY":                              |
+|  Interval x Unhealthy Threshold = Max detection time           |
+|  30s x 3 = 90 sekunder                                         |
+|                                                                 |
+|  ⚠️  Trade-off:                                                 |
+|  Snabbare detection = mer load balancer trafik                 |
+|  Långsammare = längre outage vid problem                       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Health Endpoint Best Practice
@@ -31081,10 +31081,10 @@ ssh instance "curl -I localhost:80/health"
 - Health Check avgör om target får trafik
 - Tune thresholds för din workload
 - Implementera proper /health endpoint
-- Security Groups måste tillåta LB → Target
+- Security Groups måste tillåta LB -> Target
 
 ## Nästa steg
-→ Auto Scaling groups
+-> Auto Scaling groups
 """
             },
             {"title": "Auto Scaling groups", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 55,
@@ -31102,35 +31102,35 @@ Auto Scaling anpassar automatiskt antal instanser efter behov. Rätt konfigurati
 ## Auto Scaling Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              AUTO SCALING ARCHITECTURE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│       CloudWatch Alarm                                          │
-│       "CPU > 70% for 5 min"                                     │
-│              │                                                  │
-│              ▼                                                  │
-│  ┌───────────────────────────────────────────────────┐         │
-│  │           AUTO SCALING GROUP                      │         │
-│  │                                                   │         │
-│  │   Min: 2    Desired: 3    Max: 10                │         │
-│  │                                                   │         │
-│  │   ┌────────────────────────────────────────────┐ │         │
-│  │   │         Launch Template                    │ │         │
-│  │   │  AMI: ami-xxx                              │ │         │
-│  │   │  Type: m6i.large                           │ │         │
-│  │   │  Security Groups: sg-xxx                   │ │         │
-│  │   │  User Data: bootstrap.sh                   │ │         │
-│  │   └────────────────────────────────────────────┘ │         │
-│  │                                                   │         │
-│  │   ┌─────┐  ┌─────┐  ┌─────┐                     │         │
-│  │   │ EC2 │  │ EC2 │  │ EC2 │  → Target Group    │         │
-│  │   │ AZ-a│  │ AZ-b│  │ AZ-a│  → Load Balancer   │         │
-│  │   └─────┘  └─────┘  └─────┘                     │         │
-│  │                                                   │         │
-│  └───────────────────────────────────────────────────┘         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              AUTO SCALING ARCHITECTURE                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|       CloudWatch Alarm                                          |
+|       "CPU > 70% for 5 min"                                     |
+|              |                                                  |
+|              ▼                                                  |
+|  +---------------------------------------------------+         |
+|  |           AUTO SCALING GROUP                      |         |
+|  |                                                   |         |
+|  |   Min: 2    Desired: 3    Max: 10                |         |
+|  |                                                   |         |
+|  |   +--------------------------------------------+ |         |
+|  |   |         Launch Template                    | |         |
+|  |   |  AMI: ami-xxx                              | |         |
+|  |   |  Type: m6i.large                           | |         |
+|  |   |  Security Groups: sg-xxx                   | |         |
+|  |   |  User Data: bootstrap.sh                   | |         |
+|  |   +--------------------------------------------+ |         |
+|  |                                                   |         |
+|  |   +-----+  +-----+  +-----+                     |         |
+|  |   | EC2 |  | EC2 |  | EC2 |  -> Target Group    |         |
+|  |   | AZ-a|  | AZ-b|  | AZ-a|  -> Load Balancer   |         |
+|  |   +-----+  +-----+  +-----+                     |         |
+|  |                                                   |         |
+|  +---------------------------------------------------+         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Launch Template
@@ -31250,7 +31250,7 @@ aws autoscaling start-instance-refresh \\
 - Instance Refresh för rolling updates
 
 ## Nästa steg
-→ S3 bucket configuration
+-> S3 bucket configuration
 """
             },
             {"title": "S3 bucket configuration", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -31268,27 +31268,27 @@ Amazon S3 är AWS's objekt-storage - användbart för allt från backups till st
 ## S3 Grundkoncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              S3 STRUCTURE                                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  S3 (Global Service)                                           │
-│  └── Bucket: my-company-data (globally unique namn)            │
-│      ├── Object: /logs/2024/01/app.log                         │
-│      │   └── Key: logs/2024/01/app.log                         │
-│      │   └── Value: [fil-innehåll]                             │
-│      │   └── Metadata: Content-Type, Cache-Control, etc.       │
-│      │                                                          │
-│      ├── Object: /images/logo.png                              │
-│      └── Object: /backups/db-2024-01-15.sql.gz                 │
-│                                                                 │
-│  VIKTIGT:                                                       │
-│  • Bucket-namn måste vara globally unique                       │
-│  • Max object size: 5 TB                                        │
-│  • Max PUT size: 5 GB (använd multipart för större)            │
-│  • Flat namespace (men / simulerar folders)                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              S3 STRUCTURE                                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  S3 (Global Service)                                           |
+|  +-- Bucket: my-company-data (globally unique namn)            |
+|      +-- Object: /logs/2024/01/app.log                         |
+|      |   +-- Key: logs/2024/01/app.log                         |
+|      |   +-- Value: [fil-innehåll]                             |
+|      |   +-- Metadata: Content-Type, Cache-Control, etc.       |
+|      |                                                          |
+|      +-- Object: /images/logo.png                              |
+|      +-- Object: /backups/db-2024-01-15.sql.gz                 |
+|                                                                 |
+|  VIKTIGT:                                                       |
+|  • Bucket-namn måste vara globally unique                       |
+|  • Max object size: 5 TB                                        |
+|  • Max PUT size: 5 GB (använd multipart för större)            |
+|  • Flat namespace (men / simulerar folders)                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Skapa Bucket
@@ -31423,7 +31423,7 @@ aws s3 rm s3://my-bucket/folder/ --recursive
 - Använd CloudFront för produktion
 
 ## Nästa steg
-→ S3 storage classes
+-> S3 storage classes
 """
             },
             {"title": "S3 storage classes", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -31441,75 +31441,75 @@ AWS S3 har olika storage classes med olika pris/performance trade-offs. Rätt va
 ## Storage Class Översikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              S3 STORAGE CLASSES                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  CLASS                    USE CASE           $/GB/mån  Hämtning │
-│  ─────────────────────    ────────────────   ────────  ─────────│
-│                                                                 │
-│  S3 STANDARD              Frequently         $0.023    Gratis  │
-│                           accessed data                         │
-│                           ↳ Hot data, apps                      │
-│                                                                 │
-│  S3 STANDARD-IA          Infrequent          $0.0125   $0.01/GB│
-│  (Infrequent Access)     access, but fast    30 dagars minimum │
-│                           ↳ Backups, DR                         │
-│                                                                 │
-│  S3 ONE ZONE-IA          Infrequent,         $0.01     $0.01/GB│
-│                           non-critical       Endast 1 AZ       │
-│                           ↳ Re-creatable                        │
-│                                                                 │
-│  S3 GLACIER INSTANT      Archive med         $0.004    $0.03/GB│
-│  RETRIEVAL               millisec access     90 dagars min     │
-│                           ↳ Compliance                          │
-│                                                                 │
-│  S3 GLACIER FLEXIBLE     Archive,            $0.0036   3-12h   │
-│  RETRIEVAL               minuter-timmar      90 dagars min     │
-│                           ↳ Long-term backup                    │
-│                                                                 │
-│  S3 GLACIER DEEP         Coldest archive     $0.00099  12-48h  │
-│  ARCHIVE                 årlig access        180 dagars min    │
-│                           ↳ Compliance 7+ år                    │
-│                                                                 │
-│  S3 INTELLIGENT-         Okända patterns     $0.023+   Gratis  │
-│  TIERING                 auto-optimerar      monitoring fee    │
-│                           ↳ Set and forget                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              S3 STORAGE CLASSES                                 |
++-----------------------------------------------------------------+
+|                                                                 |
+|  CLASS                    USE CASE           $/GB/mån  Hämtning |
+|  ---------------------    ----------------   --------  ---------|
+|                                                                 |
+|  S3 STANDARD              Frequently         $0.023    Gratis  |
+|                           accessed data                         |
+|                           ↳ Hot data, apps                      |
+|                                                                 |
+|  S3 STANDARD-IA          Infrequent          $0.0125   $0.01/GB|
+|  (Infrequent Access)     access, but fast    30 dagars minimum |
+|                           ↳ Backups, DR                         |
+|                                                                 |
+|  S3 ONE ZONE-IA          Infrequent,         $0.01     $0.01/GB|
+|                           non-critical       Endast 1 AZ       |
+|                           ↳ Re-creatable                        |
+|                                                                 |
+|  S3 GLACIER INSTANT      Archive med         $0.004    $0.03/GB|
+|  RETRIEVAL               millisec access     90 dagars min     |
+|                           ↳ Compliance                          |
+|                                                                 |
+|  S3 GLACIER FLEXIBLE     Archive,            $0.0036   3-12h   |
+|  RETRIEVAL               minuter-timmar      90 dagars min     |
+|                           ↳ Long-term backup                    |
+|                                                                 |
+|  S3 GLACIER DEEP         Coldest archive     $0.00099  12-48h  |
+|  ARCHIVE                 årlig access        180 dagars min    |
+|                           ↳ Compliance 7+ år                    |
+|                                                                 |
+|  S3 INTELLIGENT-         Okända patterns     $0.023+   Gratis  |
+|  TIERING                 auto-optimerar      monitoring fee    |
+|                           ↳ Set and forget                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Decision Tree
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              VILKEN STORAGE CLASS?                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Behöver du data flera gånger per dag?                         │
-│  └─ JA → S3 Standard                                           │
-│  └─ NEJ ↓                                                       │
-│                                                                 │
-│  Behöver du data några gånger i månaden?                       │
-│  └─ JA → Är det kritiskt?                                      │
-│          └─ JA → S3 Standard-IA                                │
-│          └─ NEJ → S3 One Zone-IA                               │
-│  └─ NEJ ↓                                                       │
-│                                                                 │
-│  Behöver du millisekund-access?                                │
-│  └─ JA → Glacier Instant Retrieval                             │
-│  └─ NEJ ↓                                                       │
-│                                                                 │
-│  Kan du vänta timmar?                                          │
-│  └─ JA → Glacier Flexible Retrieval                            │
-│  └─ NEJ ↓                                                       │
-│                                                                 │
-│  Kan du vänta dagar?                                           │
-│  └─ JA → Glacier Deep Archive                                  │
-│                                                                 │
-│  Osäker på access patterns? → S3 Intelligent-Tiering           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              VILKEN STORAGE CLASS?                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Behöver du data flera gånger per dag?                         |
+|  +- JA -> S3 Standard                                           |
+|  +- NEJ ↓                                                       |
+|                                                                 |
+|  Behöver du data några gånger i månaden?                       |
+|  +- JA -> Är det kritiskt?                                      |
+|          +- JA -> S3 Standard-IA                                |
+|          +- NEJ -> S3 One Zone-IA                               |
+|  +- NEJ ↓                                                       |
+|                                                                 |
+|  Behöver du millisekund-access?                                |
+|  +- JA -> Glacier Instant Retrieval                             |
+|  +- NEJ ↓                                                       |
+|                                                                 |
+|  Kan du vänta timmar?                                          |
+|  +- JA -> Glacier Flexible Retrieval                            |
+|  +- NEJ ↓                                                       |
+|                                                                 |
+|  Kan du vänta dagar?                                           |
+|  +- JA -> Glacier Deep Archive                                  |
+|                                                                 |
+|  Osäker på access patterns? -> S3 Intelligent-Tiering           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sätta Storage Class
@@ -31552,21 +31552,21 @@ aws s3 cp my-data/ s3://my-bucket/ --recursive \\
 ## Kostnadskalkyl
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              EXEMPEL: 100 TB DATA                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  S3 Standard:          100 TB × $0.023 = $2,300/mån            │
-│  Standard-IA:          100 TB × $0.0125 = $1,250/mån (46% ↓)   │
-│  Glacier Flexible:     100 TB × $0.0036 = $360/mån (84% ↓)     │
-│  Deep Archive:         100 TB × $0.00099 = $99/mån (96% ↓)     │
-│                                                                 │
-│  ⚠️  Kom ihåg:                                                  │
-│  • Retrieval costs (Glacier)                                   │
-│  • Minimum storage duration                                    │
-│  • Request pricing (IA = dyrare PUT/GET)                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              EXEMPEL: 100 TB DATA                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  S3 Standard:          100 TB x $0.023 = $2,300/mån            |
+|  Standard-IA:          100 TB x $0.0125 = $1,250/mån (46% ↓)   |
+|  Glacier Flexible:     100 TB x $0.0036 = $360/mån (84% ↓)     |
+|  Deep Archive:         100 TB x $0.00099 = $99/mån (96% ↓)     |
+|                                                                 |
+|  ⚠️  Kom ihåg:                                                  |
+|  • Retrieval costs (Glacier)                                   |
+|  • Minimum storage duration                                    |
+|  • Request pricing (IA = dyrare PUT/GET)                       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
@@ -31593,7 +31593,7 @@ aws s3api restore-object \\
 - Intelligent-Tiering = auto-optimize
 
 ## Nästa steg
-→ S3 lifecycle policies
+-> S3 lifecycle policies
 """
             },
             {"title": "S3 lifecycle policies", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -31611,31 +31611,31 @@ Lifecycle policies automatiserar flytt och radering av objekt. Utan dem betalar 
 ## Lifecycle Policy Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              LIFECYCLE POLICY FLOW                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Upload                                                         │
-│    │                                                            │
-│    ▼                                                            │
-│  S3 STANDARD                                                    │
-│    │                                                            │
-│    │ (efter 30 dagar)                                          │
-│    ▼                                                            │
-│  STANDARD-IA                                                    │
-│    │                                                            │
-│    │ (efter 90 dagar)                                          │
-│    ▼                                                            │
-│  GLACIER FLEXIBLE                                               │
-│    │                                                            │
-│    │ (efter 365 dagar)                                         │
-│    ▼                                                            │
-│  DELETE                                                         │
-│                                                                 │
-│  ✅ Automatiskt - ingen manuell hantering                       │
-│  ✅ Kostnadsoptimerat                                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              LIFECYCLE POLICY FLOW                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Upload                                                         |
+|    |                                                            |
+|    ▼                                                            |
+|  S3 STANDARD                                                    |
+|    |                                                            |
+|    | (efter 30 dagar)                                          |
+|    ▼                                                            |
+|  STANDARD-IA                                                    |
+|    |                                                            |
+|    | (efter 90 dagar)                                          |
+|    ▼                                                            |
+|  GLACIER FLEXIBLE                                               |
+|    |                                                            |
+|    | (efter 365 dagar)                                         |
+|    ▼                                                            |
+|  DELETE                                                         |
+|                                                                 |
+|  ✅ Automatiskt - ingen manuell hantering                       |
+|  ✅ Kostnadsoptimerat                                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Skapa Lifecycle Policy
@@ -31803,13 +31803,13 @@ aws s3api delete-bucket-lifecycle --bucket my-bucket
 
 ## Sammanfattning
 - Lifecycle = automatisk transition + deletion
-- Transition: Standard → IA → Glacier → Delete
+- Transition: Standard -> IA -> Glacier -> Delete
 - Filter på Prefix och/eller Tags
 - Aktivera versioning för säkerhet
 - Min 128KB för transition till IA
 
 ## Nästa steg
-→ S3 versioning and encryption
+-> S3 versioning and encryption
 """
             },
             {"title": "S3 versioning and encryption", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -31827,28 +31827,28 @@ Versioning skyddar mot oavsiktlig radering. Encryption skyddar data at rest. Til
 ## Versioning Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              S3 VERSIONING                                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Bucket: my-bucket (Versioning: Enabled)                       │
-│                                                                 │
-│  Object: config.json                                            │
-│  ┌────────────────────────────────────────────────────────────┐│
-│  │ Version ID          Created           Size      Current?   ││
-│  │ ─────────────────   ─────────────     ─────     ────────   ││
-│  │ v3_abc123...        2024-01-15        2 KB      ✓ Latest   ││
-│  │ v2_def456...        2024-01-10        1.8 KB    Previous   ││
-│  │ v1_ghi789...        2024-01-01        1.5 KB    Previous   ││
-│  └────────────────────────────────────────────────────────────┘│
-│                                                                 │
-│  DELETE config.json → Skapar "Delete Marker"                   │
-│  Object finns kvar, men osynligt utan version ID               │
-│                                                                 │
-│  PERMANENT DELETE: Måste ange Version ID                       │
-│  aws s3api delete-object --bucket x --key y --version-id z     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              S3 VERSIONING                                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Bucket: my-bucket (Versioning: Enabled)                       |
+|                                                                 |
+|  Object: config.json                                            |
+|  +------------------------------------------------------------+|
+|  | Version ID          Created           Size      Current?   ||
+|  | -----------------   -------------     -----     --------   ||
+|  | v3_abc123...        2024-01-15        2 KB      ✓ Latest   ||
+|  | v2_def456...        2024-01-10        1.8 KB    Previous   ||
+|  | v1_ghi789...        2024-01-01        1.5 KB    Previous   ||
+|  +------------------------------------------------------------+|
+|                                                                 |
+|  DELETE config.json -> Skapar "Delete Marker"                   |
+|  Object finns kvar, men osynligt utan version ID               |
+|                                                                 |
+|  PERMANENT DELETE: Måste ange Version ID                       |
+|  aws s3api delete-object --bucket x --key y --version-id z     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Aktivera Versioning
@@ -31880,7 +31880,7 @@ aws s3api get-object \\
   --version-id abc123... \\
   output-file.json
 
-# Återställ till tidigare version (kopiera gammal → ny)
+# Återställ till tidigare version (kopiera gammal -> ny)
 aws s3api copy-object \\
   --bucket my-bucket \\
   --copy-source my-bucket/config.json?versionId=v1_old \\
@@ -31896,37 +31896,37 @@ aws s3api delete-object \\
 ## Encryption Typer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              S3 ENCRYPTION OPTIONS                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SERVER-SIDE ENCRYPTION (SSE)                                  │
-│  ─────────────────────────────                                  │
-│                                                                 │
-│  SSE-S3 (default)                                              │
-│  • AWS-managed keys                                            │
-│  • Enklast, ingen setup                                        │
-│  • AES-256 encryption                                          │
-│                                                                 │
-│  SSE-KMS                                                       │
-│  • Du kontrollerar nyckeln (KMS)                               │
-│  • Audit trail via CloudTrail                                  │
-│  • Key rotation                                                │
-│  • Extra kostnad för KMS calls                                 │
-│                                                                 │
-│  SSE-C                                                         │
-│  • Du tillhandahåller nyckeln                                  │
-│  • Du hanterar key storage                                     │
-│  • Måste skicka key med varje request                          │
-│                                                                 │
-│  CLIENT-SIDE ENCRYPTION                                        │
-│  • Krypterat innan upload                                      │
-│  • AWS ser aldrig okrypterad data                              │
-│  • Du hanterar allt                                            │
-│                                                                 │
-│  REKOMMENDATION: SSE-S3 eller SSE-KMS                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              S3 ENCRYPTION OPTIONS                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SERVER-SIDE ENCRYPTION (SSE)                                  |
+|  -----------------------------                                  |
+|                                                                 |
+|  SSE-S3 (default)                                              |
+|  • AWS-managed keys                                            |
+|  • Enklast, ingen setup                                        |
+|  • AES-256 encryption                                          |
+|                                                                 |
+|  SSE-KMS                                                       |
+|  • Du kontrollerar nyckeln (KMS)                               |
+|  • Audit trail via CloudTrail                                  |
+|  • Key rotation                                                |
+|  • Extra kostnad för KMS calls                                 |
+|                                                                 |
+|  SSE-C                                                         |
+|  • Du tillhandahåller nyckeln                                  |
+|  • Du hanterar key storage                                     |
+|  • Måste skicka key med varje request                          |
+|                                                                 |
+|  CLIENT-SIDE ENCRYPTION                                        |
+|  • Krypterat innan upload                                      |
+|  • AWS ser aldrig okrypterad data                              |
+|  • Du hanterar allt                                            |
+|                                                                 |
+|  REKOMMENDATION: SSE-S3 eller SSE-KMS                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Konfigurera Default Encryption
@@ -31972,19 +31972,19 @@ aws s3api put-bucket-versioning \\
 ## Best Practices Checklista
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              DATA PROTECTION CHECKLIST                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ☐ Versioning aktiverat                                        │
-│  ☐ Default encryption (SSE-S3 minimum)                         │
-│  ☐ Block Public Access enabled                                 │
-│  ☐ Lifecycle policy för gamla versioner                        │
-│  ☐ Cross-region replication för DR (om kritiskt)               │
-│  ☐ Access logging aktiverat                                    │
-│  ☐ MFA Delete för kritiska buckets                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              DATA PROTECTION CHECKLIST                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ☐ Versioning aktiverat                                        |
+|  ☐ Default encryption (SSE-S3 minimum)                         |
+|  ☐ Block Public Access enabled                                 |
+|  ☐ Lifecycle policy för gamla versioner                        |
+|  ☐ Cross-region replication för DR (om kritiskt)               |
+|  ☐ Access logging aktiverat                                    |
+|  ☐ MFA Delete för kritiska buckets                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
@@ -32006,7 +32006,7 @@ aws s3api put-bucket-versioning \\
 
 ## Nästa steg
 Grattis! Du har slutfört AWS Core Services-modulen!
-→ Fortsätt till labs för hands-on övning
+-> Fortsätt till labs för hands-on övning
 """
             },
         ],
@@ -32056,26 +32056,26 @@ Infrastructure as Code (IaC) är **det mest transformativa konceptet** i modern 
 ### Scenario: Traditionell infrastrukturhantering
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MANUELL INFRASTRUKTUR                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. Ops-teamet loggar in i AWS Console                          │
-│  2. Klickar sig igenom VPC-wizard                               │
-│  3. Skapar EC2-instanser manuellt                               │
-│  4. Konfigurerar security groups "on the fly"                   │
-│  5. Dokumenterar i ett Word-dokument... kanske                  │
-│                                                                 │
-│  PROBLEM:                                                       │
-│  ────────                                                       │
-│  ❌ Ingen versionshistorik - "vem ändrade detta?"               │
-│  ❌ Ingen reproducerbarhet - "hur sätter vi upp prod igen?"     │
-│  ❌ Configuration drift - prod och staging skiljer sig          │
-│  ❌ Ingen granskning - ändringar går direkt i prod              │
-│  ❌ Disaster recovery - "förhoppningsvis har vi backup"         │
-│  ❌ Onboarding - ny person måste lära sig allt manuellt         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MANUELL INFRASTRUKTUR                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. Ops-teamet loggar in i AWS Console                          |
+|  2. Klickar sig igenom VPC-wizard                               |
+|  3. Skapar EC2-instanser manuellt                               |
+|  4. Konfigurerar security groups "on the fly"                   |
+|  5. Dokumenterar i ett Word-dokument... kanske                  |
+|                                                                 |
+|  PROBLEM:                                                       |
+|  --------                                                       |
+|  ❌ Ingen versionshistorik - "vem ändrade detta?"               |
+|  ❌ Ingen reproducerbarhet - "hur sätter vi upp prod igen?"     |
+|  ❌ Configuration drift - prod och staging skiljer sig          |
+|  ❌ Ingen granskning - ändringar går direkt i prod              |
+|  ❌ Disaster recovery - "förhoppningsvis har vi backup"         |
+|  ❌ Onboarding - ny person måste lära sig allt manuellt         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Den fruktade frågan:
@@ -32090,26 +32090,26 @@ Infrastructure as Code (IaC) är **det mest transformativa konceptet** i modern 
 **Definition:** Hantera och provisionera infrastruktur genom maskintolkningsbara definitionsfiler, snarare än manuell konfiguration.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│   TRADITIONELLT              INFRASTRUCTURE AS CODE             │
-│   ─────────────              ─────────────────────              │
-│                                                                 │
-│   AWS Console  ───────►      main.tf                            │
-│   Azure Portal              ├── vpc.tf                          │
-│   Bash scripts              ├── ec2.tf                          │
-│   Word-dokument             ├── rds.tf                          │
-│   "Tribal knowledge"        └── security.tf                     │
-│                                                                 │
-│   "Klicka här,               resource "aws_instance" "web" {    │
-│    sedan där,                  ami           = "ami-12345"      │
-│    glöm inte att..."           instance_type = "t3.medium"      │
-│                              }                                  │
-│                                                                 │
-│   Dokumenterat i någons      Dokumenterat i KOD som alla        │
-│   huvud                      kan läsa och förstå                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                                                                 |
+|   TRADITIONELLT              INFRASTRUCTURE AS CODE             |
+|   -------------              ---------------------              |
+|                                                                 |
+|   AWS Console  -------►      main.tf                            |
+|   Azure Portal              +-- vpc.tf                          |
+|   Bash scripts              +-- ec2.tf                          |
+|   Word-dokument             +-- rds.tf                          |
+|   "Tribal knowledge"        +-- security.tf                     |
+|                                                                 |
+|   "Klicka här,               resource "aws_instance" "web" {    |
+|    sedan där,                  ami           = "ami-12345"      |
+|    glöm inte att..."           instance_type = "t3.medium"      |
+|                              }                                  |
+|                                                                 |
+|   Dokumenterat i någons      Dokumenterat i KOD som alla        |
+|   huvud                      kan läsa och förstå                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Fördelar med IaC
@@ -32130,19 +32130,19 @@ git blame vpc.tf
 ### 2. Code Review för infrastruktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  PULL REQUEST: Upgrade EC2 to t3.xlarge                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  - instance_type = "t3.medium"                                  │
-│  + instance_type = "t3.xlarge"                                  │
-│                                                                 │
-│  💬 Reviewer: "This will double our compute cost. Is this       │
-│                needed? Can we use auto-scaling instead?"        │
-│                                                                 │
-│  ✅ Approved by: @security-team, @platform-team                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  PULL REQUEST: Upgrade EC2 to t3.xlarge                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  - instance_type = "t3.medium"                                  |
+|  + instance_type = "t3.xlarge"                                  |
+|                                                                 |
+|  💬 Reviewer: "This will double our compute cost. Is this       |
+|                needed? Can we use auto-scaling instead?"        |
+|                                                                 |
+|  ✅ Approved by: @security-team, @platform-team                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### 3. Reproducerbarhet
@@ -32214,7 +32214,7 @@ Ditt företag kör all infrastruktur via manuella console-klick. Du har blivit t
 2. **Existerande resurser:** Använd `terraform import` för att importera befintliga resurser. Terraform kan "adoptera" resurser du skapat manuellt.
 
 3. **Överyga management:**
-   - Disaster recovery tid: dagar → minuter
+   - Disaster recovery tid: dagar -> minuter
    - Compliance: full audit trail
    - Onboarding: nya personer kan läsa koden
    - Kostnadskontroll: ändringar granskas före deployment
@@ -32247,39 +32247,39 @@ De två huvudsakliga paradigmen för IaC har fundamentalt olika filosofier. Att 
 ## De Två Paradigmen
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│         DECLARATIVE vs IMPERATIVE                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DECLARATIVE (Terraform, CloudFormation)                       │
-│  ─────────────────────────────────────────                      │
-│  "VAD ska finnas"                                               │
-│                                                                 │
-│  resource "aws_instance" "web" {                                │
-│    ami           = "ami-12345"                                  │
-│    instance_type = "t3.micro"                                   │
-│  }                                                              │
-│                                                                 │
-│  → "Det ska finnas en EC2 med denna config"                    │
-│  → Terraform räknar ut HUR                                      │
-│                                                                 │
-│  ───────────────────────────────────────────────────────────    │
-│                                                                 │
-│  IMPERATIVE (Ansible, Scripts)                                  │
-│  ─────────────────────────────                                  │
-│  "HUR ska det göras"                                            │
-│                                                                 │
-│  - name: Create EC2 instance                                    │
-│    ec2:                                                         │
-│      state: present                                             │
-│      instance_type: t3.micro                                    │
-│      image: ami-12345                                           │
-│      wait: yes                                                  │
-│                                                                 │
-│  → Steg-för-steg instruktioner                                  │
-│  → Du kontrollerar ordningen                                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|         DECLARATIVE vs IMPERATIVE                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DECLARATIVE (Terraform, CloudFormation)                       |
+|  -----------------------------------------                      |
+|  "VAD ska finnas"                                               |
+|                                                                 |
+|  resource "aws_instance" "web" {                                |
+|    ami           = "ami-12345"                                  |
+|    instance_type = "t3.micro"                                   |
+|  }                                                              |
+|                                                                 |
+|  -> "Det ska finnas en EC2 med denna config"                    |
+|  -> Terraform räknar ut HUR                                      |
+|                                                                 |
+|  -----------------------------------------------------------    |
+|                                                                 |
+|  IMPERATIVE (Ansible, Scripts)                                  |
+|  -----------------------------                                  |
+|  "HUR ska det göras"                                            |
+|                                                                 |
+|  - name: Create EC2 instance                                    |
+|    ec2:                                                         |
+|      state: present                                             |
+|      instance_type: t3.micro                                    |
+|      image: ami-12345                                           |
+|      wait: yes                                                  |
+|                                                                 |
+|  -> Steg-för-steg instruktioner                                  |
+|  -> Du kontrollerar ordningen                                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Praktiskt Exempel
@@ -32298,7 +32298,7 @@ resource "aws_instance" "web" {
   }
 }
 
-# Kör igen: Terraform ser att 3 redan finns → ingen ändring
+# Kör igen: Terraform ser att 3 redan finns -> ingen ändring
 # Ändra till count = 5: Terraform skapar 2 till
 # Ändra till count = 2: Terraform tar bort 1
 ```
@@ -32320,44 +32320,44 @@ done
 ## Jämförelse
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  ASPEKT              DECLARATIVE         IMPERATIVE            │
-├─────────────────────────────────────────────────────────────────┤
-│  Idempotens          Inbyggd             Du måste implementera │
-│  State tracking      Automatisk          Manuell               │
-│  Dependency mgmt     Automatisk          Manuell ordning       │
-│  Läsbarhet           Vad som ska finnas  Hur det ska göras     │
-│  Flexibilitet        Begränsad           Hög                   │
-│  Lärningskurva       Lägre               Beror på              │
-│  Drift detection     Ja                  Nej                   │
-│  Rollback            Via state           Manuell               │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  ASPEKT              DECLARATIVE         IMPERATIVE            |
++-----------------------------------------------------------------+
+|  Idempotens          Inbyggd             Du måste implementera |
+|  State tracking      Automatisk          Manuell               |
+|  Dependency mgmt     Automatisk          Manuell ordning       |
+|  Läsbarhet           Vad som ska finnas  Hur det ska göras     |
+|  Flexibilitet        Begränsad           Hög                   |
+|  Lärningskurva       Lägre               Beror på              |
+|  Drift detection     Ja                  Nej                   |
+|  Rollback            Via state           Manuell               |
++-----------------------------------------------------------------+
 ```
 
 ## När Använda Vilket?
 
 ```
 DECLARATIVE (Terraform, CloudFormation):
-├── Cloud infrastructure (VPC, EC2, RDS)
-├── Kubernetes manifests
-├── Reproducerbara miljöer
-└── Team-samarbete
++-- Cloud infrastructure (VPC, EC2, RDS)
++-- Kubernetes manifests
++-- Reproducerbara miljöer
++-- Team-samarbete
 
 IMPERATIVE (Ansible, Scripts):
-├── Configuration management
-├── Orkestrering av deployments
-├── Engångsmigreringar
-└── Komplexa villkorliga flöden
++-- Configuration management
++-- Orkestrering av deployments
++-- Engångsmigreringar
++-- Komplexa villkorliga flöden
 ```
 
 ## Sammanfattning
-- Declarative = "Vad" → Terraform räknar ut "hur"
-- Imperative = "Hur" → Du styr varje steg
-- Terraform är declarative → idempotent by default
+- Declarative = "Vad" -> Terraform räknar ut "hur"
+- Imperative = "Hur" -> Du styr varje steg
+- Terraform är declarative -> idempotent by default
 - Välj declarative för infrastruktur, imperative för config
 
 ## Nästa steg
-→ Provider architecture
+-> Provider architecture
 """
             },
             {"title": "Provider architecture", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -32375,29 +32375,29 @@ Providers är Terraforms plugins som pratar med olika APIs (AWS, Azure, GCP, Kub
 ## Provider Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRAFORM ARCHITECTURE                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Din Kod (*.tf)                                               │
-│        │                                                        │
-│        ▼                                                        │
-│   ┌─────────────────┐                                          │
-│   │  Terraform Core │  ← Läser .tf, bygger dependency graph    │
-│   └────────┬────────┘                                          │
-│            │                                                    │
-│            ▼                                                    │
-│   ┌─────────────────┐     ┌─────────────────┐                  │
-│   │  AWS Provider   │     │  Azure Provider │                  │
-│   │  (plugin)       │     │  (plugin)       │                  │
-│   └────────┬────────┘     └────────┬────────┘                  │
-│            │                       │                            │
-│            ▼                       ▼                            │
-│   ┌─────────────────┐     ┌─────────────────┐                  │
-│   │   AWS API       │     │   Azure API     │                  │
-│   └─────────────────┘     └─────────────────┘                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRAFORM ARCHITECTURE                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Din Kod (*.tf)                                               |
+|        |                                                        |
+|        ▼                                                        |
+|   +-----------------+                                          |
+|   |  Terraform Core |  <- Läser .tf, bygger dependency graph    |
+|   +--------+--------+                                          |
+|            |                                                    |
+|            ▼                                                    |
+|   +-----------------+     +-----------------+                  |
+|   |  AWS Provider   |     |  Azure Provider |                  |
+|   |  (plugin)       |     |  (plugin)       |                  |
+|   +--------+--------+     +--------+--------+                  |
+|            |                       |                            |
+|            ▼                       ▼                            |
+|   +-----------------+     +-----------------+                  |
+|   |   AWS API       |     |   Azure API     |                  |
+|   +-----------------+     +-----------------+                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Konfigurera AWS Provider
@@ -32498,19 +32498,19 @@ required_providers {
 ## Vanliga Providers
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  Provider           Source                 Use Case             │
-├─────────────────────────────────────────────────────────────────┤
-│  aws                hashicorp/aws          AWS resources        │
-│  azurerm            hashicorp/azurerm      Azure resources      │
-│  google             hashicorp/google       GCP resources        │
-│  kubernetes         hashicorp/kubernetes   K8s resources        │
-│  helm               hashicorp/helm         Helm charts          │
-│  random             hashicorp/random       Random values        │
-│  null               hashicorp/null         No-op resources      │
-│  local              hashicorp/local        Local files          │
-│  tls                hashicorp/tls          TLS certs/keys       │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  Provider           Source                 Use Case             |
++-----------------------------------------------------------------+
+|  aws                hashicorp/aws          AWS resources        |
+|  azurerm            hashicorp/azurerm      Azure resources      |
+|  google             hashicorp/google       GCP resources        |
+|  kubernetes         hashicorp/kubernetes   K8s resources        |
+|  helm               hashicorp/helm         Helm charts          |
+|  random             hashicorp/random       Random values        |
+|  null               hashicorp/null         No-op resources      |
+|  local              hashicorp/local        Local files          |
+|  tls                hashicorp/tls          TLS certs/keys       |
++-----------------------------------------------------------------+
 ```
 
 ## Vanliga problem
@@ -32529,7 +32529,7 @@ required_providers {
 - Credentials via env vars eller IAM role
 
 ## Nästa steg
-→ Resources and data sources
+-> Resources and data sources
 """
             },
             {"title": "Resources and data sources", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -32547,23 +32547,23 @@ Resources skapar infrastruktur, data sources läser befintlig. Att förstå skil
 ## Resources vs Data Sources
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│         RESOURCE vs DATA SOURCE                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  RESOURCE                          DATA SOURCE                  │
-│  ────────                          ───────────                  │
-│  Skapar/uppdaterar/tar bort        Endast läser                │
-│  Terraform manages lifecycle       Read-only, ingen state      │
-│  resource "aws_instance" "web"     data "aws_ami" "latest"     │
-│                                                                 │
-│  Exempel:                          Exempel:                     │
-│  - EC2 instances                   - Senaste AMI ID            │
-│  - S3 buckets                      - Befintlig VPC             │
-│  - RDS databases                   - Account ID                 │
-│  - VPCs                            - Availability zones        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|         RESOURCE vs DATA SOURCE                                 |
++-----------------------------------------------------------------+
+|                                                                 |
+|  RESOURCE                          DATA SOURCE                  |
+|  --------                          -----------                  |
+|  Skapar/uppdaterar/tar bort        Endast läser                |
+|  Terraform manages lifecycle       Read-only, ingen state      |
+|  resource "aws_instance" "web"     data "aws_ami" "latest"     |
+|                                                                 |
+|  Exempel:                          Exempel:                     |
+|  - EC2 instances                   - Senaste AMI ID            |
+|  - S3 buckets                      - Befintlig VPC             |
+|  - RDS databases                   - Account ID                 |
+|  - VPCs                            - Availability zones        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Resource Syntax
@@ -32643,7 +32643,7 @@ resource "aws_instance" "web" {
 ```hcl
 # Implicit dependency (via referens)
 resource "aws_subnet" "public" {
-  vpc_id     = aws_vpc.main.id  # ← Implicit dependency
+  vpc_id     = aws_vpc.main.id  # <- Implicit dependency
   cidr_block = "10.0.1.0/24"
 }
 
@@ -32652,7 +32652,7 @@ resource "aws_instance" "web" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
 
-  depends_on = [aws_internet_gateway.main]  # ← Explicit
+  depends_on = [aws_internet_gateway.main]  # <- Explicit
 }
 ```
 
@@ -32695,7 +32695,7 @@ resource "aws_instance" "web" {
 - Lifecycle blocks för avancerad kontroll
 
 ## Nästa steg
-→ Variables and outputs
+-> Variables and outputs
 """
             },
             {"title": "Variables and outputs", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -32862,12 +32862,12 @@ terraform output -raw vpc_id
 ## Variable Precedence (prioritet)
 
 ```
-1. Command line (-var, -var-file)     ← Högst
+1. Command line (-var, -var-file)     <- Högst
 2. *.auto.tfvars / *.auto.tfvars.json
 3. terraform.tfvars.json
 4. terraform.tfvars
 5. Environment variables (TF_VAR_*)
-6. Default value i variable block      ← Lägst
+6. Default value i variable block      <- Lägst
 ```
 
 ## Vanliga problem
@@ -32886,7 +32886,7 @@ terraform output -raw vpc_id
 - sensitive = true för känslig data
 
 ## Nästa steg
-→ terraform init, plan, apply, destroy
+-> terraform init, plan, apply, destroy
 """
             },
             {"title": "terraform init, plan, apply, destroy", "difficulty": "easy", "estimated_minutes": 20, "xp_reward": 35,
@@ -32904,34 +32904,34 @@ De fyra grundläggande kommandona är allt du behöver för att hantera infrastr
 ## Workflow Översikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRAFORM WORKFLOW                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   1. INIT                                                       │
-│      │  "Förbered arbetsmiljön"                                │
-│      │  - Ladda ner providers                                  │
-│      │  - Initiera backend                                     │
-│      │  - Installera modules                                   │
-│      ▼                                                          │
-│   2. PLAN                                                       │
-│      │  "Vad kommer att hända?"                                │
-│      │  - Jämför kod med state                                 │
-│      │  - Visa ändringar (create/update/delete)                │
-│      │  - Ingen ändring görs!                                  │
-│      ▼                                                          │
-│   3. APPLY                                                      │
-│      │  "Gör ändringarna"                                      │
-│      │  - Exekverar planen                                     │
-│      │  - Uppdaterar state                                     │
-│      │  - Visar resultat                                       │
-│      ▼                                                          │
-│   4. DESTROY (vid behov)                                        │
-│      "Ta bort allt"                                            │
-│      - Tar bort alla resurser i state                          │
-│      - Tömmer state-filen                                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRAFORM WORKFLOW                                 |
++-----------------------------------------------------------------+
+|                                                                 |
+|   1. INIT                                                       |
+|      |  "Förbered arbetsmiljön"                                |
+|      |  - Ladda ner providers                                  |
+|      |  - Initiera backend                                     |
+|      |  - Installera modules                                   |
+|      ▼                                                          |
+|   2. PLAN                                                       |
+|      |  "Vad kommer att hända?"                                |
+|      |  - Jämför kod med state                                 |
+|      |  - Visa ändringar (create/update/delete)                |
+|      |  - Ingen ändring görs!                                  |
+|      ▼                                                          |
+|   3. APPLY                                                      |
+|      |  "Gör ändringarna"                                      |
+|      |  - Exekverar planen                                     |
+|      |  - Uppdaterar state                                     |
+|      |  - Visar resultat                                       |
+|      ▼                                                          |
+|   4. DESTROY (vid behov)                                        |
+|      "Ta bort allt"                                            |
+|      - Tar bort alla resurser i state                          |
+|      - Tömmer state-filen                                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## terraform init
@@ -33067,7 +33067,7 @@ terraform destroy
 - Spara plan med -out för reproducerbarhet
 
 ## Nästa steg
-→ Expressions and functions
+-> Expressions and functions
 """
             },
             {"title": "Expressions and functions", "difficulty": "medium", "estimated_minutes": 30, "xp_reward": 50,
@@ -33122,18 +33122,18 @@ locals {
 ```hcl
 locals {
   # lower/upper
-  env_lower = lower(var.environment)        # "PROD" → "prod"
-  env_upper = upper(var.environment)        # "prod" → "PROD"
+  env_lower = lower(var.environment)        # "PROD" -> "prod"
+  env_upper = upper(var.environment)        # "prod" -> "PROD"
 
   # format (printf-style)
   name = format("app-%s-%02d", var.env, 1)  # "app-prod-01"
 
   # join/split
-  az_string = join(",", var.azs)            # ["a","b"] → "a,b"
-  az_list   = split(",", "a,b,c")           # "a,b,c" → ["a","b","c"]
+  az_string = join(",", var.azs)            # ["a","b"] -> "a,b"
+  az_list   = split(",", "a,b,c")           # "a,b,c" -> ["a","b","c"]
 
   # replace
-  clean = replace(var.name, " ", "-")       # "my name" → "my-name"
+  clean = replace(var.name, " ", "-")       # "my name" -> "my-name"
 
   # substr
   short = substr(var.long_string, 0, 10)    # Första 10 tecken
@@ -33238,14 +33238,14 @@ resource "aws_instance" "web" {
 # Transform list
 locals {
   upper_names = [for name in var.names : upper(name)]
-  # ["alice", "bob"] → ["ALICE", "BOB"]
+  # ["alice", "bob"] -> ["ALICE", "BOB"]
 
   # Filter list
   prod_servers = [for s in var.servers : s if s.env == "prod"]
 
   # Transform to map
   name_map = {for s in var.servers : s.id => s.name}
-  # [{id: 1, name: "a"}] → {1 = "a"}
+  # [{id: 1, name: "a"}] -> {1 = "a"}
 }
 
 # In resource
@@ -33271,7 +33271,7 @@ resource "aws_iam_user" "users" {
 - Använd `terraform console` för att testa
 
 ## Nästa steg
-→ Conditionals and loops (count, for_each)
+-> Conditionals and loops (count, for_each)
 """
             },
             {"title": "Conditionals and loops (count, for_each)", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -33397,30 +33397,30 @@ output "web1_id" {
 ## count vs for_each
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              count vs for_each                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  count                           for_each                       │
-│  ─────                           ────────                       │
-│  Index-baserad (0, 1, 2)         Key-baserad ("web-1", "api")  │
-│  Tar bort mittenelement →        Tar bort specifikt element    │
-│  alla efter får nya index        → andra påverkas inte         │
-│                                                                 │
-│  Använd för:                     Använd för:                   │
-│  - Identiska resurser            - Unika resurser              │
-│  - Conditionals (count = x?1:0)  - Named instances             │
-│                                  - När ordning inte spelar roll │
-│                                                                 │
-│  PROBLEMET MED count:                                          │
-│  count = ["a", "b", "c"]                                       │
-│  Om du tar bort "b":                                           │
-│  count = ["a", "c"]                                            │
-│  "c" hade index 2, nu index 1 → DESTROY och RECREATE!          │
-│                                                                 │
-│  for_each har inte detta problem!                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              count vs for_each                                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|  count                           for_each                       |
+|  -----                           --------                       |
+|  Index-baserad (0, 1, 2)         Key-baserad ("web-1", "api")  |
+|  Tar bort mittenelement ->        Tar bort specifikt element    |
+|  alla efter får nya index        -> andra påverkas inte         |
+|                                                                 |
+|  Använd för:                     Använd för:                   |
+|  - Identiska resurser            - Unika resurser              |
+|  - Conditionals (count = x?1:0)  - Named instances             |
+|                                  - När ordning inte spelar roll |
+|                                                                 |
+|  PROBLEMET MED count:                                          |
+|  count = ["a", "b", "c"]                                       |
+|  Om du tar bort "b":                                           |
+|  count = ["a", "c"]                                            |
+|  "c" hade index 2, nu index 1 -> DESTROY och RECREATE!          |
+|                                                                 |
+|  for_each har inte detta problem!                              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Praktiskt Exempel: Subnets
@@ -33475,7 +33475,7 @@ locals {
 - each.key och each.value i for_each
 
 ## Nästa steg
-→ Dynamic blocks
+-> Dynamic blocks
 """
             },
             {"title": "Dynamic blocks", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -33685,7 +33685,7 @@ resource "aws_security_group" "complex" {
 - Använd med måtta - för mycket = svårläst
 
 ## Nästa steg
-→ Local values
+-> Local values
 """
             },
             {"title": "Local values", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -33866,7 +33866,7 @@ resource "aws_instance" "api" {
 - Referera med `local.name`
 
 ## Nästa steg
-→ Type constraints
+-> Type constraints
 """
             },
             {"title": "Type constraints", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -34063,7 +34063,7 @@ variable "bucket_name" {
 - validation{} för custom rules
 
 ## Nästa steg
-→ Local vs remote state
+-> Local vs remote state
 """
             },
             {"title": "Local vs remote state", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -34081,32 +34081,32 @@ State-filen är Terraforms "minne" - den vet vilka resurser som finns. Lokal sta
 ## Vad är State?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRAFORM STATE                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Din kod (main.tf)          State (terraform.tfstate)          │
-│  ────────────────           ─────────────────────────          │
-│  resource "aws_instance"    {                                  │
-│    "web" {                    "resources": [{                  │
-│    ami = "ami-123"             "type": "aws_instance",        │
-│    type = "t3.micro"           "name": "web",                 │
-│  }                             "instances": [{                │
-│                                  "id": "i-abc123",            │
-│                                  "attributes": {              │
-│                                    "ami": "ami-123",          │
-│                                    "public_ip": "54.1.2.3"   │
-│                                  }                            │
-│                                }]                              │
-│                              }]                                 │
-│                            }                                    │
-│                                                                 │
-│  terraform plan:                                               │
-│  1. Läser state → "vad finns?"                                 │
-│  2. Läser kod → "vad ska finnas?"                              │
-│  3. Jämför → "vad behöver ändras?"                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRAFORM STATE                                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Din kod (main.tf)          State (terraform.tfstate)          |
+|  ----------------           -------------------------          |
+|  resource "aws_instance"    {                                  |
+|    "web" {                    "resources": [{                  |
+|    ami = "ami-123"             "type": "aws_instance",        |
+|    type = "t3.micro"           "name": "web",                 |
+|  }                             "instances": [{                |
+|                                  "id": "i-abc123",            |
+|                                  "attributes": {              |
+|                                    "ami": "ami-123",          |
+|                                    "public_ip": "54.1.2.3"   |
+|                                  }                            |
+|                                }]                              |
+|                              }]                                 |
+|                            }                                    |
+|                                                                 |
+|  terraform plan:                                               |
+|  1. Läser state -> "vad finns?"                                 |
+|  2. Läser kod -> "vad ska finnas?"                              |
+|  3. Jämför -> "vad behöver ändras?"                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Lokal State (default)
@@ -34114,7 +34114,7 @@ State-filen är Terraforms "minne" - den vet vilka resurser som finns. Lokal sta
 ```bash
 # Efter terraform apply:
 ls -la
-# terraform.tfstate      ← State-filen
+# terraform.tfstate      <- State-filen
 # terraform.tfstate.backup
 
 # OBS! State innehåller KÄNSLIG DATA:
@@ -34126,27 +34126,27 @@ ls -la
 ### Problem med Lokal State
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  PROBLEM MED LOKAL STATE                                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. SAMARBETE                                                   │
-│     Alice har sin state, Bob har sin                           │
-│     → Konflikter, överskrivningar                              │
-│                                                                 │
-│  2. SÄKERHET                                                    │
-│     State innehåller secrets i klartext                        │
-│     → Ska INTE committas till Git                              │
-│                                                                 │
-│  3. INGEN LOCKING                                               │
-│     Två personer kör apply samtidigt                           │
-│     → Korrupt state, race conditions                           │
-│                                                                 │
-│  4. INGEN BACKUP                                                │
-│     Disk krachar, laptop stulen                                │
-│     → All infrastruktur-kunskap borta                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  PROBLEM MED LOKAL STATE                                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. SAMARBETE                                                   |
+|     Alice har sin state, Bob har sin                           |
+|     -> Konflikter, överskrivningar                              |
+|                                                                 |
+|  2. SÄKERHET                                                    |
+|     State innehåller secrets i klartext                        |
+|     -> Ska INTE committas till Git                              |
+|                                                                 |
+|  3. INGEN LOCKING                                               |
+|     Två personer kör apply samtidigt                           |
+|     -> Korrupt state, race conditions                           |
+|                                                                 |
+|  4. INGEN BACKUP                                                |
+|     Disk krachar, laptop stulen                                |
+|     -> All infrastruktur-kunskap borta                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Remote State
@@ -34167,33 +34167,33 @@ terraform {
 ### Fördelar med Remote State
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  FÖRDELAR MED REMOTE STATE (S3)                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ SAMARBETE                                                   │
-│     Alla läser/skriver till samma state                        │
-│                                                                 │
-│  ✅ LOCKING (med DynamoDB)                                      │
-│     Endast en person kan köra apply åt gången                  │
-│                                                                 │
-│  ✅ KRYPTERING                                                  │
-│     State krypteras i S3                                       │
-│                                                                 │
-│  ✅ VERSIONING                                                  │
-│     S3 versioning = historik av alla ändringar                 │
-│                                                                 │
-│  ✅ ACCESS CONTROL                                              │
-│     IAM policies styr vem som kan läsa/skriva                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  FÖRDELAR MED REMOTE STATE (S3)                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ SAMARBETE                                                   |
+|     Alla läser/skriver till samma state                        |
+|                                                                 |
+|  ✅ LOCKING (med DynamoDB)                                      |
+|     Endast en person kan köra apply åt gången                  |
+|                                                                 |
+|  ✅ KRYPTERING                                                  |
+|     State krypteras i S3                                       |
+|                                                                 |
+|  ✅ VERSIONING                                                  |
+|     S3 versioning = historik av alla ändringar                 |
+|                                                                 |
+|  ✅ ACCESS CONTROL                                              |
+|     IAM policies styr vem som kan läsa/skriva                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Backend Typer
 
 ```
 Backend          Best For              Locking
-────────         ────────              ───────
+--------         --------              -------
 s3               AWS                   DynamoDB
 azurerm          Azure                 Built-in
 gcs              GCP                   Built-in
@@ -34238,7 +34238,7 @@ terraform state list
 - Kryptera och versionera alltid
 
 ## Nästa steg
-→ S3 + DynamoDB backend
+-> S3 + DynamoDB backend
 """
             },
             {"title": "S3 + DynamoDB backend", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -34255,31 +34255,31 @@ S3 + DynamoDB är gold standard för Terraform state på AWS. S3 lagrar state, D
 ## Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              S3 + DynamoDB STATE BACKEND                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  terraform apply                                                │
-│       │                                                         │
-│       ├──► DynamoDB: Acquire lock (LockID)                     │
-│       │    └── Om låst: vänta eller fail                       │
-│       │                                                         │
-│       ├──► S3: Read state                                      │
-│       │                                                         │
-│       ├──► [Make changes to AWS]                               │
-│       │                                                         │
-│       ├──► S3: Write new state                                 │
-│       │                                                         │
-│       └──► DynamoDB: Release lock                              │
-│                                                                 │
-│  S3 Bucket                    DynamoDB Table                   │
-│  ───────────                  ──────────────                   │
-│  • terraform.tfstate          • LockID (PK)                    │
-│  • Versioning enabled         • Info (who, when)               │
-│  • Encryption enabled                                          │
-│  • Access logging                                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              S3 + DynamoDB STATE BACKEND                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  terraform apply                                                |
+|       |                                                         |
+|       +--► DynamoDB: Acquire lock (LockID)                     |
+|       |    +-- Om låst: vänta eller fail                       |
+|       |                                                         |
+|       +--► S3: Read state                                      |
+|       |                                                         |
+|       +--► [Make changes to AWS]                               |
+|       |                                                         |
+|       +--► S3: Write new state                                 |
+|       |                                                         |
+|       +--► DynamoDB: Release lock                              |
+|                                                                 |
+|  S3 Bucket                    DynamoDB Table                   |
+|  -----------                  --------------                   |
+|  • terraform.tfstate          • LockID (PK)                    |
+|  • Versioning enabled         • Info (who, when)               |
+|  • Encryption enabled                                          |
+|  • Access logging                                              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg 1: Bootstrap Resources
@@ -34392,17 +34392,17 @@ terraform {
 ```bash
 # Organisera state-filer logiskt:
 mycompany-terraform-state-prod/
-├── bootstrap/terraform.tfstate           # State-infrastrukturen
-├── shared/
-│   ├── networking/terraform.tfstate      # VPC, subnets
-│   └── security/terraform.tfstate        # IAM, KMS
-├── environments/
-│   ├── dev/terraform.tfstate
-│   ├── staging/terraform.tfstate
-│   └── prod/terraform.tfstate
-└── applications/
-    ├── api/terraform.tfstate
-    └── web/terraform.tfstate
++-- bootstrap/terraform.tfstate           # State-infrastrukturen
++-- shared/
+|   +-- networking/terraform.tfstate      # VPC, subnets
+|   +-- security/terraform.tfstate        # IAM, KMS
++-- environments/
+|   +-- dev/terraform.tfstate
+|   +-- staging/terraform.tfstate
+|   +-- prod/terraform.tfstate
++-- applications/
+    +-- api/terraform.tfstate
+    +-- web/terraform.tfstate
 ```
 
 ## Referera Annan State (data source)
@@ -34479,7 +34479,7 @@ terraform force-unlock LOCK_ID
 - terraform_remote_state för cross-project
 
 ## Nästa steg
-→ State locking
+-> State locking
 """
             },
             {"title": "State locking", "difficulty": "hard", "estimated_minutes": 25, "xp_reward": 50,
@@ -34497,36 +34497,36 @@ Utan locking kan två personer köra `terraform apply` samtidigt och förstöra 
 ## Locking Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              STATE LOCKING FLOW                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Alice: terraform apply         Bob: terraform apply            │
-│         │                              │                        │
-│         ▼                              ▼                        │
-│  ┌──────────────┐              ┌──────────────┐                │
-│  │ Acquire Lock │              │ Acquire Lock │                │
-│  │   SUCCESS    │              │    FAIL      │                │
-│  └──────┬───────┘              └──────────────┘                │
-│         │                              │                        │
-│         │                       "Error: state locked"           │
-│         │                       "Lock ID: abc-123"              │
-│         │                       "Locked by: alice@company"      │
-│         ▼                                                       │
-│  ┌──────────────┐                                              │
-│  │ Read state   │                                              │
-│  │ Make changes │                                              │
-│  │ Write state  │                                              │
-│  └──────┬───────┘                                              │
-│         │                                                       │
-│         ▼                                                       │
-│  ┌──────────────┐                                              │
-│  │ Release Lock │                                              │
-│  └──────────────┘                                              │
-│                                                                 │
-│  Nu kan Bob köra apply                                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              STATE LOCKING FLOW                                 |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Alice: terraform apply         Bob: terraform apply            |
+|         |                              |                        |
+|         ▼                              ▼                        |
+|  +--------------+              +--------------+                |
+|  | Acquire Lock |              | Acquire Lock |                |
+|  |   SUCCESS    |              |    FAIL      |                |
+|  +------+-------+              +--------------+                |
+|         |                              |                        |
+|         |                       "Error: state locked"           |
+|         |                       "Lock ID: abc-123"              |
+|         |                       "Locked by: alice@company"      |
+|         ▼                                                       |
+|  +--------------+                                              |
+|  | Read state   |                                              |
+|  | Make changes |                                              |
+|  | Write state  |                                              |
+|  +------+-------+                                              |
+|         |                                                       |
+|         ▼                                                       |
+|  +--------------+                                              |
+|  | Release Lock |                                              |
+|  +--------------+                                              |
+|                                                                 |
+|  Nu kan Bob köra apply                                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## DynamoDB Lock Entry
@@ -34546,7 +34546,7 @@ Utan locking kan två personer köra `terraform apply` samtidigt och förstöra 
 
 ```hcl
 # Lock har ingen automatisk timeout!
-# Om terraform kraschar mitt i apply → lock sitter kvar
+# Om terraform kraschar mitt i apply -> lock sitter kvar
 
 # Disable locking (FARLIGT - endast för debugging)
 terraform apply -lock=false
@@ -34584,23 +34584,23 @@ terraform force-unlock abc-123-def-456
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              LOCKING BEST PRACTICES                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DOs                                                         │
-│  • Använd ALLTID locking i team                                │
-│  • Kontakta lockägaren innan force-unlock                      │
-│  • Använd CI/CD för apply (en runner = ingen konflikt)         │
-│  • Sätt -lock-timeout för automation                           │
-│                                                                 │
-│  ❌ DON'Ts                                                      │
-│  • force-unlock utan att veta varför låset finns               │
-│  • -lock=false i produktion                                    │
-│  • Köra apply från flera terminaler samtidigt                  │
-│  • Ignorera "state locked" fel                                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              LOCKING BEST PRACTICES                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DOs                                                         |
+|  • Använd ALLTID locking i team                                |
+|  • Kontakta lockägaren innan force-unlock                      |
+|  • Använd CI/CD för apply (en runner = ingen konflikt)         |
+|  • Sätt -lock-timeout för automation                           |
+|                                                                 |
+|  ❌ DON'Ts                                                      |
+|  • force-unlock utan att veta varför låset finns               |
+|  • -lock=false i produktion                                    |
+|  • Köra apply från flera terminaler samtidigt                  |
+|  • Ignorera "state locked" fel                                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## CI/CD Locking Strategy
@@ -34635,7 +34635,7 @@ jobs:
 - -lock-timeout för automation
 
 ## Nästa steg
-→ terraform state commands
+-> terraform state commands
 """
             },
             {"title": "terraform state commands", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -34648,24 +34648,24 @@ State-filen är Terraforms hjärta — den mappar din konfiguration till verklig
 ## State Commands Översikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRAFORM STATE COMMANDS                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  INSPEKTERA                                                     │
-│  • terraform state list     - Lista alla resurser               │
-│  • terraform state show     - Visa en specifik resurs           │
-│  • terraform state pull     - Ladda ner state som JSON          │
-│                                                                 │
-│  MODIFIERA                                                      │
-│  • terraform state mv       - Flytta/byt namn på resurs         │
-│  • terraform state rm       - Ta bort resurs från state         │
-│  • terraform state push     - Ladda upp state (FARLIGT!)        │
-│                                                                 │
-│  REFAKTORERING                                                  │
-│  • terraform state replace-provider - Byt provider              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRAFORM STATE COMMANDS                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  INSPEKTERA                                                     |
+|  • terraform state list     - Lista alla resurser               |
+|  • terraform state show     - Visa en specifik resurs           |
+|  • terraform state pull     - Ladda ner state som JSON          |
+|                                                                 |
+|  MODIFIERA                                                      |
+|  • terraform state mv       - Flytta/byt namn på resurs         |
+|  • terraform state rm       - Ta bort resurs från state         |
+|  • terraform state push     - Ladda upp state (FARLIGT!)        |
+|                                                                 |
+|  REFAKTORERING                                                  |
+|  • terraform state replace-provider - Byt provider              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## terraform state list
@@ -34748,14 +34748,14 @@ terraform state push state_backup.json
 # Efter:  aws_instance.application
 
 # UTAN state mv:
-# terraform destroy aws_instance.web   ← FÖRSTÖR SERVERN!
-# terraform apply                       ← Skapar ny server
+# terraform destroy aws_instance.web   <- FÖRSTÖR SERVERN!
+# terraform apply                       <- Skapar ny server
 
 # MED state mv:
 terraform state mv aws_instance.web aws_instance.application
 # Move "aws_instance.web" to "aws_instance.application"
 # Successfully moved 1 object(s).
-# ← Ingen server förstörd! Bara state uppdaterad
+# <- Ingen server förstörd! Bara state uppdaterad
 
 # Uppdatera din .tf-fil att matcha:
 # resource "aws_instance" "application" { ... }
@@ -34808,7 +34808,7 @@ terraform state mv aws_instance.old aws_instance.new
 # 4. Verifiera med plan
 terraform plan
 # No changes. Infrastructure is up-to-date.
-# ← PERFEKT! Inga ändringar = korrekt refaktorering
+# <- PERFEKT! Inga ändringar = korrekt refaktorering
 
 # 5. Om något gick fel, återställ:
 terraform state push backup_before_refactor.json
@@ -34829,12 +34829,12 @@ terraform state mv 'aws_instance.web[1]' 'aws_instance.web["secondary"]'
 ### Flytta resurser mellan state-filer
 
 ```bash
-# Projekt A → ta bort från state
+# Projekt A -> ta bort från state
 cd project-a
 terraform state rm aws_s3_bucket.shared
 # Resursen finns kvar i AWS!
 
-# Projekt B → importera
+# Projekt B -> importera
 cd ../project-b
 terraform import aws_s3_bucket.shared my-bucket-name
 ```
@@ -34842,23 +34842,23 @@ terraform import aws_s3_bucket.shared my-bucket-name
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              STATE COMMAND BEST PRACTICES                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DOs                                                         │
-│  • ALLTID ta backup innan state-ändringar                      │
-│  • Kör terraform plan efter state-ändring                      │
-│  • Förstå skillnaden mellan rm (glöm) och destroy (ta bort)    │
-│  • Använd state mv för refaktorering                           │
-│                                                                 │
-│  ❌ DON'Ts                                                      │
-│  • state push utan att veta exakt vad du gör                   │
-│  • state rm och förvänta sig att resursen försvinner           │
-│  • Ändra state manuellt i JSON                                 │
-│  • Glöm att uppdatera .tf-filer efter state mv                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              STATE COMMAND BEST PRACTICES                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DOs                                                         |
+|  • ALLTID ta backup innan state-ändringar                      |
+|  • Kör terraform plan efter state-ändring                      |
+|  • Förstå skillnaden mellan rm (glöm) och destroy (ta bort)    |
+|  • Använd state mv för refaktorering                           |
+|                                                                 |
+|  ❌ DON'Ts                                                      |
+|  • state push utan att veta exakt vad du gör                   |
+|  • state rm och förvänta sig att resursen försvinner           |
+|  • Ändra state manuellt i JSON                                 |
+|  • Glöm att uppdatera .tf-filer efter state mv                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
@@ -34869,7 +34869,7 @@ terraform import aws_s3_bucket.shared my-bucket-name
 - Verifiera med terraform plan efter ändringar
 
 ## Nästa steg
-→ Importing existing resources
+-> Importing existing resources
 """
             },
             {"title": "Importing existing resources", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -34882,23 +34882,23 @@ Du har redan infrastruktur i AWS skapad manuellt eller av ett annat verktyg. Nu 
 ## Import-processen
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              IMPORT WORKFLOW                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. Identifiera resursen i AWS (ID, ARN, name)                 │
-│                                                                 │
-│  2. Skriv en tom resource-block i .tf                          │
-│                                                                 │
-│  3. Kör terraform import                                        │
-│                                                                 │
-│  4. Kör terraform state show för att se alla attribut          │
-│                                                                 │
-│  5. Fyll i resource-blocket från state show output             │
-│                                                                 │
-│  6. Kör terraform plan - sikta på "No changes"                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              IMPORT WORKFLOW                                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. Identifiera resursen i AWS (ID, ARN, name)                 |
+|                                                                 |
+|  2. Skriv en tom resource-block i .tf                          |
+|                                                                 |
+|  3. Kör terraform import                                        |
+|                                                                 |
+|  4. Kör terraform state show för att se alla attribut          |
+|                                                                 |
+|  5. Fyll i resource-blocket från state show output             |
+|                                                                 |
+|  6. Kör terraform plan - sikta på "No changes"                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Steg-för-steg: Importera en VPC
@@ -34973,7 +34973,7 @@ terraform plan
 # aws_vpc.production: Refreshing state... [id=vpc-0abc123def456789]
 #
 # No changes. Your infrastructure matches the configuration.
-# ← PERFEKT!
+# <- PERFEKT!
 ```
 
 ## Import-syntax för olika resurser
@@ -35105,12 +35105,12 @@ echo "Import complete! Run 'terraform plan' to verify."
 
 ## Sammanfattning
 - terraform import = ta över befintliga resurser
-- Skriv tom resource-block → import → fyll i från state show
+- Skriv tom resource-block -> import -> fyll i från state show
 - Terraform 1.5+: import blocks + -generate-config-out
 - Målet är alltid "No changes" efter import
 
 ## Nästa steg
-→ Module structure
+-> Module structure
 """
             },
             {"title": "Module structure", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -35127,40 +35127,40 @@ Utan moduler blir Terraform-projekt snabbt ohanterliga. Moduler ger dig:
 ## Modul vs Root Module
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              MODUL HIERARKI                                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ROOT MODULE (din main.tf)                                      │
-│  └── Anropar child modules                                      │
-│      │                                                          │
-│      ├── module.vpc                                             │
-│      │   └── Anropar nested modules                             │
-│      │       └── module.subnets                                 │
-│      │                                                          │
-│      ├── module.ec2                                             │
-│      │                                                          │
-│      └── module.rds                                             │
-│                                                                 │
-│  Varje .tf-katalog är tekniskt sett en modul!                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              MODUL HIERARKI                                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ROOT MODULE (din main.tf)                                      |
+|  +-- Anropar child modules                                      |
+|      |                                                          |
+|      +-- module.vpc                                             |
+|      |   +-- Anropar nested modules                             |
+|      |       +-- module.subnets                                 |
+|      |                                                          |
+|      +-- module.ec2                                             |
+|      |                                                          |
+|      +-- module.rds                                             |
+|                                                                 |
+|  Varje .tf-katalog är tekniskt sett en modul!                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Standard modulstruktur
 
 ```
 modules/
-└── vpc/
-    ├── main.tf           # Resurser
-    ├── variables.tf      # Input-variabler
-    ├── outputs.tf        # Output-värden
-    ├── versions.tf       # Required providers/versions
-    ├── README.md         # Dokumentation
-    └── examples/         # Användningsexempel
-        └── complete/
-            ├── main.tf
-            └── outputs.tf
++-- vpc/
+    +-- main.tf           # Resurser
+    +-- variables.tf      # Input-variabler
+    +-- outputs.tf        # Output-värden
+    +-- versions.tf       # Required providers/versions
+    +-- README.md         # Dokumentation
+    +-- examples/         # Användningsexempel
+        +-- complete/
+            +-- main.tf
+            +-- outputs.tf
 ```
 
 ## variables.tf - Modulens inputs
@@ -35367,34 +35367,34 @@ resource "aws_instance" "web" {
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              MODULE BEST PRACTICES                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DOs                                                         │
-│  • Dokumentera alla variabler och outputs                      │
-│  • Använd description på ALLA variabler                        │
-│  • Sätt default-värden för icke-kritiska variabler             │
-│  • Validera inputs med validation blocks                       │
-│  • Inkludera examples/-katalog                                 │
-│                                                                 │
-│  ❌ DON'Ts                                                      │
-│  • Hårdkoda värden som borde vara variabler                    │
-│  • Exponera känslig data i outputs (utan sensitive = true)    │
-│  • Skapa för stora moduler (single responsibility)             │
-│  • Glöm versions.tf                                            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              MODULE BEST PRACTICES                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DOs                                                         |
+|  • Dokumentera alla variabler och outputs                      |
+|  • Använd description på ALLA variabler                        |
+|  • Sätt default-värden för icke-kritiska variabler             |
+|  • Validera inputs med validation blocks                       |
+|  • Inkludera examples/-katalog                                 |
+|                                                                 |
+|  ❌ DON'Ts                                                      |
+|  • Hårdkoda värden som borde vara variabler                    |
+|  • Exponera känslig data i outputs (utan sensitive = true)    |
+|  • Skapa för stora moduler (single responsibility)             |
+|  • Glöm versions.tf                                            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
 - Modul = återanvändbar terraform-kod i egen katalog
-- variables.tf → main.tf → outputs.tf
+- variables.tf -> main.tf -> outputs.tf
 - Dokumentera med descriptions
 - Inkludera examples/ och README.md
 
 ## Nästa steg
-→ Module sources (local, registry, git)
+-> Module sources (local, registry, git)
 """
             },
             {"title": "Module sources (local, registry, git)", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -35410,30 +35410,30 @@ Terraform kan hämta moduler från många ställen. Valet beror på:
 ## Source Types Översikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              MODULE SOURCES                                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  LOCAL                                                          │
-│  source = "./modules/vpc"                                       │
-│  source = "../shared-modules/vpc"                               │
-│                                                                 │
-│  TERRAFORM REGISTRY                                             │
-│  source = "hashicorp/consul/aws"                               │
-│  source = "terraform-aws-modules/vpc/aws"                      │
-│                                                                 │
-│  GITHUB                                                         │
-│  source = "github.com/org/repo//modules/vpc"                   │
-│  source = "git@github.com:org/repo.git//modules/vpc"           │
-│                                                                 │
-│  GENERIC GIT                                                    │
-│  source = "git::https://example.com/repo.git"                  │
-│  source = "git::ssh://git@example.com/repo.git"                │
-│                                                                 │
-│  S3/GCS                                                         │
-│  source = "s3::https://bucket.s3.amazonaws.com/vpc.zip"        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              MODULE SOURCES                                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  LOCAL                                                          |
+|  source = "./modules/vpc"                                       |
+|  source = "../shared-modules/vpc"                               |
+|                                                                 |
+|  TERRAFORM REGISTRY                                             |
+|  source = "hashicorp/consul/aws"                               |
+|  source = "terraform-aws-modules/vpc/aws"                      |
+|                                                                 |
+|  GITHUB                                                         |
+|  source = "github.com/org/repo//modules/vpc"                   |
+|  source = "git@github.com:org/repo.git//modules/vpc"           |
+|                                                                 |
+|  GENERIC GIT                                                    |
+|  source = "git::https://example.com/repo.git"                  |
+|  source = "git::ssh://git@example.com/repo.git"                |
+|                                                                 |
+|  S3/GCS                                                         |
+|  source = "s3::https://bucket.s3.amazonaws.com/vpc.zip"        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Local Modules
@@ -35551,19 +35551,19 @@ module "vpc" {
 module "vpc" {
   source = "github.com/org/terraform-modules//modules/networking/vpc"
   #                                        ^^
-  #                                        └── Allt efter // är sökväg i repo
+  #                                        +-- Allt efter // är sökväg i repo
 }
 
 # Repo-struktur:
 # terraform-modules/
-# ├── modules/
-# │   ├── networking/
-# │   │   └── vpc/          <── Denna modul
-# │   ├── compute/
-# │   │   └── ec2/
-# │   └── database/
-# │       └── rds/
-# └── README.md
+# +-- modules/
+# |   +-- networking/
+# |   |   +-- vpc/          <-- Denna modul
+# |   +-- compute/
+# |   |   +-- ec2/
+# |   +-- database/
+# |       +-- rds/
+# +-- README.md
 ```
 
 ## terraform init och moduler
@@ -35610,25 +35610,25 @@ export AWS_SECRET_ACCESS_KEY=xxx
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              SOURCE BEST PRACTICES                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DEVELOPMENT                                                    │
-│  • Använd local modules för snabb iteration                    │
-│  • source = "./modules/vpc"                                    │
-│                                                                 │
-│  PRODUCTION                                                     │
-│  • Använd versionerade källor                                  │
-│  • Registry: version = "5.0.0"                                 │
-│  • Git: ?ref=v1.2.0                                            │
-│                                                                 │
-│  TEAM                                                           │
-│  • Centralt modul-repo för återanvändning                      │
-│  • Använd Git tags för releases                                │
-│  • Dokumentera breaking changes                                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              SOURCE BEST PRACTICES                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DEVELOPMENT                                                    |
+|  • Använd local modules för snabb iteration                    |
+|  • source = "./modules/vpc"                                    |
+|                                                                 |
+|  PRODUCTION                                                     |
+|  • Använd versionerade källor                                  |
+|  • Registry: version = "5.0.0"                                 |
+|  • Git: ?ref=v1.2.0                                            |
+|                                                                 |
+|  TEAM                                                           |
+|  • Centralt modul-repo för återanvändning                      |
+|  • Använd Git tags för releases                                |
+|  • Dokumentera breaking changes                                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
@@ -35638,7 +35638,7 @@ export AWS_SECRET_ACCESS_KEY=xxx
 - ALLTID versionera i produktion
 
 ## Nästa steg
-→ Module versioning
+-> Module versioning
 """
             },
             {"title": "Module versioning", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -35654,24 +35654,24 @@ Utan versioning kan en modul-uppdatering ändra eller förstöra din infrastrukt
 ## Versioning per source-typ
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              VERSIONING PER SOURCE                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  REGISTRY                                                       │
-│  version = "5.0.0"           # Exact                           │
-│  version = "~> 5.0"          # >= 5.0.0, < 6.0.0               │
-│  version = ">= 4.0, < 6.0"   # Range                           │
-│                                                                 │
-│  GIT                                                            │
-│  ?ref=v1.2.0                 # Tag (rekommenderat)             │
-│  ?ref=main                   # Branch (undvik i prod)          │
-│  ?ref=abc123def              # Commit SHA                       │
-│                                                                 │
-│  LOCAL                                                          │
-│  Ingen versioning            # Följer repo-versionen           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              VERSIONING PER SOURCE                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  REGISTRY                                                       |
+|  version = "5.0.0"           # Exact                           |
+|  version = "~> 5.0"          # >= 5.0.0, < 6.0.0               |
+|  version = ">= 4.0, < 6.0"   # Range                           |
+|                                                                 |
+|  GIT                                                            |
+|  ?ref=v1.2.0                 # Tag (rekommenderat)             |
+|  ?ref=main                   # Branch (undvik i prod)          |
+|  ?ref=abc123def              # Commit SHA                       |
+|                                                                 |
+|  LOCAL                                                          |
+|  Ingen versioning            # Följer repo-versionen           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Registry Versioning
@@ -35723,7 +35723,7 @@ module "vpc" {
 # UNDVIK: Ingen ref = senaste main/master
 # module "vpc" {
 #   source = "git@github.com:my-org/modules.git//vpc"
-#   # ← FARLIGT! Vem vet vad som finns i main?
+#   # <- FARLIGT! Vem vet vad som finns i main?
 # }
 ```
 
@@ -35802,42 +35802,42 @@ terraform apply
 
 ```
 terraform-infrastructure/
-├── modules/                     # Lokala moduler
-│   └── vpc/
-│       └── CHANGELOG.md        # Dokumentera ändringar
-│
-├── environments/
-│   ├── dev/
-│   │   └── main.tf             # Kan använda latest local
-│   ├── staging/
-│   │   └── main.tf             # Samma version som prod
-│   └── prod/
-│       └── main.tf             # Pinnad version
-│
-└── CHANGELOG.md                # Övergripande ändringslogg
++-- modules/                     # Lokala moduler
+|   +-- vpc/
+|       +-- CHANGELOG.md        # Dokumentera ändringar
+|
++-- environments/
+|   +-- dev/
+|   |   +-- main.tf             # Kan använda latest local
+|   +-- staging/
+|   |   +-- main.tf             # Samma version som prod
+|   +-- prod/
+|       +-- main.tf             # Pinnad version
+|
++-- CHANGELOG.md                # Övergripande ändringslogg
 ```
 
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              VERSIONING BEST PRACTICES                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DOs                                                         │
-│  • Pinna exakta versioner i produktion                         │
-│  • Använd ~> för kontrollerade uppdateringar                   │
-│  • Commita .terraform.lock.hcl                                 │
-│  • Läs CHANGELOG innan uppgradering                            │
-│  • Testa i dev → staging → prod                                │
-│                                                                 │
-│  ❌ DON'Ts                                                      │
-│  • Utelämna version constraint                                 │
-│  • Använda ?ref=main i produktion                              │
-│  • Uppgradera direkt i prod                                    │
-│  • Ignorera breaking changes                                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              VERSIONING BEST PRACTICES                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DOs                                                         |
+|  • Pinna exakta versioner i produktion                         |
+|  • Använd ~> för kontrollerade uppdateringar                   |
+|  • Commita .terraform.lock.hcl                                 |
+|  • Läs CHANGELOG innan uppgradering                            |
+|  • Testa i dev -> staging -> prod                                |
+|                                                                 |
+|  ❌ DON'Ts                                                      |
+|  • Utelämna version constraint                                 |
+|  • Använda ?ref=main i produktion                              |
+|  • Uppgradera direkt i prod                                    |
+|  • Ignorera breaking changes                                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
@@ -35848,7 +35848,7 @@ terraform-infrastructure/
 - Testa uppgraderingar i dev först
 
 ## Nästa steg
-→ Workspace concept
+-> Workspace concept
 """
             },
             {"title": "Workspace concept", "difficulty": "medium", "estimated_minutes": 20, "xp_reward": 40,
@@ -35863,20 +35863,20 @@ Workspaces låter dig ha **flera state-filer för samma konfiguration**. Samma .
 ## Workspace Grundkoncept
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              WORKSPACE = SEPARAT STATE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SAMMA .tf-filer                                                │
-│       │                                                         │
-│       ├── workspace: default ─────► terraform.tfstate           │
-│       ├── workspace: dev ─────────► terraform.tfstate.d/dev     │
-│       ├── workspace: staging ─────► terraform.tfstate.d/staging │
-│       └── workspace: prod ────────► terraform.tfstate.d/prod    │
-│                                                                 │
-│  Varje workspace = helt separat infrastruktur                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              WORKSPACE = SEPARAT STATE                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SAMMA .tf-filer                                                |
+|       |                                                         |
+|       +-- workspace: default -----► terraform.tfstate           |
+|       +-- workspace: dev ---------► terraform.tfstate.d/dev     |
+|       +-- workspace: staging -----► terraform.tfstate.d/staging |
+|       +-- workspace: prod --------► terraform.tfstate.d/prod    |
+|                                                                 |
+|  Varje workspace = helt separat infrastruktur                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Workspace Commands
@@ -35957,9 +35957,9 @@ terraform {
     region         = "eu-north-1"
     dynamodb_table = "terraform-locks"
     # Med workspaces blir nyckeln:
-    # workspace:default → infrastructure/terraform.tfstate
-    # workspace:dev     → infrastructure/env:/dev/terraform.tfstate
-    # workspace:prod    → infrastructure/env:/prod/terraform.tfstate
+    # workspace:default -> infrastructure/terraform.tfstate
+    # workspace:dev     -> infrastructure/env:/dev/terraform.tfstate
+    # workspace:prod    -> infrastructure/env:/prod/terraform.tfstate
   }
 }
 ```
@@ -35967,26 +35967,26 @@ terraform {
 ## Workspace vs Directory Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              WORKSPACES                    DIRECTORIES          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  terraform/                    terraform/                       │
-│  ├── main.tf                   ├── modules/                     │
-│  ├── variables.tf              │   └── vpc/                     │
-│  └── terraform.tfstate.d/      ├── environments/                │
-│      ├── dev/                  │   ├── dev/                     │
-│      ├── staging/              │   │   └── main.tf ←── egen     │
-│      └── prod/                 │   ├── staging/                 │
-│                                │   │   └── main.tf ←── egen     │
-│  Samma .tf för alla            │   └── prod/                    │
-│                                │       └── main.tf ←── egen     │
-│                                │                                │
-│  ✅ Enkelt                     │  ✅ Full kontroll              │
-│  ❌ Svårt att variera          │  ✅ Olika config per env       │
-│  ❌ Risk för prod-misstag      │  ✅ Tydlig separation          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              WORKSPACES                    DIRECTORIES          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  terraform/                    terraform/                       |
+|  +-- main.tf                   +-- modules/                     |
+|  +-- variables.tf              |   +-- vpc/                     |
+|  +-- terraform.tfstate.d/      +-- environments/                |
+|      +-- dev/                  |   +-- dev/                     |
+|      +-- staging/              |   |   +-- main.tf <--- egen     |
+|      +-- prod/                 |   +-- staging/                 |
+|                                |   |   +-- main.tf <--- egen     |
+|  Samma .tf för alla            |   +-- prod/                    |
+|                                |       +-- main.tf <--- egen     |
+|                                |                                |
+|  ✅ Enkelt                     |  ✅ Full kontroll              |
+|  ❌ Svårt att variera          |  ✅ Olika config per env       |
+|  ❌ Risk för prod-misstag      |  ✅ Tydlig separation          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## När använda workspaces?
@@ -36056,24 +36056,24 @@ terraform "$@"
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              WORKSPACE BEST PRACTICES                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DOs                                                         │
-│  • Använd för temporära/identiska miljöer                      │
-│  • Visa aktivt workspace i prompt                              │
-│  • Wrapper-scripts för prod-skydd                              │
-│                                                                 │
-│  ❌ DON'Ts                                                      │
-│  • Använd för dev/staging/prod separation                      │
-│  • Förlita dig på "jag kommer ihåg" att kolla workspace        │
-│  • Ge alla teammedlemmar tillgång till prod workspace          │
-│                                                                 │
-│  REKOMMENDATION                                                 │
-│  Använd directory-struktur för miljöseparering istället!       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              WORKSPACE BEST PRACTICES                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DOs                                                         |
+|  • Använd för temporära/identiska miljöer                      |
+|  • Visa aktivt workspace i prompt                              |
+|  • Wrapper-scripts för prod-skydd                              |
+|                                                                 |
+|  ❌ DON'Ts                                                      |
+|  • Använd för dev/staging/prod separation                      |
+|  • Förlita dig på "jag kommer ihåg" att kolla workspace        |
+|  • Ge alla teammedlemmar tillgång till prod workspace          |
+|                                                                 |
+|  REKOMMENDATION                                                 |
+|  Använd directory-struktur för miljöseparering istället!       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
@@ -36084,7 +36084,7 @@ terraform "$@"
 - Rekommendation: directory-struktur för miljöer
 
 ## Nästa steg
-→ Environment separation strategies
+-> Environment separation strategies
 """
             },
             {"title": "Environment separation strategies", "difficulty": "hard", "estimated_minutes": 30, "xp_reward": 55,
@@ -36101,57 +36101,57 @@ Dålig separation = ett misstag i dev förstör produktion. Bra separation ger:
 ## Tre huvudstrategier
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              SEPARATION STRATEGIES                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. DIRECTORY SEPARATION (Rekommenderat)                        │
-│     environments/dev/  environments/staging/  environments/prod/│
-│     Egna .tf-filer per miljö                                   │
-│                                                                 │
-│  2. TERRAGRUNT                                                  │
-│     DRY config med inheritance                                 │
-│     Centraliserad backend-config                               │
-│                                                                 │
-│  3. WORKSPACES (Undvik för miljöer)                            │
-│     Samma config, olika state                                  │
-│     Risk för fel miljö                                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              SEPARATION STRATEGIES                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. DIRECTORY SEPARATION (Rekommenderat)                        |
+|     environments/dev/  environments/staging/  environments/prod/|
+|     Egna .tf-filer per miljö                                   |
+|                                                                 |
+|  2. TERRAGRUNT                                                  |
+|     DRY config med inheritance                                 |
+|     Centraliserad backend-config                               |
+|                                                                 |
+|  3. WORKSPACES (Undvik för miljöer)                            |
+|     Samma config, olika state                                  |
+|     Risk för fel miljö                                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Strategy 1: Directory Separation (Rekommenderat)
 
 ```
 terraform-infrastructure/
-├── modules/                          # Delade moduler
-│   ├── vpc/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── outputs.tf
-│   ├── ec2/
-│   └── rds/
-│
-├── environments/                     # En katalog per miljö
-│   ├── dev/
-│   │   ├── main.tf                  # Dev-specifik config
-│   │   ├── variables.tf
-│   │   ├── terraform.tfvars
-│   │   └── backend.tf               # Dev state bucket
-│   │
-│   ├── staging/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── terraform.tfvars
-│   │   └── backend.tf               # Staging state bucket
-│   │
-│   └── prod/
-│       ├── main.tf
-│       ├── variables.tf
-│       ├── terraform.tfvars
-│       └── backend.tf               # Prod state bucket
-│
-└── README.md
++-- modules/                          # Delade moduler
+|   +-- vpc/
+|   |   +-- main.tf
+|   |   +-- variables.tf
+|   |   +-- outputs.tf
+|   +-- ec2/
+|   +-- rds/
+|
++-- environments/                     # En katalog per miljö
+|   +-- dev/
+|   |   +-- main.tf                  # Dev-specifik config
+|   |   +-- variables.tf
+|   |   +-- terraform.tfvars
+|   |   +-- backend.tf               # Dev state bucket
+|   |
+|   +-- staging/
+|   |   +-- main.tf
+|   |   +-- variables.tf
+|   |   +-- terraform.tfvars
+|   |   +-- backend.tf               # Staging state bucket
+|   |
+|   +-- prod/
+|       +-- main.tf
+|       +-- variables.tf
+|       +-- terraform.tfvars
+|       +-- backend.tf               # Prod state bucket
+|
++-- README.md
 ```
 
 ### dev/main.tf
@@ -36266,18 +36266,18 @@ terraform {
 
 ```
 terraform-infrastructure/
-├── modules/
-│   └── vpc/
-│
-├── terragrunt.hcl              # Root config
-│
-└── environments/
-    ├── dev/
-    │   └── terragrunt.hcl      # Inherit + override
-    ├── staging/
-    │   └── terragrunt.hcl
-    └── prod/
-        └── terragrunt.hcl
++-- modules/
+|   +-- vpc/
+|
++-- terragrunt.hcl              # Root config
+|
++-- environments/
+    +-- dev/
+    |   +-- terragrunt.hcl      # Inherit + override
+    +-- staging/
+    |   +-- terragrunt.hcl
+    +-- prod/
+        +-- terragrunt.hcl
 ```
 
 ### Root terragrunt.hcl
@@ -36327,25 +36327,25 @@ inputs = {
 ## AWS Account Separation (Enterprise)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              AWS MULTI-ACCOUNT                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  AWS Organization                                               │
-│  │                                                              │
-│  ├── Management Account (111111111111)                          │
-│  │   └── Billing, Organizations, SSO                           │
-│  │                                                              │
-│  ├── Dev Account (222222222222)                                │
-│  │   └── Full access för developers                            │
-│  │                                                              │
-│  ├── Staging Account (333333333333)                            │
-│  │   └── Begränsad access                                      │
-│  │                                                              │
-│  └── Prod Account (444444444444)                               │
-│      └── Endast CI/CD kan deploya                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              AWS MULTI-ACCOUNT                                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|  AWS Organization                                               |
+|  |                                                              |
+|  +-- Management Account (111111111111)                          |
+|  |   +-- Billing, Organizations, SSO                           |
+|  |                                                              |
+|  +-- Dev Account (222222222222)                                |
+|  |   +-- Full access för developers                            |
+|  |                                                              |
+|  +-- Staging Account (333333333333)                            |
+|  |   +-- Begränsad access                                      |
+|  |                                                              |
+|  +-- Prod Account (444444444444)                               |
+|      +-- Endast CI/CD kan deploya                              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ```hcl
@@ -36407,26 +36407,26 @@ resource "aws_iam_policy" "terraform_prod" {
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              ENVIRONMENT SEPARATION BEST PRACTICES              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  STRUKTUR                                                       │
-│  ✅ Directory per environment                                   │
-│  ✅ Separata state buckets (helst separata AWS accounts)       │
-│  ✅ Delade moduler med versioning                              │
-│                                                                 │
-│  PERMISSIONS                                                    │
-│  ✅ Prod: endast CI/CD kan deploya                             │
-│  ✅ Utvecklare har full access till dev                        │
-│  ✅ Approve-steg för prod ändringar                            │
-│                                                                 │
-│  CI/CD                                                          │
-│  ✅ Automatisk plan på PR                                      │
-│  ✅ Manuell approve för prod apply                             │
-│  ✅ Drift detection för alla miljöer                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              ENVIRONMENT SEPARATION BEST PRACTICES              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  STRUKTUR                                                       |
+|  ✅ Directory per environment                                   |
+|  ✅ Separata state buckets (helst separata AWS accounts)       |
+|  ✅ Delade moduler med versioning                              |
+|                                                                 |
+|  PERMISSIONS                                                    |
+|  ✅ Prod: endast CI/CD kan deploya                             |
+|  ✅ Utvecklare har full access till dev                        |
+|  ✅ Approve-steg för prod ändringar                            |
+|                                                                 |
+|  CI/CD                                                          |
+|  ✅ Automatisk plan på PR                                      |
+|  ✅ Manuell approve för prod apply                             |
+|  ✅ Drift detection för alla miljöer                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
@@ -36437,7 +36437,7 @@ resource "aws_iam_policy" "terraform_prod" {
 - Undvik workspaces för miljöseparering
 
 ## Nästa steg
-→ terraform validate
+-> terraform validate
 """
             },
             {"title": "terraform validate", "difficulty": "easy", "estimated_minutes": 15, "xp_reward": 30,
@@ -36450,25 +36450,25 @@ resource "aws_iam_policy" "terraform_prod" {
 ## Vad kontrollerar validate?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              VALIDATE KONTROLLERAR                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ KOLLAR                                                      │
-│  • HCL syntax (korrekt formatering)                            │
-│  • Attribute names (rätt attribut för resurs-typ)              │
-│  • Variable types (string där string förväntas)                │
-│  • Required arguments (saknade obligatoriska fält)             │
-│  • Module inputs (rätt variabler skickas till modul)           │
-│  • Resource references (aws_vpc.main.id existerar)             │
-│                                                                 │
-│  ❌ KOLLAR INTE                                                 │
-│  • Om resurser faktiskt finns i AWS                            │
-│  • IAM permissions                                              │
-│  • Giltiga AMI IDs, VPC IDs, etc.                              │
-│  • Cost eller quotas                                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              VALIDATE KONTROLLERAR                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ KOLLAR                                                      |
+|  • HCL syntax (korrekt formatering)                            |
+|  • Attribute names (rätt attribut för resurs-typ)              |
+|  • Variable types (string där string förväntas)                |
+|  • Required arguments (saknade obligatoriska fält)             |
+|  • Module inputs (rätt variabler skickas till modul)           |
+|  • Resource references (aws_vpc.main.id existerar)             |
+|                                                                 |
+|  ❌ KOLLAR INTE                                                 |
+|  • Om resurser faktiskt finns i AWS                            |
+|  • IAM permissions                                              |
+|  • Giltiga AMI IDs, VPC IDs, etc.                              |
+|  • Cost eller quotas                                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Grundläggande användning
@@ -36588,27 +36588,27 @@ jobs:
 ## validate vs plan vs apply
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              VALIDATE → PLAN → APPLY                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  terraform validate                                             │
-│  └── Lokal syntax-check, ingen AWS-kontakt                     │
-│      Snabbt: ~1 sekund                                         │
-│                                                                 │
-│  terraform plan                                                 │
-│  └── Jämför config med state och AWS                           │
-│      Tid: 10-60 sekunder (beror på antal resurser)             │
-│      Kräver: AWS credentials                                   │
-│                                                                 │
-│  terraform apply                                                │
-│  └── Faktiskt skapar/ändrar resurser                           │
-│      Tid: Minuter till timmar                                  │
-│      Kräver: Rätt IAM permissions                              │
-│                                                                 │
-│  REKOMMENDATION: validate lokalt → plan i CI → apply med approve│
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              VALIDATE -> PLAN -> APPLY                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  terraform validate                                             |
+|  +-- Lokal syntax-check, ingen AWS-kontakt                     |
+|      Snabbt: ~1 sekund                                         |
+|                                                                 |
+|  terraform plan                                                 |
+|  +-- Jämför config med state och AWS                           |
+|      Tid: 10-60 sekunder (beror på antal resurser)             |
+|      Kräver: AWS credentials                                   |
+|                                                                 |
+|  terraform apply                                                |
+|  +-- Faktiskt skapar/ändrar resurser                           |
+|      Tid: Minuter till timmar                                  |
+|      Kräver: Rätt IAM permissions                              |
+|                                                                 |
+|  REKOMMENDATION: validate lokalt -> plan i CI -> apply med approve|
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Validate med variabler
@@ -36679,7 +36679,7 @@ terraform validate -json
 - -json flag för maskinläsbar output
 
 ## Nästa steg
-→ tflint and tfsec
+-> tflint and tfsec
 """
             },
             {"title": "tflint and tfsec", "difficulty": "medium", "estimated_minutes": 25, "xp_reward": 45,
@@ -36694,18 +36694,18 @@ terraform validate -json
 ## tflint - Terraform Linter
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TFLINT HITTAR                                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  • Deprecated syntax                                           │
-│  • Invalid instance types (t2.micro finns inte i region)       │
-│  • Invalid AMI IDs                                             │
-│  • Naming conventions                                          │
-│  • Provider-specific best practices                            │
-│  • Unused variables och declarations                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TFLINT HITTAR                                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  • Deprecated syntax                                           |
+|  • Invalid instance types (t2.micro finns inte i region)       |
+|  • Invalid AMI IDs                                             |
+|  • Naming conventions                                          |
+|  • Provider-specific best practices                            |
+|  • Unused variables och declarations                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Installation
@@ -36793,18 +36793,18 @@ tflint --format=checkstyle  # För Jenkins
 ## tfsec - Security Scanner
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TFSEC HITTAR                                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  • S3 buckets utan encryption                                  │
-│  • Security groups öppna mot 0.0.0.0/0                        │
-│  • RDS utan backup                                             │
-│  • IAM policies som är för breda                               │
-│  • Hardcoded secrets                                           │
-│  • Missing logging/monitoring                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TFSEC HITTAR                                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  • S3 buckets utan encryption                                  |
+|  • Security groups öppna mot 0.0.0.0/0                        |
+|  • RDS utan backup                                             |
+|  • IAM policies som är för breda                               |
+|  • Hardcoded secrets                                           |
+|  • Missing logging/monitoring                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Installation
@@ -36927,28 +36927,28 @@ jobs:
 ## tflint vs tfsec vs checkov
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TOOL COMPARISON                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  TFLINT                                                         │
-│  • Best practices och kodkvalitet                              │
-│  • Provider-specifik validering                                │
-│  • Deprecated features                                         │
-│                                                                 │
-│  TFSEC (nu del av Trivy)                                       │
-│  • Säkerhetsfokus                                              │
-│  • CIS Benchmarks                                              │
-│  • Snabb och enkel                                             │
-│                                                                 │
-│  CHECKOV                                                        │
-│  • Compliance (PCI-DSS, HIPAA, SOC2)                          │
-│  • Multi-framework (TF, CF, K8s, Docker)                      │
-│  • Custom policies                                             │
-│                                                                 │
-│  REKOMMENDATION: tflint + tfsec (eller Trivy) för de flesta   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TOOL COMPARISON                                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|  TFLINT                                                         |
+|  • Best practices och kodkvalitet                              |
+|  • Provider-specifik validering                                |
+|  • Deprecated features                                         |
+|                                                                 |
+|  TFSEC (nu del av Trivy)                                       |
+|  • Säkerhetsfokus                                              |
+|  • CIS Benchmarks                                              |
+|  • Snabb och enkel                                             |
+|                                                                 |
+|  CHECKOV                                                        |
+|  • Compliance (PCI-DSS, HIPAA, SOC2)                          |
+|  • Multi-framework (TF, CF, K8s, Docker)                      |
+|  • Custom policies                                             |
+|                                                                 |
+|  REKOMMENDATION: tflint + tfsec (eller Trivy) för de flesta   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## pre-commit hooks
@@ -36985,7 +36985,7 @@ pre-commit install
 - Ignorera medvetet med kommentarer
 
 ## Nästa steg
-→ Terratest basics
+-> Terratest basics
 """
             },
             {"title": "Terratest basics", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -36998,22 +36998,22 @@ pre-commit install
 ## Vad är Terratest?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRATEST = GO-BASERAT TEST FRAMEWORK              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. Kör terraform apply (skapar riktiga resurser)              │
-│                                                                 │
-│  2. Verifiera att resurser fungerar                            │
-│     • HTTP request till server                                 │
-│     • SSH och kör kommandon                                    │
-│     • Kontrollera outputs                                      │
-│                                                                 │
-│  3. Kör terraform destroy (städar upp)                         │
-│                                                                 │
-│  OBS: Kräver Go-kunskap och kostar pengar (AWS-resurser)      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRATEST = GO-BASERAT TEST FRAMEWORK              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. Kör terraform apply (skapar riktiga resurser)              |
+|                                                                 |
+|  2. Verifiera att resurser fungerar                            |
+|     • HTTP request till server                                 |
+|     • SSH och kör kommandon                                    |
+|     • Kontrollera outputs                                      |
+|                                                                 |
+|  3. Kör terraform destroy (städar upp)                         |
+|                                                                 |
+|  OBS: Kräver Go-kunskap och kostar pengar (AWS-resurser)      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Installation
@@ -37037,16 +37037,16 @@ go version
 
 ```
 terraform-module/
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── versions.tf
-├── README.md
-│
-└── test/
-    ├── go.mod
-    ├── go.sum
-    └── vpc_test.go     # Terratest-filer slutar på _test.go
++-- main.tf
++-- variables.tf
++-- outputs.tf
++-- versions.tf
++-- README.md
+|
++-- test/
+    +-- go.mod
+    +-- go.sum
+    +-- vpc_test.go     # Terratest-filer slutar på _test.go
 ```
 
 ## Initiera Go-modul
@@ -37285,24 +37285,24 @@ jobs:
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRATEST BEST PRACTICES                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ DOs                                                         │
-│  • ALLTID defer terraform.Destroy()                            │
-│  • Använd t.Parallel() för parallella tester                   │
-│  • Generera unika namn med random.UniqueId()                   │
-│  • Sätt rimlig timeout (30-60 min)                             │
-│  • Testa i dedikerat AWS-konto                                 │
-│                                                                 │
-│  ❌ DON'Ts                                                      │
-│  • Testa i produktions-konto                                   │
-│  • Hårdkoda resursnamn (kollisioner)                          │
-│  • Glöm timeout (default 10 min räcker sällan)                │
-│  • Skippa destroy vid lokala tester                            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRATEST BEST PRACTICES                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ DOs                                                         |
+|  • ALLTID defer terraform.Destroy()                            |
+|  • Använd t.Parallel() för parallella tester                   |
+|  • Generera unika namn med random.UniqueId()                   |
+|  • Sätt rimlig timeout (30-60 min)                             |
+|  • Testa i dedikerat AWS-konto                                 |
+|                                                                 |
+|  ❌ DON'Ts                                                      |
+|  • Testa i produktions-konto                                   |
+|  • Hårdkoda resursnamn (kollisioner)                          |
+|  • Glöm timeout (default 10 min räcker sällan)                |
+|  • Skippa destroy vid lokala tester                            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Kostnadshantering
@@ -37330,7 +37330,7 @@ resource "aws_instance" "test" {
 - Dyrt men värdefullt för kritisk infrastruktur
 
 ## Nästa steg
-→ GitHub Actions integration
+-> GitHub Actions integration
 """
             },
             {"title": "GitHub Actions integration", "difficulty": "hard", "estimated_minutes": 35, "xp_reward": 60,
@@ -37347,25 +37347,25 @@ Manuell terraform apply i produktionen är en säkerhetsrisk. CI/CD ger:
 ## Workflow Översikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              TERRAFORM CI/CD WORKFLOW                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  PR CREATED/UPDATED                                             │
-│  ├── terraform fmt -check                                       │
-│  ├── terraform validate                                         │
-│  ├── tflint                                                     │
-│  ├── tfsec                                                      │
-│  └── terraform plan → Post som PR-kommentar                    │
-│                                                                 │
-│  PR MERGED TO MAIN                                              │
-│  ├── terraform plan                                             │
-│  └── terraform apply (med approval för prod)                   │
-│                                                                 │
-│  SCHEDULED (drift detection)                                    │
-│  └── terraform plan → Notifiera om drift                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              TERRAFORM CI/CD WORKFLOW                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  PR CREATED/UPDATED                                             |
+|  +-- terraform fmt -check                                       |
+|  +-- terraform validate                                         |
+|  +-- tflint                                                     |
+|  +-- tfsec                                                      |
+|  +-- terraform plan -> Post som PR-kommentar                    |
+|                                                                 |
+|  PR MERGED TO MAIN                                              |
+|  +-- terraform plan                                             |
+|  +-- terraform apply (med approval för prod)                   |
+|                                                                 |
+|  SCHEDULED (drift detection)                                    |
+|  +-- terraform plan -> Notifiera om drift                       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Komplett Workflow
@@ -37555,7 +37555,7 @@ jobs:
 ## Secrets Setup
 
 ```bash
-# Repository Settings → Secrets and variables → Actions
+# Repository Settings -> Secrets and variables -> Actions
 
 # Required secrets:
 AWS_ACCESS_KEY_ID       # IAM User access key
@@ -37607,7 +37607,7 @@ resource "aws_iam_role" "github_actions" {
 ## Environment Protection Rules
 
 ```
-Repository Settings → Environments → production
+Repository Settings -> Environments -> production
 
 Required reviewers: ✓
   - @platform-team
@@ -37700,25 +37700,25 @@ jobs:
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              GITHUB ACTIONS BEST PRACTICES                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SECURITY                                                       │
-│  ✅ Använd OIDC istället för access keys                       │
-│  ✅ Environment protection rules för prod                      │
-│  ✅ Least privilege IAM permissions                            │
-│                                                                 │
-│  WORKFLOW                                                       │
-│  ✅ Plan på PR, apply på merge                                 │
-│  ✅ Posta plan som PR-kommentar                                │
-│  ✅ Kräv approval för produktions-apply                        │
-│                                                                 │
-│  DRIFT                                                          │
-│  ✅ Scheduled drift detection                                  │
-│  ✅ Alert vid oväntade ändringar                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              GITHUB ACTIONS BEST PRACTICES                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SECURITY                                                       |
+|  ✅ Använd OIDC istället för access keys                       |
+|  ✅ Environment protection rules för prod                      |
+|  ✅ Least privilege IAM permissions                            |
+|                                                                 |
+|  WORKFLOW                                                       |
+|  ✅ Plan på PR, apply på merge                                 |
+|  ✅ Posta plan som PR-kommentar                                |
+|  ✅ Kräv approval för produktions-apply                        |
+|                                                                 |
+|  DRIFT                                                          |
+|  ✅ Scheduled drift detection                                  |
+|  ✅ Alert vid oväntade ändringar                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Sammanfattning
@@ -37729,7 +37729,7 @@ jobs:
 - Drift detection som scheduled job
 
 ## Nästa steg
-→ Serverless Architecture modul
+-> Serverless Architecture modul
 """
             },
         ],
@@ -37776,26 +37776,26 @@ Serverless är inte bara "ingen server" — det är ett **helt nytt sätt att t�
 ## Vad betyder "Serverless"?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   SERVERLESS BETYDER:                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ✅ Ingen serverhantering      (AWS hanterar infrastrukturen)   │
-│  ✅ Automatisk skalning        (0 → 1000 instanser automatiskt) │
-│  ✅ Pay-per-use               (betala bara när kod exekveras)   │
-│  ✅ Event-driven              (kod triggas av händelser)        │
-│  ✅ Managed availability      (AWS garanterar uptime)           │
-│                                                                 │
-│  ❌ INTE att servrar inte finns — de är bara abstraherade       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   SERVERLESS BETYDER:                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ✅ Ingen serverhantering      (AWS hanterar infrastrukturen)   |
+|  ✅ Automatisk skalning        (0 -> 1000 instanser automatiskt) |
+|  ✅ Pay-per-use               (betala bara när kod exekveras)   |
+|  ✅ Event-driven              (kod triggas av händelser)        |
+|  ✅ Managed availability      (AWS garanterar uptime)           |
+|                                                                 |
+|  ❌ INTE att servrar inte finns — de är bara abstraherade       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Traditional vs Serverless jämförelse
 
 ```
                 TRADITIONAL (EC2)              SERVERLESS (Lambda)
-                ─────────────────              ───────────────────
+                -----------------              -------------------
 
 PROVISIONING   Du väljer instance type        Ingen - bara ladda upp kod
                t3.medium, m5.large
@@ -37859,40 +37859,40 @@ EXECUTION      Ingen gräns                    15 min max per invocation
 SCENARIO: API med 1 miljon requests/månad, 200ms average
 
 LAMBDA:
-├── 1M requests × 200ms = 200,000 GB-seconds
-├── Free tier: 400,000 GB-seconds
-├── Kostnad: $0 (inom free tier!)
-└── Vid 10M requests: ~$20/månad
++-- 1M requests x 200ms = 200,000 GB-seconds
++-- Free tier: 400,000 GB-seconds
++-- Kostnad: $0 (inom free tier!)
++-- Vid 10M requests: ~$20/månad
 
 EC2 (t3.medium):
-├── $0.0416/timme × 730 timmar
-├── Kostnad: ~$30/månad (oavsett trafik)
-└── Plus: Load balancer, patching, monitoring
++-- $0.0416/timme x 730 timmar
++-- Kostnad: ~$30/månad (oavsett trafik)
++-- Plus: Load balancer, patching, monitoring
 
 BREAK-EVEN: ~50M requests/månad
-Under det → Lambda billigare
-Över det → EC2 kan vara billigare
+Under det -> Lambda billigare
+Över det -> EC2 kan vara billigare
 ```
 
 ## Serverless ecosystem på AWS
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AWS SERVERLESS SERVICES                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  COMPUTE                       DATA                             │
-│  ├── Lambda (functions)        ├── DynamoDB (NoSQL)             │
-│  ├── Fargate (containers)      ├── Aurora Serverless (SQL)      │
-│  └── App Runner (apps)         └── S3 (object storage)          │
-│                                                                 │
-│  INTEGRATION                   API                              │
-│  ├── EventBridge (events)      ├── API Gateway (REST/HTTP)      │
-│  ├── Step Functions (workflow) ├── AppSync (GraphQL)            │
-│  ├── SQS (queues)              └── CloudFront (CDN)             │
-│  └── SNS (pub/sub)                                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AWS SERVERLESS SERVICES                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  COMPUTE                       DATA                             |
+|  +-- Lambda (functions)        +-- DynamoDB (NoSQL)             |
+|  +-- Fargate (containers)      +-- Aurora Serverless (SQL)      |
+|  +-- App Runner (apps)         +-- S3 (object storage)          |
+|                                                                 |
+|  INTEGRATION                   API                              |
+|  +-- EventBridge (events)      +-- API Gateway (REST/HTTP)      |
+|  +-- Step Functions (workflow) +-- AppSync (GraphQL)            |
+|  +-- SQS (queues)              +-- CloudFront (CDN)             |
+|  +-- SNS (pub/sub)                                              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Övning: Välj arkitektur
@@ -37936,38 +37936,38 @@ Att förstå hur Lambda fungerar under huven hjälper dig skriva effektiv kod, u
 ## Lambda Execution Model
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LAMBDA EXECUTION FLOW                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. EVENT ARRIVES                                               │
-│     │ (API Gateway, S3, SQS, CloudWatch, etc.)                  │
-│     ▼                                                           │
-│  2. LAMBDA SERVICE RECEIVES EVENT                               │
-│     │                                                           │
-│     ├── Execution environment exists?                           │
-│     │   ├── YES → Reuse (WARM START) ──────────────┐            │
-│     │   └── NO → Create new (COLD START)           │            │
-│     │            │                                 │            │
-│     │            ▼                                 │            │
-│     │         Download code                        │            │
-│     │         Start runtime                        │            │
-│     │         Run init code                        │            │
-│     │            │                                 │            │
-│     │            ▼                                 │            │
-│  3. ◄────────── INVOKE HANDLER ◄───────────────────┘            │
-│     │                                                           │
-│     ▼                                                           │
-│  4. HANDLER EXECUTES                                            │
-│     │ (your code runs here)                                     │
-│     ▼                                                           │
-│  5. RETURN RESPONSE                                             │
-│     │                                                           │
-│     ▼                                                           │
-│  6. ENVIRONMENT STAYS WARM (för återanvändning)                 │
-│     (ca 5-15 minuter innan den stängs)                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LAMBDA EXECUTION FLOW                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. EVENT ARRIVES                                               |
+|     | (API Gateway, S3, SQS, CloudWatch, etc.)                  |
+|     ▼                                                           |
+|  2. LAMBDA SERVICE RECEIVES EVENT                               |
+|     |                                                           |
+|     +-- Execution environment exists?                           |
+|     |   +-- YES -> Reuse (WARM START) --------------+            |
+|     |   +-- NO -> Create new (COLD START)           |            |
+|     |            |                                 |            |
+|     |            ▼                                 |            |
+|     |         Download code                        |            |
+|     |         Start runtime                        |            |
+|     |         Run init code                        |            |
+|     |            |                                 |            |
+|     |            ▼                                 |            |
+|  3. ◄---------- INVOKE HANDLER ◄-------------------+            |
+|     |                                                           |
+|     ▼                                                           |
+|  4. HANDLER EXECUTES                                            |
+|     | (your code runs here)                                     |
+|     ▼                                                           |
+|  5. RETURN RESPONSE                                             |
+|     |                                                           |
+|     ▼                                                           |
+|  6. ENVIRONMENT STAYS WARM (för återanvändning)                 |
+|     (ca 5-15 minuter innan den stängs)                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Lambda Execution Environment
@@ -37975,34 +37975,34 @@ Att förstå hur Lambda fungerar under huven hjälper dig skriva effektiv kod, u
 Varje Lambda kör i en **Firecracker microVM** — en lättvikts-VM designad av AWS:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   EXECUTION ENVIRONMENT                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │                    Your Function                          │  │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │  │
-│  │  │ Handler     │  │ Dependencies│  │ Layers      │        │  │
-│  │  │ (your code) │  │ (packages)  │  │ (shared)    │        │  │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘        │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                              │                                  │
-│  ┌───────────────────────────┴───────────────────────────────┐  │
-│  │                    Lambda Runtime                         │  │
-│  │  Python 3.12 / Node.js 20 / Java 21 / etc.                │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                              │                                  │
-│  ┌───────────────────────────┴───────────────────────────────┐  │
-│  │                    Amazon Linux 2                         │  │
-│  │  /tmp (512MB-10GB)  /opt (layers)  /var/task (your code)  │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                              │                                  │
-│  ┌───────────────────────────┴───────────────────────────────┐  │
-│  │                  Firecracker microVM                      │  │
-│  │  CPU: 128MB-10GB proportional    Memory: 128MB-10GB       │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   EXECUTION ENVIRONMENT                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +-----------------------------------------------------------+  |
+|  |                    Your Function                          |  |
+|  |  +-------------+  +-------------+  +-------------+        |  |
+|  |  | Handler     |  | Dependencies|  | Layers      |        |  |
+|  |  | (your code) |  | (packages)  |  | (shared)    |        |  |
+|  |  +-------------+  +-------------+  +-------------+        |  |
+|  +-----------------------------------------------------------+  |
+|                              |                                  |
+|  +---------------------------+-------------------------------+  |
+|  |                    Lambda Runtime                         |  |
+|  |  Python 3.12 / Node.js 20 / Java 21 / etc.                |  |
+|  +-----------------------------------------------------------+  |
+|                              |                                  |
+|  +---------------------------+-------------------------------+  |
+|  |                    Amazon Linux 2                         |  |
+|  |  /tmp (512MB-10GB)  /opt (layers)  /var/task (your code)  |  |
+|  +-----------------------------------------------------------+  |
+|                              |                                  |
+|  +---------------------------+-------------------------------+  |
+|  |                  Firecracker microVM                      |  |
+|  |  CPU: 128MB-10GB proportional    Memory: 128MB-10GB       |  |
+|  +-----------------------------------------------------------+  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Resource Allocation
@@ -38013,7 +38013,7 @@ Lambda allokerar CPU proportionellt till minne:
 # Mer minne = mer CPU = snabbare exekvering
 
 MEMORY        vCPU (approx)    USE CASE
-────────      ─────────────    ────────
+--------      -------------    --------
 128 MB        0.08 vCPU        Minimal processing
 512 MB        0.33 vCPU        Light API calls
 1024 MB       0.58 vCPU        Standard workloads
@@ -38022,48 +38022,48 @@ MEMORY        vCPU (approx)    USE CASE
 10240 MB      6.0 vCPU         Heavy processing
 
 # VIKTIGT: Ibland är mer minne BILLIGARE
-# 128MB × 10 sec = 1.25 GB-sec → $0.0000208
-# 1024MB × 1 sec = 1.00 GB-sec → $0.0000167 ← Billigare!
+# 128MB x 10 sec = 1.25 GB-sec -> $0.0000208
+# 1024MB x 1 sec = 1.00 GB-sec -> $0.0000167 <- Billigare!
 ```
 
 ## Concurrency Model
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LAMBDA CONCURRENCY                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  UNRESERVED CONCURRENCY (default)                               │
-│  ─────────────────────────────────                              │
-│  • Delad pool för alla funktioner i kontot                      │
-│  • Default limit: 1000 concurrent executions                    │
-│  • Kan ökas via support ticket                                  │
-│                                                                 │
-│  RESERVED CONCURRENCY                                           │
-│  ─────────────────────                                          │
-│  • Garanterar kapacitet för specifik funktion                   │
-│  • Sätter också MAX (throttling över detta)                     │
-│  • Bra för kritiska funktioner                                  │
-│                                                                 │
-│  PROVISIONED CONCURRENCY                                        │
-│  ──────────────────────────                                     │
-│  • Pre-warmed environments (eliminerar cold starts)             │
-│  • Kostar pengar även när idle                                  │
-│  • Bra för latency-kritiska APIs                                │
-│                                                                 │
-│  Visualisering:                                                 │
-│  ┌────────────────────────────────────────┐                     │
-│  │ Account Limit: 1000                    │                     │
-│  │ ┌────────────────────────────────────┐ │                     │
-│  │ │ Function A: Reserved 100           │ │                     │
-│  │ │ ┌────────────────────┐             │ │                     │
-│  │ │ │ Provisioned: 10   │             │ │                     │
-│  │ │ └────────────────────┘             │ │                     │
-│  │ └────────────────────────────────────┘ │                     │
-│  │ Unreserved pool: 900                   │                     │
-│  └────────────────────────────────────────┘                     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LAMBDA CONCURRENCY                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  UNRESERVED CONCURRENCY (default)                               |
+|  ---------------------------------                              |
+|  • Delad pool för alla funktioner i kontot                      |
+|  • Default limit: 1000 concurrent executions                    |
+|  • Kan ökas via support ticket                                  |
+|                                                                 |
+|  RESERVED CONCURRENCY                                           |
+|  ---------------------                                          |
+|  • Garanterar kapacitet för specifik funktion                   |
+|  • Sätter också MAX (throttling över detta)                     |
+|  • Bra för kritiska funktioner                                  |
+|                                                                 |
+|  PROVISIONED CONCURRENCY                                        |
+|  --------------------------                                     |
+|  • Pre-warmed environments (eliminerar cold starts)             |
+|  • Kostar pengar även när idle                                  |
+|  • Bra för latency-kritiska APIs                                |
+|                                                                 |
+|  Visualisering:                                                 |
+|  +----------------------------------------+                     |
+|  | Account Limit: 1000                    |                     |
+|  | +------------------------------------+ |                     |
+|  | | Function A: Reserved 100           | |                     |
+|  | | +--------------------+             | |                     |
+|  | | | Provisioned: 10   |             | |                     |
+|  | | +--------------------+             | |                     |
+|  | +------------------------------------+ |                     |
+|  | Unreserved pool: 900                   |                     |
+|  +----------------------------------------+                     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Handler Structure
@@ -38127,40 +38127,40 @@ Cold starts är den **vanligaste kritiken mot Lambda**. Att förstå varför de 
 ## Vad är en Cold Start?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    COLD START BREAKDOWN                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  COLD START (första request eller efter idle)                   │
-│  ────────────────────────────────────────────                   │
-│                                                                 │
-│  ┌──────────────┬──────────────┬──────────────┬──────────────┐  │
-│  │ Download     │ Start        │ Init         │ Handler      │  │
-│  │ code         │ runtime      │ code         │ execution    │  │
-│  ├──────────────┼──────────────┼──────────────┼──────────────┤  │
-│  │ ~100-500ms   │ ~100-300ms   │ varies       │ your code    │  │
-│  │ (AWS)        │ (AWS)        │ (your code)  │              │  │
-│  └──────────────┴──────────────┴──────────────┴──────────────┘  │
-│  │◄─────────── COLD START ───────────►│◄─── EXECUTION ───►│    │
-│                                                                 │
-│  WARM START (efterföljande requests)                            │
-│  ───────────────────────────────────                            │
-│                                                                 │
-│  ┌──────────────────────────────────────────────┬──────────────┐│
-│  │           Reuse existing environment         │ Handler      ││
-│  │                                              │ execution    ││
-│  ├──────────────────────────────────────────────┼──────────────┤│
-│  │           < 1ms                              │ your code    ││
-│  └──────────────────────────────────────────────┴──────────────┘│
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    COLD START BREAKDOWN                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  COLD START (första request eller efter idle)                   |
+|  --------------------------------------------                   |
+|                                                                 |
+|  +--------------+--------------+--------------+--------------+  |
+|  | Download     | Start        | Init         | Handler      |  |
+|  | code         | runtime      | code         | execution    |  |
+|  +--------------+--------------+--------------+--------------+  |
+|  | ~100-500ms   | ~100-300ms   | varies       | your code    |  |
+|  | (AWS)        | (AWS)        | (your code)  |              |  |
+|  +--------------+--------------+--------------+--------------+  |
+|  |◄----------- COLD START -----------►|◄--- EXECUTION ---►|    |
+|                                                                 |
+|  WARM START (efterföljande requests)                            |
+|  -----------------------------------                            |
+|                                                                 |
+|  +----------------------------------------------+--------------+|
+|  |           Reuse existing environment         | Handler      ||
+|  |                                              | execution    ||
+|  +----------------------------------------------+--------------+|
+|  |           < 1ms                              | your code    ||
+|  +----------------------------------------------+--------------+|
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Cold Start Duration by Runtime
 
 ```
 RUNTIME              COLD START      NOTES
-───────              ──────────      ─────
+-------              ----------      -----
 Python 3.x           100-300ms       Snabbast
 Node.js 18/20        100-300ms       Snabbast
 Go                   50-150ms        Allra snabbast
@@ -38249,7 +38249,7 @@ resource "aws_lambda_provisioned_concurrency_config" "api" {
 }
 
 # Kostnad: ~$0.015/timme per provisioned instance
-# 5 instanser × 730 timmar = ~$55/månad
+# 5 instanser x 730 timmar = ~$55/månad
 ```
 
 ### 4. Keep functions warm (budget-alternativ)
@@ -38271,25 +38271,25 @@ def handler(event, context):
 ## VPC Cold Starts
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    VPC-ATTACHED LAMBDA                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  TIDIGARE (före 2019):                                          │
-│  ─────────────────────                                          │
-│  Cold start + ENI creation = 10-30 SEKUNDER (!)                 │
-│                                                                 │
-│  NU (AWS Hyperplane):                                           │
-│  ────────────────────                                           │
-│  Cold start = ~1 sekund extra                                   │
-│                                                                 │
-│  REKOMMENDATION:                                                │
-│  ───────────────                                                │
-│  • Använd INTE VPC om du inte måste                             │
-│  • Måste? Använd Provisioned Concurrency                        │
-│  • Alternativ: VPC Endpoints istället för NAT                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    VPC-ATTACHED LAMBDA                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  TIDIGARE (före 2019):                                          |
+|  ---------------------                                          |
+|  Cold start + ENI creation = 10-30 SEKUNDER (!)                 |
+|                                                                 |
+|  NU (AWS Hyperplane):                                           |
+|  --------------------                                           |
+|  Cold start = ~1 sekund extra                                   |
+|                                                                 |
+|  REKOMMENDATION:                                                |
+|  ---------------                                                |
+|  • Använd INTE VPC om du inte måste                             |
+|  • Måste? Använd Provisioned Concurrency                        |
+|  • Alternativ: VPC Endpoints istället för NAT                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Mät dina cold starts
@@ -38342,22 +38342,22 @@ Lambda-prissättning är **radikalt annorlunda** från EC2. Du betalar per milli
 ## Prissättning: Tre komponenter
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LAMBDA PRICING                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. REQUESTS                                                    │
-│     $0.20 per 1 miljon requests                                 │
-│     Free tier: 1 miljon requests/månad                          │
-│                                                                 │
-│  2. DURATION (GB-seconds)                                       │
-│     $0.0000166667 per GB-second                                 │
-│     Free tier: 400,000 GB-seconds/månad                         │
-│                                                                 │
-│  3. PROVISIONED CONCURRENCY (optional)                          │
-│     $0.000004646 per GB-second (för pre-warmed capacity)        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LAMBDA PRICING                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. REQUESTS                                                    |
+|     $0.20 per 1 miljon requests                                 |
+|     Free tier: 1 miljon requests/månad                          |
+|                                                                 |
+|  2. DURATION (GB-seconds)                                       |
+|     $0.0000166667 per GB-second                                 |
+|     Free tier: 400,000 GB-seconds/månad                         |
+|                                                                 |
+|  3. PROVISIONED CONCURRENCY (optional)                          |
+|     $0.000004646 per GB-second (för pre-warmed capacity)        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Beräkningsexempel
@@ -38374,12 +38374,12 @@ duration_sec = 200 / 1000  # = 0.2 seconds
 requests = 1_000_000
 
 gb_seconds = memory_gb * duration_sec * requests
-# = 0.25 × 0.2 × 1,000,000
+# = 0.25 x 0.2 x 1,000,000
 # = 50,000 GB-seconds
 
 # Steg 2: Beräkna kostnad
-# Free tier: 400,000 GB-seconds → Vi är UNDER
-# Requests free tier: 1M → Vi är UNDER
+# Free tier: 400,000 GB-seconds -> Vi är UNDER
+# Requests free tier: 1M -> Vi är UNDER
 
 TOTAL_KOSTNAD = $0.00  # Helt gratis!
 ```
@@ -38387,35 +38387,35 @@ TOTAL_KOSTNAD = $0.00  # Helt gratis!
 ## Kostnadsscenarier
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    COST SCENARIOS                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SCENARIO A: Hobby project                                      │
-│  ─────────────────────────                                      │
-│  100K requests, 128MB, 100ms avg                                │
-│  GB-sec: 0.125 × 0.1 × 100,000 = 1,250                          │
-│  Kostnad: $0 (inom free tier)                                   │
-│                                                                 │
-│  SCENARIO B: Production API                                     │
-│  ─────────────────────────────                                  │
-│  10M requests, 512MB, 500ms avg                                 │
-│  GB-sec: 0.5 × 0.5 × 10,000,000 = 2,500,000                     │
-│  Över free tier: 2,100,000 GB-sec                               │
-│  Kostnad: $35 (duration) + $1.80 (requests) = ~$37/månad        │
-│                                                                 │
-│  SCENARIO C: Heavy processing                                   │
-│  ─────────────────────────────                                  │
-│  1M requests, 3GB, 10 sec avg                                   │
-│  GB-sec: 3 × 10 × 1,000,000 = 30,000,000                        │
-│  Kostnad: ~$500/månad                                           │
-│                                                                 │
-│  SCENARIO D: Samma som C, men på EC2                            │
-│  ─────────────────────────────────────                          │
-│  m5.large (8GB, 2 vCPU): ~$70/månad                             │
-│  → EC2 är 7× billigare vid konstant hög load!                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    COST SCENARIOS                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SCENARIO A: Hobby project                                      |
+|  -------------------------                                      |
+|  100K requests, 128MB, 100ms avg                                |
+|  GB-sec: 0.125 x 0.1 x 100,000 = 1,250                          |
+|  Kostnad: $0 (inom free tier)                                   |
+|                                                                 |
+|  SCENARIO B: Production API                                     |
+|  -----------------------------                                  |
+|  10M requests, 512MB, 500ms avg                                 |
+|  GB-sec: 0.5 x 0.5 x 10,000,000 = 2,500,000                     |
+|  Över free tier: 2,100,000 GB-sec                               |
+|  Kostnad: $35 (duration) + $1.80 (requests) = ~$37/månad        |
+|                                                                 |
+|  SCENARIO C: Heavy processing                                   |
+|  -----------------------------                                  |
+|  1M requests, 3GB, 10 sec avg                                   |
+|  GB-sec: 3 x 10 x 1,000,000 = 30,000,000                        |
+|  Kostnad: ~$500/månad                                           |
+|                                                                 |
+|  SCENARIO D: Samma som C, men på EC2                            |
+|  -------------------------------------                          |
+|  m5.large (8GB, 2 vCPU): ~$70/månad                             |
+|  -> EC2 är 7x billigare vid konstant hög load!                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Kostnadsfällor
@@ -38426,7 +38426,7 @@ TOTAL_KOSTNAD = $0.00  # Helt gratis!
 # ❌ DÅLIGT: Väntar på timeout
 def handler(event, context):
     response = requests.get(url)  # Hänger i 30 sek om tjänst är nere
-    # 15 min timeout = 15 × 60 × (memory/1024) GB-seconds
+    # 15 min timeout = 15 x 60 x (memory/1024) GB-seconds
     # Med 1GB: 900 GB-seconds per failed request!
 
 # ✅ BRA: Timeout på requests
@@ -38456,29 +38456,29 @@ def handler(event, context):
 # Men ibland slösar du pengar
 
 # Test: Kör med 128MB, 256MB, 512MB, 1024MB
-# Jämför: duration × memory_cost
+# Jämför: duration x memory_cost
 # Välj sweet spot
 ```
 
 ## Free Tier (alltid gratis)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LAMBDA FREE TIER                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  • 1,000,000 requests per månad                                 │
-│  • 400,000 GB-seconds per månad                                 │
-│  • GÄLLER ALLTID (inte bara 12 månader)                         │
-│                                                                 │
-│  Vad betyder 400,000 GB-seconds?                                │
-│  ─────────────────────────────────                              │
-│  128MB: 3,200,000 sekunder = 889 timmar                         │
-│  256MB: 1,600,000 sekunder = 444 timmar                         │
-│  512MB: 800,000 sekunder = 222 timmar                           │
-│  1GB:   400,000 sekunder = 111 timmar                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LAMBDA FREE TIER                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  • 1,000,000 requests per månad                                 |
+|  • 400,000 GB-seconds per månad                                 |
+|  • GÄLLER ALLTID (inte bara 12 månader)                         |
+|                                                                 |
+|  Vad betyder 400,000 GB-seconds?                                |
+|  ---------------------------------                              |
+|  128MB: 3,200,000 sekunder = 889 timmar                         |
+|  256MB: 1,600,000 sekunder = 444 timmar                         |
+|  512MB: 800,000 sekunder = 222 timmar                           |
+|  1GB:   400,000 sekunder = 111 timmar                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Kostnadsberäknare
@@ -38595,7 +38595,7 @@ def lambda_handler(event, context):
 resource "aws_lambda_function" "my_function" {
   function_name = "my-function"
   handler       = "handler.lambda_handler"
-  #              └── filename.function_name
+  #              +-- filename.function_name
 
   runtime       = "python3.12"
   filename      = "function.zip"
@@ -38860,7 +38860,7 @@ def lambda_handler(event, context):
 
     # Unique identifier för denna invocation
     print(f"Request ID: {context.aws_request_id}")
-    # → "abc123-def456-..."
+    # -> "abc123-def456-..."
 
     # Function metadata
     print(f"Function: {context.function_name}")
@@ -39159,11 +39159,11 @@ Subnetting och CIDR är grunden för all nätverksdesign. Du MÅSTE kunna detta 
 ### IP-adressens struktur
 ```
 192.168.1.100
- │   │   │  │
- │   │   │  └── Host (0-255)
- │   │   └───── Subnet
- │   └───────── Network
- └───────────── Class C indicator
+ |   |   |  |
+ |   |   |  +-- Host (0-255)
+ |   |   +----- Subnet
+ |   +--------- Network
+ +------------- Class C indicator
 ```
 
 ### Privata IP-ranges (RFC 1918)
@@ -39178,9 +39178,9 @@ Class C: 192.168.0.0/16    (192.168.0.0 - 192.168.255.255) 65K addresses
 ### Så fungerar det
 ```
 10.0.0.0/24
-    │     │
-    │     └── Prefix length (24 bitar för nätverk)
-    └──────── Nätverksadress
+    |     |
+    |     +-- Prefix length (24 bitar för nätverk)
+    +-------- Nätverksadress
 
 /24 = 255.255.255.0 = 256 adresser (254 användbara)
 /16 = 255.255.0.0   = 65,536 adresser
@@ -39219,21 +39219,21 @@ Formel: 2^(32-prefix) = antal adresser
 ### Typisk VPC-struktur
 ```
 VPC: 10.0.0.0/16 (65,536 addresses)
-│
-├── Public Subnets
-│   ├── 10.0.0.0/24   (AZ-a) - 256 addr
-│   ├── 10.0.1.0/24   (AZ-b) - 256 addr
-│   └── 10.0.2.0/24   (AZ-c) - 256 addr
-│
-├── Private Subnets (Application)
-│   ├── 10.0.10.0/24  (AZ-a) - 256 addr
-│   ├── 10.0.11.0/24  (AZ-b) - 256 addr
-│   └── 10.0.12.0/24  (AZ-c) - 256 addr
-│
-└── Private Subnets (Database)
-    ├── 10.0.20.0/24  (AZ-a) - 256 addr
-    ├── 10.0.21.0/24  (AZ-b) - 256 addr
-    └── 10.0.22.0/24  (AZ-c) - 256 addr
+|
++-- Public Subnets
+|   +-- 10.0.0.0/24   (AZ-a) - 256 addr
+|   +-- 10.0.1.0/24   (AZ-b) - 256 addr
+|   +-- 10.0.2.0/24   (AZ-c) - 256 addr
+|
++-- Private Subnets (Application)
+|   +-- 10.0.10.0/24  (AZ-a) - 256 addr
+|   +-- 10.0.11.0/24  (AZ-b) - 256 addr
+|   +-- 10.0.12.0/24  (AZ-c) - 256 addr
+|
++-- Private Subnets (Database)
+    +-- 10.0.20.0/24  (AZ-a) - 256 addr
+    +-- 10.0.21.0/24  (AZ-b) - 256 addr
+    +-- 10.0.22.0/24  (AZ-c) - 256 addr
 ```
 
 ### AWS reserverar 5 adresser per subnet
@@ -39307,13 +39307,13 @@ DNS är internets telefonbok. Varje gång din applikation anropar ett API, datab
 ### Hierarki
 ```
                     . (root)
-                      │
-        ┌─────────────┼─────────────┐
+                      |
+        +-------------+-------------+
        com           org           se
-        │
+        |
    example.com
-        │
-   ┌────┴────┐
+        |
+   +----+----+
   www       api
 ```
 
@@ -39321,15 +39321,15 @@ DNS är internets telefonbok. Varje gång din applikation anropar ett API, datab
 
 | Type | Användning | Exempel |
 |------|-----------|---------|
-| A | IPv4-adress | api.example.com → 93.184.216.34 |
-| AAAA | IPv6-adress | api.example.com → 2606:2800:220:1:... |
-| CNAME | Alias till annat namn | www → example.com |
-| MX | Mail server | example.com → mail.example.com |
+| A | IPv4-adress | api.example.com -> 93.184.216.34 |
+| AAAA | IPv6-adress | api.example.com -> 2606:2800:220:1:... |
+| CNAME | Alias till annat namn | www -> example.com |
+| MX | Mail server | example.com -> mail.example.com |
 | TXT | Text data (SPF, DKIM) | "v=spf1 include:..." |
-| NS | Nameserver | example.com → ns1.example.com |
+| NS | Nameserver | example.com -> ns1.example.com |
 | SOA | Start of Authority | Zone metadata |
 | SRV | Service location | _http._tcp.example.com |
-| PTR | Reverse lookup | 34.216.184.93 → api.example.com |
+| PTR | Reverse lookup | 34.216.184.93 -> api.example.com |
 
 ## DNS i praktiken
 
@@ -39360,12 +39360,12 @@ dig -x 93.184.216.34
 ```
 ;; ANSWER SECTION:
 api.example.com.    300    IN    A    93.184.216.34
-       │             │      │    │         │
-       │             │      │    │         └── IP-adress
-       │             │      │    └── Record type
-       │             │      └── Internet class
-       │             └── TTL (seconds)
-       └── Hostname (FQDN)
+       |             |      |    |         |
+       |             |      |    |         +-- IP-adress
+       |             |      |    +-- Record type
+       |             |      +-- Internet class
+       |             +-- TTL (seconds)
+       +-- Hostname (FQDN)
 ```
 
 ## TTL (Time To Live)
@@ -39519,18 +39519,18 @@ Dynamic/ephemeral:    49152 - 65535 (tillfälliga)
 
 ```
 TCP (Transmission Control Protocol):
-├── Connection-oriented (handshake)
-├── Reliable delivery (retransmission)
-├── Ordered packets
-├── Flow control
-└── Use: HTTP, SSH, databases
++-- Connection-oriented (handshake)
++-- Reliable delivery (retransmission)
++-- Ordered packets
++-- Flow control
++-- Use: HTTP, SSH, databases
 
 UDP (User Datagram Protocol):
-├── Connectionless
-├── No guaranteed delivery
-├── No ordering
-├── Fast, low overhead
-└── Use: DNS, video streaming, gaming
++-- Connectionless
++-- No guaranteed delivery
++-- No ordering
++-- Fast, low overhead
++-- Use: DNS, video streaming, gaming
 ```
 
 ## Kontrollera öppna portar
@@ -39658,10 +39658,10 @@ default via 10.0.0.1 dev eth0 proto dhcp metric 100
 ### Läsa routing-output
 ```
 default via 10.0.0.1 dev eth0
-   │         │           │
-   │         │           └── Genom denna interface
-   │         └── Skicka till denna gateway
-   └── Matchar all trafik (0.0.0.0/0)
+   |         |           |
+   |         |           +-- Genom denna interface
+   |         +-- Skicka till denna gateway
+   +-- Matchar all trafik (0.0.0.0/0)
 ```
 
 ### Hantera routes
@@ -39744,10 +39744,10 @@ resource "aws_route_table_association" "public" {
 
 ### Public Subnet Flow (med Internet Gateway)
 ```
-EC2 (10.0.1.50) → Internet:
+EC2 (10.0.1.50) -> Internet:
 1. EC2 skickar paket till 8.8.8.8
-2. Route table: 0.0.0.0/0 → IGW
-3. IGW gör NAT (10.0.1.50 → public IP)
+2. Route table: 0.0.0.0/0 -> IGW
+3. IGW gör NAT (10.0.1.50 -> public IP)
 4. Paket når internet
 5. Svar kommer tillbaka via IGW
 6. IGW gör reverse NAT
@@ -39756,11 +39756,11 @@ EC2 (10.0.1.50) → Internet:
 
 ### Private Subnet Flow (med NAT Gateway)
 ```
-EC2 (10.0.10.50) → Internet:
+EC2 (10.0.10.50) -> Internet:
 1. EC2 skickar paket till 8.8.8.8
-2. Route table: 0.0.0.0/0 → NAT-GW
+2. Route table: 0.0.0.0/0 -> NAT-GW
 3. NAT-GW (i public subnet) gör SNAT
-4. NAT-GW route table: 0.0.0.0/0 → IGW
+4. NAT-GW route table: 0.0.0.0/0 -> IGW
 5. IGW skickar ut på internet
 6. Svar kommer tillbaka samma väg
 ```
@@ -39973,14 +39973,14 @@ dig @8.8.8.8 api.example.com
 # Använd AWS CLI eller Console
 
 # Kolla NACL
-# VPC → Subnets → Network ACL
+# VPC -> Subnets -> Network ACL
 
 # VPC Flow Logs
 # Aktivera för VPC/Subnet/ENI
 # Analysera i CloudWatch Logs
 
 # Reachability Analyzer
-# VPC → Reachability Analyzer → Create path
+# VPC -> Reachability Analyzer -> Create path
 ```
 
 ## Övning
@@ -40011,9 +40011,9 @@ Transit Gateway är en regional nätverkstjänst som fungerar som en cloud route
 
 ```
 Utan Transit Gateway:          Med Transit Gateway:
-VPC-A ←→ VPC-B                      VPC-A
-VPC-A ←→ VPC-C                         ↓
-VPC-B ←→ VPC-C                    Transit GW ← VPN
+VPC-A <--> VPC-B                      VPC-A
+VPC-A <--> VPC-C                         ↓
+VPC-B <--> VPC-C                    Transit GW <- VPN
 (n*(n-1)/2 connections)            ↓     ↓
                                 VPC-B  VPC-C
                               (n connections)
@@ -40162,12 +40162,12 @@ PrivateLink ger privat anslutning till AWS-tjänster och egna tjänster utan att
 ## PrivateLink Koncept
 
 ```
-┌─────────────────────────────────────────┐
-│ VPC                                     │
-│  ┌─────────────┐    ┌────────────────┐ │
-│  │ EC2         │───→│ ENI (Endpoint) │──┼──→ AWS Service (S3, DynamoDB)
-│  └─────────────┘    └────────────────┘ │    (Privat anslutning)
-└─────────────────────────────────────────┘
++-----------------------------------------+
+| VPC                                     |
+|  +-------------+    +----------------+ |
+|  | EC2         |---->| ENI (Endpoint) |--+---> AWS Service (S3, DynamoDB)
+|  +-------------+    +----------------+ |    (Privat anslutning)
++-----------------------------------------+
 ```
 
 ## Interface Endpoints
@@ -40322,11 +40322,11 @@ Direct Connect ger dedikerad nätverksanslutning från ditt datacenter till AWS 
 ```
 On-Premises        Direct Connect        AWS
 Datacenter         Location
-┌──────────┐      ┌──────────┐      ┌──────────┐
-│ Router   │──────│ AWS      │──────│ VPC      │
-│          │      │ Router   │      │          │
-└──────────┘      └──────────┘      └──────────┘
-     │                 │                  │
++----------+      +----------+      +----------+
+| Router   |------| AWS      |------| VPC      |
+|          |      | Router   |      |          |
++----------+      +----------+      +----------+
+     |                 |                  |
    Your            Colocation          Private
    Network         Facility            Network
 ```
@@ -40411,10 +40411,10 @@ resource "aws_dx_gateway_association" "vpc" {
 
 ```
                     Direct Connect Location 1
-On-Prem ─────────── Connection 1 ─────────── AWS
+On-Prem ----------- Connection 1 ----------- AWS
         ╲                                   ╱
          ╲         Direct Connect Location 2
-          ──────── Connection 2 ────────────
+          -------- Connection 2 ------------
 ```
 
 Best practice: Två connections på olika locations.
@@ -40453,15 +40453,15 @@ Site-to-Site VPN ger krypterad anslutning mellan on-premises nätverk och AWS VP
 
 ```
 On-Premises                              AWS
-┌──────────────┐                    ┌──────────────┐
-│              │     IPsec Tunnel   │              │
-│ Customer GW  │════════════════════│ VPN Gateway  │
-│ (Router)     │     IPsec Tunnel   │              │
-└──────────────┘════════════════════└──────────────┘
-                                          │
-                                     ┌────┴────┐
-                                     │   VPC   │
-                                     └─────────┘
++--------------+                    +--------------+
+|              |     IPsec Tunnel   |              |
+| Customer GW  |════════════════════| VPN Gateway  |
+| (Router)     |     IPsec Tunnel   |              |
++--------------+════════════════════+--------------+
+                                          |
+                                     +----+----+
+                                     |   VPC   |
+                                     +---------+
 ```
 
 ## Komponenter
@@ -40993,7 +40993,7 @@ Security Groups är den primära nätverkssäkerhetskontrollen i AWS. Att först
 ### Stateful vs Stateless
 ```
 Security Groups (Stateful):
-- Inbound tillåts → Return traffic tillåts automatiskt
+- Inbound tillåts -> Return traffic tillåts automatiskt
 - Endast ALLOW rules (ingen DENY)
 - Appliceras på ENI-nivå
 
@@ -41053,7 +41053,7 @@ resource "aws_vpc_security_group_egress_rule" "web_to_db" {
 
 ### Security Group Chaining
 ```
-[Internet] → [ALB SG] → [App SG] → [DB SG]
+[Internet] -> [ALB SG] -> [App SG] -> [DB SG]
                            ↓
                       [Cache SG]
 ```
@@ -41097,7 +41097,7 @@ Network ACLs (NACLs) ger ett extra säkerhetslager på subnet-nivå. De är stat
 ```
 Problem: Client initierar HTTPS (443)
 - Outbound: 443 (allowed)
-- Return: 32768-65535 (ephemeral port) ← MÅSTE tillåtas!
+- Return: 32768-65535 (ephemeral port) <- MÅSTE tillåtas!
 
 Windows: 49152-65535
 Linux: 32768-60999
@@ -42044,8 +42044,8 @@ SCPs är guardrails för hela AWS Organizations. De begränsar vad konton KAN g�
 ```
 Effective permissions = IAM Policies ∩ SCPs ∩ Permission Boundaries
 
-SCP DENY → Alltid DENY (övertrumfar allt)
-SCP ALLOW → Krävs för att IAM ska kunna ALLOW
+SCP DENY -> Alltid DENY (övertrumfar allt)
+SCP ALLOW -> Krävs för att IAM ska kunna ALLOW
 ```
 
 ### Common SCPs
@@ -42163,16 +42163,16 @@ resource "aws_organizations_policy_attachment" "region_all" {
 ### OU Structure
 ```
 Root
-├── Security OU (audit, log-archive)
-├── Infrastructure OU (networking, shared-services)
-├── Workloads OU
-│   ├── Production OU
-│   │   └── Prod Account
-│   ├── Staging OU
-│   │   └── Staging Account
-│   └── Development OU
-│       └── Dev Accounts
-└── Sandbox OU (experiment accounts)
++-- Security OU (audit, log-archive)
++-- Infrastructure OU (networking, shared-services)
++-- Workloads OU
+|   +-- Production OU
+|   |   +-- Prod Account
+|   +-- Staging OU
+|   |   +-- Staging Account
+|   +-- Development OU
+|       +-- Dev Accounts
++-- Sandbox OU (experiment accounts)
 ```
 
 ### Per-OU SCPs
@@ -43872,17 +43872,17 @@ Compliance är obligatoriskt för företag som hanterar känslig data. AWS erbju
 
 ```
 Customer Responsibility ("Security IN the cloud"):
-├── Customer Data
-├── Platform, Applications, IAM
-├── Operating System, Network & Firewall Config
-├── Client-side & Server-side Encryption
-└── Network Traffic Protection
++-- Customer Data
++-- Platform, Applications, IAM
++-- Operating System, Network & Firewall Config
++-- Client-side & Server-side Encryption
++-- Network Traffic Protection
 
 AWS Responsibility ("Security OF the cloud"):
-├── Compute, Storage, Database, Networking
-├── Hardware/AWS Global Infrastructure
-├── Regions, Availability Zones, Edge Locations
-└── Physical Security
++-- Compute, Storage, Database, Networking
++-- Hardware/AWS Global Infrastructure
++-- Regions, Availability Zones, Edge Locations
++-- Physical Security
 ```
 
 ## SOC 2 Compliance
@@ -44226,29 +44226,29 @@ Du har lärt dig Docker - att bygga och köra containers. Men **vad händer när
 Tänk dig att du driver en e-commerce site:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SCENARIO: E-COMMERCE SITE                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  TJÄNSTER DU BEHÖVER:                                           │
-│  ├── Frontend (React)           x3 replicas                     │
-│  ├── Product API                x5 replicas                     │
-│  ├── Order Service              x3 replicas                     │
-│  ├── Payment Service            x2 replicas                     │
-│  ├── Inventory Service          x3 replicas                     │
-│  ├── Search Service             x4 replicas                     │
-│  └── Notification Service       x2 replicas                     │
-│                                                                 │
-│  TOTAL: 22+ containers som behöver:                             │
-│  - Schemaläggas på olika servrar                                │
-│  - Health checks                                                │
-│  - Automatisk omstart vid crash                                 │
-│  - Load balancing                                               │
-│  - Rolling updates utan downtime                                │
-│  - Secrets management                                           │
-│  - Networking mellan tjänster                                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SCENARIO: E-COMMERCE SITE                    |
++-----------------------------------------------------------------+
+|                                                                 |
+|  TJÄNSTER DU BEHÖVER:                                           |
+|  +-- Frontend (React)           x3 replicas                     |
+|  +-- Product API                x5 replicas                     |
+|  +-- Order Service              x3 replicas                     |
+|  +-- Payment Service            x2 replicas                     |
+|  +-- Inventory Service          x3 replicas                     |
+|  +-- Search Service             x4 replicas                     |
+|  +-- Notification Service       x2 replicas                     |
+|                                                                 |
+|  TOTAL: 22+ containers som behöver:                             |
+|  - Schemaläggas på olika servrar                                |
+|  - Health checks                                                |
+|  - Automatisk omstart vid crash                                 |
+|  - Load balancing                                               |
+|  - Rolling updates utan downtime                                |
+|  - Secrets management                                           |
+|  - Networking mellan tjänster                                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Utan orchestration måste du manuellt:
@@ -44277,35 +44277,35 @@ docker run -d --name product-api-2 myapp/product-api
 ## Vad Container Orchestration löser
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                PROBLEM → LÖSNING                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ❌ PROBLEM                    ✅ ORCHESTRATION LÖSER           │
-│  ─────────                     ──────────────────────           │
-│                                                                 │
-│  Var ska containern köras?     Automatic Scheduling             │
-│  "Vilken server har plats?"    "Jag hittar bästa platsen"       │
-│                                                                 │
-│  Container crashade!           Self-Healing                     │
-│  "Hur startar jag om?"         "Jag startar om automatiskt"     │
-│                                                                 │
-│  Behöver fler instanser        Auto-Scaling                     │
-│  "Starta manuellt?"            "Jag skalar baserat på load"     │
-│                                                                 │
-│  Ny version ska ut             Rolling Updates                  │
-│  "Nertid under deployment?"    "Zero-downtime deployment"       │
-│                                                                 │
-│  Tjänster ska prata            Service Discovery                │
-│  "Vilken IP har product-api?"  "Använd DNS-namn: product-api"   │
-│                                                                 │
-│  Behöver hemligheter           Secrets Management               │
-│  "Hur sprider jag DB-lösen?"   "Jag injicerar säkert"           │
-│                                                                 │
-│  En server dog                 High Availability                │
-│  "Manuell failover?"           "Jag flyttar containers"         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                PROBLEM -> LÖSNING                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  ❌ PROBLEM                    ✅ ORCHESTRATION LÖSER           |
+|  ---------                     ----------------------           |
+|                                                                 |
+|  Var ska containern köras?     Automatic Scheduling             |
+|  "Vilken server har plats?"    "Jag hittar bästa platsen"       |
+|                                                                 |
+|  Container crashade!           Self-Healing                     |
+|  "Hur startar jag om?"         "Jag startar om automatiskt"     |
+|                                                                 |
+|  Behöver fler instanser        Auto-Scaling                     |
+|  "Starta manuellt?"            "Jag skalar baserat på load"     |
+|                                                                 |
+|  Ny version ska ut             Rolling Updates                  |
+|  "Nertid under deployment?"    "Zero-downtime deployment"       |
+|                                                                 |
+|  Tjänster ska prata            Service Discovery                |
+|  "Vilken IP har product-api?"  "Använd DNS-namn: product-api"   |
+|                                                                 |
+|  Behöver hemligheter           Secrets Management               |
+|  "Hur sprider jag DB-lösen?"   "Jag injicerar säkert"           |
+|                                                                 |
+|  En server dog                 High Availability                |
+|  "Manuell failover?"           "Jag flyttar containers"         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## Declarative vs Imperative
@@ -44345,30 +44345,30 @@ spec:
 ## Kubernetes vs andra orchestrators
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 CONTAINER ORCHESTRATION LANDSCAPE               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  KUBERNETES (K8s)              DOCKER SWARM                     │
-│  ────────────────              ────────────                     │
-│  ✅ Industry standard          ✅ Enklare att lära              │
-│  ✅ Mest features              ✅ Integrerat i Docker           │
-│  ✅ Stor community             ✅ Bra för små setups            │
-│  ❌ Brant inlärningskurva      ❌ Mindre features               │
-│  ❌ Komplex                    ❌ Mindre community              │
-│                                                                 │
-│  NOMAD (HashiCorp)             AWS ECS                          │
-│  ──────────────────            ───────                          │
-│  ✅ Enklare än K8s             ✅ AWS-native integration        │
-│  ✅ Flexibel (ej bara cont.)   ✅ Managed service               │
-│  ❌ Mindre ecosystem           ❌ AWS lock-in                   │
-│                                                                 │
-│  MARKNADSANDEL 2024:                                            │
-│  Kubernetes: ~85%                                               │
-│  ECS/Fargate: ~10%                                              │
-│  Övriga: ~5%                                                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 CONTAINER ORCHESTRATION LANDSCAPE               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  KUBERNETES (K8s)              DOCKER SWARM                     |
+|  ----------------              ------------                     |
+|  ✅ Industry standard          ✅ Enklare att lära              |
+|  ✅ Mest features              ✅ Integrerat i Docker           |
+|  ✅ Stor community             ✅ Bra för små setups            |
+|  ❌ Brant inlärningskurva      ❌ Mindre features               |
+|  ❌ Komplex                    ❌ Mindre community              |
+|                                                                 |
+|  NOMAD (HashiCorp)             AWS ECS                          |
+|  ------------------            -------                          |
+|  ✅ Enklare än K8s             ✅ AWS-native integration        |
+|  ✅ Flexibel (ej bara cont.)   ✅ Managed service               |
+|  ❌ Mindre ecosystem           ❌ AWS lock-in                   |
+|                                                                 |
+|  MARKNADSANDEL 2024:                                            |
+|  Kubernetes: ~85%                                               |
+|  ECS/Fargate: ~10%                                              |
+|  Övriga: ~5%                                                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ## När behöver du INTE orchestration?
@@ -44511,7 +44511,7 @@ Men: De bör **lära sig Kubernetes** för att vara förberedda när de skalar.
         "project": {
             "title": "GitOps Platform",
             "slug": "project-gitops-platform",
-            "description": "Build a complete GitOps platform: EKS cluster (Terraform), ArgoCD installation, app-of-apps pattern, Helm charts for services, environment promotion (dev→staging→prod), security policies, automated sync.",
+            "description": "Build a complete GitOps platform: EKS cluster (Terraform), ArgoCD installation, app-of-apps pattern, Helm charts for services, environment promotion (dev->staging->prod), security policies, automated sync.",
             "deliverables": [
                 "EKS Terraform modules",
                 "Helm chart library",

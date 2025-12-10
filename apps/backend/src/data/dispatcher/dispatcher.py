@@ -1,6 +1,6 @@
 """
 Phase 8.4 — Event Dispatcher
-Deterministic dispatch pipeline: raw events → normalizers → store.
+Deterministic dispatch pipeline: raw events -> normalizers -> store.
 Integrates with Phase 7 telemetry.
 """
 
@@ -52,7 +52,7 @@ def dispatch_event(
 ) -> Dict[str, Any]:
     """
     Dispatch a single raw event through the pipeline.
-    Deterministic order: validate → normalize → store → log.
+    Deterministic order: validate -> normalize -> store -> log.
     No async operations.
 
     Args:

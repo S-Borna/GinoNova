@@ -27,30 +27,30 @@ NODE_07_ADVANCED_WORKFLOWS = {
 ## Git Stash Mastery
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            GIT STASH                                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Stash temporarily saves uncommitted changes                               │
-│                                                                             │
-│   STASH STACK:                                                              │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  stash@{0}  ─►  Latest stash (most recent)                          │  │
-│   │       │                                                             │  │
-│   │  stash@{1}  ─►  Previous stash                                      │  │
-│   │       │                                                             │  │
-│   │  stash@{2}  ─►  Older stash                                         │  │
-│   │       │                                                             │  │
-│   │     ...                                                             │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   WHAT GETS STASHED:                                                        │
-│   ├── Modified tracked files ✅                                             │
-│   ├── Staged changes ✅                                                     │
-│   ├── Untracked files ❌ (unless -u)                                        │
-│   └── Ignored files ❌ (unless -a)                                          │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                            GIT STASH                                        |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Stash temporarily saves uncommitted changes                               |
+|                                                                             |
+|   STASH STACK:                                                              |
+|   +---------------------------------------------------------------------+  |
+|   |  stash@{0}  -►  Latest stash (most recent)                          |  |
+|   |       |                                                             |  |
+|   |  stash@{1}  -►  Previous stash                                      |  |
+|   |       |                                                             |  |
+|   |  stash@{2}  -►  Older stash                                         |  |
+|   |       |                                                             |  |
+|   |     ...                                                             |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   WHAT GETS STASHED:                                                        |
+|   +-- Modified tracked files ✅                                             |
+|   +-- Staged changes ✅                                                     |
+|   +-- Untracked files ❌ (unless -u)                                        |
+|   +-- Ignored files ❌ (unless -a)                                          |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Stash Operations
@@ -135,33 +135,33 @@ git stash pop                 # Get rest back
 ## Git Worktrees
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           GIT WORKTREES                                     │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Worktrees allow multiple working directories for ONE repository           │
-│                                                                             │
-│   TRADITIONAL:                       WITH WORKTREES:                        │
-│   ┌─────────────────┐               ┌─────────────────┐                    │
-│   │   myproject/    │               │   myproject/    │ (main)             │
-│   │   ├── .git/     │               │   ├── .git/     │                    │
-│   │   └── ...       │               │   └── ...       │                    │
-│   └─────────────────┘               │                 │                    │
-│                                     │   ../myproject-feat/  │ (feature)    │
-│   Switch branches = lose context    │   └── ...       │                    │
-│                                     │                 │                    │
-│                                     │   ../myproject-fix/   │ (hotfix)     │
-│                                     │   └── ...       │                    │
-│                                     └─────────────────┘                    │
-│                                                                             │
-│   BENEFITS:                                                                 │
-│   ├── Work on multiple branches simultaneously                              │
-│   ├── No stashing required                                                  │
-│   ├── Keep long builds running                                              │
-│   ├── Review PRs while working                                              │
-│   └── Shared .git saves disk space                                          │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                           GIT WORKTREES                                     |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Worktrees allow multiple working directories for ONE repository           |
+|                                                                             |
+|   TRADITIONAL:                       WITH WORKTREES:                        |
+|   +-----------------+               +-----------------+                    |
+|   |   myproject/    |               |   myproject/    | (main)             |
+|   |   +-- .git/     |               |   +-- .git/     |                    |
+|   |   +-- ...       |               |   +-- ...       |                    |
+|   +-----------------+               |                 |                    |
+|                                     |   ../myproject-feat/  | (feature)    |
+|   Switch branches = lose context    |   +-- ...       |                    |
+|                                     |                 |                    |
+|                                     |   ../myproject-fix/   | (hotfix)     |
+|                                     |   +-- ...       |                    |
+|                                     +-----------------+                    |
+|                                                                             |
+|   BENEFITS:                                                                 |
+|   +-- Work on multiple branches simultaneously                              |
+|   +-- No stashing required                                                  |
+|   +-- Keep long builds running                                              |
+|   +-- Review PRs while working                                              |
+|   +-- Shared .git saves disk space                                          |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Worktree Operations
@@ -238,40 +238,40 @@ code ../myproject-feature
 ## Git Bisect
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            GIT BISECT                                       │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Binary search through history to find bug-introducing commit              │
-│                                                                             │
-│   CONCEPT:                                                                  │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │                                                                     │  │
-│   │   A───B───C───D───E───F───G───H───I───J                             │  │
-│   │   ▲                               ▲                                 │  │
-│   │   good                            bad                               │  │
-│   │   (works)                         (broken)                          │  │
-│   │                                                                     │  │
-│   │   Step 1: Test E (middle)                                           │  │
-│   │           Result: good                                              │  │
-│   │                                                                     │  │
-│   │   A───B───C───D───E───F───G───H───I───J                             │  │
-│   │               ▲       ▲       ▲                                     │  │
-│   │               good    test    bad                                   │  │
-│   │                                                                     │  │
-│   │   Step 2: Test G (middle of E-J)                                    │  │
-│   │           Result: bad                                               │  │
-│   │                                                                     │  │
-│   │   Step 3: Test F (middle of E-G)                                    │  │
-│   │           Result: good                                              │  │
-│   │                                                                     │  │
-│   │   FOUND: G is the first bad commit!                                 │  │
-│   │                                                                     │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   With 1000 commits: ~10 tests needed (log₂ 1000 ≈ 10)                     │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                            GIT BISECT                                       |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Binary search through history to find bug-introducing commit              |
+|                                                                             |
+|   CONCEPT:                                                                  |
+|   +---------------------------------------------------------------------+  |
+|   |                                                                     |  |
+|   |   A---B---C---D---E---F---G---H---I---J                             |  |
+|   |   ▲                               ▲                                 |  |
+|   |   good                            bad                               |  |
+|   |   (works)                         (broken)                          |  |
+|   |                                                                     |  |
+|   |   Step 1: Test E (middle)                                           |  |
+|   |           Result: good                                              |  |
+|   |                                                                     |  |
+|   |   A---B---C---D---E---F---G---H---I---J                             |  |
+|   |               ▲       ▲       ▲                                     |  |
+|   |               good    test    bad                                   |  |
+|   |                                                                     |  |
+|   |   Step 2: Test G (middle of E-J)                                    |  |
+|   |           Result: bad                                               |  |
+|   |                                                                     |  |
+|   |   Step 3: Test F (middle of E-G)                                    |  |
+|   |           Result: good                                              |  |
+|   |                                                                     |  |
+|   |   FOUND: G is the first bad commit!                                 |  |
+|   |                                                                     |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   With 1000 commits: ~10 tests needed (log₂ 1000 ≈ 10)                     |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Manual Bisect
@@ -341,32 +341,32 @@ git bisect skip abc123..def456
 ## Submodules
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          GIT SUBMODULES                                     │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Include other Git repositories as subdirectories                          │
-│                                                                             │
-│   STRUCTURE:                                                                │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  main-project/                                                      │  │
-│   │  ├── .git/                                                          │  │
-│   │  ├── .gitmodules              # Submodule configuration             │  │
-│   │  ├── src/                                                           │  │
-│   │  └── libs/                                                          │  │
-│   │      ├── shared-utils/        # Submodule (another repo)            │  │
-│   │      │   └── (tracked at specific commit)                           │  │
-│   │      └── ui-components/       # Another submodule                   │  │
-│   │          └── (tracked at specific commit)                           │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   PROS:                              CONS:                                  │
-│   ├── Share code between repos      ├── Complex workflow                   │
-│   ├── Pin dependency versions       ├── Extra commands needed              │
-│   ├── Separate access control       ├── Confusing for beginners            │
-│   └── Independent histories         └── CI/CD complexity                   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                          GIT SUBMODULES                                     |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Include other Git repositories as subdirectories                          |
+|                                                                             |
+|   STRUCTURE:                                                                |
+|   +---------------------------------------------------------------------+  |
+|   |  main-project/                                                      |  |
+|   |  +-- .git/                                                          |  |
+|   |  +-- .gitmodules              # Submodule configuration             |  |
+|   |  +-- src/                                                           |  |
+|   |  +-- libs/                                                          |  |
+|   |      +-- shared-utils/        # Submodule (another repo)            |  |
+|   |      |   +-- (tracked at specific commit)                           |  |
+|   |      +-- ui-components/       # Another submodule                   |  |
+|   |          +-- (tracked at specific commit)                           |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   PROS:                              CONS:                                  |
+|   +-- Share code between repos      +-- Complex workflow                   |
+|   +-- Pin dependency versions       +-- Extra commands needed              |
+|   +-- Separate access control       +-- Confusing for beginners            |
+|   +-- Independent histories         +-- CI/CD complexity                   |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Submodule Operations
@@ -421,28 +421,28 @@ git submodule foreach git status
 ## Git Hooks
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            GIT HOOKS                                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Hooks are scripts that run at specific Git events                         │
-│                                                                             │
-│   LOCATION: .git/hooks/ (local) or managed via tools                        │
-│                                                                             │
-│   CLIENT-SIDE HOOKS:                                                        │
-│   ├── pre-commit       → Before commit (lint, format)                       │
-│   ├── prepare-commit-msg → Edit commit message                              │
-│   ├── commit-msg       → Validate commit message                            │
-│   ├── post-commit      → After commit (notify)                              │
-│   ├── pre-push         → Before push (test)                                 │
-│   └── post-checkout    → After checkout (dependencies)                      │
-│                                                                             │
-│   SERVER-SIDE HOOKS:                                                        │
-│   ├── pre-receive      → Before accepting push                              │
-│   ├── update           → Per-branch validation                              │
-│   └── post-receive     → After accepting (deploy, notify)                   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                            GIT HOOKS                                        |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Hooks are scripts that run at specific Git events                         |
+|                                                                             |
+|   LOCATION: .git/hooks/ (local) or managed via tools                        |
+|                                                                             |
+|   CLIENT-SIDE HOOKS:                                                        |
+|   +-- pre-commit       -> Before commit (lint, format)                       |
+|   +-- prepare-commit-msg -> Edit commit message                              |
+|   +-- commit-msg       -> Validate commit message                            |
+|   +-- post-commit      -> After commit (notify)                              |
+|   +-- pre-push         -> Before push (test)                                 |
+|   +-- post-checkout    -> After checkout (dependencies)                      |
+|                                                                             |
+|   SERVER-SIDE HOOKS:                                                        |
+|   +-- pre-receive      -> Before accepting push                              |
+|   +-- update           -> Per-branch validation                              |
+|   +-- post-receive     -> After accepting (deploy, notify)                   |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Pre-commit Hook Example
@@ -572,28 +572,28 @@ NODE_08_LARGE_FILES_PERFORMANCE = {
 ## Repository Size Analysis
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     REPOSITORY SIZE BREAKDOWN                               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   HEALTHY REPO:                    BLOATED REPO:                            │
-│   ┌─────────────────────┐         ┌─────────────────────┐                  │
-│   │  .git/  50 MB       │         │  .git/  5 GB        │ ← Problem!       │
-│   │  ├── objects 45 MB  │         │  ├── objects 4.8 GB │                  │
-│   │  └── refs 5 MB      │         │  └── pack 4.7 GB    │                  │
-│   │  src/   10 MB       │         │  src/   100 MB      │                  │
-│   │  Total: 60 MB       │         │  assets/ 2 GB       │ ← Binary files   │
-│   │                     │         │  Total: 7.1 GB      │                  │
-│   └─────────────────────┘         └─────────────────────┘                  │
-│                                                                             │
-│   COMMON BLOAT CAUSES:                                                      │
-│   ├── Large binary files committed                                          │
-│   ├── Secrets/credentials in history                                        │
-│   ├── Generated files (node_modules, build/)                                │
-│   ├── Large media assets (images, videos)                                   │
-│   └── Database dumps                                                        │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                     REPOSITORY SIZE BREAKDOWN                               |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   HEALTHY REPO:                    BLOATED REPO:                            |
+|   +---------------------+         +---------------------+                  |
+|   |  .git/  50 MB       |         |  .git/  5 GB        | <- Problem!       |
+|   |  +-- objects 45 MB  |         |  +-- objects 4.8 GB |                  |
+|   |  +-- refs 5 MB      |         |  +-- pack 4.7 GB    |                  |
+|   |  src/   10 MB       |         |  src/   100 MB      |                  |
+|   |  Total: 60 MB       |         |  assets/ 2 GB       | <- Binary files   |
+|   |                     |         |  Total: 7.1 GB      |                  |
+|   +---------------------+         +---------------------+                  |
+|                                                                             |
+|   COMMON BLOAT CAUSES:                                                      |
+|   +-- Large binary files committed                                          |
+|   +-- Secrets/credentials in history                                        |
+|   +-- Generated files (node_modules, build/)                                |
+|   +-- Large media assets (images, videos)                                   |
+|   +-- Database dumps                                                        |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Analyzing Repository Size
@@ -658,33 +658,33 @@ done
 ## Git LFS (Large File Storage)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            GIT LFS                                          │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   LFS stores large files on a separate server                               │
-│                                                                             │
-│   WITHOUT LFS:                          WITH LFS:                           │
-│   ┌───────────────────┐               ┌───────────────────┐                │
-│   │  Git Repository   │               │  Git Repository   │                │
-│   │  ┌─────────────┐  │               │  ┌─────────────┐  │                │
-│   │  │ logo.png    │  │               │  │ pointer.txt │  │ (200 bytes)    │
-│   │  │ (5 MB)      │  │               │  │ → LFS ref   │  │                │
-│   │  └─────────────┘  │               │  └─────────────┘  │                │
-│   │  ┌─────────────┐  │               └─────────┬─────────┘                │
-│   │  │ logo-v2.png │  │                         │                          │
-│   │  │ (5 MB)      │  │                         ▼                          │
-│   │  └─────────────┘  │               ┌───────────────────┐                │
-│   │  Total: 10 MB     │               │    LFS Server     │                │
-│   └───────────────────┘               │  ┌─────────────┐  │                │
-│                                       │  │ logo.png    │  │                │
-│   Each version stored                 │  │ (5 MB)      │  │                │
-│   in .git/objects                     │  └─────────────┘  │                │
-│                                       │  Only latest      │                │
-│                                       │  downloaded       │                │
-│                                       └───────────────────┘                │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                            GIT LFS                                          |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   LFS stores large files on a separate server                               |
+|                                                                             |
+|   WITHOUT LFS:                          WITH LFS:                           |
+|   +-------------------+               +-------------------+                |
+|   |  Git Repository   |               |  Git Repository   |                |
+|   |  +-------------+  |               |  +-------------+  |                |
+|   |  | logo.png    |  |               |  | pointer.txt |  | (200 bytes)    |
+|   |  | (5 MB)      |  |               |  | -> LFS ref   |  |                |
+|   |  +-------------+  |               |  +-------------+  |                |
+|   |  +-------------+  |               +---------+---------+                |
+|   |  | logo-v2.png |  |                         |                          |
+|   |  | (5 MB)      |  |                         ▼                          |
+|   |  +-------------+  |               +-------------------+                |
+|   |  Total: 10 MB     |               |    LFS Server     |                |
+|   +-------------------+               |  +-------------+  |                |
+|                                       |  | logo.png    |  |                |
+|   Each version stored                 |  | (5 MB)      |  |                |
+|   in .git/objects                     |  +-------------+  |                |
+|                                       |  Only latest      |                |
+|                                       |  downloaded       |                |
+|                                       +-------------------+                |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Setting Up LFS
@@ -910,35 +910,35 @@ git fsck
 ## Performance Optimization
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     PERFORMANCE OPTIMIZATION                                │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Configuration for large repos:                                            │
-│                                                                             │
-│   # .gitconfig                                                              │
-│   [core]                                                                    │
-│       fsmonitor = true          # Filesystem monitor (huge speedup)         │
-│       untrackedCache = true     # Cache untracked files                     │
-│       preloadIndex = true       # Parallel index loading                    │
-│       commitGraph = true        # Commit graph for faster logs              │
-│                                                                             │
-│   [gc]                                                                      │
-│       auto = 256                # Trigger GC less often                     │
-│       writeCommitGraph = true   # Maintain commit graph                     │
-│                                                                             │
-│   [pack]                                                                    │
-│       threads = 0               # Use all CPUs                              │
-│       windowMemory = 256m       # More memory for delta                     │
-│                                                                             │
-│   [fetch]                                                                   │
-│       writeCommitGraph = true   # Update graph on fetch                     │
-│       parallel = 4              # Parallel fetches                          │
-│                                                                             │
-│   [index]                                                                   │
-│       version = 4               # Newer index format                        │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                     PERFORMANCE OPTIMIZATION                                |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   Configuration for large repos:                                            |
+|                                                                             |
+|   # .gitconfig                                                              |
+|   [core]                                                                    |
+|       fsmonitor = true          # Filesystem monitor (huge speedup)         |
+|       untrackedCache = true     # Cache untracked files                     |
+|       preloadIndex = true       # Parallel index loading                    |
+|       commitGraph = true        # Commit graph for faster logs              |
+|                                                                             |
+|   [gc]                                                                      |
+|       auto = 256                # Trigger GC less often                     |
+|       writeCommitGraph = true   # Maintain commit graph                     |
+|                                                                             |
+|   [pack]                                                                    |
+|       threads = 0               # Use all CPUs                              |
+|       windowMemory = 256m       # More memory for delta                     |
+|                                                                             |
+|   [fetch]                                                                   |
+|       writeCommitGraph = true   # Update graph on fetch                     |
+|       parallel = 4              # Parallel fetches                          |
+|                                                                             |
+|   [index]                                                                   |
+|       version = 4               # Newer index format                        |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Commit Graph

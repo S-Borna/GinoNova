@@ -51,7 +51,7 @@ NODE_01_CICD_FUNDAMENTALS = {
 
 Föreställ dig: Det är fredag eftermiddag. En kritisk buggfix måste ut i produktion.
 Utan CI/CD: Manuell build, manuella tester, manuell deploy. Stress. Risk för fel.
-Med CI/CD: `git push` → Automatisk pipeline → Deploy på minuter. Lugnt och säkert.
+Med CI/CD: `git push` -> Automatisk pipeline -> Deploy på minuter. Lugnt och säkert.
 
 ## Vad du kommer lära dig
 - ✅ Skillnaden mellan CI, CD och CD (ja, det finns två CD:n)
@@ -66,15 +66,15 @@ Med CI/CD: `git push` → Automatisk pipeline → Deploy på minuter. Lugnt och 
 ### Koncept
 
 ```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Developer │───▶│   Git Push  │───▶│   CI Server │
-│   Commits   │    │   Trigger   │    │   Builds    │
-└─────────────┘    └─────────────┘    └─────────────┘
-                                             │
-                   ┌─────────────┐    ┌──────▼──────┐
-                   │   Feedback  │◀───│  Run Tests  │
-                   │   (Pass/Fail)│    │  (Auto)     │
-                   └─────────────┘    └─────────────┘
++-------------+    +-------------+    +-------------+
+|   Developer |---▶|   Git Push  |---▶|   CI Server |
+|   Commits   |    |   Trigger   |    |   Builds    |
++-------------+    +-------------+    +-------------+
+                                             |
+                   +-------------+    +------▼------+
+                   |   Feedback  |◀---|  Run Tests  |
+                   |   (Pass/Fail)|    |  (Auto)     |
+                   +-------------+    +-------------+
 ```
 
 **CI handlar om:**
@@ -106,17 +106,17 @@ ci_result = run_tests()  # Kraschar DIREKT
 
 ```
 CI Pipeline
-    │
+    |
     ▼
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Build     │───▶│   Test      │───▶│   Stage     │
-│   Artifact  │    │   Suite     │    │   Deploy    │
-└─────────────┘    └─────────────┘    └─────────────┘
-                                             │
-                   ┌─────────────┐    ┌──────▼──────┐
-                   │  Production │◀───│   Manual    │
-                   │   Deploy    │    │   Approval  │
-                   └─────────────┘    └─────────────┘
++-------------+    +-------------+    +-------------+
+|   Build     |---▶|   Test      |---▶|   Stage     |
+|   Artifact  |    |   Suite     |    |   Deploy    |
++-------------+    +-------------+    +-------------+
+                                             |
+                   +-------------+    +------▼------+
+                   |  Production |◀---|   Manual    |
+                   |   Deploy    |    |   Approval  |
+                   +-------------+    +-------------+
 ```
 
 **CD (Delivery) innebar:**
@@ -133,17 +133,17 @@ CI Pipeline
 
 ```
 CI Pipeline
-    │
+    |
     ▼
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Build     │───▶│   Test      │───▶│  Production │
-│   Artifact  │    │   Suite     │    │   Deploy    │
-└─────────────┘    └─────────────┘    └─────────────┘
-                                             │
-                                      ┌──────▼──────┐
-                                      │   LIVE!     │
-                                      │   (Auto)    │
-                                      └─────────────┘
++-------------+    +-------------+    +-------------+
+|   Build     |---▶|   Test      |---▶|  Production |
+|   Artifact  |    |   Suite     |    |   Deploy    |
++-------------+    +-------------+    +-------------+
+                                             |
+                                      +------▼------+
+                                      |   LIVE!     |
+                                      |   (Auto)    |
+                                      +-------------+
 ```
 
 **CD (Deployment) innebar:**
@@ -295,13 +295,13 @@ GitHub Actions är:
 
 ```
 your-repo/
-├── .github/
-│   └── workflows/
-│       ├── ci.yml           # CI pipeline
-│       ├── deploy.yml       # Deploy pipeline
-│       └── scheduled.yml    # Scheduled jobs
-├── src/
-└── README.md
++-- .github/
+|   +-- workflows/
+|       +-- ci.yml           # CI pipeline
+|       +-- deploy.yml       # Deploy pipeline
+|       +-- scheduled.yml    # Scheduled jobs
++-- src/
++-- README.md
 ```
 
 ### Grundlaggande Struktur
@@ -364,12 +364,12 @@ on:
 on:
   schedule:
     - cron: '0 2 * * *'  # Varje natt kl 02:00 UTC
-    # ┬ ┬ ┬ ┬ ┬
-    # │ │ │ │ └── Veckodag (0-7, 0=sondag)
-    # │ │ │ └──── Manad (1-12)
-    # │ │ └────── Dag (1-31)
-    # │ └──────── Timme (0-23)
-    # └────────── Minut (0-59)
+    # + + + + +
+    # | | | | +-- Veckodag (0-7, 0=sondag)
+    # | | | +---- Manad (1-12)
+    # | | +------ Dag (1-31)
+    # | +-------- Timme (0-23)
+    # +---------- Minut (0-59)
 ```
 
 ### Manual Trigger
@@ -419,11 +419,11 @@ jobs:
 ### Job Dependencies
 
 ```
-┌──────┐    ┌──────┐    ┌──────┐
-│ test │───▶│build │───▶│deploy│
-└──────┘    └──────┘    └──────┘
-   │                        ▲
-   └────────────────────────┘
++------+    +------+    +------+
+| test |---▶|build |---▶|deploy|
++------+    +------+    +------+
+   |                        ▲
+   +------------------------+
         (parallel ocksa ok)
 ```
 
@@ -638,8 +638,8 @@ steps:
 ### Skapa Secrets (UI)
 
 ```
-Repository → Settings → Secrets and variables → Actions
-    └── New repository secret
+Repository -> Settings -> Secrets and variables -> Actions
+    +-- New repository secret
         Name: AWS_ACCESS_KEY_ID
         Value: AKIA...
 ```
@@ -747,7 +747,7 @@ steps:
 ### Skapa Environment (UI)
 
 ```
-Repository → Settings → Environments → New environment
+Repository -> Settings -> Environments -> New environment
     Name: production
     Protection rules:
       ✓ Required reviewers (lagg till approvers)
@@ -1064,15 +1064,15 @@ strategy:
 ### Cache Strategi
 
 ```
-┌─────────────┐
-│  Forsta run │
-│  Cache MISS │─────▶ Installera → Spara cache
-└─────────────┘
++-------------+
+|  Forsta run |
+|  Cache MISS |-----▶ Installera -> Spara cache
++-------------+
 
-┌─────────────┐
-│  Andra run  │
-│  Cache HIT  │─────▶ Ladda cache → Skippa install
-└─────────────┘
++-------------+
+|  Andra run  |
+|  Cache HIT  |-----▶ Ladda cache -> Skippa install
++-------------+
                       (10x snabbare!)
 ```
 
@@ -1798,12 +1798,12 @@ jobs:
 
 ```
 org-workflows/
-├── .github/
-│   └── workflows/
-│       ├── node-ci.yml
-│       ├── docker-build.yml
-│       ├── security-scan.yml
-│       └── deploy-k8s.yml
++-- .github/
+|   +-- workflows/
+|       +-- node-ci.yml
+|       +-- docker-build.yml
+|       +-- security-scan.yml
+|       +-- deploy-k8s.yml
 ```
 
 ### Anvand fran Annat Repo
@@ -2642,10 +2642,10 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 ## Freestyle Job
 
-1. New Item → Freestyle project
-2. Source Code Management → Git
-3. Build Triggers → Poll SCM
-4. Build Steps → Execute shell
+1. New Item -> Freestyle project
+2. Source Code Management -> Git
+3. Build Triggers -> Poll SCM
+4. Build Steps -> Execute shell
 
 ```bash
 # Build step exempel
@@ -2867,14 +2867,14 @@ NODE_15_JENKINS_SHARED_LIBS = {
 
 ```
 shared-library/
-├── vars/
-│   ├── buildApp.groovy      # Global funktioner
-│   └── deployToK8s.groovy
-├── src/
-│   └── org/company/
-│       └── Utils.groovy     # Klasser
-└── resources/
-    └── templates/           # Statiska filer
++-- vars/
+|   +-- buildApp.groovy      # Global funktioner
+|   +-- deployToK8s.groovy
++-- src/
+|   +-- org/company/
+|       +-- Utils.groovy     # Klasser
++-- resources/
+    +-- templates/           # Statiska filer
 ```
 
 ## Global Function (vars/)
@@ -3055,21 +3055,21 @@ NODE_17_GITOPS_PRINCIPLES = {
 
 ```
 gitops-repo/
-├── apps/
-│   ├── frontend/
-│   │   ├── base/
-│   │   │   ├── deployment.yaml
-│   │   │   ├── service.yaml
-│   │   │   └── kustomization.yaml
-│   │   └── overlays/
-│   │       ├── staging/
-│   │       └── production/
-│   └── backend/
-├── infrastructure/
-│   ├── monitoring/
-│   └── ingress/
-└── argocd/
-    └── applications.yaml
++-- apps/
+|   +-- frontend/
+|   |   +-- base/
+|   |   |   +-- deployment.yaml
+|   |   |   +-- service.yaml
+|   |   |   +-- kustomization.yaml
+|   |   +-- overlays/
+|   |       +-- staging/
+|   |       +-- production/
+|   +-- backend/
++-- infrastructure/
+|   +-- monitoring/
+|   +-- ingress/
++-- argocd/
+    +-- applications.yaml
 ```
 
 ## App of Apps Pattern

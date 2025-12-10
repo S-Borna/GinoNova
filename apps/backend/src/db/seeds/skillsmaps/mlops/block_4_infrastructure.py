@@ -17,7 +17,7 @@ BLOCK_4_NODES = [
         "prerequisites": ["mlops-hyperparameter-tuning"],
         "content": '''# CI/CD for ML Pipelines
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -34,23 +34,23 @@ Du maste forsta:
 - **Data- och modellvalidering** - kvalitetsportar for ML
 - **Experiment tracking** - spara och jamfor modeller
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ML CI/CD vs Traditional CI/CD
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                      Traditional CI/CD                                    │
-│  Code Change → Build → Test → Deploy                                     │
-├──────────────────────────────────────────────────────────────────────────┤
-│                      ML CI/CD                                             │
-│  Code Change ─┐                                                           │
-│  Data Change ─┼→ Validate → Train → Evaluate → Register → Deploy        │
-│  Model Change┘     │          │        │          │          │           │
-│                    ▼          ▼        ▼          ▼          ▼           │
-│               Schema     Experiment  Metrics   Model      Endpoint      │
-│               Tests      Tracking    Gates    Registry    Monitor       │
-└──────────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------------+
+|                      Traditional CI/CD                                    |
+|  Code Change -> Build -> Test -> Deploy                                     |
++--------------------------------------------------------------------------+
+|                      ML CI/CD                                             |
+|  Code Change -+                                                           |
+|  Data Change -+-> Validate -> Train -> Evaluate -> Register -> Deploy        |
+|  Model Change+     |          |        |          |          |           |
+|                    ▼          ▼        ▼          ▼          ▼           |
+|               Schema     Experiment  Metrics   Model      Endpoint      |
+|               Tests      Tracking    Gates    Registry    Monitor       |
++--------------------------------------------------------------------------+
 ```
 
 ## GitHub Actions for ML
@@ -382,7 +382,7 @@ class TestModelIntegrity:
         assert 'merchant_risk_score' in top_features
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -393,7 +393,7 @@ class TestModelIntegrity:
 | **DVC** | Data Version Control - versionshantering for data |
 | **CML** | Continuous Machine Learning - rapporter i PR |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -404,7 +404,7 @@ class TestModelIntegrity:
 | Model accuracy drop | Datadrift eller bugg | Analysera data och modell |
 | Deploy failed | Container/endpoint fel | Kolla loggar och resurser |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -437,7 +437,7 @@ class TestModelIntegrity:
         "prerequisites": ["mlops-cicd"],
         "content": '''# ML Pipeline Orchestration
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -454,22 +454,22 @@ Du maste forsta:
 - **Schedulering** - nar och hur pipelines kors
 - **Monitoring** - overvakning av pipeline-halsa
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Orchestration Tools
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    Orchestration Landscape                          │
-│                                                                     │
-│  General Purpose          │       ML-Specific                       │
-│  ─────────────────────    │       ───────────────                   │
-│  • Apache Airflow         │       • Kubeflow Pipelines              │
-│  • Prefect                │       • MLflow Pipelines                │
-│  • Dagster                │       • Metaflow                         │
-│  • Luigi                  │       • ZenML                            │
-│  • Argo Workflows         │       • Kedro                            │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                    Orchestration Landscape                          |
+|                                                                     |
+|  General Purpose          |       ML-Specific                       |
+|  ---------------------    |       ---------------                   |
+|  • Apache Airflow         |       • Kubeflow Pipelines              |
+|  • Prefect                |       • MLflow Pipelines                |
+|  • Dagster                |       • Metaflow                         |
+|  • Luigi                  |       • ZenML                            |
+|  • Argo Workflows         |       • Kedro                            |
++--------------------------------------------------------------------+
 ```
 
 ## Apache Airflow
@@ -806,7 +806,7 @@ compiler.Compiler().compile(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -817,7 +817,7 @@ compiler.Compiler().compile(
 | **Kubeflow** | ML-pipelines pa Kubernetes |
 | **Dagster** | Data-aware orkestration |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -828,7 +828,7 @@ compiler.Compiler().compile(
 | Resource exhaustion | For manga parallella tasks | Begranser concurrency |
 | Scheduler lag | For manga DAGs | Optimera scheduler config |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -861,7 +861,7 @@ compiler.Compiler().compile(
         "prerequisites": ["mlops-orchestration"],
         "content": '''# Model Serving och Inference
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -878,26 +878,26 @@ Du maste forsta:
 - **API design** - REST/gRPC for modeller
 - **Skalning** - hantera varierande last
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Serving Patterns
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Model Serving Patterns                           │
-│                                                                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                  │
-│  │   Online    │  │    Batch    │  │  Streaming  │                  │
-│  │  Inference  │  │  Inference  │  │  Inference  │                  │
-│  │             │  │             │  │             │                  │
-│  │ REST/gRPC   │  │ Spark/Dask  │  │ Kafka/Flink │                  │
-│  │ <100ms      │  │ Hours       │  │ Near-RT     │                  │
-│  │ Per request │  │ Bulk data   │  │ Continuous  │                  │
-│  └─────────────┘  └─────────────┘  └─────────────┘                  │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     Model Serving Patterns                           |
+|                                                                      |
+|  +-------------+  +-------------+  +-------------+                  |
+|  |   Online    |  |    Batch    |  |  Streaming  |                  |
+|  |  Inference  |  |  Inference  |  |  Inference  |                  |
+|  |             |  |             |  |             |                  |
+|  | REST/gRPC   |  | Spark/Dask  |  | Kafka/Flink |                  |
+|  | <100ms      |  | Hours       |  | Near-RT     |                  |
+|  | Per request |  | Bulk data   |  | Continuous  |                  |
+|  +-------------+  +-------------+  +-------------+                  |
++---------------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## FastAPI Model Server
 
@@ -1192,7 +1192,7 @@ async def predict(request: TransactionRequest):
     return {"prediction": result, "model_version": model_version}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1203,7 +1203,7 @@ async def predict(request: TransactionRequest):
 | **SageMaker** | AWS managed ML-platform |
 | **KServe** | Kubernetes ML serving |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1214,7 +1214,7 @@ async def predict(request: TransactionRequest):
 | Cold start | Modell ej laddad | Warmup requests |
 | Version mismatch | Fel modellversion | Kontrollera deployment |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1247,7 +1247,7 @@ async def predict(request: TransactionRequest):
         "prerequisites": ["mlops-serving"],
         "content": '''# ML Containerization
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1264,7 +1264,7 @@ Du maste forsta:
 - **Multi-stage builds** - separera training och inference
 - **Optimering** - minimera image-storlek
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Training Container
 
@@ -1541,7 +1541,7 @@ spec:
           averageValue: "100"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1552,7 +1552,7 @@ spec:
 | **GPU images** | CUDA-baserade images for ML |
 | **HPA** | Horizontal Pod Autoscaler |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1563,7 +1563,7 @@ spec:
 | OOMKilled | For lite minne | Oka memory limits |
 | Slow startup | Stor modell att ladda | Warmup eller preload |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

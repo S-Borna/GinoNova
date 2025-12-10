@@ -23,41 +23,41 @@ Network Policies är Kubernetes inbyggda brandvägg för att kontrollera pod-to-
 ### Default Behavior vs Network Policies
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DEFAULT VS NETWORK POLICIES                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DEFAULT (Utan Network Policies)                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     ALL TRAFFIC ALLOWED                          │   │
-│  │                                                                  │   │
-│  │  frontend ◄────────────────────────────────────────► backend    │   │
-│  │      │                                                   │       │   │
-│  │      ▼                                                   ▼       │   │
-│  │  database ◄────────────────────────────────────────► redis      │   │
-│  │      │                                                   │       │   │
-│  │      ▼                                                   ▼       │   │
-│  │  internet ◄────────────────────────────────────────► any pod    │   │
-│  │                                                                  │   │
-│  │  ⚠️ Alla pods kan nå alla andra pods!                           │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  MED NETWORK POLICIES                                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     EXPLICIT ALLOW ONLY                          │   │
-│  │                                                                  │   │
-│  │  frontend ─────────────────────────────────────────► backend    │   │
-│  │      │                                                   │       │   │
-│  │      X (blocked)                                         ▼       │   │
-│  │  database ◄───────────────────────────────────────── backend    │   │
-│  │      │                                                   │       │   │
-│  │      X (blocked)                                         X       │   │
-│  │  internet ─────────► frontend only                              │   │
-│  │                                                                  │   │
-│  │  ✅ Explicit control över all trafik                            │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DEFAULT VS NETWORK POLICIES                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DEFAULT (Utan Network Policies)                                         |
+|  +-----------------------------------------------------------------+   |
+|  |                     ALL TRAFFIC ALLOWED                          |   |
+|  |                                                                  |   |
+|  |  frontend ◄----------------------------------------► backend    |   |
+|  |      |                                                   |       |   |
+|  |      ▼                                                   ▼       |   |
+|  |  database ◄----------------------------------------► redis      |   |
+|  |      |                                                   |       |   |
+|  |      ▼                                                   ▼       |   |
+|  |  internet ◄----------------------------------------► any pod    |   |
+|  |                                                                  |   |
+|  |  ⚠️ Alla pods kan nå alla andra pods!                           |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  MED NETWORK POLICIES                                                    |
+|  +-----------------------------------------------------------------+   |
+|  |                     EXPLICIT ALLOW ONLY                          |   |
+|  |                                                                  |   |
+|  |  frontend -----------------------------------------► backend    |   |
+|  |      |                                                   |       |   |
+|  |      X (blocked)                                         ▼       |   |
+|  |  database ◄----------------------------------------- backend    |   |
+|  |      |                                                   |       |   |
+|  |      X (blocked)                                         X       |   |
+|  |  internet ---------► frontend only                              |   |
+|  |                                                                  |   |
+|  |  ✅ Explicit control över all trafik                            |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Network Policy Anatomy
@@ -124,46 +124,46 @@ spec:
 ## 3. Policy Types
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      NETWORK POLICY TYPES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  INGRESS ONLY                                                            │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  policyTypes: [Ingress]                                          │   │
-│  │                                                                  │   │
-│  │  ┌───────┐          ┌───────┐                                   │   │
-│  │  │ Pod A │ ──────▶  │ Pod B │  ✅ Allowed (explicit rule)       │   │
-│  │  └───────┘          └───────┘                                   │   │
-│  │                          │                                       │   │
-│  │                          ▼                                       │   │
-│  │                     ┌───────┐                                   │   │
-│  │                     │ Pod C │  ✅ Egress allowed (no rule)      │   │
-│  │                     └───────┘                                   │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  EGRESS ONLY                                                             │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  policyTypes: [Egress]                                           │   │
-│  │                                                                  │   │
-│  │  ┌───────┐          ┌───────┐                                   │   │
-│  │  │ Pod A │ ◀──────  │ Pod X │  ✅ Ingress allowed (no rule)     │   │
-│  │  └───────┘          └───────┘                                   │   │
-│  │       │                                                          │   │
-│  │       ▼ (explicit rule needed)                                   │   │
-│  │  ┌───────┐                                                      │   │
-│  │  │ Pod B │  ✅/❌ Depends on egress rule                        │   │
-│  │  └───────┘                                                      │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  BOTH (Ingress + Egress)                                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  policyTypes: [Ingress, Egress]                                  │   │
-│  │                                                                  │   │
-│  │  ALL traffic måste explicit tillåtas                             │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      NETWORK POLICY TYPES                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  INGRESS ONLY                                                            |
+|  +-----------------------------------------------------------------+   |
+|  |  policyTypes: [Ingress]                                          |   |
+|  |                                                                  |   |
+|  |  +-------+          +-------+                                   |   |
+|  |  | Pod A | ------▶  | Pod B |  ✅ Allowed (explicit rule)       |   |
+|  |  +-------+          +-------+                                   |   |
+|  |                          |                                       |   |
+|  |                          ▼                                       |   |
+|  |                     +-------+                                   |   |
+|  |                     | Pod C |  ✅ Egress allowed (no rule)      |   |
+|  |                     +-------+                                   |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  EGRESS ONLY                                                             |
+|  +-----------------------------------------------------------------+   |
+|  |  policyTypes: [Egress]                                           |   |
+|  |                                                                  |   |
+|  |  +-------+          +-------+                                   |   |
+|  |  | Pod A | ◀------  | Pod X |  ✅ Ingress allowed (no rule)     |   |
+|  |  +-------+          +-------+                                   |   |
+|  |       |                                                          |   |
+|  |       ▼ (explicit rule needed)                                   |   |
+|  |  +-------+                                                      |   |
+|  |  | Pod B |  ✅/❌ Depends on egress rule                        |   |
+|  |  +-------+                                                      |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  BOTH (Ingress + Egress)                                                 |
+|  +-----------------------------------------------------------------+   |
+|  |  policyTypes: [Ingress, Egress]                                  |   |
+|  |                                                                  |   |
+|  |  ALL traffic måste explicit tillåtas                             |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 4. Praktiska Övningar
@@ -315,74 +315,74 @@ kubectl exec -n production attacker -- curl -s --max-time 2 backend:80
 ## 5. Common Patterns
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                  NETWORK POLICY PATTERNS                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  PATTERN 1: Zero Trust (Deny All + Explicit Allow)                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  1. default-deny-all                                                    │
-│  2. allow-dns-egress                                                    │
-│  3. allow-frontend-to-backend                                           │
-│  4. allow-backend-to-database                                           │
-│                                                                          │
-│  PATTERN 2: Allow Same Namespace                                         │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ingress:                                                               │
-│    - from:                                                              │
-│        - podSelector: {}    # Alla i samma namespace                    │
-│                                                                          │
-│  PATTERN 3: Allow External Ingress via Ingress Controller               │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ingress:                                                               │
-│    - from:                                                              │
-│        - namespaceSelector:                                             │
-│            matchLabels:                                                 │
-│              name: ingress-nginx                                        │
-│                                                                          │
-│  PATTERN 4: DNS Egress (Required!)                                      │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  egress:                                                                │
-│    - to:                                                                │
-│        - namespaceSelector: {}                                          │
-│          podSelector:                                                   │
-│            matchLabels:                                                 │
-│              k8s-app: kube-dns                                          │
-│      ports:                                                             │
-│        - protocol: UDP                                                  │
-│          port: 53                                                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                  NETWORK POLICY PATTERNS                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  PATTERN 1: Zero Trust (Deny All + Explicit Allow)                       |
+|  ---------------------------------------------------------------------  |
+|  1. default-deny-all                                                    |
+|  2. allow-dns-egress                                                    |
+|  3. allow-frontend-to-backend                                           |
+|  4. allow-backend-to-database                                           |
+|                                                                          |
+|  PATTERN 2: Allow Same Namespace                                         |
+|  ---------------------------------------------------------------------  |
+|  ingress:                                                               |
+|    - from:                                                              |
+|        - podSelector: {}    # Alla i samma namespace                    |
+|                                                                          |
+|  PATTERN 3: Allow External Ingress via Ingress Controller               |
+|  ---------------------------------------------------------------------  |
+|  ingress:                                                               |
+|    - from:                                                              |
+|        - namespaceSelector:                                             |
+|            matchLabels:                                                 |
+|              name: ingress-nginx                                        |
+|                                                                          |
+|  PATTERN 4: DNS Egress (Required!)                                      |
+|  ---------------------------------------------------------------------  |
+|  egress:                                                                |
+|    - to:                                                                |
+|        - namespaceSelector: {}                                          |
+|          podSelector:                                                   |
+|            matchLabels:                                                 |
+|              k8s-app: kube-dns                                          |
+|      ports:                                                             |
+|        - protocol: UDP                                                  |
+|          port: 53                                                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                NETWORK POLICY BEST PRACTICES                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Strategy                                                            │
-│     □ Börja med default-deny-all                                       │
-│     □ Lägg till explicit allow rules                                   │
-│     □ Glöm inte DNS egress!                                            │
-│                                                                          │
-│  ✅ Labeling                                                            │
-│     □ Konsistent pod-labeling strategi                                 │
-│     □ Labela namespaces för cross-namespace policies                   │
-│     □ Dokumentera label-schema                                         │
-│                                                                          │
-│  ✅ Testing                                                             │
-│     □ Testa policies i staging först                                   │
-│     □ Verifiera med curl/wget från pods                                │
-│     □ Testa både allowed och denied traffic                            │
-│                                                                          │
-│  ✅ CNI Support                                                         │
-│     □ Verifiera att din CNI stöder Network Policies                    │
-│     □ Calico, Cilium, Weave Net: ✅                                    │
-│     □ Flannel (basic): ❌ (kräver plugin)                              │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                NETWORK POLICY BEST PRACTICES                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Strategy                                                            |
+|     □ Börja med default-deny-all                                       |
+|     □ Lägg till explicit allow rules                                   |
+|     □ Glöm inte DNS egress!                                            |
+|                                                                          |
+|  ✅ Labeling                                                            |
+|     □ Konsistent pod-labeling strategi                                 |
+|     □ Labela namespaces för cross-namespace policies                   |
+|     □ Dokumentera label-schema                                         |
+|                                                                          |
+|  ✅ Testing                                                             |
+|     □ Testa policies i staging först                                   |
+|     □ Verifiera med curl/wget från pods                                |
+|     □ Testa både allowed och denied traffic                            |
+|                                                                          |
+|  ✅ CNI Support                                                         |
+|     □ Verifiera att din CNI stöder Network Policies                    |
+|     □ Calico, Cilium, Weave Net: ✅                                    |
+|     □ Flannel (basic): ❌ (kräver plugin)                              |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7-14. Sammanfattning & Task
@@ -398,7 +398,7 @@ kubectl exec -n production attacker -- curl -s --max-time 2 backend:80
 
 ---
 
-**Nästa Node:** HPA & VPA →
+**Nästa Node:** HPA & VPA ->
 ''',
     "xp_reward": 155,
     "estimated_minutes": 55,
@@ -424,42 +424,42 @@ Kubernetes erbjuder tre typer av autoscaling för att automatiskt anpassa resurs
 ### Autoscaling Types
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      AUTOSCALING TYPES                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  HPA (Horizontal Pod Autoscaler)                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Ökar/minskar ANTAL pods baserat på metrics                      │   │
-│  │                                                                  │   │
-│  │  Low Load          Medium Load        High Load                  │   │
-│  │  ┌───┐             ┌───┐ ┌───┐       ┌───┐ ┌───┐ ┌───┐ ┌───┐  │   │
-│  │  │Pod│     →       │Pod│ │Pod│   →   │Pod│ │Pod│ │Pod│ │Pod│  │   │
-│  │  └───┘             └───┘ └───┘       └───┘ └───┘ └───┘ └───┘  │   │
-│  │  replicas: 1       replicas: 2       replicas: 4              │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  VPA (Vertical Pod Autoscaler)                                           │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Justerar RESURSER (CPU/memory) per pod                          │   │
-│  │                                                                  │   │
-│  │  Under-resourced       Right-sized         Over-resourced        │   │
-│  │  ┌─────────┐          ┌───────────┐       ┌───────────────┐     │   │
-│  │  │ 100m    │    →     │  500m     │   →   │    200m       │     │   │
-│  │  │ 128Mi   │          │  512Mi    │       │    256Mi      │     │   │
-│  │  └─────────┘          └───────────┘       └───────────────┘     │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  CLUSTER AUTOSCALER                                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Lägger till/tar bort NODER baserat på pending pods              │   │
-│  │                                                                  │   │
-│  │  ┌──────┐ ┌──────┐         ┌──────┐ ┌──────┐ ┌──────┐          │   │
-│  │  │Node 1│ │Node 2│    →    │Node 1│ │Node 2│ │Node 3│          │   │
-│  │  └──────┘ └──────┘         └──────┘ └──────┘ └──────┘          │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      AUTOSCALING TYPES                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  HPA (Horizontal Pod Autoscaler)                                         |
+|  +-----------------------------------------------------------------+   |
+|  |  Ökar/minskar ANTAL pods baserat på metrics                      |   |
+|  |                                                                  |   |
+|  |  Low Load          Medium Load        High Load                  |   |
+|  |  +---+             +---+ +---+       +---+ +---+ +---+ +---+  |   |
+|  |  |Pod|     ->       |Pod| |Pod|   ->   |Pod| |Pod| |Pod| |Pod|  |   |
+|  |  +---+             +---+ +---+       +---+ +---+ +---+ +---+  |   |
+|  |  replicas: 1       replicas: 2       replicas: 4              |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  VPA (Vertical Pod Autoscaler)                                           |
+|  +-----------------------------------------------------------------+   |
+|  |  Justerar RESURSER (CPU/memory) per pod                          |   |
+|  |                                                                  |   |
+|  |  Under-resourced       Right-sized         Over-resourced        |   |
+|  |  +---------+          +-----------+       +---------------+     |   |
+|  |  | 100m    |    ->     |  500m     |   ->   |    200m       |     |   |
+|  |  | 128Mi   |          |  512Mi    |       |    256Mi      |     |   |
+|  |  +---------+          +-----------+       +---------------+     |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  CLUSTER AUTOSCALER                                                      |
+|  +-----------------------------------------------------------------+   |
+|  |  Lägger till/tar bort NODER baserat på pending pods              |   |
+|  |                                                                  |   |
+|  |  +------+ +------+         +------+ +------+ +------+          |   |
+|  |  |Node 1| |Node 2|    ->    |Node 1| |Node 2| |Node 3|          |   |
+|  |  +------+ +------+         +------+ +------+ +------+          |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Horizontal Pod Autoscaler (HPA)
@@ -549,31 +549,31 @@ spec:
 ### HPA Requirements
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      HPA REQUIREMENTS                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  1. METRICS SERVER                                                       │
-│     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server  │
-│                                                                          │
-│  2. RESOURCE REQUESTS (Required för CPU/Memory metrics!)                 │
-│     containers:                                                          │
-│       - name: app                                                        │
-│         resources:                                                       │
-│           requests:                                                      │
-│             cpu: 200m          # ← REQUIRED för HPA                     │
-│             memory: 256Mi                                               │
-│                                                                          │
-│  3. FORMULA                                                             │
-│     desiredReplicas = ceil(currentReplicas *                            │
-│                            (currentMetricValue / desiredMetricValue))   │
-│                                                                          │
-│     Exempel:                                                            │
-│     Current: 2 replicas, 90% CPU                                        │
-│     Target: 70% CPU                                                     │
-│     Desired: ceil(2 * (90/70)) = ceil(2.57) = 3 replicas               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      HPA REQUIREMENTS                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  1. METRICS SERVER                                                       |
+|     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server  |
+|                                                                          |
+|  2. RESOURCE REQUESTS (Required för CPU/Memory metrics!)                 |
+|     containers:                                                          |
+|       - name: app                                                        |
+|         resources:                                                       |
+|           requests:                                                      |
+|             cpu: 200m          # <- REQUIRED för HPA                     |
+|             memory: 256Mi                                               |
+|                                                                          |
+|  3. FORMULA                                                             |
+|     desiredReplicas = ceil(currentReplicas *                            |
+|                            (currentMetricValue / desiredMetricValue))   |
+|                                                                          |
+|     Exempel:                                                            |
+|     Current: 2 replicas, 90% CPU                                        |
+|     Target: 70% CPU                                                     |
+|     Desired: ceil(2 * (90/70)) = ceil(2.57) = 3 replicas               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Praktiska Övningar
@@ -741,78 +741,78 @@ spec:
 ### VPA Update Modes
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      VPA UPDATE MODES                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  MODE        │ BEHAVIOR                                                  │
-│  ────────────────────────────────────────────────────────────────────── │
-│  Off         │ Endast rekommendationer, ingen automatisk ändring        │
-│  Initial     │ Sätter requests vid pod-skapande (ej restart)            │
-│  Recreate    │ Terminerar pods för att uppdatera requests               │
-│  Auto        │ Som Recreate, men kan bli In-place i framtiden           │
-│                                                                          │
-│  ⚠️ VARNING: Recreate/Auto dödar pods för att tillämpa ändringar!       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      VPA UPDATE MODES                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  MODE        | BEHAVIOR                                                  |
+|  ---------------------------------------------------------------------- |
+|  Off         | Endast rekommendationer, ingen automatisk ändring        |
+|  Initial     | Sätter requests vid pod-skapande (ej restart)            |
+|  Recreate    | Terminerar pods för att uppdatera requests               |
+|  Auto        | Som Recreate, men kan bli In-place i framtiden           |
+|                                                                          |
+|  ⚠️ VARNING: Recreate/Auto dödar pods för att tillämpa ändringar!       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 5. HPA vs VPA
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      HPA VS VPA COMPARISON                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  FEATURE            │ HPA                    │ VPA                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Scaling method     │ Pod count              │ Pod resources             │
-│  Disruption         │ None (adds pods)       │ Pod restart               │
-│  Metrics            │ CPU, Memory, Custom    │ Historical usage          │
-│  Production ready   │ ✅ Yes                 │ ⚠️ Maturing               │
-│  Use with StatefulSet│ ✅ Works              │ ⚠️ Be careful            │
-│                                                                          │
-│  USE TOGETHER?                                                          │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ❌ Inte med samma metric (CPU conflicts)                               │
-│  ✅ OK: HPA på custom metrics, VPA på resources                         │
-│  ✅ OK: VPA i "Off" mode för recommendations only                       │
-│                                                                          │
-│  RECOMMENDATIONS:                                                        │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  • Stateless apps: HPA (primary)                                        │
-│  • Resource sizing: VPA (Off mode för recs)                             │
-│  • Burst traffic: HPA                                                   │
-│  • Cost optimization: VPA                                               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      HPA VS VPA COMPARISON                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  FEATURE            | HPA                    | VPA                       |
+|  ---------------------------------------------------------------------  |
+|  Scaling method     | Pod count              | Pod resources             |
+|  Disruption         | None (adds pods)       | Pod restart               |
+|  Metrics            | CPU, Memory, Custom    | Historical usage          |
+|  Production ready   | ✅ Yes                 | ⚠️ Maturing               |
+|  Use with StatefulSet| ✅ Works              | ⚠️ Be careful            |
+|                                                                          |
+|  USE TOGETHER?                                                          |
+|  ---------------------------------------------------------------------  |
+|  ❌ Inte med samma metric (CPU conflicts)                               |
+|  ✅ OK: HPA på custom metrics, VPA på resources                         |
+|  ✅ OK: VPA i "Off" mode för recommendations only                       |
+|                                                                          |
+|  RECOMMENDATIONS:                                                        |
+|  ---------------------------------------------------------------------  |
+|  • Stateless apps: HPA (primary)                                        |
+|  • Resource sizing: VPA (Off mode för recs)                             |
+|  • Burst traffic: HPA                                                   |
+|  • Cost optimization: VPA                                               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   AUTOSCALING BEST PRACTICES                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ HPA                                                                  │
-│     □ Alltid sätt resource requests                                    │
-│     □ Sätt sane min/max replicas                                       │
-│     □ Använd behavior för att kontrollera scaling speed                │
-│     □ Testa med realistic load                                         │
-│                                                                          │
-│  ✅ VPA                                                                  │
-│     □ Börja med "Off" mode för att se recommendations                  │
-│     □ Sätt min/max allowed resources                                   │
-│     □ Var försiktig med production - pods restarterar!                 │
-│                                                                          │
-│  ✅ General                                                              │
-│     □ Undvik HPA och VPA på samma metric                               │
-│     □ Installera metrics-server                                        │
-│     □ Övervaka autoscaler events                                       │
-│     □ Kombinera med Cluster Autoscaler för nodes                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   AUTOSCALING BEST PRACTICES                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ HPA                                                                  |
+|     □ Alltid sätt resource requests                                    |
+|     □ Sätt sane min/max replicas                                       |
+|     □ Använd behavior för att kontrollera scaling speed                |
+|     □ Testa med realistic load                                         |
+|                                                                          |
+|  ✅ VPA                                                                  |
+|     □ Börja med "Off" mode för att se recommendations                  |
+|     □ Sätt min/max allowed resources                                   |
+|     □ Var försiktig med production - pods restarterar!                 |
+|                                                                          |
+|  ✅ General                                                              |
+|     □ Undvik HPA och VPA på samma metric                               |
+|     □ Installera metrics-server                                        |
+|     □ Övervaka autoscaler events                                       |
+|     □ Kombinera med Cluster Autoscaler för nodes                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7-14. Sammanfattning & Task
@@ -828,7 +828,7 @@ spec:
 
 ---
 
-**Nästa Node:** Pod Disruption Budgets →
+**Nästa Node:** Pod Disruption Budgets ->
 ''',
     "xp_reward": 165,
     "estimated_minutes": 60,

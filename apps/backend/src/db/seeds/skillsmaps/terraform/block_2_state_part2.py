@@ -19,30 +19,30 @@ NODE_7 = {
 Modules är containers för flera resurser som används tillsammans. De är Terraforms sätt att organisera och återanvända kod.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM MODULE CONCEPT                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  WITHOUT MODULES                        WITH MODULES                   │
-│  ───────────────                        ────────────                   │
-│                                                                         │
-│  project/                               project/                        │
-│  ├── main.tf (500 lines)               ├── main.tf (50 lines)          │
-│  ├── variables.tf                       ├── modules/                    │
-│  └── outputs.tf                         │   ├── vpc/                    │
-│                                         │   │   ├── main.tf             │
-│  • Svårt att underhålla                │   │   ├── variables.tf        │
-│  • Ingen återanvändning                │   │   └── outputs.tf          │
-│  • Svårt att testa                     │   ├── ec2/                    │
-│                                         │   │   └── ...                 │
-│                                         │   └── rds/                    │
-│                                         │       └── ...                 │
-│                                         │                               │
-│                                         • Organiserad kod              │
-│                                         • Återanvändbar                │
-│                                         • Testbar                      │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM MODULE CONCEPT                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  WITHOUT MODULES                        WITH MODULES                   |
+|  ---------------                        ------------                   |
+|                                                                         |
+|  project/                               project/                        |
+|  +-- main.tf (500 lines)               +-- main.tf (50 lines)          |
+|  +-- variables.tf                       +-- modules/                    |
+|  +-- outputs.tf                         |   +-- vpc/                    |
+|                                         |   |   +-- main.tf             |
+|  • Svårt att underhålla                |   |   +-- variables.tf        |
+|  • Ingen återanvändning                |   |   +-- outputs.tf          |
+|  • Svårt att testa                     |   +-- ec2/                    |
+|                                         |   |   +-- ...                 |
+|                                         |   +-- rds/                    |
+|                                         |       +-- ...                 |
+|                                         |                               |
+|                                         • Organiserad kod              |
+|                                         • Återanvändbar                |
+|                                         • Testbar                      |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -50,42 +50,42 @@ Modules är containers för flera resurser som används tillsammans. De är Terr
 ## Module Types
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    MODULE HIERARCHY                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ROOT MODULE                                                           │
-│  ───────────                                                           │
-│  • Ditt projekt's huvudkatalog                                        │
-│  • Varje Terraform-konfiguration har minst en root module             │
-│  • Kallar child modules                                               │
-│                                                                         │
-│  ┌──────────────────────────────────────────────────────┐             │
-│  │  ROOT MODULE (./main.tf)                             │             │
-│  │                                                       │             │
-│  │  module "vpc" {                                       │             │
-│  │    source = "./modules/vpc"                          │             │
-│  │  }                                                   │             │
-│  │                                                       │             │
-│  │  module "eks" {                                       │             │
-│  │    source = "./modules/eks"                          │             │
-│  │  }                                                   │             │
-│  └──────────────────────────────────────────────────────┘             │
-│       │                    │                                           │
-│       ▼                    ▼                                           │
-│  ┌─────────────┐     ┌─────────────┐                                  │
-│  │ CHILD MODULE│     │ CHILD MODULE│                                  │
-│  │   (VPC)     │     │   (EKS)     │                                  │
-│  └─────────────┘     └─────────────┘                                  │
-│                                                                         │
-│  MODULE SOURCES                                                        │
-│  ──────────────                                                        │
-│  • Local: "./modules/vpc"                                             │
-│  • Registry: "hashicorp/vpc/aws"                                      │
-│  • GitHub: "github.com/org/module"                                    │
-│  • S3: "s3::https://bucket.s3.region.amazonaws.com/module.zip"       │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    MODULE HIERARCHY                                     |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ROOT MODULE                                                           |
+|  -----------                                                           |
+|  • Ditt projekt's huvudkatalog                                        |
+|  • Varje Terraform-konfiguration har minst en root module             |
+|  • Kallar child modules                                               |
+|                                                                         |
+|  +------------------------------------------------------+             |
+|  |  ROOT MODULE (./main.tf)                             |             |
+|  |                                                       |             |
+|  |  module "vpc" {                                       |             |
+|  |    source = "./modules/vpc"                          |             |
+|  |  }                                                   |             |
+|  |                                                       |             |
+|  |  module "eks" {                                       |             |
+|  |    source = "./modules/eks"                          |             |
+|  |  }                                                   |             |
+|  +------------------------------------------------------+             |
+|       |                    |                                           |
+|       ▼                    ▼                                           |
+|  +-------------+     +-------------+                                  |
+|  | CHILD MODULE|     | CHILD MODULE|                                  |
+|  |   (VPC)     |     |   (EKS)     |                                  |
+|  +-------------+     +-------------+                                  |
+|                                                                         |
+|  MODULE SOURCES                                                        |
+|  --------------                                                        |
+|  • Local: "./modules/vpc"                                             |
+|  • Registry: "hashicorp/vpc/aws"                                      |
+|  • GitHub: "github.com/org/module"                                    |
+|  • S3: "s3::https://bucket.s3.region.amazonaws.com/module.zip"       |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -96,14 +96,14 @@ Modules är containers för flera resurser som används tillsammans. De är Terr
 
 ```
 modules/vpc/
-├── main.tf          # Resources
-├── variables.tf     # Input variables
-├── outputs.tf       # Output values
-├── versions.tf      # Provider requirements
-├── README.md        # Documentation
-└── examples/        # Usage examples
-    └── basic/
-        └── main.tf
++-- main.tf          # Resources
++-- variables.tf     # Input variables
++-- outputs.tf       # Output values
++-- versions.tf      # Provider requirements
++-- README.md        # Documentation
++-- examples/        # Usage examples
+    +-- basic/
+        +-- main.tf
 ```
 
 ### modules/vpc/variables.tf
@@ -478,33 +478,33 @@ module "vpc" {
 ## Module Versioning
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    MODULE VERSIONING STRATEGY                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  SEMANTIC VERSIONING                                                   │
-│  ───────────────────                                                   │
-│                                                                         │
-│     v1.2.3                                                             │
-│     │ │ └── Patch: Bug fixes (backwards compatible)                   │
-│     │ └──── Minor: New features (backwards compatible)                │
-│     └────── Major: Breaking changes                                   │
-│                                                                         │
-│  VERSION CONSTRAINTS                                                   │
-│  ───────────────────                                                   │
-│                                                                         │
-│  version = "5.0.0"        # Exact version                             │
-│  version = ">= 5.0.0"     # Minimum version                           │
-│  version = "~> 5.0"       # >= 5.0.0, < 6.0.0 (recommended)          │
-│  version = ">= 5.0, < 6"  # Range                                     │
-│                                                                         │
-│  BEST PRACTICE                                                         │
-│  ─────────────                                                         │
-│  • Production: Pin to specific version or pessimistic (~>)            │
-│  • Development: Can use >= for latest features                        │
-│  • Test new versions in staging first                                 │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    MODULE VERSIONING STRATEGY                           |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  SEMANTIC VERSIONING                                                   |
+|  -------------------                                                   |
+|                                                                         |
+|     v1.2.3                                                             |
+|     | | +-- Patch: Bug fixes (backwards compatible)                   |
+|     | +---- Minor: New features (backwards compatible)                |
+|     +------ Major: Breaking changes                                   |
+|                                                                         |
+|  VERSION CONSTRAINTS                                                   |
+|  -------------------                                                   |
+|                                                                         |
+|  version = "5.0.0"        # Exact version                             |
+|  version = ">= 5.0.0"     # Minimum version                           |
+|  version = "~> 5.0"       # >= 5.0.0, < 6.0.0 (recommended)          |
+|  version = ">= 5.0, < 6"  # Range                                     |
+|                                                                         |
+|  BEST PRACTICE                                                         |
+|  -------------                                                         |
+|  • Production: Pin to specific version or pessimistic (~>)            |
+|  • Development: Can use >= for latest features                        |
+|  • Test new versions in staging first                                 |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -550,7 +550,7 @@ module "vpc" {
 
 ---
 
-**Nästa Node:** Advanced Modules →
+**Nästa Node:** Advanced Modules ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 70,
@@ -576,43 +576,43 @@ NODE_8 = {
 ## Module Composition Patterns
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    MODULE COMPOSITION PATTERNS                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  PATTERN 1: LAYERED MODULES                                            │
-│  ──────────────────────────                                            │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Application Layer                                               │   │
-│  │  module "app" { source = "./modules/app" }                      │   │
-│  └───────────────────────────┬─────────────────────────────────────┘   │
-│                              │                                          │
-│  ┌───────────────────────────▼─────────────────────────────────────┐   │
-│  │  Compute Layer                                                   │   │
-│  │  module "eks" { source = "./modules/eks" }                      │   │
-│  └───────────────────────────┬─────────────────────────────────────┘   │
-│                              │                                          │
-│  ┌───────────────────────────▼─────────────────────────────────────┐   │
-│  │  Network Layer                                                   │   │
-│  │  module "vpc" { source = "./modules/vpc" }                      │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│  PATTERN 2: COMPOSITE MODULES                                          │
-│  ───────────────────────────                                           │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  module "platform" {                                             │   │
-│  │    source = "./modules/platform"                                 │   │
-│  │    # Internally creates:                                         │   │
-│  │    # - VPC                                                       │   │
-│  │    # - EKS                                                       │   │
-│  │    # - RDS                                                       │   │
-│  │    # - Monitoring                                                │   │
-│  │  }                                                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    MODULE COMPOSITION PATTERNS                          |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  PATTERN 1: LAYERED MODULES                                            |
+|  --------------------------                                            |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |  Application Layer                                               |   |
+|  |  module "app" { source = "./modules/app" }                      |   |
+|  +---------------------------+-------------------------------------+   |
+|                              |                                          |
+|  +---------------------------▼-------------------------------------+   |
+|  |  Compute Layer                                                   |   |
+|  |  module "eks" { source = "./modules/eks" }                      |   |
+|  +---------------------------+-------------------------------------+   |
+|                              |                                          |
+|  +---------------------------▼-------------------------------------+   |
+|  |  Network Layer                                                   |   |
+|  |  module "vpc" { source = "./modules/vpc" }                      |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
+|  PATTERN 2: COMPOSITE MODULES                                          |
+|  ---------------------------                                           |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |  module "platform" {                                             |   |
+|  |    source = "./modules/platform"                                 |   |
+|  |    # Internally creates:                                         |   |
+|  |    # - VPC                                                       |   |
+|  |    # - EKS                                                       |   |
+|  |    # - RDS                                                       |   |
+|  |    # - Monitoring                                                |   |
+|  |  }                                                               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1018,16 +1018,16 @@ terraform-docs markdown document --output-file README.md .
 
 ```
 my-module/
-├── README.md           # Required
-├── main.tf             # Required
-├── variables.tf        # Required (can be empty)
-├── outputs.tf          # Required (can be empty)
-├── versions.tf         # Recommended
-├── LICENSE             # Recommended
-├── CHANGELOG.md        # Recommended
-└── examples/
-    └── basic/
-        └── main.tf
++-- README.md           # Required
++-- main.tf             # Required
++-- variables.tf        # Required (can be empty)
++-- outputs.tf          # Required (can be empty)
++-- versions.tf         # Recommended
++-- LICENSE             # Recommended
++-- CHANGELOG.md        # Recommended
++-- examples/
+    +-- basic/
+        +-- main.tf
 ```
 
 ### Repository Naming Convention
@@ -1093,7 +1093,7 @@ terraform-docs markdown table ./modules/vpc > ./modules/vpc/README.md
 
 ---
 
-**Nästa Node:** Variables & Outputs Deep Dive →
+**Nästa Node:** Variables & Outputs Deep Dive ->
 ''',
     "xp_reward": 190,
     "estimated_minutes": 75,

@@ -21,37 +21,37 @@ NODE_19_ENTERPRISE_WORKFLOWS = {
 ## Enterprise Branch Strategy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ENTERPRISE BRANCH MODEL                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   PERMANENT BRANCHES:                                                   │
-│   ──────────────────                                                    │
-│                                                                         │
-│   production ────●────●────●────●────●────●────● (protected)           │
-│                  │         │         │         │                        │
-│   staging   ─────●─────────●─────────●─────────● (protected)           │
-│                  │         │         │         │                        │
-│   develop   ─────●────●────●────●────●────●────● (protected)           │
-│                       │              │                                  │
-│   TEMPORARY BRANCHES:                                                   │
-│   ──────────────────                                                    │
-│                                                                         │
-│   feature/JIRA-123-user-auth ──●──●──●─┐                               │
-│                                        │ PR                             │
-│   bugfix/JIRA-456-login-fix ──●──●─────┼─┐                             │
-│                                        │ │ PR                           │
-│   hotfix/JIRA-789-security ────────────┼─┼──●──● (→ production)        │
-│                                        │ │                              │
-│   release/v2.0 ────────────────────────●─●──●─── (→ production)        │
-│                                                                         │
-│   NAMING CONVENTION:                                                    │
-│   ├── feature/TICKET-ID-short-description                               │
-│   ├── bugfix/TICKET-ID-short-description                                │
-│   ├── hotfix/TICKET-ID-short-description                                │
-│   └── release/vMAJOR.MINOR                                              │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ENTERPRISE BRANCH MODEL                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   PERMANENT BRANCHES:                                                   |
+|   ------------------                                                    |
+|                                                                         |
+|   production ----●----●----●----●----●----●----● (protected)           |
+|                  |         |         |         |                        |
+|   staging   -----●---------●---------●---------● (protected)           |
+|                  |         |         |         |                        |
+|   develop   -----●----●----●----●----●----●----● (protected)           |
+|                       |              |                                  |
+|   TEMPORARY BRANCHES:                                                   |
+|   ------------------                                                    |
+|                                                                         |
+|   feature/JIRA-123-user-auth --●--●--●-+                               |
+|                                        | PR                             |
+|   bugfix/JIRA-456-login-fix --●--●-----+-+                             |
+|                                        | | PR                           |
+|   hotfix/JIRA-789-security ------------+-+--●--● (-> production)        |
+|                                        | |                              |
+|   release/v2.0 ------------------------●-●--●--- (-> production)        |
+|                                                                         |
+|   NAMING CONVENTION:                                                    |
+|   +-- feature/TICKET-ID-short-description                               |
+|   +-- bugfix/TICKET-ID-short-description                                |
+|   +-- hotfix/TICKET-ID-short-description                                |
+|   +-- release/vMAJOR.MINOR                                              |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -291,32 +291,32 @@ changelog:
 ### Inner Source Model
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    INNER SOURCE MODEL                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   SHARED REPOSITORIES:                                                  │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                                                                 │   │
-│   │   Platform Team (Owners)                                        │   │
-│   │   ├── packages/shared-ui/                                       │   │
-│   │   ├── packages/common-utils/                                    │   │
-│   │   └── packages/api-client/                                      │   │
-│   │                                                                 │   │
-│   │   Contributors (Other Teams):                                   │   │
-│   │   ├── Team A → Fork → PR → Review → Merge                       │   │
-│   │   ├── Team B → Fork → PR → Review → Merge                       │   │
-│   │   └── Team C → Fork → PR → Review → Merge                       │   │
-│   │                                                                 │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   GUIDELINES:                                                           │
-│   • CONTRIBUTING.md required                                            │
-│   • Response SLA for PRs (48h)                                          │
-│   • Office hours for contributors                                       │
-│   • Regular sync meetings                                               │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    INNER SOURCE MODEL                                   |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   SHARED REPOSITORIES:                                                  |
+|   +-----------------------------------------------------------------+   |
+|   |                                                                 |   |
+|   |   Platform Team (Owners)                                        |   |
+|   |   +-- packages/shared-ui/                                       |   |
+|   |   +-- packages/common-utils/                                    |   |
+|   |   +-- packages/api-client/                                      |   |
+|   |                                                                 |   |
+|   |   Contributors (Other Teams):                                   |   |
+|   |   +-- Team A -> Fork -> PR -> Review -> Merge                       |   |
+|   |   +-- Team B -> Fork -> PR -> Review -> Merge                       |   |
+|   |   +-- Team C -> Fork -> PR -> Review -> Merge                       |   |
+|   |                                                                 |   |
+|   +-----------------------------------------------------------------+   |
+|                                                                         |
+|   GUIDELINES:                                                           |
+|   • CONTRIBUTING.md required                                            |
+|   • Response SLA for PRs (48h)                                          |
+|   • Office hours for contributors                                       |
+|   • Regular sync meetings                                               |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### PR Review SLAs
@@ -362,31 +362,31 @@ jobs:
 ## Multi-Region Setup
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    MULTI-REGION GIT ARCHITECTURE                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   PRIMARY (US)                    MIRRORS                               │
-│   ────────────                    ───────                               │
-│                                                                         │
-│   ┌──────────────┐               ┌──────────────┐                      │
-│   │   GitHub     │    sync       │   GitLab     │                      │
-│   │   (Primary)  │ ───────────►  │   EU Mirror  │                      │
-│   │              │    real-time  │              │                      │
-│   └──────────────┘               └──────────────┘                      │
-│          │                              │                               │
-│          │                              │                               │
-│          ▼                              ▼                               │
-│   US Developers                  EU Developers                          │
-│   (push/pull here)               (read from mirror)                     │
-│                                  (push to primary)                      │
-│                                                                         │
-│   BENEFITS:                                                             │
-│   • Faster clones for remote teams                                      │
-│   • Disaster recovery                                                   │
-│   • Compliance (data residency)                                         │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    MULTI-REGION GIT ARCHITECTURE                        |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   PRIMARY (US)                    MIRRORS                               |
+|   ------------                    -------                               |
+|                                                                         |
+|   +--------------+               +--------------+                      |
+|   |   GitHub     |    sync       |   GitLab     |                      |
+|   |   (Primary)  | -----------►  |   EU Mirror  |                      |
+|   |              |    real-time  |              |                      |
+|   +--------------+               +--------------+                      |
+|          |                              |                               |
+|          |                              |                               |
+|          ▼                              ▼                               |
+|   US Developers                  EU Developers                          |
+|   (push/pull here)               (read from mirror)                     |
+|                                  (push to primary)                      |
+|                                                                         |
+|   BENEFITS:                                                             |
+|   • Faster clones for remote teams                                      |
+|   • Disaster recovery                                                   |
+|   • Compliance (data residency)                                         |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -428,48 +428,48 @@ NODE_20_GIT_MASTERY = {
 ## Kunskapsöversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       GIT MASTERY PROGRESSION                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   FUNDAMENTALS (Nodes 1-4)                                              │
-│   ────────────────────────                                              │
-│   ✓ Git internals (objects, refs, packfiles)                           │
-│   ✓ Repository structure                                                │
-│   ✓ Staging and committing                                              │
-│   ✓ History navigation                                                  │
-│                                                                         │
-│   BRANCHING (Nodes 5-8)                                                 │
-│   ────────────────────                                                  │
-│   ✓ Branch strategies (GitFlow, Trunk-based)                           │
-│   ✓ Merging and rebasing                                                │
-│   ✓ Conflict resolution                                                 │
-│   ✓ Cherry-pick and selective merging                                   │
-│                                                                         │
-│   ADVANCED (Nodes 9-12)                                                 │
-│   ─────────────────────                                                 │
-│   ✓ Interactive rebase                                                  │
-│   ✓ Git bisect for debugging                                            │
-│   ✓ Worktrees                                                           │
-│   ✓ Submodules and subtrees                                             │
-│   ✓ Security and compliance                                             │
-│   ✓ Monorepo strategies                                                 │
-│                                                                         │
-│   GITHUB (Nodes 13-16)                                                  │
-│   ────────────────────                                                  │
-│   ✓ GitHub platform features                                            │
-│   ✓ Pull request workflows                                              │
-│   ✓ Issues and Projects                                                 │
-│   ✓ GitHub Actions CI/CD                                                │
-│                                                                         │
-│   ENTERPRISE (Nodes 17-20)                                              │
-│   ────────────────────────                                              │
-│   ✓ GitOps principles                                                   │
-│   ✓ Disaster recovery                                                   │
-│   ✓ Enterprise workflows                                                │
-│   ✓ Certification project                                               │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       GIT MASTERY PROGRESSION                           |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   FUNDAMENTALS (Nodes 1-4)                                              |
+|   ------------------------                                              |
+|   ✓ Git internals (objects, refs, packfiles)                           |
+|   ✓ Repository structure                                                |
+|   ✓ Staging and committing                                              |
+|   ✓ History navigation                                                  |
+|                                                                         |
+|   BRANCHING (Nodes 5-8)                                                 |
+|   --------------------                                                  |
+|   ✓ Branch strategies (GitFlow, Trunk-based)                           |
+|   ✓ Merging and rebasing                                                |
+|   ✓ Conflict resolution                                                 |
+|   ✓ Cherry-pick and selective merging                                   |
+|                                                                         |
+|   ADVANCED (Nodes 9-12)                                                 |
+|   ---------------------                                                 |
+|   ✓ Interactive rebase                                                  |
+|   ✓ Git bisect for debugging                                            |
+|   ✓ Worktrees                                                           |
+|   ✓ Submodules and subtrees                                             |
+|   ✓ Security and compliance                                             |
+|   ✓ Monorepo strategies                                                 |
+|                                                                         |
+|   GITHUB (Nodes 13-16)                                                  |
+|   --------------------                                                  |
+|   ✓ GitHub platform features                                            |
+|   ✓ Pull request workflows                                              |
+|   ✓ Issues and Projects                                                 |
+|   ✓ GitHub Actions CI/CD                                                |
+|                                                                         |
+|   ENTERPRISE (Nodes 17-20)                                              |
+|   ------------------------                                              |
+|   ✓ GitOps principles                                                   |
+|   ✓ Disaster recovery                                                   |
+|   ✓ Enterprise workflows                                                |
+|   ✓ Certification project                                               |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -481,39 +481,39 @@ NODE_20_GIT_MASTERY = {
 Du ska sätta upp ett komplett Git-ekosystem för ett företag med följande krav:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    CAPSTONE PROJECT REQUIREMENTS                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   COMPANY: TechCorp                                                     │
-│   TEAMS: 3 development teams, 15 developers                             │
-│   PRODUCTS: Monorepo with 2 applications + shared packages              │
-│                                                                         │
-│   DELIVERABLES:                                                         │
-│                                                                         │
-│   1. REPOSITORY SETUP                                                   │
-│      □ Monorepo structure with Turborepo/Nx                             │
-│      □ Branch protection rules                                          │
-│      □ CODEOWNERS file                                                  │
-│      □ PR and issue templates                                           │
-│                                                                         │
-│   2. CI/CD PIPELINE                                                     │
-│      □ Build and test workflow                                          │
-│      □ Affected-based builds                                            │
-│      □ Security scanning (Gitleaks, Trivy)                              │
-│      □ Automated releases                                               │
-│                                                                         │
-│   3. GITOPS SETUP                                                       │
-│      □ Kubernetes manifests with Kustomize                              │
-│      □ ArgoCD or Flux configuration                                     │
-│      □ Multi-environment setup (dev/staging/prod)                       │
-│                                                                         │
-│   4. DOCUMENTATION                                                      │
-│      □ CONTRIBUTING.md                                                  │
-│      □ Development workflow guide                                       │
-│      □ Disaster recovery runbook                                        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    CAPSTONE PROJECT REQUIREMENTS                        |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   COMPANY: TechCorp                                                     |
+|   TEAMS: 3 development teams, 15 developers                             |
+|   PRODUCTS: Monorepo with 2 applications + shared packages              |
+|                                                                         |
+|   DELIVERABLES:                                                         |
+|                                                                         |
+|   1. REPOSITORY SETUP                                                   |
+|      □ Monorepo structure with Turborepo/Nx                             |
+|      □ Branch protection rules                                          |
+|      □ CODEOWNERS file                                                  |
+|      □ PR and issue templates                                           |
+|                                                                         |
+|   2. CI/CD PIPELINE                                                     |
+|      □ Build and test workflow                                          |
+|      □ Affected-based builds                                            |
+|      □ Security scanning (Gitleaks, Trivy)                              |
+|      □ Automated releases                                               |
+|                                                                         |
+|   3. GITOPS SETUP                                                       |
+|      □ Kubernetes manifests with Kustomize                              |
+|      □ ArgoCD or Flux configuration                                     |
+|      □ Multi-environment setup (dev/staging/prod)                       |
+|                                                                         |
+|   4. DOCUMENTATION                                                      |
+|      □ CONTRIBUTING.md                                                  |
+|      □ Development workflow guide                                       |
+|      □ Disaster recovery runbook                                        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -528,23 +528,23 @@ npx create-turbo@latest techcorp-platform
 
 # Structure
 techcorp-platform/
-├── apps/
-│   ├── web/                 # Next.js frontend
-│   └── api/                 # Node.js backend
-├── packages/
-│   ├── ui/                  # Shared UI components
-│   ├── config/              # Shared configs
-│   └── utils/               # Shared utilities
-├── manifests/               # Kubernetes manifests
-│   ├── base/
-│   └── environments/
-├── .github/
-│   ├── CODEOWNERS
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   ├── ISSUE_TEMPLATE/
-│   └── workflows/
-├── turbo.json
-└── package.json
++-- apps/
+|   +-- web/                 # Next.js frontend
+|   +-- api/                 # Node.js backend
++-- packages/
+|   +-- ui/                  # Shared UI components
+|   +-- config/              # Shared configs
+|   +-- utils/               # Shared utilities
++-- manifests/               # Kubernetes manifests
+|   +-- base/
+|   +-- environments/
++-- .github/
+|   +-- CODEOWNERS
+|   +-- PULL_REQUEST_TEMPLATE.md
+|   +-- ISSUE_TEMPLATE/
+|   +-- workflows/
++-- turbo.json
++-- package.json
 ```
 
 ### Step 2: Branch Protection
@@ -711,40 +711,40 @@ spec:
 ## Certification Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    CERTIFICATION CHECKLIST                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   FUNDAMENTALS:                                                         │
-│   □ Explain Git object model (blob, tree, commit, tag)                  │
-│   □ Navigate history with git log, show, diff                           │
-│   □ Understand refs, HEAD, and reflog                                   │
-│                                                                         │
-│   BRANCHING:                                                            │
-│   □ Implement GitFlow or Trunk-based development                        │
-│   □ Perform merge and rebase operations                                 │
-│   □ Resolve complex merge conflicts                                     │
-│   □ Use cherry-pick effectively                                         │
-│                                                                         │
-│   ADVANCED:                                                             │
-│   □ Use interactive rebase for history cleanup                          │
-│   □ Debug with git bisect                                               │
-│   □ Manage multiple worktrees                                           │
-│   □ Configure and use submodules/subtrees                               │
-│                                                                         │
-│   GITHUB:                                                               │
-│   □ Set up repository with protection rules                             │
-│   □ Create effective PR workflows                                       │
-│   □ Build CI/CD with GitHub Actions                                     │
-│   □ Manage projects with Issues and Projects                            │
-│                                                                         │
-│   ENTERPRISE:                                                           │
-│   □ Implement GitOps with ArgoCD/Flux                                   │
-│   □ Design disaster recovery strategy                                   │
-│   □ Set up enterprise branch strategy                                   │
-│   □ Configure compliance automation                                     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    CERTIFICATION CHECKLIST                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   FUNDAMENTALS:                                                         |
+|   □ Explain Git object model (blob, tree, commit, tag)                  |
+|   □ Navigate history with git log, show, diff                           |
+|   □ Understand refs, HEAD, and reflog                                   |
+|                                                                         |
+|   BRANCHING:                                                            |
+|   □ Implement GitFlow or Trunk-based development                        |
+|   □ Perform merge and rebase operations                                 |
+|   □ Resolve complex merge conflicts                                     |
+|   □ Use cherry-pick effectively                                         |
+|                                                                         |
+|   ADVANCED:                                                             |
+|   □ Use interactive rebase for history cleanup                          |
+|   □ Debug with git bisect                                               |
+|   □ Manage multiple worktrees                                           |
+|   □ Configure and use submodules/subtrees                               |
+|                                                                         |
+|   GITHUB:                                                               |
+|   □ Set up repository with protection rules                             |
+|   □ Create effective PR workflows                                       |
+|   □ Build CI/CD with GitHub Actions                                     |
+|   □ Manage projects with Issues and Projects                            |
+|                                                                         |
+|   ENTERPRISE:                                                           |
+|   □ Implement GitOps with ArgoCD/Flux                                   |
+|   □ Design disaster recovery strategy                                   |
+|   □ Set up enterprise branch strategy                                   |
+|   □ Configure compliance automation                                     |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
