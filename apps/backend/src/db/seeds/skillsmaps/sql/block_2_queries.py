@@ -972,7 +972,7 @@ JOIN teams t ON e1.team_id = t.id;
 SELECT e.name, t.name
 FROM engineers e
 CROSS JOIN teams t;
--- 4 engineers × 3 teams = 12 rader
+-- 4 engineers x 3 teams = 12 rader
 ```
 
 ## JOIN vs Subquery
