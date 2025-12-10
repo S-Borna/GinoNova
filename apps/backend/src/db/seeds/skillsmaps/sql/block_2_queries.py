@@ -11,7 +11,7 @@ NODE_05_SELECT_BASICS = {
     "prerequisites": [4],
     "content": '''# SELECT Basics
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -20,7 +20,7 @@ effektiva queries ar skillnaden mellan millisekunder och minuter.
 Som DevOps anvander du SELECT for monitoring, debugging, rapporter
 och datautvinning fran loggar och metrics.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## SELECT Anatomy
 
@@ -45,7 +45,7 @@ och datautvinning fran loggar och metrics.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande SELECT
 
@@ -110,7 +110,7 @@ SELECT
 FROM servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## WHERE - Filtrering
 
@@ -197,7 +197,7 @@ SELECT
 FROM servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Logiska operatorer - AND, OR, NOT
 
@@ -243,7 +243,7 @@ WHERE environment = 'production'
   );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ORDER BY - Sortering
 
@@ -275,7 +275,7 @@ SELECT * FROM servers ORDER BY ip_address NULLS FIRST;
 SELECT * FROM servers ORDER BY ip_address NULLS LAST;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## LIMIT och OFFSET - Paginering
 
@@ -318,7 +318,7 @@ ORDER BY id
 LIMIT 10;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DISTINCT - Unika varden
 
@@ -339,7 +339,7 @@ ORDER BY environment, created_at DESC;
 -- Ger nyaste servern per environment
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -356,7 +356,7 @@ ORDER BY environment, created_at DESC;
 | LIMIT | `LIMIT 10 OFFSET 20` | Paginera |
 | DISTINCT | `SELECT DISTINCT col` | Unika |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -412,7 +412,7 @@ SELECT * FROM large_table;
 SELECT id, hostname, status FROM large_table;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -453,7 +453,7 @@ WHERE ip_address IS NULL
 ORDER BY created_at;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -481,7 +481,7 @@ NODE_06_JOINS = {
     "prerequisites": [5],
     "content": '''# SQL JOINs
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -490,7 +490,7 @@ spreadsheets. Med JOINs kan du kombinera data fran servrar, deployments,
 loggar och anvandare i en enda kraftfull query. Forsta JOINs ar
 fundamentalt for att bygga meningsfulla rapporter och dashboards.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## JOIN-typer Visualiserat
 
@@ -516,7 +516,7 @@ fundamentalt for att bygga meningsfulla rapporter och dashboards.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Setup - Exempel-tabeller
 
@@ -547,7 +547,7 @@ INSERT INTO engineers VALUES
     (4, 'Diana', NULL); -- Inget team
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## INNER JOIN
 
@@ -586,7 +586,7 @@ INNER JOIN servers s ON d.server_id = s.id
 WHERE d.deployed_at > NOW() - INTERVAL '24 hours';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## LEFT JOIN (LEFT OUTER JOIN)
 
@@ -624,7 +624,7 @@ LEFT JOIN deployments d ON s.id = d.server_id
 WHERE d.id IS NULL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## RIGHT JOIN (RIGHT OUTER JOIN)
 
@@ -649,7 +649,7 @@ RIGHT JOIN teams t ON e.team_id = t.id;
 Notera: RIGHT JOIN ar ovanligt - de flesta foredrar LEFT JOIN och
 byter ordning pa tabellerna.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## FULL OUTER JOIN
 
@@ -684,7 +684,7 @@ FULL OUTER JOIN teams t ON e.team_id = t.id
 WHERE e.id IS NULL OR t.id IS NULL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Multiple JOINs
 
@@ -720,7 +720,7 @@ LEFT JOIN engineers e ON d.engineer_id = e.id   -- Kanske saknar engineer
 LEFT JOIN deployment_logs l ON d.id = l.deployment_id;  -- Kanske inga loggar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Self JOIN
 
@@ -751,7 +751,7 @@ FROM employees emp
 LEFT JOIN employees mgr ON emp.manager_id = mgr.id;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## CROSS JOIN
 
@@ -776,7 +776,7 @@ CROSS JOIN generate_series(
 ) AS time_slot;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## JOIN Prestanda
 
@@ -815,7 +815,7 @@ JOIN servers s ON d.server_id = s.id;
 -- "Nested Loop" vs "Hash Join" vs "Merge Join"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -828,7 +828,7 @@ JOIN servers s ON d.server_id = s.id;
 | CROSS JOIN | Alla kombinationer | Generera kombinationer |
 | Self JOIN | Tabell med sig sjalv | Hierarkier |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -889,7 +889,7 @@ SELECT * FROM servers s
 JOIN deployments d ON s.id = d.server_id;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -931,7 +931,7 @@ GROUP BY e.id, e.name, t.name
 ORDER BY deploy_count DESC;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1012,7 +1012,7 @@ NODE_07_AGGREGATIONS = {
     "prerequisites": [6],
     "content": '''# Aggregations & GROUP BY
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1021,7 +1021,7 @@ region? Genomsnittlig responstid? Max CPU-anvandning? Deploy success
 rate? Utan aggregations ar din data bara siffror. Med aggregations
 blir den information som driver beslut.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Aggregation Oversikt
 
@@ -1046,7 +1046,7 @@ blir den information som driver beslut.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande Aggregate Functions
 
@@ -1114,7 +1114,7 @@ FROM servers s
 WHERE status = 'active';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GROUP BY
 
@@ -1181,7 +1181,7 @@ FROM servers
 GROUP BY size_category;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## HAVING - Filtrera efter aggregering
 
@@ -1218,7 +1218,7 @@ HAVING AVG(e.salary) > 100000
 ORDER BY avg_salary DESC;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Conditional Aggregation med CASE
 
@@ -1260,7 +1260,7 @@ GROUP BY DATE(deployed_at)
 ORDER BY date DESC;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ROLLUP och CUBE
 
@@ -1298,7 +1298,7 @@ GROUP BY CUBE(environment, status);
 -- Ger subtotals for BADE environment och status
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1314,7 +1314,7 @@ GROUP BY CUBE(environment, status);
 | GROUP BY | Gruppera | `GROUP BY category` |
 | HAVING | Filter aggregat | `HAVING COUNT(*) > 5` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1380,7 +1380,7 @@ SELECT
 FROM ...;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1424,7 +1424,7 @@ ORDER BY deployments DESC
 LIMIT 10;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1454,7 +1454,7 @@ NODE_08_SUBQUERIES = {
 
 Subqueries ar queries inuti andra queries - ett av de mest kraftfulla verktygen i SQL for att bygga komplexa datahamtningar steg for steg.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1473,7 +1473,7 @@ Som DevOps-ingenjor behover du ofta svara pa fragor som kraver
 flera steg: "Vilka servrar har aldrig haft en lyckad deployment?"
 eller "Visa alerts for servrar over genomsnittsbelastning."
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Subquery-typer oversikt
 
@@ -1489,7 +1489,7 @@ eller "Visa alerts for servrar over genomsnittsbelastning."
 └──────────────────┴──────────────────┴──────────────────┘
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Scalar Subquery
 
@@ -1520,7 +1520,7 @@ SELECT
 FROM servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## IN och NOT IN
 
@@ -1558,7 +1558,7 @@ VARNING: NOT IN med NULL-varden ger ovantat resultat!
 -- Anvand NOT EXISTS istallet for sakerhet
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## EXISTS och NOT EXISTS
 
@@ -1587,7 +1587,7 @@ WHERE NOT EXISTS (
 
 EXISTS-queryn returnerar bara 1 - vardet spelar ingen roll, bara att raden finns.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Derived Tables (Subquery i FROM)
 
@@ -1623,7 +1623,7 @@ FROM (
 ORDER BY active_pct DESC;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Correlated Subqueries
 
@@ -1665,7 +1665,7 @@ WHERE (SELECT COUNT(*) FROM deployments WHERE engineer_id = e.id) > (
 
 VARNING: Correlated subqueries kan vara lAngsamma - overväg JOIN eller CTE.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## LATERAL Join (PostgreSQL)
 
@@ -1694,7 +1694,7 @@ LEFT JOIN LATERAL (
 ) latest ON true;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ANY och ALL
 
@@ -1720,7 +1720,7 @@ SELECT * FROM servers
 WHERE environment = ANY (ARRAY['production', 'staging']);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1737,7 +1737,7 @@ WHERE environment = ANY (ARRAY['production', 'staging']);
 | ANY | WHERE col > ANY (SELECT ...) | Jamfor mot nagon rad |
 | ALL | WHERE col > ALL (SELECT ...) | Jamfor mot alla rader |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1786,7 +1786,7 @@ SELECT
 FROM deployments;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1830,7 +1830,7 @@ CROSS JOIN LATERAL (
 ORDER BY s.hostname, deploys.deployed_at DESC;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
