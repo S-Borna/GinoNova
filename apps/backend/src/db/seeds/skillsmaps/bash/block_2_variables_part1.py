@@ -13,11 +13,11 @@ NODE_5 = {
     "difficulty": "medium",
     "content": r'''# Variables - From Basic to Advanced
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Variabler ar grundbulten i all programmering. I Bash har variabler unika egenskaper som skiljer sig fran andra sprak. Att beharska variabelhantering ar avgörande for robusta DevOps-skript.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -35,7 +35,7 @@ Du maste forsta:
 - **Scope ar viktigt** - Lokala vs globala vs environment variabler
 - **Expansion** - Bash har kraftfulla variabel-expansions-features
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Variabler
 
@@ -63,32 +63,32 @@ if [ -n "$name" ]; then
 fi
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Variabeltyper och Scope
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      VARIABEL SCOPE I BASH                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                    ENVIRONMENT VARIABLES                         │    │
-│  │                 Synliga for alla child processes                 │    │
-│  │                    export VAR="value"                            │    │
-│  │  ┌─────────────────────────────────────────────────────────┐    │    │
-│  │  │                  SHELL VARIABLES                         │    │    │
-│  │  │              Endast i nuvarande shell                    │    │    │
-│  │  │                  VAR="value"                             │    │    │
-│  │  │  ┌─────────────────────────────────────────────────┐    │    │    │
-│  │  │  │              LOCAL VARIABLES                     │    │    │    │
-│  │  │  │          Endast i nuvarande funktion            │    │    │    │
-│  │  │  │              local var="value"                  │    │    │    │
-│  │  │  └─────────────────────────────────────────────────┘    │    │    │
-│  │  └─────────────────────────────────────────────────────────┘    │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      VARIABEL SCOPE I BASH                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +-----------------------------------------------------------------+    |
+|  |                    ENVIRONMENT VARIABLES                         |    |
+|  |                 Synliga for alla child processes                 |    |
+|  |                    export VAR="value"                            |    |
+|  |  +---------------------------------------------------------+    |    |
+|  |  |                  SHELL VARIABLES                         |    |    |
+|  |  |              Endast i nuvarande shell                    |    |    |
+|  |  |                  VAR="value"                             |    |    |
+|  |  |  +-------------------------------------------------+    |    |    |
+|  |  |  |              LOCAL VARIABLES                     |    |    |    |
+|  |  |  |          Endast i nuvarande funktion            |    |    |    |
+|  |  |  |              local var="value"                  |    |    |    |
+|  |  |  +-------------------------------------------------+    |    |    |
+|  |  +---------------------------------------------------------+    |    |
+|  +-----------------------------------------------------------------+    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -121,7 +121,7 @@ printenv
 set
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Speciella Variabler
 
@@ -162,29 +162,29 @@ ls /tmp
 echo "ls exit status: $?"        # 0 (success)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parameter Expansion
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    PARAMETER EXPANSION                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SYNTAX              │ BESKRIVNING                │ EXEMPEL             │
-│  ────────────────────┼────────────────────────────┼───────────────────  │
-│  ${var:-default}     │ Default om unset/tom       │ ${NAME:-guest}      │
-│  ${var:=default}     │ Set och returnera default  │ ${NAME:=guest}      │
-│  ${var:+value}       │ Value om VAR ar satt       │ ${DEBUG:+"-v"}      │
-│  ${var:?error}       │ Error om unset/tom         │ ${DB:?required}     │
-│  ────────────────────┼────────────────────────────┼───────────────────  │
-│  ${#var}             │ Langd                      │ ${#name} → 5        │
-│  ${var^}             │ Forsta till uppercase      │ ${name^} → Hello    │
-│  ${var^^}            │ Allt till uppercase        │ ${name^^} → HELLO   │
-│  ${var,}             │ Forsta till lowercase      │ ${name,} → hELLO    │
-│  ${var,,}            │ Allt till lowercase        │ ${name,,} → hello   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    PARAMETER EXPANSION                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SYNTAX              | BESKRIVNING                | EXEMPEL             |
+|  --------------------+----------------------------+-------------------  |
+|  ${var:-default}     | Default om unset/tom       | ${NAME:-guest}      |
+|  ${var:=default}     | Set och returnera default  | ${NAME:=guest}      |
+|  ${var:+value}       | Value om VAR ar satt       | ${DEBUG:+"-v"}      |
+|  ${var:?error}       | Error om unset/tom         | ${DB:?required}     |
+|  --------------------+----------------------------+-------------------  |
+|  ${#var}             | Langd                      | ${#name} -> 5        |
+|  ${var^}             | Forsta till uppercase      | ${name^} -> Hello    |
+|  ${var^^}            | Allt till uppercase        | ${name^^} -> HELLO   |
+|  ${var,}             | Forsta till lowercase      | ${name,} -> hELLO    |
+|  ${var,,}            | Allt till lowercase        | ${name,,} -> hello   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -220,7 +220,7 @@ echo ${path/user/admin}         # /home/admin/docs (forsta)
 echo ${path//o/0}               # /h0me/user/d0cs (alla)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska Exempel
 
@@ -255,7 +255,7 @@ DEBUG=""
 ./run.sh $DEBUG
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -271,7 +271,7 @@ DEBUG=""
 | `${var/old/new}` | Ersatt forsta |
 | `${var//old/new}` | Ersatt alla |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -282,7 +282,7 @@ DEBUG=""
 | Ovaentat varde | Globbing | Quotera: `"$var"` |
 | `bad substitution` | Felaktig syntax | Kontrollera ${} syntax |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -313,11 +313,11 @@ NODE_6 = {
     "difficulty": "medium",
     "content": r'''# Arrays - Indexed and Associative
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Bash stodjer bade indexerade och associativa arrays. Dessa datastrukturer ar ovardliga for att hantera listor av servrar, konfigurationer, och komplexa data i DevOps-automation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -335,26 +335,26 @@ Du maste forsta:
 - **Associative arrays** - Key-value pairs (Bash 4+)
 - **Sparse arrays** - Index behover ej vara konsekutiva
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Indexed Arrays
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      INDEXED ARRAY STRUKTUR                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  servers=("web1" "web2" "db1" "db2")                                    │
-│                                                                          │
-│  Index:    [0]     [1]     [2]     [3]                                  │
-│  Value:   "web1"  "web2"  "db1"   "db2"                                 │
-│                                                                          │
-│  ${servers[0]}    → web1                                                │
-│  ${servers[@]}    → web1 web2 db1 db2 (alla element)                    │
-│  ${#servers[@]}   → 4 (antal element)                                   │
-│  ${!servers[@]}   → 0 1 2 3 (alla index)                                │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      INDEXED ARRAY STRUKTUR                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  servers=("web1" "web2" "db1" "db2")                                    |
+|                                                                          |
+|  Index:    [0]     [1]     [2]     [3]                                  |
+|  Value:   "web1"  "web2"  "db1"   "db2"                                 |
+|                                                                          |
+|  ${servers[0]}    -> web1                                                |
+|  ${servers[@]}    -> web1 web2 db1 db2 (alla element)                    |
+|  ${#servers[@]}   -> 4 (antal element)                                   |
+|  ${!servers[@]}   -> 0 1 2 3 (alla index)                                |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -388,7 +388,7 @@ echo ${servers[@]:1:2}                # Element 1-2 (web2 db1)
 echo ${servers[@]:2}                  # Fran index 2 till slut
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Array Manipulation
 
@@ -422,7 +422,7 @@ for s in "${servers[@]}"; do
 done
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Iterera Over Arrays
 
@@ -452,26 +452,26 @@ while IFS= read -r line; do
 done < <(kubectl get pods -o name)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Associative Arrays (Bash 4+)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ASSOCIATIVE ARRAY STRUKTUR                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  declare -A config                                                      │
-│  config=([host]="localhost" [port]="5432" [db]="mydb")                 │
-│                                                                          │
-│  Key:       [host]        [port]      [db]                              │
-│  Value:  "localhost"     "5432"     "mydb"                              │
-│                                                                          │
-│  ${config[host]}     → localhost                                        │
-│  ${config[@]}        → localhost 5432 mydb (alla varden)               │
-│  ${!config[@]}       → host port db (alla nycklar)                     │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ASSOCIATIVE ARRAY STRUKTUR                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  declare -A config                                                      |
+|  config=([host]="localhost" [port]="5432" [db]="mydb")                 |
+|                                                                          |
+|  Key:       [host]        [port]      [db]                              |
+|  Value:  "localhost"     "5432"     "mydb"                              |
+|                                                                          |
+|  ${config[host]}     -> localhost                                        |
+|  ${config[@]}        -> localhost 5432 mydb (alla varden)               |
+|  ${!config[@]}       -> host port db (alla nycklar)                     |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -507,7 +507,7 @@ for key in "${!config[@]}"; do
 done
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska DevOps-Exempel
 
@@ -582,7 +582,7 @@ for service in "${!services[@]}"; do
 done
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Readarray / Mapfile
 
@@ -607,7 +607,7 @@ for server in "${servers[@]}"; do
 done
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -621,7 +621,7 @@ done
 | `arr+=("val")` | Lagg till element |
 | `unset arr[i]` | Ta bort element |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -632,7 +632,7 @@ done
 | `declare: -A: invalid option` | Bash < 4 | Uppgradera Bash |
 | Forlorade element | Spaces i varden | Anvand quotes vid tilldelning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

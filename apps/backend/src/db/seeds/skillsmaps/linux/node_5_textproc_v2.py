@@ -39,18 +39,18 @@ LINUX_NODE_5_TEXTPROC_V2 = {
                         "title": "grep - Sök och filtrera",
                         "explanation": "-i (case insensitive), -v (invertera), -r (rekursiv), -n (radnummer), -c (count), -E (extended regex).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ grep FLAGS                                  │
-├─────────────────────────────────────────────┤
-│ -i  │ Case insensitive                     │
-│ -v  │ Invertera (visa EJ matchande)        │
-│ -r  │ Rekursiv sökning i kataloger         │
-│ -n  │ Visa radnummer                       │
-│ -c  │ Räkna matchningar                    │
-│ -E  │ Extended regex (egrep)               │
-│ -A3 │ Visa 3 rader efter match             │
-│ -B3 │ Visa 3 rader före match              │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| grep FLAGS                                  |
++---------------------------------------------+
+| -i  | Case insensitive                     |
+| -v  | Invertera (visa EJ matchande)        |
+| -r  | Rekursiv sökning i kataloger         |
+| -n  | Visa radnummer                       |
+| -c  | Räkna matchningar                    |
+| -E  | Extended regex (egrep)               |
+| -A3 | Visa 3 rader efter match             |
+| -B3 | Visa 3 rader före match              |
++---------------------------------------------+""",
                         "pro_tip": "tail -f log | grep --line-buffered 'ERROR' för realtids-filtrering.",
                         "common_mistake": "Att glömma -i när man söker - case matters!"
                     },
@@ -58,15 +58,15 @@ LINUX_NODE_5_TEXTPROC_V2 = {
                         "title": "sed & awk",
                         "explanation": "sed = stream editor för search/replace. awk = pattern scanning och text processing med fält.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ sed 's/old/new/g' file   # Replace all     │
-│ sed -i 's/old/new/g' f   # In-place edit   │
-│ sed '/pattern/d' file    # Delete lines    │
-├─────────────────────────────────────────────┤
-│ awk '{print $1}' file    # Print field 1   │
-│ awk -F: '{print $1}'     # Custom delimiter │
-│ awk '$3 > 100' file      # Filter by value │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| sed 's/old/new/g' file   # Replace all     |
+| sed -i 's/old/new/g' f   # In-place edit   |
+| sed '/pattern/d' file    # Delete lines    |
++---------------------------------------------+
+| awk '{print $1}' file    # Print field 1   |
+| awk -F: '{print $1}'     # Custom delimiter |
+| awk '$3 > 100' file      # Filter by value |
++---------------------------------------------+""",
                         "pro_tip": "awk är perfekt för CSV/log-parsing: awk -F',' '{print $2}'",
                         "common_mistake": "Att glömma -i.bak med sed - du förlorar original."
                     }

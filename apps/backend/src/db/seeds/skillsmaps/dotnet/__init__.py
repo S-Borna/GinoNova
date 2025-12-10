@@ -3,7 +3,7 @@ C# & .NET SkillsMap — Backend Development with Microsoft Stack
 ==============================================================
 
 20 nodes covering C# from fundamentals to production-ready ASP.NET Core apps.
-Akhilesh-style pedagogy: Hook → Concept → Code → Pro Tips → Hands-on Task
+Akhilesh-style pedagogy: Hook -> Concept -> Code -> Pro Tips -> Hands-on Task
 
 Block 1 (Nodes 1-4): C# Fundamentals
 Block 2 (Nodes 5-8): Object-Oriented Programming

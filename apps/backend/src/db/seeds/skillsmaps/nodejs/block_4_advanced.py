@@ -14,7 +14,7 @@ NODE_13_AUTH = {
 
 Saker autentisering i Node.js.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Authentication?
 
@@ -26,7 +26,7 @@ Authentication handlar om att verifiera vem anvandaren ar och skydda applikation
 | Auktorisering | Vad far du gora? |
 | Tokens | Identitetsbevaring |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,7 +37,7 @@ Authentication handlar om att verifiera vem anvandaren ar och skydda applikation
 | Audit trails | Sparbarhet |
 | Zero trust | Verifiera alltid |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -49,7 +49,7 @@ Authentication handlar om att verifiera vem anvandaren ar och skydda applikation
 | OAuth | Passport.js |
 | Rate limiting | express-rate-limit |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## JWT Authentication
 
@@ -135,7 +135,7 @@ export function authenticate(req, res, next) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Refresh Tokens
 
@@ -189,7 +189,7 @@ export async function refresh(req, res) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## OAuth 2.0 / Passport
 
@@ -234,7 +234,7 @@ app.get('/auth/google/callback',
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Best Practices
 
@@ -281,7 +281,7 @@ app.use(cors({
 }));
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Password Security
 
@@ -313,7 +313,7 @@ const hash = await argon2.hash(password, {
 const isValid = await argon2.verify(hash, password);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## RBAC (Role-Based Access Control)
 
@@ -350,7 +350,7 @@ app.delete('/users/:id',
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -361,7 +361,7 @@ app.delete('/users/:id',
 | Brute force | Ingen rate limiting | Implementera rate limit |
 | XSS attack | Ingen sanitering | Anvand helmet och xss-clean |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -393,7 +393,7 @@ NODE_14_FILES = {
 
 Las, skriv och hantera filer i Node.js.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar File Handling?
 
@@ -405,7 +405,7 @@ File handling ar operationer for att lasa, skriva och manipulera filer pa filsys
 | Write | Skriva till fil |
 | Stream | Hantera stora filer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -416,7 +416,7 @@ File handling ar operationer for att lasa, skriva och manipulera filer pa filsys
 | Uploads | Hantera filuppladdningar |
 | Backups | Automatiserade backuper |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -427,7 +427,7 @@ File handling ar operationer for att lasa, skriva och manipulera filer pa filsys
 | Kopiera | copyFileSync | copyFile |
 | Stats | statSync | stat |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## File System Module
 
@@ -461,7 +461,7 @@ console.log(stats.isDirectory());
 console.log(stats.mtime);       // modified time
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Directory Operations
 
@@ -493,7 +493,7 @@ await fs.cp('src', 'backup', { recursive: true });
 await fs.rename('old.txt', 'new.txt');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Streams
 
@@ -537,7 +537,7 @@ await pipeline(
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## File Upload (Multer)
 
@@ -587,7 +587,7 @@ app.post('/upload-multiple', upload.array('files', 5), (req, res) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cloud Storage (S3)
 
@@ -636,7 +636,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Path Module
 
@@ -660,7 +660,7 @@ path.extname('/home/user/file.txt');   // .txt
 path.normalize('/foo/bar//baz/');      // /foo/bar/baz
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -671,7 +671,7 @@ path.normalize('/foo/bar//baz/');      // /foo/bar/baz
 | EMFILE | For manga oppna filer | Anvand streams |
 | Memory overflow | Stor fil i minnet | Anvand streams |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -703,7 +703,7 @@ NODE_15_WEBSOCKETS = {
 
 Real-time kommunikation med WebSockets.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar WebSockets?
 
@@ -715,7 +715,7 @@ WebSockets ar ett protokoll for tvavagskommunikation mellan klient och server i 
 | Persistent | Oppet connection |
 | Low latency | Minimal fordrojning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -726,7 +726,7 @@ WebSockets ar ett protokoll for tvavagskommunikation mellan klient och server i 
 | Notifications | Push-meddelanden |
 | Chat/Collaboration | Teamkommunikation |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -738,7 +738,7 @@ WebSockets ar ett protokoll for tvavagskommunikation mellan klient och server i 
 | Reconnection | Manual | Automatic |
 | Broadcasting | Manual | Built-in |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Native WebSocket (ws)
 
@@ -781,7 +781,7 @@ function broadcast(data) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Integration med Express
 
@@ -828,7 +828,7 @@ wss.on('close', () => {
 server.listen(3000);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Socket.IO
 
@@ -893,7 +893,7 @@ function notifyUser(userId, event, data) {
 server.listen(3000);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Socket.IO Client
 
@@ -929,7 +929,7 @@ socket.on('disconnect', (reason) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rooms och Namespaces
 
@@ -964,7 +964,7 @@ io.to('room').emit('event', data);          // Specific room
 socket.to('room').emit('event', data);      // Room except sender
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Real-time Chat Example
 
@@ -997,7 +997,7 @@ io.on('connection', (socket) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1008,7 +1008,7 @@ io.on('connection', (socket) => {
 | Memory leak | Listeners ej borttagna | Rensa vid disconnect |
 | Stale connections | Ingen heartbeat | Implementera ping/pong |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1040,7 +1040,7 @@ NODE_16_WORKERS = {
 
 Parallell korning for CPU-intensiva uppgifter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Worker Threads?
 
@@ -1052,7 +1052,7 @@ Worker Threads gor det mojligt att kora JavaScript i parallella tradar for CPU-i
 | CPU-bound | For tunga berakningar |
 | Isolation | Separat minne per worker |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1063,7 +1063,7 @@ Worker Threads gor det mojligt att kora JavaScript i parallella tradar for CPU-i
 | Image processing | Bild-/videobearbetning |
 | Encryption | Kryptografiska operationer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1076,7 +1076,7 @@ Worker Threads gor det mojligt att kora JavaScript i parallella tradar for CPU-i
 | SharedArrayBuffer | Delat minne |
 | Atomics | Thread-safe operations |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Basic Worker
 
@@ -1109,7 +1109,7 @@ if (isMainThread) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Worker i samma fil
 
@@ -1150,7 +1150,7 @@ if (isMainThread) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Worker Pool
 
@@ -1234,7 +1234,7 @@ const results = await Promise.all([
 await pool.close();
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SharedArrayBuffer
 
@@ -1272,7 +1272,7 @@ if (isMainThread) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## MessageChannel
 
@@ -1304,7 +1304,7 @@ parentPort.on('message', ({ type, port }) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Use Cases
 
@@ -1316,7 +1316,7 @@ parentPort.on('message', ({ type, port }) => {
 | Data transformation | Simpla tasks (overhead) |
 | Parsing stora filer | |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1327,7 +1327,7 @@ parentPort.on('message', ({ type, port }) => {
 | Memory leak | Workers ej terminerade | Anropa terminate() |
 | Race conditions | Delat minne | Anvand Atomics |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

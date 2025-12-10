@@ -39,23 +39,23 @@ LINUX_NODE_18_LOGS_V2 = {
                         "title": "journalctl - Systemd Journal",
                         "explanation": "journalctl samlar ALLA systemd-loggar. Filtrera per tjänst (-u), tid (--since), prioritet (-p) eller följ live (-f).",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ JOURNALCTL KOMMANDON                                │
-├─────────────────────────────────────────────────────┤
-│ journalctl              │ Alla loggar              │
-│ journalctl -f           │ Följ live (som tail -f)  │
-│ journalctl -u nginx     │ Bara nginx               │
-│ journalctl -u nginx -f  │ Följ nginx live          │
-│ journalctl -n 100       │ Senaste 100 rader        │
-│ journalctl -p err       │ Bara errors              │
-│ journalctl -k           │ Kernel-meddelanden       │
-├─────────────────────────────────────────────────────┤
-│ TIDSFILTER:                                         │
-│ --since "1 hour ago"    │ Senaste timmen           │
-│ --since today           │ Sedan midnatt            │
-│ --since "2024-01-01"    │ Sedan datum              │
-│ --until "2024-01-02"    │ Till datum               │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| JOURNALCTL KOMMANDON                                |
++-----------------------------------------------------+
+| journalctl              | Alla loggar              |
+| journalctl -f           | Följ live (som tail -f)  |
+| journalctl -u nginx     | Bara nginx               |
+| journalctl -u nginx -f  | Följ nginx live          |
+| journalctl -n 100       | Senaste 100 rader        |
+| journalctl -p err       | Bara errors              |
+| journalctl -k           | Kernel-meddelanden       |
++-----------------------------------------------------+
+| TIDSFILTER:                                         |
+| --since "1 hour ago"    | Senaste timmen           |
+| --since today           | Sedan midnatt            |
+| --since "2024-01-01"    | Sedan datum              |
+| --until "2024-01-02"    | Till datum               |
++-----------------------------------------------------+""",
                         "pro_tip": "journalctl -u nginx -p err --since today = nginx-errors idag",
                         "common_mistake": "Att glömma att journalctl behöver sudo för att se alla loggar"
                     },
@@ -63,23 +63,23 @@ LINUX_NODE_18_LOGS_V2 = {
                         "title": "Viktiga Loggfiler",
                         "explanation": "/var/log/ innehåller systemloggar. Olika distros har olika filer - lär dig var dina loggar finns!",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ VIKTIGA LOGGFILER                                   │
-├─────────────────────────────────────────────────────┤
-│ UBUNTU/DEBIAN:                                      │
-│ /var/log/syslog       │ Generell systemlogg        │
-│ /var/log/auth.log     │ Inloggningar, sudo         │
-│ /var/log/kern.log     │ Kernel-meddelanden         │
-├─────────────────────────────────────────────────────┤
-│ RHEL/CENTOS:                                        │
-│ /var/log/messages     │ Generell systemlogg        │
-│ /var/log/secure       │ Autentisering              │
-├─────────────────────────────────────────────────────┤
-│ APPLIKATIONER:                                      │
-│ /var/log/nginx/       │ Nginx access/error         │
-│ /var/log/apache2/     │ Apache loggar              │
-│ /var/log/mysql/       │ MySQL/MariaDB              │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| VIKTIGA LOGGFILER                                   |
++-----------------------------------------------------+
+| UBUNTU/DEBIAN:                                      |
+| /var/log/syslog       | Generell systemlogg        |
+| /var/log/auth.log     | Inloggningar, sudo         |
+| /var/log/kern.log     | Kernel-meddelanden         |
++-----------------------------------------------------+
+| RHEL/CENTOS:                                        |
+| /var/log/messages     | Generell systemlogg        |
+| /var/log/secure       | Autentisering              |
++-----------------------------------------------------+
+| APPLIKATIONER:                                      |
+| /var/log/nginx/       | Nginx access/error         |
+| /var/log/apache2/     | Apache loggar              |
+| /var/log/mysql/       | MySQL/MariaDB              |
++-----------------------------------------------------+""",
                         "pro_tip": "tail -f /var/log/nginx/error.log för live web-debugging",
                         "common_mistake": "Att inte kolla auth.log vid misstänkt intrång - där syns allt!"
                     },
@@ -87,26 +87,26 @@ LINUX_NODE_18_LOGS_V2 = {
                         "title": "Logrotate",
                         "explanation": "logrotate förhindrar att disken blir full. Konfigurerar rotation, komprimering och retention per logg.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ LOGROTATE CONFIG EXEMPEL                            │
-│ /etc/logrotate.d/nginx                              │
-├─────────────────────────────────────────────────────┤
-│ /var/log/nginx/*.log {                              │
-│     daily              # Rotera dagligen           │
-│     rotate 14          # Behåll 14 filer           │
-│     compress           # Komprimera gamla          │
-│     delaycompress      # Vänta en cykel            │
-│     missingok          # OK om fil saknas          │
-│     notifempty         # Skippa tomma              │
-│     create 0640 www-data adm                       │
-│     postrotate                                      │
-│         systemctl reload nginx > /dev/null 2>&1    │
-│     endscript                                       │
-│ }                                                   │
-├─────────────────────────────────────────────────────┤
-│ TEST: sudo logrotate -d /etc/logrotate.conf        │
-│ FORCE: sudo logrotate -f /etc/logrotate.d/nginx    │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| LOGROTATE CONFIG EXEMPEL                            |
+| /etc/logrotate.d/nginx                              |
++-----------------------------------------------------+
+| /var/log/nginx/*.log {                              |
+|     daily              # Rotera dagligen           |
+|     rotate 14          # Behåll 14 filer           |
+|     compress           # Komprimera gamla          |
+|     delaycompress      # Vänta en cykel            |
+|     missingok          # OK om fil saknas          |
+|     notifempty         # Skippa tomma              |
+|     create 0640 www-data adm                       |
+|     postrotate                                      |
+|         systemctl reload nginx > /dev/null 2>&1    |
+|     endscript                                       |
+| }                                                   |
++-----------------------------------------------------+
+| TEST: sudo logrotate -d /etc/logrotate.conf        |
+| FORCE: sudo logrotate -f /etc/logrotate.d/nginx    |
++-----------------------------------------------------+""",
                         "pro_tip": "logrotate -d (debug) visar vad som SKULLE hända utan att göra det",
                         "common_mistake": "Att glömma postrotate-scriptet - nginx behöver reload för att börja skriva till ny fil"
                     }

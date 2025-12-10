@@ -104,7 +104,7 @@ VIKTIGT BETEENDE:
 
 **SKILLSMAPS** (länka till /skillsmaps/[slug]):
 - Samma moduler finns som SkillsMaps med djupare 20-node lärvägar
-- Varje node har: Teori → Koncept → Kommandon → Övningar → Pro Tips
+- Varje node har: Teori -> Koncept -> Kommandon -> Övningar -> Pro Tips
 
 **SPECIFIKT INNEHÅLL PER ÄMNE:**
 

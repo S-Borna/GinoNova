@@ -2,7 +2,7 @@
 # DOCKER SKILLSMAP V3 - ULTRA-PREMIUM BOOTCAMP-QUALITY CONTENT
 # =============================================================================
 # 20 noder med fullständigt pedagogiskt innehåll (~10,000-15,000 chars/nod)
-# Strukturen: Intro → Koncept → ASCII-diagram → Praktik → Övningar
+# Strukturen: Intro -> Koncept -> ASCII-diagram -> Praktik -> Övningar
 # Uppgraderad till Linux Mastery-standard
 # =============================================================================
 

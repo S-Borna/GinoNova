@@ -13,45 +13,45 @@ NODE_17_DB_DESIGN = {
 
 Bra databasdesign ar grunden for allt - prestanda, skalbarhet och underhallbarhet. Ett daligt schema kan inte fixas med index eller kraftfullare servrar.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DATABASE DESIGN IMPACT                       │
-├─────────────────────────────────────────────────────────────────┤
-│  BRA DESIGN:                                                    │
-│  - Queries ar enkla att skriva och forsta                      │
-│  - Index fungerar effektivt                                    │
-│  - Data ar konsistent utan manuell validering                  │
-│  - Schema ar sjalvdokumenterande                               │
-├─────────────────────────────────────────────────────────────────┤
-│  DALIGT DESIGN:                                                 │
-│  - Komplexa queries for enkla fragor                           │
-│  - Duplicerad data som blir inkonsistent                       │
-│  - Ingen referentiell integritet                               │
-│  - Evigt teknisk skuld                                         │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DATABASE DESIGN IMPACT                       |
++-----------------------------------------------------------------+
+|  BRA DESIGN:                                                    |
+|  - Queries ar enkla att skriva och forsta                      |
+|  - Index fungerar effektivt                                    |
+|  - Data ar konsistent utan manuell validering                  |
+|  - Schema ar sjalvdokumenterande                               |
++-----------------------------------------------------------------+
+|  DALIGT DESIGN:                                                 |
+|  - Komplexa queries for enkla fragor                           |
+|  - Duplicerad data som blir inkonsistent                       |
+|  - Ingen referentiell integritet                               |
+|  - Evigt teknisk skuld                                         |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Normalisering
 
 Normalisering eliminerar redundans och beroenden:
 
 ```
-┌──────────┬────────────────────────────────────────────────────────┐
-│ 1NF      │ Atomiska varden - inga listor i en kolumn             │
-│          │ Varje rad ar unik (har primary key)                   │
-├──────────┼────────────────────────────────────────────────────────┤
-│ 2NF      │ Inga partial dependencies                              │
-│          │ Alla non-key kolumner beror pa HELA primary key       │
-├──────────┼────────────────────────────────────────────────────────┤
-│ 3NF      │ Inga transitive dependencies                           │
-│          │ Non-key kolumner beror BARA pa primary key            │
-└──────────┴────────────────────────────────────────────────────────┘
++----------+--------------------------------------------------------+
+| 1NF      | Atomiska varden - inga listor i en kolumn             |
+|          | Varje rad ar unik (har primary key)                   |
++----------+--------------------------------------------------------+
+| 2NF      | Inga partial dependencies                              |
+|          | Alla non-key kolumner beror pa HELA primary key       |
++----------+--------------------------------------------------------+
+| 3NF      | Inga transitive dependencies                           |
+|          | Non-key kolumner beror BARA pa primary key            |
++----------+--------------------------------------------------------+
 ```
 
 ```sql
@@ -76,7 +76,7 @@ CREATE TABLE server_ips (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Relationships
 
@@ -113,7 +113,7 @@ CREATE TABLE server_configs (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Naming Conventions
 
@@ -139,7 +139,7 @@ CONSTRAINTS:
   - deployments_server_id_fkey
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga Patterns
 
@@ -177,7 +177,7 @@ CREATE TABLE sessions (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Schema Organisation
 
@@ -200,7 +200,7 @@ CREATE TABLE audit.changes (...);
 SET search_path TO core, monitoring, public;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Anti-patterns att undvika
 
@@ -238,7 +238,7 @@ CREATE TABLE comments (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -254,7 +254,7 @@ CREATE TABLE comments (
 | 1:N | Foreign key i "many"-tabellen |
 | M:N | Junction table med composite key |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -287,7 +287,7 @@ CREATE TABLE server_statuses (
 CREATE TYPE server_status AS ENUM ('active', 'inactive', 'maintenance');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -333,7 +333,7 @@ CREATE INDEX idx_servers_env ON servers(environment);
 CREATE INDEX idx_servers_active ON servers(id) WHERE deleted_at IS NULL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -365,23 +365,23 @@ NODE_18_MIGRATIONS = {
 
 Migrations ar versionshanterade schema-andringar. Aldrig gor manuella andringar i produktion - allt gar genom migrations som ar granskade, testade och kan rullas tillbaka.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MIGRATIONS BENEFITS                          │
-├─────────────────────────────────────────────────────────────────┤
-│  - Versionskontroll: Schema-andringar ar sparbara i Git        │
-│  - Code review: Andringar granskas innan deploy                │
-│  - Reproducerbarhet: Samma schema i dev, staging, prod         │
-│  - Rollback: Kan angra misslyckade andringar                   │
-│  - Audit trail: Vet vem som andrade vad och nar                │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MIGRATIONS BENEFITS                          |
++-----------------------------------------------------------------+
+|  - Versionskontroll: Schema-andringar ar sparbara i Git        |
+|  - Code review: Andringar granskas innan deploy                |
+|  - Reproducerbarhet: Samma schema i dev, staging, prod         |
+|  - Rollback: Kan angra misslyckade andringar                   |
+|  - Audit trail: Vet vem som andrade vad och nar                |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Migration Basics
 
@@ -419,31 +419,31 @@ DROP INDEX IF EXISTS idx_servers_status;
 DROP TABLE IF EXISTS servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Sakra Migrations
 
 ```
-┌───────────────────────────────────────────────────────────────┐
-│  SAKERT (minimal lock, kan rullas tillbaka)                   │
-├───────────────────────────────────────────────────────────────┤
-│  - ADD COLUMN (nullable)                                      │
-│  - ADD COLUMN med DEFAULT (PG11+)                            │
-│  - DROP COLUMN                                                │
-│  - CREATE INDEX CONCURRENTLY                                  │
-│  - DROP INDEX CONCURRENTLY                                    │
-│  - ADD CONSTRAINT (check, foreign key med NOT VALID)         │
-└───────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------+
+|  SAKERT (minimal lock, kan rullas tillbaka)                   |
++---------------------------------------------------------------+
+|  - ADD COLUMN (nullable)                                      |
+|  - ADD COLUMN med DEFAULT (PG11+)                            |
+|  - DROP COLUMN                                                |
+|  - CREATE INDEX CONCURRENTLY                                  |
+|  - DROP INDEX CONCURRENTLY                                    |
+|  - ADD CONSTRAINT (check, foreign key med NOT VALID)         |
++---------------------------------------------------------------+
 
-┌───────────────────────────────────────────────────────────────┐
-│  FARLIGT (lang lock, kraver planering)                        │
-├───────────────────────────────────────────────────────────────┤
-│  - ADD COLUMN med NOT NULL utan default                      │
-│  - ALTER COLUMN TYPE                                          │
-│  - RENAME COLUMN                                              │
-│  - CREATE INDEX (utan CONCURRENTLY)                          │
-│  - ADD CONSTRAINT (med immediate validation)                  │
-└───────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------+
+|  FARLIGT (lang lock, kraver planering)                        |
++---------------------------------------------------------------+
+|  - ADD COLUMN med NOT NULL utan default                      |
+|  - ALTER COLUMN TYPE                                          |
+|  - RENAME COLUMN                                              |
+|  - CREATE INDEX (utan CONCURRENTLY)                          |
+|  - ADD CONSTRAINT (med immediate validation)                  |
++---------------------------------------------------------------+
 ```
 
 ```sql
@@ -468,18 +468,18 @@ UPDATE servers SET team_id = 1 WHERE team_id IS NULL;
 ALTER TABLE servers ALTER COLUMN team_id SET NOT NULL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Expand-Contract Pattern
 
 For faror operationer som RENAME COLUMN:
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│  1. EXPAND: Lagg till ny kolumn                              │
-│  2. MIGRATE: Kopiera data, dual-write                        │
-│  3. CONTRACT: Ta bort gammal kolumn                          │
-└──────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------+
+|  1. EXPAND: Lagg till ny kolumn                              |
+|  2. MIGRATE: Kopiera data, dual-write                        |
+|  3. CONTRACT: Ta bort gammal kolumn                          |
++--------------------------------------------------------------+
 ```
 
 ```sql
@@ -501,7 +501,7 @@ UPDATE servers SET ip_address = ip WHERE ip_address IS NULL;
 ALTER TABLE servers DROP COLUMN ip;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Index-operationer
 
@@ -520,7 +520,7 @@ CREATE INDEX CONCURRENTLY idx_servers_hostname ON servers(hostname);
 DROP INDEX CONCURRENTLY IF EXISTS idx_servers_hostname;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Migration-verktyg
 
@@ -567,7 +567,7 @@ def downgrade():
     op.drop_table('servers')
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -582,7 +582,7 @@ def downgrade():
 | ALTER COLUMN TYPE | Nej | Lang |
 | ADD NOT NULL | Nej | Kort (kraver data) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -605,7 +605,7 @@ CREATE INDEX CONCURRENTLY idx_logs_timestamp ON logs(timestamp);
 -- Skriv ALLTID bada
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Migration Checklist
 
@@ -630,7 +630,7 @@ POST-DEPLOY:
 [ ] Dokumenterat andringar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -662,7 +662,7 @@ DROP INDEX CONCURRENTLY IF EXISTS idx_deployments_server;
 DROP TABLE IF EXISTS deployments;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -694,46 +694,46 @@ NODE_19_BACKUP = {
 
 Backups ar din forsakring mot katastrofer. En backup du aldrig testat ar inte en backup - det ar falsk trygghet. Testa restore regelbundet!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    BACKUP SCENARIOS                             │
-├─────────────────────────────────────────────────────────────────┤
-│  - Hardvaruhaveri: Disk kraschar                               │
-│  - Manskliga fel: Nagon kor DELETE utan WHERE                  │
-│  - Ransomware: Data krypteras av angripare                     │
-│  - Korruption: Data blir ogiltig                               │
-│  - Compliance: Krav pa databevarande                           │
-├─────────────────────────────────────────────────────────────────┤
-│  UTAN BACKUP: Foretaget stannar, data ar borta for alltid      │
-│  MED BACKUP: Stundtals nedtid, men data aterhamtas             │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    BACKUP SCENARIOS                             |
++-----------------------------------------------------------------+
+|  - Hardvaruhaveri: Disk kraschar                               |
+|  - Manskliga fel: Nagon kor DELETE utan WHERE                  |
+|  - Ransomware: Data krypteras av angripare                     |
+|  - Korruption: Data blir ogiltig                               |
+|  - Compliance: Krav pa databevarande                           |
++-----------------------------------------------------------------+
+|  UTAN BACKUP: Foretaget stannar, data ar borta for alltid      |
+|  MED BACKUP: Stundtals nedtid, men data aterhamtas             |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Backup-typer
 
 ```
-┌─────────────────┬────────────────────────────────────────────────┐
-│ LOGICAL BACKUP  │ SQL-statements eller data-export               │
-│ (pg_dump)       │ + Portabelt mellan versioner                  │
-│                 │ + Kan aterstalla enskilda tabeller            │
-│                 │ - Langsammare backup/restore                  │
-│                 │ - Ingen Point-in-Time Recovery                │
-├─────────────────┼────────────────────────────────────────────────┤
-│ PHYSICAL BACKUP │ Binara datafiler                               │
-│ (pg_basebackup) │ + Snabbare backup/restore                     │
-│                 │ + Stodjer PITR                                │
-│                 │ - Kraver samma PostgreSQL-version             │
-│                 │ - Allt-eller-inget restore                    │
-└─────────────────┴────────────────────────────────────────────────┘
++-----------------+------------------------------------------------+
+| LOGICAL BACKUP  | SQL-statements eller data-export               |
+| (pg_dump)       | + Portabelt mellan versioner                  |
+|                 | + Kan aterstalla enskilda tabeller            |
+|                 | - Langsammare backup/restore                  |
+|                 | - Ingen Point-in-Time Recovery                |
++-----------------+------------------------------------------------+
+| PHYSICAL BACKUP | Binara datafiler                               |
+| (pg_basebackup) | + Snabbare backup/restore                     |
+|                 | + Stodjer PITR                                |
+|                 | - Kraver samma PostgreSQL-version             |
+|                 | - Allt-eller-inget restore                    |
++-----------------+------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## pg_dump - Logical Backup
 
@@ -760,7 +760,7 @@ pg_dump -t servers -t deployments mydb > tables.sql
 pg_dump --exclude-table='logs*' mydb > backup_no_logs.sql
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## pg_restore - Aterstallning
 
@@ -785,7 +785,7 @@ pg_restore -l backup.dump
 psql -d mydb -f backup.sql
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## pg_dumpall - Alla databaser
 
@@ -803,7 +803,7 @@ pg_dumpall --tablespaces-only > tablespaces.sql
 psql -f full_cluster.sql postgres
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## pg_basebackup - Physical Backup
 
@@ -826,7 +826,7 @@ pg_basebackup -h localhost -U replication_user \
 # -P = visa progress
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Point-in-Time Recovery (PITR)
 
@@ -856,7 +856,7 @@ PITR ar kritiskt for att aterstalla fran "oops"-moment:
 - DROP TABLE
 - Bad migration
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Backup-script
 
@@ -890,7 +890,7 @@ else
 fi
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Testa Backup (KRITISKT!)
 
@@ -919,7 +919,7 @@ dropdb test_restore
 
 REGEL: Testa restore minst en gang per manad!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Cloud Backup
 
@@ -941,7 +941,7 @@ pg_dump -Fc mydb | az storage blob upload --data @- \
     --container backups --name db_$(date +%Y%m%d).dump
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -953,7 +953,7 @@ pg_dump -Fc mydb | az storage blob upload --data @- \
 | pg_basebackup | Snabb | Stor | Ja | Lag |
 | WAL Archiving | N/A | Medium | Ja | N/A |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -982,7 +982,7 @@ archive_mode = on
 archive_command = 'cp %p /archive/%f'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Backup Checklist
 
@@ -1003,7 +1003,7 @@ MANATLIGEN:
 [ ] Dokumentera RTO/RPO (Recovery Time/Point Objective)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1035,23 +1035,23 @@ NODE_20_MONITORING = {
 
 Monitoring ger dig insikt i databashalsan. Utan monitoring ser du problemen forst nar anvandare klagar - da ar det ofta for sent.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MONITORING BENEFITS                          │
-├─────────────────────────────────────────────────────────────────┤
-│  - Upptack problem INNAN anvandare marker                      │
-│  - Kapacitetsplanering: nar behover vi skala?                  │
-│  - Prestandaanalys: vilka queries ar langsamma?                │
-│  - Sakerhet: upptack onormala monster                          │
-│  - Postmortem: forsta vad som hande vid incident               │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MONITORING BENEFITS                          |
++-----------------------------------------------------------------+
+|  - Upptack problem INNAN anvandare marker                      |
+|  - Kapacitetsplanering: nar behover vi skala?                  |
+|  - Prestandaanalys: vilka queries ar langsamma?                |
+|  - Sakerhet: upptack onormala monster                          |
+|  - Postmortem: forsta vad som hande vid incident               |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Nyckelmetriker
 
@@ -1090,7 +1090,7 @@ ORDER BY pg_total_relation_size(relid) DESC
 LIMIT 20;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## pg_stat_statements - Query Analysis
 
@@ -1123,7 +1123,7 @@ LIMIT 20;
 SELECT pg_stat_statements_reset();
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Lock Monitoring
 
@@ -1162,7 +1162,7 @@ WHERE state != 'idle'
 ORDER BY query_start;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Index Health
 
@@ -1199,7 +1199,7 @@ ORDER BY pg_relation_size(indexrelid) DESC
 LIMIT 20;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Table Health
 
@@ -1230,7 +1230,7 @@ WHERE (last_vacuum IS NULL OR last_vacuum < now() - interval '7 days')
 ORDER BY n_dead_tup DESC;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Connection Pooling (PgBouncer)
 
@@ -1261,7 +1261,7 @@ Pool modes:
 - **transaction**: En connection per transaktion (rekommenderat)
 - **statement**: En connection per statement (mest aggressiv)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## PostgreSQL Configuration
 
@@ -1296,7 +1296,7 @@ autovacuum_vacuum_scale_factor = 0.1
 autovacuum_analyze_scale_factor = 0.05
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Maintenance
 
@@ -1322,7 +1322,7 @@ REINDEX INDEX CONCURRENTLY idx_servers_status;  -- Utan lock
 CLUSTER servers USING idx_servers_created;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens - Alertgranser
 
@@ -1335,7 +1335,7 @@ CLUSTER servers USING idx_servers_created;
 | Dead tuples | 10% av live | 25% av live |
 | Cache hit ratio | < 95% | < 90% |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Monitoring Checklist
 
@@ -1364,7 +1364,7 @@ MANATLIGEN:
 [ ] Uppdatera dokumentation
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning - Monitoring Query
 
@@ -1384,7 +1384,7 @@ WITH stats AS (
 SELECT * FROM stats;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1401,7 +1401,7 @@ Kom ihag:
 - Testa backup restore - inte bara att backup kor
 - Dokumentera din monitoring-setup och eskaleringsprocess
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 GRATTIS! Du har slutfort SQL SkillsMap!
 

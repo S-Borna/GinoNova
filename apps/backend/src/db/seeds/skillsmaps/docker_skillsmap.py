@@ -1,6 +1,6 @@
 # =============================================================================
 # DOCKER SKILLSMAP - 20 NODER
-# Akhilesh Pedagogical Style: Intro → Koncept → Kommandon → Tips → Task
+# Akhilesh Pedagogical Style: Intro -> Koncept -> Kommandon -> Tips -> Task
 # =============================================================================
 
 DOCKER_SKILLSMAP_INFO = {
@@ -73,15 +73,15 @@ docker rm <id>
 ## Container vs VM
 
 ```
-┌─────────────────────────────────────┐
-│           Containers                │
-├─────────┬─────────┬─────────────────┤
-│  App A  │  App B  │     App C       │
-├─────────┴─────────┴─────────────────┤
-│           Docker Engine             │
-├─────────────────────────────────────┤
-│           Host OS (Linux)           │
-└─────────────────────────────────────┘
++-------------------------------------+
+|           Containers                |
++---------+---------+-----------------+
+|  App A  |  App B  |     App C       |
++---------+---------+-----------------+
+|           Docker Engine             |
++-------------------------------------+
+|           Host OS (Linux)           |
++-------------------------------------+
 ```
 
 **Nästa steg:** Node 2 - Docker Images
@@ -125,7 +125,7 @@ docker inspect python:3.11
 registry/repository:tag
 
 docker.io/library/python:3.11-slim
-└──────┘ └──────┘ └────┘ └────────┘
++------+ +------+ +----+ +--------+
 registry  org     image    tag
 ```
 
@@ -259,7 +259,7 @@ Förstå containers livscykel.
 ## Lifecycle States
 
 ```
-Created → Running → Paused → Stopped → Removed
+Created -> Running -> Paused -> Stopped -> Removed
 ```
 
 ## Hantera Containers

@@ -17,37 +17,37 @@ NODE_11 = {
 ## Workspace Fundamentals
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM WORKSPACES                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  Workspaces = Separate state files for same configuration              │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │              SAME TERRAFORM CODE                                 │   │
-│  │              (main.tf, variables.tf, etc.)                      │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                              │                                          │
-│           ┌──────────────────┼──────────────────┐                      │
-│           │                  │                  │                      │
-│           ▼                  ▼                  ▼                      │
-│   ┌───────────────┐  ┌───────────────┐  ┌───────────────┐             │
-│   │   WORKSPACE   │  │   WORKSPACE   │  │   WORKSPACE   │             │
-│   │     "dev"     │  │   "staging"   │  │    "prod"     │             │
-│   ├───────────────┤  ├───────────────┤  ├───────────────┤             │
-│   │  State: dev   │  │State: staging │  │ State: prod   │             │
-│   │  Resources:   │  │  Resources:   │  │  Resources:   │             │
-│   │  - 1 instance │  │  - 2 instances│  │  - 5 instances│             │
-│   │  - t3.micro   │  │  - t3.small   │  │  - t3.large   │             │
-│   └───────────────┘  └───────────────┘  └───────────────┘             │
-│                                                                         │
-│  USE CASES:                                                            │
-│  • Multiple environments (dev/staging/prod)                            │
-│  • Feature branches                                                    │
-│  • Blue/Green deployments                                              │
-│  • Multi-tenant infrastructure                                         │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM WORKSPACES                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  Workspaces = Separate state files for same configuration              |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |              SAME TERRAFORM CODE                                 |   |
+|  |              (main.tf, variables.tf, etc.)                      |   |
+|  +-----------------------------------------------------------------+   |
+|                              |                                          |
+|           +------------------+------------------+                      |
+|           |                  |                  |                      |
+|           ▼                  ▼                  ▼                      |
+|   +---------------+  +---------------+  +---------------+             |
+|   |   WORKSPACE   |  |   WORKSPACE   |  |   WORKSPACE   |             |
+|   |     "dev"     |  |   "staging"   |  |    "prod"     |             |
+|   +---------------+  +---------------+  +---------------+             |
+|   |  State: dev   |  |State: staging |  | State: prod   |             |
+|   |  Resources:   |  |  Resources:   |  |  Resources:   |             |
+|   |  - 1 instance |  |  - 2 instances|  |  - 5 instances|             |
+|   |  - t3.micro   |  |  - t3.small   |  |  - t3.large   |             |
+|   +---------------+  +---------------+  +---------------+             |
+|                                                                         |
+|  USE CASES:                                                            |
+|  • Multiple environments (dev/staging/prod)                            |
+|  • Feature branches                                                    |
+|  • Blue/Green deployments                                              |
+|  • Multi-tenant infrastructure                                         |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -172,12 +172,12 @@ resource "aws_cloudfront_distribution" "cdn" {
 
 ```
 terraform.tfstate.d/
-├── dev/
-│   └── terraform.tfstate
-├── staging/
-│   └── terraform.tfstate
-└── prod/
-    └── terraform.tfstate
++-- dev/
+|   +-- terraform.tfstate
++-- staging/
+|   +-- terraform.tfstate
++-- prod/
+    +-- terraform.tfstate
 ```
 
 ### S3 Backend with Workspaces
@@ -224,40 +224,40 @@ terraform {
 ## Workspaces vs Directory Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│           WORKSPACES vs DIRECTORY STRUCTURE                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  WORKSPACES                           DIRECTORIES                       │
-│  ──────────                           ───────────                       │
-│                                                                         │
-│  project/                             infrastructure/                   │
-│  ├── main.tf                          ├── modules/                      │
-│  ├── variables.tf                     │   └── vpc/                      │
-│  └── (workspaces: dev,staging,prod)   ├── environments/                 │
-│                                        │   ├── dev/                      │
-│                                        │   │   └── main.tf              │
-│                                        │   ├── staging/                  │
-│                                        │   │   └── main.tf              │
-│                                        │   └── prod/                     │
-│                                        │       └── main.tf              │
-│                                                                         │
-│  PROS:                                PROS:                             │
-│  ✓ Same code for all envs            ✓ Full isolation                  │
-│  ✓ Easy to switch                    ✓ Different configs possible      │
-│  ✓ Less duplication                  ✓ Independent deployments         │
-│                                                                         │
-│  CONS:                                CONS:                             │
-│  ✗ Easy to apply to wrong env        ✗ Code duplication               │
-│  ✗ Must use conditionals             ✗ Harder to keep in sync          │
-│  ✗ Less isolation                    ✗ More files to maintain          │
-│                                                                         │
-│  USE WHEN:                            USE WHEN:                         │
-│  • Same code, different sizes        • Very different configs          │
-│  • Feature branches                   • Production vs non-prod split    │
-│  • Quick environment switching       • Compliance requirements          │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|           WORKSPACES vs DIRECTORY STRUCTURE                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  WORKSPACES                           DIRECTORIES                       |
+|  ----------                           -----------                       |
+|                                                                         |
+|  project/                             infrastructure/                   |
+|  +-- main.tf                          +-- modules/                      |
+|  +-- variables.tf                     |   +-- vpc/                      |
+|  +-- (workspaces: dev,staging,prod)   +-- environments/                 |
+|                                        |   +-- dev/                      |
+|                                        |   |   +-- main.tf              |
+|                                        |   +-- staging/                  |
+|                                        |   |   +-- main.tf              |
+|                                        |   +-- prod/                     |
+|                                        |       +-- main.tf              |
+|                                                                         |
+|  PROS:                                PROS:                             |
+|  ✓ Same code for all envs            ✓ Full isolation                  |
+|  ✓ Easy to switch                    ✓ Different configs possible      |
+|  ✓ Less duplication                  ✓ Independent deployments         |
+|                                                                         |
+|  CONS:                                CONS:                             |
+|  ✗ Easy to apply to wrong env        ✗ Code duplication               |
+|  ✗ Must use conditionals             ✗ Harder to keep in sync          |
+|  ✗ Less isolation                    ✗ More files to maintain          |
+|                                                                         |
+|  USE WHEN:                            USE WHEN:                         |
+|  • Same code, different sizes        • Very different configs          |
+|  • Feature branches                   • Production vs non-prod split    |
+|  • Quick environment switching       • Compliance requirements          |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -451,7 +451,7 @@ locals {
 
 ---
 
-**Nästa Node:** Provisioners & Null Resources →
+**Nästa Node:** Provisioners & Null Resources ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 60,
@@ -477,35 +477,35 @@ NODE_12 = {
 ## Provisioner Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM PROVISIONERS                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ⚠️  PROVISIONERS ARE A LAST RESORT!                                   │
-│                                                                         │
-│  Better alternatives:                                                  │
-│  • cloud-init / user_data for EC2                                      │
-│  • Packer for immutable images                                         │
-│  • Configuration management (Ansible, Chef, Puppet)                    │
-│  • Container orchestration (Kubernetes)                                │
-│                                                                         │
-│  USE PROVISIONERS WHEN:                                                │
-│  • No other option exists                                              │
-│  • Quick bootstrap needed                                              │
-│  • Running local scripts on apply/destroy                              │
-│                                                                         │
-│  PROVISIONER TYPES                                                     │
-│  ─────────────────                                                     │
-│                                                                         │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐        │
-│  │   local-exec    │  │   remote-exec   │  │      file       │        │
-│  │   ───────────   │  │   ────────────  │  │   ────────      │        │
-│  │ Runs on machine │  │ Runs on remote  │  │ Copy files to   │        │
-│  │ where Terraform │  │ resource (SSH/  │  │ remote machine  │        │
-│  │ is executed     │  │ WinRM)          │  │                 │        │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM PROVISIONERS                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ⚠️  PROVISIONERS ARE A LAST RESORT!                                   |
+|                                                                         |
+|  Better alternatives:                                                  |
+|  • cloud-init / user_data for EC2                                      |
+|  • Packer for immutable images                                         |
+|  • Configuration management (Ansible, Chef, Puppet)                    |
+|  • Container orchestration (Kubernetes)                                |
+|                                                                         |
+|  USE PROVISIONERS WHEN:                                                |
+|  • No other option exists                                              |
+|  • Quick bootstrap needed                                              |
+|  • Running local scripts on apply/destroy                              |
+|                                                                         |
+|  PROVISIONER TYPES                                                     |
+|  -----------------                                                     |
+|                                                                         |
+|  +-----------------+  +-----------------+  +-----------------+        |
+|  |   local-exec    |  |   remote-exec   |  |      file       |        |
+|  |   -----------   |  |   ------------  |  |   --------      |        |
+|  | Runs on machine |  | Runs on remote  |  | Copy files to   |        |
+|  | where Terraform |  | resource (SSH/  |  | remote machine  |        |
+|  | is executed     |  | WinRM)          |  |                 |        |
+|  +-----------------+  +-----------------+  +-----------------+        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -969,33 +969,33 @@ resource "aws_instance" "web" {
 ## Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    PROVISIONER BEST PRACTICES                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. USE PROVISIONERS AS LAST RESORT                                    │
-│     • Prefer cloud-init, Packer, Ansible                               │
-│     • Provisioners break the declarative model                         │
-│                                                                         │
-│  2. MAKE PROVISIONERS IDEMPOTENT                                       │
-│     • Running twice should produce same result                         │
-│     • Use checksums and conditions                                     │
-│                                                                         │
-│  3. HANDLE FAILURES GRACEFULLY                                         │
-│     • Use on_failure = continue when appropriate                       │
-│     • Log errors for debugging                                         │
-│                                                                         │
-│  4. AVOID REMOTE-EXEC WHEN POSSIBLE                                    │
-│     • Requires network connectivity                                    │
-│     • SSH key management complexity                                    │
-│     • Prefer local-exec with Ansible                                   │
-│                                                                         │
-│  5. USE NULL_RESOURCE FOR ORCHESTRATION                                │
-│     • Trigger external workflows                                       │
-│     • Chain dependencies                                               │
-│     • Run cleanup on destroy                                           │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    PROVISIONER BEST PRACTICES                           |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. USE PROVISIONERS AS LAST RESORT                                    |
+|     • Prefer cloud-init, Packer, Ansible                               |
+|     • Provisioners break the declarative model                         |
+|                                                                         |
+|  2. MAKE PROVISIONERS IDEMPOTENT                                       |
+|     • Running twice should produce same result                         |
+|     • Use checksums and conditions                                     |
+|                                                                         |
+|  3. HANDLE FAILURES GRACEFULLY                                         |
+|     • Use on_failure = continue when appropriate                       |
+|     • Log errors for debugging                                         |
+|                                                                         |
+|  4. AVOID REMOTE-EXEC WHEN POSSIBLE                                    |
+|     • Requires network connectivity                                    |
+|     • SSH key management complexity                                    |
+|     • Prefer local-exec with Ansible                                   |
+|                                                                         |
+|  5. USE NULL_RESOURCE FOR ORCHESTRATION                                |
+|     • Trigger external workflows                                       |
+|     • Chain dependencies                                               |
+|     • Run cleanup on destroy                                           |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1048,7 +1048,7 @@ resource "null_resource" "verify" {
 
 ---
 
-**Nästa Node:** Terraform CI/CD Pipeline →
+**Nästa Node:** Terraform CI/CD Pipeline ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 60,

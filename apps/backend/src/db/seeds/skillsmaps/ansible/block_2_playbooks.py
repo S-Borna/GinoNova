@@ -23,23 +23,23 @@ Ansible har över **3000 moduler** för allt från att installera paket till att
 ## Task Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          TASK STRUKTUR                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  - name: Install nginx                    ← BESKRIVNING (viktigt!)      │
-│    apt:                                   ← MODUL                       │
-│      name: nginx                          ← MODUL-PARAMETER             │
-│      state: present                       ← MODUL-PARAMETER             │
-│    become: true                           ← TASK KEYWORD                │
-│    when: ansible_os_family == "Debian"    ← VILLKOR                     │
-│    tags:                                  ← TAGGAR                      │
-│      - packages                                                         │
-│      - nginx                                                            │
-│    register: nginx_install                ← SPARA RESULTAT              │
-│    notify: Restart nginx                  ← TRIGGA HANDLER              │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                          TASK STRUKTUR                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  - name: Install nginx                    <- BESKRIVNING (viktigt!)      |
+|    apt:                                   <- MODUL                       |
+|      name: nginx                          <- MODUL-PARAMETER             |
+|      state: present                       <- MODUL-PARAMETER             |
+|    become: true                           <- TASK KEYWORD                |
+|    when: ansible_os_family == "Debian"    <- VILLKOR                     |
+|    tags:                                  <- TAGGAR                      |
+|      - packages                                                         |
+|      - nginx                                                            |
+|    register: nginx_install                <- SPARA RESULTAT              |
+|    notify: Restart nginx                  <- TRIGGA HANDLER              |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -381,29 +381,29 @@ http {
 ### När ska du använda vad?
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    COMMAND vs SHELL vs RAW                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  COMMAND (säkrast)                                                      │
-│  ├── Kör utan shell                                                     │
-│  ├── Ingen pipe/redirect                                                │
-│  └── Ingen env vars expansion                                           │
-│                                                                         │
-│  SHELL (flexibelt)                                                      │
-│  ├── Full shell (/bin/sh)                                              │
-│  ├── Pipes, redirects                                                   │
-│  └── Variabel expansion                                                 │
-│                                                                         │
-│  RAW (minimalt)                                                         │
-│  ├── Ingen Python krävs på target                                       │
-│  └── Bootstrap-situationer                                              │
-│                                                                         │
-│  SCRIPT (skicka och kör)                                               │
-│  ├── Kopiera lokalt script                                             │
-│  └── Kör på remote                                                      │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    COMMAND vs SHELL vs RAW                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  COMMAND (säkrast)                                                      |
+|  +-- Kör utan shell                                                     |
+|  +-- Ingen pipe/redirect                                                |
+|  +-- Ingen env vars expansion                                           |
+|                                                                         |
+|  SHELL (flexibelt)                                                      |
+|  +-- Full shell (/bin/sh)                                              |
+|  +-- Pipes, redirects                                                   |
+|  +-- Variabel expansion                                                 |
+|                                                                         |
+|  RAW (minimalt)                                                         |
+|  +-- Ingen Python krävs på target                                       |
+|  +-- Bootstrap-situationer                                              |
+|                                                                         |
+|  SCRIPT (skicka och kör)                                               |
+|  +-- Kopiera lokalt script                                             |
+|  +-- Kör på remote                                                      |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ```yaml
@@ -626,30 +626,30 @@ Tänk dig: Du har samma applikation som ska köras i 3 miljöer med olika databa
 ## Variable Typer och Scope
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      VARIABLE PRECEDENCE                                │
-│                    (Lägst till Högst Prioritet)                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1.  role defaults              roles/x/defaults/main.yml               │
-│  2.  inventory file vars        [group:vars] i inventory                │
-│  3.  inventory group_vars/all   group_vars/all.yml                      │
-│  4.  inventory group_vars/*     group_vars/webservers.yml               │
-│  5.  inventory host_vars/*      host_vars/web01.yml                     │
-│  6.  play vars                  vars: i playbook                        │
-│  7.  play vars_prompt           interaktiv input                        │
-│  8.  play vars_files            vars_files: [vars.yml]                  │
-│  9.  role vars                  roles/x/vars/main.yml                   │
-│  10. block vars                 vars: i block                           │
-│  11. task vars                  vars: i task                            │
-│  12. include_vars               dynamiskt inkluderade                   │
-│  13. set_facts/registered       runtime-genererade                      │
-│  14. extra vars (-e)            HÖGST PRIORITET                         │
-│                                                                         │
-│  REGEL: Mer specifik = högre prioritet                                  │
-│  REGEL: -e överskriver ALLT                                            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      VARIABLE PRECEDENCE                                |
+|                    (Lägst till Högst Prioritet)                         |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1.  role defaults              roles/x/defaults/main.yml               |
+|  2.  inventory file vars        [group:vars] i inventory                |
+|  3.  inventory group_vars/all   group_vars/all.yml                      |
+|  4.  inventory group_vars/*     group_vars/webservers.yml               |
+|  5.  inventory host_vars/*      host_vars/web01.yml                     |
+|  6.  play vars                  vars: i playbook                        |
+|  7.  play vars_prompt           interaktiv input                        |
+|  8.  play vars_files            vars_files: [vars.yml]                  |
+|  9.  role vars                  roles/x/vars/main.yml                   |
+|  10. block vars                 vars: i block                           |
+|  11. task vars                  vars: i task                            |
+|  12. include_vars               dynamiskt inkluderade                   |
+|  13. set_facts/registered       runtime-genererade                      |
+|  14. extra vars (-e)            HÖGST PRIORITET                         |
+|                                                                         |
+|  REGEL: Mer specifik = högre prioritet                                  |
+|  REGEL: -e överskriver ALLT                                            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -724,17 +724,17 @@ api_key: abc123xyz
 
 ```
 project/
-├── inventory.yml
-├── group_vars/
-│   ├── all.yml                 # Gäller ALLA hosts
-│   ├── webservers.yml          # Gäller webservers-gruppen
-│   ├── databases.yml           # Gäller databases-gruppen
-│   └── production/             # Directory = samma som fil
-│       ├── vars.yml
-│       └── vault.yml           # Krypterade secrets
-└── host_vars/
-    ├── web01.yml               # Endast för web01
-    └── db01.yml                # Endast för db01
++-- inventory.yml
++-- group_vars/
+|   +-- all.yml                 # Gäller ALLA hosts
+|   +-- webservers.yml          # Gäller webservers-gruppen
+|   +-- databases.yml           # Gäller databases-gruppen
+|   +-- production/             # Directory = samma som fil
+|       +-- vars.yml
+|       +-- vault.yml           # Krypterade secrets
++-- host_vars/
+    +-- web01.yml               # Endast för web01
+    +-- db01.yml                # Endast för db01
 ```
 
 ```yaml
@@ -1120,31 +1120,31 @@ Med handlers: Ansible vet när config ändrades och restartar automatiskt — me
 ## Handler Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        HANDLER FLOW                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   TASK 1: Copy nginx.conf                                              │
-│   ├── Result: CHANGED ✓                                                │
-│   └── notify: "Restart nginx"  ────────────────────────┐               │
-│                                                         │               │
-│   TASK 2: Copy site config                              │               │
-│   ├── Result: OK (no change)                            │               │
-│   └── notify: "Restart nginx" (inte triggrad)           │               │
-│                                                         │               │
-│   TASK 3: Copy SSL cert                                 │               │
-│   ├── Result: CHANGED ✓                                │               │
-│   └── notify: "Restart nginx"  ─────────────────────────┤               │
-│                                                         │               │
-│   ════════════════════════════════════════════════════════              │
-│                    END OF PLAY                          │               │
-│   ════════════════════════════════════════════════════════              │
-│                                                         │               │
-│   HANDLERS RUN:                                         │               │
-│   └── "Restart nginx" ◄────────────────────────────────┘               │
-│       (körs EN gång, även om notified flera gånger)                    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        HANDLER FLOW                                     |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   TASK 1: Copy nginx.conf                                              |
+|   +-- Result: CHANGED ✓                                                |
+|   +-- notify: "Restart nginx"  ------------------------+               |
+|                                                         |               |
+|   TASK 2: Copy site config                              |               |
+|   +-- Result: OK (no change)                            |               |
+|   +-- notify: "Restart nginx" (inte triggrad)           |               |
+|                                                         |               |
+|   TASK 3: Copy SSL cert                                 |               |
+|   +-- Result: CHANGED ✓                                |               |
+|   +-- notify: "Restart nginx"  -------------------------+               |
+|                                                         |               |
+|   ════════════════════════════════════════════════════════              |
+|                    END OF PLAY                          |               |
+|   ════════════════════════════════════════════════════════              |
+|                                                         |               |
+|   HANDLERS RUN:                                         |               |
+|   +-- "Restart nginx" ◄--------------------------------+               |
+|       (körs EN gång, även om notified flera gånger)                    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 **Viktiga regler:**
@@ -1169,14 +1169,14 @@ Med handlers: Ansible vet när config ändrades och restartar automatiskt — me
         src: nginx.conf.j2
         dest: /etc/nginx/nginx.conf
         mode: '0644'
-      notify: Restart nginx      # ← Notify handler
+      notify: Restart nginx      # <- Notify handler
 
     - name: Copy site configuration
       template:
         src: site.conf.j2
         dest: /etc/nginx/sites-available/mysite
         mode: '0644'
-      notify: Reload nginx       # ← Annan handler (reload räcker)
+      notify: Reload nginx       # <- Annan handler (reload räcker)
 
     - name: Enable site
       file:
@@ -1185,7 +1185,7 @@ Med handlers: Ansible vet när config ändrades och restartar automatiskt — me
         state: link
       notify: Reload nginx
 
-  handlers:                       # ← Definieras i slutet
+  handlers:                       # <- Definieras i slutet
     - name: Restart nginx
       service:
         name: nginx
@@ -1393,13 +1393,13 @@ handlers:
 
 ```
 roles/
-└── nginx/
-    ├── tasks/
-    │   └── main.yml
-    ├── handlers/
-    │   └── main.yml      ← Handlers definieras här
-    └── templates/
-        └── nginx.conf.j2
++-- nginx/
+    +-- tasks/
+    |   +-- main.yml
+    +-- handlers/
+    |   +-- main.yml      <- Handlers definieras här
+    +-- templates/
+        +-- nginx.conf.j2
 ```
 
 ```yaml

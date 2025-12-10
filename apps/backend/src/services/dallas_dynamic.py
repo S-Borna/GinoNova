@@ -156,7 +156,7 @@ def generate_module_response(module_info: Dict[str, Any]) -> str:
         if len(topics) > 8:
             response += f"• ...och {len(topics) - 8} till!\n"
 
-    response += f"\nGå till: **SkillsMaps → {name}** eller sök på '{slug}' i Camp DevOps."
+    response += f"\nGå till: **SkillsMaps -> {name}** eller sök på '{slug}' i Camp DevOps."
 
     return response
 
@@ -220,9 +220,9 @@ Perfekt för djupinlärning av ett ämne!"""
         ["hur får jag xp", "vad är xp", "poängsystem"],
         """**XP-systemet** belönar ditt lärande!
 
-• Slutför tasks → Få XP
-• Svara rätt på quiz → Bonus XP
-• Håll streaks → Extra belöningar
+• Slutför tasks -> Få XP
+• Svara rätt på quiz -> Bonus XP
+• Håll streaks -> Extra belöningar
 
 Se din progress på Dashboard!"""
     ),
@@ -246,24 +246,24 @@ Ställ en fråga så guidar jag dig rätt!"""
         """Välkommen! 🎉 Här är tips baserat på din inriktning:
 
 **DevOps/Infra:**
-1. Linux Mastery → Grunden
-2. Docker → Containers
-3. Kubernetes → Orchestration
-4. CI/CD → Automation
+1. Linux Mastery -> Grunden
+2. Docker -> Containers
+3. Kubernetes -> Orchestration
+4. CI/CD -> Automation
 
 **Backend-utvecklare:**
-1. Python/Node.js/Go → Välj ett språk
-2. SQL → Databaser
-3. System Design → Arkitektur
+1. Python/Node.js/Go -> Välj ett språk
+2. SQL -> Databaser
+3. System Design -> Arkitektur
 
 **Frontend/Fullstack:**
-1. JavaScript/TypeScript → Grund
-2. React/Next.js → Framework
-3. Node.js → Backend basics
+1. JavaScript/TypeScript -> Grund
+2. React/Next.js -> Framework
+3. Node.js -> Backend basics
 
 **Cloud:**
-1. AWS eller Azure → Välj en
-2. Terraform → Infrastructure as Code
+1. AWS eller Azure -> Välj en
+2. Terraform -> Infrastructure as Code
 
 Gå till **Camp** och välj din första modul!"""
     ),

@@ -39,16 +39,16 @@ LINUX_NODE_7_PIPES_V2 = {
                         "title": "Redirection Operators",
                         "explanation": "> (stdout till fil), >> (append), 2> (stderr), &> (båda), < (input från fil), | (pipe till nästa kommando).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ REDIRECTION                                 │
-├─────────────────────────────────────────────┤
-│ cmd > file   │ stdout till fil (överskriver)│
-│ cmd >> file  │ stdout append till fil       │
-│ cmd 2> file  │ stderr till fil              │
-│ cmd &> file  │ stdout + stderr till fil     │
-│ cmd < file   │ stdin från fil               │
-│ cmd1 | cmd2  │ stdout → stdin (pipe)        │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| REDIRECTION                                 |
++---------------------------------------------+
+| cmd > file   | stdout till fil (överskriver)|
+| cmd >> file  | stdout append till fil       |
+| cmd 2> file  | stderr till fil              |
+| cmd &> file  | stdout + stderr till fil     |
+| cmd < file   | stdin från fil               |
+| cmd1 | cmd2  | stdout -> stdin (pipe)        |
++---------------------------------------------+""",
                         "pro_tip": "2>&1 redirectar stderr till samma ställe som stdout.",
                         "common_mistake": "sudo echo 'text' > /etc/file fungerar inte! Använd: echo 'text' | sudo tee /etc/file"
                     },
@@ -56,16 +56,16 @@ LINUX_NODE_7_PIPES_V2 = {
                         "title": "tee & xargs",
                         "explanation": "tee skriver till fil OCH stdout (split stream). xargs bygger kommandon från stdin (t.ex. find | xargs rm).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ TEE - Split output                          │
-│ cmd | tee file | cmd2                       │
-│       ↓     ↓                               │
-│      file  cmd2                             │
-├─────────────────────────────────────────────┤
-│ XARGS - Build commands                      │
-│ find . -name "*.log" | xargs rm             │
-│ (kör: rm file1.log file2.log ...)          │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| TEE - Split output                          |
+| cmd | tee file | cmd2                       |
+|       ↓     ↓                               |
+|      file  cmd2                             |
++---------------------------------------------+
+| XARGS - Build commands                      |
+| find . -name "*.log" | xargs rm             |
+| (kör: rm file1.log file2.log ...)          |
++---------------------------------------------+""",
                         "pro_tip": "xargs -I {} låter dig placera argumentet var som helst: xargs -I {} mv {} {}.bak",
                         "common_mistake": "Spaces i filnamn kraschar xargs. Använd find -print0 | xargs -0"
                     }

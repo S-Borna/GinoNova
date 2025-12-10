@@ -18,28 +18,28 @@ BLOCK_2_NODES = [
         "prerequisites": ["mlops-cloud"],
         "content": """# Data Pipelines for ML
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Data Pipelines?
 
 Data pipelines ar automatiserade arbetsfloden som extraherar, transformerar och laddar data for ML-traning och inferens.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      ML Data Pipeline                            │
-│                                                                  │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐     │
-│  │ Sources  │ -> │ Ingest   │ -> │Transform │ -> │ Feature  │     │
-│  │          │   │          │   │          │   │ Store    │     │
-│  └──────────┘   └──────────┘   └──────────┘   └──────────┘     │
-│       │              │              │              │            │
-│   Databases      Kafka/         Spark/          Online/        │
-│   APIs           Airflow        dbt             Offline        │
-│   Files                                                         │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      ML Data Pipeline                            |
+|                                                                  |
+|  +----------+   +----------+   +----------+   +----------+     |
+|  | Sources  | -> | Ingest   | -> |Transform | -> | Feature  |     |
+|  |          |   |          |   |          |   | Store    |     |
+|  +----------+   +----------+   +----------+   +----------+     |
+|       |              |              |              |            |
+|   Databases      Kafka/         Spark/          Online/        |
+|   APIs           Airflow        dbt             Offline        |
+|   Files                                                         |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -50,7 +50,7 @@ Data pipelines ar automatiserade arbetsfloden som extraherar, transformerar och 
 | Skalbarhet | Hanterar stora datavolymer |
 | Kvalitet | Inbyggd datavalidering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -62,7 +62,7 @@ Data pipelines ar automatiserade arbetsfloden som extraherar, transformerar och 
 | dbt | SQL-baserad transformation |
 | Kafka | Streaming data |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Apache Airflow
 
@@ -128,7 +128,7 @@ with DAG(
     extract >> validate >> train
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Prefect (Modern Alternative)
 
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     ml_pipeline(date="2024-01-15")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Apache Spark for Stora Dataset
 
@@ -200,7 +200,7 @@ model = pipeline.fit(train_df)
 model.write().overwrite().save("s3://bucket/models/fraud_detector")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -211,7 +211,7 @@ model.write().overwrite().save("s3://bucket/models/fraud_detector")
 | Memory overflow | Ineffektiv kod | Anvand chunking eller Spark |
 | Inkonsistent data | Saknar validering | Implementera Great Expectations |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -243,31 +243,31 @@ model.write().overwrite().save("s3://bucket/models/fraud_detector")
         "prerequisites": ["mlops-data-pipelines"],
         "content": """# Feature Stores
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en Feature Store?
 
 En feature store ar en centraliserad plattform for att lagra, hantera och servera ML-features for bade traning och inferens.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│              ┌─────────────────┐                        │
-│              │  Feature Store  │                        │
-│              │  ┌───────────┐  │                        │
-│              │  │ Offline   │  │ <- Training            │
-│              │  │ Store     │  │                        │
-│              │  └───────────┘  │                        │
-│              │  ┌───────────┐  │                        │
-│              │  │ Online    │  │ <- Serving (low latency)│
-│              │  │ Store     │  │                        │
-│              │  └───────────┘  │                        │
-│              └─────────────────┘                        │
-│                     │                                   │
-│  Samma features for traning och serving!                │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              +-----------------+                        |
+|              |  Feature Store  |                        |
+|              |  +-----------+  |                        |
+|              |  | Offline   |  | <- Training            |
+|              |  | Store     |  |                        |
+|              |  +-----------+  |                        |
+|              |  +-----------+  |                        |
+|              |  | Online    |  | <- Serving (low latency)|
+|              |  | Store     |  |                        |
+|              |  +-----------+  |                        |
+|              +-----------------+                        |
+|                     |                                   |
+|  Samma features for traning och serving!                |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -278,7 +278,7 @@ En feature store ar en centraliserad plattform for att lagra, hantera och server
 | Tidsbesparing | Undvik duplicerat feature engineering |
 | Point-in-time | Korrekt historisk data for traning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -289,7 +289,7 @@ En feature store ar en centraliserad plattform for att lagra, hantera och server
 | Hopsworks | Full ML platform |
 | AWS SageMaker FS | Managed AWS service |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Feast - Open Source Feature Store
 
@@ -340,7 +340,7 @@ feast apply
 feast materialize-incremental $(date +%Y-%m-%dT%H:%M:%S)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Training Data Retrieval
 
@@ -368,7 +368,7 @@ training_df = store.get_historical_features(
 print(training_df)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Online Serving
 
@@ -389,7 +389,7 @@ feature_vector = store.get_online_features(
 print(feature_vector)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Feature Engineering Patterns
 
@@ -409,7 +409,7 @@ def compute_time_window_features(
     return df
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -420,7 +420,7 @@ def compute_time_window_features(
 | Stale features | Ej uppdaterade | Implementera materialization schedule |
 | Slow online serving | Komplex berakning | Forberakna och cacha |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -452,37 +452,37 @@ def compute_time_window_features(
         "prerequisites": ["mlops-feature-stores"],
         "content": """# Data Lakes och Warehouses for ML
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar skillnaden?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   DATA LAKE                                      │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  Schema-on-Read                                          │    │
-│  │  JSON, CSV, Parquet, Images, Video                       │    │
-│  │  Raw, unprocessed, any format                           │    │
-│  │  Perfekt for ML exploration!                            │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│                   DATA WAREHOUSE                                 │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  Schema-on-Write                                         │    │
-│  │  Structured Tables with defined schemas                  │    │
-│  │  Optimized for BI/Analytics queries                      │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│                   LAKEHOUSE (Modern)                             │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  Best of both worlds!                                    │    │
-│  │  Delta Lake / Apache Iceberg / Apache Hudi               │    │
-│  │  ACID transactions + Schema evolution + Time travel      │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   DATA LAKE                                      |
+|  +---------------------------------------------------------+    |
+|  |  Schema-on-Read                                          |    |
+|  |  JSON, CSV, Parquet, Images, Video                       |    |
+|  |  Raw, unprocessed, any format                           |    |
+|  |  Perfekt for ML exploration!                            |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
+|                   DATA WAREHOUSE                                 |
+|  +---------------------------------------------------------+    |
+|  |  Schema-on-Write                                         |    |
+|  |  Structured Tables with defined schemas                  |    |
+|  |  Optimized for BI/Analytics queries                      |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
+|                   LAKEHOUSE (Modern)                             |
+|  +---------------------------------------------------------+    |
+|  |  Best of both worlds!                                    |    |
+|  |  Delta Lake / Apache Iceberg / Apache Hudi               |    |
+|  |  ACID transactions + Schema evolution + Time travel      |    |
+|  +---------------------------------------------------------+    |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -493,7 +493,7 @@ def compute_time_window_features(
 | Skalbarhet | Hanterar petabytes av data |
 | Integration | Stodjer ML-verktyg och frameworks |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -504,7 +504,7 @@ def compute_time_window_features(
 | Apache Hudi | Streaming data lake |
 | Databricks | Managed lakehouse platform |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Delta Lake
 
@@ -550,23 +550,23 @@ dt = DeltaTable.forPath(spark, "/data/ml/features")
 history_df = dt.history()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Medallion Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Medallion Architecture                        │
-│                                                                  │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐                     │
-│  │  BRONZE  │ -> │  SILVER  │ -> │   GOLD   │                     │
-│  │  (Raw)   │   │ (Clean)  │   │(Features)│                     │
-│  └──────────┘   └──────────┘   └──────────┘                     │
-│       │              │              │                            │
-│   Raw JSON/      Cleaned,       Aggregated,                     │
-│   CSV ingest     validated,     feature-ready,                  │
-│   from sources   deduplicated   for ML training                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Medallion Architecture                        |
+|                                                                  |
+|  +----------+   +----------+   +----------+                     |
+|  |  BRONZE  | -> |  SILVER  | -> |   GOLD   |                     |
+|  |  (Raw)   |   | (Clean)  |   |(Features)|                     |
+|  +----------+   +----------+   +----------+                     |
+|       |              |              |                            |
+|   Raw JSON/      Cleaned,       Aggregated,                     |
+|   CSV ingest     validated,     feature-ready,                  |
+|   from sources   deduplicated   for ML training                 |
++-----------------------------------------------------------------+
 ```
 
 ```python
@@ -588,7 +588,7 @@ features_df = gold_df.groupBy("user_id").agg(
 features_df.write.format("delta").save("s3://bucket/gold/user_features/")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -599,7 +599,7 @@ features_df.write.format("delta").save("s3://bucket/gold/user_features/")
 | Kan inte reproducera | Ingen versioning | Anvand time travel |
 | Schema drift | Schema evolution | Aktivera mergeSchema |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -631,31 +631,31 @@ features_df.write.format("delta").save("s3://bucket/gold/user_features/")
         "prerequisites": ["mlops-data-lakes"],
         "content": """# Data Ingestion Architecture
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Data Ingestion?
 
 Data ingestion ar processen att hamta data fran olika kallor och ladda den i ett centralt lager for bearbetning och analys.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Data Ingestion Patterns                       │
-│                                                                  │
-│  BATCH                          STREAMING                        │
-│  ┌─────────────┐                ┌─────────────┐                  │
-│  │ Daily/      │                │ Real-time   │                  │
-│  │ Hourly      │                │ Continuous  │                  │
-│  │ Full/Incr   │                │ Events      │                  │
-│  └─────────────┘                └─────────────┘                  │
-│       │                              │                           │
-│       v                              v                           │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │              Data Lake / Feature Store                   │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Data Ingestion Patterns                       |
+|                                                                  |
+|  BATCH                          STREAMING                        |
+|  +-------------+                +-------------+                  |
+|  | Daily/      |                | Real-time   |                  |
+|  | Hourly      |                | Continuous  |                  |
+|  | Full/Incr   |                | Events      |                  |
+|  +-------------+                +-------------+                  |
+|       |                              |                           |
+|       v                              v                           |
+|  +---------------------------------------------------------+    |
+|  |              Data Lake / Feature Store                   |    |
+|  +---------------------------------------------------------+    |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -666,7 +666,7 @@ Data ingestion ar processen att hamta data fran olika kallor och ladda den i ett
 | Latens | Batch vs streaming |
 | Tillforlitlighet | Fault tolerance |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -677,7 +677,7 @@ Data ingestion ar processen att hamta data fran olika kallor och ladda den i ett
 | Airbyte | Data integration |
 | Spark Streaming | Storskalig streaming |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Apache Kafka for Streaming
 
@@ -730,7 +730,7 @@ def process_events():
     consumer.commit()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Spark Structured Streaming
 
@@ -768,7 +768,7 @@ query = windowed_features.writeStream \\
     .start("/data/streaming_features/")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Data Quality Checks
 
@@ -788,7 +788,7 @@ def validate_ingested_data(df: pd.DataFrame) -> bool:
     return results.success
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -799,7 +799,7 @@ def validate_ingested_data(df: pd.DataFrame) -> bool:
 | Schema mismatch | Schema drift | Schema registry |
 | High latency | For stor batch | Minska batch storlek |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

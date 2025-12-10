@@ -39,29 +39,29 @@ Tänk dig: Du har byggt en perfekt applikation på din laptop. Den fungerar felf
 Docker är en **containeriseringsplattform** som paketerar din applikation med ALLA dess beroenden i en isolerad enhet som kallas **container**.
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         DOCKER ARKITEKTUR                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐          │
-│   │  Container  │     │  Container  │     │  Container  │          │
-│   │   (nginx)   │     │  (python)   │     │  (postgres) │          │
-│   │  Port 80    │     │  Port 8000  │     │  Port 5432  │          │
-│   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘          │
-│          │                   │                   │                  │
-│   ┌──────┴───────────────────┴───────────────────┴──────┐          │
-│   │                   DOCKER ENGINE                      │          │
-│   │   ┌─────────┐  ┌─────────┐  ┌─────────┐             │          │
-│   │   │ Images  │  │Networks │  │ Volumes │             │          │
-│   │   └─────────┘  └─────────┘  └─────────┘             │          │
-│   └─────────────────────────────────────────────────────┘          │
-│                              │                                      │
-│   ┌──────────────────────────┴──────────────────────────┐          │
-│   │                    HOST KERNEL                       │          │
-│   │        (Linux / Windows with WSL2 / macOS VM)        │          │
-│   └─────────────────────────────────────────────────────┘          │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                         DOCKER ARKITEKTUR                           |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +-------------+     +-------------+     +-------------+          |
+|   |  Container  |     |  Container  |     |  Container  |          |
+|   |   (nginx)   |     |  (python)   |     |  (postgres) |          |
+|   |  Port 80    |     |  Port 8000  |     |  Port 5432  |          |
+|   +------+------+     +------+------+     +------+------+          |
+|          |                   |                   |                  |
+|   +------+-------------------+-------------------+------+          |
+|   |                   DOCKER ENGINE                      |          |
+|   |   +---------+  +---------+  +---------+             |          |
+|   |   | Images  |  |Networks |  | Volumes |             |          |
+|   |   +---------+  +---------+  +---------+             |          |
+|   +-----------------------------------------------------+          |
+|                              |                                      |
+|   +--------------------------+--------------------------+          |
+|   |                    HOST KERNEL                       |          |
+|   |        (Linux / Windows with WSL2 / macOS VM)        |          |
+|   +-----------------------------------------------------+          |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -69,27 +69,27 @@ Docker är en **containeriseringsplattform** som paketerar din applikation med A
 ## Container vs Virtual Machine
 
 ```
-┌─────────────── VIRTUAL MACHINES ───────────────┐  ┌──────────── CONTAINERS ────────────┐
-│                                                │  │                                    │
-│  ┌──────┐  ┌──────┐  ┌──────┐                 │  │  ┌──────┐  ┌──────┐  ┌──────┐      │
-│  │ App  │  │ App  │  │ App  │                 │  │  │ App  │  │ App  │  │ App  │      │
-│  ├──────┤  ├──────┤  ├──────┤                 │  │  ├──────┤  ├──────┤  ├──────┤      │
-│  │ Bins │  │ Bins │  │ Bins │                 │  │  │ Bins │  │ Bins │  │ Bins │      │
-│  │ Libs │  │ Libs │  │ Libs │                 │  │  │ Libs │  │ Libs │  │ Libs │      │
-│  ├──────┤  ├──────┤  ├──────┤                 │  │  └──┬───┘  └──┬───┘  └──┬───┘      │
-│  │Guest │  │Guest │  │Guest │  (Heavyweight)  │  │     └─────────┼─────────┘          │
-│  │  OS  │  │  OS  │  │  OS  │                 │  │         ┌─────┴─────┐              │
-│  └──┬───┘  └──┬───┘  └──┬───┘                 │  │         │  Docker   │ (Lightweight)│
-│     └─────────┼─────────┘                     │  │         │  Engine   │              │
-│         ┌─────┴─────┐                         │  │         └─────┬─────┘              │
-│         │Hypervisor │                         │  │               │                    │
-│         └─────┬─────┘                         │  │         ┌─────┴─────┐              │
-│         ┌─────┴─────┐                         │  │         │  Host OS  │              │
-│         │  Host OS  │                         │  │         └───────────┘              │
-│         └───────────┘                         │  │                                    │
-│                                                │  │                                    │
-│  Startup: Minutes | Size: GBs | Isolation: Full│  │  Startup: Seconds | Size: MBs     │
-└────────────────────────────────────────────────┘  └────────────────────────────────────┘
++--------------- VIRTUAL MACHINES ---------------+  +------------ CONTAINERS ------------+
+|                                                |  |                                    |
+|  +------+  +------+  +------+                 |  |  +------+  +------+  +------+      |
+|  | App  |  | App  |  | App  |                 |  |  | App  |  | App  |  | App  |      |
+|  +------+  +------+  +------+                 |  |  +------+  +------+  +------+      |
+|  | Bins |  | Bins |  | Bins |                 |  |  | Bins |  | Bins |  | Bins |      |
+|  | Libs |  | Libs |  | Libs |                 |  |  | Libs |  | Libs |  | Libs |      |
+|  +------+  +------+  +------+                 |  |  +--+---+  +--+---+  +--+---+      |
+|  |Guest |  |Guest |  |Guest |  (Heavyweight)  |  |     +---------+---------+          |
+|  |  OS  |  |  OS  |  |  OS  |                 |  |         +-----+-----+              |
+|  +--+---+  +--+---+  +--+---+                 |  |         |  Docker   | (Lightweight)|
+|     +---------+---------+                     |  |         |  Engine   |              |
+|         +-----+-----+                         |  |         +-----+-----+              |
+|         |Hypervisor |                         |  |               |                    |
+|         +-----+-----+                         |  |         +-----+-----+              |
+|         +-----+-----+                         |  |         |  Host OS  |              |
+|         |  Host OS  |                         |  |         +-----------+              |
+|         +-----------+                         |  |                                    |
+|                                                |  |                                    |
+|  Startup: Minutes | Size: GBs | Isolation: Full|  |  Startup: Seconds | Size: MBs     |
++------------------------------------------------+  +------------------------------------+
 ```
 
 | Aspekt | Virtual Machine | Container |
@@ -131,20 +131,20 @@ ls -la /var/run/docker.sock
 Där images lagras (Docker Hub, ECR, GCR, etc.)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        REGISTRY FLOW                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Developer          Docker Hub           Production            │
-│       │                  │                    │                 │
-│       │  docker push     │                    │                 │
-│       │ ───────────────▶ │                    │                 │
-│       │                  │   docker pull      │                 │
-│       │                  │ ◀───────────────── │                 │
-│       │                  │                    │                 │
-│   myapp:v1.0          myapp:v1.0          myapp:v1.0           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                        REGISTRY FLOW                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Developer          Docker Hub           Production            |
+|       |                  |                    |                 |
+|       |  docker push     |                    |                 |
+|       | ---------------▶ |                    |                 |
+|       |                  |   docker pull      |                 |
+|       |                  | ◀----------------- |                 |
+|       |                  |                    |                 |
+|   myapp:v1.0          myapp:v1.0          myapp:v1.0           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -426,27 +426,27 @@ En image är en **read-only mall** som innehåller:
 - Konfiguration
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        IMAGE ANATOMY                                │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  Layer 5: CMD ["python", "app.py"]          (metadata)      │  │
-│   ├─────────────────────────────────────────────────────────────┤  │
-│   │  Layer 4: COPY . /app                       (your code)     │  │
-│   ├─────────────────────────────────────────────────────────────┤  │
-│   │  Layer 3: RUN pip install -r requirements   (dependencies)  │  │
-│   ├─────────────────────────────────────────────────────────────┤  │
-│   │  Layer 2: COPY requirements.txt             (dep file)      │  │
-│   ├─────────────────────────────────────────────────────────────┤  │
-│   │  Layer 1: FROM python:3.11-slim             (base image)    │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│                              ▼                                      │
-│                    Content-Addressable                              │
-│                    (SHA256 hash per layer)                          │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                        IMAGE ANATOMY                                |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |  Layer 5: CMD ["python", "app.py"]          (metadata)      |  |
+|   +-------------------------------------------------------------+  |
+|   |  Layer 4: COPY . /app                       (your code)     |  |
+|   +-------------------------------------------------------------+  |
+|   |  Layer 3: RUN pip install -r requirements   (dependencies)  |  |
+|   +-------------------------------------------------------------+  |
+|   |  Layer 2: COPY requirements.txt             (dep file)      |  |
+|   +-------------------------------------------------------------+  |
+|   |  Layer 1: FROM python:3.11-slim             (base image)    |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|                              ▼                                      |
+|                    Content-Addressable                              |
+|                    (SHA256 hash per layer)                          |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -454,22 +454,22 @@ En image är en **read-only mall** som innehåller:
 ## Image Naming Convention
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     IMAGE REFERENCE FORMAT                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   docker.io / library / python : 3.11-slim                          │
-│   ────────   ───────   ──────   ─────────                           │
-│   registry   namespace  repo     tag                                │
-│                                                                     │
-│   Exempel:                                                          │
-│   ─────────────────────────────────────────────────────────────     │
-│   nginx                    → docker.io/library/nginx:latest         │
-│   python:3.11              → docker.io/library/python:3.11          │
-│   myuser/myapp:v1          → docker.io/myuser/myapp:v1              │
-│   gcr.io/project/app:prod  → gcr.io/project/app:prod                │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     IMAGE REFERENCE FORMAT                          |
++---------------------------------------------------------------------+
+|                                                                     |
+|   docker.io / library / python : 3.11-slim                          |
+|   --------   -------   ------   ---------                           |
+|   registry   namespace  repo     tag                                |
+|                                                                     |
+|   Exempel:                                                          |
+|   -------------------------------------------------------------     |
+|   nginx                    -> docker.io/library/nginx:latest         |
+|   python:3.11              -> docker.io/library/python:3.11          |
+|   myuser/myapp:v1          -> docker.io/myuser/myapp:v1              |
+|   gcr.io/project/app:prod  -> gcr.io/project/app:prod                |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ### Tagging Best Practices
@@ -501,24 +501,24 @@ kubectl set image deployment/app app=myapp:latest
 ### Hur layers fungerar
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                       LAYER SHARING                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Image A              Image B              Image C                 │
-│   ┌───────────┐       ┌───────────┐        ┌───────────┐           │
-│   │ Your App  │       │  API App  │        │ Worker    │           │
-│   ├───────────┤       ├───────────┤        ├───────────┤           │
-│   │ Flask     │       │ FastAPI   │        │ Celery    │           │
-│   ├───────────┴───────┴───────────┴────────┴───────────┤           │
-│   │              Python 3.11                           │ ◀─ DELAD! │
-│   ├────────────────────────────────────────────────────┤           │
-│   │              Debian Slim                           │ ◀─ DELAD! │
-│   └────────────────────────────────────────────────────┘           │
-│                                                                     │
-│   Disk: Delade layers lagras ENDAST EN GÅNG!                       │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                       LAYER SHARING                                 |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Image A              Image B              Image C                 |
+|   +-----------+       +-----------+        +-----------+           |
+|   | Your App  |       |  API App  |        | Worker    |           |
+|   +-----------+       +-----------+        +-----------+           |
+|   | Flask     |       | FastAPI   |        | Celery    |           |
+|   +-----------+-------+-----------+--------+-----------+           |
+|   |              Python 3.11                           | ◀- DELAD! |
+|   +----------------------------------------------------+           |
+|   |              Debian Slim                           | ◀- DELAD! |
+|   +----------------------------------------------------+           |
+|                                                                     |
+|   Disk: Delade layers lagras ENDAST EN GÅNG!                       |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ### Inspektera layers
@@ -543,7 +543,7 @@ docker inspect python:3.11-slim | jq '.[0].RootFS.Layers'
 ```dockerfile
 # ❌ DÅLIGT - Bryter cache vid varje kodändring
 FROM python:3.11-slim
-COPY . /app                      # Ändras ofta → alla efterföljande layers rebuilds
+COPY . /app                      # Ändras ofta -> alla efterföljande layers rebuilds
 RUN pip install -r requirements.txt
 
 # ✅ BRA - Maximerar cache
@@ -891,14 +891,14 @@ EXPOSE 8125/udp
 ```dockerfile
 # CMD — Default kommando (kan överskrivas)
 CMD ["python", "app.py"]
-# docker run myapp               → python app.py
-# docker run myapp python test.py → python test.py (CMD överskrivet)
+# docker run myapp               -> python app.py
+# docker run myapp python test.py -> python test.py (CMD överskrivet)
 
 # ENTRYPOINT — Fast kommando
 ENTRYPOINT ["python"]
 CMD ["app.py"]
-# docker run myapp               → python app.py
-# docker run myapp test.py       → python test.py (argument till ENTRYPOINT)
+# docker run myapp               -> python app.py
+# docker run myapp test.py       -> python test.py (argument till ENTRYPOINT)
 
 # Shell form vs Exec form
 CMD python app.py               # Shell form (kör via /bin/sh -c)
@@ -1067,7 +1067,7 @@ coverage/
 ```dockerfile
 # ❌ DÅLIGT - Cache invalideras vid varje kodändring
 FROM node:18
-COPY . .                    # Kodändring → allt nedan rebuilds
+COPY . .                    # Kodändring -> allt nedan rebuilds
 RUN npm install
 RUN npm run build
 
@@ -1082,31 +1082,31 @@ RUN npm run build
 ### Multi-stage Builds
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    MULTI-STAGE BUILD FLOW                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌──────────────────┐                                              │
-│   │   Stage: deps    │   npm ci --only=production                   │
-│   │   1.2 GB         │   (production dependencies)                  │
-│   └────────┬─────────┘                                              │
-│            │                                                        │
-│   ┌────────▼─────────┐                                              │
-│   │  Stage: builder  │   npm ci && npm run build                    │
-│   │   2.5 GB         │   (all deps + build)                         │
-│   └────────┬─────────┘                                              │
-│            │                                                        │
-│            │  COPY --from=builder /app/dist                         │
-│            │  COPY --from=deps /app/node_modules                    │
-│            ▼                                                        │
-│   ┌──────────────────┐                                              │
-│   │ Stage: production│   Final image                                │
-│   │   150 MB         │   (only runtime files)                       │
-│   └──────────────────┘                                              │
-│                                                                     │
-│   Resultat: 2.5 GB build → 150 MB production image                  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    MULTI-STAGE BUILD FLOW                           |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +------------------+                                              |
+|   |   Stage: deps    |   npm ci --only=production                   |
+|   |   1.2 GB         |   (production dependencies)                  |
+|   +--------+---------+                                              |
+|            |                                                        |
+|   +--------▼---------+                                              |
+|   |  Stage: builder  |   npm ci && npm run build                    |
+|   |   2.5 GB         |   (all deps + build)                         |
+|   +--------+---------+                                              |
+|            |                                                        |
+|            |  COPY --from=builder /app/dist                         |
+|            |  COPY --from=deps /app/node_modules                    |
+|            ▼                                                        |
+|   +------------------+                                              |
+|   | Stage: production|   Final image                                |
+|   |   150 MB         |   (only runtime files)                       |
+|   +------------------+                                              |
+|                                                                     |
+|   Resultat: 2.5 GB build -> 150 MB production image                  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -1259,33 +1259,33 @@ I produktion kan en container starta om tusentals gånger. Varje gång måste de
 ## Container States
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     CONTAINER LIFECYCLE                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   docker create                                                     │
-│        │                                                            │
-│        ▼                                                            │
-│   ┌─────────┐    docker start    ┌─────────┐                       │
-│   │ CREATED │ ─────────────────▶ │ RUNNING │                       │
-│   └─────────┘                    └────┬────┘                       │
-│                                       │                             │
-│                          docker pause │ docker unpause              │
-│                                       ▼                             │
-│                                  ┌─────────┐                        │
-│                                  │ PAUSED  │                        │
-│                                  └────┬────┘                        │
-│                                       │                             │
-│                           docker stop │ docker kill                 │
-│                                       ▼                             │
-│   ┌─────────┐                   ┌─────────┐                        │
-│   │ REMOVED │ ◀──── docker rm ──│ STOPPED │                        │
-│   └─────────┘                   └─────────┘                        │
-│                                       │                             │
-│                                       │ docker start                │
-│                                       └────────────▶ RUNNING        │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     CONTAINER LIFECYCLE                             |
++---------------------------------------------------------------------+
+|                                                                     |
+|   docker create                                                     |
+|        |                                                            |
+|        ▼                                                            |
+|   +---------+    docker start    +---------+                       |
+|   | CREATED | -----------------▶ | RUNNING |                       |
+|   +---------+                    +----+----+                       |
+|                                       |                             |
+|                          docker pause | docker unpause              |
+|                                       ▼                             |
+|                                  +---------+                        |
+|                                  | PAUSED  |                        |
+|                                  +----+----+                        |
+|                                       |                             |
+|                           docker stop | docker kill                 |
+|                                       ▼                             |
+|   +---------+                   +---------+                        |
+|   | REMOVED | ◀---- docker rm --| STOPPED |                        |
+|   +---------+                   +---------+                        |
+|                                       |                             |
+|                                       | docker start                |
+|                                       +------------▶ RUNNING        |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 | State | Beskrivning | Resursanvändning |
@@ -1685,35 +1685,35 @@ Tänk dig: Du kör PostgreSQL i Docker. Allt fungerar. Så restarts Docker daemo
 ## Förstå Container Storage
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     CONTAINER STORAGE LAYERS                        │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │           CONTAINER LAYER (Read-Write)                      │  │
-│   │   • Alla ändringar skrivs här                               │  │
-│   │   • FÖRSVINNER när containern tas bort                      │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │           IMAGE LAYERS (Read-Only)                          │  │
-│   │   Layer 3: Application code                                 │  │
-│   │   Layer 2: Dependencies                                     │  │
-│   │   Layer 1: Base OS                                          │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   PROBLEM: Container layer är INTE persistent!                      │
-│                                                                     │
-│   LÖSNING: VOLUMES                                                  │
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  Container          ◀─────────────▶  Volume (på host)       │  │
-│   │  /var/lib/data              /var/lib/docker/volumes/mydata  │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   Volume-data ÖVERLEVER container-borttagning!                      │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     CONTAINER STORAGE LAYERS                        |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |           CONTAINER LAYER (Read-Write)                      |  |
+|   |   • Alla ändringar skrivs här                               |  |
+|   |   • FÖRSVINNER när containern tas bort                      |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |           IMAGE LAYERS (Read-Only)                          |  |
+|   |   Layer 3: Application code                                 |  |
+|   |   Layer 2: Dependencies                                     |  |
+|   |   Layer 1: Base OS                                          |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   PROBLEM: Container layer är INTE persistent!                      |
+|                                                                     |
+|   LÖSNING: VOLUMES                                                  |
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |  Container          ◀-------------▶  Volume (på host)       |  |
+|   |  /var/lib/data              /var/lib/docker/volumes/mydata  |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   Volume-data ÖVERLEVER container-borttagning!                      |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -1972,7 +1972,7 @@ docker exec -i postgres psql -U postgres mydb < backup.sql
 docker run -v $(pwd):/app alpine ls -la /app
 # drwxr-xr-x  user  user  (host user)
 
-# Container körs som root → kan skriva
+# Container körs som root -> kan skriva
 # Men filer skapas som root på host!
 
 # Lösning 1: Matcha UID
@@ -2132,42 +2132,42 @@ Tänk dig: Du har byggt tre containers — frontend, API, databas. Du startar de
 ## Docker Network Drivers
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     DOCKER NETWORK DRIVERS                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                       BRIDGE (default)                       │  │
-│   │   ┌─────────┐    ┌─────────┐    ┌─────────┐                 │  │
-│   │   │Container│    │Container│    │Container│                 │  │
-│   │   │   A     │    │   B     │    │   C     │                 │  │
-│   │   └────┬────┘    └────┬────┘    └────┬────┘                 │  │
-│   │        └───────────────┼───────────────┘                     │  │
-│   │                   docker0 bridge                             │  │
-│   │                        │                                     │  │
-│   │                   NAT to host                                │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                          HOST                                │  │
-│   │   Container delar hosts nätverk direkt                       │  │
-│   │   Ingen isolering, men full hastighet                        │  │
-│   │   Användning: Performance-kritiska appar                     │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                         OVERLAY                              │  │
-│   │   Multi-host networking (Docker Swarm / Kubernetes)          │  │
-│   │   Containers på olika hosts kan kommunicera                  │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                          NONE                                │  │
-│   │   Ingen nätverksåtkomst alls                                 │  │
-│   │   Användning: Säkerhet, offline processing                   │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     DOCKER NETWORK DRIVERS                          |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |                       BRIDGE (default)                       |  |
+|   |   +---------+    +---------+    +---------+                 |  |
+|   |   |Container|    |Container|    |Container|                 |  |
+|   |   |   A     |    |   B     |    |   C     |                 |  |
+|   |   +----+----+    +----+----+    +----+----+                 |  |
+|   |        +---------------+---------------+                     |  |
+|   |                   docker0 bridge                             |  |
+|   |                        |                                     |  |
+|   |                   NAT to host                                |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |                          HOST                                |  |
+|   |   Container delar hosts nätverk direkt                       |  |
+|   |   Ingen isolering, men full hastighet                        |  |
+|   |   Användning: Performance-kritiska appar                     |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |                         OVERLAY                              |  |
+|   |   Multi-host networking (Docker Swarm / Kubernetes)          |  |
+|   |   Containers på olika hosts kan kommunicera                  |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |                          NONE                                |  |
+|   |   Ingen nätverksåtkomst alls                                 |  |
+|   |   Användning: Säkerhet, offline processing                   |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 | Driver | Isolering | Multi-host | Användning |
@@ -2295,28 +2295,28 @@ docker network connect backend-net api
 ## Port Mapping (Publishing)
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        PORT MAPPING                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   HOST                              CONTAINER                       │
-│   ┌──────────────────┐             ┌──────────────────┐            │
-│   │                  │             │                  │            │
-│   │  localhost:8080 ─┼─────────────┼─▶ 80 (nginx)    │            │
-│   │                  │   -p 8080:80│                  │            │
-│   │  localhost:5432 ─┼─────────────┼─▶ 5432 (postgres)│           │
-│   │                  │   -p 5432   │                  │            │
-│   └──────────────────┘             └──────────────────┘            │
-│                                                                     │
-│   Syntax: -p [host_ip:]host_port:container_port[/protocol]          │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                        PORT MAPPING                                 |
++---------------------------------------------------------------------+
+|                                                                     |
+|   HOST                              CONTAINER                       |
+|   +------------------+             +------------------+            |
+|   |                  |             |                  |            |
+|   |  localhost:8080 -+-------------+-▶ 80 (nginx)    |            |
+|   |                  |   -p 8080:80|                  |            |
+|   |  localhost:5432 -+-------------+-▶ 5432 (postgres)|           |
+|   |                  |   -p 5432   |                  |            |
+|   +------------------+             +------------------+            |
+|                                                                     |
+|   Syntax: -p [host_ip:]host_port:container_port[/protocol]          |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ```bash
 # Explicit mapping
 docker run -p 8080:80 nginx
-# localhost:8080 → container:80
+# localhost:8080 -> container:80
 
 # Random host port
 docker run -p 80 nginx
@@ -2351,8 +2351,8 @@ docker run -d --name redis --network app-net redis
 docker run -d --name api --network app-net myapi
 
 # I api-containern:
-# postgres://postgres:5432/db  ← "postgres" resolveras!
-# redis://redis:6379           ← "redis" resolveras!
+# postgres://postgres:5432/db  <- "postgres" resolveras!
+# redis://redis:6379           <- "redis" resolveras!
 ```
 
 ### Network Aliases
@@ -2426,10 +2426,10 @@ docker run -d \
     myfrontend:latest
 
 # Kommunikationsflöde:
-# Browser → localhost:3000 (frontend)
-#         → frontend → api:8000 (internt)
-#         → api → db:5432 (internt)
-#         → api → cache:6379 (internt)
+# Browser -> localhost:3000 (frontend)
+#         -> frontend -> api:8000 (internt)
+#         -> api -> db:5432 (internt)
+#         -> api -> cache:6379 (internt)
 ```
 
 ---
@@ -2559,37 +2559,37 @@ Scenario: Din app har 5 containers — frontend, API, databas, Redis, och en wor
 ## Compose Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DOCKER COMPOSE ARKITEKTUR                         │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   docker-compose.yml                                                │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  version: '3.8'                                              │  │
-│   │                                                              │  │
-│   │  services:          networks:         volumes:               │  │
-│   │  ┌─────────┐       ┌───────────┐     ┌───────────┐          │  │
-│   │  │ web     │       │ frontend  │     │ db-data   │          │  │
-│   │  │ api     │       │ backend   │     │ uploads   │          │  │
-│   │  │ db      │       └───────────┘     └───────────┘          │  │
-│   │  │ redis   │                                                 │  │
-│   │  │ worker  │                                                 │  │
-│   │  └─────────┘                                                 │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                           │                                         │
-│                           ▼                                         │
-│                    docker compose up                                │
-│                           │                                         │
-│                           ▼                                         │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │              RUNNING CONTAINERS                              │  │
-│   │  ┌────┐  ┌────┐  ┌────┐  ┌─────┐  ┌──────┐                  │  │
-│   │  │web │  │api │  │db  │  │redis│  │worker│                  │  │
-│   │  └────┘  └────┘  └────┘  └─────┘  └──────┘                  │  │
-│   │         Alla på samma default network                        │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DOCKER COMPOSE ARKITEKTUR                         |
++---------------------------------------------------------------------+
+|                                                                     |
+|   docker-compose.yml                                                |
+|   +-------------------------------------------------------------+  |
+|   |  version: '3.8'                                              |  |
+|   |                                                              |  |
+|   |  services:          networks:         volumes:               |  |
+|   |  +---------+       +-----------+     +-----------+          |  |
+|   |  | web     |       | frontend  |     | db-data   |          |  |
+|   |  | api     |       | backend   |     | uploads   |          |  |
+|   |  | db      |       +-----------+     +-----------+          |  |
+|   |  | redis   |                                                 |  |
+|   |  | worker  |                                                 |  |
+|   |  +---------+                                                 |  |
+|   +-------------------------------------------------------------+  |
+|                           |                                         |
+|                           ▼                                         |
+|                    docker compose up                                |
+|                           |                                         |
+|                           ▼                                         |
+|   +-------------------------------------------------------------+  |
+|   |              RUNNING CONTAINERS                              |  |
+|   |  +----+  +----+  +----+  +-----+  +------+                  |  |
+|   |  |web |  |api |  |db  |  |redis|  |worker|                  |  |
+|   |  +----+  +----+  +----+  +-----+  +------+                  |  |
+|   |         Alla på samma default network                        |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -2907,30 +2907,30 @@ services:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                   SERVICE STARTUP ORDER                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   1. db startar                                                     │
-│      │                                                              │
-│      ▼                                                              │
-│   2. db healthcheck: pg_isready                                     │
-│      │   ┌────────────────────┐                                     │
-│      ├──▶│ interval: 5s       │                                     │
-│      │   │ retries: 5         │                                     │
-│      │   │ timeout: 5s        │                                     │
-│      │   └────────────────────┘                                     │
-│      │                                                              │
-│      ▼                                                              │
-│   3. db healthy ✅                                                  │
-│      │                                                              │
-│      ▼                                                              │
-│   4. redis startar (service_started)                                │
-│      │                                                              │
-│      ▼                                                              │
-│   5. api startar (alla dependencies klara)                          │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                   SERVICE STARTUP ORDER                             |
++---------------------------------------------------------------------+
+|                                                                     |
+|   1. db startar                                                     |
+|      |                                                              |
+|      ▼                                                              |
+|   2. db healthcheck: pg_isready                                     |
+|      |   +--------------------+                                     |
+|      +--▶| interval: 5s       |                                     |
+|      |   | retries: 5         |                                     |
+|      |   | timeout: 5s        |                                     |
+|      |   +--------------------+                                     |
+|      |                                                              |
+|      ▼                                                              |
+|   3. db healthy ✅                                                  |
+|      |                                                              |
+|      ▼                                                              |
+|   4. redis startar (service_started)                                |
+|      |                                                              |
+|      ▼                                                              |
+|   5. api startar (alla dependencies klara)                          |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -3065,31 +3065,31 @@ Du har en app som fungerar lokalt. Nu behöver du:
 ## Compose File Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                 COMPOSE FILE HIERARCHY                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   docker-compose.yml          (Base configuration)                  │
-│            │                                                        │
-│            ▼                                                        │
-│   docker-compose.override.yml (Auto-loaded, dev defaults)           │
-│            │                                                        │
-│            ▼                                                        │
-│   docker-compose.prod.yml     (Production overrides)                │
-│            │                                                        │
-│            ▼                                                        │
-│   .env                        (Environment variables)               │
-│                                                                     │
-│   Merge Order:                                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  base.yml + override.yml + prod.yml = Final Config          │  │
-│   │                                                              │  │
-│   │  Later files override earlier files                          │  │
-│   │  Arrays are replaced, not merged                             │  │
-│   │  Maps are merged recursively                                 │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                 COMPOSE FILE HIERARCHY                              |
++---------------------------------------------------------------------+
+|                                                                     |
+|   docker-compose.yml          (Base configuration)                  |
+|            |                                                        |
+|            ▼                                                        |
+|   docker-compose.override.yml (Auto-loaded, dev defaults)           |
+|            |                                                        |
+|            ▼                                                        |
+|   docker-compose.prod.yml     (Production overrides)                |
+|            |                                                        |
+|            ▼                                                        |
+|   .env                        (Environment variables)               |
+|                                                                     |
+|   Merge Order:                                                      |
+|   +-------------------------------------------------------------+  |
+|   |  base.yml + override.yml + prod.yml = Final Config          |  |
+|   |                                                              |  |
+|   |  Later files override earlier files                          |  |
+|   |  Arrays are replaced, not merged                             |  |
+|   |  Maps are merged recursively                                 |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -3275,17 +3275,17 @@ docker compose --profile test run test-runner
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     PROFILE COMBINATIONS                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   docker compose up              → api, db                          │
-│   --profile dev                  → api, db, adminer                 │
-│   --profile debug                → api, db, adminer, debug-tools    │
-│   --profile prod                 → api, db, prometheus, grafana     │
-│   --profile test                 → api, db, test-runner             │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     PROFILE COMBINATIONS                            |
++---------------------------------------------------------------------+
+|                                                                     |
+|   docker compose up              -> api, db                          |
+|   --profile dev                  -> api, db, adminer                 |
+|   --profile debug                -> api, db, adminer, debug-tools    |
+|   --profile prod                 -> api, db, prometheus, grafana     |
+|   --profile test                 -> api, db, test-runner             |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -3443,34 +3443,34 @@ networks:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    NETWORK ISOLATION                                │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Internet                                                          │
-│      │                                                              │
-│      ▼                                                              │
-│   ┌──────────────────────────────────────┐                         │
-│   │         frontend network              │                         │
-│   │   ┌─────────┐     ┌─────────┐        │                         │
-│   │   │ nginx   │────▶│  api    │        │                         │
-│   │   │ :80     │     │         │        │                         │
-│   │   └─────────┘     └────┬────┘        │                         │
-│   └────────────────────────┼─────────────┘                         │
-│                            │                                        │
-│   ┌────────────────────────▼─────────────┐                         │
-│   │         backend network (internal)    │                         │
-│   │   ┌─────────┐     ┌─────────┐        │                         │
-│   │   │  api    │────▶│  db     │        │                         │
-│   │   │         │     │ :5432   │        │                         │
-│   │   │         │────▶│  redis  │        │                         │
-│   │   │         │     │ :6379   │        │                         │
-│   │   └─────────┘     └─────────┘        │                         │
-│   └──────────────────────────────────────┘                         │
-│         ↑                                                           │
-│         │ internal: true (ingen extern åtkomst)                     │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    NETWORK ISOLATION                                |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Internet                                                          |
+|      |                                                              |
+|      ▼                                                              |
+|   +--------------------------------------+                         |
+|   |         frontend network              |                         |
+|   |   +---------+     +---------+        |                         |
+|   |   | nginx   |----▶|  api    |        |                         |
+|   |   | :80     |     |         |        |                         |
+|   |   +---------+     +----+----+        |                         |
+|   +------------------------+-------------+                         |
+|                            |                                        |
+|   +------------------------▼-------------+                         |
+|   |         backend network (internal)    |                         |
+|   |   +---------+     +---------+        |                         |
+|   |   |  api    |----▶|  db     |        |                         |
+|   |   |         |     | :5432   |        |                         |
+|   |   |         |----▶|  redis  |        |                         |
+|   |   |         |     | :6379   |        |                         |
+|   |   +---------+     +---------+        |                         |
+|   +--------------------------------------+                         |
+|         ↑                                                           |
+|         | internal: true (ingen extern åtkomst)                     |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -3635,28 +3635,28 @@ Din första Dockerfile fungerar. Men tar den 15 minuter att bygga? Är imagen 2G
 ## Layer Caching Mastery
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DOCKER LAYER CACHING                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ❌ DÅLIGT: Cache invalideras varje kodändring                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  COPY . .                          ← Ändras ofta!           │  │
-│   │  RUN pip install -r requirements.txt  ← Måste köras igen   │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   ✅ BRA: Dependencies cachas separat                               │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  COPY requirements.txt .           ← Ändras sällan         │  │
-│   │  RUN pip install -r requirements.txt  ← CACHAD!            │  │
-│   │  COPY . .                          ← Endast detta körs om  │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   Build Times:                                                      │
-│   Dålig ordning: 5 min varje gång                                   │
-│   Bra ordning: 30 sek (med cache)                                   │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DOCKER LAYER CACHING                             |
++---------------------------------------------------------------------+
+|                                                                     |
+|   ❌ DÅLIGT: Cache invalideras varje kodändring                     |
+|   +-------------------------------------------------------------+  |
+|   |  COPY . .                          <- Ändras ofta!           |  |
+|   |  RUN pip install -r requirements.txt  <- Måste köras igen   |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   ✅ BRA: Dependencies cachas separat                               |
+|   +-------------------------------------------------------------+  |
+|   |  COPY requirements.txt .           <- Ändras sällan         |  |
+|   |  RUN pip install -r requirements.txt  <- CACHAD!            |  |
+|   |  COPY . .                          <- Endast detta körs om  |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   Build Times:                                                      |
+|   Dålig ordning: 5 min varje gång                                   |
+|   Bra ordning: 30 sek (med cache)                                   |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ### Python Exempel
@@ -3818,25 +3818,25 @@ Thumbs.db
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                  EFFECT OF .dockerignore                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Without .dockerignore:                                            │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  COPY . .                                                    │  │
-│   │  Sends: 500MB (includes node_modules, .git, etc.)           │  │
-│   │  Build context time: 30 seconds                              │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   With .dockerignore:                                               │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  COPY . .                                                    │  │
-│   │  Sends: 5MB (only source code)                              │  │
-│   │  Build context time: 1 second                                │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                  EFFECT OF .dockerignore                            |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Without .dockerignore:                                            |
+|   +-------------------------------------------------------------+  |
+|   |  COPY . .                                                    |  |
+|   |  Sends: 500MB (includes node_modules, .git, etc.)           |  |
+|   |  Build context time: 30 seconds                              |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   With .dockerignore:                                               |
+|   +-------------------------------------------------------------+  |
+|   |  COPY . .                                                    |  |
+|   |  Sends: 5MB (only source code)                              |  |
+|   |  Build context time: 1 second                                |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -4039,36 +4039,36 @@ Du skriver nu production-grade Dockerfiles! Nästa task: **Multi-stage Builds** 
 
 Scenario: Din Node.js app behöver `npm`, `typescript`, och `webpack` för att bygga. Men i produktion behövs bara den kompilerade JavaScript-filen. Utan multi-stage skickar du 1GB+ images med build-verktyg till produktion.
 
-**Med multi-stage: 1GB build → 50MB production.**
+**Med multi-stage: 1GB build -> 50MB production.**
 
 ---
 
 ## Multi-stage Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    MULTI-STAGE BUILD FLOW                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Stage 1: BUILD                     Stage 2: PRODUCTION            │
-│   ┌─────────────────────────┐       ┌─────────────────────────┐    │
-│   │ FROM node:18            │       │ FROM node:18-alpine     │    │
-│   │                         │       │                         │    │
-│   │ ┌─────────────────────┐ │       │ ┌─────────────────────┐ │    │
-│   │ │ node_modules (500MB)│ │       │ │ dist/ (5MB)         │ │    │
-│   │ │ src/                │ │  ───▶ │ │ node_modules (50MB) │ │    │
-│   │ │ typescript          │ │ COPY  │ │ (prod only)         │ │    │
-│   │ │ webpack             │ │       │ └─────────────────────┘ │    │
-│   │ │ eslint              │ │       │                         │    │
-│   │ │ jest                │ │       │ Size: ~70MB             │    │
-│   │ └─────────────────────┘ │       └─────────────────────────┘    │
-│   │                         │                                       │
-│   │ Size: ~1.2GB            │                                       │
-│   └─────────────────────────┘                                       │
-│                                                                     │
-│   RESULT: Build-verktyg stannar i Stage 1, endast artifacts kopieras│
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    MULTI-STAGE BUILD FLOW                           |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Stage 1: BUILD                     Stage 2: PRODUCTION            |
+|   +-------------------------+       +-------------------------+    |
+|   | FROM node:18            |       | FROM node:18-alpine     |    |
+|   |                         |       |                         |    |
+|   | +---------------------+ |       | +---------------------+ |    |
+|   | | node_modules (500MB)| |       | | dist/ (5MB)         | |    |
+|   | | src/                | |  ---▶ | | node_modules (50MB) | |    |
+|   | | typescript          | | COPY  | | (prod only)         | |    |
+|   | | webpack             | |       | +---------------------+ |    |
+|   | | eslint              | |       |                         |    |
+|   | | jest                | |       | Size: ~70MB             |    |
+|   | +---------------------+ |       +-------------------------+    |
+|   |                         |                                       |
+|   | Size: ~1.2GB            |                                       |
+|   +-------------------------+                                       |
+|                                                                     |
+|   RESULT: Build-verktyg stannar i Stage 1, endast artifacts kopieras|
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -4096,7 +4096,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build TypeScript → JavaScript
+# Build TypeScript -> JavaScript
 RUN npm run build
 
 # Prune dev dependencies
@@ -4132,7 +4132,7 @@ docker build -t myapp:latest .
 # Jämför storlekar
 docker images myapp
 # REPOSITORY   TAG       SIZE
-# myapp        latest    72MB   ← Inte 1.2GB!
+# myapp        latest    72MB   <- Inte 1.2GB!
 ```
 
 ---
@@ -4229,7 +4229,7 @@ ENTRYPOINT ["/server"]
 ```bash
 docker images
 # REPOSITORY   TAG       SIZE
-# mygoapp      latest    12MB   ← From scratch!
+# mygoapp      latest    12MB   <- From scratch!
 ```
 
 ---
@@ -4461,35 +4461,35 @@ En utvecklare pushar en container som kör som root, har hårdkodade credentials
 ## Security Layers
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    CONTAINER SECURITY LAYERS                        │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                    APPLICATION LAYER                         │  │
-│   │   • Input validation    • Authentication                     │  │
-│   │   • Secrets management  • Logging                            │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                    CONTAINER LAYER                           │  │
-│   │   • Non-root user       • Read-only filesystem               │  │
-│   │   • Resource limits     • Dropped capabilities               │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                    IMAGE LAYER                               │  │
-│   │   • Minimal base image  • No secrets in image                │  │
-│   │   • Vulnerability scan  • Signed images                      │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                    HOST/RUNTIME LAYER                        │  │
-│   │   • Seccomp profiles    • AppArmor/SELinux                   │  │
-│   │   • Network isolation   • Audit logging                      │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    CONTAINER SECURITY LAYERS                        |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |                    APPLICATION LAYER                         |  |
+|   |   • Input validation    • Authentication                     |  |
+|   |   • Secrets management  • Logging                            |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |                    CONTAINER LAYER                           |  |
+|   |   • Non-root user       • Read-only filesystem               |  |
+|   |   • Resource limits     • Dropped capabilities               |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |                    IMAGE LAYER                               |  |
+|   |   • Minimal base image  • No secrets in image                |  |
+|   |   • Vulnerability scan  • Signed images                      |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |                    HOST/RUNTIME LAYER                        |  |
+|   |   • Seccomp profiles    • AppArmor/SELinux                   |  |
+|   |   • Network isolation   • Audit logging                      |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -4499,21 +4499,21 @@ En utvecklare pushar en container som kör som root, har hårdkodade credentials
 ### Varför det spelar roll
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│   ROOT IN CONTAINER = ROOT ON HOST (potentially)                    │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Container (root)         Host                                     │
-│   ┌──────────────┐        ┌──────────────┐                         │
-│   │ UID 0 (root) │   ==   │ UID 0 (root) │  ⚠️ Container escape!   │
-│   └──────────────┘        └──────────────┘                         │
-│                                                                     │
-│   Container (non-root)    Host                                      │
-│   ┌──────────────┐        ┌──────────────┐                         │
-│   │ UID 1000     │   ==   │ UID 1000     │  ✅ Limited damage      │
-│   └──────────────┘        └──────────────┘                         │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|   ROOT IN CONTAINER = ROOT ON HOST (potentially)                    |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Container (root)         Host                                     |
+|   +--------------+        +--------------+                         |
+|   | UID 0 (root) |   ==   | UID 0 (root) |  ⚠️ Container escape!   |
+|   +--------------+        +--------------+                         |
+|                                                                     |
+|   Container (non-root)    Host                                      |
+|   +--------------+        +--------------+                         |
+|   | UID 1000     |   ==   | UID 1000     |  ✅ Limited damage      |
+|   +--------------+        +--------------+                         |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ### Implementering
@@ -4898,30 +4898,30 @@ Du bygger en image på din laptop. Hur får Kubernetes i produktion tillgång ti
 ## Registry Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    REGISTRY WORKFLOW                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Developer                 Registry                Production      │
-│   ┌────────┐               ┌────────┐              ┌────────┐      │
-│   │        │  docker push  │        │  docker pull │        │      │
-│   │ Laptop │ ────────────▶ │  Hub   │ ◀─────────── │  K8s   │      │
-│   │        │               │ ECR/GCR│              │ Server │      │
-│   └────────┘               │ GHCR   │              └────────┘      │
-│                            └────────┘                               │
-│                                 │                                   │
-│                                 │                                   │
-│   ┌─────────────────────────────▼───────────────────────────────┐  │
-│   │                    IMAGE LAYERS                              │  │
-│   │   myapp:v1.2.3                                               │  │
-│   │   ├── sha256:abc123 (base layer)                             │  │
-│   │   ├── sha256:def456 (dependencies)                           │  │
-│   │   └── sha256:ghi789 (application)                            │  │
-│   │                                                              │  │
-│   │   Layers delas mellan tags → effektiv lagring                │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    REGISTRY WORKFLOW                                 |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Developer                 Registry                Production      |
+|   +--------+               +--------+              +--------+      |
+|   |        |  docker push  |        |  docker pull |        |      |
+|   | Laptop | ------------▶ |  Hub   | ◀----------- |  K8s   |      |
+|   |        |               | ECR/GCR|              | Server |      |
+|   +--------+               | GHCR   |              +--------+      |
+|                            +--------+                               |
+|                                 |                                   |
+|                                 |                                   |
+|   +-----------------------------▼-------------------------------+  |
+|   |                    IMAGE LAYERS                              |  |
+|   |   myapp:v1.2.3                                               |  |
+|   |   +-- sha256:abc123 (base layer)                             |  |
+|   |   +-- sha256:def456 (dependencies)                           |  |
+|   |   +-- sha256:ghi789 (application)                            |  |
+|   |                                                              |  |
+|   |   Layers delas mellan tags -> effektiv lagring                |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -4979,7 +4979,7 @@ docker tag myapp myuser/myapp:main-abc1234
 
 ```bash
 # 1. Skapa Personal Access Token (PAT)
-# Settings → Developer settings → Personal access tokens
+# Settings -> Developer settings -> Personal access tokens
 # Behörigheter: read:packages, write:packages, delete:packages
 
 # 2. Login
@@ -4992,7 +4992,7 @@ docker tag myapp:latest ghcr.io/username/myapp:v1.0.0
 docker push ghcr.io/username/myapp:v1.0.0
 
 # 5. Gör public (valfritt)
-# Gå till GitHub → Packages → Package settings → Change visibility
+# Gå till GitHub -> Packages -> Package settings -> Change visibility
 ```
 
 ### GitHub Actions Integration
@@ -5267,30 +5267,30 @@ Scenario: Din kollega bygger imagen på sin Mac. Du bygger på Linux. Produktion
 ## CI/CD Pipeline Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DOCKER CI/CD PIPELINE                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐        │
-│   │  Code   │───▶│  Build  │───▶│  Test   │───▶│  Scan   │        │
-│   │  Push   │    │  Image  │    │  Image  │    │  CVEs   │        │
-│   └─────────┘    └─────────┘    └─────────┘    └─────────┘        │
-│        │              │              │              │               │
-│        │              │              │              │               │
-│        ▼              ▼              ▼              ▼               │
-│   git push       Dockerfile      pytest        Trivy/Scout         │
-│                  multi-stage     in container  vulnerability        │
-│                                                                     │
-│   ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐        │
-│   │  Push   │───▶│  Deploy │───▶│ Verify  │───▶│ Monitor │        │
-│   │Registry │    │  Staging│    │  Health │    │  Logs   │        │
-│   └─────────┘    └─────────┘    └─────────┘    └─────────┘        │
-│        │              │              │              │               │
-│        ▼              ▼              ▼              ▼               │
-│   GHCR/ECR/GCR  Kubernetes     healthcheck    Prometheus           │
-│   tagged         rollout       endpoints      Grafana              │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DOCKER CI/CD PIPELINE                            |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +---------+    +---------+    +---------+    +---------+        |
+|   |  Code   |---▶|  Build  |---▶|  Test   |---▶|  Scan   |        |
+|   |  Push   |    |  Image  |    |  Image  |    |  CVEs   |        |
+|   +---------+    +---------+    +---------+    +---------+        |
+|        |              |              |              |               |
+|        |              |              |              |               |
+|        ▼              ▼              ▼              ▼               |
+|   git push       Dockerfile      pytest        Trivy/Scout         |
+|                  multi-stage     in container  vulnerability        |
+|                                                                     |
+|   +---------+    +---------+    +---------+    +---------+        |
+|   |  Push   |---▶|  Deploy |---▶| Verify  |---▶| Monitor |        |
+|   |Registry |    |  Staging|    |  Health |    |  Logs   |        |
+|   +---------+    +---------+    +---------+    +---------+        |
+|        |              |              |              |               |
+|        ▼              ▼              ▼              ▼               |
+|   GHCR/ECR/GCR  Kubernetes     healthcheck    Prometheus           |
+|   tagged         rollout       endpoints      Grafana              |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -5727,42 +5727,42 @@ Det är fredag kväll. Din container startar inte i produktion. Logs visar ingen
 ## Debugging Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DOCKER DEBUGGING WORKFLOW                        │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   1. CHECK STATE                                                    │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  docker ps -a                    │ Is it running?           │  │
-│   │  docker inspect container        │ What's the state?        │  │
-│   │  docker inspect --format         │ Exit code? OOMKilled?    │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│                              ▼                                      │
-│   2. CHECK LOGS                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  docker logs container           │ What happened?           │  │
-│   │  docker logs --tail 100          │ Recent errors?           │  │
-│   │  docker logs --since 5m          │ Last 5 minutes           │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│                              ▼                                      │
-│   3. INTERACT                                                       │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  docker exec -it container bash  │ Get inside               │  │
-│   │  curl, ping, nslookup            │ Network issues?          │  │
-│   │  cat, ls, env                    │ Files/config correct?    │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│                              ▼                                      │
-│   4. ISOLATE                                                        │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  docker run with overrides       │ Test different configs   │  │
-│   │  docker commit + inspect         │ Examine dead container   │  │
-│   │  Debug container (nicolaka)      │ Network namespace tools  │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DOCKER DEBUGGING WORKFLOW                        |
++---------------------------------------------------------------------+
+|                                                                     |
+|   1. CHECK STATE                                                    |
+|   +-------------------------------------------------------------+  |
+|   |  docker ps -a                    | Is it running?           |  |
+|   |  docker inspect container        | What's the state?        |  |
+|   |  docker inspect --format         | Exit code? OOMKilled?    |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|                              ▼                                      |
+|   2. CHECK LOGS                                                     |
+|   +-------------------------------------------------------------+  |
+|   |  docker logs container           | What happened?           |  |
+|   |  docker logs --tail 100          | Recent errors?           |  |
+|   |  docker logs --since 5m          | Last 5 minutes           |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|                              ▼                                      |
+|   3. INTERACT                                                       |
+|   +-------------------------------------------------------------+  |
+|   |  docker exec -it container bash  | Get inside               |  |
+|   |  curl, ping, nslookup            | Network issues?          |  |
+|   |  cat, ls, env                    | Files/config correct?    |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|                              ▼                                      |
+|   4. ISOLATE                                                        |
+|   +-------------------------------------------------------------+  |
+|   |  docker run with overrides       | Test different configs   |  |
+|   |  docker commit + inspect         | Examine dead container   |  |
+|   |  Debug container (nicolaka)      | Network namespace tools  |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -6182,40 +6182,40 @@ Din pipeline tar 15 minuter. Du pushar 10 gånger om dagen. Det är 2.5 timmar v
 ## Build Performance Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    BUILD OPTIMIZATION LAYERS                        │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  BUILDKIT ENGINE                                             │  │
-│   │  ┌──────────────────┐  ┌──────────────────┐                 │  │
-│   │  │ Parallel builds  │  │ Efficient cache  │                 │  │
-│   │  │ Secret mounts    │  │ Inline cache     │                 │  │
-│   │  └──────────────────┘  └──────────────────┘                 │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  LAYER OPTIMIZATION                                          │  │
-│   │  • Order by change frequency                                │  │
-│   │  • Minimize layer count                                     │  │
-│   │  • Use cache mounts                                         │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  BUILD CONTEXT                                               │  │
-│   │  • Minimal .dockerignore                                    │  │
-│   │  • Targeted COPY commands                                   │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                              │                                      │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  MULTI-STAGE                                                 │  │
-│   │  • Separate build/runtime                                   │  │
-│   │  • Parallel independent stages                              │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   Before: 15 minutes  →  After: 90 seconds                         │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    BUILD OPTIMIZATION LAYERS                        |
++---------------------------------------------------------------------+
+|                                                                     |
+|   +-------------------------------------------------------------+  |
+|   |  BUILDKIT ENGINE                                             |  |
+|   |  +------------------+  +------------------+                 |  |
+|   |  | Parallel builds  |  | Efficient cache  |                 |  |
+|   |  | Secret mounts    |  | Inline cache     |                 |  |
+|   |  +------------------+  +------------------+                 |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |  LAYER OPTIMIZATION                                          |  |
+|   |  • Order by change frequency                                |  |
+|   |  • Minimize layer count                                     |  |
+|   |  • Use cache mounts                                         |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |  BUILD CONTEXT                                               |  |
+|   |  • Minimal .dockerignore                                    |  |
+|   |  • Targeted COPY commands                                   |  |
+|   +-------------------------------------------------------------+  |
+|                              |                                      |
+|   +-------------------------------------------------------------+  |
+|   |  MULTI-STAGE                                                 |  |
+|   |  • Separate build/runtime                                   |  |
+|   |  • Parallel independent stages                              |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   Before: 15 minutes  ->  After: 90 seconds                         |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -6295,21 +6295,21 @@ COPY --from=backend /backend /app
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    PARALLEL BUILD FLOW                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Utan parallellism:                                                │
-│   [frontend 3m] → [backend 4m] → [production 30s] = 7.5 min        │
-│                                                                     │
-│   Med BuildKit parallellism:                                        │
-│   [frontend 3m]  ─┐                                                 │
-│                    ├── [production 30s] = 4.5 min                  │
-│   [backend 4m]  ──┘                                                 │
-│                                                                     │
-│   Tidsbesparing: 40%!                                               │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    PARALLEL BUILD FLOW                              |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Utan parallellism:                                                |
+|   [frontend 3m] -> [backend 4m] -> [production 30s] = 7.5 min        |
+|                                                                     |
+|   Med BuildKit parallellism:                                        |
+|   [frontend 3m]  -+                                                 |
+|                    +-- [production 30s] = 4.5 min                  |
+|   [backend 4m]  --+                                                 |
+|                                                                     |
+|   Tidsbesparing: 40%!                                               |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -6427,7 +6427,7 @@ docker buildx build \
 # ❌ DÅLIGT: Dependencies installeras om vid varje kodändring
 FROM python:3.11-slim
 WORKDIR /app
-COPY . .                           # Alla filer → invaliderar cache
+COPY . .                           # Alla filer -> invaliderar cache
 RUN pip install -r requirements.txt  # Körs varje gång!
 
 # ✅ BRA: Dependencies cachas
@@ -6441,21 +6441,21 @@ COPY . .                           # Endast detta körs vid kodändring
 ### Layer Order Rules
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    OPTIMAL LAYER ORDER                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   1. Base image                    (Ändras nästan aldrig)          │
-│   2. System packages               (Ändras sällan)                  │
-│   3. Package manager files         (package.json, requirements.txt) │
-│   4. Package install               (Cachad om #3 inte ändrats)     │
-│   5. Build tools/configs           (Ändras sällan)                 │
-│   6. Source code                   (Ändras ofta)                   │
-│   7. Build command                 (Beror på #6)                   │
-│                                                                     │
-│   Regel: Saker som ändras ofta SIST!                                │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    OPTIMAL LAYER ORDER                              |
++---------------------------------------------------------------------+
+|                                                                     |
+|   1. Base image                    (Ändras nästan aldrig)          |
+|   2. System packages               (Ändras sällan)                  |
+|   3. Package manager files         (package.json, requirements.txt) |
+|   4. Package install               (Cachad om #3 inte ändrats)     |
+|   5. Build tools/configs           (Ändras sällan)                 |
+|   6. Source code                   (Ändras ofta)                   |
+|   7. Build command                 (Beror på #6)                   |
+|                                                                     |
+|   Regel: Saker som ändras ofta SIST!                                |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -6523,10 +6523,10 @@ Jenkinsfile
 ```bash
 # Se vad som skickas till Docker daemon
 docker build --no-cache -t test . 2>&1 | grep "Sending build context"
-# Sending build context to Docker daemon  2.048GB  ← För stort!
+# Sending build context to Docker daemon  2.048GB  <- För stort!
 
 # Med bra .dockerignore:
-# Sending build context to Docker daemon  5.12MB   ← Bättre!
+# Sending build context to Docker daemon  5.12MB   <- Bättre!
 ```
 
 ---
@@ -6671,42 +6671,42 @@ Scenario: Din container kör. `docker ps` visar "Up 2 hours". Men API:t returner
 ## Healthcheck Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DOCKER HEALTHCHECK FLOW                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Container Start                                                   │
-│        │                                                            │
-│        ▼                                                            │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  STATUS: starting                                            │  │
-│   │  (Under start_period - healthchecks körs men ignoreras)     │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│        │                                                            │
-│        ▼  After start_period                                        │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │  HEALTHCHECK LOOP                                            │  │
-│   │  ┌──────────────────────────────────────────────────────┐   │  │
-│   │  │  interval: 30s                                        │   │  │
-│   │  │  timeout: 10s                                         │   │  │
-│   │  │  retries: 3                                           │   │  │
-│   │  └──────────────────────────────────────────────────────┘   │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│        │                              │                             │
-│        ▼                              ▼                             │
-│   ┌────────────┐               ┌────────────┐                      │
-│   │  HEALTHY   │               │ UNHEALTHY  │                      │
-│   │ exit 0     │               │ exit 1     │                      │
-│   │            │               │ (retries   │                      │
-│   │ Container  │               │  exceeded) │                      │
-│   │ stays up   │               │            │                      │
-│   └────────────┘               │ Actions:   │                      │
-│                                │ • Log      │                      │
-│                                │ • Restart  │                      │
-│                                │ • Remove   │                      │
-│                                └────────────┘                      │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DOCKER HEALTHCHECK FLOW                          |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Container Start                                                   |
+|        |                                                            |
+|        ▼                                                            |
+|   +-------------------------------------------------------------+  |
+|   |  STATUS: starting                                            |  |
+|   |  (Under start_period - healthchecks körs men ignoreras)     |  |
+|   +-------------------------------------------------------------+  |
+|        |                                                            |
+|        ▼  After start_period                                        |
+|   +-------------------------------------------------------------+  |
+|   |  HEALTHCHECK LOOP                                            |  |
+|   |  +------------------------------------------------------+   |  |
+|   |  |  interval: 30s                                        |   |  |
+|   |  |  timeout: 10s                                         |   |  |
+|   |  |  retries: 3                                           |   |  |
+|   |  +------------------------------------------------------+   |  |
+|   +-------------------------------------------------------------+  |
+|        |                              |                             |
+|        ▼                              ▼                             |
+|   +------------+               +------------+                      |
+|   |  HEALTHY   |               | UNHEALTHY  |                      |
+|   | exit 0     |               | exit 1     |                      |
+|   |            |               | (retries   |                      |
+|   | Container  |               |  exceeded) |                      |
+|   | stays up   |               |            |                      |
+|   +------------+               | Actions:   |                      |
+|                                | • Log      |                      |
+|                                | • Restart  |                      |
+|                                | • Remove   |                      |
+|                                +------------+                      |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -6903,24 +6903,24 @@ services:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    STARTUP ORDER WITH HEALTHCHECKS                  │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Timeline:                                                         │
-│   0s    5s   10s   15s   20s   25s   30s   35s   40s               │
-│   │─────│─────│─────│─────│─────│─────│─────│─────│                │
-│   │                                                                 │
-│   │ [db starts]                                                     │
-│   │     [db healthy ✓]                                              │
-│   │         [redis starts]                                          │
-│   │             [redis healthy ✓]                                   │
-│   │                 [api starts]                                    │
-│   │                         [api start_period]                      │
-│   │                                     [api healthy ✓]             │
-│   │                                         [worker starts]         │
-│   │                                                                 │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    STARTUP ORDER WITH HEALTHCHECKS                  |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Timeline:                                                         |
+|   0s    5s   10s   15s   20s   25s   30s   35s   40s               |
+|   |-----|-----|-----|-----|-----|-----|-----|-----|                |
+|   |                                                                 |
+|   | [db starts]                                                     |
+|   |     [db healthy ✓]                                              |
+|   |         [redis starts]                                          |
+|   |             [redis healthy ✓]                                   |
+|   |                 [api starts]                                    |
+|   |                         [api start_period]                      |
+|   |                                     [api healthy ✓]             |
+|   |                                         [worker starts]         |
+|   |                                                                 |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -7158,47 +7158,47 @@ Du har en app på en server. Servern går ner. App down. Users arg. Med Swarm: d
 ## Swarm Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DOCKER SWARM ARKITEKTUR                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│                        SWARM CLUSTER                                │
-│   ┌─────────────────────────────────────────────────────────────┐  │
-│   │                                                              │  │
-│   │   MANAGER NODES (Odd number: 1, 3, 5)                       │  │
-│   │   ┌────────────┐  ┌────────────┐  ┌────────────┐           │  │
-│   │   │  Manager1  │  │  Manager2  │  │  Manager3  │           │  │
-│   │   │  (Leader)  │  │ (Reachable)│  │ (Reachable)│           │  │
-│   │   │            │  │            │  │            │           │  │
-│   │   │  Raft      │◀─│──Consensus─│─▶│            │           │  │
-│   │   │  Leader    │  │            │  │            │           │  │
-│   │   └────────────┘  └────────────┘  └────────────┘           │  │
-│   │         │                │               │                  │  │
-│   │         └────────────────┼───────────────┘                  │  │
-│   │                          │                                  │  │
-│   │                    Scheduling                               │  │
-│   │                          │                                  │  │
-│   │   WORKER NODES                                              │  │
-│   │   ┌────────────┐  ┌────────────┐  ┌────────────┐           │  │
-│   │   │  Worker1   │  │  Worker2   │  │  Worker3   │           │  │
-│   │   │ ┌────────┐ │  │ ┌────────┐ │  │ ┌────────┐ │           │  │
-│   │   │ │Task 1  │ │  │ │Task 2  │ │  │ │Task 3  │ │           │  │
-│   │   │ │(nginx) │ │  │ │(nginx) │ │  │ │(nginx) │ │           │  │
-│   │   │ └────────┘ │  │ └────────┘ │  │ └────────┘ │           │  │
-│   │   │ ┌────────┐ │  │ ┌────────┐ │  │            │           │  │
-│   │   │ │Task 4  │ │  │ │Task 5  │ │  │            │           │  │
-│   │   │ │(api)   │ │  │ │(api)   │ │  │            │           │  │
-│   │   │ └────────┘ │  │ └────────┘ │  │            │           │  │
-│   │   └────────────┘  └────────────┘  └────────────┘           │  │
-│   │                                                              │  │
-│   └─────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│   Key concepts:                                                     │
-│   • Service: Desired state (3 replicas of nginx)                   │
-│   • Task: One container instance running                           │
-│   • Node: A Docker host in the swarm                               │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DOCKER SWARM ARKITEKTUR                          |
++---------------------------------------------------------------------+
+|                                                                     |
+|                        SWARM CLUSTER                                |
+|   +-------------------------------------------------------------+  |
+|   |                                                              |  |
+|   |   MANAGER NODES (Odd number: 1, 3, 5)                       |  |
+|   |   +------------+  +------------+  +------------+           |  |
+|   |   |  Manager1  |  |  Manager2  |  |  Manager3  |           |  |
+|   |   |  (Leader)  |  | (Reachable)|  | (Reachable)|           |  |
+|   |   |            |  |            |  |            |           |  |
+|   |   |  Raft      |◀-|--Consensus-|-▶|            |           |  |
+|   |   |  Leader    |  |            |  |            |           |  |
+|   |   +------------+  +------------+  +------------+           |  |
+|   |         |                |               |                  |  |
+|   |         +----------------+---------------+                  |  |
+|   |                          |                                  |  |
+|   |                    Scheduling                               |  |
+|   |                          |                                  |  |
+|   |   WORKER NODES                                              |  |
+|   |   +------------+  +------------+  +------------+           |  |
+|   |   |  Worker1   |  |  Worker2   |  |  Worker3   |           |  |
+|   |   | +--------+ |  | +--------+ |  | +--------+ |           |  |
+|   |   | |Task 1  | |  | |Task 2  | |  | |Task 3  | |           |  |
+|   |   | |(nginx) | |  | |(nginx) | |  | |(nginx) | |           |  |
+|   |   | +--------+ |  | +--------+ |  | +--------+ |           |  |
+|   |   | +--------+ |  | +--------+ |  |            |           |  |
+|   |   | |Task 4  | |  | |Task 5  | |  |            |           |  |
+|   |   | |(api)   | |  | |(api)   | |  |            |           |  |
+|   |   | +--------+ |  | +--------+ |  |            |           |  |
+|   |   +------------+  +------------+  +------------+           |  |
+|   |                                                              |  |
+|   +-------------------------------------------------------------+  |
+|                                                                     |
+|   Key concepts:                                                     |
+|   • Service: Desired state (3 replicas of nginx)                   |
+|   • Task: One container instance running                           |
+|   • Node: A Docker host in the swarm                               |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -7483,25 +7483,25 @@ docker service rollback api
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    ROLLING UPDATE FLOW                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   Before: 5 replicas v1                                             │
-│   [v1] [v1] [v1] [v1] [v1]                                         │
-│                                                                     │
-│   Step 1: Start 2 new (parallelism: 2)                             │
-│   [v1] [v1] [v1] [v2] [v2]                                         │
-│                                                                     │
-│   Step 2: Delay 10s, then continue                                 │
-│   [v1] [v1] [v2] [v2] [v2]                                         │
-│                                                                     │
-│   Step 3: Finish                                                    │
-│   [v2] [v2] [v2] [v2] [v2]                                         │
-│                                                                     │
-│   Total time: ~30 seconds with zero downtime!                       │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    ROLLING UPDATE FLOW                              |
++---------------------------------------------------------------------+
+|                                                                     |
+|   Before: 5 replicas v1                                             |
+|   [v1] [v1] [v1] [v1] [v1]                                         |
+|                                                                     |
+|   Step 1: Start 2 new (parallelism: 2)                             |
+|   [v1] [v1] [v1] [v2] [v2]                                         |
+|                                                                     |
+|   Step 2: Delay 10s, then continue                                 |
+|   [v1] [v1] [v2] [v2] [v2]                                         |
+|                                                                     |
+|   Step 3: Finish                                                    |
+|   [v2] [v2] [v2] [v2] [v2]                                         |
+|                                                                     |
+|   Total time: ~30 seconds with zero downtime!                       |
+|                                                                     |
++---------------------------------------------------------------------+
 ```
 
 ---
@@ -7673,11 +7673,11 @@ Du kan nu orchestrera containers med Swarm! Nästa task: **Production Patterns**
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -7784,11 +7784,11 @@ services:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -7884,11 +7884,11 @@ services:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8028,15 +8028,15 @@ docker rm <id>
 ## Container vs VM
 
 ```
-┌─────────────────────────────────────┐
-│           Containers                │
-├─────────┬─────────┬─────────────────┤
-│  App A  │  App B  │     App C       │
-├─────────┴─────────┴─────────────────┤
-│           Docker Engine             │
-├─────────────────────────────────────┤
-│           Host OS (Linux)           │
-└─────────────────────────────────────┘
++-------------------------------------+
+|           Containers                |
++---------+---------+-----------------+
+|  App A  |  App B  |     App C       |
++---------+---------+-----------------+
+|           Docker Engine             |
++-------------------------------------+
+|           Host OS (Linux)           |
++-------------------------------------+
 ```
 
 **Nästa steg:** Node 2 - Docker Images
@@ -8057,11 +8057,11 @@ docker rm <id>
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8101,7 +8101,7 @@ docker inspect python:3.11
 registry/repository:tag
 
 docker.io/library/python:3.11-slim
-└──────┘ └──────┘ └────┘ └────────┘
++------+ +------+ +----+ +--------+
 registry  org     image    tag
 ```
 
@@ -8153,11 +8153,11 @@ docker push registry.com/myapp:v1.0.0
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8255,11 +8255,11 @@ CMD ["app.py"]  # Argument till ENTRYPOINT
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8277,7 +8277,7 @@ Förstå containers livscykel.
 ## Lifecycle States
 
 ```
-Created → Running → Paused → Stopped → Removed
+Created -> Running -> Paused -> Stopped -> Removed
 ```
 
 ## Hantera Containers
@@ -8367,11 +8367,11 @@ docker system prune -a
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8462,11 +8462,11 @@ docker run -v mydata:/data:rw nginx
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8573,11 +8573,11 @@ docker run -d --name web \
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8682,11 +8682,11 @@ docker compose restart api
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8813,11 +8813,11 @@ networks:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8919,11 +8919,11 @@ WORKDIR /home/appuser/app
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9020,11 +9020,11 @@ docker build --target production -t myapp:prod .
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9130,11 +9130,11 @@ secrets:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9229,11 +9229,11 @@ docker push ghcr.io/username/myapp:v1
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9325,11 +9325,11 @@ build:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9438,11 +9438,11 @@ docker top myapp
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9545,11 +9545,11 @@ dive myapp:latest  # Interaktivt verktyg
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9651,11 +9651,11 @@ services:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9754,11 +9754,11 @@ docker stack services myapp
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9865,11 +9865,11 @@ services:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9965,11 +9965,11 @@ services:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig

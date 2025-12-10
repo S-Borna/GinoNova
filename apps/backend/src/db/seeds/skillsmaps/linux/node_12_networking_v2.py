@@ -39,20 +39,20 @@ LINUX_NODE_12_NETWORKING_V2 = {
                         "title": "ip - Network Interfaces",
                         "explanation": "ip-kommandot ersätter ifconfig. 'ip addr' visar interfaces och IP-adresser, 'ip route' visar routing.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ IP ADDR OUTPUT                                      │
-├─────────────────────────────────────────────────────┤
-│ $ ip addr                                           │
-│ 1: lo: <LOOPBACK,UP>                               │
-│     inet 127.0.0.1/8 scope host lo                 │
-│ 2: eth0: <BROADCAST,UP>                            │
-│     inet 192.168.1.10/24 scope global eth0         │
-├─────────────────────────────────────────────────────┤
-│ IP KOMMANDON                                        │
-│ ip addr          │ Visa alla interfaces            │
-│ ip route         │ Visa routing table              │
-│ ip link show     │ Visa link-status                │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| IP ADDR OUTPUT                                      |
++-----------------------------------------------------+
+| $ ip addr                                           |
+| 1: lo: <LOOPBACK,UP>                               |
+|     inet 127.0.0.1/8 scope host lo                 |
+| 2: eth0: <BROADCAST,UP>                            |
+|     inet 192.168.1.10/24 scope global eth0         |
++-----------------------------------------------------+
+| IP KOMMANDON                                        |
+| ip addr          | Visa alla interfaces            |
+| ip route         | Visa routing table              |
+| ip link show     | Visa link-status                |
++-----------------------------------------------------+""",
                         "pro_tip": "'ip a' är kortform för 'ip addr show'",
                         "common_mistake": "Att använda ifconfig på moderna system - det är deprecated!"
                     },
@@ -60,18 +60,18 @@ LINUX_NODE_12_NETWORKING_V2 = {
                         "title": "ss - Socket Statistics",
                         "explanation": "ss visar nätverksanslutningar och lyssnande portar. Ersätter netstat. -t=TCP, -u=UDP, -l=listening, -n=numerisk, -p=process.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ SS KOMMANDON                                        │
-├─────────────────────────────────────────────────────┤
-│ ss -tuln        │ Alla lyssnande TCP/UDP-portar    │
-│ ss -tulnp       │ Med process-info (kräver sudo)   │
-│ ss -tun         │ Etablerade connections           │
-│ ss -tuln|grep :80│ Filtrera på port 80             │
-├─────────────────────────────────────────────────────┤
-│ FLAGS:                                              │
-│ -t = TCP    -u = UDP    -l = Listening             │
-│ -n = Numeric (port nr)  -p = Process               │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| SS KOMMANDON                                        |
++-----------------------------------------------------+
+| ss -tuln        | Alla lyssnande TCP/UDP-portar    |
+| ss -tulnp       | Med process-info (kräver sudo)   |
+| ss -tun         | Etablerade connections           |
+| ss -tuln|grep :80| Filtrera på port 80             |
++-----------------------------------------------------+
+| FLAGS:                                              |
+| -t = TCP    -u = UDP    -l = Listening             |
+| -n = Numeric (port nr)  -p = Process               |
++-----------------------------------------------------+""",
                         "pro_tip": "sudo ss -tulnp visar vilken process som lyssnar på varje port",
                         "common_mistake": "Att glömma -n och få service-namn istället för portnummer."
                     },
@@ -79,17 +79,17 @@ LINUX_NODE_12_NETWORKING_V2 = {
                         "title": "Connectivity Testing",
                         "explanation": "ping testar om en host är nåbar. traceroute visar vägen genom nätverket. Kombination ger komplett bild.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DEBUGGING FLOW                                      │
-├─────────────────────────────────────────────────────┤
-│ 1. ping -c 4 8.8.8.8     │ Fungerar internet?      │
-│ 2. ping -c 4 google.com  │ Fungerar DNS?           │
-│ 3. traceroute google.com │ Var fastnar trafiken?   │
-│ 4. ss -tuln              │ Lyssnar tjänsten?       │
-│ 5. nc -zv host 443       │ Är porten öppen?        │
-├─────────────────────────────────────────────────────┤
-│ mtr google.com = ping + traceroute kombinerat      │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DEBUGGING FLOW                                      |
++-----------------------------------------------------+
+| 1. ping -c 4 8.8.8.8     | Fungerar internet?      |
+| 2. ping -c 4 google.com  | Fungerar DNS?           |
+| 3. traceroute google.com | Var fastnar trafiken?   |
+| 4. ss -tuln              | Lyssnar tjänsten?       |
+| 5. nc -zv host 443       | Är porten öppen?        |
++-----------------------------------------------------+
+| mtr google.com = ping + traceroute kombinerat      |
++-----------------------------------------------------+""",
                         "pro_tip": "mtr ger live-uppdaterad traceroute - perfekt för att hitta intermittenta problem!",
                         "common_mistake": "Att bara testa DNS (hostname) - börja med IP (8.8.8.8) för att isolera problemet."
                     }

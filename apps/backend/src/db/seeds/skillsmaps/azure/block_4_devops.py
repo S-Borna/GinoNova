@@ -26,7 +26,7 @@ AZURE_NODE_13_DEVOPS = {
 
 > *"Plan smarter, collaborate better, ship faster."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,48 +37,48 @@ AZURE_NODE_13_DEVOPS = {
 | Compliance | Svart att spara audit trail | Inbyggd traceability |
 | Kostnader | Betala for flera verktyg | Generos gratis-tier |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure DevOps Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE DEVOPS SERVICES                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                      ORGANIZATION                         │   │
-│  │  ┌─────────────────────────────────────────────────────┐ │   │
-│  │  │                     PROJECT                          │ │   │
-│  │  │                                                      │ │   │
-│  │  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │ │   │
-│  │  │  │ BOARDS  │ │  REPOS  │ │PIPELINES│ │ARTIFACTS│   │ │   │
-│  │  │  │         │ │         │ │         │ │         │   │ │   │
-│  │  │  │ Work    │ │ Git     │ │ Build   │ │ NuGet   │   │ │   │
-│  │  │  │ Items   │ │ hosting │ │ Release │ │ npm     │   │ │   │
-│  │  │  │ Sprints │ │ PRs     │ │ YAML    │ │ Maven   │   │ │   │
-│  │  │  │ Kanban  │ │ Branch  │ │ Classic │ │ Python  │   │ │   │
-│  │  │  │         │ │ policies│ │         │ │ Docker  │   │ │   │
-│  │  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘   │ │   │
-│  │  │                                                      │ │   │
-│  │  │  ┌─────────┐ ┌─────────┐                            │ │   │
-│  │  │  │  TEST   │ │  WIKI   │                            │ │   │
-│  │  │  │ PLANS   │ │         │                            │ │   │
-│  │  │  │ Manual  │ │ Project │                            │ │   │
-│  │  │  │ tests   │ │ docs    │                            │ │   │
-│  │  │  └─────────┘ └─────────┘                            │ │   │
-│  │  └─────────────────────────────────────────────────────┘ │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  PRICING:                                                       │
-│  - Free: 5 users, unlimited public/private repos                │
-│  - Basic: $6/user/month                                         │
-│  - Basic + Test Plans: $52/user/month                           │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE DEVOPS SERVICES                         |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +----------------------------------------------------------+   |
+|  |                      ORGANIZATION                         |   |
+|  |  +-----------------------------------------------------+ |   |
+|  |  |                     PROJECT                          | |   |
+|  |  |                                                      | |   |
+|  |  |  +---------+ +---------+ +---------+ +---------+   | |   |
+|  |  |  | BOARDS  | |  REPOS  | |PIPELINES| |ARTIFACTS|   | |   |
+|  |  |  |         | |         | |         | |         |   | |   |
+|  |  |  | Work    | | Git     | | Build   | | NuGet   |   | |   |
+|  |  |  | Items   | | hosting | | Release | | npm     |   | |   |
+|  |  |  | Sprints | | PRs     | | YAML    | | Maven   |   | |   |
+|  |  |  | Kanban  | | Branch  | | Classic | | Python  |   | |   |
+|  |  |  |         | | policies| |         | | Docker  |   | |   |
+|  |  |  +---------+ +---------+ +---------+ +---------+   | |   |
+|  |  |                                                      | |   |
+|  |  |  +---------+ +---------+                            | |   |
+|  |  |  |  TEST   | |  WIKI   |                            | |   |
+|  |  |  | PLANS   | |         |                            | |   |
+|  |  |  | Manual  | | Project |                            | |   |
+|  |  |  | tests   | | docs    |                            | |   |
+|  |  |  +---------+ +---------+                            | |   |
+|  |  +-----------------------------------------------------+ |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
+|  PRICING:                                                       |
+|  - Free: 5 users, unlimited public/private repos                |
+|  - Basic: $6/user/month                                         |
+|  - Basic + Test Plans: $52/user/month                           |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komma igang
 
@@ -100,7 +100,7 @@ az devops configure --defaults organization=https://dev.azure.com/myorg project=
 az devops project list --output table
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure Boards
 
@@ -129,7 +129,7 @@ az boards work-item relation add \\
     --target-id 456
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure Repos
 
@@ -144,7 +144,7 @@ az repos create --name "my-new-repo"
 git clone https://dev.azure.com/myorg/MyProject/_git/my-new-repo
 
 # Branch policies (via CLI eller Portal)
-# Portal: Repos → Branches → ... → Branch policies
+# Portal: Repos -> Branches -> ... -> Branch policies
 # - Require minimum reviewers
 # - Check for linked work items
 # - Build validation
@@ -159,7 +159,7 @@ az repos pr create \\
     --work-items 123 456
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure Artifacts
 
@@ -184,13 +184,13 @@ npm publish
 pip install my-package --index-url https://pkgs.dev.azure.com/myorg/_packaging/my-packages/pypi/simple/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service Connections
 
 ```bash
 # Skapa service connection till Azure (för pipelines)
-# Portal: Project Settings → Service connections → New service connection
+# Portal: Project Settings -> Service connections -> New service connection
 
 # Via CLI (ARM service connection)
 az devops service-endpoint azurerm create \\
@@ -205,7 +205,7 @@ az devops service-endpoint azurerm create \\
 az devops service-endpoint list --output table
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Project Settings
 
@@ -218,13 +218,13 @@ az devops service-endpoint list --output table
 # 5. Resolve all comments before merge
 
 # Security: begränsa permissions
-# Project Settings → Permissions → Groups
+# Project Settings -> Permissions -> Groups
 # - Contributors: läs/skriv repos
 # - Readers: endast läs
 # - Project Administrators: full kontroll
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -232,7 +232,7 @@ az devops service-endpoint list --output table
 
 ```bash
 # Skapa ny PAT
-# Portal → User Settings → Personal access tokens → New Token
+# Portal -> User Settings -> Personal access tokens -> New Token
 
 # Scopes att välja:
 # - Code: Read & write
@@ -240,7 +240,7 @@ az devops service-endpoint list --output table
 # - Packaging: Read & write
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -282,7 +282,7 @@ AZURE_NODE_14_ACR = {
 
 > *"Your private Docker Hub, but in Azure."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -293,48 +293,48 @@ AZURE_NODE_14_ACR = {
 | AKS integration | ImagePullSecrets kravs | Attach ACR = somlost |
 | Geo distribution | Lag pull-hastighet | Geo-replication |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ACR Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE CONTAINER REGISTRY                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                    ACR: myregistry                        │   │
-│  │                                                           │   │
-│  │  ┌──────────────────────────────────────────────────┐    │   │
-│  │  │  REPOSITORY: myapp                                │    │   │
-│  │  │  ┌─────────┐ ┌─────────┐ ┌─────────┐            │    │   │
-│  │  │  │ :latest │ │ :v1.0.0 │ │ :abc123 │            │    │   │
-│  │  │  │  (tag)  │ │  (tag)  │ │ (commit)│            │    │   │
-│  │  │  └─────────┘ └─────────┘ └─────────┘            │    │   │
-│  │  └──────────────────────────────────────────────────┘    │   │
-│  │                                                           │   │
-│  │  ┌──────────────────────────────────────────────────┐    │   │
-│  │  │  REPOSITORY: api                                  │    │   │
-│  │  │  ┌─────────┐ ┌─────────┐                         │    │   │
-│  │  │  │ :prod   │ │ :dev    │                         │    │   │
-│  │  │  └─────────┘ └─────────┘                         │    │   │
-│  │  └──────────────────────────────────────────────────┘    │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  TIERS:                                                         │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ Basic        │ Standard     │ Premium                   │    │
-│  │ - 10GB       │ - 100GB      │ - 500GB                   │    │
-│  │ - ~$5/mån    │ - ~$20/mån   │ - ~$50/mån                │    │
-│  │              │              │ - Geo-replication         │    │
-│  │              │              │ - Private Link            │    │
-│  │              │              │ - Content trust           │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE CONTAINER REGISTRY                      |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +----------------------------------------------------------+   |
+|  |                    ACR: myregistry                        |   |
+|  |                                                           |   |
+|  |  +--------------------------------------------------+    |   |
+|  |  |  REPOSITORY: myapp                                |    |   |
+|  |  |  +---------+ +---------+ +---------+            |    |   |
+|  |  |  | :latest | | :v1.0.0 | | :abc123 |            |    |   |
+|  |  |  |  (tag)  | |  (tag)  | | (commit)|            |    |   |
+|  |  |  +---------+ +---------+ +---------+            |    |   |
+|  |  +--------------------------------------------------+    |   |
+|  |                                                           |   |
+|  |  +--------------------------------------------------+    |   |
+|  |  |  REPOSITORY: api                                  |    |   |
+|  |  |  +---------+ +---------+                         |    |   |
+|  |  |  | :prod   | | :dev    |                         |    |   |
+|  |  |  +---------+ +---------+                         |    |   |
+|  |  +--------------------------------------------------+    |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
+|  TIERS:                                                         |
+|  +---------------------------------------------------------+    |
+|  | Basic        | Standard     | Premium                   |    |
+|  | - 10GB       | - 100GB      | - 500GB                   |    |
+|  | - ~$5/mån    | - ~$20/mån   | - ~$50/mån                |    |
+|  |              |              | - Geo-replication         |    |
+|  |              |              | - Private Link            |    |
+|  |              |              | - Content trust           |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa ACR
 
@@ -359,7 +359,7 @@ docker login myregistry123.azurecr.io \\
     --password $(az acr credential show --name myregistry123 --query "passwords[0].value" -o tsv)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Push/Pull Images
 
@@ -382,7 +382,7 @@ az acr repository show-tags --name myregistry123 --repository myapp --output tab
 docker pull myregistry123.azurecr.io/myapp:v1.0.0
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ACR Tasks (Build i molnet)
 
@@ -421,7 +421,7 @@ az acr task create \\
     --file acr-task.yaml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security
 
@@ -453,7 +453,7 @@ az role assignment create \\
     --scope $(az acr show --name myregistry123 --query id -o tsv)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Integration med AKS
 
@@ -470,7 +470,7 @@ az aks update \\
 # image: myregistry123.azurecr.io/myapp:v1.0.0
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cleanup & Retention
 
@@ -502,7 +502,7 @@ az acr task create \\
     --context /dev/null
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -517,7 +517,7 @@ docker logout myregistry123.azurecr.io
 az acr login --name myregistry123
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -559,7 +559,7 @@ AZURE_NODE_15_BICEP = {
 
 > *"Define your infrastructure in code, deploy it anywhere."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -570,38 +570,38 @@ AZURE_NODE_15_BICEP = {
 | DR/Recovery | Timmar att aterbygga miljo | Deploy pa minuter |
 | Code review | Ingen granskning av infra | PR-process for infra |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ARM vs Bicep
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ARM TEMPLATES vs BICEP                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ARM TEMPLATE (JSON)           BICEP (.bicep)                   │
-│  ┌─────────────────────┐      ┌─────────────────────┐          │
-│  │ {                   │      │ param location string│          │
-│  │   "$schema": "...", │  →   │ param name string    │          │
-│  │   "parameters": {   │      │                      │          │
-│  │     "location": {}  │      │ resource sa 'Micro.. │          │
-│  │   },                │      │   name: name         │          │
-│  │   "resources": [...]│      │   location: location │          │
-│  │ }                   │      │ }                    │          │
-│  └─────────────────────┘      └─────────────────────┘          │
-│                                                                  │
-│  ARM:                          Bicep:                           │
-│  ✓ Azure native               ✓ Enklare syntax                  │
-│  ✗ Verbose (mycket JSON)      ✓ Typad, IntelliSense             │
-│  ✗ Svårt att läsa             ✓ Moduler                         │
-│                               ✓ Kompileras till ARM              │
-│                                                                  │
-│  REKOMMENDATION: Använd Bicep för nya projekt!                  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    ARM TEMPLATES vs BICEP                        |
++-----------------------------------------------------------------+
+|                                                                  |
+|  ARM TEMPLATE (JSON)           BICEP (.bicep)                   |
+|  +---------------------+      +---------------------+          |
+|  | {                   |      | param location string|          |
+|  |   "$schema": "...", |  ->   | param name string    |          |
+|  |   "parameters": {   |      |                      |          |
+|  |     "location": {}  |      | resource sa 'Micro.. |          |
+|  |   },                |      |   name: name         |          |
+|  |   "resources": [...]|      |   location: location |          |
+|  | }                   |      | }                    |          |
+|  +---------------------+      +---------------------+          |
+|                                                                  |
+|  ARM:                          Bicep:                           |
+|  ✓ Azure native               ✓ Enklare syntax                  |
+|  ✗ Verbose (mycket JSON)      ✓ Typad, IntelliSense             |
+|  ✗ Svårt att läsa             ✓ Moduler                         |
+|                               ✓ Kompileras till ARM              |
+|                                                                  |
+|  REKOMMENDATION: Använd Bicep för nya projekt!                  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Bicep Basics
 
@@ -689,7 +689,7 @@ output webAppUrl string = 'https://${webApp.properties.defaultHostName}'
 output storageAccountName string = storageAccount.name
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parameters File
 
@@ -709,7 +709,7 @@ output storageAccountName string = storageAccount.name
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Deploy Bicep
 
@@ -749,7 +749,7 @@ az deployment group show \\
     --query properties.outputs
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Bicep Modules
 
@@ -785,7 +785,7 @@ module storage 'modules/storage.bicep' = {
 output storageEndpoint string = storage.outputs.primaryEndpoint
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Loops & Conditions
 
@@ -818,7 +818,7 @@ resource redisCache 'Microsoft.Cache/redis@2023-04-01' = if (deployRedis) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Complete Example: Full Stack
 
@@ -857,7 +857,7 @@ module webapp 'modules/webapp.bicep' = {
 output appUrl string = webapp.outputs.url
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -871,7 +871,7 @@ output appUrl string = webapp.outputs.url
 az deployment group what-if ...
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -913,7 +913,7 @@ AZURE_NODE_16_PIPELINES = {
 
 > *"Automate your build, test, and deployment."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -924,52 +924,52 @@ AZURE_NODE_16_PIPELINES = {
 | Multi-platform | Olika build-maskiner | Windows/Linux/macOS agents |
 | Azure integration | Komplex setup | Native service connections |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pipeline Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE PIPELINE STRUCTURE                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  PIPELINE (azure-pipelines.yml)                                 │
-│  │                                                               │
-│  ├── TRIGGER (when to run)                                      │
-│  │   └── branches, paths, tags                                  │
-│  │                                                               │
-│  ├── VARIABLES                                                   │
-│  │   └── inline, groups, secrets                                │
-│  │                                                               │
-│  └── STAGES                                                      │
-│      │                                                           │
-│      ├── Stage: Build                                           │
-│      │   └── Jobs                                               │
-│      │       └── Job: Build                                     │
-│      │           └── Steps                                      │
-│      │               ├── checkout                               │
-│      │               ├── script: npm install                    │
-│      │               ├── script: npm test                       │
-│      │               └── publish artifact                       │
-│      │                                                           │
-│      ├── Stage: Deploy-Dev                                      │
-│      │   └── Jobs                                               │
-│      │       └── Deployment: dev                                │
-│      │           └── Steps                                      │
-│      │               └── deploy to dev                          │
-│      │                                                           │
-│      └── Stage: Deploy-Prod                                     │
-│          └── condition: succeeded()                             │
-│          └── Jobs                                               │
-│              └── Deployment: prod                               │
-│                  └── approval required                          │
-│                  └── Steps                                      │
-│                      └── deploy to prod                         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE PIPELINE STRUCTURE                      |
++-----------------------------------------------------------------+
+|                                                                  |
+|  PIPELINE (azure-pipelines.yml)                                 |
+|  |                                                               |
+|  +-- TRIGGER (when to run)                                      |
+|  |   +-- branches, paths, tags                                  |
+|  |                                                               |
+|  +-- VARIABLES                                                   |
+|  |   +-- inline, groups, secrets                                |
+|  |                                                               |
+|  +-- STAGES                                                      |
+|      |                                                           |
+|      +-- Stage: Build                                           |
+|      |   +-- Jobs                                               |
+|      |       +-- Job: Build                                     |
+|      |           +-- Steps                                      |
+|      |               +-- checkout                               |
+|      |               +-- script: npm install                    |
+|      |               +-- script: npm test                       |
+|      |               +-- publish artifact                       |
+|      |                                                           |
+|      +-- Stage: Deploy-Dev                                      |
+|      |   +-- Jobs                                               |
+|      |       +-- Deployment: dev                                |
+|      |           +-- Steps                                      |
+|      |               +-- deploy to dev                          |
+|      |                                                           |
+|      +-- Stage: Deploy-Prod                                     |
+|          +-- condition: succeeded()                             |
+|          +-- Jobs                                               |
+|              +-- Deployment: prod                               |
+|                  +-- approval required                          |
+|                  +-- Steps                                      |
+|                      +-- deploy to prod                         |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Basic Pipeline
 
@@ -1023,7 +1023,7 @@ stages:
             displayName: 'Publish Artifact'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multi-Stage Pipeline
 
@@ -1119,16 +1119,16 @@ stages:
                     containers: '$(dockerRegistry)/myapp:$(Build.BuildId)'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environments & Approvals
 
 ```bash
 # Skapa environment i Portal:
-# Pipelines → Environments → New environment
+# Pipelines -> Environments -> New environment
 
 # Konfigurera approvals:
-# Environment → ... → Approvals and checks → Add check → Approvals
+# Environment -> ... -> Approvals and checks -> Add check -> Approvals
 
 # Approvals konfiguration:
 # - Required approvers
@@ -1136,7 +1136,7 @@ stages:
 # - Instructions
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Templates
 
@@ -1172,7 +1172,7 @@ stages:
               nodeVersion: '20.x'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secrets & Variable Groups
 
@@ -1195,7 +1195,7 @@ variables:
   - group: 'kv-secrets'  # Linked to Azure Key Vault
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## PR Validation
 
@@ -1227,7 +1227,7 @@ stages:
           - task: OWASP@2
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -1246,7 +1246,7 @@ paths:
     - 'src/**'  # Om ändring är i docs/, triggas inte
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

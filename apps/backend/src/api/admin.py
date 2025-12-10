@@ -1814,38 +1814,38 @@ Efter denna fördjupning kommer du kunna:
 
 ### Linux: Monolitisk Kernel
 ```
-┌─────────────────────────────────────────┐
-│           User Space (Ring 3)           │
-├─────────────────────────────────────────┤
-│    System Call Interface (syscall)      │
-├─────────────────────────────────────────┤
-│         Linux Kernel (Ring 0)           │
-│  ┌─────────┬─────────┬─────────┐        │
-│  │ Process │ Memory  │  File   │        │
-│  │ Sched.  │  Mgmt   │ Systems │        │
-│  └─────────┴─────────┴─────────┘        │
-│  ┌─────────┬─────────┬─────────┐        │
-│  │ Network │ Device  │   IPC   │        │
-│  │  Stack  │ Drivers │         │        │
-│  └─────────┴─────────┴─────────┘        │
-└─────────────────────────────────────────┘
++-----------------------------------------+
+|           User Space (Ring 3)           |
++-----------------------------------------+
+|    System Call Interface (syscall)      |
++-----------------------------------------+
+|         Linux Kernel (Ring 0)           |
+|  +---------+---------+---------+        |
+|  | Process | Memory  |  File   |        |
+|  | Sched.  |  Mgmt   | Systems |        |
+|  +---------+---------+---------+        |
+|  +---------+---------+---------+        |
+|  | Network | Device  |   IPC   |        |
+|  |  Stack  | Drivers |         |        |
+|  +---------+---------+---------+        |
++-----------------------------------------+
 ```
 
 ### macOS: XNU Hybrid Kernel
 ```
-┌─────────────────────────────────────────┐
-│           User Space (Ring 3)           │
-├─────────────────────────────────────────┤
-│        BSD Layer (POSIX APIs)           │
-├─────────────────────────────────────────┤
-│           Mach Microkernel              │
-│  ┌─────────┬─────────┬─────────┐        │
-│  │  Tasks  │  Ports  │ Memory  │        │
-│  │         │  (IPC)  │  Mgmt   │        │
-│  └─────────┴─────────┴─────────┘        │
-├─────────────────────────────────────────┤
-│         I/O Kit (Device Drivers)        │
-└─────────────────────────────────────────┘
++-----------------------------------------+
+|           User Space (Ring 3)           |
++-----------------------------------------+
+|        BSD Layer (POSIX APIs)           |
++-----------------------------------------+
+|           Mach Microkernel              |
+|  +---------+---------+---------+        |
+|  |  Tasks  |  Ports  | Memory  |        |
+|  |         |  (IPC)  |  Mgmt   |        |
+|  +---------+---------+---------+        |
++-----------------------------------------+
+|         I/O Kit (Device Drivers)        |
++-----------------------------------------+
 ```
 
 ---
@@ -1980,8 +1980,8 @@ p10k configure
 
 ### Resultat:
 ```
-╭─ ~/projects/devopshub main ✔ 3m 42s
-╰─❯ kubectl get pods
+╭- ~/projects/devopshub main ✔ 3m 42s
+╰-❯ kubectl get pods
 ```
 
 ---
@@ -2085,8 +2085,8 @@ function ksh() {
 source ~/.zshrc
 
 # Testa completion (tryck TAB)
-git che<TAB>     # → checkout
-kubectl get p<TAB>  # → pods
+git che<TAB>     # -> checkout
+kubectl get p<TAB>  # -> pods
 
 # Testa alias
 kgp  # kubectl get pods
@@ -2127,29 +2127,29 @@ dps  # docker ps formatted
 Git lagrar allt som **objekt** med SHA-1 hash:
 
 ```
-┌─────────────────────────────────────────────┐
-│                   COMMIT                    │
-│  tree: abc123...                            │
-│  parent: def456...                          │
-│  author: Said <said@dev.com>                │
-│  message: "Add feature X"                   │
-└────────────────────┬────────────────────────┘
-                     │
++---------------------------------------------+
+|                   COMMIT                    |
+|  tree: abc123...                            |
+|  parent: def456...                          |
+|  author: Said <said@dev.com>                |
+|  message: "Add feature X"                   |
++--------------------+------------------------+
+                     |
                      ▼
-┌─────────────────────────────────────────────┐
-│                    TREE                     │
-│  blob: 789abc... README.md                  │
-│  blob: 012def... src/main.py                │
-│  tree: 345ghi... src/utils/                 │
-└─────────────────────────────────────────────┘
-                     │
++---------------------------------------------+
+|                    TREE                     |
+|  blob: 789abc... README.md                  |
+|  blob: 012def... src/main.py                |
+|  tree: 345ghi... src/utils/                 |
++---------------------------------------------+
+                     |
                      ▼
-┌─────────────────────────────────────────────┐
-│                    BLOB                     │
-│  (raw file content)                         │
-│  # My Project                               │
-│  This is the README...                      │
-└─────────────────────────────────────────────┘
++---------------------------------------------+
+|                    BLOB                     |
+|  (raw file content)                         |
+|  # My Project                               |
+|  This is the README...                      |
++---------------------------------------------+
 ```
 
 ---
@@ -2172,8 +2172,8 @@ find .git/objects -type f
 
 ### Läs objektet:
 ```bash
-# git cat-file -t <hash>  → typ
-# git cat-file -p <hash>  → innehåll
+# git cat-file -t <hash>  -> typ
+# git cat-file -p <hash>  -> innehåll
 
 git cat-file -t e965047
 # blob
@@ -2201,15 +2201,15 @@ echo "abc123def456" > .git/refs/heads/my-branch
 
 ### Visualisering:
 ```
-refs/heads/main ──────┐
+refs/heads/main ------+
                       ▼
                   [Commit C]
-                      │
-refs/heads/feature ───┤
-                      │
+                      |
+refs/heads/feature ---+
+                      |
                       ▼
                   [Commit B]
-                      │
+                      |
                       ▼
                   [Commit A]
 ```
@@ -2319,18 +2319,18 @@ ls .git/objects/pack/
 Varje fil i Linux har en **inode** (index node) som innehåller:
 
 ```
-┌────────────────────────────────────────┐
-│              INODE                      │
-├────────────────────────────────────────┤
-│ • File type (file, dir, link, etc)     │
-│ • Permissions (rwxrwxrwx)              │
-│ • Owner (UID)                          │
-│ • Group (GID)                          │
-│ • Size                                 │
-│ • Timestamps (atime, mtime, ctime)     │
-│ • Link count                           │
-│ • Data block pointers                  │
-└────────────────────────────────────────┘
++----------------------------------------+
+|              INODE                      |
++----------------------------------------+
+| • File type (file, dir, link, etc)     |
+| • Permissions (rwxrwxrwx)              |
+| • Owner (UID)                          |
+| • Group (GID)                          |
+| • Size                                 |
+| • Timestamps (atime, mtime, ctime)     |
+| • Link count                           |
+| • Data block pointers                  |
++----------------------------------------+
 ```
 
 ### Utforska inodes:
@@ -2446,18 +2446,18 @@ docker export container_id | tar -tf - | head -20
 
 ```
         Virtual Machines              Containers
-    ┌─────────────────────┐     ┌─────────────────────┐
-    │   App A  │  App B   │     │   App A  │  App B   │
-    ├──────────┼──────────┤     ├──────────┼──────────┤
-    │  Guest   │  Guest   │     │  Bins/   │  Bins/   │
-    │   OS     │   OS     │     │  Libs    │  Libs    │
-    ├──────────┴──────────┤     ├──────────┴──────────┤
-    │     Hypervisor      │     │  Container Runtime  │
-    ├─────────────────────┤     ├─────────────────────┤
-    │      Host OS        │     │      Host OS        │
-    ├─────────────────────┤     ├─────────────────────┤
-    │     Hardware        │     │     Hardware        │
-    └─────────────────────┘     └─────────────────────┘
+    +---------------------+     +---------------------+
+    |   App A  |  App B   |     |   App A  |  App B   |
+    +----------+----------+     +----------+----------+
+    |  Guest   |  Guest   |     |  Bins/   |  Bins/   |
+    |   OS     |   OS     |     |  Libs    |  Libs    |
+    +----------+----------+     +----------+----------+
+    |     Hypervisor      |     |  Container Runtime  |
+    +---------------------+     +---------------------+
+    |      Host OS        |     |      Host OS        |
+    +---------------------+     +---------------------+
+    |     Hardware        |     |     Hardware        |
+    +---------------------+     +---------------------+
 
     ~1-2 GB overhead/VM          ~50-100 MB/container
     Boot: 30-60 sekunder         Boot: <1 sekund

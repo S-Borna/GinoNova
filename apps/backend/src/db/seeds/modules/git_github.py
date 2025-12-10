@@ -26,7 +26,7 @@ MODULE = {
             "content": """
 # Git Fundamentals & Architecture
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -39,29 +39,29 @@ MODULE = {
 
 Git ar fundamentet for ALL modern DevOps - CI/CD, GitOps, Infrastructure as Code.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Gits Arkitektur
 
 Git ar ett DISTRIBUERAT versionskontrollsystem - varje klon ar ett komplett repo.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         GIT WORKFLOW                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌──────────────┐    git add    ┌──────────────┐   git commit   │
-│  │   Working    │ ────────────► │   Staging    │ ────────────►  │
-│  │  Directory   │               │    Area      │                │
-│  │              │               │   (Index)    │                │
-│  │  Dina filer  │               │ Forberedelse │   ┌─────────┐  │
-│  │  pa disk     │               │              │   │  .git/  │  │
-│  └──────────────┘               └──────────────┘   │  Repo   │  │
-│         ▲                                          └─────────┘  │
-│         │                  git checkout/restore                 │
-│         └───────────────────────────────────────────────────────│
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                         GIT WORKFLOW                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +--------------+    git add    +--------------+   git commit   |
+|  |   Working    | ------------► |   Staging    | ------------►  |
+|  |  Directory   |               |    Area      |                |
+|  |              |               |   (Index)    |                |
+|  |  Dina filer  |               | Forberedelse |   +---------+  |
+|  |  pa disk     |               |              |   |  .git/  |  |
+|  +--------------+               +--------------+   |  Repo   |  |
+|         ▲                                          +---------+  |
+|         |                  git checkout/restore                 |
+|         +-------------------------------------------------------|
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 **Gits fyra objekttyper:**
@@ -75,7 +75,7 @@ Git ar ett DISTRIBUERAT versionskontrollsystem - varje klon ar ett komplett repo
 
 Allt identifieras med SHA-1 hashar (40 tecken). Samma innehall = samma hash.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande Git-kommandon
 
@@ -182,26 +182,26 @@ git log -p hello.txt                 # Logg med patches for filen
 git log --follow hello.txt           # Foljer filhistorik aven vid rename
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## .git-katalogen
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      .git/ STRUKTUR                             │
-├─────────────────────────────────────────────────────────────────┤
-│  .git/                                                          │
-│  ├── config         Repo-specifik konfiguration                 │
-│  ├── HEAD           Pekare till aktuell branch                  │
-│  ├── index          Staging area (binarfil)                     │
-│  ├── objects/       Alla Git-objekt (blobs, trees, commits)     │
-│  │   ├── ab/        Objekt med hash som borjar "ab"             │
-│  │   └── pack/      Packade objekt (optimering)                 │
-│  └── refs/          Branch- och tag-pekare                      │
-│      ├── heads/     Lokala branches                             │
-│      ├── remotes/   Remote tracking branches                    │
-│      └── tags/      Taggar                                      │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      .git/ STRUKTUR                             |
++-----------------------------------------------------------------+
+|  .git/                                                          |
+|  +-- config         Repo-specifik konfiguration                 |
+|  +-- HEAD           Pekare till aktuell branch                  |
+|  +-- index          Staging area (binarfil)                     |
+|  +-- objects/       Alla Git-objekt (blobs, trees, commits)     |
+|  |   +-- ab/        Objekt med hash som borjar "ab"             |
+|  |   +-- pack/      Packade objekt (optimering)                 |
+|  +-- refs/          Branch- och tag-pekare                      |
+|      +-- heads/     Lokala branches                             |
+|      +-- remotes/   Remote tracking branches                    |
+|      +-- tags/      Taggar                                      |
++-----------------------------------------------------------------+
 ```
 
 ```bash
@@ -212,7 +212,7 @@ git cat-file -t abc123               # Visar objekttyp (blob/tree/commit)
 git cat-file -p abc123               # Visar objektinnehall
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -225,7 +225,7 @@ git cat-file -p abc123               # Visar objektinnehall
 | git commit                | Sparar staging till repository                      |
 | .git/                     | Innehaller HELA repositoryts data och historik      |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -243,7 +243,7 @@ git cat-file -p abc123               # Visar objektinnehall
             "content": """
 # Branching & Merging
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -256,38 +256,38 @@ git cat-file -p abc123               # Visar objektinnehall
 
 Branching ar det som gor Git overlaget. Det kostar INGENTING att skapa en branch.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Hur Branching Fungerar
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      BRANCH = PEKARE                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  En branch ar BARA en 41-byte fil med en commit-hash!           │
-│                                                                 │
-│      ┌────────┐                                                 │
-│      │  HEAD  │ ◄── Vilken branch du ar pa                      │
-│      └───┬────┘                                                 │
-│          │                                                      │
-│          ▼                                                      │
-│      ┌────────┐        ┌────────┐        ┌────────┐            │
-│      │  main  │───────►│ commit │◄───────│feature │            │
-│      └────────┘        │  C3    │        └────────┘            │
-│                        └───┬────┘                               │
-│                            │                                    │
-│                        ┌───▼────┐        ┌────────┐            │
-│                        │ commit │◄───────│ commit │            │
-│                        │  C2    │        │  C4    │            │
-│                        └───┬────┘        └────────┘            │
-│                            │               (feature)            │
-│                        ┌───▼────┐                               │
-│                        │ commit │                               │
-│                        │  C1    │                               │
-│                        └────────┘                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      BRANCH = PEKARE                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  En branch ar BARA en 41-byte fil med en commit-hash!           |
+|                                                                 |
+|      +--------+                                                 |
+|      |  HEAD  | ◄-- Vilken branch du ar pa                      |
+|      +---+----+                                                 |
+|          |                                                      |
+|          ▼                                                      |
+|      +--------+        +--------+        +--------+            |
+|      |  main  |-------►| commit |◄-------|feature |            |
+|      +--------+        |  C3    |        +--------+            |
+|                        +---+----+                               |
+|                            |                                    |
+|                        +---▼----+        +--------+            |
+|                        | commit |◄-------| commit |            |
+|                        |  C2    |        |  C4    |            |
+|                        +---+----+        +--------+            |
+|                            |               (feature)            |
+|                        +---▼----+                               |
+|                        | commit |                               |
+|                        |  C1    |                               |
+|                        +--------+                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 **Merge-strategier:**
@@ -298,7 +298,7 @@ Branching ar det som gor Git overlaget. Det kostar INGENTING att skapa en branch
 | Three-way merge | Bada branches har commits     | Skapar merge-commit           |
 | Squash merge    | Vill ha clean historik        | En commit med alla andringar  |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa och Hantera Branches
 
@@ -411,7 +411,7 @@ git merge feature-login              # Merga in feature
 git branch -d feature-login          # Ta bort feature-branch
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -423,7 +423,7 @@ git branch -d feature-login          # Ta bort feature-branch
 | --no-ff                   | Tvingar merge-commit aven vid fast-forward          |
 | Stada upp                 | Ta bort mergade branches for ordning                |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -441,7 +441,7 @@ git branch -d feature-login          # Ta bort feature-branch
             "content": """
 # Remote Repositories & GitHub
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -454,31 +454,31 @@ git branch -d feature-login          # Ta bort feature-branch
 
 GitHub ar den dominerande plattformen. Remote-hantering ar kritiskt for DevOps.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Remote Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LOCAL vs REMOTE                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ┌─────────────────┐              ┌─────────────────┐          │
-│   │   LOCAL REPO    │              │  REMOTE (origin)│          │
-│   │                 │    git push  │                 │          │
-│   │  main ─────────────────────────► main           │          │
-│   │                 │              │                 │          │
-│   │  origin/main◄───────────────────                │          │
-│   │  (tracking)     │   git fetch  │                 │          │
-│   │                 │              │                 │          │
-│   │  feature ──────────────────────► feature        │          │
-│   │                 │              │                 │          │
-│   └─────────────────┘              └─────────────────┘          │
-│                                                                 │
-│   origin/main = LOKAL kopia av remote branch                    │
-│   Uppdateras vid fetch/pull, inte automatiskt                   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LOCAL vs REMOTE                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|   +-----------------+              +-----------------+          |
+|   |   LOCAL REPO    |              |  REMOTE (origin)|          |
+|   |                 |    git push  |                 |          |
+|   |  main -------------------------► main           |          |
+|   |                 |              |                 |          |
+|   |  origin/main◄-------------------                |          |
+|   |  (tracking)     |   git fetch  |                 |          |
+|   |                 |              |                 |          |
+|   |  feature ----------------------► feature        |          |
+|   |                 |              |                 |          |
+|   +-----------------+              +-----------------+          |
+|                                                                 |
+|   origin/main = LOKAL kopia av remote branch                    |
+|   Uppdateras vid fetch/pull, inte automatiskt                   |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 **Kommandon:**
@@ -490,7 +490,7 @@ GitHub ar den dominerande plattformen. Remote-hantering ar kritiskt for DevOps.
 | git push       | Skickar dina commits till remote                     |
 | git clone      | Skapar lokal kopia av remote repo                    |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## SSH-nycklar for GitHub
 
@@ -510,7 +510,7 @@ git remote set-url origin git@github.com:user/repo.git  # Byt till SSH
 git remote remove origin             # Tar bort remote-referens
 
 # Byt namn på remote
-git remote rename origin upstream    # Byter namn origin → upstream
+git remote rename origin upstream    # Byter namn origin -> upstream
 ```
 
 ---
@@ -534,7 +534,7 @@ cat ~/.ssh/id_ed25519.pub            # Visa publika nyckeln
 # Kopiera output
 
 # Lägg till på GitHub:
-# 1. Settings → SSH and GPG keys → New SSH key
+# 1. Settings -> SSH and GPG keys -> New SSH key
 # 2. Klistra in publika nyckeln
 # 3. Spara
 
@@ -620,7 +620,7 @@ git merge upstream/main              # Merga upstream's main
 git push origin main                 # Uppdaterar din fork pa GitHub
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -632,7 +632,7 @@ git push origin main                 # Uppdaterar din fork pa GitHub
 | -u (upstream)             | Satter tracking sa du slipper ange remote varje gang|
 | --prune                   | Stadar bort refs till borttagna remote branches     |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -650,7 +650,7 @@ git push origin main                 # Uppdaterar din fork pa GitHub
             "content": """
 # Git Workflow Strategies
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -663,39 +663,39 @@ git push origin main                 # Uppdaterar din fork pa GitHub
 
 Ratt workflow minskar konflikter, forbattrar kodkvalitet och snabbar upp leverans.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Workflow-jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    WORKFLOW COMPARISON                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  GITHUB FLOW (Enkel - Rekommenderas)                           │
-│  ──────────────────────────────────────                         │
-│  main ─────●─────●─────●─────●─────●                           │
-│             \\         /                                         │
-│              ●───────●  feature                                 │
-│                 PR                                              │
-│                                                                 │
-│  GIT FLOW (Komplex - Schemalagda releaser)                     │
-│  ──────────────────────────────────────────                     │
-│  main    ─────●─────────────────●─────●                        │
-│               │                 │     │                         │
-│  release      │     ●───────────●     │                        │
-│               │    /            │     │                         │
-│  develop ─────●───●─────●───────●─────●                        │
-│                    \\   /                                        │
-│  feature            ●─●                                         │
-│                                                                 │
-│  TRUNK-BASED (Snabbast - Mogna team)                           │
-│  ────────────────────────────────────                           │
-│  main ─────●─────●─────●─────●─────●                           │
-│             \\   /   \\   /   \\   /                              │
-│              ●       ●       ●   (kort-livade branches)        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    WORKFLOW COMPARISON                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  GITHUB FLOW (Enkel - Rekommenderas)                           |
+|  --------------------------------------                         |
+|  main -----●-----●-----●-----●-----●                           |
+|             \\         /                                         |
+|              ●-------●  feature                                 |
+|                 PR                                              |
+|                                                                 |
+|  GIT FLOW (Komplex - Schemalagda releaser)                     |
+|  ------------------------------------------                     |
+|  main    -----●-----------------●-----●                        |
+|               |                 |     |                         |
+|  release      |     ●-----------●     |                        |
+|               |    /            |     |                         |
+|  develop -----●---●-----●-------●-----●                        |
+|                    \\   /                                        |
+|  feature            ●-●                                         |
+|                                                                 |
+|  TRUNK-BASED (Snabbast - Mogna team)                           |
+|  ------------------------------------                           |
+|  main -----●-----●-----●-----●-----●                           |
+|             \\   /   \\   /   \\   /                              |
+|              ●       ●       ●   (kort-livade branches)        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Workflow     | Komplexitet | Release-frekvens   | Bast for               |
@@ -704,7 +704,7 @@ Ratt workflow minskar konflikter, forbattrar kodkvalitet och snabbar upp leveran
 | Git Flow     | Hog         | Schemalagd         | Stora projekt, apps   |
 | Trunk-Based  | Lag         | Kontinuerlig       | Mogna team, micro     |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GitHub Flow (Rekommenderat)
 
@@ -816,7 +816,7 @@ git commit -m "Update button color"  # Commita
 git push -u origin feat/button-color # Pusha
 
 # Merge samma dag (efter CI passerar)
-# PR → Review → Merge
+# PR -> Review -> Merge
 
 # Feature flags för större features
 # if (featureFlags.newCheckout) { ... }
@@ -883,7 +883,7 @@ feature/JIRA-123-user-auth
 fix/GH-456-login-bug
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -895,7 +895,7 @@ fix/GH-456-login-bug
 | Conventional Commits      | Gor historiken lasbar och automatiserbar            |
 | Konsekvent namngivning    | feature/, fix/, hotfix/ - hjalper hela teamet       |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -913,7 +913,7 @@ fix/GH-456-login-bug
             "content": """
 # Rebasing & Interactive Rebase
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -926,33 +926,33 @@ fix/GH-456-login-bug
 
 Professionella utvecklare forvantas kunna halla en ren Git-historik.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Merge vs Rebase
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MERGE vs REBASE                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  FORE:                                                          │
-│        A───B───C feature                                        │
-│       /                                                         │
-│  D───E───F───G main                                             │
-│                                                                 │
-│  EFTER MERGE:                                                   │
-│        A───B───C                                                │
-│       /         \\                                               │
-│  D───E───F───G───M main  (M = merge commit)                    │
-│                                                                 │
-│  EFTER REBASE:                                                  │
-│                  A'──B'──C' feature                            │
-│                 /                                               │
-│  D───E───F───G main                                             │
-│                                                                 │
-│  Rebase "flyttar" commits till ny bas (nya hashar A', B', C')  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MERGE vs REBASE                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  FORE:                                                          |
+|        A---B---C feature                                        |
+|       /                                                         |
+|  D---E---F---G main                                             |
+|                                                                 |
+|  EFTER MERGE:                                                   |
+|        A---B---C                                                |
+|       /         \\                                               |
+|  D---E---F---G---M main  (M = merge commit)                    |
+|                                                                 |
+|  EFTER REBASE:                                                  |
+|                  A'--B'--C' feature                            |
+|                 /                                               |
+|  D---E---F---G main                                             |
+|                                                                 |
+|  Rebase "flyttar" commits till ny bas (nya hashar A', B', C')  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Aspekt          | Merge                         | Rebase                        |
@@ -961,7 +961,7 @@ Professionella utvecklare forvantas kunna halla en ren Git-historik.
 | Saker           | Aldrig problem                | Farligt for publika commits   |
 | Anvandning      | Publika branches, PRs         | Lokala branches, cleanup      |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande Rebase
 
@@ -1131,7 +1131,7 @@ git reflog                           # Visar alla HEAD-ändringar
 git reset --hard HEAD@{2}            # Aterstall till tidigare tillstand
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Interactive Rebase Actions
 
@@ -1144,7 +1144,7 @@ git reset --hard HEAD@{2}            # Aterstall till tidigare tillstand
 | drop     | Ta bort commit helt                                  |
 | edit     | Pausa for att andra commit                           |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1156,7 +1156,7 @@ git reset --hard HEAD@{2}            # Aterstall till tidigare tillstand
 | --fixup + --autosquash    | Automatiserar cleanup                               |
 | ALDRIG rebasa publikt     | Anvand --force-with-lease om nodvandigt             |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -1174,7 +1174,7 @@ git reset --hard HEAD@{2}            # Aterstall till tidigare tillstand
             "content": """
 # Undoing Changes & Recovery
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1187,32 +1187,32 @@ git reset --hard HEAD@{2}            # Aterstall till tidigare tillstand
 
 Formagan att aterstalla ar skillnaden mellan panik och lugn problemlosning.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Undo Cheat Sheet
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      UNDO DECISION TREE                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Var ar andringen?                                              │
-│  │                                                              │
-│  ├─► Working Directory (ej stagad)                              │
-│  │   └─► git restore <file>                                     │
-│  │                                                              │
-│  ├─► Staging Area (stagad, ej committad)                        │
-│  │   └─► git restore --staged <file>                            │
-│  │                                                              │
-│  ├─► Committad (lokalt)                                         │
-│  │   ├─► Angra + behall andringar: git reset --soft HEAD~1      │
-│  │   ├─► Angra + unstage: git reset HEAD~1                      │
-│  │   └─► Angra + kasta allt: git reset --hard HEAD~1            │
-│  │                                                              │
-│  └─► Pushad (remote)                                            │
-│      └─► git revert HEAD (skapar NY commit som angrar)          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      UNDO DECISION TREE                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Var ar andringen?                                              |
+|  |                                                              |
+|  +-► Working Directory (ej stagad)                              |
+|  |   +-► git restore <file>                                     |
+|  |                                                              |
+|  +-► Staging Area (stagad, ej committad)                        |
+|  |   +-► git restore --staged <file>                            |
+|  |                                                              |
+|  +-► Committad (lokalt)                                         |
+|  |   +-► Angra + behall andringar: git reset --soft HEAD~1      |
+|  |   +-► Angra + unstage: git reset HEAD~1                      |
+|  |   +-► Angra + kasta allt: git reset --hard HEAD~1            |
+|  |                                                              |
+|  +-► Pushad (remote)                                            |
+|      +-► git revert HEAD (skapar NY commit som angrar)          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Situation            | Kommando                          | Effekt                        |
@@ -1222,7 +1222,7 @@ Formagan att aterstalla ar skillnaden mellan panik och lugn problemlosning.
 | Angra senaste commit | git reset --soft HEAD~1           | Behaller andringar i staging  |
 | Revert pushad commit | git revert HEAD                   | Ny commit som angrar          |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Angra i Working Directory
 
@@ -1406,7 +1406,7 @@ git switch correct-branch            # Byt till rätt branch
 git cherry-pick abc1234              # Applicera commit har
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1418,7 +1418,7 @@ git cherry-pick abc1234              # Applicera commit har
 | git revert                | For publika commits - skapar ny commit som angrar   |
 | git reflog                | Din backup - loggar allt aven "borttaget"           |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -1436,7 +1436,7 @@ git cherry-pick abc1234              # Applicera commit har
             "content": """
 # Pull Requests & Code Review
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1449,47 +1449,47 @@ git cherry-pick abc1234              # Applicera commit har
 
 PRs ar hjartat i modern mjukvaruutveckling. Bra PR-praxis hojer kodkvaliteten.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## PR Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      PR LIFECYCLE                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. SKAPA BRANCH                                                │
-│     git switch -c feature/user-auth                             │
-│              │                                                  │
-│              ▼                                                  │
-│  2. UTVECKLA + COMMITA                                          │
-│     git commit -m "feat(auth): add login"                       │
-│              │                                                  │
-│              ▼                                                  │
-│  3. PUSH + SKAPA PR                                             │
-│     git push -u origin feature/user-auth                        │
-│     → GitHub: "Compare & pull request"                          │
-│              │                                                  │
-│              ▼                                                  │
-│  4. CI KORS AUTOMATISKT                                         │
-│     Tests, linting, build                                       │
-│              │                                                  │
-│              ▼                                                  │
-│  5. CODE REVIEW                                                 │
-│     Kommentarer, feedback, diskussion                           │
-│              │                                                  │
-│              ▼                                                  │
-│  6. APPROVED + MERGE                                            │
-│     Squash and merge till main                                  │
-│              │                                                  │
-│              ▼                                                  │
-│  7. DELETE BRANCH                                               │
-│     Automatiskt eller manuellt                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      PR LIFECYCLE                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. SKAPA BRANCH                                                |
+|     git switch -c feature/user-auth                             |
+|              |                                                  |
+|              ▼                                                  |
+|  2. UTVECKLA + COMMITA                                          |
+|     git commit -m "feat(auth): add login"                       |
+|              |                                                  |
+|              ▼                                                  |
+|  3. PUSH + SKAPA PR                                             |
+|     git push -u origin feature/user-auth                        |
+|     -> GitHub: "Compare & pull request"                          |
+|              |                                                  |
+|              ▼                                                  |
+|  4. CI KORS AUTOMATISKT                                         |
+|     Tests, linting, build                                       |
+|              |                                                  |
+|              ▼                                                  |
+|  5. CODE REVIEW                                                 |
+|     Kommentarer, feedback, diskussion                           |
+|              |                                                  |
+|              ▼                                                  |
+|  6. APPROVED + MERGE                                            |
+|     Squash and merge till main                                  |
+|              |                                                  |
+|              ▼                                                  |
+|  7. DELETE BRANCH                                               |
+|     Automatiskt eller manuellt                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa en bra Pull Request
 
@@ -1510,7 +1510,7 @@ git push --force-with-lease          # Säkrare force push
 # 4. Skapa PR på GitHub
 # - Gå till repo på GitHub
 # - Klicka "Compare & pull request"
-# - Eller: Pull requests → New pull request
+# - Eller: Pull requests -> New pull request
 ```
 
 ---
@@ -1615,7 +1615,7 @@ gh pr review 123 --request-changes   # Be om ändringar
 ## Branch Protection Rules
 
 ```yaml
-# På GitHub: Settings → Branches → Add rule
+# På GitHub: Settings -> Branches -> Add rule
 
 # Branch name pattern: main
 
@@ -1676,7 +1676,7 @@ Dockerfile      @devops-team
 package.json    @tech-lead
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Review Feedback Kategorier
 
@@ -1687,7 +1687,7 @@ package.json    @tech-lead
 | [blocking]  | Maste fixas fore merge            | Obligatorisk fix              |
 | [question]  | Behover forklaring                | Svara pa fragan               |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1699,7 +1699,7 @@ package.json    @tech-lead
 | Branch protection         | Forhindrar misstag, kraver reviews                  |
 | CODEOWNERS                | Automatiserar reviewer-tilldelning                  |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -1717,7 +1717,7 @@ package.json    @tech-lead
             "content": """
 # GitHub Actions Basics
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1730,34 +1730,34 @@ package.json    @tech-lead
 
 GitHub Actions ar standard for CI/CD i modern utveckling.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GitHub Actions Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  GITHUB ACTIONS STRUCTURE                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  WORKFLOW (.github/workflows/ci.yml)                           │
-│  │                                                              │
-│  ├─► EVENT (trigger)                                            │
-│  │   push, pull_request, schedule, workflow_dispatch            │
-│  │                                                              │
-│  └─► JOBS (parallella som standard)                             │
-│      │                                                          │
-│      ├─► job: build                                             │
-│      │   runs-on: ubuntu-latest                                 │
-│      │   steps:                                                 │
-│      │     - uses: actions/checkout@v4                          │
-│      │     - run: npm install                                   │
-│      │     - run: npm test                                      │
-│      │                                                          │
-│      └─► job: deploy (needs: build)                             │
-│          runs-on: ubuntu-latest                                 │
-│          steps: ...                                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  GITHUB ACTIONS STRUCTURE                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  WORKFLOW (.github/workflows/ci.yml)                           |
+|  |                                                              |
+|  +-► EVENT (trigger)                                            |
+|  |   push, pull_request, schedule, workflow_dispatch            |
+|  |                                                              |
+|  +-► JOBS (parallella som standard)                             |
+|      |                                                          |
+|      +-► job: build                                             |
+|      |   runs-on: ubuntu-latest                                 |
+|      |   steps:                                                 |
+|      |     - uses: actions/checkout@v4                          |
+|      |     - run: npm install                                   |
+|      |     - run: npm test                                      |
+|      |                                                          |
+|      +-► job: deploy (needs: build)                             |
+|          runs-on: ubuntu-latest                                 |
+|          steps: ...                                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Komponent   | Beskrivning                                          |
@@ -1769,7 +1769,7 @@ GitHub Actions ar standard for CI/CD i modern utveckling.
 | Action      | Ateranvandbar enhet fran marketplace                 |
 | Runner      | Maskin som kor jobbet                                |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Forsta Workflow
 
@@ -1896,7 +1896,7 @@ jobs:
 
 ```yaml
 # Använd secrets (aldrig hårdkoda credentials!)
-# Lägg till i: Settings → Secrets → Actions
+# Lägg till i: Settings -> Secrets -> Actions
 
 jobs:
   deploy:
@@ -2007,7 +2007,7 @@ jobs:
             "content": """
 # Git Stash & Worktrees
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2020,40 +2020,40 @@ jobs:
 
 Stash och worktrees ar kritiska for effektivt arbete i team.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Stash Visualisering
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      STASH STACK                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  WORKING DIRECTORY                                              │
-│  (med andringar)                                                │
-│        │                                                        │
-│        │ git stash                                              │
-│        ▼                                                        │
-│  ┌─────────────┐                                                │
-│  │ stash@{0}   │ ◄── Senaste stash                              │
-│  │ "WIP auth"  │                                                │
-│  ├─────────────┤                                                │
-│  │ stash@{1}   │                                                │
-│  │ "Fix bug"   │                                                │
-│  ├─────────────┤                                                │
-│  │ stash@{2}   │                                                │
-│  │ "Refactor"  │                                                │
-│  └─────────────┘                                                │
-│        │                                                        │
-│        │ git stash pop                                          │
-│        ▼                                                        │
-│  WORKING DIRECTORY                                              │
-│  (andringar tillbaka)                                           │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      STASH STACK                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  WORKING DIRECTORY                                              |
+|  (med andringar)                                                |
+|        |                                                        |
+|        | git stash                                              |
+|        ▼                                                        |
+|  +-------------+                                                |
+|  | stash@{0}   | ◄-- Senaste stash                              |
+|  | "WIP auth"  |                                                |
+|  +-------------+                                                |
+|  | stash@{1}   |                                                |
+|  | "Fix bug"   |                                                |
+|  +-------------+                                                |
+|  | stash@{2}   |                                                |
+|  | "Refactor"  |                                                |
+|  +-------------+                                                |
+|        |                                                        |
+|        | git stash pop                                          |
+|        ▼                                                        |
+|  WORKING DIRECTORY                                              |
+|  (andringar tillbaka)                                           |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Git Stash Grunderna
 
@@ -2161,12 +2161,12 @@ cd ../project                        # Tillbaka till main
 ```bash
 # Worktree-struktur (typisk)
 ~/projects/
-├── myapp/                           # Huvudrepo (main)
-│   └── .git/                        # Git-databasen
-├── myapp-feature/                   # Worktree (feature-x)
-│   └── .git                         # Fil som pekar till huvudrepo
-└── myapp-hotfix/                    # Worktree (hotfix)
-    └── .git                         # Fil som pekar till huvudrepo
++-- myapp/                           # Huvudrepo (main)
+|   +-- .git/                        # Git-databasen
++-- myapp-feature/                   # Worktree (feature-x)
+|   +-- .git                         # Fil som pekar till huvudrepo
++-- myapp-hotfix/                    # Worktree (hotfix)
+    +-- .git                         # Fil som pekar till huvudrepo
 
 # Ta bort worktree
 git worktree remove ../project-feature  # Tar bort katalog och registrering
@@ -2221,7 +2221,7 @@ npm install && npm test              # Testa PR lokalt
 git worktree remove ~/projects/app-pr-review
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2233,7 +2233,7 @@ git worktree remove ~/projects/app-pr-review
 | Worktrees                 | Flera branches utcheckade samtidigt                 |
 | Delar .git                | Worktrees synkar automatiskt                        |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2251,7 +2251,7 @@ git worktree remove ~/projects/app-pr-review
             "content": """
 # Git Tags & Releases
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2264,33 +2264,33 @@ git worktree remove ~/projects/app-pr-review
 
 Tags ar fundamentet for versionshantering och release-automatisering.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Tag-typer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    LIGHTWEIGHT vs ANNOTATED                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  LIGHTWEIGHT TAG                 ANNOTATED TAG                  │
-│  ────────────────                ──────────────                 │
-│  Bara en pekare                  Fullt Git-objekt               │
-│                                                                 │
-│  ┌────────┐                      ┌────────────────┐             │
-│  │ v1.0.0 │────► commit          │ v1.0.0 (tag)   │             │
-│  └────────┘                      │ Author: Said   │             │
-│                                  │ Date: 2024-01  │             │
-│                                  │ Msg: Release   │             │
-│                                  └───────┬────────┘             │
-│                                          │                      │
-│                                          ▼                      │
-│                                       commit                    │
-│                                                                 │
-│  Anvandning: Temporart           Anvandning: Releases           │
-│                                  (rekommenderas)                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    LIGHTWEIGHT vs ANNOTATED                     |
++-----------------------------------------------------------------+
+|                                                                 |
+|  LIGHTWEIGHT TAG                 ANNOTATED TAG                  |
+|  ----------------                --------------                 |
+|  Bara en pekare                  Fullt Git-objekt               |
+|                                                                 |
+|  +--------+                      +----------------+             |
+|  | v1.0.0 |----► commit          | v1.0.0 (tag)   |             |
+|  +--------+                      | Author: Said   |             |
+|                                  | Date: 2024-01  |             |
+|                                  | Msg: Release   |             |
+|                                  +-------+--------+             |
+|                                          |                      |
+|                                          ▼                      |
+|                                       commit                    |
+|                                                                 |
+|  Anvandning: Temporart           Anvandning: Releases           |
+|                                  (rekommenderas)                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Typ         | Skapas med         | Innehall                     | Anvandning     |
@@ -2299,7 +2299,7 @@ Tags ar fundamentet for versionshantering och release-automatisering.
 | Annotated   | git tag -a v1.0.0  | Metadata, meddelande, datum | Releases       |
 | Signed      | git tag -s v1.0.0  | + GPG-signatur              | Sakra releases |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Skapa Taggar
 
@@ -2368,7 +2368,7 @@ git config --global push.followTags true
 
 ```bash
 # Format: MAJOR.MINOR.PATCH
-# v1.0.0 → v1.0.1 → v1.1.0 → v2.0.0
+# v1.0.0 -> v1.0.1 -> v1.1.0 -> v2.0.0
 
 # MAJOR (1.x.x)
 # Inkompatibla API-ändringar
@@ -2481,18 +2481,18 @@ jobs:
           generate_release_notes: true
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Semantic Versioning
 
 | Version       | Nar                                    | Exempel                       |
 |---------------|----------------------------------------|-------------------------------|
-| MAJOR (X.0.0) | Breaking changes, inkompatibelt        | v1.0.0 → v2.0.0               |
-| MINOR (0.X.0) | Ny funktionalitet, bakatkompat         | v1.0.0 → v1.1.0               |
-| PATCH (0.0.X) | Buggfixar, bakatkompat                 | v1.0.0 → v1.0.1               |
+| MAJOR (X.0.0) | Breaking changes, inkompatibelt        | v1.0.0 -> v2.0.0               |
+| MINOR (0.X.0) | Ny funktionalitet, bakatkompat         | v1.0.0 -> v1.1.0               |
+| PATCH (0.0.X) | Buggfixar, bakatkompat                 | v1.0.0 -> v1.0.1               |
 | Pre-release   | Alpha, beta, RC                        | v2.0.0-beta.1                 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2504,7 +2504,7 @@ jobs:
 | GitHub Releases           | Bygger pa Git tags + release notes                  |
 | CI/CD trigger             | Push tag = automatisk deployment                    |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2522,7 +2522,7 @@ jobs:
             "content": """
 # Git Hooks
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2535,37 +2535,37 @@ jobs:
 
 Hooks forhindrar att dalig kod ens hamnar i repositoryt.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Hook-typer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      GIT HOOKS LIFECYCLE                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  CLIENT-SIDE HOOKS                                              │
-│  ─────────────────                                              │
-│                                                                 │
-│  git commit                                                     │
-│       │                                                         │
-│       ├──► pre-commit         Lint, formatera, tester           │
-│       │                                                         │
-│       ├──► prepare-commit-msg Redigera default-meddelande       │
-│       │                                                         │
-│       └──► commit-msg         Validera commit-meddelande        │
-│                                                                 │
-│  git push                                                       │
-│       │                                                         │
-│       └──► pre-push           Full test suite, build            │
-│                                                                 │
-│  SERVER-SIDE HOOKS                                              │
-│  ─────────────────                                              │
-│                                                                 │
-│  pre-receive    Validera fore accept                            │
-│  post-receive   Trigger deployment, notifieringar               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      GIT HOOKS LIFECYCLE                        |
++-----------------------------------------------------------------+
+|                                                                 |
+|  CLIENT-SIDE HOOKS                                              |
+|  -----------------                                              |
+|                                                                 |
+|  git commit                                                     |
+|       |                                                         |
+|       +--► pre-commit         Lint, formatera, tester           |
+|       |                                                         |
+|       +--► prepare-commit-msg Redigera default-meddelande       |
+|       |                                                         |
+|       +--► commit-msg         Validera commit-meddelande        |
+|                                                                 |
+|  git push                                                       |
+|       |                                                         |
+|       +--► pre-push           Full test suite, build            |
+|                                                                 |
+|  SERVER-SIDE HOOKS                                              |
+|  -----------------                                              |
+|                                                                 |
+|  pre-receive    Validera fore accept                            |
+|  post-receive   Trigger deployment, notifieringar               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Hook             | Nar                    | Anvandning                    |
@@ -2575,7 +2575,7 @@ Hooks forhindrar att dalig kod ens hamnar i repositoryt.
 | pre-push         | Fore push till remote  | Full test suite, build        |
 | post-receive     | Efter server tar emot  | Deploy, notifiera             |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande Hooks
 
@@ -2780,7 +2780,7 @@ npm install lint-staged --save-dev
 npx lint-staged
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2792,7 +2792,7 @@ npx lint-staged
 | Husky                     | Versionshanterar hooks, teamet far automatiskt      |
 | lint-staged               | Kor checks BARA pa staged files (snabbt)            |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -2810,7 +2810,7 @@ npx lint-staged
             "content": """
 # Git Configuration & Aliases
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2823,38 +2823,38 @@ npx lint-staged
 
 Professionella utvecklare har optimerade Git-konfigurationer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Konfigurationsnivaer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  GIT CONFIG HIERARCHY                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  PRIORITET (hogst forst):                                       │
-│                                                                 │
-│  ┌─────────────────┐                                            │
-│  │  LOCAL          │  .git/config      Repo-specifik            │
-│  │  --local        │  Overskriver allt                          │
-│  └────────┬────────┘                                            │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                            │
-│  │  GLOBAL         │  ~/.gitconfig     Din anvandare            │
-│  │  --global       │  Rekommenderat for personliga settings     │
-│  └────────┬────────┘                                            │
-│           │                                                     │
-│           ▼                                                     │
-│  ┌─────────────────┐                                            │
-│  │  SYSTEM         │  /etc/gitconfig   Alla anvandare           │
-│  │  --system       │  Sallan anvand                             │
-│  └─────────────────┘                                            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  GIT CONFIG HIERARCHY                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  PRIORITET (hogst forst):                                       |
+|                                                                 |
+|  +-----------------+                                            |
+|  |  LOCAL          |  .git/config      Repo-specifik            |
+|  |  --local        |  Overskriver allt                          |
+|  +--------+--------+                                            |
+|           |                                                     |
+|           ▼                                                     |
+|  +-----------------+                                            |
+|  |  GLOBAL         |  ~/.gitconfig     Din anvandare            |
+|  |  --global       |  Rekommenderat for personliga settings     |
+|  +--------+--------+                                            |
+|           |                                                     |
+|           ▼                                                     |
+|  +-----------------+                                            |
+|  |  SYSTEM         |  /etc/gitconfig   Alla anvandare           |
+|  |  --system       |  Sallan anvand                             |
+|  +-----------------+                                            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande Konfiguration
 
@@ -3078,7 +3078,7 @@ git config --global --unset alias.st
 git config --global --remove-section alias
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3090,7 +3090,7 @@ git config --global --remove-section alias
 | pull.rebase = true        | Ger renare historik som default                     |
 | Global gitignore          | For OS- och editor-filer (.DS_Store, .idea/)        |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -3108,7 +3108,7 @@ git config --global --remove-section alias
             "content": """
 # Submodules & Monorepos
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3121,33 +3121,33 @@ git config --global --remove-section alias
 
 Storre projekt kraver strukturerad kodhantering.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Submodules vs Monorepo
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                SUBMODULES vs MONOREPO                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SUBMODULES                      MONOREPO                       │
-│  ──────────                      ────────                       │
-│                                                                 │
-│  repo-main/                      company/                       │
-│  ├── src/                        ├── apps/                      │
-│  ├── libs/                       │   ├── web/                   │
-│  │   └── shared/ ──► repo        │   ├── api/                   │
-│  └── .gitmodules                 │   └── mobile/                │
-│                                  ├── packages/                  │
-│  Separata repos                  │   ├── ui/                    │
-│  Pinnades till commit            │   └── utils/                 │
-│  Explicit version                └── turbo.json                 │
-│                                                                 │
-│                                  Allt i ett repo                │
-│                                  Atomara commits                │
-│                                  Enklare refactoring            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                SUBMODULES vs MONOREPO                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SUBMODULES                      MONOREPO                       |
+|  ----------                      --------                       |
+|                                                                 |
+|  repo-main/                      company/                       |
+|  +-- src/                        +-- apps/                      |
+|  +-- libs/                       |   +-- web/                   |
+|  |   +-- shared/ --► repo        |   +-- api/                   |
+|  +-- .gitmodules                 |   +-- mobile/                |
+|                                  +-- packages/                  |
+|  Separata repos                  |   +-- ui/                    |
+|  Pinnades till commit            |   +-- utils/                 |
+|  Explicit version                +-- turbo.json                 |
+|                                                                 |
+|                                  Allt i ett repo                |
+|                                  Atomara commits                |
+|                                  Enklare refactoring            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Aspekt           | Submodules                   | Monorepo                      |
@@ -3157,7 +3157,7 @@ Storre projekt kraver strukturerad kodhantering.
 | CI/CD            | Per-repo pipelines           | Intelligent caching           |
 | Bast for         | Externa beroenden            | Intern kod, team-projekt      |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Git Submodules
 
@@ -3242,27 +3242,27 @@ git submodule update --init --remote
 ```bash
 # Typisk monorepo-struktur
 mycompany/
-├── apps/
-│   ├── web/                         # Frontend app
-│   │   ├── src/
-│   │   └── package.json
-│   ├── api/                         # Backend API
-│   │   ├── src/
-│   │   └── package.json
-│   └── mobile/                      # Mobile app
-│       ├── src/
-│       └── package.json
-├── packages/
-│   ├── ui/                          # Shared UI components
-│   │   ├── src/
-│   │   └── package.json
-│   ├── utils/                       # Shared utilities
-│   │   └── package.json
-│   └── config/                      # Shared configs
-│       └── package.json
-├── package.json                     # Root package.json
-├── turbo.json                       # Turborepo config
-└── pnpm-workspace.yaml              # Workspace definition
++-- apps/
+|   +-- web/                         # Frontend app
+|   |   +-- src/
+|   |   +-- package.json
+|   +-- api/                         # Backend API
+|   |   +-- src/
+|   |   +-- package.json
+|   +-- mobile/                      # Mobile app
+|       +-- src/
+|       +-- package.json
++-- packages/
+|   +-- ui/                          # Shared UI components
+|   |   +-- src/
+|   |   +-- package.json
+|   +-- utils/                       # Shared utilities
+|   |   +-- package.json
+|   +-- config/                      # Shared configs
+|       +-- package.json
++-- package.json                     # Root package.json
++-- turbo.json                       # Turborepo config
++-- pnpm-workspace.yaml              # Workspace definition
 ```
 
 ---
@@ -3358,7 +3358,7 @@ cd ../api-hotfix
 # Kombinera med sparse checkout for stora repos
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3370,7 +3370,7 @@ cd ../api-hotfix
 | Sparse checkout           | Klona bara delar av stora repos                     |
 | Worktrees                 | Parallellt arbete i monorepos                       |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -3388,7 +3388,7 @@ cd ../api-hotfix
             "content": """
 # Git Bisect & Debugging
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3401,38 +3401,38 @@ cd ../api-hotfix
 
 git bisect ar kraftfullt for att hitta exakt vilken commit som introducerade en bugg.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Bisect Visualisering
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    BINARY SEARCH                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1000 commits att soka igenom?                                  │
-│                                                                 │
-│  LINJAR SOKNING:    ~500 tester i snitt                        │
-│  BINARSOKNING:      ~10 tester (log2 1000)                     │
-│                                                                 │
-│  [GOOD]────────────────[?]────────────────[BAD]                │
-│    │                    │                    │                  │
-│    v1.0.0               │                  HEAD                 │
-│                         │                                       │
-│                    testa mitten                                 │
-│                         │                                       │
-│                   ┌─────┴─────┐                                 │
-│                   │           │                                 │
-│                  BAD?       GOOD?                               │
-│                   │           │                                 │
-│              soka har     soka har                              │
-│                                                                 │
-│  Varje test halverar sokomradet!                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    BINARY SEARCH                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1000 commits att soka igenom?                                  |
+|                                                                 |
+|  LINJAR SOKNING:    ~500 tester i snitt                        |
+|  BINARSOKNING:      ~10 tester (log2 1000)                     |
+|                                                                 |
+|  [GOOD]----------------[?]----------------[BAD]                |
+|    |                    |                    |                  |
+|    v1.0.0               |                  HEAD                 |
+|                         |                                       |
+|                    testa mitten                                 |
+|                         |                                       |
+|                   +-----+-----+                                 |
+|                   |           |                                 |
+|                  BAD?       GOOD?                               |
+|                   |           |                                 |
+|              soka har     soka har                              |
+|                                                                 |
+|  Varje test halverar sokomradet!                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Grundlaggande Bisect
 
@@ -3649,7 +3649,7 @@ git bisect reset
 # Skapa fix baserad pa vad du hittat
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3661,7 +3661,7 @@ git bisect reset
 | git log -S                | Hittar commits som andrade en strang                |
 | Kombinera                 | bisect + blame + log for effektiv debugging         |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -3679,7 +3679,7 @@ git bisect reset
             "content": """
 # Git LFS & Large Files
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3692,36 +3692,36 @@ git bisect reset
 
 Git ar optimerat for text. Stora binarfiler (bilder, videos, ML-modeller) kraver LFS.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## LFS Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GIT LFS WORKFLOW                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  UTAN LFS:                                                      │
-│  ─────────                                                      │
-│  .git/objects/                                                  │
-│  ├── commit1 ──► image.psd (50 MB)                             │
-│  ├── commit2 ──► image.psd (50 MB)  Varje version sparas!      │
-│  └── commit3 ──► image.psd (50 MB)  = 150 MB for en fil        │
-│                                                                 │
-│  MED LFS:                                                       │
-│  ────────                                                       │
-│  .git/objects/                     LFS Server                   │
-│  ├── commit1 ──► pekare (130 B)    ├── abc123.psd (50 MB)      │
-│  ├── commit2 ──► pekare (130 B)    ├── def456.psd (50 MB)      │
-│  └── commit3 ──► pekare (130 B)    └── ghi789.psd (50 MB)      │
-│                                                                 │
-│  Pekare i repo, faktiska filer pa LFS-server                   │
-│  Laddas ned on-demand vid checkout                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    GIT LFS WORKFLOW                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  UTAN LFS:                                                      |
+|  ---------                                                      |
+|  .git/objects/                                                  |
+|  +-- commit1 --► image.psd (50 MB)                             |
+|  +-- commit2 --► image.psd (50 MB)  Varje version sparas!      |
+|  +-- commit3 --► image.psd (50 MB)  = 150 MB for en fil        |
+|                                                                 |
+|  MED LFS:                                                       |
+|  --------                                                       |
+|  .git/objects/                     LFS Server                   |
+|  +-- commit1 --► pekare (130 B)    +-- abc123.psd (50 MB)      |
+|  +-- commit2 --► pekare (130 B)    +-- def456.psd (50 MB)      |
+|  +-- commit3 --► pekare (130 B)    +-- ghi789.psd (50 MB)      |
+|                                                                 |
+|  Pekare i repo, faktiska filer pa LFS-server                   |
+|  Laddas ned on-demand vid checkout                              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Installera Git LFS
 
@@ -3920,7 +3920,7 @@ EOF
 # Gratis tier har begränsningar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3932,7 +3932,7 @@ EOF
 | migrate import            | Skriver om historiken - kraver force push           |
 | Timing                    | Satt upp LFS tidigt i projektet                     |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -3950,7 +3950,7 @@ EOF
             "content": """
 # GitHub Features & Settings
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3964,49 +3964,49 @@ EOF
 
 GitHub ar mer an Git-hosting - det ar en hel utvecklingsplattform.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GitHub Platform Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GITHUB PLATFORM                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │   ISSUES    │  │  PROJECTS   │  │ DISCUSSIONS │             │
-│  │  Bug track  │  │   Kanban    │  │  Community  │             │
-│  │  Features   │  │  Roadmap    │  │    Q&A      │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │    WIKI     │  │  ACTIONS    │  │  SECURITY   │             │
-│  │    Docs     │  │   CI/CD     │  │  Scanning   │             │
-│  │  Runbooks   │  │ Automation  │  │ Dependabot  │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │  PACKAGES   │  │  RELEASES   │  │   PAGES     │             │
-│  │   Docker    │  │  Versions   │  │   Static    │             │
-│  │    npm      │  │ Changelogs  │  │   Sites     │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    GITHUB PLATFORM                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  +-------------+  +-------------+  +-------------+             |
+|  |   ISSUES    |  |  PROJECTS   |  | DISCUSSIONS |             |
+|  |  Bug track  |  |   Kanban    |  |  Community  |             |
+|  |  Features   |  |  Roadmap    |  |    Q&A      |             |
+|  +-------------+  +-------------+  +-------------+             |
+|                                                                 |
+|  +-------------+  +-------------+  +-------------+             |
+|  |    WIKI     |  |  ACTIONS    |  |  SECURITY   |             |
+|  |    Docs     |  |   CI/CD     |  |  Scanning   |             |
+|  |  Runbooks   |  | Automation  |  | Dependabot  |             |
+|  +-------------+  +-------------+  +-------------+             |
+|                                                                 |
+|  +-------------+  +-------------+  +-------------+             |
+|  |  PACKAGES   |  |  RELEASES   |  |   PAGES     |             |
+|  |   Docker    |  |  Versions   |  |   Static    |             |
+|  |    npm      |  | Changelogs  |  |   Sites     |             |
+|  +-------------+  +-------------+  +-------------+             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Repository Settings
 
 ```yaml
-# Settings → General
+# Settings -> General
 
 # Repository name
-# Byt namn: Settings → General → Repository name
+# Byt namn: Settings -> General -> Repository name
 # OBS: Bryter länkar och clones!
 
 # Default branch
-# Settings → General → Default branch
+# Settings -> General -> Default branch
 # Ändra från master till main om nödvändigt
 
 # Features (aktivera/avaktivera)
@@ -4032,7 +4032,7 @@ GitHub ar mer an Git-hosting - det ar en hel utvecklingsplattform.
 # Issues för buggrapporter och features
 
 # Skapa issue via GitHub UI
-1. Gå till repo → Issues → New issue
+1. Gå till repo -> Issues -> New issue
 2. Välj template (om det finns)
 3. Fyll i titel och beskrivning
 4. Lägg till labels, assignees, project
@@ -4094,7 +4094,7 @@ Alternative solutions considered.
 # Projects för projekthantering (Kanban/roadmap)
 
 # Skapa projekt
-1. Repo → Projects → New project
+1. Repo -> Projects -> New project
 2. Välj template: Board, Table, Roadmap
 3. Namnge projektet
 
@@ -4106,7 +4106,7 @@ Alternative solutions considered.
 # - ✅ Done
 
 # Lägg till issues i projekt
-# 1. Öppna issue → Projects → Välj projekt
+# 1. Öppna issue -> Projects -> Välj projekt
 # 2. Dra issue till rätt column
 
 # Automatisering (built-in)
@@ -4166,7 +4166,7 @@ testing       # 🟣 Tester
 🙌 Show and tell  - Visa upp projekt
 
 # Aktivera:
-Settings → Features → ✅ Discussions
+Settings -> Features -> ✅ Discussions
 
 # Moderering:
 - Pin viktiga diskussioner
@@ -4182,7 +4182,7 @@ Settings → Features → ✅ Discussions
 # Wiki för dokumentation
 
 # Aktivera:
-Settings → Features → ✅ Wikis
+Settings -> Features -> ✅ Wikis
 
 # Struktur:
 Home              # Startsida
@@ -4208,7 +4208,7 @@ git push
 ## Security Features
 
 ```yaml
-# Settings → Security
+# Settings -> Security
 
 # Dependabot
 # Automatiska säkerhetsuppdateringar av dependencies
@@ -4243,26 +4243,26 @@ updates:
 
 ```bash
 # Skapa template-repo
-Settings → ✅ Template repository
+Settings -> ✅ Template repository
 
 # Användning:
-# "Use this template" → Skapar nytt repo från template
+# "Use this template" -> Skapar nytt repo från template
 
 # Template bör innehålla:
 .github/
-├── ISSUE_TEMPLATE/
-│   ├── bug_report.md
-│   └── feature_request.md
-├── PULL_REQUEST_TEMPLATE.md
-├── workflows/
-│   └── ci.yml
-└── dependabot.yml
++-- ISSUE_TEMPLATE/
+|   +-- bug_report.md
+|   +-- feature_request.md
++-- PULL_REQUEST_TEMPLATE.md
++-- workflows/
+|   +-- ci.yml
++-- dependabot.yml
 README.md
 LICENSE
 .gitignore
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4274,7 +4274,7 @@ LICENSE
 | Dependabot                | Haller dependencies uppdaterade automatiskt         |
 | Template repos            | Sparar tid vid nya projekt                          |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -4292,7 +4292,7 @@ LICENSE
             "content": """
 # GitHub Security & Access Control
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4305,33 +4305,33 @@ LICENSE
 
 Sakerhet i repositories ar kritiskt - en lackt credential kan kosta miljoner.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GitHub Sakerhetslager
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GITHUB SECURITY LAYERS                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  AUTENTISERING              AUKTORISERING                       │
-│  ──────────────             ──────────────                      │
-│  - SSH-nycklar              - Repo permissions                  │
-│  - PATs (tokens)            - Branch protection                 │
-│  - 2FA / SAML SSO           - Team access                       │
-│  - Deploy keys              - CODEOWNERS                        │
-│                                                                 │
-│  SCANNING                   AUDIT                               │
-│  ────────                   ─────                               │
-│  - Secret scanning          - Audit logs                        │
-│  - Dependabot               - Security advisories               │
-│  - CodeQL                   - Compliance reports                │
-│  - Push protection          - API activity                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    GITHUB SECURITY LAYERS                       |
++-----------------------------------------------------------------+
+|                                                                 |
+|  AUTENTISERING              AUKTORISERING                       |
+|  --------------             --------------                      |
+|  - SSH-nycklar              - Repo permissions                  |
+|  - PATs (tokens)            - Branch protection                 |
+|  - 2FA / SAML SSO           - Team access                       |
+|  - Deploy keys              - CODEOWNERS                        |
+|                                                                 |
+|  SCANNING                   AUDIT                               |
+|  --------                   -----                               |
+|  - Secret scanning          - Audit logs                        |
+|  - Dependabot               - Security advisories               |
+|  - CodeQL                   - Compliance reports                |
+|  - Push protection          - API activity                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Personal Access Tokens (PAT)
 
@@ -4339,8 +4339,8 @@ Sakerhet i repositories ar kritiskt - en lackt credential kan kosta miljoner.
 # PAT ersätter lösenord för Git-operationer
 
 # Skapa token:
-# Settings → Developer settings → Personal access tokens
-# → Tokens (classic) eller Fine-grained tokens
+# Settings -> Developer settings -> Personal access tokens
+# -> Tokens (classic) eller Fine-grained tokens
 
 # Classic token scopes:
 # repo         - Full kontroll över privata repos
@@ -4376,7 +4376,7 @@ ssh-keygen -t ed25519 -C "deploy-key-production"
 # Spara som deploy_key (inget lösenord för automation)
 
 # Lägg till i repo:
-# Settings → Deploy keys → Add deploy key
+# Settings -> Deploy keys -> Add deploy key
 # Klistra in publika nyckeln (.pub)
 # ✅ Allow write access (om du behöver pusha)
 
@@ -4397,7 +4397,7 @@ ssh-keygen -t ed25519 -C "deploy-key-production"
 ## Branch Protection
 
 ```yaml
-# Settings → Branches → Add branch protection rule
+# Settings -> Branches -> Add branch protection rule
 
 # Branch name pattern: main
 
@@ -4442,14 +4442,14 @@ ssh-keygen -t ed25519 -C "deploy-key-production"
 # - Database credentials
 # - Payment credentials
 
-# Settings → Security → Secret scanning
+# Settings -> Security -> Secret scanning
 # ✅ Enable
 
 # Push protection (blockerar push med secrets)
-# Settings → Code security → Secret scanning → Push protection
+# Settings -> Code security -> Secret scanning -> Push protection
 
 # Custom patterns:
-# Settings → Security → Secret scanning → Custom patterns
+# Settings -> Security -> Secret scanning -> Custom patterns
 # Lägg till egna regex för interna credentials
 ```
 
@@ -4565,18 +4565,18 @@ jobs:
 # - admins (admin)
 
 # Repository access:
-# Settings → Collaborators and teams
+# Settings -> Collaborators and teams
 
 # Base permissions:
-# Organization Settings → Member privileges
+# Organization Settings -> Member privileges
 # Base permission: None/Read/Write
 
 # SAML SSO:
-# Organization Settings → Security → SAML SSO
+# Organization Settings -> Security -> SAML SSO
 # Kräver företags-login
 
 # 2FA requirement:
-# Organization Settings → Security
+# Organization Settings -> Security
 # ✅ Require 2FA for everyone
 ```
 
@@ -4585,7 +4585,7 @@ jobs:
 ## Audit Log
 
 ```bash
-# Organization Settings → Audit log
+# Organization Settings -> Audit log
 
 # Filtrera:
 # action:repo.create          # Repo skapade
@@ -4595,14 +4595,14 @@ jobs:
 # created:>2024-01-01         # Efter datum
 
 # Exportera:
-# Audit log → Export → JSON/CSV
+# Audit log -> Export -> JSON/CSV
 
 # API:
 curl -H "Authorization: token $TOKEN" \\
   "https://api.github.com/orgs/myorg/audit-log?phrase=action:repo.create"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4614,7 +4614,7 @@ curl -H "Authorization: token $TOKEN" \\
 | Secret scanning           | Blockerar lackta credentials automatiskt            |
 | Dependabot                | Haller dependencies sakra med auto-PRs              |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -4632,7 +4632,7 @@ curl -H "Authorization: token $TOKEN" \\
             "content": """
 # Advanced Git Internals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4645,39 +4645,39 @@ curl -H "Authorization: token $TOKEN" \\
 
 Forstaelse for Gits internals gor dig till en Git-mastare.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Git Object Model
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GIT OBJECT DATABASE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  FYRA OBJEKTTYPER:                                              │
-│                                                                 │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐                │
-│  │   BLOB   │     │   TREE   │     │  COMMIT  │                │
-│  │          │     │          │     │          │                │
-│  │ Fildata  │◄────│ Katalog  │◄────│ Snapshot │                │
-│  │ (binart) │     │ struktur │     │ +metadata│                │
-│  └──────────┘     └──────────┘     └──────────┘                │
-│                                          │                      │
-│                                          ▼                      │
-│                                    ┌──────────┐                │
-│                                    │   TAG    │                │
-│                                    │          │                │
-│                                    │ Namngiven│                │
-│                                    │  pekare  │                │
-│                                    └──────────┘                │
-│                                                                 │
-│  SHA-1 hash: abc123def456...                                    │
-│  Lagringsplats: .git/objects/ab/c123def456...                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    GIT OBJECT DATABASE                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  FYRA OBJEKTTYPER:                                              |
+|                                                                 |
+|  +----------+     +----------+     +----------+                |
+|  |   BLOB   |     |   TREE   |     |  COMMIT  |                |
+|  |          |     |          |     |          |                |
+|  | Fildata  |◄----| Katalog  |◄----| Snapshot |                |
+|  | (binart) |     | struktur |     | +metadata|                |
+|  +----------+     +----------+     +----------+                |
+|                                          |                      |
+|                                          ▼                      |
+|                                    +----------+                |
+|                                    |   TAG    |                |
+|                                    |          |                |
+|                                    | Namngiven|                |
+|                                    |  pekare  |                |
+|                                    +----------+                |
+|                                                                 |
+|  SHA-1 hash: abc123def456...                                    |
+|  Lagringsplats: .git/objects/ab/c123def456...                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Git Objects
 
@@ -4697,7 +4697,7 @@ git mktree                           # Läser tree-format från stdin
 # Objekt-databasen
 ls .git/objects/                     # Loose objects + packfiles
 ls .git/objects/ab/                  # Objekt med hash som börjar "ab"
-# abc123... → .git/objects/ab/c123...
+# abc123... -> .git/objects/ab/c123...
 ```
 
 ---
@@ -4819,17 +4819,17 @@ git fsck --dangling                  # Lista dangling (ej ref:ad)
 
 # 1. Skapa blob
 echo "file content" | git hash-object -w --stdin
-# → abc123
+# -> abc123
 
 # 2. Skapa tree
 git mktree << EOF
 100644 blob abc123    filename.txt
 EOF
-# → def456
+# -> def456
 
 # 3. Skapa commit
 git commit-tree def456 -m "Manual commit" -p HEAD
-# → ghi789
+# -> ghi789
 
 # 4. Uppdatera branch
 git update-ref refs/heads/main ghi789
@@ -4899,7 +4899,7 @@ git config core.commitGraph true
 git multi-pack-index write
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4911,7 +4911,7 @@ git multi-pack-index write
 | Packfiles                 | Komprimerar objekt for effektivitet                 |
 | git fsck                  | Verifiera och hitta problem i repo                  |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -4929,7 +4929,7 @@ git multi-pack-index write
             "content": """
 # Git for DevOps & Automation
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4942,39 +4942,39 @@ git multi-pack-index write
 
 Git ar fundamentet for modern DevOps och automation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GitOps Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GITOPS WORKFLOW                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DEVELOPER              GIT REPO                CLUSTER         │
-│  ─────────              ────────                ───────         │
-│                                                                 │
-│  ┌─────────┐           ┌─────────┐           ┌─────────┐       │
-│  │  Code   │──push────►│  main   │◄──sync────│  ArgoCD │       │
-│  │ Change  │           │ branch  │           │  /Flux  │       │
-│  └─────────┘           └─────────┘           └─────────┘       │
-│       │                     │                     │             │
-│       ▼                     ▼                     ▼             │
-│  ┌─────────┐           ┌─────────┐           ┌─────────┐       │
-│  │   PR    │──review──►│  merge  │──trigger─►│ deploy  │       │
-│  │ Review  │           │         │           │         │       │
-│  └─────────┘           └─────────┘           └─────────┘       │
-│                                                                 │
-│  Principer:                                                     │
-│  1. Deklarativ  - Beskriv onskat tillstand                     │
-│  2. Versioned   - Allt i Git                                    │
-│  3. Automated   - PR = Deploy                                   │
-│  4. Observed    - Kontinuerlig sync                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    GITOPS WORKFLOW                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DEVELOPER              GIT REPO                CLUSTER         |
+|  ---------              --------                -------         |
+|                                                                 |
+|  +---------+           +---------+           +---------+       |
+|  |  Code   |--push----►|  main   |◄--sync----|  ArgoCD |       |
+|  | Change  |           | branch  |           |  /Flux  |       |
+|  +---------+           +---------+           +---------+       |
+|       |                     |                     |             |
+|       ▼                     ▼                     ▼             |
+|  +---------+           +---------+           +---------+       |
+|  |   PR    |--review--►|  merge  |--trigger-►| deploy  |       |
+|  | Review  |           |         |           |         |       |
+|  +---------+           +---------+           +---------+       |
+|                                                                 |
+|  Principer:                                                     |
+|  1. Deklarativ  - Beskriv onskat tillstand                     |
+|  2. Versioned   - Allt i Git                                    |
+|  3. Automated   - PR = Deploy                                   |
+|  4. Observed    - Kontinuerlig sync                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## GitOps-monster
 
@@ -4989,20 +4989,20 @@ Git ar fundamentet for modern DevOps och automation.
 
 # Repo-struktur för GitOps:
 infrastructure/
-├── base/                            # Bas-konfiguration
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── kustomization.yaml
-├── overlays/
-│   ├── development/
-│   │   └── kustomization.yaml
-│   ├── staging/
-│   │   └── kustomization.yaml
-│   └── production/
-│       └── kustomization.yaml
-└── apps/
-    ├── frontend/
-    └── backend/
++-- base/                            # Bas-konfiguration
+|   +-- deployment.yaml
+|   +-- service.yaml
+|   +-- kustomization.yaml
++-- overlays/
+|   +-- development/
+|   |   +-- kustomization.yaml
+|   +-- staging/
+|   |   +-- kustomization.yaml
+|   +-- production/
+|       +-- kustomization.yaml
++-- apps/
+    +-- frontend/
+    +-- backend/
 
 # Workflow:
 # 1. Utvecklare skapar PR med infrastrukturändringar
@@ -5079,21 +5079,21 @@ git checkout -b infra/add-rds
 ```yaml
 # Struktur för Ansible repo
 ansible/
-├── inventories/
-│   ├── development/
-│   │   └── hosts.yml
-│   ├── staging/
-│   │   └── hosts.yml
-│   └── production/
-│       └── hosts.yml
-├── playbooks/
-│   ├── deploy.yml
-│   └── rollback.yml
-├── roles/
-│   └── webserver/
-├── group_vars/
-│   └── all.yml
-└── ansible.cfg
++-- inventories/
+|   +-- development/
+|   |   +-- hosts.yml
+|   +-- staging/
+|   |   +-- hosts.yml
+|   +-- production/
+|       +-- hosts.yml
++-- playbooks/
+|   +-- deploy.yml
+|   +-- rollback.yml
++-- roles/
+|   +-- webserver/
++-- group_vars/
+|   +-- all.yml
++-- ansible.cfg
 
 # ansible.cfg
 [defaults]
@@ -5230,17 +5230,17 @@ git commit -m "docs: update changelog"
 # Environment branches för deployment
 
 # Struktur:
-# main         → Production
-# staging      → Staging environment
-# develop      → Development environment
+# main         -> Production
+# staging      -> Staging environment
+# develop      -> Development environment
 
 # Promotion workflow:
-# 1. PR till develop → Auto-deploy till dev
-# 2. PR develop → staging → Auto-deploy till staging
-# 3. PR staging → main → Auto-deploy till production (med approval)
+# 1. PR till develop -> Auto-deploy till dev
+# 2. PR develop -> staging -> Auto-deploy till staging
+# 3. PR staging -> main -> Auto-deploy till production (med approval)
 
 # Med environment protection:
-# GitHub: Settings → Environments → Production
+# GitHub: Settings -> Environments -> Production
 # - Required reviewers
 # - Wait timer
 # - Deployment branches: main only
@@ -5275,7 +5275,7 @@ sops secrets.yaml                    # Krypterar YAML-filer
 # Stöder AWS KMS, GCP KMS, Azure Key Vault, PGP
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -5287,7 +5287,7 @@ sops secrets.yaml                    # Krypterar YAML-filer
 | Secrets                   | git-crypt eller SOPS for krypterade filer           |
 | Conventional Commits      | Mojliggor automatisk changelog-generering           |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 
@@ -5305,7 +5305,7 @@ sops secrets.yaml                    # Krypterar YAML-filer
             "content": """
 # Git Troubleshooting & Common Issues
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5318,40 +5318,40 @@ sops secrets.yaml                    # Krypterar YAML-filer
 
 Alla stoter pa Git-problem. Snabb losning sparar timmar.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanligaste Git-problemen
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GIT TROUBLESHOOTING                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  PROBLEM              SYMPTOM                LOSNING            │
-│  ───────              ───────                ───────            │
-│                                                                 │
-│  Merge conflict       <<<< ==== >>>>         Redigera, add,     │
-│                       markorer i fil         commit             │
-│                                                                 │
-│  Detached HEAD        "detached HEAD"        git switch -c      │
-│                       varning                new-branch         │
-│                                                                 │
-│  Push rejected        fetch first            git pull --rebase  │
-│                       meddelande             sen push           │
-│                                                                 │
-│  Forlorade commits    Commits "forsvann"     git reflog         │
-│                       efter reset            git reset --hard   │
-│                                                                 │
-│  Korrupt index        index file error       rm .git/index      │
-│                                              git reset          │
-│                                                                 │
-│  SSH permission       Permission denied      ssh-add, config    │
-│                       (publickey)                               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    GIT TROUBLESHOOTING                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|  PROBLEM              SYMPTOM                LOSNING            |
+|  -------              -------                -------            |
+|                                                                 |
+|  Merge conflict       <<<< ==== >>>>         Redigera, add,     |
+|                       markorer i fil         commit             |
+|                                                                 |
+|  Detached HEAD        "detached HEAD"        git switch -c      |
+|                       varning                new-branch         |
+|                                                                 |
+|  Push rejected        fetch first            git pull --rebase  |
+|                       meddelande             sen push           |
+|                                                                 |
+|  Forlorade commits    Commits "forsvann"     git reflog         |
+|                       efter reset            git reset --hard   |
+|                                                                 |
+|  Korrupt index        index file error       rm .git/index      |
+|                                              git reset          |
+|                                                                 |
+|  SSH permission       Permission denied      ssh-add, config    |
+|                       (publickey)                               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Merge Conflicts
 
@@ -5624,7 +5624,7 @@ git clone --depth 1 URL
 git clone --filter=blob:none URL
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -5636,7 +5636,7 @@ git clone --filter=blob:none URL
 | SSH-problem               | Kontrollera ssh-agent och ~/.ssh/config             |
 | Performance               | git gc och stora filer kan vara boven               |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Kom ihag
 

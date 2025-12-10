@@ -39,25 +39,25 @@ LINUX_NODE_17_CRON_V2 = {
                         "title": "Crontab Syntax",
                         "explanation": "Fem fält: minut, timme, dag-i-månad, månad, veckodag. * betyder 'alla'. */5 betyder 'var 5:e'.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ CRONTAB SYNTAX                                      │
-├─────────────────────────────────────────────────────┤
-│ ┌───────────── minut (0-59)                        │
-│ │ ┌───────────── timme (0-23)                      │
-│ │ │ ┌───────────── dag i månad (1-31)              │
-│ │ │ │ ┌───────────── månad (1-12)                  │
-│ │ │ │ │ ┌───────────── veckodag (0-6, 0=söndag)    │
-│ │ │ │ │ │                                          │
-│ * * * * * kommando                                 │
-├─────────────────────────────────────────────────────┤
-│ EXEMPEL:                                            │
-│ * * * * *     │ Varje minut                        │
-│ 0 * * * *     │ Varje timme (vid :00)              │
-│ 0 3 * * *     │ Kl 03:00 dagligen                  │
-│ */5 * * * *   │ Var 5:e minut                      │
-│ 0 0 * * 0     │ Varje söndag midnatt               │
-│ 0 9 * * 1-5   │ Kl 09:00 måndag-fredag             │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| CRONTAB SYNTAX                                      |
++-----------------------------------------------------+
+| +------------- minut (0-59)                        |
+| | +------------- timme (0-23)                      |
+| | | +------------- dag i månad (1-31)              |
+| | | | +------------- månad (1-12)                  |
+| | | | | +------------- veckodag (0-6, 0=söndag)    |
+| | | | | |                                          |
+| * * * * * kommando                                 |
++-----------------------------------------------------+
+| EXEMPEL:                                            |
+| * * * * *     | Varje minut                        |
+| 0 * * * *     | Varje timme (vid :00)              |
+| 0 3 * * *     | Kl 03:00 dagligen                  |
+| */5 * * * *   | Var 5:e minut                      |
+| 0 0 * * 0     | Varje söndag midnatt               |
+| 0 9 * * 1-5   | Kl 09:00 måndag-fredag             |
++-----------------------------------------------------+""",
                         "pro_tip": "Använd crontab.guru för att verifiera dina uttryck!",
                         "common_mistake": "Glömma att paths i cron ofta kräver full sökväg (/usr/bin/python, inte python)"
                     },
@@ -65,21 +65,21 @@ LINUX_NODE_17_CRON_V2 = {
                         "title": "Hantera Crontab",
                         "explanation": "crontab -e för att redigera, -l för att lista, -r för att ta bort. Varje användare har sin egen crontab.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ CRONTAB KOMMANDON                                   │
-├─────────────────────────────────────────────────────┤
-│ crontab -e         │ Redigera din crontab          │
-│ crontab -l         │ Lista dina jobb               │
-│ crontab -r         │ Ta bort alla jobb             │
-│ sudo crontab -u nginx -e │ Annan användares crontab│
-├─────────────────────────────────────────────────────┤
-│ SPECIAL SYNTAX:                                     │
-│ @reboot     │ Kör vid systemstart                  │
-│ @hourly     │ Kör varje timme (0 * * * *)          │
-│ @daily      │ Kör dagligen (0 0 * * *)             │
-│ @weekly     │ Kör varje vecka (0 0 * * 0)          │
-│ @monthly    │ Kör varje månad (0 0 1 * *)          │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| CRONTAB KOMMANDON                                   |
++-----------------------------------------------------+
+| crontab -e         | Redigera din crontab          |
+| crontab -l         | Lista dina jobb               |
+| crontab -r         | Ta bort alla jobb             |
+| sudo crontab -u nginx -e | Annan användares crontab|
++-----------------------------------------------------+
+| SPECIAL SYNTAX:                                     |
+| @reboot     | Kör vid systemstart                  |
+| @hourly     | Kör varje timme (0 * * * *)          |
+| @daily      | Kör dagligen (0 0 * * *)             |
+| @weekly     | Kör varje vecka (0 0 * * 0)          |
+| @monthly    | Kör varje månad (0 0 1 * *)          |
++-----------------------------------------------------+""",
                         "pro_tip": "@reboot är perfekt för att starta services som inte är systemd-hanterade",
                         "common_mistake": "Att glömma omdirigera output - cron mailar annars allt till användaren"
                     },
@@ -87,25 +87,25 @@ LINUX_NODE_17_CRON_V2 = {
                         "title": "Output & Debugging",
                         "explanation": "Cron-jobb körs utan terminal - de har ingen PATH eller miljövariabler. Logga alltid output för debugging.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ CRON OUTPUT & DEBUGGING                             │
-├─────────────────────────────────────────────────────┤
-│ # Logga output till fil                             │
-│ 0 3 * * * /backup.sh >> /var/log/backup.log 2>&1   │
-│                                                     │
-│ # Tysta (ingen output)                              │
-│ 0 3 * * * /backup.sh > /dev/null 2>&1              │
-│                                                     │
-│ # Sätt PATH i crontab                               │
-│ PATH=/usr/local/bin:/usr/bin:/bin                  │
-│ 0 3 * * * backup.sh                                │
-├─────────────────────────────────────────────────────┤
-│ DEBUG TIPS:                                         │
-│ - Kolla /var/log/cron eller journalctl             │
-│ - Testa scriptet manuellt först                    │
-│ - Använd fulla sökvägar                            │
-│ - Sätt MAILTO=email för felmeddelanden             │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| CRON OUTPUT & DEBUGGING                             |
++-----------------------------------------------------+
+| # Logga output till fil                             |
+| 0 3 * * * /backup.sh >> /var/log/backup.log 2>&1   |
+|                                                     |
+| # Tysta (ingen output)                              |
+| 0 3 * * * /backup.sh > /dev/null 2>&1              |
+|                                                     |
+| # Sätt PATH i crontab                               |
+| PATH=/usr/local/bin:/usr/bin:/bin                  |
+| 0 3 * * * backup.sh                                |
++-----------------------------------------------------+
+| DEBUG TIPS:                                         |
+| - Kolla /var/log/cron eller journalctl             |
+| - Testa scriptet manuellt först                    |
+| - Använd fulla sökvägar                            |
+| - Sätt MAILTO=email för felmeddelanden             |
++-----------------------------------------------------+""",
                         "pro_tip": "2>&1 slår ihop stderr och stdout så du fångar alla meddelanden",
                         "common_mistake": "Scripts som funkar manuellt men inte i cron - ofta PATH-problem!"
                     }

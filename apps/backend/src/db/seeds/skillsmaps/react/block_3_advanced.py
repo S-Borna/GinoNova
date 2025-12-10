@@ -26,7 +26,7 @@ REACT_NODE_09_CONTEXT = {
 
 Context gor data tillganglig for alla komponenter i ett trad utan prop drilling.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,7 +37,7 @@ Context gor data tillganglig for alla komponenter i ett trad utan prop drilling.
 | **Config context** | Miljovariabler och feature flags |
 | **Notification** | Global toast/alert system |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Creating Context
 
@@ -99,7 +99,7 @@ function App() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Auth Context
 
@@ -170,7 +170,7 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multiple Contexts
 
@@ -198,7 +198,7 @@ function App() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -209,7 +209,7 @@ function App() {
 | **useContext** | Konsumerar context value |
 | **Custom hook** | useTheme, useAuth for saker consumption |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -220,7 +220,7 @@ function App() {
 | Hook utanfor Provider | Komponent inte wrapped | Lagg till Provider hogre upp |
 | Default value null | Saknar check | Kasta error i custom hook |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -262,7 +262,7 @@ REACT_NODE_10_USEREDUCER = {
 
 useReducer ar att foredra framfor useState nar du har komplex state-logik.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -273,26 +273,26 @@ useReducer ar att foredra framfor useState nar du har komplex state-logik.
 | **Data tables** | Sorting, filtering, pagination |
 | **State machines** | Pipeline status transitions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useState vs useReducer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  useState vs useReducer                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  useState                         useReducer                    │
-│  ────────                         ──────────                    │
-│  Enkelt state                     Komplex state                 │
-│  Fa uppdateringar                 Manga relaterade andringar    │
-│  Inline logic OK                  Logic bor vara testbar        │
-│  Enskilda varden                  State machine patterns        │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  useState vs useReducer                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  useState                         useReducer                    |
+|  --------                         ----------                    |
+|  Enkelt state                     Komplex state                 |
+|  Fa uppdateringar                 Manga relaterade andringar    |
+|  Inline logic OK                  Logic bor vara testbar        |
+|  Enskilda varden                  State machine patterns        |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Basic useReducer
 
@@ -350,7 +350,7 @@ function Counter() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Todo App med useReducer
 
@@ -408,7 +408,7 @@ function todoReducer(state: TodoState, action: TodoAction): TodoState {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useReducer + Context
 
@@ -441,7 +441,7 @@ function DeepNestedComponent() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -452,7 +452,7 @@ function DeepNestedComponent() {
 | **dispatch** | Funktion som skickar action till reducer |
 | **Initial state** | Startvardet for state |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -463,7 +463,7 @@ function DeepNestedComponent() {
 | Undefined state | Fel initial state | Kontrollera initial value |
 | Type error | Fel action type | Anvand TypeScript discriminated unions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -505,7 +505,7 @@ REACT_NODE_11_PERFORMANCE = {
 
 React ar snabbt som default, men vid skala behovs forstaelse for memoization och optimering.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -516,7 +516,7 @@ React ar snabbt som default, men vid skala behovs forstaelse for memoization och
 | **Real-time** | Frekventa uppdateringar utan lag |
 | **Code splitting** | Snabbare initial load |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## React.memo
 
@@ -549,7 +549,7 @@ const MemoizedWithCompare = React.memo(ExpensiveList, (prevProps, nextProps) => 
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useMemo
 
@@ -574,7 +574,7 @@ function Dashboard({ users, filter }: { users: User[]; filter: string }) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useCallback
 
@@ -609,38 +609,38 @@ const MemoizedChild = React.memo(function Child({ onClick }: { onClick: () => vo
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Nar ska du anvanda dem?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              OPTIMIZATION DECISION TREE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Anvand React.memo nar:                                         │
-│  - Komponenten renderas ofta med samma props                    │
-│  - Komponenten ar tung (manga children, komplex render)         │
-│  - Parent re-renderas ofta av andra anledningar                 │
-│                                                                  │
-│  Anvand useMemo nar:                                            │
-│  - Berakningen ar dyr (filtering, sorting stora arrayer)        │
-│  - Resultatet anvands i dependency array for andra hooks        │
-│  - Du skapar objekt/arrayer som skickas till memo'd children    │
-│                                                                  │
-│  Anvand useCallback nar:                                        │
-│  - Funktionen skickas till memo'd children                      │
-│  - Funktionen ar dependency for useEffect                       │
-│                                                                  │
-│  ANVAND INTE for:                                               │
-│  - Enkla komponenter                                            │
-│  - Simpla berakningar                                           │
-│  - "Just in case" - matning forst!                              │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              OPTIMIZATION DECISION TREE                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Anvand React.memo nar:                                         |
+|  - Komponenten renderas ofta med samma props                    |
+|  - Komponenten ar tung (manga children, komplex render)         |
+|  - Parent re-renderas ofta av andra anledningar                 |
+|                                                                  |
+|  Anvand useMemo nar:                                            |
+|  - Berakningen ar dyr (filtering, sorting stora arrayer)        |
+|  - Resultatet anvands i dependency array for andra hooks        |
+|  - Du skapar objekt/arrayer som skickas till memo'd children    |
+|                                                                  |
+|  Anvand useCallback nar:                                        |
+|  - Funktionen skickas till memo'd children                      |
+|  - Funktionen ar dependency for useEffect                       |
+|                                                                  |
+|  ANVAND INTE for:                                               |
+|  - Enkla komponenter                                            |
+|  - Simpla berakningar                                           |
+|  - "Just in case" - matning forst!                              |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Code Splitting
 
@@ -670,7 +670,7 @@ function App() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -681,7 +681,7 @@ function App() {
 | **useCallback** | Cacha funktioner |
 | **lazy/Suspense** | Code splitting |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -692,7 +692,7 @@ function App() {
 | Stale data | Tom dependency array | Lagg till alla dependencies |
 | Ingen effekt | Prop andras faktiskt | Kontrollera vad som andras |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -734,7 +734,7 @@ REACT_NODE_12_PATTERNS = {
 
 Dessa patterns loser vanliga problem i storre React-appar och gor din kod mer flexibel.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -745,7 +745,7 @@ Dessa patterns loser vanliga problem i storre React-appar och gor din kod mer fl
 | **HOC** | Ateranvandbar auth/permission logic |
 | **Portals** | Modals, tooltips, notifications |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Compound Components
 
@@ -805,7 +805,7 @@ Tabs.Content = function TabsContent({ value, children }: { value: string; childr
 };
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Higher-Order Components (HOC)
 
@@ -833,7 +833,7 @@ function App() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Portals
 
@@ -871,7 +871,7 @@ function App() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -882,7 +882,7 @@ function App() {
 | **Render Props** | Dela logik via render function |
 | **Portals** | Rendera utanfor DOM-hierarkin |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -893,7 +893,7 @@ function App() {
 | Portal renderas inte | modal-root saknas | Lagg till div i HTML |
 | Render prop re-renders | Inline function | useCallback eller flytta ut |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

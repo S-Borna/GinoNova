@@ -2,7 +2,7 @@
 # BASH SKILLSMAP V3 - ULTRA-PREMIUM BOOTCAMP-QUALITY CONTENT
 # =============================================================================
 # 20 noder med fullständigt pedagogiskt innehåll (~10,000-15,000 chars/nod)
-# Strukturen: Intro → Koncept → ASCII-diagram → Praktik → Övningar
+# Strukturen: Intro -> Koncept -> ASCII-diagram -> Praktik -> Övningar
 # =============================================================================
 
 # Block 1: Bash Fundamentals (Nodes 1-4)

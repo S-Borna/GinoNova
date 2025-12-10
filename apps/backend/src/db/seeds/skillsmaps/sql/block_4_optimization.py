@@ -13,27 +13,27 @@ NODE_13_INDEXING = {
 
 Index ar datastrukturer som dramatiskt snabbar upp datasokningar. Ratt index kan gora skillnaden mellan en query som tar 10 sekunder och en som tar 10 millisekunder.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     INDEX IMPACT                                │
-├─────────────────────────────────────────────────────────────────┤
-│  Utan index:                                                    │
-│  SELECT * FROM logs WHERE timestamp > '2024-01-01'             │
-│  -> Seq Scan: 10,000,000 rader -> 15 sekunder                  │
-├─────────────────────────────────────────────────────────────────┤
-│  Med index:                                                     │
-│  CREATE INDEX idx_logs_ts ON logs(timestamp)                   │
-│  -> Index Scan: 50,000 rader -> 50 millisekunder               │
-├─────────────────────────────────────────────────────────────────┤
-│  Skillnad: 300x snabbare!                                       │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     INDEX IMPACT                                |
++-----------------------------------------------------------------+
+|  Utan index:                                                    |
+|  SELECT * FROM logs WHERE timestamp > '2024-01-01'             |
+|  -> Seq Scan: 10,000,000 rader -> 15 sekunder                  |
++-----------------------------------------------------------------+
+|  Med index:                                                     |
+|  CREATE INDEX idx_logs_ts ON logs(timestamp)                   |
+|  -> Index Scan: 50,000 rader -> 50 millisekunder               |
++-----------------------------------------------------------------+
+|  Skillnad: 300x snabbare!                                       |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Index Basics
 
@@ -50,20 +50,20 @@ ON servers(environment, status);
 VIKTIGT - Kolumnordning i composite index:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  INDEX: (environment, status)                                   │
-├─────────────────────────────────────────────────────────────────┤
-│  FUNGERAR:                                                      │
-│  - WHERE environment = 'prod'                                   │
-│  - WHERE environment = 'prod' AND status = 'active'            │
-├─────────────────────────────────────────────────────────────────┤
-│  FUNGERAR INTE:                                                 │
-│  - WHERE status = 'active'  (anvander INTE index!)             │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  INDEX: (environment, status)                                   |
++-----------------------------------------------------------------+
+|  FUNGERAR:                                                      |
+|  - WHERE environment = 'prod'                                   |
+|  - WHERE environment = 'prod' AND status = 'active'            |
++-----------------------------------------------------------------+
+|  FUNGERAR INTE:                                                 |
+|  - WHERE status = 'active'  (anvander INTE index!)             |
++-----------------------------------------------------------------+
   Tumregel: Forsta kolumnen maste finnas i WHERE
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Index-typer
 
@@ -94,7 +94,7 @@ ON logs USING brin(timestamp);
 -- Bra for: Append-only tabeller, 1000x mindre an B-tree
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Partial Index
 
@@ -118,7 +118,7 @@ WHERE status = 'pending';
 -- Perfekt for job queues - indexet krymper nar jobb processeras!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Expression Index
 
@@ -145,7 +145,7 @@ CREATE INDEX idx_logs_date
 ON logs(DATE(timestamp));
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Unique Index
 
@@ -162,7 +162,7 @@ ON servers(hostname)
 WHERE deleted_at IS NULL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Covering Index (INCLUDE)
 
@@ -181,7 +181,7 @@ WHERE status = 'active';
 -- -> Index Only Scan (snabbast mojligt)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Concurrent Index
 
@@ -198,7 +198,7 @@ ON servers(environment);
 
 ALLTID anvand CONCURRENTLY i produktion!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Index Maintenance
 
@@ -231,7 +231,7 @@ DROP INDEX IF EXISTS idx_servers_status;
 REINDEX INDEX CONCURRENTLY idx_servers_hostname;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -243,7 +243,7 @@ REINDEX INDEX CONCURRENTLY idx_servers_hostname;
 | GiST | &&, @>, <@ | Geometri, ranges |
 | BRIN | <, > | Stora sorterade tabeller |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -269,7 +269,7 @@ SELECT * FROM servers WHERE LOWER(hostname) = 'web1';  -- Seq Scan!
 CREATE INDEX idx_lower_hostname ON servers(LOWER(hostname));
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -295,7 +295,7 @@ CREATE INDEX idx_logs_timestamp_brin ON logs USING brin(timestamp);
 EXPLAIN ANALYZE SELECT * FROM servers WHERE LOWER(hostname) = 'web1';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -327,23 +327,23 @@ NODE_14_EXPLAIN = {
 
 EXPLAIN ar ditt viktigaste verktyg for att forsta varfor queries ar langsamma. Det visar exakt hur PostgreSQL planerar att exekvera din query.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    EXPLAIN USE CASES                            │
-├─────────────────────────────────────────────────────────────────┤
-│  - Identifiera varfor dashboard ar langsam                     │
-│  - Verifiera att index anvands                                 │
-│  - Hitta N+1 query-problem                                     │
-│  - Optimera batch-jobb och rapporter                           │
-│  - Planera for skalning - hur haller queries vid 10x data?     │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    EXPLAIN USE CASES                            |
++-----------------------------------------------------------------+
+|  - Identifiera varfor dashboard ar langsam                     |
+|  - Verifiera att index anvands                                 |
+|  - Hitta N+1 query-problem                                     |
+|  - Optimera batch-jobb och rapporter                           |
+|  - Planera for skalning - hur haller queries vid 10x data?     |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## EXPLAIN Basics
 
@@ -367,7 +367,7 @@ EXPLAIN (FORMAT JSON)
 SELECT * FROM servers WHERE status = 'active';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Lasa EXPLAIN Output
 
@@ -376,15 +376,15 @@ Seq Scan on servers  (cost=0.00..35.50 rows=1230 width=112)
   Filter: (status = 'active'::text)
   Rows Removed by Filter: 270
 
-┌─────────────────────────────────────────────────────────────────┐
-│  cost=0.00..35.50                                               │
-│  ├── 0.00 = startup cost (tid innan forsta raden)              │
-│  └── 35.50 = total cost (estimerad, inte sekunder!)            │
-├─────────────────────────────────────────────────────────────────┤
-│  rows=1230 = estimerat antal rader som returneras               │
-├─────────────────────────────────────────────────────────────────┤
-│  width=112 = bytes per rad                                      │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  cost=0.00..35.50                                               |
+|  +-- 0.00 = startup cost (tid innan forsta raden)              |
+|  +-- 35.50 = total cost (estimerad, inte sekunder!)            |
++-----------------------------------------------------------------+
+|  rows=1230 = estimerat antal rader som returneras               |
++-----------------------------------------------------------------+
+|  width=112 = bytes per rad                                      |
++-----------------------------------------------------------------+
 ```
 
 Med ANALYZE far du faktiska tider:
@@ -393,37 +393,37 @@ Med ANALYZE far du faktiska tider:
 Seq Scan on servers  (cost=0.00..35.50 rows=1230 width=112)
                      (actual time=0.015..0.892 rows=1500 loops=1)
 
-┌─────────────────────────────────────────────────────────────────┐
-│  actual time=0.015..0.892  (millisekunder)                      │
-│  ├── 0.015 = tid till forsta rad                               │
-│  └── 0.892 = total tid                                          │
-├─────────────────────────────────────────────────────────────────┤
-│  rows=1500 = faktiskt antal rader (jfr estimat 1230)           │
-├─────────────────────────────────────────────────────────────────┤
-│  loops=1 = antal ganger noden exekverades                       │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|  actual time=0.015..0.892  (millisekunder)                      |
+|  +-- 0.015 = tid till forsta rad                               |
+|  +-- 0.892 = total tid                                          |
++-----------------------------------------------------------------+
+|  rows=1500 = faktiskt antal rader (jfr estimat 1230)           |
++-----------------------------------------------------------------+
+|  loops=1 = antal ganger noden exekverades                       |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Scan Types
 
 ```
-┌─────────────────┬────────────────────────────────────────────────┐
-│ SCAN TYPE       │ BESKRIVNING                                    │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Seq Scan        │ Laser ALLA rader i tabellen                   │
-│                 │ Daligt for stora tabeller med selektiv query  │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Index Scan      │ Anvander index, laser sedan tabell for data   │
-│                 │ Bra for selektiva queries                     │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Index Only Scan │ ALL data finns i index - laser aldrig tabell  │
-│                 │ Snabbast mojligt!                             │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Bitmap Scan     │ Kombinerar flera index, sedan laser tabell    │
-│                 │ Bra for OR-villkor eller lag selektivitet     │
-└─────────────────┴────────────────────────────────────────────────┘
++-----------------+------------------------------------------------+
+| SCAN TYPE       | BESKRIVNING                                    |
++-----------------+------------------------------------------------+
+| Seq Scan        | Laser ALLA rader i tabellen                   |
+|                 | Daligt for stora tabeller med selektiv query  |
++-----------------+------------------------------------------------+
+| Index Scan      | Anvander index, laser sedan tabell for data   |
+|                 | Bra for selektiva queries                     |
++-----------------+------------------------------------------------+
+| Index Only Scan | ALL data finns i index - laser aldrig tabell  |
+|                 | Snabbast mojligt!                             |
++-----------------+------------------------------------------------+
+| Bitmap Scan     | Kombinerar flera index, sedan laser tabell    |
+|                 | Bra for OR-villkor eller lag selektivitet     |
++-----------------+------------------------------------------------+
 ```
 
 ```sql
@@ -448,7 +448,7 @@ EXPLAIN SELECT * FROM servers WHERE status = 'active' OR environment = 'prod';
 --        -> Bitmap Index Scan on idx_env
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Join Strategier
 
@@ -458,21 +458,21 @@ JOIN deployments d ON s.id = d.server_id;
 ```
 
 ```
-┌─────────────────┬────────────────────────────────────────────────┐
-│ JOIN TYPE       │ NAR DET ANVANDS                                │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Nested Loop     │ Liten yttre tabell, index pa inre             │
-│                 │ Bra: 100 x 1 lookup                           │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Hash Join       │ Equality joins, medelstor data                │
-│                 │ Bygger hashtabell, probar mot den             │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Merge Join      │ Bada tabeller sorterade pa join-kolumn        │
-│                 │ Effektivt for stora sorterade dataset         │
-└─────────────────┴────────────────────────────────────────────────┘
++-----------------+------------------------------------------------+
+| JOIN TYPE       | NAR DET ANVANDS                                |
++-----------------+------------------------------------------------+
+| Nested Loop     | Liten yttre tabell, index pa inre             |
+|                 | Bra: 100 x 1 lookup                           |
++-----------------+------------------------------------------------+
+| Hash Join       | Equality joins, medelstor data                |
+|                 | Bygger hashtabell, probar mot den             |
++-----------------+------------------------------------------------+
+| Merge Join      | Bada tabeller sorterade pa join-kolumn        |
+|                 | Effektivt for stora sorterade dataset         |
++-----------------+------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga Problem och Losningar
 
@@ -515,7 +515,7 @@ ANALYZE servers;
 ANALYZE servers(status, environment);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Optimization Tips
 
@@ -550,7 +550,7 @@ SELECT * FROM logs ORDER BY id LIMIT 10 OFFSET 100000;
 SELECT * FROM logs WHERE id > 100000 ORDER BY id LIMIT 10;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ANALYZE och VACUUM
 
@@ -571,7 +571,7 @@ VACUUM ANALYZE servers;
 VACUUM FULL servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -582,7 +582,7 @@ VACUUM FULL servers;
 | Index Only Scan | Alla kolumner i index | - |
 | Bitmap Scan | OR-villkor, medel selektivitet | - |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -606,7 +606,7 @@ CREATE INDEX idx_servers_env ON servers(environment);
 CREATE INDEX idx_deploys_server_date ON deployments(server_id, deployed_at);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -638,28 +638,28 @@ NODE_15_PARTITIONING = {
 
 Partitioning delar upp stora tabeller i mindre, hanterbara delar. Queries scannar bara relevanta partitioner istallet for hela tabellen.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    PARTITIONING USE CASES                       │
-├─────────────────────────────────────────────────────────────────┤
-│  LOGS-TABELL:                                                   │
-│  - 100M rader, vaxer 1M/dag                                    │
-│  - De flesta queries pa senaste 7 dagarna                      │
-│  - Gammal data ska arkiveras                                   │
-├─────────────────────────────────────────────────────────────────┤
-│  MED PARTITIONING:                                              │
-│  - Manatliga partitioner                                       │
-│  - Query pa senaste veckan scannar 1 partition (3M rader)      │
-│  - Arkivera genom att DROP:a gammal partition (instant!)       │
-│  - VACUUM per partition (snabbare, mindre lock)                │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    PARTITIONING USE CASES                       |
++-----------------------------------------------------------------+
+|  LOGS-TABELL:                                                   |
+|  - 100M rader, vaxer 1M/dag                                    |
+|  - De flesta queries pa senaste 7 dagarna                      |
+|  - Gammal data ska arkiveras                                   |
++-----------------------------------------------------------------+
+|  MED PARTITIONING:                                              |
+|  - Manatliga partitioner                                       |
+|  - Query pa senaste veckan scannar 1 partition (3M rader)      |
+|  - Arkivera genom att DROP:a gammal partition (instant!)       |
+|  - VACUUM per partition (snabbare, mindre lock)                |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Fordelar och Nackdelar
 
@@ -677,7 +677,7 @@ NACKDELAR:
 - Kraver planering for partition-strategi
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Range Partitioning
 
@@ -716,7 +716,7 @@ EXPLAIN SELECT * FROM logs WHERE timestamp >= '2024-02-01';
 -- Scannar BARA logs_2024_02 och senare!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## List Partitioning
 
@@ -743,7 +743,7 @@ FOR VALUES IN ('development', 'testing');
 SELECT * FROM servers WHERE environment = 'production';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Hash Partitioning
 
@@ -774,7 +774,7 @@ FOR VALUES WITH (MODULUS 4, REMAINDER 3);
 -- Bra for parallelisering av queries
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Sub-partitioning
 
@@ -804,7 +804,7 @@ PARTITION OF metrics_2024_01
 FOR VALUES IN ('staging');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Partition Management
 
@@ -830,7 +830,7 @@ DROP TABLE logs_2024_01;
 -- Instant! Ingen DELETE som skannar miljontals rader
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Index pa Partitionerade Tabeller
 
@@ -845,7 +845,7 @@ CREATE INDEX idx_logs_2024_02_server ON logs_2024_02(server_id);
 -- Bra for partition-specifik optimering
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Automatisk Partition med pg_partman
 
@@ -872,7 +872,7 @@ SET retention = '12 months',
 WHERE parent_table = 'public.logs';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -882,7 +882,7 @@ WHERE parent_table = 'public.logs';
 | LIST | Diskreta varden | environment, region |
 | HASH | Jamn fordelning | sessions, large tables |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -910,7 +910,7 @@ WHERE timestamp >= NOW() - INTERVAL '7 days'
 -- Scannar bara relevanta partitioner!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -941,7 +941,7 @@ WHERE deployed_at >= '2024-02-01' AND deployed_at < '2024-03-01';
 -- Ska bara scanna deployments_2024_q1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -973,50 +973,50 @@ NODE_16_JSON = {
 
 JSONB kombinerar flexibiliteten fran NoSQL med kraften i SQL. Perfekt for semi-strukturerad data, metadata, konfigurationer och API-responses.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    JSONB USE CASES                              │
-├─────────────────────────────────────────────────────────────────┤
-│  Server metadata:                                               │
-│  - tags, labels, annotations                                   │
-│  - Cloud provider-specifik data                                │
-│  - Custom attributes som varierar per server                   │
-├─────────────────────────────────────────────────────────────────┤
-│  Deployment info:                                               │
-│  - Environment variables                                       │
-│  - Config overrides                                            │
-│  - Build metadata                                              │
-├─────────────────────────────────────────────────────────────────┤
-│  Audit logs:                                                    │
-│  - Request/response bodies                                     │
-│  - Diff av andringar                                           │
-│  - Flexibel loggning utan schema-andringar                     │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    JSONB USE CASES                              |
++-----------------------------------------------------------------+
+|  Server metadata:                                               |
+|  - tags, labels, annotations                                   |
+|  - Cloud provider-specifik data                                |
+|  - Custom attributes som varierar per server                   |
++-----------------------------------------------------------------+
+|  Deployment info:                                               |
+|  - Environment variables                                       |
+|  - Config overrides                                            |
+|  - Build metadata                                              |
++-----------------------------------------------------------------+
+|  Audit logs:                                                    |
+|  - Request/response bodies                                     |
+|  - Diff av andringar                                           |
+|  - Flexibel loggning utan schema-andringar                     |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## JSON vs JSONB
 
 ```
-┌─────────────────┬────────────────────────────────────────────────┐
-│ JSON            │ JSONB (rekommenderas!)                         │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Sparar exakt    │ Binart format, ingen whitespace               │
-│ text inkl.      │                                                │
-│ whitespace      │                                                │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Ingen indexing  │ Stodjer GIN index for snabba lookups          │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Snabbare INSERT │ Snabbare queries                              │
-├─────────────────┼────────────────────────────────────────────────┤
-│ Bevarar         │ Ingen duplicerade nycklar                     │
-│ duplicates      │                                                │
-└─────────────────┴────────────────────────────────────────────────┘
++-----------------+------------------------------------------------+
+| JSON            | JSONB (rekommenderas!)                         |
++-----------------+------------------------------------------------+
+| Sparar exakt    | Binart format, ingen whitespace               |
+| text inkl.      |                                                |
+| whitespace      |                                                |
++-----------------+------------------------------------------------+
+| Ingen indexing  | Stodjer GIN index for snabba lookups          |
++-----------------+------------------------------------------------+
+| Snabbare INSERT | Snabbare queries                              |
++-----------------+------------------------------------------------+
+| Bevarar         | Ingen duplicerade nycklar                     |
+| duplicates      |                                                |
++-----------------+------------------------------------------------+
 
 Tumregel: Anvand ALLTID JSONB om du inte har specifik anledning for JSON
 ```
@@ -1033,7 +1033,7 @@ INSERT INTO servers (hostname, metadata) VALUES
 ('db1', '{"region": "eu-west-1", "tier": "standard", "replicas": 2}');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Lasa JSON-data
 
@@ -1058,7 +1058,7 @@ SELECT metadata->'tags'->0 FROM servers;   -- Forsta elementet
 SELECT metadata->'tags'->>1 FROM servers;  -- Andra som text
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Filtrera JSON-data
 
@@ -1089,7 +1089,7 @@ SELECT * FROM servers WHERE metadata->'tags' ? 'prod';
 SELECT * FROM servers WHERE metadata @> '{"tags": ["prod"]}';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Modifiera JSON-data
 
@@ -1129,7 +1129,7 @@ SET metadata = jsonb_set(
 WHERE hostname = 'web1';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## JSONB Functions
 
@@ -1172,7 +1172,7 @@ FROM servers;
 -- {"web1": "eu-west-1", "db1": "eu-west-1"}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Indexering av JSONB
 
@@ -1197,7 +1197,7 @@ ON servers((metadata->>'region'));
 SELECT * FROM servers WHERE metadata->>'region' = 'eu-west-1';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## JSON Path (PostgreSQL 12+)
 
@@ -1224,7 +1224,7 @@ SELECT jsonb_path_query_first(metadata, '$.tags[0]')
 FROM servers;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1242,7 +1242,7 @@ FROM servers;
 | #- | Remove via path | JSONB |
 | || | Merge/concat | JSONB |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1268,7 +1268,7 @@ SELECT * FROM servers WHERE metadata->'region' = '"eu-west-1"';  -- Seq Scan!
 SELECT * FROM servers WHERE metadata->>'region' = 'eu-west-1';   -- Index Scan!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1311,7 +1311,7 @@ SET metadata = metadata || '{"monitored": true}'
 WHERE metadata @> '{"environment": "production"}';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 

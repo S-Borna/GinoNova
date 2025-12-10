@@ -23,64 +23,64 @@ En Dockerfile är en textfil med instruktioner för att bygga en Docker image. D
 ### Dockerfile Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      DOCKERFILE ANATOMY                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  # Comment - dokumentation                                               │
-│  ────────────────────────────────────────────────────────────────────── │
-│                                                                          │
-│  FROM python:3.11-slim          # Base image (REQUIRED, alltid först)   │
-│                                                                          │
-│  LABEL maintainer="dev@co.com"  # Metadata                              │
-│  LABEL version="1.0"                                                    │
-│                                                                          │
-│  ENV PYTHONDONTWRITEBYTECODE=1  # Environment variables                 │
-│  ENV PYTHONUNBUFFERED=1                                                 │
-│                                                                          │
-│  WORKDIR /app                   # Sätt working directory                │
-│                                                                          │
-│  COPY requirements.txt .        # Kopiera dependencies först            │
-│  RUN pip install --no-cache-dir -r requirements.txt  # Installera      │
-│                                                                          │
-│  COPY . .                       # Kopiera applikationskod               │
-│                                                                          │
-│  EXPOSE 8000                    # Dokumentera port (öppnar inte!)       │
-│                                                                          │
-│  USER appuser                   # Byt till non-root user                │
-│                                                                          │
-│  CMD ["python", "app.py"]       # Default command                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      DOCKERFILE ANATOMY                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  # Comment - dokumentation                                               |
+|  ---------------------------------------------------------------------- |
+|                                                                          |
+|  FROM python:3.11-slim          # Base image (REQUIRED, alltid först)   |
+|                                                                          |
+|  LABEL maintainer="dev@co.com"  # Metadata                              |
+|  LABEL version="1.0"                                                    |
+|                                                                          |
+|  ENV PYTHONDONTWRITEBYTECODE=1  # Environment variables                 |
+|  ENV PYTHONUNBUFFERED=1                                                 |
+|                                                                          |
+|  WORKDIR /app                   # Sätt working directory                |
+|                                                                          |
+|  COPY requirements.txt .        # Kopiera dependencies först            |
+|  RUN pip install --no-cache-dir -r requirements.txt  # Installera      |
+|                                                                          |
+|  COPY . .                       # Kopiera applikationskod               |
+|                                                                          |
+|  EXPOSE 8000                    # Dokumentera port (öppnar inte!)       |
+|                                                                          |
+|  USER appuser                   # Byt till non-root user                |
+|                                                                          |
+|  CMD ["python", "app.py"]       # Default command                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Dockerfile Instructions
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DOCKERFILE INSTRUCTIONS                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  INSTRUCTION    │ PURPOSE                  │ EXAMPLE                    │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  FROM           │ Base image              │ FROM python:3.11-slim       │
-│  LABEL          │ Metadata                │ LABEL version="1.0"         │
-│  ENV            │ Environment vars        │ ENV NODE_ENV=production     │
-│  ARG            │ Build-time vars         │ ARG VERSION=1.0             │
-│  WORKDIR        │ Working directory       │ WORKDIR /app                │
-│  COPY           │ Copy files              │ COPY src/ /app/src/         │
-│  ADD            │ Copy + extract + URL    │ ADD app.tar.gz /app/        │
-│  RUN            │ Execute command         │ RUN pip install flask       │
-│  EXPOSE         │ Document port           │ EXPOSE 8080                 │
-│  USER           │ Set user                │ USER appuser                │
-│  CMD            │ Default command         │ CMD ["python", "app.py"]    │
-│  ENTRYPOINT     │ Fixed entrypoint        │ ENTRYPOINT ["python"]       │
-│  VOLUME         │ Mount point             │ VOLUME /data                │
-│  HEALTHCHECK    │ Health check            │ HEALTHCHECK CMD curl ...    │
-│  SHELL          │ Default shell           │ SHELL ["/bin/bash", "-c"]   │
-│  STOPSIGNAL     │ Stop signal             │ STOPSIGNAL SIGTERM          │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DOCKERFILE INSTRUCTIONS                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  INSTRUCTION    | PURPOSE                  | EXAMPLE                    |
+|  ---------------------------------------------------------------------  |
+|  FROM           | Base image              | FROM python:3.11-slim       |
+|  LABEL          | Metadata                | LABEL version="1.0"         |
+|  ENV            | Environment vars        | ENV NODE_ENV=production     |
+|  ARG            | Build-time vars         | ARG VERSION=1.0             |
+|  WORKDIR        | Working directory       | WORKDIR /app                |
+|  COPY           | Copy files              | COPY src/ /app/src/         |
+|  ADD            | Copy + extract + URL    | ADD app.tar.gz /app/        |
+|  RUN            | Execute command         | RUN pip install flask       |
+|  EXPOSE         | Document port           | EXPOSE 8080                 |
+|  USER           | Set user                | USER appuser                |
+|  CMD            | Default command         | CMD ["python", "app.py"]    |
+|  ENTRYPOINT     | Fixed entrypoint        | ENTRYPOINT ["python"]       |
+|  VOLUME         | Mount point             | VOLUME /data                |
+|  HEALTHCHECK    | Health check            | HEALTHCHECK CMD curl ...    |
+|  SHELL          | Default shell           | SHELL ["/bin/bash", "-c"]   |
+|  STOPSIGNAL     | Stop signal             | STOPSIGNAL SIGTERM          |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. COPY vs ADD
@@ -119,44 +119,44 @@ ADD https://example.com/file /app/
 ## 4. RUN vs CMD vs ENTRYPOINT
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                 RUN vs CMD vs ENTRYPOINT                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  RUN - Körs vid BUILD time                                               │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  RUN apt-get update                    # Skapar ny layer               │
-│  RUN pip install flask                 # Installerar under build       │
-│  RUN chmod +x /app/entrypoint.sh       # Körs EN gång vid build        │
-│                                                                          │
-│  CMD - Default command vid RUNTIME (kan överskrivas)                     │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  CMD ["python", "app.py"]              # Exec form (preferred)          │
-│  CMD python app.py                     # Shell form                     │
-│                                                                          │
-│  docker run myapp                      # Kör CMD: python app.py         │
-│  docker run myapp bash                 # CMD ersätts med: bash          │
-│                                                                          │
-│  ENTRYPOINT - Fast command (svårt att överskrivas)                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ENTRYPOINT ["python"]                 # Fast startpunkt               │
-│  CMD ["app.py"]                        # Default argument              │
-│                                                                          │
-│  docker run myapp                      # Kör: python app.py            │
-│  docker run myapp script.py            # Kör: python script.py         │
-│  docker run --entrypoint bash myapp    # Override entrypoint           │
-│                                                                          │
-│  KOMBINATIONER:                                                          │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ENTRYPOINT ["python"]                                                   │
-│  CMD ["app.py"]                                                         │
-│  # Resultat: python app.py                                              │
-│                                                                          │
-│  ENTRYPOINT ["/entrypoint.sh"]                                          │
-│  CMD ["--help"]                                                         │
-│  # Resultat: /entrypoint.sh --help                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                 RUN vs CMD vs ENTRYPOINT                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  RUN - Körs vid BUILD time                                               |
+|  ---------------------------------------------------------------------  |
+|  RUN apt-get update                    # Skapar ny layer               |
+|  RUN pip install flask                 # Installerar under build       |
+|  RUN chmod +x /app/entrypoint.sh       # Körs EN gång vid build        |
+|                                                                          |
+|  CMD - Default command vid RUNTIME (kan överskrivas)                     |
+|  ---------------------------------------------------------------------  |
+|  CMD ["python", "app.py"]              # Exec form (preferred)          |
+|  CMD python app.py                     # Shell form                     |
+|                                                                          |
+|  docker run myapp                      # Kör CMD: python app.py         |
+|  docker run myapp bash                 # CMD ersätts med: bash          |
+|                                                                          |
+|  ENTRYPOINT - Fast command (svårt att överskrivas)                       |
+|  ---------------------------------------------------------------------  |
+|  ENTRYPOINT ["python"]                 # Fast startpunkt               |
+|  CMD ["app.py"]                        # Default argument              |
+|                                                                          |
+|  docker run myapp                      # Kör: python app.py            |
+|  docker run myapp script.py            # Kör: python script.py         |
+|  docker run --entrypoint bash myapp    # Override entrypoint           |
+|                                                                          |
+|  KOMBINATIONER:                                                          |
+|  ---------------------------------------------------------------------  |
+|  ENTRYPOINT ["python"]                                                   |
+|  CMD ["app.py"]                                                         |
+|  # Resultat: python app.py                                              |
+|                                                                          |
+|  ENTRYPOINT ["/entrypoint.sh"]                                          |
+|  CMD ["--help"]                                                         |
+|  # Resultat: /entrypoint.sh --help                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 5. Shell Form vs Exec Form
@@ -503,31 +503,31 @@ docker inspect myapp:1.2.3 | jq '.[0].Config.Labels'
 ## 10. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                 DOCKERFILE BEST PRACTICES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Base Image                                                          │
-│     □ Använd specifika tags (aldrig :latest)                           │
-│     □ Välj slim/alpine för produktion                                  │
-│     □ Använd official images                                           │
-│                                                                          │
-│  ✅ Layer Optimization                                                  │
-│     □ Kombinera RUN-kommandon                                          │
-│     □ Ordna instruktioner för caching                                  │
-│     □ Ta bort temporary files i samma layer                            │
-│                                                                          │
-│  ✅ Security                                                            │
-│     □ Använd non-root USER                                             │
-│     □ Scanna images för vulnerabilities                                │
-│     □ Minimera installed packages                                      │
-│                                                                          │
-│  ✅ Clarity                                                             │
-│     □ Dokumentera med LABEL och kommentarer                            │
-│     □ Använd .dockerignore                                             │
-│     □ EXPOSE dokumenterade portar                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                 DOCKERFILE BEST PRACTICES                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Base Image                                                          |
+|     □ Använd specifika tags (aldrig :latest)                           |
+|     □ Välj slim/alpine för produktion                                  |
+|     □ Använd official images                                           |
+|                                                                          |
+|  ✅ Layer Optimization                                                  |
+|     □ Kombinera RUN-kommandon                                          |
+|     □ Ordna instruktioner för caching                                  |
+|     □ Ta bort temporary files i samma layer                            |
+|                                                                          |
+|  ✅ Security                                                            |
+|     □ Använd non-root USER                                             |
+|     □ Scanna images för vulnerabilities                                |
+|     □ Minimera installed packages                                      |
+|                                                                          |
+|  ✅ Clarity                                                             |
+|     □ Dokumentera med LABEL och kommentarer                            |
+|     □ Använd .dockerignore                                             |
+|     □ EXPOSE dokumenterade portar                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 11-14. Sammanfattning
@@ -547,7 +547,7 @@ docker inspect myapp:1.2.3 | jq '.[0].Config.Labels'
 
 ---
 
-**Nästa Node:** Container Lifecycle →
+**Nästa Node:** Container Lifecycle ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 65,
@@ -573,52 +573,52 @@ Att förstå container lifecycle är kritiskt för att effektivt hantera och fel
 ### Container States
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     CONTAINER LIFECYCLE STATES                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│                          docker create                                   │
-│                               │                                          │
-│                               ▼                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                        CREATED                                   │   │
-│  │                   Container exists but                           │   │
-│  │                   not yet started                                │   │
-│  └────────────────────────┬────────────────────────────────────────┘   │
-│                           │                                             │
-│                    docker start                                         │
-│                           │                                             │
-│                           ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                        RUNNING                                   │   │
-│  │                   Container executing                            │   │
-│  │                   main process                                   │   │
-│  └─────┬─────────────────┬─────────────────┬───────────────────────┘   │
-│        │                 │                 │                            │
-│  docker pause      docker stop       Process exits                      │
-│        │                 │                 │                            │
-│        ▼                 ▼                 ▼                            │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐                        │
-│  │  PAUSED  │     │ STOPPING │     │  EXITED  │                        │
-│  │          │     │          │     │ (code)   │                        │
-│  └────┬─────┘     └────┬─────┘     └────┬─────┘                        │
-│       │                │                │                               │
-│ docker unpause   SIGTERM→SIGKILL   docker start                        │
-│       │                │                │                               │
-│       ▼                ▼                ▼                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     RUNNING / EXITED                             │   │
-│  └────────────────────────┬────────────────────────────────────────┘   │
-│                           │                                             │
-│                      docker rm                                          │
-│                           │                                             │
-│                           ▼                                             │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                       REMOVED                                    │   │
-│  │                  Container deleted                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     CONTAINER LIFECYCLE STATES                           |
++-------------------------------------------------------------------------+
+|                                                                          |
+|                          docker create                                   |
+|                               |                                          |
+|                               ▼                                          |
+|  +-----------------------------------------------------------------+   |
+|  |                        CREATED                                   |   |
+|  |                   Container exists but                           |   |
+|  |                   not yet started                                |   |
+|  +------------------------+----------------------------------------+   |
+|                           |                                             |
+|                    docker start                                         |
+|                           |                                             |
+|                           ▼                                             |
+|  +-----------------------------------------------------------------+   |
+|  |                        RUNNING                                   |   |
+|  |                   Container executing                            |   |
+|  |                   main process                                   |   |
+|  +-----+-----------------+-----------------+-----------------------+   |
+|        |                 |                 |                            |
+|  docker pause      docker stop       Process exits                      |
+|        |                 |                 |                            |
+|        ▼                 ▼                 ▼                            |
+|  +----------+     +----------+     +----------+                        |
+|  |  PAUSED  |     | STOPPING |     |  EXITED  |                        |
+|  |          |     |          |     | (code)   |                        |
+|  +----+-----+     +----+-----+     +----+-----+                        |
+|       |                |                |                               |
+| docker unpause   SIGTERM->SIGKILL   docker start                        |
+|       |                |                |                               |
+|       ▼                ▼                ▼                               |
+|  +-----------------------------------------------------------------+   |
+|  |                     RUNNING / EXITED                             |   |
+|  +------------------------+----------------------------------------+   |
+|                           |                                             |
+|                      docker rm                                          |
+|                           |                                             |
+|                           ▼                                             |
+|  +-----------------------------------------------------------------+   |
+|  |                       REMOVED                                    |   |
+|  |                  Container deleted                               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Lifecycle Commands
@@ -655,7 +655,7 @@ docker run --rm nginx:alpine cat /etc/hosts  # Auto-remove vid exit
 # STOP - Graceful shutdown
 # ═══════════════════════════════════════════════════════════════════════
 
-docker stop myapp              # SIGTERM → wait 10s → SIGKILL
+docker stop myapp              # SIGTERM -> wait 10s -> SIGKILL
 docker stop -t 30 myapp        # Custom timeout (30s)
 docker stop $(docker ps -q)    # Stoppa alla körande
 
@@ -705,8 +705,8 @@ docker run -it ubuntu:22.04 bash
 docker run -it --rm python:3.11 python
 
 # Inuti containern:
-# Ctrl+D eller exit → Avsluta och stoppa
-# Ctrl+P, Ctrl+Q    → Detach utan att stoppa
+# Ctrl+D eller exit -> Avsluta och stoppa
+# Ctrl+P, Ctrl+Q    -> Detach utan att stoppa
 
 # ═══════════════════════════════════════════════════════════════════════
 # ATTACH - Anslut till körande container
@@ -802,11 +802,11 @@ docker events --filter event=die
 # COPY - Between container and host
 # ═══════════════════════════════════════════════════════════════════════
 
-# Container → Host
+# Container -> Host
 docker cp myapp:/app/config.json ./config.json
 docker cp myapp:/var/log/ ./logs/
 
-# Host → Container
+# Host -> Container
 docker cp ./newconfig.json myapp:/app/config.json
 docker cp ./data/ myapp:/app/data/
 
@@ -842,37 +842,37 @@ docker commit -m "Added packages" myapp myapp-modified:v1
 ## 6. Restart Policies
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     RESTART POLICIES                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  POLICY              │ BEHAVIOR                                          │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  no                  │ Aldrig restart (default)                         │
-│  on-failure          │ Restart vid exit code != 0                       │
-│  on-failure:N        │ Max N restarts                                   │
-│  always              │ Alltid restart                                   │
-│  unless-stopped      │ Alltid, utom om manuellt stoppad                 │
-│                                                                          │
-│  EXEMPEL:                                                                │
-│  ─────────────────────────────────────────────────────────────────────  │
-│                                                                          │
-│  # Always restart                                                        │
-│  docker run -d --restart=always nginx                                    │
-│                                                                          │
-│  # Restart on failure, max 5 times                                       │
-│  docker run -d --restart=on-failure:5 myapp                             │
-│                                                                          │
-│  # Update restart policy                                                 │
-│  docker update --restart=always myapp                                    │
-│                                                                          │
-│  USE CASES:                                                              │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Production services    │ always / unless-stopped                       │
-│  Workers/Jobs           │ on-failure:N                                  │
-│  Development            │ no                                            │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     RESTART POLICIES                                     |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  POLICY              | BEHAVIOR                                          |
+|  ---------------------------------------------------------------------  |
+|  no                  | Aldrig restart (default)                         |
+|  on-failure          | Restart vid exit code != 0                       |
+|  on-failure:N        | Max N restarts                                   |
+|  always              | Alltid restart                                   |
+|  unless-stopped      | Alltid, utom om manuellt stoppad                 |
+|                                                                          |
+|  EXEMPEL:                                                                |
+|  ---------------------------------------------------------------------  |
+|                                                                          |
+|  # Always restart                                                        |
+|  docker run -d --restart=always nginx                                    |
+|                                                                          |
+|  # Restart on failure, max 5 times                                       |
+|  docker run -d --restart=on-failure:5 myapp                             |
+|                                                                          |
+|  # Update restart policy                                                 |
+|  docker update --restart=always myapp                                    |
+|                                                                          |
+|  USE CASES:                                                              |
+|  ---------------------------------------------------------------------  |
+|  Production services    | always / unless-stopped                       |
+|  Workers/Jobs           | on-failure:N                                  |
+|  Development            | no                                            |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. Praktiska Övningar
@@ -1005,27 +1005,27 @@ docker update --memory=1g --cpus=2 myapp
 ## 9. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│              CONTAINER MANAGEMENT BEST PRACTICES                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Naming                                                               │
-│     □ Använd --name för alla containers                                │
-│     □ Följ naming convention: project-service-env                      │
-│                                                                          │
-│  ✅ Resources                                                           │
-│     □ Sätt memory/CPU limits i produktion                              │
-│     □ Använd restart policies                                          │
-│                                                                          │
-│  ✅ Cleanup                                                              │
-│     □ Använd --rm för temporära containers                             │
-│     □ Regelbunden docker container prune                               │
-│                                                                          │
-│  ✅ Debugging                                                           │
-│     □ Använd exec för debugging, inte attach                           │
-│     □ Övervaka med stats och logs                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|              CONTAINER MANAGEMENT BEST PRACTICES                         |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Naming                                                               |
+|     □ Använd --name för alla containers                                |
+|     □ Följ naming convention: project-service-env                      |
+|                                                                          |
+|  ✅ Resources                                                           |
+|     □ Sätt memory/CPU limits i produktion                              |
+|     □ Använd restart policies                                          |
+|                                                                          |
+|  ✅ Cleanup                                                              |
+|     □ Använd --rm för temporära containers                             |
+|     □ Regelbunden docker container prune                               |
+|                                                                          |
+|  ✅ Debugging                                                           |
+|     □ Använd exec för debugging, inte attach                           |
+|     □ Övervaka med stats och logs                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 10-14. Sammanfattning
@@ -1045,7 +1045,7 @@ docker update --memory=1g --cpus=2 myapp
 
 ---
 
-**Nästa Node:** Docker Volumes →
+**Nästa Node:** Docker Volumes ->
 ''',
     "xp_reward": 150,
     "estimated_minutes": 60,

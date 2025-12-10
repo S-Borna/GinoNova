@@ -32,33 +32,33 @@ MLOps (Machine Learning Operations) är praktiker och verktyg för att automatis
 
 ### Utan MLOps (ML-skuld)
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Data Scientist's Laptop                                │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │ Notebook    │→ │ model.pkl   │→ │ "It works!" │     │
-│  │ experiment  │  │ (local)     │  │             │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-│                                                         │
-│  Månader senare: "Vilken version? Vilken data?"        │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  Data Scientist's Laptop                                |
+|  +-------------+  +-------------+  +-------------+     |
+|  | Notebook    |-> | model.pkl   |-> | "It works!" |     |
+|  | experiment  |  | (local)     |  |             |     |
+|  +-------------+  +-------------+  +-------------+     |
+|                                                         |
+|  Månader senare: "Vilken version? Vilken data?"        |
++---------------------------------------------------------+
 ```
 
 ### Med MLOps
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    MLOps Pipeline                        │
-│                                                          │
-│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────────┐    │
-│  │ Data   │→ │ Train  │→ │ Test   │→ │ Deploy     │    │
-│  │ Ingest │  │ Model  │  │ Valid. │  │ Monitor    │    │
-│  └────────┘  └────────┘  └────────┘  └────────────┘    │
-│       │          │           │             │            │
-│       ▼          ▼           ▼             ▼            │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │        Version Control + Experiment Tracking     │   │
-│  │        Model Registry + Feature Store            │   │
-│  └─────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    MLOps Pipeline                        |
+|                                                          |
+|  +--------+  +--------+  +--------+  +------------+    |
+|  | Data   |-> | Train  |-> | Test   |-> | Deploy     |    |
+|  | Ingest |  | Model  |  | Valid. |  | Monitor    |    |
+|  +--------+  +--------+  +--------+  +------------+    |
+|       |          |           |             |            |
+|       ▼          ▼           ▼             ▼            |
+|  +-------------------------------------------------+   |
+|  |        Version Control + Experiment Tracking     |   |
+|  |        Model Registry + Feature Store            |   |
+|  +-------------------------------------------------+   |
++---------------------------------------------------------+
 ```
 
 ## MLOps Maturity Levels
@@ -94,24 +94,24 @@ MLOps (Machine Learning Operations) är praktiker och verktyg för att automatis
 ## MLOps Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     MLOps Stack                          │
-├─────────────────────────────────────────────────────────┤
-│  Monitoring     │ Prometheus, Grafana, Evidently AI     │
-├─────────────────────────────────────────────────────────┤
-│  Model Serving  │ TensorFlow Serving, Seldon, KServe    │
-├─────────────────────────────────────────────────────────┤
-│  Orchestration  │ Airflow, Kubeflow, Prefect, Dagster   │
-├─────────────────────────────────────────────────────────┤
-│  Experiment     │ MLflow, Weights & Biases, Neptune     │
-│  Tracking       │                                       │
-├─────────────────────────────────────────────────────────┤
-│  Feature Store  │ Feast, Tecton, Hopsworks              │
-├─────────────────────────────────────────────────────────┤
-│  Data Pipeline  │ Spark, dbt, Airflow, Kafka            │
-├─────────────────────────────────────────────────────────┤
-│  Infrastructure │ Kubernetes, Docker, Terraform         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                     MLOps Stack                          |
++---------------------------------------------------------+
+|  Monitoring     | Prometheus, Grafana, Evidently AI     |
++---------------------------------------------------------+
+|  Model Serving  | TensorFlow Serving, Seldon, KServe    |
++---------------------------------------------------------+
+|  Orchestration  | Airflow, Kubeflow, Prefect, Dagster   |
++---------------------------------------------------------+
+|  Experiment     | MLflow, Weights & Biases, Neptune     |
+|  Tracking       |                                       |
++---------------------------------------------------------+
+|  Feature Store  | Feast, Tecton, Hopsworks              |
++---------------------------------------------------------+
+|  Data Pipeline  | Spark, dbt, Airflow, Kafka            |
++---------------------------------------------------------+
+|  Infrastructure | Kubernetes, Docker, Terraform         |
++---------------------------------------------------------+
 ```
 
 ## Karriärvägar i MLOps
@@ -178,11 +178,11 @@ I denna SkillsMap kommer du lära dig:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -202,19 +202,19 @@ Du bör redan kunna grundläggande Python. Här fokuserar vi på ML-specifika bi
 ## ML Python Stack
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    ML Python Ecosystem                   │
-├─────────────────────────────────────────────────────────┤
-│  Deep Learning  │ PyTorch, TensorFlow, JAX              │
-├─────────────────────────────────────────────────────────┤
-│  ML Frameworks  │ scikit-learn, XGBoost, LightGBM       │
-├─────────────────────────────────────────────────────────┤
-│  Data Proc.     │ Pandas, NumPy, Polars, Dask           │
-├─────────────────────────────────────────────────────────┤
-│  Visualization  │ Matplotlib, Seaborn, Plotly           │
-├─────────────────────────────────────────────────────────┤
-│  MLOps Tools    │ MLflow, DVC, Hydra, ONNX              │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    ML Python Ecosystem                   |
++---------------------------------------------------------+
+|  Deep Learning  | PyTorch, TensorFlow, JAX              |
++---------------------------------------------------------+
+|  ML Frameworks  | scikit-learn, XGBoost, LightGBM       |
++---------------------------------------------------------+
+|  Data Proc.     | Pandas, NumPy, Polars, Dask           |
++---------------------------------------------------------+
+|  Visualization  | Matplotlib, Seaborn, Plotly           |
++---------------------------------------------------------+
+|  MLOps Tools    | MLflow, DVC, Hydra, ONNX              |
++---------------------------------------------------------+
 ```
 
 ## Environment Management
@@ -452,10 +452,10 @@ Med solid Python-grund går vi vidare till:
 
 ```
 Traditional Software:
-  Code → Application
+  Code -> Application
 
 Machine Learning:
-  Code + Data + Config + Model → ML System
+  Code + Data + Config + Model -> ML System
 
   Alla måste versionshanteras!
 ```
@@ -465,45 +465,45 @@ Machine Learning:
 ### Rekommenderad projektstruktur
 ```
 ml-project/
-├── .git/
-├── .gitignore
-├── .dvc/                    # DVC config
-├── pyproject.toml
-├── README.md
-├── configs/                 # Hydra/YAML configs
-│   ├── config.yaml
-│   ├── model/
-│   │   ├── random_forest.yaml
-│   │   └── xgboost.yaml
-│   └── data/
-│       └── preprocessing.yaml
-├── data/
-│   ├── raw/                 # → Tracked by DVC
-│   ├── processed/           # → Tracked by DVC
-│   └── .gitkeep
-├── models/                  # → Tracked by DVC
-│   └── .gitkeep
-├── notebooks/               # Exploratory notebooks
-│   └── eda.ipynb
-├── src/
-│   ├── __init__.py
-│   ├── data/
-│   │   ├── __init__.py
-│   │   └── preprocessing.py
-│   ├── features/
-│   │   ├── __init__.py
-│   │   └── build_features.py
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── train.py
-│   │   └── predict.py
-│   └── evaluation/
-│       ├── __init__.py
-│       └── metrics.py
-├── tests/
-│   ├── test_data.py
-│   └── test_model.py
-└── dvc.yaml                 # DVC pipeline
++-- .git/
++-- .gitignore
++-- .dvc/                    # DVC config
++-- pyproject.toml
++-- README.md
++-- configs/                 # Hydra/YAML configs
+|   +-- config.yaml
+|   +-- model/
+|   |   +-- random_forest.yaml
+|   |   +-- xgboost.yaml
+|   +-- data/
+|       +-- preprocessing.yaml
++-- data/
+|   +-- raw/                 # -> Tracked by DVC
+|   +-- processed/           # -> Tracked by DVC
+|   +-- .gitkeep
++-- models/                  # -> Tracked by DVC
+|   +-- .gitkeep
++-- notebooks/               # Exploratory notebooks
+|   +-- eda.ipynb
++-- src/
+|   +-- __init__.py
+|   +-- data/
+|   |   +-- __init__.py
+|   |   +-- preprocessing.py
+|   +-- features/
+|   |   +-- __init__.py
+|   |   +-- build_features.py
+|   +-- models/
+|   |   +-- __init__.py
+|   |   +-- train.py
+|   |   +-- predict.py
+|   +-- evaluation/
+|       +-- __init__.py
+|       +-- metrics.py
++-- tests/
+|   +-- test_data.py
+|   +-- test_model.py
++-- dvc.yaml                 # DVC pipeline
 ```
 
 ### .gitignore för ML
@@ -632,18 +632,18 @@ dvc exp show
 ### Rekommenderad strategi
 ```
 main
-  │
-  ├── develop
-  │     │
-  │     ├── feature/new-feature-engineering
-  │     │
-  │     ├── experiment/xgboost-tuning
-  │     │     (kan mergas om bättre metrics)
-  │     │
-  │     └── experiment/transformer-model
-  │           (kasta om dåliga resultat)
-  │
-  └── release/v1.2
+  |
+  +-- develop
+  |     |
+  |     +-- feature/new-feature-engineering
+  |     |
+  |     +-- experiment/xgboost-tuning
+  |     |     (kan mergas om bättre metrics)
+  |     |
+  |     +-- experiment/transformer-model
+  |           (kasta om dåliga resultat)
+  |
+  +-- release/v1.2
 ```
 
 ### Experiment tracking i Git
@@ -662,7 +662,7 @@ git commit -m "exp: BERT embeddings - accuracy 0.92"
 git diff main -- metrics/
 dvc metrics diff main
 
-# Om bra resultat → merge
+# Om bra resultat -> merge
 git checkout develop
 git merge experiment/bert-embeddings
 ```
@@ -713,7 +713,7 @@ python train.py --model xgboost
 
 # 7. Jämför
 dvc metrics diff experiment/baseline
-# accuracy: 0.85 → 0.91
+# accuracy: 0.85 -> 0.91
 
 # 8. Merge bästa experiment
 git checkout main
@@ -739,15 +739,15 @@ Med versionshantering på plats går vi vidare till:
 ## Varför Cloud för ML?
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Local Development         Cloud Training               │
-│  ┌─────────────────┐       ┌─────────────────┐         │
-│  │ Laptop GPU      │       │ 8x A100 80GB    │         │
-│  │ 8GB VRAM        │       │ 640GB VRAM      │         │
-│  │ Days to train   │   →   │ Hours to train  │         │
-│  │ $2000 hardware  │       │ Pay per use     │         │
-│  └─────────────────┘       └─────────────────┘         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  Local Development         Cloud Training               |
+|  +-----------------+       +-----------------+         |
+|  | Laptop GPU      |       | 8x A100 80GB    |         |
+|  | 8GB VRAM        |       | 640GB VRAM      |         |
+|  | Days to train   |   ->   | Hours to train  |         |
+|  | $2000 hardware  |       | Pay per use     |         |
+|  +-----------------+       +-----------------+         |
++---------------------------------------------------------+
 ```
 
 ## Cloud ML Services Comparison
@@ -979,11 +979,11 @@ Med cloud-grunderna på plats går vi vidare till:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -999,18 +999,18 @@ Med cloud-grunderna på plats går vi vidare till:
 ## Data Pipeline Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      ML Data Pipeline                            │
-│                                                                  │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐     │
-│  │ Sources  │ → │ Ingest   │ → │Transform │ → │ Feature  │     │
-│  │          │   │          │   │          │   │ Store    │     │
-│  └──────────┘   └──────────┘   └──────────┘   └──────────┘     │
-│       │              │              │              │            │
-│   Databases      Kafka/         Spark/          Online/        │
-│   APIs           Airflow        dbt             Offline        │
-│   Files                                                         │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      ML Data Pipeline                            |
+|                                                                  |
+|  +----------+   +----------+   +----------+   +----------+     |
+|  | Sources  | -> | Ingest   | -> |Transform | -> | Feature  |     |
+|  |          |   |          |   |          |   | Store    |     |
+|  +----------+   +----------+   +----------+   +----------+     |
+|       |              |              |              |            |
+|   Databases      Kafka/         Spark/          Online/        |
+|   APIs           Airflow        dbt             Offline        |
+|   Files                                                         |
++-----------------------------------------------------------------+
 ```
 
 ## Apache Airflow
@@ -1317,33 +1317,33 @@ FROM user_stats
 
 ```
 Utan Feature Store:
-┌─────────────────────────────────────────────────────────┐
-│  Training                    Serving                    │
-│  ┌─────────────┐            ┌─────────────┐            │
-│  │ Python/     │            │ Java/       │            │
-│  │ Spark       │            │ Go          │            │
-│  │ features    │     ≠      │ features    │            │
-│  └─────────────┘            └─────────────┘            │
-│       ↓                           ↓                     │
-│  Training/Serving skew! Modellen presterar sämre!       │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  Training                    Serving                    |
+|  +-------------+            +-------------+            |
+|  | Python/     |            | Java/       |            |
+|  | Spark       |            | Go          |            |
+|  | features    |     ≠      | features    |            |
+|  +-------------+            +-------------+            |
+|       ↓                           ↓                     |
+|  Training/Serving skew! Modellen presterar sämre!       |
++---------------------------------------------------------+
 
 Med Feature Store:
-┌─────────────────────────────────────────────────────────┐
-│              ┌─────────────────┐                        │
-│              │  Feature Store  │                        │
-│              │  ┌───────────┐  │                        │
-│              │  │ Offline   │  │ ← Training             │
-│              │  │ Store     │  │                        │
-│              │  └───────────┘  │                        │
-│              │  ┌───────────┐  │                        │
-│              │  │ Online    │  │ ← Serving (low latency)│
-│              │  │ Store     │  │                        │
-│              │  └───────────┘  │                        │
-│              └─────────────────┘                        │
-│                     ↓                                   │
-│  Samma features för träning och serving!                │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              +-----------------+                        |
+|              |  Feature Store  |                        |
+|              |  +-----------+  |                        |
+|              |  | Offline   |  | <- Training             |
+|              |  | Store     |  |                        |
+|              |  +-----------+  |                        |
+|              |  +-----------+  |                        |
+|              |  | Online    |  | <- Serving (low latency)|
+|              |  | Store     |  |                        |
+|              |  +-----------+  |                        |
+|              +-----------------+                        |
+|                     ↓                                   |
+|  Samma features för träning och serving!                |
++---------------------------------------------------------+
 ```
 
 ## Feast - Open Source Feature Store
@@ -1573,11 +1573,11 @@ realtime_user_stats = StreamFeatureView(
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1593,37 +1593,37 @@ realtime_user_stats = StreamFeatureView(
 ## Data Lake vs Data Warehouse
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   DATA LAKE                                      │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  Schema-on-Read                                          │    │
-│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐               │    │
-│  │  │JSON │ │CSV  │ │Parq │ │Image│ │Video│               │    │
-│  │  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘               │    │
-│  │  Raw, unprocessed, any format                           │    │
-│  │  Perfect for ML exploration!                            │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│                   DATA WAREHOUSE                                 │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  Schema-on-Write                                         │    │
-│  │  ┌──────────────────────────────────────────┐           │    │
-│  │  │  Structured Tables with defined schemas   │           │    │
-│  │  │  Optimized for BI/Analytics queries       │           │    │
-│  │  │  Clean, validated, aggregated             │           │    │
-│  │  └──────────────────────────────────────────┘           │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│                   LAKEHOUSE (Modern)                             │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  Best of both worlds!                                    │    │
-│  │  Delta Lake / Apache Iceberg / Apache Hudi               │    │
-│  │  - ACID transactions                                     │    │
-│  │  - Schema evolution                                      │    │
-│  │  - Time travel                                           │    │
-│  │  - Direct ML access to raw data                          │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   DATA LAKE                                      |
+|  +---------------------------------------------------------+    |
+|  |  Schema-on-Read                                          |    |
+|  |  +-----+ +-----+ +-----+ +-----+ +-----+               |    |
+|  |  |JSON | |CSV  | |Parq | |Image| |Video|               |    |
+|  |  +-----+ +-----+ +-----+ +-----+ +-----+               |    |
+|  |  Raw, unprocessed, any format                           |    |
+|  |  Perfect for ML exploration!                            |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
+|                   DATA WAREHOUSE                                 |
+|  +---------------------------------------------------------+    |
+|  |  Schema-on-Write                                         |    |
+|  |  +------------------------------------------+           |    |
+|  |  |  Structured Tables with defined schemas   |           |    |
+|  |  |  Optimized for BI/Analytics queries       |           |    |
+|  |  |  Clean, validated, aggregated             |           |    |
+|  |  +------------------------------------------+           |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
+|                   LAKEHOUSE (Modern)                             |
+|  +---------------------------------------------------------+    |
+|  |  Best of both worlds!                                    |    |
+|  |  Delta Lake / Apache Iceberg / Apache Hudi               |    |
+|  |  - ACID transactions                                     |    |
+|  |  - Schema evolution                                      |    |
+|  |  - Time travel                                           |    |
+|  |  - Direct ML access to raw data                          |    |
+|  +---------------------------------------------------------+    |
++-----------------------------------------------------------------+
 ```
 
 ## Delta Lake
@@ -1686,18 +1686,18 @@ new_df_with_extra_column.write.format("delta") \
 
 ### Bronze/Silver/Gold Pattern
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Medallion Architecture                        │
-│                                                                  │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐                     │
-│  │  BRONZE  │ → │  SILVER  │ → │   GOLD   │                     │
-│  │  (Raw)   │   │ (Clean)  │   │(Features)│                     │
-│  └──────────┘   └──────────┘   └──────────┘                     │
-│       │              │              │                            │
-│   Raw JSON/      Cleaned,       Aggregated,                     │
-│   CSV ingest     validated,     feature-ready,                  │
-│   from sources   deduplicated   for ML training                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Medallion Architecture                        |
+|                                                                  |
+|  +----------+   +----------+   +----------+                     |
+|  |  BRONZE  | -> |  SILVER  | -> |   GOLD   |                     |
+|  |  (Raw)   |   | (Clean)  |   |(Features)|                     |
+|  +----------+   +----------+   +----------+                     |
+|       |              |              |                            |
+|   Raw JSON/      Cleaned,       Aggregated,                     |
+|   CSV ingest     validated,     feature-ready,                  |
+|   from sources   deduplicated   for ML training                 |
++-----------------------------------------------------------------+
 ```
 
 ### Implementation
@@ -1774,19 +1774,19 @@ spark.sql('''
 ```python
 # Exempel: ML-ready data structure
 data/
-├── bronze/           # Raw data as-is
-│   └── events/
-├── silver/           # Cleaned, validated
-│   └── events/
-├── gold/             # Feature tables
-│   ├── user_features/
-│   └── transaction_features/
-└── ml/               # ML-specific datasets
-    ├── train/
-    │   ├── 2024-01-01/
-    │   └── 2024-01-15/
-    ├── validation/
-    └── test/
++-- bronze/           # Raw data as-is
+|   +-- events/
++-- silver/           # Cleaned, validated
+|   +-- events/
++-- gold/             # Feature tables
+|   +-- user_features/
+|   +-- transaction_features/
++-- ml/               # ML-specific datasets
+    +-- train/
+    |   +-- 2024-01-01/
+    |   +-- 2024-01-15/
+    +-- validation/
+    +-- test/
 ```
 
 > 💡 **Pro Tip:** Dokumentera VARFÖR, inte VAD. Koden visar vad, kommentarer förklarar varför.
@@ -1804,11 +1804,11 @@ data/
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1824,21 +1824,21 @@ data/
 ## Ingestion Patterns
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Data Ingestion Patterns                       │
-│                                                                  │
-│  BATCH                          STREAMING                        │
-│  ┌─────────────┐                ┌─────────────┐                  │
-│  │ Daily/      │                │ Real-time   │                  │
-│  │ Hourly      │                │ Continuous  │                  │
-│  │ Full/Incr   │                │ Events      │                  │
-│  └─────────────┘                └─────────────┘                  │
-│       │                              │                           │
-│       ▼                              ▼                           │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │              Data Lake / Feature Store                   │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Data Ingestion Patterns                       |
+|                                                                  |
+|  BATCH                          STREAMING                        |
+|  +-------------+                +-------------+                  |
+|  | Daily/      |                | Real-time   |                  |
+|  | Hourly      |                | Continuous  |                  |
+|  | Full/Incr   |                | Events      |                  |
+|  +-------------+                +-------------+                  |
+|       |                              |                           |
+|       ▼                              ▼                           |
+|  +---------------------------------------------------------+    |
+|  |              Data Lake / Feature Store                   |    |
+|  +---------------------------------------------------------+    |
++-----------------------------------------------------------------+
 ```
 
 ## Apache Kafka for Streaming
@@ -2076,11 +2076,11 @@ def validate_ingested_data(df: pd.DataFrame) -> bool:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2434,7 +2434,7 @@ Utan tracking:
   "Vilken modell presterade bäst?"
   "Vilka hyperparameters använde jag?"
   "Vilken data version?"
-  → Ingen aning! Kör om allt...
+  -> Ingen aning! Kör om allt...
 
 Med tracking:
   experiment_id: exp_2024_01_15_v3
@@ -2442,7 +2442,7 @@ Med tracking:
   metrics: {accuracy: 0.95}
   artifacts: model.pkl, plots/
   data_version: v1.2.3
-  → Full reproducibility!
+  -> Full reproducibility!
 ```
 
 ## MLflow
@@ -2686,11 +2686,11 @@ mlflow.register_model(
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2706,19 +2706,19 @@ mlflow.register_model(
 ## Vad är en Model Registry?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Model Registry                              │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────┐     │
-│  │  fraud_detector                                         │     │
-│  │  ├── Version 1 (Staging)    - RF, acc=0.92             │     │
-│  │  ├── Version 2 (Production) - XGBoost, acc=0.95       │     │
-│  │  ├── Version 3 (None)       - Neural Net, acc=0.94    │     │
-│  │  └── Version 4 (Staging)    - Ensemble, acc=0.97       │     │
-│  └────────────────────────────────────────────────────────┘     │
-│                                                                  │
-│  Stages: None → Staging → Production → Archived                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      Model Registry                              |
+|                                                                  |
+|  +--------------------------------------------------------+     |
+|  |  fraud_detector                                         |     |
+|  |  +-- Version 1 (Staging)    - RF, acc=0.92             |     |
+|  |  +-- Version 2 (Production) - XGBoost, acc=0.95       |     |
+|  |  +-- Version 3 (None)       - Neural Net, acc=0.94    |     |
+|  |  +-- Version 4 (Staging)    - Ensemble, acc=0.97       |     |
+|  +--------------------------------------------------------+     |
+|                                                                  |
+|  Stages: None -> Staging -> Production -> Archived                 |
++-----------------------------------------------------------------+
 ```
 
 ## MLflow Model Registry
@@ -2764,7 +2764,7 @@ client.transition_model_version_stage(
     archive_existing_versions=False
 )
 
-# Efter validering → Production
+# Efter validering -> Production
 client.transition_model_version_stage(
     name="fraud_detector",
     version=4,
@@ -2937,11 +2937,11 @@ PATCH: Fixes
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2957,19 +2957,19 @@ PATCH: Fixes
 ## Tuning Strategier
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Hyperparameter Search                         │
-│                                                                  │
-│  Grid Search          Random Search         Bayesian Opt        │
-│  ┌─────────┐          ┌─────────┐          ┌─────────┐          │
-│  │ ■ ■ ■ ■ │          │   ■     │          │       ■ │          │
-│  │ ■ ■ ■ ■ │          │ ■   ■   │          │   ■     │          │
-│  │ ■ ■ ■ ■ │          │     ■ ■ │          │ ■   ■   │          │
-│  │ ■ ■ ■ ■ │          │ ■       │          │ ■ ■ ■ ■ │ ← Focus  │
-│  └─────────┘          └─────────┘          └─────────┘           │
-│  Exhaustive           Random samples       Smart sampling       │
-│  O(n^d)               O(n)                 O(n log n)           │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Hyperparameter Search                         |
+|                                                                  |
+|  Grid Search          Random Search         Bayesian Opt        |
+|  +---------+          +---------+          +---------+          |
+|  | ■ ■ ■ ■ |          |   ■     |          |       ■ |          |
+|  | ■ ■ ■ ■ |          | ■   ■   |          |   ■     |          |
+|  | ■ ■ ■ ■ |          |     ■ ■ |          | ■   ■   |          |
+|  | ■ ■ ■ ■ |          | ■       |          | ■ ■ ■ ■ | <- Focus  |
+|  +---------+          +---------+          +---------+           |
+|  Exhaustive           Random samples       Smart sampling       |
+|  O(n^d)               O(n)                 O(n log n)           |
++-----------------------------------------------------------------+
 ```
 
 ## Optuna
@@ -3200,11 +3200,11 @@ best_hp = tuner.get_best_hyperparameters(num_trials=1)[0]
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3220,18 +3220,18 @@ best_hp = tuner.get_best_hyperparameters(num_trials=1)[0]
 ## ML CI/CD vs Traditional CI/CD
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                      Traditional CI/CD                                    │
-│  Code Change → Build → Test → Deploy                                     │
-├──────────────────────────────────────────────────────────────────────────┤
-│                      ML CI/CD                                             │
-│  Code Change ─┐                                                           │
-│  Data Change ─┼→ Validate → Train → Evaluate → Register → Deploy        │
-│  Model Change┘     │          │        │          │          │           │
-│                    ▼          ▼        ▼          ▼          ▼           │
-│               Schema     Experiment  Metrics   Model      Endpoint      │
-│               Tests      Tracking    Gates    Registry    Monitor       │
-└──────────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------------+
+|                      Traditional CI/CD                                    |
+|  Code Change -> Build -> Test -> Deploy                                     |
++--------------------------------------------------------------------------+
+|                      ML CI/CD                                             |
+|  Code Change -+                                                           |
+|  Data Change -+-> Validate -> Train -> Evaluate -> Register -> Deploy        |
+|  Model Change+     |          |        |          |          |           |
+|                    ▼          ▼        ▼          ▼          ▼           |
+|               Schema     Experiment  Metrics   Model      Endpoint      |
+|               Tests      Tracking    Gates    Registry    Monitor       |
++--------------------------------------------------------------------------+
 ```
 
 ## GitHub Actions for ML
@@ -3586,11 +3586,11 @@ class TestModelIntegrity:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3606,17 +3606,17 @@ class TestModelIntegrity:
 ## Orchestration Tools
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    Orchestration Landscape                          │
-│                                                                     │
-│  General Purpose          │       ML-Specific                       │
-│  ─────────────────────    │       ───────────────                   │
-│  • Apache Airflow         │       • Kubeflow Pipelines              │
-│  • Prefect                │       • MLflow Pipelines                │
-│  • Dagster                │       • Metaflow                         │
-│  • Luigi                  │       • ZenML                            │
-│  • Argo Workflows         │       • Kedro                            │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                    Orchestration Landscape                          |
+|                                                                     |
+|  General Purpose          |       ML-Specific                       |
+|  ---------------------    |       ---------------                   |
+|  • Apache Airflow         |       • Kubeflow Pipelines              |
+|  • Prefect                |       • MLflow Pipelines                |
+|  • Dagster                |       • Metaflow                         |
+|  • Luigi                  |       • ZenML                            |
+|  • Argo Workflows         |       • Kedro                            |
++--------------------------------------------------------------------+
 ```
 
 ## Apache Airflow
@@ -3976,11 +3976,11 @@ compiler.Compiler().compile(
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3996,18 +3996,18 @@ compiler.Compiler().compile(
 ## Serving Patterns
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Model Serving Patterns                           │
-│                                                                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                  │
-│  │   Online    │  │    Batch    │  │  Streaming  │                  │
-│  │  Inference  │  │  Inference  │  │  Inference  │                  │
-│  │             │  │             │  │             │                  │
-│  │ REST/gRPC   │  │ Spark/Dask  │  │ Kafka/Flink │                  │
-│  │ <100ms      │  │ Hours       │  │ Near-RT     │                  │
-│  │ Per request │  │ Bulk data   │  │ Continuous  │                  │
-│  └─────────────┘  └─────────────┘  └─────────────┘                  │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     Model Serving Patterns                           |
+|                                                                      |
+|  +-------------+  +-------------+  +-------------+                  |
+|  |   Online    |  |    Batch    |  |  Streaming  |                  |
+|  |  Inference  |  |  Inference  |  |  Inference  |                  |
+|  |             |  |             |  |             |                  |
+|  | REST/gRPC   |  | Spark/Dask  |  | Kafka/Flink |                  |
+|  | <100ms      |  | Hours       |  | Near-RT     |                  |
+|  | Per request |  | Bulk data   |  | Continuous  |                  |
+|  +-------------+  +-------------+  +-------------+                  |
++---------------------------------------------------------------------+
 ```
 
 ## FastAPI Model Server
@@ -4318,11 +4318,11 @@ async def predict(request: TransactionRequest):
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -4632,23 +4632,23 @@ spec:
 ## Varför Model Monitoring?
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Model Decay Over Time                            │
-│                                                                      │
-│  Accuracy                                                            │
-│    ↑                                                                 │
-│  95├─────╮                                                          │
-│    │      ╲                                                         │
-│  90├       ╲─────╮                                                  │
-│    │              ╲                                                 │
-│  85├               ╲────────╮                                       │
-│    │                         ╲         ← Data Drift                 │
-│  80├                          ╲                                     │
-│    │                           ╲────── ← Concept Drift              │
-│  75├                                                                │
-│    └────────┴────────┴────────┴────────→ Time                       │
-│           Week 1    Week 4    Week 8   Week 12                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                     Model Decay Over Time                            |
+|                                                                      |
+|  Accuracy                                                            |
+|    ↑                                                                 |
+|  95+-----╮                                                          |
+|    |      ╲                                                         |
+|  90+       ╲-----╮                                                  |
+|    |              ╲                                                 |
+|  85+               ╲--------╮                                       |
+|    |                         ╲         <- Data Drift                 |
+|  80+                          ╲                                     |
+|    |                           ╲------ <- Concept Drift              |
+|  75+                                                                |
+|    +--------+--------+--------+---------> Time                       |
+|           Week 1    Week 4    Week 8   Week 12                      |
++---------------------------------------------------------------------+
 ```
 
 ## Types of Monitoring
@@ -4972,11 +4972,11 @@ class AlertManager:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -4992,34 +4992,34 @@ class AlertManager:
 ## Vad är en Feature Store?
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                       Feature Store                                 │
-│                                                                     │
-│  ┌─────────────┐    ┌─────────────────┐    ┌─────────────┐        │
-│  │   Raw Data  │    │   Feature       │    │  Training   │        │
-│  │  Sources    │───→│   Engineering   │───→│    Data     │        │
-│  └─────────────┘    │   Pipelines     │    └─────────────┘        │
-│                     └─────────────────┘            │               │
-│                            │                       ▼               │
-│                            ▼               ┌─────────────┐        │
-│                     ┌─────────────┐        │   Offline   │        │
-│                     │   Feature   │        │   Store     │        │
-│                     │   Registry  │        │  (Batch)    │        │
-│                     └─────────────┘        └─────────────┘        │
-│                            │                       │               │
-│                            ▼                       ▼               │
-│                     ┌─────────────┐        ┌─────────────┐        │
-│                     │   Online    │←───────│    Sync     │        │
-│                     │   Store     │        │   Process   │        │
-│                     │  (Real-time)│        └─────────────┘        │
-│                     └─────────────┘                                │
-│                            │                                       │
-│                            ▼                                       │
-│                     ┌─────────────┐                                │
-│                     │   Serving   │                                │
-│                     │    API      │                                │
-│                     └─────────────┘                                │
-└────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------------+
+|                       Feature Store                                 |
+|                                                                     |
+|  +-------------+    +-----------------+    +-------------+        |
+|  |   Raw Data  |    |   Feature       |    |  Training   |        |
+|  |  Sources    |---->|   Engineering   |---->|    Data     |        |
+|  +-------------+    |   Pipelines     |    +-------------+        |
+|                     +-----------------+            |               |
+|                            |                       ▼               |
+|                            ▼               +-------------+        |
+|                     +-------------+        |   Offline   |        |
+|                     |   Feature   |        |   Store     |        |
+|                     |   Registry  |        |  (Batch)    |        |
+|                     +-------------+        +-------------+        |
+|                            |                       |               |
+|                            ▼                       ▼               |
+|                     +-------------+        +-------------+        |
+|                     |   Online    |<--------|    Sync     |        |
+|                     |   Store     |        |   Process   |        |
+|                     |  (Real-time)|        +-------------+        |
+|                     +-------------+                                |
+|                            |                                       |
+|                            ▼                                       |
+|                     +-------------+                                |
+|                     |   Serving   |                                |
+|                     |    API      |                                |
+|                     +-------------+                                |
++--------------------------------------------------------------------+
 ```
 
 ## Feast
@@ -5295,11 +5295,11 @@ class FeatureEngineer:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -5315,32 +5315,32 @@ class FeatureEngineer:
 ## AutoML Landscape
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        AutoML Stack                                  │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │                  End-to-End AutoML                           │   │
-│  │  (AutoGluon, H2O AutoML, Google AutoML, Azure AutoML)       │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                              │                                      │
-│          ┌───────────────────┼───────────────────┐                  │
-│          ▼                   ▼                   ▼                  │
-│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐           │
-│  │   Feature     │  │    Model      │  │  Hyperparams  │           │
-│  │ Engineering   │  │  Selection    │  │    Tuning     │           │
-│  │ (AutoFeat,    │  │ (TPOT, auto-  │  │ (Optuna, Ray  │           │
-│  │  Featuretools)│  │  sklearn)     │  │  Tune, Hyperopt│          │
-│  └───────────────┘  └───────────────┘  └───────────────┘           │
-│                              │                                      │
-│                              ▼                                      │
-│                     ┌───────────────┐                               │
-│                     │Neural Arch    │                               │
-│                     │Search (NAS)   │                               │
-│                     │(AutoKeras,    │                               │
-│                     │ Neural-Net    │                               │
-│                     │ Intelligence) │                               │
-│                     └───────────────┘                               │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                        AutoML Stack                                  |
+|                                                                      |
+|  +-------------------------------------------------------------+   |
+|  |                  End-to-End AutoML                           |   |
+|  |  (AutoGluon, H2O AutoML, Google AutoML, Azure AutoML)       |   |
+|  +-------------------------------------------------------------+   |
+|                              |                                      |
+|          +-------------------+-------------------+                  |
+|          ▼                   ▼                   ▼                  |
+|  +---------------+  +---------------+  +---------------+           |
+|  |   Feature     |  |    Model      |  |  Hyperparams  |           |
+|  | Engineering   |  |  Selection    |  |    Tuning     |           |
+|  | (AutoFeat,    |  | (TPOT, auto-  |  | (Optuna, Ray  |           |
+|  |  Featuretools)|  |  sklearn)     |  |  Tune, Hyperopt|          |
+|  +---------------+  +---------------+  +---------------+           |
+|                              |                                      |
+|                              ▼                                      |
+|                     +---------------+                               |
+|                     |Neural Arch    |                               |
+|                     |Search (NAS)   |                               |
+|                     |(AutoKeras,    |                               |
+|                     | Neural-Net    |                               |
+|                     | Intelligence) |                               |
+|                     +---------------+                               |
++---------------------------------------------------------------------+
 ```
 
 ## AutoGluon
@@ -5581,11 +5581,11 @@ print(feature_matrix.head())
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -5601,30 +5601,30 @@ print(feature_matrix.head())
 ## MLOps Maturity Model
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    MLOps Maturity Levels                             │
-│                                                                      │
-│  Level 0: Manual                                                     │
-│  ├── Manual training in notebooks                                   │
-│  ├── No pipeline automation                                         │
-│  └── Manual deployment                                               │
-│                                                                      │
-│  Level 1: ML Pipeline Automation                                     │
-│  ├── Automated training pipelines                                   │
-│  ├── Experiment tracking                                            │
-│  └── Continuous training                                             │
-│                                                                      │
-│  Level 2: CI/CD Pipeline Automation                                  │
-│  ├── Automated testing                                               │
-│  ├── Automated deployment                                           │
-│  └── Model monitoring                                                │
-│                                                                      │
-│  Level 3: Full MLOps                                                 │
-│  ├── A/B testing                                                     │
-│  ├── Feature stores                                                  │
-│  ├── Automated retraining triggers                                  │
-│  └── Full observability                                              │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    MLOps Maturity Levels                             |
+|                                                                      |
+|  Level 0: Manual                                                     |
+|  +-- Manual training in notebooks                                   |
+|  +-- No pipeline automation                                         |
+|  +-- Manual deployment                                               |
+|                                                                      |
+|  Level 1: ML Pipeline Automation                                     |
+|  +-- Automated training pipelines                                   |
+|  +-- Experiment tracking                                            |
+|  +-- Continuous training                                             |
+|                                                                      |
+|  Level 2: CI/CD Pipeline Automation                                  |
+|  +-- Automated testing                                               |
+|  +-- Automated deployment                                           |
+|  +-- Model monitoring                                                |
+|                                                                      |
+|  Level 3: Full MLOps                                                 |
+|  +-- A/B testing                                                     |
+|  +-- Feature stores                                                  |
+|  +-- Automated retraining triggers                                  |
+|  +-- Full observability                                              |
++---------------------------------------------------------------------+
 ```
 
 ## Production Checklist

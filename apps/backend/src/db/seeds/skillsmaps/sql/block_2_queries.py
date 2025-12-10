@@ -25,24 +25,24 @@ och datautvinning fran loggar och metrics.
 ## SELECT Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SELECT STATEMENT                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  SELECT kolumn1, kolumn2, ...    ← Vilka kolumner               │
-│  FROM tabell                      ← Fran vilken tabell          │
-│  WHERE villkor                    ← Filtrera rader              │
-│  ORDER BY kolumn                  ← Sortera resultat            │
-│  LIMIT antal                      ← Begransar antal             │
-│                                                                 │
-│  Ordning av exekvering:                                         │
-│  1. FROM   - Valj tabell                                       │
-│  2. WHERE  - Filtrera rader                                    │
-│  3. SELECT - Valj kolumner                                     │
-│  4. ORDER BY - Sortera                                         │
-│  5. LIMIT  - Begransar                                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SELECT STATEMENT                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  SELECT kolumn1, kolumn2, ...    <- Vilka kolumner               |
+|  FROM tabell                      <- Fran vilken tabell          |
+|  WHERE villkor                    <- Filtrera rader              |
+|  ORDER BY kolumn                  <- Sortera resultat            |
+|  LIMIT antal                      <- Begransar antal             |
+|                                                                 |
+|  Ordning av exekvering:                                         |
+|  1. FROM   - Valj tabell                                       |
+|  2. WHERE  - Filtrera rader                                    |
+|  3. SELECT - Valj kolumner                                     |
+|  4. ORDER BY - Sortera                                         |
+|  5. LIMIT  - Begransar                                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ------------------------------------------------------------------
@@ -495,25 +495,25 @@ fundamentalt for att bygga meningsfulla rapporter och dashboards.
 ## JOIN-typer Visualiserat
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     SQL JOIN TYPER                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  INNER JOIN                     LEFT JOIN                       │
-│  ┌─────┬─────┐                  ┌─────┬─────┐                  │
-│  │  A  │█████│  B  │            │█████│█████│  B  │            │
-│  │     │█████│     │            │█████│█████│     │            │
-│  └─────┴─────┘                  └─────┴─────┘                  │
-│  Endast matchande               Alla A + matchande B            │
-│                                                                 │
-│  RIGHT JOIN                     FULL OUTER JOIN                 │
-│  ┌─────┬─────┐                  ┌─────┬─────┐                  │
-│  │  A  │█████│█████│            │█████│█████│█████│            │
-│  │     │█████│█████│            │█████│█████│█████│            │
-│  └─────┴─────┘                  └─────┴─────┘                  │
-│  Alla B + matchande A           Alla fran bada                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     SQL JOIN TYPER                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  INNER JOIN                     LEFT JOIN                       |
+|  +-----+-----+                  +-----+-----+                  |
+|  |  A  |#####|  B  |            |#####|#####|  B  |            |
+|  |     |#####|     |            |#####|#####|     |            |
+|  +-----+-----+                  +-----+-----+                  |
+|  Endast matchande               Alla A + matchande B            |
+|                                                                 |
+|  RIGHT JOIN                     FULL OUTER JOIN                 |
+|  +-----+-----+                  +-----+-----+                  |
+|  |  A  |#####|#####|            |#####|#####|#####|            |
+|  |     |#####|#####|            |#####|#####|#####|            |
+|  +-----+-----+                  +-----+-----+                  |
+|  Alla B + matchande A           Alla fran bada                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ------------------------------------------------------------------
@@ -605,7 +605,7 @@ LEFT JOIN teams t ON e.team_id = t.id;
 -- Alice    | Platform
 -- Bob      | Platform
 -- Charlie  | SRE
--- Diana    | NULL      ← Inkluderad trots inget team!
+-- Diana    | NULL      <- Inkluderad trots inget team!
 ```
 
 ### Hitta rader UTAN matchning
@@ -643,7 +643,7 @@ RIGHT JOIN teams t ON e.team_id = t.id;
 -- Alice    | Platform
 -- Bob      | Platform
 -- Charlie  | SRE
--- NULL     | Empty Team  ← Inkluderat trots inga engineers!
+-- NULL     | Empty Team  <- Inkluderat trots inga engineers!
 ```
 
 Notera: RIGHT JOIN ar ovanligt - de flesta foredrar LEFT JOIN och
@@ -668,8 +668,8 @@ FULL OUTER JOIN teams t ON e.team_id = t.id;
 -- Alice    | Platform
 -- Bob      | Platform
 -- Charlie  | SRE
--- Diana    | NULL        ← Engineer utan team
--- NULL     | Empty Team  ← Team utan engineers
+-- Diana    | NULL        <- Engineer utan team
+-- NULL     | Empty Team  <- Team utan engineers
 ```
 
 ### Hitta alla orphans
@@ -946,9 +946,6 @@ Kom ihag:
 - Analysera queries med EXPLAIN ANALYZE for att hitta flaskhalsar
 - Aggregera resultat med GROUP BY for att undvika dubbletter
 
-Nasta steg: Node 7 - Aggregations & GROUP BY
-''',
-}
 WHERE d.status = 'success';
 ```
 
@@ -1026,24 +1023,24 @@ blir den information som driver beslut.
 ## Aggregation Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  AGGREGATE FUNCTIONS                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  RAKNA                          BERAKNA                         │
-│  ├── COUNT(*)     - Alla rader  ├── SUM(col)   - Summa         │
-│  ├── COUNT(col)   - Non-NULL    ├── AVG(col)   - Medelvarde    │
-│  └── COUNT(DISTINCT col)        ├── MIN(col)   - Minimum       │
-│                                 └── MAX(col)   - Maximum       │
-│                                                                 │
-│  SAMLA (PostgreSQL)                                             │
-│  ├── STRING_AGG(col, sep) - Konkatenera till string            │
-│  ├── ARRAY_AGG(col)       - Samla till array                   │
-│  └── JSON_AGG(col)        - Samla till JSON                    │
-│                                                                 │
-│  Anvand med GROUP BY for per-kategori aggregation              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  AGGREGATE FUNCTIONS                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|  RAKNA                          BERAKNA                         |
+|  +-- COUNT(*)     - Alla rader  +-- SUM(col)   - Summa         |
+|  +-- COUNT(col)   - Non-NULL    +-- AVG(col)   - Medelvarde    |
+|  +-- COUNT(DISTINCT col)        +-- MIN(col)   - Minimum       |
+|                                 +-- MAX(col)   - Maximum       |
+|                                                                 |
+|  SAMLA (PostgreSQL)                                             |
+|  +-- STRING_AGG(col, sep) - Konkatenera till string            |
+|  +-- ARRAY_AGG(col)       - Samla till array                   |
+|  +-- JSON_AGG(col)        - Samla till JSON                    |
+|                                                                 |
+|  Anvand med GROUP BY for per-kategori aggregation              |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ------------------------------------------------------------------
@@ -1459,14 +1456,14 @@ Subqueries ar queries inuti andra queries - ett av de mest kraftfulla verktygen 
 ## Varfor viktigt for DevOps?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SUBQUERY ANVANDNINGAR                        │
-├─────────────────────────────────────────────────────────────────┤
-│  "Hitta servrar utan deployments senaste 30 dagarna"           │
-│  "Visa bara teams med fler an 5 medlemmar"                     │
-│  "Jamfor server metrics mot genomsnitt"                        │
-│  "Filtrera pa aggregerade varden"                              │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SUBQUERY ANVANDNINGAR                        |
++-----------------------------------------------------------------+
+|  "Hitta servrar utan deployments senaste 30 dagarna"           |
+|  "Visa bara teams med fler an 5 medlemmar"                     |
+|  "Jamfor server metrics mot genomsnitt"                        |
+|  "Filtrera pa aggregerade varden"                              |
++-----------------------------------------------------------------+
 ```
 
 Som DevOps-ingenjor behover du ofta svara pa fragor som kraver
@@ -1478,15 +1475,15 @@ eller "Visa alerts for servrar over genomsnittsbelastning."
 ## Subquery-typer oversikt
 
 ```
-┌──────────────────┬──────────────────┬──────────────────┐
-│  SCALAR          │  TABLE           │  CORRELATED      │
-│  Returnerar      │  Returnerar      │  Refererar       │
-│  ETT varde       │  RADER           │  yttre query     │
-├──────────────────┼──────────────────┼──────────────────┤
-│  SELECT          │  IN / NOT IN     │  Kors for        │
-│  (subquery)      │  EXISTS          │  varje rad       │
-│  as column       │  FROM (derived)  │  i yttre query   │
-└──────────────────┴──────────────────┴──────────────────┘
++------------------+------------------+------------------+
+|  SCALAR          |  TABLE           |  CORRELATED      |
+|  Returnerar      |  Returnerar      |  Refererar       |
+|  ETT varde       |  RADER           |  yttre query     |
++------------------+------------------+------------------+
+|  SELECT          |  IN / NOT IN     |  Kors for        |
+|  (subquery)      |  EXISTS          |  varje rad       |
+|  as column       |  FROM (derived)  |  i yttre query   |
++------------------+------------------+------------------+
 ```
 
 ------------------------------------------------------------------

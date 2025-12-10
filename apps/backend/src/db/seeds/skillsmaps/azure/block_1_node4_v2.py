@@ -65,37 +65,37 @@ subscription-finance
 **Strategi 3: Hybrid (Rekommenderat)**
 ```
 Management Group: Company
-├── MG: Production
-│   ├── sub-prod-eu
-│   └── sub-prod-us
-└── MG: Non-Production
-    ├── sub-dev
-    └── sub-test
++-- MG: Production
+|   +-- sub-prod-eu
+|   +-- sub-prod-us
++-- MG: Non-Production
+    +-- sub-dev
+    +-- sub-test
 ```
 ✅ Policies på MG-nivå
 ✅ Flexibel struktur
 ✅ Passar enterprise""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│        SUBSCRIPTION STRATEGY: HYBRID            │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   Root Management Group                         │
-│   └── MG: Contoso                               │
-│       ├── MG: Production                        │
-│       │   ├── sub-prod-eu    ($50,000/mo)      │
-│       │   └── sub-prod-us    ($30,000/mo)      │
-│       │                                         │
-│       ├── MG: Non-Production                    │
-│       │   ├── sub-dev        ($5,000/mo)       │
-│       │   └── sub-test       ($3,000/mo)       │
-│       │                                         │
-│       └── MG: Sandbox                           │
-│           └── sub-experiments ($1,000/mo)      │
-│                                                 │
-│   TOTAL: ~$89,000/month                         │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|        SUBSCRIPTION STRATEGY: HYBRID            |
++-------------------------------------------------+
+|                                                 |
+|   Root Management Group                         |
+|   +-- MG: Contoso                               |
+|       +-- MG: Production                        |
+|       |   +-- sub-prod-eu    ($50,000/mo)      |
+|       |   +-- sub-prod-us    ($30,000/mo)      |
+|       |                                         |
+|       +-- MG: Non-Production                    |
+|       |   +-- sub-dev        ($5,000/mo)       |
+|       |   +-- sub-test       ($3,000/mo)       |
+|       |                                         |
+|       +-- MG: Sandbox                           |
+|           +-- sub-experiments ($1,000/mo)      |
+|                                                 |
+|   TOTAL: ~$89,000/month                         |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd Management Groups för att applicera Azure Policies på flera subscriptions samtidigt.",
             "common_mistake": "Att ha EN subscription för allt. Gör det omöjligt att separera kostnader och rättigheter."
@@ -128,29 +128,29 @@ Management Group: Company
 | Unused resources | 0 | >5% |
 | Reserved coverage | >70% | <50% |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           COST MANAGEMENT DASHBOARD             │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   December 2024 Forecast: $12,500               │
-│   Budget: $15,000     Used: 83% ████████░░      │
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │ COST BY SERVICE                         │   │
-│   │ ┌────────────────────────────────┐      │   │
-│   │ │██████████████████│ VMs      $6,200   │   │
-│   │ │████████████      │ SQL DB   $3,100   │   │
-│   │ │██████            │ Storage  $1,500   │   │
-│   │ │████              │ Network  $1,200   │   │
-│   │ │██                │ Other    $500     │   │
-│   │ └────────────────────────────────┘      │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   ALERTS:                                       │
-│   ⚠️  Budget 75% - Sent to admin@company.com   │
-│   ✅  No anomalies detected                     │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           COST MANAGEMENT DASHBOARD             |
++-------------------------------------------------+
+|                                                 |
+|   December 2024 Forecast: $12,500               |
+|   Budget: $15,000     Used: 83% ########░░      |
+|                                                 |
+|   +-----------------------------------------+   |
+|   | COST BY SERVICE                         |   |
+|   | +--------------------------------+      |   |
+|   | |##################| VMs      $6,200   |   |
+|   | |############      | SQL DB   $3,100   |   |
+|   | |######            | Storage  $1,500   |   |
+|   | |####              | Network  $1,200   |   |
+|   | |##                | Other    $500     |   |
+|   | +--------------------------------+      |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   ALERTS:                                       |
+|   ⚠️  Budget 75% - Sent to admin@company.com   |
+|   ✅  No anomalies detected                     |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Sätt upp anomaly detection - Azure kan varna dig om plötsliga kostnadsökningar.",
             "common_mistake": "Att bara sätta budget alert på 100%. Då är det för sent. Sätt på 50%, 75%, 90%."
@@ -184,28 +184,28 @@ Management Group: Company
 - Batch processing
 - CI/CD build agents""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           SAVINGS COMPARISON                     │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   Standard_D4s_v3 VM - Monthly Cost             │
-│                                                 │
-│   Pay-as-you-go  ████████████████████ $140      │
-│   1-year RI      ████████████         $85  -40% │
-│   3-year RI      ████████             $55  -60% │
-│   Spot VM        ██                   $14  -90% │
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │ RECOMMENDATION ENGINE                   │   │
-│   │                                         │   │
-│   │ ⭐ Purchase 3x Standard_D4s_v3 3-year RI│   │
-│   │    Current: $420/mo → After: $165/mo   │   │
-│   │    Savings: $255/mo = $9,180/year      │   │
-│   │                                         │   │
-│   │ [Buy Now] [Analyze More]               │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           SAVINGS COMPARISON                     |
++-------------------------------------------------+
+|                                                 |
+|   Standard_D4s_v3 VM - Monthly Cost             |
+|                                                 |
+|   Pay-as-you-go  #################### $140      |
+|   1-year RI      ############         $85  -40% |
+|   3-year RI      ########             $55  -60% |
+|   Spot VM        ##                   $14  -90% |
+|                                                 |
+|   +-----------------------------------------+   |
+|   | RECOMMENDATION ENGINE                   |   |
+|   |                                         |   |
+|   | ⭐ Purchase 3x Standard_D4s_v3 3-year RI|   |
+|   |    Current: $420/mo -> After: $165/mo   |   |
+|   |    Savings: $255/mo = $9,180/year      |   |
+|   |                                         |   |
+|   | [Buy Now] [Analyze More]               |   |
+|   +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Kolla Azure Advisor varje månad - den rekommenderar RIs baserat på din användning.",
             "common_mistake": "Att köpa RIs för VMs du inte är säker på behöver i 3 år. Börja med 1-year och utvärdera."
@@ -218,8 +218,8 @@ Management Group: Company
 **1. Right-size VMs:**
 ```bash
 # Hitta underutnyttjade VMs
-# Portal → VM → Metrics → CPU < 20%?
-# → Byt till mindre storlek
+# Portal -> VM -> Metrics -> CPU < 20%?
+# -> Byt till mindre storlek
 ```
 
 **2. Auto-shutdown för Dev:**
@@ -251,29 +251,29 @@ az network public-ip list --query "[?ipConfiguration==null]"
 - Spara 40% på Windows VMs
 - Spara 55% på SQL Server""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           COST OPTIMIZATION CHECKLIST           │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   QUICK WINS (Do Today)                         │
-│   □ Auto-shutdown dev VMs              -20%     │
-│   □ Deallocate stopped VMs              -$50+   │
-│   □ Delete orphan disks                 -$20+   │
-│   □ Delete unused public IPs            -$5/ea  │
-│                                                 │
-│   MEDIUM TERM (This Month)                      │
-│   □ Right-size over-provisioned VMs    -30%    │
-│   □ Enable Azure Hybrid Benefit        -40%    │
-│   □ Move dev storage to Cool tier      -50%    │
-│                                                 │
-│   STRATEGIC (This Quarter)                      │
-│   □ Purchase Reserved Instances        -60%    │
-│   □ Implement Spot VMs for batch       -90%    │
-│   □ Consolidate small databases        -40%    │
-│                                                 │
-│   ESTIMATED MONTHLY SAVINGS: $3,500+            │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           COST OPTIMIZATION CHECKLIST           |
++-------------------------------------------------+
+|                                                 |
+|   QUICK WINS (Do Today)                         |
+|   □ Auto-shutdown dev VMs              -20%     |
+|   □ Deallocate stopped VMs              -$50+   |
+|   □ Delete orphan disks                 -$20+   |
+|   □ Delete unused public IPs            -$5/ea  |
+|                                                 |
+|   MEDIUM TERM (This Month)                      |
+|   □ Right-size over-provisioned VMs    -30%    |
+|   □ Enable Azure Hybrid Benefit        -40%    |
+|   □ Move dev storage to Cool tier      -50%    |
+|                                                 |
+|   STRATEGIC (This Quarter)                      |
+|   □ Purchase Reserved Instances        -60%    |
+|   □ Implement Spot VMs for batch       -90%    |
+|   □ Consolidate small databases        -40%    |
+|                                                 |
+|   ESTIMATED MONTHLY SAVINGS: $3,500+            |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Sätt upp en månatlig 'FinOps review' - 30 min för att kolla Azure Advisor och Cost Analysis.",
             "common_mistake": "Att köra az vm stop istället för az vm deallocate. Du betalar fortfarande för compute!"
@@ -487,7 +487,7 @@ TOTAL_SAVINGS=0
 # ═══════════════════════════════════════════════════════════════
 echo ""
 echo "🚀 QUICK WINS - Implement Today"
-echo "─────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------"
 
 # 1. Orphan Disks
 echo ""
@@ -532,7 +532,7 @@ echo "   Quick Wins Total: \$$TOTAL_SAVINGS/month"
 # ═══════════════════════════════════════════════════════════════
 echo ""
 echo "📈 MEDIUM TERM - This Week"
-echo "─────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------"
 
 # 4. Dev/Test VMs without auto-shutdown
 echo ""
@@ -555,15 +555,15 @@ TOTAL_SAVINGS=$((TOTAL_SAVINGS + SHUTDOWN_SAVINGS))
 # 5. Over-provisioned VMs (would need metrics API for real check)
 echo ""
 echo "📊 Over-provisioned VMs (recommendation):"
-echo "   → Check Azure Advisor for right-sizing recommendations"
-echo "   → Estimated savings: 20-40% on compute"
+echo "   -> Check Azure Advisor for right-sizing recommendations"
+echo "   -> Estimated savings: 20-40% on compute"
 
 # ═══════════════════════════════════════════════════════════════
 # LONG TERM (This Quarter)
 # ═══════════════════════════════════════════════════════════════
 echo ""
 echo "🎯 LONG TERM - This Quarter"
-echo "─────────────────────────────────────────────────────────────"
+echo "-------------------------------------------------------------"
 
 # 6. Reserved Instance Candidates
 echo ""
@@ -578,8 +578,8 @@ TOTAL_SAVINGS=$((TOTAL_SAVINGS + RI_SAVINGS))
 # 7. Storage tier optimization
 echo ""
 echo "🗄️  Storage Optimization:"
-echo "   → Move infrequently accessed data to Cool/Archive tier"
-echo "   → Estimated savings: 50% on storage costs"
+echo "   -> Move infrequently accessed data to Cool/Archive tier"
+echo "   -> Estimated savings: 50% on storage costs"
 
 # ═══════════════════════════════════════════════════════════════
 # SUMMARY

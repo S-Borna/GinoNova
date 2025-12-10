@@ -14,7 +14,7 @@ NODE_01_TRANSFORMER_MODELS = {
 
 Forsta grunderna i Large Language Models och transformer-arkitekturen.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Transformer Models?
 
@@ -27,7 +27,7 @@ Transformers ar den arkitektur som driver alla moderna LLMs. Introducerades 2017
 | Layer Norm | Stabiliserar traningen |
 | Positional Encoding | Ger positionsinformation |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ Transformers ar den arkitektur som driver alla moderna LLMs. Introducerades 2017
 | Kostnad | Modellval paverkar kostnader dramatiskt |
 | Felskning | Forsta hallucinationer och hur man undviker dem |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -48,55 +48,55 @@ Transformers ar den arkitektur som driver alla moderna LLMs. Introducerades 2017
 | Encoder-only | BERT-stil | BERT, RoBERTa | Classification, embeddings |
 | Encoder-Decoder | T5-stil | T5, BART | Translation, summarization |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Transformer Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   TRANSFORMER ARCHITECTURE                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  INPUT: "The cat sat on the"                                    │
-│           │                                                      │
-│           v                                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                   TOKENIZATION                           │   │
-│  │  "The" -> 464 │ "cat" -> 2278 │ "sat" -> 3421           │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│           │                                                      │
-│           v                                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                 EMBEDDING LAYER                          │   │
-│  │  Token IDs -> Dense Vectors (768-12288 dimensions)       │   │
-│  │  + Positional Encoding                                   │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│           │                                                      │
-│           v                                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │           TRANSFORMER BLOCKS (xN layers)                 │   │
-│  │  ┌───────────────────────────────────────────────────┐  │   │
-│  │  │  Multi-Head Self-Attention                        │  │   │
-│  │  │  Query (Q): Vad letar jag efter?                  │  │   │
-│  │  │  Key (K): Vad har jag att erbjuda?                │  │   │
-│  │  │  Value (V): Vad ar mitt innehall?                 │  │   │
-│  │  └───────────────────────────────────────────────────┘  │   │
-│  │  ┌───────────────────────────────────────────────────┐  │   │
-│  │  │  Feed-Forward Network (FFN)                       │  │   │
-│  │  │  Linear -> GELU/ReLU -> Linear                    │  │   │
-│  │  └───────────────────────────────────────────────────┘  │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│           │                                                      │
-│           v                                                      │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                   OUTPUT LAYER                           │   │
-│  │  Logits -> Softmax -> Next Token Probability             │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   TRANSFORMER ARCHITECTURE                       |
++-----------------------------------------------------------------+
+|                                                                  |
+|  INPUT: "The cat sat on the"                                    |
+|           |                                                      |
+|           v                                                      |
+|  +---------------------------------------------------------+   |
+|  |                   TOKENIZATION                           |   |
+|  |  "The" -> 464 | "cat" -> 2278 | "sat" -> 3421           |   |
+|  +---------------------------------------------------------+   |
+|           |                                                      |
+|           v                                                      |
+|  +---------------------------------------------------------+   |
+|  |                 EMBEDDING LAYER                          |   |
+|  |  Token IDs -> Dense Vectors (768-12288 dimensions)       |   |
+|  |  + Positional Encoding                                   |   |
+|  +---------------------------------------------------------+   |
+|           |                                                      |
+|           v                                                      |
+|  +---------------------------------------------------------+   |
+|  |           TRANSFORMER BLOCKS (xN layers)                 |   |
+|  |  +---------------------------------------------------+  |   |
+|  |  |  Multi-Head Self-Attention                        |  |   |
+|  |  |  Query (Q): Vad letar jag efter?                  |  |   |
+|  |  |  Key (K): Vad har jag att erbjuda?                |  |   |
+|  |  |  Value (V): Vad ar mitt innehall?                 |  |   |
+|  |  +---------------------------------------------------+  |   |
+|  |  +---------------------------------------------------+  |   |
+|  |  |  Feed-Forward Network (FFN)                       |  |   |
+|  |  |  Linear -> GELU/ReLU -> Linear                    |  |   |
+|  |  +---------------------------------------------------+  |   |
+|  +---------------------------------------------------------+   |
+|           |                                                      |
+|           v                                                      |
+|  +---------------------------------------------------------+   |
+|  |                   OUTPUT LAYER                           |   |
+|  |  Logits -> Softmax -> Next Token Probability             |   |
+|  +---------------------------------------------------------+   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Populara LLMs for Agenter (2024)
 
@@ -108,7 +108,7 @@ Transformers ar den arkitektur som driver alla moderna LLMs. Introducerades 2017
 | Claude 3.5 Sonnet | Anthropic | 200K | $3/$15 | Kodningsagenter |
 | Llama 3.1 405B | Meta | 128K | Self-host | Integritetskanslig |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Enkel LLM-interaktion
 
@@ -132,7 +132,7 @@ print(response.choices[0].message.content)
 print(f"Tokens anvanda: {response.usage.total_tokens}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jamfor Modeller
 
@@ -164,7 +164,7 @@ for model, data in results.items():
     print(f"Tokens: {data['tokens']}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hantera Rate Limits
 
@@ -188,7 +188,7 @@ def safe_completion(prompt: str, max_retries: int = 3) -> str:
     raise Exception("Max retries exceeded")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -199,7 +199,7 @@ def safe_completion(prompt: str, max_retries: int = 3) -> str:
 | Hallucinationer | Modellen gar fel svar | Anvand lagre temperature |
 | Context overflow | For lang prompt | Trunkera aldre meddelanden |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -230,7 +230,7 @@ NODE_02_TOKENIZATION = {
 
 Forsta hur text konverteras till tokens och hur context windows fungerar.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Tokenization?
 
@@ -242,7 +242,7 @@ Tokenization ar processen som konverterar text till numeriska tokens som LLM kan
 | WordPiece | Liknande BPE | BERT |
 | SentencePiece | Unigram | T5, Llama |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -253,7 +253,7 @@ Tokenization ar processen som konverterar text till numeriska tokens som LLM kan
 | Optimering | Kortare prompts = lagre kostnad |
 | Trunkering | Nodvandigt for langa konversationer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -264,36 +264,36 @@ Tokenization ar processen som konverterar text till numeriska tokens som LLM kan
 | 1 sida | ca 500-700 tokens |
 | 1 bok | ca 80,000-100,000 tokens |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tokenization Process
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   TOKENIZATION PROCESS                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  INPUT TEXT: "Hello, I'm learning about AI agents!"             │
-│                                                                  │
-│  BPE (Byte Pair Encoding):                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  'Hello'    -> [15496]     (common word = 1 token)        │ │
-│  │  ','        -> [11]        (punctuation = 1 token)        │ │
-│  │  ' I'       -> [314]       (space + I = 1 token)          │ │
-│  │  "'m"       -> [1101]      (contraction = 1 token)        │ │
-│  │  ' learning'-> [4673]      (space + word = 1 token)       │ │
-│  │  ' about'   -> [546]       (common = 1 token)             │ │
-│  │  ' AI'      -> [9552]      (space + AI = 1 token)         │ │
-│  │  ' agents'  -> [15906]     (space + word = 1 token)       │ │
-│  │  '!'        -> [0]         (punctuation = 1 token)        │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  TOTAL: 9 tokens                                                │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   TOKENIZATION PROCESS                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  INPUT TEXT: "Hello, I'm learning about AI agents!"             |
+|                                                                  |
+|  BPE (Byte Pair Encoding):                                      |
+|  +-----------------------------------------------------------+ |
+|  |  'Hello'    -> [15496]     (common word = 1 token)        | |
+|  |  ','        -> [11]        (punctuation = 1 token)        | |
+|  |  ' I'       -> [314]       (space + I = 1 token)          | |
+|  |  "'m"       -> [1101]      (contraction = 1 token)        | |
+|  |  ' learning'-> [4673]      (space + word = 1 token)       | |
+|  |  ' about'   -> [546]       (common = 1 token)             | |
+|  |  ' AI'      -> [9552]      (space + AI = 1 token)         | |
+|  |  ' agents'  -> [15906]     (space + word = 1 token)       | |
+|  |  '!'        -> [0]         (punctuation = 1 token)        | |
+|  +-----------------------------------------------------------+ |
+|                                                                  |
+|  TOTAL: 9 tokens                                                |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Context Windows (2024)
 
@@ -304,7 +304,7 @@ Tokenization ar processen som konverterar text till numeriska tokens som LLM kan
 | Claude 3 Opus | 200K | ca 300 | Lang research |
 | Gemini 1.5 Pro | 1,000K | ca 1,500 | Hela kodbaser |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rakna Tokens med tiktoken
 
@@ -327,7 +327,7 @@ print(f"Text: {text}")
 print(f"Tokens (GPT-4): {count_tokens(text, 'gpt-4o')}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kostnadskalkylering
 
@@ -363,7 +363,7 @@ def estimate_cost(prompt: str, model: str, output_tokens: int = 500):
     )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hantera Context Overflow
 
@@ -401,7 +401,7 @@ def prepare_prompt_with_context(
     }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -412,7 +412,7 @@ def prepare_prompt_with_context(
 | Output avbryts | max_tokens for lagt | Oka max_tokens eller dela upp |
 | Hog kostnad | Ineffektiva prompts | Optimera prompts, valj billigare modell |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

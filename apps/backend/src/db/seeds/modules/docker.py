@@ -30,7 +30,7 @@ MODULE = {
             "xp_reward": 75,
             "content": """# Docker Fundamentals & Architecture
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -48,63 +48,63 @@ Som DevOps-ingenjör kommer du använda Docker dagligen. Du måste förstå:
 - **Hur Docker-arkitekturen fungerar** så du vet var problem kan uppstå
 - **Skillnaden mellan containers och VMs** så du kan välja rätt verktyg
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad är Docker?
 
 Tänk på Docker som en **standardiserad fraktcontainer** för mjukvara. Precis som fraktcontainrar revolutionerade sjöfarten genom att standardisera hur gods transporteras, revolutionerar Docker hur mjukvara levereras.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DOCKER KONCEPTET                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Fraktcontainer             Docker Container               │
-│   ─────────────────          ──────────────────────         │
-│   • Standardstorlek          • Standardformat               │
-│   • Fraktas var som helst    • Körs var som helst           │
-│   • Innehåll isolerat        • App isolerad                 │
-│   • Staplas effektivt        • Resurseffektiv               │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    DOCKER KONCEPTET                         |
++-------------------------------------------------------------+
+|                                                             |
+|   Fraktcontainer             Docker Container               |
+|   -----------------          ----------------------         |
+|   • Standardstorlek          • Standardformat               |
+|   • Fraktas var som helst    • Körs var som helst           |
+|   • Innehåll isolerat        • App isolerad                 |
+|   • Staplas effektivt        • Resurseffektiv               |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container vs Virtual Machine
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              VIRTUAL MACHINE (VM)                           │
-├─────────────────────────────────────────────────────────────┤
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐                    │
-│  │  App A   │ │  App B   │ │  App C   │                    │
-│  ├──────────┤ ├──────────┤ ├──────────┤                    │
-│  │ Guest OS │ │ Guest OS │ │ Guest OS │  ← Varje VM har    │
-│  │ (5-10GB) │ │ (5-10GB) │ │ (5-10GB) │    eget OS!        │
-│  └──────────┘ └──────────┘ └──────────┘                    │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              Hypervisor (VMware, KVM)               │   │
-│  └─────────────────────────────────────────────────────┘   │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │                    Host OS                          │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              VIRTUAL MACHINE (VM)                           |
++-------------------------------------------------------------+
+|  +----------+ +----------+ +----------+                    |
+|  |  App A   | |  App B   | |  App C   |                    |
+|  +----------+ +----------+ +----------+                    |
+|  | Guest OS | | Guest OS | | Guest OS |  <- Varje VM har    |
+|  | (5-10GB) | | (5-10GB) | | (5-10GB) |    eget OS!        |
+|  +----------+ +----------+ +----------+                    |
+|  +-----------------------------------------------------+   |
+|  |              Hypervisor (VMware, KVM)               |   |
+|  +-----------------------------------------------------+   |
+|  +-----------------------------------------------------+   |
+|  |                    Host OS                          |   |
+|  +-----------------------------------------------------+   |
++-------------------------------------------------------------+
 
-┌─────────────────────────────────────────────────────────────┐
-│                    CONTAINERS                               │
-├─────────────────────────────────────────────────────────────┤
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐                    │
-│  │  App A   │ │  App B   │ │  App C   │                    │
-│  │ (50 MB)  │ │ (100 MB) │ │ (30 MB)  │  ← Bara appen!     │
-│  └──────────┘ └──────────┘ └──────────┘                    │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │           Docker Engine (Container Runtime)         │   │
-│  └─────────────────────────────────────────────────────┘   │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              Host OS (delad kernel)                 │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    CONTAINERS                               |
++-------------------------------------------------------------+
+|  +----------+ +----------+ +----------+                    |
+|  |  App A   | |  App B   | |  App C   |                    |
+|  | (50 MB)  | | (100 MB) | | (30 MB)  |  <- Bara appen!     |
+|  +----------+ +----------+ +----------+                    |
+|  +-----------------------------------------------------+   |
+|  |           Docker Engine (Container Runtime)         |   |
+|  +-----------------------------------------------------+   |
+|  +-----------------------------------------------------+   |
+|  |              Host OS (delad kernel)                 |   |
+|  +-----------------------------------------------------+   |
++-------------------------------------------------------------+
 ```
 
 ### Jämförelsetabell
@@ -120,43 +120,43 @@ Tänk på Docker som en **standardiserad fraktcontainer** för mjukvara. Precis 
 
 **Containers delar Host OS kernel** - det är därför de är så snabba och lätta!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker-arkitekturen
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      DIN TERMINAL                           │
-│                    $ docker run nginx                       │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
++-------------------------------------------------------------+
+|                      DIN TERMINAL                           |
+|                    $ docker run nginx                       |
++--------------------------+----------------------------------+
+                           |
                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    DOCKER CLIENT                            │
-│                    (docker CLI)                             │
-│        Tar dina kommandon och skickar till daemon           │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ REST API (unix socket)
++-------------------------------------------------------------+
+|                    DOCKER CLIENT                            |
+|                    (docker CLI)                             |
+|        Tar dina kommandon och skickar till daemon           |
++--------------------------+----------------------------------+
+                           | REST API (unix socket)
                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    DOCKER DAEMON                            │
-│                     (dockerd)                               │
-├──────────┬──────────┬───────────┬──────────────────────────┤
-│  Images  │Containers│ Networks  │ Volumes                  │
-└──────────┴──────────┴───────────┴──────────────────────────┘
-                           │
++-------------------------------------------------------------+
+|                    DOCKER DAEMON                            |
+|                     (dockerd)                               |
++----------+----------+-----------+--------------------------+
+|  Images  |Containers| Networks  | Volumes                  |
++----------+----------+-----------+--------------------------+
+                           |
                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  CONTAINER RUNTIME                          │
-│                   (containerd)                              │
-│          Hanterar container-livscykel                       │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
++-------------------------------------------------------------+
+|                  CONTAINER RUNTIME                          |
+|                   (containerd)                              |
+|          Hanterar container-livscykel                       |
++--------------------------+----------------------------------+
+                           |
                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                        RUNC                                 │
-│               Skapar och kör containers                     │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                        RUNC                                 |
+|               Skapar och kör containers                     |
++-------------------------------------------------------------+
 ```
 
 ### Komponentöversikt
@@ -169,7 +169,7 @@ Tänk på Docker som en **standardiserad fraktcontainer** för mjukvara. Precis 
 | **runc** | Skapar containers | `runc` |
 | **Docker Registry** | Lagrar images | Docker Hub, ECR, etc. |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundläggande kommandon
 
@@ -221,7 +221,7 @@ docker images
 # hello-world   latest    d2c94e258dcb   13.3kB
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad händer när du kör "docker run"?
 
@@ -230,31 +230,31 @@ docker run nginx
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   docker run nginx                          │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-         ┌─────────────────┼─────────────────┐
-         ▼                 │                 │
-┌─────────────────┐        │        ┌────────▼────────┐
-│ 1. FINNS IMAGE  │        │        │ 2. PULL IMAGE   │
-│    LOKALT?      │──NEJ──▶│        │  från Docker    │
-│                 │        │        │  Hub            │
-└────────┬────────┘        │        └────────┬────────┘
-         │ JA              │                 │
-         ▼                 │                 ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 3. SKAPA CONTAINER                                          │
-│    • Allokera filsystem (writable layer)                    │
-│    • Konfigurera nätverk (bridge network)                   │
-│    • Sätt upp namespace isolation                           │
-└──────────────────────────┬──────────────────────────────────┘
++-------------------------------------------------------------+
+|                   docker run nginx                          |
++--------------------------+----------------------------------+
+                           |
+         +-----------------+-----------------+
+         ▼                 |                 |
++-----------------+        |        +--------▼--------+
+| 1. FINNS IMAGE  |        |        | 2. PULL IMAGE   |
+|    LOKALT?      |--NEJ--▶|        |  från Docker    |
+|                 |        |        |  Hub            |
++--------+--------+        |        +--------+--------+
+         | JA              |                 |
+         ▼                 |                 ▼
++-------------------------------------------------------------+
+| 3. SKAPA CONTAINER                                          |
+|    • Allokera filsystem (writable layer)                    |
+|    • Konfigurera nätverk (bridge network)                   |
+|    • Sätt upp namespace isolation                           |
++--------------------------+----------------------------------+
                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 4. STARTA CONTAINER                                         │
-│    • Kör ENTRYPOINT/CMD                                     │
-│    • Container är nu igång!                                 │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+| 4. STARTA CONTAINER                                         |
+|    • Kör ENTRYPOINT/CMD                                     |
+|    • Container är nu igång!                                 |
++-------------------------------------------------------------+
 ```
 
 ### Steg för steg
@@ -263,12 +263,12 @@ docker run nginx
 |------|------------|------------------|
 | 1 | Kommando tas emot | Docker Client |
 | 2 | Kolla om image finns lokalt | Docker Daemon |
-| 3 | Pull image om den saknas | Docker Daemon → Registry |
+| 3 | Pull image om den saknas | Docker Daemon -> Registry |
 | 4 | Skapa writable layer | Storage Driver |
 | 5 | Konfigurera nätverk | Network Driver |
-| 6 | Starta container | containerd → runc |
+| 6 | Starta container | containerd -> runc |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Viktiga Termer
 
@@ -282,7 +282,7 @@ docker run nginx
 | **Volume** | Persistent data utanför container |
 | **Network** | Kommunikation mellan containers |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -302,7 +302,7 @@ sudo systemctl start docker
 sudo systemctl enable docker  # Starta vid boot
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -328,7 +328,7 @@ sudo systemctl enable docker  # Starta vid boot
             "xp_reward": 75,
             "content": """# Docker Images Deep Dive
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -346,63 +346,63 @@ Images är grunden för allt i Docker. Du måste förstå:
 - **Layers och caching** så du inte slösar tid på onödiga rebuilds
 - **Tagging-strategier** så du kan hantera versioner i produktion
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad är en Docker Image?
 
 Tänk på en image som en **snapshot av ett filsystem** plus metadata om hur containern ska köras. Det är som en mall eller recept - du kan skapa hur många containers som helst från samma image.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DOCKER IMAGE                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Image = Filsystem-snapshot + Metadata                     │
-│                                                             │
-│   ┌─────────────────────────────────────────────────────┐   │
-│   │  Filsystem                                          │   │
-│   │  • /bin, /usr, /etc (OS-filer)                      │   │
-│   │  • /app (din applikation)                           │   │
-│   │  • Libraries och dependencies                       │   │
-│   └─────────────────────────────────────────────────────┘   │
-│   ┌─────────────────────────────────────────────────────┐   │
-│   │  Metadata                                           │   │
-│   │  • CMD/ENTRYPOINT (vad ska köras)                   │   │
-│   │  • ENV (miljövariabler)                             │   │
-│   │  • EXPOSE (portar)                                  │   │
-│   └─────────────────────────────────────────────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    DOCKER IMAGE                             |
++-------------------------------------------------------------+
+|                                                             |
+|   Image = Filsystem-snapshot + Metadata                     |
+|                                                             |
+|   +-----------------------------------------------------+   |
+|   |  Filsystem                                          |   |
+|   |  • /bin, /usr, /etc (OS-filer)                      |   |
+|   |  • /app (din applikation)                           |   |
+|   |  • Libraries och dependencies                       |   |
+|   +-----------------------------------------------------+   |
+|   +-----------------------------------------------------+   |
+|   |  Metadata                                           |   |
+|   |  • CMD/ENTRYPOINT (vad ska köras)                   |   |
+|   |  • ENV (miljövariabler)                             |   |
+|   |  • EXPOSE (portar)                                  |   |
+|   +-----------------------------------------------------+   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Layers
 
 Varje instruktion i en Dockerfile skapar ett nytt **layer**. Layers stackas ovanpå varandra.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    IMAGE LAYERS                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ┌─────────────────────────────────────────────────────┐   │
-│   │  Layer 4: COPY app.py /app/                   [2 KB]│   │
-│   │           Ditt app-lager (ändras ofta)              │   │
-│   ├─────────────────────────────────────────────────────┤   │
-│   │  Layer 3: RUN pip install flask             [50 MB] │   │
-│   │           Dependencies (ändras sällan)              │   │
-│   ├─────────────────────────────────────────────────────┤   │
-│   │  Layer 2: RUN apt-get update && install    [100 MB] │   │
-│   │           System packages                           │   │
-│   ├─────────────────────────────────────────────────────┤   │
-│   │  Layer 1: FROM python:3.11-slim            [150 MB] │   │
-│   │           Base image                                │   │
-│   └─────────────────────────────────────────────────────┘   │
-│                                                             │
-│   Totalt: ~302 MB                                           │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    IMAGE LAYERS                             |
++-------------------------------------------------------------+
+|                                                             |
+|   +-----------------------------------------------------+   |
+|   |  Layer 4: COPY app.py /app/                   [2 KB]|   |
+|   |           Ditt app-lager (ändras ofta)              |   |
+|   +-----------------------------------------------------+   |
+|   |  Layer 3: RUN pip install flask             [50 MB] |   |
+|   |           Dependencies (ändras sällan)              |   |
+|   +-----------------------------------------------------+   |
+|   |  Layer 2: RUN apt-get update && install    [100 MB] |   |
+|   |           System packages                           |   |
+|   +-----------------------------------------------------+   |
+|   |  Layer 1: FROM python:3.11-slim            [150 MB] |   |
+|   |           Base image                                |   |
+|   +-----------------------------------------------------+   |
+|                                                             |
+|   Totalt: ~302 MB                                           |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Layer-egenskaper
@@ -416,7 +416,7 @@ Varje instruktion i en Dockerfile skapar ett nytt **layer**. Layers stackas ovan
 
 **Varje layer är immutable** - ändrar du något skapas ett nytt layer ovanpå.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Arbeta med Images
 
@@ -455,24 +455,24 @@ docker image prune                   # Ta bort oanvända images
 docker image prune -a                # Ta bort ALLA oanvända
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Tagging
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    IMAGE TAG FORMAT                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   docker.io/library/nginx:1.25                              │
-│   ────────  ─────── ───── ────                              │
-│      │         │      │    │                                │
-│      │         │      │    └── Tag (version)                │
-│      │         │      └── Repository (image-namn)           │
-│      │         └── Namespace (user/org)                     │
-│      └── Registry (docker.io är default)                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    IMAGE TAG FORMAT                         |
++-------------------------------------------------------------+
+|                                                             |
+|   docker.io/library/nginx:1.25                              |
+|   --------  ------- ----- ----                              |
+|      |         |      |    |                                |
+|      |         |      |    +-- Tag (version)                |
+|      |         |      +-- Repository (image-namn)           |
+|      |         +-- Namespace (user/org)                     |
+|      +-- Registry (docker.io är default)                    |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Tagging-kommandon
@@ -501,31 +501,31 @@ docker push myregistry.com/nginx:v1.0
 | **Environment** | `production`, `staging` | Miljöer |
 | **Date** | `2024-12-07` | Dagliga builds |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Layer Caching
 
 Docker cachar layers för snabbare builds. Om inget ändrats i ett layer, återanvänds cached version.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    LAYER CACHING                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   DÅLIGT - cache invalideras vid varje kodändring:          │
-│   ─────────────────────────────────────────────────         │
-│   FROM python:3.11                                          │
-│   COPY . /app              ← Ändras ofta                    │
-│   RUN pip install ...      ← Måste köras om varje gång!     │
-│                                                             │
-│   BRA - dependencies cachas separat:                        │
-│   ─────────────────────────────────────────────────         │
-│   FROM python:3.11                                          │
-│   COPY requirements.txt /app/   ← Ändras sällan             │
-│   RUN pip install ...           ← CACHAS!                   │
-│   COPY . /app                   ← Bara detta körs om        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    LAYER CACHING                            |
++-------------------------------------------------------------+
+|                                                             |
+|   DÅLIGT - cache invalideras vid varje kodändring:          |
+|   -------------------------------------------------         |
+|   FROM python:3.11                                          |
+|   COPY . /app              <- Ändras ofta                    |
+|   RUN pip install ...      <- Måste köras om varje gång!     |
+|                                                             |
+|   BRA - dependencies cachas separat:                        |
+|   -------------------------------------------------         |
+|   FROM python:3.11                                          |
+|   COPY requirements.txt /app/   <- Ändras sällan             |
+|   RUN pip install ...           <- CACHAS!                   |
+|   COPY . /app                   <- Bara detta körs om        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Caching-regler
@@ -537,7 +537,7 @@ Docker cachar layers för snabbare builds. Om inget ändrats i ett layer, återa
 | **RUN-kommandon** | Samma kommando = cached (om föregående cachat) |
 | **--no-cache** | Tvinga ombyggnad utan cache |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image-storlek
 
@@ -564,7 +564,7 @@ docker images --format "table {{.Repository}}\\t{{.Tag}}\\t{{.Size}}"
 # python       3.11-alpine   51.8MB
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -579,7 +579,7 @@ docker images --format "table {{.Repository}}\\t{{.Tag}}\\t{{.Size}}"
 | `docker rmi image` | Ta bort image |
 | `docker image prune` | Städa oanvända |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -601,7 +601,7 @@ docker image prune -a
 docker search nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -627,7 +627,7 @@ docker search nginx
             "xp_reward": 70,
             "content": """# Container Lifecycle Management
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -645,46 +645,46 @@ Containers har en livscykel precis som processer. Du måste förstå:
 - **Skillnaden mellan stop och kill** för graceful shutdown
 - **Hur du felsöker** containers som beter sig konstigt
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 CONTAINER LIFECYCLE                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ┌─────────┐                                               │
-│   │  IMAGE  │                                               │
-│   └────┬────┘                                               │
-│        │                                                    │
-│        │ docker create                                      │
-│        ▼                                                    │
-│   ┌─────────┐     docker start      ┌─────────┐            │
-│   │ CREATED │ ────────────────────▶ │ RUNNING │            │
-│   └─────────┘                       └────┬────┘            │
-│        ▲                                 │                  │
-│        │                                 │                  │
-│        │ docker run                      │                  │
-│        │ (create + start)                │                  │
-│        │                    ┌────────────┼────────────┐     │
-│        │                    │            │            │     │
-│        │              docker stop   docker kill   crash     │
-│        │              (SIGTERM)     (SIGKILL)               │
-│        │                    │            │            │     │
-│        │                    ▼            ▼            ▼     │
-│        │               ┌─────────────────────────────────┐  │
-│        │               │           EXITED                │  │
-│        │               │  Exit 0 = OK                    │  │
-│        │               │  Exit 1 = Error                 │  │
-│        │               │  Exit 137 = SIGKILL/OOM         │  │
-│        │               │  Exit 143 = SIGTERM             │  │
-│        │               └─────────────────────────────────┘  │
-│        │                              │                     │
-│        └──────────────────────────────┘                     │
-│                    docker start                             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 CONTAINER LIFECYCLE                         |
++-------------------------------------------------------------+
+|                                                             |
+|   +---------+                                               |
+|   |  IMAGE  |                                               |
+|   +----+----+                                               |
+|        |                                                    |
+|        | docker create                                      |
+|        ▼                                                    |
+|   +---------+     docker start      +---------+            |
+|   | CREATED | --------------------▶ | RUNNING |            |
+|   +---------+                       +----+----+            |
+|        ▲                                 |                  |
+|        |                                 |                  |
+|        | docker run                      |                  |
+|        | (create + start)                |                  |
+|        |                    +------------+------------+     |
+|        |                    |            |            |     |
+|        |              docker stop   docker kill   crash     |
+|        |              (SIGTERM)     (SIGKILL)               |
+|        |                    |            |            |     |
+|        |                    ▼            ▼            ▼     |
+|        |               +---------------------------------+  |
+|        |               |           EXITED                |  |
+|        |               |  Exit 0 = OK                    |  |
+|        |               |  Exit 1 = Error                 |  |
+|        |               |  Exit 137 = SIGKILL/OOM         |  |
+|        |               |  Exit 143 = SIGTERM             |  |
+|        |               +---------------------------------+  |
+|        |                              |                     |
+|        +------------------------------+                     |
+|                    docker start                             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### State-översikt
@@ -697,7 +697,7 @@ Containers har en livscykel precis som processer. Du måste förstå:
 | **Exited** | Container har stoppat | `docker stop`, `docker kill`, crash |
 | **Dead** | Fel vid borttagning | Sällsynt, rensa manuellt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Starta Containers
 
@@ -742,7 +742,7 @@ root@container:/#               # Du är nu inne i containern
 | `-v` | Volume mount | `docker run -v data:/app nginx` |
 | `-e` | Miljövariabel | `docker run -e DEBUG=1 nginx` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hantera körande containers
 
@@ -780,30 +780,30 @@ docker stats
 # webserver   0.50%   10MB/256MB   1.5kB/2.1kB
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Stoppa Containers
 
 ### Stop vs Kill
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 STOP vs KILL                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   docker stop                     docker kill               │
-│   ───────────                     ───────────               │
-│   1. Skickar SIGTERM              1. Skickar SIGKILL        │
-│   2. Ger appen tid att städa      2. Dödar direkt           │
-│   3. Väntar 10s (default)         3. Ingen cleanup          │
-│   4. SIGKILL om ej stoppat        4. Exit code 137          │
-│                                                             │
-│   ANVÄND FÖR:                     ANVÄND FÖR:               │
-│   • Normal shutdown               • Hängda containers       │
-│   • Graceful termination          • Debugging               │
-│   • Production deploys            • Nödstopp                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 STOP vs KILL                                |
++-------------------------------------------------------------+
+|                                                             |
+|   docker stop                     docker kill               |
+|   -----------                     -----------               |
+|   1. Skickar SIGTERM              1. Skickar SIGKILL        |
+|   2. Ger appen tid att städa      2. Dödar direkt           |
+|   3. Väntar 10s (default)         3. Ingen cleanup          |
+|   4. SIGKILL om ej stoppat        4. Exit code 137          |
+|                                                             |
+|   ANVÄND FÖR:                     ANVÄND FÖR:               |
+|   • Normal shutdown               • Hängda containers       |
+|   • Graceful termination          • Debugging               |
+|   • Production deploys            • Nödstopp                |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Stop-kommandon
@@ -835,7 +835,7 @@ docker pause webserver
 docker unpause webserver
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ta bort Containers
 
@@ -862,7 +862,7 @@ docker container prune
 docker rm -f $(docker ps -aq)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Exit Codes
 
@@ -889,7 +889,7 @@ docker inspect webserver --format='{{.State.OOMKilled}}'
 docker inspect webserver --format='{{json .State}}' | jq
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felsökning
 
@@ -919,7 +919,7 @@ docker exec -it container_name bash
 docker exec container_name cat /app/logs/error.log
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -935,7 +935,7 @@ docker exec container_name cat /app/logs/error.log
 | `docker rm name` | Ta bort container |
 | `docker container prune` | Städa stoppade |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -961,7 +961,7 @@ docker exec container_name cat /app/logs/error.log
             "xp_reward": 85,
             "content": """# Dockerfile Mastery
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -979,27 +979,27 @@ Dockerfile är receptet för dina images. Du måste kunna:
 - **Optimera för storlek och säkerhet**
 - **Förstå varje instruktion** så du kan felsöka build-problem
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dockerfile Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DOCKERFILE                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   # Kommentar                                               │
-│   INSTRUKTION argument                                      │
-│                                                             │
-│   Läses uppifrån och ner                                    │
-│   Varje instruktion skapar ett LAYER                        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    DOCKERFILE                               |
++-------------------------------------------------------------+
+|                                                             |
+|   # Kommentar                                               |
+|   INSTRUKTION argument                                      |
+|                                                             |
+|   Läses uppifrån och ner                                    |
+|   Varje instruktion skapar ett LAYER                        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 Docker läser Dockerfile uppifrån och ner. Varje instruktion skapar ett nytt layer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dockerfile Instruktioner
 
@@ -1048,24 +1048,24 @@ EXPOSE 8000
 CMD ["python", "app.py"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## COPY vs ADD
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 COPY vs ADD                                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   COPY (REKOMMENDERAS)          ADD (undvik om möjligt)     │
-│   ────────────────────          ─────────────────────────   │
-│   • Enkel kopiering             • Allt COPY kan              │
-│   • Förutsägbart                • Auto-extrahera tar.gz     │
-│   • Transparent                 • Ladda ner från URL        │
-│                                 • Mer "magi" = svårare att  │
-│                                   förstå vad som händer     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 COPY vs ADD                                 |
++-------------------------------------------------------------+
+|                                                             |
+|   COPY (REKOMMENDERAS)          ADD (undvik om möjligt)     |
+|   --------------------          -------------------------   |
+|   • Enkel kopiering             • Allt COPY kan              |
+|   • Förutsägbart                • Auto-extrahera tar.gz     |
+|   • Transparent                 • Ladda ner från URL        |
+|                                 • Mer "magi" = svårare att  |
+|                                   förstå vad som händer     |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Scenario | Använd | Exempel |
@@ -1085,24 +1085,24 @@ ADD archive.tar.gz /app/     # Auto-extraherar
 # Undvik: ADD https://...    # Använd RUN curl istället
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CMD vs ENTRYPOINT
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 CMD vs ENTRYPOINT                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   CMD                           ENTRYPOINT                  │
-│   ───                           ──────────                  │
-│   • Default kommando            • Fast kommando             │
-│   • Kan överskrivas helt        • Körs alltid               │
-│   • docker run image X          • CMD blir argument         │
-│     → kör X istället            • docker run image X        │
-│                                   → kör ENTRYPOINT X        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 CMD vs ENTRYPOINT                           |
++-------------------------------------------------------------+
+|                                                             |
+|   CMD                           ENTRYPOINT                  |
+|   ---                           ----------                  |
+|   • Default kommando            • Fast kommando             |
+|   • Kan överskrivas helt        • Körs alltid               |
+|   • docker run image X          • CMD blir argument         |
+|     -> kör X istället            • docker run image X        |
+|                                   -> kör ENTRYPOINT X        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Exempel
@@ -1116,23 +1116,23 @@ ADD archive.tar.gz /app/     # Auto-extraherar
 ```dockerfile
 # CMD - Kan överskrivas vid docker run
 CMD ["python", "app.py"]
-# docker run myimage              → python app.py
-# docker run myimage python test.py → python test.py (CMD ignoreras)
+# docker run myimage              -> python app.py
+# docker run myimage python test.py -> python test.py (CMD ignoreras)
 
 # ENTRYPOINT - Körs alltid, CMD blir argument
 ENTRYPOINT ["python"]
 CMD ["app.py"]
-# docker run myimage              → python app.py
-# docker run myimage test.py      → python test.py
+# docker run myimage              -> python app.py
+# docker run myimage test.py      -> python test.py
 
 # Kombinera för flexibilitet (Django-exempel)
 ENTRYPOINT ["python", "manage.py"]
 CMD ["runserver"]
-# docker run myimage              → python manage.py runserver
-# docker run myimage migrate      → python manage.py migrate
+# docker run myimage              -> python manage.py runserver
+# docker run myimage migrate      -> python manage.py migrate
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Optimerad Dockerfile - Best Practices
 
@@ -1187,30 +1187,30 @@ CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
 | Specifik tag | Reproducerbarhet |
 | Healthcheck | Kubernetes/orchestration |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multi-stage Builds
 
 Multi-stage bygger i flera steg och kopierar bara det nödvändiga till final image.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 MULTI-STAGE BUILD                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Stage 1: BUILD              Stage 2: PRODUCTION           │
-│   ──────────────              ───────────────────           │
-│   FROM node:18                FROM nginx:alpine             │
-│   • Node.js (1GB)             • Bara nginx (40MB)           │
-│   • npm, node_modules         • Inga build tools            │
-│   • Kompilering               • Bara statiska filer         │
-│                                                             │
-│   COPY --from=builder                                       │
-│   ─────────────────────────────────────▶                    │
-│                                                             │
-│   Resultat: 1GB → 50MB!                                     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 MULTI-STAGE BUILD                           |
++-------------------------------------------------------------+
+|                                                             |
+|   Stage 1: BUILD              Stage 2: PRODUCTION           |
+|   --------------              -------------------           |
+|   FROM node:18                FROM nginx:alpine             |
+|   • Node.js (1GB)             • Bara nginx (40MB)           |
+|   • npm, node_modules         • Inga build tools            |
+|   • Kompilering               • Bara statiska filer         |
+|                                                             |
+|   COPY --from=builder                                       |
+|   -------------------------------------▶                    |
+|                                                             |
+|   Resultat: 1GB -> 50MB!                                     |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```dockerfile
@@ -1232,7 +1232,7 @@ CMD ["nginx", "-g", "daemon off;"]
 # Image size: ~50MB istället för ~1GB
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## .dockerignore
 
@@ -1264,7 +1264,7 @@ README.md
 | `.env` | Säkerhetsrisk |
 | `Dockerfile` | Inte del av appen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Build-kommandon
 
@@ -1276,7 +1276,7 @@ README.md
 | `docker build --no-cache .` | Bygg utan cache |
 | `docker build --target stage .` | Bygg till specifikt stage |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1288,7 +1288,7 @@ README.md
 | Image blir för stor | För mycket i image | Multi-stage, .dockerignore |
 | Build tar lång tid | Dålig layer-ordning | Dependencies före kod |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1314,7 +1314,7 @@ README.md
             "xp_reward": 85,
             "content": """# Docker Networking
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1332,32 +1332,32 @@ Containers behöver prata med varandra och omvärlden. Du måste förstå:
 - **Hur containers hittar varandra** via DNS
 - **Port mapping** för att exponera tjänster
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Network Drivers
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 DOCKER NETWORK DRIVERS                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   BRIDGE (default)             HOST                         │
-│   ────────────────             ────                         │
-│   ┌─────────┐                  Container delar              │
-│   │Container│──┐               host's nätverks-             │
-│   └─────────┘  │               stack direkt                 │
-│   ┌─────────┐  ├─► Bridge ─► Host                           │
-│   │Container│──┘                                            │
-│   └─────────┘                  NONE                         │
-│   Isolerat nätverk             ────                         │
-│   på samma host                Ingen nätverks-              │
-│                                åtkomst alls                 │
-│   OVERLAY                                                   │
-│   ───────                      MACVLAN                      │
-│   Multi-host nätverk           ───────                      │
-│   (Swarm/K8s)                  Direkt på fysiskt            │
-│                                nätverk                      │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 DOCKER NETWORK DRIVERS                      |
++-------------------------------------------------------------+
+|                                                             |
+|   BRIDGE (default)             HOST                         |
+|   ----------------             ----                         |
+|   +---------+                  Container delar              |
+|   |Container|--+               host's nätverks-             |
+|   +---------+  |               stack direkt                 |
+|   +---------+  +-► Bridge -► Host                           |
+|   |Container|--+                                            |
+|   +---------+                  NONE                         |
+|   Isolerat nätverk             ----                         |
+|   på samma host                Ingen nätverks-              |
+|                                åtkomst alls                 |
+|   OVERLAY                                                   |
+|   -------                      MACVLAN                      |
+|   Multi-host nätverk           -------                      |
+|   (Swarm/K8s)                  Direkt på fysiskt            |
+|                                nätverk                      |
++-------------------------------------------------------------+
 ```
 
 ### Network Driver-översikt
@@ -1384,7 +1384,7 @@ docker run --network none alpine
 docker network create -d overlay myoverlay
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Bridge Network
 
@@ -1409,7 +1409,7 @@ docker run -d --name db --network backend-net postgres
 docker run -d --name api --network backend-net myapi
 
 # Nu kan api nå db via hostname "db"
-# Inuti api-containern: ping db → fungerar!
+# Inuti api-containern: ping db -> fungerar!
 
 # Lista nätverk
 docker network ls
@@ -1421,32 +1421,32 @@ docker network ls
 docker network inspect backend-net
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container DNS
 
 Docker har inbyggd DNS för containers i samma user-defined nätverk.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 CONTAINER DNS                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   backend-net (user-defined bridge)                         │
-│   ┌─────────────────────────────────────────────────────┐   │
-│   │                                                     │   │
-│   │  ┌──────────┐         ┌──────────┐                  │   │
-│   │  │   api    │ ──────► │ postgres │                  │   │
-│   │  │          │  "postgres"         │                  │   │
-│   │  └──────────┘         └──────────┘                  │   │
-│   │                                                     │   │
-│   │  DNS: container-namn resolvas till container IP     │   │
-│   │                                                     │   │
-│   └─────────────────────────────────────────────────────┘   │
-│                                                             │
-│   "postgres" → 172.18.0.2 (automatiskt!)                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 CONTAINER DNS                               |
++-------------------------------------------------------------+
+|                                                             |
+|   backend-net (user-defined bridge)                         |
+|   +-----------------------------------------------------+   |
+|   |                                                     |   |
+|   |  +----------+         +----------+                  |   |
+|   |  |   api    | ------► | postgres |                  |   |
+|   |  |          |  "postgres"         |                  |   |
+|   |  +----------+         +----------+                  |   |
+|   |                                                     |   |
+|   |  DNS: container-namn resolvas till container IP     |   |
+|   |                                                     |   |
+|   +-----------------------------------------------------+   |
+|                                                             |
+|   "postgres" -> 172.18.0.2 (automatiskt!)                    |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1462,44 +1462,44 @@ docker run -d --name api --network mynet \\
 # Inuti api: "postgres" resolvas automatiskt till rätt IP
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Port Mapping
 
 Exponera container-portar till host för extern åtkomst.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 PORT MAPPING                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   HOST                         CONTAINER                    │
-│   ────                         ─────────                    │
-│                                                             │
-│   localhost:8080  ──────────►  nginx:80                     │
-│        │                           │                        │
-│        │      -p 8080:80           │                        │
-│        │                           │                        │
-│   Host port              Container port                     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 PORT MAPPING                                |
++-------------------------------------------------------------+
+|                                                             |
+|   HOST                         CONTAINER                    |
+|   ----                         ---------                    |
+|                                                             |
+|   localhost:8080  ----------►  nginx:80                     |
+|        |                           |                        |
+|        |      -p 8080:80           |                        |
+|        |                           |                        |
+|   Host port              Container port                     |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Port Mapping-syntax
 
 | Syntax | Beskrivning |
 |--------|-------------|
-| `-p 8080:80` | Host 8080 → Container 80 |
+| `-p 8080:80` | Host 8080 -> Container 80 |
 | `-p 127.0.0.1:8080:80` | Bara localhost |
-| `-p 80` | Random host port → Container 80 |
+| `-p 80` | Random host port -> Container 80 |
 | `-p 80:80 -p 443:443` | Flera portar |
 
 ```bash
 # Exponera port till host
 docker run -p 8080:80 nginx
-#          │    │
-#          │    └── Container port (nginx lyssnar på 80)
-#          └── Host port (du når via localhost:8080)
+#          |    |
+#          |    +-- Container port (nginx lyssnar på 80)
+#          +-- Host port (du når via localhost:8080)
 
 # Exponera till specifik IP (säkrare!)
 docker run -p 127.0.0.1:8080:80 nginx  # Bara localhost
@@ -1512,33 +1512,33 @@ docker port container_name              # Se vilken port
 docker run -p 80:80 -p 443:443 nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt exempel: Web App + Databas
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 WEBAPP ARCHITECTURE                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Internet                                                  │
-│      │                                                      │
-│      │ :8080                                                │
-│      ▼                                                      │
-│   ┌──────────────────────────────────────────────────┐      │
-│   │              webapp-net (bridge)                 │      │
-│   │                                                  │      │
-│   │   ┌─────────┐           ┌─────────┐             │      │
-│   │   │ webapp  │ ────────► │   db    │             │      │
-│   │   │ :8000   │  "db"     │ :5432   │             │      │
-│   │   └─────────┘           └─────────┘             │      │
-│   │       │                      │                  │      │
-│   │   EXPONERAD              EJ EXPONERAD           │      │
-│   │   (p 8080:8000)          (intern endast)        │      │
-│   │                                                  │      │
-│   └──────────────────────────────────────────────────┘      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 WEBAPP ARCHITECTURE                         |
++-------------------------------------------------------------+
+|                                                             |
+|   Internet                                                  |
+|      |                                                      |
+|      | :8080                                                |
+|      ▼                                                      |
+|   +--------------------------------------------------+      |
+|   |              webapp-net (bridge)                 |      |
+|   |                                                  |      |
+|   |   +---------+           +---------+             |      |
+|   |   | webapp  | --------► |   db    |             |      |
+|   |   | :8000   |  "db"     | :5432   |             |      |
+|   |   +---------+           +---------+             |      |
+|   |       |                      |                  |      |
+|   |   EXPONERAD              EJ EXPONERAD           |      |
+|   |   (p 8080:8000)          (intern endast)        |      |
+|   |                                                  |      |
+|   +--------------------------------------------------+      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1568,7 +1568,7 @@ docker run -d \\
 # - webapp kan nå db via hostname "db"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Network Troubleshooting
 
@@ -1595,7 +1595,7 @@ docker exec webapp curl http://api:8000/health
 docker stats --format "table {{.Name}}\\t{{.NetIO}}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Koppla container till flera nätverk
 
@@ -1610,7 +1610,7 @@ docker network connect backend-net webapp
 docker network disconnect frontend-net webapp
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1624,7 +1624,7 @@ docker network disconnect frontend-net webapp
 | `docker network rm name` | Ta bort nätverk |
 | `docker network prune` | Städa oanvända |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1635,7 +1635,7 @@ docker network disconnect frontend-net webapp
 | Port already in use | Annan process på porten | Byt host port |
 | Network not found | Nätverket finns inte | Skapa eller kolla namn |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1661,7 +1661,7 @@ docker network disconnect frontend-net webapp
             "xp_reward": 80,
             "content": """# Docker Volumes & Persistence
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1679,29 +1679,29 @@ Containers är ephemeral - data försvinner när de tas bort. Du måste förstå
 - **Skillnaden mellan volumes och bind mounts**
 - **Backup och restore** av container-data
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Problemet utan volumes
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 DATA UTAN VOLUMES                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. docker run postgres                                    │
-│      ┌──────────────────┐                                   │
-│      │    PostgreSQL    │                                   │
-│      │   ┌──────────┐   │                                   │
-│      │   │   DATA   │   │  ← Data i container               │
-│      │   └──────────┘   │                                   │
-│      └──────────────────┘                                   │
-│                                                             │
-│   2. docker rm postgres                                     │
-│      ┌──────────────────┐                                   │
-│      │    BORTTAGEN     │  ← DATA FÖRLORAD!                 │
-│      └──────────────────┘                                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 DATA UTAN VOLUMES                           |
++-------------------------------------------------------------+
+|                                                             |
+|   1. docker run postgres                                    |
+|      +------------------+                                   |
+|      |    PostgreSQL    |                                   |
+|      |   +----------+   |                                   |
+|      |   |   DATA   |   |  <- Data i container               |
+|      |   +----------+   |                                   |
+|      +------------------+                                   |
+|                                                             |
+|   2. docker rm postgres                                     |
+|      +------------------+                                   |
+|      |    BORTTAGEN     |  <- DATA FÖRLORAD!                 |
+|      +------------------+                                   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1715,34 +1715,34 @@ docker rm -f db
 # All data är BORTA!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Tre sätt att persistera data
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 STORAGE OPTIONS                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   VOLUMES              BIND MOUNTS          TMPFS           │
-│   ───────              ───────────          ─────           │
-│   Docker-managed       Host directory       RAM-disk        │
-│   /var/lib/docker/     /host/path           Försvinner      │
-│   volumes/             Kräver absolut       vid stopp       │
-│   Best för prod        path                 Temp-filer      │
-│                        Best för dev                         │
-│                                                             │
-│   ┌────────┐           ┌────────┐           ┌────────┐      │
-│   │Volume  │           │Host FS │           │  RAM   │      │
-│   │        │           │        │           │        │      │
-│   └────────┘           └────────┘           └────────┘      │
-│       │                    │                    │           │
-│       ▼                    ▼                    ▼           │
-│   ┌────────────────────────────────────────────────────┐    │
-│   │                   Container                        │    │
-│   └────────────────────────────────────────────────────┘    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 STORAGE OPTIONS                             |
++-------------------------------------------------------------+
+|                                                             |
+|   VOLUMES              BIND MOUNTS          TMPFS           |
+|   -------              -----------          -----           |
+|   Docker-managed       Host directory       RAM-disk        |
+|   /var/lib/docker/     /host/path           Försvinner      |
+|   volumes/             Kräver absolut       vid stopp       |
+|   Best för prod        path                 Temp-filer      |
+|                        Best för dev                         |
+|                                                             |
+|   +--------+           +--------+           +--------+      |
+|   |Volume  |           |Host FS |           |  RAM   |      |
+|   |        |           |        |           |        |      |
+|   +--------+           +--------+           +--------+      |
+|       |                    |                    |           |
+|       ▼                    ▼                    ▼           |
+|   +----------------------------------------------------+    |
+|   |                   Container                        |    |
+|   +----------------------------------------------------+    |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Typ | Syntax | Användning |
@@ -1762,7 +1762,7 @@ docker run -v /host/path:/container/path postgres
 docker run --tmpfs /tmp postgres
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Volumes (Docker-managed)
 
@@ -1803,7 +1803,7 @@ docker volume rm dbdata
 docker volume prune
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Bind Mounts
 
@@ -1831,7 +1831,7 @@ docker run -v $(pwd)/config:/etc/app/config:ro myimage
 | `:z` | SELinux shared |
 | `:Z` | SELinux private |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Volumes vs Bind Mounts
 
@@ -1845,28 +1845,28 @@ docker run -v $(pwd)/config:/etc/app/config:ro myimage
 | **Användning** | Produktion | Utveckling |
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 VOLUMES vs BIND MOUNTS                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   VOLUMES                       BIND MOUNTS                 │
-│   ───────                       ───────────                 │
-│   + Docker hanterar lagring     + Kontroll över path        │
-│   + Plattformsoberoende         + Bra för utveckling        │
-│   + Backup med docker           + Hot reload                │
-│   + Dela mellan containers                                  │
-│                                 - Host path-beroende        │
-│                                 - Permission-problem        │
-│                                                             │
-│   ANVÄND FÖR:                   ANVÄND FÖR:                 │
-│   • Databaser                   • Kod under utveckling      │
-│   • Uploads                     • Config-filer              │
-│   • Cache                       • Log-filer                 │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 VOLUMES vs BIND MOUNTS                      |
++-------------------------------------------------------------+
+|                                                             |
+|   VOLUMES                       BIND MOUNTS                 |
+|   -------                       -----------                 |
+|   + Docker hanterar lagring     + Kontroll över path        |
+|   + Plattformsoberoende         + Bra för utveckling        |
+|   + Backup med docker           + Hot reload                |
+|   + Dela mellan containers                                  |
+|                                 - Host path-beroende        |
+|                                 - Permission-problem        |
+|                                                             |
+|   ANVÄND FÖR:                   ANVÄND FÖR:                 |
+|   • Databaser                   • Kod under utveckling      |
+|   • Uploads                     • Config-filer              |
+|   • Cache                       • Log-filer                 |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt exempel: Persistent Databas
 
@@ -1896,23 +1896,23 @@ docker run -d --name postgres -v pgdata:/var/lib/postgresql/data postgres
 | **redis** | `/data` |
 | **elasticsearch** | `/usr/share/elasticsearch/data` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Backup och Restore
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 BACKUP STRATEGY                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Volume ──► Container ──► tar.gz ──► S3/Backup             │
-│                                                             │
-│   1. Skapa temp container                                   │
-│   2. Montera volume som /source                             │
-│   3. Montera backup-dir som /backup                         │
-│   4. Kör tar för att komprimera                             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 BACKUP STRATEGY                             |
++-------------------------------------------------------------+
+|                                                             |
+|   Volume --► Container --► tar.gz --► S3/Backup             |
+|                                                             |
+|   1. Skapa temp container                                   |
+|   2. Montera volume som /source                             |
+|   3. Montera backup-dir som /backup                         |
+|   4. Kör tar för att komprimera                             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1933,7 +1933,7 @@ docker cp localfile.txt container:/path/in/volume/
 docker cp container:/path/in/volume/file.txt ./local/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1948,7 +1948,7 @@ docker cp container:/path/in/volume/file.txt ./local/
 | `-v /host:/path` | Bind mount |
 | `-v /host:/path:ro` | Read-only mount |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1959,7 +1959,7 @@ docker cp container:/path/in/volume/file.txt ./local/
 | Data försvinner | Glömde volume | Kolla `-v` flagga |
 | Disk full | Stora volumes | `docker volume prune` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1985,7 +1985,7 @@ docker cp container:/path/in/volume/file.txt ./local/
             "xp_reward": 85,
             "content": """# Docker Compose Fundamentals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -2003,24 +2003,24 @@ Att köra `docker run` med 10 flaggor för flera containers är opraktiskt. Du b
 - **Starta allt med ett kommando**
 - **Versionshantera infrastrukturen** som kod
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad är Docker Compose?
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 DOCKER COMPOSE                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   UTAN Compose:                MED Compose:                 │
-│   ────────────                 ───────────                  │
-│   docker network create...     docker compose up            │
-│   docker run db...                                          │
-│   docker run api...            Allt definierat i            │
-│   docker run web...            docker-compose.yml           │
-│   (många kommandon!)           (en fil, ett kommando!)      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 DOCKER COMPOSE                              |
++-------------------------------------------------------------+
+|                                                             |
+|   UTAN Compose:                MED Compose:                 |
+|   ------------                 -----------                  |
+|   docker network create...     docker compose up            |
+|   docker run db...                                          |
+|   docker run api...            Allt definierat i            |
+|   docker run web...            docker-compose.yml           |
+|   (många kommandon!)           (en fil, ett kommando!)      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 Docker Compose låter dig definiera multi-container applikationer i en YAML-fil.
@@ -2051,7 +2051,7 @@ volumes:
   dbdata:
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundläggande struktur
 
@@ -2081,7 +2081,7 @@ networks:       # Custom networks (optional)
 | `secrets` | Känslig data (Swarm) |
 | `configs` | Config-filer (Swarm) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service-konfiguration
 
@@ -2142,7 +2142,7 @@ services:
           memory: 512M
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundläggande kommandon
 
@@ -2189,31 +2189,31 @@ docker compose up --build  # Build + start
 docker compose exec db psql -U postgres
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komplett exempel: Full Stack App
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 FULL STACK ARCHITECTURE                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Internet                                                  │
-│      │                                                      │
-│      │ :3000                                                │
-│      ▼                                                      │
-│   ┌─────────┐    :8000     ┌─────────┐     ┌─────────┐     │
-│   │   web   │ ───────────▶ │   api   │ ──▶ │   db    │     │
-│   │ (React) │              │(FastAPI)│     │(Postgres│     │
-│   └─────────┘              └─────────┘     └─────────┘     │
-│                                 │                          │
-│                                 ▼                          │
-│                            ┌─────────┐                     │
-│                            │  redis  │                     │
-│                            │ (cache) │                     │
-│                            └─────────┘                     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 FULL STACK ARCHITECTURE                     |
++-------------------------------------------------------------+
+|                                                             |
+|   Internet                                                  |
+|      |                                                      |
+|      | :3000                                                |
+|      ▼                                                      |
+|   +---------+    :8000     +---------+     +---------+     |
+|   |   web   | -----------▶ |   api   | --▶ |   db    |     |
+|   | (React) |              |(FastAPI)|     |(Postgres|     |
+|   +---------+              +---------+     +---------+     |
+|                                 |                          |
+|                                 ▼                          |
+|                            +---------+                     |
+|                            |  redis  |                     |
+|                            | (cache) |                     |
+|                            +---------+                     |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```yaml
@@ -2261,7 +2261,7 @@ volumes:
   pgdata:
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -2276,7 +2276,7 @@ volumes:
 | `docker compose pull` | Hämta images |
 | `docker compose restart svc` | Starta om service |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -2288,7 +2288,7 @@ volumes:
 | `volume permission denied` | User mismatch | Fixa permissions |
 | `build failed` | Dockerfile-fel | Kolla build-output |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2314,7 +2314,7 @@ volumes:
             "xp_reward": 95,
             "content": """# Docker Compose Advanced Patterns
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -2332,26 +2332,26 @@ Grundläggande Compose räcker för utveckling, men produktion kräver mer:
 - **Healthchecks och restart policies**
 - **Skalning och load balancing**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multiple Compose Files
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 COMPOSE FILE LAYERING                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   docker-compose.yml          (bas-konfiguration)           │
-│          │                                                  │
-│          ▼                                                  │
-│   docker-compose.override.yml (laddas automatiskt, dev)     │
-│          │                                                  │
-│          ▼                                                  │
-│   docker-compose.prod.yml     (explicit, produktion)        │
-│                                                             │
-│   Senare filer överskriver tidigare!                        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 COMPOSE FILE LAYERING                       |
++-------------------------------------------------------------+
+|                                                             |
+|   docker-compose.yml          (bas-konfiguration)           |
+|          |                                                  |
+|          ▼                                                  |
+|   docker-compose.override.yml (laddas automatiskt, dev)     |
+|          |                                                  |
+|          ▼                                                  |
+|   docker-compose.prod.yml     (explicit, produktion)        |
+|                                                             |
+|   Senare filer överskriver tidigare!                        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Fil | Laddas | Användning |
@@ -2394,7 +2394,7 @@ docker compose up
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Healthchecks
 
@@ -2434,7 +2434,7 @@ services:
         condition: service_healthy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environment Variables
 
@@ -2470,7 +2470,7 @@ API_KEY=abc123
 DEBUG=false
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Profiles
 
@@ -2509,7 +2509,7 @@ docker compose --profile monitoring up
 docker compose --profile monitoring --profile debug up
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skalning
 
@@ -2535,7 +2535,7 @@ docker compose ps
 # app-worker-1   worker    5/5        running
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secrets
 
@@ -2562,7 +2562,7 @@ cat /run/secrets/db_password
 cat /run/secrets/api_key
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Extension Fields (YAML anchors)
 
@@ -2594,7 +2594,7 @@ services:
       SERVICE_NAME: worker
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -2608,7 +2608,7 @@ services:
 | Secrets | `secrets: [name]` |
 | Anchor | `&name` och `<<: *name` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2634,13 +2634,13 @@ services:
             "xp_reward": 90,
             "content": """# Docker Security Best Practices
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
 | Risk | Konsekvens |
 |------|------------|
-| **Root i container** | Container escape → host komprometterad |
+| **Root i container** | Container escape -> host komprometterad |
 | **Stora images** | Fler sårbarheter, större attack surface |
 | **Secrets i image** | Läcker i registry, git history |
 | **Ingen scanning** | Kända CVEs i produktion |
@@ -2652,25 +2652,25 @@ Containers är inte automatiskt säkra. Du måste förstå:
 - **Principle of least privilege** för containers
 - **Image scanning** för sårbarheter
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kör ALDRIG som root
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              ROOT vs NON-ROOT                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ROOT (default)              NON-ROOT (säkert)             │
-│   ──────────────              ─────────────────             │
-│   UID 0                       UID 1000+                     │
-│   Full host access            Begränsad access              │
-│   Container escape risk       Isolerad                      │
-│                                                             │
-│   Om container komprometteras:                              │
-│   Root → Kan skada host       Non-root → Begränsad skada    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              ROOT vs NON-ROOT                               |
++-------------------------------------------------------------+
+|                                                             |
+|   ROOT (default)              NON-ROOT (säkert)             |
+|   --------------              -----------------             |
+|   UID 0                       UID 1000+                     |
+|   Full host access            Begränsad access              |
+|   Container escape risk       Isolerad                      |
+|                                                             |
+|   Om container komprometteras:                              |
+|   Root -> Kan skada host       Non-root -> Begränsad skada    |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```dockerfile
@@ -2688,7 +2688,7 @@ USER appuser
 CMD ["python", "app.py"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Minimal Base Images
 
@@ -2712,7 +2712,7 @@ FROM python:3.11-slim
 FROM gcr.io/distroless/python3
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Använd specifika tags
 
@@ -2737,7 +2737,7 @@ FROM nginx:1.25.3-alpine
 FROM python@sha256:abc123...
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Read-only filsystem
 
@@ -2759,7 +2759,7 @@ docker run --read-only \\
 | `--tmpfs /tmp` | RAM-disk för temp-filer |
 | `-v logs:/path` | Persistent volume för loggar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Begränsa capabilities
 
@@ -2778,7 +2778,7 @@ Linux capabilities ger finkornig kontroll över privilegier.
 docker run --cap-drop=ALL --cap-add=NET_BIND_SERVICE myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Resource Limits
 
@@ -2813,7 +2813,7 @@ services:
           memory: 256M
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Scanning
 
@@ -2836,7 +2836,7 @@ trivy image myimage
 snyk container test myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secrets Hantering
 
@@ -2863,7 +2863,7 @@ docker run --secret db_pass myimage
 # HashiCorp Vault, AWS Secrets Manager, etc.
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Network Security
 
@@ -2882,7 +2882,7 @@ docker run -p 127.0.0.1:8080:8080 myimage  # Bara localhost
 | `--internal` | Nej | Hög |
 | `none` | Nej | Total |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Checklist
 
@@ -2898,7 +2898,7 @@ docker run -p 127.0.0.1:8080:8080 myimage  # Bara localhost
 | Regelbunden image scanning | [ ] |
 | Isolerade nätverk | [ ] |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2924,7 +2924,7 @@ docker run -p 127.0.0.1:8080:8080 myimage  # Bara localhost
             "xp_reward": 95,
             "content": """# Docker in Production
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -2942,7 +2942,7 @@ Att köra Docker lokalt är en sak - produktion är en annan. Du måste förstå
 - **Restart policies** för att hantera crashes
 - **Resource management** för stabil drift
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Restart Policies
 
@@ -2969,7 +2969,7 @@ services:
     restart: unless-stopped
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Logging
 
@@ -3007,7 +3007,7 @@ docker run --log-driver json-file \\
     myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Monitoring
 
@@ -3029,7 +3029,7 @@ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 docker inspect --format='{{.State.Health.Status}}' container_name
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Healthchecks
 
@@ -3058,7 +3058,7 @@ docker run --health-cmd="curl -f http://localhost:8000/health" \\
 docker inspect --format='{{json .State.Health}}' container_name
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Production Docker Compose
 
@@ -3110,26 +3110,26 @@ volumes:
   pgdata:
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Deployment Strategies
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              DEPLOYMENT STRATEGIES                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   BLUE-GREEN                  ROLLING UPDATE                │
-│   ──────────                  ──────────────                │
-│   [Blue v1] ──┐               [v1] [v1] [v1]                │
-│               │ Switch        [v2] [v1] [v1]                │
-│   [Green v2]──┘               [v2] [v2] [v1]                │
-│                               [v2] [v2] [v2]                │
-│                                                             │
-│   + Instant rollback          + No extra resources          │
-│   - Double resources          - Slower rollback             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              DEPLOYMENT STRATEGIES                          |
++-------------------------------------------------------------+
+|                                                             |
+|   BLUE-GREEN                  ROLLING UPDATE                |
+|   ----------                  --------------                |
+|   [Blue v1] --+               [v1] [v1] [v1]                |
+|               | Switch        [v2] [v1] [v1]                |
+|   [Green v2]--+               [v2] [v2] [v1]                |
+|                               [v2] [v2] [v2]                |
+|                                                             |
+|   + Instant rollback          + No extra resources          |
+|   - Double resources          - Slower rollback             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -3143,7 +3143,7 @@ docker compose -p myapp-blue down
 docker service update --image myimage:v2 myservice
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Backup Strategy
 
@@ -3164,7 +3164,7 @@ docker run --rm \\
 docker exec postgres pg_dump -U postgres mydb > backup.sql
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3189,7 +3189,7 @@ docker exec postgres pg_dump -U postgres mydb > backup.sql
             "xp_reward": 80,
             "content": """# Docker Registry & Image Distribution
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -3206,31 +3206,31 @@ Images måste lagras och distribueras. Du måste förstå:
 - **Push och pull** av images
 - **Private registries** för företagsbruk
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad är ett Registry?
 
 Ett registry är en lagringsplats för Docker images. Tänk på det som "npm för containers".
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 IMAGE NAMING CONVENTION                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   registry.example.com / namespace / repository : tag       │
-│   ────────────────────   ─────────   ──────────   ───       │
-│   Registry URL           User/Org    Image name   Version   │
-│   (default: docker.io)                            (latest)  │
-│                                                             │
-│   Exempel:                                                  │
-│   docker.io/library/nginx:1.25                              │
-│   ghcr.io/myorg/myapp:v2.0.0                               │
-│   123456.dkr.ecr.eu-north-1.amazonaws.com/api:latest       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 IMAGE NAMING CONVENTION                     |
++-------------------------------------------------------------+
+|                                                             |
+|   registry.example.com / namespace / repository : tag       |
+|   --------------------   ---------   ----------   ---       |
+|   Registry URL           User/Org    Image name   Version   |
+|   (default: docker.io)                            (latest)  |
+|                                                             |
+|   Exempel:                                                  |
+|   docker.io/library/nginx:1.25                              |
+|   ghcr.io/myorg/myapp:v2.0.0                               |
+|   123456.dkr.ecr.eu-north-1.amazonaws.com/api:latest       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Registry-typer
 
@@ -3243,7 +3243,7 @@ Ett registry är en lagringsplats för Docker images. Tänk på det som "npm fö
 | **Azure ACR** | Private | Azure-ekosystem |
 | **Harbor** | Self-hosted | Enterprise on-prem |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker Hub (Public)
 
@@ -3268,7 +3268,7 @@ docker push username/myimage:v1.0
 docker pull username/myimage:v1.0
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Private Registries
 
@@ -3302,7 +3302,7 @@ docker tag myimage ghcr.io/username/myimage:v1
 docker push ghcr.io/username/myimage:v1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Self-hosted Registry
 
@@ -3316,7 +3316,7 @@ docker push localhost:5000/myimage:v1
 docker pull localhost:5000/myimage:v1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Tagging Strategy
 
@@ -3335,7 +3335,7 @@ myimage:abc123f            # Git commit SHA
 myimage:v1.2.3-abc123f     # Kombination (bäst!)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multi-platform Images
 
@@ -3359,7 +3359,7 @@ docker manifest inspect myimage:v1
 | `linux/arm64` | AWS Graviton, Apple Silicon |
 | `linux/arm/v7` | Raspberry Pi |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3384,7 +3384,7 @@ docker manifest inspect myimage:v1
             "xp_reward": 80,
             "content": """# Docker Multi-stage Builds
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -3401,7 +3401,7 @@ Build-verktyg och dependencies behövs inte i produktion. Du måste kunna:
 - **Kopiera artefakter** mellan stages
 - **Optimera för säkerhet** genom att exkludera build-verktyg
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Problemet utan multi-stage
 
@@ -3418,26 +3418,26 @@ RUN npm run build
 CMD ["node", "dist/index.js"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multi-stage lösningen
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 MULTI-STAGE BUILD                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   STAGE 1: builder              STAGE 2: production         │
-│   ───────────────               ────────────────────        │
-│   FROM node:18                  FROM node:18-slim           │
-│   + npm, devDeps                - Bara runtime              │
-│   + Source code                 - Compiled code             │
-│   + Build tools                 - prod deps only            │
-│   = ~1 GB                       = ~150 MB                   │
-│                                                             │
-│   [Build] ─── COPY --from=builder ───▶ [Production]         │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 MULTI-STAGE BUILD                           |
++-------------------------------------------------------------+
+|                                                             |
+|   STAGE 1: builder              STAGE 2: production         |
+|   ---------------               --------------------        |
+|   FROM node:18                  FROM node:18-slim           |
+|   + npm, devDeps                - Bara runtime              |
+|   + Source code                 - Compiled code             |
+|   + Build tools                 - prod deps only            |
+|   = ~1 GB                       = ~150 MB                   |
+|                                                             |
+|   [Build] --- COPY --from=builder ---▶ [Production]         |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```dockerfile
@@ -3460,7 +3460,7 @@ CMD ["node", "dist/index.js"]
 # Storlek: ~150 MB
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Språkspecifika exempel
 
@@ -3528,7 +3528,7 @@ CMD ["nginx", "-g", "daemon off;"]
 # Image storlek: ~25 MB
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Avancerat: Flera stages
 
@@ -3575,7 +3575,7 @@ docker build --target tester -t myapp:test .
 docker build -t myapp:prod .
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kopiera från externa images
 
@@ -3586,7 +3586,7 @@ COPY --from=docker:cli /usr/local/bin/docker /usr/local/bin/
 COPY --from=hashicorp/terraform:latest /bin/terraform /usr/local/bin/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Storleksjämförelse
 
@@ -3597,7 +3597,7 @@ COPY --from=hashicorp/terraform:latest /bin/terraform /usr/local/bin/
 | Python | ~1 GB | ~200 MB | 80% |
 | React | ~500 MB | ~25 MB | 95% |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3623,7 +3623,7 @@ COPY --from=hashicorp/terraform:latest /bin/terraform /usr/local/bin/
             "xp_reward": 90,
             "content": """# Docker Performance Optimization
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -3640,24 +3640,24 @@ Långsamma builds och stora images kostar tid och pengar. Du måste kunna:
 - **Minska image-storlek** för snabbare deploys
 - **Förbättra runtime-prestanda**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Build Cache Optimization
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 LAYER CACHING                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Layer 1: FROM python ────────────── [CACHED]              │
-│   Layer 2: COPY requirements.txt ──── [CACHED]              │
-│   Layer 3: RUN pip install ────────── [CACHED]              │
-│   Layer 4: COPY . . ───────────────── [REBUILD] <-- ändring │
-│   Layer 5: RUN build ──────────────── [REBUILD]             │
-│                                                             │
-│   Om Layer N ändras → alla efterföljande rebuilds!          │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 LAYER CACHING                               |
++-------------------------------------------------------------+
+|                                                             |
+|   Layer 1: FROM python -------------- [CACHED]              |
+|   Layer 2: COPY requirements.txt ---- [CACHED]              |
+|   Layer 3: RUN pip install ---------- [CACHED]              |
+|   Layer 4: COPY . . ----------------- [REBUILD] <-- ändring |
+|   Layer 5: RUN build ---------------- [REBUILD]             |
+|                                                             |
+|   Om Layer N ändras -> alla efterföljande rebuilds!          |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```dockerfile
@@ -3674,7 +3674,7 @@ RUN pip install -r requirements.txt  # Cachas om requirements.txt inte ändras
 COPY . .
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Layer Order - Bästa praxis
 
@@ -3704,7 +3704,7 @@ COPY . .
 RUN npm run build
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Minska antal layers
 
@@ -3723,7 +3723,7 @@ RUN apt-get update && \\
     rm -rf /var/lib/apt/lists/*
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## .dockerignore
 
@@ -3751,7 +3751,7 @@ build
 | `*.md` | Dokumentation |
 | `__pycache__` | Python bytecode |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## BuildKit Features
 
@@ -3773,7 +3773,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \\
     pip install -r requirements.txt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Size Reduction
 
@@ -3798,7 +3798,7 @@ RUN apt-get update && \\
     rm -rf /var/lib/apt/lists/*
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Analysera image-storlek
 
@@ -3819,7 +3819,7 @@ dive myimage
 docker scout quickview myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Runtime Performance
 
@@ -3839,7 +3839,7 @@ docker run \\
     myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3865,7 +3865,7 @@ docker run \\
             "xp_reward": 80,
             "content": """# Docker Debugging & Troubleshooting
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -3882,27 +3882,27 @@ Containers kommer att krasha och bete sig konstigt. Du måste kunna:
 - **Debugga körande containers** utan att störa produktion
 - **Hantera vanliga problem** snabbt
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container startar inte - Felsökningssteg
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              TROUBLESHOOTING FLOW                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. docker logs container     ─── Se felmeddelande         │
-│              │                                              │
-│              ▼                                              │
-│   2. docker inspect            ─── Kolla exit code          │
-│              │                                              │
-│              ▼                                              │
-│   3. docker run -it --entrypoint sh ── Debugga interaktivt  │
-│              │                                              │
-│              ▼                                              │
-│   4. docker events             ─── System-level events      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              TROUBLESHOOTING FLOW                           |
++-------------------------------------------------------------+
+|                                                             |
+|   1. docker logs container     --- Se felmeddelande         |
+|              |                                              |
+|              ▼                                              |
+|   2. docker inspect            --- Kolla exit code          |
+|              |                                              |
+|              ▼                                              |
+|   3. docker run -it --entrypoint sh -- Debugga interaktivt  |
+|              |                                              |
+|              ▼                                              |
+|   4. docker events             --- System-level events      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Exit Codes
@@ -3928,7 +3928,7 @@ docker inspect container_name --format='{{.State.ExitCode}}'
 docker run -it --entrypoint sh myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inspektera containers
 
@@ -3955,7 +3955,7 @@ docker top container_name
 docker stats container_name
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Debugga körande container
 
@@ -3978,7 +3978,7 @@ docker exec container_name env
 docker exec -u 0 container_name bash
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Nätverksproblem
 
@@ -4001,7 +4001,7 @@ docker exec container_name curl http://other_container:8080
 docker port container_name
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Disk/Storage problem
 
@@ -4022,7 +4022,7 @@ docker system prune -a     # + alla oanvända images
 docker system prune --volumes  # + volumes
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## OOM (Out of Memory)
 
@@ -4037,7 +4037,7 @@ docker stats container_name --no-stream
 docker update --memory=2g container_name
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -4049,7 +4049,7 @@ docker update --memory=2g container_name
 | Cannot connect to daemon | Docker ej startat | `sudo systemctl start docker` |
 | OOMKilled | För lite minne | Öka `--memory` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4075,7 +4075,7 @@ docker update --memory=2g container_name
             "xp_reward": 90,
             "content": """# Docker with CI/CD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -4092,7 +4092,7 @@ Docker och CI/CD hör ihop. Du måste kunna:
 - **Pusha till registry** från pipeline
 - **Deploya** nya versioner automatiskt
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GitHub Actions
 
@@ -4134,7 +4134,7 @@ jobs:
           cache-to: type=gha,mode=max
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GitLab CI
 
@@ -4175,7 +4175,7 @@ deploy:
     - main
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Smart Tagging Strategy
 
@@ -4200,7 +4200,7 @@ deploy:
       type=sha,prefix=
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Layer Caching i CI
 
@@ -4222,7 +4222,7 @@ deploy:
     cache-to: type=gha,mode=max
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Scanning i Pipeline
 
@@ -4241,7 +4241,7 @@ deploy:
     sarif_file: 'trivy-results.sarif'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multi-platform Builds i CI
 
@@ -4261,7 +4261,7 @@ deploy:
     tags: myapp:latest
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Deploy med Docker Compose
 
@@ -4280,7 +4280,7 @@ deploy:
     - main
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4306,7 +4306,7 @@ deploy:
             "xp_reward": 80,
             "content": """# Docker Swarm Basics
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt for DevOps?
 
@@ -4322,26 +4322,26 @@ Swarm är Dockers inbyggda orkestrering:
 - **Förstå orkestreringskoncept** innan Kubernetes
 - **Hantera enklare produktionsmiljöer**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Swarm Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     SWARM CLUSTER                        │
-├─────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
-│  │   MANAGER   │  │   MANAGER   │  │   MANAGER   │      │
-│  │   (Leader)  │  │  (Standby)  │  │  (Standby)  │      │
-│  └─────────────┘  └─────────────┘  └─────────────┘      │
-│         │                                                │
-│         ▼ Scheduling & State                            │
-├─────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
-│  │   WORKER    │  │   WORKER    │  │   WORKER    │      │
-│  │  [Task 1]   │  │  [Task 2]   │  │  [Task 3]   │      │
-│  └─────────────┘  └─────────────┘  └─────────────┘      │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                     SWARM CLUSTER                        |
++---------------------------------------------------------+
+|  +-------------+  +-------------+  +-------------+      |
+|  |   MANAGER   |  |   MANAGER   |  |   MANAGER   |      |
+|  |   (Leader)  |  |  (Standby)  |  |  (Standby)  |      |
+|  +-------------+  +-------------+  +-------------+      |
+|         |                                                |
+|         ▼ Scheduling & State                            |
++---------------------------------------------------------+
+|  +-------------+  +-------------+  +-------------+      |
+|  |   WORKER    |  |   WORKER    |  |   WORKER    |      |
+|  |  [Task 1]   |  |  [Task 2]   |  |  [Task 3]   |      |
+|  +-------------+  +-------------+  +-------------+      |
++---------------------------------------------------------+
 ```
 
 | Komponent | Roll |
@@ -4351,7 +4351,7 @@ Swarm är Dockers inbyggda orkestrering:
 | **Service** | Definierar applikationen |
 | **Task** | En container-instans |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Initiera Swarm
 
@@ -4376,7 +4376,7 @@ docker swarm join --token SWMTKN-xxx manager-ip:2377
 docker node ls
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Services vs Containers
 
@@ -4407,7 +4407,7 @@ docker service update --image nginx:1.25 web
 docker service rm web
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Stacks (Swarm + Compose)
 
@@ -4449,22 +4449,22 @@ docker stack services mystack
 docker stack rm mystack
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rolling Updates
 
 ```
 Update Process:
-┌─────────────────────────────────────────────────────┐
-│  Service: web (replicas=3)                          │
-│                                                      │
-│  [v1.0] ─────> [v1.1] (update 1/3)                 │
-│  [v1.0]        [v1.0] (waiting...)                  │
-│  [v1.0]        [v1.0] (waiting...)                  │
-│                                                      │
-│  --update-parallelism 1                             │
-│  --update-delay 10s                                 │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|  Service: web (replicas=3)                          |
+|                                                      |
+|  [v1.0] -----> [v1.1] (update 1/3)                 |
+|  [v1.0]        [v1.0] (waiting...)                  |
+|  [v1.0]        [v1.0] (waiting...)                  |
+|                                                      |
+|  --update-parallelism 1                             |
+|  --update-delay 10s                                 |
++-----------------------------------------------------+
 ```
 
 ```bash
@@ -4479,7 +4479,7 @@ docker service update \\
 docker service rollback web
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4505,7 +4505,7 @@ docker service rollback web
             "xp_reward": 75,
             "content": """# Docker Best Practices Summary
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -4518,7 +4518,7 @@ docker service rollback web
 
 En sammanfattning av alla best practices för professionella Dockerfiles och produktion.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dockerfile Best Practices
 
@@ -4569,7 +4569,7 @@ LABEL maintainer="team@example.com"
 LABEL version="1.0"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Best Practices
 
@@ -4602,7 +4602,7 @@ export DOCKER_CONTENT_TRUST=1
 docker push myimage:1.2.3
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container Best Practices
 
@@ -4635,7 +4635,7 @@ docker run --cap-drop ALL --cap-add NET_BIND_SERVICE myimage
 docker network create --internal backend
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker Compose Best Practices
 
@@ -4663,7 +4663,7 @@ secrets:
     external: true
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Checklista
 
@@ -4676,7 +4676,7 @@ secrets:
 | .dockerignore | Dropped capabilities | - |
 | Minimala layers | - | - |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4702,7 +4702,7 @@ secrets:
             "xp_reward": 70,
             "content": """# Docker Development Workflow
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -4718,30 +4718,30 @@ Docker förändrar hur du utvecklar:
 - **Hot reload och debugging** i containers
 - **Skillnaden mellan dev och prod** konfiguration
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Development vs Production
 
 ```
 Dev Environment:
-┌─────────────────────────────────────────────────────┐
-│  docker-compose.yml (bas)                           │
-│  + docker-compose.override.yml (dev, auto-laddas)  │
-│                                                      │
-│  - Volume mounts (hot reload)                       │
-│  - Debug ports exponerade                           │
-│  - DEBUG=true                                       │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|  docker-compose.yml (bas)                           |
+|  + docker-compose.override.yml (dev, auto-laddas)  |
+|                                                      |
+|  - Volume mounts (hot reload)                       |
+|  - Debug ports exponerade                           |
+|  - DEBUG=true                                       |
++-----------------------------------------------------+
 
 Prod Environment:
-┌─────────────────────────────────────────────────────┐
-│  docker-compose.yml (bas)                           │
-│  + docker-compose.prod.yml (explicit)               │
-│                                                      │
-│  - Built image från registry                        │
-│  - Restart policies                                 │
-│  - Resource limits                                  │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|  docker-compose.yml (bas)                           |
+|  + docker-compose.prod.yml (explicit)               |
+|                                                      |
+|  - Built image från registry                        |
+|  - Restart policies                                 |
+|  - Resource limits                                  |
++-----------------------------------------------------+
 ```
 
 | Fil | Syfte | Automatisk? |
@@ -4779,7 +4779,7 @@ services:
     restart: unless-stopped
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hot Reload Setup
 
@@ -4802,7 +4802,7 @@ RUN npm run build
 CMD ["node", "dist/index.js"]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Användbart dev-kommandon
 
@@ -4832,7 +4832,7 @@ docker compose logs -f api
 docker compose restart api
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Debugging i Container
 
@@ -4858,7 +4858,7 @@ services:
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Database i Development
 
@@ -4879,7 +4879,7 @@ volumes:
   pgdata:
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Makefile för vanliga tasks
 
@@ -4916,7 +4916,7 @@ clean:
 | `make logs` | Följa loggar |
 | `make clean` | Rensa allt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4942,7 +4942,7 @@ clean:
             "xp_reward": 65,
             "content": """# Docker Ecosystem & Tools
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -4958,7 +4958,7 @@ Docker är mer än bara Docker Engine:
 - **Alternativ och relaterade teknologier**
 - **Var Docker passar in i DevOps-landskapet**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker Desktop
 
@@ -4975,7 +4975,7 @@ Docker är mer än bara Docker Engine:
 # I produktion: använd Docker Engine direkt på Linux
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Podman (Docker-alternativ)
 
@@ -4993,7 +4993,7 @@ podman run nginx           # Samma syntax som docker
 podman build -t myimage .  # Samma Dockerfiles
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Scanning Tools
 
@@ -5019,7 +5019,7 @@ snyk container test myimage
 grype myimage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container Registries
 
@@ -5031,16 +5031,16 @@ grype myimage
 
 ```
 Registry Landscape:
-┌─────────────────────────────────────────────────────┐
-│  PUBLIC          │  CLOUD          │  SELF-HOSTED   │
-├──────────────────┼─────────────────┼────────────────┤
-│  docker.io       │  AWS ECR        │  Harbor        │
-│  ghcr.io         │  Google GCR     │  GitLab CR     │
-│  quay.io         │  Azure ACR      │  Nexus         │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|  PUBLIC          |  CLOUD          |  SELF-HOSTED   |
++------------------+-----------------+----------------+
+|  docker.io       |  AWS ECR        |  Harbor        |
+|  ghcr.io         |  Google GCR     |  GitLab CR     |
+|  quay.io         |  Azure ACR      |  Nexus         |
++-----------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Image Analysis Tools
 
@@ -5061,7 +5061,7 @@ docker history myimage
 skopeo copy docker://docker.io/nginx docker://myregistry/nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Build Tools
 
@@ -5086,7 +5086,7 @@ docker buildx build --platform linux/amd64,linux/arm64 .
 buildah build-using-dockerfile -t myimage .
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Orchestration
 
@@ -5111,7 +5111,7 @@ nomad job run myapp.nomad
 aws ecs create-service ...
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Monitoring & Logging
 
@@ -5124,16 +5124,16 @@ aws ecs create-service ...
 
 ```
 Monitoring Stack:
-┌─────────────────────────────────────────────────────┐
-│  METRICS         │  LOGGING        │  APM           │
-├──────────────────┼─────────────────┼────────────────┤
-│  Prometheus      │  Elasticsearch  │  Datadog       │
-│  Grafana         │  Logstash       │  New Relic     │
-│  cAdvisor        │  Kibana         │  Jaeger        │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|  METRICS         |  LOGGING        |  APM           |
++------------------+-----------------+----------------+
+|  Prometheus      |  Elasticsearch  |  Datadog       |
+|  Grafana         |  Logstash       |  New Relic     |
+|  cAdvisor        |  Kibana         |  Jaeger        |
++-----------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -5159,7 +5159,7 @@ Monitoring Stack:
             "xp_reward": 60,
             "content": """# Docker Certification Path
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -5175,7 +5175,7 @@ Docker-certifieringar validerar dina kunskaper:
 - **Vad de täcker**
 - **Hur du förbereder dig**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker Certified Associate (DCA)
 
@@ -5190,28 +5190,28 @@ Docker-certifieringar validerar dina kunskaper:
 
 ```
 DCA Exam Overview:
-┌─────────────────────────────────────────────────────┐
-│  Orchestration (25%)                                │
-│  ████████████████████████                           │
-├─────────────────────────────────────────────────────┤
-│  Image Management (20%)                             │
-│  ████████████████████                               │
-├─────────────────────────────────────────────────────┤
-│  Installation (15%)                                 │
-│  ███████████████                                    │
-├─────────────────────────────────────────────────────┤
-│  Networking (15%)                                   │
-│  ███████████████                                    │
-├─────────────────────────────────────────────────────┤
-│  Security (15%)                                     │
-│  ███████████████                                    │
-├─────────────────────────────────────────────────────┤
-│  Storage (10%)                                      │
-│  ██████████                                         │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|  Orchestration (25%)                                |
+|  ########################                           |
++-----------------------------------------------------+
+|  Image Management (20%)                             |
+|  ####################                               |
++-----------------------------------------------------+
+|  Installation (15%)                                 |
+|  ###############                                    |
++-----------------------------------------------------+
+|  Networking (15%)                                   |
+|  ###############                                    |
++-----------------------------------------------------+
+|  Security (15%)                                     |
+|  ###############                                    |
++-----------------------------------------------------+
+|  Storage (10%)                                      |
+|  ##########                                         |
++-----------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Förberedelse
 
@@ -5240,7 +5240,7 @@ DCA Exam Overview:
 # - Katacoda scenarios
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Relaterade Certifieringar
 
@@ -5254,23 +5254,23 @@ DCA Exam Overview:
 
 ```
 Certification Path:
-┌─────────────────────────────────────────────────────┐
-│                                                      │
-│  Docker Certified Associate (DCA)                   │
-│              │                                       │
-│              ▼                                       │
-│  ┌─────────────────────────────────────────┐        │
-│  │  Kubernetes Path                         │        │
-│  │  CKA ──> CKAD ──> CKS                   │        │
-│  └─────────────────────────────────────────┘        │
-│              │                                       │
-│              ▼                                       │
-│  Cloud Certifications (AWS/Azure/GCP DevOps)        │
-│                                                      │
-└─────────────────────────────────────────────────────┘
++-----------------------------------------------------+
+|                                                      |
+|  Docker Certified Associate (DCA)                   |
+|              |                                       |
+|              ▼                                       |
+|  +-----------------------------------------+        |
+|  |  Kubernetes Path                         |        |
+|  |  CKA --> CKAD --> CKS                   |        |
+|  +-----------------------------------------+        |
+|              |                                       |
+|              ▼                                       |
+|  Cloud Certifications (AWS/Azure/GCP DevOps)        |
+|                                                      |
++-----------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Study Checklist
 
@@ -5286,7 +5286,7 @@ Certification Path:
 | Logging och monitoring | |
 | Troubleshooting containers | |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

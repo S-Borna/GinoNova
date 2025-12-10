@@ -18,13 +18,13 @@ BLOCK_3_NODES = [
         "prerequisites": ["mlops-data-ingestion"],
         "content": """# ML Training Best Practices
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar ML Training Best Practices?
 
 Best practices for ML-traning sakertstaller reproducerbarhet, skalbarhet och produktionskvalitet for dina modeller.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -35,7 +35,7 @@ Best practices for ML-traning sakertstaller reproducerbarhet, skalbarhet och pro
 | Kvalitet | Validering och testning |
 | Automation | Automatiserade pipelines |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -46,7 +46,7 @@ Best practices for ML-traning sakertstaller reproducerbarhet, skalbarhet och pro
 | Early stopping | Undvik overfitting |
 | Checkpointing | Spara progress |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Reproducibility
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     train()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Training Pipeline Structure
 
@@ -156,7 +156,7 @@ class MLTrainer:
         return self.metrics
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Data Validation Before Training
 
@@ -178,7 +178,7 @@ def validate_training_data(df: pd.DataFrame) -> bool:
     return True
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GPU Training with PyTorch
 
@@ -210,7 +210,7 @@ class PyTorchTrainer:
         return total_loss / len(train_loader)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -221,7 +221,7 @@ class PyTorchTrainer:
 | Slow training | Ej GPU | Aktivera CUDA och mixed precision |
 | Data leakage | Fel split | Anvand temporal split |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -253,7 +253,7 @@ class PyTorchTrainer:
         "prerequisites": ["mlops-training"],
         "content": """# Experiment Tracking
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Experiment Tracking?
 
@@ -274,7 +274,7 @@ Med tracking:
   -> Full reproducibility!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -285,7 +285,7 @@ Med tracking:
 | Samarbete | Dela experiment med teamet |
 | Governance | Dokumentation for compliance |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -296,7 +296,7 @@ Med tracking:
 | Neptune | Enterprise features |
 | Comet ML | Collaborative features |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## MLflow
 
@@ -357,7 +357,7 @@ mlflow.tensorflow.autolog()
 mlflow.xgboost.autolog()
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Weights and Biases
 
@@ -403,7 +403,7 @@ artifact.add_file("model.pkl")
 run.log_artifact(artifact)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Comparison och Analysis
 
@@ -432,7 +432,7 @@ mlflow.register_model(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -443,7 +443,7 @@ mlflow.register_model(
 | Svart att jamfora | Inkonsistent namngivning | Standardisera metrics |
 | Fullt storage | For manga artifacts | Implementera retention policy |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -475,29 +475,29 @@ mlflow.register_model(
         "prerequisites": ["mlops-experiment-tracking"],
         "content": """# Model Registry
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en Model Registry?
 
 En model registry ar en centraliserad plats for att lagra, versionera och hantera ML-modeller genom deras livscykel.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Model Registry                              │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────┐     │
-│  │  fraud_detector                                         │     │
-│  │  ├── Version 1 (Staging)    - RF, acc=0.92             │     │
-│  │  ├── Version 2 (Production) - XGBoost, acc=0.95       │     │
-│  │  ├── Version 3 (None)       - Neural Net, acc=0.94    │     │
-│  │  └── Version 4 (Staging)    - Ensemble, acc=0.97       │     │
-│  └────────────────────────────────────────────────────────┘     │
-│                                                                  │
-│  Stages: None -> Staging -> Production -> Archived              │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      Model Registry                              |
+|                                                                  |
+|  +--------------------------------------------------------+     |
+|  |  fraud_detector                                         |     |
+|  |  +-- Version 1 (Staging)    - RF, acc=0.92             |     |
+|  |  +-- Version 2 (Production) - XGBoost, acc=0.95       |     |
+|  |  +-- Version 3 (None)       - Neural Net, acc=0.94    |     |
+|  |  +-- Version 4 (Staging)    - Ensemble, acc=0.97       |     |
+|  +--------------------------------------------------------+     |
+|                                                                  |
+|  Stages: None -> Staging -> Production -> Archived              |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -508,7 +508,7 @@ En model registry ar en centraliserad plats for att lagra, versionera och hanter
 | Governance | Godkannande och audit trail |
 | Rollback | Snabb aterstallning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -519,7 +519,7 @@ En model registry ar en centraliserad plats for att lagra, versionera och hanter
 | Production | Live i produktion |
 | Archived | Utgatt version |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## MLflow Model Registry
 
@@ -590,7 +590,7 @@ model_v2 = mlflow.pyfunc.load_model("models:/fraud_detector/2")
 predictions = model.predict(X_new)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Model Governance
 
@@ -621,7 +621,7 @@ card = ModelCard(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Model Versioning Strategy
 
@@ -641,7 +641,7 @@ PATCH: Fixes
   - Minor retraining
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -652,7 +652,7 @@ PATCH: Fixes
 | Saknar metadata | Ej dokumenterat | Skapa model cards |
 | Godkannande saknas | Ingen governance | Implementera approval workflow |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -684,28 +684,28 @@ PATCH: Fixes
         "prerequisites": ["mlops-model-registry"],
         "content": """# Hyperparameter Tuning
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Hyperparameter Tuning?
 
 Hyperparameter tuning ar processen att hitta de optimala hyperparametrarna for en ML-modell for att maximera prestanda.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Hyperparameter Search                         │
-│                                                                  │
-│  Grid Search          Random Search         Bayesian Opt        │
-│  ┌─────────┐          ┌─────────┐          ┌─────────┐          │
-│  │ # # # # │          │   #     │          │       # │          │
-│  │ # # # # │          │ #   #   │          │   #     │          │
-│  │ # # # # │          │     # # │          │ #   #   │          │
-│  │ # # # # │          │ #       │          │ # # # # │ <- Focus │
-│  └─────────┘          └─────────┘          └─────────┘           │
-│  Exhaustive           Random samples       Smart sampling       │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    Hyperparameter Search                         |
+|                                                                  |
+|  Grid Search          Random Search         Bayesian Opt        |
+|  +---------+          +---------+          +---------+          |
+|  | # # # # |          |   #     |          |       # |          |
+|  | # # # # |          | #   #   |          |   #     |          |
+|  | # # # # |          |     # # |          | #   #   |          |
+|  | # # # # |          | #       |          | # # # # | <- Focus |
+|  +---------+          +---------+          +---------+           |
+|  Exhaustive           Random samples       Smart sampling       |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -716,7 +716,7 @@ Hyperparameter tuning ar processen att hitta de optimala hyperparametrarna for e
 | Reproducerbarhet | Dokumentera basta params |
 | Effektivitet | Spara tid med smart sokning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -727,7 +727,7 @@ Hyperparameter tuning ar processen att hitta de optimala hyperparametrarna for e
 | Bayesian | Smart, fokuserar pa lovande |
 | Pruning | Avbryt daliga trials tidigt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Optuna
 
@@ -795,7 +795,7 @@ study = optuna.create_study(
 study.optimize(objective_with_pruning, n_trials=100)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ray Tune (Distributed)
 
@@ -838,7 +838,7 @@ analysis = tune.run(
 best_config = analysis.get_best_config(metric="val_accuracy", mode="max")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -849,7 +849,7 @@ best_config = analysis.get_best_config(metric="val_accuracy", mode="max")
 | Suboptimal | For fa trials | Oka antal trials |
 | Ej reproducerbart | Saknar seed | Satt seed |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

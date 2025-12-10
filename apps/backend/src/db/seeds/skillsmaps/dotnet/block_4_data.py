@@ -41,32 +41,32 @@ Entity Framework Core är standard ORM för .NET:
 ## 🧠 EF Core Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  ENTITY FRAMEWORK CORE                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  YOUR C# CODE                                                   │
-│       │                                                          │
-│       ▼                                                          │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                     DbContext                             │   │
-│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐         │   │
-│  │  │ DbSet<User>│  │DbSet<Order>│  │DbSet<Item> │         │   │
-│  │  └────────────┘  └────────────┘  └────────────┘         │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│       │                                                          │
-│       ▼                                                          │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │              Database Provider                            │   │
-│  │   SqlServer │ PostgreSQL │ SQLite │ InMemory             │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│       │                                                          │
-│       ▼                                                          │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                    DATABASE                               │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  ENTITY FRAMEWORK CORE                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  YOUR C# CODE                                                   |
+|       |                                                          |
+|       ▼                                                          |
+|  +----------------------------------------------------------+   |
+|  |                     DbContext                             |   |
+|  |  +------------+  +------------+  +------------+         |   |
+|  |  | DbSet<User>|  |DbSet<Order>|  |DbSet<Item> |         |   |
+|  |  +------------+  +------------+  +------------+         |   |
+|  +----------------------------------------------------------+   |
+|       |                                                          |
+|       ▼                                                          |
+|  +----------------------------------------------------------+   |
+|  |              Database Provider                            |   |
+|  |   SqlServer | PostgreSQL | SQLite | InMemory             |   |
+|  +----------------------------------------------------------+   |
+|       |                                                          |
+|       ▼                                                          |
+|  +----------------------------------------------------------+   |
+|  |                    DATABASE                               |   |
+|  +----------------------------------------------------------+   |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -664,41 +664,41 @@ Bra API design ger:
 ## 🧠 REST Principles
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    REST API DESIGN                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  RESOURCE-BASED URLS                                            │
-│  ────────────────────────────────────────────────────────────   │
-│  ✅ /api/users                  (noun, plural)                  │
-│  ✅ /api/users/123              (specific resource)             │
-│  ✅ /api/users/123/orders       (nested resource)               │
-│  ❌ /api/getUsers               (verb in URL)                   │
-│  ❌ /api/user                   (singular)                      │
-│                                                                  │
-│  HTTP METHODS                                                   │
-│  ────────────────────────────────────────────────────────────   │
-│  GET      /api/users           → List users                     │
-│  GET      /api/users/123       → Get user 123                   │
-│  POST     /api/users           → Create user                    │
-│  PUT      /api/users/123       → Replace user 123               │
-│  PATCH    /api/users/123       → Update user 123 (partial)      │
-│  DELETE   /api/users/123       → Delete user 123                │
-│                                                                  │
-│  STATUS CODES                                                   │
-│  ────────────────────────────────────────────────────────────   │
-│  200 OK              → Success with body                        │
-│  201 Created         → Resource created (POST)                  │
-│  204 No Content      → Success without body (DELETE)            │
-│  400 Bad Request     → Client error (validation)                │
-│  401 Unauthorized    → Not authenticated                        │
-│  403 Forbidden       → Authenticated but not allowed            │
-│  404 Not Found       → Resource doesn't exist                   │
-│  409 Conflict        → Resource conflict                        │
-│  422 Unprocessable   → Validation failed                        │
-│  500 Server Error    → Unexpected error                         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    REST API DESIGN                               |
++-----------------------------------------------------------------+
+|                                                                  |
+|  RESOURCE-BASED URLS                                            |
+|  ------------------------------------------------------------   |
+|  ✅ /api/users                  (noun, plural)                  |
+|  ✅ /api/users/123              (specific resource)             |
+|  ✅ /api/users/123/orders       (nested resource)               |
+|  ❌ /api/getUsers               (verb in URL)                   |
+|  ❌ /api/user                   (singular)                      |
+|                                                                  |
+|  HTTP METHODS                                                   |
+|  ------------------------------------------------------------   |
+|  GET      /api/users           -> List users                     |
+|  GET      /api/users/123       -> Get user 123                   |
+|  POST     /api/users           -> Create user                    |
+|  PUT      /api/users/123       -> Replace user 123               |
+|  PATCH    /api/users/123       -> Update user 123 (partial)      |
+|  DELETE   /api/users/123       -> Delete user 123                |
+|                                                                  |
+|  STATUS CODES                                                   |
+|  ------------------------------------------------------------   |
+|  200 OK              -> Success with body                        |
+|  201 Created         -> Resource created (POST)                  |
+|  204 No Content      -> Success without body (DELETE)            |
+|  400 Bad Request     -> Client error (validation)                |
+|  401 Unauthorized    -> Not authenticated                        |
+|  403 Forbidden       -> Authenticated but not allowed            |
+|  404 Not Found       -> Resource doesn't exist                   |
+|  409 Conflict        -> Resource conflict                        |
+|  422 Unprocessable   -> Validation failed                        |
+|  500 Server Error    -> Unexpected error                         |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---

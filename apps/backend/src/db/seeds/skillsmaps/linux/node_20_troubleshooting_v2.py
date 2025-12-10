@@ -37,26 +37,26 @@ LINUX_NODE_20_TROUBLESHOOTING_V2 = {
                 "concepts": [
                     {
                         "title": "Systematisk Approach",
-                        "explanation": "Följ alltid samma mönster: IDENTIFY → REPRODUCE → ISOLATE → ANALYZE → FIX → VERIFY → DOCUMENT.",
+                        "explanation": "Följ alltid samma mönster: IDENTIFY -> REPRODUCE -> ISOLATE -> ANALYZE -> FIX -> VERIFY -> DOCUMENT.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ TROUBLESHOOTING FLOW                                │
-├─────────────────────────────────────────────────────┤
-│ 1. IDENTIFY    │ Vad är symptomen exakt?           │
-│ 2. REPRODUCE   │ Kan du återskapa problemet?       │
-│ 3. ISOLATE     │ Var är problemet? (CPU/RAM/disk?) │
-│ 4. ANALYZE     │ Varför händer det?                │
-│ 5. FIX         │ Åtgärda rotorsaken               │
-│ 6. VERIFY      │ Bekräfta att det är fixat         │
-│ 7. DOCUMENT    │ Skriv ner för framtiden           │
-├─────────────────────────────────────────────────────┤
-│ FÖRSTA KOMMANDONA VID INCIDENT:                     │
-│ uptime          │ Load average                     │
-│ df -h           │ Diskutrymme                       │
-│ free -h         │ Minne                             │
-│ journalctl -xe  │ Senaste loggar                   │
-│ systemctl status│ Tjänsternas status               │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| TROUBLESHOOTING FLOW                                |
++-----------------------------------------------------+
+| 1. IDENTIFY    | Vad är symptomen exakt?           |
+| 2. REPRODUCE   | Kan du återskapa problemet?       |
+| 3. ISOLATE     | Var är problemet? (CPU/RAM/disk?) |
+| 4. ANALYZE     | Varför händer det?                |
+| 5. FIX         | Åtgärda rotorsaken               |
+| 6. VERIFY      | Bekräfta att det är fixat         |
+| 7. DOCUMENT    | Skriv ner för framtiden           |
++-----------------------------------------------------+
+| FÖRSTA KOMMANDONA VID INCIDENT:                     |
+| uptime          | Load average                     |
+| df -h           | Diskutrymme                       |
+| free -h         | Minne                             |
+| journalctl -xe  | Senaste loggar                   |
+| systemctl status| Tjänsternas status               |
++-----------------------------------------------------+""",
                         "pro_tip": "Dokumentera ALLTID - nästa gång kan samma problem lösas på sekunder!",
                         "common_mistake": "Att börja gissa istället för att samla data systematiskt"
                     },
@@ -64,25 +64,25 @@ LINUX_NODE_20_TROUBLESHOOTING_V2 = {
                         "title": "Vanliga Problem & Lösningar",
                         "explanation": "De flesta incidenter är disk full, out of memory, eller nätverksproblem. Lär dig dessa utantill.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ PROBLEM → DIAGNOS → LÖSNING                         │
-├─────────────────────────────────────────────────────┤
-│ DISK FULL:                                          │
-│ df -h                 │ Hitta fullt filsystem       │
-│ du -sh /* | sort -rh  │ Hitta vad som tar plats     │
-│ journalctl --vacuum-size=500M │ Rensa journalloggar│
-├─────────────────────────────────────────────────────┤
-│ OUT OF MEMORY:                                      │
-│ free -h              │ Kolla RAM/swap               │
-│ dmesg | grep -i oom  │ Hitta OOM-killed processer   │
-│ ps --sort=-%mem      │ Hitta minnesslukare          │
-├─────────────────────────────────────────────────────┤
-│ CAN'T CONNECT:                                      │
-│ systemctl status     │ Kör tjänsten?                │
-│ ss -tlnp | grep :80  │ Lyssnar på porten?           │
-│ ufw status           │ Firewall blockerar?          │
-│ dig domain.com       │ DNS fungerar?                │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| PROBLEM -> DIAGNOS -> LÖSNING                         |
++-----------------------------------------------------+
+| DISK FULL:                                          |
+| df -h                 | Hitta fullt filsystem       |
+| du -sh /* | sort -rh  | Hitta vad som tar plats     |
+| journalctl --vacuum-size=500M | Rensa journalloggar|
++-----------------------------------------------------+
+| OUT OF MEMORY:                                      |
+| free -h              | Kolla RAM/swap               |
+| dmesg | grep -i oom  | Hitta OOM-killed processer   |
+| ps --sort=-%mem      | Hitta minnesslukare          |
++-----------------------------------------------------+
+| CAN'T CONNECT:                                      |
+| systemctl status     | Kör tjänsten?                |
+| ss -tlnp | grep :80  | Lyssnar på porten?           |
+| ufw status           | Firewall blockerar?          |
+| dig domain.com       | DNS fungerar?                |
++-----------------------------------------------------+""",
                         "pro_tip": "'Cannot allocate memory' i loggar = OOM killer har slagit till",
                         "common_mistake": "Att starta om tjänsten utan att förstå varför den dog"
                     },
@@ -90,24 +90,24 @@ LINUX_NODE_20_TROUBLESHOOTING_V2 = {
                         "title": "Kraftfulla Debug-verktyg",
                         "explanation": "strace spårar systemanrop, lsof visar öppna filer, tcpdump fångar nätverkstrafik.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DEBUG TOOLS                                         │
-├─────────────────────────────────────────────────────┤
-│ STRACE - Vad gör processen?                         │
-│ strace -p <PID>              │ Spåra körande process│
-│ strace -f ./script.sh        │ Spåra inkl. barn     │
-│ strace -e open,read ./app    │ Bara vissa anrop     │
-├─────────────────────────────────────────────────────┤
-│ LSOF - Öppna filer & sockets                        │
-│ lsof -p <PID>      │ Allt processen har öppet      │
-│ lsof -i :80        │ Vem använder port 80?         │
-│ lsof +L1           │ Raderade men öppna filer      │
-├─────────────────────────────────────────────────────┤
-│ TCPDUMP - Nätverkstrafik                            │
-│ tcpdump -i eth0 port 443                            │
-│ tcpdump -i any host 10.0.0.5                        │
-│ tcpdump -w capture.pcap      │ Spara till fil      │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DEBUG TOOLS                                         |
++-----------------------------------------------------+
+| STRACE - Vad gör processen?                         |
+| strace -p <PID>              | Spåra körande process|
+| strace -f ./script.sh        | Spåra inkl. barn     |
+| strace -e open,read ./app    | Bara vissa anrop     |
++-----------------------------------------------------+
+| LSOF - Öppna filer & sockets                        |
+| lsof -p <PID>      | Allt processen har öppet      |
+| lsof -i :80        | Vem använder port 80?         |
+| lsof +L1           | Raderade men öppna filer      |
++-----------------------------------------------------+
+| TCPDUMP - Nätverkstrafik                            |
+| tcpdump -i eth0 port 443                            |
+| tcpdump -i any host 10.0.0.5                        |
+| tcpdump -w capture.pcap      | Spara till fil      |
++-----------------------------------------------------+""",
                         "pro_tip": "lsof +L1 hittar raderade filer som fortfarande tar diskutrymme!",
                         "common_mistake": "Att inte använda -f med strace när processen forkar"
                     }
@@ -215,11 +215,11 @@ LINUX_NODE_20_TROUBLESHOOTING_V2 = {
 
 echo "=== 1. SERVICE STATUS ==="
 systemctl status nginx
-# Om inactive/failed → journalctl -u nginx för detaljer
+# Om inactive/failed -> journalctl -u nginx för detaljer
 
 echo "=== 2. PORT LISTENING ==="
 ss -tlnp | grep -E ':80|:443'
-# Om inget → nginx lyssnar inte, kolla config
+# Om inget -> nginx lyssnar inte, kolla config
 
 echo "=== 3. RECENT LOGS ==="
 journalctl -u nginx -n 50 --no-pager
@@ -227,15 +227,15 @@ journalctl -u nginx -n 50 --no-pager
 
 echo "=== 4. DISK SPACE ==="
 df -h /var/log /var/www
-# Om fullt → nginx kan inte skriva logs
+# Om fullt -> nginx kan inte skriva logs
 
 echo "=== 5. FIREWALL ==="
 sudo ufw status | grep -E '80|443'
-# Om inte ALLOW → öppna porten
+# Om inte ALLOW -> öppna porten
 
 echo "=== 6. DNS CHECK ==="
 dig +short mysite.com
-# Om fel IP → DNS-problem
+# Om fel IP -> DNS-problem
 
 echo "=== 7. LOCAL TEST ==="
 curl -I localhost
@@ -243,14 +243,14 @@ curl -I localhost
 
 echo "=== 8. EXTERNAL TEST ==="
 curl -I http://mysite.com
-# Om timeout men lokal funkar → firewall/routing
+# Om timeout men lokal funkar -> firewall/routing
 
 # VANLIGA LÖSNINGAR:
 # Service död:     sudo systemctl restart nginx
-# Port occupied:   lsof -i :80 → döda processen
+# Port occupied:   lsof -i :80 -> döda processen
 # Disk full:       journalctl --vacuum-size=500M
 # Firewall:        sudo ufw allow 80
-# Config error:    nginx -t → fixa config
+# Config error:    nginx -t -> fixa config
 
 echo "=== 9. RESTART & VERIFY ==="
 sudo nginx -t                    # Testa config

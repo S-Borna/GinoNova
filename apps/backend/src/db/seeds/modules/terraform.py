@@ -27,7 +27,7 @@ MODULE = {
             "content": """
 # Introduction to Terraform
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -40,18 +40,18 @@ MODULE = {
 
 Terraform loser allt detta genom Infrastructure as Code. Du beskriver onskat tillstand i kod, Terraform gor verkligheten. Deklarativt, versionshanterat, replikerbart.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   .tf fil   │────▶│   terraform │────▶│    Cloud    │
-│   (onskat)  │     │   plan/apply│     │   (verklig) │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                   │                   │
++-------------+     +-------------+     +-------------+
+|   .tf fil   |----▶|   terraform |----▶|    Cloud    |
+|   (onskat)  |     |   plan/apply|     |   (verklig) |
++-------------+     +-------------+     +-------------+
+       |                   |                   |
        ▼                   ▼                   ▼
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ Git version │     │ State file  │     │ EC2, S3,    │
-│ control     │     │ (mapping)   │     │ VPC, RDS... │
-└─────────────┘     └─────────────┘     └─────────────┘
++-------------+     +-------------+     +-------------+
+| Git version |     | State file  |     | EC2, S3,    |
+| control     |     | (mapping)   |     | VPC, RDS... |
++-------------+     +-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -183,7 +183,7 @@ Providers ecosystem | Limited             | SDKs
             "content": """
 # HCL Syntax & Basics
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -196,20 +196,20 @@ Providers ecosystem | Limited             | SDKs
 
 HCL ar Terraforms sprak - designat for infrastruktur, lasbart for manniskor och maskiner. Forsta syntax = skriv effektiv, underhallbar Terraform-kod.
 
-┌─────────────────────────────────────────────────────────┐
-│                    HCL BUILDING BLOCKS                   │
-├─────────────────────────────────────────────────────────┤
-│  terraform { }    - Global konfiguration                │
-│  provider "x" { } - Plugin-konfiguration                │
-│  resource "x" { } - Skapar infrastruktur                │
-│  variable "x" { } - Input-varden                        │
-│  output "x" { }   - Exporterar varden                   │
-│  locals { }       - Lokala varden                       │
-│  data "x" { }     - Laser extern data                   │
-│  module "x" { }   - Ateranvander kod                    │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    HCL BUILDING BLOCKS                   |
++---------------------------------------------------------+
+|  terraform { }    - Global konfiguration                |
+|  provider "x" { } - Plugin-konfiguration                |
+|  resource "x" { } - Skapar infrastruktur                |
+|  variable "x" { } - Input-varden                        |
+|  output "x" { }   - Exporterar varden                   |
+|  locals { }       - Lokala varden                       |
+|  data "x" { }     - Laser extern data                   |
+|  module "x" { }   - Ateranvander kod                    |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -476,7 +476,7 @@ output "instance_dns" {
             "content": """
 # Providers & Resources
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -489,18 +489,18 @@ output "instance_dns" {
 
 Providers ar Terraforms plugins - de oversatter HCL till API-anrop. AWS, Azure, GCP, Kubernetes, GitHub - allt via providers. Resources ar objekten du skapar via providers.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   .tf fil   │────▶│  Provider   │────▶│  Cloud API  │
-│  resource   │     │  (plugin)   │     │  (AWS etc)  │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                   │                   │
++-------------+     +-------------+     +-------------+
+|   .tf fil   |----▶|  Provider   |----▶|  Cloud API  |
+|  resource   |     |  (plugin)   |     |  (AWS etc)  |
++-------------+     +-------------+     +-------------+
+       |                   |                   |
        ▼                   ▼                   ▼
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ aws_instance│     │ hashicorp/  │     │  EC2 API    │
-│ aws_s3...   │     │   aws       │     │  S3 API     │
-└─────────────┘     └─────────────┘     └─────────────┘
++-------------+     +-------------+     +-------------+
+| aws_instance|     | hashicorp/  |     |  EC2 API    |
+| aws_s3...   |     |   aws       |     |  S3 API     |
++-------------+     +-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -793,7 +793,7 @@ resource "aws_instance" "web" {
             "content": """
 # State Management
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -806,21 +806,21 @@ resource "aws_instance" "web" {
 
 State ar Terraforms hjarna - den mappar din kod till verklig infrastruktur. Utan state vet Terraform inte vad som finns. Remote state med locking ar obligatoriskt for team.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   .tf kod   │────▶│  State fil  │◀───▶│   Verklig   │
-│  (onskat)   │     │  (mapping)  │     │   infra     │
-└─────────────┘     └─────────────┘     └─────────────┘
-                          │
++-------------+     +-------------+     +-------------+
+|   .tf kod   |----▶|  State fil  |◀---▶|   Verklig   |
+|  (onskat)   |     |  (mapping)  |     |   infra     |
++-------------+     +-------------+     +-------------+
+                          |
                           ▼
-              ┌───────────────────────┐
-              │  terraform.tfstate    │
-              │  - resource IDs       │
-              │  - attributes         │
-              │  - dependencies       │
-              │  - metadata           │
-              └───────────────────────┘
+              +-----------------------+
+              |  terraform.tfstate    |
+              |  - resource IDs       |
+              |  - attributes         |
+              |  - dependencies       |
+              |  - metadata           |
+              +-----------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -1057,7 +1057,7 @@ resource "aws_instance" "web" {
             "content": """
 # Variables & Outputs
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1070,21 +1070,21 @@ resource "aws_instance" "web" {
 
 Variables ar input, outputs ar export. Med dem blir samma Terraform-kod anvandbar i dev, staging och prod. Secrets hanteras sakert via sensitive-flaggan.
 
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Variables  │────▶│  Terraform  │────▶│   Outputs   │
-│   (input)   │     │    kod      │     │  (export)   │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                                       │
++-------------+     +-------------+     +-------------+
+|  Variables  |----▶|  Terraform  |----▶|   Outputs   |
+|   (input)   |     |    kod      |     |  (export)   |
++-------------+     +-------------+     +-------------+
+       |                                       |
        ▼                                       ▼
-┌─────────────┐                         ┌─────────────┐
-│ -var        │                         │ terraform   │
-│ -var-file   │                         │ output      │
-│ TF_VAR_     │                         │ (query)     │
-│ terraform.  │                         │             │
-│   tfvars    │                         │             │
-└─────────────┘                         └─────────────┘
++-------------+                         +-------------+
+| -var        |                         | terraform   |
+| -var-file   |                         | output      |
+| TF_VAR_     |                         | (query)     |
+| terraform.  |                         |             |
+|   tfvars    |                         |             |
++-------------+                         +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -1333,22 +1333,22 @@ resource "aws_instance" "app" {
 
 ```bash
 # Projektstruktur
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── terraform.tfvars          # Gemensamma defaults
-├── dev.tfvars                # Dev-miljö
-├── staging.tfvars            # Staging-miljö
-└── prod.tfvars               # Prod-miljö
++-- main.tf
++-- variables.tf
++-- outputs.tf
++-- terraform.tfvars          # Gemensamma defaults
++-- dev.tfvars                # Dev-miljö
++-- staging.tfvars            # Staging-miljö
++-- prod.tfvars               # Prod-miljö
 
 # Kör för specifik miljö
 terraform plan -var-file="prod.tfvars"
 terraform apply -var-file="prod.tfvars"
 
 # Eller använd workspaces + auto.tfvars
-├── terraform.tfvars
-├── dev.auto.tfvars           # Laddas i dev workspace
-└── prod.auto.tfvars          # Laddas i prod workspace
++-- terraform.tfvars
++-- dev.auto.tfvars           # Laddas i dev workspace
++-- prod.auto.tfvars          # Laddas i prod workspace
 ```
 
 ---
@@ -1379,7 +1379,7 @@ terraform apply -var-file="prod.tfvars"
             "content": """
 # Resource Dependencies
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1392,21 +1392,21 @@ terraform apply -var-file="prod.tfvars"
 
 Infrastruktur har beroenden - EC2 behover VPC, Lambda behover IAM Role. Terraform bygger automatiskt en dependency graph och skapar i ratt ordning. Men ibland behover du explicit kontroll.
 
-┌─────────────┐
-│     VPC     │
-└──────┬──────┘
-       │
++-------------+
+|     VPC     |
++------+------+
+       |
        ▼
-┌─────────────┐
-│   Subnet    │
-└──────┬──────┘
-       │
++-------------+
+|   Subnet    |
++------+------+
+       |
        ▼
-┌─────────────┐     ┌─────────────┐
-│  Instance   │────▶│ Sec Group   │
-└─────────────┘     └─────────────┘
++-------------+     +-------------+
+|  Instance   |----▶| Sec Group   |
++-------------+     +-------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Terraform analyserar beroenden:
 
@@ -1716,7 +1716,7 @@ resource "aws_instance" "web" {
             "content": """
 # Terraform Modules
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1729,19 +1729,19 @@ resource "aws_instance" "web" {
 
 Modules ar Terraforms funktion for kod-atervanvandning. Skapa en VPC-modul en gang, anvand den i alla projekt. Community modules sparar hundratals timmar.
 
-┌─────────────────────────────────────────────────────────┐
-│                  MODULE ECOSYSTEM                        │
-├─────────────────────────────────────────────────────────┤
-│  Root Module          Child Modules         Registry    │
-│  ┌──────────┐         ┌──────────┐         ┌─────────┐ │
-│  │ main.tf  │ ──────▶ │ modules/ │ ──────▶ │ Public  │ │
-│  │ (caller) │         │  vpc/    │         │ modules │ │
-│  └──────────┘         │  ec2/    │         └─────────┘ │
-│                       │  rds/    │                      │
-│                       └──────────┘                      │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                  MODULE ECOSYSTEM                        |
++---------------------------------------------------------+
+|  Root Module          Child Modules         Registry    |
+|  +----------+         +----------+         +---------+ |
+|  | main.tf  | ------▶ | modules/ | ------▶ | Public  | |
+|  | (caller) |         |  vpc/    |         | modules | |
+|  +----------+         |  ec2/    |         +---------+ |
+|                       |  rds/    |                      |
+|                       +----------+                      |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -1750,22 +1750,22 @@ Modules ar Terraforms funktion for kod-atervanvandning. Skapa en VPC-modul en ga
 ```bash
 # Standard module-layout
 modules/
-└── vpc/
-    ├── main.tf              # Resurser
-    ├── variables.tf         # Input variables
-    ├── outputs.tf           # Output values
-    ├── versions.tf          # Provider requirements
-    └── README.md            # Dokumentation
++-- vpc/
+    +-- main.tf              # Resurser
+    +-- variables.tf         # Input variables
+    +-- outputs.tf           # Output values
+    +-- versions.tf          # Provider requirements
+    +-- README.md            # Dokumentation
 
 # Användning
 .
-├── main.tf                  # Anropar modules
-├── variables.tf
-├── outputs.tf
-└── modules/
-    ├── vpc/
-    ├── ec2/
-    └── rds/
++-- main.tf                  # Anropar modules
++-- variables.tf
++-- outputs.tf
++-- modules/
+    +-- vpc/
+    +-- ec2/
+    +-- rds/
 ```
 
 ---
@@ -2078,7 +2078,7 @@ module "rds" {
             "content": """
 # Count & For Each
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2091,19 +2091,19 @@ module "rds" {
 
 count och for_each skapar multipla resurser dynamiskt. Istallet for 10 resource-blocks, ett block med count = 10. for_each ar generellt battre - stabilare vid andringar.
 
-┌─────────────────────────────────────────────────────────┐
-│              COUNT vs FOR_EACH                           │
-├─────────────────────────────────────────────────────────┤
-│  count = 3                    for_each = toset([...])   │
-│  ┌───────────────────┐        ┌───────────────────┐     │
-│  │ resource[0]       │        │ resource["a"]     │     │
-│  │ resource[1]       │        │ resource["b"]     │     │
-│  │ resource[2]       │        │ resource["c"]     │     │
-│  └───────────────────┘        └───────────────────┘     │
-│  Index-baserat (fragilt)      Nyckel-baserat (stabilt)  │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              COUNT vs FOR_EACH                           |
++---------------------------------------------------------+
+|  count = 3                    for_each = toset([...])   |
+|  +-------------------+        +-------------------+     |
+|  | resource[0]       |        | resource["a"]     |     |
+|  | resource[1]       |        | resource["b"]     |     |
+|  | resource[2]       |        | resource["c"]     |     |
+|  +-------------------+        +-------------------+     |
+|  Index-baserat (fragilt)      Nyckel-baserat (stabilt)  |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -2322,7 +2322,7 @@ resource "aws_instance" "web" {
   # ...
 }
 # Resurser: [0], [1], [2]
-# Om du tar bort [1] → [2] blir [1] → onödig re-create
+# Om du tar bort [1] -> [2] blir [1] -> onödig re-create
 
 # FOR_EACH: Stabilt vid ändringar
 resource "aws_instance" "web" {
@@ -2330,7 +2330,7 @@ resource "aws_instance" "web" {
   # ...
 }
 # Resurser: ["web1"], ["web2"], ["web3"]
-# Ta bort "web2" → bara den tas bort
+# Ta bort "web2" -> bara den tas bort
 
 # REKOMMENDATION:
 # - count: För identiska resurser, conditional create
@@ -2405,7 +2405,7 @@ resource "aws_security_group" "web" {
             "content": """
 # Data Sources
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2418,17 +2418,17 @@ resource "aws_security_group" "web" {
 
 Data sources laser existerande infrastruktur och extern data. Du hardkodar inte AMI IDs - du laser senaste Ubuntu automatiskt. Du hardkodar inte AZs - du laser tillgangliga dynamiskt.
 
-┌─────────────────────────────────────────────────────────┐
-│                   DATA SOURCES                           │
-├─────────────────────────────────────────────────────────┤
-│  data "aws_ami" { }       → Senaste Ubuntu AMI         │
-│  data "aws_vpc" { }       → Existerande VPC            │
-│  data "aws_caller_id" { } → Account ID, ARN            │
-│  data "aws_region" { }    → Current region             │
-│  data "terraform_remote_state" { } → Annat projekt     │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                   DATA SOURCES                           |
++---------------------------------------------------------+
+|  data "aws_ami" { }       -> Senaste Ubuntu AMI         |
+|  data "aws_vpc" { }       -> Existerande VPC            |
+|  data "aws_caller_id" { } -> Account ID, ARN            |
+|  data "aws_region" { }    -> Current region             |
+|  data "terraform_remote_state" { } -> Annat projekt     |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Account information
 
 Data sources läser utan att skapa.
@@ -2752,7 +2752,7 @@ resource "aws_instance" "app" {
             "content": """
 # Functions & Expressions
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2765,20 +2765,20 @@ resource "aws_instance" "app" {
 
 Terraform har 100+ inbyggda funktioner for strangar, listor, maps, filer, natverk. Istallet for att hardkoda cidrsubnet(vpc_cidr, 8, 1), berakna den dynamiskt.
 
-┌─────────────────────────────────────────────────────────┐
-│                  FUNCTION CATEGORIES                     │
-├─────────────────────────────────────────────────────────┤
-│  String   │ upper, lower, format, split, join, regex   │
-│  Numeric  │ min, max, ceil, floor, abs, parseint       │
-│  List     │ length, element, concat, flatten, sort     │
-│  Map      │ lookup, keys, values, merge, zipmap        │
-│  File     │ file, templatefile, filebase64             │
-│  Network  │ cidrsubnet, cidrhost, cidrnetmask          │
-│  Encoding │ base64encode, jsonencode, yamlencode       │
-│  Hash     │ md5, sha256, uuid                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                  FUNCTION CATEGORIES                     |
++---------------------------------------------------------+
+|  String   | upper, lower, format, split, join, regex   |
+|  Numeric  | min, max, ceil, floor, abs, parseint       |
+|  List     | length, element, concat, flatten, sort     |
+|  Map      | lookup, keys, values, merge, zipmap        |
+|  File     | file, templatefile, filebase64             |
+|  Network  | cidrsubnet, cidrhost, cidrnetmask          |
+|  Encoding | base64encode, jsonencode, yamlencode       |
+|  Hash     | md5, sha256, uuid                          |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -3108,7 +3108,7 @@ locals {
             "content": """
 # Terraform Workspaces
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3121,21 +3121,21 @@ locals {
 
 Workspaces ger separata state-filer for samma kod. Dev, staging, prod - samma Terraform, olika infrastruktur. Alternativet ar katalogstruktur med separata mappar.
 
-┌─────────────────────────────────────────────────────────┐
-│              WORKSPACE vs DIRECTORY                      │
-├─────────────────────────────────────────────────────────┤
-│  Workspaces:              Directory Structure:          │
-│  ┌──────────────┐         ┌──────────────┐             │
-│  │ Same .tf     │         │ environments/│             │
-│  │ files        │         │   dev/       │             │
-│  │              │         │   staging/   │             │
-│  │ Different    │         │   prod/      │             │
-│  │ state files  │         │ modules/     │             │
-│  └──────────────┘         └──────────────┘             │
-│  Enkelt, samma kod        Explicit, full kontroll      │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              WORKSPACE vs DIRECTORY                      |
++---------------------------------------------------------+
+|  Workspaces:              Directory Structure:          |
+|  +--------------+         +--------------+             |
+|  | Same .tf     |         | environments/|             |
+|  | files        |         |   dev/       |             |
+|  |              |         |   staging/   |             |
+|  | Different    |         |   prod/      |             |
+|  | state files  |         | modules/     |             |
+|  +--------------+         +--------------+             |
+|  Enkelt, samma kod        Explicit, full kontroll      |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -3227,29 +3227,29 @@ terraform {
 ```bash
 # Rekommenderas för större projekt
 .
-├── modules/                    # Återanvändbara modules
-│   ├── vpc/
-│   ├── ec2/
-│   └── rds/
-│
-├── environments/
-│   ├── dev/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── terraform.tfvars
-│   │   └── backend.tf
-│   │
-│   ├── staging/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── terraform.tfvars
-│   │   └── backend.tf
-│   │
-│   └── prod/
-│       ├── main.tf
-│       ├── variables.tf
-│       ├── terraform.tfvars
-│       └── backend.tf
++-- modules/                    # Återanvändbara modules
+|   +-- vpc/
+|   +-- ec2/
+|   +-- rds/
+|
++-- environments/
+|   +-- dev/
+|   |   +-- main.tf
+|   |   +-- variables.tf
+|   |   +-- terraform.tfvars
+|   |   +-- backend.tf
+|   |
+|   +-- staging/
+|   |   +-- main.tf
+|   |   +-- variables.tf
+|   |   +-- terraform.tfvars
+|   |   +-- backend.tf
+|   |
+|   +-- prod/
+|       +-- main.tf
+|       +-- variables.tf
+|       +-- terraform.tfvars
+|       +-- backend.tf
 ```
 
 ```hcl
@@ -3437,7 +3437,7 @@ remote_state {
             "content": """
 # Import & Migration
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3450,17 +3450,17 @@ remote_state {
 
 Import tar in existerande infrastruktur i Terraform state. State manipulation (mv, rm) mojliggor refaktorering utan att destroya resurser. Kritiskt for migrering till IaC.
 
-┌─────────────────────────────────────────────────────────┐
-│                   IMPORT WORKFLOW                        │
-├─────────────────────────────────────────────────────────┤
-│  1. Skriv resource block i .tf          (tom kropp)    │
-│  2. terraform import <address> <id>     (populerar)    │
-│  3. terraform plan                      (diff)         │
-│  4. Justera .tf for att matcha          (no changes)   │
-│  5. terraform apply                     (verify)       │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                   IMPORT WORKFLOW                        |
++---------------------------------------------------------+
+|  1. Skriv resource block i .tf          (tom kropp)    |
+|  2. terraform import <address> <id>     (populerar)    |
+|  3. terraform plan                      (diff)         |
+|  4. Justera .tf for att matcha          (no changes)   |
+|  5. terraform apply                     (verify)       |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -3789,7 +3789,7 @@ terraform workspace delete import-test
             "content": """
 # Terraform in CI/CD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3802,18 +3802,18 @@ terraform workspace delete import-test
 
 CI/CD for Terraform ger kontroll, sparbarhet och automation. Plan i PR, Apply efter merge. Allt loggas, allt granskas, allt ar repeterbart.
 
-┌─────────────────────────────────────────────────────────┐
-│               TERRAFORM CI/CD PIPELINE                   │
-├─────────────────────────────────────────────────────────┤
-│  PR Created ─▶ fmt ─▶ validate ─▶ plan ─▶ Comment      │
-│                                            │            │
-│  PR Merged ─▶ plan ─▶ apply ─▶ notify                  │
-│                         │                               │
-│                    Protected by                         │
-│                    approval gates                       │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|               TERRAFORM CI/CD PIPELINE                   |
++---------------------------------------------------------+
+|  PR Created -▶ fmt -▶ validate -▶ plan -▶ Comment      |
+|                                            |            |
+|  PR Merged -▶ plan -▶ apply -▶ notify                  |
+|                         |                               |
+|                    Protected by                         |
+|                    approval gates                       |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -4167,7 +4167,7 @@ terraform {
             "content": """
 # Security Best Practices
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4180,17 +4180,17 @@ terraform {
 
 Terraform hanterar kritisk infrastruktur - IAM, natverk, databaser. Sakerhet maste byggas in fran start, inte laggas till efterat. Defense in depth med kryptering, least privilege och policy as code.
 
-┌─────────────────────────────────────────────────────────┐
-│               SECURITY LAYERS                            │
-├─────────────────────────────────────────────────────────┤
-│  1. State Security    │ Krypterat, begransad access    │
-│  2. Secrets Mgmt      │ Aldrig i kod, externa stores   │
-│  3. Least Privilege   │ Minimal IAM for varje resurs   │
-│  4. Policy as Code    │ Sentinel, OPA, tfsec           │
-│  5. Audit Logging     │ CloudTrail, state versioning   │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|               SECURITY LAYERS                            |
++---------------------------------------------------------+
+|  1. State Security    | Krypterat, begransad access    |
+|  2. Secrets Mgmt      | Aldrig i kod, externa stores   |
+|  3. Least Privilege   | Minimal IAM for varje resurs   |
+|  4. Policy as Code    | Sentinel, OPA, tfsec           |
+|  5. Audit Logging     | CloudTrail, state versioning   |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -4544,7 +4544,7 @@ resource "aws_flow_log" "main" {
             "content": """
 # Testing Terraform
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4557,21 +4557,21 @@ resource "aws_flow_log" "main" {
 
 Tester fangar problem innan deploy. Static analysis ar gratis och snabbt. Integration tests verifierar mot verklig infrastruktur. Policy tests sakerstraller compliance.
 
-┌─────────────────────────────────────────────────────────┐
-│               TERRAFORM TEST PYRAMID                     │
-├─────────────────────────────────────────────────────────┤
-│                    ┌───────────┐                        │
-│                    │ E2E Tests │  Langsammast           │
-│                   ┌┴───────────┴┐                       │
-│                   │Integration  │  Verkliga resurser    │
-│                  ┌┴─────────────┴┐                      │
-│                  │  Unit Tests   │  Module-logik        │
-│                 ┌┴───────────────┴┐                     │
-│                 │  Static Analysis │  Snabbast          │
-│                 └─────────────────┘                     │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|               TERRAFORM TEST PYRAMID                     |
++---------------------------------------------------------+
+|                    +-----------+                        |
+|                    | E2E Tests |  Langsammast           |
+|                   ++-----------++                       |
+|                   |Integration  |  Verkliga resurser    |
+|                  ++-------------++                      |
+|                  |  Unit Tests   |  Module-logik        |
+|                 ++---------------++                     |
+|                 |  Static Analysis |  Snabbast          |
+|                 +-----------------+                     |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -4879,7 +4879,7 @@ run "contract_validation" {
             "content": '''
 # Remote State & Backends
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4892,24 +4892,24 @@ run "contract_validation" {
 
 Remote backends (S3, GCS, Azure Blob) loser alla dessa problem. State sparas centralt, krypterat, med locking och versioning. Obligatoriskt for team och CI/CD.
 
-┌─────────────────────────────────────────────────────────┐
-│              REMOTE STATE ARCHITECTURE                   │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  Developer A ──┐                                        │
-│                │      ┌──────────┐      ┌───────────┐  │
-│  Developer B ──┼────▶ │ S3 State │ ────▶│ DynamoDB  │  │
-│                │      │ (central)│      │  (lock)   │  │
-│  CI/CD ────────┘      └──────────┘      └───────────┘  │
-│                              │                          │
-│                              ▼                          │
-│                       ┌──────────┐                      │
-│                       │   KMS    │                      │
-│                       │(encrypt) │                      │
-│                       └──────────┘                      │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              REMOTE STATE ARCHITECTURE                   |
++---------------------------------------------------------+
+|                                                          |
+|  Developer A --+                                        |
+|                |      +----------+      +-----------+  |
+|  Developer B --+----▶ | S3 State | ----▶| DynamoDB  |  |
+|                |      | (central)|      |  (lock)   |  |
+|  CI/CD --------+      +----------+      +-----------+  |
+|                              |                          |
+|                              ▼                          |
+|                       +----------+                      |
+|                       |   KMS    |                      |
+|                       |(encrypt) |                      |
+|                       +----------+                      |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -5188,7 +5188,7 @@ aws dynamodb get-item \
             "content": '''
 # Terraform Cloud & Enterprise
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5202,20 +5202,20 @@ aws dynamodb get-item \
 
 Terraform Cloud ar HashiCorps managed platform - gratis for sma team. Remote state, execution, VCS integration och policy enforcement i en tjanst. Enterprise lagger till SSO, audit logging och mer.
 
-┌─────────────────────────────────────────────────────────┐
-│              TERRAFORM CLOUD FEATURES                    │
-├─────────────────────────────────────────────────────────┤
-│  Free Tier          │ Plus/Enterprise                  │
-│  ─────────────────  │ ────────────────────────────────  │
-│  Remote state       │ SSO/SAML                         │
-│  Remote runs        │ Audit logging                    │
-│  VCS integration    │ Private networking               │
-│  5 users            │ Unlimited users                  │
-│  State versioning   │ Custom agents                    │
-│  Cost estimation    │ Sentinel policies                │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              TERRAFORM CLOUD FEATURES                    |
++---------------------------------------------------------+
+|  Free Tier          | Plus/Enterprise                  |
+|  -----------------  | --------------------------------  |
+|  Remote state       | SSO/SAML                         |
+|  Remote runs        | Audit logging                    |
+|  VCS integration    | Private networking               |
+|  5 users            | Unlimited users                  |
+|  State versioning   | Custom agents                    |
+|  Cost estimation    | Sentinel policies                |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -5335,13 +5335,13 @@ main = rule {
 ```bash
 # Policy set struktur
 policies/
-├── sentinel.hcl            # Policy set config
-├── cost-estimation.sentinel
-├── required-tags.sentinel
-└── test/
-    └── required-tags/
-        ├── pass.hcl
-        └── fail.hcl
++-- sentinel.hcl            # Policy set config
++-- cost-estimation.sentinel
++-- required-tags.sentinel
++-- test/
+    +-- required-tags/
+        +-- pass.hcl
+        +-- fail.hcl
 ```
 
 ---
@@ -5356,7 +5356,7 @@ policies/
 # Run Triggers: Add staging workspace
 
 # När staging workspace apply:ar
-# → production workspace triggas automatiskt
+# -> production workspace triggas automatiskt
 ```
 
 ```bash
@@ -5508,7 +5508,7 @@ resource "tfe_team_access" "dev_team" {
             "content": '''
 # Advanced Module Patterns
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5521,17 +5521,17 @@ resource "tfe_team_access" "dev_team" {
 
 Avancerade module patterns tar atervanvandning till nasta niva. Composition kombinerar sma moduler. Factory pattern skapar manga resurser. Wrapper patterns forenklar komplexa interfaces.
 
-┌─────────────────────────────────────────────────────────┐
-│              ADVANCED MODULE PATTERNS                    │
-├─────────────────────────────────────────────────────────┤
-│  Composition    │ Sma moduler som kombineras            │
-│  Factory        │ for_each skapar manga instanser       │
-│  Wrapper        │ Forenklar komplex modul-interface     │
-│  Opinionated    │ Defaults for common use cases         │
-│  Configuration  │ Flexibel via complex types            │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              ADVANCED MODULE PATTERNS                    |
++---------------------------------------------------------+
+|  Composition    | Sma moduler som kombineras            |
+|  Factory        | for_each skapar manga instanser       |
+|  Wrapper        | Forenklar komplex modul-interface     |
+|  Opinionated    | Defaults for common use cases         |
+|  Configuration  | Flexibel via complex types            |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -5906,7 +5906,7 @@ variable "config" {
             "content": '''
 # Multi-Cloud & Provider Patterns
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5919,23 +5919,23 @@ variable "config" {
 
 Terraform hanterar alla clouds med samma workflow. En state-fil kan innehalla resurser fran AWS, Azure och GCP. Samma HCL-syntax, samma plan/apply process.
 
-┌─────────────────────────────────────────────────────────┐
-│              MULTI-CLOUD ARCHITECTURE                    │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │               Terraform                          │    │
-│  └──────────┬──────────┬──────────┬───────────────┘    │
-│             │          │          │                     │
-│             ▼          ▼          ▼                     │
-│       ┌─────────┐ ┌─────────┐ ┌─────────┐              │
-│       │   AWS   │ │  Azure  │ │   GCP   │              │
-│       │provider │ │provider │ │provider │              │
-│       └─────────┘ └─────────┘ └─────────┘              │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|              MULTI-CLOUD ARCHITECTURE                    |
++---------------------------------------------------------+
+|                                                          |
+|  +-------------------------------------------------+    |
+|  |               Terraform                          |    |
+|  +----------+----------+----------+---------------+    |
+|             |          |          |                     |
+|             ▼          ▼          ▼                     |
+|       +---------+ +---------+ +---------+              |
+|       |   AWS   | |  Azure  | |   GCP   |              |
+|       |provider | |provider | |provider |              |
+|       +---------+ +---------+ +---------+              |
+|                                                          |
++---------------------------------------------------------+
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
@@ -6320,7 +6320,7 @@ module "us_vpc" {
             "content": '''
 # Drift Detection & Reconciliation
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------
 ## Varfor viktigt for DevOps?
 
 | Problem utan drift detection | Konsekvens |
@@ -6331,28 +6331,28 @@ module "us_vpc" {
 | Ingen audit trail for andringar | Omojligt att spara vem/vad/nar |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DRIFT LIVSCYKEL                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐     │
-│   │  Kod    │───>│  State  │───>│  Cloud  │───>│  Drift  │     │
-│   │ (.tf)   │    │ (.state)│    │(resurser)│   │(avvikelse)│   │
-│   └─────────┘    └─────────┘    └─────────┘    └─────────┘     │
-│        │                                             │          │
-│        └──────────── terraform plan ─────────────────┘          │
-│                           │                                     │
-│                     ┌─────┴─────┐                               │
-│                     │  Drift?   │                               │
-│                     └─────┬─────┘                               │
-│               ┌───────────┼───────────┐                         │
-│               v           v           v                         │
-│          ┌────────┐  ┌────────┐  ┌────────┐                     │
-│          │ Accept │  │ Reject │  │ Import │                     │
-│          │(refresh)│ │(apply) │  │(import)│                     │
-│          └────────┘  └────────┘  └────────┘                     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DRIFT LIVSCYKEL                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|   +---------+    +---------+    +---------+    +---------+     |
+|   |  Kod    |--->|  State  |--->|  Cloud  |--->|  Drift  |     |
+|   | (.tf)   |    | (.state)|    |(resurser)|   |(avvikelse)|   |
+|   +---------+    +---------+    +---------+    +---------+     |
+|        |                                             |          |
+|        +------------ terraform plan -----------------+          |
+|                           |                                     |
+|                     +-----+-----+                               |
+|                     |  Drift?   |                               |
+|                     +-----+-----+                               |
+|               +-----------+-----------+                         |
+|               v           v           v                         |
+|          +--------+  +--------+  +--------+                     |
+|          | Accept |  | Reject |  | Import |                     |
+|          |(refresh)| |(apply) |  |(import)|                     |
+|          +--------+  +--------+  +--------+                     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ---

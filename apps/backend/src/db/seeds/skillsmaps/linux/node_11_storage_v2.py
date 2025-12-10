@@ -39,20 +39,20 @@ LINUX_NODE_11_STORAGE_V2 = {
                         "title": "df - Disk Free",
                         "explanation": "df visar tillgängligt utrymme per filsystem. -h för human-readable. Varning vid 80%+, kritiskt vid 90%+.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DF OUTPUT EXEMPEL                                   │
-├─────────────────────────────────────────────────────┤
-│ $ df -h                                             │
-│ Filesystem      Size  Used Avail Use% Mounted on   │
-│ /dev/sda1        50G   15G   32G  32% /            │
-│ /dev/sda2       200G  150G   40G  79% /home   ⚠️   │
-│ /dev/sdb1       500G  480G   10G  96% /data   🚨   │
-├─────────────────────────────────────────────────────┤
-│ VARNINGSNIVÅER:                                     │
-│ 80%+ → Planera expansion                           │
-│ 90%+ → Kritiskt, åtgärda nu                        │
-│ 95%+ → AKUT, system kan sluta fungera              │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DF OUTPUT EXEMPEL                                   |
++-----------------------------------------------------+
+| $ df -h                                             |
+| Filesystem      Size  Used Avail Use% Mounted on   |
+| /dev/sda1        50G   15G   32G  32% /            |
+| /dev/sda2       200G  150G   40G  79% /home   ⚠️   |
+| /dev/sdb1       500G  480G   10G  96% /data   🚨   |
++-----------------------------------------------------+
+| VARNINGSNIVÅER:                                     |
+| 80%+ -> Planera expansion                           |
+| 90%+ -> Kritiskt, åtgärda nu                        |
+| 95%+ -> AKUT, system kan sluta fungera              |
++-----------------------------------------------------+""",
                         "pro_tip": "df -i visar inodes - kan vara slut även med ledigt utrymme!",
                         "common_mistake": "Att bara kolla root (/) när /var eller /home kan vara fulla."
                     },
@@ -60,18 +60,18 @@ LINUX_NODE_11_STORAGE_V2 = {
                         "title": "du - Disk Usage",
                         "explanation": "du visar storlek på filer/kataloger. Perfekt för att hitta vad som äter diskutrymme.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ DU KOMMANDON                                        │
-├─────────────────────────────────────────────────────┤
-│ du -sh /var/log     │ Total storlek på katalog     │
-│ du -h --max-depth=1 │ En nivå i taget              │
-│ du -h /var | sort -rh | head -20                   │
-│                     │ Hitta de största tjuvarna     │
-├─────────────────────────────────────────────────────┤
-│ HITTA STORA FILER:                                  │
-│ find / -type f -size +100M 2>/dev/null             │
-│ ncdu /   ← interaktiv disk usage                   │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| DU KOMMANDON                                        |
++-----------------------------------------------------+
+| du -sh /var/log     | Total storlek på katalog     |
+| du -h --max-depth=1 | En nivå i taget              |
+| du -h /var | sort -rh | head -20                   |
+|                     | Hitta de största tjuvarna     |
++-----------------------------------------------------+
+| HITTA STORA FILER:                                  |
+| find / -type f -size +100M 2>/dev/null             |
+| ncdu /   <- interaktiv disk usage                   |
++-----------------------------------------------------+""",
                         "pro_tip": "Installera ncdu för interaktiv diskanalys - mycket snabbare!",
                         "common_mistake": "Att glömma 2>/dev/null på find - du drunknar i permission errors."
                     },
@@ -79,20 +79,20 @@ LINUX_NODE_11_STORAGE_V2 = {
                         "title": "Mount & fstab",
                         "explanation": "mount kopplar filsystem till kataloger. /etc/fstab gör mounts permanenta över omstarter.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ MOUNT WORKFLOW                                      │
-├─────────────────────────────────────────────────────┤
-│ lsblk              │ Lista blockenheter            │
-│ sudo mount /dev/sdb1 /mnt/data                     │
-│                    │ Temporär mount                │
-│ sudo umount /mnt/data                              │
-│                    │ Avmontera                      │
-├─────────────────────────────────────────────────────┤
-│ /etc/fstab SYNTAX:                                  │
-│ /dev/sdb1  /mnt/data  ext4  defaults  0  2        │
-│ │          │         │     │         │  │         │
-│ device     mountpoint fs    options  dump fsck    │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| MOUNT WORKFLOW                                      |
++-----------------------------------------------------+
+| lsblk              | Lista blockenheter            |
+| sudo mount /dev/sdb1 /mnt/data                     |
+|                    | Temporär mount                |
+| sudo umount /mnt/data                              |
+|                    | Avmontera                      |
++-----------------------------------------------------+
+| /etc/fstab SYNTAX:                                  |
+| /dev/sdb1  /mnt/data  ext4  defaults  0  2        |
+| |          |         |     |         |  |         |
+| device     mountpoint fs    options  dump fsck    |
++-----------------------------------------------------+""",
                         "pro_tip": "Använd UUID istället för /dev/sdX - det ändras inte!",
                         "common_mistake": "Fel i fstab kan göra systemet obootbart. Alltid test med 'mount -a' först!"
                     }

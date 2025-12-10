@@ -23,36 +23,36 @@ Optimerade Dockerfiles resulterar i mindre images, snabbare builds och säkrare 
 ### Optimization Pyramid
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   DOCKERFILE OPTIMIZATION PYRAMID                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│                           ┌───────────┐                                  │
-│                           │  SECURITY │                                  │
-│                           │  Non-root │                                  │
-│                           │  Scanning │                                  │
-│                         ┌─┴───────────┴─┐                               │
-│                         │   EFFICIENCY   │                               │
-│                         │  Multi-stage   │                               │
-│                         │  .dockerignore │                               │
-│                       ┌─┴───────────────┴─┐                             │
-│                       │   LAYER CACHING   │                              │
-│                       │ Instruction order │                              │
-│                       │  Combine RUN cmds │                              │
-│                     ┌─┴───────────────────┴─┐                           │
-│                     │     BASE IMAGE         │                           │
-│                     │  Minimal (alpine/slim) │                           │
-│                     │  Specific tags         │                           │
-│                     └───────────────────────┘                           │
-│                                                                          │
-│  IMPACT:                                                                 │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Base Image      │ 50-90% size reduction                                │
-│  Layer Caching   │ 10x faster builds                                    │
-│  Multi-stage     │ 70-80% smaller final image                          │
-│  Security        │ Reduced attack surface                               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   DOCKERFILE OPTIMIZATION PYRAMID                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|                           +-----------+                                  |
+|                           |  SECURITY |                                  |
+|                           |  Non-root |                                  |
+|                           |  Scanning |                                  |
+|                         +-+-----------+-+                               |
+|                         |   EFFICIENCY   |                               |
+|                         |  Multi-stage   |                               |
+|                         |  .dockerignore |                               |
+|                       +-+---------------+-+                             |
+|                       |   LAYER CACHING   |                              |
+|                       | Instruction order |                              |
+|                       |  Combine RUN cmds |                              |
+|                     +-+-------------------+-+                           |
+|                     |     BASE IMAGE         |                           |
+|                     |  Minimal (alpine/slim) |                           |
+|                     |  Specific tags         |                           |
+|                     +-----------------------+                           |
+|                                                                          |
+|  IMPACT:                                                                 |
+|  ---------------------------------------------------------------------  |
+|  Base Image      | 50-90% size reduction                                |
+|  Layer Caching   | 10x faster builds                                    |
+|  Multi-stage     | 70-80% smaller final image                          |
+|  Security        | Reduced attack surface                               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Base Image Selection
@@ -96,24 +96,24 @@ FROM python:3.11-slim@sha256:abc123...
 ### Size Comparison
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    IMAGE SIZE COMPARISON                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  IMAGE                        │ SIZE     │ PACKAGES  │ USE CASE         │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  python:3.11                  │ 1.0 GB   │ Full      │ Development      │
-│  python:3.11-slim             │ 130 MB   │ Minimal   │ Production       │
-│  python:3.11-alpine           │ 50 MB    │ musl      │ Size-critical    │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  node:20                      │ 1.1 GB   │ Full      │ Development      │
-│  node:20-slim                 │ 240 MB   │ Minimal   │ Production       │
-│  node:20-alpine               │ 140 MB   │ musl      │ Size-critical    │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  golang:1.21                  │ 800 MB   │ Full      │ Build only       │
-│  gcr.io/distroless/static    │ 2 MB     │ None      │ Go binaries      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    IMAGE SIZE COMPARISON                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  IMAGE                        | SIZE     | PACKAGES  | USE CASE         |
+|  ---------------------------------------------------------------------  |
+|  python:3.11                  | 1.0 GB   | Full      | Development      |
+|  python:3.11-slim             | 130 MB   | Minimal   | Production       |
+|  python:3.11-alpine           | 50 MB    | musl      | Size-critical    |
+|  ---------------------------------------------------------------------  |
+|  node:20                      | 1.1 GB   | Full      | Development      |
+|  node:20-slim                 | 240 MB   | Minimal   | Production       |
+|  node:20-alpine               | 140 MB   | musl      | Size-critical    |
+|  ---------------------------------------------------------------------  |
+|  golang:1.21                  | 800 MB   | Full      | Build only       |
+|  gcr.io/distroless/static    | 2 MB     | None      | Go binaries      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Layer Optimization
@@ -399,7 +399,7 @@ time docker build -f Dockerfile.after -t app:after .
 
 ---
 
-**Nästa Node:** Multi-stage Builds →
+**Nästa Node:** Multi-stage Builds ->
 ''',
     "xp_reward": 175,
     "estimated_minutes": 75,
@@ -425,39 +425,39 @@ Multi-stage builds låter dig använda flera FROM-statements i samma Dockerfile.
 ### Multi-stage Concept
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    MULTI-STAGE BUILD CONCEPT                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  TRADITIONAL BUILD:                                                      │
-│  ═══════════════════════════════════════════════════════════════════   │
-│                                                                          │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                    SINGLE IMAGE                                  │   │
-│  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐            │   │
-│  │  │ Build tools  │ │   Source     │ │  Final app   │            │   │
-│  │  │  (100 MB)    │ │  (50 MB)     │ │  (10 MB)     │            │   │
-│  │  └──────────────┘ └──────────────┘ └──────────────┘            │   │
-│  │                                                                  │   │
-│  │  Total: 160+ MB (inkluderar allt)                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  MULTI-STAGE BUILD:                                                      │
-│  ═══════════════════════════════════════════════════════════════════   │
-│                                                                          │
-│  Stage 1: BUILD                        Stage 2: PRODUCTION              │
-│  ┌─────────────────────────┐          ┌─────────────────────────┐      │
-│  │  FROM node:20           │          │  FROM node:20-alpine    │      │
-│  │  ┌──────────────┐       │          │                         │      │
-│  │  │ Build tools  │       │   COPY   │  ┌──────────────┐       │      │
-│  │  │ Source code  │──────────────────│→ │  Built app   │       │      │
-│  │  │ Dependencies │       │  only    │  │  only        │       │      │
-│  │  └──────────────┘       │  dist/   │  └──────────────┘       │      │
-│  │                         │          │                         │      │
-│  │  (DISCARDED)            │          │  Final: 50 MB           │      │
-│  └─────────────────────────┘          └─────────────────────────┘      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    MULTI-STAGE BUILD CONCEPT                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  TRADITIONAL BUILD:                                                      |
+|  ═══════════════════════════════════════════════════════════════════   |
+|                                                                          |
+|  +-----------------------------------------------------------------+   |
+|  |                    SINGLE IMAGE                                  |   |
+|  |  +--------------+ +--------------+ +--------------+            |   |
+|  |  | Build tools  | |   Source     | |  Final app   |            |   |
+|  |  |  (100 MB)    | |  (50 MB)     | |  (10 MB)     |            |   |
+|  |  +--------------+ +--------------+ +--------------+            |   |
+|  |                                                                  |   |
+|  |  Total: 160+ MB (inkluderar allt)                               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  MULTI-STAGE BUILD:                                                      |
+|  ═══════════════════════════════════════════════════════════════════   |
+|                                                                          |
+|  Stage 1: BUILD                        Stage 2: PRODUCTION              |
+|  +-------------------------+          +-------------------------+      |
+|  |  FROM node:20           |          |  FROM node:20-alpine    |      |
+|  |  +--------------+       |          |                         |      |
+|  |  | Build tools  |       |   COPY   |  +--------------+       |      |
+|  |  | Source code  |------------------|-> |  Built app   |       |      |
+|  |  | Dependencies |       |  only    |  |  only        |       |      |
+|  |  +--------------+       |  dist/   |  +--------------+       |      |
+|  |                         |          |                         |      |
+|  |  (DISCARDED)            |          |  Final: 50 MB           |      |
+|  +-------------------------+          +-------------------------+      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Basic Multi-stage
@@ -564,25 +564,25 @@ ENTRYPOINT ["/server"]
 ### Size Comparison
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    GO BUILD SIZE COMPARISON                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Stage                    │ Image Size │ Contents                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  golang:1.21              │ 800 MB     │ Full Go toolchain              │
-│  golang:1.21-alpine       │ 250 MB     │ Go + Alpine                    │
-│  alpine:3.18              │ 7 MB       │ Minimal Linux                  │
-│  distroless/static        │ 2 MB       │ Static binary only             │
-│  scratch                  │ 0 MB       │ Empty (binary only)            │
-│                                                                          │
-│  RESULT:                                                                │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  Without multi-stage      │ 800 MB                                      │
-│  With multi-stage         │ 12 MB (binary + distroless)                │
-│  Reduction                │ 98%                                         │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    GO BUILD SIZE COMPARISON                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Stage                    | Image Size | Contents                       |
+|  ---------------------------------------------------------------------  |
+|  golang:1.21              | 800 MB     | Full Go toolchain              |
+|  golang:1.21-alpine       | 250 MB     | Go + Alpine                    |
+|  alpine:3.18              | 7 MB       | Minimal Linux                  |
+|  distroless/static        | 2 MB       | Static binary only             |
+|  scratch                  | 0 MB       | Empty (binary only)            |
+|                                                                          |
+|  RESULT:                                                                |
+|  ---------------------------------------------------------------------  |
+|  Without multi-stage      | 800 MB                                      |
+|  With multi-stage         | 12 MB (binary + distroless)                |
+|  Reduction                | 98%                                         |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 5. Python with Virtual Environment
@@ -758,7 +758,7 @@ EOF
 # Build and compare
 docker build -t app:multi .
 docker images | grep app
-# → Se storleken (ska vara ~15MB)
+# -> Se storleken (ska vara ~15MB)
 
 # Test
 docker run -d -p 8080:8080 --name test app:multi
@@ -813,7 +813,7 @@ docker run --rm app:test
 
 ---
 
-**Nästa Node:** Docker Security →
+**Nästa Node:** Docker Security ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 80,

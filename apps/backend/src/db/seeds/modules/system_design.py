@@ -27,7 +27,7 @@ SYSTEM_DESIGN_MODULE = {
             "xp_reward": 120,
             "content": """# Introduction to System Design
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -45,46 +45,46 @@ Som DevOps-ingenjor maste du forsta:
 - **Trade-offs** mellan olika losningar
 - **Estimering** av kapacitet och resurser
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar System Design?
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    SYSTEM DESIGN                        │
-│                                                         │
-│  Processen att definiera arkitektur, komponenter,       │
-│  moduler och granssnitt for ett system som uppfyller    │
-│  specificerade krav.                                    │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    SYSTEM DESIGN                        |
+|                                                         |
+|  Processen att definiera arkitektur, komponenter,       |
+|  moduler och granssnitt for ett system som uppfyller    |
+|  specificerade krav.                                    |
++---------------------------------------------------------+
 ```
 
 ### System Design Process
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  1. REQUIREMENTS GATHERING                               │
-│     ├── Functional: Vad systemet ska gora               │
-│     └── Non-functional: Hur bra det ska gora det        │
-├──────────────────────────────────────────────────────────┤
-│  2. HIGH-LEVEL DESIGN                                    │
-│     ├── System komponenter                              │
-│     ├── Data flow                                       │
-│     └── Integrationer                                   │
-├──────────────────────────────────────────────────────────┤
-│  3. DETAILED DESIGN                                      │
-│     ├── Database schema                                 │
-│     ├── API endpoints                                   │
-│     └── Algoritmer                                      │
-├──────────────────────────────────────────────────────────┤
-│  4. IDENTIFY BOTTLENECKS                                 │
-│     ├── Single points of failure                        │
-│     ├── Performance bottlenecks                         │
-│     └── Data hotspots                                   │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  1. REQUIREMENTS GATHERING                               |
+|     +-- Functional: Vad systemet ska gora               |
+|     +-- Non-functional: Hur bra det ska gora det        |
++----------------------------------------------------------+
+|  2. HIGH-LEVEL DESIGN                                    |
+|     +-- System komponenter                              |
+|     +-- Data flow                                       |
+|     +-- Integrationer                                   |
++----------------------------------------------------------+
+|  3. DETAILED DESIGN                                      |
+|     +-- Database schema                                 |
+|     +-- API endpoints                                   |
+|     +-- Algoritmer                                      |
++----------------------------------------------------------+
+|  4. IDENTIFY BOTTLENECKS                                 |
+|     +-- Single points of failure                        |
+|     +-- Performance bottlenecks                         |
+|     +-- Data hotspots                                   |
++----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Functional vs Non-Functional Requirements
 
@@ -110,43 +110,43 @@ Vad systemet SKA gora:
 | **Security** | Sakerhet | E2E kryptering |
 | **Maintainability** | Underhall | Enkel deploy |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Back-of-the-Envelope Estimation
 
 ```
 Snabb kapacitetsplanering:
 
-┌─────────────────────────────────────────────────────────┐
-│ TRAFFIC ESTIMATION                                      │
-├─────────────────────────────────────────────────────────┤
-│ Daily Active Users (DAU):     10,000,000               │
-│ Requests per user per day:    10                        │
-│ Total requests per day:       100,000,000              │
-│                                                         │
-│ Requests per second (RPS):                             │
-│ = 100M / (24 * 60 * 60)                                │
-│ = 100M / 86,400                                        │
-│ = ~1,157 RPS                                           │
-│                                                         │
-│ Peak traffic (5x average):    ~5,800 RPS               │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+| TRAFFIC ESTIMATION                                      |
++---------------------------------------------------------+
+| Daily Active Users (DAU):     10,000,000               |
+| Requests per user per day:    10                        |
+| Total requests per day:       100,000,000              |
+|                                                         |
+| Requests per second (RPS):                             |
+| = 100M / (24 * 60 * 60)                                |
+| = 100M / 86,400                                        |
+| = ~1,157 RPS                                           |
+|                                                         |
+| Peak traffic (5x average):    ~5,800 RPS               |
++---------------------------------------------------------+
 
-┌─────────────────────────────────────────────────────────┐
-│ STORAGE ESTIMATION                                      │
-├─────────────────────────────────────────────────────────┤
-│ Messages per user per day:    5                         │
-│ Message size:                 500 bytes                 │
-│                                                         │
-│ Daily data:                                            │
-│ = 10M * 5 * 500 bytes                                  │
-│ = 25 GB per dag                                        │
-│ = ~750 GB per manad                                    │
-│ = ~9 TB per ar                                         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+| STORAGE ESTIMATION                                      |
++---------------------------------------------------------+
+| Messages per user per day:    5                         |
+| Message size:                 500 bytes                 |
+|                                                         |
+| Daily data:                                            |
+| = 10M * 5 * 500 bytes                                  |
+| = 25 GB per dag                                        |
+| = ~750 GB per manad                                    |
+| = ~9 TB per ar                                         |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Latency Numbers - Maste kunna
 
@@ -169,46 +169,46 @@ Snabb kapacitetsplanering:
 | 1 GB | 1,000,000,000 | Video |
 | 1 TB | 1,000,000,000,000 | Databas |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## System Design Interview Framework
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  STEG 1: CLARIFY REQUIREMENTS (5 min)                   │
-│  ────────────────────────────────────────               │
-│  - Vad ar use cases?                                    │
-│  - Hur manga anvandare?                                 │
-│  - Read/write ratio?                                    │
-│  - Vilka features ar kritiska?                          │
-├──────────────────────────────────────────────────────────┤
-│  STEG 2: ESTIMATE SCALE (5 min)                         │
-│  ────────────────────────────────────────               │
-│  - QPS (queries per second)                             │
-│  - Storage requirements                                 │
-│  - Bandwidth                                            │
-├──────────────────────────────────────────────────────────┤
-│  STEG 3: HIGH-LEVEL DESIGN (10 min)                     │
-│  ────────────────────────────────────────               │
-│  - Rita komponenter                                     │
-│  - Visa data flow                                       │
-│  - Identifiera APIs                                     │
-├──────────────────────────────────────────────────────────┤
-│  STEG 4: DETAILED DESIGN (15 min)                       │
-│  ────────────────────────────────────────               │
-│  - Database design                                      │
-│  - Caching strategy                                     │
-│  - API design                                           │
-├──────────────────────────────────────────────────────────┤
-│  STEG 5: IDENTIFY BOTTLENECKS (5 min)                   │
-│  ────────────────────────────────────────               │
-│  - Single points of failure                             │
-│  - Scaling strategies                                   │
-│  - Monitoring/alerting                                  │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  STEG 1: CLARIFY REQUIREMENTS (5 min)                   |
+|  ----------------------------------------               |
+|  - Vad ar use cases?                                    |
+|  - Hur manga anvandare?                                 |
+|  - Read/write ratio?                                    |
+|  - Vilka features ar kritiska?                          |
++----------------------------------------------------------+
+|  STEG 2: ESTIMATE SCALE (5 min)                         |
+|  ----------------------------------------               |
+|  - QPS (queries per second)                             |
+|  - Storage requirements                                 |
+|  - Bandwidth                                            |
++----------------------------------------------------------+
+|  STEG 3: HIGH-LEVEL DESIGN (10 min)                     |
+|  ----------------------------------------               |
+|  - Rita komponenter                                     |
+|  - Visa data flow                                       |
+|  - Identifiera APIs                                     |
++----------------------------------------------------------+
+|  STEG 4: DETAILED DESIGN (15 min)                       |
+|  ----------------------------------------               |
+|  - Database design                                      |
+|  - Caching strategy                                     |
+|  - API design                                           |
++----------------------------------------------------------+
+|  STEG 5: IDENTIFY BOTTLENECKS (5 min)                   |
+|  ----------------------------------------               |
+|  - Single points of failure                             |
+|  - Scaling strategies                                   |
+|  - Monitoring/alerting                                  |
++----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - System Design
 
@@ -221,7 +221,7 @@ Snabb kapacitetsplanering:
 | **Throughput** | Requests per sekund |
 | **Consistency** | Data ar samma overallt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -232,7 +232,7 @@ Snabb kapacitetsplanering:
 | Single point of failure | Ingen redundans | Replikering |
 | Tight coupling | Beroenden | Microservices |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -263,7 +263,7 @@ Snabb kapacitetsplanering:
             "xp_reward": 130,
             "content": """# Scalability Fundamentals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -275,21 +275,21 @@ Snabb kapacitetsplanering:
 | **Resiliens** | Overleva traffic spikes |
 | **Flexibilitet** | Skala upp och ner |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vertikal vs Horisontell Skalning
 
 ```
 VERTIKAL SKALNING (Scale Up)
-────────────────────────────
+----------------------------
 Lagga till mer kraft till EN maskin
 
      Fore              Efter
-  ┌─────────┐      ┌─────────┐
-  │  4 CPU  │      │ 16 CPU  │
-  │  8 GB   │  ->  │ 64 GB   │
-  │ 100 GB  │      │  1 TB   │
-  └─────────┘      └─────────┘
+  +---------+      +---------+
+  |  4 CPU  |      | 16 CPU  |
+  |  8 GB   |  ->  | 64 GB   |
+  | 100 GB  |      |  1 TB   |
+  +---------+      +---------+
 
 Fordelar:
 + Enkelt att implementera
@@ -304,14 +304,14 @@ Nackdelar:
 
 ```
 HORISONTELL SKALNING (Scale Out)
-────────────────────────────────
+--------------------------------
 Lagga till FLER maskiner
 
      Fore                    Efter
-  ┌─────────┐      ┌─────────┐ ┌─────────┐ ┌─────────┐
-  │ Server  │      │ Server  │ │ Server  │ │ Server  │
-  │   #1    │  ->  │   #1    │ │   #2    │ │   #3    │
-  └─────────┘      └─────────┘ └─────────┘ └─────────┘
+  +---------+      +---------+ +---------+ +---------+
+  | Server  |      | Server  | | Server  | | Server  |
+  |   #1    |  ->  |   #1    | |   #2    | |   #3    |
+  +---------+      +---------+ +---------+ +---------+
 
 Fordelar:
 + Teoretiskt oandlig skalning
@@ -324,32 +324,32 @@ Nackdelar:
 - Data consistency utmaningar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Stateless vs Stateful
 
 ### Stateless Design
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                    STATELESS                             │
-├──────────────────────────────────────────────────────────┤
-│  Varje request innehaller ALL information som behovs    │
-│  Servern sparar INGENTING mellan requests               │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                    STATELESS                             |
++----------------------------------------------------------+
+|  Varje request innehaller ALL information som behovs    |
+|  Servern sparar INGENTING mellan requests               |
++----------------------------------------------------------+
 
      Request 1          Request 2          Request 3
-    ┌─────────┐        ┌─────────┐        ┌─────────┐
-    │ Token:  │        │ Token:  │        │ Token:  │
-    │ abc123  │        │ abc123  │        │ abc123  │
-    │ Data:X  │        │ Data:Y  │        │ Data:Z  │
-    └────┬────┘        └────┬────┘        └────┬────┘
-         │                  │                  │
+    +---------+        +---------+        +---------+
+    | Token:  |        | Token:  |        | Token:  |
+    | abc123  |        | abc123  |        | abc123  |
+    | Data:X  |        | Data:Y  |        | Data:Z  |
+    +----+----+        +----+----+        +----+----+
+         |                  |                  |
          v                  v                  v
-    ┌─────────┐        ┌─────────┐        ┌─────────┐
-    │ Server  │        │ Server  │        │ Server  │
-    │   A     │        │   B     │        │   C     │
-    └─────────┘        └─────────┘        └─────────┘
+    +---------+        +---------+        +---------+
+    | Server  |        | Server  |        | Server  |
+    |   A     |        |   B     |        |   C     |
+    +---------+        +---------+        +---------+
 
 Fordelar:
 + Enkel horisontell skalning
@@ -360,18 +360,18 @@ Fordelar:
 ### Stateful Design (problem)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                    STATEFUL                              │
-├──────────────────────────────────────────────────────────┤
-│  Servern sparar session state                           │
-│  Anvandaren MASTE alltid traffa samma server            │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                    STATEFUL                              |
++----------------------------------------------------------+
+|  Servern sparar session state                           |
+|  Anvandaren MASTE alltid traffa samma server            |
++----------------------------------------------------------+
 
 Problem: Session affinity / sticky sessions kravs
          Om servern gar ner forsvinner all state
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skalningsstrategier
 
@@ -379,51 +379,51 @@ Problem: Session affinity / sticky sessions kravs
 
 ```
 READ REPLICAS
-─────────────
-                    ┌─────────────┐
-                    │   Primary   │
-                    │  (Writes)   │
-                    └──────┬──────┘
-                           │
-           ┌───────────────┼───────────────┐
-           │               │               │
+-------------
+                    +-------------+
+                    |   Primary   |
+                    |  (Writes)   |
+                    +------+------+
+                           |
+           +---------------+---------------+
+           |               |               |
            v               v               v
-    ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-    │  Replica 1  │ │  Replica 2  │ │  Replica 3  │
-    │  (Reads)    │ │  (Reads)    │ │  (Reads)    │
-    └─────────────┘ └─────────────┘ └─────────────┘
+    +-------------+ +-------------+ +-------------+
+    |  Replica 1  | |  Replica 2  | |  Replica 3  |
+    |  (Reads)    | |  (Reads)    | |  (Reads)    |
+    +-------------+ +-------------+ +-------------+
 
 SHARDING
-────────
+--------
 Data delas upp baserat pa shard key
 
     User ID 1-1000     User ID 1001-2000   User ID 2001-3000
-    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-    │   Shard 1   │    │   Shard 2   │    │   Shard 3   │
-    └─────────────┘    └─────────────┘    └─────────────┘
+    +-------------+    +-------------+    +-------------+
+    |   Shard 1   |    |   Shard 2   |    |   Shard 3   |
+    +-------------+    +-------------+    +-------------+
 ```
 
 ### 2. Application Scaling
 
 ```
 AUTO-SCALING
-────────────
+------------
               CPU > 70%           CPU < 30%
-                  │                   │
+                  |                   |
                   v                   v
-            ┌─────────┐         ┌─────────┐
-            │ Scale   │         │ Scale   │
-            │   UP    │         │  DOWN   │
-            └─────────┘         └─────────┘
-                  │                   │
+            +---------+         +---------+
+            | Scale   |         | Scale   |
+            |   UP    |         |  DOWN   |
+            +---------+         +---------+
+                  |                   |
                   v                   v
-         ┌───┐ ┌───┐ ┌───┐      ┌───┐ ┌───┐
-         │ S │ │ S │ │ S │      │ S │ │ S │
-         └───┘ └───┘ └───┘      └───┘ └───┘
+         +---+ +---+ +---+      +---+ +---+
+         | S | | S | | S |      | S | | S |
+         +---+ +---+ +---+      +---+ +---+
           3 servrar              2 servrar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Skalbarhet
 
@@ -436,7 +436,7 @@ AUTO-SCALING
 | Caching | Repetitiva queries |
 | CDN | Statiskt innehall |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -447,7 +447,7 @@ AUTO-SCALING
 | Over-scaling | For aggressiv | Tune thresholds |
 | Under-scaling | For konservativ | Monitor och justera |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -477,7 +477,7 @@ AUTO-SCALING
             "xp_reward": 120,
             "content": """# Load Balancing
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -489,28 +489,28 @@ AUTO-SCALING
 | **Prestanda** | Undvik overbelastning |
 | **SSL Termination** | Centraliserad HTTPS |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en Load Balancer?
 
 ```
-                        ┌─────────────────┐
-                        │  Load Balancer  │
-                        │                 │
-      Request ────────> │  Distribuerar   │
-                        │    trafik       │
-                        └────────┬────────┘
-                                 │
-              ┌──────────────────┼──────────────────┐
-              │                  │                  │
+                        +-----------------+
+                        |  Load Balancer  |
+                        |                 |
+      Request --------> |  Distribuerar   |
+                        |    trafik       |
+                        +--------+--------+
+                                 |
+              +------------------+------------------+
+              |                  |                  |
               v                  v                  v
-        ┌──────────┐       ┌──────────┐       ┌──────────┐
-        │ Server 1 │       │ Server 2 │       │ Server 3 │
-        │  (25%)   │       │  (50%)   │       │  (25%)   │
-        └──────────┘       └──────────┘       └──────────┘
+        +----------+       +----------+       +----------+
+        | Server 1 |       | Server 2 |       | Server 3 |
+        |  (25%)   |       |  (50%)   |       |  (25%)   |
+        +----------+       +----------+       +----------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Load Balancing Algoritmer
 
@@ -570,66 +570,66 @@ Client 192.168.1.2 -> alltid Server B
 - Ojamn fordelning mojlig
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Layer 4 vs Layer 7
 
 ### Layer 4 (Transport)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  LAYER 4 LOAD BALANCING                                  │
-├──────────────────────────────────────────────────────────┤
-│  Baserat pa: IP-adress och port                         │
-│  Snabbare: Tittar inte pa innehall                      │
-│  Anvandning: TCP/UDP trafik                             │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  LAYER 4 LOAD BALANCING                                  |
++----------------------------------------------------------+
+|  Baserat pa: IP-adress och port                         |
+|  Snabbare: Tittar inte pa innehall                      |
+|  Anvandning: TCP/UDP trafik                             |
++----------------------------------------------------------+
 
      TCP Connection
-    ┌────────────────┐
-    │ Src: 10.0.0.1  │
-    │ Dst: LB IP     │──────> Load Balancer ──> Server
-    │ Port: 443      │
-    └────────────────┘
+    +----------------+
+    | Src: 10.0.0.1  |
+    | Dst: LB IP     |------> Load Balancer --> Server
+    | Port: 443      |
+    +----------------+
 ```
 
 ### Layer 7 (Application)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  LAYER 7 LOAD BALANCING                                  │
-├──────────────────────────────────────────────────────────┤
-│  Baserat pa: HTTP headers, URL, cookies                 │
-│  Smartare: Content-based routing                        │
-│  Anvandning: HTTP/HTTPS trafik                          │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  LAYER 7 LOAD BALANCING                                  |
++----------------------------------------------------------+
+|  Baserat pa: HTTP headers, URL, cookies                 |
+|  Smartare: Content-based routing                        |
+|  Anvandning: HTTP/HTTPS trafik                          |
++----------------------------------------------------------+
 
      HTTP Request
-    ┌────────────────┐
-    │ GET /api/users │──> API servers
-    │ GET /images/*  │──> Static servers
-    │ GET /admin/*   │──> Admin servers
-    └────────────────┘
+    +----------------+
+    | GET /api/users |--> API servers
+    | GET /images/*  |--> Static servers
+    | GET /admin/*   |--> Admin servers
+    +----------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Health Checks
 
 ```
 Load Balancer utfor regelbundna health checks:
 
-    LB ──── GET /health ────> Server A  (200 OK)     [HEALTHY]
-    LB ──── GET /health ────> Server B  (200 OK)     [HEALTHY]
-    LB ──── GET /health ────> Server C  (timeout)    [UNHEALTHY]
+    LB ---- GET /health ----> Server A  (200 OK)     [HEALTHY]
+    LB ---- GET /health ----> Server B  (200 OK)     [HEALTHY]
+    LB ---- GET /health ----> Server C  (timeout)    [UNHEALTHY]
 
-         ┌──────────────────────────────────────┐
-         │          TRAFFIC ROUTING             │
-         ├──────────────────────────────────────┤
-         │  Server A: [====] Receives traffic   │
-         │  Server B: [====] Receives traffic   │
-         │  Server C: [----] Removed from pool  │
-         └──────────────────────────────────────┘
+         +--------------------------------------+
+         |          TRAFFIC ROUTING             |
+         +--------------------------------------+
+         |  Server A: [====] Receives traffic   |
+         |  Server B: [====] Receives traffic   |
+         |  Server C: [----] Removed from pool  |
+         +--------------------------------------+
 
 Health Check Types:
 - TCP: Kan vi oppna en connection?
@@ -637,33 +637,33 @@ Health Check Types:
 - Custom: Applikationsspecifik logik
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## High Availability Setup
 
 ```
-                    ┌─────────────┐
-                    │     DNS     │
-                    └──────┬──────┘
-                           │
-              ┌────────────┴────────────┐
-              │                         │
+                    +-------------+
+                    |     DNS     |
+                    +------+------+
+                           |
+              +------------+------------+
+              |                         |
               v                         v
-       ┌─────────────┐          ┌─────────────┐
-       │     LB 1    │◄────────►│     LB 2    │
-       │  (Active)   │  VRRP    │  (Standby)  │
-       └──────┬──────┘          └─────────────┘
-              │
-    ┌─────────┼─────────┐
+       +-------------+          +-------------+
+       |     LB 1    |◄--------►|     LB 2    |
+       |  (Active)   |  VRRP    |  (Standby)  |
+       +------+------+          +-------------+
+              |
+    +---------+---------+
     v         v         v
-┌───────┐ ┌───────┐ ┌───────┐
-│ Srv 1 │ │ Srv 2 │ │ Srv 3 │
-└───────┘ └───────┘ └───────┘
++-------+ +-------+ +-------+
+| Srv 1 | | Srv 2 | | Srv 3 |
++-------+ +-------+ +-------+
 
 Om LB 1 gar ner tar LB 2 over automatiskt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Load Balancers
 
@@ -676,7 +676,7 @@ Om LB 1 gar ner tar LB 2 over automatiskt
 | **GCP LB** | L4/L7 | Google Cloud |
 | **Azure LB** | L4 | Azure |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -687,7 +687,7 @@ Om LB 1 gar ner tar LB 2 over automatiskt
 | Single LB failure | Ingen redundans | HA setup |
 | Slow health check | For langsam | Tune intervall |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -716,7 +716,7 @@ Om LB 1 gar ner tar LB 2 over automatiskt
             "xp_reward": 130,
             "content": """# Caching Strategies
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -728,70 +728,70 @@ Om LB 1 gar ner tar LB 2 over automatiskt
 | **Kostnad** | Mindre compute behov |
 | **UX** | Battre anvandarupplevelse |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cache Hierarki
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CACHE HIERARKI                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ┌─────────────┐                                          │
-│   │  Browser    │  <-- Snabbast (lokal)                    │
-│   │   Cache     │      ~1ms                                │
-│   └──────┬──────┘                                          │
-│          │                                                 │
-│   ┌──────v──────┐                                          │
-│   │    CDN      │  <-- Edge location                       │
-│   │   Cache     │      ~10-50ms                            │
-│   └──────┬──────┘                                          │
-│          │                                                 │
-│   ┌──────v──────┐                                          │
-│   │ Application │  <-- Redis/Memcached                     │
-│   │   Cache     │      ~1-5ms                              │
-│   └──────┬──────┘                                          │
-│          │                                                 │
-│   ┌──────v──────┐                                          │
-│   │  Database   │  <-- Query cache                         │
-│   │   Cache     │      ~10-100ms                           │
-│   └──────┬──────┘                                          │
-│          │                                                 │
-│   ┌──────v──────┐                                          │
-│   │   Origin    │  <-- Disk I/O                            │
-│   │  Database   │      ~100-1000ms                         │
-│   └─────────────┘                                          │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    CACHE HIERARKI                          |
++-------------------------------------------------------------+
+|                                                             |
+|   +-------------+                                          |
+|   |  Browser    |  <-- Snabbast (lokal)                    |
+|   |   Cache     |      ~1ms                                |
+|   +------+------+                                          |
+|          |                                                 |
+|   +------v------+                                          |
+|   |    CDN      |  <-- Edge location                       |
+|   |   Cache     |      ~10-50ms                            |
+|   +------+------+                                          |
+|          |                                                 |
+|   +------v------+                                          |
+|   | Application |  <-- Redis/Memcached                     |
+|   |   Cache     |      ~1-5ms                              |
+|   +------+------+                                          |
+|          |                                                 |
+|   +------v------+                                          |
+|   |  Database   |  <-- Query cache                         |
+|   |   Cache     |      ~10-100ms                           |
+|   +------+------+                                          |
+|          |                                                 |
+|   +------v------+                                          |
+|   |   Origin    |  <-- Disk I/O                            |
+|   |  Database   |      ~100-1000ms                         |
+|   +-------------+                                          |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cache-Aside (Lazy Loading)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  CACHE-ASIDE PATTERN                                     │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  CACHE-ASIDE PATTERN                                     |
++----------------------------------------------------------+
 
 READ Operation:
-                                  ┌─────────┐
-                           1. Get │  Cache  │
-    ┌──────────┐ ──────────────> └────┬────┘
-    │   App    │                      │
-    └────┬─────┘ <────────────────────┘
-         │        2a. Hit: Return data
-         │
-         │ 2b. Miss: Query DB
+                                  +---------+
+                           1. Get |  Cache  |
+    +----------+ --------------> +----+----+
+    |   App    |                      |
+    +----+-----+ <--------------------+
+         |        2a. Hit: Return data
+         |
+         | 2b. Miss: Query DB
          v
-    ┌──────────┐
-    │ Database │
-    └────┬─────┘
-         │
-         │ 3. Store in cache
+    +----------+
+    | Database |
+    +----+-----+
+         |
+         | 3. Store in cache
          v
-    ┌──────────┐
-    │  Cache   │
-    └──────────┘
+    +----------+
+    |  Cache   |
+    +----------+
 
 WRITE Operation:
     1. Write to database
@@ -816,50 +816,50 @@ def get_user(user_id):
     return user
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Write-Through Cache
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  WRITE-THROUGH PATTERN                                   │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  WRITE-THROUGH PATTERN                                   |
++----------------------------------------------------------+
 
 WRITE Operation:
-    ┌──────────┐
-    │   App    │
-    └────┬─────┘
-         │ 1. Write
+    +----------+
+    |   App    |
+    +----+-----+
+         | 1. Write
          v
-    ┌──────────┐
-    │  Cache   │ ────── 2. Sync write ────> ┌──────────┐
-    └──────────┘                            │ Database │
-                                            └──────────┘
+    +----------+
+    |  Cache   | ------ 2. Sync write ----> +----------+
+    +----------+                            | Database |
+                                            +----------+
 
 + Data alltid konsistent
 + Latency vid writes
 - Hojer write-latency
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Write-Behind (Write-Back)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  WRITE-BEHIND PATTERN                                    │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  WRITE-BEHIND PATTERN                                    |
++----------------------------------------------------------+
 
 WRITE Operation:
-    ┌──────────┐
-    │   App    │
-    └────┬─────┘
-         │ 1. Write (returns immediately)
+    +----------+
+    |   App    |
+    +----+-----+
+         | 1. Write (returns immediately)
          v
-    ┌──────────┐
-    │  Cache   │ ─── 2. Async batch write ──> ┌──────────┐
-    └──────────┘     (later)                  │ Database │
-                                              └──────────┘
+    +----------+
+    |  Cache   | --- 2. Async batch write --> +----------+
+    +----------+     (later)                  | Database |
+                                              +----------+
 
 + Lag write-latency
 + Batching mojligt
@@ -867,68 +867,68 @@ WRITE Operation:
 - Komplexitet
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cache Invalidation Strategies
 
 ```
-┌───────────────────────────────────────────────────────────┐
-│            INVALIDATION STRATEGIES                        │
-├───────────────────────────────────────────────────────────┤
-│                                                           │
-│  1. TIME-BASED (TTL)                                      │
-│     ┌──────────────────────────────────────┐             │
-│     │ cache.set(key, value, ttl=3600)      │             │
-│     │ # Expires after 1 hour               │             │
-│     └──────────────────────────────────────┘             │
-│                                                           │
-│  2. EVENT-BASED                                           │
-│     ┌──────────────────────────────────────┐             │
-│     │ def update_user(user):               │             │
-│     │     db.update(user)                  │             │
-│     │     cache.delete(f"user:{user.id}")  │             │
-│     └──────────────────────────────────────┘             │
-│                                                           │
-│  3. VERSION-BASED                                         │
-│     ┌──────────────────────────────────────┐             │
-│     │ key = f"user:{id}:v{version}"        │             │
-│     │ # Ny version = ny cache key          │             │
-│     └──────────────────────────────────────┘             │
-│                                                           │
-└───────────────────────────────────────────────────────────┘
++-----------------------------------------------------------+
+|            INVALIDATION STRATEGIES                        |
++-----------------------------------------------------------+
+|                                                           |
+|  1. TIME-BASED (TTL)                                      |
+|     +--------------------------------------+             |
+|     | cache.set(key, value, ttl=3600)      |             |
+|     | # Expires after 1 hour               |             |
+|     +--------------------------------------+             |
+|                                                           |
+|  2. EVENT-BASED                                           |
+|     +--------------------------------------+             |
+|     | def update_user(user):               |             |
+|     |     db.update(user)                  |             |
+|     |     cache.delete(f"user:{user.id}")  |             |
+|     +--------------------------------------+             |
+|                                                           |
+|  3. VERSION-BASED                                         |
+|     +--------------------------------------+             |
+|     | key = f"user:{id}:v{version}"        |             |
+|     | # Ny version = ny cache key          |             |
+|     +--------------------------------------+             |
+|                                                           |
++-----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cache Stampede Prevention
 
 ```
 Problem: Manga requests samtidigt vid cache miss
 
-    Request 1 ──┐
-    Request 2 ──┼──> Cache Miss ──> All hit DB simultaneously!
-    Request 3 ──┤
-    Request 4 ──┘
+    Request 1 --+
+    Request 2 --+--> Cache Miss --> All hit DB simultaneously!
+    Request 3 --+
+    Request 4 --+
 
 Losningar:
 
 1. LOCKING (endast en hamtar)
-   ┌────────────────────────────────────────┐
-   │ Request 1: Acquire lock, fetch from DB │
-   │ Request 2-4: Wait for lock release     │
-   │ Request 1: Store in cache, release     │
-   │ Request 2-4: Get from cache            │
-   └────────────────────────────────────────┘
+   +----------------------------------------+
+   | Request 1: Acquire lock, fetch from DB |
+   | Request 2-4: Wait for lock release     |
+   | Request 1: Store in cache, release     |
+   | Request 2-4: Get from cache            |
+   +----------------------------------------+
 
 2. PROBABILISTIC EARLY EXPIRATION
-   ┌────────────────────────────────────────┐
-   │ TTL = 3600                             │
-   │ Refresh at: 3000 + random(0-600)       │
-   │ Requests refreshar vid olika tider    │
-   └────────────────────────────────────────┘
+   +----------------------------------------+
+   | TTL = 3600                             |
+   | Refresh at: 3000 + random(0-600)       |
+   | Requests refreshar vid olika tider    |
+   +----------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Cache Teknologier
 
@@ -940,7 +940,7 @@ Losningar:
 | **CDN** | Edge cache | Static content |
 | **Browser** | Client | Assets, API responses |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -951,7 +951,7 @@ Losningar:
 | Memory exhaustion | For mycket data | Eviction policy |
 | Hot keys | Ojamn fordelning | Replication |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -980,7 +980,7 @@ Losningar:
             "xp_reward": 140,
             "content": """# Database Fundamentals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -992,21 +992,21 @@ Losningar:
 | **Backup** | Disaster recovery |
 | **Compliance** | Data governance |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SQL vs NoSQL
 
 ```
 SQL DATABASES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-  │   Users     │    │   Orders    │    │  Products   │
-  ├─────────────┤    ├─────────────┤    ├─────────────┤
-  │ id          │───>│ user_id     │    │ id          │
-  │ name        │    │ product_id  │<───│ name        │
-  │ email       │    │ quantity    │    │ price       │
-  └─────────────┘    └─────────────┘    └─────────────┘
+  +-------------+    +-------------+    +-------------+
+  |   Users     |    |   Orders    |    |  Products   |
+  +-------------+    +-------------+    +-------------+
+  | id          |--->| user_id     |    | id          |
+  | name        |    | product_id  |<---| name        |
+  | email       |    | quantity    |    | price       |
+  +-------------+    +-------------+    +-------------+
 
   + ACID compliance
   + Relationella queries
@@ -1016,19 +1016,19 @@ SQL DATABASES
   Exempel: PostgreSQL, MySQL, Oracle
 
 NoSQL DATABASES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
   Document Store:           Key-Value:
-  ┌───────────────────┐    ┌────────────────────┐
-  │ {                 │    │ "user:123" -> data │
-  │   "_id": "123",   │    │ "session:abc" -> {}│
-  │   "name": "Anna", │    └────────────────────┘
-  │   "orders": [...]│
-  │ }                 │    Wide Column:
-  └───────────────────┘    ┌────────────────────┐
-                           │ Row -> Column Fam  │
-  Graph:                   │      -> Columns    │
-  (User)--[BOUGHT]->(Prod) └────────────────────┘
+  +-------------------+    +--------------------+
+  | {                 |    | "user:123" -> data |
+  |   "_id": "123",   |    | "session:abc" -> {}|
+  |   "name": "Anna", |    +--------------------+
+  |   "orders": [...]|
+  | }                 |    Wide Column:
+  +-------------------+    +--------------------+
+                           | Row -> Column Fam  |
+  Graph:                   |      -> Columns    |
+  (User)--[BOUGHT]->(Prod) +--------------------+
 
   + Flexibelt schema
   + Horisontell skalning
@@ -1037,35 +1037,35 @@ NoSQL DATABASES
   Exempel: MongoDB, Redis, Cassandra, Neo4j
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ACID Properties
 
 ```
 A - ATOMICITY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 "Allt eller inget"
 
 Transaction:
-1. Debit account A  -$100  ┐
-2. Credit account B +$100  ┘ Bada eller ingen
+1. Debit account A  -$100  +
+2. Credit account B +$100  + Bada eller ingen
 
 C - CONSISTENCY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 "Fran ett giltigt state till ett annat"
 
 Before: Total = $1000
 After:  Total = $1000 (fortfarande)
 
 I - ISOLATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 "Transaktioner ser inte varandras mellantillstand"
 
 T1: Read balance -> $100
 T2: Read balance -> $100 (inte T1:s ocommittade -$50)
 
 D - DURABILITY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 "Committade transaktioner overlever krasch"
 
 COMMIT; <-- Skrivet till disk/log
@@ -1073,20 +1073,20 @@ COMMIT; <-- Skrivet till disk/log
 [RESTART] <-- Data finns kvar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Indexering
 
 ```
 UTAN INDEX
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 SELECT * FROM users WHERE email = 'a@b.com'
 
 Soks igenom ALLA rader: O(n)
 1000000 rader = 1000000 jamforelser
 
 MED INDEX (B-Tree)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
                   [M]
                  /   \\
@@ -1119,39 +1119,39 @@ ON orders(user_id, created_at);
 -- Undvik: Index pa kolumner som andras ofta
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Normalisering
 
 ```
 ONORMALISERAT (Redundans)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 Orders:
-┌────────────────────────────────────────────┐
-│ order_id │ customer_name │ customer_email  │
-├──────────┼───────────────┼─────────────────┤
-│ 1        │ Anna          │ anna@mail.com   │
-│ 2        │ Anna          │ anna@mail.com   │ DUBLETT
-│ 3        │ Anna          │ anna@mail.com   │ DUBLETT
-└────────────────────────────────────────────┘
++--------------------------------------------+
+| order_id | customer_name | customer_email  |
++----------+---------------+-----------------+
+| 1        | Anna          | anna@mail.com   |
+| 2        | Anna          | anna@mail.com   | DUBLETT
+| 3        | Anna          | anna@mail.com   | DUBLETT
++--------------------------------------------+
 
 NORMALISERAT (3NF)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 Customers:              Orders:
-┌──────────────────┐   ┌───────────────────┐
-│ id │ name │email │   │ id │ customer_id  │
-├────┼──────┼──────┤   ├────┼──────────────┤
-│ 1  │ Anna │a@... │   │ 1  │ 1            │
-└──────────────────┘   │ 2  │ 1            │
-                       │ 3  │ 1            │
-                       └───────────────────┘
++------------------+   +-------------------+
+| id | name |email |   | id | customer_id  |
++----+------+------+   +----+--------------+
+| 1  | Anna |a@... |   | 1  | 1            |
++------------------+   | 2  | 1            |
+                       | 3  | 1            |
+                       +-------------------+
 
 + Ingen redundans
 + Enklare uppdateringar
 - Mer JOINs
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Database Val
 
@@ -1165,7 +1165,7 @@ Customers:              Orders:
 | **Graph** | Neo4j |
 | **Search** | Elasticsearch |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1176,7 +1176,7 @@ Customers:              Orders:
 | N+1 queries | ORM lazy load | Eager loading / JOIN |
 | Deadlocks | Lock contention | Consistent ordering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1205,7 +1205,7 @@ Customers:              Orders:
             "xp_reward": 140,
             "content": """# Database Replication
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1217,32 +1217,32 @@ Customers:              Orders:
 | **Backup** | Point-in-time recovery |
 | **Analytics** | Separata read replicas |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Master-Slave (Primary-Replica)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              MASTER-SLAVE REPLICATION                    │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              MASTER-SLAVE REPLICATION                    |
++----------------------------------------------------------+
 
-                     ┌─────────────┐
-     Writes ────────>│   MASTER    │
-                     │  (Primary)  │
-                     └──────┬──────┘
-                            │
-              Replication   │   (async/sync)
-                            │
-            ┌───────────────┼───────────────┐
-            │               │               │
+                     +-------------+
+     Writes -------->|   MASTER    |
+                     |  (Primary)  |
+                     +------+------+
+                            |
+              Replication   |   (async/sync)
+                            |
+            +---------------+---------------+
+            |               |               |
             v               v               v
-      ┌──────────┐    ┌──────────┐    ┌──────────┐
-      │  SLAVE   │    │  SLAVE   │    │  SLAVE   │
-      │ Replica 1│    │ Replica 2│    │ Replica 3│
-      └────┬─────┘    └────┬─────┘    └────┬─────┘
-           │               │               │
-           └───────────────┼───────────────┘
-                           │
+      +----------+    +----------+    +----------+
+      |  SLAVE   |    |  SLAVE   |    |  SLAVE   |
+      | Replica 1|    | Replica 2|    | Replica 3|
+      +----+-----+    +----+-----+    +----+-----+
+           |               |               |
+           +---------------+---------------+
+                           |
                         Reads
 
 + Enkelt att forsta
@@ -1251,22 +1251,22 @@ Customers:              Orders:
 - Write bottleneck
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Master-Master (Multi-Master)
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              MASTER-MASTER REPLICATION                   │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              MASTER-MASTER REPLICATION                   |
++----------------------------------------------------------+
 
      Writes/Reads              Writes/Reads
-          │                         │
+          |                         |
           v                         v
-    ┌──────────┐              ┌──────────┐
-    │ MASTER 1 │<────────────>│ MASTER 2 │
-    │          │  Bi-dir      │          │
-    └──────────┘  Replication └──────────┘
+    +----------+              +----------+
+    | MASTER 1 |<------------>| MASTER 2 |
+    |          |  Bi-dir      |          |
+    +----------+  Replication +----------+
 
 + Ingen single point of failure
 + Write scaling
@@ -1288,16 +1288,16 @@ Losningar:
 3. Konflikt-fria CRDT datastrukturer
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Synchronous vs Asynchronous
 
 ```
 SYNCHRONOUS REPLICATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-Client ──> Master ──> Replica ──> ACK ──> Master ──> Client
-                                   │
+Client --> Master --> Replica --> ACK --> Master --> Client
+                                   |
                       Vantar pa bekraftelse
 
 + Ingen data loss
@@ -1306,11 +1306,11 @@ Client ──> Master ──> Replica ──> ACK ──> Master ──> Client
 - Replika-problem paverkar writes
 
 ASYNCHRONOUS REPLICATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-Client ──> Master ──> Client (returnerar direkt)
-               │
-               └──> Replica (i bakgrunden)
+Client --> Master --> Client (returnerar direkt)
+               |
+               +--> Replica (i bakgrunden)
 
 + Lag latency
 + Replika-problem paverkar ej writes
@@ -1318,24 +1318,24 @@ Client ──> Master ──> Client (returnerar direkt)
 - Replication lag
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Replication Lag
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                 REPLICATION LAG                          │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                 REPLICATION LAG                          |
++----------------------------------------------------------+
 
 Timeline:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 t=0     Master: INSERT user (id=1, name='Anna')
 t=0     Client: "Success!"
 t=0.5   Replica: (not yet received)
 t=0.5   Client: SELECT * FROM users WHERE id=1
         -> Reads from replica -> "User not found!"
 t=1     Replica: INSERT user (id=1, name='Anna')
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Losningar:
 1. Read-your-writes: Las fran master efter write
@@ -1343,31 +1343,31 @@ Losningar:
 3. Synchronous replication (for kritisk data)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Failover Strategier
 
 ```
 AUTOMATIC FAILOVER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-      ┌──────────┐
-      │  Master  │ <── Health check fails!
-      │   [X]    │
-      └──────────┘
-           │
-           │ Sentinel/Orchestrator detects
+      +----------+
+      |  Master  | <-- Health check fails!
+      |   [X]    |
+      +----------+
+           |
+           | Sentinel/Orchestrator detects
            v
-      ┌──────────┐
-      │ Replica  │ ─── Promoted to Master
-      │   [OK]   │
-      └──────────┘
-           │
+      +----------+
+      | Replica  | --- Promoted to Master
+      |   [OK]   |
+      +----------+
+           |
            v
       Other replicas reconfigured
 
 MANUAL FAILOVER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 1. DBA detects issue
 2. Stops writes to old master
 3. Promotes replica
@@ -1375,7 +1375,7 @@ MANUAL FAILOVER
 5. Resumes operations
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Replication
 
@@ -1387,7 +1387,7 @@ MANUAL FAILOVER
 | **Redis** | Async, Sentinel |
 | **CockroachDB** | Raft consensus |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1398,7 +1398,7 @@ MANUAL FAILOVER
 | Data loss | Async + master crash | Sync for kritisk data |
 | Stale reads | Lag | Read-your-writes |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1427,7 +1427,7 @@ MANUAL FAILOVER
             "xp_reward": 150,
             "content": """# Database Sharding
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1439,38 +1439,38 @@ MANUAL FAILOVER
 | **Isolation** | Tenant-separation |
 | **Compliance** | Data residency |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Sharding?
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                 SINGLE DATABASE                          │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │ Users Table: 100 million rows                      │ │
-│  │ All on ONE server                                  │ │
-│  │ [SLOW QUERIES, STORAGE LIMIT, BOTTLENECK]         │ │
-│  └────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                 SINGLE DATABASE                          |
+|  +----------------------------------------------------+ |
+|  | Users Table: 100 million rows                      | |
+|  | All on ONE server                                  | |
+|  | [SLOW QUERIES, STORAGE LIMIT, BOTTLENECK]         | |
+|  +----------------------------------------------------+ |
++----------------------------------------------------------+
 
-                         │
-                         │ Sharding
+                         |
+                         | Sharding
                          v
 
-┌──────────────────────────────────────────────────────────┐
-│                  SHARDED DATABASE                        │
-│                                                          │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐     │
-│  │   Shard 1    │ │   Shard 2    │ │   Shard 3    │     │
-│  │  Users A-H   │ │  Users I-P   │ │  Users Q-Z   │     │
-│  │  33M rows    │ │  33M rows    │ │  34M rows    │     │
-│  └──────────────┘ └──────────────┘ └──────────────┘     │
-│                                                          │
-│  [PARALLEL QUERIES, DISTRIBUTED, SCALABLE]              │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                  SHARDED DATABASE                        |
+|                                                          |
+|  +--------------+ +--------------+ +--------------+     |
+|  |   Shard 1    | |   Shard 2    | |   Shard 3    |     |
+|  |  Users A-H   | |  Users I-P   | |  Users Q-Z   |     |
+|  |  33M rows    | |  33M rows    | |  34M rows    |     |
+|  +--------------+ +--------------+ +--------------+     |
+|                                                          |
+|  [PARALLEL QUERIES, DISTRIBUTED, SCALABLE]              |
++----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Sharding Strategier
 
@@ -1478,15 +1478,15 @@ MANUAL FAILOVER
 
 ```
 RANGE-BASED SHARDING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Shard Key: user_id
 
-┌─────────────────────────────────────────────────────────┐
-│ user_id 1-1000000       -> Shard 1                      │
-│ user_id 1000001-2000000 -> Shard 2                      │
-│ user_id 2000001-3000000 -> Shard 3                      │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+| user_id 1-1000000       -> Shard 1                      |
+| user_id 1000001-2000000 -> Shard 2                      |
+| user_id 2000001-3000000 -> Shard 3                      |
++---------------------------------------------------------+
 
 + Enkelt att implementera
 + Range queries effektiva
@@ -1498,7 +1498,7 @@ Shard Key: user_id
 
 ```
 HASH-BASED SHARDING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 shard_id = hash(user_id) % num_shards
 
@@ -1516,17 +1516,17 @@ user_id=11111 -> hash(11111) % 3 = 2 -> Shard 2
 
 ```
 DIRECTORY-BASED SHARDING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌───────────────────────────────────┐
-│          LOOKUP SERVICE           │
-├───────────────────────────────────┤
-│ tenant_id │ shard_location        │
-├───────────┼───────────────────────┤
-│ acme      │ shard-eu-1            │
-│ globex    │ shard-us-1            │
-│ initech   │ shard-eu-2            │
-└───────────┴───────────────────────┘
++-----------------------------------+
+|          LOOKUP SERVICE           |
++-----------------------------------+
+| tenant_id | shard_location        |
++-----------+-----------------------+
+| acme      | shard-eu-1            |
+| globex    | shard-us-1            |
+| initech   | shard-eu-2            |
++-----------+-----------------------+
 
 + Flexibel mapping
 + Enkel resharding
@@ -1534,13 +1534,13 @@ DIRECTORY-BASED SHARDING
 - Lookup service = SPOF
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Shard Key Val
 
 ```
 BRA SHARD KEYS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Hog kardinalitet (manga unika varden)
 - Jamn distribution
 - Anvands i de flesta queries
@@ -1552,14 +1552,14 @@ Exempel:
 - region (geo-distribution)
 
 DALIGA SHARD KEYS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Lag kardinalitet (status: active/inactive)
 - Monotonically increasing (timestamp)
 - Frequently updated columns
 - Nullable columns
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cross-Shard Queries
 
@@ -1568,18 +1568,18 @@ PROBLEM: Query som behover data fran flera shards
 
 SELECT * FROM orders WHERE status = 'pending'
 
-        ┌──────────┐
-        │  Router  │
-        └────┬─────┘
-             │
-   ┌─────────┼─────────┐
+        +----------+
+        |  Router  |
+        +----+-----+
+             |
+   +---------+---------+
    v         v         v
-┌──────┐ ┌──────┐ ┌──────┐
-│Shard1│ │Shard2│ │Shard3│
-│ 100  │ │  50  │ │  75  │
-└──────┘ └──────┘ └──────┘
-   │         │         │
-   └─────────┼─────────┘
++------+ +------+ +------+
+|Shard1| |Shard2| |Shard3|
+| 100  | |  50  | |  75  |
++------+ +------+ +------+
+   |         |         |
+   +---------+---------+
              v
       Merge: 225 results
 
@@ -1590,7 +1590,7 @@ LOSNINGAR:
 4. Application-level joins
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Resharding
 
@@ -1598,10 +1598,10 @@ LOSNINGAR:
 NAR: Shard blir for stor eller ojamn distribution
 
 BEFORE:                    AFTER:
-┌────────┐ ┌────────┐     ┌────────┐ ┌────────┐ ┌────────┐
-│Shard 1 │ │Shard 2 │     │Shard 1 │ │Shard 2 │ │Shard 3 │
-│ 70%    │ │ 30%    │ --> │ 35%    │ │ 30%    │ │ 35%    │
-└────────┘ └────────┘     └────────┘ └────────┘ └────────┘
++--------+ +--------+     +--------+ +--------+ +--------+
+|Shard 1 | |Shard 2 |     |Shard 1 | |Shard 2 | |Shard 3 |
+| 70%    | | 30%    | --> | 35%    | | 30%    | | 35%    |
++--------+ +--------+     +--------+ +--------+ +--------+
 
 STRATEGIER:
 1. Double-write under migration
@@ -1609,7 +1609,7 @@ STRATEGIER:
 3. Consistent hashing (minimerar flytt)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Sharding Solutions
 
@@ -1621,7 +1621,7 @@ STRATEGIER:
 | **Citus** | PostgreSQL extension |
 | **Cassandra** | Native partitioning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1632,7 +1632,7 @@ STRATEGIER:
 | Uneven shards | Growth pattern | Resharding |
 | Complex joins | Distributed data | Application joins |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1661,7 +1661,7 @@ STRATEGIER:
             "xp_reward": 140,
             "content": """# CAP Theorem
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1673,20 +1673,20 @@ STRATEGIER:
 | **SLA design** | Ratt forvantan |
 | **Systemforstaelse** | Distributed systems |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## De tre egenskaperna
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                    CAP THEOREM                           │
-│                                                          │
-│        C - Consistency (Konsistens)                      │
-│        A - Availability (Tillganglighet)                 │
-│        P - Partition Tolerance (Partitionstolerans)      │
-│                                                          │
-│  "Du kan bara valja TVA av tre i ett distribuerat system"│
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                    CAP THEOREM                           |
+|                                                          |
+|        C - Consistency (Konsistens)                      |
+|        A - Availability (Tillganglighet)                 |
+|        P - Partition Tolerance (Partitionstolerans)      |
+|                                                          |
+|  "Du kan bara valja TVA av tre i ett distribuerat system"|
++----------------------------------------------------------+
 
                       C
                      /\\
@@ -1700,22 +1700,22 @@ STRATEGIER:
                     AP
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## C - Consistency
 
 ```
 CONSISTENCY (Linearizability)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Alla noder ser samma data vid samma tidpunkt.
 
-    Client A: WRITE x=5 ──> Node 1
+    Client A: WRITE x=5 --> Node 1
 
-         Node 1 ────── sync ────── Node 2
+         Node 1 ------ sync ------ Node 2
          x=5                       x=5
 
-    Client B: READ x ──> Node 2
+    Client B: READ x --> Node 2
     Result: x=5 (alltid samma som senaste write)
 
 STARKT KONSISTENT:
@@ -1724,18 +1724,18 @@ STARKT KONSISTENT:
 - "Som en enda dator"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## A - Availability
 
 ```
 AVAILABILITY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Varje request far ett svar (success eller failure).
 
-    Client ──> Request ──> System ──> Response
-                             │
+    Client --> Request --> System --> Response
+                             |
                      Aldrig "no response"
                      Alltid svar inom rimlig tid
 
@@ -1745,21 +1745,21 @@ HOGT TILLGANGLIGT:
 - Kan vara stale data
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## P - Partition Tolerance
 
 ```
 PARTITION TOLERANCE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Systemet fortsatter fungera trots natverkspartitioner.
 
-    ┌──────────────┐          ┌──────────────┐
-    │    Node 1    │    X     │    Node 2    │
-    │              │<--//-->  │              │
-    │   Region A   │  Network │   Region B   │
-    └──────────────┘ Partition└──────────────┘
+    +--------------+          +--------------+
+    |    Node 1    |    X     |    Node 2    |
+    |              |<--//-->  |              |
+    |   Region A   |  Network |   Region B   |
+    +--------------+ Partition+--------------+
 
 PARTITION TOLERANT:
 - Hanterar natverksfel
@@ -1767,43 +1767,43 @@ PARTITION TOLERANT:
 - Fragor: Vad gor vi nar partition uppstar?
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CAP Kombinationer
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  CP - CONSISTENCY + PARTITION TOLERANCE                  │
-├──────────────────────────────────────────────────────────┤
-│  Vid partition: Vissa requests nekas (unavailable)       │
-│  Garanti: Data alltid konsistent                        │
-│                                                          │
-│  Exempel: MongoDB (i vissa configs), HBase, Redis       │
-│  Use case: Bank transaktioner, inventory                │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  CP - CONSISTENCY + PARTITION TOLERANCE                  |
++----------------------------------------------------------+
+|  Vid partition: Vissa requests nekas (unavailable)       |
+|  Garanti: Data alltid konsistent                        |
+|                                                          |
+|  Exempel: MongoDB (i vissa configs), HBase, Redis       |
+|  Use case: Bank transaktioner, inventory                |
++----------------------------------------------------------+
 
-┌──────────────────────────────────────────────────────────┐
-│  AP - AVAILABILITY + PARTITION TOLERANCE                 │
-├──────────────────────────────────────────────────────────┤
-│  Vid partition: Svarar alltid, men data kan vara stale  │
-│  Garanti: System alltid tillgangligt                    │
-│                                                          │
-│  Exempel: Cassandra, DynamoDB, CouchDB                  │
-│  Use case: Social media feeds, shopping carts           │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  AP - AVAILABILITY + PARTITION TOLERANCE                 |
++----------------------------------------------------------+
+|  Vid partition: Svarar alltid, men data kan vara stale  |
+|  Garanti: System alltid tillgangligt                    |
+|                                                          |
+|  Exempel: Cassandra, DynamoDB, CouchDB                  |
+|  Use case: Social media feeds, shopping carts           |
++----------------------------------------------------------+
 
-┌──────────────────────────────────────────────────────────┐
-│  CA - CONSISTENCY + AVAILABILITY                         │
-├──────────────────────────────────────────────────────────┤
-│  Endast mojligt utan partitioner (single node)          │
-│  I praktiken: Distribuerade system MASTE ha P           │
-│                                                          │
-│  Exempel: Single-node PostgreSQL, MySQL                 │
-│  Use case: Smarre applikationer                         │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  CA - CONSISTENCY + AVAILABILITY                         |
++----------------------------------------------------------+
+|  Endast mojligt utan partitioner (single node)          |
+|  I praktiken: Distribuerade system MASTE ha P           |
+|                                                          |
+|  Exempel: Single-node PostgreSQL, MySQL                 |
+|  Use case: Smarre applikationer                         |
++----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Partition Scenario
 
@@ -1811,63 +1811,63 @@ PARTITION TOLERANT:
 SCENARIO: Network partition mellan datacenters
 
              BEFORE PARTITION
-             ━━━━━━━━━━━━━━━━
-    ┌────────────┐     ┌────────────┐
-    │ Datacenter │<--->│ Datacenter │
-    │     A      │sync │     B      │
-    │   x=100    │     │   x=100    │
-    └────────────┘     └────────────┘
+             ----------------
+    +------------+     +------------+
+    | Datacenter |<--->| Datacenter |
+    |     A      |sync |     B      |
+    |   x=100    |     |   x=100    |
+    +------------+     +------------+
 
              PARTITION OCCURS
-             ━━━━━━━━━━━━━━━━
-    ┌────────────┐  X  ┌────────────┐
-    │ Datacenter │     │ Datacenter │
-    │     A      │     │     B      │
-    └────────────┘     └────────────┘
+             ----------------
+    +------------+  X  +------------+
+    | Datacenter |     | Datacenter |
+    |     A      |     |     B      |
+    +------------+     +------------+
 
 Client A writes x=200 to DC A
 Client B writes x=300 to DC B
 
              CP CHOICE:
-             ━━━━━━━━━━
+             ----------
     DC A: Accept write (x=200)
     DC B: REJECT write (unavailable)
     Result: Konsistent men ej fullt tillganglig
 
              AP CHOICE:
-             ━━━━━━━━━━
+             ----------
     DC A: Accept write (x=200)
     DC B: Accept write (x=300)
     Result: Tillgangligt men konflikt uppstar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## PACELC - Utokad modell
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  PACELC: Mer nyanserad an CAP                           │
-├──────────────────────────────────────────────────────────┤
-│                                                          │
-│  if (Partition) {                                        │
-│      choose: Availability OR Consistency                 │
-│  } else {                                                │
-│      choose: Latency OR Consistency                      │
-│  }                                                       │
-│                                                          │
-│  PA/EL: Availability vid partition, Latency normalt     │
-│         (Cassandra, DynamoDB)                           │
-│                                                          │
-│  PC/EC: Consistency alltid                              │
-│         (MongoDB, HBase)                                │
-│                                                          │
-│  PA/EC: Availability vid partition, Consistency normalt │
-│         (Yahoo PNUTS)                                   │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|  PACELC: Mer nyanserad an CAP                           |
++----------------------------------------------------------+
+|                                                          |
+|  if (Partition) {                                        |
+|      choose: Availability OR Consistency                 |
+|  } else {                                                |
+|      choose: Latency OR Consistency                      |
+|  }                                                       |
+|                                                          |
+|  PA/EL: Availability vid partition, Latency normalt     |
+|         (Cassandra, DynamoDB)                           |
+|                                                          |
+|  PC/EC: Consistency alltid                              |
+|         (MongoDB, HBase)                                |
+|                                                          |
+|  PA/EC: Availability vid partition, Consistency normalt |
+|         (Yahoo PNUTS)                                   |
++----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Databaser och CAP
 
@@ -1880,7 +1880,7 @@ Client B writes x=300 to DC B
 | **Redis Cluster** | CP | PC/EC |
 | **CockroachDB** | CP | PC/EC |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1891,7 +1891,7 @@ Client B writes x=300 to DC B
 | Unavailability | CP under partition | Failover strategy |
 | Data conflicts | AP writes | CRDT, last-write-wins |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1920,7 +1920,7 @@ Client B writes x=300 to DC B
             "xp_reward": 130,
             "content": """# Message Queues
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1932,96 +1932,96 @@ Client B writes x=300 to DC B
 | **Reliability** | Garanterad leverans |
 | **Scaling** | Oberoende skalning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundkoncept
 
 ```
 SYNCHRONOUS (Utan queue)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-User ──> API ──> Email Service ──> Response
-              │
-              └── Vantar pa email att skickas (slow!)
+User --> API --> Email Service --> Response
+              |
+              +-- Vantar pa email att skickas (slow!)
 
 ASYNCHRONOUS (Med queue)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-User ──> API ──> Queue ──> Response (snabbt!)
-                   │
-                   └──> Email Worker ──> Skickar email
+User --> API --> Queue --> Response (snabbt!)
+                   |
+                   +--> Email Worker --> Skickar email
                         (i bakgrunden)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Queue Arkitektur
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│               MESSAGE QUEUE ARCHITECTURE                 │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|               MESSAGE QUEUE ARCHITECTURE                 |
++----------------------------------------------------------+
 
-  ┌──────────┐    ┌──────────────────────┐    ┌──────────┐
-  │ Producer │───>│       QUEUE          │───>│ Consumer │
-  │          │    │  ┌──┬──┬──┬──┬──┐   │    │          │
-  │ Service A│    │  │M1│M2│M3│M4│M5│   │    │ Worker 1 │
-  └──────────┘    │  └──┴──┴──┴──┴──┘   │    └──────────┘
-                  │                      │
-  ┌──────────┐    │  FIFO (vanligtvis)   │    ┌──────────┐
-  │ Producer │───>│                      │───>│ Consumer │
-  │          │    └──────────────────────┘    │          │
-  │ Service B│                                │ Worker 2 │
-  └──────────┘                                └──────────┘
+  +----------+    +----------------------+    +----------+
+  | Producer |--->|       QUEUE          |--->| Consumer |
+  |          |    |  +--+--+--+--+--+   |    |          |
+  | Service A|    |  |M1|M2|M3|M4|M5|   |    | Worker 1 |
+  +----------+    |  +--+--+--+--+--+   |    +----------+
+                  |                      |
+  +----------+    |  FIFO (vanligtvis)   |    +----------+
+  | Producer |--->|                      |--->| Consumer |
+  |          |    +----------------------+    |          |
+  | Service B|                                | Worker 2 |
+  +----------+                                +----------+
 
 Producer: Skickar meddelanden
 Queue: Lagrar meddelanden
 Consumer: Processerar meddelanden
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Point-to-Point vs Pub/Sub
 
 ```
 POINT-TO-POINT (Queue)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-Producer ──> [Queue] ──> Consumer
-                 │
+Producer --> [Queue] --> Consumer
+                 |
     Meddelande tas bort efter konsumtion
     EN consumer per meddelande
 
 PUB/SUB (Topic)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-                    ┌──> Subscriber A
-Publisher ──> Topic─┼──> Subscriber B
-                    └──> Subscriber C
-                 │
+                    +--> Subscriber A
+Publisher --> Topic-+--> Subscriber B
+                    +--> Subscriber C
+                 |
     Meddelande levereras till ALLA subscribers
     MANGA consumers per meddelande
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Delivery Guarantees
 
 ```
 AT-MOST-ONCE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Producer ──> Queue ──> Consumer
-              │
+------------------------------------------------------------
+Producer --> Queue --> Consumer
+              |
     Meddelandet KAN forsvinna
     Ingen retry
 
 Use case: Metrics, logs (ok att tappa nagra)
 
 AT-LEAST-ONCE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Producer ──> Queue ──> Consumer ──> ACK
-              │           │
-              └───────────┘ Retry om ingen ACK
+------------------------------------------------------------
+Producer --> Queue --> Consumer --> ACK
+              |           |
+              +-----------+ Retry om ingen ACK
 
     Meddelandet KAN levereras flera ganger
     Consumer maste vara idempotent!
@@ -2029,29 +2029,29 @@ Producer ──> Queue ──> Consumer ──> ACK
 Use case: De flesta fall (payments, orders)
 
 EXACTLY-ONCE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
     Svart att uppna i distribuerade system
     Kraver transaktioner + deduplication
 
 Use case: Finansiella transaktioner
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dead Letter Queue
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│               DEAD LETTER QUEUE (DLQ)                    │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|               DEAD LETTER QUEUE (DLQ)                    |
++----------------------------------------------------------+
 
-                                    ┌─────────────────┐
-                    Fail x 3        │  Dead Letter    │
-                 ┌─────────────────>│     Queue       │
-                 │                  │                 │
-┌─────────┐    ┌─┴───────┐        └────────┬────────┘
-│ Queue   │───>│ Consumer │                 │
-└─────────┘    └─────────┘                  v
+                                    +-----------------+
+                    Fail x 3        |  Dead Letter    |
+                 +----------------->|     Queue       |
+                 |                  |                 |
++---------+    +-+-------+        +--------+--------+
+| Queue   |--->| Consumer |                 |
++---------+    +---------+                  v
                                     Manual inspection
                                     or alerting
 
@@ -2062,45 +2062,45 @@ DLQ anvands for:
 - Debugging och analys
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Consumer Patterns
 
 ```
 COMPETING CONSUMERS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-       ┌─────────┐
-       │Consumer1│◄──┐
-       └─────────┘   │
-                     │
-┌─────────┐   ┌──────┴──────┐
-│ Queue   │──>│ Load Balance│
-└─────────┘   └──────┬──────┘
-                     │
-       ┌─────────┐   │
-       │Consumer2│◄──┘
-       └─────────┘
+       +---------+
+       |Consumer1|◄--+
+       +---------+   |
+                     |
++---------+   +------+------+
+| Queue   |-->| Load Balance|
++---------+   +------+------+
+                     |
+       +---------+   |
+       |Consumer2|◄--+
+       +---------+
 
 + Horisontell skalning
 + Fel-tolerant
 
 CONSUMER GROUPS (Kafka)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Topic Partitions:
-┌──────┐ ┌──────┐ ┌──────┐
-│ P0   │ │ P1   │ │ P2   │
-└───┬──┘ └───┬──┘ └───┬──┘
-    │        │        │
++------+ +------+ +------+
+| P0   | | P1   | | P2   |
++---+--+ +---+--+ +---+--+
+    |        |        |
     v        v        v
-┌──────┐ ┌──────┐ ┌──────┐
-│ C0   │ │ C1   │ │ C2   │
-└──────┘ └──────┘ └──────┘
++------+ +------+ +------+
+| C0   | | C1   | | C2   |
++------+ +------+ +------+
   Consumer Group A
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Queue Teknologier
 
@@ -2112,7 +2112,7 @@ Topic Partitions:
 | **Redis** | In-memory | Fast pub/sub |
 | **NATS** | Lightweight | Microservices |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -2123,7 +2123,7 @@ Topic Partitions:
 | Queue buildup | Slow consumer | Scale consumers |
 | Poison messages | Bad data | DLQ + validation |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2152,7 +2152,7 @@ Topic Partitions:
             "xp_reward": 120,
             "content": """# CDN & Edge Computing
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2164,63 +2164,63 @@ Topic Partitions:
 | **DDoS** | Edge absorption |
 | **Kostnad** | Minska origin load |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en CDN?
 
 ```
 UTAN CDN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-User i Tokyo ────────────────────> Origin i Stockholm
+User i Tokyo --------------------> Origin i Stockholm
                  200ms RTT
                  Alla requests gar till origin
 
 MED CDN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-                          ┌─────────────────┐
-                          │  Origin Server  │
-                          │   Stockholm     │
-                          └────────┬────────┘
-                                   │
-               Cache miss          │
-          ┌────────────────────────┴──────────────────────┐
-          │                        │                      │
-    ┌─────┴─────┐           ┌──────┴──────┐        ┌──────┴──────┐
-    │ Edge PoP  │           │  Edge PoP   │        │  Edge PoP   │
-    │   Tokyo   │           │   London    │        │  New York   │
-    └─────┬─────┘           └─────────────┘        └─────────────┘
-          │ 20ms
-          │ Cache hit
-    ┌─────┴─────┐
-    │   User    │
-    │   Tokyo   │
-    └───────────┘
+                          +-----------------+
+                          |  Origin Server  |
+                          |   Stockholm     |
+                          +--------+--------+
+                                   |
+               Cache miss          |
+          +------------------------+----------------------+
+          |                        |                      |
+    +-----+-----+           +------+------+        +------+------+
+    | Edge PoP  |           |  Edge PoP   |        |  Edge PoP   |
+    |   Tokyo   |           |   London    |        |  New York   |
+    +-----+-----+           +-------------+        +-------------+
+          | 20ms
+          | Cache hit
+    +-----+-----+
+    |   User    |
+    |   Tokyo   |
+    +-----------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CDN Caching
 
 ```
 REQUEST FLOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. User requests: https://cdn.example.com/image.jpg
 
 2. DNS resolves to nearest edge
 
 3. Edge checks cache:
-   ┌────────────────────────────────────────┐
-   │  CACHE HIT?                            │
-   ├────────────────────────────────────────┤
-   │  YES: Return cached content (fast!)    │
-   │  NO:  Fetch from origin, cache, return │
-   └────────────────────────────────────────┘
+   +----------------------------------------+
+   |  CACHE HIT?                            |
+   +----------------------------------------+
+   |  YES: Return cached content (fast!)    |
+   |  NO:  Fetch from origin, cache, return |
+   +----------------------------------------+
 
 CACHE HEADERS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Cache-Control: max-age=86400        # Cache 1 dag
 Cache-Control: s-maxage=3600        # CDN cache 1 timme
@@ -2229,34 +2229,34 @@ Cache-Control: no-store             # Aldrig cacha
 ETag: "abc123"                      # Version for validation
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Push vs Pull CDN
 
 ```
 PULL CDN (Origin Pull)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-Request ──> Edge (cache miss) ──> Origin
-                │
+Request --> Edge (cache miss) --> Origin
+                |
             Cachar svaret
-                │
-Request ──> Edge (cache hit) ──> Return
+                |
+Request --> Edge (cache hit) --> Return
 
 + Automatiskt
 + Enkelt att konfigurera
 - Forsta request ar langsammare
 
 PUSH CDN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Deploy: Upload content to ALL edges
 
-┌────────┐    Push    ┌────────┐
-│ Origin │ ──────────>│ Edge 1 │
-│        │ ──────────>│ Edge 2 │
-│        │ ──────────>│ Edge 3 │
-└────────┘            └────────┘
++--------+    Push    +--------+
+| Origin | ---------->| Edge 1 |
+|        | ---------->| Edge 2 |
+|        | ---------->| Edge 3 |
++--------+            +--------+
 
 + Ingen cold start
 + Full kontroll
@@ -2264,31 +2264,31 @@ Deploy: Upload content to ALL edges
 - Mer komplext
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Edge Computing
 
 ```
 TRADITIONAL: Compute at origin
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-User ──> CDN (static only) ──> Origin (all logic)
-                                    │
+User --> CDN (static only) --> Origin (all logic)
+                                    |
                               200ms latency
 
 EDGE COMPUTING: Compute at edge
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-                   ┌──────────────────┐
-User ──> CDN Edge ─┤ Run code here!   │
-          20ms     │ - A/B testing    │
-                   │ - Auth           │
-                   │ - Personalization│
-                   │ - API routing    │
-                   └──────────────────┘
+                   +------------------+
+User --> CDN Edge -+ Run code here!   |
+          20ms     | - A/B testing    |
+                   | - Auth           |
+                   | - Personalization|
+                   | - API routing    |
+                   +------------------+
 
 EDGE FUNCTIONS (Cloudflare Workers, Vercel Edge)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 // Runs at edge, not origin
 export default {
@@ -2302,13 +2302,13 @@ export default {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cache Invalidation
 
 ```
 STRATEGIER FOR INVALIDERING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. TTL-based (vanta ut)
    Cache-Control: max-age=3600
@@ -2333,7 +2333,7 @@ STRATEGIER FOR INVALIDERING
    - Kraver URL-andringar
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - CDN Providers
 
@@ -2345,7 +2345,7 @@ STRATEGIER FOR INVALIDERING
 | **Fastly** | Compute@Edge | High performance |
 | **Akamai** | EdgeWorkers | Enterprise |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -2356,7 +2356,7 @@ STRATEGIER FOR INVALIDERING
 | Origin overload | Cache bypass | Check headers |
 | Wrong region | DNS config | Anycast eller geo-routing |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2385,7 +2385,7 @@ STRATEGIER FOR INVALIDERING
             "xp_reward": 130,
             "content": """# API Design
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2397,13 +2397,13 @@ STRATEGIER FOR INVALIDERING
 | **DX** | Developer experience |
 | **Security** | Auth och authorization |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## REST API Principles
 
 ```
 REST FUNDAMENTALS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Resources (substantiv, inte verb):
   /users          (inte /getUsers)
@@ -2418,7 +2418,7 @@ HTTP Methods:
   DELETE  - Ta bort resurs
 
 STATUS CODES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 2xx - Success
   200 OK           - GET success
   201 Created      - POST success
@@ -2437,13 +2437,13 @@ STATUS CODES
   503 Unavailable  - Overloaded
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## REST API Exempel
 
 ```
 CRUD OPERATIONS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 # Lista alla users
 GET /api/v1/users
@@ -2474,20 +2474,20 @@ DELETE /api/v1/users/123
 Response: 204 No Content
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GraphQL
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                     GRAPHQL                              │
-├──────────────────────────────────────────────────────────┤
-│  + Klienten bestammer vilken data                       │
-│  + En endpoint for allt                                 │
-│  + Starkt typat schema                                  │
-│  - Komplexare implementation                            │
-│  - Caching mer utmanande                               │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                     GRAPHQL                              |
++----------------------------------------------------------+
+|  + Klienten bestammer vilken data                       |
+|  + En endpoint for allt                                 |
+|  + Starkt typat schema                                  |
+|  - Komplexare implementation                            |
+|  - Caching mer utmanande                               |
++----------------------------------------------------------+
 
 REST: Multiple endpoints, fixed response
 GET /users/123         -> {id, name, email, address, ...}
@@ -2520,23 +2520,23 @@ Response:
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## gRPC
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                       gRPC                               │
-├──────────────────────────────────────────────────────────┤
-│  + Hog performance (binary, HTTP/2)                     │
-│  + Stark typing med Protocol Buffers                    │
-│  + Bidirectional streaming                              │
-│  - Svarare att debugga                                  │
-│  - Begransat browserstod                                │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                       gRPC                               |
++----------------------------------------------------------+
+|  + Hog performance (binary, HTTP/2)                     |
+|  + Stark typing med Protocol Buffers                    |
+|  + Bidirectional streaming                              |
+|  - Svarare att debugga                                  |
+|  - Begransat browserstod                                |
++----------------------------------------------------------+
 
 Protocol Buffer definition:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 syntax = "proto3";
 
@@ -2557,13 +2557,13 @@ USE CASES:
 - Performance-critical APIs
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## API Versioning
 
 ```
 URL PATH (rekommenderas)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 /api/v1/users
 /api/v2/users
 
@@ -2572,27 +2572,27 @@ URL PATH (rekommenderas)
 - URL andras vid ny version
 
 HEADER-BASED
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 Accept: application/vnd.api+json; version=2
 
 + Renare URLs
 - Svarare att testa
 
 QUERY PARAMETER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 /api/users?version=2
 
 + Enkelt att testa
 - Mindre REST-ful
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pagination
 
 ```
 OFFSET-BASED
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 GET /users?limit=20&offset=40
 
 + Enkelt
@@ -2601,7 +2601,7 @@ GET /users?limit=20&offset=40
 - Inconsistent vid inserts
 
 CURSOR-BASED (rekommenderas)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 GET /users?limit=20&cursor=eyJpZCI6MTIzfQ==
 
 Response:
@@ -2618,7 +2618,7 @@ Response:
 - Kan inte hoppa till sida
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - API Val
 
@@ -2630,7 +2630,7 @@ Response:
 | **Real-time** | WebSocket, gRPC |
 | **Internal** | gRPC eller REST |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -2641,7 +2641,7 @@ Response:
 | Slow pagination | OFFSET | Cursor-based |
 | Over-fetching | Fixed responses | GraphQL eller sparse |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2670,7 +2670,7 @@ Response:
             "xp_reward": 160,
             "content": """# Microservices Architecture
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2682,28 +2682,28 @@ Response:
 | **Resilience** | Isolerade failures |
 | **Tech diversity** | Ratt verktyg per tjanst |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Monolith vs Microservices
 
 ```
 MONOLITH
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌──────────────────────────────────────────┐
-│              MONOLITH                    │
-├──────────────────────────────────────────┤
-│  ┌────────┐ ┌────────┐ ┌────────┐       │
-│  │  UI    │ │ Orders │ │ Users  │       │
-│  └────────┘ └────────┘ └────────┘       │
-│  ┌────────┐ ┌────────┐ ┌────────┐       │
-│  │Payments│ │Inventory│ │Shipping│       │
-│  └────────┘ └────────┘ └────────┘       │
-│                                          │
-│  ┌──────────────────────────────────┐   │
-│  │         SHARED DATABASE          │   │
-│  └──────────────────────────────────┘   │
-└──────────────────────────────────────────┘
++------------------------------------------+
+|              MONOLITH                    |
++------------------------------------------+
+|  +--------+ +--------+ +--------+       |
+|  |  UI    | | Orders | | Users  |       |
+|  +--------+ +--------+ +--------+       |
+|  +--------+ +--------+ +--------+       |
+|  |Payments| |Inventory| |Shipping|       |
+|  +--------+ +--------+ +--------+       |
+|                                          |
+|  +----------------------------------+   |
+|  |         SHARED DATABASE          |   |
+|  +----------------------------------+   |
++------------------------------------------+
 
 + Enkel development och deploy
 + Enkel debugging
@@ -2712,16 +2712,16 @@ MONOLITH
 - Tech lock-in
 
 MICROSERVICES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌────────┐   ┌────────┐   ┌────────┐   ┌─────────┐
-│ Orders │   │ Users  │   │Payments│   │Inventory│
-│Service │   │Service │   │Service │   │ Service │
-└───┬────┘   └───┬────┘   └───┬────┘   └────┬────┘
-    │            │            │             │
-┌───┴────┐   ┌───┴────┐   ┌───┴────┐   ┌────┴────┐
-│   DB   │   │   DB   │   │   DB   │   │   DB    │
-└────────┘   └────────┘   └────────┘   └─────────┘
++--------+   +--------+   +--------+   +---------+
+| Orders |   | Users  |   |Payments|   |Inventory|
+|Service |   |Service |   |Service |   | Service |
++---+----+   +---+----+   +---+----+   +----+----+
+    |            |            |             |
++---+----+   +---+----+   +---+----+   +----+----+
+|   DB   |   |   DB   |   |   DB   |   |   DB    |
++--------+   +--------+   +--------+   +---------+
 
 + Oberoende deploy
 + Individuell skalning
@@ -2731,17 +2731,17 @@ MICROSERVICES
 - Network latency
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service Communication
 
 ```
 SYNCHRONOUS (Request/Response)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-Order Service ──HTTP/gRPC──> User Service
-      │                           │
-      └──────── Response ─────────┘
+Order Service --HTTP/gRPC--> User Service
+      |                           |
+      +-------- Response ---------+
 
 + Enkelt att forsta
 + Omedelbart svar
@@ -2749,11 +2749,11 @@ Order Service ──HTTP/gRPC──> User Service
 - Latency kedja
 
 ASYNCHRONOUS (Event-Driven)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-Order Service ──> Message Queue ──> User Service
-                                ──> Email Service
-                                ──> Analytics
+Order Service --> Message Queue --> User Service
+                                --> Email Service
+                                --> Analytics
 
 + Loskopp tjansterna
 + Resilient
@@ -2761,65 +2761,65 @@ Order Service ──> Message Queue ──> User Service
 - Mer komplext
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## API Gateway
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                      API GATEWAY                         │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                      API GATEWAY                         |
++----------------------------------------------------------+
 
-                    ┌────────────────────┐
-     Clients ──────>│    API Gateway     │
-                    ├────────────────────┤
-                    │ - Authentication   │
-                    │ - Rate limiting    │
-                    │ - Request routing  │
-                    │ - Load balancing   │
-                    │ - SSL termination  │
-                    └─────────┬──────────┘
-                              │
-         ┌────────────────────┼────────────────────┐
-         │                    │                    │
+                    +--------------------+
+     Clients ------>|    API Gateway     |
+                    +--------------------+
+                    | - Authentication   |
+                    | - Rate limiting    |
+                    | - Request routing  |
+                    | - Load balancing   |
+                    | - SSL termination  |
+                    +---------+----------+
+                              |
+         +--------------------+--------------------+
+         |                    |                    |
          v                    v                    v
-    ┌─────────┐         ┌─────────┐         ┌─────────┐
-    │ Orders  │         │  Users  │         │ Products│
-    │ Service │         │ Service │         │ Service │
-    └─────────┘         └─────────┘         └─────────┘
+    +---------+         +---------+         +---------+
+    | Orders  |         |  Users  |         | Products|
+    | Service |         | Service |         | Service |
+    +---------+         +---------+         +---------+
 
 Exempel: Kong, AWS API Gateway, Nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Database per Service
 
 ```
 SHARED DATABASE (anti-pattern)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────┐  ┌─────────┐  ┌─────────┐
-│Service A│  │Service B│  │Service C│
-└────┬────┘  └────┬────┘  └────┬────┘
-     │            │            │
-     └────────────┼────────────┘
++---------+  +---------+  +---------+
+|Service A|  |Service B|  |Service C|
++----+----+  +----+----+  +----+----+
+     |            |            |
+     +------------+------------+
                   v
-          ┌─────────────┐
-          │ Shared DB   │  <-- TIGHT COUPLING!
-          └─────────────┘
+          +-------------+
+          | Shared DB   |  <-- TIGHT COUPLING!
+          +-------------+
 
 DATABASE PER SERVICE (best practice)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────┐  ┌─────────┐  ┌─────────┐
-│Service A│  │Service B│  │Service C│
-└────┬────┘  └────┬────┘  └────┬────┘
-     │            │            │
++---------+  +---------+  +---------+
+|Service A|  |Service B|  |Service C|
++----+----+  +----+----+  +----+----+
+     |            |            |
      v            v            v
-┌─────────┐  ┌─────────┐  ┌─────────┐
-│  DB A   │  │  DB B   │  │  DB C   │
-└─────────┘  └─────────┘  └─────────┘
++---------+  +---------+  +---------+
+|  DB A   |  |  DB B   |  |  DB C   |
++---------+  +---------+  +---------+
 
 + Oberoende schema evolution
 + Ratt databas for varje tjanst
@@ -2827,7 +2827,7 @@ DATABASE PER SERVICE (best practice)
 - Distributed transactions
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Saga Pattern
 
@@ -2842,61 +2842,61 @@ Order koper:
 Vad hander om steg 2 failar efter steg 1?
 
 SAGA: Kompenserade transaktioner
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Success path:
-Reserve ──> Charge ──> Update ──> Complete
+Reserve --> Charge --> Update --> Complete
 
 Failure at Charge:
-Reserve ──> Charge (FAIL)
-    │
-    └── Compensate: Release reservation
+Reserve --> Charge (FAIL)
+    |
+    +-- Compensate: Release reservation
 
-┌────────────────────────────────────────────────────────┐
-│  T1          T2          T3                            │
-│  Reserve --> Charge --> Update                         │
-│                                                        │
-│  C1          C2          C3                            │
-│  Release <-- Refund <-- Rollback (compensations)      │
-└────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|  T1          T2          T3                            |
+|  Reserve --> Charge --> Update                         |
+|                                                        |
+|  C1          C2          C3                            |
+|  Release <-- Refund <-- Rollback (compensations)      |
++--------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Circuit Breaker
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│               CIRCUIT BREAKER PATTERN                    │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|               CIRCUIT BREAKER PATTERN                    |
++----------------------------------------------------------+
 
-         ┌─────────┐
-         │ CLOSED  │ Normal operation
-         └────┬────┘ Requests go through
-              │
+         +---------+
+         | CLOSED  | Normal operation
+         +----+----+ Requests go through
+              |
      Failures exceed threshold
-              │
+              |
               v
-         ┌─────────┐
-         │  OPEN   │ Fast fail
-         └────┬────┘ No requests sent
-              │
+         +---------+
+         |  OPEN   | Fast fail
+         +----+----+ No requests sent
+              |
      Timeout expires
-              │
+              |
               v
-         ┌─────────┐
-         │HALF-OPEN│ Test requests
-         └────┬────┘
-              │
-    Success?──┼──Failure?
-      │       │        │
-      v       │        v
-   CLOSED     │      OPEN
+         +---------+
+         |HALF-OPEN| Test requests
+         +----+----+
+              |
+    Success?--+--Failure?
+      |       |        |
+      v       |        v
+   CLOSED     |      OPEN
 
 Forhindrar kaskadfel!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Microservices Tools
 
@@ -2908,7 +2908,7 @@ Forhindrar kaskadfel!
 | **Observability** | Jaeger, Prometheus |
 | **Messaging** | Kafka, RabbitMQ |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -2919,7 +2919,7 @@ Forhindrar kaskadfel!
 | Data inconsistency | Shared DB | Database per service |
 | Debugging nightmare | No tracing | Distributed tracing |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2948,7 +2948,7 @@ Forhindrar kaskadfel!
             "xp_reward": 130,
             "content": """# Service Discovery
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2960,13 +2960,13 @@ Forhindrar kaskadfel!
 | **Load balancing** | Fordela over instanser |
 | **Decoupling** | Hardkoda ej adresser |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Problemet
 
 ```
 UTAN SERVICE DISCOVERY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 config.yaml:
   user_service: http://10.0.0.5:8080
@@ -2979,7 +2979,7 @@ Problem:
 - Manuell konfiguppdatering = downtime!
 
 MED SERVICE DISCOVERY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 config.yaml:
   user_service: user-service  # Logiskt namn!
@@ -2988,27 +2988,27 @@ Service registry hanterar mapping:
   user-service -> [10.0.0.5:8080, 10.0.0.8:8080, 10.0.0.9:8080]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Client-Side vs Server-Side
 
 ```
 CLIENT-SIDE DISCOVERY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌────────┐   1. Query    ┌──────────────┐
-│ Client │──────────────>│   Service    │
-│        │               │   Registry   │
-│        │<──────────────│              │
-└───┬────┘   2. Return   └──────────────┘
-    │        addresses
-    │
-    │ 3. Direct call
++--------+   1. Query    +--------------+
+| Client |-------------->|   Service    |
+|        |               |   Registry   |
+|        |<--------------|              |
++---+----+   2. Return   +--------------+
+    |        addresses
+    |
+    | 3. Direct call
     v
-┌──────────┐
-│ Service  │
-│ Instance │
-└──────────┘
++----------+
+| Service  |
+| Instance |
++----------+
 
 + Klienten valjer instans
 + Flexibel load balancing
@@ -3016,19 +3016,19 @@ CLIENT-SIDE DISCOVERY
 - Varje sprak behover impl
 
 SERVER-SIDE DISCOVERY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌────────┐              ┌───────────────┐
-│ Client │─────────────>│ Load Balancer │
-│        │              │   /Router     │
-└────────┘              └───────┬───────┘
-                                │
-           ┌────────────────────┼────────────────────┐
-           │                    │                    │
++--------+              +---------------+
+| Client |------------->| Load Balancer |
+|        |              |   /Router     |
++--------+              +-------+-------+
+                                |
+           +--------------------+--------------------+
+           |                    |                    |
            v                    v                    v
-     ┌──────────┐         ┌──────────┐         ┌──────────┐
-     │Instance 1│         │Instance 2│         │Instance 3│
-     └──────────┘         └──────────┘         └──────────┘
+     +----------+         +----------+         +----------+
+     |Instance 1|         |Instance 2|         |Instance 3|
+     +----------+         +----------+         +----------+
 
 + Enklare klienter
 + Centraliserad logik
@@ -3036,18 +3036,18 @@ SERVER-SIDE DISCOVERY
 - LB kan bli flaskhals
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service Registration
 
 ```
 SELF-REGISTRATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌──────────┐  1. Register  ┌──────────────┐
-│ Service  │──────────────>│   Service    │
-│ Instance │               │   Registry   │
-└──────────┘               └──────────────┘
++----------+  1. Register  +--------------+
+| Service  |-------------->|   Service    |
+| Instance |               |   Registry   |
++----------+               +--------------+
 
 Service startup:
 1. Service startar
@@ -3056,41 +3056,41 @@ Service startup:
 4. Avregistrerar vid shutdown
 
 THIRD-PARTY REGISTRATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌──────────┐               ┌──────────────┐
-│ Service  │               │   Service    │
-│ Instance │               │   Registry   │
-└──────────┘               └──────┬───────┘
-      │                           │
-      │ Watch                     │
-      v                           │
-┌──────────────┐                  │
-│  Registrar   │──────────────────┘
-│ (K8s, Consul)│   Register/Deregister
-└──────────────┘
++----------+               +--------------+
+| Service  |               |   Service    |
+| Instance |               |   Registry   |
++----------+               +------+-------+
+      |                           |
+      | Watch                     |
+      v                           |
++--------------+                  |
+|  Registrar   |------------------+
+| (K8s, Consul)|   Register/Deregister
++--------------+
 
 Kubernetes gor detta automatiskt!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## DNS-Based Discovery
 
 ```
 KUBERNETES DNS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Service name: user-service
 Namespace: default
 
 DNS: user-service.default.svc.cluster.local
 
-┌────────────┐    DNS Query     ┌─────────────┐
-│   Pod A    │─────────────────>│  Kube-DNS   │
-│            │                  │             │
-│            │<─────────────────│             │
-└────────────┘   10.96.0.100    └─────────────┘
++------------+    DNS Query     +-------------+
+|   Pod A    |----------------->|  Kube-DNS   |
+|            |                  |             |
+|            |<-----------------|             |
++------------+   10.96.0.100    +-------------+
 
 Requests till user-service:
   http://user-service:8080/api/users
@@ -3101,24 +3101,24 @@ Requests till user-service:
 - TTL caching issues
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Health Checking
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│               HEALTH CHECK FLOW                          │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|               HEALTH CHECK FLOW                          |
++----------------------------------------------------------+
 
 Service Registry
-      │
-      │ Health check varje 10s
+      |
+      | Health check varje 10s
       v
-┌──────────┐  GET /health  ┌──────────┐
-│ Registry │──────────────>│ Instance │
-│          │               │          │
-│          │<──────────────│          │
-└──────────┘   200 OK      └──────────┘
++----------+  GET /health  +----------+
+| Registry |-------------->| Instance |
+|          |               |          |
+|          |<--------------|          |
++----------+   200 OK      +----------+
 
 Health Status:
 - HEALTHY: Receives traffic
@@ -3137,7 +3137,7 @@ GET /health
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Service Discovery Tools
 
@@ -3149,7 +3149,7 @@ GET /health
 | **Kubernetes** | Native | K8s only |
 | **AWS Cloud Map** | Managed | AWS |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3160,7 +3160,7 @@ GET /health
 | DNS caching | Stale IPs | Short TTL |
 | Slow startup | Registrar innan ready | Readiness probe |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3189,7 +3189,7 @@ GET /health
             "xp_reward": 120,
             "content": """# Rate Limiting & Throttling
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3201,13 +3201,13 @@ GET /health
 | **Cost** | Begransar cloud-kostnader |
 | **Stability** | Forhindra overbelastning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rate Limit vs Throttling
 
 ```
 RATE LIMITING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 "Max 100 requests per minut"
 
 Request 1-100:  [OK]
@@ -3216,7 +3216,7 @@ Request 101:    [DENIED - 429 Too Many Requests]
 Avvisar requests over gransen
 
 THROTTLING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 "Max 10 requests per sekund, koar resten"
 
 Request 1-10:   [Processed immediately]
@@ -3225,80 +3225,80 @@ Request 11-20:  [Queued, processed later]
 Saktar ner istallet for att avvisa
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Token Bucket Algorithm
 
 ```
 TOKEN BUCKET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│     Tokens added at fixed rate (e.g., 10/second)       │
-│                      │                                  │
-│                      v                                  │
-│            ┌─────────────────┐                         │
-│            │     BUCKET      │  Max capacity: 100      │
-│            │  ● ● ● ● ● ● ●  │                         │
-│            │  ● ● ● ● ● ● ●  │  Current: 14 tokens    │
-│            └────────┬────────┘                         │
-│                     │                                  │
-│                     v                                  │
-│                 Request arrives                        │
-│                     │                                  │
-│         Token available? ─── No ──> REJECT (429)      │
-│              │                                         │
-│             Yes                                        │
-│              │                                         │
-│              v                                         │
-│         Remove token                                   │
-│         Process request                                │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                                                         |
+|     Tokens added at fixed rate (e.g., 10/second)       |
+|                      |                                  |
+|                      v                                  |
+|            +-----------------+                         |
+|            |     BUCKET      |  Max capacity: 100      |
+|            |  ● ● ● ● ● ● ●  |                         |
+|            |  ● ● ● ● ● ● ●  |  Current: 14 tokens    |
+|            +--------+--------+                         |
+|                     |                                  |
+|                     v                                  |
+|                 Request arrives                        |
+|                     |                                  |
+|         Token available? --- No --> REJECT (429)      |
+|              |                                         |
+|             Yes                                        |
+|              |                                         |
+|              v                                         |
+|         Remove token                                   |
+|         Process request                                |
+|                                                         |
++---------------------------------------------------------+
 
 + Tillater bursts (upp till bucket size)
 + Smooth long-term rate
 + Enkel implementation
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Leaky Bucket Algorithm
 
 ```
 LEAKY BUCKET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│              Requests added to bucket                   │
-│                      │                                  │
-│                      v                                  │
-│            ┌─────────────────┐                         │
-│            │     BUCKET      │  If full: REJECT       │
-│            │  R R R R R R R  │                         │
-│            │  R R R R R R R  │                         │
-│            └────────┬────────┘                         │
-│                     │ Fixed rate leak                  │
-│                     │ (e.g., 10/second)               │
-│                     v                                  │
-│                 Process                                │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                                                         |
+|              Requests added to bucket                   |
+|                      |                                  |
+|                      v                                  |
+|            +-----------------+                         |
+|            |     BUCKET      |  If full: REJECT       |
+|            |  R R R R R R R  |                         |
+|            |  R R R R R R R  |                         |
+|            +--------+--------+                         |
+|                     | Fixed rate leak                  |
+|                     | (e.g., 10/second)               |
+|                     v                                  |
+|                 Process                                |
+|                                                         |
++---------------------------------------------------------+
 
 + Jamn output rate
 + Forutsagbar belastning
 - Ingen burst tolerance
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Fixed Window vs Sliding Window
 
 ```
 FIXED WINDOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Timeline:
 |-------- Window 1 --------|-------- Window 2 --------|
@@ -3313,28 +3313,28 @@ Problem: Burst vid window-grans
 190 requests pa 2 sekunder!
 
 SLIDING WINDOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Request at 1:30:
   Count = (requests 0:30-1:00) * 0.5 + (requests 1:00-1:30)
 
-        ┌─────────────────────────────────┐
-        │      Rolling 60s window         │
-        │<───────────────────────────────>│
-        └─────────────────────────────────┘
+        +---------------------------------+
+        |      Rolling 60s window         |
+        |<------------------------------->|
+        +---------------------------------+
        0:30                              1:30
 
 + Ingen burst vid granser
 - Mer komplex att implementera
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rate Limit Headers
 
 ```
 HTTP RESPONSE HEADERS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 HTTP/1.1 200 OK
 X-RateLimit-Limit: 100
@@ -3347,7 +3347,7 @@ RateLimit-Remaining: 45
 RateLimit-Reset: 60
 
 429 TOO MANY REQUESTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 HTTP/1.1 429 Too Many Requests
 Retry-After: 30
@@ -3360,25 +3360,25 @@ Content-Type: application/json
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rate Limiting Strategies
 
 ```
 BY USER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 key = user_id
 limit = 1000/hour per user
 
 BY IP
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 key = client_ip
 limit = 100/minute per IP
 
 Problem: NAT, proxies (manga users = samma IP)
 
 BY API KEY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 key = api_key
 limit = varies by plan
 
@@ -3387,51 +3387,51 @@ Pro: 10000/day
 Enterprise: unlimited
 
 BY ENDPOINT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 /api/search: 10/minute (expensive)
 /api/users: 100/minute (cheap)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Distributed Rate Limiting
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              DISTRIBUTED RATE LIMITING                   │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              DISTRIBUTED RATE LIMITING                   |
++----------------------------------------------------------+
 
 Problem: Flera API servers
 
-     ┌──────────┐
-     │ Client   │
-     └────┬─────┘
-          │
-     ┌────┴─────┐
-     │    LB    │
-     └────┬─────┘
-          │
-  ┌───────┼───────┐
+     +----------+
+     | Client   |
+     +----+-----+
+          |
+     +----+-----+
+     |    LB    |
+     +----+-----+
+          |
+  +-------+-------+
   v       v       v
-┌───┐   ┌───┐   ┌───┐
-│S1 │   │S2 │   │S3 │   <-- Varje har lokal counter?
-└───┘   └───┘   └───┘
++---+   +---+   +---+
+|S1 |   |S2 |   |S3 |   <-- Varje har lokal counter?
++---+   +---+   +---+
 
 Losning: Centralized store (Redis)
 
-┌───┐   ┌───┐   ┌───┐
-│S1 │   │S2 │   │S3 │
-└─┬─┘   └─┬─┘   └─┬─┘
-  │       │       │
-  └───────┼───────┘
++---+   +---+   +---+
+|S1 |   |S2 |   |S3 |
++-+-+   +-+-+   +-+-+
+  |       |       |
+  +-------+-------+
           v
-    ┌──────────┐
-    │  Redis   │  <-- Single source of truth
-    │ (INCR)   │
-    └──────────┘
+    +----------+
+    |  Redis   |  <-- Single source of truth
+    | (INCR)   |
+    +----------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Rate Limiting Tools
 
@@ -3443,7 +3443,7 @@ Losning: Centralized store (Redis)
 | **AWS WAF** | Rate-based rules |
 | **Cloudflare** | Edge rate limiting |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3454,7 +3454,7 @@ Losning: Centralized store (Redis)
 | IP limit unfair | NAT/shared IP | User-based limits |
 | Missing headers | No info to client | Add rate headers |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3483,7 +3483,7 @@ Losning: Centralized store (Redis)
             "xp_reward": 170,
             "content": """# Distributed Systems
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3495,13 +3495,13 @@ Losning: Centralized store (Redis)
 | **Availability** | 99.99% uptime |
 | **Modern apps** | Cloud-native ar distributed |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## The Eight Fallacies
 
 ```
 DE ATTA VILLFARELSERNA OM DISTRIBUERADE SYSTEM
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. Natverket ar pålitligt          <- DET AR DET INTE
 2. Latency ar noll                 <- DET AR DET INTE
@@ -3518,33 +3518,33 @@ Konsekvens:
 - Designa for eventual consistency
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Distributed System Challenges
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              FUNDAMENTAL CHALLENGES                      │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              FUNDAMENTAL CHALLENGES                      |
++----------------------------------------------------------+
 
 1. PARTIAL FAILURE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
    Vissa delar kan failar medan andra fungerar
 
-   ┌──────┐     ┌──────┐     ┌──────┐
-   │Node A│     │Node B│     │Node C│
-   │  OK  │     │ FAIL │     │  OK  │
-   └──────┘     └──────┘     └──────┘
+   +------+     +------+     +------+
+   |Node A|     |Node B|     |Node C|
+   |  OK  |     | FAIL |     |  OK  |
+   +------+     +------+     +------+
 
 2. NETWORK PARTITION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
    Noder kan inte kommunicera
 
-   [Node A] ──X──X──X── [Node B]
+   [Node A] --X--X--X-- [Node B]
         Network failure
 
 3. CLOCK SYNCHRONIZATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
    Varje nod har sin egen klocka
 
    Node A: 10:00:00.000
@@ -3554,66 +3554,66 @@ Konsekvens:
    Vem hande forst?
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Consensus Algorithms
 
 ```
 PROBLEMET: Hur enas flera noder om ett varde?
 
-┌──────┐  ┌──────┐  ┌──────┐
-│Node A│  │Node B│  │Node C│
-│ v=5  │  │ v=7  │  │ v=5  │
-└──────┘  └──────┘  └──────┘
++------+  +------+  +------+
+|Node A|  |Node B|  |Node C|
+| v=5  |  | v=7  |  | v=5  |
++------+  +------+  +------+
 
 Vilket varde ar "sant"?
 
 PAXOS/RAFT: Consensus protocols
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 RAFT Roles:
-┌─────────────────────────────────────────────────────────┐
-│  LEADER: En nod som koordinerar                        │
-│  FOLLOWER: Replikerar ledarens beslut                  │
-│  CANDIDATE: Vill bli leader                            │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  LEADER: En nod som koordinerar                        |
+|  FOLLOWER: Replikerar ledarens beslut                  |
+|  CANDIDATE: Vill bli leader                            |
++---------------------------------------------------------+
 
-     ┌──────────┐
-     │  LEADER  │
-     │ (Node A) │
-     └────┬─────┘
-          │ Append entries
-    ┌─────┴─────┐
+     +----------+
+     |  LEADER  |
+     | (Node A) |
+     +----+-----+
+          | Append entries
+    +-----+-----+
     v           v
-┌──────┐    ┌──────┐
-│FOLLOW│    │FOLLOW│
-│Node B│    │Node C│
-└──────┘    └──────┘
++------+    +------+
+|FOLLOW|    |FOLLOW|
+|Node B|    |Node C|
++------+    +------+
 
 Quorum: Majoritet maste vara overens (2 av 3)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Timeouts and Retries
 
 ```
 TIMEOUT STRATEGY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
             Request
-Client ───────────────> Server
-   │                       │
-   │ Timeout: 5 seconds    │
-   │<──────────────────────│ Response
-   │                       │
-   │ If no response:       │
-   │ - Retry?              │
-   │ - Fail?               │
-   │ - Fallback?           │
+Client ---------------> Server
+   |                       |
+   | Timeout: 5 seconds    |
+   |<----------------------| Response
+   |                       |
+   | If no response:       |
+   | - Retry?              |
+   | - Fail?               |
+   | - Fallback?           |
 
 RETRY WITH EXPONENTIAL BACKOFF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Attempt 1: Wait 1 second
 Attempt 2: Wait 2 seconds
@@ -3635,7 +3635,7 @@ sleep(2 ** attempt + random(0, 1000)ms)
 Undvik thundering herd
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Idempotency
 
@@ -3643,16 +3643,16 @@ Undvik thundering herd
 PROBLEMET: Retry kan orsaka dubbletter
 
 Request: "Skapa order"
-    │
+    |
     v
-[Server skapar order] ──> Response forsvinner
-    │
-    │ Client timeout, retry
+[Server skapar order] --> Response forsvinner
+    |
+    | Client timeout, retry
     v
 [Server skapar SAMMA order igen] <- DABBEL ORDER!
 
 LOSNING: Idempotency key
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 POST /orders
 Idempotency-Key: abc-123-xyz
@@ -3670,42 +3670,42 @@ Server:
 + Safe to retry
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Distributed Transactions
 
 ```
 TWO-PHASE COMMIT (2PC)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Phase 1: PREPARE
-┌─────────────┐    "Can you commit?"
-│ Coordinator │───────────────────>┌──────────┐
-│             │                    │Participant│
-│             │<───────────────────│           │
-└─────────────┘    "Yes/No"        └──────────┘
++-------------+    "Can you commit?"
+| Coordinator |------------------->+----------+
+|             |                    |Participant|
+|             |<-------------------|           |
++-------------+    "Yes/No"        +----------+
 
 Phase 2: COMMIT/ABORT
-┌─────────────┐    "Commit!" (if all yes)
-│ Coordinator │───────────────────>┌──────────┐
-│             │    "Abort!" (if any no)
-└─────────────┘                    └──────────┘
++-------------+    "Commit!" (if all yes)
+| Coordinator |------------------->+----------+
+|             |    "Abort!" (if any no)
++-------------+                    +----------+
 
 Problem: Coordinator failure = stuck transactions
 
 SAGA PATTERN (better for microservices)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-T1 ──> T2 ──> T3 ──> Success!
- │      │      │
- C1 <── C2 <── C3   (Compensations if failure)
+T1 --> T2 --> T3 --> Success!
+ |      |      |
+ C1 <-- C2 <-- C3   (Compensations if failure)
 
 + No distributed locks
 + Better availability
 - Eventual consistency
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Distributed Systems Tools
 
@@ -3717,7 +3717,7 @@ T1 ──> T2 ──> T3 ──> Success!
 | **Redis Cluster** | Distributed cache |
 | **Kafka** | Distributed messaging |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3728,7 +3728,7 @@ T1 ──> T2 ──> T3 ──> Success!
 | Duplicate processing | Retry | Idempotency keys |
 | Clock skew | Different clocks | Vector clocks, NTP |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3757,7 +3757,7 @@ T1 ──> T2 ──> T3 ──> Success!
             "xp_reward": 150,
             "content": """# Consistency Patterns
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3769,48 +3769,48 @@ T1 ──> T2 ──> T3 ──> Success!
 | **Trade-offs** | Prestanda vs korrekthet |
 | **Architecture** | Systemdesign beslut |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Consistency Spectrum
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              CONSISTENCY SPECTRUM                        │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              CONSISTENCY SPECTRUM                        |
++----------------------------------------------------------+
 
 STRONG                                              EVENTUAL
-  │                                                      │
-  │  Linearizable  Sequential  Causal    Eventual       │
-  │      │             │          │          │          │
-  ├──────┼─────────────┼──────────┼──────────┼──────────┤
-  │                                                      │
-  │  Hogre latency                     Lagre latency    │
-  │  Lagre tillganglighet              Hogre tillg.     │
-  │  Enklare att resonera              Mer komplext     │
-  │                                                      │
-└──────────────────────────────────────────────────────────┘
+  |                                                      |
+  |  Linearizable  Sequential  Causal    Eventual       |
+  |      |             |          |          |          |
+  +------+-------------+----------+----------+----------+
+  |                                                      |
+  |  Hogre latency                     Lagre latency    |
+  |  Lagre tillganglighet              Hogre tillg.     |
+  |  Enklare att resonera              Mer komplext     |
+  |                                                      |
++----------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Strong Consistency
 
 ```
 LINEARIZABILITY (Starkaste)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Alla operationer verkar ske vid en atomisk punkt i tiden.
 
 Timeline:
-─────────────────────────────────────────────────────────>
+--------------------------------------------------------->
 
-Client A: ───WRITE x=1─────────────────────────────────>
-                    │
-                    │ (write completes)
-                    │
-Client B: ─────────────READ x──────────────────────────>
-                         │
-                         └── MUST return 1
+Client A: ---WRITE x=1--------------------------------->
+                    |
+                    | (write completes)
+                    |
+Client B: -------------READ x-------------------------->
+                         |
+                         +-- MUST return 1
 
 Garantier:
 - Alla ser samma ordning
@@ -3820,19 +3820,19 @@ Garantier:
 Anvandning: Bank transaktioner, inventory
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Eventual Consistency
 
 ```
 EVENTUAL CONSISTENCY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 "Om inga nya writes gor, kommer alla replikor
  TILL SLUT returnera samma varde"
 
 Timeline:
-─────────────────────────────────────────────────────────>
+--------------------------------------------------------->
 
 t=0   Write x=1 to Node A
       Node A: x=1
@@ -3854,24 +3854,24 @@ Under 0-200ms kan olika klienter se olika varden!
 Anvandning: Social media feeds, likes, counters
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Read-Your-Writes
 
 ```
 READ-YOUR-WRITES CONSISTENCY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Garanti: En klient ser alltid sina egna skrivningar
 
-┌──────────────────────────────────────────────────────────┐
-│                                                          │
-│  Client A:  WRITE profile="Anna" ──> Node 1             │
-│             READ profile ──> Node 2                      │
-│                    │                                     │
-│             Should return "Anna"!                        │
-│                                                          │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                                                          |
+|  Client A:  WRITE profile="Anna" --> Node 1             |
+|             READ profile --> Node 2                      |
+|                    |                                     |
+|             Should return "Anna"!                        |
+|                                                          |
++----------------------------------------------------------+
 
 Implementation:
 1. Sticky sessions (alltid samma replica)
@@ -3881,19 +3881,19 @@ Implementation:
 Anvandning: User profile updates, settings
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Monotonic Reads
 
 ```
 MONOTONIC READS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Garanti: Om en klient last varde v, ser den aldrig ett
          tidigare varde i efterfoljande lasningar
 
 UTAN MONOTONIC READS:
-─────────────────────────────────────────────────────────>
+--------------------------------------------------------->
 
 Read 1 (Node B): x=5
 Read 2 (Node A): x=3  <- OLDER VALUE! Confusing!
@@ -3902,7 +3902,7 @@ Read 3 (Node B): x=5
 "Tiden gar baklanges" for anvandaren
 
 MED MONOTONIC READS:
-─────────────────────────────────────────────────────────>
+--------------------------------------------------------->
 
 Read 1 (Node B): x=5
 Read 2 (Node A): x=5  <- Same or newer
@@ -3911,13 +3911,13 @@ Read 3 (Node C): x=7  <- Newer is OK
 Implementation: Session affinity, version tracking
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Causal Consistency
 
 ```
 CAUSAL CONSISTENCY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Operationer som ar kausalt relaterade ses i ratt ordning.
 
@@ -3928,7 +3928,7 @@ User B: Replies "Hi there!" (to User A's comment)
 
 KAUSALT KORREKT:
   "Hello"          (visas forst)
-  └── "Hi there!"  (visas efter)
+  +-- "Hi there!"  (visas efter)
 
 KAUSALT INKORREKT:
   "Hi there!"  <- Svar till vad?
@@ -3941,13 +3941,13 @@ Vector Clock Example:
 {A: 1, B: 1}  "Hi there!" (knows about A:1)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Quorum
 
 ```
 QUORUM: N/W/R
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 N = Total replicas
 W = Write quorum (replicas that must ACK write)
@@ -3956,20 +3956,20 @@ R = Read quorum (replicas to read from)
 Rule: W + R > N  (garanterar overlap)
 
 EXAMPLE: N=3, W=2, R=2
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Write x=5:
-┌──────┐ ┌──────┐ ┌──────┐
-│ R1   │ │ R2   │ │ R3   │
-│ x=5  │ │ x=5  │ │ x=?  │ (2 of 3 ACK = success)
-│ ACK  │ │ ACK  │ │      │
-└──────┘ └──────┘ └──────┘
++------+ +------+ +------+
+| R1   | | R2   | | R3   |
+| x=5  | | x=5  | | x=?  | (2 of 3 ACK = success)
+| ACK  | | ACK  | |      |
++------+ +------+ +------+
 
 Read x:
-┌──────┐ ┌──────┐
-│ R1   │ │ R3   │  Read from 2 replicas
-│ x=5  │ │ x=?  │  At least one has x=5
-└──────┘ └──────┘  Return x=5
++------+ +------+
+| R1   | | R3   |  Read from 2 replicas
+| x=5  | | x=?  |  At least one has x=5
++------+ +------+  Return x=5
 
 CONFIGURATIONS:
 N=3, W=3, R=1: Strong consistency (slow writes)
@@ -3977,7 +3977,7 @@ N=3, W=1, R=3: Fast writes, slow reads
 N=3, W=2, R=2: Balanced
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Consistency Levels
 
@@ -3988,7 +3988,7 @@ N=3, W=2, R=2: Balanced
 | **Read-your-writes** | User profile | Session sticky |
 | **Causal** | Comments, chat | Complexity |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -3999,7 +3999,7 @@ N=3, W=2, R=2: Balanced
 | Lost updates | Concurrent writes | Optimistic locking |
 | Split brain | Partition | Quorum |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4028,7 +4028,7 @@ N=3, W=2, R=2: Balanced
             "xp_reward": 160,
             "content": """# Event-Driven Architecture
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4040,17 +4040,17 @@ N=3, W=2, R=2: Balanced
 | **Real-time** | Omedelbar reaktion |
 | **Audit** | Komplett historik |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Request-Driven vs Event-Driven
 
 ```
 REQUEST-DRIVEN (Synchronous)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-User ──> Order Service ──> Inventory ──> Payment ──> Email
-              │                │            │          │
-              └────────────────┴────────────┴──────────┘
+User --> Order Service --> Inventory --> Payment --> Email
+              |                |            |          |
+              +----------------+------------+----------+
                         Waits for all to complete
 
 - Tight coupling
@@ -4058,15 +4058,15 @@ User ──> Order Service ──> Inventory ──> Payment ──> Email
 - One failure = all fail
 
 EVENT-DRIVEN (Asynchronous)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-User ──> Order Service ──> "OrderCreated" event
-              │
-              └──> Returns immediately!
+User --> Order Service --> "OrderCreated" event
+              |
+              +--> Returns immediately!
 
          Event Bus
-            │
-     ┌──────┼──────┐──────┐
+            |
+     +------+------+------+
      v      v      v      v
 Inventory Payment Email Analytics
  Service  Service Service Service
@@ -4076,17 +4076,17 @@ Inventory Payment Email Analytics
 + Independent failures
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Event Types
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                    EVENT TYPES                           │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|                    EVENT TYPES                           |
++----------------------------------------------------------+
 
 1. DOMAIN EVENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
    Affarshandelser som har skett
 
    OrderCreated { orderId, customerId, items, total }
@@ -4094,47 +4094,47 @@ Inventory Payment Email Analytics
    UserRegistered { userId, email, timestamp }
 
 2. INTEGRATION EVENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
    For kommunikation mellan bounded contexts
 
    InventoryReserved { orderId, items }
    ShipmentDispatched { orderId, trackingId }
 
 3. NOTIFICATION EVENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
    "Nagot hande, om nagon bryr sig"
 
    PriceChanged { productId, oldPrice, newPrice }
    StockLow { productId, quantity }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Event Sourcing
 
 ```
 TRADITIONAL: Store current state
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Account Table:
-┌────────────┬─────────┐
-│ account_id │ balance │
-├────────────┼─────────┤
-│ 123        │ 500     │  <- Only current state
-└────────────┴─────────┘
++------------+---------+
+| account_id | balance |
++------------+---------+
+| 123        | 500     |  <- Only current state
++------------+---------+
 
 EVENT SOURCING: Store events
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Event Store:
-┌────────────┬──────────────────┬────────┐
-│ account_id │ event            │ amount │
-├────────────┼──────────────────┼────────┤
-│ 123        │ AccountCreated   │ 0      │
-│ 123        │ MoneyDeposited   │ 1000   │
-│ 123        │ MoneyWithdrawn   │ -300   │
-│ 123        │ MoneyWithdrawn   │ -200   │
-└────────────┴──────────────────┴────────┘
++------------+------------------+--------+
+| account_id | event            | amount |
++------------+------------------+--------+
+| 123        | AccountCreated   | 0      |
+| 123        | MoneyDeposited   | 1000   |
+| 123        | MoneyWithdrawn   | -300   |
+| 123        | MoneyWithdrawn   | -200   |
++------------+------------------+--------+
 
 Current balance = replay all events = 500
 
@@ -4145,55 +4145,55 @@ Current balance = replay all events = 500
 - Storage
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CQRS
 
 ```
 CQRS: Command Query Responsibility Segregation
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Separera writes (commands) fran reads (queries)
 
-          ┌────────────────────────────────────┐
-          │            API Gateway             │
-          └──────────────┬─────────────────────┘
-                         │
-            ┌────────────┴────────────┐
-            │                         │
+          +------------------------------------+
+          |            API Gateway             |
+          +--------------+---------------------+
+                         |
+            +------------+------------+
+            |                         |
             v                         v
-    ┌───────────────┐        ┌───────────────┐
-    │   COMMAND     │        │    QUERY      │
-    │   SERVICE     │        │   SERVICE     │
-    │               │        │               │
-    │ CreateOrder   │        │ GetOrders     │
-    │ UpdateOrder   │        │ SearchOrders  │
-    └───────┬───────┘        └───────┬───────┘
-            │                        │
+    +---------------+        +---------------+
+    |   COMMAND     |        |    QUERY      |
+    |   SERVICE     |        |   SERVICE     |
+    |               |        |               |
+    | CreateOrder   |        | GetOrders     |
+    | UpdateOrder   |        | SearchOrders  |
+    +-------+-------+        +-------+-------+
+            |                        |
             v                        v
-    ┌───────────────┐        ┌───────────────┐
-    │  Write DB     │───────>│   Read DB     │
-    │  (normalized) │ events │ (denormalized)│
-    └───────────────┘        └───────────────┘
+    +---------------+        +---------------+
+    |  Write DB     |------->|   Read DB     |
+    |  (normalized) | events | (denormalized)|
+    +---------------+        +---------------+
 
 + Optimerad for varje use case
 + Separat skalning
 - Eventual consistency mellan DBs
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Event-Driven Patterns
 
 ```
 CHOREOGRAPHY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Tjanster reagerar pa events, ingen central koordinator
 
-Order ──"OrderCreated"──> Event Bus
-                             │
-              ┌──────────────┼──────────────┐
+Order --"OrderCreated"--> Event Bus
+                             |
+              +--------------+--------------+
               v              v              v
           Inventory      Payment        Email
           "ItemsReserved" "PaymentDone" "EmailSent"
@@ -4202,33 +4202,33 @@ Order ──"OrderCreated"──> Event Bus
 - Svart att se hela flodet
 
 ORCHESTRATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Central orchestrator styr flodet
 
-         ┌─────────────────┐
-         │   Orchestrator  │
-         │  (Saga Manager) │
-         └────────┬────────┘
-                  │
-    ┌─────────────┼─────────────┐
+         +-----------------+
+         |   Orchestrator  |
+         |  (Saga Manager) |
+         +--------+--------+
+                  |
+    +-------------+-------------+
     v             v             v
 Inventory     Payment       Email
-    │             │             │
-    └─────────────┴─────────────┘
+    |             |             |
+    +-------------+-------------+
           Reports back
 
 + Tydligt flode
 - Central koordinator
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Event Schema
 
 ```
 EVENT STRUCTURE (CloudEvents)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 {
   "specversion": "1.0",
@@ -4246,13 +4246,13 @@ EVENT STRUCTURE (CloudEvents)
 }
 
 SCHEMA EVOLUTION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Add fields (backward compatible)
 - Deprecate, don't remove
 - Use schema registry (Avro, Protobuf)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Event Tools
 
@@ -4264,7 +4264,7 @@ SCHEMA EVOLUTION
 | **NATS** | Lightweight pub/sub |
 | **Redis Streams** | Simple event store |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -4275,7 +4275,7 @@ SCHEMA EVOLUTION
 | Lost events | No persistence | Durable queues |
 | Schema breaking | No versioning | Schema registry |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4304,7 +4304,7 @@ SCHEMA EVOLUTION
             "xp_reward": 140,
             "content": """# Monitoring & Observability
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4316,33 +4316,33 @@ SCHEMA EVOLUTION
 | **SLAs** | Visa uppfyllnad |
 | **Incidents** | Snabbare MTTR |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Three Pillars of Observability
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              THREE PILLARS                               │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              THREE PILLARS                               |
++----------------------------------------------------------+
 
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│    LOGS      │    │   METRICS    │    │   TRACES     │
-│              │    │              │    │              │
-│ What happened│    │ How much/many│    │ Request flow │
-│ Discrete     │    │ Aggregated   │    │ Distributed  │
-│ events       │    │ numbers      │    │ context      │
-└──────────────┘    └──────────────┘    └──────────────┘
++--------------+    +--------------+    +--------------+
+|    LOGS      |    |   METRICS    |    |   TRACES     |
+|              |    |              |    |              |
+| What happened|    | How much/many|    | Request flow |
+| Discrete     |    | Aggregated   |    | Distributed  |
+| events       |    | numbers      |    | context      |
++--------------+    +--------------+    +--------------+
 
 Together: Complete picture of system health
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Logs
 
 ```
 LOG LEVELS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 DEBUG   -> Detaljerad info for debugging
 INFO    -> Normala handelser
@@ -4351,7 +4351,7 @@ ERROR   -> Fel som hindrar operation
 FATAL   -> Systemet maste stoppas
 
 STRUCTURED LOGGING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 DALIGT:
 "User 123 created order 456 for $99.99"
@@ -4372,34 +4372,34 @@ BRA (JSON):
 + Korrelering med trace_id
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Metrics
 
 ```
 METRIC TYPES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 COUNTER: Okar bara (requests, errors)
-┌──────────────────────────────────────┐
-│  http_requests_total = 12345         │
-│  ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲                 │
-└──────────────────────────────────────┘
++--------------------------------------+
+|  http_requests_total = 12345         |
+|  ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲                 |
++--------------------------------------+
 
 GAUGE: Kan oka/minska (temperature, queue size)
-┌──────────────────────────────────────┐
-│  memory_usage_bytes = 2.5GB          │
-│  ─────────/\\────/\\───────           │
-└──────────────────────────────────────┘
++--------------------------------------+
+|  memory_usage_bytes = 2.5GB          |
+|  ---------/\\----/\\-------           |
++--------------------------------------+
 
 HISTOGRAM: Distribution (latency, sizes)
-┌──────────────────────────────────────┐
-│  request_duration_seconds            │
-│  p50=0.1s, p90=0.5s, p99=1.2s       │
-└──────────────────────────────────────┘
++--------------------------------------+
+|  request_duration_seconds            |
+|  p50=0.1s, p90=0.5s, p99=1.2s       |
++--------------------------------------+
 
 THE FOUR GOLDEN SIGNALS (Google SRE)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. LATENCY    - How long requests take
 2. TRAFFIC    - Requests per second
@@ -4407,7 +4407,7 @@ THE FOUR GOLDEN SIGNALS (Google SRE)
 4. SATURATION - How "full" is the system
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Distributed Tracing
 
@@ -4415,35 +4415,35 @@ THE FOUR GOLDEN SIGNALS (Google SRE)
 PROBLEM: Hur foljer jag ett request genom flera tjanster?
 
 Request: GET /checkout
-─────────────────────────────────────────────────────────>
+--------------------------------------------------------->
 API Gateway -> Order -> Inventory -> Payment -> Email
 
 Var tog det 5 sekunder?
 
 TRACING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Trace ID: abc-123 (samma genom hela kedjan)
 
-┌─────────────────────────────────────────────────────────┐
-│ Span: API Gateway (100ms)                               │
-│  └─ Span: Order Service (2000ms)                       │
-│      ├─ Span: Inventory (500ms)                        │
-│      └─ Span: Payment (1400ms)  <- BOTTLENECK!         │
-│          └─ Span: Email (50ms)                         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+| Span: API Gateway (100ms)                               |
+|  +- Span: Order Service (2000ms)                       |
+|      +- Span: Inventory (500ms)                        |
+|      +- Span: Payment (1400ms)  <- BOTTLENECK!         |
+|          +- Span: Email (50ms)                         |
++---------------------------------------------------------+
 
 Headers:
 traceparent: 00-abc123-def456-01
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Alerting
 
 ```
 ALERT RULES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 # Prometheus alerting rule
 - alert: HighErrorRate
@@ -4455,7 +4455,7 @@ ALERT RULES
     summary: "High error rate detected"
 
 ALERT FATIGUE PREVENTION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 - Alert pa symptom, inte orsaker
 - Ha actionable alerts
@@ -4463,40 +4463,40 @@ ALERT FATIGUE PREVENTION
 - Dedup och grouping
 - On-call rotation
 
-┌────────────────────────────────────────────────────────┐
-│  SYMPTOM-BASED ALERTING                                │
-├────────────────────────────────────────────────────────┤
-│  DALIGT: "CPU > 90%"  <- Kanske okej                  │
-│  BRA: "Latency p99 > 2s" <- User-facing impact        │
-└────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|  SYMPTOM-BASED ALERTING                                |
++--------------------------------------------------------+
+|  DALIGT: "CPU > 90%"  <- Kanske okej                  |
+|  BRA: "Latency p99 > 2s" <- User-facing impact        |
++--------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dashboards
 
 ```
 DASHBOARD BEST PRACTICES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────────────────────────────────────────────────────┐
-│  OVERVIEW DASHBOARD                                     │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
-│  │ Requests │ │  Errors  │ │ Latency  │ │   CPU    │  │
-│  │  15K/s   │ │   0.1%   │ │  120ms   │ │   45%    │  │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
-│                                                         │
-│  ┌────────────────────────────────────────────────────┐│
-│  │  Request Rate Over Time                            ││
-│  │  ────────────────/\\────────────────               ││
-│  └────────────────────────────────────────────────────┘│
-│                                                         │
-│  USE Method: Utilization, Saturation, Errors          │
-│  RED Method: Rate, Errors, Duration                   │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  OVERVIEW DASHBOARD                                     |
++---------------------------------------------------------+
+|                                                         |
+|  +----------+ +----------+ +----------+ +----------+  |
+|  | Requests | |  Errors  | | Latency  | |   CPU    |  |
+|  |  15K/s   | |   0.1%   | |  120ms   | |   45%    |  |
+|  +----------+ +----------+ +----------+ +----------+  |
+|                                                         |
+|  +----------------------------------------------------+|
+|  |  Request Rate Over Time                            ||
+|  |  ----------------/\\----------------               ||
+|  +----------------------------------------------------+|
+|                                                         |
+|  USE Method: Utilization, Saturation, Errors          |
+|  RED Method: Rate, Errors, Duration                   |
+|                                                         |
++---------------------------------------------------------+
 
 Hierarki:
 1. Overview (hog niva)
@@ -4504,7 +4504,7 @@ Hierarki:
 3. Debug/deep-dive
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Observability Stack
 
@@ -4516,7 +4516,7 @@ Hierarki:
 | **Dashboards** | Grafana |
 | **APM** | New Relic, Datadog |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -4527,7 +4527,7 @@ Hierarki:
 | Missing context | Unstructured logs | Structured logging |
 | Cardinality explosion | High-card labels | Label review |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4556,7 +4556,7 @@ Hierarki:
             "xp_reward": 150,
             "content": """# Security in System Design
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4568,54 +4568,54 @@ Hierarki:
 | **Cost** | Incidenter ar dyra |
 | **Availability** | DDoS protection |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Defense in Depth
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              DEFENSE IN DEPTH                            │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+|              DEFENSE IN DEPTH                            |
++----------------------------------------------------------+
 
     Layer 1: PERIMETER
-    ┌────────────────────────────────────────────────────┐
-    │  WAF, DDoS Protection, CDN                         │
-    │                                                    │
-    │    Layer 2: NETWORK                                │
-    │    ┌──────────────────────────────────────────┐   │
-    │    │  Firewalls, VPCs, Security Groups        │   │
-    │    │                                          │   │
-    │    │    Layer 3: APPLICATION                  │   │
-    │    │    ┌────────────────────────────────┐   │   │
-    │    │    │  Auth, Input validation, HTTPS │   │   │
-    │    │    │                                │   │   │
-    │    │    │    Layer 4: DATA               │   │   │
-    │    │    │    ┌────────────────────┐     │   │   │
-    │    │    │    │ Encryption at rest │     │   │   │
-    │    │    │    │ Access control     │     │   │   │
-    │    │    │    └────────────────────┘     │   │   │
-    │    │    └────────────────────────────────┘   │   │
-    │    └──────────────────────────────────────────┘   │
-    └────────────────────────────────────────────────────┘
+    +----------------------------------------------------+
+    |  WAF, DDoS Protection, CDN                         |
+    |                                                    |
+    |    Layer 2: NETWORK                                |
+    |    +------------------------------------------+   |
+    |    |  Firewalls, VPCs, Security Groups        |   |
+    |    |                                          |   |
+    |    |    Layer 3: APPLICATION                  |   |
+    |    |    +--------------------------------+   |   |
+    |    |    |  Auth, Input validation, HTTPS |   |   |
+    |    |    |                                |   |   |
+    |    |    |    Layer 4: DATA               |   |   |
+    |    |    |    +--------------------+     |   |   |
+    |    |    |    | Encryption at rest |     |   |   |
+    |    |    |    | Access control     |     |   |   |
+    |    |    |    +--------------------+     |   |   |
+    |    |    +--------------------------------+   |   |
+    |    +------------------------------------------+   |
+    +----------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Authentication
 
 ```
 AUTHENTICATION METHODS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. PASSWORD + MFA
-   User ──> Password ──> OTP/TOTP ──> Authenticated
+   User --> Password --> OTP/TOTP --> Authenticated
 
 2. OAUTH 2.0 / OIDC
-   ┌────────┐     ┌───────────────┐     ┌────────┐
-   │ Client │────>│ Auth Provider │────>│  API   │
-   └────────┘     │ (Google/Okta) │     └────────┘
-                  └───────────────┘
-                       │
+   +--------+     +---------------+     +--------+
+   | Client |---->| Auth Provider |---->|  API   |
+   +--------+     | (Google/Okta) |     +--------+
+                  +---------------+
+                       |
                   ID Token + Access Token
 
 3. API KEYS
@@ -4623,7 +4623,7 @@ AUTHENTICATION METHODS
    X-API-Key: sk_live_abc123
 
 JWT STRUCTURE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Header.Payload.Signature
 
@@ -4639,53 +4639,53 @@ BASTA PRAXIS:
 - Inkludera aldrig secrets i payload
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Authorization
 
 ```
 AUTHORIZATION MODELS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 RBAC (Role-Based Access Control)
-┌────────────────────────────────────────────────────────┐
-│                                                        │
-│  User ──> Role ──> Permissions                        │
-│                                                        │
-│  anna@ex.com ──> Admin ──> [read, write, delete]     │
-│  erik@ex.com ──> Viewer ──> [read]                   │
-│                                                        │
-└────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|                                                        |
+|  User --> Role --> Permissions                        |
+|                                                        |
+|  anna@ex.com --> Admin --> [read, write, delete]     |
+|  erik@ex.com --> Viewer --> [read]                   |
+|                                                        |
++--------------------------------------------------------+
 
 ABAC (Attribute-Based Access Control)
-┌────────────────────────────────────────────────────────┐
-│                                                        │
-│  Policy: "user.department == resource.department"     │
-│                                                        │
-│  User {dept: "sales"} ──> Resource {dept: "sales"}   │
-│  ALLOWED                                              │
-│                                                        │
-│  User {dept: "sales"} ──> Resource {dept: "eng"}     │
-│  DENIED                                               │
-│                                                        │
-└────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|                                                        |
+|  Policy: "user.department == resource.department"     |
+|                                                        |
+|  User {dept: "sales"} --> Resource {dept: "sales"}   |
+|  ALLOWED                                              |
+|                                                        |
+|  User {dept: "sales"} --> Resource {dept: "eng"}     |
+|  DENIED                                               |
+|                                                        |
++--------------------------------------------------------+
 
 PRINCIPLE OF LEAST PRIVILEGE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 Ge endast de permissions som behovs, inget mer.
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Encryption
 
 ```
 ENCRYPTION IN TRANSIT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 Client ══════ TLS 1.3 ══════> Server
-       │                   │
-       └── Encrypted ──────┘
+       |                   |
+       +-- Encrypted ------+
 
 - HTTPS everywhere
 - TLS 1.3 minimum
@@ -4693,30 +4693,30 @@ Client ══════ TLS 1.3 ══════> Server
 - Certificate pinning (mobile)
 
 ENCRYPTION AT REST
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────────────────────────────────────────────────────┐
-│  DATABASE                                               │
-│  ┌───────────────────────────────────────────────────┐ │
-│  │ AES-256 encrypted                                 │ │
-│  │ user_data: [encrypted blob]                       │ │
-│  └───────────────────────────────────────────────────┘ │
-│                                                         │
-│  KEY MANAGEMENT                                         │
-│  ┌───────────────────────────────────────────────────┐ │
-│  │ AWS KMS / HashiCorp Vault / Azure Key Vault       │ │
-│  │ Master key ──> Data keys (rotated)               │ │
-│  └───────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  DATABASE                                               |
+|  +---------------------------------------------------+ |
+|  | AES-256 encrypted                                 | |
+|  | user_data: [encrypted blob]                       | |
+|  +---------------------------------------------------+ |
+|                                                         |
+|  KEY MANAGEMENT                                         |
+|  +---------------------------------------------------+ |
+|  | AWS KMS / HashiCorp Vault / Azure Key Vault       | |
+|  | Master key --> Data keys (rotated)               | |
+|  +---------------------------------------------------+ |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Common Vulnerabilities
 
 ```
 OWASP TOP 10 (simplified)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. INJECTION (SQL, NoSQL, LDAP)
    DALIGT: query = "SELECT * FROM users WHERE id=" + input
@@ -4741,45 +4741,45 @@ OWASP TOP 10 (simplified)
    GET /api/users/123/data  <- Ar jag user 123?
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secrets Management
 
 ```
 ALDRIG:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Hardcoded secrets i kod
 - Secrets i git
 - Okrypterade env files
 
 ALLTID:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────────────────────────────────────────────────────┐
-│  SECRETS MANAGEMENT                                     │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  ┌──────────────┐                                      │
-│  │ HashiCorp    │                                      │
-│  │   Vault      │ ──> App fetches at runtime          │
-│  └──────────────┘                                      │
-│                                                         │
-│  ┌──────────────┐                                      │
-│  │  AWS Secrets │                                      │
-│  │   Manager    │ ──> Injected as env vars            │
-│  └──────────────┘                                      │
-│                                                         │
-│  ┌──────────────┐                                      │
-│  │  K8s Secrets │                                      │
-│  │  (encrypted) │ ──> Mounted as volume               │
-│  └──────────────┘                                      │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  SECRETS MANAGEMENT                                     |
++---------------------------------------------------------+
+|                                                         |
+|  +--------------+                                      |
+|  | HashiCorp    |                                      |
+|  |   Vault      | --> App fetches at runtime          |
+|  +--------------+                                      |
+|                                                         |
+|  +--------------+                                      |
+|  |  AWS Secrets |                                      |
+|  |   Manager    | --> Injected as env vars            |
+|  +--------------+                                      |
+|                                                         |
+|  +--------------+                                      |
+|  |  K8s Secrets |                                      |
+|  |  (encrypted) | --> Mounted as volume               |
+|  +--------------+                                      |
+|                                                         |
++---------------------------------------------------------+
 
 Rotera secrets regelbundet!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Security Tools
 
@@ -4791,7 +4791,7 @@ Rotera secrets regelbundet!
 | **Auth** | Auth0, Okta, Keycloak |
 | **Certificates** | Let's Encrypt, ACM |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -4802,7 +4802,7 @@ Rotera secrets regelbundet!
 | Broken auth | Weak passwords | MFA required |
 | IDOR | No authz check | Resource-level authz |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4831,7 +4831,7 @@ Rotera secrets regelbundet!
             "xp_reward": 180,
             "content": """# Real-World System Design Cases
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4843,31 +4843,31 @@ Rotera secrets regelbundet!
 | **Scale** | Tanka i miljarder |
 | **Practice** | Applicera kunskap |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Case 1: URL Shortener (bit.ly)
 
 ```
 REQUIREMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Shorten URLs (write)
 - Redirect to original (read)
 - Analytics (clicks)
 - 100M URLs/day, 10:1 read/write ratio
 
 HIGH-LEVEL DESIGN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌─────────┐     ┌─────────────┐     ┌─────────────┐
-│ Client  │────>│ API Gateway │────>│ URL Service │
-└─────────┘     └─────────────┘     └──────┬──────┘
-                                           │
-                    ┌──────────────────────┼──────────────────────┐
++---------+     +-------------+     +-------------+
+| Client  |---->| API Gateway |---->| URL Service |
++---------+     +-------------+     +------+------+
+                                           |
+                    +----------------------+----------------------+
                     v                      v                      v
-              ┌──────────┐          ┌──────────┐          ┌──────────┐
-              │  Cache   │          │ Database │          │ Analytics│
-              │ (Redis)  │          │(Cassandra)│          │ (Kafka)  │
-              └──────────┘          └──────────┘          └──────────┘
+              +----------+          +----------+          +----------+
+              |  Cache   |          | Database |          | Analytics|
+              | (Redis)  |          |(Cassandra)|          | (Kafka)  |
+              +----------+          +----------+          +----------+
 
 KEY DECISIONS:
 - Base62 encoding (a-zA-Z0-9) for short codes
@@ -4877,20 +4877,20 @@ KEY DECISIONS:
 - Kafka for async analytics
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Case 2: Twitter Timeline
 
 ```
 REQUIREMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Post tweets
 - Follow users
 - View home timeline
 - 500M tweets/day, 300M MAU
 
 TWO APPROACHES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 PULL MODEL (Fan-out on read):
 User opens app -> Query all follows -> Merge + sort
@@ -4903,48 +4903,48 @@ Tweet posted -> Push to all followers' timelines
 - Slow write for celebrities (millions of followers)
 
 HYBRID (Twitter's approach):
-┌────────────────────────────────────────────────────────┐
-│                                                        │
-│  Regular users (<1000 followers): PUSH                │
-│  - Pre-compute timeline in Redis                      │
-│                                                        │
-│  Celebrities (>1000 followers): PULL                  │
-│  - Merge at read time                                 │
-│                                                        │
-└────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|                                                        |
+|  Regular users (<1000 followers): PUSH                |
+|  - Pre-compute timeline in Redis                      |
+|                                                        |
+|  Celebrities (>1000 followers): PULL                  |
+|  - Merge at read time                                 |
+|                                                        |
++--------------------------------------------------------+
 
 Timeline Cache (Redis):
 user:123:timeline -> [tweet_id_1, tweet_id_2, ...]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Case 3: Chat System (WhatsApp)
 
 ```
 REQUIREMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - 1:1 and group messaging
 - Online/offline status
 - Message delivery confirmation
 - 100M concurrent users
 
 ARCHITECTURE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌──────────┐                         ┌──────────┐
-│ Client A │<──WebSocket──>┌────────┐│ Client B │
-└──────────┘               │  Chat  │└──────────┘
-                           │ Server │
-                           │ Cluster│
-                           └───┬────┘
-                               │
-        ┌──────────────────────┼──────────────────────┐
++----------+                         +----------+
+| Client A |<--WebSocket-->+--------+| Client B |
++----------+               |  Chat  |+----------+
+                           | Server |
+                           | Cluster|
+                           +---+----+
+                               |
+        +----------------------+----------------------+
         v                      v                      v
-  ┌──────────┐           ┌──────────┐          ┌──────────┐
-  │  Redis   │           │ Message  │          │ Presence │
-  │(Session) │           │   Queue  │          │ Service  │
-  └──────────┘           └──────────┘          └──────────┘
+  +----------+           +----------+          +----------+
+  |  Redis   |           | Message  |          | Presence |
+  |(Session) |           |   Queue  |          | Service  |
+  +----------+           +----------+          +----------+
 
 MESSAGE FLOW:
 1. A sends message
@@ -4959,46 +4959,46 @@ PRESENCE:
 - Broadcast status changes to contacts
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Case 4: Distributed File Storage (S3/Dropbox)
 
 ```
 REQUIREMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Upload/download files
 - File sync across devices
 - Deduplication
 - Versioning
 
 ARCHITECTURE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
-┌──────────┐     ┌─────────────┐
-│ Client   │────>│ API Server  │
-└──────────┘     └──────┬──────┘
-                        │
-        ┌───────────────┼───────────────┐
++----------+     +-------------+
+| Client   |---->| API Server  |
++----------+     +------+------+
+                        |
+        +---------------+---------------+
         v               v               v
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│  Metadata    │ │   Block      │ │    CDN       │
-│   Service    │ │   Storage    │ │  (Download)  │
-│  (Postgres)  │ │  (HDFS/S3)   │ │              │
-└──────────────┘ └──────────────┘ └──────────────┘
++--------------+ +--------------+ +--------------+
+|  Metadata    | |   Block      | |    CDN       |
+|   Service    | |   Storage    | |  (Download)  |
+|  (Postgres)  | |  (HDFS/S3)   | |              |
++--------------+ +--------------+ +--------------+
 
 CHUNKING + DEDUP:
-┌────────────────────────────────────────────────────────┐
-│  File (100MB)                                          │
-│  ┌────┐┌────┐┌────┐┌────┐┌────┐                      │
-│  │ C1 ││ C2 ││ C3 ││ C4 ││ C5 │ <- 4MB chunks       │
-│  └────┘└────┘└────┘└────┘└────┘                      │
-│                                                        │
-│  Each chunk: SHA256 hash as ID                        │
-│  Same content = same hash = store once                │
-│                                                        │
-│  File metadata:                                        │
-│  {chunks: [hash1, hash2, hash3, hash4, hash5]}       │
-└────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|  File (100MB)                                          |
+|  +----++----++----++----++----+                      |
+|  | C1 || C2 || C3 || C4 || C5 | <- 4MB chunks       |
+|  +----++----++----++----++----+                      |
+|                                                        |
+|  Each chunk: SHA256 hash as ID                        |
+|  Same content = same hash = store once                |
+|                                                        |
+|  File metadata:                                        |
+|  {chunks: [hash1, hash2, hash3, hash4, hash5]}       |
++--------------------------------------------------------+
 
 SYNC:
 - Client sends file tree with hashes
@@ -5006,36 +5006,36 @@ SYNC:
 - Conflict resolution: Last-write-wins or manual
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Case 5: Rate Limiter
 
 ```
 REQUIREMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 - Limit: 100 requests/minute per user
 - Distributed across multiple servers
 - Low latency (<1ms overhead)
 
 DESIGN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
          Request
-            │
+            |
             v
-┌────────────────────┐
-│ Rate Limit Check   │
-│                    │
-│ GET user:123:count │──> Redis
-│                    │
-│ count < 100?       │
-│   YES: INCR, allow │
-│   NO:  deny (429)  │
-│                    │
-└────────────────────┘
++--------------------+
+| Rate Limit Check   |
+|                    |
+| GET user:123:count |--> Redis
+|                    |
+| count < 100?       |
+|   YES: INCR, allow |
+|   NO:  deny (429)  |
+|                    |
++--------------------+
 
 REDIS IMPLEMENTATION (Sliding Window):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 -- Lua script for atomic operation
 local key = "ratelimit:" .. user_id
@@ -5053,13 +5053,13 @@ return 1  -- allowed
 + Distributed
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## System Design Interview Framework
 
 ```
 STEP-BY-STEP APPROACH
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 1. CLARIFY REQUIREMENTS (5 min)
    - Functional: What should it do?
@@ -5087,7 +5087,7 @@ STEP-BY-STEP APPROACH
    - Future improvements
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Common Patterns
 
@@ -5099,7 +5099,7 @@ STEP-BY-STEP APPROACH
 | **Real-time** | WebSocket + Redis pub/sub |
 | **Analytics** | Kafka + data warehouse |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -5110,7 +5110,7 @@ STEP-BY-STEP APPROACH
 | Single point of failure | No redundancy | Replicate everything |
 | No monitoring | "Ship it" | Observability from day 1 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

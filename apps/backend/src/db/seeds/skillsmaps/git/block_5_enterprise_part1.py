@@ -21,38 +21,38 @@ NODE_17_GITOPS = {
 ## GitOps Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       GITOPS ARCHITECTURE                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   DEVELOPER                   GIT REPOSITORY          KUBERNETES        │
-│   ─────────                   ──────────────          ──────────        │
-│                                                                         │
-│   ┌─────────┐   git push     ┌─────────────┐         ┌─────────────┐   │
-│   │ Change  │ ────────────►  │ main branch │         │  Cluster    │   │
-│   │ Code    │                │             │         │             │   │
-│   └─────────┘                │ manifests/  │         │ ┌─────────┐ │   │
-│                              │ ├── app.yaml│         │ │  Pods   │ │   │
-│   ┌─────────┐   PR review    │ ├── svc.yaml│  sync   │ │Services │ │   │
-│   │ Review  │ ◄────────────  │ └── ing.yaml│ ◄─────► │ │Ingress  │ │   │
-│   │ Approve │                │             │         │ └─────────┘ │   │
-│   └─────────┘                └─────────────┘         └─────────────┘   │
-│                                    │                       ▲           │
-│                                    │                       │           │
-│                              ┌─────▼─────┐                 │           │
-│                              │  GitOps   │                 │           │
-│                              │ Operator  │─────────────────┘           │
-│                              │(ArgoCD/   │    reconcile                │
-│                              │ Flux)     │                             │
-│                              └───────────┘                             │
-│                                                                         │
-│   PRINCIPLES:                                                           │
-│   1. Declarative - Desired state in Git                                 │
-│   2. Versioned - Git history = audit trail                              │
-│   3. Automated - Operators sync continuously                            │
-│   4. Auditable - All changes traceable                                  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       GITOPS ARCHITECTURE                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   DEVELOPER                   GIT REPOSITORY          KUBERNETES        |
+|   ---------                   --------------          ----------        |
+|                                                                         |
+|   +---------+   git push     +-------------+         +-------------+   |
+|   | Change  | ------------►  | main branch |         |  Cluster    |   |
+|   | Code    |                |             |         |             |   |
+|   +---------+                | manifests/  |         | +---------+ |   |
+|                              | +-- app.yaml|         | |  Pods   | |   |
+|   +---------+   PR review    | +-- svc.yaml|  sync   | |Services | |   |
+|   | Review  | ◄------------  | +-- ing.yaml| ◄-----► | |Ingress  | |   |
+|   | Approve |                |             |         | +---------+ |   |
+|   +---------+                +-------------+         +-------------+   |
+|                                    |                       ▲           |
+|                                    |                       |           |
+|                              +-----▼-----+                 |           |
+|                              |  GitOps   |                 |           |
+|                              | Operator  |-----------------+           |
+|                              |(ArgoCD/   |    reconcile                |
+|                              | Flux)     |                             |
+|                              +-----------+                             |
+|                                                                         |
+|   PRINCIPLES:                                                           |
+|   1. Declarative - Desired state in Git                                 |
+|   2. Versioned - Git history = audit trail                              |
+|   3. Automated - Operators sync continuously                            |
+|   4. Auditable - All changes traceable                                  |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -113,40 +113,40 @@ spec:
 ### Multi-Environment Setup
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    MULTI-ENVIRONMENT GITOPS                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   REPOSITORY STRUCTURE:                                                 │
-│                                                                         │
-│   app-manifests/                                                        │
-│   ├── base/                    # Shared base configs                    │
-│   │   ├── deployment.yaml                                               │
-│   │   ├── service.yaml                                                  │
-│   │   └── kustomization.yaml                                            │
-│   │                                                                     │
-│   └── environments/                                                     │
-│       ├── development/         # Dev environment                        │
-│       │   ├── kustomization.yaml                                        │
-│       │   └── patches/                                                  │
-│       │       └── replicas.yaml                                         │
-│       │                                                                 │
-│       ├── staging/             # Staging environment                    │
-│       │   ├── kustomization.yaml                                        │
-│       │   └── patches/                                                  │
-│       │                                                                 │
-│       └── production/          # Production environment                 │
-│           ├── kustomization.yaml                                        │
-│           └── patches/                                                  │
-│                                                                         │
-│   PROMOTION FLOW:                                                       │
-│   development → staging → production                                    │
-│        │           │           │                                        │
-│        ▼           ▼           ▼                                        │
-│     auto-sync   PR-review   PR-review                                   │
-│                + approval   + 2 approvals                               │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    MULTI-ENVIRONMENT GITOPS                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   REPOSITORY STRUCTURE:                                                 |
+|                                                                         |
+|   app-manifests/                                                        |
+|   +-- base/                    # Shared base configs                    |
+|   |   +-- deployment.yaml                                               |
+|   |   +-- service.yaml                                                  |
+|   |   +-- kustomization.yaml                                            |
+|   |                                                                     |
+|   +-- environments/                                                     |
+|       +-- development/         # Dev environment                        |
+|       |   +-- kustomization.yaml                                        |
+|       |   +-- patches/                                                  |
+|       |       +-- replicas.yaml                                         |
+|       |                                                                 |
+|       +-- staging/             # Staging environment                    |
+|       |   +-- kustomization.yaml                                        |
+|       |   +-- patches/                                                  |
+|       |                                                                 |
+|       +-- production/          # Production environment                 |
+|           +-- kustomization.yaml                                        |
+|           +-- patches/                                                  |
+|                                                                         |
+|   PROMOTION FLOW:                                                       |
+|   development -> staging -> production                                    |
+|        |           |           |                                        |
+|        ▼           ▼           ▼                                        |
+|     auto-sync   PR-review   PR-review                                   |
+|                + approval   + 2 approvals                               |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -217,30 +217,30 @@ spec:
 
 ```
 company-platform/
-├── apps/                    # Application code
-│   ├── frontend/
-│   └── backend/
-├── manifests/               # Kubernetes manifests
-│   ├── base/
-│   └── environments/
-├── terraform/               # Infrastructure
-│   ├── modules/
-│   └── environments/
-└── .github/workflows/       # CI/CD
++-- apps/                    # Application code
+|   +-- frontend/
+|   +-- backend/
++-- manifests/               # Kubernetes manifests
+|   +-- base/
+|   +-- environments/
++-- terraform/               # Infrastructure
+|   +-- modules/
+|   +-- environments/
++-- .github/workflows/       # CI/CD
 ```
 
 ### Polyrepo Strategy
 
 ```
 REPOSITORIES:
-├── app-frontend/           # Frontend code + Dockerfile
-├── app-backend/            # Backend code + Dockerfile
-├── infrastructure/         # Terraform code
-└── fleet-manifests/        # Kubernetes manifests
-    ├── apps/
-    │   ├── frontend/
-    │   └── backend/
-    └── infrastructure/
++-- app-frontend/           # Frontend code + Dockerfile
++-- app-backend/            # Backend code + Dockerfile
++-- infrastructure/         # Terraform code
++-- fleet-manifests/        # Kubernetes manifests
+    +-- apps/
+    |   +-- frontend/
+    |   +-- backend/
+    +-- infrastructure/
 ```
 
 ---
@@ -399,7 +399,7 @@ jobs:
 
 | Component | Tool | Purpose |
 |-----------|------|---------|
-| GitOps Operator | ArgoCD/Flux | Sync Git → Cluster |
+| GitOps Operator | ArgoCD/Flux | Sync Git -> Cluster |
 | Config Management | Kustomize/Helm | Environment patches |
 | Secrets | Sealed Secrets/SOPS | Encrypted secrets in Git |
 | Image Updates | Flux Image Automation | Auto-update image tags |
@@ -432,39 +432,39 @@ NODE_18_DISASTER_RECOVERY = {
 ## Backup Strategies
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       GIT BACKUP STRATEGIES                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   LEVEL 1: DISTRIBUTED COPIES                                           │
-│   ─────────────────────────────                                         │
-│   Every clone is a backup!                                              │
-│   • Developer machines                                                  │
-│   • CI/CD runners                                                       │
-│   • Multiple remotes                                                    │
-│                                                                         │
-│   LEVEL 2: MIRROR REPOSITORIES                                          │
-│   ─────────────────────────────                                         │
-│   ┌──────────────┐    mirror    ┌──────────────┐                       │
-│   │   GitHub     │ ──────────►  │   GitLab     │                       │
-│   │   (Primary)  │              │   (Backup)   │                       │
-│   └──────────────┘              └──────────────┘                       │
-│                                                                         │
-│   LEVEL 3: BARE REPOSITORY BACKUPS                                      │
-│   ─────────────────────────────────                                     │
-│   ┌──────────────┐    backup    ┌──────────────┐                       │
-│   │   Origin     │ ──────────►  │   S3/GCS     │                       │
-│   │              │    daily     │   Archive    │                       │
-│   └──────────────┘              └──────────────┘                       │
-│                                                                         │
-│   LEVEL 4: FULL ORGANIZATION BACKUP                                     │
-│   ─────────────────────────────────                                     │
-│   • All repositories                                                    │
-│   • Issues, PRs, wikis                                                  │
-│   • Actions workflows                                                   │
-│   • Settings and permissions                                            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       GIT BACKUP STRATEGIES                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   LEVEL 1: DISTRIBUTED COPIES                                           |
+|   -----------------------------                                         |
+|   Every clone is a backup!                                              |
+|   • Developer machines                                                  |
+|   • CI/CD runners                                                       |
+|   • Multiple remotes                                                    |
+|                                                                         |
+|   LEVEL 2: MIRROR REPOSITORIES                                          |
+|   -----------------------------                                         |
+|   +--------------+    mirror    +--------------+                       |
+|   |   GitHub     | ----------►  |   GitLab     |                       |
+|   |   (Primary)  |              |   (Backup)   |                       |
+|   +--------------+              +--------------+                       |
+|                                                                         |
+|   LEVEL 3: BARE REPOSITORY BACKUPS                                      |
+|   ---------------------------------                                     |
+|   +--------------+    backup    +--------------+                       |
+|   |   Origin     | ----------►  |   S3/GCS     |                       |
+|   |              |    daily     |   Archive    |                       |
+|   +--------------+              +--------------+                       |
+|                                                                         |
+|   LEVEL 4: FULL ORGANIZATION BACKUP                                     |
+|   ---------------------------------                                     |
+|   • All repositories                                                    |
+|   • Issues, PRs, wikis                                                  |
+|   • Actions workflows                                                   |
+|   • Settings and permissions                                            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -760,49 +760,49 @@ git branch recovered <commit-hash>
 ## Disaster Recovery Plan
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DISASTER RECOVERY PLAN                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   SCENARIO 1: Accidental Force Push                                     │
-│   ──────────────────────────────────                                    │
-│   1. Check reflog on any machine with old state                         │
-│   2. git reflog | grep <branch>                                         │
-│   3. git push origin <old-commit>:<branch> --force                      │
-│   4. Notify team, verify recovery                                       │
-│   RTO: Minutes                                                          │
-│                                                                         │
-│   SCENARIO 2: Repository Deletion                                       │
-│   ────────────────────────────────                                      │
-│   1. Check GitHub support (30-day retention)                            │
-│   2. Restore from mirror/backup                                         │
-│   3. Re-create repo settings manually                                   │
-│   4. Re-configure branch protection                                     │
-│   RTO: Hours                                                            │
-│                                                                         │
-│   SCENARIO 3: Complete GitHub Outage                                    │
-│   ──────────────────────────────────                                    │
-│   1. Communicate to team                                                │
-│   2. Switch to mirror (GitLab/self-hosted)                              │
-│   3. Update CI/CD to use mirror                                         │
-│   4. Continue operations                                                │
-│   RTO: Hours                                                            │
-│                                                                         │
-│   SCENARIO 4: Ransomware/Compromise                                     │
-│   ────────────────────────────────                                      │
-│   1. Isolate affected systems                                           │
-│   2. Revoke all access tokens                                           │
-│   3. Restore from verified clean backup                                 │
-│   4. Forensic analysis                                                  │
-│   5. Reset all credentials                                              │
-│   RTO: Days                                                             │
-│                                                                         │
-│   TESTING SCHEDULE:                                                     │
-│   • Monthly: Restore test (random repo)                                 │
-│   • Quarterly: Full DR drill                                            │
-│   • Annually: Complete failover test                                    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DISASTER RECOVERY PLAN                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   SCENARIO 1: Accidental Force Push                                     |
+|   ----------------------------------                                    |
+|   1. Check reflog on any machine with old state                         |
+|   2. git reflog | grep <branch>                                         |
+|   3. git push origin <old-commit>:<branch> --force                      |
+|   4. Notify team, verify recovery                                       |
+|   RTO: Minutes                                                          |
+|                                                                         |
+|   SCENARIO 2: Repository Deletion                                       |
+|   --------------------------------                                      |
+|   1. Check GitHub support (30-day retention)                            |
+|   2. Restore from mirror/backup                                         |
+|   3. Re-create repo settings manually                                   |
+|   4. Re-configure branch protection                                     |
+|   RTO: Hours                                                            |
+|                                                                         |
+|   SCENARIO 3: Complete GitHub Outage                                    |
+|   ----------------------------------                                    |
+|   1. Communicate to team                                                |
+|   2. Switch to mirror (GitLab/self-hosted)                              |
+|   3. Update CI/CD to use mirror                                         |
+|   4. Continue operations                                                |
+|   RTO: Hours                                                            |
+|                                                                         |
+|   SCENARIO 4: Ransomware/Compromise                                     |
+|   --------------------------------                                      |
+|   1. Isolate affected systems                                           |
+|   2. Revoke all access tokens                                           |
+|   3. Restore from verified clean backup                                 |
+|   4. Forensic analysis                                                  |
+|   5. Reset all credentials                                              |
+|   RTO: Days                                                             |
+|                                                                         |
+|   TESTING SCHEDULE:                                                     |
+|   • Monthly: Restore test (random repo)                                 |
+|   • Quarterly: Full DR drill                                            |
+|   • Annually: Complete failover test                                    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---

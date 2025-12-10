@@ -33,22 +33,22 @@ Varför viktigt:
 ```text
 En prompt är input-texten du ger till en LLM.
 
-┌─────────────────────────────────────┐
-│           PROMPT                    │
-│  "Förklara Docker på enkelt sätt"   │
-└─────────────────────────────────────┘
-                 │
++-------------------------------------+
+|           PROMPT                    |
+|  "Förklara Docker på enkelt sätt"   |
++-------------------------------------+
+                 |
                  ▼
-┌─────────────────────────────────────┐
-│           LLM                       │
-│  (GPT-4, Claude, Gemini, etc.)      │
-└─────────────────────────────────────┘
-                 │
++-------------------------------------+
+|           LLM                       |
+|  (GPT-4, Claude, Gemini, etc.)      |
++-------------------------------------+
+                 |
                  ▼
-┌─────────────────────────────────────┐
-│           RESPONSE                  │
-│  "Docker är som en container..."    │
-└─────────────────────────────────────┘
++-------------------------------------+
+|           RESPONSE                  |
+|  "Docker är som en container..."    |
++-------------------------------------+
 ```
 
 ## Komponenter i en Prompt
@@ -144,10 +144,10 @@ Definition:
   De kan vara ord, delar av ord, eller tecken.
 
 Exempel (GPT tokenizer):
-  "Hello" → ["Hello"] (1 token)
-  "ChatGPT" → ["Chat", "GPT"] (2 tokens)
-  "Tokenization" → ["Token", "ization"] (2 tokens)
-  "🚀" → 1 token (emoji)
+  "Hello" -> ["Hello"] (1 token)
+  "ChatGPT" -> ["Chat", "GPT"] (2 tokens)
+  "Tokenization" -> ["Token", "ization"] (2 tokens)
+  "🚀" -> 1 token (emoji)
 ```
 
 ## Token-räkning
@@ -191,17 +191,17 @@ Kod:
 Context Window = Max tokens modellen kan hantera
 (input + output tillsammans)
 
-┌────────────────────────────────────────────┐
-│              CONTEXT WINDOW                │
-│  ┌──────────────────┬───────────────────┐  │
-│  │   INPUT TOKENS   │   OUTPUT TOKENS   │  │
-│  │   (din prompt)   │   (AI:s svar)     │  │
-│  │                  │                   │  │
-│  │    10,000        │      5,000        │  │
-│  └──────────────────┴───────────────────┘  │
-│                                            │
-│         Total: 15,000 / 128,000            │
-└────────────────────────────────────────────┘
++--------------------------------------------+
+|              CONTEXT WINDOW                |
+|  +------------------+-------------------+  |
+|  |   INPUT TOKENS   |   OUTPUT TOKENS   |  |
+|  |   (din prompt)   |   (AI:s svar)     |  |
+|  |                  |                   |  |
+|  |    10,000        |      5,000        |  |
+|  +------------------+-------------------+  |
+|                                            |
+|         Total: 15,000 / 128,000            |
++--------------------------------------------+
 ```
 
 ## Context Window per modell
@@ -337,25 +337,25 @@ Större modell:
 ## Fine-Tuning vs Prompt Engineering
 
 ```text
-┌─────────────────────────────────────────────────────────┐
-│                    FINE-TUNING                          │
-├─────────────────────────────────────────────────────────┤
-│  • Tränar om modellen på ny data                        │
-│  • Ändrar weights permanent                             │
-│  • Kräver dataset och compute                           │
-│  • Bra för: specifik domän/stil                         │
-│  • Dyrt och tidskrävande                                │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    FINE-TUNING                          |
++---------------------------------------------------------+
+|  • Tränar om modellen på ny data                        |
+|  • Ändrar weights permanent                             |
+|  • Kräver dataset och compute                           |
+|  • Bra för: specifik domän/stil                         |
+|  • Dyrt och tidskrävande                                |
++---------------------------------------------------------+
 
-┌─────────────────────────────────────────────────────────┐
-│                PROMPT ENGINEERING                       │
-├─────────────────────────────────────────────────────────┤
-│  • Ändrar input, inte modellen                          │
-│  • Ingen träning krävs                                  │
-│  • Flexibelt och snabbt                                 │
-│  • Bra för: de flesta användningsfall                   │
-│  • Gratis att experimentera                             │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                PROMPT ENGINEERING                       |
++---------------------------------------------------------+
+|  • Ändrar input, inte modellen                          |
+|  • Ingen träning krävs                                  |
+|  • Flexibelt och snabbt                                 |
+|  • Bra för: de flesta användningsfall                   |
+|  • Gratis att experimentera                             |
++---------------------------------------------------------+
 ```
 
 ## RAG (Retrieval-Augmented Generation)
@@ -607,19 +607,19 @@ Styrkor:
 
 ```yaml
 För nybörjare:
-  → OpenAI (bäst dokumentation)
+  -> OpenAI (bäst dokumentation)
 
 För kodning:
-  → Anthropic Claude
+  -> Anthropic Claude
 
 För långa dokument:
-  → Google Gemini
+  -> Google Gemini
 
 För privacy/kontroll:
-  → Meta Llama (self-hosted)
+  -> Meta Llama (self-hosted)
 
 För produktion:
-  → OpenAI eller Anthropic (stabilitet)
+  -> OpenAI eller Anthropic (stabilitet)
 ```
 
 **Nästa steg:** Node 5 - Sampling Parameters

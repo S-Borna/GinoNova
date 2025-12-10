@@ -28,35 +28,35 @@ NODE_13_CORE_MODULES = {
 ## Module Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       ANSIBLE MODULE EXECUTION                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  CONTROL NODE                          TARGET NODE                      │
-│  ────────────                          ───────────                      │
-│  ┌──────────────┐                      ┌──────────────────────────┐     │
-│  │ Playbook     │                      │ 1. Module transferred    │     │
-│  │   ↓          │      SSH/WinRM       │ 2. Arguments passed      │     │
-│  │ Task         │  ─────────────────►  │ 3. Module executes       │     │
-│  │   ↓          │                      │ 4. JSON result returned  │     │
-│  │ Module       │  ◄─────────────────  │ 5. Cleanup               │     │
-│  └──────────────┘                      └──────────────────────────┘     │
-│                                                                         │
-│  MODULE TYPES:                                                          │
-│  ├── Python modules (most)  → Requires Python on target                 │
-│  ├── Binary modules         → Platform-specific                         │
-│  └── Raw/Script             → No Python needed                          │
-│                                                                         │
-│  RETURN VALUES:                                                         │
-│  {                                                                      │
-│    "changed": true/false,   ← Idempotency indicator                     │
-│    "msg": "Human readable", ← Status message                            │
-│    "rc": 0,                 ← Return code (commands)                    │
-│    "stdout": "...",         ← Command output                            │
-│    "failed": false          ← Success/failure                           │
-│  }                                                                      │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       ANSIBLE MODULE EXECUTION                          |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  CONTROL NODE                          TARGET NODE                      |
+|  ------------                          -----------                      |
+|  +--------------+                      +--------------------------+     |
+|  | Playbook     |                      | 1. Module transferred    |     |
+|  |   ↓          |      SSH/WinRM       | 2. Arguments passed      |     |
+|  | Task         |  -----------------►  | 3. Module executes       |     |
+|  |   ↓          |                      | 4. JSON result returned  |     |
+|  | Module       |  ◄-----------------  | 5. Cleanup               |     |
+|  +--------------+                      +--------------------------+     |
+|                                                                         |
+|  MODULE TYPES:                                                          |
+|  +-- Python modules (most)  -> Requires Python on target                 |
+|  +-- Binary modules         -> Platform-specific                         |
+|  +-- Raw/Script             -> No Python needed                          |
+|                                                                         |
+|  RETURN VALUES:                                                         |
+|  {                                                                      |
+|    "changed": true/false,   <- Idempotency indicator                     |
+|    "msg": "Human readable", <- Status message                            |
+|    "rc": 0,                 <- Return code (commands)                    |
+|    "stdout": "...",         <- Command output                            |
+|    "failed": false          <- Success/failure                           |
+|  }                                                                      |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -220,19 +220,19 @@ NODE_13_CORE_MODULES = {
 ### command vs shell vs raw
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                    COMMAND MODULE COMPARISON                           │
-├─────────────┬──────────────┬──────────────┬────────────────────────────┤
-│ Feature     │ command      │ shell        │ raw                        │
-├─────────────┼──────────────┼──────────────┼────────────────────────────┤
-│ Shell       │ ❌ No        │ ✅ Yes       │ ✅ Yes                     │
-│ Pipes       │ ❌ No        │ ✅ Yes       │ ✅ Yes                     │
-│ Redirects   │ ❌ No        │ ✅ Yes       │ ✅ Yes                     │
-│ Variables   │ ❌ No        │ ✅ Yes       │ ✅ Yes                     │
-│ Python req  │ ✅ Yes       │ ✅ Yes       │ ❌ No                      │
-│ Security    │ ✅ Safer     │ ⚠️ Riskier   │ ⚠️ Riskier                 │
-│ Idempotent  │ With creates │ With creates │ ❌ Never                   │
-└─────────────┴──────────────┴──────────────┴────────────────────────────┘
++------------------------------------------------------------------------+
+|                    COMMAND MODULE COMPARISON                           |
++-------------+--------------+--------------+----------------------------+
+| Feature     | command      | shell        | raw                        |
++-------------+--------------+--------------+----------------------------+
+| Shell       | ❌ No        | ✅ Yes       | ✅ Yes                     |
+| Pipes       | ❌ No        | ✅ Yes       | ✅ Yes                     |
+| Redirects   | ❌ No        | ✅ Yes       | ✅ Yes                     |
+| Variables   | ❌ No        | ✅ Yes       | ✅ Yes                     |
+| Python req  | ✅ Yes       | ✅ Yes       | ❌ No                      |
+| Security    | ✅ Safer     | ⚠️ Riskier   | ⚠️ Riskier                 |
+| Idempotent  | With creates | With creates | ❌ Never                   |
++-------------+--------------+--------------+----------------------------+
 ```
 
 ### command - Execute without shell
@@ -668,38 +668,38 @@ NODE_14_CLOUD_MODULES = {
 ## Cloud Automation Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ANSIBLE CLOUD AUTOMATION                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  CONTROL NODE                        CLOUD PROVIDERS                    │
-│  ────────────                        ───────────────                    │
-│  ┌──────────────┐                    ┌─────────────────┐                │
-│  │ Playbook     │                    │      AWS        │                │
-│  │  ↓           │                    │    ┌─────┐      │                │
-│  │ Cloud Module │ ──── API Calls ──► │    │ EC2 │      │                │
-│  │  ↓           │                    │    │ S3  │      │                │
-│  │ localhost    │                    │    │ RDS │      │                │
-│  └──────────────┘                    └─────────────────┘                │
-│        │                             ┌─────────────────┐                │
-│        │                             │     Azure       │                │
-│        └──── API Calls ────────────► │    ┌─────┐      │                │
-│                                      │    │ VMs │      │                │
-│                                      │    │ AKS │      │                │
-│                                      └─────────────────┘                │
-│                                                                         │
-│  AUTHENTICATION METHODS:                                                │
-│  ├── Environment Variables (AWS_ACCESS_KEY_ID)                          │
-│  ├── IAM Roles (EC2 Instance Profiles)                                  │
-│  ├── Credential Files (~/.aws/credentials)                              │
-│  └── Service Account JSON (GCP)                                         │
-│                                                                         │
-│  DYNAMIC INVENTORY:                                                     │
-│  ├── aws_ec2           → Auto-discover EC2 instances                    │
-│  ├── azure_rm          → Auto-discover Azure VMs                        │
-│  └── gcp_compute       → Auto-discover GCE instances                    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ANSIBLE CLOUD AUTOMATION                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  CONTROL NODE                        CLOUD PROVIDERS                    |
+|  ------------                        ---------------                    |
+|  +--------------+                    +-----------------+                |
+|  | Playbook     |                    |      AWS        |                |
+|  |  ↓           |                    |    +-----+      |                |
+|  | Cloud Module | ---- API Calls --► |    | EC2 |      |                |
+|  |  ↓           |                    |    | S3  |      |                |
+|  | localhost    |                    |    | RDS |      |                |
+|  +--------------+                    +-----------------+                |
+|        |                             +-----------------+                |
+|        |                             |     Azure       |                |
+|        +---- API Calls ------------► |    +-----+      |                |
+|                                      |    | VMs |      |                |
+|                                      |    | AKS |      |                |
+|                                      +-----------------+                |
+|                                                                         |
+|  AUTHENTICATION METHODS:                                                |
+|  +-- Environment Variables (AWS_ACCESS_KEY_ID)                          |
+|  +-- IAM Roles (EC2 Instance Profiles)                                  |
+|  +-- Credential Files (~/.aws/credentials)                              |
+|  +-- Service Account JSON (GCP)                                         |
+|                                                                         |
+|  DYNAMIC INVENTORY:                                                     |
+|  +-- aws_ec2           -> Auto-discover EC2 instances                    |
+|  +-- azure_rm          -> Auto-discover Azure VMs                        |
+|  +-- gcp_compute       -> Auto-discover GCE instances                    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1223,43 +1223,43 @@ NODE_15_CONTAINER_MODULES = {
 ## Container Automation Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ANSIBLE CONTAINER AUTOMATION                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ANSIBLE PLAYBOOK                                                       │
-│  ─────────────────                                                      │
-│                                                                         │
-│  ┌─────────────┐    ┌──────────────────────────────────────────────┐    │
-│  │ docker_image│───►│ Pull/Build Images                            │    │
-│  └─────────────┘    └──────────────────────────────────────────────┘    │
-│         │                                                               │
-│         ▼                                                               │
-│  ┌───────────────┐  ┌──────────────────────────────────────────────┐    │
-│  │docker_network │─►│ Create Networks (bridge, overlay)            │    │
-│  └───────────────┘  └──────────────────────────────────────────────┘    │
-│         │                                                               │
-│         ▼                                                               │
-│  ┌───────────────┐  ┌──────────────────────────────────────────────┐    │
-│  │ docker_volume │─►│ Create Persistent Volumes                    │    │
-│  └───────────────┘  └──────────────────────────────────────────────┘    │
-│         │                                                               │
-│         ▼                                                               │
-│  ┌─────────────────┐┌──────────────────────────────────────────────┐    │
-│  │docker_container ││ Run Containers with configs                  │    │
-│  └─────────────────┘└──────────────────────────────────────────────┘    │
-│         │                                                               │
-│         ▼                                                               │
-│  ┌─────────────────┐┌──────────────────────────────────────────────┐    │
-│  │docker_compose_v2││ Multi-container apps with Compose            │    │
-│  └─────────────────┘└──────────────────────────────────────────────┘    │
-│                                                                         │
-│  KUBERNETES FLOW:                                                       │
-│  ┌────────┐  ┌────────────┐  ┌────────┐  ┌─────────────────────────┐    │
-│  │ k8s    │─►│ Deployment │─►│Service │─►│ Ingress/ConfigMaps/etc │    │
-│  └────────┘  └────────────┘  └────────┘  └─────────────────────────┘    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ANSIBLE CONTAINER AUTOMATION                         |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ANSIBLE PLAYBOOK                                                       |
+|  -----------------                                                      |
+|                                                                         |
+|  +-------------+    +----------------------------------------------+    |
+|  | docker_image|---►| Pull/Build Images                            |    |
+|  +-------------+    +----------------------------------------------+    |
+|         |                                                               |
+|         ▼                                                               |
+|  +---------------+  +----------------------------------------------+    |
+|  |docker_network |-►| Create Networks (bridge, overlay)            |    |
+|  +---------------+  +----------------------------------------------+    |
+|         |                                                               |
+|         ▼                                                               |
+|  +---------------+  +----------------------------------------------+    |
+|  | docker_volume |-►| Create Persistent Volumes                    |    |
+|  +---------------+  +----------------------------------------------+    |
+|         |                                                               |
+|         ▼                                                               |
+|  +-----------------++----------------------------------------------+    |
+|  |docker_container || Run Containers with configs                  |    |
+|  +-----------------++----------------------------------------------+    |
+|         |                                                               |
+|         ▼                                                               |
+|  +-----------------++----------------------------------------------+    |
+|  |docker_compose_v2|| Multi-container apps with Compose            |    |
+|  +-----------------++----------------------------------------------+    |
+|                                                                         |
+|  KUBERNETES FLOW:                                                       |
+|  +--------+  +------------+  +--------+  +-------------------------+    |
+|  | k8s    |-►| Deployment |-►|Service |-►| Ingress/ConfigMaps/etc |    |
+|  +--------+  +------------+  +--------+  +-------------------------+    |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---

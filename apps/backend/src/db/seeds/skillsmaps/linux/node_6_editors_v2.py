@@ -39,17 +39,17 @@ LINUX_NODE_6_EDITORS_V2 = {
                         "title": "Vim Modes",
                         "explanation": "NORMAL (navigera, default), INSERT (skriv text, i/a/o), COMMAND (:kommandon), VISUAL (markera, v/V).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ VIM MODES                                   │
-├─────────────────────────────────────────────┤
-│ NORMAL  │ Start här. ESC tar dig tillbaka.│
-│    ↓ i  │                                  │
-│ INSERT  │ Skriv text. ESC för att gå ut.  │
-│    ↓ ESC → :                               │
-│ COMMAND │ :w :q :wq :s/old/new/g          │
-│    ↓ v  │                                  │
-│ VISUAL  │ Markera text med hjkl           │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| VIM MODES                                   |
++---------------------------------------------+
+| NORMAL  | Start här. ESC tar dig tillbaka.|
+|    ↓ i  |                                  |
+| INSERT  | Skriv text. ESC för att gå ut.  |
+|    ↓ ESC -> :                               |
+| COMMAND | :w :q :wq :s/old/new/g          |
+|    ↓ v  |                                  |
+| VISUAL  | Markera text med hjkl           |
++---------------------------------------------+""",
                         "pro_tip": "ESC ESC (dubbel-escape) tar dig alltid till NORMAL mode.",
                         "common_mistake": "Att skriva i NORMAL mode - tecken blir kommandon!"
                     },
@@ -57,17 +57,17 @@ LINUX_NODE_6_EDITORS_V2 = {
                         "title": "Vim Survival Kit",
                         "explanation": ":q! (avsluta utan spara), :wq (spara och avsluta), i (insert mode), ESC (normal mode), dd (ta bort rad), u (undo).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ VIKTIGASTE KOMMANDON                        │
-├─────────────────────────────────────────────┤
-│ :q!  │ Avsluta UTAN att spara (nödutgång)│
-│ :wq  │ Spara och avsluta                  │
-│ i    │ Insert mode före cursor            │
-│ ESC  │ Tillbaka till normal mode          │
-│ dd   │ Ta bort hela raden                 │
-│ u    │ Ångra (undo)                       │
-│ /text│ Sök efter 'text'                   │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| VIKTIGASTE KOMMANDON                        |
++---------------------------------------------+
+| :q!  | Avsluta UTAN att spara (nödutgång)|
+| :wq  | Spara och avsluta                  |
+| i    | Insert mode före cursor            |
+| ESC  | Tillbaka till normal mode          |
+| dd   | Ta bort hela raden                 |
+| u    | Ångra (undo)                       |
+| /text| Sök efter 'text'                   |
++---------------------------------------------+""",
                         "pro_tip": "ZZ (shift+z två gånger) är snabbaste sättet att spara och avsluta.",
                         "common_mistake": "Att panika när man är fast i Vim. ESC :q! tar dig ut!"
                     }
@@ -85,7 +85,7 @@ LINUX_NODE_6_EDITORS_V2 = {
                     {
                         "task": "Öppna och avsluta Vim",
                         "instruction": "Öppna test.txt i vim, gå till insert mode, skriv 'Hello', spara och avsluta",
-                        "expected_command": "vim test.txt → i → Hello → ESC → :wq",
+                        "expected_command": "vim test.txt -> i -> Hello -> ESC -> :wq",
                         "hint": "i = insert, ESC = normal, :wq = write & quit"
                     },
                     {
@@ -97,7 +97,7 @@ LINUX_NODE_6_EDITORS_V2 = {
                     {
                         "task": "Snabbedit med Nano",
                         "instruction": "Öppna config.conf, editera, spara och avsluta",
-                        "expected_command": "nano config.conf → edit → Ctrl+O → Enter → Ctrl+X",
+                        "expected_command": "nano config.conf -> edit -> Ctrl+O -> Enter -> Ctrl+X",
                         "hint": "^O = save (Write Out), ^X = exit"
                     },
                     {

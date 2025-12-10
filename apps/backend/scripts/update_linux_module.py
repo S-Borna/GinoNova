@@ -181,7 +181,7 @@ def update_linux_module():
         print("\n" + "=" * 55)
         print("✅ SUCCESS! Linux module updated with V3 content!")
         print(f"   📚 Module: {module_name}")
-        print(f"   📝 Tasks: {old_count} → {len(new_tasks)}")
+        print(f"   📝 Tasks: {old_count} -> {len(new_tasks)}")
         print("=" * 55)
 
     except Exception as e:

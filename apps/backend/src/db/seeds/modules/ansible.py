@@ -28,7 +28,7 @@ MODULE = {
 
 Ansible ar den ledande agentlosa automatiseringsplattformen for konfigurationshantering. Istallet for att manuellt SSH:a till servrar och kora kommandon, definierar du onskat tillstand i YAML-filer och lat Ansible gora jobbet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation
 
@@ -46,33 +46,33 @@ ansible-playbook --version           # visa playbook-version
 which ansible                        # visa installationssokväg
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ansible Arkitektur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ANSIBLE ARKITEKTUR                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ┌──────────────┐                                             │
-│   │ KONTROLLNOD  │  (Ansible installerat har)                  │
-│   │  - Playbooks │                                             │
-│   │  - Inventory │                                             │
-│   │  - Roles     │                                             │
-│   └──────┬───────┘                                             │
-│          │ SSH                                                  │
-│          │ (ingen agent!)                                       │
-│          ▼                                                      │
-│   ┌──────────────┬──────────────┬──────────────┐               │
-│   │   Server 1   │   Server 2   │   Server 3   │               │
-│   │  (managed)   │  (managed)   │  (managed)   │               │
-│   └──────────────┴──────────────┴──────────────┘               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    ANSIBLE ARKITEKTUR                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|   +--------------+                                             |
+|   | KONTROLLNOD  |  (Ansible installerat har)                  |
+|   |  - Playbooks |                                             |
+|   |  - Inventory |                                             |
+|   |  - Roles     |                                             |
+|   +------+-------+                                             |
+|          | SSH                                                  |
+|          | (ingen agent!)                                       |
+|          ▼                                                      |
+|   +--------------+--------------+--------------+               |
+|   |   Server 1   |   Server 2   |   Server 3   |               |
+|   |  (managed)   |  (managed)   |  (managed)   |               |
+|   +--------------+--------------+--------------+               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ansible vs Andra Verktyg
 
@@ -84,7 +84,7 @@ which ansible                        # visa installationssokväg
 | Inlarning | Enkel | Svar | Medel | Medel |
 | SSH | Ja | Nej | Nej | Valfri |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inventory Grunderna
 
@@ -119,7 +119,7 @@ all:
     ansible_user: deploy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ad-hoc Kommandon
 
@@ -138,7 +138,7 @@ ansible webservers -i inventory.ini -a "df -h" # diskutrymme
 ansible all -m setup -a "filter=ansible_os*"   # OS-info
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Forsta Playbook
 
@@ -179,7 +179,7 @@ ansible-playbook playbook.yml -v      # mer info
 ansible-playbook playbook.yml -vvv    # debug
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -207,7 +207,7 @@ ansible-playbook playbook.yml -vvv    # debug
 
 Inventory ar Ansibles karta over din infrastruktur - vilka servrar finns, hur grupperas de, och vilka variabler galler. En valsstrukturerad inventory ar nyckeln till skalbar automation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inventory Typer
 
@@ -218,29 +218,29 @@ Inventory ar Ansibles karta over din infrastruktur - vilka servrar finns, hur gr
 | Dynamic | Python/Plugin | Cloud, auto-discovery |
 | Directory | Mapp-struktur | Stora miljoer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inventory Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INVENTORY HIERARKI                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   all (implicit grupp)                                         │
-│    ├── production          (children-grupp)                    │
-│    │    ├── webservers                                         │
-│    │    │    ├── web1.example.com                              │
-│    │    │    └── web2.example.com                              │
-│    │    └── dbservers                                          │
-│    │         └── db1.example.com                               │
-│    └── staging                                                 │
-│         └── staging.example.com                                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    INVENTORY HIERARKI                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|   all (implicit grupp)                                         |
+|    +-- production          (children-grupp)                    |
+|    |    +-- webservers                                         |
+|    |    |    +-- web1.example.com                              |
+|    |    |    +-- web2.example.com                              |
+|    |    +-- dbservers                                          |
+|    |         +-- db1.example.com                               |
+|    +-- staging                                                 |
+|         +-- staging.example.com                                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Static INI Inventory
 
@@ -276,7 +276,7 @@ ansible_user=deploy
 ansible_python_interpreter=/usr/bin/python3
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## YAML Inventory (Rekommenderat)
 
@@ -310,24 +310,24 @@ all:
           ansible_host: 10.0.0.50
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Directory Layout (Skalbar)
 
 ```
 inventory/
-├── production/
-│   ├── hosts.yml              # servrar
-│   ├── group_vars/
-│   │   ├── all.yml            # alla prod-servrar
-│   │   ├── webservers.yml     # webserver-specifikt
-│   │   └── dbservers.yml      # db-specifikt
-│   └── host_vars/
-│       └── web1.example.com.yml
-└── staging/
-    ├── hosts.yml
-    └── group_vars/
-        └── all.yml
++-- production/
+|   +-- hosts.yml              # servrar
+|   +-- group_vars/
+|   |   +-- all.yml            # alla prod-servrar
+|   |   +-- webservers.yml     # webserver-specifikt
+|   |   +-- dbservers.yml      # db-specifikt
+|   +-- host_vars/
+|       +-- web1.example.com.yml
++-- staging/
+    +-- hosts.yml
+    +-- group_vars/
+        +-- all.yml
 ```
 
 ```yaml
@@ -338,7 +338,7 @@ nginx_worker_connections: 1024
 ssl_certificate: /etc/ssl/certs/prod.crt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dynamic Inventory (Cloud)
 
@@ -370,7 +370,7 @@ ansible-galaxy collection install amazon.aws
 ansible-inventory -i inventory/aws_ec2.yml --graph
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inventory Kommandon
 
@@ -388,7 +388,7 @@ ansible-inventory -i inventory/ --host web1.example.com
 ansible webservers -i inventory/ --list-hosts
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -416,34 +416,34 @@ ansible webservers -i inventory/ --list-hosts
 
 Playbooks ar hjartat i Ansible - YAML-filer som definierar onskat tillstand for din infrastruktur. En playbook innehaller plays, som i sin tur innehaller tasks som utfor det faktiska arbetet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Playbook Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      PLAYBOOK ANATOMI                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   playbook.yml                                                 │
-│   ├── Play 1: "Configure webservers"                           │
-│   │    ├── hosts: webservers                                   │
-│   │    ├── vars: {...}                                         │
-│   │    ├── tasks:                                              │
-│   │    │    ├── Task 1: Install nginx                          │
-│   │    │    ├── Task 2: Copy config                            │
-│   │    │    └── Task 3: Start service                          │
-│   │    └── handlers:                                           │
-│   │         └── Restart nginx                                  │
-│   │                                                             │
-│   └── Play 2: "Configure dbservers"                            │
-│        ├── hosts: dbservers                                    │
-│        └── tasks: [...]                                        │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      PLAYBOOK ANATOMI                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|   playbook.yml                                                 |
+|   +-- Play 1: "Configure webservers"                           |
+|   |    +-- hosts: webservers                                   |
+|   |    +-- vars: {...}                                         |
+|   |    +-- tasks:                                              |
+|   |    |    +-- Task 1: Install nginx                          |
+|   |    |    +-- Task 2: Copy config                            |
+|   |    |    +-- Task 3: Start service                          |
+|   |    +-- handlers:                                           |
+|   |         +-- Restart nginx                                  |
+|   |                                                             |
+|   +-- Play 2: "Configure dbservers"                            |
+|        +-- hosts: dbservers                                    |
+|        +-- tasks: [...]                                        |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Playbook
 
@@ -478,7 +478,7 @@ Playbooks ar hjartat i Ansible - YAML-filer som definierar onskat tillstand for 
         state: restarted
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Task Syntax
 
@@ -525,23 +525,23 @@ tasks:
     when: not config_file.stat.exists
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Handlers
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    HANDLER FLODE                                │
-│                                                                 │
-│   Task: Copy config ──► notify: Restart nginx                  │
-│                              │                                  │
-│                              ▼                                  │
-│   (Alla tasks kors forst)                                      │
-│                              │                                  │
-│                              ▼                                  │
-│   Handler: Restart nginx ──► Kors EN gang i slutet             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    HANDLER FLODE                                |
+|                                                                 |
+|   Task: Copy config --► notify: Restart nginx                  |
+|                              |                                  |
+|                              ▼                                  |
+|   (Alla tasks kors forst)                                      |
+|                              |                                  |
+|                              ▼                                  |
+|   Handler: Restart nginx --► Kors EN gang i slutet             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ```yaml
@@ -564,7 +564,7 @@ tasks:
     notify: Restart nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Play Options
 
@@ -601,7 +601,7 @@ tasks:
       # ...
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Block Error Handling
 
@@ -632,7 +632,7 @@ tasks:
           state: absent
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kora Playbooks
 
@@ -645,7 +645,7 @@ tasks:
 | `ansible-playbook site.yml --limit web1` | Begransat till host |
 | `ansible-playbook site.yml --tags deploy` | Endast taggade tasks |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -673,28 +673,28 @@ tasks:
 
 Variabler gor dina playbooks dynamiska och ateranvandbara. Istallet for hardkodade varden kan samma playbook konfigurera utveckling, staging och produktion. Facts ar systeminfo som Ansible automatiskt samlar in fran varje host.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Variabel Prioritet (Lagst till Hogst)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 VARIABEL PRECEDENS                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   1. Role defaults         (lagst)                             │
-│   2. Inventory group_vars                                      │
-│   3. Inventory host_vars                                       │
-│   4. Playbook vars                                             │
-│   5. Role vars                                                 │
-│   6. Block vars                                                │
-│   7. Task vars                                                 │
-│   8. Extra vars (-e)       (hogst)                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 VARIABEL PRECEDENS                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|   1. Role defaults         (lagst)                             |
+|   2. Inventory group_vars                                      |
+|   3. Inventory host_vars                                       |
+|   4. Playbook vars                                             |
+|   5. Role vars                                                 |
+|   6. Block vars                                                |
+|   7. Task vars                                                 |
+|   8. Extra vars (-e)       (hogst)                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Definiera Variabler
 
@@ -728,7 +728,7 @@ Variabler gor dina playbooks dynamiska och ateranvandbara. Istallet for hardkoda
         msg: "Port: {{ http_port }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Extra Vars (Kommandorad)
 
@@ -746,7 +746,7 @@ ansible-playbook site.yml -e "http_port=8080 debug=true"
 ansible-playbook site.yml -e "@secrets.yml"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ansible Facts
 
@@ -789,7 +789,7 @@ ansible hostname -m setup
 ansible hostname -m setup -a "filter=ansible_distribution*"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Register och set_fact
 
@@ -816,7 +816,7 @@ tasks:
       msg: "Deployed on {{ deploy_date }} to {{ deploy_env }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jinja2 Filters
 
@@ -840,7 +840,7 @@ tasks:
         Join: {{ packages | join(', ') }}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Custom Facts
 
@@ -858,7 +858,7 @@ environment=production
     msg: "Version: {{ ansible_local.custom.general.app_version }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -886,7 +886,7 @@ environment=production
 
 Modules ar Ansibles byggblock - over 3000 inbyggda modules som var och en gor en specifik uppgift. Alla modules ar idempotenta vilket betyder att de ar sakra att kora flera ganger utan oonskat resultat.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Module Kategorier
 
@@ -899,7 +899,7 @@ Modules ar Ansibles byggblock - over 3000 inbyggda modules som var och en gor en
 | Network | ios_*, nxos_* | Natverksutrustning |
 | Database | postgresql_*, mysql_* | Databashantering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## System Modules
 
@@ -929,7 +929,7 @@ tasks:
       enabled: yes
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## File Modules
 
@@ -965,7 +965,7 @@ tasks:
     notify: Restart nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Package Modules
 
@@ -1000,7 +1000,7 @@ tasks:
       virtualenv: /opt/venv
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Command Modules
 
@@ -1030,7 +1030,7 @@ tasks:
     raw: apt-get install -y python3
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lookup Plugins
 
@@ -1057,7 +1057,7 @@ tasks:
       msg: "{{ lookup('password', '/dev/null length=16') }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Module Dokumentation
 
@@ -1078,7 +1078,7 @@ ansible-doc apt
 ansible-doc -s template
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1106,7 +1106,7 @@ ansible-doc -s template
 
 Templates gor dina konfigurationsfiler dynamiska. Istallet for att ha olika config-filer for varje miljo, skapar du EN template som renderas med ratt variabler vid deployment. Jinja2 ar templating-motorn som driver detta.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jinja2 Syntax Oversikt
 
@@ -1118,27 +1118,27 @@ Templates gor dina konfigurationsfiler dynamiska. Istallet for att ha olika conf
 | `{# kommentar #}` | Kommentar (renderas ej) |
 | `\\| filter` | Transformera varde |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Template Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    TEMPLATE RENDERING                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   nginx.conf.j2          vars:                 nginx.conf       │
-│   ┌─────────────┐       http_port: 80         ┌─────────────┐  │
-│   │ listen      │  ──►  server: web1     ──►  │ listen 80;  │  │
-│   │ {{ port }}; │       env: prod             │ server web1 │  │
-│   └─────────────┘                             └─────────────┘  │
-│                                                                 │
-│       Template    +    Variabler    =    Renderad fil          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    TEMPLATE RENDERING                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|   nginx.conf.j2          vars:                 nginx.conf       |
+|   +-------------+       http_port: 80         +-------------+  |
+|   | listen      |  --►  server: web1     --►  | listen 80;  |  |
+|   | {{ port }}; |       env: prod             | server web1 |  |
+|   +-------------+                             +-------------+  |
+|                                                                 |
+|       Template    +    Variabler    =    Renderad fil          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Template
 
@@ -1173,7 +1173,7 @@ http {
     server_name: example.com
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Villkor (if/elif/else)
 
@@ -1198,7 +1198,7 @@ REPLICA_URL = {{ db_replica_url }}
 STATUS = {{ 'enabled' if feature_on else 'disabled' }}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Loopar (for)
 
@@ -1227,7 +1227,7 @@ server {{ server }};
 | `loop.last` | True om sista |
 | `loop.length` | Total antal |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Filters
 
@@ -1250,7 +1250,7 @@ SERVERS = {{ servers | join(', ') }}
 CONFIG = {{ settings | to_nice_yaml }}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Template Validering
 
@@ -1269,7 +1269,7 @@ tasks:
       validate: visudo -cf %s
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Whitespace Control
 
@@ -1288,7 +1288,7 @@ tasks:
 {{ items | join(', ') }}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1316,30 +1316,30 @@ tasks:
 
 Roles ar satt att organisera Ansible-kod i ateranvandbara, testbara och delbara komponenter. Istallet for en stor playbook med all logik, bryter du ut funktionalitet i roller som nginx, postgresql, eller deploy - var och en med standardiserad katalogstruktur.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Role Katalogstruktur
 
 ```
 roles/nginx/
-├── defaults/
-│   └── main.yml          # Default-variabler (lagst prio)
-├── vars/
-│   └── main.yml          # Role-variabler (hog prio)
-├── tasks/
-│   └── main.yml          # Huvudsakliga tasks
-├── handlers/
-│   └── main.yml          # Handlers
-├── templates/
-│   └── nginx.conf.j2     # Jinja2 templates
-├── files/
-│   └── ssl.crt           # Statiska filer
-├── meta/
-│   └── main.yml          # Dependencies, metadata
-└── README.md
++-- defaults/
+|   +-- main.yml          # Default-variabler (lagst prio)
++-- vars/
+|   +-- main.yml          # Role-variabler (hog prio)
++-- tasks/
+|   +-- main.yml          # Huvudsakliga tasks
++-- handlers/
+|   +-- main.yml          # Handlers
++-- templates/
+|   +-- nginx.conf.j2     # Jinja2 templates
++-- files/
+|   +-- ssl.crt           # Statiska filer
++-- meta/
+|   +-- main.yml          # Dependencies, metadata
++-- README.md
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Role Kataloger
 
@@ -1353,7 +1353,7 @@ roles/nginx/
 | `files/` | Statiska filer att kopiera |
 | `meta/` | Dependencies och metadata |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa en Role
 
@@ -1406,7 +1406,7 @@ nginx_sites: []
     state: reloaded
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Anvanda Roles
 
@@ -1435,7 +1435,7 @@ nginx_sites: []
       tags: [web, nginx]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## include_role vs roles
 
@@ -1453,7 +1453,7 @@ tasks:
     when: setup_nginx | default(false)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Role Dependencies
 
@@ -1471,21 +1471,21 @@ dependencies:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  DEPENDENCY ORDNING                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   webapp (main role)                                           │
-│      │                                                          │
-│      ├──► common    (kors forst)                               │
-│      ├──► nginx     (kors andra)                               │
-│      ├──► nodejs    (kors tredje)                              │
-│      └──► webapp tasks (kors sist)                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  DEPENDENCY ORDNING                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|   webapp (main role)                                           |
+|      |                                                          |
+|      +--► common    (kors forst)                               |
+|      +--► nginx     (kors andra)                               |
+|      +--► nodejs    (kors tredje)                              |
+|      +--► webapp tasks (kors sist)                             |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## OS-specifika Tasks
 
@@ -1511,7 +1511,7 @@ dependencies:
     name: nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1540,7 +1540,7 @@ dependencies:
 
 Ansible Galaxy ar det officiella paketsystemet for Ansible - en central hubb dar du hittar tusentals fardiga roles och collections skapade av communityn och foretag. Istallet for att skriva allt fran grunden kan du atervanda beprovat innehall och fokusera pa det som ar unikt for din infrastruktur.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Galaxy Koncept
 
@@ -1552,25 +1552,25 @@ Ansible Galaxy ar det officiella paketsystemet for Ansible - en central hubb dar
 | requirements.yml | Beroendefil | Versionshantering |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ANSIBLE GALAXY                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   galaxy.ansible.com                                           │
-│         │                                                       │
-│         ├──► Roles       (enskilda paket)                      │
-│         │      └── geerlingguy.nginx                           │
-│         │      └── geerlingguy.docker                          │
-│         │                                                       │
-│         └──► Collections (bundlade paket)                      │
-│                └── community.general                           │
-│                └── amazon.aws                                  │
-│                └── azure.azcollection                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    ANSIBLE GALAXY                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|   galaxy.ansible.com                                           |
+|         |                                                       |
+|         +--► Roles       (enskilda paket)                      |
+|         |      +-- geerlingguy.nginx                           |
+|         |      +-- geerlingguy.docker                          |
+|         |                                                       |
+|         +--► Collections (bundlade paket)                      |
+|                +-- community.general                           |
+|                +-- amazon.aws                                  |
+|                +-- azure.azcollection                          |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Galaxy Kommandon
 
@@ -1600,7 +1600,7 @@ ansible-galaxy collection install amazon.aws
 ansible-galaxy collection install azure.azcollection
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Requirements File
 
@@ -1644,7 +1644,7 @@ ansible-galaxy install -r requirements.yml -p ./roles
 ansible-galaxy collection install -r requirements.yml -p ./collections
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Anvanda Collections
 
@@ -1677,7 +1677,7 @@ ansible-galaxy collection install -r requirements.yml -p ./collections
 | collections: | `s3_bucket:` | Kortare syntax |
 | FQCN | `amazon.aws.ec2_instance:` | Tydlig kalla |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Skapa Egen Role
 
@@ -1688,16 +1688,16 @@ ansible-galaxy role init my_company.webserver
 
 ```
 my_company.webserver/
-├── README.md                  # Dokumentation
-├── meta/
-│   └── main.yml               # Galaxy metadata
-├── defaults/
-│   └── main.yml               # Overskrivbara varden
-├── tasks/
-│   └── main.yml               # Huvudlogik
-├── handlers/
-│   └── main.yml               # Handlers
-└── templates/                 # Jinja2-templates
++-- README.md                  # Dokumentation
++-- meta/
+|   +-- main.yml               # Galaxy metadata
++-- defaults/
+|   +-- main.yml               # Overskrivbara varden
++-- tasks/
+|   +-- main.yml               # Huvudlogik
++-- handlers/
+|   +-- main.yml               # Handlers
++-- templates/                 # Jinja2-templates
 ```
 
 ```yaml
@@ -1725,7 +1725,7 @@ dependencies:
   - geerlingguy.nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Skapa Egen Collection
 
@@ -1736,16 +1736,16 @@ ansible-galaxy collection init my_company.infrastructure
 
 ```
 my_company/infrastructure/
-├── README.md
-├── galaxy.yml                 # Collection metadata
-├── plugins/
-│   ├── modules/               # Custom modules
-│   ├── lookup/                # Lookup plugins
-│   └── filter/                # Filter plugins
-├── roles/
-│   ├── webserver/
-│   └── database/
-└── playbooks/
++-- README.md
++-- galaxy.yml                 # Collection metadata
++-- plugins/
+|   +-- modules/               # Custom modules
+|   +-- lookup/                # Lookup plugins
+|   +-- filter/                # Filter plugins
++-- roles/
+|   +-- webserver/
+|   +-- database/
++-- playbooks/
 ```
 
 ```yaml
@@ -1770,7 +1770,7 @@ ansible-galaxy collection build
 ansible-galaxy collection publish my_company-infrastructure-1.0.0.tar.gz --token TOKEN
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Private Galaxy
 
@@ -1793,7 +1793,7 @@ token = YOUR_TOKEN
 url = https://galaxy.ansible.com/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Version Constraints
 
@@ -1818,7 +1818,7 @@ roles:
     version: ">=3.0.0"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1847,7 +1847,7 @@ roles:
 
 Villkor och loopar ar kraftfulla konstruktioner som gor dina playbooks dynamiska och flexibla. Med when-satser kan du anpassa tasks efter OS, miljo eller variabelvarden. Loopar lat dig iterera over listor och dictionaries for att hantera multipla resurser elegant utan upprepning.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Villkors- och Loop-typer
 
@@ -1859,23 +1859,23 @@ Villkor och loopar ar kraftfulla konstruktioner som gor dina playbooks dynamiska
 | `loop_control` | Kontrollera loop-beteende | `index_var`, `label` |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              CONDITIONAL & LOOP FLOW                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   when: condition                                               │
-│      └──► TRUE  ──► Task kors                                  │
-│      └──► FALSE ──► Task skippas                               │
-│                                                                 │
-│   loop: [a, b, c]                                              │
-│      └──► item=a ──► Task kors                                 │
-│      └──► item=b ──► Task kors                                 │
-│      └──► item=c ──► Task kors                                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              CONDITIONAL & LOOP FLOW                            |
++-----------------------------------------------------------------+
+|                                                                 |
+|   when: condition                                               |
+|      +--► TRUE  --► Task kors                                  |
+|      +--► FALSE --► Task skippas                               |
+|                                                                 |
+|   loop: [a, b, c]                                              |
+|      +--► item=a --► Task kors                                 |
+|      +--► item=b --► Task kors                                 |
+|      +--► item=c --► Task kors                                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## When Conditionals
 
@@ -1930,7 +1930,7 @@ tasks:
 | `is defined` | Existerar | `when: var is defined` |
 | `and`, `or` | Logiska | `when: a and b` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Register och Conditionals
 
@@ -1971,7 +1971,7 @@ tasks:
     when: "'1.0' in version_output.stdout"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Loop Basics
 
@@ -2018,7 +2018,7 @@ tasks:
 | `pause` | Sekunder mellan iterationer |
 | `extended` | Extra loop-info (first, last, etc) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Dictionary Loops
 
@@ -2042,7 +2042,7 @@ tasks:
     loop: "{{ users | dict2items }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Nested Loops
 
@@ -2068,7 +2068,7 @@ tasks:
     loop: "{{ users | subelements('ssh_keys') }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Until Loops (Retry)
 
@@ -2099,7 +2099,7 @@ tasks:
 | `retries` | Max antal forsok | 3 |
 | `delay` | Sekunder mellan forsok | 5 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Loop med Conditionals
 
@@ -2120,7 +2120,7 @@ tasks:
     when: item != 'admin'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Block Conditionals
 
@@ -2144,7 +2144,7 @@ tasks:
     when: environment == 'production'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2173,7 +2173,7 @@ tasks:
 
 Fel ar oundvikliga i distribuerade system - servrar kan vara otillgangliga, tjanster kan krascha, och kommandon kan misslyckas. Ansible erbjuder kraftfulla verktyg for att hantera dessa situationer graciost, fran att ignorera icke-kritiska fel till komplett rollback-logik med block/rescue/always.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Felhanteringsverktyg
 
@@ -2187,24 +2187,24 @@ Fel ar oundvikliga i distribuerade system - servrar kan vara otillgangliga, tjan
 | `assert` | Validera forutsattningar | Pre-flight checks |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ERROR HANDLING FLOW                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Task kors                                                     │
-│      │                                                          │
-│      ├── SUCCESS ──► Nasta task                                │
-│      │                                                          │
-│      └── FAILURE                                                │
-│             │                                                   │
-│             ├── ignore_errors: yes ──► Fortsatt               │
-│             ├── block/rescue ──► Kor rescue-tasks              │
-│             └── default ──► Stoppa playbook                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    ERROR HANDLING FLOW                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Task kors                                                     |
+|      |                                                          |
+|      +-- SUCCESS --► Nasta task                                |
+|      |                                                          |
+|      +-- FAILURE                                                |
+|             |                                                   |
+|             +-- ignore_errors: yes --► Fortsatt               |
+|             +-- block/rescue --► Kor rescue-tasks              |
+|             +-- default --► Stoppa playbook                    |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## ignore_errors
 
@@ -2230,7 +2230,7 @@ tasks:
     when: optional_status.rc == 0
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## failed_when och changed_when
 
@@ -2269,7 +2269,7 @@ tasks:
 | `changed_when: false` | Alltid | Rapporterar aldrig changed |
 | `changed_when: "'x' in out"` | Villkor | Changed vid match |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## block/rescue/always
 
@@ -2323,7 +2323,7 @@ tasks:
 | `rescue:` | Kors om block misslyckas (catch) |
 | `always:` | Kors alltid (finally) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## any_errors_fatal
 
@@ -2345,7 +2345,7 @@ tasks:
         dest: /opt/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## assert och fail
 
@@ -2370,7 +2370,7 @@ tasks:
       - ansible_date_time.weekday == 'Friday'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## max_fail_percentage
 
@@ -2389,7 +2389,7 @@ tasks:
       notify: Restart app
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2419,7 +2419,7 @@ tasks:
 
 Hemlig data som losenord, API-nycklar och certifikat maste skyddas - de far aldrig ligga i klartext i version control. Ansible Vault erbjuder AES256-kryptering som lat dig lagra kanslig data sakert medan den fortfarande ar anvandbar i dina playbooks.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Vault Kommandon
 
@@ -2443,7 +2443,7 @@ ansible-vault decrypt vars/secrets.yml
 ansible-vault rekey secrets.yml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Vault i Playbook
 
@@ -2484,7 +2484,7 @@ ansible-playbook playbook.yml --ask-vault-pass
 ansible-playbook playbook.yml --vault-password-file ~/.vault_pass
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Kryptera Enskilda Varden
 
@@ -2514,7 +2514,7 @@ db_host: localhost
 db_port: 5432
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Multipla Vault-losenord
 
@@ -2536,7 +2536,7 @@ ansible-playbook playbook.yml \\
 | Fil | `prod@~/.vault_pass` | Las fran fil |
 | Script | `prod@./get_pass.py` | Kor script |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Vault Password File
 
@@ -2565,21 +2565,21 @@ result = subprocess.run(
 print(result.stdout.strip())
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Best Practices Struktur
 
 ```
 group_vars/
-├── all/
-│   ├── vars.yml         # Okrypterade variabler
-│   └── vault.yml        # Krypterade variabler
-├── production/
-│   ├── vars.yml
-│   └── vault.yml
-└── staging/
-    ├── vars.yml
-    └── vault.yml
++-- all/
+|   +-- vars.yml         # Okrypterade variabler
+|   +-- vault.yml        # Krypterade variabler
++-- production/
+|   +-- vars.yml
+|   +-- vault.yml
++-- staging/
+    +-- vars.yml
+    +-- vault.yml
 ```
 
 ```yaml
@@ -2599,7 +2599,7 @@ db_password: "{{ vault_db_password }}"
 api_key: "{{ vault_api_key }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Externa Secret Managers
 
@@ -2621,7 +2621,7 @@ api_key: "{{ vault_api_key }}"
     db_password: "{{ lookup('amazon.aws.aws_secret', 'myapp/db_password') }}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2650,7 +2650,7 @@ api_key: "{{ vault_api_key }}"
 
 Att integrera Ansible i CI/CD-pipelines automatiserar hela deployment-processen - fran kodandring till produktion. Varje commit kan trigga linting, tester och deployment till ratt miljo, vilket ger snabbare leveranser och konsistenta deployments med full audit trail.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## CI/CD Pipeline Steg
 
@@ -2664,22 +2664,22 @@ Att integrera Ansible i CI/CD-pipelines automatiserar hela deployment-processen 
 | Deploy Prod | ansible-playbook | Produktion |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CI/CD PIPELINE FLOW                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Push/PR ──► Lint ──► Test ──► Deploy Staging                 │
-│                                      │                          │
-│                                      ▼                          │
-│                              Manual Approve                     │
-│                                      │                          │
-│                                      ▼                          │
-│                              Deploy Production                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CI/CD PIPELINE FLOW                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Push/PR --► Lint --► Test --► Deploy Staging                 |
+|                                      |                          |
+|                                      ▼                          |
+|                              Manual Approve                     |
+|                                      |                          |
+|                                      ▼                          |
+|                              Deploy Production                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## GitHub Actions
 
@@ -2761,7 +2761,7 @@ jobs:
             --vault-password-file <(echo "${{ secrets.VAULT_PASS }}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## GitLab CI
 
@@ -2809,7 +2809,7 @@ deploy-production:
     - ansible-playbook -i inventory/production site.yml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Ansible-lint Konfiguration
 
@@ -2842,7 +2842,7 @@ use_default_rules: true
 | shared | For delade roles |
 | production | Strikt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Molecule i CI/CD
 
@@ -2875,7 +2875,7 @@ scenario:
     - destroy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## AWX / Ansible Tower
 
@@ -2903,7 +2903,7 @@ curl -X POST \\
   "https://awx.example.com/api/v2/job_templates/123/launch/"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2933,7 +2933,7 @@ curl -X POST \\
 
 I molnmiljoer ar infrastrukturen i konstant forandring - servrar skapas och tas bort, auto-scaling andrar antal instanser, och IP-adresser byts ut. Dynamic inventory loser detta genom att fraga cloud-APIs i realtid och alltid ge dig en aktuell bild av din infrastruktur.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Dynamic Inventory Koncept
 
@@ -2946,25 +2946,25 @@ I molnmiljoer ar infrastrukturen i konstant forandring - servrar skapas och tas 
 | filters | Filtrera vilka hosts som inkluderas |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 DYNAMIC INVENTORY FLOW                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ansible-playbook -i aws_ec2.yml site.yml                     │
-│         │                                                       │
-│         ▼                                                       │
-│   Plugin fragar AWS API                                        │
-│         │                                                       │
-│         ▼                                                       │
-│   Returnerar JSON med hosts                                    │
-│         │                                                       │
-│         ▼                                                       │
-│   Ansible kor playbook mot aktuella hosts                      │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 DYNAMIC INVENTORY FLOW                          |
++-----------------------------------------------------------------+
+|                                                                 |
+|   ansible-playbook -i aws_ec2.yml site.yml                     |
+|         |                                                       |
+|         ▼                                                       |
+|   Plugin fragar AWS API                                        |
+|         |                                                       |
+|         ▼                                                       |
+|   Returnerar JSON med hosts                                    |
+|         |                                                       |
+|         ▼                                                       |
+|   Ansible kor playbook mot aktuella hosts                      |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## AWS EC2 Plugin
 
@@ -3014,7 +3014,7 @@ ansible-inventory -i inventory/aws_ec2.yml --graph
 ansible-inventory -i inventory/aws_ec2.yml --list
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Azure Plugin
 
@@ -3048,7 +3048,7 @@ az login
 ansible-inventory -i inventory/azure_rm.yml --graph
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## GCP Plugin
 
@@ -3083,7 +3083,7 @@ export GCP_SERVICE_ACCOUNT_FILE=/path/to/sa.json
 ansible-inventory -i inventory/gcp.yml --graph
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Custom Dynamic Inventory
 
@@ -3134,17 +3134,17 @@ chmod +x inventory/custom_inventory.py
 ansible-playbook -i inventory/custom_inventory.py site.yml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Kombinera Inventory Sources
 
 ```
 inventory/
-├── static_hosts.yml      # Statiska hosts
-├── aws_ec2.yml           # AWS EC2
-├── azure_rm.yml          # Azure VMs
-└── group_vars/
-    └── all.yml
++-- static_hosts.yml      # Statiska hosts
++-- aws_ec2.yml           # AWS EC2
++-- azure_rm.yml          # Azure VMs
++-- group_vars/
+    +-- all.yml
 ```
 
 ```bash
@@ -3158,7 +3158,7 @@ ansible-playbook -i inventory/ site.yml
 inventory = ./inventory
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3187,7 +3187,7 @@ inventory = ./inventory
 
 Nar du hanterar hundratals eller tusentals servrar blir prestanda kritiskt. En playbook som tar 30 minuter kan optimeras till 5 minuter med ratt installningar - forks, pipelining, fact caching och effektiva playbook-monster gor enorm skillnad.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Optimeringsomraden
 
@@ -3200,23 +3200,23 @@ Nar du hanterar hundratals eller tusentals servrar blir prestanda kritiskt. En p
 | Strategy | free/mitogen | Snabbare exekvering |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              PERFORMANCE OPTIMIZATION                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   Default (forks=5)          Optimized (forks=50)              │
-│   ─────────────────          ────────────────────              │
-│   Host1 ──────►              Host1-50 ──────►                  │
-│   Host2 ──────►                   │                            │
-│   Host3 ──────►              Host51-100 ─────►                 │
-│   Host4 ──────►                                                │
-│   Host5 ──────►              2-7x snabbare med Mitogen         │
-│   (vantar...)                                                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              PERFORMANCE OPTIMIZATION                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|   Default (forks=5)          Optimized (forks=50)              |
+|   -----------------          --------------------              |
+|   Host1 ------►              Host1-50 ------►                  |
+|   Host2 ------►                   |                            |
+|   Host3 ------►              Host51-100 -----►                 |
+|   Host4 ------►                                                |
+|   Host5 ------►              2-7x snabbare med Mitogen         |
+|   (vantar...)                                                  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Grundlaggande Tuning
 
@@ -3240,7 +3240,7 @@ transfer_method = piped
 | pipelining | False | True | 2x snabbare |
 | gathering | implicit | smart | Cache facts |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Fact Caching
 
@@ -3270,7 +3270,7 @@ fact_caching_connection = localhost:6379:0
         dest: /opt/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Pipelining
 
@@ -3286,7 +3286,7 @@ pipelining = True
 # deploy ALL=(ALL) NOPASSWD: ALL
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Async Tasks
 
@@ -3320,7 +3320,7 @@ tasks:
 | poll: 0 | Fire-and-forget |
 | async_status | Kolla jobb-status |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Strategy
 
@@ -3341,7 +3341,7 @@ tasks:
 | free | Hosts kor sa fort de kan |
 | mitogen_linear | 2-7x snabbare |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Playbook Optimering
 
@@ -3371,7 +3371,7 @@ handlers:
     service: name=app state=restarted
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Serial (Rolling Deploy)
 
@@ -3386,7 +3386,7 @@ handlers:
     - include_tasks: deploy.yml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Profiling
 
@@ -3403,7 +3403,7 @@ template ------------------ 12.45s
 service ------------------- 3.21s
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3433,7 +3433,7 @@ service ------------------- 3.21s
 
 Ansible-kod behover testas precis som all annan kod. Molecule ar standardverktyget for att testa Ansible roles - det skapar isolerade testmiljoer i Docker-containers, kor dina playbooks, verifierar resultatet och sakerstaller idempotens.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Installation
 
@@ -3452,24 +3452,24 @@ molecule --version
 | vagrant | VMs for full systemtest |
 | ec2 | AWS-instanser |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Molecule Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  MOLECULE TEST SEQUENCE                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   lint ──► destroy ──► create ──► converge                     │
-│                                      │                          │
-│                                      ▼                          │
-│                              idempotence                        │
-│                                      │                          │
-│                                      ▼                          │
-│                              verify ──► destroy                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  MOLECULE TEST SEQUENCE                         |
++-----------------------------------------------------------------+
+|                                                                 |
+|   lint --► destroy --► create --► converge                     |
+|                                      |                          |
+|                                      ▼                          |
+|                              idempotence                        |
+|                                      |                          |
+|                                      ▼                          |
+|                              verify --► destroy                 |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Steg | Beskrivning |
@@ -3481,7 +3481,7 @@ molecule --version
 | idempotence | Kor igen - ska inte andra nagot |
 | verify | Verifiera att allt fungerar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Initiera Molecule
 
@@ -3492,14 +3492,14 @@ molecule init scenario -d docker
 
 ```
 roles/webserver/
-└── molecule/
-    └── default/
-        ├── converge.yml      # Kor rolen
-        ├── molecule.yml      # Konfiguration
-        └── verify.yml        # Testa resultat
++-- molecule/
+    +-- default/
+        +-- converge.yml      # Kor rolen
+        +-- molecule.yml      # Konfiguration
+        +-- verify.yml        # Testa resultat
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## molecule.yml Konfiguration
 
@@ -3542,7 +3542,7 @@ scenario:
     - destroy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## converge.yml och verify.yml
 
@@ -3582,7 +3582,7 @@ scenario:
         status_code: 200
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Molecule Kommandon
 
@@ -3607,7 +3607,7 @@ molecule verify
 molecule destroy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Multiple Scenarios
 
@@ -3618,12 +3618,12 @@ molecule init scenario --scenario-name integration -d vagrant
 
 ```
 molecule/
-├── default/
-│   └── molecule.yml
-├── ubuntu-only/
-│   └── molecule.yml
-└── integration/
-    └── molecule.yml
++-- default/
+|   +-- molecule.yml
++-- ubuntu-only/
+|   +-- molecule.yml
++-- integration/
+    +-- molecule.yml
 ```
 
 ```bash
@@ -3631,7 +3631,7 @@ molecule test -s ubuntu-only
 molecule converge -s integration
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## CI/CD Integration
 
@@ -3657,7 +3657,7 @@ jobs:
           MOLECULE_DISTRO: ${{ matrix.distro }}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3686,7 +3686,7 @@ jobs:
 
 Callback plugins lat dig utoka Ansibles beteende genom att haka pa events under korningen. Du kan anvanda inbyggda callbacks for profiling och JSON-output, eller skapa egna for att skicka notifikationer till Slack, logga till externa system eller integrera med monitoring-verktyg.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Callback Typer
 
@@ -3697,23 +3697,23 @@ Callback plugins lat dig utoka Ansibles beteende genom att haka pa events under 
 | aggregate | Samlar statistik | profile_tasks |
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   CALLBACK EVENTS                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   playbook_on_start                                            │
-│         │                                                       │
-│         ▼                                                       │
-│   play_on_start ──► task_on_start ──► runner_on_ok            │
-│                                    └─► runner_on_failed         │
-│         │                                                       │
-│         ▼                                                       │
-│   playbook_on_stats                                            │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   CALLBACK EVENTS                               |
++-----------------------------------------------------------------+
+|                                                                 |
+|   playbook_on_start                                            |
+|         |                                                       |
+|         ▼                                                       |
+|   play_on_start --► task_on_start --► runner_on_ok            |
+|                                    +-► runner_on_failed         |
+|         |                                                       |
+|         ▼                                                       |
+|   playbook_on_stats                                            |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Inbyggda Callbacks
 
@@ -3745,7 +3745,7 @@ ansible-doc -t callback -l
 ansible-doc -t callback profile_tasks
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Profile Callbacks
 
@@ -3768,7 +3768,7 @@ Start service -------------------- 2.34s
 Total ---------------------------- 47.46s
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## JSON Callback
 
@@ -3797,7 +3797,7 @@ ansible-playbook site.yml --stdout-callback json > output.json
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Custom Callback Plugin
 
@@ -3842,7 +3842,7 @@ class CallbackModule(CallbackBase):
             requests.post(self.webhook_url, json=payload)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Aktivera Custom Callback
 
@@ -3862,7 +3862,7 @@ export SLACK_WEBHOOK_URL=https://hooks.slack.com/...
 ansible-playbook site.yml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Callback Events
 
@@ -3891,7 +3891,7 @@ class CallbackModule(CallbackBase):
         pass
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3920,7 +3920,7 @@ class CallbackModule(CallbackBase):
 
 Ansible ar inte bara for Linux - Windows-hantering ar en kritisk del av enterprise automation. Hybrid-miljoer med bade Linux och Windows ar standard idag, och Ansible ger dig ett enhetligt satt att automatisera bada plattformar med samma playbooks och workflows.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Windows Connection Architecture
 
@@ -3934,7 +3934,7 @@ Ansible ar inte bara for Linux - Windows-hantering ar en kritisk del av enterpri
 +-------------------+                          +-------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Viktiga Windows Modules
 
@@ -3953,7 +3953,7 @@ Ansible ar inte bara for Linux - Windows-hantering ar en kritisk del av enterpri
 | win_iis_* | IIS webbserver hantering |
 | win_dsc | PowerShell DSC integration |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## WinRM setup
 
@@ -4215,7 +4215,7 @@ tasks:
       Ensure: Present
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4245,7 +4245,7 @@ tasks:
 
 AWX ar den oppna kallkods-versionen av Red Hat Ansible Tower - en kraftfull plattform som ger dig visuell hantering, schemaläggning och API-access for dina Ansible automationer. For team och enterprise ar AWX det som gor Ansible till en skalbar automation platform.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## AWX Architecture Overview
 
@@ -4274,7 +4274,7 @@ AWX ar den oppna kallkods-versionen av Red Hat Ansible Tower - en kraftfull plat
     +---------+         +---------+          +---------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## AWX Komponenter
 
@@ -4288,7 +4288,7 @@ AWX ar den oppna kallkods-versionen av Red Hat Ansible Tower - en kraftfull plat
 | Schedules | Cron-liknande schemaläggning av jobs |
 | RBAC | Role-based access control for team |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation med Docker
 
@@ -4561,7 +4561,7 @@ print(f"Job ID: {job['id']}")
     enabled: yes
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4591,7 +4591,7 @@ print(f"Job ID: {job['id']}")
 
 Med stor makt kommer stort ansvar - Ansible har tillgang till alla servrar och hanterar kansliga credentials. Sakerhetsmisstag kan fa katastrofala konsekvenser. Denna nod gar igenom hur du bygger in sakerhet fran borjan och foljer best practices for enterprise-automation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Checklist
 
@@ -4608,7 +4608,7 @@ Med stor makt kommer stort ansvar - Ansible har tillgang till alla servrar och h
 +------------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Security Practices Oversikt
 
@@ -4621,7 +4621,7 @@ Med stor makt kommer stort ansvar - Ansible har tillgang till alla servrar och h
 | Audit | Custom callbacks for compliance |
 | CI/CD | Secret scanning i pipelines |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vault best practices
 
@@ -4632,9 +4632,9 @@ ansible-vault create --vault-id dev@prompt secrets_dev.yml
 
 # Separera vault-variabler
 group_vars/
-├── production/
-│   ├── vars.yml              # Inga secrets
-│   └── vault.yml             # Alla secrets
++-- production/
+|   +-- vars.yml              # Inga secrets
+|   +-- vault.yml             # Alla secrets
 ```
 
 ```yaml
@@ -4876,7 +4876,7 @@ jobs:
             grep -v "!vault" && exit 1 || exit 0
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -4906,7 +4906,7 @@ jobs:
 
 Nar Ansible skalar fran ett litet team till enterprise med tusentals servrar och multipla team kravs helt nya patterns. Denna nod gar igenom beproade metoder for repository-struktur, multi-team workflows, self-service automation och compliance - allt som kravs for att Ansible ska fungera i stor skala.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Enterprise Patterns Overview
 
@@ -4935,7 +4935,7 @@ Nar Ansible skalar fran ett litet team till enterprise med tusentals servrar och
 +--------------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Enterprise Patterns Checklist
 
@@ -4948,47 +4948,47 @@ Nar Ansible skalar fran ett litet team till enterprise med tusentals servrar och
 | Compliance | Automatiska audits och rapporter som kod |
 | GitOps | Deklarativ automation synkad fran Git |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Monorepo struktur
 
 ```bash
 # Enterprise repository layout
 ansible-infrastructure/
-├── ansible.cfg
-├── requirements.yml               # Galaxy dependencies
-├── inventory/
-│   ├── production/
-│   │   ├── hosts.yml
-│   │   ├── group_vars/
-│   │   │   ├── all/
-│   │   │   │   ├── vars.yml
-│   │   │   │   └── vault.yml
-│   │   │   └── webservers/
-│   │   └── host_vars/
-│   └── staging/
-├── playbooks/
-│   ├── site.yml                   # Main entry point
-│   ├── webservers.yml
-│   ├── databases.yml
-│   └── maintenance/
-│       ├── patching.yml
-│       └── backup.yml
-├── roles/
-│   ├── common/
-│   ├── webserver/
-│   ├── database/
-│   └── security/
-├── collections/
-│   └── requirements.yml
-├── plugins/
-│   ├── callback/
-│   ├── filter/
-│   └── lookup/
-├── files/
-├── templates/
-└── tests/
-    └── molecule/
++-- ansible.cfg
++-- requirements.yml               # Galaxy dependencies
++-- inventory/
+|   +-- production/
+|   |   +-- hosts.yml
+|   |   +-- group_vars/
+|   |   |   +-- all/
+|   |   |   |   +-- vars.yml
+|   |   |   |   +-- vault.yml
+|   |   |   +-- webservers/
+|   |   +-- host_vars/
+|   +-- staging/
++-- playbooks/
+|   +-- site.yml                   # Main entry point
+|   +-- webservers.yml
+|   +-- databases.yml
+|   +-- maintenance/
+|       +-- patching.yml
+|       +-- backup.yml
++-- roles/
+|   +-- common/
+|   +-- webserver/
+|   +-- database/
+|   +-- security/
++-- collections/
+|   +-- requirements.yml
++-- plugins/
+|   +-- callback/
+|   +-- filter/
+|   +-- lookup/
++-- files/
++-- templates/
++-- tests/
+    +-- molecule/
 ```
 
 ---
@@ -5283,7 +5283,7 @@ spec:
       restartPolicy: OnFailure
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

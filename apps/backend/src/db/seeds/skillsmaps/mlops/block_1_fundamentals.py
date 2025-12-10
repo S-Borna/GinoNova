@@ -18,7 +18,7 @@ BLOCK_1_NODES = [
         "prerequisites": [],
         "content": """# Introduktion till MLOps
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar MLOps?
 
@@ -29,7 +29,7 @@ MLOps kombinerar:
 - DevOps-principer
 - Datahantering
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -41,7 +41,7 @@ MLOps kombinerar:
 | Samarbete | Forbattrar samarbetet mellan data scientists och DevOps |
 | Kvalitet | Sakertstaller kvalitet genom automatiserade tester |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -53,44 +53,44 @@ MLOps kombinerar:
 | Feature Store | Central lagring for ML-features |
 | CT | Continuous Training - automatisk omtraning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Utan MLOps vs Med MLOps
 
 Utan MLOps (ML-skuld):
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Data Scientists Laptop                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │ Notebook    │─>│ model.pkl   │─>│ Det funkar! │     │
-│  │ experiment  │  │ (lokal)     │  │             │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-│                                                         │
-│  Manader senare: Vilken version? Vilken data?          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  Data Scientists Laptop                                 |
+|  +-------------+  +-------------+  +-------------+     |
+|  | Notebook    |->| model.pkl   |->| Det funkar! |     |
+|  | experiment  |  | (lokal)     |  |             |     |
+|  +-------------+  +-------------+  +-------------+     |
+|                                                         |
+|  Manader senare: Vilken version? Vilken data?          |
++---------------------------------------------------------+
 ```
 
 Med MLOps:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    MLOps Pipeline                        │
-│                                                          │
-│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────────┐    │
-│  │ Data   │─>│ Train  │─>│ Test   │─>│ Deploy     │    │
-│  │ Ingest │  │ Model  │  │ Valid. │  │ Monitor    │    │
-│  └────────┘  └────────┘  └────────┘  └────────────┘    │
-│       │          │           │             │            │
-│       v          v           v             v            │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │        Version Control + Experiment Tracking     │   │
-│  │        Model Registry + Feature Store            │   │
-│  └─────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    MLOps Pipeline                        |
+|                                                          |
+|  +--------+  +--------+  +--------+  +------------+    |
+|  | Data   |->| Train  |->| Test   |->| Deploy     |    |
+|  | Ingest |  | Model  |  | Valid. |  | Monitor    |    |
+|  +--------+  +--------+  +--------+  +------------+    |
+|       |          |           |             |            |
+|       v          v           v             v            |
+|  +-------------------------------------------------+   |
+|  |        Version Control + Experiment Tracking     |   |
+|  |        Model Registry + Feature Store            |   |
+|  +-------------------------------------------------+   |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## MLOps Mognadsnivaar
 
@@ -112,7 +112,7 @@ Med MLOps:
 - Continuous Monitoring
 - Automatiserad omtraning
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## MLOps vs DevOps
 
@@ -124,32 +124,32 @@ Med MLOps:
 | Monitoring | App metrics | + Data drift, Model drift |
 | Versioning | Kod | Kod + Data + Modell |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## MLOps Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     MLOps Stack                          │
-├─────────────────────────────────────────────────────────┤
-│  Monitoring     │ Prometheus, Grafana, Evidently AI     │
-├─────────────────────────────────────────────────────────┤
-│  Model Serving  │ TensorFlow Serving, Seldon, KServe    │
-├─────────────────────────────────────────────────────────┤
-│  Orchestration  │ Airflow, Kubeflow, Prefect, Dagster   │
-├─────────────────────────────────────────────────────────┤
-│  Experiment     │ MLflow, Weights and Biases, Neptune   │
-│  Tracking       │                                       │
-├─────────────────────────────────────────────────────────┤
-│  Feature Store  │ Feast, Tecton, Hopsworks              │
-├─────────────────────────────────────────────────────────┤
-│  Data Pipeline  │ Spark, dbt, Airflow, Kafka            │
-├─────────────────────────────────────────────────────────┤
-│  Infrastructure │ Kubernetes, Docker, Terraform         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                     MLOps Stack                          |
++---------------------------------------------------------+
+|  Monitoring     | Prometheus, Grafana, Evidently AI     |
++---------------------------------------------------------+
+|  Model Serving  | TensorFlow Serving, Seldon, KServe    |
++---------------------------------------------------------+
+|  Orchestration  | Airflow, Kubeflow, Prefect, Dagster   |
++---------------------------------------------------------+
+|  Experiment     | MLflow, Weights and Biases, Neptune   |
+|  Tracking       |                                       |
++---------------------------------------------------------+
+|  Feature Store  | Feast, Tecton, Hopsworks              |
++---------------------------------------------------------+
+|  Data Pipeline  | Spark, dbt, Airflow, Kafka            |
++---------------------------------------------------------+
+|  Infrastructure | Kubernetes, Docker, Terraform         |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Karriarvagar i MLOps
 
@@ -160,7 +160,7 @@ Med MLOps:
 | Data Engineer | Data pipelines |
 | Platform Engineer | Bygger ML-plattformar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -171,7 +171,7 @@ Med MLOps:
 | Modellen presterar samre over tid | Data drift | Implementera kontinuerlig monitoring |
 | Lang tid till produktion | Manuella processer | Automatisera med CI/CD pipelines |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -203,13 +203,13 @@ Med MLOps:
         "prerequisites": ["mlops-intro"],
         "content": """# Python for Machine Learning
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Python for ML?
 
 Python ar det dominerande spraket for maskininlarning tack vare sitt rika ekosystem av bibliotek och verktyg. Har fokuserar vi pa ML-specifika bibliotek och monster.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -220,7 +220,7 @@ Python ar det dominerande spraket for maskininlarning tack vare sitt rika ekosys
 | Integration | Enkelt att integrera med DevOps-verktyg |
 | Reproducerbarhet | Bra stod for miljohantering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -232,27 +232,27 @@ Python ar det dominerande spraket for maskininlarning tack vare sitt rika ekosys
 | PyTorch | Deep Learning |
 | MLflow | Experiment tracking |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ML Python Stack
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    ML Python Ecosystem                   │
-├─────────────────────────────────────────────────────────┤
-│  Deep Learning  │ PyTorch, TensorFlow, JAX              │
-├─────────────────────────────────────────────────────────┤
-│  ML Frameworks  │ scikit-learn, XGBoost, LightGBM       │
-├─────────────────────────────────────────────────────────┤
-│  Data Proc.     │ Pandas, NumPy, Polars, Dask           │
-├─────────────────────────────────────────────────────────┤
-│  Visualization  │ Matplotlib, Seaborn, Plotly           │
-├─────────────────────────────────────────────────────────┤
-│  MLOps Tools    │ MLflow, DVC, Hydra, ONNX              │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    ML Python Ecosystem                   |
++---------------------------------------------------------+
+|  Deep Learning  | PyTorch, TensorFlow, JAX              |
++---------------------------------------------------------+
+|  ML Frameworks  | scikit-learn, XGBoost, LightGBM       |
++---------------------------------------------------------+
+|  Data Proc.     | Pandas, NumPy, Polars, Dask           |
++---------------------------------------------------------+
+|  Visualization  | Matplotlib, Seaborn, Plotly           |
++---------------------------------------------------------+
+|  MLOps Tools    | MLflow, DVC, Hydra, ONNX              |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environment Management
 
@@ -297,7 +297,7 @@ uv venv
 uv pip install -r requirements.txt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## NumPy Essentials
 
@@ -323,7 +323,7 @@ W = np.random.randn(10, 5)  # Weight matrix
 output = X @ W  # Matrix multiplication
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pandas for Data Prep
 
@@ -349,7 +349,7 @@ def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
 df_processed = prepare_features(df)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Scikit-learn Pipeline
 
@@ -387,7 +387,7 @@ import joblib
 joblib.dump(pipeline, 'models/pipeline.joblib')
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## PyTorch Basics
 
@@ -428,7 +428,7 @@ def train_model(model, train_loader, criterion, optimizer, epochs=10):
         print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(train_loader):.4f}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -439,7 +439,7 @@ def train_model(model, train_loader, criterion, optimizer, epochs=10):
 | Memory error | For stor data | Anvand chunking eller Dask |
 | Slow training | Ej optimerad kod | Anvand vektoroperationer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -471,7 +471,7 @@ def train_model(model, train_loader, criterion, optimizer, epochs=10):
         "prerequisites": ["mlops-python"],
         "content": """# Version Control for ML
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar ML Version Control?
 
@@ -487,7 +487,7 @@ Machine Learning:
   Alla maste versionshanteras!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -498,7 +498,7 @@ Machine Learning:
 | Samarbete | Team kan dela data och modeller |
 | Rollback | Aterstall tidigare versioner vid problem |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -509,35 +509,35 @@ Machine Learning:
 | MLflow | Experiment tracking |
 | Git LFS | Stora filer i Git |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rekommenderad projektstruktur
 
 ```
 ml-project/
-├── .git/
-├── .gitignore
-├── .dvc/
-├── pyproject.toml
-├── README.md
-├── configs/
-│   ├── config.yaml
-│   └── model/
-├── data/
-│   ├── raw/          # Tracked by DVC
-│   └── processed/    # Tracked by DVC
-├── models/           # Tracked by DVC
-├── notebooks/
-├── src/
-│   ├── data/
-│   ├── features/
-│   ├── models/
-│   └── evaluation/
-├── tests/
-└── dvc.yaml
++-- .git/
++-- .gitignore
++-- .dvc/
++-- pyproject.toml
++-- README.md
++-- configs/
+|   +-- config.yaml
+|   +-- model/
++-- data/
+|   +-- raw/          # Tracked by DVC
+|   +-- processed/    # Tracked by DVC
++-- models/           # Tracked by DVC
++-- notebooks/
++-- src/
+|   +-- data/
+|   +-- features/
+|   +-- models/
+|   +-- evaluation/
++-- tests/
++-- dvc.yaml
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## DVC - Data Version Control
 
@@ -566,7 +566,7 @@ dvc push
 dvc pull
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## DVC Pipeline
 
@@ -603,25 +603,25 @@ stages:
           cache: false
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Git Branching for ML
 
 ```
 main
-  │
-  ├── develop
-  │     │
-  │     ├── feature/new-feature-engineering
-  │     │
-  │     ├── experiment/xgboost-tuning
-  │     │
-  │     └── experiment/transformer-model
-  │
-  └── release/v1.2
+  |
+  +-- develop
+  |     |
+  |     +-- feature/new-feature-engineering
+  |     |
+  |     +-- experiment/xgboost-tuning
+  |     |
+  |     +-- experiment/transformer-model
+  |
+  +-- release/v1.2
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Semantic Versioning for Modeller
 
@@ -633,7 +633,7 @@ MINOR: Ny traningsdata, hyperparameter-tuning
 PATCH: Bugfixar, minor improvements
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -644,7 +644,7 @@ PATCH: Bugfixar, minor improvements
 | Kan inte reproducera | Saknar params | Lagg till params i dvc.yaml |
 | Merge conflicts | Binara filer | Anvand DVC for stora filer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -676,24 +676,24 @@ PATCH: Bugfixar, minor improvements
         "prerequisites": ["mlops-version-control"],
         "content": """# Cloud Computing for ML
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Cloud for ML?
 
 Cloud computing ger tillgang till skalbar berakningskraft och lagringskapacitet for att trana och kora ML-modeller.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Local Development         Cloud Training               │
-│  ┌─────────────────┐       ┌─────────────────┐         │
-│  │ Laptop GPU      │       │ 8x A100 80GB    │         │
-│  │ 8GB VRAM        │       │ 640GB VRAM      │         │
-│  │ Dagar att trana │  ->   │ Timmar att trana│         │
-│  └─────────────────┘       └─────────────────┘         │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|  Local Development         Cloud Training               |
+|  +-----------------+       +-----------------+         |
+|  | Laptop GPU      |       | 8x A100 80GB    |         |
+|  | 8GB VRAM        |       | 640GB VRAM      |         |
+|  | Dagar att trana |  ->   | Timmar att trana|         |
+|  +-----------------+       +-----------------+         |
++---------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -704,7 +704,7 @@ Cloud computing ger tillgang till skalbar berakningskraft och lagringskapacitet 
 | Tillganglighet | Tillgang till kraftfull GPU overallt |
 | Managed Services | Fardiga tjanster for ML |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -715,7 +715,7 @@ Cloud computing ger tillgang till skalbar berakningskraft och lagringskapacitet 
 | GPU | p4d, g5 | A2, L4 | NC, ND |
 | Storage | S3 | GCS | Blob |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## AWS SageMaker
 
@@ -753,7 +753,7 @@ predictor = estimator.deploy(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GCP Vertex AI
 
@@ -786,7 +786,7 @@ endpoint = model.deploy(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kostnadsoptimering
 
@@ -797,7 +797,7 @@ endpoint = model.deploy(
 | Auto-shutdown | 30-70% |
 | Ratt storage tier | 50-90% |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -808,7 +808,7 @@ endpoint = model.deploy(
 | Lag prestanda | Fel instance type | Right-size baserat pa workload |
 | Data transfer cost | Regioner | Halla data i samma region |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

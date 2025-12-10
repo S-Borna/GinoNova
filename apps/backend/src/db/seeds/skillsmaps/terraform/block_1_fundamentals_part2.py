@@ -19,42 +19,42 @@ NODE_3 = {
 Providers är plugins som gör det möjligt för Terraform att interagera med cloud providers, SaaS-tjänster och andra APIer. De ansvarar för att förstå API-interaktioner och exponera resurser.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM PROVIDER ARCHITECTURE                      │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│                      ┌──────────────────────┐                          │
-│                      │    TERRAFORM CORE    │                          │
-│                      │   (Configuration     │                          │
-│                      │    Processing)       │                          │
-│                      └──────────┬───────────┘                          │
-│                                 │                                       │
-│           ┌─────────────────────┼─────────────────────┐                │
-│           │                     │                     │                │
-│           ▼                     ▼                     ▼                │
-│   ┌───────────────┐    ┌───────────────┐    ┌───────────────┐         │
-│   │ AWS Provider  │    │ Azure Provider│    │ GCP Provider  │         │
-│   │   (hashicorp/ │    │   (hashicorp/ │    │   (hashicorp/ │         │
-│   │    aws)       │    │    azurerm)   │    │    google)    │         │
-│   └───────┬───────┘    └───────┬───────┘    └───────┬───────┘         │
-│           │                     │                     │                │
-│           ▼                     ▼                     ▼                │
-│   ┌───────────────┐    ┌───────────────┐    ┌───────────────┐         │
-│   │    AWS API    │    │   Azure API   │    │   GCP API     │         │
-│   │               │    │               │    │               │         │
-│   │  EC2, S3,     │    │  VMs, Storage │    │  GCE, GCS,    │         │
-│   │  RDS, etc     │    │  SQL, etc     │    │  BigQuery     │         │
-│   └───────────────┘    └───────────────┘    └───────────────┘         │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     OTHER PROVIDERS                              │   │
-│  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐       │   │
-│  │  │Kuberne-│ │Docker  │ │GitHub  │ │DataDog │ │PagerDuty       │   │
-│  │  │tes     │ │        │ │        │ │        │ │        │       │   │
-│  │  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘       │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM PROVIDER ARCHITECTURE                      |
++-------------------------------------------------------------------------+
+|                                                                         |
+|                      +----------------------+                          |
+|                      |    TERRAFORM CORE    |                          |
+|                      |   (Configuration     |                          |
+|                      |    Processing)       |                          |
+|                      +----------+-----------+                          |
+|                                 |                                       |
+|           +---------------------+---------------------+                |
+|           |                     |                     |                |
+|           ▼                     ▼                     ▼                |
+|   +---------------+    +---------------+    +---------------+         |
+|   | AWS Provider  |    | Azure Provider|    | GCP Provider  |         |
+|   |   (hashicorp/ |    |   (hashicorp/ |    |   (hashicorp/ |         |
+|   |    aws)       |    |    azurerm)   |    |    google)    |         |
+|   +-------+-------+    +-------+-------+    +-------+-------+         |
+|           |                     |                     |                |
+|           ▼                     ▼                     ▼                |
+|   +---------------+    +---------------+    +---------------+         |
+|   |    AWS API    |    |   Azure API   |    |   GCP API     |         |
+|   |               |    |               |    |               |         |
+|   |  EC2, S3,     |    |  VMs, Storage |    |  GCE, GCS,    |         |
+|   |  RDS, etc     |    |  SQL, etc     |    |  BigQuery     |         |
+|   +---------------+    +---------------+    +---------------+         |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |                     OTHER PROVIDERS                              |   |
+|  |  +--------+ +--------+ +--------+ +--------+ +--------+       |   |
+|  |  |Kuberne-| |Docker  | |GitHub  | |DataDog | |PagerDuty       |   |
+|  |  |tes     | |        | |        | |        | |        |       |   |
+|  |  +--------+ +--------+ +--------+ +--------+ +--------+       |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -64,33 +64,33 @@ Providers är plugins som gör det möjligt för Terraform att interagera med cl
 Terraform Registry är den officiella källan för providers:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    PROVIDER TIERS                                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  OFFICIAL (HashiCorp)                                                   │
-│  ────────────────────                                                   │
-│  • hashicorp/aws        AWS Cloud Platform                             │
-│  • hashicorp/azurerm    Microsoft Azure                                │
-│  • hashicorp/google     Google Cloud Platform                          │
-│  • hashicorp/kubernetes Kubernetes                                     │
-│  • hashicorp/vault      HashiCorp Vault                                │
-│  • hashicorp/consul     HashiCorp Consul                               │
-│                                                                         │
-│  VERIFIED (Partner-maintained, HashiCorp-verified)                     │
-│  ────────────────────────────────────────────────────────────────────  │
-│  • datadog/datadog      Monitoring & APM                               │
-│  • cloudflare/cloudflare CDN & DNS                                     │
-│  • newrelic/newrelic    Observability                                  │
-│  • pagerduty/pagerduty  Incident Management                            │
-│                                                                         │
-│  COMMUNITY (Third-party maintained)                                     │
-│  ─────────────────────────────────                                      │
-│  • Tusentals tillgängliga                                              │
-│  • Varierande kvalitet                                                 │
-│  • Granska före användning                                             │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    PROVIDER TIERS                                       |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  OFFICIAL (HashiCorp)                                                   |
+|  --------------------                                                   |
+|  • hashicorp/aws        AWS Cloud Platform                             |
+|  • hashicorp/azurerm    Microsoft Azure                                |
+|  • hashicorp/google     Google Cloud Platform                          |
+|  • hashicorp/kubernetes Kubernetes                                     |
+|  • hashicorp/vault      HashiCorp Vault                                |
+|  • hashicorp/consul     HashiCorp Consul                               |
+|                                                                         |
+|  VERIFIED (Partner-maintained, HashiCorp-verified)                     |
+|  --------------------------------------------------------------------  |
+|  • datadog/datadog      Monitoring & APM                               |
+|  • cloudflare/cloudflare CDN & DNS                                     |
+|  • newrelic/newrelic    Observability                                  |
+|  • pagerduty/pagerduty  Incident Management                            |
+|                                                                         |
+|  COMMUNITY (Third-party maintained)                                     |
+|  ---------------------------------                                      |
+|  • Tusentals tillgängliga                                              |
+|  • Varierande kvalitet                                                 |
+|  • Granska före användning                                             |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -606,7 +606,7 @@ resource "aws_db_instance" "replica" {
 
 ---
 
-**Nästa Node:** Resources & Data Sources →
+**Nästa Node:** Resources & Data Sources ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 60,
@@ -632,36 +632,36 @@ NODE_4 = {
 ## Resources vs Data Sources
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│              RESOURCES vs DATA SOURCES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  RESOURCES                              DATA SOURCES                    │
-│  ─────────                              ────────────                    │
-│                                                                         │
-│  ┌─────────────────────┐               ┌─────────────────────┐         │
-│  │  CREATE / UPDATE    │               │    READ ONLY        │         │
-│  │  / DELETE           │               │                     │         │
-│  └─────────────────────┘               └─────────────────────┘         │
-│                                                                         │
-│  resource "aws_instance"               data "aws_ami" "latest"         │
-│  {                                      {                               │
-│    ami = "ami-xxx"                       most_recent = true            │
-│    instance_type = "t3"                  filter {...}                  │
-│  }                                      }                               │
-│                                                                         │
-│  • Managed by Terraform                • Query existing resources      │
-│  • Stored in state                     • Read at plan time             │
-│  • Full lifecycle control              • No state tracking             │
-│  • Changes applied                     • Reference external data       │
-│                                                                         │
-│  Use cases:                            Use cases:                       │
-│  • Create new infrastructure           • Lookup AMI IDs                │
-│  • Modify existing resources           • Get VPC/Subnet IDs            │
-│  • Destroy when removed                • Read secrets                  │
-│                                         • Query account info           │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|              RESOURCES vs DATA SOURCES                                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  RESOURCES                              DATA SOURCES                    |
+|  ---------                              ------------                    |
+|                                                                         |
+|  +---------------------+               +---------------------+         |
+|  |  CREATE / UPDATE    |               |    READ ONLY        |         |
+|  |  / DELETE           |               |                     |         |
+|  +---------------------+               +---------------------+         |
+|                                                                         |
+|  resource "aws_instance"               data "aws_ami" "latest"         |
+|  {                                      {                               |
+|    ami = "ami-xxx"                       most_recent = true            |
+|    instance_type = "t3"                  filter {...}                  |
+|  }                                      }                               |
+|                                                                         |
+|  • Managed by Terraform                • Query existing resources      |
+|  • Stored in state                     • Read at plan time             |
+|  • Full lifecycle control              • No state tracking             |
+|  • Changes applied                     • Reference external data       |
+|                                                                         |
+|  Use cases:                            Use cases:                       |
+|  • Create new infrastructure           • Lookup AMI IDs                |
+|  • Modify existing resources           • Get VPC/Subnet IDs            |
+|  • Destroy when removed                • Read secrets                  |
+|                                         • Query account info           |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1102,45 +1102,45 @@ resource "aws_instance" "web" {
 ## Resource Dependency Graph
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DEPENDENCY GRAPH EXAMPLE                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│                      ┌────────────────┐                                │
-│                      │     VPC        │                                │
-│                      │ aws_vpc.main   │                                │
-│                      └───────┬────────┘                                │
-│                              │                                          │
-│            ┌─────────────────┼─────────────────┐                       │
-│            │                 │                 │                       │
-│            ▼                 ▼                 ▼                       │
-│   ┌────────────────┐ ┌────────────────┐ ┌────────────────┐            │
-│   │    Subnet A    │ │    Subnet B    │ │ Internet GW    │            │
-│   │ aws_subnet.a   │ │ aws_subnet.b   │ │ aws_igw.main   │            │
-│   └───────┬────────┘ └───────┬────────┘ └───────┬────────┘            │
-│           │                  │                  │                      │
-│           │                  │                  │                      │
-│           └──────────┬───────┴──────────────────┘                      │
-│                      │                                                  │
-│                      ▼                                                  │
-│            ┌─────────────────────┐                                     │
-│            │    Route Table      │                                     │
-│            │ aws_route_table.pub │                                     │
-│            └──────────┬──────────┘                                     │
-│                       │                                                 │
-│                       ▼                                                 │
-│            ┌─────────────────────┐                                     │
-│            │   Security Group    │                                     │
-│            │ aws_security_group  │                                     │
-│            └──────────┬──────────┘                                     │
-│                       │                                                 │
-│                       ▼                                                 │
-│            ┌─────────────────────┐                                     │
-│            │    EC2 Instance     │                                     │
-│            │ aws_instance.web    │                                     │
-│            └─────────────────────┘                                     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DEPENDENCY GRAPH EXAMPLE                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|                      +----------------+                                |
+|                      |     VPC        |                                |
+|                      | aws_vpc.main   |                                |
+|                      +-------+--------+                                |
+|                              |                                          |
+|            +-----------------+-----------------+                       |
+|            |                 |                 |                       |
+|            ▼                 ▼                 ▼                       |
+|   +----------------+ +----------------+ +----------------+            |
+|   |    Subnet A    | |    Subnet B    | | Internet GW    |            |
+|   | aws_subnet.a   | | aws_subnet.b   | | aws_igw.main   |            |
+|   +-------+--------+ +-------+--------+ +-------+--------+            |
+|           |                  |                  |                      |
+|           |                  |                  |                      |
+|           +----------+-------+------------------+                      |
+|                      |                                                  |
+|                      ▼                                                  |
+|            +---------------------+                                     |
+|            |    Route Table      |                                     |
+|            | aws_route_table.pub |                                     |
+|            +----------+----------+                                     |
+|                       |                                                 |
+|                       ▼                                                 |
+|            +---------------------+                                     |
+|            |   Security Group    |                                     |
+|            | aws_security_group  |                                     |
+|            +----------+----------+                                     |
+|                       |                                                 |
+|                       ▼                                                 |
+|            +---------------------+                                     |
+|            |    EC2 Instance     |                                     |
+|            | aws_instance.web    |                                     |
+|            +---------------------+                                     |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -1239,7 +1239,7 @@ resource "aws_autoscaling_group" "app" {
 
 ---
 
-**Nästa Node:** State Management →
+**Nästa Node:** State Management ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 65,

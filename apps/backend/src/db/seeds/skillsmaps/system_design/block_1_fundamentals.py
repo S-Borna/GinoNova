@@ -46,28 +46,28 @@ Skäl:
 
 ```
 1. Requirements Gathering
-   ├── Functional Requirements
-   │   └── Vad systemet ska göra
-   └── Non-Functional Requirements
-       ├── Skalbarhet
-       ├── Tillgänglighet
-       ├── Latency
-       └── Consistency
+   +-- Functional Requirements
+   |   +-- Vad systemet ska göra
+   +-- Non-Functional Requirements
+       +-- Skalbarhet
+       +-- Tillgänglighet
+       +-- Latency
+       +-- Consistency
 
 2. High-Level Design
-   ├── System komponenter
-   ├── Data flow
-   └── Integrationer
+   +-- System komponenter
+   +-- Data flow
+   +-- Integrationer
 
 3. Detailed Design
-   ├── Database schema
-   ├── API endpoints
-   └── Algoritmer
+   +-- Database schema
+   +-- API endpoints
+   +-- Algoritmer
 
 4. Identify Bottlenecks
-   ├── Single points of failure
-   ├── Performance bottlenecks
-   └── Data hotspots
+   +-- Single points of failure
+   +-- Performance bottlenecks
+   +-- Data hotspots
 ```
 
 ## Functional vs Non-Functional
@@ -116,27 +116,27 @@ daily_data = 10_000_000 * 5 * 500
 
 ```
 Latency Numbers:
-├── L1 cache: 0.5 ns
-├── L2 cache: 7 ns
-├── RAM: 100 ns
-├── SSD random read: 150 μs
-├── HDD seek: 10 ms
-├── Network (same datacenter): 0.5 ms
-├── Network (cross-continent): 150 ms
-└── Disk read 1MB (SSD): 1 ms
++-- L1 cache: 0.5 ns
++-- L2 cache: 7 ns
++-- RAM: 100 ns
++-- SSD random read: 150 μs
++-- HDD seek: 10 ms
++-- Network (same datacenter): 0.5 ms
++-- Network (cross-continent): 150 ms
++-- Disk read 1MB (SSD): 1 ms
 
 Storage:
-├── 1 char = 1 byte (ASCII)
-├── 1 char = 4 bytes (UTF-8 max)
-├── UUID = 36 chars = 36 bytes
-├── Timestamp = 8 bytes
-└── Integer = 4-8 bytes
++-- 1 char = 1 byte (ASCII)
++-- 1 char = 4 bytes (UTF-8 max)
++-- UUID = 36 chars = 36 bytes
++-- Timestamp = 8 bytes
++-- Integer = 4-8 bytes
 
 Scale:
-├── 1 KB = 1,000 bytes
-├── 1 MB = 1,000,000 bytes
-├── 1 GB = 1,000,000,000 bytes
-└── 1 TB = 1,000,000,000,000 bytes
++-- 1 KB = 1,000 bytes
++-- 1 MB = 1,000,000 bytes
++-- 1 GB = 1,000,000,000 bytes
++-- 1 TB = 1,000,000,000,000 bytes
 ```
 
 ## System Design Interview
@@ -233,19 +233,19 @@ p99 = 99th_percentile     # 99% snabbare (viktigt!)
 
 ```
 High Throughput + High Latency:
-├── Batch processing
-├── ETL jobs
-└── Background tasks
++-- Batch processing
++-- ETL jobs
++-- Background tasks
 
 Low Latency + Lower Throughput:
-├── Real-time APIs
-├── Gaming servers
-└── Trading systems
++-- Real-time APIs
++-- Gaming servers
++-- Trading systems
 
 Ideal: Low Latency + High Throughput
-├── Optimerad kod
-├── Caching
-└── Rätt infrastruktur
++-- Optimerad kod
++-- Caching
++-- Rätt infrastruktur
 ```
 
 ## Vertical vs Horizontal Scaling
@@ -260,7 +260,7 @@ Vertical Scaling (Scale Up):
     - Har en gräns
     - Single point of failure
     - Dyrt vid höga nivåer
-  Exempel: 2 CPU → 64 CPU
+  Exempel: 2 CPU -> 64 CPU
 
 Horizontal Scaling (Scale Out):
   Vad: Fler servrar
@@ -272,30 +272,30 @@ Horizontal Scaling (Scale Out):
     - Mer komplexitet
     - Data consistency
     - Load balancing behövs
-  Exempel: 1 server → 100 servrar
+  Exempel: 1 server -> 100 servrar
 ```
 
 ## Scaling Patterns
 
 ```
-                    ┌─────────────┐
-                    │   Users     │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │Load Balancer│
-                    └──────┬──────┘
-           ┌───────────────┼───────────────┐
-           │               │               │
-    ┌──────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐
-    │  Server 1   │ │  Server 2   │ │  Server 3   │
-    └──────┬──────┘ └──────┬──────┘ └──────┬──────┘
-           │               │               │
-           └───────────────┼───────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  Database   │
-                    └─────────────┘
+                    +-------------+
+                    |   Users     |
+                    +------+------+
+                           |
+                    +------▼------+
+                    |Load Balancer|
+                    +------+------+
+           +---------------+---------------+
+           |               |               |
+    +------▼------+ +------▼------+ +------▼------+
+    |  Server 1   | |  Server 2   | |  Server 3   |
+    +------+------+ +------+------+ +------+------+
+           |               |               |
+           +---------------+---------------+
+                           |
+                    +------▼------+
+                    |  Database   |
+                    +-------------+
 ```
 
 ## Performance Optimization
@@ -471,25 +471,25 @@ Weak Consistency:
 ## Consistency Models
 
 ```
-             ┌──────────────────────────────────┐
-             │        Strong Consistency        │
-             │   Alla ser samma data direkt     │
-             └──────────────────────────────────┘
-                            │
-             ┌──────────────────────────────────┐
-             │     Sequential Consistency       │
-             │   Alla ser samma ordning         │
-             └──────────────────────────────────┘
-                            │
-             ┌──────────────────────────────────┐
-             │       Causal Consistency         │
-             │   Relaterade ops i ordning       │
-             └──────────────────────────────────┘
-                            │
-             ┌──────────────────────────────────┐
-             │      Eventual Consistency        │
-             │   Konvergerar så småningom       │
-             └──────────────────────────────────┘
+             +----------------------------------+
+             |        Strong Consistency        |
+             |   Alla ser samma data direkt     |
+             +----------------------------------+
+                            |
+             +----------------------------------+
+             |     Sequential Consistency       |
+             |   Alla ser samma ordning         |
+             +----------------------------------+
+                            |
+             +----------------------------------+
+             |       Causal Consistency         |
+             |   Relaterade ops i ordning       |
+             +----------------------------------+
+                            |
+             +----------------------------------+
+             |      Eventual Consistency        |
+             |   Konvergerar så småningom       |
+             +----------------------------------+
 ```
 
 ## CAP Theorem
@@ -590,20 +590,20 @@ NODE_04_CAP = {
 ```
                  Consistency (C)
                       ▲
-                     /│\\
-                    / │ \\
-                   /  │  \\
-                  /   │   \\
-                 /    │    \\
-                /  CP │ CA  \\
-               /      │      \\
-              /       │       \\
-             ─────────┼─────────
-            /         │         \\
-           /    AP    │          \\
-          /           │           \\
-         ▼            │            ▼
-  Availability (A) ◄──┼──► Partition Tolerance (P)
+                     /|\\
+                    / | \\
+                   /  |  \\
+                  /   |   \\
+                 /    |    \\
+                /  CP | CA  \\
+               /      |      \\
+              /       |       \\
+             ---------+---------
+            /         |         \\
+           /    AP    |          \\
+          /           |           \\
+         ▼            |            ▼
+  Availability (A) ◄--+--► Partition Tolerance (P)
 
 CA: Existerar ej i distribuerade system
     (Partition händer alltid)
@@ -681,8 +681,8 @@ use_cases = {
 ## PACELC i Detalj
 
 ```
-P → A eller C?
-E → L eller C?
+P -> A eller C?
+E -> L eller C?
 
 System Examples:
 

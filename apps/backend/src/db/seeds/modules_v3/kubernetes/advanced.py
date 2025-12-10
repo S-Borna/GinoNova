@@ -17,11 +17,11 @@ TASKS_ADVANCED = [
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -45,23 +45,23 @@ TASKS_ADVANCED = [
 ## 📖 StatefulSet vs Deployment
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│            DEPLOYMENT vs STATEFULSET                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Deployment:                  StatefulSet:                   │
-│  ┌─────────────────┐         ┌─────────────────┐           │
-│  │ web-6d4f7b8c-a1 │         │    web-0        │           │
-│  │ web-6d4f7b8c-b2 │         │    web-1        │           │
-│  │ web-6d4f7b8c-c3 │         │    web-2        │           │
-│  └─────────────────┘         └─────────────────┘           │
-│                                                              │
-│  • Random names              • Stable ordinal index         │
-│  • Any order                 • Ordered create/delete        │
-│  • Shared storage            • Unique storage per pod       │
-│  • Interchangeable           • Stable network identity      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|            DEPLOYMENT vs STATEFULSET                         |
++-------------------------------------------------------------+
+|                                                              |
+|  Deployment:                  StatefulSet:                   |
+|  +-----------------+         +-----------------+           |
+|  | web-6d4f7b8c-a1 |         |    web-0        |           |
+|  | web-6d4f7b8c-b2 |         |    web-1        |           |
+|  | web-6d4f7b8c-c3 |         |    web-2        |           |
+|  +-----------------+         +-----------------+           |
+|                                                              |
+|  • Random names              • Stable ordinal index         |
+|  • Any order                 • Ordered create/delete        |
+|  • Shared storage            • Unique storage per pod       |
+|  • Interchangeable           • Stable network identity      |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -126,24 +126,24 @@ spec:
 ## 🔗 Stable Network Identity
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                STATEFULSET DNS                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Pod DNS Format:                                            │
-│  <pod-name>.<service-name>.<namespace>.svc.cluster.local    │
-│                                                              │
-│  Example (postgres StatefulSet):                            │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  postgres-0.postgres.default.svc.cluster.local      │   │
-│  │  postgres-1.postgres.default.svc.cluster.local      │   │
-│  │  postgres-2.postgres.default.svc.cluster.local      │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Headless Service returns all Pod IPs:                      │
-│  postgres.default.svc → [10.244.0.5, 10.244.1.6, ...]      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                STATEFULSET DNS                               |
++-------------------------------------------------------------+
+|                                                              |
+|  Pod DNS Format:                                            |
+|  <pod-name>.<service-name>.<namespace>.svc.cluster.local    |
+|                                                              |
+|  Example (postgres StatefulSet):                            |
+|  +-----------------------------------------------------+   |
+|  |  postgres-0.postgres.default.svc.cluster.local      |   |
+|  |  postgres-1.postgres.default.svc.cluster.local      |   |
+|  |  postgres-2.postgres.default.svc.cluster.local      |   |
+|  +-----------------------------------------------------+   |
+|                                                              |
+|  Headless Service returns all Pod IPs:                      |
+|  postgres.default.svc -> [10.244.0.5, 10.244.1.6, ...]      |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -213,11 +213,11 @@ kubectl delete pvc -l app=postgres
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -241,21 +241,21 @@ kubectl delete pvc -l app=postgres
 ## 📖 Workload Types
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    WORKLOAD TYPES                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  DaemonSet           Job                CronJob              │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
-│  │ One pod per │    │ Run-to-     │    │ Scheduled   │     │
-│  │ node        │    │ completion  │    │ Jobs        │     │
-│  │             │    │             │    │             │     │
-│  │ • Logging   │    │ • Migrations│    │ • Backups   │     │
-│  │ • Monitoring│    │ • Batch     │    │ • Reports   │     │
-│  │ • Network   │    │ • One-time  │    │ • Cleanup   │     │
-│  └─────────────┘    └─────────────┘    └─────────────┘     │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    WORKLOAD TYPES                            |
++-------------------------------------------------------------+
+|                                                              |
+|  DaemonSet           Job                CronJob              |
+|  +-------------+    +-------------+    +-------------+     |
+|  | One pod per |    | Run-to-     |    | Scheduled   |     |
+|  | node        |    | completion  |    | Jobs        |     |
+|  |             |    |             |    |             |     |
+|  | • Logging   |    | • Migrations|    | • Backups   |     |
+|  | • Monitoring|    | • Batch     |    | • Reports   |     |
+|  | • Network   |    | • One-time  |    | • Cleanup   |     |
+|  +-------------+    +-------------+    +-------------+     |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -409,11 +409,11 @@ kubectl delete job test-job
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -437,31 +437,31 @@ kubectl delete job test-job
 ## 📖 Requests vs Limits
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                REQUESTS vs LIMITS                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Requests = Guaranteed minimum                               │
-│  Limits = Maximum allowed                                    │
-│                                                              │
-│  Memory Usage:                                               │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  0MB          256MB         512MB         1GB      │   │
-│  │  │             │             │             │        │   │
-│  │  ├─────────────┤             │             │        │   │
-│  │  │   REQUEST   │             │             │        │   │
-│  │  │             │             │             │        │   │
-│  │  ├─────────────┴─────────────┤             │        │   │
-│  │  │          ACTUAL           │             │        │   │
-│  │  │                           │             │        │   │
-│  │  ├───────────────────────────┴─────────────┤        │   │
-│  │  │              LIMIT                       │        │   │
-│  │  └──────────────────────────────────────────┘        │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                              │
-│  If actual > limit → OOMKilled                              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                REQUESTS vs LIMITS                            |
++-------------------------------------------------------------+
+|                                                              |
+|  Requests = Guaranteed minimum                               |
+|  Limits = Maximum allowed                                    |
+|                                                              |
+|  Memory Usage:                                               |
+|  +-----------------------------------------------------+   |
+|  |  0MB          256MB         512MB         1GB      |   |
+|  |  |             |             |             |        |   |
+|  |  +-------------+             |             |        |   |
+|  |  |   REQUEST   |             |             |        |   |
+|  |  |             |             |             |        |   |
+|  |  +-------------+-------------+             |        |   |
+|  |  |          ACTUAL           |             |        |   |
+|  |  |                           |             |        |   |
+|  |  +---------------------------+-------------+        |   |
+|  |  |              LIMIT                       |        |   |
+|  |  +------------------------------------------+        |   |
+|  +-----------------------------------------------------+   |
+|                                                              |
+|  If actual > limit -> OOMKilled                              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -491,23 +491,23 @@ spec:
 ## 🎯 QoS Classes
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    QoS CLASSES                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  1. Guaranteed (highest priority)                           │
-│     • requests == limits för CPU och memory                │
-│     • Sista att bli evicted                                │
-│                                                              │
-│  2. Burstable                                               │
-│     • requests < limits                                     │
-│     • Eller bara requests satt                             │
-│                                                              │
-│  3. BestEffort (lowest priority)                            │
-│     • Inga requests eller limits                           │
-│     • Första att bli evicted                               │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    QoS CLASSES                               |
++-------------------------------------------------------------+
+|                                                              |
+|  1. Guaranteed (highest priority)                           |
+|     • requests == limits för CPU och memory                |
+|     • Sista att bli evicted                                |
+|                                                              |
+|  2. Burstable                                               |
+|     • requests < limits                                     |
+|     • Eller bara requests satt                             |
+|                                                              |
+|  3. BestEffort (lowest priority)                            |
+|     • Inga requests eller limits                           |
+|     • Första att bli evicted                               |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ```yaml
@@ -630,11 +630,11 @@ kubectl describe quota -n test-quota
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -658,27 +658,27 @@ kubectl describe quota -n test-quota
 ## 📖 Autoscaling Types
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 AUTOSCALING TYPES                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  HPA (Horizontal)           VPA (Vertical)                  │
-│  ┌─────────────────┐       ┌─────────────────┐             │
-│  │ Add more pods   │       │ Resize pods     │             │
-│  │                 │       │                 │             │
-│  │  [P] [P] [P]    │       │     [P]         │             │
-│  │       +         │       │    ↑↓           │             │
-│  │  [P] [P] [P]    │       │  CPU/Mem        │             │
-│  └─────────────────┘       └─────────────────┘             │
-│                                                              │
-│  Cluster Autoscaler                                         │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Add/Remove nodes based on pending pods             │   │
-│  │                                                      │   │
-│  │  [Node] [Node] [Node] + [Node]                      │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 AUTOSCALING TYPES                            |
++-------------------------------------------------------------+
+|                                                              |
+|  HPA (Horizontal)           VPA (Vertical)                  |
+|  +-----------------+       +-----------------+             |
+|  | Add more pods   |       | Resize pods     |             |
+|  |                 |       |                 |             |
+|  |  [P] [P] [P]    |       |     [P]         |             |
+|  |       +         |       |    ↑↓           |             |
+|  |  [P] [P] [P]    |       |  CPU/Mem        |             |
+|  +-----------------+       +-----------------+             |
+|                                                              |
+|  Cluster Autoscaler                                         |
+|  +-----------------------------------------------------+   |
+|  |  Add/Remove nodes based on pending pods             |   |
+|  |                                                      |   |
+|  |  [Node] [Node] [Node] + [Node]                      |   |
+|  +-----------------------------------------------------+   |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -856,11 +856,11 @@ kubectl get hpa -w
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -884,30 +884,30 @@ kubectl get hpa -w
 ## 📖 Observability Stack
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                OBSERVABILITY STACK                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │                     Grafana                           │  │
-│  │                  (Visualization)                      │  │
-│  └─────────────────────────┬────────────────────────────┘  │
-│                            │                                │
-│           ┌────────────────┼────────────────┐              │
-│           │                │                │               │
-│           ▼                ▼                ▼               │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐    │
-│  │ Prometheus  │  │    Loki     │  │     Tempo       │    │
-│  │  (Metrics)  │  │   (Logs)    │  │   (Traces)      │    │
-│  └──────┬──────┘  └──────┬──────┘  └────────┬────────┘    │
-│         │                │                   │              │
-│         │                │                   │              │
-│  ┌──────▼──────────────▼───────────────────▼──────────┐   │
-│  │               Kubernetes Cluster                    │   │
-│  │  [Pods]  [Services]  [Nodes]  [Events]             │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                OBSERVABILITY STACK                           |
++-------------------------------------------------------------+
+|                                                              |
+|  +------------------------------------------------------+  |
+|  |                     Grafana                           |  |
+|  |                  (Visualization)                      |  |
+|  +-------------------------+----------------------------+  |
+|                            |                                |
+|           +----------------+----------------+              |
+|           |                |                |               |
+|           ▼                ▼                ▼               |
+|  +-------------+  +-------------+  +-----------------+    |
+|  | Prometheus  |  |    Loki     |  |     Tempo       |    |
+|  |  (Metrics)  |  |   (Logs)    |  |   (Traces)      |    |
+|  +------+------+  +------+------+  +--------+--------+    |
+|         |                |                   |              |
+|         |                |                   |              |
+|  +------▼--------------▼-------------------▼----------+   |
+|  |               Kubernetes Cluster                    |   |
+|  |  [Pods]  [Services]  [Nodes]  [Events]             |   |
+|  +----------------------------------------------------+   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1016,7 +1016,7 @@ kubectl port-forward svc/monitoring-grafana 3000:80
 
 # Check Prometheus targets
 kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090
-# Go to Status → Targets
+# Go to Status -> Targets
 ```
 
 ---
@@ -1048,11 +1048,11 @@ kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1076,30 +1076,30 @@ kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090
 ## 📖 Troubleshooting Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              TROUBLESHOOTING WORKFLOW                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  1. Check Pod Status                                        │
-│     kubectl get pods                                        │
-│     kubectl describe pod <name>                             │
-│                                                              │
-│  2. Check Logs                                              │
-│     kubectl logs <pod>                                      │
-│     kubectl logs <pod> --previous                           │
-│                                                              │
-│  3. Check Events                                            │
-│     kubectl get events --sort-by='.lastTimestamp'          │
-│                                                              │
-│  4. Check Resources                                         │
-│     kubectl top pods                                        │
-│     kubectl describe node                                   │
-│                                                              │
-│  5. Debug Container                                         │
-│     kubectl exec -it <pod> -- sh                           │
-│     kubectl debug <pod> --image=busybox                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              TROUBLESHOOTING WORKFLOW                        |
++-------------------------------------------------------------+
+|                                                              |
+|  1. Check Pod Status                                        |
+|     kubectl get pods                                        |
+|     kubectl describe pod <name>                             |
+|                                                              |
+|  2. Check Logs                                              |
+|     kubectl logs <pod>                                      |
+|     kubectl logs <pod> --previous                           |
+|                                                              |
+|  3. Check Events                                            |
+|     kubectl get events --sort-by='.lastTimestamp'          |
+|                                                              |
+|  4. Check Resources                                         |
+|     kubectl top pods                                        |
+|     kubectl describe node                                   |
+|                                                              |
+|  5. Debug Container                                         |
+|     kubectl exec -it <pod> -- sh                           |
+|     kubectl debug <pod> --image=busybox                    |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1107,30 +1107,30 @@ kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090
 ## 🚨 Common Issues
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   COMMON POD ISSUES                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ImagePullBackOff                                           │
-│  ├─ Wrong image name/tag                                   │
-│  ├─ Private registry auth                                  │
-│  └─ Image doesn't exist                                    │
-│                                                              │
-│  CrashLoopBackOff                                           │
-│  ├─ Application error                                      │
-│  ├─ Missing config/secrets                                 │
-│  └─ Resource limits too low                                │
-│                                                              │
-│  Pending                                                    │
-│  ├─ Insufficient resources                                 │
-│  ├─ Node selector/affinity                                 │
-│  └─ PVC not bound                                          │
-│                                                              │
-│  OOMKilled                                                  │
-│  ├─ Memory limit too low                                   │
-│  └─ Memory leak in app                                     │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                   COMMON POD ISSUES                          |
++-------------------------------------------------------------+
+|                                                              |
+|  ImagePullBackOff                                           |
+|  +- Wrong image name/tag                                   |
+|  +- Private registry auth                                  |
+|  +- Image doesn't exist                                    |
+|                                                              |
+|  CrashLoopBackOff                                           |
+|  +- Application error                                      |
+|  +- Missing config/secrets                                 |
+|  +- Resource limits too low                                |
+|                                                              |
+|  Pending                                                    |
+|  +- Insufficient resources                                 |
+|  +- Node selector/affinity                                 |
+|  +- PVC not bound                                          |
+|                                                              |
+|  OOMKilled                                                  |
+|  +- Memory limit too low                                   |
+|  +- Memory leak in app                                     |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1259,11 +1259,11 @@ kubectl delete pod failing-pod
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1287,26 +1287,26 @@ kubectl delete pod failing-pod
 ## 📖 GitOps Principles
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    GITOPS WORKFLOW                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Developer              Git Repository          Kubernetes   │
-│  ┌──────────┐          ┌──────────────┐       ┌──────────┐ │
-│  │  Change  │──Push───▶│   Desired    │       │  Actual  │ │
-│  │  Code    │          │   State      │       │  State   │ │
-│  └──────────┘          └──────┬───────┘       └────┬─────┘ │
-│                               │                     │       │
-│                               │    ArgoCD           │       │
-│                               │  ┌─────────┐        │       │
-│                               └─▶│ Compare │◀───────┘       │
-│                                  │  & Sync │                │
-│                                  └─────────┘                │
-│                                                              │
-│  Git = Single source of truth                               │
-│  All changes through Git (no kubectl apply)                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    GITOPS WORKFLOW                           |
++-------------------------------------------------------------+
+|                                                              |
+|  Developer              Git Repository          Kubernetes   |
+|  +----------+          +--------------+       +----------+ |
+|  |  Change  |--Push---▶|   Desired    |       |  Actual  | |
+|  |  Code    |          |   State      |       |  State   | |
+|  +----------+          +------+-------+       +----+-----+ |
+|                               |                     |       |
+|                               |    ArgoCD           |       |
+|                               |  +---------+        |       |
+|                               +-▶| Compare |◀-------+       |
+|                                  |  & Sync |                |
+|                                  +---------+                |
+|                                                              |
+|  Git = Single source of truth                               |
+|  All changes through Git (no kubectl apply)                 |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1388,19 +1388,19 @@ metadata:
 
 ```
 myapp-k8s/
-├── base/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── kustomization.yaml
-├── overlays/
-│   ├── dev/
-│   │   └── kustomization.yaml
-│   ├── staging/
-│   │   └── kustomization.yaml
-│   └── production/
-│       └── kustomization.yaml
-└── argocd/
-    └── application.yaml
++-- base/
+|   +-- deployment.yaml
+|   +-- service.yaml
+|   +-- kustomization.yaml
++-- overlays/
+|   +-- dev/
+|   |   +-- kustomization.yaml
+|   +-- staging/
+|   |   +-- kustomization.yaml
+|   +-- production/
+|       +-- kustomization.yaml
++-- argocd/
+    +-- application.yaml
 ```
 
 ---
@@ -1436,7 +1436,7 @@ argocd app get nginx
 | GitOps | Git as source of truth |
 | ArgoCD | GitOps operator |
 | Application | ArgoCD CRD |
-| Sync | Reconcile Git → Cluster |
+| Sync | Reconcile Git -> Cluster |
 
 **Nästa steg:** Production Best Practices
 
@@ -1456,11 +1456,11 @@ argocd app get nginx
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1484,32 +1484,32 @@ argocd app get nginx
 ## 📖 HA Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              HIGH AVAILABILITY SETUP                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              Load Balancer                           │   │
-│  └───────────────────────┬─────────────────────────────┘   │
-│                          │                                  │
-│         ┌────────────────┼────────────────┐                │
-│         │                │                │                 │
-│  ┌──────▼──────┐  ┌──────▼──────┐  ┌──────▼──────┐        │
-│  │ Control     │  │ Control     │  │ Control     │        │
-│  │ Plane 1     │  │ Plane 2     │  │ Plane 3     │        │
-│  └─────────────┘  └─────────────┘  └─────────────┘        │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │                    etcd cluster                       │  │
-│  │    [etcd-1]         [etcd-2]         [etcd-3]        │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │  Worker 1   │  │  Worker 2   │  │  Worker N   │        │
-│  │   AZ-a      │  │   AZ-b      │  │   AZ-c      │        │
-│  └─────────────┘  └─────────────┘  └─────────────┘        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              HIGH AVAILABILITY SETUP                         |
++-------------------------------------------------------------+
+|                                                              |
+|  +-----------------------------------------------------+   |
+|  |              Load Balancer                           |   |
+|  +-----------------------+-----------------------------+   |
+|                          |                                  |
+|         +----------------+----------------+                |
+|         |                |                |                 |
+|  +------▼------+  +------▼------+  +------▼------+        |
+|  | Control     |  | Control     |  | Control     |        |
+|  | Plane 1     |  | Plane 2     |  | Plane 3     |        |
+|  +-------------+  +-------------+  +-------------+        |
+|                                                             |
+|  +------------------------------------------------------+  |
+|  |                    etcd cluster                       |  |
+|  |    [etcd-1]         [etcd-2]         [etcd-3]        |  |
+|  +------------------------------------------------------+  |
+|                                                             |
+|  +-------------+  +-------------+  +-------------+        |
+|  |  Worker 1   |  |  Worker 2   |  |  Worker N   |        |
+|  |   AZ-a      |  |   AZ-b      |  |   AZ-c      |        |
+|  +-------------+  +-------------+  +-------------+        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1642,24 +1642,24 @@ velero restore create --from-backup production-backup
 ## 📋 Production Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              PRODUCTION CHECKLIST                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ☐ Resource requests/limits set                            │
-│  ☐ Health probes configured                                │
-│  ☐ Pod anti-affinity for HA                               │
-│  ☐ Network policies in place                              │
-│  ☐ RBAC properly configured                               │
-│  ☐ Secrets encrypted at rest                              │
-│  ☐ Pod Security Standards enforced                        │
-│  ☐ Monitoring/alerting setup                              │
-│  ☐ Logging aggregation                                    │
-│  ☐ Backup strategy implemented                            │
-│  ☐ Disaster recovery tested                               │
-│  ☐ GitOps workflow established                            │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              PRODUCTION CHECKLIST                            |
++-------------------------------------------------------------+
+|                                                              |
+|  ☐ Resource requests/limits set                            |
+|  ☐ Health probes configured                                |
+|  ☐ Pod anti-affinity for HA                               |
+|  ☐ Network policies in place                              |
+|  ☐ RBAC properly configured                               |
+|  ☐ Secrets encrypted at rest                              |
+|  ☐ Pod Security Standards enforced                        |
+|  ☐ Monitoring/alerting setup                              |
+|  ☐ Logging aggregation                                    |
+|  ☐ Backup strategy implemented                            |
+|  ☐ Disaster recovery tested                               |
+|  ☐ GitOps workflow established                            |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1692,11 +1692,11 @@ velero restore create --from-backup production-backup
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1720,33 +1720,33 @@ velero restore create --from-backup production-backup
 ## 📖 CRD & Operator Concept
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 OPERATOR PATTERN                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Custom Resource Definition (CRD)                           │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Extends Kubernetes API                              │   │
-│  │  Defines new resource types                         │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                           │                                 │
-│                           ▼                                 │
-│  Custom Resource (CR)                                       │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Instance of CRD                                     │   │
-│  │  apiVersion: myapp.io/v1                            │   │
-│  │  kind: Database                                     │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                           │                                 │
-│                           ▼                                 │
-│  Operator (Controller)                                      │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Watches CR changes                                  │   │
-│  │  Reconciles desired → actual state                  │   │
-│  │  Creates/manages K8s resources                      │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 OPERATOR PATTERN                             |
++-------------------------------------------------------------+
+|                                                              |
+|  Custom Resource Definition (CRD)                           |
+|  +-----------------------------------------------------+   |
+|  |  Extends Kubernetes API                              |   |
+|  |  Defines new resource types                         |   |
+|  +-----------------------------------------------------+   |
+|                           |                                 |
+|                           ▼                                 |
+|  Custom Resource (CR)                                       |
+|  +-----------------------------------------------------+   |
+|  |  Instance of CRD                                     |   |
+|  |  apiVersion: myapp.io/v1                            |   |
+|  |  kind: Database                                     |   |
+|  +-----------------------------------------------------+   |
+|                           |                                 |
+|                           ▼                                 |
+|  Operator (Controller)                                      |
+|  +-----------------------------------------------------+   |
+|  |  Watches CR changes                                  |   |
+|  |  Reconciles desired -> actual state                  |   |
+|  |  Creates/manages K8s resources                      |   |
+|  +-----------------------------------------------------+   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1841,29 +1841,29 @@ kubectl describe db my-postgres
 ## 🌟 Popular Operators
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                  POPULAR OPERATORS                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Databases                                                  │
-│  ├─ CloudNativePG (PostgreSQL)                             │
-│  ├─ MongoDB Community Operator                             │
-│  └─ MySQL Operator                                         │
-│                                                              │
-│  Messaging                                                  │
-│  ├─ Strimzi (Kafka)                                        │
-│  └─ RabbitMQ Cluster Operator                              │
-│                                                              │
-│  Certificates                                               │
-│  └─ cert-manager                                           │
-│                                                              │
-│  GitOps                                                     │
-│  └─ ArgoCD                                                 │
-│                                                              │
-│  Monitoring                                                 │
-│  └─ Prometheus Operator                                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                  POPULAR OPERATORS                           |
++-------------------------------------------------------------+
+|                                                              |
+|  Databases                                                  |
+|  +- CloudNativePG (PostgreSQL)                             |
+|  +- MongoDB Community Operator                             |
+|  +- MySQL Operator                                         |
+|                                                              |
+|  Messaging                                                  |
+|  +- Strimzi (Kafka)                                        |
+|  +- RabbitMQ Cluster Operator                              |
+|                                                              |
+|  Certificates                                               |
+|  +- cert-manager                                           |
+|                                                              |
+|  GitOps                                                     |
+|  +- ArgoCD                                                 |
+|                                                              |
+|  Monitoring                                                 |
+|  +- Prometheus Operator                                    |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1909,7 +1909,7 @@ kubectl get clusterissuer
 | CRD | Extend K8s API |
 | CR | Instance av CRD |
 | Operator | Controller för CR |
-| Reconciliation | Sync desired → actual |
+| Reconciliation | Sync desired -> actual |
 
 **🎉 Grattis! Du har slutfört Kubernetes Mastery!**
 
@@ -1929,11 +1929,11 @@ kubectl get clusterissuer
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1957,34 +1957,34 @@ kubectl get clusterissuer
 ## 🏗️ Project Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              COMPLETE K8S PROJECT                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │                   Ingress (nginx)                    │   │
-│  │                 app.example.com                      │   │
-│  └─────────────────────────┬───────────────────────────┘   │
-│                            │                                │
-│              ┌─────────────┼─────────────┐                 │
-│              │             │             │                  │
-│              ▼             ▼             ▼                  │
-│        ┌─────────┐   ┌─────────┐   ┌─────────┐            │
-│        │Frontend │   │   API   │   │ Worker  │            │
-│        │ (3 pods)│   │ (3 pods)│   │ (2 pods)│            │
-│        └────┬────┘   └────┬────┘   └────┬────┘            │
-│             │             │             │                   │
-│             └─────────────┼─────────────┘                  │
-│                           │                                 │
-│        ┌──────────────────┼──────────────────┐            │
-│        │                  │                   │            │
-│        ▼                  ▼                   ▼            │
-│  ┌──────────┐      ┌──────────┐       ┌──────────┐       │
-│  │PostgreSQL│      │  Redis   │       │ RabbitMQ │       │
-│  │(StatefulS│      │ (Deploy) │       │ (Deploy) │       │
-│  └──────────┘      └──────────┘       └──────────┘       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              COMPLETE K8S PROJECT                            |
++-------------------------------------------------------------+
+|                                                              |
+|  +-----------------------------------------------------+   |
+|  |                   Ingress (nginx)                    |   |
+|  |                 app.example.com                      |   |
+|  +-------------------------+---------------------------+   |
+|                            |                                |
+|              +-------------+-------------+                 |
+|              |             |             |                  |
+|              ▼             ▼             ▼                  |
+|        +---------+   +---------+   +---------+            |
+|        |Frontend |   |   API   |   | Worker  |            |
+|        | (3 pods)|   | (3 pods)|   | (2 pods)|            |
+|        +----+----+   +----+----+   +----+----+            |
+|             |             |             |                   |
+|             +-------------+-------------+                  |
+|                           |                                 |
+|        +------------------+------------------+            |
+|        |                  |                   |            |
+|        ▼                  ▼                   ▼            |
+|  +----------+      +----------+       +----------+       |
+|  |PostgreSQL|      |  Redis   |       | RabbitMQ |       |
+|  |(StatefulS|      | (Deploy) |       | (Deploy) |       |
+|  +----------+      +----------+       +----------+       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1993,38 +1993,38 @@ kubectl get clusterissuer
 
 ```
 k8s-project/
-├── base/
-│   ├── namespace.yaml
-│   ├── frontend/
-│   │   ├── deployment.yaml
-│   │   └── service.yaml
-│   ├── api/
-│   │   ├── deployment.yaml
-│   │   ├── service.yaml
-│   │   └── hpa.yaml
-│   ├── worker/
-│   │   └── deployment.yaml
-│   ├── postgres/
-│   │   ├── statefulset.yaml
-│   │   ├── service.yaml
-│   │   └── pvc.yaml
-│   ├── redis/
-│   │   ├── deployment.yaml
-│   │   └── service.yaml
-│   └── kustomization.yaml
-├── overlays/
-│   ├── dev/
-│   │   ├── kustomization.yaml
-│   │   └── patches/
-│   └── production/
-│       ├── kustomization.yaml
-│       ├── patches/
-│       └── secrets/
-├── monitoring/
-│   ├── prometheus-rules.yaml
-│   └── servicemonitor.yaml
-└── argocd/
-    └── application.yaml
++-- base/
+|   +-- namespace.yaml
+|   +-- frontend/
+|   |   +-- deployment.yaml
+|   |   +-- service.yaml
+|   +-- api/
+|   |   +-- deployment.yaml
+|   |   +-- service.yaml
+|   |   +-- hpa.yaml
+|   +-- worker/
+|   |   +-- deployment.yaml
+|   +-- postgres/
+|   |   +-- statefulset.yaml
+|   |   +-- service.yaml
+|   |   +-- pvc.yaml
+|   +-- redis/
+|   |   +-- deployment.yaml
+|   |   +-- service.yaml
+|   +-- kustomization.yaml
++-- overlays/
+|   +-- dev/
+|   |   +-- kustomization.yaml
+|   |   +-- patches/
+|   +-- production/
+|       +-- kustomization.yaml
+|       +-- patches/
+|       +-- secrets/
++-- monitoring/
+|   +-- prometheus-rules.yaml
+|   +-- servicemonitor.yaml
++-- argocd/
+    +-- application.yaml
 ```
 
 ---

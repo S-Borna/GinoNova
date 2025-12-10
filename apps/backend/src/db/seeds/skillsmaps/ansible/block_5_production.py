@@ -27,39 +27,39 @@ NODE_17_TESTING_ANSIBLE = {
 ## Testing Pyramid
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ANSIBLE TESTING PYRAMID                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│                          ┌─────────┐                                    │
-│                          │ E2E     │  ← Full stack testing              │
-│                         ╱│ Tests   │╲   (Production-like)               │
-│                        ╱ └─────────┘ ╲                                  │
-│                       ╱               ╲                                 │
-│                      ╱  ┌───────────┐  ╲                                │
-│                     ╱   │ Molecule  │   ╲ ← Integration tests           │
-│                    ╱    │ + Verify  │    ╲  (Containers)                │
-│                   ╱     └───────────┘     ╲                             │
-│                  ╱                         ╲                            │
-│                 ╱    ┌─────────────────┐    ╲                           │
-│                ╱     │ Check Mode      │     ╲ ← Dry run                │
-│               ╱      │ (--check --diff)│      ╲ (Simulation)            │
-│              ╱       └─────────────────┘       ╲                        │
-│             ╱                                   ╲                       │
-│            ╱      ┌───────────────────────┐      ╲                      │
-│           ╱       │ Lint + Syntax Check   │       ╲ ← Static analysis   │
-│          ╱        │ (ansible-lint, yamllint)       ╲ (Fast feedback)    │
-│         ╱─────────└───────────────────────┘─────────╲                   │
-│                                                                         │
-│  TESTING STAGES:                                                        │
-│  ───────────────                                                        │
-│  1. Developer runs lint locally (pre-commit)                            │
-│  2. CI runs full test suite on PR                                       │
-│  3. Check mode validates against staging                                │
-│  4. Molecule tests run in containers                                    │
-│  5. E2E tests validate full deployment                                  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ANSIBLE TESTING PYRAMID                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|                          +---------+                                    |
+|                          | E2E     |  <- Full stack testing              |
+|                         ╱| Tests   |╲   (Production-like)               |
+|                        ╱ +---------+ ╲                                  |
+|                       ╱               ╲                                 |
+|                      ╱  +-----------+  ╲                                |
+|                     ╱   | Molecule  |   ╲ <- Integration tests           |
+|                    ╱    | + Verify  |    ╲  (Containers)                |
+|                   ╱     +-----------+     ╲                             |
+|                  ╱                         ╲                            |
+|                 ╱    +-----------------+    ╲                           |
+|                ╱     | Check Mode      |     ╲ <- Dry run                |
+|               ╱      | (--check --diff)|      ╲ (Simulation)            |
+|              ╱       +-----------------+       ╲                        |
+|             ╱                                   ╲                       |
+|            ╱      +-----------------------+      ╲                      |
+|           ╱       | Lint + Syntax Check   |       ╲ <- Static analysis   |
+|          ╱        | (ansible-lint, yamllint)       ╲ (Fast feedback)    |
+|         ╱---------+-----------------------+---------╲                   |
+|                                                                         |
+|  TESTING STAGES:                                                        |
+|  ---------------                                                        |
+|  1. Developer runs lint locally (pre-commit)                            |
+|  2. CI runs full test suite on PR                                       |
+|  3. Check mode validates against staging                                |
+|  4. Molecule tests run in containers                                    |
+|  5. E2E tests validate full deployment                                  |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -293,17 +293,17 @@ molecule init scenario -d docker
 
 # Created structure:
 roles/nginx/
-├── defaults/
-├── handlers/
-├── tasks/
-├── templates/
-├── vars/
-└── molecule/
-    └── default/
-        ├── molecule.yml
-        ├── converge.yml
-        ├── verify.yml
-        └── prepare.yml
++-- defaults/
++-- handlers/
++-- tasks/
++-- templates/
++-- vars/
++-- molecule/
+    +-- default/
+        +-- molecule.yml
+        +-- converge.yml
+        +-- verify.yml
+        +-- prepare.yml
 ```
 
 ### molecule.yml Configuration
@@ -692,44 +692,44 @@ NODE_18_CICD_ANSIBLE = {
 ## CI/CD Pipeline Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    ANSIBLE CI/CD PIPELINE                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  GIT REPOSITORY                                                         │
-│  ──────────────                                                         │
-│       │                                                                 │
-│       ▼                                                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                    CI PIPELINE (PR/Merge)                       │    │
-│  ├─────────┬────────────┬─────────────┬────────────┬──────────────┤    │
-│  │  Lint   │  Syntax    │  Unit Tests │  Molecule  │  Security    │    │
-│  │         │  Check     │  (pytest)   │  Tests     │  Scan        │    │
-│  └────┬────┴─────┬──────┴──────┬──────┴─────┬──────┴──────┬───────┘    │
-│       │          │             │            │             │            │
-│       └──────────┴─────────────┴────────────┴─────────────┘            │
-│                              │                                          │
-│                              ▼ (if all pass)                            │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                    CD PIPELINE (main branch)                    │    │
-│  ├─────────────┬──────────────┬────────────────┬──────────────────┤    │
-│  │   Deploy    │   Deploy     │   Deploy       │   Smoke Tests    │    │
-│  │   Staging   │   Canary     │   Production   │   + Verify       │    │
-│  │             │   (10%)      │   (Rolling)    │                  │    │
-│  └──────┬──────┴───────┬──────┴────────┬───────┴─────────┬────────┘    │
-│         │              │               │                 │             │
-│         ▼              ▼               ▼                 ▼             │
-│  ┌───────────┐  ┌───────────┐  ┌───────────────┐  ┌──────────────┐     │
-│  │ Staging   │  │  Canary   │  │  Production   │  │  Monitoring  │     │
-│  │ Servers   │  │  Servers  │  │  Servers      │  │  Dashboard   │     │
-│  └───────────┘  └───────────┘  └───────────────┘  └──────────────┘     │
-│                                                                         │
-│  SECRETS MANAGEMENT:                                                    │
-│  ├── CI/CD Variables (encrypted)                                        │
-│  ├── Vault integration                                                  │
-│  └── Ansible Vault passwords                                            │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    ANSIBLE CI/CD PIPELINE                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  GIT REPOSITORY                                                         |
+|  --------------                                                         |
+|       |                                                                 |
+|       ▼                                                                 |
+|  +-----------------------------------------------------------------+    |
+|  |                    CI PIPELINE (PR/Merge)                       |    |
+|  +---------+------------+-------------+------------+--------------+    |
+|  |  Lint   |  Syntax    |  Unit Tests |  Molecule  |  Security    |    |
+|  |         |  Check     |  (pytest)   |  Tests     |  Scan        |    |
+|  +----+----+-----+------+------+------+-----+------+------+-------+    |
+|       |          |             |            |             |            |
+|       +----------+-------------+------------+-------------+            |
+|                              |                                          |
+|                              ▼ (if all pass)                            |
+|  +-----------------------------------------------------------------+    |
+|  |                    CD PIPELINE (main branch)                    |    |
+|  +-------------+--------------+----------------+------------------+    |
+|  |   Deploy    |   Deploy     |   Deploy       |   Smoke Tests    |    |
+|  |   Staging   |   Canary     |   Production   |   + Verify       |    |
+|  |             |   (10%)      |   (Rolling)    |                  |    |
+|  +------+------+-------+------+--------+-------+---------+--------+    |
+|         |              |               |                 |             |
+|         ▼              ▼               ▼                 ▼             |
+|  +-----------+  +-----------+  +---------------+  +--------------+     |
+|  | Staging   |  |  Canary   |  |  Production   |  |  Monitoring  |     |
+|  | Servers   |  |  Servers  |  |  Servers      |  |  Dashboard   |     |
+|  +-----------+  +-----------+  +---------------+  +--------------+     |
+|                                                                         |
+|  SECRETS MANAGEMENT:                                                    |
+|  +-- CI/CD Variables (encrypted)                                        |
+|  +-- Vault integration                                                  |
+|  +-- Ansible Vault passwords                                            |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1208,19 +1208,19 @@ hostnames:
 
 ```
 Repository Secrets:
-├── AWS_ACCESS_KEY_ID
-├── AWS_SECRET_ACCESS_KEY
-├── ANSIBLE_VAULT_PASSWORD
-├── SSH_PRIVATE_KEY
-└── SLACK_WEBHOOK
++-- AWS_ACCESS_KEY_ID
++-- AWS_SECRET_ACCESS_KEY
++-- ANSIBLE_VAULT_PASSWORD
++-- SSH_PRIVATE_KEY
++-- SLACK_WEBHOOK
 
 Environment Secrets (staging):
-├── DB_PASSWORD
-└── API_KEY
++-- DB_PASSWORD
++-- API_KEY
 
 Environment Secrets (production):
-├── DB_PASSWORD
-└── API_KEY
++-- DB_PASSWORD
++-- API_KEY
 ```
 
 ### Using Secrets in Playbooks
@@ -1342,55 +1342,55 @@ NODE_19_BEST_PRACTICES = {
 ## Project Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    RECOMMENDED PROJECT STRUCTURE                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ansible/                                                               │
-│  ├── ansible.cfg              ← Global Ansible configuration            │
-│  ├── requirements.yml         ← Galaxy dependencies                     │
-│  ├── .ansible-lint            ← Linting rules                           │
-│  ├── .yamllint                ← YAML linting rules                      │
-│  │                                                                      │
-│  ├── inventories/             ← Environment-specific inventories        │
-│  │   ├── production/                                                    │
-│  │   │   ├── hosts.yml        ← Static inventory                        │
-│  │   │   ├── aws_ec2.yml      ← Dynamic inventory                       │
-│  │   │   ├── group_vars/      ← Environment-specific vars               │
-│  │   │   │   ├── all.yml                                                │
-│  │   │   │   ├── all/                                                   │
-│  │   │   │   │   ├── vars.yml                                           │
-│  │   │   │   │   └── vault.yml ← Encrypted secrets                      │
-│  │   │   │   └── webservers.yml                                         │
-│  │   │   └── host_vars/       ← Host-specific vars                      │
-│  │   │       └── web01.yml                                              │
-│  │   └── staging/                                                       │
-│  │       └── ...                                                        │
-│  │                                                                      │
-│  ├── playbooks/               ← Playbook files                          │
-│  │   ├── site.yml             ← Master playbook                         │
-│  │   ├── webservers.yml                                                 │
-│  │   ├── databases.yml                                                  │
-│  │   └── deploy.yml                                                     │
-│  │                                                                      │
-│  ├── roles/                   ← Reusable roles                          │
-│  │   ├── common/                                                        │
-│  │   │   ├── defaults/                                                  │
-│  │   │   ├── handlers/                                                  │
-│  │   │   ├── tasks/                                                     │
-│  │   │   ├── templates/                                                 │
-│  │   │   ├── files/                                                     │
-│  │   │   ├── vars/                                                      │
-│  │   │   ├── meta/                                                      │
-│  │   │   └── molecule/        ← Tests                                   │
-│  │   ├── nginx/                                                         │
-│  │   └── postgresql/                                                    │
-│  │                                                                      │
-│  ├── library/                 ← Custom modules                          │
-│  ├── filter_plugins/          ← Custom filters                          │
-│  └── callback_plugins/        ← Custom callbacks                        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    RECOMMENDED PROJECT STRUCTURE                        |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ansible/                                                               |
+|  +-- ansible.cfg              <- Global Ansible configuration            |
+|  +-- requirements.yml         <- Galaxy dependencies                     |
+|  +-- .ansible-lint            <- Linting rules                           |
+|  +-- .yamllint                <- YAML linting rules                      |
+|  |                                                                      |
+|  +-- inventories/             <- Environment-specific inventories        |
+|  |   +-- production/                                                    |
+|  |   |   +-- hosts.yml        <- Static inventory                        |
+|  |   |   +-- aws_ec2.yml      <- Dynamic inventory                       |
+|  |   |   +-- group_vars/      <- Environment-specific vars               |
+|  |   |   |   +-- all.yml                                                |
+|  |   |   |   +-- all/                                                   |
+|  |   |   |   |   +-- vars.yml                                           |
+|  |   |   |   |   +-- vault.yml <- Encrypted secrets                      |
+|  |   |   |   +-- webservers.yml                                         |
+|  |   |   +-- host_vars/       <- Host-specific vars                      |
+|  |   |       +-- web01.yml                                              |
+|  |   +-- staging/                                                       |
+|  |       +-- ...                                                        |
+|  |                                                                      |
+|  +-- playbooks/               <- Playbook files                          |
+|  |   +-- site.yml             <- Master playbook                         |
+|  |   +-- webservers.yml                                                 |
+|  |   +-- databases.yml                                                  |
+|  |   +-- deploy.yml                                                     |
+|  |                                                                      |
+|  +-- roles/                   <- Reusable roles                          |
+|  |   +-- common/                                                        |
+|  |   |   +-- defaults/                                                  |
+|  |   |   +-- handlers/                                                  |
+|  |   |   +-- tasks/                                                     |
+|  |   |   +-- templates/                                                 |
+|  |   |   +-- files/                                                     |
+|  |   |   +-- vars/                                                      |
+|  |   |   +-- meta/                                                      |
+|  |   |   +-- molecule/        <- Tests                                   |
+|  |   +-- nginx/                                                         |
+|  |   +-- postgresql/                                                    |
+|  |                                                                      |
+|  +-- library/                 <- Custom modules                          |
+|  +-- filter_plugins/          <- Custom filters                          |
+|  +-- callback_plugins/        <- Custom callbacks                        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### ansible.cfg
@@ -1446,17 +1446,17 @@ enable_plugins = yaml, ini, auto, host_list, aws_ec2
 ```
 # Roles: lowercase, underscore separated
 roles/
-├── web_server/          ✅ Good
-├── db_backup/           ✅ Good
-├── WebServer/           ❌ Bad (PascalCase)
-├── web-server/          ❌ Bad (hyphens)
++-- web_server/          ✅ Good
++-- db_backup/           ✅ Good
++-- WebServer/           ❌ Bad (PascalCase)
++-- web-server/          ❌ Bad (hyphens)
 
 # Playbooks: descriptive, verb-noun
 playbooks/
-├── deploy_application.yml    ✅ Good
-├── configure_webservers.yml  ✅ Good
-├── setup.yml                 ❌ Bad (not descriptive)
-├── do_stuff.yml              ❌ Bad (vague)
++-- deploy_application.yml    ✅ Good
++-- configure_webservers.yml  ✅ Good
++-- setup.yml                 ❌ Bad (not descriptive)
++-- do_stuff.yml              ❌ Bad (vague)
 ```
 
 ### Variables
@@ -1560,39 +1560,39 @@ tasks:
 ## Variable Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    VARIABLE PRECEDENCE (Low to High)                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1.  command line values (for example, -u my_user)                      │
-│  2.  role defaults (defined in role/defaults/main.yml)                  │
-│  3.  inventory file or script group vars                                │
-│  4.  inventory group_vars/all                                           │
-│  5.  playbook group_vars/all                                            │
-│  6.  inventory group_vars/*                                             │
-│  7.  playbook group_vars/*                                              │
-│  8.  inventory file or script host vars                                 │
-│  9.  inventory host_vars/*                                              │
-│  10. playbook host_vars/*                                               │
-│  11. host facts / cached set_facts                                      │
-│  12. play vars                                                          │
-│  13. play vars_prompt                                                   │
-│  14. play vars_files                                                    │
-│  15. role vars (defined in role/vars/main.yml)                          │
-│  16. block vars (only for tasks in block)                               │
-│  17. task vars (only for the task)                                      │
-│  18. include_vars                                                       │
-│  19. set_facts / registered vars                                        │
-│  20. role (and include_role) params                                     │
-│  21. include params                                                     │
-│  22. extra vars (for example, -e "user=admin")          ← HIGHEST       │
-│                                                                         │
-│  BEST PRACTICE:                                                         │
-│  ├── defaults/main.yml  → Sane defaults (can be overridden)             │
-│  ├── vars/main.yml      → Role-internal vars (rarely override)          │
-│  └── group_vars/        → Environment-specific values                   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    VARIABLE PRECEDENCE (Low to High)                    |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1.  command line values (for example, -u my_user)                      |
+|  2.  role defaults (defined in role/defaults/main.yml)                  |
+|  3.  inventory file or script group vars                                |
+|  4.  inventory group_vars/all                                           |
+|  5.  playbook group_vars/all                                            |
+|  6.  inventory group_vars/*                                             |
+|  7.  playbook group_vars/*                                              |
+|  8.  inventory file or script host vars                                 |
+|  9.  inventory host_vars/*                                              |
+|  10. playbook host_vars/*                                               |
+|  11. host facts / cached set_facts                                      |
+|  12. play vars                                                          |
+|  13. play vars_prompt                                                   |
+|  14. play vars_files                                                    |
+|  15. role vars (defined in role/vars/main.yml)                          |
+|  16. block vars (only for tasks in block)                               |
+|  17. task vars (only for the task)                                      |
+|  18. include_vars                                                       |
+|  19. set_facts / registered vars                                        |
+|  20. role (and include_role) params                                     |
+|  21. include params                                                     |
+|  22. extra vars (for example, -e "user=admin")          <- HIGHEST       |
+|                                                                         |
+|  BEST PRACTICE:                                                         |
+|  +-- defaults/main.yml  -> Sane defaults (can be overridden)             |
+|  +-- vars/main.yml      -> Role-internal vars (rarely override)          |
+|  +-- group_vars/        -> Environment-specific values                   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Variable Organization
@@ -1902,49 +1902,49 @@ NODE_20_REALWORLD_PATTERNS = {
 ## Deployment Pattern Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DEPLOYMENT STRATEGIES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ROLLING DEPLOYMENT                                                     │
-│  ──────────────────                                                     │
-│  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐                           │
-│  │ v1  │  │ v1  │  │ v1  │  │ v1  │  │ v1  │  ← Start                  │
-│  └─────┘  └─────┘  └─────┘  └─────┘  └─────┘                           │
-│     ↓                                                                   │
-│  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐                           │
-│  │ v2  │  │ v2  │  │ v1  │  │ v1  │  │ v1  │  ← 2 at a time           │
-│  └─────┘  └─────┘  └─────┘  └─────┘  └─────┘                           │
-│                       ↓                                                 │
-│  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐                           │
-│  │ v2  │  │ v2  │  │ v2  │  │ v2  │  │ v2  │  ← Complete               │
-│  └─────┘  └─────┘  └─────┘  └─────┘  └─────┘                           │
-│                                                                         │
-│  BLUE/GREEN DEPLOYMENT                                                  │
-│  ─────────────────────                                                  │
-│  ┌─────────────────┐     ┌─────────────────┐                           │
-│  │   BLUE (v1)     │ ←─  │   Load          │  ← Traffic to Blue       │
-│  │   [Active]      │     │   Balancer      │                           │
-│  └─────────────────┘     └─────────────────┘                           │
-│  ┌─────────────────┐           │                                       │
-│  │   GREEN (v2)    │ ←─────────┘            ← Deploy to Green          │
-│  │   [Standby]     │     Switch traffic     ← Test, then switch       │
-│  └─────────────────┘                                                    │
-│                                                                         │
-│  CANARY DEPLOYMENT                                                      │
-│  ─────────────────                                                      │
-│  ┌───────────────────────────────────────┐                             │
-│  │             PRODUCTION (v1)           │ ← 90% traffic               │
-│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐     │                             │
-│  │  │ v1  │ │ v1  │ │ v1  │ │ v1  │     │                             │
-│  └───────────────────────────────────────┘                             │
-│  ┌───────────────┐                                                      │
-│  │  CANARY (v2)  │ ← 10% traffic, monitor                              │
-│  │  ┌─────┐      │                                                      │
-│  │  │ v2  │      │  If OK → Roll out to all                            │
-│  └───────────────┘  If BAD → Roll back                                  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DEPLOYMENT STRATEGIES                                |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ROLLING DEPLOYMENT                                                     |
+|  ------------------                                                     |
+|  +-----+  +-----+  +-----+  +-----+  +-----+                           |
+|  | v1  |  | v1  |  | v1  |  | v1  |  | v1  |  <- Start                  |
+|  +-----+  +-----+  +-----+  +-----+  +-----+                           |
+|     ↓                                                                   |
+|  +-----+  +-----+  +-----+  +-----+  +-----+                           |
+|  | v2  |  | v2  |  | v1  |  | v1  |  | v1  |  <- 2 at a time           |
+|  +-----+  +-----+  +-----+  +-----+  +-----+                           |
+|                       ↓                                                 |
+|  +-----+  +-----+  +-----+  +-----+  +-----+                           |
+|  | v2  |  | v2  |  | v2  |  | v2  |  | v2  |  <- Complete               |
+|  +-----+  +-----+  +-----+  +-----+  +-----+                           |
+|                                                                         |
+|  BLUE/GREEN DEPLOYMENT                                                  |
+|  ---------------------                                                  |
+|  +-----------------+     +-----------------+                           |
+|  |   BLUE (v1)     | <--  |   Load          |  <- Traffic to Blue       |
+|  |   [Active]      |     |   Balancer      |                           |
+|  +-----------------+     +-----------------+                           |
+|  +-----------------+           |                                       |
+|  |   GREEN (v2)    | <----------+            <- Deploy to Green          |
+|  |   [Standby]     |     Switch traffic     <- Test, then switch       |
+|  +-----------------+                                                    |
+|                                                                         |
+|  CANARY DEPLOYMENT                                                      |
+|  -----------------                                                      |
+|  +---------------------------------------+                             |
+|  |             PRODUCTION (v1)           | <- 90% traffic               |
+|  |  +-----+ +-----+ +-----+ +-----+     |                             |
+|  |  | v1  | | v1  | | v1  | | v1  |     |                             |
+|  +---------------------------------------+                             |
+|  +---------------+                                                      |
+|  |  CANARY (v2)  | <- 10% traffic, monitor                              |
+|  |  +-----+      |                                                      |
+|  |  | v2  |      |  If OK -> Roll out to all                            |
+|  +---------------+  If BAD -> Roll back                                  |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -2504,10 +2504,10 @@ Du har slutfört **Ansible Mastery SkillsMap**!
 ## Nästa Steg
 
 **Rekommenderade SkillsMaps:**
-- **Terraform** → Infrastructure as Code
-- **Kubernetes** → Container orchestration
-- **CI/CD Pipelines** → GitHub Actions, GitLab CI
-- **Monitoring** → Prometheus, Grafana
+- **Terraform** -> Infrastructure as Code
+- **Kubernetes** -> Container orchestration
+- **CI/CD Pipelines** -> GitHub Actions, GitLab CI
+- **Monitoring** -> Prometheus, Grafana
 ''',
 }
 

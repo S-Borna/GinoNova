@@ -39,17 +39,17 @@ Tänk dig: Det är fredag kväll. Monitoring larmar — CPU:n på din produktion
 En process är ett körande program. Varje gång du startar ett kommando skapar Linux en ny process.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        PROCESS                              │
-├─────────────────────────────────────────────────────────────┤
-│  PID: 1234              │  Unikt process-ID                │
-│  PPID: 1                │  Parent process ID               │
-│  UID: 1000              │  Användare som äger processen    │
-│  State: R (Running)     │  Aktuellt tillstånd              │
-│  CPU: 15%               │  Resursanvändning                │
-│  MEM: 2.5%              │  Minnesanvändning                │
-│  CMD: nginx             │  Kommandot som startade den      │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                        PROCESS                              |
++-------------------------------------------------------------+
+|  PID: 1234              |  Unikt process-ID                |
+|  PPID: 1                |  Parent process ID               |
+|  UID: 1000              |  Användare som äger processen    |
+|  State: R (Running)     |  Aktuellt tillstånd              |
+|  CPU: 15%               |  Resursanvändning                |
+|  MEM: 2.5%              |  Minnesanvändning                |
+|  CMD: nginx             |  Kommandot som startade den      |
++-------------------------------------------------------------+
 ```
 
 ### Process States (tillstånd)
@@ -260,12 +260,12 @@ pstree -c
 ### Output-exempel
 
 ```
-systemd─┬─ModemManager───2*[{ModemManager}]
-        ├─NetworkManager───2*[{NetworkManager}]
-        ├─dockerd───13*[{dockerd}]
-        ├─nginx───nginx───2*[nginx]
-        ├─sshd───sshd───sshd───bash───pstree
-        └─systemd───(sd-pam)
+systemd-+-ModemManager---2*[{ModemManager}]
+        +-NetworkManager---2*[{NetworkManager}]
+        +-dockerd---13*[{dockerd}]
+        +-nginx---nginx---2*[nginx]
+        +-sshd---sshd---sshd---bash---pstree
+        +-systemd---(sd-pam)
 ```
 
 **Pro Tip:** Om en process blir zombie, titta på dess parent (PPID) — det är parent som inte städar upp korrekt.
@@ -357,7 +357,7 @@ kill -9 1234
 Linux prioriterar processer med "nice"-värden:
 
 ```
--20 ←───────────────────────────────→ +19
+-20 <---------------------------------> +19
 HÖGST prioritet                LÄGST prioritet
 (elak mot andra)               (snäll mot andra)
 
@@ -641,31 +641,31 @@ Linux följer FHS (Filesystem Hierarchy Standard). Alla distros har samma grunds
 
 ```
 /
-├── bin/        → Essential binaries (ls, cp, mv)
-├── boot/       → Boot files, kernel
-├── dev/        → Device files
-├── etc/        → Configuration files (etcetera)
-├── home/       → User home directories
-├── lib/        → Shared libraries
-├── media/      → Removable media mount points
-├── mnt/        → Temporary mount points
-├── opt/        → Optional/third-party software
-├── proc/       → Virtual filesystem for processes
-├── root/       → Root user's home
-├── run/        → Runtime data
-├── sbin/       → System binaries (admin commands)
-├── srv/        → Service data
-├── sys/        → Virtual filesystem for kernel
-├── tmp/        → Temporary files
-├── usr/        → User programs and data
-│   ├── bin/    → User binaries
-│   ├── lib/    → User libraries
-│   ├── local/  → Locally installed software
-│   └── share/  → Shared data (docs, icons)
-└── var/        → Variable data (logs, caches)
-    ├── log/    → Log files
-    ├── cache/  → Application caches
-    └── www/    → Web server files
++-- bin/        -> Essential binaries (ls, cp, mv)
++-- boot/       -> Boot files, kernel
++-- dev/        -> Device files
++-- etc/        -> Configuration files (etcetera)
++-- home/       -> User home directories
++-- lib/        -> Shared libraries
++-- media/      -> Removable media mount points
++-- mnt/        -> Temporary mount points
++-- opt/        -> Optional/third-party software
++-- proc/       -> Virtual filesystem for processes
++-- root/       -> Root user's home
++-- run/        -> Runtime data
++-- sbin/       -> System binaries (admin commands)
++-- srv/        -> Service data
++-- sys/        -> Virtual filesystem for kernel
++-- tmp/        -> Temporary files
++-- usr/        -> User programs and data
+|   +-- bin/    -> User binaries
+|   +-- lib/    -> User libraries
+|   +-- local/  -> Locally installed software
+|   +-- share/  -> Shared data (docs, icons)
++-- var/        -> Variable data (logs, caches)
+    +-- log/    -> Log files
+    +-- cache/  -> Application caches
+    +-- www/    -> Web server files
 ```
 
 ### DevOps-kritiska directories
@@ -751,17 +751,17 @@ ls -lah
 
 ```
 -rw-r--r-- 1 user group 4.0K Dec  1 10:30 file.txt
-│├──┼──┼──┤ │  │    │     │      │         │
-││  │  │  │ │  │    │     │      │         └── Filename
-││  │  │  │ │  │    │     │      └── Modification time
-││  │  │  │ │  │    │     └── Size
-││  │  │  │ │  │    └── Group owner
-││  │  │  │ │  └── User owner
-││  │  │  │ └── Hard link count
-││  │  │  └── Others permissions (r-x)
-││  │  └── Group permissions (r-x)
-││  └── User permissions (rwx)
-│└── File type (- = file, d = dir, l = link)
+|+--+--+--+ |  |    |     |      |         |
+||  |  |  | |  |    |     |      |         +-- Filename
+||  |  |  | |  |    |     |      +-- Modification time
+||  |  |  | |  |    |     +-- Size
+||  |  |  | |  |    +-- Group owner
+||  |  |  | |  +-- User owner
+||  |  |  | +-- Hard link count
+||  |  |  +-- Others permissions (r-x)
+||  |  +-- Group permissions (r-x)
+||  +-- User permissions (rwx)
+|+-- File type (- = file, d = dir, l = link)
 ```
 
 ---
@@ -972,7 +972,7 @@ echo 'alias etc="cd /etc"' >> ~/.bashrc
 source ~/.bashrc
 
 # 2. Nu kan du bara skriva:
-logs    # → går till /var/log
+logs    # -> går till /var/log
 ```
 
 ---
@@ -1115,8 +1115,8 @@ cp -ruv ./dist/* /var/www/html/
 
 **Viktigt om trailing slash:**
 ```bash
-cp -r folder /dest/       # Kopierar folder TILL dest → /dest/folder/
-cp -r folder/ /dest/      # Kopierar INNEHÅLLET i folder → /dest/*
+cp -r folder /dest/       # Kopierar folder TILL dest -> /dest/folder/
+cp -r folder/ /dest/      # Kopierar INNEHÅLLET i folder -> /dest/*
 ```
 
 ---
@@ -1231,22 +1231,22 @@ rmdir -p path/to/empty/dirs/
 ### Förstå Inodes
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    INODE (metadata)                         │
-├─────────────────────────────────────────────────────────────┤
-│  Inode #: 12345                                            │
-│  Type: regular file                                        │
-│  Permissions: -rw-r--r--                                   │
-│  Owner: user                                               │
-│  Size: 4096 bytes                                          │
-│  Pointers to data blocks: [block1, block2, ...]            │
-└─────────────────────────────────────────────────────────────┘
-           │                          │
-           │                          │
-    ┌──────┴──────┐            ┌──────┴──────┐
-    │  file.txt   │            │  link.txt   │
-    │  (filename) │            │ (hard link) │
-    └─────────────┘            └─────────────┘
++-------------------------------------------------------------+
+|                    INODE (metadata)                         |
++-------------------------------------------------------------+
+|  Inode #: 12345                                            |
+|  Type: regular file                                        |
+|  Permissions: -rw-r--r--                                   |
+|  Owner: user                                               |
+|  Size: 4096 bytes                                          |
+|  Pointers to data blocks: [block1, block2, ...]            |
++-------------------------------------------------------------+
+           |                          |
+           |                          |
+    +------+------+            +------+------+
+    |  file.txt   |            |  link.txt   |
+    |  (filename) |            | (hard link) |
+    +-------------+            +-------------+
 ```
 
 ### Hard Links
@@ -1266,7 +1266,7 @@ ls -li original.txt hardlink.txt
 ```
 
 **Hard link egenskaper:**
-- Delar samma inode → exakt samma data
+- Delar samma inode -> exakt samma data
 - Om du raderar originalet finns datan kvar (så länge en link finns)
 - Kan INTE korsa filsystem
 - Kan INTE länka till kataloger (undantag: . och ..)
@@ -1436,34 +1436,34 @@ Du kan nu manipulera filer som ett proffs. Nästa node: **File Permissions** —
 ### Tre kategorier
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    FILE PERMISSIONS                          │
-├──────────────────────────────────────────────────────────────┤
-│                                                              │
-│   OWNER (u)          GROUP (g)         OTHERS (o)           │
-│   ─────────          ─────────         ──────────           │
-│   Användaren som     Alla användare    Alla andra           │
-│   äger filen         i filens grupp    på systemet          │
-│                                                              │
-│   rwx                rwx               rwx                   │
-│   ─┬─                ─┬─               ─┬─                   │
-│    │                  │                 │                    │
-│    ├─ r = read (läs)  │                 │                    │
-│    ├─ w = write       │                 │                    │
-│    └─ x = execute     │                 │                    │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------+
+|                    FILE PERMISSIONS                          |
++--------------------------------------------------------------+
+|                                                              |
+|   OWNER (u)          GROUP (g)         OTHERS (o)           |
+|   ---------          ---------         ----------           |
+|   Användaren som     Alla användare    Alla andra           |
+|   äger filen         i filens grupp    på systemet          |
+|                                                              |
+|   rwx                rwx               rwx                   |
+|   -+-                -+-               -+-                   |
+|    |                  |                 |                    |
+|    +- r = read (läs)  |                 |                    |
+|    +- w = write       |                 |                    |
+|    +- x = execute     |                 |                    |
+|                                                              |
++--------------------------------------------------------------+
 ```
 
 ### Tolka permissions
 
 ```bash
 -rwxr-xr-- 1 user group 4096 Dec 1 10:30 script.sh
-│└┬┘└┬┘└┬┘
-│ │  │  └── Others: r-- (read only)
-│ │  └───── Group:  r-x (read + execute)
-│ └──────── Owner:  rwx (read + write + execute)
-└────────── Type:   - (regular file)
+|+++++++++
+| |  |  +-- Others: r-- (read only)
+| |  +----- Group:  r-x (read + execute)
+| +-------- Owner:  rwx (read + write + execute)
++---------- Type:   - (regular file)
 
 File types:
 -  = regular file
@@ -2409,10 +2409,10 @@ nano -Y sh script.sh
 ### Markering
 
 ```
-Alt+A    → Starta markering
-(flytta) → Markera text
-^K       → Klipp ut
-^U       → Klistra in
+Alt+A    -> Starta markering
+(flytta) -> Markera text
+^K       -> Klipp ut
+^U       -> Klistra in
 ```
 
 ### ~/.nanorc konfiguration
@@ -2446,49 +2446,49 @@ Vim är kraftfull men har en inlärningskurva. Det viktigaste: Vim har MODES.
 ### Modes (KRITISKT att förstå)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        VIM MODES                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   NORMAL MODE (default)                                     │
-│   ──────────────────────                                    │
-│   Du startar här. Navigera, ta bort, kopiera.               │
-│   Tryck ESC för att återgå hit.                            │
-│                                                             │
-│           │                                                 │
-│           │ i, a, o                                         │
-│           ▼                                                 │
-│   INSERT MODE                                               │
-│   ───────────                                               │
-│   Skriv text som vanligt.                                   │
-│   Tryck ESC för att gå tillbaka till Normal.               │
-│                                                             │
-│           │                                                 │
-│           │ ESC → :                                         │
-│           ▼                                                 │
-│   COMMAND MODE                                              │
-│   ────────────                                              │
-│   Spara, avsluta, söka.                                    │
-│   :w, :q, :wq                                              │
-│                                                             │
-│           │                                                 │
-│           │ v, V, Ctrl+v                                    │
-│           ▼                                                 │
-│   VISUAL MODE                                               │
-│   ───────────                                               │
-│   Markera text.                                            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                        VIM MODES                            |
++-------------------------------------------------------------+
+|                                                             |
+|   NORMAL MODE (default)                                     |
+|   ----------------------                                    |
+|   Du startar här. Navigera, ta bort, kopiera.               |
+|   Tryck ESC för att återgå hit.                            |
+|                                                             |
+|           |                                                 |
+|           | i, a, o                                         |
+|           ▼                                                 |
+|   INSERT MODE                                               |
+|   -----------                                               |
+|   Skriv text som vanligt.                                   |
+|   Tryck ESC för att gå tillbaka till Normal.               |
+|                                                             |
+|           |                                                 |
+|           | ESC -> :                                         |
+|           ▼                                                 |
+|   COMMAND MODE                                              |
+|   ------------                                              |
+|   Spara, avsluta, söka.                                    |
+|   :w, :q, :wq                                              |
+|                                                             |
+|           |                                                 |
+|           | v, V, Ctrl+v                                    |
+|           ▼                                                 |
+|   VISUAL MODE                                               |
+|   -----------                                               |
+|   Markera text.                                            |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Det viktigaste: Avsluta Vim!
 
 ```
-:q      → Avsluta (om inga ändringar)
-:q!     → Avsluta utan att spara (force)
-:w      → Spara
-:wq     → Spara och avsluta
-ZZ      → Spara och avsluta (snabbare)
+:q      -> Avsluta (om inga ändringar)
+:q!     -> Avsluta utan att spara (force)
+:w      -> Spara
+:wq     -> Spara och avsluta
+ZZ      -> Spara och avsluta (snabbare)
 ```
 
 ### In i Insert Mode
@@ -2505,78 +2505,78 @@ ZZ      → Spara och avsluta (snabbare)
 ### Navigation i Normal Mode
 
 ```
-h j k l     → Vänster, Ner, Upp, Höger
-w           → Nästa ord
-b           → Föregående ord
-e           → Slutet av ord
-0           → Början av rad
-$           → Slutet av rad
-gg          → Första raden
-G           → Sista raden
-10G         → Gå till rad 10
-Ctrl+f      → Sida framåt
-Ctrl+b      → Sida bakåt
+h j k l     -> Vänster, Ner, Upp, Höger
+w           -> Nästa ord
+b           -> Föregående ord
+e           -> Slutet av ord
+0           -> Början av rad
+$           -> Slutet av rad
+gg          -> Första raden
+G           -> Sista raden
+10G         -> Gå till rad 10
+Ctrl+f      -> Sida framåt
+Ctrl+b      -> Sida bakåt
 ```
 
 ### Radera i Normal Mode
 
 ```
-x           → Radera tecken under cursor
-X           → Radera tecken före cursor
-dd          → Radera rad
-dw          → Radera ord
-d$          → Radera till slutet av rad
-d0          → Radera till början av rad
-D           → Samma som d$
-5dd         → Radera 5 rader
+x           -> Radera tecken under cursor
+X           -> Radera tecken före cursor
+dd          -> Radera rad
+dw          -> Radera ord
+d$          -> Radera till slutet av rad
+d0          -> Radera till början av rad
+D           -> Samma som d$
+5dd         -> Radera 5 rader
 ```
 
 ### Kopiera och klistra
 
 ```
-yy          → Kopiera (yank) rad
-yw          → Kopiera ord
-y$          → Kopiera till slutet
-5yy         → Kopiera 5 rader
-p           → Klistra efter
-P           → Klistra före
+yy          -> Kopiera (yank) rad
+yw          -> Kopiera ord
+y$          -> Kopiera till slutet
+5yy         -> Kopiera 5 rader
+p           -> Klistra efter
+P           -> Klistra före
 ```
 
 ### Undo / Redo
 
 ```
-u           → Undo
-Ctrl+r      → Redo
-.           → Upprepa senaste kommando
+u           -> Undo
+Ctrl+r      -> Redo
+.           -> Upprepa senaste kommando
 ```
 
 ### Sök och ersätt
 
 ```
-/pattern    → Sök framåt
-?pattern    → Sök bakåt
-n           → Nästa träff
-N           → Föregående träff
-*           → Sök ord under cursor
+/pattern    -> Sök framåt
+?pattern    -> Sök bakåt
+n           -> Nästa träff
+N           -> Föregående träff
+*           -> Sök ord under cursor
 
-:s/old/new/         → Ersätt första på rad
-:s/old/new/g        → Ersätt alla på rad
-:%s/old/new/g       → Ersätt alla i fil
-:%s/old/new/gc      → Med bekräftelse
+:s/old/new/         -> Ersätt första på rad
+:s/old/new/g        -> Ersätt alla på rad
+:%s/old/new/g       -> Ersätt alla i fil
+:%s/old/new/gc      -> Med bekräftelse
 ```
 
 ### Visual Mode
 
 ```
-v           → Markera tecken
-V           → Markera rader
-Ctrl+v      → Block-markering
+v           -> Markera tecken
+V           -> Markera rader
+Ctrl+v      -> Block-markering
 
 (efter markering):
-d           → Radera
-y           → Kopiera
->           → Indentera
-<           → Outdent
+d           -> Radera
+y           -> Kopiera
+>           -> Indentera
+<           -> Outdent
 ```
 
 ### ~/.vimrc konfiguration
@@ -2619,18 +2619,18 @@ EOF
 ### Vim Survival Cheatsheet
 
 ```
-┌────────────────────────────────────────────────┐
-│              VIM SURVIVAL GUIDE                │
-├────────────────────────────────────────────────┤
-│ ESC        → Tillbaka till Normal mode         │
-│ :q!        → PANIC EXIT (utan att spara)       │
-│ :wq        → Spara och avsluta                 │
-│ i          → Börja skriva                      │
-│ dd         → Radera rad                        │
-│ u          → Undo                              │
-│ /text      → Sök                               │
-│ :set nu    → Visa radnummer                    │
-└────────────────────────────────────────────────┘
++------------------------------------------------+
+|              VIM SURVIVAL GUIDE                |
++------------------------------------------------+
+| ESC        -> Tillbaka till Normal mode         |
+| :q!        -> PANIC EXIT (utan att spara)       |
+| :wq        -> Spara och avsluta                 |
+| i          -> Börja skriva                      |
+| dd         -> Radera rad                        |
+| u          -> Undo                              |
+| /text      -> Sök                               |
+| :set nu    -> Visa radnummer                    |
++------------------------------------------------+
 ```
 
 ---
@@ -2754,18 +2754,18 @@ Du kan nu redigera filer på vilken server som helst. Nästa node: **I/O Redirec
 Varje process har tre standard-strömmar:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     PROCESS                                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   stdin (0)  ──────►  [COMMAND]  ──────► stdout (1)        │
-│   (input)                │               (output)           │
-│                          │                                  │
-│                          ▼                                  │
-│                     stderr (2)                              │
-│                     (errors)                                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                     PROCESS                                 |
++-------------------------------------------------------------+
+|                                                             |
+|   stdin (0)  ------►  [COMMAND]  ------► stdout (1)        |
+|   (input)                |               (output)           |
+|                          |                                  |
+|                          ▼                                  |
+|                     stderr (2)                              |
+|                     (errors)                                |
+|                                                             |
++-------------------------------------------------------------+
 
 File Descriptors:
 0 = stdin  (standard input)
@@ -2899,7 +2899,7 @@ du -h /var/log/* | sort -rh | head -10
 ### Pipeline-mönster
 
 ```bash
-# Filtrera → Transformera → Aggregera
+# Filtrera -> Transformera -> Aggregera
 cat data.csv | grep "active" | cut -d',' -f2 | sort | uniq -c
 
 # Log-analys
@@ -3097,7 +3097,7 @@ cat /tmp/xargs_test/*.txt
 | `<` | Input från fil |
 | `<<` | Here document |
 | `<<<` | Here string |
-| `\|` | Pipe (stdout → stdin) |
+| `\|` | Pipe (stdout -> stdin) |
 | `tee` | Split till fil + stdout |
 | `xargs` | Bygg kommandon från input |
 | `<()` | Process substitution |
@@ -3127,20 +3127,20 @@ Du behärskar nu dataflöden i Linux. Nästa node: **User Management** — hante
 ## Förstå Användarsystemet
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   LINUX USER MODEL                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   /etc/passwd     → Användarinfo (namn, UID, shell)        │
-│   /etc/shadow     → Krypterade lösenord                    │
-│   /etc/group      → Gruppdefinitioner                      │
-│   /etc/gshadow    → Grupplösenord                          │
-│                                                             │
-│   UID 0           → root (superuser)                       │
-│   UID 1-999       → System/service accounts                │
-│   UID 1000+       → Vanliga användare                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                   LINUX USER MODEL                          |
++-------------------------------------------------------------+
+|                                                             |
+|   /etc/passwd     -> Användarinfo (namn, UID, shell)        |
+|   /etc/shadow     -> Krypterade lösenord                    |
+|   /etc/group      -> Gruppdefinitioner                      |
+|   /etc/gshadow    -> Grupplösenord                          |
+|                                                             |
+|   UID 0           -> root (superuser)                       |
+|   UID 1-999       -> System/service accounts                |
+|   UID 1000+       -> Vanliga användare                      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### /etc/passwd format
@@ -3482,17 +3482,17 @@ Du kan nu hantera användare och grupper. Nästa node: **Package Management** �
 ## Pakethanterare per Distribution
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              PACKAGE MANAGERS BY DISTRO                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Debian/Ubuntu          →  apt, apt-get, dpkg             │
-│   RHEL/CentOS/Fedora     →  dnf, yum, rpm                  │
-│   Arch                   →  pacman                          │
-│   Alpine                 →  apk                             │
-│   Universal              →  snap, flatpak                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              PACKAGE MANAGERS BY DISTRO                     |
++-------------------------------------------------------------+
+|                                                             |
+|   Debian/Ubuntu          ->  apt, apt-get, dpkg             |
+|   RHEL/CentOS/Fedora     ->  dnf, yum, rpm                  |
+|   Arch                   ->  pacman                          |
+|   Alpine                 ->  apk                             |
+|   Universal              ->  snap, flatpak                   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -3740,22 +3740,22 @@ Du kan nu installera programvara. Nästa node: **Service Management** — hanter
 ## Förstå systemd
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      SYSTEMD                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   PID 1 (init system)                                      │
-│      │                                                     │
-│      ├── Services (.service)  → nginx, postgresql, sshd   │
-│      ├── Sockets (.socket)    → Activation triggers        │
-│      ├── Timers (.timer)      → Cron-liknande              │
-│      ├── Mounts (.mount)      → Filsystem                  │
-│      └── Targets (.target)    → Boot stages                │
-│                                                             │
-│   Unit files: /etc/systemd/system/                         │
-│               /lib/systemd/system/                          │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      SYSTEMD                                |
++-------------------------------------------------------------+
+|                                                             |
+|   PID 1 (init system)                                      |
+|      |                                                     |
+|      +-- Services (.service)  -> nginx, postgresql, sshd   |
+|      +-- Sockets (.socket)    -> Activation triggers        |
+|      +-- Timers (.timer)      -> Cron-liknande              |
+|      +-- Mounts (.mount)      -> Filsystem                  |
+|      +-- Targets (.target)    -> Boot stages                |
+|                                                             |
+|   Unit files: /etc/systemd/system/                         |
+|               /lib/systemd/system/                          |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -4063,9 +4063,9 @@ tmpfs           4.0G     0  4.0G   0% /dev/shm
 ```
 
 **Varningsnivåer:**
-- 80%+ → Börja planera expansion
-- 90%+ → Kritiskt, åtgärda nu
-- 95%+ → Akut, system kan sluta fungera
+- 80%+ -> Börja planera expansion
+- 90%+ -> Kritiskt, åtgärda nu
+- 95%+ -> Akut, system kan sluta fungera
 
 ### du — Disk Usage
 
@@ -4123,11 +4123,11 @@ sudo parted -l
 $ lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   100G  0 disk
-├─sda1   8:1    0    50G  0 part /
-├─sda2   8:2    0    48G  0 part /home
-└─sda3   8:3    0     2G  0 part [SWAP]
++-sda1   8:1    0    50G  0 part /
++-sda2   8:2    0    48G  0 part /home
++-sda3   8:3    0     2G  0 part [SWAP]
 sdb      8:16   0   500G  0 disk
-└─sdb1   8:17   0   500G  0 part /data
++-sdb1   8:17   0   500G  0 part /data
 ```
 
 ### Skapa partition (fdisk)
@@ -4137,12 +4137,12 @@ sdb      8:16   0   500G  0 disk
 sudo fdisk /dev/sdb
 
 # Kommandon i fdisk:
-# n → New partition
-# p → Primary
-# 1 → Partition number
-# Enter → Default first sector
-# +50G → Size
-# w → Write and exit
+# n -> New partition
+# p -> Primary
+# 1 -> Partition number
+# Enter -> Default first sector
+# +50G -> Size
+# w -> Write and exit
 ```
 
 ---
@@ -4235,22 +4235,22 @@ sudo mount -a
 LVM ger flexibilitet att ändra storlek utan att röra partitioner.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         LVM STRUCTURE                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Physical Disks:    /dev/sda    /dev/sdb    /dev/sdc      │
-│                          │           │           │          │
-│   Physical Volumes:     pv1        pv2        pv3          │
-│                          └───────────┼───────────┘          │
-│                                      │                      │
-│   Volume Group:            ┌─────── vg_data ───────┐       │
-│                            │                       │        │
-│   Logical Volumes:     lv_home                 lv_var      │
-│                            │                       │        │
-│   Mount Points:        /home                   /var        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         LVM STRUCTURE                        |
++-------------------------------------------------------------+
+|                                                             |
+|   Physical Disks:    /dev/sda    /dev/sdb    /dev/sdc      |
+|                          |           |           |          |
+|   Physical Volumes:     pv1        pv2        pv3          |
+|                          +-----------+-----------+          |
+|                                      |                      |
+|   Volume Group:            +------- vg_data -------+       |
+|                            |                       |        |
+|   Logical Volumes:     lv_home                 lv_var      |
+|                            |                       |        |
+|   Mount Points:        /home                   /var        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### LVM-kommandon
@@ -4649,28 +4649,28 @@ Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** —
 ## Så fungerar DNS
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     DNS RESOLUTION                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   User: "google.com"                                        │
-│          │                                                  │
-│          ▼                                                  │
-│   1. Check /etc/hosts                                       │
-│          │ (not found)                                      │
-│          ▼                                                  │
-│   2. Check local DNS cache                                  │
-│          │ (not found)                                      │
-│          ▼                                                  │
-│   3. Query DNS resolver (/etc/resolv.conf)                  │
-│          │                                                  │
-│          ▼                                                  │
-│   4. Resolver → Root servers → .com → google.com           │
-│          │                                                  │
-│          ▼                                                  │
-│   5. Return IP: 142.250.185.78                             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                     DNS RESOLUTION                          |
++-------------------------------------------------------------+
+|                                                             |
+|   User: "google.com"                                        |
+|          |                                                  |
+|          ▼                                                  |
+|   1. Check /etc/hosts                                       |
+|          | (not found)                                      |
+|          ▼                                                  |
+|   2. Check local DNS cache                                  |
+|          | (not found)                                      |
+|          ▼                                                  |
+|   3. Query DNS resolver (/etc/resolv.conf)                  |
+|          |                                                  |
+|          ▼                                                  |
+|   4. Resolver -> Root servers -> .com -> google.com           |
+|          |                                                  |
+|          ▼                                                  |
+|   5. Return IP: 142.250.185.78                             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -4679,13 +4679,13 @@ Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** —
 
 | Record | Syfte | Exempel |
 |--------|-------|---------|
-| A | IPv4-adress | example.com → 93.184.216.34 |
-| AAAA | IPv6-adress | example.com → 2606:2800:220:1:... |
-| CNAME | Alias | www.example.com → example.com |
-| MX | Mail server | example.com → mail.example.com |
+| A | IPv4-adress | example.com -> 93.184.216.34 |
+| AAAA | IPv6-adress | example.com -> 2606:2800:220:1:... |
+| CNAME | Alias | www.example.com -> example.com |
+| MX | Mail server | example.com -> mail.example.com |
 | TXT | Text (SPF, DKIM) | "v=spf1 include:..." |
-| NS | Nameservers | example.com → ns1.example.com |
-| PTR | Reverse lookup | IP → hostname |
+| NS | Nameservers | example.com -> ns1.example.com |
+| PTR | Reverse lookup | IP -> hostname |
 
 ---
 
@@ -4827,11 +4827,11 @@ sudo systemd-resolve --flush-caches
 ```bash
 # 1. Testa med IP (bypass DNS)
 ping 8.8.8.8
-# Funkar? → Problem är DNS, inte nätverk
+# Funkar? -> Problem är DNS, inte nätverk
 
 # 2. Testa DNS-resolution
 dig @8.8.8.8 example.com
-# Funkar? → Lokal resolver är problemet
+# Funkar? -> Lokal resolver är problemet
 
 # 3. Kolla resolv.conf
 cat /etc/resolv.conf
@@ -4887,18 +4887,18 @@ Du förstår nu DNS. Nästa node: **Firewall** — kontrollera nätverkstrafik.
 ## Firewall-verktyg
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              LINUX FIREWALL LANDSCAPE                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   iptables     → Klassiskt, kraftfullt, komplext           │
-│   nftables     → Modern ersättare för iptables             │
-│   ufw          → Ubuntu Firewall (frontend för iptables)   │
-│   firewalld    → RHEL/CentOS (frontend för nftables)       │
-│                                                             │
-│   Kernel: netfilter (underliggande)                        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              LINUX FIREWALL LANDSCAPE                       |
++-------------------------------------------------------------+
+|                                                             |
+|   iptables     -> Klassiskt, kraftfullt, komplext           |
+|   nftables     -> Modern ersättare för iptables             |
+|   ufw          -> Ubuntu Firewall (frontend för iptables)   |
+|   firewalld    -> RHEL/CentOS (frontend för nftables)       |
+|                                                             |
+|   Kernel: netfilter (underliggande)                        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -5009,15 +5009,15 @@ sudo iptables -L INPUT -n -v
 ### Chains
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    IPTABLES CHAINS                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   INPUT       → Trafik TO this server                      │
-│   OUTPUT      → Trafik FROM this server                    │
-│   FORWARD     → Trafik THROUGH this server (routing)       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    IPTABLES CHAINS                          |
++-------------------------------------------------------------+
+|                                                             |
+|   INPUT       -> Trafik TO this server                      |
+|   OUTPUT      -> Trafik FROM this server                    |
+|   FORWARD     -> Trafik THROUGH this server (routing)       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Grundläggande regler
@@ -5276,7 +5276,7 @@ rsync -avz --progress source/ user@hostname:/destination/
 ```bash
 # Syntax: ssh -L local_port:remote_host:remote_port
 
-# Databas på remote server (port 5432) → localhost:5432
+# Databas på remote server (port 5432) -> localhost:5432
 ssh -L 5432:localhost:5432 user@dbserver
 
 # Nu kan du ansluta lokalt:
@@ -5290,7 +5290,7 @@ Exponera lokal service till remote.
 ```bash
 # Syntax: ssh -R remote_port:local_host:local_port
 
-# Din lokala port 3000 → remote port 8080
+# Din lokala port 3000 -> remote port 8080
 ssh -R 8080:localhost:3000 user@server
 ```
 
@@ -5455,7 +5455,7 @@ tar -xzvf archive.tar.gz path/to/file.txt
 
 ```bash
 # Komprimera (ersätter original)
-gzip file.txt           # → file.txt.gz
+gzip file.txt           # -> file.txt.gz
 
 # Behåll original
 gzip -k file.txt
@@ -5471,14 +5471,14 @@ gzip -l file.txt.gz
 ### bzip2 / bunzip2
 
 ```bash
-bzip2 file.txt          # → file.txt.bz2
+bzip2 file.txt          # -> file.txt.bz2
 bunzip2 file.txt.bz2
 ```
 
 ### xz
 
 ```bash
-xz file.txt             # → file.txt.xz
+xz file.txt             # -> file.txt.xz
 xz -d file.txt.xz
 ```
 
@@ -5576,12 +5576,12 @@ Du kan nu arkivera och komprimera. Nästa node: **Cron & Scheduling** — automa
 ### Syntax
 
 ```
-┌───────────── minute (0-59)
-│ ┌───────────── hour (0-23)
-│ │ ┌───────────── day of month (1-31)
-│ │ │ ┌───────────── month (1-12)
-│ │ │ │ ┌───────────── day of week (0-6, 0=Sunday)
-│ │ │ │ │
++------------- minute (0-59)
+| +------------- hour (0-23)
+| | +------------- day of month (1-31)
+| | | +------------- month (1-12)
+| | | | +------------- day of week (0-6, 0=Sunday)
+| | | | |
 * * * * * command
 ```
 
@@ -6100,13 +6100,13 @@ Du kan nu övervaka prestanda. Nästa node: **Troubleshooting** — felsökning 
 ## Systematisk Approach
 
 ```
-1. IDENTIFY  → Vad är symptomen?
-2. REPRODUCE → Kan du återskapa?
-3. ISOLATE   → Var är problemet?
-4. ANALYZE   → Varför händer det?
-5. FIX       → Åtgärda
-6. VERIFY    → Bekräfta fix
-7. DOCUMENT  → Skriv ner
+1. IDENTIFY  -> Vad är symptomen?
+2. REPRODUCE -> Kan du återskapa?
+3. ISOLATE   -> Var är problemet?
+4. ANALYZE   -> Varför händer det?
+5. FIX       -> Åtgärda
+6. VERIFY    -> Bekräfta fix
+7. DOCUMENT  -> Skriv ner
 ```
 
 ---
@@ -6328,7 +6328,7 @@ Du kan nu:
 - Automatisera med cron
 - Analysera loggar och prestanda
 
-**Nästa steg:** Docker SkillsMap → Containerisering
+**Nästa steg:** Docker SkillsMap -> Containerisering
 
 > 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """
@@ -6355,17 +6355,17 @@ Tänk dig: Det är fredag kväll. Monitoring larmar — CPU:n på din produktion
 En process är ett körande program. Varje gång du startar ett kommando skapar Linux en ny process.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        PROCESS                              │
-├─────────────────────────────────────────────────────────────┤
-│  PID: 1234              │  Unikt process-ID                │
-│  PPID: 1                │  Parent process ID               │
-│  UID: 1000              │  Användare som äger processen    │
-│  State: R (Running)     │  Aktuellt tillstånd              │
-│  CPU: 15%               │  Resursanvändning                │
-│  MEM: 2.5%              │  Minnesanvändning                │
-│  CMD: nginx             │  Kommandot som startade den      │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                        PROCESS                              |
++-------------------------------------------------------------+
+|  PID: 1234              |  Unikt process-ID                |
+|  PPID: 1                |  Parent process ID               |
+|  UID: 1000              |  Användare som äger processen    |
+|  State: R (Running)     |  Aktuellt tillstånd              |
+|  CPU: 15%               |  Resursanvändning                |
+|  MEM: 2.5%              |  Minnesanvändning                |
+|  CMD: nginx             |  Kommandot som startade den      |
++-------------------------------------------------------------+
 ```
 
 ### Process States (tillstånd)
@@ -6576,12 +6576,12 @@ pstree -c
 ### Output-exempel
 
 ```
-systemd─┬─ModemManager───2*[{ModemManager}]
-        ├─NetworkManager───2*[{NetworkManager}]
-        ├─dockerd───13*[{dockerd}]
-        ├─nginx───nginx───2*[nginx]
-        ├─sshd───sshd───sshd───bash───pstree
-        └─systemd───(sd-pam)
+systemd-+-ModemManager---2*[{ModemManager}]
+        +-NetworkManager---2*[{NetworkManager}]
+        +-dockerd---13*[{dockerd}]
+        +-nginx---nginx---2*[nginx]
+        +-sshd---sshd---sshd---bash---pstree
+        +-systemd---(sd-pam)
 ```
 
 **Pro Tip:** Om en process blir zombie, titta på dess parent (PPID) — det är parent som inte städar upp korrekt.
@@ -6673,7 +6673,7 @@ kill -9 1234
 Linux prioriterar processer med "nice"-värden:
 
 ```
--20 ←───────────────────────────────→ +19
+-20 <---------------------------------> +19
 HÖGST prioritet                LÄGST prioritet
 (elak mot andra)               (snäll mot andra)
 
@@ -6957,31 +6957,31 @@ Linux följer FHS (Filesystem Hierarchy Standard). Alla distros har samma grunds
 
 ```
 /
-├── bin/        → Essential binaries (ls, cp, mv)
-├── boot/       → Boot files, kernel
-├── dev/        → Device files
-├── etc/        → Configuration files (etcetera)
-├── home/       → User home directories
-├── lib/        → Shared libraries
-├── media/      → Removable media mount points
-├── mnt/        → Temporary mount points
-├── opt/        → Optional/third-party software
-├── proc/       → Virtual filesystem for processes
-├── root/       → Root user's home
-├── run/        → Runtime data
-├── sbin/       → System binaries (admin commands)
-├── srv/        → Service data
-├── sys/        → Virtual filesystem for kernel
-├── tmp/        → Temporary files
-├── usr/        → User programs and data
-│   ├── bin/    → User binaries
-│   ├── lib/    → User libraries
-│   ├── local/  → Locally installed software
-│   └── share/  → Shared data (docs, icons)
-└── var/        → Variable data (logs, caches)
-    ├── log/    → Log files
-    ├── cache/  → Application caches
-    └── www/    → Web server files
++-- bin/        -> Essential binaries (ls, cp, mv)
++-- boot/       -> Boot files, kernel
++-- dev/        -> Device files
++-- etc/        -> Configuration files (etcetera)
++-- home/       -> User home directories
++-- lib/        -> Shared libraries
++-- media/      -> Removable media mount points
++-- mnt/        -> Temporary mount points
++-- opt/        -> Optional/third-party software
++-- proc/       -> Virtual filesystem for processes
++-- root/       -> Root user's home
++-- run/        -> Runtime data
++-- sbin/       -> System binaries (admin commands)
++-- srv/        -> Service data
++-- sys/        -> Virtual filesystem for kernel
++-- tmp/        -> Temporary files
++-- usr/        -> User programs and data
+|   +-- bin/    -> User binaries
+|   +-- lib/    -> User libraries
+|   +-- local/  -> Locally installed software
+|   +-- share/  -> Shared data (docs, icons)
++-- var/        -> Variable data (logs, caches)
+    +-- log/    -> Log files
+    +-- cache/  -> Application caches
+    +-- www/    -> Web server files
 ```
 
 ### DevOps-kritiska directories
@@ -7067,17 +7067,17 @@ ls -lah
 
 ```
 -rw-r--r-- 1 user group 4.0K Dec  1 10:30 file.txt
-│├──┼──┼──┤ │  │    │     │      │         │
-││  │  │  │ │  │    │     │      │         └── Filename
-││  │  │  │ │  │    │     │      └── Modification time
-││  │  │  │ │  │    │     └── Size
-││  │  │  │ │  │    └── Group owner
-││  │  │  │ │  └── User owner
-││  │  │  │ └── Hard link count
-││  │  │  └── Others permissions (r-x)
-││  │  └── Group permissions (r-x)
-││  └── User permissions (rwx)
-│└── File type (- = file, d = dir, l = link)
+|+--+--+--+ |  |    |     |      |         |
+||  |  |  | |  |    |     |      |         +-- Filename
+||  |  |  | |  |    |     |      +-- Modification time
+||  |  |  | |  |    |     +-- Size
+||  |  |  | |  |    +-- Group owner
+||  |  |  | |  +-- User owner
+||  |  |  | +-- Hard link count
+||  |  |  +-- Others permissions (r-x)
+||  |  +-- Group permissions (r-x)
+||  +-- User permissions (rwx)
+|+-- File type (- = file, d = dir, l = link)
 ```
 
 ---
@@ -7288,7 +7288,7 @@ echo 'alias etc="cd /etc"' >> ~/.bashrc
 source ~/.bashrc
 
 # 2. Nu kan du bara skriva:
-logs    # → går till /var/log
+logs    # -> går till /var/log
 ```
 
 ---
@@ -7431,8 +7431,8 @@ cp -ruv ./dist/* /var/www/html/
 
 **Viktigt om trailing slash:**
 ```bash
-cp -r folder /dest/       # Kopierar folder TILL dest → /dest/folder/
-cp -r folder/ /dest/      # Kopierar INNEHÅLLET i folder → /dest/*
+cp -r folder /dest/       # Kopierar folder TILL dest -> /dest/folder/
+cp -r folder/ /dest/      # Kopierar INNEHÅLLET i folder -> /dest/*
 ```
 
 ---
@@ -7547,22 +7547,22 @@ rmdir -p path/to/empty/dirs/
 ### Förstå Inodes
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    INODE (metadata)                         │
-├─────────────────────────────────────────────────────────────┤
-│  Inode #: 12345                                            │
-│  Type: regular file                                        │
-│  Permissions: -rw-r--r--                                   │
-│  Owner: user                                               │
-│  Size: 4096 bytes                                          │
-│  Pointers to data blocks: [block1, block2, ...]            │
-└─────────────────────────────────────────────────────────────┘
-           │                          │
-           │                          │
-    ┌──────┴──────┐            ┌──────┴──────┐
-    │  file.txt   │            │  link.txt   │
-    │  (filename) │            │ (hard link) │
-    └─────────────┘            └─────────────┘
++-------------------------------------------------------------+
+|                    INODE (metadata)                         |
++-------------------------------------------------------------+
+|  Inode #: 12345                                            |
+|  Type: regular file                                        |
+|  Permissions: -rw-r--r--                                   |
+|  Owner: user                                               |
+|  Size: 4096 bytes                                          |
+|  Pointers to data blocks: [block1, block2, ...]            |
++-------------------------------------------------------------+
+           |                          |
+           |                          |
+    +------+------+            +------+------+
+    |  file.txt   |            |  link.txt   |
+    |  (filename) |            | (hard link) |
+    +-------------+            +-------------+
 ```
 
 ### Hard Links
@@ -7582,7 +7582,7 @@ ls -li original.txt hardlink.txt
 ```
 
 **Hard link egenskaper:**
-- Delar samma inode → exakt samma data
+- Delar samma inode -> exakt samma data
 - Om du raderar originalet finns datan kvar (så länge en link finns)
 - Kan INTE korsa filsystem
 - Kan INTE länka till kataloger (undantag: . och ..)
@@ -7752,34 +7752,34 @@ Du kan nu manipulera filer som ett proffs. Nästa node: **File Permissions** —
 ### Tre kategorier
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    FILE PERMISSIONS                          │
-├──────────────────────────────────────────────────────────────┤
-│                                                              │
-│   OWNER (u)          GROUP (g)         OTHERS (o)           │
-│   ─────────          ─────────         ──────────           │
-│   Användaren som     Alla användare    Alla andra           │
-│   äger filen         i filens grupp    på systemet          │
-│                                                              │
-│   rwx                rwx               rwx                   │
-│   ─┬─                ─┬─               ─┬─                   │
-│    │                  │                 │                    │
-│    ├─ r = read (läs)  │                 │                    │
-│    ├─ w = write       │                 │                    │
-│    └─ x = execute     │                 │                    │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
++--------------------------------------------------------------+
+|                    FILE PERMISSIONS                          |
++--------------------------------------------------------------+
+|                                                              |
+|   OWNER (u)          GROUP (g)         OTHERS (o)           |
+|   ---------          ---------         ----------           |
+|   Användaren som     Alla användare    Alla andra           |
+|   äger filen         i filens grupp    på systemet          |
+|                                                              |
+|   rwx                rwx               rwx                   |
+|   -+-                -+-               -+-                   |
+|    |                  |                 |                    |
+|    +- r = read (läs)  |                 |                    |
+|    +- w = write       |                 |                    |
+|    +- x = execute     |                 |                    |
+|                                                              |
++--------------------------------------------------------------+
 ```
 
 ### Tolka permissions
 
 ```bash
 -rwxr-xr-- 1 user group 4096 Dec 1 10:30 script.sh
-│└┬┘└┬┘└┬┘
-│ │  │  └── Others: r-- (read only)
-│ │  └───── Group:  r-x (read + execute)
-│ └──────── Owner:  rwx (read + write + execute)
-└────────── Type:   - (regular file)
+|+++++++++
+| |  |  +-- Others: r-- (read only)
+| |  +----- Group:  r-x (read + execute)
+| +-------- Owner:  rwx (read + write + execute)
++---------- Type:   - (regular file)
 
 File types:
 -  = regular file
@@ -8725,10 +8725,10 @@ nano -Y sh script.sh
 ### Markering
 
 ```
-Alt+A    → Starta markering
-(flytta) → Markera text
-^K       → Klipp ut
-^U       → Klistra in
+Alt+A    -> Starta markering
+(flytta) -> Markera text
+^K       -> Klipp ut
+^U       -> Klistra in
 ```
 
 ### ~/.nanorc konfiguration
@@ -8762,49 +8762,49 @@ Vim är kraftfull men har en inlärningskurva. Det viktigaste: Vim har MODES.
 ### Modes (KRITISKT att förstå)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        VIM MODES                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   NORMAL MODE (default)                                     │
-│   ──────────────────────                                    │
-│   Du startar här. Navigera, ta bort, kopiera.               │
-│   Tryck ESC för att återgå hit.                            │
-│                                                             │
-│           │                                                 │
-│           │ i, a, o                                         │
-│           ▼                                                 │
-│   INSERT MODE                                               │
-│   ───────────                                               │
-│   Skriv text som vanligt.                                   │
-│   Tryck ESC för att gå tillbaka till Normal.               │
-│                                                             │
-│           │                                                 │
-│           │ ESC → :                                         │
-│           ▼                                                 │
-│   COMMAND MODE                                              │
-│   ────────────                                              │
-│   Spara, avsluta, söka.                                    │
-│   :w, :q, :wq                                              │
-│                                                             │
-│           │                                                 │
-│           │ v, V, Ctrl+v                                    │
-│           ▼                                                 │
-│   VISUAL MODE                                               │
-│   ───────────                                               │
-│   Markera text.                                            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                        VIM MODES                            |
++-------------------------------------------------------------+
+|                                                             |
+|   NORMAL MODE (default)                                     |
+|   ----------------------                                    |
+|   Du startar här. Navigera, ta bort, kopiera.               |
+|   Tryck ESC för att återgå hit.                            |
+|                                                             |
+|           |                                                 |
+|           | i, a, o                                         |
+|           ▼                                                 |
+|   INSERT MODE                                               |
+|   -----------                                               |
+|   Skriv text som vanligt.                                   |
+|   Tryck ESC för att gå tillbaka till Normal.               |
+|                                                             |
+|           |                                                 |
+|           | ESC -> :                                         |
+|           ▼                                                 |
+|   COMMAND MODE                                              |
+|   ------------                                              |
+|   Spara, avsluta, söka.                                    |
+|   :w, :q, :wq                                              |
+|                                                             |
+|           |                                                 |
+|           | v, V, Ctrl+v                                    |
+|           ▼                                                 |
+|   VISUAL MODE                                               |
+|   -----------                                               |
+|   Markera text.                                            |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Det viktigaste: Avsluta Vim!
 
 ```
-:q      → Avsluta (om inga ändringar)
-:q!     → Avsluta utan att spara (force)
-:w      → Spara
-:wq     → Spara och avsluta
-ZZ      → Spara och avsluta (snabbare)
+:q      -> Avsluta (om inga ändringar)
+:q!     -> Avsluta utan att spara (force)
+:w      -> Spara
+:wq     -> Spara och avsluta
+ZZ      -> Spara och avsluta (snabbare)
 ```
 
 ### In i Insert Mode
@@ -8821,78 +8821,78 @@ ZZ      → Spara och avsluta (snabbare)
 ### Navigation i Normal Mode
 
 ```
-h j k l     → Vänster, Ner, Upp, Höger
-w           → Nästa ord
-b           → Föregående ord
-e           → Slutet av ord
-0           → Början av rad
-$           → Slutet av rad
-gg          → Första raden
-G           → Sista raden
-10G         → Gå till rad 10
-Ctrl+f      → Sida framåt
-Ctrl+b      → Sida bakåt
+h j k l     -> Vänster, Ner, Upp, Höger
+w           -> Nästa ord
+b           -> Föregående ord
+e           -> Slutet av ord
+0           -> Början av rad
+$           -> Slutet av rad
+gg          -> Första raden
+G           -> Sista raden
+10G         -> Gå till rad 10
+Ctrl+f      -> Sida framåt
+Ctrl+b      -> Sida bakåt
 ```
 
 ### Radera i Normal Mode
 
 ```
-x           → Radera tecken under cursor
-X           → Radera tecken före cursor
-dd          → Radera rad
-dw          → Radera ord
-d$          → Radera till slutet av rad
-d0          → Radera till början av rad
-D           → Samma som d$
-5dd         → Radera 5 rader
+x           -> Radera tecken under cursor
+X           -> Radera tecken före cursor
+dd          -> Radera rad
+dw          -> Radera ord
+d$          -> Radera till slutet av rad
+d0          -> Radera till början av rad
+D           -> Samma som d$
+5dd         -> Radera 5 rader
 ```
 
 ### Kopiera och klistra
 
 ```
-yy          → Kopiera (yank) rad
-yw          → Kopiera ord
-y$          → Kopiera till slutet
-5yy         → Kopiera 5 rader
-p           → Klistra efter
-P           → Klistra före
+yy          -> Kopiera (yank) rad
+yw          -> Kopiera ord
+y$          -> Kopiera till slutet
+5yy         -> Kopiera 5 rader
+p           -> Klistra efter
+P           -> Klistra före
 ```
 
 ### Undo / Redo
 
 ```
-u           → Undo
-Ctrl+r      → Redo
-.           → Upprepa senaste kommando
+u           -> Undo
+Ctrl+r      -> Redo
+.           -> Upprepa senaste kommando
 ```
 
 ### Sök och ersätt
 
 ```
-/pattern    → Sök framåt
-?pattern    → Sök bakåt
-n           → Nästa träff
-N           → Föregående träff
-*           → Sök ord under cursor
+/pattern    -> Sök framåt
+?pattern    -> Sök bakåt
+n           -> Nästa träff
+N           -> Föregående träff
+*           -> Sök ord under cursor
 
-:s/old/new/         → Ersätt första på rad
-:s/old/new/g        → Ersätt alla på rad
-:%s/old/new/g       → Ersätt alla i fil
-:%s/old/new/gc      → Med bekräftelse
+:s/old/new/         -> Ersätt första på rad
+:s/old/new/g        -> Ersätt alla på rad
+:%s/old/new/g       -> Ersätt alla i fil
+:%s/old/new/gc      -> Med bekräftelse
 ```
 
 ### Visual Mode
 
 ```
-v           → Markera tecken
-V           → Markera rader
-Ctrl+v      → Block-markering
+v           -> Markera tecken
+V           -> Markera rader
+Ctrl+v      -> Block-markering
 
 (efter markering):
-d           → Radera
-y           → Kopiera
->           → Indentera
-<           → Outdent
+d           -> Radera
+y           -> Kopiera
+>           -> Indentera
+<           -> Outdent
 ```
 
 ### ~/.vimrc konfiguration
@@ -8935,18 +8935,18 @@ EOF
 ### Vim Survival Cheatsheet
 
 ```
-┌────────────────────────────────────────────────┐
-│              VIM SURVIVAL GUIDE                │
-├────────────────────────────────────────────────┤
-│ ESC        → Tillbaka till Normal mode         │
-│ :q!        → PANIC EXIT (utan att spara)       │
-│ :wq        → Spara och avsluta                 │
-│ i          → Börja skriva                      │
-│ dd         → Radera rad                        │
-│ u          → Undo                              │
-│ /text      → Sök                               │
-│ :set nu    → Visa radnummer                    │
-└────────────────────────────────────────────────┘
++------------------------------------------------+
+|              VIM SURVIVAL GUIDE                |
++------------------------------------------------+
+| ESC        -> Tillbaka till Normal mode         |
+| :q!        -> PANIC EXIT (utan att spara)       |
+| :wq        -> Spara och avsluta                 |
+| i          -> Börja skriva                      |
+| dd         -> Radera rad                        |
+| u          -> Undo                              |
+| /text      -> Sök                               |
+| :set nu    -> Visa radnummer                    |
++------------------------------------------------+
 ```
 
 ---
@@ -9070,18 +9070,18 @@ Du kan nu redigera filer på vilken server som helst. Nästa node: **I/O Redirec
 Varje process har tre standard-strömmar:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     PROCESS                                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   stdin (0)  ──────►  [COMMAND]  ──────► stdout (1)        │
-│   (input)                │               (output)           │
-│                          │                                  │
-│                          ▼                                  │
-│                     stderr (2)                              │
-│                     (errors)                                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                     PROCESS                                 |
++-------------------------------------------------------------+
+|                                                             |
+|   stdin (0)  ------►  [COMMAND]  ------► stdout (1)        |
+|   (input)                |               (output)           |
+|                          |                                  |
+|                          ▼                                  |
+|                     stderr (2)                              |
+|                     (errors)                                |
+|                                                             |
++-------------------------------------------------------------+
 
 File Descriptors:
 0 = stdin  (standard input)
@@ -9215,7 +9215,7 @@ du -h /var/log/* | sort -rh | head -10
 ### Pipeline-mönster
 
 ```bash
-# Filtrera → Transformera → Aggregera
+# Filtrera -> Transformera -> Aggregera
 cat data.csv | grep "active" | cut -d',' -f2 | sort | uniq -c
 
 # Log-analys
@@ -9413,7 +9413,7 @@ cat /tmp/xargs_test/*.txt
 | `<` | Input från fil |
 | `<<` | Here document |
 | `<<<` | Here string |
-| `\|` | Pipe (stdout → stdin) |
+| `\|` | Pipe (stdout -> stdin) |
 | `tee` | Split till fil + stdout |
 | `xargs` | Bygg kommandon från input |
 | `<()` | Process substitution |
@@ -9443,20 +9443,20 @@ Du behärskar nu dataflöden i Linux. Nästa node: **User Management** — hante
 ## Förstå Användarsystemet
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   LINUX USER MODEL                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   /etc/passwd     → Användarinfo (namn, UID, shell)        │
-│   /etc/shadow     → Krypterade lösenord                    │
-│   /etc/group      → Gruppdefinitioner                      │
-│   /etc/gshadow    → Grupplösenord                          │
-│                                                             │
-│   UID 0           → root (superuser)                       │
-│   UID 1-999       → System/service accounts                │
-│   UID 1000+       → Vanliga användare                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                   LINUX USER MODEL                          |
++-------------------------------------------------------------+
+|                                                             |
+|   /etc/passwd     -> Användarinfo (namn, UID, shell)        |
+|   /etc/shadow     -> Krypterade lösenord                    |
+|   /etc/group      -> Gruppdefinitioner                      |
+|   /etc/gshadow    -> Grupplösenord                          |
+|                                                             |
+|   UID 0           -> root (superuser)                       |
+|   UID 1-999       -> System/service accounts                |
+|   UID 1000+       -> Vanliga användare                      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### /etc/passwd format
@@ -9798,17 +9798,17 @@ Du kan nu hantera användare och grupper. Nästa node: **Package Management** �
 ## Pakethanterare per Distribution
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              PACKAGE MANAGERS BY DISTRO                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Debian/Ubuntu          →  apt, apt-get, dpkg             │
-│   RHEL/CentOS/Fedora     →  dnf, yum, rpm                  │
-│   Arch                   →  pacman                          │
-│   Alpine                 →  apk                             │
-│   Universal              →  snap, flatpak                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              PACKAGE MANAGERS BY DISTRO                     |
++-------------------------------------------------------------+
+|                                                             |
+|   Debian/Ubuntu          ->  apt, apt-get, dpkg             |
+|   RHEL/CentOS/Fedora     ->  dnf, yum, rpm                  |
+|   Arch                   ->  pacman                          |
+|   Alpine                 ->  apk                             |
+|   Universal              ->  snap, flatpak                   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -10056,22 +10056,22 @@ Du kan nu installera programvara. Nästa node: **Service Management** — hanter
 ## Förstå systemd
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      SYSTEMD                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   PID 1 (init system)                                      │
-│      │                                                     │
-│      ├── Services (.service)  → nginx, postgresql, sshd   │
-│      ├── Sockets (.socket)    → Activation triggers        │
-│      ├── Timers (.timer)      → Cron-liknande              │
-│      ├── Mounts (.mount)      → Filsystem                  │
-│      └── Targets (.target)    → Boot stages                │
-│                                                             │
-│   Unit files: /etc/systemd/system/                         │
-│               /lib/systemd/system/                          │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      SYSTEMD                                |
++-------------------------------------------------------------+
+|                                                             |
+|   PID 1 (init system)                                      |
+|      |                                                     |
+|      +-- Services (.service)  -> nginx, postgresql, sshd   |
+|      +-- Sockets (.socket)    -> Activation triggers        |
+|      +-- Timers (.timer)      -> Cron-liknande              |
+|      +-- Mounts (.mount)      -> Filsystem                  |
+|      +-- Targets (.target)    -> Boot stages                |
+|                                                             |
+|   Unit files: /etc/systemd/system/                         |
+|               /lib/systemd/system/                          |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -10379,9 +10379,9 @@ tmpfs           4.0G     0  4.0G   0% /dev/shm
 ```
 
 **Varningsnivåer:**
-- 80%+ → Börja planera expansion
-- 90%+ → Kritiskt, åtgärda nu
-- 95%+ → Akut, system kan sluta fungera
+- 80%+ -> Börja planera expansion
+- 90%+ -> Kritiskt, åtgärda nu
+- 95%+ -> Akut, system kan sluta fungera
 
 ### du — Disk Usage
 
@@ -10439,11 +10439,11 @@ sudo parted -l
 $ lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   100G  0 disk
-├─sda1   8:1    0    50G  0 part /
-├─sda2   8:2    0    48G  0 part /home
-└─sda3   8:3    0     2G  0 part [SWAP]
++-sda1   8:1    0    50G  0 part /
++-sda2   8:2    0    48G  0 part /home
++-sda3   8:3    0     2G  0 part [SWAP]
 sdb      8:16   0   500G  0 disk
-└─sdb1   8:17   0   500G  0 part /data
++-sdb1   8:17   0   500G  0 part /data
 ```
 
 ### Skapa partition (fdisk)
@@ -10453,12 +10453,12 @@ sdb      8:16   0   500G  0 disk
 sudo fdisk /dev/sdb
 
 # Kommandon i fdisk:
-# n → New partition
-# p → Primary
-# 1 → Partition number
-# Enter → Default first sector
-# +50G → Size
-# w → Write and exit
+# n -> New partition
+# p -> Primary
+# 1 -> Partition number
+# Enter -> Default first sector
+# +50G -> Size
+# w -> Write and exit
 ```
 
 ---
@@ -10551,22 +10551,22 @@ sudo mount -a
 LVM ger flexibilitet att ändra storlek utan att röra partitioner.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         LVM STRUCTURE                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Physical Disks:    /dev/sda    /dev/sdb    /dev/sdc      │
-│                          │           │           │          │
-│   Physical Volumes:     pv1        pv2        pv3          │
-│                          └───────────┼───────────┘          │
-│                                      │                      │
-│   Volume Group:            ┌─────── vg_data ───────┐       │
-│                            │                       │        │
-│   Logical Volumes:     lv_home                 lv_var      │
-│                            │                       │        │
-│   Mount Points:        /home                   /var        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         LVM STRUCTURE                        |
++-------------------------------------------------------------+
+|                                                             |
+|   Physical Disks:    /dev/sda    /dev/sdb    /dev/sdc      |
+|                          |           |           |          |
+|   Physical Volumes:     pv1        pv2        pv3          |
+|                          +-----------+-----------+          |
+|                                      |                      |
+|   Volume Group:            +------- vg_data -------+       |
+|                            |                       |        |
+|   Logical Volumes:     lv_home                 lv_var      |
+|                            |                       |        |
+|   Mount Points:        /home                   /var        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### LVM-kommandon
@@ -10965,28 +10965,28 @@ Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** —
 ## Så fungerar DNS
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     DNS RESOLUTION                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   User: "google.com"                                        │
-│          │                                                  │
-│          ▼                                                  │
-│   1. Check /etc/hosts                                       │
-│          │ (not found)                                      │
-│          ▼                                                  │
-│   2. Check local DNS cache                                  │
-│          │ (not found)                                      │
-│          ▼                                                  │
-│   3. Query DNS resolver (/etc/resolv.conf)                  │
-│          │                                                  │
-│          ▼                                                  │
-│   4. Resolver → Root servers → .com → google.com           │
-│          │                                                  │
-│          ▼                                                  │
-│   5. Return IP: 142.250.185.78                             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                     DNS RESOLUTION                          |
++-------------------------------------------------------------+
+|                                                             |
+|   User: "google.com"                                        |
+|          |                                                  |
+|          ▼                                                  |
+|   1. Check /etc/hosts                                       |
+|          | (not found)                                      |
+|          ▼                                                  |
+|   2. Check local DNS cache                                  |
+|          | (not found)                                      |
+|          ▼                                                  |
+|   3. Query DNS resolver (/etc/resolv.conf)                  |
+|          |                                                  |
+|          ▼                                                  |
+|   4. Resolver -> Root servers -> .com -> google.com           |
+|          |                                                  |
+|          ▼                                                  |
+|   5. Return IP: 142.250.185.78                             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -10995,13 +10995,13 @@ Du har nu grunderna i nätverksdiagnostik. Nästa node: **DNS & Resolution** —
 
 | Record | Syfte | Exempel |
 |--------|-------|---------|
-| A | IPv4-adress | example.com → 93.184.216.34 |
-| AAAA | IPv6-adress | example.com → 2606:2800:220:1:... |
-| CNAME | Alias | www.example.com → example.com |
-| MX | Mail server | example.com → mail.example.com |
+| A | IPv4-adress | example.com -> 93.184.216.34 |
+| AAAA | IPv6-adress | example.com -> 2606:2800:220:1:... |
+| CNAME | Alias | www.example.com -> example.com |
+| MX | Mail server | example.com -> mail.example.com |
 | TXT | Text (SPF, DKIM) | "v=spf1 include:..." |
-| NS | Nameservers | example.com → ns1.example.com |
-| PTR | Reverse lookup | IP → hostname |
+| NS | Nameservers | example.com -> ns1.example.com |
+| PTR | Reverse lookup | IP -> hostname |
 
 ---
 
@@ -11143,11 +11143,11 @@ sudo systemd-resolve --flush-caches
 ```bash
 # 1. Testa med IP (bypass DNS)
 ping 8.8.8.8
-# Funkar? → Problem är DNS, inte nätverk
+# Funkar? -> Problem är DNS, inte nätverk
 
 # 2. Testa DNS-resolution
 dig @8.8.8.8 example.com
-# Funkar? → Lokal resolver är problemet
+# Funkar? -> Lokal resolver är problemet
 
 # 3. Kolla resolv.conf
 cat /etc/resolv.conf
@@ -11203,18 +11203,18 @@ Du förstår nu DNS. Nästa node: **Firewall** — kontrollera nätverkstrafik.
 ## Firewall-verktyg
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              LINUX FIREWALL LANDSCAPE                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   iptables     → Klassiskt, kraftfullt, komplext           │
-│   nftables     → Modern ersättare för iptables             │
-│   ufw          → Ubuntu Firewall (frontend för iptables)   │
-│   firewalld    → RHEL/CentOS (frontend för nftables)       │
-│                                                             │
-│   Kernel: netfilter (underliggande)                        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              LINUX FIREWALL LANDSCAPE                       |
++-------------------------------------------------------------+
+|                                                             |
+|   iptables     -> Klassiskt, kraftfullt, komplext           |
+|   nftables     -> Modern ersättare för iptables             |
+|   ufw          -> Ubuntu Firewall (frontend för iptables)   |
+|   firewalld    -> RHEL/CentOS (frontend för nftables)       |
+|                                                             |
+|   Kernel: netfilter (underliggande)                        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -11325,15 +11325,15 @@ sudo iptables -L INPUT -n -v
 ### Chains
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    IPTABLES CHAINS                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   INPUT       → Trafik TO this server                      │
-│   OUTPUT      → Trafik FROM this server                    │
-│   FORWARD     → Trafik THROUGH this server (routing)       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    IPTABLES CHAINS                          |
++-------------------------------------------------------------+
+|                                                             |
+|   INPUT       -> Trafik TO this server                      |
+|   OUTPUT      -> Trafik FROM this server                    |
+|   FORWARD     -> Trafik THROUGH this server (routing)       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Grundläggande regler
@@ -11592,7 +11592,7 @@ rsync -avz --progress source/ user@hostname:/destination/
 ```bash
 # Syntax: ssh -L local_port:remote_host:remote_port
 
-# Databas på remote server (port 5432) → localhost:5432
+# Databas på remote server (port 5432) -> localhost:5432
 ssh -L 5432:localhost:5432 user@dbserver
 
 # Nu kan du ansluta lokalt:
@@ -11606,7 +11606,7 @@ Exponera lokal service till remote.
 ```bash
 # Syntax: ssh -R remote_port:local_host:local_port
 
-# Din lokala port 3000 → remote port 8080
+# Din lokala port 3000 -> remote port 8080
 ssh -R 8080:localhost:3000 user@server
 ```
 
@@ -11771,7 +11771,7 @@ tar -xzvf archive.tar.gz path/to/file.txt
 
 ```bash
 # Komprimera (ersätter original)
-gzip file.txt           # → file.txt.gz
+gzip file.txt           # -> file.txt.gz
 
 # Behåll original
 gzip -k file.txt
@@ -11787,14 +11787,14 @@ gzip -l file.txt.gz
 ### bzip2 / bunzip2
 
 ```bash
-bzip2 file.txt          # → file.txt.bz2
+bzip2 file.txt          # -> file.txt.bz2
 bunzip2 file.txt.bz2
 ```
 
 ### xz
 
 ```bash
-xz file.txt             # → file.txt.xz
+xz file.txt             # -> file.txt.xz
 xz -d file.txt.xz
 ```
 
@@ -11892,12 +11892,12 @@ Du kan nu arkivera och komprimera. Nästa node: **Cron & Scheduling** — automa
 ### Syntax
 
 ```
-┌───────────── minute (0-59)
-│ ┌───────────── hour (0-23)
-│ │ ┌───────────── day of month (1-31)
-│ │ │ ┌───────────── month (1-12)
-│ │ │ │ ┌───────────── day of week (0-6, 0=Sunday)
-│ │ │ │ │
++------------- minute (0-59)
+| +------------- hour (0-23)
+| | +------------- day of month (1-31)
+| | | +------------- month (1-12)
+| | | | +------------- day of week (0-6, 0=Sunday)
+| | | | |
 * * * * * command
 ```
 
@@ -12416,13 +12416,13 @@ Du kan nu övervaka prestanda. Nästa node: **Troubleshooting** — felsökning 
 ## Systematisk Approach
 
 ```
-1. IDENTIFY  → Vad är symptomen?
-2. REPRODUCE → Kan du återskapa?
-3. ISOLATE   → Var är problemet?
-4. ANALYZE   → Varför händer det?
-5. FIX       → Åtgärda
-6. VERIFY    → Bekräfta fix
-7. DOCUMENT  → Skriv ner
+1. IDENTIFY  -> Vad är symptomen?
+2. REPRODUCE -> Kan du återskapa?
+3. ISOLATE   -> Var är problemet?
+4. ANALYZE   -> Varför händer det?
+5. FIX       -> Åtgärda
+6. VERIFY    -> Bekräfta fix
+7. DOCUMENT  -> Skriv ner
 ```
 
 ---
@@ -12644,7 +12644,7 @@ Du kan nu:
 - Automatisera med cron
 - Analysera loggar och prestanda
 
-**Nästa steg:** Docker SkillsMap → Containerisering
+**Nästa steg:** Docker SkillsMap -> Containerisering
 
 > 💡 **Pro Tip:** Testa i en dev-miljö först. Produktion är inte platsen för experiment.
 """

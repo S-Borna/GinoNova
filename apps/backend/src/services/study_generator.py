@@ -3,10 +3,10 @@ Study Generator - Dynamiskt generera flashcards och quiz från V3 modulinnehåll
 ==============================================================================
 
 Hämtar innehåll från modulernas noder (tasks) och extraherar:
-- Key Takeaways → Flashcards
-- Kom ihåg-punkter → Flashcards
-- Kodexempel → Quiz-frågor
-- Tabeller → Quiz-frågor
+- Key Takeaways -> Flashcards
+- Kom ihåg-punkter -> Flashcards
+- Kodexempel -> Quiz-frågor
+- Tabeller -> Quiz-frågor
 
 Detta ersätter statisk study_data med dynamiskt innehåll från V3-formaterade moduler.
 """
@@ -186,7 +186,7 @@ def extract_concept_table(content: str, title: str) -> List[Dict[str, Any]]:
                     "question": f"I {title}: Vad är konsekvensen av '{concept['problem']}'?",
                     "options": [concept["consequence"]] + wrong,
                     "correct": 0,
-                    "explanation": f"{concept['problem']} → {concept['consequence']}"
+                    "explanation": f"{concept['problem']} -> {concept['consequence']}"
                 })
 
     return quiz_questions

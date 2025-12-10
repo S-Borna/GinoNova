@@ -14,7 +14,7 @@ NODE_17_TESTING = {
 
 Testa Node.js-applikationer med Jest.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Testing?
 
@@ -26,7 +26,7 @@ Testing ar processen att verifiera att koden fungerar som forvantat och upptacka
 | Integration | Testar komponenter tillsammans |
 | E2E | Testar hela flodet |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,7 +37,7 @@ Testing ar processen att verifiera att koden fungerar som forvantat och upptacka
 | Refactoring | Modifiera kod sakert |
 | Dokumentation | Tester visar hur koden ska anvandas |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -50,7 +50,7 @@ Testing ar processen att verifiera att koden fungerar som forvantat och upptacka
 | afterAll | Kor efter alla tester |
 | jest.mock | Mocka modul |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jest Setup
 
@@ -77,7 +77,7 @@ export default {
 };
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Unit Tests
 
@@ -118,7 +118,7 @@ describe('Math functions', () => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Mocking
 
@@ -173,7 +173,7 @@ test('mocked database', async () => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## API Testing (Supertest)
 
@@ -240,7 +240,7 @@ describe('API Tests', () => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Test Database
 
@@ -296,7 +296,7 @@ describe('User model', () => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Coverage
 
@@ -314,7 +314,7 @@ npm test -- users.test.js
 npm test -- --testNamePattern="should create"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -325,7 +325,7 @@ npm test -- --testNamePattern="should create"
 | DB state | Delad data mellan tester | beforeEach cleanup |
 | Flaky tests | Timing issues | Anvand waitFor/retry |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -357,7 +357,7 @@ NODE_18_SECURITY = {
 
 Skydda din Node.js-applikation mot vanliga attacker.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Security?
 
@@ -369,7 +369,7 @@ Security handlar om att skydda applikationen mot attacker, datalackage och andra
 | XSS | Script i webbsidor |
 | CSRF | Forgad request |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -380,7 +380,7 @@ Security handlar om att skydda applikationen mot attacker, datalackage och andra
 | Reputation | Undvik intrång |
 | Cost | Sakerhetsincidenter ar dyra |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -392,7 +392,7 @@ Security handlar om att skydda applikationen mot attacker, datalackage och andra
 | SQL Injection | Parameterized queries |
 | XSS | DOMPurify, escape output |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Input Validation
 
@@ -432,7 +432,7 @@ export function validate(schema) {
 app.post('/users', validate(userSchema), createUser);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SQL Injection Prevention
 
@@ -459,7 +459,7 @@ const user = await prisma.user.findUnique({
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## XSS Prevention
 
@@ -498,7 +498,7 @@ app.use(helmet.contentSecurityPolicy({
 }));
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CSRF Protection
 
@@ -533,7 +533,7 @@ fetch('/api/data', {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rate Limiting
 
@@ -577,7 +577,7 @@ const userLimiter = rateLimit({
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secure Headers (Helmet)
 
@@ -613,7 +613,7 @@ app.use((req, res, next) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environment Security
 
@@ -641,7 +641,7 @@ const env = envSchema.parse(process.env);
 // - Kubernetes Secrets
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dependency Security
 
@@ -658,7 +658,7 @@ npx npm-check-updates -u
 # Renovate/Dependabot for automatiska PRs
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -669,7 +669,7 @@ npx npm-check-updates -u
 | Secrets leaked | Hardkodade | Environment variables |
 | Brute force | Ingen limit | Rate limiting |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -701,7 +701,7 @@ NODE_19_DEPLOYMENT = {
 
 Deploya Node.js-applikationer till produktion.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Deployment?
 
@@ -713,7 +713,7 @@ Deployment ar processen att gora din applikation tillganglig for anvandare i en 
 | Container | Docker/K8s |
 | Serverless | Functions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -724,7 +724,7 @@ Deployment ar processen att gora din applikation tillganglig for anvandare i en 
 | Scalability | Hantera last |
 | Rollback | Aterga vid problem |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -735,7 +735,7 @@ Deployment ar processen att gora din applikation tillganglig for anvandare i en 
 | AWS ECS | Container | Skalbarhet |
 | Vercel | Serverless | Frontend + API |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## PM2 Process Manager
 
@@ -787,7 +787,7 @@ pm2 startup
 pm2 save
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Docker
 
@@ -858,7 +858,7 @@ volumes:
   postgres_data:
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CI/CD (GitHub Actions)
 
@@ -909,7 +909,7 @@ jobs:
             -d '{"image": "myapp:${{ github.sha }}"}'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Health Checks
 
@@ -962,7 +962,7 @@ app.get('/health/live', (req, res) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Graceful Shutdown
 
@@ -1012,7 +1012,7 @@ app.use((req, res, next) => {
 process.send?.('ready');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1023,7 +1023,7 @@ process.send?.('ready');
 | Downtime vid deploy | Ingen graceful shutdown | Implementera shutdown |
 | Lost requests | Ingen health check | Lagg till readiness probe |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1055,7 +1055,7 @@ NODE_20_MONITORING = {
 
 Overvaka och logga din Node.js-applikation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Monitoring?
 
@@ -1067,7 +1067,7 @@ Monitoring och logging handlar om att samla in data om applikationens halsa, pre
 | Metrics | Numerisk data over tid |
 | Traces | Request-floden |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1078,7 +1078,7 @@ Monitoring och logging handlar om att samla in data om applikationens halsa, pre
 | Alerting | Reagera pa problem |
 | Capacity | Planera skalning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1090,7 +1090,7 @@ Monitoring och logging handlar om att samla in data om applikationens halsa, pre
 | Grafana | Visualisering |
 | OpenTelemetry | Distributed tracing |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Structured Logging (Pino)
 
@@ -1122,7 +1122,7 @@ const reqLogger = logger.child({ requestId: req.id });
 reqLogger.info('Processing request');
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Request Logging
 
@@ -1152,7 +1152,7 @@ const httpLogger = pinoHttp({
 app.use(httpLogger);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Error Tracking (Sentry)
 
@@ -1198,7 +1198,7 @@ Sentry.addBreadcrumb({
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Metrics (Prometheus)
 
@@ -1258,7 +1258,7 @@ app.get('/metrics', async (req, res) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## OpenTelemetry (Distributed Tracing)
 
@@ -1307,7 +1307,7 @@ async function processOrder(orderId) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Alerting
 
@@ -1348,7 +1348,7 @@ app.use((err, req, res, next) => {
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1359,7 +1359,7 @@ app.use((err, req, res, next) => {
 | Alert fatigue | For manga alerts | Justera thresholds |
 | Log flooding | Debug i produktion | Konfigurera log levels |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

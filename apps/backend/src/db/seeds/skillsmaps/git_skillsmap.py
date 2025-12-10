@@ -1,6 +1,6 @@
 # =============================================================================
 # GIT & GITHUB SKILLSMAP - 15 NODER
-# Akhilesh Pedagogical Style: Intro → Koncept → Kommandon → Tips → Task
+# Akhilesh Pedagogical Style: Intro -> Koncept -> Kommandon -> Tips -> Task
 # =============================================================================
 
 GIT_SKILLSMAP_INFO = {
@@ -84,7 +84,7 @@ git commit -m "Initial commit"
 ## Git Areas
 
 ```
-Working Dir → Staging Area → Repository
+Working Dir -> Staging Area -> Repository
      git add      git commit
 ```
 
@@ -839,15 +839,15 @@ Välj rätt workflow.
 ## Git Flow
 
 ```
-main ─────────●─────────────●───────
-              │             │
-release ──────┼─────●───────┤
-              │     │       │
-develop ──●───┼─────●───●───┼───●───
-          │   │         │   │   │
-feature ──●───┘         └───┘   │
-                                │
-hotfix ─────────────────────────●───
+main ---------●-------------●-------
+              |             |
+release ------+-----●-------+
+              |     |       |
+develop --●---+-----●---●---+---●---
+          |   |         |   |   |
+feature --●---+         +---+   |
+                                |
+hotfix -------------------------●---
 ```
 
 ```bash
@@ -911,15 +911,15 @@ Flera projekt i ett repo.
 
 ```
 monorepo/
-├── packages/
-│   ├── frontend/
-│   ├── backend/
-│   └── shared/
-├── apps/
-│   ├── web/
-│   └── mobile/
-├── package.json
-└── turbo.json
++-- packages/
+|   +-- frontend/
+|   +-- backend/
+|   +-- shared/
++-- apps/
+|   +-- web/
+|   +-- mobile/
++-- package.json
++-- turbo.json
 ```
 
 ## Turborepo

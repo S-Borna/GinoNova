@@ -26,7 +26,7 @@ AZURE_NODE_9_BLOB = {
 
 > *"Blob Storage is where the world's data lives."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,48 +37,48 @@ AZURE_NODE_9_BLOB = {
 | Log aggregation | Loggar sprids over servrar | Centraliserad log storage |
 | Cost optimization | Samma pris for alla data | Auto-tiering (Hot/Cool/Archive) |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Blob Storage Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 BLOB STORAGE HIERARCHY                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Storage Account: stmyapp123                                    │
-│  └── Container: images                                          │
-│      ├── 2024/                                                  │
-│      │   ├── 01/                                                │
-│      │   │   ├── photo1.jpg        ← Blob                       │
-│      │   │   └── photo2.jpg                                     │
-│      │   └── 02/                                                │
-│      │       └── photo3.jpg                                     │
-│      └── thumbnails/                                            │
-│          └── photo1_thumb.jpg                                   │
-│                                                                  │
-│  BLOB TYPES:                                                    │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ Block Blob  │ Page Blob    │ Append Blob                │    │
-│  │ - Images    │ - VHD disks  │ - Log files                │    │
-│  │ - Videos    │ - Random I/O │ - Append-only              │    │
-│  │ - Backups   │              │ - Audit trails             │    │
-│  │ - Up to 4.7TB│ - Up to 8TB │ - Up to 195GB             │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-│  ACCESS TIERS:                                                  │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ Hot       │ Cool      │ Cold       │ Archive           │    │
-│  │ Frequent  │ Infrequent│ Rare       │ Long-term         │    │
-│  │ $0.02/GB  │ $0.01/GB  │ $0.004/GB  │ $0.001/GB         │    │
-│  │ Low access│ Higher    │ Higher     │ Rehydration       │    │
-│  │ cost      │ access    │ access     │ required          │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 BLOB STORAGE HIERARCHY                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Storage Account: stmyapp123                                    |
+|  +-- Container: images                                          |
+|      +-- 2024/                                                  |
+|      |   +-- 01/                                                |
+|      |   |   +-- photo1.jpg        <- Blob                       |
+|      |   |   +-- photo2.jpg                                     |
+|      |   +-- 02/                                                |
+|      |       +-- photo3.jpg                                     |
+|      +-- thumbnails/                                            |
+|          +-- photo1_thumb.jpg                                   |
+|                                                                  |
+|  BLOB TYPES:                                                    |
+|  +---------------------------------------------------------+    |
+|  | Block Blob  | Page Blob    | Append Blob                |    |
+|  | - Images    | - VHD disks  | - Log files                |    |
+|  | - Videos    | - Random I/O | - Append-only              |    |
+|  | - Backups   |              | - Audit trails             |    |
+|  | - Up to 4.7TB| - Up to 8TB | - Up to 195GB             |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
+|  ACCESS TIERS:                                                  |
+|  +---------------------------------------------------------+    |
+|  | Hot       | Cool      | Cold       | Archive           |    |
+|  | Frequent  | Infrequent| Rare       | Long-term         |    |
+|  | $0.02/GB  | $0.01/GB  | $0.004/GB  | $0.001/GB         |    |
+|  | Low access| Higher    | Higher     | Rehydration       |    |
+|  | cost      | access    | access     | required          |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa Storage Account
 
@@ -104,7 +104,7 @@ az storage account keys list \\
     --resource-group rg-demo
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Upload/Download Blobs
 
@@ -144,7 +144,7 @@ az storage blob delete \\
     --name photos/old-photo.jpg
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SAS Tokens (Shared Access Signatures)
 
@@ -170,7 +170,7 @@ az storage blob generate-sas \\
 # https://stmyapp123.blob.core.windows.net/images/photos/secret.jpg?sv=...&sig=...
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lifecycle Management
 
@@ -208,7 +208,7 @@ az storage account management-policy create \\
     --policy @lifecycle-policy.json
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Static Website Hosting
 
@@ -235,7 +235,7 @@ az storage account show \\
 # Resultat: https://stmyapp123.z16.web.core.windows.net/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SDK Usage (Python)
 
@@ -265,7 +265,7 @@ for blob in container.list_blobs(name_starts_with="photos/"):
     print(f"{blob.name}: {blob.size} bytes")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -279,7 +279,7 @@ az role assignment create \\
     --scope "/subscriptions/.../resourceGroups/rg-demo/providers/Microsoft.Storage/storageAccounts/stmyapp123"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -321,7 +321,7 @@ AZURE_NODE_10_SQL = {
 
 > *"Your database, managed by Microsoft."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -332,57 +332,57 @@ AZURE_NODE_10_SQL = {
 | Disaster recovery | Komplex replikering | Inbyggd geo-replication |
 | Dev/test kostnader | Betala for idle servrar | Serverless auto-pause |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Azure SQL Options
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    AZURE SQL OPTIONS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ AZURE SQL DATABASE (PaaS - Single Database)                 │ │
-│  │ • Enklast att använda                                       │ │
-│  │ • Per-databas prissättning                                  │ │
-│  │ • Serverless option (auto-pause)                            │ │
-│  │ Use case: Nya appar, microservices                          │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ ELASTIC POOL                                                │ │
-│  │ • Dela resurser mellan databaser                            │ │
-│  │ • Kostnadseffektivt för SaaS                                │ │
-│  │ Use case: Multi-tenant apps                                 │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ AZURE SQL MANAGED INSTANCE                                  │ │
-│  │ • Närmast on-prem SQL Server                                │ │
-│  │ • Cross-database queries, SQL Agent                         │ │
-│  │ • VNet-native                                               │ │
-│  │ Use case: Lift-and-shift migration                          │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ SQL SERVER ON AZURE VM (IaaS)                               │ │
-│  │ • Full kontroll över OS och SQL                             │ │
-│  │ • Du hanterar patching och backups                          │ │
-│  │ Use case: Legacy apps, specifika krav                       │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  PRICING TIERS:                                                 │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ DTU (Basic/Std/Prem) │ vCore (Gen Purpose/Business Crit)│    │
-│  │ - Bundled resources  │ - Separate CPU/Storage            │    │
-│  │ - Enklare prissätt   │ - Mer flexibel                    │    │
-│  │ - Från ~$5/mån       │ - Från ~$30/mån                   │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    AZURE SQL OPTIONS                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  | AZURE SQL DATABASE (PaaS - Single Database)                 | |
+|  | • Enklast att använda                                       | |
+|  | • Per-databas prissättning                                  | |
+|  | • Serverless option (auto-pause)                            | |
+|  | Use case: Nya appar, microservices                          | |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  | ELASTIC POOL                                                | |
+|  | • Dela resurser mellan databaser                            | |
+|  | • Kostnadseffektivt för SaaS                                | |
+|  | Use case: Multi-tenant apps                                 | |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  | AZURE SQL MANAGED INSTANCE                                  | |
+|  | • Närmast on-prem SQL Server                                | |
+|  | • Cross-database queries, SQL Agent                         | |
+|  | • VNet-native                                               | |
+|  | Use case: Lift-and-shift migration                          | |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  | SQL SERVER ON AZURE VM (IaaS)                               | |
+|  | • Full kontroll över OS och SQL                             | |
+|  | • Du hanterar patching och backups                          | |
+|  | Use case: Legacy apps, specifika krav                       | |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  PRICING TIERS:                                                 |
+|  +---------------------------------------------------------+    |
+|  | DTU (Basic/Std/Prem) | vCore (Gen Purpose/Business Crit)|    |
+|  | - Bundled resources  | - Separate CPU/Storage            |    |
+|  | - Enklare prissätt   | - Mer flexibel                    |    |
+|  | - Från ~$5/mån       | - Från ~$30/mån                   |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa SQL Database
 
@@ -425,7 +425,7 @@ az sql db create \\
     --auto-pause-delay 60  # minuter
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Firewall & Security
 
@@ -454,7 +454,7 @@ az sql server ad-admin create \\
     --object-id "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Connection Strings
 
@@ -472,7 +472,7 @@ az sql db show-connection-string \\
 "Server=tcp:sqlserver-myapp.database.windows.net,1433;Initial Catalog=mydb;Authentication=Active Directory Default;"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Geo-Replication & Failover
 
@@ -497,7 +497,7 @@ az sql failover-group create \\
     --grace-period 1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Backup & Restore
 
@@ -527,13 +527,13 @@ az sql db restore \\
     --geo-backup
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Performance Monitoring
 
 ```bash
 # Query Performance Insight (i Portal)
-# Portal → SQL Database → Query Performance Insight
+# Portal -> SQL Database -> Query Performance Insight
 
 # Intelligent Insights
 az sql db show \\
@@ -549,7 +549,7 @@ az monitor metrics list \\
     --interval PT1H
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -563,7 +563,7 @@ az sql server firewall-rule list --resource-group rg-demo --server sqlserver-mya
 telnet sqlserver-myapp.database.windows.net 1433
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -605,7 +605,7 @@ AZURE_NODE_11_COSMOS = {
 
 > *"Single-digit millisecond latency, anywhere in the world."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -616,48 +616,48 @@ AZURE_NODE_11_COSMOS = {
 | Varying workloads | Over/under-provisioning | Autoscale RU |
 | Multi-API stod | Migrera fran MongoDB/Cassandra | Native API-stod |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cosmos DB Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    COSMOS DB ARCHITECTURE                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │                   COSMOS DB ACCOUNT                         │ │
-│  │  ┌──────────────────────────────────────────────────────┐  │ │
-│  │  │                    DATABASE                           │  │ │
-│  │  │  ┌─────────────────────────────────────────────────┐ │  │ │
-│  │  │  │              CONTAINER                          │ │  │ │
-│  │  │  │  ┌─────────┐ ┌─────────┐ ┌─────────┐          │ │  │ │
-│  │  │  │  │  Item   │ │  Item   │ │  Item   │          │ │  │ │
-│  │  │  │  │ (JSON)  │ │ (JSON)  │ │ (JSON)  │          │ │  │ │
-│  │  │  │  └─────────┘ └─────────┘ └─────────┘          │ │  │ │
-│  │  │  │       ↓           ↓           ↓                │ │  │ │
-│  │  │  │  PARTITION KEY (e.g., userId)                  │ │  │ │
-│  │  │  │  ┌─────────┐ ┌─────────┐ ┌─────────┐          │ │  │ │
-│  │  │  │  │Partition│ │Partition│ │Partition│          │ │  │ │
-│  │  │  │  │   A     │ │   B     │ │   C     │          │ │  │ │
-│  │  │  │  └─────────┘ └─────────┘ └─────────┘          │ │  │ │
-│  │  │  └─────────────────────────────────────────────────┘ │  │ │
-│  │  └──────────────────────────────────────────────────────┘  │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  CONSISTENCY LEVELS:                                            │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ Strong → Bounded Staleness → Session → Consistent Prefix │    │
-│  │        → Eventual                                        │    │
-│  │                                                          │    │
-│  │ More consistency ←───────────────────→ More performance  │    │
-│  │ Higher latency   ←───────────────────→ Lower latency     │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    COSMOS DB ARCHITECTURE                        |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  |                   COSMOS DB ACCOUNT                         | |
+|  |  +------------------------------------------------------+  | |
+|  |  |                    DATABASE                           |  | |
+|  |  |  +-------------------------------------------------+ |  | |
+|  |  |  |              CONTAINER                          | |  | |
+|  |  |  |  +---------+ +---------+ +---------+          | |  | |
+|  |  |  |  |  Item   | |  Item   | |  Item   |          | |  | |
+|  |  |  |  | (JSON)  | | (JSON)  | | (JSON)  |          | |  | |
+|  |  |  |  +---------+ +---------+ +---------+          | |  | |
+|  |  |  |       ↓           ↓           ↓                | |  | |
+|  |  |  |  PARTITION KEY (e.g., userId)                  | |  | |
+|  |  |  |  +---------+ +---------+ +---------+          | |  | |
+|  |  |  |  |Partition| |Partition| |Partition|          | |  | |
+|  |  |  |  |   A     | |   B     | |   C     |          | |  | |
+|  |  |  |  +---------+ +---------+ +---------+          | |  | |
+|  |  |  +-------------------------------------------------+ |  | |
+|  |  +------------------------------------------------------+  | |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  CONSISTENCY LEVELS:                                            |
+|  +---------------------------------------------------------+    |
+|  | Strong -> Bounded Staleness -> Session -> Consistent Prefix |    |
+|  |        -> Eventual                                        |    |
+|  |                                                          |    |
+|  | More consistency <---------------------> More performance  |    |
+|  | Higher latency   <---------------------> Lower latency     |    |
+|  +---------------------------------------------------------+    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa Cosmos DB
 
@@ -695,37 +695,37 @@ az cosmosdb sql container create \\
     --max-throughput 4000  # Auto-scales 400-4000 RU
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Request Units (RU)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    REQUEST UNITS (RU)                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  RU = Valutan för Cosmos DB throughput                          │
-│                                                                  │
-│  OPERATION                              COST                     │
-│  ─────────────────────────────────────────────                  │
-│  Read 1KB item by ID & partition key    ~1 RU                   │
-│  Read 1KB item by query                 ~3 RU                   │
-│  Write 1KB item                         ~5 RU                   │
-│  Delete 1KB item                        ~5 RU                   │
-│  Query with filter (depends)            ~10-100+ RU             │
-│                                                                  │
-│  PRICING (Sweden Central):                                       │
-│  Provisioned: 400 RU = ~$24/month                               │
-│  Autoscale:   Min 400, Max 4000 = ~$28/month (for 400 avg)      │
-│  Serverless:  Per request ($0.25 per 1M RU)                     │
-│                                                                  │
-│  ⚠️ COST TRAP:                                                   │
-│  Dålig partition key → cross-partition queries → höga RU costs  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    REQUEST UNITS (RU)                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  RU = Valutan för Cosmos DB throughput                          |
+|                                                                  |
+|  OPERATION                              COST                     |
+|  ---------------------------------------------                  |
+|  Read 1KB item by ID & partition key    ~1 RU                   |
+|  Read 1KB item by query                 ~3 RU                   |
+|  Write 1KB item                         ~5 RU                   |
+|  Delete 1KB item                        ~5 RU                   |
+|  Query with filter (depends)            ~10-100+ RU             |
+|                                                                  |
+|  PRICING (Sweden Central):                                       |
+|  Provisioned: 400 RU = ~$24/month                               |
+|  Autoscale:   Min 400, Max 4000 = ~$28/month (for 400 avg)      |
+|  Serverless:  Per request ($0.25 per 1M RU)                     |
+|                                                                  |
+|  ⚠️ COST TRAP:                                                   |
+|  Dålig partition key -> cross-partition queries -> höga RU costs  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CRUD Operations (Python SDK)
 
@@ -771,7 +771,7 @@ container.upsert_item(body=user)
 container.delete_item(item="user-123", partition_key="user-123")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Partition Key Design
 
@@ -790,7 +790,7 @@ container.delete_item(item="user-123", partition_key="user-123")
 # Example: E-commerce orders
 {
     "id": "order-12345",
-    "customerId": "cust-789",  # ← Partition key
+    "customerId": "cust-789",  # <- Partition key
     "orderDate": "2024-12-07",
     "items": [...],
     "total": 99.99
@@ -799,11 +799,11 @@ container.delete_item(item="user-123", partition_key="user-123")
 # Query within partition (efficient):
 container.query_items(
     query="SELECT * FROM c WHERE c.orderDate > @date",
-    partition_key="cust-789"  # ← Locked to one partition!
+    partition_key="cust-789"  # <- Locked to one partition!
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Global Distribution
 
@@ -828,7 +828,7 @@ az cosmosdb failover-priority-change \\
     --failover-policies "westeurope=0" "northeurope=1"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -848,7 +848,7 @@ container.query_items(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -890,7 +890,7 @@ AZURE_NODE_12_CACHE = {
 
 > *"The fastest way to speed up your app is to not hit the database."*
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -901,45 +901,45 @@ AZURE_NODE_12_CACHE = {
 | Real-time features | Polling, hog latency | Pub/Sub, microsekunder |
 | Rate limiting | Komplex implementation | Atomic INCR med TTL |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Caching Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    CACHING ARCHITECTURE                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Without Cache:                                                 │
-│  ┌────────┐        ┌──────────┐        ┌──────────┐            │
-│  │ Client │ ────→  │   App    │ ────→  │ Database │            │
-│  └────────┘        └──────────┘        └──────────┘            │
-│                        │                    │                   │
-│                    50ms total           50ms query              │
-│                                                                  │
-│  With Cache (Cache Hit):                                        │
-│  ┌────────┐        ┌──────────┐        ┌──────────┐            │
-│  │ Client │ ────→  │   App    │ ─ X ─  │ Database │            │
-│  └────────┘        └──────────┘        └──────────┘            │
-│                        │                                        │
-│                    ┌──────────┐                                 │
-│                    │  Redis   │                                 │
-│                    └──────────┘                                 │
-│                        │                                        │
-│                    2ms total (25x faster!)                      │
-│                                                                  │
-│  TIERS:                                                         │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ Basic      │ Standard   │ Premium      │ Enterprise    │    │
-│  │ - No SLA   │ - 99.9%    │ - Clustering │ - 99.999%     │    │
-│  │ - Dev/test │ - Replicas │ - VNet       │ - Active-geo  │    │
-│  │ - 250MB+   │ - HA       │ - Zones      │ - Redis Modules│   │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    CACHING ARCHITECTURE                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Without Cache:                                                 |
+|  +--------+        +----------+        +----------+            |
+|  | Client | ----->  |   App    | ----->  | Database |            |
+|  +--------+        +----------+        +----------+            |
+|                        |                    |                   |
+|                    50ms total           50ms query              |
+|                                                                  |
+|  With Cache (Cache Hit):                                        |
+|  +--------+        +----------+        +----------+            |
+|  | Client | ----->  |   App    | - X -  | Database |            |
+|  +--------+        +----------+        +----------+            |
+|                        |                                        |
+|                    +----------+                                 |
+|                    |  Redis   |                                 |
+|                    +----------+                                 |
+|                        |                                        |
+|                    2ms total (25x faster!)                      |
+|                                                                  |
+|  TIERS:                                                         |
+|  +---------------------------------------------------------+    |
+|  | Basic      | Standard   | Premium      | Enterprise    |    |
+|  | - No SLA   | - 99.9%    | - Clustering | - 99.999%     |    |
+|  | - Dev/test | - Replicas | - VNet       | - Active-geo  |    |
+|  | - 250MB+   | - HA       | - Zones      | - Redis Modules|   |
+|  +---------------------------------------------------------+    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa Redis Cache
 
@@ -974,7 +974,7 @@ az redis show \\
     --query "{Host:hostName,Port:sslPort}"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Python Usage
 
@@ -1018,7 +1018,7 @@ def get_user(user_id: str):
     if cached:
         return json.loads(cached)
 
-    # 2. Cache miss → hämta från databas
+    # 2. Cache miss -> hämta från databas
     user = db.query_user(user_id)
 
     # 3. Spara i cache (1 timme TTL)
@@ -1050,7 +1050,7 @@ def validate_session(session_id: str):
     return json.loads(session_data)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Common Patterns
 
@@ -1106,7 +1106,7 @@ for message in pubsub.listen():
         print(f"Received: {data}")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## .NET Integration
 
@@ -1129,7 +1129,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Problem
 
@@ -1168,7 +1168,7 @@ def get_popular_item_safe(item_id):
         return get_popular_item_safe(item_id)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

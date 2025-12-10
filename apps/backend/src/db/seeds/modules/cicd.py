@@ -26,7 +26,7 @@ MODULE = {
             "difficulty": "beginner",
             "content": """# Introduction to CI/CD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -39,26 +39,26 @@ MODULE = {
 
 CI/CD ar grunden for modern DevOps.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CI/CD Pipeline Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CI/CD PIPELINE                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   CODE ──► BUILD ──► TEST ──► DEPLOY ──► MONITOR            │
-│     │        │        │         │          │                │
-│     ▼        ▼        ▼         ▼          ▼                │
-│   Git     Compile   Unit     Staging    Alerts              │
-│   push    Lint      Integ.   Prod       Metrics             │
-│   PR/MR   Deps      E2E      Canary     Logs                │
-│                                                             │
-├─────────────────────────────────────────────────────────────┤
-│   CI = Continuous Integration (bygg + test)                 │
-│   CD = Continuous Delivery/Deployment                       │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    CI/CD PIPELINE                           |
++-------------------------------------------------------------+
+|                                                             |
+|   CODE --► BUILD --► TEST --► DEPLOY --► MONITOR            |
+|     |        |        |         |          |                |
+|     ▼        ▼        ▼         ▼          ▼                |
+|   Git     Compile   Unit     Staging    Alerts              |
+|   push    Lint      Integ.   Prod       Metrics             |
+|   PR/MR   Deps      E2E      Canary     Logs                |
+|                                                             |
++-------------------------------------------------------------+
+|   CI = Continuous Integration (bygg + test)                 |
+|   CD = Continuous Delivery/Deployment                       |
++-------------------------------------------------------------+
 ```
 
 | Steg | Vad det gor |
@@ -69,7 +69,7 @@ CI/CD ar grunden for modern DevOps.
 | **Deploy** | Staging, production |
 | **Monitor** | Loggar, metrics |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CI/CD Verktyg
 
@@ -94,7 +94,7 @@ Drone CI               # Container-native
 | Jenkins | Flexibilitet |
 | Argo CD | Kubernetes |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Forsta Pipeline (GitHub Actions)
 
@@ -135,7 +135,7 @@ jobs:
         run: npm run build
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Best Practices
 
@@ -168,7 +168,7 @@ jobs:
 | Reproducerbarhet | npm ci, lock-filer |
 | Parallellism | Oberoende jobs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -176,7 +176,7 @@ jobs:
 |---------|--------|
 | **CI** | Bygg + test vid varje commit |
 | **CD** | Auto-deploy till produktion |
-| **Pipeline** | Code → Build → Test → Deploy |
+| **Pipeline** | Code -> Build -> Test -> Deploy |
 | **Feedback** | Snabbare = battre |
 | **Lock-filer** | Reproducerbara byggen |
 
@@ -194,7 +194,7 @@ jobs:
             "difficulty": "beginner",
             "content": """# GitHub Actions Fundamentals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -208,24 +208,24 @@ jobs:
 
 GitHub Actions ar industristandard for GitHub-projekt.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                GITHUB ACTIONS STRUKTUR                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   WORKFLOW (.github/workflows/ci.yml)                       │
-│   └── JOB (build, test, deploy)                             │
-│       └── STEP (checkout, install, test)                    │
-│           └── ACTION (actions/checkout@v4)                  │
-│               eller COMMAND (npm test)                      │
-│                                                             │
-│   RUNNER = Maskin som kor jobs                              │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                GITHUB ACTIONS STRUKTUR                      |
++-------------------------------------------------------------+
+|                                                             |
+|   WORKFLOW (.github/workflows/ci.yml)                       |
+|   +-- JOB (build, test, deploy)                             |
+|       +-- STEP (checkout, install, test)                    |
+|           +-- ACTION (actions/checkout@v4)                  |
+|               eller COMMAND (npm test)                      |
+|                                                             |
+|   RUNNER = Maskin som kor jobs                              |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Beskrivning |
@@ -236,7 +236,7 @@ GitHub Actions ar industristandard for GitHub-projekt.
 | **Action** | Ateranvandbar komponent |
 | **Runner** | ubuntu, windows, macos |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Workflow Syntax
 
@@ -287,7 +287,7 @@ jobs:
 | `schedule` | Cron |
 | `workflow_dispatch` | Manuell |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jobs och Dependencies
 
@@ -320,7 +320,7 @@ jobs:
       - run: echo "Deploying..."
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Matrix Builds
 
@@ -353,7 +353,7 @@ jobs:
 | 3 OS x 3 Node | 9 jobb |
 | Med exclude | 8 jobb |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secrets och Variabler
 
@@ -383,7 +383,7 @@ jobs:
 | `vars.*` | Publik config |
 | `env:` | Job/step scope |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Caching
 
@@ -410,7 +410,7 @@ jobs:
           key: build-${{ github.sha }}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Artifacts
 
@@ -438,7 +438,7 @@ jobs:
           name: build-output
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -464,7 +464,7 @@ jobs:
             "difficulty": "beginner",
             "content": """# GitLab CI/CD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -478,22 +478,22 @@ jobs:
 
 GitLab CI/CD ar kraftfullt och populart i enterprise.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 GITLAB CI/CD STRUKTUR                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   .gitlab-ci.yml (repo-root)                                │
-│   └── PIPELINE (alla jobs for en commit)                    │
-│       └── STAGES (build, test, deploy)                      │
-│           └── JOBS (individuella tasks)                     │
-│               └── RUNNERS (kor jobs)                        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 GITLAB CI/CD STRUKTUR                       |
++-------------------------------------------------------------+
+|                                                             |
+|   .gitlab-ci.yml (repo-root)                                |
+|   +-- PIPELINE (alla jobs for en commit)                    |
+|       +-- STAGES (build, test, deploy)                      |
+|           +-- JOBS (individuella tasks)                     |
+|               +-- RUNNERS (kor jobs)                        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Beskrivning |
@@ -504,7 +504,7 @@ GitLab CI/CD ar kraftfullt och populart i enterprise.
 | **Jobs** | Individuella tasks |
 | **Runners** | Maskiner som kor |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Pipeline
 
@@ -547,7 +547,7 @@ deploy:
     url: https://example.com
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jobs och Dependencies
 
@@ -594,7 +594,7 @@ deploy-staging:
 | `needs: [job]` | Vanta pa job |
 | `only:` | Filter branch |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cache och Artifacts
 
@@ -626,7 +626,7 @@ build:
 | **cache** | Dependencies mellan pipelines |
 | **artifacts** | Output mellan jobs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Environments och Deployment
 
@@ -660,7 +660,7 @@ deploy-production:
     - main
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rules (Modern Syntax)
 
@@ -692,7 +692,7 @@ test:
 | `changes:` | File-filter |
 | `when: manual` | Manuell |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Includes och Templates
 
@@ -720,7 +720,7 @@ test:
     - npm test
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Services (Sidecars)
 
@@ -741,7 +741,7 @@ test:
     - pytest
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -767,7 +767,7 @@ test:
             "difficulty": "intermediate",
             "content": """# Jenkins Pipelines
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -781,32 +781,32 @@ test:
 
 Jenkins ar fortfarande enormt populart i enterprise.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pipeline Typer
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 JENKINS PIPELINE TYPER                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. Declarative Pipeline                                   │
-│      - Strukturerad syntax                                  │
-│      - Enkel att lasa                                       │
-│      - Rekommenderad                                        │
-│                                                             │
-│   2. Scripted Pipeline                                      │
-│      - Full Groovy-kontroll                                 │
-│      - Max flexibilitet                                     │
-│                                                             │
-│   3. Multibranch Pipeline                                   │
-│      - Automatisk per branch                                │
-│      - Scan repository                                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 JENKINS PIPELINE TYPER                      |
++-------------------------------------------------------------+
+|                                                             |
+|   1. Declarative Pipeline                                   |
+|      - Strukturerad syntax                                  |
+|      - Enkel att lasa                                       |
+|      - Rekommenderad                                        |
+|                                                             |
+|   2. Scripted Pipeline                                      |
+|      - Full Groovy-kontroll                                 |
+|      - Max flexibilitet                                     |
+|                                                             |
+|   3. Multibranch Pipeline                                   |
+|      - Automatisk per branch                                |
+|      - Scan repository                                      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Declarative Pipeline
 
@@ -870,7 +870,7 @@ pipeline {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent Options
 
@@ -903,7 +903,7 @@ pipeline {
 | `agent { label }` | Specifik label |
 | `agent { docker }` | Docker container |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parallel Execution
 
@@ -935,7 +935,7 @@ pipeline {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Credentials
 
@@ -974,7 +974,7 @@ pipeline {
 | `sshagent()` | SSH agent |
 | `withCredentials()` | Scoped |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Shared Libraries
 
@@ -1007,7 +1007,7 @@ pipeline {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multibranch Pipeline
 
@@ -1040,7 +1040,7 @@ pipeline {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1066,7 +1066,7 @@ pipeline {
             "difficulty": "intermediate",
             "content": """# Testing in Pipelines
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1080,26 +1080,26 @@ pipeline {
 
 Automatiserade tester ar CI/CD:s ryggrad.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Test-pyramid
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    TEST PYRAMID                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│              /\\                                             │
-│             /  \\                                            │
-│            / E2E\\           Fa, langsamma, hogt varde       │
-│           /──────\\                                          │
-│          /Integr- \\         Mellan                          │
-│         /  ation   \\                                        │
-│        /────────────\\                                       │
-│       /   Unit       \\      Manga, snabba, grundlaggande    │
-│      /________________\\                                     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    TEST PYRAMID                             |
++-------------------------------------------------------------+
+|                                                             |
+|              /\\                                             |
+|             /  \\                                            |
+|            / E2E\\           Fa, langsamma, hogt varde       |
+|           /------\\                                          |
+|          /Integr- \\         Mellan                          |
+|         /  ation   \\                                        |
+|        /------------\\                                       |
+|       /   Unit       \\      Manga, snabba, grundlaggande    |
+|      /________________\\                                     |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Test-typ | Antal | Hastighet | Kostnad |
@@ -1108,7 +1108,7 @@ Automatiserade tester ar CI/CD:s ryggrad.
 | **Integration** | Mellan | Medium | Medium |
 | **E2E** | Fa | Langsam | Hog |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Unit Tests
 
@@ -1429,7 +1429,7 @@ jobs:
             "difficulty": "intermediate",
             "content": """# Build & Release Strategies
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1758,7 +1758,7 @@ jobs:
             "difficulty": "intermediate",
             "content": """# GitLab CI Deep Dive
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1772,21 +1772,21 @@ jobs:
 
 GitLab CI ar populart i enterprise-miljoer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komponenter
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 GITLAB CI KONCEPT                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Pipeline         Hela CI/CD-flodet                        │
-│   └── Stage        Grupp av jobs                            │
-│       └── Job      Enskild uppgift                          │
-│           └── Runner   Server som kor                       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 GITLAB CI KONCEPT                           |
++-------------------------------------------------------------+
+|                                                             |
+|   Pipeline         Hela CI/CD-flodet                        |
+|   +-- Stage        Grupp av jobs                            |
+|       +-- Job      Enskild uppgift                          |
+|           +-- Runner   Server som kor                       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Funktion |
@@ -1796,7 +1796,7 @@ GitLab CI ar populart i enterprise-miljoer.
 | **Job** | Enskild uppgift |
 | **Runner** | Kor jobs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Pipeline
 
@@ -2095,7 +2095,7 @@ security-scan:
             "difficulty": "intermediate",
             "content": """# Azure DevOps Pipelines
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2109,21 +2109,21 @@ security-scan:
 
 Azure DevOps ar standard i Microsoft-ekosystemet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              AZURE PIPELINES HIERARKI                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Pipeline (YAML-fil)                                       │
-│   └── Stage (logisk grupp)                                  │
-│       └── Job (kors pa en agent)                            │
-│           └── Step (enskild task)                           │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              AZURE PIPELINES HIERARKI                       |
++-------------------------------------------------------------+
+|                                                             |
+|   Pipeline (YAML-fil)                                       |
+|   +-- Stage (logisk grupp)                                  |
+|       +-- Job (kors pa en agent)                            |
+|           +-- Step (enskild task)                           |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Beskrivning |
@@ -2133,7 +2133,7 @@ Azure DevOps ar standard i Microsoft-ekosystemet.
 | **Job** | Kors pa en agent |
 | **Step** | Enskild task |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande Pipeline
 
@@ -2458,7 +2458,7 @@ jobs:
             "difficulty": "intermediate",
             "content": """# Container-based CI/CD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2472,22 +2472,22 @@ jobs:
 
 Containers eliminerar "works on my machine"-problem.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Container-CI Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              CONTAINER CI/CD FLOW                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. BUILD     Skapa container image                        │
-│   2. TEST      Testa i container                            │
-│   3. SCAN      Sakerhetsscanning                            │
-│   4. PUSH      Till registry                                │
-│   5. DEPLOY    Till runtime                                 │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              CONTAINER CI/CD FLOW                           |
++-------------------------------------------------------------+
+|                                                             |
+|   1. BUILD     Skapa container image                        |
+|   2. TEST      Testa i container                            |
+|   3. SCAN      Sakerhetsscanning                            |
+|   4. PUSH      Till registry                                |
+|   5. DEPLOY    Till runtime                                 |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Steg | Verktyg |
@@ -2498,7 +2498,7 @@ Containers eliminerar "works on my machine"-problem.
 | **Push** | Docker Registry, ECR, GCR |
 | **Deploy** | Kubernetes, ECS, Cloud Run |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Multi-Stage Dockerfile
 
@@ -2808,7 +2808,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# GitOps with ArgoCD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2822,21 +2822,21 @@ jobs:
 
 GitOps ar modern standard for Kubernetes-deployment.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GitOps-principer
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 GITOPS PRINCIPER                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   DECLARATIVE    Onskat state definieras i Git             │
-│   VERSIONED      Alla andringar committas                   │
-│   AUTOMATED      Agent synkar automatiskt till cluster      │
-│   AUDITABLE      Git history = audit log                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 GITOPS PRINCIPER                            |
++-------------------------------------------------------------+
+|                                                             |
+|   DECLARATIVE    Onskat state definieras i Git             |
+|   VERSIONED      Alla andringar committas                   |
+|   AUTOMATED      Agent synkar automatiskt till cluster      |
+|   AUDITABLE      Git history = audit log                    |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Princip | Beskrivning |
@@ -2846,7 +2846,7 @@ GitOps ar modern standard for Kubernetes-deployment.
 | **Automated** | Agent synkar |
 | **Auditable** | Git history |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ArgoCD Installation
 
@@ -3194,7 +3194,7 @@ spec:
             "difficulty": "advanced",
             "content": """# Secrets Management
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3208,21 +3208,21 @@ spec:
 
 Secrets-lackage ar extremt dyrt - bade ekonomiskt och for ryktet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Secrets-strategier
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              SECRETS STRATEGIER                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. Environment Variables    Runtime injection             │
-│   2. Secret Managers          Centraliserad lagring         │
-│   3. Sealed Secrets           Krypterade i Git              │
-│   4. SOPS                     Encrypted files               │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              SECRETS STRATEGIER                             |
++-------------------------------------------------------------+
+|                                                             |
+|   1. Environment Variables    Runtime injection             |
+|   2. Secret Managers          Centraliserad lagring         |
+|   3. Sealed Secrets           Krypterade i Git              |
+|   4. SOPS                     Encrypted files               |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Strategi | Anvandning |
@@ -3232,7 +3232,7 @@ Secrets-lackage ar extremt dyrt - bade ekonomiskt och for ryktet.
 | **Sealed Secrets** | GitOps-vanligt |
 | **SOPS** | Encrypted config |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GitHub Actions Secrets
 
@@ -3547,7 +3547,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# Pipeline Optimization
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3561,21 +3561,21 @@ jobs:
 
 Langsamma pipelines kostar enormt i forlorad tid.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Optimeringsomraden
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              OPTIMERINGSOMRADEN                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. PARALLELLISM     Kor saker samtidigt                   │
-│   2. CACHING          Ateranvand resultat                   │
-│   3. INKREMENTELLT    Bygg bara det som andrats             │
-│   4. RATT RUNNERS     Resurser efter behov                  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              OPTIMERINGSOMRADEN                             |
++-------------------------------------------------------------+
+|                                                             |
+|   1. PARALLELLISM     Kor saker samtidigt                   |
+|   2. CACHING          Ateranvand resultat                   |
+|   3. INKREMENTELLT    Bygg bara det som andrats             |
+|   4. RATT RUNNERS     Resurser efter behov                  |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Omrade | Vinst |
@@ -3585,7 +3585,7 @@ Langsamma pipelines kostar enormt i forlorad tid.
 | **Inkrementellt** | Monorepo-optimering |
 | **Runners** | Storre for tunga tasks |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Parallel Execution
 
@@ -3889,7 +3889,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# Multi-Environment Deployments
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3903,22 +3903,22 @@ jobs:
 
 Flera miljoer ar standard for sakra deployments.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Miljo-hierarki
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              MILJO-HIERARKI                                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   DEVELOPMENT    Utvecklartestning                          │
-│   STAGING        Prod-like testning                         │
-│   PRODUCTION     Live-trafik                                │
-│                                                             │
-│   Varje miljo = egen konfiguration                          │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              MILJO-HIERARKI                                 |
++-------------------------------------------------------------+
+|                                                             |
+|   DEVELOPMENT    Utvecklartestning                          |
+|   STAGING        Prod-like testning                         |
+|   PRODUCTION     Live-trafik                                |
+|                                                             |
+|   Varje miljo = egen konfiguration                          |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Miljo | Syfte |
@@ -3927,7 +3927,7 @@ Flera miljoer ar standard for sakra deployments.
 | **Staging** | Prod-like testning |
 | **Production** | Live-trafik |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GitHub Environments
 
@@ -4299,7 +4299,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# Monitoring CI/CD Pipelines
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4313,21 +4313,21 @@ jobs:
 
 DORA-metrics mater engineering excellence.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## DORA Metrics
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 DORA METRICS                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. Deployment Frequency    Hur ofta deployas              │
-│   2. Lead Time               Commit till prod               │
-│   3. Change Failure Rate     Misslyckade deploys            │
-│   4. MTTR                    Tid att aterhamta              │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                 DORA METRICS                                |
++-------------------------------------------------------------+
+|                                                             |
+|   1. Deployment Frequency    Hur ofta deployas              |
+|   2. Lead Time               Commit till prod               |
+|   3. Change Failure Rate     Misslyckade deploys            |
+|   4. MTTR                    Tid att aterhamta              |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Metric | Matning |
@@ -4337,7 +4337,7 @@ DORA-metrics mater engineering excellence.
 | **Failure Rate** | Under 15% = bra |
 | **MTTR** | Under 1 timme = bra |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## DORA Metrics Implementation
 
@@ -4615,7 +4615,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# Compliance and Audit
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4629,21 +4629,21 @@ jobs:
 
 Audit trail ar bevis pa processer och compliance.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Compliance i CI/CD
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              COMPLIANCE OMRADEN                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. Access Control     Vem far deploya                     │
-│   2. Audit Trail        Vad hande nar                       │
-│   3. Approvals          Manuella godkannanden               │
-│   4. Scanning           Sakerhet och licenser               │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              COMPLIANCE OMRADEN                             |
++-------------------------------------------------------------+
+|                                                             |
+|   1. Access Control     Vem far deploya                     |
+|   2. Audit Trail        Vad hande nar                       |
+|   3. Approvals          Manuella godkannanden               |
+|   4. Scanning           Sakerhet och licenser               |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Omrade | Beskrivning |
@@ -4653,7 +4653,7 @@ Audit trail ar bevis pa processer och compliance.
 | **Approvals** | Manuella godkannanden |
 | **Scanning** | Sakerhet och licenser |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Branch Protection
 
@@ -4971,7 +4971,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# Disaster Recovery
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -4985,21 +4985,21 @@ jobs:
 
 Disaster recovery ar kritiskt for CI/CD-infrastruktur.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## DR-koncept
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              DR KONCEPT                                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   RTO     Recovery Time Objective                           │
-│   RPO     Recovery Point Objective                          │
-│   BACKUP  Sakerhetskopiering                                │
-│   ROLLBACK  Aterstall tidigare version                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              DR KONCEPT                                     |
++-------------------------------------------------------------+
+|                                                             |
+|   RTO     Recovery Time Objective                           |
+|   RPO     Recovery Point Objective                          |
+|   BACKUP  Sakerhetskopiering                                |
+|   ROLLBACK  Aterstall tidigare version                      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Koncept | Beskrivning |
@@ -5009,7 +5009,7 @@ Disaster recovery ar kritiskt for CI/CD-infrastruktur.
 | **Backup** | Sakerhetskopiering |
 | **Rollback** | Aterstall version |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rollback Strategies
 
@@ -5308,7 +5308,7 @@ jobs:
             "difficulty": "intermediate",
             "content": """# CircleCI and Other Platforms
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5322,21 +5322,21 @@ jobs:
 
 Olika plattformar passar olika behov.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Gemensamma Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              GEMENSAMMA CI/CD KONCEPT                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   Pipeline Definition    YAML-fil                           │
-│   Jobs                   Korbar enhet                       │
-│   Workflows              Orkestrering                       │
-│   Artifacts              Output-filer                       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              GEMENSAMMA CI/CD KONCEPT                       |
++-------------------------------------------------------------+
+|                                                             |
+|   Pipeline Definition    YAML-fil                           |
+|   Jobs                   Korbar enhet                       |
+|   Workflows              Orkestrering                       |
+|   Artifacts              Output-filer                       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Koncept | Beskrivning |
@@ -5346,7 +5346,7 @@ Olika plattformar passar olika behov.
 | **Workflows** | Orkestrering |
 | **Artifacts** | Output-filer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CircleCI Basics
 
@@ -5777,7 +5777,7 @@ jobs:
             "difficulty": "advanced",
             "content": """# Self-Hosted Runners
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -5791,21 +5791,21 @@ jobs:
 
 Cloud runners racker inte alltid.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Self-hosted Setup
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              SELF-HOSTED SETUP                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. PROVISION    Skapa server                              │
-│   2. INSTALL      Runner-agent                              │
-│   3. REGISTER     Koppla till repo/org                      │
-│   4. LABEL        For targeting                             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              SELF-HOSTED SETUP                              |
++-------------------------------------------------------------+
+|                                                             |
+|   1. PROVISION    Skapa server                              |
+|   2. INSTALL      Runner-agent                              |
+|   3. REGISTER     Koppla till repo/org                      |
+|   4. LABEL        For targeting                             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Steg | Beskrivning |
@@ -5815,7 +5815,7 @@ Cloud runners racker inte alltid.
 | **Register** | Koppla till repo |
 | **Label** | Targeting |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GitHub Actions Runner
 
@@ -6124,7 +6124,7 @@ spec:
             "difficulty": "advanced",
             "content": """# Monorepo CI/CD Patterns
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -6138,21 +6138,21 @@ spec:
 
 Monorepos kraver smart CI/CD.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Monorepo CI-utmaningar
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              MONOREPO UTMANINGAR                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. CHANGE DETECTION    Vad andrades?                      │
-│   2. DEPENDENCY GRAPH    Vad paverkas?                      │
-│   3. SELECTIVE EXEC      Kor bara det                       │
-│   4. CACHING             Spara tid                          │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              MONOREPO UTMANINGAR                            |
++-------------------------------------------------------------+
+|                                                             |
+|   1. CHANGE DETECTION    Vad andrades?                      |
+|   2. DEPENDENCY GRAPH    Vad paverkas?                      |
+|   3. SELECTIVE EXEC      Kor bara det                       |
+|   4. CACHING             Spara tid                          |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Utmaning | Losning |
@@ -6162,7 +6162,7 @@ Monorepos kraver smart CI/CD.
 | **Selective** | Affected builds |
 | **Caching** | Remote cache |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Turborepo Setup
 
@@ -6528,7 +6528,7 @@ jobs:
             "difficulty": "expert",
             "content": """# Enterprise CI/CD Patterns
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -6542,21 +6542,21 @@ jobs:
 
 Enterprise-patterns skalar till stora organisationer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Enterprise CI/CD Principer
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              ENTERPRISE PRINCIPER                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. PLATFORM TEAM    Bygger verktygen                      │
-│   2. PRODUCT TEAMS    Anvander verktygen                    │
-│   3. GOLDEN PATHS     Rekommenderad vag                     │
-│   4. GUARDRAILS       Automatiska begransningar             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|              ENTERPRISE PRINCIPER                           |
++-------------------------------------------------------------+
+|                                                             |
+|   1. PLATFORM TEAM    Bygger verktygen                      |
+|   2. PRODUCT TEAMS    Anvander verktygen                    |
+|   3. GOLDEN PATHS     Rekommenderad vag                     |
+|   4. GUARDRAILS       Automatiska begransningar             |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Princip | Beskrivning |
@@ -6566,7 +6566,7 @@ Enterprise-patterns skalar till stora organisationer.
 | **Golden Paths** | Rekommenderad vag |
 | **Guardrails** | Begransningar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Template Libraries
 

@@ -39,19 +39,19 @@ LINUX_NODE_14_FIREWALL_V2 = {
                         "title": "UFW - Uncomplicated Firewall",
                         "explanation": "UFW är standard på Ubuntu. Enkelt interface över iptables. 'deny incoming, allow outgoing' är säker default.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ UFW KOMMANDON                                       │
-├─────────────────────────────────────────────────────┤
-│ sudo ufw status         │ Visa status & regler     │
-│ sudo ufw enable         │ Aktivera firewall        │
-│ sudo ufw disable        │ Inaktivera              │
-│ sudo ufw default deny incoming                      │
-│ sudo ufw default allow outgoing                     │
-│ sudo ufw allow 22       │ Tillåt SSH              │
-│ sudo ufw allow ssh      │ Samma (service name)    │
-│ sudo ufw deny 23        │ Blockera port           │
-│ sudo ufw delete allow 80│ Ta bort regel           │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| UFW KOMMANDON                                       |
++-----------------------------------------------------+
+| sudo ufw status         | Visa status & regler     |
+| sudo ufw enable         | Aktivera firewall        |
+| sudo ufw disable        | Inaktivera              |
+| sudo ufw default deny incoming                      |
+| sudo ufw default allow outgoing                     |
+| sudo ufw allow 22       | Tillåt SSH              |
+| sudo ufw allow ssh      | Samma (service name)    |
+| sudo ufw deny 23        | Blockera port           |
+| sudo ufw delete allow 80| Ta bort regel           |
++-----------------------------------------------------+""",
                         "pro_tip": "ALLTID tillåt SSH (port 22) INNAN du aktiverar firewall!",
                         "common_mistake": "Att aktivera firewall utan att tillåta SSH - du låser dig ute!"
                     },
@@ -59,22 +59,22 @@ LINUX_NODE_14_FIREWALL_V2 = {
                         "title": "Avancerade UFW-regler",
                         "explanation": "UFW kan filtrera på IP, nätverk, port ranges och application profiles.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ AVANCERADE UFW REGLER                               │
-├─────────────────────────────────────────────────────┤
-│ # Tillåt från specifik IP                          │
-│ sudo ufw allow from 192.168.1.100                  │
-│                                                     │
-│ # Tillåt nätverk till specifik port                │
-│ sudo ufw allow from 192.168.1.0/24 to any port 22  │
-│                                                     │
-│ # Port range                                        │
-│ sudo ufw allow 6000:6007/tcp                       │
-│                                                     │
-│ # Application profiles                              │
-│ sudo ufw app list                                  │
-│ sudo ufw allow "Nginx Full"                        │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| AVANCERADE UFW REGLER                               |
++-----------------------------------------------------+
+| # Tillåt från specifik IP                          |
+| sudo ufw allow from 192.168.1.100                  |
+|                                                     |
+| # Tillåt nätverk till specifik port                |
+| sudo ufw allow from 192.168.1.0/24 to any port 22  |
+|                                                     |
+| # Port range                                        |
+| sudo ufw allow 6000:6007/tcp                       |
+|                                                     |
+| # Application profiles                              |
+| sudo ufw app list                                  |
+| sudo ufw allow "Nginx Full"                        |
++-----------------------------------------------------+""",
                         "pro_tip": "'ufw status numbered' visar regelnummer för enkel deletion",
                         "common_mistake": "Att glömma /tcp eller /udp när det är relevant."
                     },
@@ -82,27 +82,27 @@ LINUX_NODE_14_FIREWALL_V2 = {
                         "title": "iptables Grunderna",
                         "explanation": "iptables är det underliggande systemet. INPUT=till server, OUTPUT=från server, FORWARD=genom server.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ IPTABLES CHAINS                                     │
-├─────────────────────────────────────────────────────┤
-│   Internet                                          │
-│       │                                             │
-│       ▼                                             │
-│   ┌───────────┐                                     │
-│   │   INPUT   │ → Trafik TO this server            │
-│   └───────────┘                                     │
-│       │                                             │
-│       ▼                                             │
-│   [Server processes]                                │
-│       │                                             │
-│       ▼                                             │
-│   ┌───────────┐                                     │
-│   │  OUTPUT   │ → Trafik FROM this server          │
-│   └───────────┘                                     │
-│       │                                             │
-│       ▼                                             │
-│   Internet                                          │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| IPTABLES CHAINS                                     |
++-----------------------------------------------------+
+|   Internet                                          |
+|       |                                             |
+|       ▼                                             |
+|   +-----------+                                     |
+|   |   INPUT   | -> Trafik TO this server            |
+|   +-----------+                                     |
+|       |                                             |
+|       ▼                                             |
+|   [Server processes]                                |
+|       |                                             |
+|       ▼                                             |
+|   +-----------+                                     |
+|   |  OUTPUT   | -> Trafik FROM this server          |
+|   +-----------+                                     |
+|       |                                             |
+|       ▼                                             |
+|   Internet                                          |
++-----------------------------------------------------+""",
                         "pro_tip": "Använd UFW istället för raw iptables - mycket enklare!",
                         "common_mistake": "Att inte spara iptables-regler - de försvinner vid reboot."
                     }
@@ -161,9 +161,9 @@ LINUX_NODE_14_FIREWALL_V2 = {
                         {
                             "question": "Vilken ordning ska du göra firewall-setup?",
                             "options": [
-                                "enable → allow ssh → set defaults",
-                                "set defaults → allow ssh → enable",
-                                "allow ssh → set defaults → enable",
+                                "enable -> allow ssh -> set defaults",
+                                "set defaults -> allow ssh -> enable",
+                                "allow ssh -> set defaults -> enable",
                                 "Ordningen spelar ingen roll"
                             ],
                             "correct": 1,

@@ -7,7 +7,7 @@ Complete Azure cloud platform mastery from basics to advanced services.
 Slug: azure-mastery
 Icon: ☁️
 Color: #0078D4 (Azure blue)
-Nodes: 20 (5 blocks × 4 nodes)
+Nodes: 20 (5 blocks x 4 nodes)
 
 Block Structure:
 1. Azure Fundamentals (Nodes 1-4)

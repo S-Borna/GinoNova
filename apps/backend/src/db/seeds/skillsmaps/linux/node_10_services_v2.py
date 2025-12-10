@@ -39,19 +39,19 @@ LINUX_NODE_10_SERVICES_V2 = {
                         "title": "systemctl - Tjänsthantering",
                         "explanation": "systemctl är verktyget för att hantera tjänster. status, start, stop, restart, enable, disable är de viktigaste kommandona.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ SYSTEMCTL KOMMANDON                                 │
-├─────────────────────────────────────────────────────┤
-│ systemctl status nginx    │ Visa tjänstens status  │
-│ systemctl start nginx     │ Starta tjänst          │
-│ systemctl stop nginx      │ Stoppa tjänst          │
-│ systemctl restart nginx   │ Starta om              │
-│ systemctl reload nginx    │ Ladda om config        │
-│ systemctl enable nginx    │ Autostart vid boot     │
-│ systemctl disable nginx   │ Ingen autostart        │
-│ systemctl is-active nginx │ Kör den?               │
-│ systemctl is-enabled nginx│ Autostart aktiv?       │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| SYSTEMCTL KOMMANDON                                 |
++-----------------------------------------------------+
+| systemctl status nginx    | Visa tjänstens status  |
+| systemctl start nginx     | Starta tjänst          |
+| systemctl stop nginx      | Stoppa tjänst          |
+| systemctl restart nginx   | Starta om              |
+| systemctl reload nginx    | Ladda om config        |
+| systemctl enable nginx    | Autostart vid boot     |
+| systemctl disable nginx   | Ingen autostart        |
+| systemctl is-active nginx | Kör den?               |
+| systemctl is-enabled nginx| Autostart aktiv?       |
++-----------------------------------------------------+""",
                         "pro_tip": "enable --now kombinerar enable + start i ett kommando!",
                         "common_mistake": "Glömma sudo - de flesta systemctl-kommandon kräver root."
                     },
@@ -59,16 +59,16 @@ LINUX_NODE_10_SERVICES_V2 = {
                         "title": "journalctl - Systemloggar",
                         "explanation": "journalctl samlar ALLA systemd-loggar på ett ställe. Filtrera per tjänst, tid, prioritet.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ JOURNALCTL KOMMANDON                                │
-├─────────────────────────────────────────────────────┤
-│ journalctl -u nginx       │ Loggar för nginx       │
-│ journalctl -u nginx -f    │ Följ live              │
-│ journalctl -u nginx -n 50 │ Senaste 50 rader       │
-│ journalctl -u nginx -p err│ Bara errors            │
-│ journalctl -u nginx -b    │ Sedan boot             │
-│ journalctl --since "1h"   │ Senaste timmen         │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| JOURNALCTL KOMMANDON                                |
++-----------------------------------------------------+
+| journalctl -u nginx       | Loggar för nginx       |
+| journalctl -u nginx -f    | Följ live              |
+| journalctl -u nginx -n 50 | Senaste 50 rader       |
+| journalctl -u nginx -p err| Bara errors            |
+| journalctl -u nginx -b    | Sedan boot             |
+| journalctl --since "1h"   | Senaste timmen         |
++-----------------------------------------------------+""",
                         "pro_tip": "-f (follow) + -u (unit) = live debugging!",
                         "common_mistake": "Att leta i /var/log/ när journalctl har allt samlat."
                     },
@@ -76,23 +76,23 @@ LINUX_NODE_10_SERVICES_V2 = {
                         "title": "Skapa egen Service",
                         "explanation": "Unit-filer i /etc/systemd/system/ definierar egna tjänster. Tre sektioner: [Unit], [Service], [Install].",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ SERVICE UNIT STRUKTUR                               │
-├─────────────────────────────────────────────────────┤
-│ [Unit]                                              │
-│ Description=My Application                          │
-│ After=network.target                               │
-│                                                     │
-│ [Service]                                          │
-│ Type=simple                                        │
-│ User=myapp                                         │
-│ WorkingDirectory=/opt/myapp                        │
-│ ExecStart=/opt/myapp/run.sh                        │
-│ Restart=always                                     │
-│                                                     │
-│ [Install]                                          │
-│ WantedBy=multi-user.target                         │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| SERVICE UNIT STRUKTUR                               |
++-----------------------------------------------------+
+| [Unit]                                              |
+| Description=My Application                          |
+| After=network.target                               |
+|                                                     |
+| [Service]                                          |
+| Type=simple                                        |
+| User=myapp                                         |
+| WorkingDirectory=/opt/myapp                        |
+| ExecStart=/opt/myapp/run.sh                        |
+| Restart=always                                     |
+|                                                     |
+| [Install]                                          |
+| WantedBy=multi-user.target                         |
++-----------------------------------------------------+""",
                         "pro_tip": "Restart=always med RestartSec=5 ger automatisk recovery.",
                         "common_mistake": "Glömma 'systemctl daemon-reload' efter att ändra unit-filer."
                     }

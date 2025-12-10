@@ -39,19 +39,19 @@ ansible all -m apt -a "name=openssl state=latest" --become
 Ansible är ett **agentless configuration management och automation-verktyg** skapat av Michael DeHaan 2012 (nu ägt av Red Hat).
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     ANSIBLE VS ANDRA VERKTYG                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ANSIBLE          PUPPET           CHEF            SALTSTACK           │
-│   ────────         ──────           ────            ─────────           │
-│   Agentless        Agent            Agent           Agent/Agentless     │
-│   Push-based       Pull-based       Pull-based      Push/Pull           │
-│   YAML             DSL              Ruby DSL        YAML                │
-│   SSH              HTTPS            HTTPS           ZeroMQ              │
-│   Simple           Complex          Complex         Medium              │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     ANSIBLE VS ANDRA VERKTYG                            |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   ANSIBLE          PUPPET           CHEF            SALTSTACK           |
+|   --------         ------           ----            ---------           |
+|   Agentless        Agent            Agent           Agent/Agentless     |
+|   Push-based       Pull-based       Pull-based      Push/Pull           |
+|   YAML             DSL              Ruby DSL        YAML                |
+|   SSH              HTTPS            HTTPS           ZeroMQ              |
+|   Simple           Complex          Complex         Medium              |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Ansibles Kärnkoncept
@@ -69,43 +69,43 @@ Ansible är ett **agentless configuration management och automation-verktyg** sk
 ## Arkitektur Deep Dive
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         ANSIBLE ARKITEKTUR                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌─────────────────────────────────────┐                                │
-│  │         CONTROL NODE                │                                │
-│  │  ┌─────────────────────────────┐    │                                │
-│  │  │  ansible / ansible-playbook │    │                                │
-│  │  └──────────────┬──────────────┘    │                                │
-│  │                 │                   │                                │
-│  │  ┌──────────────┴──────────────┐    │                                │
-│  │  │      INVENTORY              │    │                                │
-│  │  │  [webservers]               │    │                                │
-│  │  │  web01.example.com          │    │                                │
-│  │  │  web02.example.com          │    │                                │
-│  │  └──────────────┬──────────────┘    │                                │
-│  │                 │                   │                                │
-│  │  ┌──────────────┴──────────────┐    │                                │
-│  │  │      PLAYBOOKS              │    │                                │
-│  │  │  - tasks                    │    │                                │
-│  │  │  - handlers                 │    │                                │
-│  │  │  - roles                    │    │                                │
-│  │  └─────────────────────────────┘    │                                │
-│  └─────────────────┬───────────────────┘                                │
-│                    │                                                    │
-│                    │ SSH (port 22)                                      │
-│                    │                                                    │
-│     ┌──────────────┼──────────────┬──────────────┐                      │
-│     ▼              ▼              ▼              ▼                      │
-│  ┌──────┐      ┌──────┐      ┌──────┐      ┌──────┐                     │
-│  │web01 │      │web02 │      │ db01 │      │cache │                     │
-│  │      │      │      │      │      │      │      │                     │
-│  │Python│      │Python│      │Python│      │Python│                     │
-│  └──────┘      └──────┘      └──────┘      └──────┘                     │
-│           MANAGED NODES (Ingen Ansible-agent!)                          │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         ANSIBLE ARKITEKTUR                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  +-------------------------------------+                                |
+|  |         CONTROL NODE                |                                |
+|  |  +-----------------------------+    |                                |
+|  |  |  ansible / ansible-playbook |    |                                |
+|  |  +--------------+--------------+    |                                |
+|  |                 |                   |                                |
+|  |  +--------------+--------------+    |                                |
+|  |  |      INVENTORY              |    |                                |
+|  |  |  [webservers]               |    |                                |
+|  |  |  web01.example.com          |    |                                |
+|  |  |  web02.example.com          |    |                                |
+|  |  +--------------+--------------+    |                                |
+|  |                 |                   |                                |
+|  |  +--------------+--------------+    |                                |
+|  |  |      PLAYBOOKS              |    |                                |
+|  |  |  - tasks                    |    |                                |
+|  |  |  - handlers                 |    |                                |
+|  |  |  - roles                    |    |                                |
+|  |  +-----------------------------+    |                                |
+|  +-----------------+-------------------+                                |
+|                    |                                                    |
+|                    | SSH (port 22)                                      |
+|                    |                                                    |
+|     +--------------+--------------+--------------+                      |
+|     ▼              ▼              ▼              ▼                      |
+|  +------+      +------+      +------+      +------+                     |
+|  |web01 |      |web02 |      | db01 |      |cache |                     |
+|  |      |      |      |      |      |      |      |                     |
+|  |Python|      |Python|      |Python|      |Python|                     |
+|  +------+      +------+      +------+      +------+                     |
+|           MANAGED NODES (Ingen Ansible-agent!)                          |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Krav på Control Node
@@ -415,26 +415,26 @@ ansible 'databases:!prod_databases' -m shell -a "pg_dump..."
 ## Inventory Koncept
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        INVENTORY HIERARCHY                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│                              ALL                                        │
-│                               │                                         │
-│         ┌─────────────────────┼─────────────────────┐                   │
-│         │                     │                     │                   │
-│    ┌────┴────┐          ┌────┴────┐          ┌────┴────┐               │
-│    │   DEV   │          │ STAGING │          │  PROD   │               │
-│    └────┬────┘          └────┬────┘          └────┬────┘               │
-│         │                    │                    │                    │
-│    ┌────┼────┐          ┌────┼────┐          ┌────┼────┐               │
-│    │    │    │          │    │    │          │    │    │               │
-│   web  db  cache       web  db  cache       web  db  cache             │
-│                                                                         │
-│  Grupper kan ha children (nested groups)                               │
-│  Hosts kan vara i flera grupper                                        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        INVENTORY HIERARCHY                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|                              ALL                                        |
+|                               |                                         |
+|         +---------------------+---------------------+                   |
+|         |                     |                     |                   |
+|    +----+----+          +----+----+          +----+----+               |
+|    |   DEV   |          | STAGING |          |  PROD   |               |
+|    +----+----+          +----+----+          +----+----+               |
+|         |                    |                    |                    |
+|    +----+----+          +----+----+          +----+----+               |
+|    |    |    |          |    |    |          |    |    |               |
+|   web  db  cache       web  db  cache       web  db  cache             |
+|                                                                         |
+|  Grupper kan ha children (nested groups)                               |
+|  Hosts kan vara i flera grupper                                        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -628,23 +628,23 @@ ansible 'webservers[0:4]' -m ping
 ### Var definieras variabler?
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    VARIABEL PRECEDENCE (lägst → högst)                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. all group_vars                     group_vars/all.yml               │
-│  2. parent group_vars                  group_vars/production.yml        │
-│  3. child group_vars                   group_vars/webservers.yml        │
-│  4. host_vars                          host_vars/web01.yml              │
-│  5. inventory file vars                [webservers:vars]                │
-│  6. play vars                          vars: i playbook                 │
-│  7. include_vars                       dynamiskt laddade                │
-│  8. set_facts / registered vars        runtime                          │
-│  9. extra vars (-e)                    ansible-playbook -e "var=val"    │
-│                                                                         │
-│  HÖGRE NUMMER = ÖVERSKRIVER LÄGRE                                       │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    VARIABEL PRECEDENCE (lägst -> högst)                  |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. all group_vars                     group_vars/all.yml               |
+|  2. parent group_vars                  group_vars/production.yml        |
+|  3. child group_vars                   group_vars/webservers.yml        |
+|  4. host_vars                          host_vars/web01.yml              |
+|  5. inventory file vars                [webservers:vars]                |
+|  6. play vars                          vars: i playbook                 |
+|  7. include_vars                       dynamiskt laddade                |
+|  8. set_facts / registered vars        runtime                          |
+|  9. extra vars (-e)                    ansible-playbook -e "var=val"    |
+|                                                                         |
+|  HÖGRE NUMMER = ÖVERSKRIVER LÄGRE                                       |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### group_vars och host_vars
@@ -652,15 +652,15 @@ ansible 'webservers[0:4]' -m ping
 ```bash
 # Projektstruktur
 ansible-project/
-├── inventory.yml
-├── playbook.yml
-├── group_vars/
-│   ├── all.yml              # Gäller ALLA hosts
-│   ├── production.yml       # Gäller production-gruppen
-│   └── webservers.yml       # Gäller webservers-gruppen
-└── host_vars/
-    ├── web01.yml            # Specifikt för web01
-    └── db01.yml             # Specifikt för db01
++-- inventory.yml
++-- playbook.yml
++-- group_vars/
+|   +-- all.yml              # Gäller ALLA hosts
+|   +-- production.yml       # Gäller production-gruppen
+|   +-- webservers.yml       # Gäller webservers-gruppen
++-- host_vars/
+    +-- web01.yml            # Specifikt för web01
+    +-- db01.yml             # Specifikt för db01
 ```
 
 ```yaml
@@ -904,19 +904,19 @@ Ad-hoc commands är Ansible's **emergency toolkit**. När du inte har tid att sk
 ## Syntax och Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       AD-HOC COMMAND ANATOMY                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ansible  webservers  -i inventory.yml  -m apt  -a "name=nginx"  -b    │
-│     │         │              │            │           │            │    │
-│     │         │              │            │           │            │    │
-│  Command   Pattern       Inventory     Module    Arguments      Become  │
-│                                                                         │
-│  REQUIRED: ansible <pattern> -m <module>                               │
-│  OPTIONAL: -i, -a, -b, -u, -f, -v                                     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       AD-HOC COMMAND ANATOMY                            |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ansible  webservers  -i inventory.yml  -m apt  -a "name=nginx"  -b    |
+|     |         |              |            |           |            |    |
+|     |         |              |            |           |            |    |
+|  Command   Pattern       Inventory     Module    Arguments      Become  |
+|                                                                         |
+|  REQUIRED: ansible <pattern> -m <module>                               |
+|  OPTIONAL: -i, -a, -b, -u, -f, -v                                     |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Alla Flaggor
@@ -1076,21 +1076,21 @@ ansible all -m user -a "name=olduser state=absent remove=yes" -b
 ## Privilege Escalation
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     PRIVILEGE ESCALATION FLOW                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  SSH Login (ubuntu)                                                     │
-│       │                                                                 │
-│       │  --become                                                       │
-│       ▼                                                                 │
-│  sudo su (root)     ← default become_method                            │
-│       │                                                                 │
-│       │  --become-user=postgres                                         │
-│       ▼                                                                 │
-│  sudo -u postgres   ← specifik användare                               │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     PRIVILEGE ESCALATION FLOW                           |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  SSH Login (ubuntu)                                                     |
+|       |                                                                 |
+|       |  --become                                                       |
+|       ▼                                                                 |
+|  sudo su (root)     <- default become_method                            |
+|       |                                                                 |
+|       |  --become-user=postgres                                         |
+|       ▼                                                                 |
+|  sudo -u postgres   <- specifik användare                               |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ```bash
@@ -1303,18 +1303,18 @@ Tänk dig: Du har manuellt konfigurerat din webserver perfekt. Två månader sen
 YAML = YAML Ain't Markup Language. Det är ett data-serialiseringsformat designat för att vara läsbart av människor.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           YAML REGLER                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. Indentering med SPACES (aldrig TAB!)                               │
-│  2. 2 spaces är standard i Ansible                                      │
-│  3. Case sensitive                                                      │
-│  4. Listor börjar med -                                                │
-│  5. Key-value med :                                                     │
-│  6. Kommentarer med #                                                   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                           YAML REGLER                                   |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. Indentering med SPACES (aldrig TAB!)                               |
+|  2. 2 spaces är standard i Ansible                                      |
+|  3. Case sensitive                                                      |
+|  4. Listor börjar med -                                                |
+|  5. Key-value med :                                                     |
+|  6. Kommentarer med #                                                   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Data Types
@@ -1414,34 +1414,34 @@ servers:
 ## Playbook Struktur
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        PLAYBOOK ANATOMY                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   playbook.yml                                                          │
-│   │                                                                     │
-│   ├── PLAY 1 ──────────────────────────────────────────                │
-│   │   ├── name: Configure webservers                                   │
-│   │   ├── hosts: webservers                                            │
-│   │   ├── become: true                                                 │
-│   │   ├── vars:                                                        │
-│   │   │   └── http_port: 80                                           │
-│   │   │                                                                │
-│   │   └── tasks:                                                       │
-│   │       ├── Task 1: Install nginx                                    │
-│   │       ├── Task 2: Copy config                                      │
-│   │       └── Task 3: Start service                                    │
-│   │                                                                     │
-│   └── PLAY 2 ──────────────────────────────────────────                │
-│       ├── name: Configure databases                                    │
-│       ├── hosts: databases                                             │
-│       └── tasks:                                                       │
-│           └── ...                                                      │
-│                                                                         │
-│   En playbook kan ha FLERA plays                                       │
-│   Varje play körs mot en grupp hosts                                   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        PLAYBOOK ANATOMY                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   playbook.yml                                                          |
+|   |                                                                     |
+|   +-- PLAY 1 ------------------------------------------                |
+|   |   +-- name: Configure webservers                                   |
+|   |   +-- hosts: webservers                                            |
+|   |   +-- become: true                                                 |
+|   |   +-- vars:                                                        |
+|   |   |   +-- http_port: 80                                           |
+|   |   |                                                                |
+|   |   +-- tasks:                                                       |
+|   |       +-- Task 1: Install nginx                                    |
+|   |       +-- Task 2: Copy config                                      |
+|   |       +-- Task 3: Start service                                    |
+|   |                                                                     |
+|   +-- PLAY 2 ------------------------------------------                |
+|       +-- name: Configure databases                                    |
+|       +-- hosts: databases                                             |
+|       +-- tasks:                                                       |
+|           +-- ...                                                      |
+|                                                                         |
+|   En playbook kan ha FLERA plays                                       |
+|   Varje play körs mot en grupp hosts                                   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Komplett Playbook Exempel

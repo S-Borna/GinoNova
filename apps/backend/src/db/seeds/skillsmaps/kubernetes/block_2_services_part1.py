@@ -23,43 +23,43 @@ Kubernetes Services löser ett fundamentalt problem: Pods är efemära med dynam
 ### Problemet Services Löser
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    THE SERVICE ABSTRACTION PROBLEM                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  UTAN SERVICE:                                                           │
-│  ┌──────────┐                                                           │
-│  │ Frontend │                                                           │
-│  │   Pod    │                                                           │
-│  └────┬─────┘                                                           │
-│       │  "Vilken backend-IP ska jag använda?"                           │
-│       │  "Pod IPs ändras hela tiden!"                                   │
-│       ▼                                                                  │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │Backend-1│  │Backend-2│  │Backend-3│                                 │
-│  │10.1.0.5 │  │10.1.0.8 │  │10.1.0.12│  ← IPs ändras vid restart      │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-│  MED SERVICE:                                                            │
-│  ┌──────────┐                                                           │
-│  │ Frontend │                                                           │
-│  │   Pod    │                                                           │
-│  └────┬─────┘                                                           │
-│       │  "Anslut till backend-service:8080"                             │
-│       ▼                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐           │
-│  │                    SERVICE                               │           │
-│  │        backend-service.default.svc.cluster.local        │           │
-│  │                 ClusterIP: 10.96.1.100                   │           │
-│  └───────────────────────┬─────────────────────────────────┘           │
-│                          │  Load Balancing                              │
-│       ┌──────────────────┼──────────────────┐                          │
-│       ▼                  ▼                  ▼                           │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                                 │
-│  │Backend-1│  │Backend-2│  │Backend-3│                                 │
-│  └─────────┘  └─────────┘  └─────────┘                                 │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    THE SERVICE ABSTRACTION PROBLEM                       |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  UTAN SERVICE:                                                           |
+|  +----------+                                                           |
+|  | Frontend |                                                           |
+|  |   Pod    |                                                           |
+|  +----+-----+                                                           |
+|       |  "Vilken backend-IP ska jag använda?"                           |
+|       |  "Pod IPs ändras hela tiden!"                                   |
+|       ▼                                                                  |
+|  +---------+  +---------+  +---------+                                 |
+|  |Backend-1|  |Backend-2|  |Backend-3|                                 |
+|  |10.1.0.5 |  |10.1.0.8 |  |10.1.0.12|  <- IPs ändras vid restart      |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
+|  MED SERVICE:                                                            |
+|  +----------+                                                           |
+|  | Frontend |                                                           |
+|  |   Pod    |                                                           |
+|  +----+-----+                                                           |
+|       |  "Anslut till backend-service:8080"                             |
+|       ▼                                                                  |
+|  +---------------------------------------------------------+           |
+|  |                    SERVICE                               |           |
+|  |        backend-service.default.svc.cluster.local        |           |
+|  |                 ClusterIP: 10.96.1.100                   |           |
+|  +-----------------------+---------------------------------+           |
+|                          |  Load Balancing                              |
+|       +------------------+------------------+                          |
+|       ▼                  ▼                  ▼                           |
+|  +---------+  +---------+  +---------+                                 |
+|  |Backend-1|  |Backend-2|  |Backend-3|                                 |
+|  +---------+  +---------+  +---------+                                 |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Service Types
@@ -88,31 +88,31 @@ spec:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        ClusterIP SERVICE                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Åtkomst: Endast inom klustret                                          │
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────┐    │
-│  │                      KUBERNETES CLUSTER                         │    │
-│  │                                                                  │    │
-│  │  ┌────────────┐        ┌────────────────────┐                  │    │
-│  │  │ Any Pod    │───────▶│  ClusterIP Service │                  │    │
-│  │  │ in cluster │        │  10.96.1.100:80    │                  │    │
-│  │  └────────────┘        └─────────┬──────────┘                  │    │
-│  │                                  │                              │    │
-│  │                       ┌──────────┼──────────┐                  │    │
-│  │                       ▼          ▼          ▼                  │    │
-│  │                  ┌──────┐   ┌──────┐   ┌──────┐               │    │
-│  │                  │ Pod  │   │ Pod  │   │ Pod  │               │    │
-│  │                  └──────┘   └──────┘   └──────┘               │    │
-│  │                                                                  │    │
-│  └────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-│  ❌ Ej åtkomlig från utsidan                                           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                        ClusterIP SERVICE                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Åtkomst: Endast inom klustret                                          |
+|                                                                          |
+|  +----------------------------------------------------------------+    |
+|  |                      KUBERNETES CLUSTER                         |    |
+|  |                                                                  |    |
+|  |  +------------+        +--------------------+                  |    |
+|  |  | Any Pod    |-------▶|  ClusterIP Service |                  |    |
+|  |  | in cluster |        |  10.96.1.100:80    |                  |    |
+|  |  +------------+        +---------+----------+                  |    |
+|  |                                  |                              |    |
+|  |                       +----------+----------+                  |    |
+|  |                       ▼          ▼          ▼                  |    |
+|  |                  +------+   +------+   +------+               |    |
+|  |                  | Pod  |   | Pod  |   | Pod  |               |    |
+|  |                  +------+   +------+   +------+               |    |
+|  |                                                                  |    |
+|  +----------------------------------------------------------------+    |
+|                                                                          |
+|  ❌ Ej åtkomlig från utsidan                                           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### NodePort
@@ -133,43 +133,43 @@ spec:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         NodePort SERVICE                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Åtkomst: node-ip:nodePort från utsidan                                 │
-│                                                                          │
-│  EXTERNAL WORLD                                                          │
-│       │                                                                  │
-│       │  http://192.168.1.10:30080                                      │
-│       │  http://192.168.1.11:30080                                      │
-│       │  http://192.168.1.12:30080                                      │
-│       ▼                                                                  │
-│  ┌────────────────────────────────────────────────────────────────┐    │
-│  │                      KUBERNETES CLUSTER                         │    │
-│  │                                                                  │    │
-│  │  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐   │    │
-│  │  │    Node 1      │  │    Node 2      │  │    Node 3      │   │    │
-│  │  │ 192.168.1.10   │  │ 192.168.1.11   │  │ 192.168.1.12   │   │    │
-│  │  │     :30080     │  │     :30080     │  │     :30080     │   │    │
-│  │  └───────┬────────┘  └───────┬────────┘  └───────┬────────┘   │    │
-│  │          │                   │                   │             │    │
-│  │          └───────────────────┼───────────────────┘             │    │
-│  │                              │                                  │    │
-│  │                    ┌─────────▼─────────┐                       │    │
-│  │                    │   NodePort Svc    │                       │    │
-│  │                    │  ClusterIP + Port │                       │    │
-│  │                    └─────────┬─────────┘                       │    │
-│  │                              │                                  │    │
-│  │               ┌──────────────┼──────────────┐                  │    │
-│  │               ▼              ▼              ▼                  │    │
-│  │          ┌──────┐       ┌──────┐       ┌──────┐               │    │
-│  │          │ Pod  │       │ Pod  │       │ Pod  │               │    │
-│  │          └──────┘       └──────┘       └──────┘               │    │
-│  │                                                                  │    │
-│  └────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         NodePort SERVICE                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Åtkomst: node-ip:nodePort från utsidan                                 |
+|                                                                          |
+|  EXTERNAL WORLD                                                          |
+|       |                                                                  |
+|       |  http://192.168.1.10:30080                                      |
+|       |  http://192.168.1.11:30080                                      |
+|       |  http://192.168.1.12:30080                                      |
+|       ▼                                                                  |
+|  +----------------------------------------------------------------+    |
+|  |                      KUBERNETES CLUSTER                         |    |
+|  |                                                                  |    |
+|  |  +----------------+  +----------------+  +----------------+   |    |
+|  |  |    Node 1      |  |    Node 2      |  |    Node 3      |   |    |
+|  |  | 192.168.1.10   |  | 192.168.1.11   |  | 192.168.1.12   |   |    |
+|  |  |     :30080     |  |     :30080     |  |     :30080     |   |    |
+|  |  +-------+--------+  +-------+--------+  +-------+--------+   |    |
+|  |          |                   |                   |             |    |
+|  |          +-------------------+-------------------+             |    |
+|  |                              |                                  |    |
+|  |                    +---------▼---------+                       |    |
+|  |                    |   NodePort Svc    |                       |    |
+|  |                    |  ClusterIP + Port |                       |    |
+|  |                    +---------+---------+                       |    |
+|  |                              |                                  |    |
+|  |               +--------------+--------------+                  |    |
+|  |               ▼              ▼              ▼                  |    |
+|  |          +------+       +------+       +------+               |    |
+|  |          | Pod  |       | Pod  |       | Pod  |               |    |
+|  |          +------+       +------+       +------+               |    |
+|  |                                                                  |    |
+|  +----------------------------------------------------------------+    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### LoadBalancer
@@ -196,44 +196,44 @@ spec:
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       LoadBalancer SERVICE                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Åtkomst: Via cloud provider load balancer                              │
-│                                                                          │
-│  INTERNET                                                                │
-│       │                                                                  │
-│       │  https://api.example.com (DNS → LB IP)                         │
-│       ▼                                                                  │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                 CLOUD LOAD BALANCER                              │   │
-│  │            (AWS ALB/NLB, GCP LB, Azure LB)                      │   │
-│  │                   External IP: 52.1.2.3                          │   │
-│  └────────────────────────────┬────────────────────────────────────┘   │
-│                               │                                         │
-│  ┌────────────────────────────┼────────────────────────────────────┐   │
-│  │          KUBERNETES CLUSTER                                      │   │
-│  │                            │                                     │   │
-│  │  ┌────────────────┐  ┌────┼───────────┐  ┌────────────────┐    │   │
-│  │  │    Node 1      │  │    ▼           │  │    Node 3      │    │   │
-│  │  │                │  │  LoadBalancer  │  │                │    │   │
-│  │  │                │  │    Service     │  │                │    │   │
-│  │  └────────────────┘  └────────────────┘  └────────────────┘    │   │
-│  │                            │                                     │   │
-│  │               ┌────────────┼────────────┐                       │   │
-│  │               ▼            ▼            ▼                       │   │
-│  │          ┌──────┐     ┌──────┐     ┌──────┐                    │   │
-│  │          │ Pod  │     │ Pod  │     │ Pod  │                    │   │
-│  │          └──────┘     └──────┘     └──────┘                    │   │
-│  │                                                                  │   │
-│  └────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  ✅ Extern IP från cloud provider                                       │
-│  ✅ SSL termination (om konfigurerat)                                   │
-│  ✅ Health checks                                                        │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       LoadBalancer SERVICE                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Åtkomst: Via cloud provider load balancer                              |
+|                                                                          |
+|  INTERNET                                                                |
+|       |                                                                  |
+|       |  https://api.example.com (DNS -> LB IP)                         |
+|       ▼                                                                  |
+|  +-----------------------------------------------------------------+   |
+|  |                 CLOUD LOAD BALANCER                              |   |
+|  |            (AWS ALB/NLB, GCP LB, Azure LB)                      |   |
+|  |                   External IP: 52.1.2.3                          |   |
+|  +----------------------------+------------------------------------+   |
+|                               |                                         |
+|  +----------------------------+------------------------------------+   |
+|  |          KUBERNETES CLUSTER                                      |   |
+|  |                            |                                     |   |
+|  |  +----------------+  +----+-----------+  +----------------+    |   |
+|  |  |    Node 1      |  |    ▼           |  |    Node 3      |    |   |
+|  |  |                |  |  LoadBalancer  |  |                |    |   |
+|  |  |                |  |    Service     |  |                |    |   |
+|  |  +----------------+  +----------------+  +----------------+    |   |
+|  |                            |                                     |   |
+|  |               +------------+------------+                       |   |
+|  |               ▼            ▼            ▼                       |   |
+|  |          +------+     +------+     +------+                    |   |
+|  |          | Pod  |     | Pod  |     | Pod  |                    |   |
+|  |          +------+     +------+     +------+                    |   |
+|  |                                                                  |   |
+|  +----------------------------------------------------------------+   |
+|                                                                          |
+|  ✅ Extern IP från cloud provider                                       |
+|  ✅ SSL termination (om konfigurerat)                                   |
+|  ✅ Health checks                                                        |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### ExternalName
@@ -268,34 +268,34 @@ spec:
 ### DNS-baserad Discovery
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       SERVICE DNS RESOLUTION                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Full DNS Name:                                                          │
-│  <service>.<namespace>.svc.cluster.local                                │
-│                                                                          │
-│  Exempel:                                                                │
-│  backend-service.production.svc.cluster.local                           │
-│                                                                          │
-│  Kortformer (inom samma namespace):                                      │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                                                                    │  │
-│  │  backend-service                         # Samma namespace        │  │
-│  │  backend-service.production              # Specifik namespace    │  │
-│  │  backend-service.production.svc          # Med svc suffix        │  │
-│  │  backend-service.production.svc.cluster.local  # Full FQDN      │  │
-│  │                                                                    │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                                                                          │
-│  Headless Service DNS (för StatefulSets):                               │
-│  <pod-name>.<service>.<namespace>.svc.cluster.local                     │
-│                                                                          │
-│  Exempel:                                                                │
-│  postgres-0.postgres-headless.default.svc.cluster.local                 │
-│  postgres-1.postgres-headless.default.svc.cluster.local                 │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                       SERVICE DNS RESOLUTION                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Full DNS Name:                                                          |
+|  <service>.<namespace>.svc.cluster.local                                |
+|                                                                          |
+|  Exempel:                                                                |
+|  backend-service.production.svc.cluster.local                           |
+|                                                                          |
+|  Kortformer (inom samma namespace):                                      |
+|  +------------------------------------------------------------------+  |
+|  |                                                                    |  |
+|  |  backend-service                         # Samma namespace        |  |
+|  |  backend-service.production              # Specifik namespace    |  |
+|  |  backend-service.production.svc          # Med svc suffix        |  |
+|  |  backend-service.production.svc.cluster.local  # Full FQDN      |  |
+|  |                                                                    |  |
+|  +------------------------------------------------------------------+  |
+|                                                                          |
+|  Headless Service DNS (för StatefulSets):                               |
+|  <pod-name>.<service>.<namespace>.svc.cluster.local                     |
+|                                                                          |
+|  Exempel:                                                                |
+|  postgres-0.postgres-headless.default.svc.cluster.local                 |
+|  postgres-1.postgres-headless.default.svc.cluster.local                 |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### Testa DNS Resolution
@@ -450,32 +450,32 @@ kubectl get svc my-service
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     SERVICE BEST PRACTICES                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Service Type Val                                                    │
-│     □ ClusterIP: Intern kommunikation (default)                         │
-│     □ NodePort: Development/test, direktåtkomst                         │
-│     □ LoadBalancer: Production extern åtkomst                           │
-│     □ ExternalName: Externa tjänster                                    │
-│                                                                          │
-│  ✅ Naming & Labels                                                     │
-│     □ Konsekvent namngivning (app-name-service)                         │
-│     □ Matcha selector med pod labels                                    │
-│     □ Använd named ports                                                │
-│                                                                          │
-│  ✅ Security                                                            │
-│     □ Begränsa LoadBalancer med sourceRanges                            │
-│     □ Använd NetworkPolicies                                            │
-│     □ TLS termination i Ingress, inte Service                           │
-│                                                                          │
-│  ✅ Performance                                                         │
-│     □ sessionAffinity för stateful apps                                 │
-│     □ externalTrafficPolicy: Local för performance                      │
-│     □ Undvik NodePort i produktion                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     SERVICE BEST PRACTICES                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Service Type Val                                                    |
+|     □ ClusterIP: Intern kommunikation (default)                         |
+|     □ NodePort: Development/test, direktåtkomst                         |
+|     □ LoadBalancer: Production extern åtkomst                           |
+|     □ ExternalName: Externa tjänster                                    |
+|                                                                          |
+|  ✅ Naming & Labels                                                     |
+|     □ Konsekvent namngivning (app-name-service)                         |
+|     □ Matcha selector med pod labels                                    |
+|     □ Använd named ports                                                |
+|                                                                          |
+|  ✅ Security                                                            |
+|     □ Begränsa LoadBalancer med sourceRanges                            |
+|     □ Använd NetworkPolicies                                            |
+|     □ TLS termination i Ingress, inte Service                           |
+|                                                                          |
+|  ✅ Performance                                                         |
+|     □ sessionAffinity för stateful apps                                 |
+|     □ externalTrafficPolicy: Local för performance                      |
+|     □ Undvik NodePort i produktion                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8. Advanced Service Configuration
@@ -541,7 +541,7 @@ kubectl run test --image=busybox --rm -it -- wget -qO- backend:80
 
 ---
 
-**Nästa Node:** Ingress - HTTP/HTTPS Routing →
+**Nästa Node:** Ingress - HTTP/HTTPS Routing ->
 ''',
     "xp_reward": 155,
     "estimated_minutes": 55,
@@ -567,87 +567,87 @@ Ingress är en API-resurs som hanterar extern HTTP/HTTPS-åtkomst till tjänster
 ### Varför Ingress?
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    INGRESS VS LOADBALANCER                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  UTAN INGRESS (Multiple LoadBalancers):                                 │
-│                                                                          │
-│  Internet ──┬──▶ LB1 ($18/month) ──▶ api-service                       │
-│             ├──▶ LB2 ($18/month) ──▶ web-service                       │
-│             ├──▶ LB3 ($18/month) ──▶ admin-service                     │
-│             └──▶ LB4 ($18/month) ──▶ docs-service                      │
-│                                                                          │
-│             💸 Kostnad: $72/month för 4 services                        │
-│             ❌ Ingen delad SSL                                          │
-│             ❌ Ingen path-baserad routing                               │
-│                                                                          │
-│  MED INGRESS (Single Load Balancer):                                    │
-│                                                                          │
-│  Internet ──▶ LB ($18/month) ──▶ Ingress Controller                    │
-│                                        │                                │
-│                                        ├── /api/*    ──▶ api-service   │
-│                                        ├── /         ──▶ web-service   │
-│                                        ├── /admin/*  ──▶ admin-service │
-│                                        └── /docs/*   ──▶ docs-service  │
-│                                                                          │
-│             💰 Kostnad: $18/month för alla services                     │
-│             ✅ SSL termination på en plats                              │
-│             ✅ Host-baserad routing                                     │
-│             ✅ Path-baserad routing                                     │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    INGRESS VS LOADBALANCER                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  UTAN INGRESS (Multiple LoadBalancers):                                 |
+|                                                                          |
+|  Internet --+--▶ LB1 ($18/month) --▶ api-service                       |
+|             +--▶ LB2 ($18/month) --▶ web-service                       |
+|             +--▶ LB3 ($18/month) --▶ admin-service                     |
+|             +--▶ LB4 ($18/month) --▶ docs-service                      |
+|                                                                          |
+|             💸 Kostnad: $72/month för 4 services                        |
+|             ❌ Ingen delad SSL                                          |
+|             ❌ Ingen path-baserad routing                               |
+|                                                                          |
+|  MED INGRESS (Single Load Balancer):                                    |
+|                                                                          |
+|  Internet --▶ LB ($18/month) --▶ Ingress Controller                    |
+|                                        |                                |
+|                                        +-- /api/*    --▶ api-service   |
+|                                        +-- /         --▶ web-service   |
+|                                        +-- /admin/*  --▶ admin-service |
+|                                        +-- /docs/*   --▶ docs-service  |
+|                                                                          |
+|             💰 Kostnad: $18/month för alla services                     |
+|             ✅ SSL termination på en plats                              |
+|             ✅ Host-baserad routing                                     |
+|             ✅ Path-baserad routing                                     |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Ingress Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      INGRESS ARCHITECTURE                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  EXTERNAL TRAFFIC                                                        │
-│        │                                                                 │
-│        │  https://api.example.com                                       │
-│        │  https://web.example.com                                       │
-│        ▼                                                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                    CLOUD LOAD BALANCER                           │   │
-│  │                (Points to Ingress Controller)                    │   │
-│  └────────────────────────────┬────────────────────────────────────┘   │
-│                               │                                         │
-│  ┌────────────────────────────┼────────────────────────────────────┐   │
-│  │         KUBERNETES CLUSTER │                                     │   │
-│  │                            ▼                                     │   │
-│  │  ┌─────────────────────────────────────────────────────────┐    │   │
-│  │  │               INGRESS CONTROLLER                         │    │   │
-│  │  │           (nginx-ingress / traefik / etc)               │    │   │
-│  │  │                                                          │    │   │
-│  │  │  Watches: Ingress resources                              │    │   │
-│  │  │  Updates: nginx.conf / routing rules                     │    │   │
-│  │  │  Handles: SSL termination                                │    │   │
-│  │  └───────────────────────────┬─────────────────────────────┘    │   │
-│  │                              │                                   │   │
-│  │           ┌──────────────────┼──────────────────┐               │   │
-│  │           │                  │                  │               │   │
-│  │           ▼                  ▼                  ▼               │   │
-│  │  ┌──────────────┐   ┌──────────────┐   ┌──────────────┐        │   │
-│  │  │  Ingress     │   │  Ingress     │   │  Ingress     │        │   │
-│  │  │  Resource    │   │  Resource    │   │  Resource    │        │   │
-│  │  │  (api.yaml)  │   │  (web.yaml)  │   │  (admin.yaml)│        │   │
-│  │  └──────┬───────┘   └──────┬───────┘   └──────┬───────┘        │   │
-│  │         │                  │                  │                 │   │
-│  │         ▼                  ▼                  ▼                 │   │
-│  │  ┌──────────────┐   ┌──────────────┐   ┌──────────────┐        │   │
-│  │  │ api-service  │   │ web-service  │   │admin-service │        │   │
-│  │  └──────┬───────┘   └──────┬───────┘   └──────┬───────┘        │   │
-│  │         │                  │                  │                 │   │
-│  │         ▼                  ▼                  ▼                 │   │
-│  │      [Pods]             [Pods]             [Pods]              │   │
-│  │                                                                  │   │
-│  └────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      INGRESS ARCHITECTURE                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  EXTERNAL TRAFFIC                                                        |
+|        |                                                                 |
+|        |  https://api.example.com                                       |
+|        |  https://web.example.com                                       |
+|        ▼                                                                 |
+|  +-----------------------------------------------------------------+   |
+|  |                    CLOUD LOAD BALANCER                           |   |
+|  |                (Points to Ingress Controller)                    |   |
+|  +----------------------------+------------------------------------+   |
+|                               |                                         |
+|  +----------------------------+------------------------------------+   |
+|  |         KUBERNETES CLUSTER |                                     |   |
+|  |                            ▼                                     |   |
+|  |  +---------------------------------------------------------+    |   |
+|  |  |               INGRESS CONTROLLER                         |    |   |
+|  |  |           (nginx-ingress / traefik / etc)               |    |   |
+|  |  |                                                          |    |   |
+|  |  |  Watches: Ingress resources                              |    |   |
+|  |  |  Updates: nginx.conf / routing rules                     |    |   |
+|  |  |  Handles: SSL termination                                |    |   |
+|  |  +---------------------------+-----------------------------+    |   |
+|  |                              |                                   |   |
+|  |           +------------------+------------------+               |   |
+|  |           |                  |                  |               |   |
+|  |           ▼                  ▼                  ▼               |   |
+|  |  +--------------+   +--------------+   +--------------+        |   |
+|  |  |  Ingress     |   |  Ingress     |   |  Ingress     |        |   |
+|  |  |  Resource    |   |  Resource    |   |  Resource    |        |   |
+|  |  |  (api.yaml)  |   |  (web.yaml)  |   |  (admin.yaml)|        |   |
+|  |  +------+-------+   +------+-------+   +------+-------+        |   |
+|  |         |                  |                  |                 |   |
+|  |         ▼                  ▼                  ▼                 |   |
+|  |  +--------------+   +--------------+   +--------------+        |   |
+|  |  | api-service  |   | web-service  |   |admin-service |        |   |
+|  |  +------+-------+   +------+-------+   +------+-------+        |   |
+|  |         |                  |                  |                 |   |
+|  |         ▼                  ▼                  ▼                 |   |
+|  |      [Pods]             [Pods]             [Pods]              |   |
+|  |                                                                  |   |
+|  +----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Ingress Controller Installation
@@ -1107,27 +1107,27 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
 ## 9. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      INGRESS BEST PRACTICES                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Security                                                            │
-│     □ Alltid SSL/TLS i produktion                                       │
-│     □ Använd cert-manager för automatiska certs                         │
-│     □ Aktivera HSTS                                                     │
-│     □ Sätt security headers                                             │
-│                                                                          │
-│  ✅ Performance                                                         │
-│     □ Sätt lämpliga timeouts                                            │
-│     □ Konfigurera rate limiting                                         │
-│     □ Använd gzip compression                                           │
-│                                                                          │
-│  ✅ Organization                                                        │
-│     □ En ingress per applikation/team                                   │
-│     □ Använd ingressClassName                                           │
-│     □ Dokumentera annotations                                           │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      INGRESS BEST PRACTICES                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Security                                                            |
+|     □ Alltid SSL/TLS i produktion                                       |
+|     □ Använd cert-manager för automatiska certs                         |
+|     □ Aktivera HSTS                                                     |
+|     □ Sätt security headers                                             |
+|                                                                          |
+|  ✅ Performance                                                         |
+|     □ Sätt lämpliga timeouts                                            |
+|     □ Konfigurera rate limiting                                         |
+|     □ Använd gzip compression                                           |
+|                                                                          |
+|  ✅ Organization                                                        |
+|     □ En ingress per applikation/team                                   |
+|     □ Använd ingressClassName                                           |
+|     □ Dokumentera annotations                                           |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 10-14. Sammanfattning & Task
@@ -1136,14 +1136,14 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
 
 | Feature | Beskrivning |
 |---------|-------------|
-| **Path routing** | /api/* → service A |
-| **Host routing** | api.example.com → service A |
+| **Path routing** | /api/* -> service A |
+| **Host routing** | api.example.com -> service A |
 | **TLS** | SSL termination |
 | **Annotations** | Controller-specific config |
 
 ---
 
-**Nästa Node:** ConfigMaps & Secrets →
+**Nästa Node:** ConfigMaps & Secrets ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 60,

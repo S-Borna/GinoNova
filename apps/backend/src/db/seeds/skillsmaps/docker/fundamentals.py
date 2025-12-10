@@ -32,19 +32,19 @@ Efter denna lektion kommer du att:
 Varje utvecklare har hört det. Koden fungerar perfekt lokalt men kraschar i produktion.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    UTAN DOCKER                                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Developer laptop          Staging Server        Production     │
-│  ┌─────────────┐          ┌─────────────┐      ┌─────────────┐ │
-│  │ Python 3.11 │          │ Python 3.9  │      │ Python 3.8  │ │
-│  │ Ubuntu 22   │          │ CentOS 7    │      │ RHEL 8      │ │
-│  │ Node 18     │          │ Node 16     │      │ Node 14     │ │
-│  └─────────────┘          └─────────────┘      └─────────────┘ │
-│        ✅                        ⚠️                   ❌        │
-│    "Funkar!"              "Konstigt..."         "KRASCH!"       │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    UTAN DOCKER                                   |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Developer laptop          Staging Server        Production     |
+|  +-------------+          +-------------+      +-------------+ |
+|  | Python 3.11 |          | Python 3.9  |      | Python 3.8  | |
+|  | Ubuntu 22   |          | CentOS 7    |      | RHEL 8      | |
+|  | Node 18     |          | Node 16     |      | Node 14     | |
+|  +-------------+          +-------------+      +-------------+ |
+|        ✅                        ⚠️                   ❌        |
+|    "Funkar!"              "Konstigt..."         "KRASCH!"       |
++-----------------------------------------------------------------+
 ```
 
 **Verkliga scenarion:**
@@ -56,25 +56,25 @@ Varje utvecklare har hört det. Koden fungerar perfekt lokalt men kraschar i pro
 ### Dockers lösning: Paketera ALLT
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MED DOCKER                                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │              DOCKER IMAGE: my-app:v1.0                      │ │
-│  │  ┌────────────────────────────────────────────────────────┐│ │
-│  │  │ Applikationskod                                        ││ │
-│  │  │ Python 3.11 + alla dependencies                        ││ │
-│  │  │ Node 18 + npm packages                                 ││ │
-│  │  │ Systembibliotek                                        ││ │
-│  │  │ Konfigurationsfiler                                    ││ │
-│  │  └────────────────────────────────────────────────────────┘│ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  Developer laptop          Staging Server        Production     │
-│        ✅                        ✅                   ✅        │
-│   IDENTISKT ÖVERALLT!                                           │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MED DOCKER                                    |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  |              DOCKER IMAGE: my-app:v1.0                      | |
+|  |  +--------------------------------------------------------+| |
+|  |  | Applikationskod                                        || |
+|  |  | Python 3.11 + alla dependencies                        || |
+|  |  | Node 18 + npm packages                                 || |
+|  |  | Systembibliotek                                        || |
+|  |  | Konfigurationsfiler                                    || |
+|  |  +--------------------------------------------------------+| |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  Developer laptop          Staging Server        Production     |
+|        ✅                        ✅                   ✅        |
+|   IDENTISKT ÖVERALLT!                                           |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -84,25 +84,25 @@ Varje utvecklare har hört det. Koden fungerar perfekt lokalt men kraschar i pro
 ### Virtuella maskiner (VMs)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    VIRTUELLA MASKINER                        │
-├─────────────────────────────────────────────────────────────┤
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐               │
-│  │   App A   │  │   App B   │  │   App C   │               │
-│  ├───────────┤  ├───────────┤  ├───────────┤               │
-│  │  Bins/Lib │  │  Bins/Lib │  │  Bins/Lib │               │
-│  ├───────────┤  ├───────────┤  ├───────────┤               │
-│  │ Guest OS  │  │ Guest OS  │  │ Guest OS  │  <- Fullständigt OS!
-│  │  (2GB+)   │  │  (2GB+)   │  │  (2GB+)   │               │
-│  └───────────┘  └───────────┘  └───────────┘               │
-│  ┌─────────────────────────────────────────────────────────┤
-│  │              HYPERVISOR (VMware/VirtualBox)              │
-│  ├─────────────────────────────────────────────────────────┤
-│  │                     HOST OS                              │
-│  ├─────────────────────────────────────────────────────────┤
-│  │                   HÅRDVARA                               │
-│  └─────────────────────────────────────────────────────────┘
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    VIRTUELLA MASKINER                        |
++-------------------------------------------------------------+
+|  +-----------+  +-----------+  +-----------+               |
+|  |   App A   |  |   App B   |  |   App C   |               |
+|  +-----------+  +-----------+  +-----------+               |
+|  |  Bins/Lib |  |  Bins/Lib |  |  Bins/Lib |               |
+|  +-----------+  +-----------+  +-----------+               |
+|  | Guest OS  |  | Guest OS  |  | Guest OS  |  <- Fullständigt OS!
+|  |  (2GB+)   |  |  (2GB+)   |  |  (2GB+)   |               |
+|  +-----------+  +-----------+  +-----------+               |
+|  +---------------------------------------------------------+
+|  |              HYPERVISOR (VMware/VirtualBox)              |
+|  +---------------------------------------------------------+
+|  |                     HOST OS                              |
+|  +---------------------------------------------------------+
+|  |                   HÅRDVARA                               |
+|  +---------------------------------------------------------+
++-------------------------------------------------------------+
 
 Totalt minne: ~6GB+ bara för OS
 Starttid: Minuter
@@ -111,23 +111,23 @@ Starttid: Minuter
 ### Docker Containers
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      CONTAINERS                              │
-├─────────────────────────────────────────────────────────────┤
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐               │
-│  │   App A   │  │   App B   │  │   App C   │               │
-│  ├───────────┤  ├───────────┤  ├───────────┤               │
-│  │  Bins/Lib │  │  Bins/Lib │  │  Bins/Lib │  <- Endast det│
-│  │  (50MB)   │  │  (50MB)   │  │  (50MB)   │     som behövs│
-│  └───────────┘  └───────────┘  └───────────┘               │
-│  ┌─────────────────────────────────────────────────────────┤
-│  │              DOCKER ENGINE                               │
-│  ├─────────────────────────────────────────────────────────┤
-│  │                 HOST OS (Linux kernel)                   │
-│  ├─────────────────────────────────────────────────────────┤
-│  │                   HÅRDVARA                               │
-│  └─────────────────────────────────────────────────────────┘
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      CONTAINERS                              |
++-------------------------------------------------------------+
+|  +-----------+  +-----------+  +-----------+               |
+|  |   App A   |  |   App B   |  |   App C   |               |
+|  +-----------+  +-----------+  +-----------+               |
+|  |  Bins/Lib |  |  Bins/Lib |  |  Bins/Lib |  <- Endast det|
+|  |  (50MB)   |  |  (50MB)   |  |  (50MB)   |     som behövs|
+|  +-----------+  +-----------+  +-----------+               |
+|  +---------------------------------------------------------+
+|  |              DOCKER ENGINE                               |
+|  +---------------------------------------------------------+
+|  |                 HOST OS (Linux kernel)                   |
+|  +---------------------------------------------------------+
+|  |                   HÅRDVARA                               |
+|  +---------------------------------------------------------+
++-------------------------------------------------------------+
 
 Totalt minne: ~150MB för alla tre
 Starttid: Sekunder
@@ -243,29 +243,29 @@ To generate this message, Docker took the following steps:
 ### Vad hände egentligen?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     docker run hello-world                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  1. Docker CLI → Docker Daemon                                  │
-│     "Jag vill köra hello-world"                                 │
-│                                                                  │
-│  2. Docker Daemon kollar lokalt                                 │
-│     "Finns inte lokalt..."                                      │
-│                                                                  │
-│  3. Docker Daemon → Docker Hub                                  │
-│     "Laddar ner hello-world:latest"                             │
-│                                                                  │
-│  4. Image sparas lokalt                                         │
-│     ~/.docker/images/hello-world                                │
-│                                                                  │
-│  5. Container skapas från image                                 │
-│     Isolerad process startar                                    │
-│                                                                  │
-│  6. Output skrivs till terminalen                               │
-│     Container avslutas                                          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     docker run hello-world                       |
++-----------------------------------------------------------------+
+|                                                                  |
+|  1. Docker CLI -> Docker Daemon                                  |
+|     "Jag vill köra hello-world"                                 |
+|                                                                  |
+|  2. Docker Daemon kollar lokalt                                 |
+|     "Finns inte lokalt..."                                      |
+|                                                                  |
+|  3. Docker Daemon -> Docker Hub                                  |
+|     "Laddar ner hello-world:latest"                             |
+|                                                                  |
+|  4. Image sparas lokalt                                         |
+|     ~/.docker/images/hello-world                                |
+|                                                                  |
+|  5. Container skapas från image                                 |
+|     Isolerad process startar                                    |
+|                                                                  |
+|  6. Output skrivs till terminalen                               |
+|     Container avslutas                                          |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ### Kör en interaktiv container
@@ -359,29 +359,29 @@ docker rm myserver
 ## 🧩 Docker-ekosystemet
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DOCKER ECOSYSTEM                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │ Docker CLI  │ →  │ Docker      │ →  │  Container  │         │
-│  │   (docker)  │    │   Daemon    │    │   Runtime   │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-│         │                  │                                    │
-│         │                  ↓                                    │
-│         │           ┌─────────────┐                             │
-│         │           │ Docker Hub  │  ← Images repository        │
-│         │           └─────────────┘                             │
-│         │                                                       │
-│         ↓                                                       │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │ Docker      │    │ Docker      │    │ Docker      │         │
-│  │ Compose     │    │ Swarm       │    │ Desktop     │         │
-│  │ (multi-     │    │ (clustering)│    │ (GUI)       │         │
-│  │ container)  │    │             │    │             │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DOCKER ECOSYSTEM                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +-------------+    +-------------+    +-------------+         |
+|  | Docker CLI  | ->  | Docker      | ->  |  Container  |         |
+|  |   (docker)  |    |   Daemon    |    |   Runtime   |         |
+|  +-------------+    +-------------+    +-------------+         |
+|         |                  |                                    |
+|         |                  ↓                                    |
+|         |           +-------------+                             |
+|         |           | Docker Hub  |  <- Images repository        |
+|         |           +-------------+                             |
+|         |                                                       |
+|         ↓                                                       |
+|  +-------------+    +-------------+    +-------------+         |
+|  | Docker      |    | Docker      |    | Docker      |         |
+|  | Compose     |    | Swarm       |    | Desktop     |         |
+|  | (multi-     |    | (clustering)|    | (GUI)       |         |
+|  | container)  |    |             |    |             |         |
+|  +-------------+    +-------------+    +-------------+         |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 **Komponenterna:**
@@ -502,29 +502,29 @@ En Docker Image är en **skrivskyddad mall** som innehåller allt som behövs f�
 ### Images är lager (Layers)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    IMAGE: my-python-app:1.0                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Layer 6: CMD ["python", "app.py"]              (0 KB)          │
-│  ─────────────────────────────────────────────────────          │
-│  Layer 5: COPY app.py /app/                     (5 KB)          │
-│  ─────────────────────────────────────────────────────          │
-│  Layer 4: RUN pip install flask requests        (15 MB)         │
-│  ─────────────────────────────────────────────────────          │
-│  Layer 3: WORKDIR /app                          (0 KB)          │
-│  ─────────────────────────────────────────────────────          │
-│  Layer 2: python:3.11-slim                      (120 MB)        │
-│  ─────────────────────────────────────────────────────          │
-│  Layer 1: Base OS (Debian slim)                 (80 MB)         │
-│                                                                  │
-│  Total: ~215 MB                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    IMAGE: my-python-app:1.0                      |
++-----------------------------------------------------------------+
+|                                                                  |
+|  Layer 6: CMD ["python", "app.py"]              (0 KB)          |
+|  -----------------------------------------------------          |
+|  Layer 5: COPY app.py /app/                     (5 KB)          |
+|  -----------------------------------------------------          |
+|  Layer 4: RUN pip install flask requests        (15 MB)         |
+|  -----------------------------------------------------          |
+|  Layer 3: WORKDIR /app                          (0 KB)          |
+|  -----------------------------------------------------          |
+|  Layer 2: python:3.11-slim                      (120 MB)        |
+|  -----------------------------------------------------          |
+|  Layer 1: Base OS (Debian slim)                 (80 MB)         |
+|                                                                  |
+|  Total: ~215 MB                                                  |
++-----------------------------------------------------------------+
 ```
 
 **Varför lager?**
 - **Delning:** Flera images kan dela samma bas-lager
-- **Caching:** Oförändrade lager cachas → snabbare builds
+- **Caching:** Oförändrade lager cachas -> snabbare builds
 - **Effektivitet:** Bara ändrade lager laddas om
 
 ---
@@ -739,7 +739,7 @@ docker history --no-trunc my-app:1.0.0
 # ❌ DÅLIGT - Allt ombyggs vid kodändring
 FROM node:20-alpine
 WORKDIR /app
-COPY . .                    # <- Ändras ofta → alla efterföljande lager ombyggs
+COPY . .                    # <- Ändras ofta -> alla efterföljande lager ombyggs
 RUN npm install
 CMD ["npm", "start"]
 ```
@@ -757,18 +757,18 @@ CMD ["npm", "start"]
 ### Cache-invalidering
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              LAYER CACHE INVALIDERING                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  FROM node:20-alpine          ✅ Cached                         │
-│  WORKDIR /app                 ✅ Cached                         │
-│  COPY package.json .          ✅ Cached (om oförändrad)         │
-│  RUN npm install              ✅ Cached (om package.json samma) │
-│  COPY . .                     🔄 Ombyggs (kod ändrad)           │
-│  CMD ["npm", "start"]         🔄 Ombyggs (layer före ändrades)  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              LAYER CACHE INVALIDERING                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  FROM node:20-alpine          ✅ Cached                         |
+|  WORKDIR /app                 ✅ Cached                         |
+|  COPY package.json .          ✅ Cached (om oförändrad)         |
+|  RUN npm install              ✅ Cached (om package.json samma) |
+|  COPY . .                     🔄 Ombyggs (kod ändrad)           |
+|  CMD ["npm", "start"]         🔄 Ombyggs (layer före ändrades)  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -886,7 +886,7 @@ docker build \\
    - ADD: + URL-support + automatisk tar-extraktion
 
 2. **Varför är layer-ordning viktig?**
-   - Oftast-ändrade lager sist → bättre caching
+   - Oftast-ändrade lager sist -> bättre caching
    - Dependencies före kod
 
 3. **Vad gör .dockerignore?**
@@ -965,31 +965,31 @@ Efter denna lektion kommer du att:
 ### Tillstånd
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  CONTAINER LIFECYCLE                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                    docker create                                │
-│                         ↓                                       │
-│  ┌─────────────┐   docker start   ┌─────────────┐              │
-│  │   CREATED   │ ─────────────→   │   RUNNING   │              │
-│  └─────────────┘                  └─────────────┘              │
-│                                          │                      │
-│                                    docker stop                  │
-│                                          ↓                      │
-│                                   ┌─────────────┐              │
-│                                   │   STOPPED   │              │
-│                                   └─────────────┘              │
-│                                          │                      │
-│                              docker start │ docker rm           │
-│                                    ↓      │      ↓              │
-│                              ┌─────────┐  │  ┌─────────┐       │
-│                              │ RUNNING │  │  │ REMOVED │       │
-│                              └─────────┘  │  └─────────┘       │
-│                                          │                      │
-│  docker run = docker create + docker start                     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  CONTAINER LIFECYCLE                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|                    docker create                                |
+|                         ↓                                       |
+|  +-------------+   docker start   +-------------+              |
+|  |   CREATED   | -------------->   |   RUNNING   |              |
+|  +-------------+                  +-------------+              |
+|                                          |                      |
+|                                    docker stop                  |
+|                                          ↓                      |
+|                                   +-------------+              |
+|                                   |   STOPPED   |              |
+|                                   +-------------+              |
+|                                          |                      |
+|                              docker start | docker rm           |
+|                                    ↓      |      ↓              |
+|                              +---------+  |  +---------+       |
+|                              | RUNNING |  |  | REMOVED |       |
+|                              +---------+  |  +---------+       |
+|                                          |                      |
+|  docker run = docker create + docker start                     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ### Tillståndskommandon
@@ -1010,7 +1010,7 @@ docker ps     # STATUS: Up X seconds (Paused)
 # Avpausa
 docker unpause myapp
 
-# Stoppa (SIGTERM → 10s → SIGKILL)
+# Stoppa (SIGTERM -> 10s -> SIGKILL)
 docker stop myapp
 docker ps -a  # STATUS: Exited (0)
 
@@ -1090,7 +1090,7 @@ docker run --rm alpine echo "Hello"
 ```bash
 # HOST_PORT:CONTAINER_PORT
 docker run -d -p 8080:80 nginx
-# localhost:8080 → container:80
+# localhost:8080 -> container:80
 
 # Slumpmässig host-port
 docker run -d -p 80 nginx
@@ -1360,48 +1360,48 @@ Efter denna lektion kommer du att:
 ### Containers är flyktiga
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    UTAN VOLUMES                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   Container 1 (v1.0)          Container 2 (v1.1)               │
-│   ┌─────────────────┐         ┌─────────────────┐              │
-│   │ /data           │         │ /data           │              │
-│   │  - users.db     │   →→→   │  (TOM!)         │              │
-│   │  - cache/       │  Uppg.  │                 │              │
-│   │  - uploads/     │         │                 │              │
-│   └─────────────────┘         └─────────────────┘              │
-│                                                                  │
-│   Data FÖRSVINNER vid:                                          │
-│   • docker rm                                                   │
-│   • Container crash                                             │
-│   • Image update                                                │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    UTAN VOLUMES                                  |
++-----------------------------------------------------------------+
+|                                                                  |
+|   Container 1 (v1.0)          Container 2 (v1.1)               |
+|   +-----------------+         +-----------------+              |
+|   | /data           |         | /data           |              |
+|   |  - users.db     |   ->->->   |  (TOM!)         |              |
+|   |  - cache/       |  Uppg.  |                 |              |
+|   |  - uploads/     |         |                 |              |
+|   +-----------------+         +-----------------+              |
+|                                                                  |
+|   Data FÖRSVINNER vid:                                          |
+|   • docker rm                                                   |
+|   • Container crash                                             |
+|   • Image update                                                |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ### Med volumes
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MED VOLUMES                                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   Container 1 (v1.0)          Container 2 (v1.1)               │
-│   ┌─────────────────┐         ┌─────────────────┐              │
-│   │ /data ─────────────────────────→ /data      │              │
-│   └─────────────────┘         └─────────────────┘              │
-│              │                         │                        │
-│              └───────────┬─────────────┘                        │
-│                          │                                      │
-│                   ┌──────▼──────┐                               │
-│                   │   VOLUME    │                               │
-│                   │ - users.db  │ ← Data BEVARAS!              │
-│                   │ - cache/    │                               │
-│                   │ - uploads/  │                               │
-│                   └─────────────┘                               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MED VOLUMES                                   |
++-----------------------------------------------------------------+
+|                                                                  |
+|   Container 1 (v1.0)          Container 2 (v1.1)               |
+|   +-----------------+         +-----------------+              |
+|   | /data --------------------------> /data      |              |
+|   +-----------------+         +-----------------+              |
+|              |                         |                        |
+|              +-----------+-------------+                        |
+|                          |                                      |
+|                   +------▼------+                               |
+|                   |   VOLUME    |                               |
+|                   | - users.db  | <- Data BEVARAS!              |
+|                   | - cache/    |                               |
+|                   | - uploads/  |                               |
+|                   +-------------+                               |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1510,21 +1510,21 @@ docker run -d --name dev \\
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    BIND MOUNT FÖR DEV                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   HOST                              CONTAINER                   │
-│   ~/project/                        /app/                       │
-│   ├── src/        ←────────────→    ├── src/                   │
-│   │   ├── app.js  (synkad!)         │   ├── app.js             │
-│   │   └── ...                       │   └── ...                │
-│   └── package.json ←────────────→   └── package.json           │
-│                                                                  │
-│   Ändringar på host → omedelbart i container                   │
-│   Hot-reload fungerar!                                          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    BIND MOUNT FÖR DEV                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|   HOST                              CONTAINER                   |
+|   ~/project/                        /app/                       |
+|   +-- src/        <-------------->    +-- src/                   |
+|   |   +-- app.js  (synkad!)         |   +-- app.js             |
+|   |   +-- ...                       |   +-- ...                |
+|   +-- package.json <-------------->   +-- package.json           |
+|                                                                  |
+|   Ändringar på host -> omedelbart i container                   |
+|   Hot-reload fungerar!                                          |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ### Ny --mount syntax (rekommenderas)

@@ -70,34 +70,34 @@ AZURE_NODE_8_V2 = {
 
 Så /24 (256) = 251 användbara IPs.""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│         VNET ARCHITECTURE EXAMPLE               │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   VNet: vnet-prod (10.0.0.0/16)                │
-│   ┌─────────────────────────────────────────┐   │
-│   │                                         │   │
-│   │   subnet-web (10.0.1.0/24)              │   │
-│   │   ┌─────────────────────────────────┐   │   │
-│   │   │  [VM-Web-1]    [VM-Web-2]      │   │   │
-│   │   │  10.0.1.4      10.0.1.5        │   │   │
-│   │   └─────────────────────────────────┘   │   │
-│   │                                         │   │
-│   │   subnet-app (10.0.2.0/24)              │   │
-│   │   ┌─────────────────────────────────┐   │   │
-│   │   │  [VM-App-1]    [VM-App-2]      │   │   │
-│   │   │  10.0.2.4      10.0.2.5        │   │   │
-│   │   └─────────────────────────────────┘   │   │
-│   │                                         │   │
-│   │   subnet-db (10.0.3.0/25)               │   │
-│   │   ┌─────────────────────────────────┐   │   │
-│   │   │  [SQL-Primary] [SQL-Secondary] │   │   │
-│   │   │  10.0.3.4      10.0.3.5        │   │   │
-│   │   └─────────────────────────────────┘   │   │
-│   │                                         │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|         VNET ARCHITECTURE EXAMPLE               |
++-------------------------------------------------+
+|                                                 |
+|   VNet: vnet-prod (10.0.0.0/16)                |
+|   +-----------------------------------------+   |
+|   |                                         |   |
+|   |   subnet-web (10.0.1.0/24)              |   |
+|   |   +---------------------------------+   |   |
+|   |   |  [VM-Web-1]    [VM-Web-2]      |   |   |
+|   |   |  10.0.1.4      10.0.1.5        |   |   |
+|   |   +---------------------------------+   |   |
+|   |                                         |   |
+|   |   subnet-app (10.0.2.0/24)              |   |
+|   |   +---------------------------------+   |   |
+|   |   |  [VM-App-1]    [VM-App-2]      |   |   |
+|   |   |  10.0.2.4      10.0.2.5        |   |   |
+|   |   +---------------------------------+   |   |
+|   |                                         |   |
+|   |   subnet-db (10.0.3.0/25)               |   |
+|   |   +---------------------------------+   |   |
+|   |   |  [SQL-Primary] [SQL-Secondary] |   |   |
+|   |   |  10.0.3.4      10.0.3.5        |   |   |
+|   |   +---------------------------------+   |   |
+|   |                                         |   |
+|   +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Planera stort! Det är svårt att ändra VNet CIDR efteråt. Börja med /16 även för små miljöer.",
             "common_mistake": "Att använda överlappande CIDR-ranges mellan VNets. Gör VNet Peering omöjligt."
@@ -135,38 +135,38 @@ Gruppera VMs logiskt istället för IP-ranges:
 ```
 Source: asg-web-servers
 Destination: asg-app-servers
-→ Alla web-servrar kan nå alla app-servrar
+-> Alla web-servrar kan nå alla app-servrar
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│         NSG RULE PROCESSING                      │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   INBOUND TRAFFIC FLOW:                         │
-│                                                 │
-│   [Internet] ──▶ NSG Rules (Priority order)     │
-│                     │                           │
-│   ┌─────────────────▼─────────────────────┐     │
-│   │ 100: Allow SSH from 1.2.3.4     ✅    │     │
-│   │ 200: Allow HTTPS from Internet  ✅    │     │
-│   │ 300: Allow HTTP from Internet   ✅    │     │
-│   │ 400: Deny SQL from Internet     ❌    │     │
-│   │ 65000: Allow VNet (default)           │     │
-│   │ 65001: Allow LB (default)             │     │
-│   │ 65500: Deny All (default)       ❌    │     │
-│   └───────────────────────────────────────┘     │
-│                                                 │
-│   ⚡ First match wins!                          │
-│   💡 Lower priority number = processed first    │
-│                                                 │
-│   SUBNET vs NIC:                                │
-│   ┌──────────┐    ┌──────────┐                 │
-│   │ Subnet   │    │ NIC NSG  │    ┌─────┐      │
-│   │ NSG      │──▶│ (optional)│──▶│ VM  │      │
-│   └──────────┘    └──────────┘    └─────┘      │
-│   Traffic must pass BOTH if both exist!        │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|         NSG RULE PROCESSING                      |
++-------------------------------------------------+
+|                                                 |
+|   INBOUND TRAFFIC FLOW:                         |
+|                                                 |
+|   [Internet] --▶ NSG Rules (Priority order)     |
+|                     |                           |
+|   +-----------------▼---------------------+     |
+|   | 100: Allow SSH from 1.2.3.4     ✅    |     |
+|   | 200: Allow HTTPS from Internet  ✅    |     |
+|   | 300: Allow HTTP from Internet   ✅    |     |
+|   | 400: Deny SQL from Internet     ❌    |     |
+|   | 65000: Allow VNet (default)           |     |
+|   | 65001: Allow LB (default)             |     |
+|   | 65500: Deny All (default)       ❌    |     |
+|   +---------------------------------------+     |
+|                                                 |
+|   ⚡ First match wins!                          |
+|   💡 Lower priority number = processed first    |
+|                                                 |
+|   SUBNET vs NIC:                                |
+|   +----------+    +----------+                 |
+|   | Subnet   |    | NIC NSG  |    +-----+      |
+|   | NSG      |--▶| (optional)|--▶| VM  |      |
+|   +----------+    +----------+    +-----+      |
+|   Traffic must pass BOTH if both exist!        |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd Service Tags istället för hårdkodade IPs. 'Storage.NorthEurope' är bättre än en lista av IPs.",
             "common_mistake": "Att koppla NSG till både subnet OCH NIC utan att förstå att traffic måste passera BÅDA."
@@ -184,61 +184,61 @@ Destination: asg-app-servers
 - ✅ Låg latency (Azure backbone)
 - ✅ Ingen gateway behövs
 - ✅ Traffic stays private (aldrig internet)
-- ⚠️ Icke-transitiv (A→B→C ≠ A→C)
+- ⚠️ Icke-transitiv (A->B->C ≠ A->C)
 - ⚠️ CIDR får inte överlappa
 
 **Icke-transitiv förklarat:**
 ```
 VNet-A peered med VNet-B
 VNet-B peered med VNet-C
-→ VNet-A kan INTE nå VNet-C automatiskt!
-→ Du måste peera A→C separat
+-> VNet-A kan INTE nå VNet-C automatiskt!
+-> Du måste peera A->C separat
 ```
 
 **Hub-and-Spoke topology:**
 ```
-      ┌────────┐
-      │ Hub    │ (shared services)
-      │ VNet   │
-      └────┬───┘
-    ┌──────┼──────┐
+      +--------+
+      | Hub    | (shared services)
+      | VNet   |
+      +----+---+
+    +------+------+
     ▼      ▼      ▼
-┌──────┐┌──────┐┌──────┐
-│Spoke1││Spoke2││Spoke3│
-│(App1)││(App2)││(App3)│
-└──────┘└──────┘└──────┘
++------++------++------+
+|Spoke1||Spoke2||Spoke3|
+|(App1)||(App2)||(App3)|
++------++------++------+
 ```
 Hub innehåller: Firewall, VPN Gateway, DNS
 Spokes: Applikations-VNets""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           VNET PEERING TOPOLOGY                 │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   HUB-AND-SPOKE (Recommended)                   │
-│                                                 │
-│              ┌─────────────────┐                │
-│              │    HUB VNET     │                │
-│              │  (10.0.0.0/16)  │                │
-│              │                 │                │
-│              │  [Firewall]     │                │
-│              │  [VPN Gateway]  │                │
-│              │  [DNS Server]   │                │
-│              └────────┬────────┘                │
-│          ┌───────────┼───────────┐              │
-│          │     Peering│         │              │
-│          ▼            ▼          ▼              │
-│   ┌───────────┐┌───────────┐┌───────────┐      │
-│   │ SPOKE 1   ││ SPOKE 2   ││ SPOKE 3   │      │
-│   │10.1.0.0/16││10.2.0.0/16││10.3.0.0/16│      │
-│   │           ││           ││           │      │
-│   │ [App A]   ││ [App B]   ││ [App C]   │      │
-│   └───────────┘└───────────┘└───────────┘      │
-│                                                 │
-│   ⚠️  Spokes cannot talk directly!             │
-│   → Traffic via Hub (or add spoke-spoke peer)  │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           VNET PEERING TOPOLOGY                 |
++-------------------------------------------------+
+|                                                 |
+|   HUB-AND-SPOKE (Recommended)                   |
+|                                                 |
+|              +-----------------+                |
+|              |    HUB VNET     |                |
+|              |  (10.0.0.0/16)  |                |
+|              |                 |                |
+|              |  [Firewall]     |                |
+|              |  [VPN Gateway]  |                |
+|              |  [DNS Server]   |                |
+|              +--------+--------+                |
+|          +-----------+-----------+              |
+|          |     Peering|         |              |
+|          ▼            ▼          ▼              |
+|   +-----------++-----------++-----------+      |
+|   | SPOKE 1   || SPOKE 2   || SPOKE 3   |      |
+|   |10.1.0.0/16||10.2.0.0/16||10.3.0.0/16|      |
+|   |           ||           ||           |      |
+|   | [App A]   || [App B]   || [App C]   |      |
+|   +-----------++-----------++-----------+      |
+|                                                 |
+|   ⚠️  Spokes cannot talk directly!             |
+|   -> Traffic via Hub (or add spoke-spoke peer)  |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Hub-and-Spoke med Azure Firewall i Hub ger central säkerhetskontroll och loggning.",
             "common_mistake": "Att anta att peering är transitiv. VNet A peered med B, B peered med C, betyder INTE att A kan nå C."
@@ -262,7 +262,7 @@ Spokes: Applikations-VNets""",
 
 **Hur det fungerar:**
 ```
-Du → Azure Portal → Bastion → Private VM
+Du -> Azure Portal -> Bastion -> Private VM
      (HTTPS:443)    (Private IP)
 ```
 Bastion gör 'jump host' automatiskt.
@@ -277,36 +277,36 @@ Bastion gör 'jump host' automatiskt.
 - VPN Gateway (Point-to-Site eller Site-to-Site)
 - Azure VPN Client""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           AZURE BASTION ARCHITECTURE            │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   WITHOUT BASTION (risky):                      │
-│   ┌────────┐      ┌─────────────────────┐       │
-│   │Internet│──────│ VM with Public IP   │       │
-│   │        │ RDP  │ (port 3389 open!)   │       │
-│   └────────┘      └─────────────────────┘       │
-│       ❌ Attack surface, brute force risk       │
-│                                                 │
-│   WITH BASTION (secure):                        │
-│   ┌────────┐      ┌──────────────────────────┐  │
-│   │Browser │      │ VNet                     │  │
-│   │(you)   │      │                          │  │
-│   └───┬────┘      │  AzureBastionSubnet      │  │
-│       │ HTTPS     │  ┌─────────────────┐     │  │
-│       │ :443      │  │ Azure Bastion   │     │  │
-│       └──────────▶│  └────────┬────────┘     │  │
-│                   │           │ Private IP    │  │
-│                   │  subnet-vms              │  │
-│                   │  ┌─────────────────┐     │  │
-│                   │  │ VM (no public IP)│     │  │
-│                   │  │ 10.0.1.4        │     │  │
-│                   │  └─────────────────┘     │  │
-│                   └──────────────────────────┘  │
-│       ✅ No public IP needed on VMs            │
-│       ✅ No RDP/SSH ports to internet          │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           AZURE BASTION ARCHITECTURE            |
++-------------------------------------------------+
+|                                                 |
+|   WITHOUT BASTION (risky):                      |
+|   +--------+      +---------------------+       |
+|   |Internet|------| VM with Public IP   |       |
+|   |        | RDP  | (port 3389 open!)   |       |
+|   +--------+      +---------------------+       |
+|       ❌ Attack surface, brute force risk       |
+|                                                 |
+|   WITH BASTION (secure):                        |
+|   +--------+      +--------------------------+  |
+|   |Browser |      | VNet                     |  |
+|   |(you)   |      |                          |  |
+|   +---+----+      |  AzureBastionSubnet      |  |
+|       | HTTPS     |  +-----------------+     |  |
+|       | :443      |  | Azure Bastion   |     |  |
+|       +----------▶|  +--------+--------+     |  |
+|                   |           | Private IP    |  |
+|                   |  subnet-vms              |  |
+|                   |  +-----------------+     |  |
+|                   |  | VM (no public IP)|     |  |
+|                   |  | 10.0.1.4        |     |  |
+|                   |  +-----------------+     |  |
+|                   +--------------------------+  |
+|       ✅ No public IP needed on VMs            |
+|       ✅ No RDP/SSH ports to internet          |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Azure Bastion Standard SKU har IP-based connect - du kan nå VMs via IP utan att gå via Portal.",
             "common_mistake": "Att döpa subnet till något annat än 'AzureBastionSubnet'. Det MÅSTE heta exakt så."
@@ -445,7 +445,7 @@ subnet-db   10.0.2.0/24   /subscriptions/.../nsg-db""",
             {
                 "id": "fc2",
                 "front": "Vad betyder att VNet Peering är icke-transitiv?",
-                "back": "A→B och B→C betyder INTE att A→C. Du måste explicit peera A→C."
+                "back": "A->B och B->C betyder INTE att A->C. Du måste explicit peera A->C."
             },
             {
                 "id": "fc3",
@@ -522,7 +522,7 @@ Krav:
         "requirements": [
             "Skapa Hub VNet (10.0.0.0/16) med subnets för Firewall och Bastion",
             "Skapa 3 Spoke VNets med icke-överlappande CIDR",
-            "Konfigurera VNet Peering (Hub→Spoke)",
+            "Konfigurera VNet Peering (Hub->Spoke)",
             "Sätt upp Azure Bastion i Hub",
             "Konfigurera NSGs för varje tier",
             "Dokumentera trafikflöden"
@@ -647,7 +647,7 @@ az network vnet subnet create \\
 # ═══════════════════════════════════════════════════════════════
 echo "🔗 Creating VNet Peerings..."
 
-# Hub → Prod
+# Hub -> Prod
 az network vnet peering create \\
     --name hub-to-prod \\
     --resource-group $RG \\
@@ -666,7 +666,7 @@ az network vnet peering create \\
     --allow-forwarded-traffic \\
     --use-remote-gateways false
 
-# Hub → Dev
+# Hub -> Dev
 az network vnet peering create \\
     --name hub-to-dev \\
     --resource-group $RG \\
@@ -683,7 +683,7 @@ az network vnet peering create \\
     --allow-vnet-access \\
     --allow-forwarded-traffic
 
-# Hub → Shared
+# Hub -> Shared
 az network vnet peering create \\
     --name hub-to-shared \\
     --resource-group $RG \\
@@ -788,21 +788,21 @@ echo "║           HUB-AND-SPOKE NETWORK DEPLOYED                   ║"
 echo "╠════════════════════════════════════════════════════════════╣"
 echo "║                                                            ║"
 echo "║  Hub VNet:     10.0.0.0/16                                 ║"
-echo "║  ├── AzureFirewallSubnet: 10.0.0.0/26                     ║"
-echo "║  ├── AzureBastionSubnet:  10.0.0.64/26                    ║"
-echo "║  └── subnet-management:   10.0.1.0/24                     ║"
+echo "║  +-- AzureFirewallSubnet: 10.0.0.0/26                     ║"
+echo "║  +-- AzureBastionSubnet:  10.0.0.64/26                    ║"
+echo "║  +-- subnet-management:   10.0.1.0/24                     ║"
 echo "║                                                            ║"
 echo "║  Spoke 1 (Prod): 10.1.0.0/16                               ║"
-echo "║  ├── subnet-web: 10.1.1.0/24 [nsg-prod-web]               ║"
-echo "║  ├── subnet-app: 10.1.2.0/24 [nsg-prod-app]               ║"
-echo "║  └── subnet-db:  10.1.3.0/24 [nsg-prod-db]                ║"
+echo "║  +-- subnet-web: 10.1.1.0/24 [nsg-prod-web]               ║"
+echo "║  +-- subnet-app: 10.1.2.0/24 [nsg-prod-app]               ║"
+echo "║  +-- subnet-db:  10.1.3.0/24 [nsg-prod-db]                ║"
 echo "║                                                            ║"
 echo "║  Spoke 2 (Dev):  10.2.0.0/16                               ║"
-echo "║  └── subnet-dev: 10.2.1.0/24                              ║"
+echo "║  +-- subnet-dev: 10.2.1.0/24                              ║"
 echo "║                                                            ║"
 echo "║  Spoke 3 (Shared): 10.3.0.0/16                             ║"
-echo "║  ├── subnet-ad:  10.3.1.0/24                              ║"
-echo "║  └── subnet-dns: 10.3.2.0/24                              ║"
+echo "║  +-- subnet-ad:  10.3.1.0/24                              ║"
+echo "║  +-- subnet-dns: 10.3.2.0/24                              ║"
 echo "║                                                            ║"
 echo "║  Access: Azure Bastion (bastion-hub)                       ║"
 echo "║                                                            ║"
@@ -810,11 +810,11 @@ echo "╚═══════════════════════�
 
 echo ""
 echo "🔍 Traffic Flow Rules:"
-echo "  • Internet → Prod Web: Allowed (HTTPS/HTTP)"
-echo "  • Prod Web → Prod App: Allowed (8080)"
-echo "  • Prod App → Prod DB: Allowed (1433)"
-echo "  • Dev → Prod DB: BLOCKED"
-echo "  • All spokes → Shared Services: Allowed via Hub"
+echo "  • Internet -> Prod Web: Allowed (HTTPS/HTTP)"
+echo "  • Prod Web -> Prod App: Allowed (8080)"
+echo "  • Prod App -> Prod DB: Allowed (1433)"
+echo "  • Dev -> Prod DB: BLOCKED"
+echo "  • All spokes -> Shared Services: Allowed via Hub"
 """,
         "xp": 25
     },

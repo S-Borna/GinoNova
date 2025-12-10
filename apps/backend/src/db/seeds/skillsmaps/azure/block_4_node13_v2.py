@@ -39,15 +39,15 @@ AZURE_NODE_13_DEVOPS_V2 = {
                         "title": "DevOps Services",
                         "explanation": "Boards (agil planering), Repos (Git hosting), Pipelines (CI/CD), Artifacts (package management), Test Plans (testning).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ ORGANIZATION → PROJECT                      │
-├─────────────────────────────────────────────┤
-│ Boards    │ Work items, Sprints, Kanban     │
-│ Repos     │ Git hosting, PRs, Branch policy │
-│ Pipelines │ Build, Release, YAML/Classic    │
-│ Artifacts │ NuGet, npm, Maven, Python, Docker│
-│ Test Plans│ Manual & automated testing      │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| ORGANIZATION -> PROJECT                      |
++---------------------------------------------+
+| Boards    | Work items, Sprints, Kanban     |
+| Repos     | Git hosting, PRs, Branch policy |
+| Pipelines | Build, Release, YAML/Classic    |
+| Artifacts | NuGet, npm, Maven, Python, Docker|
+| Test Plans| Manual & automated testing      |
++---------------------------------------------+""",
                         "pro_tip": "Free tier ger 5 users och unlimited private repos.",
                         "common_mistake": "Att hoppa över branch policies - kräv PRs och code review!"
                     },
@@ -55,14 +55,14 @@ AZURE_NODE_13_DEVOPS_V2 = {
                         "title": "Service Connections",
                         "explanation": "Kopplar Azure DevOps till externa resurser som Azure subscriptions, Docker registries, Kubernetes clusters.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ Azure DevOps ─→ Service Connection          │
-├─────────────────────────────────────────────┤
-│ Azure RM      │ Deploy till Azure           │
-│ Docker Registry│ Push/pull images           │
-│ Kubernetes    │ Deploy till AKS             │
-│ GitHub        │ Cross-platform CI           │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| Azure DevOps --> Service Connection          |
++---------------------------------------------+
+| Azure RM      | Deploy till Azure           |
+| Docker Registry| Push/pull images           |
+| Kubernetes    | Deploy till AKS             |
+| GitHub        | Cross-platform CI           |
++---------------------------------------------+""",
                         "pro_tip": "Använd Service Principal med minsta nödvändiga permissions.",
                         "common_mistake": "Att ge Service Connection Owner-rättigheter på subscription."
                     }
@@ -144,12 +144,12 @@ AZURE_NODE_13_DEVOPS_V2 = {
                     "Skapa Service Connection till Azure"
                 ],
                 "hints": [
-                    "Portal: dev.azure.com → Create organization",
-                    "Project Settings → Repos → Branch policies",
-                    "Project Settings → Service connections"
+                    "Portal: dev.azure.com -> Create organization",
+                    "Project Settings -> Repos -> Branch policies",
+                    "Project Settings -> Service connections"
                 ],
                 "solution": """# 1. Skapa organization på dev.azure.com
-# 2. Skapa projekt: New project → Name, Visibility
+# 2. Skapa projekt: New project -> Name, Visibility
 
 # CLI setup
 az extension add --name azure-devops
@@ -159,14 +159,14 @@ az devops configure --defaults organization=https://dev.azure.com/myorg project=
 az repos list --output table
 
 # Branch policy via Portal:
-# Repos → Branches → main → ... → Branch policies
+# Repos -> Branches -> main -> ... -> Branch policies
 # ✓ Require minimum number of reviewers: 1
 # ✓ Check for linked work items
 # ✓ Build validation (lägg till pipeline)
 
 # Service Connection:
-# Project Settings → Service connections → New
-# Azure Resource Manager → Service principal (automatic)""",
+# Project Settings -> Service connections -> New
+# Azure Resource Manager -> Service principal (automatic)""",
                 "estimated_time": "10 min",
                 "xp_reward": 20
             }

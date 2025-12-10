@@ -14,7 +14,7 @@ NODE_07_AGENT_LOOP = {
 
 Implementera den cykliska process som driver AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Agent Loop?
 
@@ -27,7 +27,7 @@ Agent Loop ar den cykliska processen dar agenten tar emot input, resonerar, ager
 | Action | Utfor handling (tool call) |
 | Observation | Analysera resultat |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ Agent Loop ar den cykliska processen dar agenten tar emot input, resonerar, ager
 | Kontroll | Stopping conditions forhindrar loopar |
 | Prestanda | Effektiv loop = snabbare agent |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Loop Patterns
 
@@ -48,58 +48,58 @@ Agent Loop ar den cykliska processen dar agenten tar emot input, resonerar, ager
 | Plan-Execute | Plan forst, sen exekvera | Komplexa uppgifter |
 | Reflexion | Lar sig fran misstag | Iterativ forbattring |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Core Agent Loop
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     THE AGENT LOOP                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  START: User Request                                            │
-│           │                                                      │
-│           v                                                      │
-│  ┌─────────────────┐                                            │
-│  │   PERCEPTION    │<────────────────────────────────┐          │
-│  │  - Parse input  │                                 │          │
-│  │  - Load context │                                 │          │
-│  └────────┬────────┘                                 │          │
-│           │                                          │          │
-│           v                                          │          │
-│  ┌─────────────────┐                                 │          │
-│  │   REASONING     │                                 │          │
-│  │  - Analyze      │                                 │          │
-│  │  - Plan next    │                                 │          │
-│  │  - Decide       │                                 │          │
-│  └────────┬────────┘                                 │          │
-│           │                                          │          │
-│           v                                          │          │
-│     ┌───────────────┐                                │          │
-│     │ ACTION TYPE?  │                                │          │
-│     └───────┬───────┘                                │          │
-│             │                                        │          │
-│    ┌────────┼────────┐                               │          │
-│    v        v        v                               │          │
-│  TOOL    RESPOND   ERROR                             │          │
-│  CALL    TO USER   HANDLE                            │          │
-│    │        │        │                               │          │
-│    v        │        │                               │          │
-│  OBSERVE   END      │                                │          │
-│  RESULT ────────────┘                                │          │
-│    │                                                 │          │
-│    └─────────────────────────────────────────────────┘          │
-│                                                                  │
-│  STOPPING CONDITIONS:                                           │
-│  - Task completed                                               │
-│  - Max iterations                                               │
-│  - Error threshold                                              │
-│  - Timeout                                                      │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     THE AGENT LOOP                               |
++-----------------------------------------------------------------+
+|                                                                  |
+|  START: User Request                                            |
+|           |                                                      |
+|           v                                                      |
+|  +-----------------+                                            |
+|  |   PERCEPTION    |<--------------------------------+          |
+|  |  - Parse input  |                                 |          |
+|  |  - Load context |                                 |          |
+|  +--------+--------+                                 |          |
+|           |                                          |          |
+|           v                                          |          |
+|  +-----------------+                                 |          |
+|  |   REASONING     |                                 |          |
+|  |  - Analyze      |                                 |          |
+|  |  - Plan next    |                                 |          |
+|  |  - Decide       |                                 |          |
+|  +--------+--------+                                 |          |
+|           |                                          |          |
+|           v                                          |          |
+|     +---------------+                                |          |
+|     | ACTION TYPE?  |                                |          |
+|     +-------+-------+                                |          |
+|             |                                        |          |
+|    +--------+--------+                               |          |
+|    v        v        v                               |          |
+|  TOOL    RESPOND   ERROR                             |          |
+|  CALL    TO USER   HANDLE                            |          |
+|    |        |        |                               |          |
+|    v        |        |                               |          |
+|  OBSERVE   END      |                                |          |
+|  RESULT ------------+                                |          |
+|    |                                                 |          |
+|    +-------------------------------------------------+          |
+|                                                                  |
+|  STOPPING CONDITIONS:                                           |
+|  - Task completed                                               |
+|  - Max iterations                                               |
+|  - Error threshold                                              |
+|  - Timeout                                                      |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent State
 
@@ -135,7 +135,7 @@ class LoopConfig:
     max_consecutive_errors: int = 3
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Robust Agent Loop
 
@@ -195,7 +195,7 @@ class AgentLoop:
         return None
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ReAct Pattern
 
@@ -225,7 +225,7 @@ class ReActAgent(AgentLoop):
         return super().run(user_message, system_prompt=REACT_SYSTEM_PROMPT)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Plan-and-Execute Pattern
 
@@ -270,7 +270,7 @@ class PlanExecuteAgent:
         return json.loads(response.choices[0].message.content).get("steps", [])
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Loop Detector
 
@@ -302,7 +302,7 @@ class LoopDetector:
         """
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -313,7 +313,7 @@ class LoopDetector:
 | Saknar kontext | Glommer tidigare steg | Battre state management |
 | For langsam | For manga iterationer | Optimera prompt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -344,7 +344,7 @@ NODE_08_OBSERVATION_REFLECTION = {
 
 Lar agenten analysera resultat och forbattra sitt beteende.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar Observation och Reflection?
 
@@ -356,7 +356,7 @@ Observation ar formagan att forsta vad som hande. Reflection ar formagan att lar
 | Reflection | Analysera och lara sig |
 | Self-correction | Fixa misstag automatiskt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -367,7 +367,7 @@ Observation ar formagan att forsta vad som hande. Reflection ar formagan att lar
 | Debugging | Enklare att forsta vad som gick fel |
 | Effektivitet | Kortare cykler till ratt svar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Reflection Types
 
@@ -378,41 +378,41 @@ Observation ar formagan att forsta vad som hande. Reflection ar formagan att lar
 | Final | Vid slutforande | +1 LLM call/task |
 | Retrospective | Over flera tasks | Periodisk batch |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Observation Pipeline
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   OBSERVATION PIPELINE                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  TOOL OUTPUT (Raw)                                              │
-│  │                                                               │
-│  │  {"status": 200, "data": {"temp": 15.5, ...}}                │
-│  │                                                               │
-│  v                                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  PARSER                                                    │ │
-│  │  - Extract relevant fields                                 │ │
-│  │  - Handle errors                                           │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│  │                                                               │
-│  v                                                               │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │  SUMMARIZER                                                │ │
-│  │  - Condense long outputs                                   │ │
-│  │  - Highlight key info                                      │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│  │                                                               │
-│  v                                                               │
-│  PROCESSED OBSERVATION                                          │
-│  "Vader i Stockholm: 15.5C, molnigt"                           │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   OBSERVATION PIPELINE                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  TOOL OUTPUT (Raw)                                              |
+|  |                                                               |
+|  |  {"status": 200, "data": {"temp": 15.5, ...}}                |
+|  |                                                               |
+|  v                                                               |
+|  +-----------------------------------------------------------+ |
+|  |  PARSER                                                    | |
+|  |  - Extract relevant fields                                 | |
+|  |  - Handle errors                                           | |
+|  +-----------------------------------------------------------+ |
+|  |                                                               |
+|  v                                                               |
+|  +-----------------------------------------------------------+ |
+|  |  SUMMARIZER                                                | |
+|  |  - Condense long outputs                                   | |
+|  |  - Highlight key info                                      | |
+|  +-----------------------------------------------------------+ |
+|  |                                                               |
+|  v                                                               |
+|  PROCESSED OBSERVATION                                          |
+|  "Vader i Stockholm: 15.5C, molnigt"                           |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Observation Handler
 
@@ -467,7 +467,7 @@ class ObservationHandler:
         return anomalies
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Reflection Engine
 
@@ -536,7 +536,7 @@ class ReflectionEngine:
         return self._parse_reflection(response.choices[0].message.content)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Self-Correction System
 
@@ -579,7 +579,7 @@ class SelfCorrectionSystem:
         self.error_patterns.append(error_context)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Reflective Agent
 
@@ -648,7 +648,7 @@ class ReflectiveAgent:
         return "Max iterations"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -659,7 +659,7 @@ class ReflectiveAgent:
 | Upprepar misstag | Ingen learning | Implementera error patterns |
 | Langsam agent | For manga LLM calls | Battra reflection threshold |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

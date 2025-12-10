@@ -17,38 +17,38 @@ NODE_9 = {
 ## Variable Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM VARIABLE FLOW                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  INPUT SOURCES (Priority order - highest first)                        │
-│  ─────────────────────────────────────────────                         │
-│                                                                         │
-│  1. Command line (-var, -var-file)                                     │
-│     terraform apply -var="region=eu-west-1"                            │
-│                                                                         │
-│  2. *.auto.tfvars files (alphabetical order)                           │
-│     prod.auto.tfvars, staging.auto.tfvars                              │
-│                                                                         │
-│  3. terraform.tfvars file                                              │
-│     terraform.tfvars                                                   │
-│                                                                         │
-│  4. Environment variables (TF_VAR_*)                                   │
-│     export TF_VAR_region="eu-north-1"                                  │
-│                                                                         │
-│  5. Default values in variable block                                   │
-│     variable "region" { default = "us-east-1" }                        │
-│                                                                         │
-│  6. Interactive prompt (if no default)                                 │
-│     var.region: _____                                                  │
-│                                                                         │
-│                                                                         │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                │
-│  │  Variables  │───▶│  Terraform  │───▶│  Resources  │                │
-│  │   .tfvars   │    │   Config    │    │   Created   │                │
-│  └─────────────┘    └─────────────┘    └─────────────┘                │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM VARIABLE FLOW                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  INPUT SOURCES (Priority order - highest first)                        |
+|  ---------------------------------------------                         |
+|                                                                         |
+|  1. Command line (-var, -var-file)                                     |
+|     terraform apply -var="region=eu-west-1"                            |
+|                                                                         |
+|  2. *.auto.tfvars files (alphabetical order)                           |
+|     prod.auto.tfvars, staging.auto.tfvars                              |
+|                                                                         |
+|  3. terraform.tfvars file                                              |
+|     terraform.tfvars                                                   |
+|                                                                         |
+|  4. Environment variables (TF_VAR_*)                                   |
+|     export TF_VAR_region="eu-north-1"                                  |
+|                                                                         |
+|  5. Default values in variable block                                   |
+|     variable "region" { default = "us-east-1" }                        |
+|                                                                         |
+|  6. Interactive prompt (if no default)                                 |
+|     var.region: _____                                                  |
+|                                                                         |
+|                                                                         |
+|  +-------------+    +-------------+    +-------------+                |
+|  |  Variables  |---▶|  Terraform  |---▶|  Resources  |                |
+|  |   .tfvars   |    |   Config    |    |   Created   |                |
+|  +-------------+    +-------------+    +-------------+                |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -467,12 +467,12 @@ export TF_VAR_availability_zones='["eu-north-1a","eu-north-1b"]'
 
 ```
 project/
-├── terraform.tfvars           # Default values (not in git if contains secrets)
-├── dev.tfvars                 # Development environment
-├── staging.tfvars             # Staging environment
-├── prod.tfvars                # Production environment
-├── secrets.auto.tfvars        # Auto-loaded secrets (in .gitignore!)
-└── common.auto.tfvars         # Auto-loaded common values
++-- terraform.tfvars           # Default values (not in git if contains secrets)
++-- dev.tfvars                 # Development environment
++-- staging.tfvars             # Staging environment
++-- prod.tfvars                # Production environment
++-- secrets.auto.tfvars        # Auto-loaded secrets (in .gitignore!)
++-- common.auto.tfvars         # Auto-loaded common values
 ```
 
 ### terraform.tfvars
@@ -609,7 +609,7 @@ variable "bucket_name" {
 
 ---
 
-**Nästa Node:** Outputs & Expressions →
+**Nästa Node:** Outputs & Expressions ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 65,
@@ -635,27 +635,27 @@ NODE_10 = {
 ## Output Fundamentals
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM OUTPUTS PURPOSE                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. EXPOSE VALUES                                                      │
-│     └─ Show important info after apply                                 │
-│        terraform output instance_ip                                    │
-│                                                                         │
-│  2. CROSS-MODULE COMMUNICATION                                         │
-│     └─ Pass data between modules                                       │
-│        module.vpc.vpc_id                                               │
-│                                                                         │
-│  3. REMOTE STATE DATA                                                  │
-│     └─ Share data with other configurations                            │
-│        data.terraform_remote_state.networking.outputs.vpc_id           │
-│                                                                         │
-│  4. INTEGRATION                                                        │
-│     └─ Output for scripts/CI/CD                                        │
-│        terraform output -json | jq .instance_ip.value                  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM OUTPUTS PURPOSE                            |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. EXPOSE VALUES                                                      |
+|     +- Show important info after apply                                 |
+|        terraform output instance_ip                                    |
+|                                                                         |
+|  2. CROSS-MODULE COMMUNICATION                                         |
+|     +- Pass data between modules                                       |
+|        module.vpc.vpc_id                                               |
+|                                                                         |
+|  3. REMOTE STATE DATA                                                  |
+|     +- Share data with other configurations                            |
+|        data.terraform_remote_state.networking.outputs.vpc_id           |
+|                                                                         |
+|  4. INTEGRATION                                                        |
+|     +- Output for scripts/CI/CD                                        |
+|        terraform output -json | jq .instance_ip.value                  |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1184,7 +1184,7 @@ variable "servers" {
 
 ---
 
-**Nästa Node:** Workspaces & Environment Management →
+**Nästa Node:** Workspaces & Environment Management ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 65,

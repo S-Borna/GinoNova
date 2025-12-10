@@ -23,78 +23,78 @@ StatefulSets är för applikationer som kräver stabil identitet, persistent sto
 ### StatefulSet vs Deployment
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                 STATEFULSET VS DEPLOYMENT                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DEPLOYMENT (Stateless)                                                  │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Pods har:                                                       │   │
-│  │  • Random namn (nginx-7d9f8c6b5-abc12)                          │   │
-│  │  • Delat storage (alla läser samma PVC)                         │   │
-│  │  • Parallell start/stop                                         │   │
-│  │  • Random DNS (via Service)                                     │   │
-│  │                                                                  │   │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐                         │   │
-│  │  │nginx-abc│  │nginx-def│  │nginx-ghi│  ← Interchangeable       │   │
-│  │  └─────────┘  └─────────┘  └─────────┘                         │   │
-│  │       │            │            │                               │   │
-│  │       └────────────┼────────────┘                               │   │
-│  │                    │                                             │   │
-│  │              ┌─────▼─────┐                                      │   │
-│  │              │Shared PVC │                                      │   │
-│  │              └───────────┘                                      │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  STATEFULSET (Stateful)                                                  │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Pods har:                                                       │   │
-│  │  • Stabil ordningstal (postgres-0, postgres-1, postgres-2)      │   │
-│  │  • Eget storage (varje pod har egen PVC)                        │   │
-│  │  • Sekventiell start/stop (0 före 1 före 2)                     │   │
-│  │  • Stabil DNS (postgres-0.postgres-svc.ns.svc.cluster.local)    │   │
-│  │                                                                  │   │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐                      │   │
-│  │  │postgres-0│  │postgres-1│  │postgres-2│  ← Unique identity   │   │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘                      │   │
-│  │       │             │             │                             │   │
-│  │  ┌────▼────┐   ┌────▼────┐   ┌────▼────┐                       │   │
-│  │  │ PVC-0   │   │ PVC-1   │   │ PVC-2   │  ← Dedicated storage  │   │
-│  │  └─────────┘   └─────────┘   └─────────┘                       │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                 STATEFULSET VS DEPLOYMENT                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DEPLOYMENT (Stateless)                                                  |
+|  +-----------------------------------------------------------------+   |
+|  |  Pods har:                                                       |   |
+|  |  • Random namn (nginx-7d9f8c6b5-abc12)                          |   |
+|  |  • Delat storage (alla läser samma PVC)                         |   |
+|  |  • Parallell start/stop                                         |   |
+|  |  • Random DNS (via Service)                                     |   |
+|  |                                                                  |   |
+|  |  +---------+  +---------+  +---------+                         |   |
+|  |  |nginx-abc|  |nginx-def|  |nginx-ghi|  <- Interchangeable       |   |
+|  |  +---------+  +---------+  +---------+                         |   |
+|  |       |            |            |                               |   |
+|  |       +------------+------------+                               |   |
+|  |                    |                                             |   |
+|  |              +-----▼-----+                                      |   |
+|  |              |Shared PVC |                                      |   |
+|  |              +-----------+                                      |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  STATEFULSET (Stateful)                                                  |
+|  +-----------------------------------------------------------------+   |
+|  |  Pods har:                                                       |   |
+|  |  • Stabil ordningstal (postgres-0, postgres-1, postgres-2)      |   |
+|  |  • Eget storage (varje pod har egen PVC)                        |   |
+|  |  • Sekventiell start/stop (0 före 1 före 2)                     |   |
+|  |  • Stabil DNS (postgres-0.postgres-svc.ns.svc.cluster.local)    |   |
+|  |                                                                  |   |
+|  |  +----------+  +----------+  +----------+                      |   |
+|  |  |postgres-0|  |postgres-1|  |postgres-2|  <- Unique identity   |   |
+|  |  +----+-----+  +----+-----+  +----+-----+                      |   |
+|  |       |             |             |                             |   |
+|  |  +----▼----+   +----▼----+   +----▼----+                       |   |
+|  |  | PVC-0   |   | PVC-1   |   | PVC-2   |  <- Dedicated storage  |   |
+|  |  +---------+   +---------+   +---------+                       |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. StatefulSet Guarantees
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    STATEFULSET GUARANTEES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  1. STABLE POD IDENTITY                                                  │
-│     Pod names: <statefulset-name>-<ordinal>                             │
-│     postgres-0, postgres-1, postgres-2...                               │
-│                                                                          │
-│  2. STABLE NETWORK IDENTITY                                             │
-│     DNS: <pod-name>.<service-name>.<namespace>.svc.cluster.local        │
-│     postgres-0.postgres-headless.default.svc.cluster.local              │
-│                                                                          │
-│  3. STABLE STORAGE                                                       │
-│     Varje pod får egen PVC som följer med även efter pod-restart        │
-│     PVC-namn: <volumeClaimTemplate-name>-<statefulset-name>-<ordinal>   │
-│     data-postgres-0, data-postgres-1, data-postgres-2                   │
-│                                                                          │
-│  4. ORDERED DEPLOYMENT & SCALING                                        │
-│     Start:  0 → 1 → 2 (väntar tills föregående är Ready)               │
-│     Scale down: 2 → 1 → 0                                               │
-│     Delete: 2 → 1 → 0                                                   │
-│                                                                          │
-│  5. ORDERED ROLLING UPDATES                                             │
-│     Update: 2 → 1 → 0 (högst ordinal först)                            │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    STATEFULSET GUARANTEES                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  1. STABLE POD IDENTITY                                                  |
+|     Pod names: <statefulset-name>-<ordinal>                             |
+|     postgres-0, postgres-1, postgres-2...                               |
+|                                                                          |
+|  2. STABLE NETWORK IDENTITY                                             |
+|     DNS: <pod-name>.<service-name>.<namespace>.svc.cluster.local        |
+|     postgres-0.postgres-headless.default.svc.cluster.local              |
+|                                                                          |
+|  3. STABLE STORAGE                                                       |
+|     Varje pod får egen PVC som följer med även efter pod-restart        |
+|     PVC-namn: <volumeClaimTemplate-name>-<statefulset-name>-<ordinal>   |
+|     data-postgres-0, data-postgres-1, data-postgres-2                   |
+|                                                                          |
+|  4. ORDERED DEPLOYMENT & SCALING                                        |
+|     Start:  0 -> 1 -> 2 (väntar tills föregående är Ready)               |
+|     Scale down: 2 -> 1 -> 0                                               |
+|     Delete: 2 -> 1 -> 0                                                   |
+|                                                                          |
+|  5. ORDERED ROLLING UPDATES                                             |
+|     Update: 2 -> 1 -> 0 (högst ordinal först)                            |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. StatefulSet Anatomy
@@ -367,32 +367,32 @@ kubectl delete pvc -l app=postgres                    # Radera PVCs
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   STATEFULSET BEST PRACTICES                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Design                                                               │
-│     □ Använd ENDAST för stateful workloads                              │
-│     □ Headless service är REQUIRED                                       │
-│     □ Implementera proper health checks                                  │
-│     □ Hantera leader election om nödvändigt                             │
-│                                                                          │
-│  ✅ Storage                                                              │
-│     □ Använd StorageClass med Retain policy                             │
-│     □ Testa backup/restore procedure                                    │
-│     □ Övervaka disk usage                                               │
-│                                                                          │
-│  ✅ Updates                                                              │
-│     □ Använd partition för staged rollouts                              │
-│     □ Testa på staging först                                            │
-│     □ Ha rollback-plan                                                  │
-│                                                                          │
-│  ✅ Operations                                                          │
-│     □ Dokumentera startup/shutdown ordning                              │
-│     □ Automatisera backup                                               │
-│     □ Övervaka replication lag                                          │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   STATEFULSET BEST PRACTICES                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Design                                                               |
+|     □ Använd ENDAST för stateful workloads                              |
+|     □ Headless service är REQUIRED                                       |
+|     □ Implementera proper health checks                                  |
+|     □ Hantera leader election om nödvändigt                             |
+|                                                                          |
+|  ✅ Storage                                                              |
+|     □ Använd StorageClass med Retain policy                             |
+|     □ Testa backup/restore procedure                                    |
+|     □ Övervaka disk usage                                               |
+|                                                                          |
+|  ✅ Updates                                                              |
+|     □ Använd partition för staged rollouts                              |
+|     □ Testa på staging först                                            |
+|     □ Ha rollback-plan                                                  |
+|                                                                          |
+|  ✅ Operations                                                          |
+|     □ Dokumentera startup/shutdown ordning                              |
+|     □ Automatisera backup                                               |
+|     □ Övervaka replication lag                                          |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Sammanfattning & Task
@@ -409,7 +409,7 @@ kubectl delete pvc -l app=postgres                    # Radera PVCs
 
 ---
 
-**Nästa Node:** Jobs & CronJobs →
+**Nästa Node:** Jobs & CronJobs ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 60,
@@ -435,36 +435,36 @@ Jobs och CronJobs är för batch-arbeten som ska köras en gång eller enligt sc
 ### Job vs Deployment
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      JOB VS DEPLOYMENT                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DEPLOYMENT (Long-running)                                               │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  restartPolicy: Always                                           │   │
-│  │                                                                  │   │
-│  │  Start ─────────────────────────────────────────────────▶ ∞     │   │
-│  │        Kör för alltid, restart om crash                         │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  JOB (Run-to-completion)                                                 │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  restartPolicy: Never | OnFailure                                │   │
-│  │                                                                  │   │
-│  │  Start ────────────────────────▶ Complete ✓                     │   │
-│  │        Kör tills klart, exit 0 = success                        │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  CRONJOB (Scheduled Jobs)                                                │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  schedule: "0 2 * * *"                                           │   │
-│  │                                                                  │   │
-│  │  02:00 ──▶ Job ──▶ ✓                                            │   │
-│  │  02:00 ──▶ Job ──▶ ✓   (nästa dag)                              │   │
-│  │  02:00 ──▶ Job ──▶ ✓   (nästa dag)                              │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      JOB VS DEPLOYMENT                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DEPLOYMENT (Long-running)                                               |
+|  +-----------------------------------------------------------------+   |
+|  |  restartPolicy: Always                                           |   |
+|  |                                                                  |   |
+|  |  Start -------------------------------------------------▶ ∞     |   |
+|  |        Kör för alltid, restart om crash                         |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  JOB (Run-to-completion)                                                 |
+|  +-----------------------------------------------------------------+   |
+|  |  restartPolicy: Never | OnFailure                                |   |
+|  |                                                                  |   |
+|  |  Start ------------------------▶ Complete ✓                     |   |
+|  |        Kör tills klart, exit 0 = success                        |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  CRONJOB (Scheduled Jobs)                                                |
+|  +-----------------------------------------------------------------+   |
+|  |  schedule: "0 2 * * *"                                           |   |
+|  |                                                                  |   |
+|  |  02:00 --▶ Job --▶ ✓                                            |   |
+|  |  02:00 --▶ Job --▶ ✓   (nästa dag)                              |   |
+|  |  02:00 --▶ Job --▶ ✓   (nästa dag)                              |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Job Types
@@ -595,31 +595,31 @@ spec:
 ### Cron Schedule Syntax
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      CRON SCHEDULE SYNTAX                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌───────────── minute (0 - 59)                                         │
-│  │ ┌───────────── hour (0 - 23)                                         │
-│  │ │ ┌───────────── day of month (1 - 31)                               │
-│  │ │ │ ┌───────────── month (1 - 12)                                    │
-│  │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday = 0)                │
-│  │ │ │ │ │                                                               │
-│  * * * * *                                                               │
-│                                                                          │
-│  Exempel:                                                                │
-│  ────────────────────────────────────────────────────────────────────── │
-│  */15 * * * *     │ Var 15:e minut                                      │
-│  0 * * * *        │ Varje timme (hh:00)                                 │
-│  0 0 * * *        │ Varje dag vid midnatt                               │
-│  0 2 * * *        │ Varje dag kl 02:00                                  │
-│  0 0 * * 0        │ Varje söndag vid midnatt                            │
-│  0 0 1 * *        │ Första dagen i månaden                              │
-│  0 0 1 1 *        │ 1 januari vid midnatt                               │
-│  0 8-17 * * 1-5   │ Varje timme 08-17 på vardagar                       │
-│  0 */2 * * *      │ Varannan timme                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      CRON SCHEDULE SYNTAX                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +------------- minute (0 - 59)                                         |
+|  | +------------- hour (0 - 23)                                         |
+|  | | +------------- day of month (1 - 31)                               |
+|  | | | +------------- month (1 - 12)                                    |
+|  | | | | +------------- day of week (0 - 6) (Sunday = 0)                |
+|  | | | | |                                                               |
+|  * * * * *                                                               |
+|                                                                          |
+|  Exempel:                                                                |
+|  ---------------------------------------------------------------------- |
+|  */15 * * * *     | Var 15:e minut                                      |
+|  0 * * * *        | Varje timme (hh:00)                                 |
+|  0 0 * * *        | Varje dag vid midnatt                               |
+|  0 2 * * *        | Varje dag kl 02:00                                  |
+|  0 0 * * 0        | Varje söndag vid midnatt                            |
+|  0 0 1 * *        | Första dagen i månaden                              |
+|  0 0 1 1 *        | 1 januari vid midnatt                               |
+|  0 8-17 * * 1-5   | Varje timme 08-17 på vardagar                       |
+|  0 */2 * * *      | Varannan timme                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 4. Praktiska Övningar
@@ -740,34 +740,34 @@ kubectl patch cronjob hourly-report -p '{"spec":{"suspend":true}}'
 ## 5. Job Completion Handling
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     JOB COMPLETION STATES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SUCCESS (exit 0)                                                        │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Job: COMPLETE                                                   │   │
-│  │  Pod: Succeeded                                                  │   │
-│  │                                                                  │   │
-│  │  kubectl get job backup                                         │   │
-│  │  NAME     COMPLETIONS   DURATION   AGE                          │   │
-│  │  backup   1/1           45s        2m                           │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-│  FAILURE (exit != 0)                                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  restartPolicy: OnFailure                                        │   │
-│  │  → Container restarts i samma pod                               │   │
-│  │  → backoffLimit kontrollerar max retries                        │   │
-│  │                                                                  │   │
-│  │  restartPolicy: Never                                            │   │
-│  │  → Ny pod skapas för varje retry                                │   │
-│  │  → backoffLimit kontrollerar max pods                           │   │
-│  │                                                                  │   │
-│  │  Efter backoffLimit: Job = Failed                               │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                     JOB COMPLETION STATES                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SUCCESS (exit 0)                                                        |
+|  +-----------------------------------------------------------------+   |
+|  |  Job: COMPLETE                                                   |   |
+|  |  Pod: Succeeded                                                  |   |
+|  |                                                                  |   |
+|  |  kubectl get job backup                                         |   |
+|  |  NAME     COMPLETIONS   DURATION   AGE                          |   |
+|  |  backup   1/1           45s        2m                           |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
+|  FAILURE (exit != 0)                                                    |
+|  +-----------------------------------------------------------------+   |
+|  |  restartPolicy: OnFailure                                        |   |
+|  |  -> Container restarts i samma pod                               |   |
+|  |  -> backoffLimit kontrollerar max retries                        |   |
+|  |                                                                  |   |
+|  |  restartPolicy: Never                                            |   |
+|  |  -> Ny pod skapas för varje retry                                |   |
+|  |  -> backoffLimit kontrollerar max pods                           |   |
+|  |                                                                  |   |
+|  |  Efter backoffLimit: Job = Failed                               |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Vanliga Fel & Lösningar
@@ -809,28 +809,28 @@ kubectl create job test-run --from=cronjob/my-cronjob
 ## 7. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   JOBS BEST PRACTICES                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Job Design                                                          │
-│     □ Sätt activeDeadlineSeconds för timeout                            │
-│     □ Använd backoffLimit baserat på job-typ                            │
-│     □ Gör jobs idempotenta (kan köras flera gånger)                     │
-│     □ Log progress för debugging                                        │
-│                                                                          │
-│  ✅ CronJob                                                             │
-│     □ Använd concurrencyPolicy: Forbid för de flesta fall               │
-│     □ Sätt startingDeadlineSeconds                                      │
-│     □ Begränsa history (successfulJobsHistoryLimit)                     │
-│     □ Övervaka job failures                                             │
-│                                                                          │
-│  ✅ Monitoring                                                          │
-│     □ Alerting på job failures                                          │
-│     □ Track job duration                                                │
-│     □ Log centralization                                                │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   JOBS BEST PRACTICES                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Job Design                                                          |
+|     □ Sätt activeDeadlineSeconds för timeout                            |
+|     □ Använd backoffLimit baserat på job-typ                            |
+|     □ Gör jobs idempotenta (kan köras flera gånger)                     |
+|     □ Log progress för debugging                                        |
+|                                                                          |
+|  ✅ CronJob                                                             |
+|     □ Använd concurrencyPolicy: Forbid för de flesta fall               |
+|     □ Sätt startingDeadlineSeconds                                      |
+|     □ Begränsa history (successfulJobsHistoryLimit)                     |
+|     □ Övervaka job failures                                             |
+|                                                                          |
+|  ✅ Monitoring                                                          |
+|     □ Alerting på job failures                                          |
+|     □ Track job duration                                                |
+|     □ Log centralization                                                |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Sammanfattning & Task
@@ -855,7 +855,7 @@ kubectl create job test-run --from=cronjob/my-cronjob
 
 ---
 
-**Nästa Node:** DaemonSets & RBAC →
+**Nästa Node:** DaemonSets & RBAC ->
 ''',
     "xp_reward": 145,
     "estimated_minutes": 50,

@@ -11,7 +11,7 @@ NODE_01_SQL_INTRO = {
     "prerequisites": [],
     "content": '''# SQL Introduktion
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -22,7 +22,7 @@ Utan SQL ar du blind i produktionsmiljon.
 Nar en deployment failar och du behover kolla vilka rader som paverkades,
 eller nar du ska automatisera backups - da behover du SQL.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vad ar SQL?
 
@@ -30,34 +30,34 @@ SQL (Structured Query Language) ar ett standardiserat sprak for att
 hantera relationsdatabaser. Det anvands for att:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     SQL OVERSIKT                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐        │
-│   │  Applikation │    │  Applikation │    │   DevOps    │        │
-│   │   (Backend) │    │   (Frontend)│    │   Scripts   │        │
-│   └──────┬──────┘    └──────┬──────┘    └──────┬──────┘        │
-│          │                  │                  │                │
-│          └────────────┬─────┴──────────────────┘                │
-│                       │                                         │
-│                       ▼                                         │
-│              ┌────────────────┐                                 │
-│              │   SQL Queries  │                                 │
-│              └────────┬───────┘                                 │
-│                       │                                         │
-│                       ▼                                         │
-│   ┌─────────────────────────────────────────────────────────┐  │
-│   │                    DATABAS                               │  │
-│   │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐    │  │
-│   │  │ users   │  │ orders  │  │ servers │  │  logs   │    │  │
-│   │  └─────────┘  └─────────┘  └─────────┘  └─────────┘    │  │
-│   └─────────────────────────────────────────────────────────┘  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     SQL OVERSIKT                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|   +-------------+    +-------------+    +-------------+        |
+|   |  Applikation |    |  Applikation |    |   DevOps    |        |
+|   |   (Backend) |    |   (Frontend)|    |   Scripts   |        |
+|   +------+------+    +------+------+    +------+------+        |
+|          |                  |                  |                |
+|          +------------+-----+------------------+                |
+|                       |                                         |
+|                       ▼                                         |
+|              +----------------+                                 |
+|              |   SQL Queries  |                                 |
+|              +--------+-------+                                 |
+|                       |                                         |
+|                       ▼                                         |
+|   +---------------------------------------------------------+  |
+|   |                    DATABAS                               |  |
+|   |  +---------+  +---------+  +---------+  +---------+    |  |
+|   |  | users   |  | orders  |  | servers |  |  logs   |    |  |
+|   |  +---------+  +---------+  +---------+  +---------+    |  |
+|   +---------------------------------------------------------+  |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Databaser - Jamforelse
 
@@ -69,7 +69,7 @@ hantera relationsdatabaser. Det anvands for att:
 | SQL Server | Microsoft stack | Windows integration |
 | MariaDB | MySQL-fork | Open source |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Installation - PostgreSQL
 
@@ -116,40 +116,40 @@ docker run -d \\
 docker exec -it postgres-dev psql -U devops -d devops_db
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## SQL Kategorier
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SQL KOMMANDO-KATEGORIER                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  DDL (Data Definition Language)                                 │
-│  ├── CREATE  - Skapa tabeller, index, databaser                │
-│  ├── ALTER   - Andrar struktur                                 │
-│  ├── DROP    - Ta bort objekt                                  │
-│  └── TRUNCATE - Tom tabell                                     │
-│                                                                 │
-│  DML (Data Manipulation Language)                               │
-│  ├── SELECT  - Hamta data                                      │
-│  ├── INSERT  - Lagg till data                                  │
-│  ├── UPDATE  - Uppdatera data                                  │
-│  └── DELETE  - Ta bort data                                    │
-│                                                                 │
-│  DCL (Data Control Language)                                    │
-│  ├── GRANT   - Ge rattigheter                                  │
-│  └── REVOKE  - Ta bort rattigheter                             │
-│                                                                 │
-│  TCL (Transaction Control Language)                             │
-│  ├── COMMIT  - Spara transaktion                               │
-│  ├── ROLLBACK - Angra transaktion                              │
-│  └── SAVEPOINT - Skapa aterstallningspunkt                     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SQL KOMMANDO-KATEGORIER                      |
++-----------------------------------------------------------------+
+|                                                                 |
+|  DDL (Data Definition Language)                                 |
+|  +-- CREATE  - Skapa tabeller, index, databaser                |
+|  +-- ALTER   - Andrar struktur                                 |
+|  +-- DROP    - Ta bort objekt                                  |
+|  +-- TRUNCATE - Tom tabell                                     |
+|                                                                 |
+|  DML (Data Manipulation Language)                               |
+|  +-- SELECT  - Hamta data                                      |
+|  +-- INSERT  - Lagg till data                                  |
+|  +-- UPDATE  - Uppdatera data                                  |
+|  +-- DELETE  - Ta bort data                                    |
+|                                                                 |
+|  DCL (Data Control Language)                                    |
+|  +-- GRANT   - Ge rattigheter                                  |
+|  +-- REVOKE  - Ta bort rattigheter                             |
+|                                                                 |
+|  TCL (Transaction Control Language)                             |
+|  +-- COMMIT  - Spara transaktion                               |
+|  +-- ROLLBACK - Angra transaktion                              |
+|  +-- SAVEPOINT - Skapa aterstallningspunkt                     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Forsta Queries - CRUD Operations
 
@@ -223,7 +223,7 @@ DELETE FROM servers WHERE hostname = 'old-server';
 -- DELETE FROM servers;  -- FARLIGT!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -237,7 +237,7 @@ DELETE FROM servers WHERE hostname = 'old-server';
 | DELETE | `DELETE FROM tabell WHERE ...;` | Ta bort rad |
 | DROP TABLE | `DROP TABLE namn;` | Ta bort tabell |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -290,7 +290,7 @@ SELECT * FROM servers WHERE status = 'decommissioned';
 DELETE FROM servers WHERE status = 'decommissioned';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -325,7 +325,7 @@ FROM deployments
 WHERE environment = 'production';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -352,7 +352,7 @@ NODE_02_DATA_TYPES = {
     "prerequisites": [1],
     "content": '''# Data Types i SQL
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -361,36 +361,36 @@ val kan kosta dig terabytes i lagring eller millisekunder i query-tid.
 Som DevOps maste du forsta vilka typer som passar for loggar, metrics,
 timestamps och konfigurationsdata.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Datatyper - Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SQL DATATYPER                                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  NUMERISKA                      TEXT                            │
-│  ├── SMALLINT (2 bytes)         ├── CHAR(n)    - Fast langd    │
-│  ├── INTEGER  (4 bytes)         ├── VARCHAR(n) - Variabel      │
-│  ├── BIGINT   (8 bytes)         └── TEXT       - Obegransad    │
-│  ├── SERIAL   (auto-increment)                                  │
-│  ├── DECIMAL  (exakt)           DATUM & TID                     │
-│  └── REAL/DOUBLE (approx)       ├── DATE       - Bara datum    │
-│                                 ├── TIME       - Bara tid      │
-│  BOOLEAN                        ├── TIMESTAMP  - Datum + tid   │
-│  └── true/false/null            └── TIMESTAMPTZ - Med timezone │
-│                                                                 │
-│  SPECIELLA (PostgreSQL)                                         │
-│  ├── UUID    - Unika ID                                        │
-│  ├── JSONB   - JSON data                                       │
-│  ├── ARRAY   - Listor                                          │
-│  └── INET    - IP-adresser                                     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SQL DATATYPER                                |
++-----------------------------------------------------------------+
+|                                                                 |
+|  NUMERISKA                      TEXT                            |
+|  +-- SMALLINT (2 bytes)         +-- CHAR(n)    - Fast langd    |
+|  +-- INTEGER  (4 bytes)         +-- VARCHAR(n) - Variabel      |
+|  +-- BIGINT   (8 bytes)         +-- TEXT       - Obegransad    |
+|  +-- SERIAL   (auto-increment)                                  |
+|  +-- DECIMAL  (exakt)           DATUM & TID                     |
+|  +-- REAL/DOUBLE (approx)       +-- DATE       - Bara datum    |
+|                                 +-- TIME       - Bara tid      |
+|  BOOLEAN                        +-- TIMESTAMP  - Datum + tid   |
+|  +-- true/false/null            +-- TIMESTAMPTZ - Med timezone |
+|                                                                 |
+|  SPECIELLA (PostgreSQL)                                         |
+|  +-- UUID    - Unika ID                                        |
+|  +-- JSONB   - JSON data                                       |
+|  +-- ARRAY   - Listor                                          |
+|  +-- INET    - IP-adresser                                     |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Numeriska typer
 
@@ -444,7 +444,7 @@ CREATE TABLE cloud_costs (
 -- DECIMAL: 10.00 + 10.00 + 10.00 = 30.00 (exakt)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Text typer
 
@@ -472,7 +472,7 @@ SELECT
     LENGTH('hello'::VARCHAR(10)) AS varchar_len; -- 5 (faktisk)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Datum och Tid
 
@@ -525,7 +525,7 @@ FROM deployment_log;
 SET timezone = 'Europe/Stockholm';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Boolean
 
@@ -555,7 +555,7 @@ SELECT * FROM feature_flags WHERE is_enabled AND NOT is_beta;
 SELECT * FROM feature_flags WHERE is_enabled IS NOT NULL;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## PostgreSQL Specialtyper
 
@@ -662,7 +662,7 @@ SELECT * FROM firewall_rules
 WHERE source_ip << '10.0.0.0/8';  -- Inom subnet
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -679,7 +679,7 @@ WHERE source_ip << '10.0.0.0/8';  -- Inom subnet
 | JSONB | Flexibel data | `config JSONB` |
 | ARRAY | Listor | `tags TEXT[]` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -731,7 +731,7 @@ view_count SMALLINT  -- Max 32,767
 view_count INTEGER   -- Max 2 miljarder
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -759,7 +759,7 @@ NODE_03_DDL_CREATE = {
     "prerequisites": [2],
     "content": '''# CREATE & ALTER - DDL
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -768,32 +768,32 @@ leder till dalig prestanda och buggar som ar extremt svara att fixa i
 produktion. Som DevOps hanterar du migrations, schema-uppdateringar och
 rollbacks - DDL-kunskap ar essentiellt.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DDL Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 DDL - Data Definition Language                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  CREATE                         ALTER                           │
-│  ├── DATABASE                   ├── ADD COLUMN                 │
-│  ├── TABLE                      ├── DROP COLUMN                │
-│  ├── INDEX                      ├── ALTER COLUMN               │
-│  ├── VIEW                       ├── ADD CONSTRAINT             │
-│  └── SEQUENCE                   └── RENAME                     │
-│                                                                 │
-│  DROP                           TRUNCATE                        │
-│  ├── DATABASE                   └── Tomma tabell snabbt        │
-│  ├── TABLE                          (behall struktur)          │
-│  ├── INDEX                                                      │
-│  └── CASCADE (beroenden)                                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 DDL - Data Definition Language                  |
++-----------------------------------------------------------------+
+|                                                                 |
+|  CREATE                         ALTER                           |
+|  +-- DATABASE                   +-- ADD COLUMN                 |
+|  +-- TABLE                      +-- DROP COLUMN                |
+|  +-- INDEX                      +-- ALTER COLUMN               |
+|  +-- VIEW                       +-- ADD CONSTRAINT             |
+|  +-- SEQUENCE                   +-- RENAME                     |
+|                                                                 |
+|  DROP                           TRUNCATE                        |
+|  +-- DATABASE                   +-- Tomma tabell snabbt        |
+|  +-- TABLE                          (behall struktur)          |
+|  +-- INDEX                                                      |
+|  +-- CASCADE (beroenden)                                       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## CREATE TABLE
 
@@ -844,40 +844,40 @@ CREATE TABLE deployments (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Constraints
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     SQL CONSTRAINTS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  PRIMARY KEY                                                    │
-│  └── Unik identifierare, kan inte vara NULL                    │
-│      id SERIAL PRIMARY KEY                                      │
-│                                                                 │
-│  FOREIGN KEY                                                    │
-│  └── Referens till annan tabell                                │
-│      user_id INTEGER REFERENCES users(id)                       │
-│                                                                 │
-│  UNIQUE                                                         │
-│  └── Varde maste vara unikt i kolumnen                         │
-│      email VARCHAR(255) UNIQUE                                  │
-│                                                                 │
-│  NOT NULL                                                       │
-│  └── Kolumnen kan inte vara NULL                               │
-│      username VARCHAR(50) NOT NULL                              │
-│                                                                 │
-│  DEFAULT                                                        │
-│  └── Standardvarde om inget anges                              │
-│      created_at TIMESTAMPTZ DEFAULT NOW()                       │
-│                                                                 │
-│  CHECK                                                          │
-│  └── Validera varden                                           │
-│      age INTEGER CHECK (age >= 0 AND age < 150)                │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     SQL CONSTRAINTS                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  PRIMARY KEY                                                    |
+|  +-- Unik identifierare, kan inte vara NULL                    |
+|      id SERIAL PRIMARY KEY                                      |
+|                                                                 |
+|  FOREIGN KEY                                                    |
+|  +-- Referens till annan tabell                                |
+|      user_id INTEGER REFERENCES users(id)                       |
+|                                                                 |
+|  UNIQUE                                                         |
+|  +-- Varde maste vara unikt i kolumnen                         |
+|      email VARCHAR(255) UNIQUE                                  |
+|                                                                 |
+|  NOT NULL                                                       |
+|  +-- Kolumnen kan inte vara NULL                               |
+|      username VARCHAR(50) NOT NULL                              |
+|                                                                 |
+|  DEFAULT                                                        |
+|  +-- Standardvarde om inget anges                              |
+|      created_at TIMESTAMPTZ DEFAULT NOW()                       |
+|                                                                 |
+|  CHECK                                                          |
+|  +-- Validera varden                                           |
+|      age INTEGER CHECK (age >= 0 AND age < 150)                |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 ### Foreign Keys med ON DELETE/UPDATE
@@ -922,7 +922,7 @@ CREATE TABLE user_roles (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## ALTER TABLE
 
@@ -1006,7 +1006,7 @@ ALTER TABLE deployments
 RENAME TO releases;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DROP och TRUNCATE
 
@@ -1039,7 +1039,7 @@ TRUNCATE TABLE logs, audit_trail RESTART IDENTITY;
 TRUNCATE TABLE deployments CASCADE;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## INDEX - Prestanda
 
@@ -1075,26 +1075,26 @@ ON deployments USING gin(tags);
 ### Nar ska man skapa index?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  INDEX BESLUTSTRÄ                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Skapa index om:                                                │
-│  ├── Kolumnen anvands ofta i WHERE                             │
-│  ├── Kolumnen anvands i JOIN                                   │
-│  ├── Kolumnen anvands i ORDER BY                               │
-│  └── Tabellen ar stor (>10,000 rader)                          │
-│                                                                 │
-│  Undvik index om:                                               │
-│  ├── Tabellen ar liten                                         │
-│  ├── Kolumnen uppdateras mycket                                │
-│  ├── Kolumnen har lag kardinalitet (fa unika varden)           │
-│  └── Du redan har manga index (saktar ner INSERT/UPDATE)       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  INDEX BESLUTSTRÄ                              |
++-----------------------------------------------------------------+
+|                                                                 |
+|  Skapa index om:                                                |
+|  +-- Kolumnen anvands ofta i WHERE                             |
+|  +-- Kolumnen anvands i JOIN                                   |
+|  +-- Kolumnen anvands i ORDER BY                               |
+|  +-- Tabellen ar stor (>10,000 rader)                          |
+|                                                                 |
+|  Undvik index om:                                               |
+|  +-- Tabellen ar liten                                         |
+|  +-- Kolumnen uppdateras mycket                                |
+|  +-- Kolumnen har lag kardinalitet (fa unika varden)           |
+|  +-- Du redan har manga index (saktar ner INSERT/UPDATE)       |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1109,7 +1109,7 @@ ON deployments USING gin(tags);
 | TRUNCATE | `TRUNCATE TABLE t` | Tom tabell |
 | CREATE INDEX | `CREATE INDEX i ON t(c)` | Skapa index |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1173,7 +1173,7 @@ EXPLAIN ANALYZE SELECT * FROM deployments WHERE service_name = 'api';
 -- 4. Statistik ar inaktuell: ANALYZE deployments;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1220,7 +1220,7 @@ CREATE INDEX idx_runs_started ON pipeline_runs(started_at DESC);
 \\di
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1248,7 +1248,7 @@ NODE_04_DML_BASICS = {
     "prerequisites": [3],
     "content": '''# INSERT, UPDATE, DELETE - DML
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1256,34 +1256,34 @@ CRUD-operationer ar brod och smor i databashantering. Men UPDATE och DELETE
 utan WHERE kan forstora hela din databas pa sekunder. Som DevOps maste du
 kunna manipulera data sakert for migrations, datarensning och debugging.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DML Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              DML - Data Manipulation Language                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  INSERT                         UPDATE                          │
-│  ├── Enkel rad                  ├── Enkel kolumn               │
-│  ├── Flera rader                ├── Flera kolumner             │
-│  ├── INSERT ... SELECT          ├── UPDATE ... FROM            │
-│  ├── RETURNING                  ├── Conditional (CASE)         │
-│  └── ON CONFLICT (UPSERT)       └── RETURNING                  │
-│                                                                 │
-│  DELETE                         MERGE (SQL Standard)            │
-│  ├── Med WHERE                  └── INSERT or UPDATE           │
-│  ├── Med subquery                   (PostgreSQL: ON CONFLICT)  │
-│  ├── RETURNING                                                  │
-│  └── TRUNCATE (snabbare)                                       │
-│                                                                 │
-│  VIKTIGT: Anvand ALLTID WHERE vid UPDATE/DELETE!               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              DML - Data Manipulation Language                   |
++-----------------------------------------------------------------+
+|                                                                 |
+|  INSERT                         UPDATE                          |
+|  +-- Enkel rad                  +-- Enkel kolumn               |
+|  +-- Flera rader                +-- Flera kolumner             |
+|  +-- INSERT ... SELECT          +-- UPDATE ... FROM            |
+|  +-- RETURNING                  +-- Conditional (CASE)         |
+|  +-- ON CONFLICT (UPSERT)       +-- RETURNING                  |
+|                                                                 |
+|  DELETE                         MERGE (SQL Standard)            |
+|  +-- Med WHERE                  +-- INSERT or UPDATE           |
+|  +-- Med subquery                   (PostgreSQL: ON CONFLICT)  |
+|  +-- RETURNING                                                  |
+|  +-- TRUNCATE (snabbare)                                       |
+|                                                                 |
+|  VIKTIGT: Anvand ALLTID WHERE vid UPDATE/DELETE!               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## INSERT
 
@@ -1345,7 +1345,7 @@ FROM servers
 WHERE status = 'decommissioned';
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## UPSERT - INSERT ON CONFLICT
 
@@ -1383,7 +1383,7 @@ DO UPDATE SET
 WHERE config.version < EXCLUDED.version;  -- Endast om ny version ar hogre
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## UPDATE
 
@@ -1474,7 +1474,7 @@ WHERE id IN (
 );
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## DELETE
 
@@ -1543,7 +1543,7 @@ TRUNCATE TABLE logs, audit_trail RESTART IDENTITY;
 TRUNCATE TABLE deployments CASCADE;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Transaktioner
 
@@ -1600,7 +1600,7 @@ UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 COMMIT;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1616,7 +1616,7 @@ COMMIT;
 | TRUNCATE | `TRUNCATE TABLE t` | Tom tabell snabbt |
 | RETURNING | `INSERT/UPDATE/DELETE ... RETURNING *` | Returnera paverkade rader |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1686,7 +1686,7 @@ INSERT INTO orders (customer_id) VALUES (1);
 SELECT lastval();  -- Returnerar senast genererade SERIAL
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Praktisk ovning
 
@@ -1733,7 +1733,7 @@ INSERT INTO deployment_logs (deployment_id, message) VALUES (1, 'Rollback initia
 COMMIT;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------------
 
 ## Key Takeaways
 

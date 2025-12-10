@@ -39,11 +39,11 @@ AZURE_NODE_14_ACR_V2 = {
                         "title": "ACR Tiers",
                         "explanation": "Basic (10GB, ~$5/mån), Standard (100GB, ~$20/mån), Premium (500GB, ~$50/mån med geo-replication och private link).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ Basic      │ 10GB, dev/test               │
-│ Standard   │ 100GB, produktion            │
-│ Premium    │ 500GB, geo-rep, private link │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| Basic      | 10GB, dev/test               |
+| Standard   | 100GB, produktion            |
+| Premium    | 500GB, geo-rep, private link |
++---------------------------------------------+""",
                         "pro_tip": "Standard räcker för de flesta produktionsmiljöer.",
                         "common_mistake": "Att aktivera admin user i produktion - använd managed identity istället."
                     },
@@ -51,15 +51,15 @@ AZURE_NODE_14_ACR_V2 = {
                         "title": "ACR Tasks",
                         "explanation": "Bygg Docker images direkt i Azure utan lokal Docker installation. Triggered av commits, base image updates eller schedule.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ Source (Git/Local) → ACR Task → Image       │
-├─────────────────────────────────────────────┤
-│ Triggers:                                   │
-│ • Git commit                                │
-│ • Base image update                         │
-│ • Schedule                                  │
-│ • Manual                                    │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| Source (Git/Local) -> ACR Task -> Image       |
++---------------------------------------------+
+| Triggers:                                   |
+| • Git commit                                |
+| • Base image update                         |
+| • Schedule                                  |
+| • Manual                                    |
++---------------------------------------------+""",
                         "pro_tip": "ACR Tasks är perfekt för CI - inget behov av Docker på build agent.",
                         "common_mistake": "Att glömma --platform linux/amd64 vid multi-arch builds."
                     }

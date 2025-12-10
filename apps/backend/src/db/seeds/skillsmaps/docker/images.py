@@ -57,26 +57,26 @@ CMD ["npm", "start"]
 ### Varför är det ett problem?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              SINGLE-STAGE IMAGE: 1.2 GB                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ Build tools (python, make, g++)           │  ~300 MB       │ │
-│  │ devDependencies (webpack, eslint, etc)    │  ~400 MB       │ │
-│  │ Source code (.ts, tests)                  │  ~50 MB        │ │
-│  │ node_modules (alla)                       │  ~300 MB       │ │
-│  │ Built output (dist/)                      │  ~10 MB        │ │
-│  │ Node.js runtime                           │  ~150 MB       │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  I PRODUKTION behöver vi bara:                                  │
-│  • Built output (dist/)        ~10 MB                           │
-│  • Production dependencies     ~50 MB                           │
-│  • Node.js runtime             ~50 MB (alpine)                  │
-│  = ~110 MB istället för 1.2 GB!                                 │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              SINGLE-STAGE IMAGE: 1.2 GB                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +------------------------------------------------------------+ |
+|  | Build tools (python, make, g++)           |  ~300 MB       | |
+|  | devDependencies (webpack, eslint, etc)    |  ~400 MB       | |
+|  | Source code (.ts, tests)                  |  ~50 MB        | |
+|  | node_modules (alla)                       |  ~300 MB       | |
+|  | Built output (dist/)                      |  ~10 MB        | |
+|  | Node.js runtime                           |  ~150 MB       | |
+|  +------------------------------------------------------------+ |
+|                                                                  |
+|  I PRODUKTION behöver vi bara:                                  |
+|  • Built output (dist/)        ~10 MB                           |
+|  • Production dependencies     ~50 MB                           |
+|  • Node.js runtime             ~50 MB (alpine)                  |
+|  = ~110 MB istället för 1.2 GB!                                 |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -103,24 +103,24 @@ CMD ["node", "dist/index.js"]
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MULTI-STAGE BUILD                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   STAGE 1: builder                    STAGE 2: runtime          │
-│   ┌─────────────────┐                 ┌─────────────────┐       │
-│   │ FROM node:20    │                 │ FROM node:alpine│       │
-│   │                 │                 │                 │       │
-│   │ npm install     │   COPY --from   │ dist/           │       │
-│   │ npm run build   │  ────────────→  │ node_modules/   │       │
-│   │                 │                 │ (prod only)     │       │
-│   │ ~1.2 GB         │                 │ ~110 MB         │       │
-│   └─────────────────┘                 └─────────────────┘       │
-│         │                                     │                  │
-│         ↓                                     ↓                  │
-│      KASTAS                              FINAL IMAGE             │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    MULTI-STAGE BUILD                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|   STAGE 1: builder                    STAGE 2: runtime          |
+|   +-----------------+                 +-----------------+       |
+|   | FROM node:20    |                 | FROM node:alpine|       |
+|   |                 |                 |                 |       |
+|   | npm install     |   COPY --from   | dist/           |       |
+|   | npm run build   |  ------------->  | node_modules/   |       |
+|   |                 |                 | (prod only)     |       |
+|   | ~1.2 GB         |                 | ~110 MB         |       |
+|   +-----------------+                 +-----------------+       |
+|         |                                     |                  |
+|         ↓                                     ↓                  |
+|      KASTAS                              FINAL IMAGE             |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -396,29 +396,29 @@ NODE_06_REGISTRY = {
 ## 📖 Vad är en Registry?
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    DOCKER REGISTRY                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   Developer                    Registry                         │
-│   ┌─────────────┐              ┌─────────────┐                 │
-│   │ docker push │  ──────────→ │ Docker Hub  │                 │
-│   │ docker pull │  ←────────── │   / ECR     │                 │
-│   └─────────────┘              │   / GCR     │                 │
-│                                │   / Private │                 │
-│                                └─────────────┘                 │
-│                                       │                         │
-│                                       ↓                         │
-│                    ┌─────────────────────────────────┐         │
-│                    │        REPOSITORY               │         │
-│                    │  mycompany/webapp               │         │
-│                    │   ├── :latest                   │         │
-│                    │   ├── :1.0.0                    │         │
-│                    │   ├── :1.0.1                    │         │
-│                    │   └── :develop                  │         │
-│                    └─────────────────────────────────┘         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    DOCKER REGISTRY                               |
++-----------------------------------------------------------------+
+|                                                                  |
+|   Developer                    Registry                         |
+|   +-------------+              +-------------+                 |
+|   | docker push |  -----------> | Docker Hub  |                 |
+|   | docker pull |  <----------- |   / ECR     |                 |
+|   +-------------+              |   / GCR     |                 |
+|                                |   / Private |                 |
+|                                +-------------+                 |
+|                                       |                         |
+|                                       ↓                         |
+|                    +---------------------------------+         |
+|                    |        REPOSITORY               |         |
+|                    |  mycompany/webapp               |         |
+|                    |   +-- :latest                   |         |
+|                    |   +-- :1.0.0                    |         |
+|                    |   +-- :1.0.1                    |         |
+|                    |   +-- :develop                  |         |
+|                    +---------------------------------+         |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -449,11 +449,11 @@ docker pull myuser/myapp:1.0
 registry.com/namespace/repository:tag
 
 docker.io/library/nginx:latest
-     │        │      │     │
-     │        │      │     └── Tag
-     │        │      └── Repository
-     │        └── Namespace (user/org)
-     └── Registry
+     |        |      |     |
+     |        |      |     +-- Tag
+     |        |      +-- Repository
+     |        +-- Namespace (user/org)
+     +-- Registry
 ```
 
 ---
@@ -759,18 +759,18 @@ NODE_08_IMAGE_SECURITY = {
 ### Attack Vectors
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                 CONTAINER SECURITY THREATS                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  1. Vulnerable base images (CVEs)                               │
-│  2. Malicious packages i dependencies                           │
-│  3. Secrets i image layers                                      │
-│  4. Running as root                                             │
-│  5. Excessive permissions                                       │
-│  6. Outdated packages                                           │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                 CONTAINER SECURITY THREATS                       |
++-----------------------------------------------------------------+
+|                                                                  |
+|  1. Vulnerable base images (CVEs)                               |
+|  2. Malicious packages i dependencies                           |
+|  3. Secrets i image layers                                      |
+|  4. Running as root                                             |
+|  5. Excessive permissions                                       |
+|  6. Outdated packages                                           |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---

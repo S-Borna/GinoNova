@@ -23,44 +23,44 @@ Docker Compose är ett verktyg för att definiera och köra multi-container Dock
 ### Compose vs Docker Run
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   COMPOSE VS DOCKER RUN                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  DOCKER RUN (Manual):                                                    │
-│  ═══════════════════════════════════════════════════════════════════   │
-│                                                                          │
-│  docker network create myapp                                            │
-│  docker volume create db-data                                           │
-│                                                                          │
-│  docker run -d \                                                        │
-│    --name db \                                                          │
-│    --network myapp \                                                    │
-│    -e POSTGRES_PASSWORD=secret \                                        │
-│    -v db-data:/var/lib/postgresql/data \                               │
-│    postgres:15                                                          │
-│                                                                          │
-│  docker run -d \                                                        │
-│    --name api \                                                         │
-│    --network myapp \                                                    │
-│    -e DATABASE_URL=postgresql://... \                                   │
-│    -p 8000:8000 \                                                       │
-│    myapi:latest                                                         │
-│                                                                          │
-│  DOCKER COMPOSE (Declarative):                                          │
-│  ═══════════════════════════════════════════════════════════════════   │
-│                                                                          │
-│  docker compose up -d   ← Ett kommando!                                 │
-│                                                                          │
-│  Fördelar:                                                               │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  ✓ Versionshanterat (YAML-fil i repo)                                  │
-│  ✓ Reproducerbart                                                       │
-│  ✓ Enkelt att dela                                                      │
-│  ✓ Ett kommando för hela stacken                                       │
-│  ✓ Automatisk nätverks- och volymhantering                             │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   COMPOSE VS DOCKER RUN                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  DOCKER RUN (Manual):                                                    |
+|  ═══════════════════════════════════════════════════════════════════   |
+|                                                                          |
+|  docker network create myapp                                            |
+|  docker volume create db-data                                           |
+|                                                                          |
+|  docker run -d \                                                        |
+|    --name db \                                                          |
+|    --network myapp \                                                    |
+|    -e POSTGRES_PASSWORD=secret \                                        |
+|    -v db-data:/var/lib/postgresql/data \                               |
+|    postgres:15                                                          |
+|                                                                          |
+|  docker run -d \                                                        |
+|    --name api \                                                         |
+|    --network myapp \                                                    |
+|    -e DATABASE_URL=postgresql://... \                                   |
+|    -p 8000:8000 \                                                       |
+|    myapi:latest                                                         |
+|                                                                          |
+|  DOCKER COMPOSE (Declarative):                                          |
+|  ═══════════════════════════════════════════════════════════════════   |
+|                                                                          |
+|  docker compose up -d   <- Ett kommando!                                 |
+|                                                                          |
+|  Fördelar:                                                               |
+|  ---------------------------------------------------------------------  |
+|  ✓ Versionshanterat (YAML-fil i repo)                                  |
+|  ✓ Reproducerbart                                                       |
+|  ✓ Enkelt att dela                                                      |
+|  ✓ Ett kommando för hela stacken                                       |
+|  ✓ Automatisk nätverks- och volymhantering                             |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Compose File Structure
@@ -107,38 +107,38 @@ networks:
 ### File Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    COMPOSE FILE STRUCTURE                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  docker-compose.yml                                                      │
-│  ├── version: "3.9"                                                     │
-│  │                                                                       │
-│  ├── services:                    # Container definitions               │
-│  │   ├── web:                                                           │
-│  │   │   ├── image                                                      │
-│  │   │   ├── build                                                      │
-│  │   │   ├── ports                                                      │
-│  │   │   ├── volumes                                                    │
-│  │   │   ├── environment                                                │
-│  │   │   ├── depends_on                                                 │
-│  │   │   ├── networks                                                   │
-│  │   │   └── ...                                                        │
-│  │   └── db:                                                            │
-│  │       └── ...                                                        │
-│  │                                                                       │
-│  ├── volumes:                     # Volume definitions                  │
-│  │   └── db-data:                                                       │
-│  │                                                                       │
-│  ├── networks:                    # Network definitions                 │
-│  │   ├── frontend:                                                      │
-│  │   └── backend:                                                       │
-│  │                                                                       │
-│  ├── configs:                     # Config file definitions             │
-│  │                                                                       │
-│  └── secrets:                     # Secret definitions                  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    COMPOSE FILE STRUCTURE                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  docker-compose.yml                                                      |
+|  +-- version: "3.9"                                                     |
+|  |                                                                       |
+|  +-- services:                    # Container definitions               |
+|  |   +-- web:                                                           |
+|  |   |   +-- image                                                      |
+|  |   |   +-- build                                                      |
+|  |   |   +-- ports                                                      |
+|  |   |   +-- volumes                                                    |
+|  |   |   +-- environment                                                |
+|  |   |   +-- depends_on                                                 |
+|  |   |   +-- networks                                                   |
+|  |   |   +-- ...                                                        |
+|  |   +-- db:                                                            |
+|  |       +-- ...                                                        |
+|  |                                                                       |
+|  +-- volumes:                     # Volume definitions                  |
+|  |   +-- db-data:                                                       |
+|  |                                                                       |
+|  +-- networks:                    # Network definitions                 |
+|  |   +-- frontend:                                                      |
+|  |   +-- backend:                                                       |
+|  |                                                                       |
+|  +-- configs:                     # Config file definitions             |
+|  |                                                                       |
+|  +-- secrets:                     # Secret definitions                  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 3. Service Configuration
@@ -522,7 +522,7 @@ docker compose down
 
 ---
 
-**Nästa Node:** Compose Advanced →
+**Nästa Node:** Compose Advanced ->
 ''',
     "xp_reward": 175,
     "estimated_minutes": 80,
@@ -548,36 +548,36 @@ Avancerade Compose-funktioner möjliggör professionella deployment-workflows me
 ### Advanced Compose Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   COMPOSE OVERRIDE PATTERN                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  BASE FILE (docker-compose.yml)                                         │
-│  ═══════════════════════════════════════════════════════════════════   │
-│  - Gemensam konfiguration                                               │
-│  - Service definitions                                                  │
-│  - Networks & volumes                                                   │
-│                                                                          │
-│           │                                                              │
-│           │ MERGED WITH                                                  │
-│           ▼                                                              │
-│                                                                          │
-│  ┌─────────────────────┐    ┌─────────────────────┐                    │
-│  │ docker-compose.     │    │ docker-compose.     │                    │
-│  │ override.yml        │    │ prod.yml            │                    │
-│  │                     │    │                     │                    │
-│  │ - Dev ports         │    │ - Prod settings     │                    │
-│  │ - Volume mounts     │    │ - Resource limits   │                    │
-│  │ - Debug mode        │    │ - No ports exposed  │                    │
-│  │                     │    │ - Replicas          │                    │
-│  └─────────────────────┘    └─────────────────────┘                    │
-│                                                                          │
-│  USAGE:                                                                  │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  docker compose up                     # base + override (auto)         │
-│  docker compose -f ... -f prod.yml up  # base + prod                   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   COMPOSE OVERRIDE PATTERN                               |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  BASE FILE (docker-compose.yml)                                         |
+|  ═══════════════════════════════════════════════════════════════════   |
+|  - Gemensam konfiguration                                               |
+|  - Service definitions                                                  |
+|  - Networks & volumes                                                   |
+|                                                                          |
+|           |                                                              |
+|           | MERGED WITH                                                  |
+|           ▼                                                              |
+|                                                                          |
+|  +---------------------+    +---------------------+                    |
+|  | docker-compose.     |    | docker-compose.     |                    |
+|  | override.yml        |    | prod.yml            |                    |
+|  |                     |    |                     |                    |
+|  | - Dev ports         |    | - Prod settings     |                    |
+|  | - Volume mounts     |    | - Resource limits   |                    |
+|  | - Debug mode        |    | - No ports exposed  |                    |
+|  |                     |    | - Replicas          |                    |
+|  +---------------------+    +---------------------+                    |
+|                                                                          |
+|  USAGE:                                                                  |
+|  ---------------------------------------------------------------------  |
+|  docker compose up                     # base + override (auto)         |
+|  docker compose -f ... -f prod.yml up  # base + prod                   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Multiple Compose Files
@@ -1067,7 +1067,7 @@ docker compose down
 
 ---
 
-**Nästa Node:** Dockerfile Best Practices →
+**Nästa Node:** Dockerfile Best Practices ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 85,

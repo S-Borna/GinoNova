@@ -65,32 +65,32 @@ AZURE_NODE_6_V2 = {
 **En Plan, flera Apps:**
 ```
 App Service Plan (S1)
-├── Web App: api.mysite.com
-├── Web App: www.mysite.com
-└── Web App: admin.mysite.com
++-- Web App: api.mysite.com
++-- Web App: www.mysite.com
++-- Web App: admin.mysite.com
 ```
 Alla delar samma resurser men kostar bara för planen!""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           APP SERVICE ARCHITECTURE              │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │         APP SERVICE PLAN (S1)           │   │
-│   │     2 vCPU, 3.5GB RAM, $73/month        │   │
-│   │                                         │   │
-│   │   ┌──────────┐ ┌──────────┐ ┌────────┐ │   │
-│   │   │ Web App  │ │ Web App  │ │Web App │ │   │
-│   │   │   API    │ │ Frontend │ │ Admin  │ │   │
-│   │   │ Node.js  │ │ React    │ │ Python │ │   │
-│   │   └──────────┘ └──────────┘ └────────┘ │   │
-│   │                                         │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   ✅ 3 apps, betalar bara för 1 plan!          │
-│   ⚠️  Alla delar samma CPU/RAM                 │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           APP SERVICE ARCHITECTURE              |
++-------------------------------------------------+
+|                                                 |
+|   +-----------------------------------------+   |
+|   |         APP SERVICE PLAN (S1)           |   |
+|   |     2 vCPU, 3.5GB RAM, $73/month        |   |
+|   |                                         |   |
+|   |   +----------+ +----------+ +--------+ |   |
+|   |   | Web App  | | Web App  | |Web App | |   |
+|   |   |   API    | | Frontend | | Admin  | |   |
+|   |   | Node.js  | | React    | | Python | |   |
+|   |   +----------+ +----------+ +--------+ |   |
+|   |                                         |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   ✅ 3 apps, betalar bara för 1 plan!          |
+|   ⚠️  Alla delar samma CPU/RAM                 |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Sätt flera små appar på samma plan för att spara pengar. Separera bara om de behöver olika scaling.",
             "common_mistake": "Att skapa en ny App Service Plan för varje Web App. Det blir dyrt snabbt!"
@@ -138,31 +138,31 @@ az webapp create --deployment-container-image-name myregistry.azurecr.io/app:v1
 - Dev/test: ZIP eller Local Git
 - Produktion: GitHub Actions eller Azure DevOps""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│            DEPLOYMENT METHODS                    │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   ┌──────────────────────────────────────────┐  │
-│   │ 1. ZIP DEPLOY                            │  │
-│   │    [Local] → zip → az webapp deploy      │  │
-│   └──────────────────────────────────────────┘  │
-│                                                 │
-│   ┌──────────────────────────────────────────┐  │
-│   │ 2. LOCAL GIT                             │  │
-│   │    [Local] → git push azure → Build      │  │
-│   └──────────────────────────────────────────┘  │
-│                                                 │
-│   ┌──────────────────────────────────────────┐  │
-│   │ 3. GITHUB ACTIONS (Recommended)          │  │
-│   │    [GitHub] → PR → CI → Deploy → Slot    │  │
-│   └──────────────────────────────────────────┘  │
-│                                                 │
-│   ┌──────────────────────────────────────────┐  │
-│   │ 4. CONTAINER DEPLOY                      │  │
-│   │    [ACR] → webhook → Pull → Run          │  │
-│   └──────────────────────────────────────────┘  │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|            DEPLOYMENT METHODS                    |
++-------------------------------------------------+
+|                                                 |
+|   +------------------------------------------+  |
+|   | 1. ZIP DEPLOY                            |  |
+|   |    [Local] -> zip -> az webapp deploy      |  |
+|   +------------------------------------------+  |
+|                                                 |
+|   +------------------------------------------+  |
+|   | 2. LOCAL GIT                             |  |
+|   |    [Local] -> git push azure -> Build      |  |
+|   +------------------------------------------+  |
+|                                                 |
+|   +------------------------------------------+  |
+|   | 3. GITHUB ACTIONS (Recommended)          |  |
+|   |    [GitHub] -> PR -> CI -> Deploy -> Slot    |  |
+|   +------------------------------------------+  |
+|                                                 |
+|   +------------------------------------------+  |
+|   | 4. CONTAINER DEPLOY                      |  |
+|   |    [ACR] -> webhook -> Pull -> Run          |  |
+|   +------------------------------------------+  |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd GitHub Actions med deployment slots. Deploya till staging, testa, swap till production.",
             "common_mistake": "Att deploya direkt till produktion utan att testa. Använd alltid staging slot först."
@@ -200,33 +200,33 @@ Dessa byter INTE plats vid swap!
 - Skicka 10% trafik till staging för canary releases
 - Gradvis öka till 100% om allt ser bra ut""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           DEPLOYMENT SLOT WORKFLOW              │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   BEFORE SWAP:                                  │
-│   ┌─────────────────┐ ┌─────────────────┐       │
-│   │   PRODUCTION    │ │    STAGING      │       │
-│   │   app v1.0      │ │    app v1.1     │       │
-│   │   myapp.azure   │ │ myapp-staging   │       │
-│   │   100% traffic  │ │   0% traffic    │       │
-│   └─────────────────┘ └─────────────────┘       │
-│                                                 │
-│   az webapp deployment slot swap --slot staging │
-│                    ↓↑                           │
-│                                                 │
-│   AFTER SWAP:                                   │
-│   ┌─────────────────┐ ┌─────────────────┐       │
-│   │   PRODUCTION    │ │    STAGING      │       │
-│   │   app v1.1  ✨  │ │    app v1.0     │       │
-│   │   myapp.azure   │ │ myapp-staging   │       │
-│   │   100% traffic  │ │   0% traffic    │       │
-│   └─────────────────┘ └─────────────────┘       │
-│                                                 │
-│   ⚡ Swap takes ~5 seconds, zero downtime!      │
-│   🔄 Rollback = swap again                      │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           DEPLOYMENT SLOT WORKFLOW              |
++-------------------------------------------------+
+|                                                 |
+|   BEFORE SWAP:                                  |
+|   +-----------------+ +-----------------+       |
+|   |   PRODUCTION    | |    STAGING      |       |
+|   |   app v1.0      | |    app v1.1     |       |
+|   |   myapp.azure   | | myapp-staging   |       |
+|   |   100% traffic  | |   0% traffic    |       |
+|   +-----------------+ +-----------------+       |
+|                                                 |
+|   az webapp deployment slot swap --slot staging |
+|                    ↓↑                           |
+|                                                 |
+|   AFTER SWAP:                                   |
+|   +-----------------+ +-----------------+       |
+|   |   PRODUCTION    | |    STAGING      |       |
+|   |   app v1.1  ✨  | |    app v1.0     |       |
+|   |   myapp.azure   | | myapp-staging   |       |
+|   |   100% traffic  | |   0% traffic    |       |
+|   +-----------------+ +-----------------+       |
+|                                                 |
+|   ⚡ Swap takes ~5 seconds, zero downtime!      |
+|   🔄 Rollback = swap again                      |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Markera settings som 'slot-sticky' om de ska stanna i slotten (t.ex. DEBUG=true på staging).",
             "common_mistake": "Att glömma att staging har produktionsdata efter swap. Var försiktig med databas-migrations!"
@@ -267,32 +267,32 @@ Appen får bara rätt att läsa secrets, aldrig exponerat i portal!
 | Connection strings | App Settings / Key Vault | DATABASE_URL |
 | Slot-specifikt | Deployment slot setting | DEBUG=true (staging only) |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           CONFIGURATION HIERARCHY               │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │         AZURE KEY VAULT                 │   │
-│   │   • Database passwords                  │   │
-│   │   • API keys                           │   │
-│   │   • SSL certificates                   │   │
-│   └──────────────────┬──────────────────────┘   │
-│                      │ @Microsoft.KeyVault(...)│
-│   ┌──────────────────▼──────────────────────┐   │
-│   │         APP SETTINGS                    │   │
-│   │   • NODE_ENV=production                │   │
-│   │   • LOG_LEVEL=info                     │   │
-│   │   • API_KEY=@KeyVault(...)             │   │
-│   └──────────────────┬──────────────────────┘   │
-│                      │ process.env.API_KEY      │
-│   ┌──────────────────▼──────────────────────┐   │
-│   │         YOUR APPLICATION               │   │
-│   │   const key = process.env.API_KEY      │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   ✅ Secrets never in code or portal visible   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           CONFIGURATION HIERARCHY               |
++-------------------------------------------------+
+|                                                 |
+|   +-----------------------------------------+   |
+|   |         AZURE KEY VAULT                 |   |
+|   |   • Database passwords                  |   |
+|   |   • API keys                           |   |
+|   |   • SSL certificates                   |   |
+|   +------------------+----------------------+   |
+|                      | @Microsoft.KeyVault(...)|
+|   +------------------▼----------------------+   |
+|   |         APP SETTINGS                    |   |
+|   |   • NODE_ENV=production                |   |
+|   |   • LOG_LEVEL=info                     |   |
+|   |   • API_KEY=@KeyVault(...)             |   |
+|   +------------------+----------------------+   |
+|                      | process.env.API_KEY      |
+|   +------------------▼----------------------+   |
+|   |         YOUR APPLICATION               |   |
+|   |   const key = process.env.API_KEY      |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   ✅ Secrets never in code or portal visible   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd ALLTID Key Vault references för secrets. Aldrig hårdkoda eller sätt direkt i App Settings.",
             "common_mistake": "Att lägga secrets direkt i App Settings. De syns i klartext i Azure Portal!"

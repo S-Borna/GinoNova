@@ -39,22 +39,22 @@ LINUX_NODE_15_SSH_V2 = {
                         "title": "SSH-nycklar",
                         "explanation": "Lösenord är osäkert - använd nycklar! Ed25519 är modernast och snabbast. Privata nyckeln SKA ALDRIG delas.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ SSH KEY WORKFLOW                                    │
-├─────────────────────────────────────────────────────┤
-│ 1. Generera nyckelpar                              │
-│    ssh-keygen -t ed25519 -C "email@example.com"    │
-│                                                     │
-│ 2. Resultat:                                        │
-│    ~/.ssh/id_ed25519      ← PRIVAT (skydda!)       │
-│    ~/.ssh/id_ed25519.pub  ← Publik (dela fritt)    │
-│                                                     │
-│ 3. Kopiera publik till server                       │
-│    ssh-copy-id user@server                         │
-│                                                     │
-│ 4. Nu kan du logga in utan lösenord                │
-│    ssh user@server                                 │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| SSH KEY WORKFLOW                                    |
++-----------------------------------------------------+
+| 1. Generera nyckelpar                              |
+|    ssh-keygen -t ed25519 -C "email@example.com"    |
+|                                                     |
+| 2. Resultat:                                        |
+|    ~/.ssh/id_ed25519      <- PRIVAT (skydda!)       |
+|    ~/.ssh/id_ed25519.pub  <- Publik (dela fritt)    |
+|                                                     |
+| 3. Kopiera publik till server                       |
+|    ssh-copy-id user@server                         |
+|                                                     |
+| 4. Nu kan du logga in utan lösenord                |
+|    ssh user@server                                 |
++-----------------------------------------------------+""",
                         "pro_tip": "Använd passphrase på nyckeln + ssh-agent för bästa säkerhet!",
                         "common_mistake": "Fel permissions - .ssh måste vara 700, privat nyckel 600."
                     },
@@ -62,26 +62,26 @@ LINUX_NODE_15_SSH_V2 = {
                         "title": "~/.ssh/config",
                         "explanation": "Spara host-inställningar så du slipper skriva långa kommandon. 'ssh prod' istället för 'ssh -p 2222 -i ~/.ssh/prod_key user@server.com'",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ ~/.ssh/config EXAMPLE                               │
-├─────────────────────────────────────────────────────┤
-│ Host prod                                           │
-│     HostName production.example.com                 │
-│     User deploy                                     │
-│     Port 22                                         │
-│     IdentityFile ~/.ssh/prod_key                   │
-│                                                     │
-│ Host dev                                            │
-│     HostName dev.example.com                        │
-│     User developer                                  │
-│     Port 2222                                       │
-│                                                     │
-│ Host *                                              │
-│     ServerAliveInterval 60                          │
-│     ServerAliveCountMax 3                           │
-├─────────────────────────────────────────────────────┤
-│ ANVÄNDNING: ssh prod   ← Så enkelt!                │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| ~/.ssh/config EXAMPLE                               |
++-----------------------------------------------------+
+| Host prod                                           |
+|     HostName production.example.com                 |
+|     User deploy                                     |
+|     Port 22                                         |
+|     IdentityFile ~/.ssh/prod_key                   |
+|                                                     |
+| Host dev                                            |
+|     HostName dev.example.com                        |
+|     User developer                                  |
+|     Port 2222                                       |
+|                                                     |
+| Host *                                              |
+|     ServerAliveInterval 60                          |
+|     ServerAliveCountMax 3                           |
++-----------------------------------------------------+
+| ANVÄNDNING: ssh prod   <- Så enkelt!                |
++-----------------------------------------------------+""",
                         "pro_tip": "Host * gäller alla anslutningar - perfekt för globala inställningar",
                         "common_mistake": "Att glömma att Host-namn är case-sensitive."
                     },
@@ -89,26 +89,26 @@ LINUX_NODE_15_SSH_V2 = {
                         "title": "Filkopiering & Tunneling",
                         "explanation": "scp för enkla kopior, rsync för synk/backup. SSH tunnels ger säker access till remote tjänster.",
                         "diagram": """
-┌─────────────────────────────────────────────────────┐
-│ KOPIERA FILER                                       │
-├─────────────────────────────────────────────────────┤
-│ scp file.txt user@host:/path/      │ Upload        │
-│ scp user@host:/path/file.txt ./    │ Download      │
-│ scp -r folder/ user@host:/path/    │ Rekursiv      │
-│                                                     │
-│ rsync -avz src/ user@host:/dest/   │ Synk (bäst)   │
-│ rsync -avz --delete src/ host:/d/  │ Spegla exakt  │
-├─────────────────────────────────────────────────────┤
-│ SSH TUNNELING                                       │
-├─────────────────────────────────────────────────────┤
-│ # Lokal port → Remote service                       │
-│ ssh -L 5432:localhost:5432 user@dbserver           │
-│ # Nu: psql -h localhost -p 5432                    │
-│                                                     │
-│ # Remote port → Lokal service                       │
-│ ssh -R 8080:localhost:80 user@server               │
-│ # Server:8080 → Din maskin:80                      │
-└─────────────────────────────────────────────────────┘""",
++-----------------------------------------------------+
+| KOPIERA FILER                                       |
++-----------------------------------------------------+
+| scp file.txt user@host:/path/      | Upload        |
+| scp user@host:/path/file.txt ./    | Download      |
+| scp -r folder/ user@host:/path/    | Rekursiv      |
+|                                                     |
+| rsync -avz src/ user@host:/dest/   | Synk (bäst)   |
+| rsync -avz --delete src/ host:/d/  | Spegla exakt  |
++-----------------------------------------------------+
+| SSH TUNNELING                                       |
++-----------------------------------------------------+
+| # Lokal port -> Remote service                       |
+| ssh -L 5432:localhost:5432 user@dbserver           |
+| # Nu: psql -h localhost -p 5432                    |
+|                                                     |
+| # Remote port -> Lokal service                       |
+| ssh -R 8080:localhost:80 user@server               |
+| # Server:8080 -> Din maskin:80                      |
++-----------------------------------------------------+""",
                         "pro_tip": "rsync -n (dry-run) för att se vad som händer innan!",
                         "common_mistake": "scp -P (stor P) för port, ssh -p (liten p) - förvirrande!"
                     }
@@ -168,7 +168,7 @@ LINUX_NODE_15_SSH_V2 = {
                             "question": "Vad gör 'ssh -L 3306:localhost:3306 user@db'?",
                             "options": [
                                 "Startar MySQL lokalt",
-                                "Tunnel: lokal port 3306 → remote MySQL",
+                                "Tunnel: lokal port 3306 -> remote MySQL",
                                 "Kopierar MySQL-data",
                                 "Listar databaser"
                             ],

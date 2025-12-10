@@ -23,44 +23,44 @@ Observability i Kubernetes består av tre pelare: Logs, Metrics, och Traces. Til
 ### Three Pillars of Observability
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   THREE PILLARS OF OBSERVABILITY                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │                         LOGS                                        │ │
-│  │  "Vad hände?"                                                       │ │
-│  │                                                                     │ │
-│  │  • Container stdout/stderr                                          │ │
-│  │  • Kubernetes events                                                │ │
-│  │  • Audit logs                                                       │ │
-│  │                                                                     │ │
-│  │  Tools: ELK Stack, Loki, Fluentd, CloudWatch                       │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │                        METRICS                                      │ │
-│  │  "Hur mår systemet?"                                                │ │
-│  │                                                                     │ │
-│  │  • CPU, Memory, Disk usage                                          │ │
-│  │  • Request rate, latency, errors                                    │ │
-│  │  • Custom business metrics                                          │ │
-│  │                                                                     │ │
-│  │  Tools: Prometheus, Grafana, Datadog, CloudWatch                   │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │                        TRACES                                       │ │
-│  │  "Hur flödar requests?"                                             │ │
-│  │                                                                     │ │
-│  │  • Distributed tracing                                              │ │
-│  │  • Request path through services                                    │ │
-│  │  • Latency breakdown                                                │ │
-│  │                                                                     │ │
-│  │  Tools: Jaeger, Zipkin, OpenTelemetry                              │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   THREE PILLARS OF OBSERVABILITY                         |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +--------------------------------------------------------------------+ |
+|  |                         LOGS                                        | |
+|  |  "Vad hände?"                                                       | |
+|  |                                                                     | |
+|  |  • Container stdout/stderr                                          | |
+|  |  • Kubernetes events                                                | |
+|  |  • Audit logs                                                       | |
+|  |                                                                     | |
+|  |  Tools: ELK Stack, Loki, Fluentd, CloudWatch                       | |
+|  +--------------------------------------------------------------------+ |
+|                                                                          |
+|  +--------------------------------------------------------------------+ |
+|  |                        METRICS                                      | |
+|  |  "Hur mår systemet?"                                                | |
+|  |                                                                     | |
+|  |  • CPU, Memory, Disk usage                                          | |
+|  |  • Request rate, latency, errors                                    | |
+|  |  • Custom business metrics                                          | |
+|  |                                                                     | |
+|  |  Tools: Prometheus, Grafana, Datadog, CloudWatch                   | |
+|  +--------------------------------------------------------------------+ |
+|                                                                          |
+|  +--------------------------------------------------------------------+ |
+|  |                        TRACES                                       | |
+|  |  "Hur flödar requests?"                                             | |
+|  |                                                                     | |
+|  |  • Distributed tracing                                              | |
+|  |  • Request path through services                                    | |
+|  |  • Latency breakdown                                                | |
+|  |                                                                     | |
+|  |  Tools: Jaeger, Zipkin, OpenTelemetry                              | |
+|  +--------------------------------------------------------------------+ |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Kubernetes Logging
@@ -68,51 +68,51 @@ Observability i Kubernetes består av tre pelare: Logs, Metrics, och Traces. Til
 ### Log Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   KUBERNETES LOG ARCHITECTURE                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │  POD                                                              │  │
-│  │  ┌─────────────────────────────────────────────────────────────┐ │  │
-│  │  │  Container                                                   │ │  │
-│  │  │  ┌───────────────────────────────────────────────────────┐  │ │  │
-│  │  │  │  Application                                          │  │ │  │
-│  │  │  │  console.log("Hello")  ──▶  stdout                    │  │ │  │
-│  │  │  │  console.error("Error") ──▶  stderr                   │  │ │  │
-│  │  │  └───────────────────────────────────────────────────────┘  │ │  │
-│  │  └─────────────────────────────────────────────────────────────┘ │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                              │                                          │
-│                              ▼                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │  NODE                                                             │  │
-│  │  Container Runtime (containerd/docker)                            │  │
-│  │            │                                                      │  │
-│  │            ▼                                                      │  │
-│  │  /var/log/pods/<namespace>_<pod>_<uid>/<container>/0.log         │  │
-│  │  /var/log/containers/<pod>_<ns>_<container>-<id>.log             │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                              │                                          │
-│                              ▼                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │  LOG AGGREGATOR (DaemonSet)                                       │  │
-│  │  Fluentd / Fluent Bit / Filebeat                                  │  │
-│  │  • Läser logs från /var/log                                       │  │
-│  │  • Parsar och enrichar                                            │  │
-│  │  • Skickar till central storage                                   │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                              │                                          │
-│                              ▼                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │  CENTRAL LOG STORAGE                                              │  │
-│  │  Elasticsearch / Loki / CloudWatch Logs                           │  │
-│  │                      │                                             │  │
-│  │                      ▼                                             │  │
-│  │  VISUALIZATION: Kibana / Grafana                                  │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   KUBERNETES LOG ARCHITECTURE                            |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +------------------------------------------------------------------+  |
+|  |  POD                                                              |  |
+|  |  +-------------------------------------------------------------+ |  |
+|  |  |  Container                                                   | |  |
+|  |  |  +-------------------------------------------------------+  | |  |
+|  |  |  |  Application                                          |  | |  |
+|  |  |  |  console.log("Hello")  --▶  stdout                    |  | |  |
+|  |  |  |  console.error("Error") --▶  stderr                   |  | |  |
+|  |  |  +-------------------------------------------------------+  | |  |
+|  |  +-------------------------------------------------------------+ |  |
+|  +------------------------------------------------------------------+  |
+|                              |                                          |
+|                              ▼                                          |
+|  +------------------------------------------------------------------+  |
+|  |  NODE                                                             |  |
+|  |  Container Runtime (containerd/docker)                            |  |
+|  |            |                                                      |  |
+|  |            ▼                                                      |  |
+|  |  /var/log/pods/<namespace>_<pod>_<uid>/<container>/0.log         |  |
+|  |  /var/log/containers/<pod>_<ns>_<container>-<id>.log             |  |
+|  +------------------------------------------------------------------+  |
+|                              |                                          |
+|                              ▼                                          |
+|  +------------------------------------------------------------------+  |
+|  |  LOG AGGREGATOR (DaemonSet)                                       |  |
+|  |  Fluentd / Fluent Bit / Filebeat                                  |  |
+|  |  • Läser logs från /var/log                                       |  |
+|  |  • Parsar och enrichar                                            |  |
+|  |  • Skickar till central storage                                   |  |
+|  +------------------------------------------------------------------+  |
+|                              |                                          |
+|                              ▼                                          |
+|  +------------------------------------------------------------------+  |
+|  |  CENTRAL LOG STORAGE                                              |  |
+|  |  Elasticsearch / Loki / CloudWatch Logs                           |  |
+|  |                      |                                             |  |
+|  |                      ▼                                             |  |
+|  |  VISUALIZATION: Kibana / Grafana                                  |  |
+|  +------------------------------------------------------------------+  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### Kubectl Logs
@@ -371,34 +371,34 @@ spec:
 ## 5. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                OBSERVABILITY BEST PRACTICES                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Logging                                                              │
-│     □ Logga till stdout/stderr (inte filer)                            │
-│     □ Strukturerade logs (JSON)                                        │
-│     □ Inkludera request ID för tracing                                 │
-│     □ Rätt log levels (debug, info, warn, error)                       │
-│                                                                          │
-│  ✅ Metrics                                                              │
-│     □ RED method: Rate, Errors, Duration                               │
-│     □ USE method: Utilization, Saturation, Errors                      │
-│     □ Custom business metrics                                          │
-│     □ Cardinality-aware labels                                         │
-│                                                                          │
-│  ✅ Alerting                                                            │
-│     □ Alert på symptoms, inte orsaker                                  │
-│     □ Actionable alerts                                                │
-│     □ Undvik alert fatigue                                             │
-│     □ Runbooks för varje alert                                         │
-│                                                                          │
-│  ✅ Dashboards                                                          │
-│     □ Golden signals overview                                          │
-│     □ Service-specifika dashboards                                     │
-│     □ Infrastructure dashboards                                        │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                OBSERVABILITY BEST PRACTICES                              |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Logging                                                              |
+|     □ Logga till stdout/stderr (inte filer)                            |
+|     □ Strukturerade logs (JSON)                                        |
+|     □ Inkludera request ID för tracing                                 |
+|     □ Rätt log levels (debug, info, warn, error)                       |
+|                                                                          |
+|  ✅ Metrics                                                              |
+|     □ RED method: Rate, Errors, Duration                               |
+|     □ USE method: Utilization, Saturation, Errors                      |
+|     □ Custom business metrics                                          |
+|     □ Cardinality-aware labels                                         |
+|                                                                          |
+|  ✅ Alerting                                                            |
+|     □ Alert på symptoms, inte orsaker                                  |
+|     □ Actionable alerts                                                |
+|     □ Undvik alert fatigue                                             |
+|     □ Runbooks för varje alert                                         |
+|                                                                          |
+|  ✅ Dashboards                                                          |
+|     □ Golden signals overview                                          |
+|     □ Service-specifika dashboards                                     |
+|     □ Infrastructure dashboards                                        |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6-14. Sammanfattning & Task
@@ -414,7 +414,7 @@ spec:
 
 ---
 
-**Nästa Node:** Production Best Practices →
+**Nästa Node:** Production Best Practices ->
 ''',
     "xp_reward": 160,
     "estimated_minutes": 60,
@@ -440,45 +440,45 @@ Den här noden sammanfattar alla kritiska best practices för att köra Kubernet
 ### Production Readiness Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                  PRODUCTION READINESS CHECKLIST                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │  TIER 1: MUST HAVE (Critical)                                       │ │
-│  │  ─────────────────────────────────────────────────────────────────  │ │
-│  │  □ Resource requests & limits                                       │ │
-│  │  □ Liveness & Readiness probes                                     │ │
-│  │  □ Multiple replicas (replicas >= 2)                               │ │
-│  │  □ Pod Disruption Budget                                            │ │
-│  │  □ Secrets management (ej plaintext)                               │ │
-│  │  □ Network Policies                                                 │ │
-│  │  □ RBAC & ServiceAccount                                           │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │  TIER 2: SHOULD HAVE (Important)                                    │ │
-│  │  ─────────────────────────────────────────────────────────────────  │ │
-│  │  □ Horizontal Pod Autoscaler                                        │ │
-│  │  □ Pod Anti-Affinity                                                │ │
-│  │  □ Topology Spread Constraints                                      │ │
-│  │  □ Security Context (non-root, read-only fs)                       │ │
-│  │  □ Centralized logging                                              │ │
-│  │  □ Prometheus metrics                                               │ │
-│  │  □ Alerting rules                                                   │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────────────┐ │
-│  │  TIER 3: NICE TO HAVE (Optimization)                                │ │
-│  │  ─────────────────────────────────────────────────────────────────  │ │
-│  │  □ Priority Classes                                                 │ │
-│  │  □ Pod Topology Spread                                              │ │
-│  │  □ Vertical Pod Autoscaler (recommendations)                        │ │
-│  │  □ Cost optimization                                                │ │
-│  │  □ FinOps practices                                                 │ │
-│  └────────────────────────────────────────────────────────────────────┘ │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                  PRODUCTION READINESS CHECKLIST                          |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +--------------------------------------------------------------------+ |
+|  |  TIER 1: MUST HAVE (Critical)                                       | |
+|  |  -----------------------------------------------------------------  | |
+|  |  □ Resource requests & limits                                       | |
+|  |  □ Liveness & Readiness probes                                     | |
+|  |  □ Multiple replicas (replicas >= 2)                               | |
+|  |  □ Pod Disruption Budget                                            | |
+|  |  □ Secrets management (ej plaintext)                               | |
+|  |  □ Network Policies                                                 | |
+|  |  □ RBAC & ServiceAccount                                           | |
+|  +--------------------------------------------------------------------+ |
+|                                                                          |
+|  +--------------------------------------------------------------------+ |
+|  |  TIER 2: SHOULD HAVE (Important)                                    | |
+|  |  -----------------------------------------------------------------  | |
+|  |  □ Horizontal Pod Autoscaler                                        | |
+|  |  □ Pod Anti-Affinity                                                | |
+|  |  □ Topology Spread Constraints                                      | |
+|  |  □ Security Context (non-root, read-only fs)                       | |
+|  |  □ Centralized logging                                              | |
+|  |  □ Prometheus metrics                                               | |
+|  |  □ Alerting rules                                                   | |
+|  +--------------------------------------------------------------------+ |
+|                                                                          |
+|  +--------------------------------------------------------------------+ |
+|  |  TIER 3: NICE TO HAVE (Optimization)                                | |
+|  |  -----------------------------------------------------------------  | |
+|  |  □ Priority Classes                                                 | |
+|  |  □ Pod Topology Spread                                              | |
+|  |  □ Vertical Pod Autoscaler (recommendations)                        | |
+|  |  □ Cost optimization                                                | |
+|  |  □ FinOps practices                                                 | |
+|  +--------------------------------------------------------------------+ |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Complete Production Deployment
@@ -715,105 +715,105 @@ spec:
 ## 3. Security Checklist
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      SECURITY CHECKLIST                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  POD SECURITY                                                            │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ runAsNonRoot: true                                                   │
-│  □ readOnlyRootFilesystem: true                                         │
-│  □ allowPrivilegeEscalation: false                                      │
-│  □ capabilities: drop ALL                                               │
-│  □ Ingen hostNetwork, hostPID, hostIPC                                  │
-│  □ Secrets via secretKeyRef (ej env i plaintext)                        │
-│                                                                          │
-│  RBAC                                                                    │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ Dedicated ServiceAccount per app                                     │
-│  □ Minimala permissions (least privilege)                               │
-│  □ Inga cluster-admin bindings för apps                                 │
-│  □ Regular audit av RoleBindings                                        │
-│                                                                          │
-│  NETWORK                                                                 │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ Default deny NetworkPolicy                                           │
-│  □ Explicit allow rules                                                 │
-│  □ Namespace isolation                                                  │
-│  □ TLS för all intern kommunikation                                     │
-│                                                                          │
-│  IMAGE SECURITY                                                          │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ Trusted base images                                                  │
-│  □ Image scanning i CI/CD                                               │
-│  □ No :latest tags                                                      │
-│  □ Image pull policy: IfNotPresent eller Always                         │
-│  □ Private registry med authentication                                  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      SECURITY CHECKLIST                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  POD SECURITY                                                            |
+|  ---------------------------------------------------------------------  |
+|  □ runAsNonRoot: true                                                   |
+|  □ readOnlyRootFilesystem: true                                         |
+|  □ allowPrivilegeEscalation: false                                      |
+|  □ capabilities: drop ALL                                               |
+|  □ Ingen hostNetwork, hostPID, hostIPC                                  |
+|  □ Secrets via secretKeyRef (ej env i plaintext)                        |
+|                                                                          |
+|  RBAC                                                                    |
+|  ---------------------------------------------------------------------  |
+|  □ Dedicated ServiceAccount per app                                     |
+|  □ Minimala permissions (least privilege)                               |
+|  □ Inga cluster-admin bindings för apps                                 |
+|  □ Regular audit av RoleBindings                                        |
+|                                                                          |
+|  NETWORK                                                                 |
+|  ---------------------------------------------------------------------  |
+|  □ Default deny NetworkPolicy                                           |
+|  □ Explicit allow rules                                                 |
+|  □ Namespace isolation                                                  |
+|  □ TLS för all intern kommunikation                                     |
+|                                                                          |
+|  IMAGE SECURITY                                                          |
+|  ---------------------------------------------------------------------  |
+|  □ Trusted base images                                                  |
+|  □ Image scanning i CI/CD                                               |
+|  □ No :latest tags                                                      |
+|  □ Image pull policy: IfNotPresent eller Always                         |
+|  □ Private registry med authentication                                  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 4. Disaster Recovery
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      DISASTER RECOVERY                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  BACKUP                                                                  │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ etcd backup (cluster state)                                          │
-│  □ PersistentVolume snapshots                                           │
-│  □ Database backups                                                     │
-│  □ Secrets backup (encrypted)                                           │
-│  □ GitOps - all manifests i Git                                         │
-│                                                                          │
-│  HIGH AVAILABILITY                                                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ Multi-AZ deployment                                                  │
-│  □ Pod anti-affinity                                                    │
-│  □ Multiple replicas                                                    │
-│  □ Database replication                                                 │
-│  □ Load balancer health checks                                          │
-│                                                                          │
-│  TESTING                                                                 │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ Regular backup restore tests                                         │
-│  □ Chaos engineering                                                    │
-│  □ Failover drills                                                      │
-│  □ Documented runbooks                                                  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      DISASTER RECOVERY                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  BACKUP                                                                  |
+|  ---------------------------------------------------------------------  |
+|  □ etcd backup (cluster state)                                          |
+|  □ PersistentVolume snapshots                                           |
+|  □ Database backups                                                     |
+|  □ Secrets backup (encrypted)                                           |
+|  □ GitOps - all manifests i Git                                         |
+|                                                                          |
+|  HIGH AVAILABILITY                                                       |
+|  ---------------------------------------------------------------------  |
+|  □ Multi-AZ deployment                                                  |
+|  □ Pod anti-affinity                                                    |
+|  □ Multiple replicas                                                    |
+|  □ Database replication                                                 |
+|  □ Load balancer health checks                                          |
+|                                                                          |
+|  TESTING                                                                 |
+|  ---------------------------------------------------------------------  |
+|  □ Regular backup restore tests                                         |
+|  □ Chaos engineering                                                    |
+|  □ Failover drills                                                      |
+|  □ Documented runbooks                                                  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 5. Cost Optimization
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      COST OPTIMIZATION                                   │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  RIGHT-SIZING                                                           │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ VPA recommendations för resource requests                            │
-│  □ Rightsized node pools                                                │
-│  □ Resource quotas per namespace                                        │
-│  □ LimitRanges för defaults                                             │
-│                                                                          │
-│  AUTOSCALING                                                            │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ HPA baserat på actual load                                           │
-│  □ Cluster autoscaler                                                   │
-│  □ Scale to zero för dev/staging                                        │
-│  □ Scheduled scaling för predictable load                               │
-│                                                                          │
-│  SPOT/PREEMPTIBLE                                                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  □ Spot instances för fault-tolerant workloads                          │
-│  □ Mixed on-demand + spot node pools                                    │
-│  □ Proper PDB för spot termination                                      │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      COST OPTIMIZATION                                   |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  RIGHT-SIZING                                                           |
+|  ---------------------------------------------------------------------  |
+|  □ VPA recommendations för resource requests                            |
+|  □ Rightsized node pools                                                |
+|  □ Resource quotas per namespace                                        |
+|  □ LimitRanges för defaults                                             |
+|                                                                          |
+|  AUTOSCALING                                                            |
+|  ---------------------------------------------------------------------  |
+|  □ HPA baserat på actual load                                           |
+|  □ Cluster autoscaler                                                   |
+|  □ Scale to zero för dev/staging                                        |
+|  □ Scheduled scaling för predictable load                               |
+|                                                                          |
+|  SPOT/PREEMPTIBLE                                                       |
+|  ---------------------------------------------------------------------  |
+|  □ Spot instances för fault-tolerant workloads                          |
+|  □ Mixed on-demand + spot node pools                                    |
+|  □ Proper PDB för spot termination                                      |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Pre-Deploy Checklist
@@ -848,45 +848,45 @@ echo "=== Checklist Complete ==="
 ## 7. Final Summary
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                   KUBERNETES MASTERY COMPLETED! 🎉                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Du har nu genomgått hela Kubernetes Mastery-modulen!                    │
-│                                                                          │
-│  BLOCK 1: Fundamentals                                                   │
-│  ├── Node 1: K8s Introduction                                           │
-│  ├── Node 2: kubectl Mastery                                            │
-│  ├── Node 3: Pods                                                       │
-│  └── Node 4: Deployments                                                │
-│                                                                          │
-│  BLOCK 2: Services & Networking                                          │
-│  ├── Node 5: Services                                                   │
-│  ├── Node 6: Ingress                                                    │
-│  ├── Node 7: ConfigMaps & Secrets                                       │
-│  └── Node 8: Volumes & Storage                                          │
-│                                                                          │
-│  BLOCK 3: Advanced Workloads                                             │
-│  ├── Node 9: StatefulSets                                               │
-│  ├── Node 10: Jobs & CronJobs                                           │
-│  ├── Node 11: DaemonSets                                                │
-│  └── Node 12: RBAC                                                      │
-│                                                                          │
-│  BLOCK 4: Helm & Advanced                                                │
-│  ├── Node 13: Helm Basics                                               │
-│  ├── Node 14: Helm Charts                                               │
-│  ├── Node 15: Network Policies                                          │
-│  └── Node 16: HPA & VPA                                                 │
-│                                                                          │
-│  BLOCK 5: Production                                                     │
-│  ├── Node 17: Pod Disruption Budgets                                    │
-│  ├── Node 18: Probes                                                    │
-│  ├── Node 19: Logging & Monitoring                                      │
-│  └── Node 20: Production Best Practices ← DU ÄR HÄR!                   │
-│                                                                          │
-│  GRATTIS! Du är nu redo för production Kubernetes! 🚀                   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                   KUBERNETES MASTERY COMPLETED! 🎉                       |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Du har nu genomgått hela Kubernetes Mastery-modulen!                    |
+|                                                                          |
+|  BLOCK 1: Fundamentals                                                   |
+|  +-- Node 1: K8s Introduction                                           |
+|  +-- Node 2: kubectl Mastery                                            |
+|  +-- Node 3: Pods                                                       |
+|  +-- Node 4: Deployments                                                |
+|                                                                          |
+|  BLOCK 2: Services & Networking                                          |
+|  +-- Node 5: Services                                                   |
+|  +-- Node 6: Ingress                                                    |
+|  +-- Node 7: ConfigMaps & Secrets                                       |
+|  +-- Node 8: Volumes & Storage                                          |
+|                                                                          |
+|  BLOCK 3: Advanced Workloads                                             |
+|  +-- Node 9: StatefulSets                                               |
+|  +-- Node 10: Jobs & CronJobs                                           |
+|  +-- Node 11: DaemonSets                                                |
+|  +-- Node 12: RBAC                                                      |
+|                                                                          |
+|  BLOCK 4: Helm & Advanced                                                |
+|  +-- Node 13: Helm Basics                                               |
+|  +-- Node 14: Helm Charts                                               |
+|  +-- Node 15: Network Policies                                          |
+|  +-- Node 16: HPA & VPA                                                 |
+|                                                                          |
+|  BLOCK 5: Production                                                     |
+|  +-- Node 17: Pod Disruption Budgets                                    |
+|  +-- Node 18: Probes                                                    |
+|  +-- Node 19: Logging & Monitoring                                      |
+|  +-- Node 20: Production Best Practices <- DU ÄR HÄR!                   |
+|                                                                          |
+|  GRATTIS! Du är nu redo för production Kubernetes! 🚀                   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 8-14. Praktisk Task

@@ -19,38 +19,38 @@ NODE_5 = {
 State är hjärtat i Terraform. Det är en JSON-fil som mappar dina konfigurationer till verkliga resurser i cloud providers.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM STATE OVERVIEW                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌──────────────────┐                                                  │
-│  │  Configuration   │     .tf files                                    │
-│  │    (Desired)     │     "I want 3 EC2 instances"                     │
-│  └────────┬─────────┘                                                  │
-│           │                                                             │
-│           ▼                                                             │
-│  ┌──────────────────┐                                                  │
-│  │  Terraform State │     .tfstate file                                │
-│  │    (Mapping)     │     "These are the 3 instances I manage"         │
-│  │                  │     - ID: i-abc123 → aws_instance.web[0]         │
-│  │                  │     - ID: i-def456 → aws_instance.web[1]         │
-│  │                  │     - ID: i-ghi789 → aws_instance.web[2]         │
-│  └────────┬─────────┘                                                  │
-│           │                                                             │
-│           ▼                                                             │
-│  ┌──────────────────┐                                                  │
-│  │  Real Resources  │     AWS/Azure/GCP                                │
-│  │    (Actual)      │     "The actual infrastructure"                  │
-│  └──────────────────┘                                                  │
-│                                                                         │
-│  STATE PURPOSES:                                                        │
-│  ───────────────                                                        │
-│  1. Mapping: Config address → Resource ID                              │
-│  2. Metadata: Dependencies, outputs, provider config                   │
-│  3. Performance: Cache for plan operations                             │
-│  4. Syncing: Team collaboration                                        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM STATE OVERVIEW                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  +------------------+                                                  |
+|  |  Configuration   |     .tf files                                    |
+|  |    (Desired)     |     "I want 3 EC2 instances"                     |
+|  +--------+---------+                                                  |
+|           |                                                             |
+|           ▼                                                             |
+|  +------------------+                                                  |
+|  |  Terraform State |     .tfstate file                                |
+|  |    (Mapping)     |     "These are the 3 instances I manage"         |
+|  |                  |     - ID: i-abc123 -> aws_instance.web[0]         |
+|  |                  |     - ID: i-def456 -> aws_instance.web[1]         |
+|  |                  |     - ID: i-ghi789 -> aws_instance.web[2]         |
+|  +--------+---------+                                                  |
+|           |                                                             |
+|           ▼                                                             |
+|  +------------------+                                                  |
+|  |  Real Resources  |     AWS/Azure/GCP                                |
+|  |    (Actual)      |     "The actual infrastructure"                  |
+|  +------------------+                                                  |
+|                                                                         |
+|  STATE PURPOSES:                                                        |
+|  ---------------                                                        |
+|  1. Mapping: Config address -> Resource ID                              |
+|  2. Metadata: Dependencies, outputs, provider config                   |
+|  3. Performance: Cache for plan operations                             |
+|  4. Syncing: Team collaboration                                        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -98,26 +98,26 @@ State är hjärtat i Terraform. Det är en JSON-fil som mappar dina konfiguratio
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    STATE FILE COMPONENTS                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  version          Schema version för state format                      │
-│  terraform_version Terraform version som skapade staten               │
-│  serial           Inkrementellt nummer, ökar vid varje ändring        │
-│  lineage          Unikt ID för state history                          │
-│  outputs          Alla output values                                   │
-│  resources        Lista av managed resources                           │
-│    ├─ mode        managed (resource) eller data (data source)         │
-│    ├─ type        Resource type (aws_instance)                        │
-│    ├─ name        Local name (web)                                    │
-│    ├─ provider    Full provider address                               │
-│    └─ instances   List of resource instances                          │
-│        ├─ attributes  All resource attributes                         │
-│        ├─ sensitive_attributes  Sensitive data markers               │
-│        └─ private     Provider-specific data                          │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    STATE FILE COMPONENTS                                |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  version          Schema version för state format                      |
+|  terraform_version Terraform version som skapade staten               |
+|  serial           Inkrementellt nummer, ökar vid varje ändring        |
+|  lineage          Unikt ID för state history                          |
+|  outputs          Alla output values                                   |
+|  resources        Lista av managed resources                           |
+|    +- mode        managed (resource) eller data (data source)         |
+|    +- type        Resource type (aws_instance)                        |
+|    +- name        Local name (web)                                    |
+|    +- provider    Full provider address                               |
+|    +- instances   List of resource instances                          |
+|        +- attributes  All resource attributes                         |
+|        +- sensitive_attributes  Sensitive data markers               |
+|        +- private     Provider-specific data                          |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -175,30 +175,30 @@ terraform apply -replace="aws_instance.web"  # Modern
 ### State Operations Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    STATE MODIFICATION WORKFLOW                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  SCENARIO: Rename resource without destroying                          │
-│                                                                         │
-│  1. BEFORE                                                             │
-│     ┌─────────────────────────────────────────┐                       │
-│     │ resource "aws_instance" "old_name" {...}│                       │
-│     └─────────────────────────────────────────┘                       │
-│                                                                         │
-│  2. STATE MOVE                                                         │
-│     $ terraform state mv aws_instance.old_name aws_instance.new_name  │
-│                                                                         │
-│  3. UPDATE CONFIG                                                      │
-│     ┌─────────────────────────────────────────┐                       │
-│     │ resource "aws_instance" "new_name" {...}│                       │
-│     └─────────────────────────────────────────┘                       │
-│                                                                         │
-│  4. VERIFY                                                             │
-│     $ terraform plan                                                   │
-│     # No changes. Your infrastructure matches the configuration.      │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    STATE MODIFICATION WORKFLOW                          |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  SCENARIO: Rename resource without destroying                          |
+|                                                                         |
+|  1. BEFORE                                                             |
+|     +-----------------------------------------+                       |
+|     | resource "aws_instance" "old_name" {...}|                       |
+|     +-----------------------------------------+                       |
+|                                                                         |
+|  2. STATE MOVE                                                         |
+|     $ terraform state mv aws_instance.old_name aws_instance.new_name  |
+|                                                                         |
+|  3. UPDATE CONFIG                                                      |
+|     +-----------------------------------------+                       |
+|     | resource "aws_instance" "new_name" {...}|                       |
+|     +-----------------------------------------+                       |
+|                                                                         |
+|  4. VERIFY                                                             |
+|     $ terraform plan                                                   |
+|     # No changes. Your infrastructure matches the configuration.      |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -211,44 +211,44 @@ terraform apply -replace="aws_instance.web"  # Modern
 
 # Projektstruktur
 my-terraform-project/
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── terraform.tfstate         # State file (KÄNSLIGT!)
-└── terraform.tfstate.backup  # Backup av föregående state
++-- main.tf
++-- variables.tf
++-- outputs.tf
++-- terraform.tfstate         # State file (KÄNSLIGT!)
++-- terraform.tfstate.backup  # Backup av föregående state
 ```
 
 ### Local State Risks
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    LOCAL STATE PROBLEMS                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ⚠️  RISK 1: Team Collaboration                                        │
-│      ────────────────────────                                          │
-│      Developer A: terraform apply (modifies state)                     │
-│      Developer B: terraform apply (overwrites A's changes!)            │
-│      → State conflict, potential resource destruction                  │
-│                                                                         │
-│  ⚠️  RISK 2: Single Point of Failure                                   │
-│      ─────────────────────────────                                      │
-│      - State file på laptop → Laptop kraschar → State borta            │
-│      - Ingen backup → Terraform vet inte om befintliga resurser        │
-│      - Manual recovery krävs                                           │
-│                                                                         │
-│  ⚠️  RISK 3: Security                                                  │
-│      ────────────────                                                   │
-│      - State innehåller secrets (databas-lösenord, API-nycklar)        │
-│      - Plain text JSON                                                 │
-│      - Risk att committa till Git                                      │
-│                                                                         │
-│  ⚠️  RISK 4: Locking                                                   │
-│      ────────────────                                                   │
-│      - Ingen locking för local state                                   │
-│      - Concurrent applies kan korruptera state                         │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    LOCAL STATE PROBLEMS                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  ⚠️  RISK 1: Team Collaboration                                        |
+|      ------------------------                                          |
+|      Developer A: terraform apply (modifies state)                     |
+|      Developer B: terraform apply (overwrites A's changes!)            |
+|      -> State conflict, potential resource destruction                  |
+|                                                                         |
+|  ⚠️  RISK 2: Single Point of Failure                                   |
+|      -----------------------------                                      |
+|      - State file på laptop -> Laptop kraschar -> State borta            |
+|      - Ingen backup -> Terraform vet inte om befintliga resurser        |
+|      - Manual recovery krävs                                           |
+|                                                                         |
+|  ⚠️  RISK 3: Security                                                  |
+|      ----------------                                                   |
+|      - State innehåller secrets (databas-lösenord, API-nycklar)        |
+|      - Plain text JSON                                                 |
+|      - Risk att committa till Git                                      |
+|                                                                         |
+|  ⚠️  RISK 4: Locking                                                   |
+|      ----------------                                                   |
+|      - Ingen locking för local state                                   |
+|      - Concurrent applies kan korruptera state                         |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### .gitignore for Terraform
@@ -291,33 +291,33 @@ terraform.rc
 ## State Locking
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    STATE LOCKING MECHANISM                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  WITHOUT LOCKING                          WITH LOCKING                 │
-│  ───────────────                          ────────────                 │
-│                                                                         │
-│  User A                User B             User A                User B │
-│    │                     │                  │                     │    │
-│    ├─ Read state         │                  ├─ Acquire lock       │    │
-│    │                     │                  │  ✓ Lock acquired    │    │
-│    │                     ├─ Read state      │                     │    │
-│    │                     │                  │                     ├─ Try lock │
-│    ├─ Modify state       │                  │                     │  ✗ Locked! │
-│    │                     │                  ├─ Modify state       │    │
-│    │                     ├─ Modify state    │                     │ (wait...) │
-│    │                     │                  ├─ Release lock       │    │
-│    ▼                     ▼                  │                     │    │
-│  ┌─────────────────────────┐              │                     ├─ Acquire │
-│  │    CORRUPTED STATE!    │              │                     │  ✓ OK    │
-│  │    Data loss possible   │              ▼                     ▼    │
-│  └─────────────────────────┘              ┌─────────────────────────┐ │
-│                                           │    SAFE STATE          │ │
-│                                           │    Consistent data      │ │
-│                                           └─────────────────────────┘ │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    STATE LOCKING MECHANISM                              |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  WITHOUT LOCKING                          WITH LOCKING                 |
+|  ---------------                          ------------                 |
+|                                                                         |
+|  User A                User B             User A                User B |
+|    |                     |                  |                     |    |
+|    +- Read state         |                  +- Acquire lock       |    |
+|    |                     |                  |  ✓ Lock acquired    |    |
+|    |                     +- Read state      |                     |    |
+|    |                     |                  |                     +- Try lock |
+|    +- Modify state       |                  |                     |  ✗ Locked! |
+|    |                     |                  +- Modify state       |    |
+|    |                     +- Modify state    |                     | (wait...) |
+|    |                     |                  +- Release lock       |    |
+|    ▼                     ▼                  |                     |    |
+|  +-------------------------+              |                     +- Acquire |
+|  |    CORRUPTED STATE!    |              |                     |  ✓ OK    |
+|  |    Data loss possible   |              ▼                     ▼    |
+|  +-------------------------+              +-------------------------+ |
+|                                           |    SAFE STATE          | |
+|                                           |    Consistent data      | |
+|                                           +-------------------------+ |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Force Unlock
@@ -421,44 +421,44 @@ resource "aws_instance" "web" {
 ## Import Existing Resources
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM IMPORT WORKFLOW                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. EXISTING RESOURCE (created manually)                               │
-│     ┌─────────────────────────────────────────────┐                   │
-│     │  AWS Console: EC2 Instance i-0abc123       │                   │
-│     │  (Exists but not in Terraform state)        │                   │
-│     └─────────────────────────────────────────────┘                   │
-│                                                                         │
-│  2. CREATE PLACEHOLDER CONFIG                                          │
-│     ```hcl                                                             │
-│     resource "aws_instance" "imported" {                               │
-│       # Will be populated after import                                 │
-│     }                                                                  │
-│     ```                                                                │
-│                                                                         │
-│  3. RUN IMPORT                                                         │
-│     $ terraform import aws_instance.imported i-0abc123                │
-│                                                                         │
-│  4. GENERATE CONFIG                                                    │
-│     $ terraform show -no-color > imported.tf                          │
-│     # Or use `terraform plan` to see required attributes              │
-│                                                                         │
-│  5. COMPLETE CONFIG                                                    │
-│     ```hcl                                                             │
-│     resource "aws_instance" "imported" {                               │
-│       ami           = "ami-0c55b159cbfafe1f0"                         │
-│       instance_type = "t3.micro"                                       │
-│       # ... all required attributes                                    │
-│     }                                                                  │
-│     ```                                                                │
-│                                                                         │
-│  6. VERIFY                                                             │
-│     $ terraform plan                                                   │
-│     # No changes required.                                             │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM IMPORT WORKFLOW                            |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. EXISTING RESOURCE (created manually)                               |
+|     +---------------------------------------------+                   |
+|     |  AWS Console: EC2 Instance i-0abc123       |                   |
+|     |  (Exists but not in Terraform state)        |                   |
+|     +---------------------------------------------+                   |
+|                                                                         |
+|  2. CREATE PLACEHOLDER CONFIG                                          |
+|     ```hcl                                                             |
+|     resource "aws_instance" "imported" {                               |
+|       # Will be populated after import                                 |
+|     }                                                                  |
+|     ```                                                                |
+|                                                                         |
+|  3. RUN IMPORT                                                         |
+|     $ terraform import aws_instance.imported i-0abc123                |
+|                                                                         |
+|  4. GENERATE CONFIG                                                    |
+|     $ terraform show -no-color > imported.tf                          |
+|     # Or use `terraform plan` to see required attributes              |
+|                                                                         |
+|  5. COMPLETE CONFIG                                                    |
+|     ```hcl                                                             |
+|     resource "aws_instance" "imported" {                               |
+|       ami           = "ami-0c55b159cbfafe1f0"                         |
+|       instance_type = "t3.micro"                                       |
+|       # ... all required attributes                                    |
+|     }                                                                  |
+|     ```                                                                |
+|                                                                         |
+|  6. VERIFY                                                             |
+|     $ terraform plan                                                   |
+|     # No changes required.                                             |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Import Block (Terraform 1.5+)
@@ -529,7 +529,7 @@ terraform plan
 
 ---
 
-**Nästa Node:** Remote State & Backends →
+**Nästa Node:** Remote State & Backends ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 70,
@@ -555,41 +555,41 @@ NODE_6 = {
 ## Varför Remote State?
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    REMOTE STATE BENEFITS                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  LOCAL STATE                           REMOTE STATE                    │
-│  ───────────                           ────────────                    │
-│                                                                         │
-│  ❌ Single developer only              ✅ Team collaboration           │
-│  ❌ No locking                         ✅ State locking                 │
-│  ❌ On local machine                   ✅ Centralized storage          │
-│  ❌ Easy to lose                       ✅ Durable & backed up          │
-│  ❌ Plain text secrets                 ✅ Encryption at rest           │
-│  ❌ No audit trail                     ✅ Versioning & history         │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     REMOTE STATE ARCHITECTURE                    │   │
-│  │                                                                   │   │
-│  │   Developer A     Developer B      CI/CD Pipeline                │   │
-│  │       │               │                 │                        │   │
-│  │       └───────────────┼─────────────────┘                        │   │
-│  │                       │                                          │   │
-│  │                       ▼                                          │   │
-│  │              ┌────────────────┐                                  │   │
-│  │              │  State Lock    │  (DynamoDB/Consul/etc)          │   │
-│  │              └───────┬────────┘                                  │   │
-│  │                      │                                           │   │
-│  │                      ▼                                           │   │
-│  │              ┌────────────────┐                                  │   │
-│  │              │  Remote State  │  (S3/GCS/Azure Blob/etc)        │   │
-│  │              │   (encrypted)  │                                  │   │
-│  │              └────────────────┘                                  │   │
-│  │                                                                   │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    REMOTE STATE BENEFITS                                |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  LOCAL STATE                           REMOTE STATE                    |
+|  -----------                           ------------                    |
+|                                                                         |
+|  ❌ Single developer only              ✅ Team collaboration           |
+|  ❌ No locking                         ✅ State locking                 |
+|  ❌ On local machine                   ✅ Centralized storage          |
+|  ❌ Easy to lose                       ✅ Durable & backed up          |
+|  ❌ Plain text secrets                 ✅ Encryption at rest           |
+|  ❌ No audit trail                     ✅ Versioning & history         |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |                     REMOTE STATE ARCHITECTURE                    |   |
+|  |                                                                   |   |
+|  |   Developer A     Developer B      CI/CD Pipeline                |   |
+|  |       |               |                 |                        |   |
+|  |       +---------------+-----------------+                        |   |
+|  |                       |                                          |   |
+|  |                       ▼                                          |   |
+|  |              +----------------+                                  |   |
+|  |              |  State Lock    |  (DynamoDB/Consul/etc)          |   |
+|  |              +-------+--------+                                  |   |
+|  |                      |                                           |   |
+|  |                      ▼                                           |   |
+|  |              +----------------+                                  |   |
+|  |              |  Remote State  |  (S3/GCS/Azure Blob/etc)        |   |
+|  |              |   (encrypted)  |                                  |   |
+|  |              +----------------+                                  |   |
+|  |                                                                   |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -694,35 +694,35 @@ terraform {
 ### State Path Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    S3 STATE ORGANIZATION                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  my-company-terraform-state/                                           │
-│  │                                                                      │
-│  ├── production/                                                       │
-│  │   ├── networking/                                                   │
-│  │   │   └── terraform.tfstate      VPC, Subnets, etc.               │
-│  │   ├── eks/                                                          │
-│  │   │   └── terraform.tfstate      EKS Cluster                       │
-│  │   ├── rds/                                                          │
-│  │   │   └── terraform.tfstate      Databases                         │
-│  │   └── applications/                                                 │
-│  │       └── terraform.tfstate      Application resources             │
-│  │                                                                      │
-│  ├── staging/                                                          │
-│  │   ├── networking/                                                   │
-│  │   │   └── terraform.tfstate                                        │
-│  │   └── applications/                                                 │
-│  │       └── terraform.tfstate                                        │
-│  │                                                                      │
-│  └── shared/                                                           │
-│      ├── iam/                                                          │
-│      │   └── terraform.tfstate      IAM Roles, Policies               │
-│      └── dns/                                                          │
-│          └── terraform.tfstate      Route53 Zones                     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    S3 STATE ORGANIZATION                                |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  my-company-terraform-state/                                           |
+|  |                                                                      |
+|  +-- production/                                                       |
+|  |   +-- networking/                                                   |
+|  |   |   +-- terraform.tfstate      VPC, Subnets, etc.               |
+|  |   +-- eks/                                                          |
+|  |   |   +-- terraform.tfstate      EKS Cluster                       |
+|  |   +-- rds/                                                          |
+|  |   |   +-- terraform.tfstate      Databases                         |
+|  |   +-- applications/                                                 |
+|  |       +-- terraform.tfstate      Application resources             |
+|  |                                                                      |
+|  +-- staging/                                                          |
+|  |   +-- networking/                                                   |
+|  |   |   +-- terraform.tfstate                                        |
+|  |   +-- applications/                                                 |
+|  |       +-- terraform.tfstate                                        |
+|  |                                                                      |
+|  +-- shared/                                                           |
+|      +-- iam/                                                          |
+|      |   +-- terraform.tfstate      IAM Roles, Policies               |
+|      +-- dns/                                                          |
+|          +-- terraform.tfstate      Route53 Zones                     |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -839,34 +839,34 @@ terraform {
 ```
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM CLOUD FEATURES                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  FREE TIER                                                       │   │
-│  │  • Remote state management                                       │   │
-│  │  • State locking                                                 │   │
-│  │  • Remote operations                                             │   │
-│  │  • Up to 5 users                                                 │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  TEAM TIER                                                       │   │
-│  │  • Team management                                               │   │
-│  │  • SSO                                                           │   │
-│  │  • Sentinel policies                                             │   │
-│  │  • Run triggers                                                  │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  BUSINESS TIER                                                   │   │
-│  │  • Self-hosted agents                                            │   │
-│  │  • Audit logging                                                 │   │
-│  │  • Custom concurrency                                            │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    TERRAFORM CLOUD FEATURES                             |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |  FREE TIER                                                       |   |
+|  |  • Remote state management                                       |   |
+|  |  • State locking                                                 |   |
+|  |  • Remote operations                                             |   |
+|  |  • Up to 5 users                                                 |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |  TEAM TIER                                                       |   |
+|  |  • Team management                                               |   |
+|  |  • SSO                                                           |   |
+|  |  • Sentinel policies                                             |   |
+|  |  • Run triggers                                                  |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
+|  +-----------------------------------------------------------------+   |
+|  |  BUSINESS TIER                                                   |   |
+|  |  • Self-hosted agents                                            |   |
+|  |  • Audit logging                                                 |   |
+|  |  • Custom concurrency                                            |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -986,41 +986,41 @@ terraform state push terraform.tfstate.backup
 ## Backend Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    BACKEND BEST PRACTICES                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. ALWAYS USE REMOTE STATE IN TEAMS                                   │
-│     • Minimum: S3 + DynamoDB                                           │
-│     • Preferred: Terraform Cloud                                       │
-│                                                                         │
-│  2. ENABLE VERSIONING                                                  │
-│     • S3 bucket versioning                                             │
-│     • Möjliggör rollback                                               │
-│                                                                         │
-│  3. ENCRYPT STATE                                                      │
-│     • KMS encryption för S3                                            │
-│     • State innehåller secrets                                         │
-│                                                                         │
-│  4. RESTRICT ACCESS                                                    │
-│     • IAM policies                                                     │
-│     • Bucket policies                                                  │
-│     • Network restrictions                                             │
-│                                                                         │
-│  5. USE SEPARATE STATE FILES                                           │
-│     • Per environment (dev/staging/prod)                               │
-│     • Per component (networking/compute/storage)                       │
-│     • Minimera blast radius                                            │
-│                                                                         │
-│  6. BACKUP REGULARLY                                                   │
-│     • Cross-region replication                                         │
-│     • Lifecycle policies                                               │
-│                                                                         │
-│  7. AUDIT ACCESS                                                       │
-│     • CloudTrail för S3                                                │
-│     • Audit logs för TFC                                               │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    BACKEND BEST PRACTICES                               |
++-------------------------------------------------------------------------+
+|                                                                         |
+|  1. ALWAYS USE REMOTE STATE IN TEAMS                                   |
+|     • Minimum: S3 + DynamoDB                                           |
+|     • Preferred: Terraform Cloud                                       |
+|                                                                         |
+|  2. ENABLE VERSIONING                                                  |
+|     • S3 bucket versioning                                             |
+|     • Möjliggör rollback                                               |
+|                                                                         |
+|  3. ENCRYPT STATE                                                      |
+|     • KMS encryption för S3                                            |
+|     • State innehåller secrets                                         |
+|                                                                         |
+|  4. RESTRICT ACCESS                                                    |
+|     • IAM policies                                                     |
+|     • Bucket policies                                                  |
+|     • Network restrictions                                             |
+|                                                                         |
+|  5. USE SEPARATE STATE FILES                                           |
+|     • Per environment (dev/staging/prod)                               |
+|     • Per component (networking/compute/storage)                       |
+|     • Minimera blast radius                                            |
+|                                                                         |
+|  6. BACKUP REGULARLY                                                   |
+|     • Cross-region replication                                         |
+|     • Lifecycle policies                                               |
+|                                                                         |
+|  7. AUDIT ACCESS                                                       |
+|     • CloudTrail för S3                                                |
+|     • Audit logs för TFC                                               |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -1053,7 +1053,7 @@ terraform state push terraform.tfstate.backup
 
 ---
 
-**Nästa Node:** Modules - Reusable Infrastructure →
+**Nästa Node:** Modules - Reusable Infrastructure ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 70,

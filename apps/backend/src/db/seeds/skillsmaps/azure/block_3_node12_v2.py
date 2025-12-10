@@ -37,16 +37,16 @@ AZURE_NODE_12_REDIS_V2 = {
                 "concepts": [
                     {
                         "title": "Cache-Aside Pattern",
-                        "explanation": "1) Kolla cache först. 2) Om miss → hämta från DB. 3) Spara i cache med TTL. 4) Returnera data.",
+                        "explanation": "1) Kolla cache först. 2) Om miss -> hämta från DB. 3) Spara i cache med TTL. 4) Returnera data.",
                         "diagram": """
-┌────────┐     ┌─────┐     ┌────────┐
-│ Client │────→│ App │────→│ Redis  │ Cache hit? Return!
-└────────┘     └─────┘     └────────┘
-                  │              ↑
-                  ↓ Cache miss   │
-              ┌────────┐         │
-              │   DB   │─────────┘ Store in cache
-              └────────┘""",
++--------+     +-----+     +--------+
+| Client |----->| App |----->| Redis  | Cache hit? Return!
++--------+     +-----+     +--------+
+                  |              ↑
+                  ↓ Cache miss   |
+              +--------+         |
+              |   DB   |---------+ Store in cache
+              +--------+""",
                         "pro_tip": "Sätt alltid TTL för att undvika stale data.",
                         "common_mistake": "Att glömma cache invalidation vid DB-uppdateringar."
                     },
@@ -54,12 +54,12 @@ AZURE_NODE_12_REDIS_V2 = {
                         "title": "Redis Tiers",
                         "explanation": "Basic (dev/test, ingen SLA), Standard (99.9% SLA, replicas), Premium (clustering, VNet), Enterprise (99.999%, Redis modules).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ Basic      │ Dev/test, 250MB+, ingen SLA    │
-│ Standard   │ HA replicas, 99.9% SLA         │
-│ Premium    │ Clustering, VNet, zones        │
-│ Enterprise │ 99.999%, Active-geo, modules   │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| Basic      | Dev/test, 250MB+, ingen SLA    |
+| Standard   | HA replicas, 99.9% SLA         |
+| Premium    | Clustering, VNet, zones        |
+| Enterprise | 99.999%, Active-geo, modules   |
++---------------------------------------------+""",
                         "pro_tip": "Standard C1 (~$40/mån) räcker för de flesta appar.",
                         "common_mistake": "Att använda Basic i produktion - ingen HA!"
                     }

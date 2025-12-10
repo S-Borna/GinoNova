@@ -34,7 +34,7 @@ AZURE_NODE_2_RESOURCES_V2 = {
         "headline": "Organisera ditt Azure-kaos",
         "hook": "Utan Resource Groups blir din Azure-miljö en röra av 200 resurser utan struktur. Med rätt organisation hittar du allt på sekunder och kan radera hela miljöer med ett kommando.",
         "learning_objectives": [
-            "Förstå Azure-hierarkin (Tenant → Subscription → Resource Group → Resource)",
+            "Förstå Azure-hierarkin (Tenant -> Subscription -> Resource Group -> Resource)",
             "Skapa och hantera Resource Groups med Azure CLI",
             "Använda naming conventions enligt Microsoft CAF",
             "Skydda resurser med Tags och Locks"
@@ -55,10 +55,10 @@ AZURE_NODE_2_RESOURCES_V2 = {
             "explanation": """
 Allt i Azure följer en hierarki. Tänk på det som mappar på din dator:
 
-**Tenant** (Azure AD) → Din organisation
-  └── **Subscription** → Faktureringscontainer (en per miljö/avdelning)
-      └── **Resource Group** → Logisk mapp för relaterade resurser
-          └── **Resources** → VMs, databaser, storage, etc.
+**Tenant** (Azure AD) -> Din organisation
+  +-- **Subscription** -> Faktureringscontainer (en per miljö/avdelning)
+      +-- **Resource Group** -> Logisk mapp för relaterade resurser
+          +-- **Resources** -> VMs, databaser, storage, etc.
 
 **Varför detta spelar roll:**
 - RBAC (rättigheter) ärvs nedåt i hierarkin
@@ -66,20 +66,20 @@ Allt i Azure följer en hierarki. Tänk på det som mappar på din dator:
 - Radera en Resource Group = alla resurser i den försvinner
 """,
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           AZURE AD TENANT                       │
-│           (din-organisation.onmicrosoft.com)    │
-├─────────────────────────────────────────────────┤
-│  ┌──────────────┐  ┌──────────────┐            │
-│  │ Dev Subscr.  │  │ Prod Subscr. │            │
-│  └──────┬───────┘  └──────┬───────┘            │
-│         │                 │                     │
-│   ┌─────┴─────┐     ┌─────┴─────┐              │
-│   │ rg-app-dev│     │rg-app-prod│              │
-│   └─────┬─────┘     └─────┬─────┘              │
-│         │                 │                     │
-│    [VM] [DB]         [VM] [DB]                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           AZURE AD TENANT                       |
+|           (din-organisation.onmicrosoft.com)    |
++-------------------------------------------------+
+|  +--------------+  +--------------+            |
+|  | Dev Subscr.  |  | Prod Subscr. |            |
+|  +------+-------+  +------+-------+            |
+|         |                 |                     |
+|   +-----+-----+     +-----+-----+              |
+|   | rg-app-dev|     |rg-app-prod|              |
+|   +-----+-----+     +-----+-----+              |
+|         |                 |                     |
+|    [VM] [DB]         [VM] [DB]                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Ha separata Subscriptions för Dev och Prod - det är det enklaste sättet att isolera kostnader och förhindra misstag."
         },
@@ -137,7 +137,7 @@ Locks förhindrar oavsiktlig radering eller ändring:
 - CanNotDelete på alla produktions-Resource Groups
 - ReadOnly på kritisk infrastruktur (VNet, DNS)
 """,
-            "common_mistake": "Glömmer att ta bort lock innan du försöker radera → förvirrande felmeddelanden."
+            "common_mistake": "Glömmer att ta bort lock innan du försöker radera -> förvirrande felmeddelanden."
         }
     ],
 
@@ -275,10 +275,10 @@ rg-webshop-prod-ne-001  northeurope  Succeeded""",
             {
                 "question": "Vilken hierarki är korrekt i Azure?",
                 "options": [
-                    "Resource → Resource Group → Subscription → Tenant",
-                    "Tenant → Resource Group → Subscription → Resource",
-                    "Tenant → Subscription → Resource Group → Resource",
-                    "Subscription → Tenant → Resource Group → Resource"
+                    "Resource -> Resource Group -> Subscription -> Tenant",
+                    "Tenant -> Resource Group -> Subscription -> Resource",
+                    "Tenant -> Subscription -> Resource Group -> Resource",
+                    "Subscription -> Tenant -> Resource Group -> Resource"
                 ],
                 "correct_answer": 2,
                 "explanation": "Tenant (Azure AD) är toppen, sedan Subscription, Resource Group, och sist själva resurserna."

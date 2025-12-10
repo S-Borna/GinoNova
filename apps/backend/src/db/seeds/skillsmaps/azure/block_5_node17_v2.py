@@ -39,26 +39,26 @@ AZURE_NODE_17_ENTRA_V2 = {
                         "title": "Identity Types",
                         "explanation": "User Identity (människor), Service Principal (appar/services med client ID + secret), Managed Identity (Azure-hanterad, inga credentials).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ USER IDENTITY   │ Interactive login, MFA   │
-│ SERVICE PRINCIPAL│ App credentials, CI/CD  │
-│ MANAGED IDENTITY │ No credentials, Azure   │
-└─────────────────────────────────────────────┘
++---------------------------------------------+
+| USER IDENTITY   | Interactive login, MFA   |
+| SERVICE PRINCIPAL| App credentials, CI/CD  |
+| MANAGED IDENTITY | No credentials, Azure   |
++---------------------------------------------+
 Recommendation: Managed Identity > Service Principal > User""",
                         "pro_tip": "Använd ALLTID Managed Identity för Azure-resurser - inga credentials att hantera!",
                         "common_mistake": "Att hårdkoda Service Principal credentials i kod."
                     },
                     {
                         "title": "RBAC (Role-Based Access Control)",
-                        "explanation": "Security principal + Role + Scope = Access. Roller: Owner, Contributor, Reader. Scope: Management Group → Subscription → Resource Group → Resource.",
+                        "explanation": "Security principal + Role + Scope = Access. Roller: Owner, Contributor, Reader. Scope: Management Group -> Subscription -> Resource Group -> Resource.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ WHO        │ WHAT              │ WHERE      │
-├─────────────────────────────────────────────┤
-│ Principal  │ Role              │ Scope      │
-│ (User/App) │ (Contributor)     │ (/sub/rg)  │
-└─────────────────────────────────────────────┘
-Inheritance: MG → Subscription → RG → Resource""",
++---------------------------------------------+
+| WHO        | WHAT              | WHERE      |
++---------------------------------------------+
+| Principal  | Role              | Scope      |
+| (User/App) | (Contributor)     | (/sub/rg)  |
++---------------------------------------------+
+Inheritance: MG -> Subscription -> RG -> Resource""",
                         "pro_tip": "Principle of least privilege - ge bara nödvändiga rättigheter.",
                         "common_mistake": "Att ge Owner på subscription-nivå istället för minimal scope."
                     }
@@ -105,7 +105,7 @@ Inheritance: MG → Subscription → RG → Resource""",
                     "flashcards": [
                         {"front": "Vad är skillnaden mellan System-assigned och User-assigned Managed Identity?", "back": "System-assigned: skapas/tas bort med resursen, 1:1. User-assigned: separat resurs som kan delas mellan många resurser."},
                         {"front": "Vad innehåller Service Principal output?", "back": "appId (client ID), password (client secret), tenant - SECRET visas bara EN gång!"},
-                        {"front": "Hur fungerar DefaultAzureCredential?", "back": "Försöker i ordning: Environment vars → Managed Identity → VS Code → Azure CLI → Interactive browser"}
+                        {"front": "Hur fungerar DefaultAzureCredential?", "back": "Försöker i ordning: Environment vars -> Managed Identity -> VS Code -> Azure CLI -> Interactive browser"}
                     ],
                     "multiple_choice": [
                         {

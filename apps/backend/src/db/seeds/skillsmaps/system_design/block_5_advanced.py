@@ -261,17 +261,17 @@ NODE_18_OBSERVABILITY = {
 ## Three Pillars of Observability
 
 ```
-┌────────────────────────────────────────────────────┐
-│                  Observability                      │
-├───────────────┬───────────────┬────────────────────┤
-│     Logs      │    Metrics    │      Traces        │
-│               │               │                    │
-│  What         │  How much     │  How requests      │
-│  happened     │  & trends     │  flow through      │
-│               │               │                    │
-│  Debugging    │  Alerting     │  Performance       │
-│  Forensics    │  Dashboards   │  Dependencies      │
-└───────────────┴───────────────┴────────────────────┘
++----------------------------------------------------+
+|                  Observability                      |
++---------------+---------------+--------------------+
+|     Logs      |    Metrics    |      Traces        |
+|               |               |                    |
+|  What         |  How much     |  How requests      |
+|  happened     |  & trends     |  flow through      |
+|               |               |                    |
+|  Debugging    |  Alerting     |  Performance       |
+|  Forensics    |  Dashboards   |  Dependencies      |
++---------------+---------------+--------------------+
 ```
 
 ## Logging
@@ -388,33 +388,33 @@ async def metrics_middleware(request, call_next):
 
 ```
 Request Flow:
-┌─────────┐     ┌─────────┐     ┌─────────┐
-│ Gateway │────►│ Orders  │────►│ Payment │
-└─────────┘     └─────────┘     └─────────┘
++---------+     +---------+     +---------+
+| Gateway |----►| Orders  |----►| Payment |
++---------+     +---------+     +---------+
   Span A          Span B          Span C
 
 Trace ID: abc-123 (same for all spans)
 
 Span A: Gateway
-├── trace_id: abc-123
-├── span_id: 001
-├── parent_id: null
-├── start: 0ms
-└── duration: 150ms
++-- trace_id: abc-123
++-- span_id: 001
++-- parent_id: null
++-- start: 0ms
++-- duration: 150ms
 
 Span B: Orders
-├── trace_id: abc-123
-├── span_id: 002
-├── parent_id: 001
-├── start: 10ms
-└── duration: 100ms
++-- trace_id: abc-123
++-- span_id: 002
++-- parent_id: 001
++-- start: 10ms
++-- duration: 100ms
 
 Span C: Payment
-├── trace_id: abc-123
-├── span_id: 003
-├── parent_id: 002
-├── start: 50ms
-└── duration: 40ms
++-- trace_id: abc-123
++-- span_id: 003
++-- parent_id: 002
++-- start: 50ms
++-- duration: 40ms
 ```
 
 ```python
@@ -532,10 +532,10 @@ Koncept:
   - Olika modeller för queries och commands
 
 Write Side:
-  - Commands → Write Model → Event Store
+  - Commands -> Write Model -> Event Store
 
 Read Side:
-  - Event Store → Projections → Read Model → Queries
+  - Event Store -> Projections -> Read Model -> Queries
 
 Benefits:
   - Optimera read/write separat
@@ -545,23 +545,23 @@ Benefits:
 
 ```
                 Command                    Query
-                   │                         │
+                   |                         |
                    ▼                         ▼
-            ┌───────────┐             ┌───────────┐
-            │  Command  │             │   Query   │
-            │  Handler  │             │  Handler  │
-            └─────┬─────┘             └─────┬─────┘
-                  │                         │
+            +-----------+             +-----------+
+            |  Command  |             |   Query   |
+            |  Handler  |             |  Handler  |
+            +-----+-----+             +-----+-----+
+                  |                         |
                   ▼                         ▼
-            ┌───────────┐             ┌───────────┐
-            │   Write   │   Events    │   Read    │
-            │   Model   │────────────►│   Model   │
-            └───────────┘             └───────────┘
-                  │                         │
+            +-----------+             +-----------+
+            |   Write   |   Events    |   Read    |
+            |   Model   |------------►|   Model   |
+            +-----------+             +-----------+
+                  |                         |
                   ▼                         ▼
-            ┌───────────┐             ┌───────────┐
-            │Event Store│             │ View DB   │
-            └───────────┘             └───────────┘
+            +-----------+             +-----------+
+            |Event Store|             | View DB   |
+            +-----------+             +-----------+
 ```
 
 ## Event Sourcing + CQRS
@@ -625,27 +625,27 @@ Process:
 
 ```
 Before:
-  ┌─────────────────────────────┐
-  │       Legacy System         │
-  │   Everything in one place   │
-  └─────────────────────────────┘
+  +-----------------------------+
+  |       Legacy System         |
+  |   Everything in one place   |
+  +-----------------------------+
 
 During:
-  ┌─────────────────────────────────────────────┐
-  │                  Proxy                      │
-  └────────────────┬────────────────────────────┘
-         ┌─────────┴─────────┐
+  +---------------------------------------------+
+  |                  Proxy                      |
+  +----------------+----------------------------+
+         +---------+---------+
          ▼                   ▼
-  ┌─────────────┐     ┌─────────────┐
-  │   Legacy    │     │    New      │
-  │  (shrinking)│     │ (growing)   │
-  └─────────────┘     └─────────────┘
+  +-------------+     +-------------+
+  |   Legacy    |     |    New      |
+  |  (shrinking)|     | (growing)   |
+  +-------------+     +-------------+
 
 After:
-  ┌─────────────────────────────┐
-  │        New System           │
-  │   Modern architecture       │
-  └─────────────────────────────┘
+  +-----------------------------+
+  |        New System           |
+  |   Modern architecture       |
+  +-----------------------------+
 ```
 
 ## Sidecar Pattern
@@ -728,29 +728,29 @@ Similar to:
 ## Backend for Frontend (BFF)
 
 ```
-                    ┌─────────────┐
-                    │   Mobile    │
-                    │   Client    │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │ Mobile BFF  │
-                    └──────┬──────┘
-                           │
-         ┌─────────────────┼─────────────────┐
-         │                 │                 │
-    ┌────▼────┐       ┌────▼────┐       ┌────▼────┐
-    │ Users   │       │ Orders  │       │Products │
-    └─────────┘       └─────────┘       └─────────┘
-         │                 │                 │
-         │          ┌──────▼──────┐          │
-         │          │  Web BFF    │          │
-         │          └──────┬──────┘          │
-         │                 │                 │
-         │          ┌──────▼──────┐          │
-         │          │    Web      │          │
-         │          │   Client    │          │
-         │          └─────────────┘          │
+                    +-------------+
+                    |   Mobile    |
+                    |   Client    |
+                    +------+------+
+                           |
+                    +------▼------+
+                    | Mobile BFF  |
+                    +------+------+
+                           |
+         +-----------------+-----------------+
+         |                 |                 |
+    +----▼----+       +----▼----+       +----▼----+
+    | Users   |       | Orders  |       |Products |
+    +---------+       +---------+       +---------+
+         |                 |                 |
+         |          +------▼------+          |
+         |          |  Web BFF    |          |
+         |          +------+------+          |
+         |                 |                 |
+         |          +------▼------+          |
+         |          |    Web      |          |
+         |          |   Client    |          |
+         |          +-------------+          |
 ```
 
 | Pattern | Use Case |
@@ -801,7 +801,7 @@ Scale:
 Design:
   Write Path:
     1. Generate short code
-    2. Store: short_code → long_url
+    2. Store: short_code -> long_url
     3. Return shortened URL
 
   Read Path:
@@ -813,32 +813,32 @@ Components:
   - API servers (stateless)
   - Cache (Redis): Hot URLs
   - Database (MySQL/Postgres): All URLs
-  - Analytics (Kafka → ClickHouse)
+  - Analytics (Kafka -> ClickHouse)
 ```
 
 ```
-┌────────────────────────────────────────────────────┐
-│                    Client                          │
-└────────────────────────┬───────────────────────────┘
-                         │
-                ┌────────▼────────┐
-                │  Load Balancer  │
-                └────────┬────────┘
-                         │
-                ┌────────▼────────┐
-                │   API Servers   │
-                └────────┬────────┘
-            ┌────────────┼────────────┐
++----------------------------------------------------+
+|                    Client                          |
++------------------------+---------------------------+
+                         |
+                +--------▼--------+
+                |  Load Balancer  |
+                +--------+--------+
+                         |
+                +--------▼--------+
+                |   API Servers   |
+                +--------+--------+
+            +------------+------------+
             ▼            ▼            ▼
-       ┌────────┐   ┌────────┐   ┌────────┐
-       │ Cache  │   │   DB   │   │ Kafka  │
-       │(Redis) │   │        │   │        │
-       └────────┘   └────────┘   └────────┘
-                                      │
-                               ┌──────▼──────┐
-                               │ ClickHouse  │
-                               │ (Analytics) │
-                               └─────────────┘
+       +--------+   +--------+   +--------+
+       | Cache  |   |   DB   |   | Kafka  |
+       |(Redis) |   |        |   |        |
+       +--------+   +--------+   +--------+
+                                      |
+                               +------▼------+
+                               | ClickHouse  |
+                               | (Analytics) |
+                               +-------------+
 ```
 
 ## Twitter Timeline
@@ -863,7 +863,7 @@ Approaches:
 
   Push Model (Fan-out):
     - Pre-compute timelines
-    - Write tweet → push to all follower caches
+    - Write tweet -> push to all follower caches
     - Fast reads, expensive writes
 
   Hybrid:
@@ -912,23 +912,23 @@ Design:
 
 ```
 User A                                    User B
-   │                                         │
-   │ WebSocket                    WebSocket  │
+   |                                         |
+   | WebSocket                    WebSocket  |
    ▼                                         ▼
-┌──────────┐                          ┌──────────┐
-│ WS Server│                          │ WS Server│
-│  (Pod 1) │                          │  (Pod 2) │
-└────┬─────┘                          └────┬─────┘
-     │                                     │
-     │         ┌──────────────┐            │
-     └────────►│  Redis Pub/  │◄───────────┘
-               │     Sub      │
-               └──────────────┘
-                      │
-               ┌──────▼──────┐
-               │  Cassandra  │
-               │  (Messages) │
-               └─────────────┘
++----------+                          +----------+
+| WS Server|                          | WS Server|
+|  (Pod 1) |                          |  (Pod 2) |
++----+-----+                          +----+-----+
+     |                                     |
+     |         +--------------+            |
+     +--------►|  Redis Pub/  |◄-----------+
+               |     Sub      |
+               +--------------+
+                      |
+               +------▼------+
+               |  Cassandra  |
+               |  (Messages) |
+               +-------------+
 ```
 
 ## Design Rate Limiter
@@ -962,26 +962,26 @@ Requirements:
   - Delivery tracking
 
 Design:
-  ┌────────────┐
-  │ Service A  │──┐
-  └────────────┘  │
-  ┌────────────┐  │    ┌─────────────────┐
-  │ Service B  │──┼───►│ Notification    │
-  └────────────┘  │    │ Service         │
-  ┌────────────┐  │    └────────┬────────┘
-  │ Service C  │──┘             │
-  └────────────┘         ┌──────┴──────┐
+  +------------+
+  | Service A  |--+
+  +------------+  |
+  +------------+  |    +-----------------+
+  | Service B  |--+---►| Notification    |
+  +------------+  |    | Service         |
+  +------------+  |    +--------+--------+
+  | Service C  |--+             |
+  +------------+         +------+------+
                          ▼             ▼
-                    ┌────────┐    ┌────────┐
-                    │  Push  │    │ Email  │
-                    │ Queue  │    │ Queue  │
-                    └────┬───┘    └───┬────┘
-                         │            │
+                    +--------+    +--------+
+                    |  Push  |    | Email  |
+                    | Queue  |    | Queue  |
+                    +----+---+    +---+----+
+                         |            |
                          ▼            ▼
-                    ┌────────┐   ┌────────┐
-                    │ FCM/   │   │Sendgrid│
-                    │ APNs   │   │        │
-                    └────────┘   └────────┘
+                    +--------+   +--------+
+                    | FCM/   |   |Sendgrid|
+                    | APNs   |   |        |
+                    +--------+   +--------+
 ```
 
 ## Interview Tips

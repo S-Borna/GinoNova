@@ -23,34 +23,34 @@ Docker är fundamentalt för modern CI/CD. Det garanterar reproducerbarhet från
 ### CI/CD Pipeline Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER CI/CD PIPELINE                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SOURCE        BUILD           TEST            DEPLOY                   │
-│  ══════        ═════           ════            ══════                   │
-│                                                                          │
-│  ┌─────┐      ┌─────────┐     ┌─────────┐     ┌─────────────┐          │
-│  │ Git │ ──►  │ Docker  │ ──► │ Docker  │ ──► │ Deploy to   │          │
-│  │Push │      │ Build   │     │ Test    │     │ Production  │          │
-│  └─────┘      └────┬────┘     └────┬────┘     └──────┬──────┘          │
-│                    │               │                  │                  │
-│                    ▼               ▼                  ▼                  │
-│              ┌──────────┐    ┌──────────┐     ┌──────────────┐         │
-│              │ Registry │    │ Report   │     │ Kubernetes/  │         │
-│              │  Push    │    │ Results  │     │ Docker Swarm │         │
-│              └──────────┘    └──────────┘     └──────────────┘         │
-│                                                                          │
-│  STAGES:                                                                 │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  1. Checkout code                                                        │
-│  2. Build Docker image                                                   │
-│  3. Run tests in container                                              │
-│  4. Scan for vulnerabilities                                            │
-│  5. Push to registry                                                    │
-│  6. Deploy to environment                                               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER CI/CD PIPELINE                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SOURCE        BUILD           TEST            DEPLOY                   |
+|  ══════        ═════           ════            ══════                   |
+|                                                                          |
+|  +-----+      +---------+     +---------+     +-------------+          |
+|  | Git | --►  | Docker  | --► | Docker  | --► | Deploy to   |          |
+|  |Push |      | Build   |     | Test    |     | Production  |          |
+|  +-----+      +----+----+     +----+----+     +------+------+          |
+|                    |               |                  |                  |
+|                    ▼               ▼                  ▼                  |
+|              +----------+    +----------+     +--------------+         |
+|              | Registry |    | Report   |     | Kubernetes/  |         |
+|              |  Push    |    | Results  |     | Docker Swarm |         |
+|              +----------+    +----------+     +--------------+         |
+|                                                                          |
+|  STAGES:                                                                 |
+|  ---------------------------------------------------------------------  |
+|  1. Checkout code                                                        |
+|  2. Build Docker image                                                   |
+|  3. Run tests in container                                              |
+|  4. Scan for vulnerabilities                                            |
+|  5. Push to registry                                                    |
+|  6. Deploy to environment                                               |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. GitHub Actions
@@ -352,7 +352,7 @@ jobs:
 
 ---
 
-**Nästa Node:** Docker Debugging →
+**Nästa Node:** Docker Debugging ->
 ''',
     "xp_reward": 175,
     "estimated_minutes": 80,
@@ -378,31 +378,31 @@ Debugging Docker containers kräver specifika tekniker. Denna guide täcker esse
 ### Debugging Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER DEBUGGING WORKFLOW                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  1. IDENTIFY                                                             │
-│     └─► docker ps -a          # Container status                        │
-│     └─► docker logs           # Application logs                        │
-│     └─► docker events         # Docker daemon events                    │
-│                                                                          │
-│  2. INSPECT                                                              │
-│     └─► docker inspect        # Container config                        │
-│     └─► docker stats          # Resource usage                          │
-│     └─► docker top            # Running processes                       │
-│                                                                          │
-│  3. INTERACT                                                             │
-│     └─► docker exec           # Run commands                            │
-│     └─► docker attach         # Attach to process                       │
-│     └─► docker cp             # Copy files                              │
-│                                                                          │
-│  4. ANALYZE                                                              │
-│     └─► docker diff           # Filesystem changes                      │
-│     └─► docker history        # Image layers                            │
-│     └─► docker system df      # Disk usage                              │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER DEBUGGING WORKFLOW                             |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  1. IDENTIFY                                                             |
+|     +-► docker ps -a          # Container status                        |
+|     +-► docker logs           # Application logs                        |
+|     +-► docker events         # Docker daemon events                    |
+|                                                                          |
+|  2. INSPECT                                                              |
+|     +-► docker inspect        # Container config                        |
+|     +-► docker stats          # Resource usage                          |
+|     +-► docker top            # Running processes                       |
+|                                                                          |
+|  3. INTERACT                                                             |
+|     +-► docker exec           # Run commands                            |
+|     +-► docker attach         # Attach to process                       |
+|     +-► docker cp             # Copy files                              |
+|                                                                          |
+|  4. ANALYZE                                                              |
+|     +-► docker diff           # Filesystem changes                      |
+|     +-► docker history        # Image layers                            |
+|     +-► docker system df      # Disk usage                              |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Container Status
@@ -623,38 +623,38 @@ docker system df -v
 ## 8. Common Issues
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    COMMON DOCKER ISSUES                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ISSUE: Container exits immediately                                      │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  DIAGNOSE: docker logs myapp                                            │
-│  CAUSES:                                                                │
-│  • CMD/ENTRYPOINT exits                                                 │
-│  • Missing environment variables                                        │
-│  • Permission errors                                                    │
-│  FIX: docker run -it --entrypoint sh myapp                             │
-│                                                                          │
-│  ISSUE: OOM Killed (exit code 137)                                      │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  DIAGNOSE: docker inspect --format='{{.State.OOMKilled}}' myapp        │
-│  CAUSES: Memory limit exceeded                                          │
-│  FIX: Increase --memory limit or optimize app                          │
-│                                                                          │
-│  ISSUE: Permission denied                                                │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  DIAGNOSE: docker exec myapp ls -la /app                               │
-│  CAUSES: USER mismatch, volume permissions                              │
-│  FIX: chown in Dockerfile or use correct UID                           │
-│                                                                          │
-│  ISSUE: Container can't reach network                                   │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  DIAGNOSE: docker exec myapp ping google.com                           │
-│  CAUSES: Network config, DNS, firewall                                 │
-│  FIX: Check network mode and DNS settings                              │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    COMMON DOCKER ISSUES                                  |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ISSUE: Container exits immediately                                      |
+|  ---------------------------------------------------------------------  |
+|  DIAGNOSE: docker logs myapp                                            |
+|  CAUSES:                                                                |
+|  • CMD/ENTRYPOINT exits                                                 |
+|  • Missing environment variables                                        |
+|  • Permission errors                                                    |
+|  FIX: docker run -it --entrypoint sh myapp                             |
+|                                                                          |
+|  ISSUE: OOM Killed (exit code 137)                                      |
+|  ---------------------------------------------------------------------  |
+|  DIAGNOSE: docker inspect --format='{{.State.OOMKilled}}' myapp        |
+|  CAUSES: Memory limit exceeded                                          |
+|  FIX: Increase --memory limit or optimize app                          |
+|                                                                          |
+|  ISSUE: Permission denied                                                |
+|  ---------------------------------------------------------------------  |
+|  DIAGNOSE: docker exec myapp ls -la /app                               |
+|  CAUSES: USER mismatch, volume permissions                              |
+|  FIX: chown in Dockerfile or use correct UID                           |
+|                                                                          |
+|  ISSUE: Container can't reach network                                   |
+|  ---------------------------------------------------------------------  |
+|  DIAGNOSE: docker exec myapp ping google.com                           |
+|  CAUSES: Network config, DNS, firewall                                 |
+|  FIX: Check network mode and DNS settings                              |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9-14. Sammanfattning
@@ -670,7 +670,7 @@ docker system df -v
 
 ---
 
-**Nästa Node:** Build Optimization →
+**Nästa Node:** Build Optimization ->
 ''',
     "xp_reward": 170,
     "estimated_minutes": 75,

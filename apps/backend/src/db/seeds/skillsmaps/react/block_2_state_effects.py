@@ -26,7 +26,7 @@ REACT_NODE_05_USESTATE = {
 
 State ar det som gor React-appar interaktiva. Utan state ar komponenter statiska.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -37,26 +37,26 @@ State ar det som gor React-appar interaktiva. Utan state ar komponenter statiska
 | **UI state** | Modals, alerts, loading states i operations UI |
 | **Filter state** | Filtrera loggar, metrics, och alerts |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## State vs Props
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      STATE vs PROPS                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  PROPS                          STATE                           │
-│  ─────                          ─────                           │
-│  Kommer fran parent             Ags av komponenten sjalv        │
-│  Read-only                      Kan andras via setter           │
-│  Kan inte andras                Triggar re-render vid andring   │
-│  Flodar nedat                   Privat till komponenten         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      STATE vs PROPS                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  PROPS                          STATE                           |
+|  -----                          -----                           |
+|  Kommer fran parent             Ags av komponenten sjalv        |
+|  Read-only                      Kan andras via setter           |
+|  Kan inte andras                Triggar re-render vid andring   |
+|  Flodar nedat                   Privat till komponenten         |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useState Hook
 
@@ -78,7 +78,7 @@ function Counter() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Functional Updates
 
@@ -107,7 +107,7 @@ function Counter() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Object State
 
@@ -163,7 +163,7 @@ function UserSettings() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Array State
 
@@ -219,7 +219,7 @@ function TaskList() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -231,7 +231,7 @@ function TaskList() {
 | **Functional update** | `prev => prev + 1` for state baserat pa previous |
 | **Immutability** | Skapa nya objekt/arrayer, mutera aldrig |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -242,7 +242,7 @@ function TaskList() {
 | Re-render sker inte | Mutering av state | Skapa nytt objekt med spread |
 | For manga re-renders | useState i loop | Flytta useState till top level |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -284,7 +284,7 @@ REACT_NODE_06_USEEFFECT = {
 
 useEffect hanterar kod som kor efter rendering - API-anrop, subscriptions, DOM-manipulation.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -295,28 +295,28 @@ useEffect hanterar kod som kor efter rendering - API-anrop, subscriptions, DOM-m
 | **Polling** | Periodisk kontroll av system health |
 | **Cleanup** | Forhindra memory leaks vid unmount |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pure vs Side Effects
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      PURE vs SIDE EFFECTS                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  PURE RENDER                        SIDE EFFECTS                │
-│  ───────────                        ────────────                │
-│  Berakna JSX fran props/state       API-anrop                   │
-│  Deterministiskt                    DOM-manipulation            │
-│  Inga externa beroenden             Event listeners             │
-│  Samma input = samma output         Timers/intervals            │
-│                                     LocalStorage                │
-│                                     WebSocket connections        │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      PURE vs SIDE EFFECTS                        |
++-----------------------------------------------------------------+
+|                                                                  |
+|  PURE RENDER                        SIDE EFFECTS                |
+|  -----------                        ------------                |
+|  Berakna JSX fran props/state       API-anrop                   |
+|  Deterministiskt                    DOM-manipulation            |
+|  Inga externa beroenden             Event listeners             |
+|  Samma input = samma output         Timers/intervals            |
+|                                     LocalStorage                |
+|                                     WebSocket connections        |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useEffect Syntax
 
@@ -336,7 +336,7 @@ function Component() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dependency Array
 
@@ -363,7 +363,7 @@ useEffect(() => {
 }, [userId, filter]);
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Data Fetching
 
@@ -425,7 +425,7 @@ function UserProfile({ userId }: { userId: string }) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Event Listeners
 
@@ -456,7 +456,7 @@ function WindowSize() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## WebSocket Subscription
 
@@ -488,7 +488,7 @@ function LiveStatus({ serverId }: { serverId: string }) {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -505,7 +505,7 @@ function LiveStatus({ serverId }: { serverId: string }) {
 | **clearInterval** | Stoppa timers |
 | **ws.close()** | Stang WebSocket |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -516,7 +516,7 @@ function LiveStatus({ serverId }: { serverId: string }) {
 | Memory leak | Cleanup missas | Returnera cleanup-funktion |
 | Stale data | Race condition | Anvand AbortController |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -558,7 +558,7 @@ REACT_NODE_07_FORMS = {
 
 Formular ar det primara sattet anvandare interagerar med webbapplikationer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -569,27 +569,27 @@ Formular ar det primara sattet anvandare interagerar med webbapplikationer.
 | **Settings** | System-installningar, user preferences |
 | **Validation** | Forhindra felaktiga konfigurationer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Controlled vs Uncontrolled
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│              CONTROLLED vs UNCONTROLLED                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  CONTROLLED                       UNCONTROLLED                  │
-│  ──────────                       ────────────                  │
-│  React styr vardet               DOM styr vardet                │
-│  value + onChange                ref + defaultValue             │
-│  Fullstandig kontroll            Enklare for enkla formular     │
-│  Kan validera i realtid          Mindre kod                     │
-│  Mer kod                         Svarare att kontrollera        │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|              CONTROLLED vs UNCONTROLLED                          |
++-----------------------------------------------------------------+
+|                                                                  |
+|  CONTROLLED                       UNCONTROLLED                  |
+|  ----------                       ------------                  |
+|  React styr vardet               DOM styr vardet                |
+|  value + onChange                ref + defaultValue             |
+|  Fullstandig kontroll            Enklare for enkla formular     |
+|  Kan validera i realtid          Mindre kod                     |
+|  Mer kod                         Svarare att kontrollera        |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Controlled Component
 
@@ -623,7 +623,7 @@ function LoginForm() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Uncontrolled Component
 
@@ -660,7 +660,7 @@ function LoginFormUncontrolled() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Form with Validation
 
@@ -767,7 +767,7 @@ function RegistrationForm() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## React Hook Form + Zod
 
@@ -822,7 +822,7 @@ function RegistrationForm() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -834,7 +834,7 @@ function RegistrationForm() {
 | **register** | React Hook Form for input binding |
 | **zodResolver** | Schema-baserad validering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -845,7 +845,7 @@ function RegistrationForm() {
 | Input uppdateras inte | Saknar onChange | Lagg till onChange handler |
 | Validering triggas inte | Fel form event | Anvand onSubmit pa form-taggen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -887,7 +887,7 @@ REACT_NODE_08_CUSTOM_HOOKS = {
 
 Custom hooks later dig extrahera komponentlogik till ateranvandbara funktioner.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -898,7 +898,7 @@ Custom hooks later dig extrahera komponentlogik till ateranvandbara funktioner.
 | **useWebSocket** | Realtidsanslutningar for monitoring |
 | **useLocalStorage** | Persistent state for user preferences |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en Custom Hook?
 
@@ -933,7 +933,7 @@ function Counter() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useLocalStorage
 
@@ -976,7 +976,7 @@ function Settings() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useFetch
 
@@ -1031,7 +1031,7 @@ function UserList() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## useDebounce
 
@@ -1065,28 +1065,28 @@ function SearchBox() {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hook Rules
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                       RULES OF HOOKS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  1. Anropa hooks pa TOP LEVEL                                   │
-│     Aldrig i loops, conditions, eller nested functions          │
-│                                                                  │
-│  2. Anropa hooks bara fran REACT FUNCTIONS                      │
-│     React function components eller custom hooks                 │
-│                                                                  │
-│  3. Custom hooks borjar alltid med "use"                        │
-│     useCounter, useFetch, useLocalStorage                       │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                       RULES OF HOOKS                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|  1. Anropa hooks pa TOP LEVEL                                   |
+|     Aldrig i loops, conditions, eller nested functions          |
+|                                                                  |
+|  2. Anropa hooks bara fran REACT FUNCTIONS                      |
+|     React function components eller custom hooks                 |
+|                                                                  |
+|  3. Custom hooks borjar alltid med "use"                        |
+|     useCounter, useFetch, useLocalStorage                       |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1098,7 +1098,7 @@ function SearchBox() {
 | **useMediaQuery** | Responsiv design baserat pa skarmstorlek |
 | **useOnClickOutside** | Detektera klick utanfor element |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1109,7 +1109,7 @@ function SearchBox() {
 | Oandlig loop | useEffect saknar deps | Lagg till dependencies |
 | Stale closure | Gammal referens | Anvand useCallback |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

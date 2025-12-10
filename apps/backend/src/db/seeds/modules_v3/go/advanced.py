@@ -17,11 +17,11 @@ TASKS_ADVANCED = [
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -92,16 +92,16 @@ func main() {
 
 ```
 devops-cli/
-├── cmd/
-│   ├── root.go
-│   ├── deploy.go
-│   ├── status.go
-│   └── config.go
-├── internal/
-│   ├── deploy/
-│   └── config/
-├── main.go
-└── go.mod
++-- cmd/
+|   +-- root.go
+|   +-- deploy.go
+|   +-- status.go
+|   +-- config.go
++-- internal/
+|   +-- deploy/
+|   +-- config/
++-- main.go
++-- go.mod
 ```
 
 ---
@@ -175,11 +175,11 @@ var statusCmd = &cobra.Command{
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -372,11 +372,11 @@ func createTodo(c *gin.Context) {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -564,11 +564,11 @@ func (r *gormUserRepo) FindByID(id uint) (*User, error) {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -768,11 +768,11 @@ go tool cover -html=coverage.out
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -935,11 +935,11 @@ for event := range watch.ResultChan() {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1112,11 +1112,11 @@ r.GET("/ready", func(c *gin.Context) {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1250,11 +1250,11 @@ func (c *Config) Validate() error {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1402,11 +1402,11 @@ func main() {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1534,11 +1534,11 @@ db.SetConnMaxLifetime(5 * time.Minute)
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1563,28 +1563,28 @@ db.SetConnMaxLifetime(5 * time.Minute)
 
 ```
 myservice/
-├── cmd/
-│   └── server/
-│       └── main.go
-├── internal/
-│   ├── api/
-│   │   ├── handlers.go
-│   │   ├── middleware.go
-│   │   └── routes.go
-│   ├── domain/
-│   │   ├── user.go
-│   │   └── errors.go
-│   ├── repository/
-│   │   └── user_repo.go
-│   └── service/
-│       └── user_service.go
-├── pkg/
-│   └── httputil/
-├── config/
-│   └── config.yaml
-├── Dockerfile
-├── Makefile
-└── go.mod
++-- cmd/
+|   +-- server/
+|       +-- main.go
++-- internal/
+|   +-- api/
+|   |   +-- handlers.go
+|   |   +-- middleware.go
+|   |   +-- routes.go
+|   +-- domain/
+|   |   +-- user.go
+|   |   +-- errors.go
+|   +-- repository/
+|   |   +-- user_repo.go
+|   +-- service/
+|       +-- user_service.go
++-- pkg/
+|   +-- httputil/
++-- config/
+|   +-- config.yaml
++-- Dockerfile
++-- Makefile
++-- go.mod
 ```
 
 ---

@@ -23,7 +23,7 @@ DOTNET_NODE_5_CLASSES = {
     ],
     "content": """# Classes och Objects
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -40,40 +40,40 @@ Du maste forsta:
 - **Properties** - kontrollerad dataatkomst
 - **Constructors** - initialisering av objekt
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Class Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                       CLASS ANATOMY                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  public class Person                                            │
-│  {                                                              │
-│      // FIELDS (private data)                                   │
-│      private string _name;                                      │
-│      private int _age;                                          │
-│                                                                  │
-│      // PROPERTIES (controlled access)                          │
-│      public string Name                                         │
-│      {                                                          │
-│          get => _name;                                          │
-│          set => _name = value ?? throw new ArgumentException(); │
-│      }                                                          │
-│                                                                  │
-│      // CONSTRUCTOR (initialization)                            │
-│      public Person(string name, int age)                        │
-│      {                                                          │
-│          _name = name;                                          │
-│          _age = age;                                            │
-│      }                                                          │
-│                                                                  │
-│      // METHODS (behavior)                                      │
-│      public void Greet() => Console.WriteLine($"Hi, I'm {Name}");│
-│  }                                                              │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                       CLASS ANATOMY                              |
++-----------------------------------------------------------------+
+|                                                                  |
+|  public class Person                                            |
+|  {                                                              |
+|      // FIELDS (private data)                                   |
+|      private string _name;                                      |
+|      private int _age;                                          |
+|                                                                  |
+|      // PROPERTIES (controlled access)                          |
+|      public string Name                                         |
+|      {                                                          |
+|          get => _name;                                          |
+|          set => _name = value ?? throw new ArgumentException(); |
+|      }                                                          |
+|                                                                  |
+|      // CONSTRUCTOR (initialization)                            |
+|      public Person(string name, int age)                        |
+|      {                                                          |
+|          _name = name;                                          |
+|          _age = age;                                            |
+|      }                                                          |
+|                                                                  |
+|      // METHODS (behavior)                                      |
+|      public void Greet() => Console.WriteLine($"Hi, I'm {Name}");|
+|  }                                                              |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -324,7 +324,7 @@ public class Order
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -335,7 +335,7 @@ public class Order
 | `protected` | Klass + subklasser |
 | `internal` | Samma assembly |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -346,7 +346,7 @@ public class Order
 | Mutable object | Public setters | Anvand init eller private set |
 | Memory leak | Event handlers | Unsubscribe eller weak reference |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -385,7 +385,7 @@ DOTNET_NODE_6_INHERITANCE = {
     ],
     "content": """# Inheritance och Polymorphism
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -402,28 +402,28 @@ Du maste forsta:
 - **virtual/override** - polymorfism
 - **abstract** - tvinga implementation
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Inheritance Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INHERITANCE HIERARCHY                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│                        Animal (base)                            │
-│                    ┌──────┴──────┐                              │
-│                    │             │                               │
-│                  Dog           Cat                               │
-│                   │                                              │
-│              GermanShepherd                                      │
-│                                                                  │
-│  ══════════════════════════════════════════════════════════     │
-│  Animal animal = new Dog();  // Polymorphism!                   │
-│  animal.MakeSound();         // Calls Dog's implementation      │
-│  ══════════════════════════════════════════════════════════     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    INHERITANCE HIERARCHY                         |
++-----------------------------------------------------------------+
+|                                                                  |
+|                        Animal (base)                            |
+|                    +------+------+                              |
+|                    |             |                               |
+|                  Dog           Cat                               |
+|                   |                                              |
+|              GermanShepherd                                      |
+|                                                                  |
+|  ══════════════════════════════════════════════════════════     |
+|  Animal animal = new Dog();  // Polymorphism!                   |
+|  animal.MakeSound();         // Calls Dog's implementation      |
+|  ══════════════════════════════════════════════════════════     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -718,7 +718,7 @@ public class Dog : Animal
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -731,7 +731,7 @@ public class Dog : Animal
 | `sealed` | Kan ej arvas |
 | `base` | Anropar basklassmetod |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -742,7 +742,7 @@ public class Dog : Animal
 | Deep hierarchy | For manga nivaer | Anvand composition |
 | Fragile base class | Andring bryter subklasser | Design for inheritance |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -781,7 +781,7 @@ DOTNET_NODE_7_INTERFACES = {
     ],
     "content": """# Interfaces och Abstraction
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -798,29 +798,29 @@ Du maste forsta:
 - **Multiple interfaces** - multipelt arv for kontrakt
 - **Dependency Injection** - loose coupling
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Interface vs Abstract Class
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│            INTERFACE vs ABSTRACT CLASS                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  INTERFACE                     │  ABSTRACT CLASS                │
-│  ─────────────────────────────┼───────────────────────────────  │
-│  Defines contract (what)      │  Defines template (how)         │
-│  No state (before C# 8)       │  Can have state (fields)        │
-│  Multiple inheritance OK      │  Single inheritance only        │
-│  All members public           │  Any access modifier            │
-│  Default implementations OK   │  Mix of abstract & concrete     │
-│                                                                  │
-│  Use when:                    │  Use when:                       │
-│  - Unrelated classes          │  - Related classes (is-a)       │
-│  - Multiple behaviors         │  - Shared implementation        │
-│  - API contracts              │  - Base behavior + extension    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|            INTERFACE vs ABSTRACT CLASS                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  INTERFACE                     |  ABSTRACT CLASS                |
+|  -----------------------------+-------------------------------  |
+|  Defines contract (what)      |  Defines template (how)         |
+|  No state (before C# 8)       |  Can have state (fields)        |
+|  Multiple inheritance OK      |  Single inheritance only        |
+|  All members public           |  Any access modifier            |
+|  Default implementations OK   |  Mix of abstract & concrete     |
+|                                                                  |
+|  Use when:                    |  Use when:                       |
+|  - Unrelated classes          |  - Related classes (is-a)       |
+|  - Multiple behaviors         |  - Shared implementation        |
+|  - API contracts              |  - Base behavior + extension    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1098,7 +1098,7 @@ public interface IUserService
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1109,7 +1109,7 @@ public interface IUserService
 | `IEnumerable<T>` | For iteration |
 | `IComparable<T>` | For sortering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1120,7 +1120,7 @@ public interface IUserService
 | No DI | Hard-coded dependencies | Injicera via constructor |
 | Concrete dependency | Beror pa klass | Beror pa interface |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1159,7 +1159,7 @@ DOTNET_NODE_8_GENERICS = {
     ],
     "content": """# Generics och Collections
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1176,34 +1176,34 @@ Du maste forsta:
 - **Constraints** - begransa tillatet typer
 - **Collections** - List, Dictionary, HashSet
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Collections Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   .NET COLLECTIONS                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  LIST<T>            Ordered, indexed, duplicates OK             │
-│  └─ List<string> names = ["Alice", "Bob", "Alice"]              │
-│                                                                  │
-│  DICTIONARY<K,V>    Key-value pairs, unique keys                │
-│  └─ Dictionary<string, int> ages = { ["Alice"] = 25 }           │
-│                                                                  │
-│  HASHSET<T>         Unique values, fast lookup                  │
-│  └─ HashSet<int> ids = { 1, 2, 3 }                              │
-│                                                                  │
-│  QUEUE<T>           FIFO (First In, First Out)                  │
-│  └─ Queue<Task> tasks = ...                                     │
-│                                                                  │
-│  STACK<T>           LIFO (Last In, First Out)                   │
-│  └─ Stack<Action> undoStack = ...                               │
-│                                                                  │
-│  LINKEDLIST<T>      Doubly linked, efficient insert/remove      │
-│  └─ LinkedList<Node> nodes = ...                                │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   .NET COLLECTIONS                               |
++-----------------------------------------------------------------+
+|                                                                  |
+|  LIST<T>            Ordered, indexed, duplicates OK             |
+|  +- List<string> names = ["Alice", "Bob", "Alice"]              |
+|                                                                  |
+|  DICTIONARY<K,V>    Key-value pairs, unique keys                |
+|  +- Dictionary<string, int> ages = { ["Alice"] = 25 }           |
+|                                                                  |
+|  HASHSET<T>         Unique values, fast lookup                  |
+|  +- HashSet<int> ids = { 1, 2, 3 }                              |
+|                                                                  |
+|  QUEUE<T>           FIFO (First In, First Out)                  |
+|  +- Queue<Task> tasks = ...                                     |
+|                                                                  |
+|  STACK<T>           LIFO (Last In, First Out)                   |
+|  +- Stack<Action> undoStack = ...                               |
+|                                                                  |
+|  LINKEDLIST<T>      Doubly linked, efficient insert/remove      |
+|  +- LinkedList<Node> nodes = ...                                |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1455,7 +1455,7 @@ for (int i = list.Count - 1; i >= 0; i--)
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1467,7 +1467,7 @@ for (int i = list.Count - 1; i >= 0; i--)
 | `Queue<T>` | FIFO |
 | `Stack<T>` | LIFO |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1478,7 +1478,7 @@ for (int i = list.Count - 1; i >= 0; i--)
 | Boxing overhead | object istallet for T | Anvand generics |
 | Wrong collection | Fel datastruktur | Valj ratt for use case |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

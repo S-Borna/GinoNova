@@ -17,14 +17,14 @@ TASKS_PART4 = [
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM WORKFLOW                                │
-├─────────────────────────────────────────────────────────────────────┤
-│   ┌────────┐     ┌────────┐     ┌────────┐     ┌────────┐          │
-│   │  Write │────▶│  Plan  │────▶│ Review │────▶│ Apply  │          │
-│   │   HCL  │     │        │     │        │     │        │          │
-│   └────────┘     └────────┘     └────────┘     └────────┘          │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM WORKFLOW                                |
++---------------------------------------------------------------------+
+|   +--------+     +--------+     +--------+     +--------+          |
+|   |  Write |----▶|  Plan  |----▶| Review |----▶| Apply  |          |
+|   |   HCL  |     |        |     |        |     |        |          |
+|   +--------+     +--------+     +--------+     +--------+          |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -253,14 +253,14 @@ run "verify_output_contract" {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM WORKFLOW                                │
-├─────────────────────────────────────────────────────────────────────┤
-│   ┌────────┐     ┌────────┐     ┌────────┐     ┌────────┐          │
-│   │  Write │────▶│  Plan  │────▶│ Review │────▶│ Apply  │          │
-│   │   HCL  │     │        │     │        │     │        │          │
-│   └────────┘     └────────┘     └────────┘     └────────┘          │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM WORKFLOW                                |
++---------------------------------------------------------------------+
+|   +--------+     +--------+     +--------+     +--------+          |
+|   |  Write |----▶|  Plan  |----▶| Review |----▶| Apply  |          |
+|   |   HCL  |     |        |     |        |     |        |          |
+|   +--------+     +--------+     +--------+     +--------+          |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -532,14 +532,14 @@ security-scan:
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM WORKFLOW                                │
-├─────────────────────────────────────────────────────────────────────┤
-│   ┌────────┐     ┌────────┐     ┌────────┐     ┌────────┐          │
-│   │  Write │────▶│  Plan  │────▶│ Review │────▶│ Apply  │          │
-│   │   HCL  │     │        │     │        │     │        │          │
-│   └────────┘     └────────┘     └────────┘     └────────┘          │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM WORKFLOW                                |
++---------------------------------------------------------------------+
+|   +--------+     +--------+     +--------+     +--------+          |
+|   |  Write |----▶|  Plan  |----▶| Review |----▶| Apply  |          |
+|   |   HCL  |     |        |     |        |     |        |          |
+|   +--------+     +--------+     +--------+     +--------+          |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -557,18 +557,18 @@ security-scan:
 
 ```
 infrastructure/
-├── networking/        # VPC, subnets, routes
-│   ├── main.tf
-│   └── backend.tf     # networking/terraform.tfstate
-├── compute/           # EC2, ASG, LB
-│   ├── main.tf
-│   └── backend.tf     # compute/terraform.tfstate
-├── database/          # RDS, ElastiCache
-│   ├── main.tf
-│   └── backend.tf     # database/terraform.tfstate
-└── applications/      # ECS, Lambda
-    ├── main.tf
-    └── backend.tf     # applications/terraform.tfstate
++-- networking/        # VPC, subnets, routes
+|   +-- main.tf
+|   +-- backend.tf     # networking/terraform.tfstate
++-- compute/           # EC2, ASG, LB
+|   +-- main.tf
+|   +-- backend.tf     # compute/terraform.tfstate
++-- database/          # RDS, ElastiCache
+|   +-- main.tf
+|   +-- backend.tf     # database/terraform.tfstate
++-- applications/      # ECS, Lambda
+    +-- main.tf
+    +-- backend.tf     # applications/terraform.tfstate
 ```
 
 ```hcl
@@ -727,14 +727,14 @@ terraform apply -refresh-only -target=aws_instance.web
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM WORKFLOW                                │
-├─────────────────────────────────────────────────────────────────────┤
-│   ┌────────┐     ┌────────┐     ┌────────┐     ┌────────┐          │
-│   │  Write │────▶│  Plan  │────▶│ Review │────▶│ Apply  │          │
-│   │   HCL  │     │        │     │        │     │        │          │
-│   └────────┘     └────────┘     └────────┘     └────────┘          │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM WORKFLOW                                |
++---------------------------------------------------------------------+
+|   +--------+     +--------+     +--------+     +--------+          |
+|   |  Write |----▶|  Plan  |----▶| Review |----▶| Apply  |          |
+|   |   HCL  |     |        |     |        |     |        |          |
+|   +--------+     +--------+     +--------+     +--------+          |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1065,14 +1065,14 @@ resource "aws_route53_record" "app_dr" {
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    TERRAFORM WORKFLOW                                │
-├─────────────────────────────────────────────────────────────────────┤
-│   ┌────────┐     ┌────────┐     ┌────────┐     ┌────────┐          │
-│   │  Write │────▶│  Plan  │────▶│ Review │────▶│ Apply  │          │
-│   │   HCL  │     │        │     │        │     │        │          │
-│   └────────┘     └────────┘     └────────┘     └────────┘          │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    TERRAFORM WORKFLOW                                |
++---------------------------------------------------------------------+
+|   +--------+     +--------+     +--------+     +--------+          |
+|   |  Write |----▶|  Plan  |----▶| Review |----▶| Apply  |          |
+|   |   HCL  |     |        |     |        |     |        |          |
+|   +--------+     +--------+     +--------+     +--------+          |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -1090,31 +1090,31 @@ resource "aws_route53_record" "app_dr" {
 
 ```
 terraform/
-├── modules/           # Shared modules
-│   ├── vpc/
-│   ├── eks/
-│   ├── rds/
-│   └── monitoring/
-├── environments/
-│   ├── _shared/       # Shared configuration
-│   │   ├── providers.tf
-│   │   └── backend.tf.tpl
-│   ├── dev/
-│   │   ├── main.tf
-│   │   ├── backend.tf
-│   │   └── terraform.tfvars
-│   ├── staging/
-│   │   ├── main.tf
-│   │   ├── backend.tf
-│   │   └── terraform.tfvars
-│   └── prod/
-│       ├── main.tf
-│       ├── backend.tf
-│       └── terraform.tfvars
-└── global/            # Account-wide resources
-    ├── iam/
-    ├── route53/
-    └── s3/
++-- modules/           # Shared modules
+|   +-- vpc/
+|   +-- eks/
+|   +-- rds/
+|   +-- monitoring/
++-- environments/
+|   +-- _shared/       # Shared configuration
+|   |   +-- providers.tf
+|   |   +-- backend.tf.tpl
+|   +-- dev/
+|   |   +-- main.tf
+|   |   +-- backend.tf
+|   |   +-- terraform.tfvars
+|   +-- staging/
+|   |   +-- main.tf
+|   |   +-- backend.tf
+|   |   +-- terraform.tfvars
+|   +-- prod/
+|       +-- main.tf
+|       +-- backend.tf
+|       +-- terraform.tfvars
++-- global/            # Account-wide resources
+    +-- iam/
+    +-- route53/
+    +-- s3/
 ```
 
 ## Terragrunt for DRY

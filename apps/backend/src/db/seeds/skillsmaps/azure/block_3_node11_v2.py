@@ -39,15 +39,15 @@ AZURE_NODE_11_COSMOS_V2 = {
                         "title": "Partition Keys",
                         "explanation": "Partition key bestämmer hur data distribueras. Bra val: userId, customerId, tenantId. Dåliga val: country, status (låg kardinalitet).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ Account → Database → Container → Items      │
-├─────────────────────────────────────────────┤
-│ Container: orders                           │
-│ Partition key: /customerId                  │
-│ ├── Partition A (cust-001)                  │
-│ ├── Partition B (cust-002)                  │
-│ └── Partition C (cust-003)                  │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| Account -> Database -> Container -> Items      |
++---------------------------------------------+
+| Container: orders                           |
+| Partition key: /customerId                  |
+| +-- Partition A (cust-001)                  |
+| +-- Partition B (cust-002)                  |
+| +-- Partition C (cust-003)                  |
++---------------------------------------------+""",
                         "pro_tip": "Partition key kan INTE ändras efteråt - välj rätt från början!",
                         "common_mistake": "Att använda datum som partition key skapar hot partitions."
                     },
@@ -55,14 +55,14 @@ AZURE_NODE_11_COSMOS_V2 = {
                         "title": "Request Units (RU)",
                         "explanation": "RU är Cosmos DB valuta. Read 1KB = ~1 RU. Write 1KB = ~5 RU. Cross-partition query = dyrt!",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ OPERATION                     COST          │
-├─────────────────────────────────────────────┤
-│ Read 1KB by ID + partition    ~1 RU         │
-│ Read 1KB by query             ~3 RU         │
-│ Write 1KB                     ~5 RU         │
-│ Cross-partition query         10-100+ RU    │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| OPERATION                     COST          |
++---------------------------------------------+
+| Read 1KB by ID + partition    ~1 RU         |
+| Read 1KB by query             ~3 RU         |
+| Write 1KB                     ~5 RU         |
+| Cross-partition query         10-100+ RU    |
++---------------------------------------------+""",
                         "pro_tip": "Autoscale (400-4000 RU) är bäst för variabel workload.",
                         "common_mistake": "Cross-partition queries utan partition key kostar extremt mycket."
                     }

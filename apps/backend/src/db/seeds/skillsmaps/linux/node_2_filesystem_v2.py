@@ -39,17 +39,17 @@ LINUX_NODE_2_FILESYSTEM_V2 = {
                         "title": "FHS - Filesystem Hierarchy Standard",
                         "explanation": "/bin (binaries), /etc (config), /home (users), /var (logs/data), /tmp (temp), /usr (user programs), /opt (third-party).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ /                                           │
-├─────────────────────────────────────────────┤
-│ /bin    │ Essential binaries (ls, cp)      │
-│ /etc    │ System configuration             │
-│ /home   │ User home directories            │
-│ /var    │ Variable data (logs, spool)      │
-│ /tmp    │ Temporary files                  │
-│ /usr    │ User programs                    │
-│ /opt    │ Third-party software             │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| /                                           |
++---------------------------------------------+
+| /bin    | Essential binaries (ls, cp)      |
+| /etc    | System configuration             |
+| /home   | User home directories            |
+| /var    | Variable data (logs, spool)      |
+| /tmp    | Temporary files                  |
+| /usr    | User programs                    |
+| /opt    | Third-party software             |
++---------------------------------------------+""",
                         "pro_tip": "/etc/passwd = users, /etc/shadow = passwords, /var/log = logs",
                         "common_mistake": "Att inte veta var loggar finns - alltid /var/log/"
                     },
@@ -57,16 +57,16 @@ LINUX_NODE_2_FILESYSTEM_V2 = {
                         "title": "Absoluta vs Relativa sökvägar",
                         "explanation": "Absolut börjar med / (från root). Relativ börjar från current directory. . = current, .. = parent, ~ = home.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ ABSOLUT                                     │
-│ /home/user/docs/file.txt                   │
-├─────────────────────────────────────────────┤
-│ RELATIV (pwd=/home/user)                   │
-│ docs/file.txt                              │
-│ ./docs/file.txt                            │
-│ ../other/file.txt                          │
-│ ~/docs/file.txt                            │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| ABSOLUT                                     |
+| /home/user/docs/file.txt                   |
++---------------------------------------------+
+| RELATIV (pwd=/home/user)                   |
+| docs/file.txt                              |
+| ./docs/file.txt                            |
+| ../other/file.txt                          |
+| ~/docs/file.txt                            |
++---------------------------------------------+""",
                         "pro_tip": "I scripts, använd alltid absoluta sökvägar för förutsägbarhet.",
                         "common_mistake": "Att glömma att ~ bara fungerar i shell, inte i alla program."
                     }

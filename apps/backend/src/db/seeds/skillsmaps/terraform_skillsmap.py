@@ -1,6 +1,6 @@
 # =============================================================================
 # TERRAFORM SKILLSMAP - 20 NODER
-# Akhilesh Pedagogical Style: Intro → Koncept → Kommandon → Tips → Task
+# Akhilesh Pedagogical Style: Intro -> Koncept -> Kommandon -> Tips -> Task
 # =============================================================================
 
 TERRAFORM_SKILLSMAP_INFO = {

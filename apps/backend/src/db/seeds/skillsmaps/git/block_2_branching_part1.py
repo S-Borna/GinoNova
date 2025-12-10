@@ -27,75 +27,75 @@ NODE_05_BRANCHING_STRATEGIES = {
 ## Branching Strategy Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     BRANCHING STRATEGY COMPARISON                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  GITFLOW                                                            │  │
-│   │  ─────────────────────────────────────────────────────────────────  │  │
-│   │  • Best for: Scheduled releases, versioned products                 │  │
-│   │  • Branches: main, develop, feature/*, release/*, hotfix/*          │  │
-│   │  • Complexity: High                                                 │  │
-│   │  • Release frequency: Weekly to monthly                             │  │
-│   │                                                                     │  │
-│   │  main      ●───────────●────────────●──────────────●               │  │
-│   │             \\         /│\\          /               /               │  │
-│   │  hotfix/*    \\       / │ \\        /               /                │  │
-│   │               \\     /  │  \\      /               /                 │  │
-│   │  release/*    ●───●    │   ●────●               /                  │  │
-│   │              /         │        \\             /                    │  │
-│   │  develop   ●───●───●───●────●────●───●───●───●                     │  │
-│   │           / \\       \\      /       \\    /                         │  │
-│   │  feature/*  ●───●    ●────●         ●──●                           │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  TRUNK-BASED DEVELOPMENT                                            │  │
-│   │  ─────────────────────────────────────────────────────────────────  │  │
-│   │  • Best for: Continuous deployment, mature CI/CD                    │  │
-│   │  • Branches: main, short-lived feature branches                     │  │
-│   │  • Complexity: Low                                                  │  │
-│   │  • Release frequency: Multiple per day                              │  │
-│   │                                                                     │  │
-│   │  main     ●───●───●───●───●───●───●───●───●───●                     │  │
-│   │          /│\\  │  / \\ /│\\  │                                        │  │
-│   │  feature  ●   ● ●   ● ● ●  ●                                        │  │
-│   │        (< 2 days old)                                               │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  GITHUB FLOW                                                        │  │
-│   │  ─────────────────────────────────────────────────────────────────  │  │
-│   │  • Best for: Web apps, continuous delivery                          │  │
-│   │  • Branches: main, feature/*                                        │  │
-│   │  • Complexity: Very low                                             │  │
-│   │  • Release frequency: On every merge                                │  │
-│   │                                                                     │  │
-│   │  main     ●───●───────●───────●───────●───────●                     │  │
-│   │          / \\       / \\     / \\     / \\                             │  │
-│   │  feature  ●───●───●   ●───●   ●───●   ●───●                         │  │
-│   │           PR review   Deploy  Deploy  Deploy                        │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│   ┌─────────────────────────────────────────────────────────────────────┐  │
-│   │  GITLAB FLOW                                                        │  │
-│   │  ─────────────────────────────────────────────────────────────────  │  │
-│   │  • Best for: Multiple environments, staged releases                 │  │
-│   │  • Branches: main, environment branches, feature/*                  │  │
-│   │  • Complexity: Medium                                               │  │
-│   │  • Release frequency: Daily to weekly                               │  │
-│   │                                                                     │  │
-│   │  production   ●─────────────●─────────────●                         │  │
-│   │              ↑              ↑              ↑                         │  │
-│   │  staging     ●───────●─────●───────●─────●                         │  │
-│   │             ↑        ↑            ↑                                 │  │
-│   │  main      ●───●───●───●───●───●───●───●                           │  │
-│   │           / \\    / \\      / \\                                       │  │
-│   │  feature   ●───●   ●───●    ●───●                                   │  │
-│   └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                     BRANCHING STRATEGY COMPARISON                           |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   +---------------------------------------------------------------------+  |
+|   |  GITFLOW                                                            |  |
+|   |  -----------------------------------------------------------------  |  |
+|   |  • Best for: Scheduled releases, versioned products                 |  |
+|   |  • Branches: main, develop, feature/*, release/*, hotfix/*          |  |
+|   |  • Complexity: High                                                 |  |
+|   |  • Release frequency: Weekly to monthly                             |  |
+|   |                                                                     |  |
+|   |  main      ●-----------●------------●--------------●               |  |
+|   |             \\         /|\\          /               /               |  |
+|   |  hotfix/*    \\       / | \\        /               /                |  |
+|   |               \\     /  |  \\      /               /                 |  |
+|   |  release/*    ●---●    |   ●----●               /                  |  |
+|   |              /         |        \\             /                    |  |
+|   |  develop   ●---●---●---●----●----●---●---●---●                     |  |
+|   |           / \\       \\      /       \\    /                         |  |
+|   |  feature/*  ●---●    ●----●         ●--●                           |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   +---------------------------------------------------------------------+  |
+|   |  TRUNK-BASED DEVELOPMENT                                            |  |
+|   |  -----------------------------------------------------------------  |  |
+|   |  • Best for: Continuous deployment, mature CI/CD                    |  |
+|   |  • Branches: main, short-lived feature branches                     |  |
+|   |  • Complexity: Low                                                  |  |
+|   |  • Release frequency: Multiple per day                              |  |
+|   |                                                                     |  |
+|   |  main     ●---●---●---●---●---●---●---●---●---●                     |  |
+|   |          /|\\  |  / \\ /|\\  |                                        |  |
+|   |  feature  ●   ● ●   ● ● ●  ●                                        |  |
+|   |        (< 2 days old)                                               |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   +---------------------------------------------------------------------+  |
+|   |  GITHUB FLOW                                                        |  |
+|   |  -----------------------------------------------------------------  |  |
+|   |  • Best for: Web apps, continuous delivery                          |  |
+|   |  • Branches: main, feature/*                                        |  |
+|   |  • Complexity: Very low                                             |  |
+|   |  • Release frequency: On every merge                                |  |
+|   |                                                                     |  |
+|   |  main     ●---●-------●-------●-------●-------●                     |  |
+|   |          / \\       / \\     / \\     / \\                             |  |
+|   |  feature  ●---●---●   ●---●   ●---●   ●---●                         |  |
+|   |           PR review   Deploy  Deploy  Deploy                        |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
+|   +---------------------------------------------------------------------+  |
+|   |  GITLAB FLOW                                                        |  |
+|   |  -----------------------------------------------------------------  |  |
+|   |  • Best for: Multiple environments, staged releases                 |  |
+|   |  • Branches: main, environment branches, feature/*                  |  |
+|   |  • Complexity: Medium                                               |  |
+|   |  • Release frequency: Daily to weekly                               |  |
+|   |                                                                     |  |
+|   |  production   ●-------------●-------------●                         |  |
+|   |              ↑              ↑              ↑                         |  |
+|   |  staging     ●-------●-----●-------●-----●                         |  |
+|   |             ↑        ↑            ↑                                 |  |
+|   |  main      ●---●---●---●---●---●---●---●                           |  |
+|   |           / \\    / \\      / \\                                       |  |
+|   |  feature   ●---●   ●---●    ●---●                                   |  |
+|   +---------------------------------------------------------------------+  |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -200,36 +200,36 @@ git flow hotfix finish 1.0.1
 ### Core Principles
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    TRUNK-BASED DEVELOPMENT RULES                            │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   1. SMALL COMMITS                                                          │
-│      • Each commit should be deployable                                     │
-│      • Max 200 lines changed                                                │
-│      • Atomic, focused changes                                              │
-│                                                                             │
-│   2. SHORT-LIVED BRANCHES                                                   │
-│      • Maximum 2 days                                                       │
-│      • Ideally < 1 day                                                      │
-│      • Merge frequently                                                     │
-│                                                                             │
-│   3. FEATURE FLAGS                                                          │
-│      • Deploy incomplete features                                           │
-│      • Toggle visibility                                                    │
-│      • Gradual rollout                                                      │
-│                                                                             │
-│   4. CONTINUOUS INTEGRATION                                                 │
-│      • Run tests on every commit                                            │
-│      • Block broken builds                                                  │
-│      • Fast feedback (< 10 min)                                             │
-│                                                                             │
-│   5. MAIN IS ALWAYS DEPLOYABLE                                              │
-│      • Protected branch                                                     │
-│      • Required CI checks                                                   │
-│      • No direct commits                                                    │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                    TRUNK-BASED DEVELOPMENT RULES                            |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   1. SMALL COMMITS                                                          |
+|      • Each commit should be deployable                                     |
+|      • Max 200 lines changed                                                |
+|      • Atomic, focused changes                                              |
+|                                                                             |
+|   2. SHORT-LIVED BRANCHES                                                   |
+|      • Maximum 2 days                                                       |
+|      • Ideally < 1 day                                                      |
+|      • Merge frequently                                                     |
+|                                                                             |
+|   3. FEATURE FLAGS                                                          |
+|      • Deploy incomplete features                                           |
+|      • Toggle visibility                                                    |
+|      • Gradual rollout                                                      |
+|                                                                             |
+|   4. CONTINUOUS INTEGRATION                                                 |
+|      • Run tests on every commit                                            |
+|      • Block broken builds                                                  |
+|      • Fast feedback (< 10 min)                                             |
+|                                                                             |
+|   5. MAIN IS ALWAYS DEPLOYABLE                                              |
+|      • Protected branch                                                     |
+|      • Required CI checks                                                   |
+|      • No direct commits                                                    |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Trunk-Based Workflow
@@ -375,33 +375,33 @@ protection_rules:
 ### Semantic Versioning
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      SEMANTIC VERSIONING (SemVer)                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   VERSION FORMAT: MAJOR.MINOR.PATCH                                         │
-│                                                                             │
-│   2.1.3                                                                     │
-│   │ │ └── PATCH: Bug fixes, security patches                               │
-│   │ │            Backward compatible                                        │
-│   │ │                                                                       │
-│   │ └──── MINOR: New features                                               │
-│   │              Backward compatible                                        │
-│   │                                                                         │
-│   └────── MAJOR: Breaking changes                                           │
-│                  May require migration                                      │
-│                                                                             │
-│   EXAMPLES:                                                                 │
-│   1.0.0 → 1.0.1  Bug fix                                                    │
-│   1.0.1 → 1.1.0  New feature added                                          │
-│   1.1.0 → 2.0.0  Breaking API change                                        │
-│                                                                             │
-│   PRE-RELEASE VERSIONS:                                                     │
-│   1.0.0-alpha.1   → Early testing                                           │
-│   1.0.0-beta.1    → Feature complete                                        │
-│   1.0.0-rc.1      → Release candidate                                       │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                      SEMANTIC VERSIONING (SemVer)                           |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   VERSION FORMAT: MAJOR.MINOR.PATCH                                         |
+|                                                                             |
+|   2.1.3                                                                     |
+|   | | +-- PATCH: Bug fixes, security patches                               |
+|   | |            Backward compatible                                        |
+|   | |                                                                       |
+|   | +---- MINOR: New features                                               |
+|   |              Backward compatible                                        |
+|   |                                                                         |
+|   +------ MAJOR: Breaking changes                                           |
+|                  May require migration                                      |
+|                                                                             |
+|   EXAMPLES:                                                                 |
+|   1.0.0 -> 1.0.1  Bug fix                                                    |
+|   1.0.1 -> 1.1.0  New feature added                                          |
+|   1.1.0 -> 2.0.0  Breaking API change                                        |
+|                                                                             |
+|   PRE-RELEASE VERSIONS:                                                     |
+|   1.0.0-alpha.1   -> Early testing                                           |
+|   1.0.0-beta.1    -> Feature complete                                        |
+|   1.0.0-rc.1      -> Release candidate                                       |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Automated Versioning
@@ -415,9 +415,9 @@ standard-version
 # Reads commit messages, bumps version, generates CHANGELOG
 
 # Commit message format (Conventional Commits)
-# feat: new feature → MINOR
-# fix: bug fix → PATCH
-# BREAKING CHANGE: → MAJOR
+# feat: new feature -> MINOR
+# fix: bug fix -> PATCH
+# BREAKING CHANGE: -> MAJOR
 
 # Example commits:
 git commit -m "feat: add user search API"
@@ -445,39 +445,39 @@ standard-version --release-as minor
 ## Strategy Selection Guide
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    CHOOSE YOUR BRANCHING STRATEGY                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ASK YOURSELF:                                                             │
-│                                                                             │
-│   1. How often do you deploy?                                               │
-│      □ Multiple times per day → Trunk-Based                                 │
-│      □ Weekly/Monthly → GitFlow                                             │
-│      □ On every merge → GitHub Flow                                         │
-│                                                                             │
-│   2. Do you support multiple versions?                                      │
-│      □ Yes (v1.x, v2.x in parallel) → GitFlow                               │
-│      □ No (always latest) → GitHub/Trunk                                    │
-│                                                                             │
-│   3. Team maturity with CI/CD?                                              │
-│      □ High (comprehensive tests) → Trunk-Based                             │
-│      □ Medium → GitHub Flow                                                 │
-│      □ Low → GitFlow (more gates)                                           │
-│                                                                             │
-│   4. Release approval process?                                              │
-│      □ None (auto-deploy) → Trunk-Based                                     │
-│      □ Light (PR approval) → GitHub Flow                                    │
-│      □ Heavy (release committee) → GitFlow                                  │
-│                                                                             │
-│   RECOMMENDATIONS BY PRODUCT TYPE:                                          │
-│   ├── Web SaaS → GitHub Flow or Trunk-Based                                 │
-│   ├── Mobile App (App Store) → GitFlow                                      │
-│   ├── Open Source Library → GitFlow                                         │
-│   ├── Internal Tools → GitHub Flow                                          │
-│   └── Microservices → Trunk-Based per service                               │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                    CHOOSE YOUR BRANCHING STRATEGY                           |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   ASK YOURSELF:                                                             |
+|                                                                             |
+|   1. How often do you deploy?                                               |
+|      □ Multiple times per day -> Trunk-Based                                 |
+|      □ Weekly/Monthly -> GitFlow                                             |
+|      □ On every merge -> GitHub Flow                                         |
+|                                                                             |
+|   2. Do you support multiple versions?                                      |
+|      □ Yes (v1.x, v2.x in parallel) -> GitFlow                               |
+|      □ No (always latest) -> GitHub/Trunk                                    |
+|                                                                             |
+|   3. Team maturity with CI/CD?                                              |
+|      □ High (comprehensive tests) -> Trunk-Based                             |
+|      □ Medium -> GitHub Flow                                                 |
+|      □ Low -> GitFlow (more gates)                                           |
+|                                                                             |
+|   4. Release approval process?                                              |
+|      □ None (auto-deploy) -> Trunk-Based                                     |
+|      □ Light (PR approval) -> GitHub Flow                                    |
+|      □ Heavy (release committee) -> GitFlow                                  |
+|                                                                             |
+|   RECOMMENDATIONS BY PRODUCT TYPE:                                          |
+|   +-- Web SaaS -> GitHub Flow or Trunk-Based                                 |
+|   +-- Mobile App (App Store) -> GitFlow                                      |
+|   +-- Open Source Library -> GitFlow                                         |
+|   +-- Internal Tools -> GitHub Flow                                          |
+|   +-- Microservices -> Trunk-Based per service                               |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -524,36 +524,36 @@ NODE_06_MERGE_REBASE = {
 ## Merge vs Rebase Fundamentals
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        MERGE vs REBASE                                      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   INITIAL STATE:                                                            │
-│                                                                             │
-│   main:    A───B───C                                                        │
-│                 \\                                                            │
-│   feature:      D───E                                                       │
-│                                                                             │
-│   ─────────────────────────────────────────────────────────────────────    │
-│                                                                             │
-│   AFTER MERGE:                              AFTER REBASE:                   │
-│                                                                             │
-│   main:    A───B───C───M                    main:    A───B───C              │
-│                 \\     /                                      \\              │
-│   feature:      D───E                       feature:          D'──E'        │
-│                                                                             │
-│   • Creates merge commit (M)                • Rewrites history              │
-│   • Preserves branch history                • Creates new commits (D', E')  │
-│   • Non-destructive                         • Linear history                │
-│   • Shows when work diverged                • Cleaner, but alters history   │
-│                                                                             │
-│   USE MERGE WHEN:                           USE REBASE WHEN:                │
-│   ├── Public/shared branches                ├── Local/private branches      │
-│   ├── Want to preserve history              ├── Want clean linear history   │
-│   ├── Working with others' code             ├── Before pushing feature      │
-│   └── Release branches                      └── Updating feature from main  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                        MERGE vs REBASE                                      |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   INITIAL STATE:                                                            |
+|                                                                             |
+|   main:    A---B---C                                                        |
+|                 \\                                                            |
+|   feature:      D---E                                                       |
+|                                                                             |
+|   ---------------------------------------------------------------------    |
+|                                                                             |
+|   AFTER MERGE:                              AFTER REBASE:                   |
+|                                                                             |
+|   main:    A---B---C---M                    main:    A---B---C              |
+|                 \\     /                                      \\              |
+|   feature:      D---E                       feature:          D'--E'        |
+|                                                                             |
+|   • Creates merge commit (M)                • Rewrites history              |
+|   • Preserves branch history                • Creates new commits (D', E')  |
+|   • Non-destructive                         • Linear history                |
+|   • Shows when work diverged                • Cleaner, but alters history   |
+|                                                                             |
+|   USE MERGE WHEN:                           USE REBASE WHEN:                |
+|   +-- Public/shared branches                +-- Local/private branches      |
+|   +-- Want to preserve history              +-- Want clean linear history   |
+|   +-- Working with others' code             +-- Before pushing feature      |
+|   +-- Release branches                      +-- Updating feature from main  |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -564,36 +564,36 @@ NODE_06_MERGE_REBASE = {
 
 ```bash
 # Scenario: main hasn't changed since feature branched
-# main:    A───B
+# main:    A---B
 #               \\
-# feature:      C───D
+# feature:      C---D
 
 git checkout main
 git merge feature
-# Result: A───B───C───D (no merge commit)
+# Result: A---B---C---D (no merge commit)
 
 # Force merge commit anyway
 git merge --no-ff feature
-# Result: A───B───────M
+# Result: A---B-------M
 #               \\     /
-#                C───D
+#                C---D
 ```
 
 ### Three-Way Merge
 
 ```bash
 # Scenario: main has diverged
-# main:    A───B───E
+# main:    A---B---E
 #               \\
-# feature:      C───D
+# feature:      C---D
 
 git checkout main
 git merge feature
 
 # Automatic 3-way merge
-# Result: A───B───E───M
+# Result: A---B---E---M
 #               \\     /
-#                C───D
+#                C---D
 
 # M contains changes from both branches
 ```
@@ -652,14 +652,14 @@ git rebase main
 # 3. Replays feature commits on top
 
 # Before:
-# main:    A───B───C
+# main:    A---B---C
 #               \\
-# feature:      D───E
+# feature:      D---E
 
 # After:
-# main:    A───B───C
+# main:    A---B---C
 #                   \\
-# feature:          D'──E'
+# feature:          D'--E'
 ```
 
 ### Interactive Rebase (The Power Tool)
@@ -723,35 +723,35 @@ git rebase --continue
 ## Conflict Resolution
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     CONFLICT RESOLUTION WORKFLOW                            │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   1. IDENTIFY CONFLICTS                                                     │
-│      git status                                                             │
-│      # both modified: src/app.py                                            │
-│                                                                             │
-│   2. UNDERSTAND THE CONFLICT                                                │
-│      <<<<<<< HEAD                                                           │
-│      current_value = "from main"                                            │
-│      =======                                                                │
-│      current_value = "from feature"                                         │
-│      >>>>>>> feature                                                        │
-│                                                                             │
-│   3. RESOLVE OPTIONS                                                        │
-│      a) Manual edit (most common)                                           │
-│      b) Accept ours:   git checkout --ours file.py                          │
-│      c) Accept theirs: git checkout --theirs file.py                        │
-│      d) Use merge tool: git mergetool                                       │
-│                                                                             │
-│   4. MARK RESOLVED                                                          │
-│      git add src/app.py                                                     │
-│                                                                             │
-│   5. CONTINUE                                                               │
-│      git merge --continue   # or                                            │
-│      git rebase --continue                                                  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                     CONFLICT RESOLUTION WORKFLOW                            |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   1. IDENTIFY CONFLICTS                                                     |
+|      git status                                                             |
+|      # both modified: src/app.py                                            |
+|                                                                             |
+|   2. UNDERSTAND THE CONFLICT                                                |
+|      <<<<<<< HEAD                                                           |
+|      current_value = "from main"                                            |
+|      =======                                                                |
+|      current_value = "from feature"                                         |
+|      >>>>>>> feature                                                        |
+|                                                                             |
+|   3. RESOLVE OPTIONS                                                        |
+|      a) Manual edit (most common)                                           |
+|      b) Accept ours:   git checkout --ours file.py                          |
+|      c) Accept theirs: git checkout --theirs file.py                        |
+|      d) Use merge tool: git mergetool                                       |
+|                                                                             |
+|   4. MARK RESOLVED                                                          |
+|      git add src/app.py                                                     |
+|                                                                             |
+|   5. CONTINUE                                                               |
+|      git merge --continue   # or                                            |
+|      git rebase --continue                                                  |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ### Conflict Resolution Tools
@@ -826,19 +826,19 @@ git config --global rebase.autoSquash true
 ```bash
 # Scenario: Move feature to different base
 # Before:
-# main:      A───B───C───D
+# main:      A---B---C---D
 #                 \\
-# old-base:       X───Y
+# old-base:       X---Y
 #                      \\
-# feature:              E───F
+# feature:              E---F
 
 # Move feature from old-base to main
 git rebase --onto main old-base feature
 
 # After:
-# main:      A───B───C───D
+# main:      A---B---C---D
 #                         \\
-# feature:                 E'──F'
+# feature:                 E'--F'
 ```
 
 ### Preserving Merge Commits
@@ -882,31 +882,31 @@ git cherry-pick --abort
 ## The Golden Rules
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        GOLDEN RULES OF REBASE                               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ⚠️  NEVER REBASE PUBLIC/SHARED BRANCHES                                   │
-│                                                                             │
-│   ✅ SAFE:                                                                   │
-│   git checkout my-feature                                                   │
-│   git rebase main                      # Rebase MY branch onto main         │
-│   git push --force-with-lease          # Force push MY branch               │
-│                                                                             │
-│   ❌ DANGEROUS:                                                              │
-│   git checkout main                                                         │
-│   git rebase feature                   # DON'T rebase shared branches!      │
-│   git push --force                     # This breaks everyone's repo        │
-│                                                                             │
-│   RECOVERY FROM BAD REBASE:                                                 │
-│   git reflog                           # Find pre-rebase state              │
-│   git reset --hard HEAD@{n}            # Reset to that state                │
-│                                                                             │
-│   SAFE FORCE PUSH:                                                          │
-│   git push --force-with-lease          # Fails if remote changed            │
-│   git push --force-with-lease=origin/my-feature                             │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+|                        GOLDEN RULES OF REBASE                               |
++-----------------------------------------------------------------------------+
+|                                                                             |
+|   ⚠️  NEVER REBASE PUBLIC/SHARED BRANCHES                                   |
+|                                                                             |
+|   ✅ SAFE:                                                                   |
+|   git checkout my-feature                                                   |
+|   git rebase main                      # Rebase MY branch onto main         |
+|   git push --force-with-lease          # Force push MY branch               |
+|                                                                             |
+|   ❌ DANGEROUS:                                                              |
+|   git checkout main                                                         |
+|   git rebase feature                   # DON'T rebase shared branches!      |
+|   git push --force                     # This breaks everyone's repo        |
+|                                                                             |
+|   RECOVERY FROM BAD REBASE:                                                 |
+|   git reflog                           # Find pre-rebase state              |
+|   git reset --hard HEAD@{n}            # Reset to that state                |
+|                                                                             |
+|   SAFE FORCE PUSH:                                                          |
+|   git push --force-with-lease          # Fails if remote changed            |
+|   git push --force-with-lease=origin/my-feature                             |
+|                                                                             |
++-----------------------------------------------------------------------------+
 ```
 
 ---
@@ -933,7 +933,7 @@ git rebase origin/main
 # 5. Push (force if rebased)
 git push --force-with-lease
 
-# 6. PR review → Merge to main
+# 6. PR review -> Merge to main
 # Use squash merge or merge commit (team decision)
 ```
 

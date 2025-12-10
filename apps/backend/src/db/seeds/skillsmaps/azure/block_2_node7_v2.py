@@ -71,30 +71,30 @@ AZURE_NODE_7_V2 = {
 | Premium | Nej | Obegränsad | Per sekund |
 | Dedicated | Nej | Obegränsad | Som App Service |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│            SERVERLESS VS TRADITIONAL            │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   TRADITIONAL (VM/App Service)                  │
-│   ┌─────────────────────────────────────────┐   │
-│   │  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  │   │
-│   │  ↑ Betalar hela tiden                   │   │
-│   │  |____________________________________  │   │
-│   │  0:00        12:00         24:00       │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   SERVERLESS (Azure Functions)                  │
-│   ┌─────────────────────────────────────────┐   │
-│   │           $    $$   $      $$    $      │   │
-│   │  ↑        │    ││   │      ││    │      │   │
-│   │  |________│____││___│______││____│____  │   │
-│   │  0:00        12:00         24:00       │   │
-│   │           ↑ Betalar bara vid exekvering │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   💰 Kan spara 90%+ för sporadisk trafik       │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|            SERVERLESS VS TRADITIONAL            |
++-------------------------------------------------+
+|                                                 |
+|   TRADITIONAL (VM/App Service)                  |
+|   +-----------------------------------------+   |
+|   |  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  |   |
+|   |  ↑ Betalar hela tiden                   |   |
+|   |  |____________________________________  |   |
+|   |  0:00        12:00         24:00       |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   SERVERLESS (Azure Functions)                  |
+|   +-----------------------------------------+   |
+|   |           $    $$   $      $$    $      |   |
+|   |  ↑        |    ||   |      ||    |      |   |
+|   |  |________|____||___|______||____|____  |   |
+|   |  0:00        12:00         24:00       |   |
+|   |           ↑ Betalar bara vid exekvering |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   💰 Kan spara 90%+ för sporadisk trafik       |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Consumption Plan är nästan gratis för låg trafik. 1M exekveringar/månad = ~$0.20.",
             "common_mistake": "Att använda Functions för konstant hög trafik. Då blir App Service billigare."
@@ -110,8 +110,8 @@ AZURE_NODE_7_V2 = {
 | HTTP | REST API | POST /api/users |
 | Timer | Cron-jobb | Varje natt kl 02:00 |
 | Queue | Meddelandekö | Service Bus, Storage Queue |
-| Blob | Fil-upload | Ny bild → thumbnail |
-| Cosmos DB | Databas-ändringar | Ny order → email |
+| Blob | Fil-upload | Ny bild -> thumbnail |
+| Cosmos DB | Databas-ändringar | Ny order -> email |
 | Event Grid | Events | Azure-events |
 
 **Bindings (input/output utan kod):**
@@ -150,36 +150,36 @@ module.exports = async function (context, myBlob) {
 }
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           TRIGGERS & BINDINGS                    │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   TRIGGER (Input - startar funktionen)          │
-│   ┌─────────────┐                              │
-│   │ HTTP POST   │──┐                           │
-│   │ Timer       │  │                           │
-│   │ Queue msg   │  │   ┌─────────────────┐     │
-│   │ Blob upload │──┼──▶│  YOUR FUNCTION  │     │
-│   │ Cosmos DB   │  │   │                 │     │
-│   │ Event Grid  │──┘   └────────┬────────┘     │
-│   └─────────────┘               │              │
-│                                 │              │
-│   INPUT BINDINGS               │              │
-│   ┌─────────────┐              │              │
-│   │ Read Blob   │──────────────┤              │
-│   │ Read Table  │              │              │
-│   │ Read Cosmos │              │              │
-│   └─────────────┘              │              │
-│                                 │              │
-│   OUTPUT BINDINGS              ▼              │
-│                      ┌─────────────────┐       │
-│                      │ Write Blob      │       │
-│                      │ Send Email      │       │
-│                      │ Queue Message   │       │
-│                      │ HTTP Response   │       │
-│                      └─────────────────┘       │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           TRIGGERS & BINDINGS                    |
++-------------------------------------------------+
+|                                                 |
+|   TRIGGER (Input - startar funktionen)          |
+|   +-------------+                              |
+|   | HTTP POST   |--+                           |
+|   | Timer       |  |                           |
+|   | Queue msg   |  |   +-----------------+     |
+|   | Blob upload |--+--▶|  YOUR FUNCTION  |     |
+|   | Cosmos DB   |  |   |                 |     |
+|   | Event Grid  |--+   +--------+--------+     |
+|   +-------------+               |              |
+|                                 |              |
+|   INPUT BINDINGS               |              |
+|   +-------------+              |              |
+|   | Read Blob   |--------------+              |
+|   | Read Table  |              |              |
+|   | Read Cosmos |              |              |
+|   +-------------+              |              |
+|                                 |              |
+|   OUTPUT BINDINGS              ▼              |
+|                      +-----------------+       |
+|                      | Write Blob      |       |
+|                      | Send Email      |       |
+|                      | Queue Message   |       |
+|                      | HTTP Response   |       |
+|                      +-----------------+       |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Bindings sparar MYCKET kod. Istället för att connecta till Blob Storage manuellt, lägg till binding i function.json.",
             "common_mistake": "Att inte använda bindings och skriva egen connection-kod. Bindings hanterar retry, connection pooling etc."
@@ -234,35 +234,35 @@ npm prune --production
 - Kör alltid
 - Ingen cold start""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              COLD START TIMELINE                │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   Request arrives at cold function:             │
-│   ─────────────────────────────────────────────│
-│   │                                            │
-│   ├─ 0ms    Request received                   │
-│   │         (Function App sleeping 💤)         │
-│   │                                            │
-│   ├─ 500ms  Allocate resources                 │
-│   │                                            │
-│   ├─ 1500ms Start runtime (Node.js)            │
-│   │                                            │
-│   ├─ 2500ms Load your code                     │
-│   │                                            │
-│   ├─ 3000ms Execute function                   │
-│   │                                            │
-│   └─ 3100ms Return response                    │
-│                                                 │
-│   TOTAL: ~3 seconds (cold start)               │
-│   vs ~100ms (warm)                             │
-│                                                 │
-│   SOLUTIONS:                                    │
-│   • Premium Plan: Pre-warmed instances         │
-│   • Timer trigger: Keep-alive every 5 min      │
-│   • Smaller dependencies                       │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              COLD START TIMELINE                |
++-------------------------------------------------+
+|                                                 |
+|   Request arrives at cold function:             |
+|   ---------------------------------------------|
+|   |                                            |
+|   +- 0ms    Request received                   |
+|   |         (Function App sleeping 💤)         |
+|   |                                            |
+|   +- 500ms  Allocate resources                 |
+|   |                                            |
+|   +- 1500ms Start runtime (Node.js)            |
+|   |                                            |
+|   +- 2500ms Load your code                     |
+|   |                                            |
+|   +- 3000ms Execute function                   |
+|   |                                            |
+|   +- 3100ms Return response                    |
+|                                                 |
+|   TOTAL: ~3 seconds (cold start)               |
+|   vs ~100ms (warm)                             |
+|                                                 |
+|   SOLUTIONS:                                    |
+|   • Premium Plan: Pre-warmed instances         |
+|   • Timer trigger: Keep-alive every 5 min      |
+|   • Smaller dependencies                       |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "För API:er med SLA-krav, använd Premium Plan. Cold start på 5-10 sek är inte acceptabelt för användare.",
             "common_mistake": "Att välja Consumption Plan för produktions-API:er och sedan bli överraskad av cold start."
@@ -281,31 +281,31 @@ npm prune --production
 
 **1. Function Chaining:**
 ```
-F1 → F2 → F3 → F4
+F1 -> F2 -> F3 -> F4
 ```
 Kör funktioner i sekvens, behåll state.
 
 **2. Fan-out/Fan-in:**
 ```
-     ┌─ F1 ─┐
-Start┼─ F2 ─┼─ Aggregate
-     └─ F3 ─┘
+     +- F1 -+
+Start+- F2 -+- Aggregate
+     +- F3 -+
 ```
 Parallell exekvering, samla resultat.
 
 **3. Async HTTP API:**
 ```
-POST → Start → 202 Accepted
+POST -> Start -> 202 Accepted
        ↓
        Processing...
        ↓
-GET /status → 200 Done
+GET /status -> 200 Done
 ```
 Long-running job med polling.
 
 **4. Monitor:**
 ```
-Loop: Check condition → Wait → Check → ...
+Loop: Check condition -> Wait -> Check -> ...
 ```
 Polling med intelligent backoff.
 
@@ -331,33 +331,33 @@ module.exports = df.orchestrator(function* (context) {
 });
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│          DURABLE FUNCTIONS PATTERNS             │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   FUNCTION CHAINING                             │
-│   ┌────┐   ┌────┐   ┌────┐   ┌────┐            │
-│   │ F1 │──▶│ F2 │──▶│ F3 │──▶│ F4 │            │
-│   └────┘   └────┘   └────┘   └────┘            │
-│                                                 │
-│   FAN-OUT / FAN-IN                              │
-│              ┌────┐                             │
-│   ┌────┐  ┌─▶│ F2 │─┐  ┌────┐                  │
-│   │ F1 │──┼─▶│ F3 │─┼─▶│ F5 │                  │
-│   └────┘  └─▶│ F4 │─┘  └────┘                  │
-│              └────┘                             │
-│                                                 │
-│   ASYNC HTTP API                                │
-│   ┌──────┐   ┌──────────┐   ┌──────┐           │
-│   │Client│──▶│ Start job│──▶│ 202  │           │
-│   │      │   └──────────┘   │Accept│           │
-│   │      │                  └──────┘           │
-│   │      │   ┌──────────┐   ┌──────┐           │
-│   │      │──▶│GET status│──▶│ 200  │           │
-│   │      │   └──────────┘   │ Done │           │
-│   └──────┘                  └──────┘           │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|          DURABLE FUNCTIONS PATTERNS             |
++-------------------------------------------------+
+|                                                 |
+|   FUNCTION CHAINING                             |
+|   +----+   +----+   +----+   +----+            |
+|   | F1 |--▶| F2 |--▶| F3 |--▶| F4 |            |
+|   +----+   +----+   +----+   +----+            |
+|                                                 |
+|   FAN-OUT / FAN-IN                              |
+|              +----+                             |
+|   +----+  +-▶| F2 |-+  +----+                  |
+|   | F1 |--+-▶| F3 |-+-▶| F5 |                  |
+|   +----+  +-▶| F4 |-+  +----+                  |
+|              +----+                             |
+|                                                 |
+|   ASYNC HTTP API                                |
+|   +------+   +----------+   +------+           |
+|   |Client|--▶| Start job|--▶| 202  |           |
+|   |      |   +----------+   |Accept|           |
+|   |      |                  +------+           |
+|   |      |   +----------+   +------+           |
+|   |      |--▶|GET status|--▶| 200  |           |
+|   |      |   +----------+   | Done |           |
+|   +------+                  +------+           |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Durable Functions sparar state automatiskt i Azure Storage. Perfekt för långkörande workflows som kan ta timmar/dagar.",
             "common_mistake": "Att försöka implementera orkestreringslogik i vanliga Functions. Durable Functions hanterar retry, checkpoints etc."

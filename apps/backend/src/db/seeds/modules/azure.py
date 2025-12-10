@@ -23,7 +23,7 @@ MODULE = {
             "xp_reward": 75,
             "content": """# Azure Fundamentals & Architecture
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -40,16 +40,16 @@ Du behöver förstå:
 - **Regionala resurser och zoner** för tillgänglighet och latency
 - **Prenumerationer och management groups** för isolation och billing
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
-┌─────────────────────────────────────────────────────────────┐
-│                    Azure Resource Model                     │
-├─────────────────────────────────────────────────────────────┤
-│ Management Group → Subscription → Resource Group → Resource │
-│               Region/Zoner sätter HA och latency            │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    Azure Resource Model                     |
++-------------------------------------------------------------+
+| Management Group -> Subscription -> Resource Group -> Resource |
+|               Region/Zoner sätter HA och latency            |
++-------------------------------------------------------------+
 
 | Princip | Förklaring |
 |---------|------------|
@@ -59,7 +59,7 @@ Du behöver förstå:
 | **Tags** | Nyckel/värde för kost, ägare, miljö |
 | **RBAC** | Rollbaserad åtkomst via Entra ID |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -71,7 +71,7 @@ Du behöver förstå:
 | `az resource list --tag env=dev` | Lista resurser efter tag |
 | `az deployment group create ...` | Deploya ARM/Bicep till RG |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -90,7 +90,7 @@ az group create \
 az resource list --resource-group rg-app-dev --output table
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -101,7 +101,7 @@ az resource list --resource-group rg-app-dev --output table
 | **Taggar** | Gör kost, ägare och miljö spårbara |
 | **Region/Zon** | Plats och tillgänglighetsnivå |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -111,7 +111,7 @@ az resource list --resource-group rg-app-dev --output table
 | `RequestDisallowedByPolicy` | Policy blockerar resurs | Läs `policyDefinitionDisplayName`, justera resurs eller ansök om undantag |
 | `LocationNotAvailableForResourceType` | Tjänst ej i regionen | Välj annan region eller SKU |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -131,7 +131,7 @@ az resource list --resource-group rg-app-dev --output table
             "xp_reward": 70,
             "content": """# Resource Groups & RBAC
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -141,22 +141,22 @@ az resource list --resource-group rg-app-dev --output table
 | **Åtkomstkontroll** | RBAC per RG för team och tjänster |
 | **IaC** | All provisioning adresserar RG |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
-┌─────────────────────────────────────────────────────────────┐
-│ Resource Group → Innehåller resurser, tags, åtkomst         │
-│ RBAC → Roll + principal + scope                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+| Resource Group -> Innehåller resurser, tags, åtkomst         |
+| RBAC -> Roll + principal + scope                             |
++-------------------------------------------------------------+
 
 | Princip | Förklaring |
 |---------|------------|
-| **Scope** | MG → Sub → RG → Resurs |
+| **Scope** | MG -> Sub -> RG -> Resurs |
 | **Built-in roles** | Reader, Contributor, Owner |
 | **Custom roles** | Egen JSON-definition |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -166,7 +166,7 @@ az resource list --resource-group rg-app-dev --output table
 | `az role assignment create --assignee ... --role Reader --scope ...` | Tilldela roll |
 | `az role definition list` | Visa inbyggda roller |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -178,7 +178,7 @@ az role assignment create \
   --scope /subscriptions/$SUB/resourceGroups/rg-api-dev
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -188,7 +188,7 @@ az role assignment create \
 | **Role Definition** | Behörigheter |
 | **Role Assignment** | Knyt identitet till roll |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -197,7 +197,7 @@ az role assignment create \
 | `AuthorizationFailed` | Fel scope | Sätt korrekt subscription/RG |
 | `Insufficient privileges` | Identitet saknar rätt roll | Tilldela minst Contributor där det behövs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -216,7 +216,7 @@ az role assignment create \
             "xp_reward": 70,
             "content": """# Governance: Policy & Management Groups
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -226,7 +226,7 @@ az role assignment create \
 | **Compliance** | ISO/SOC kräver kontroller och evidens |
 | **Skalbar styrning** | Management groups sätter standard över subscriptions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -236,7 +236,7 @@ az role assignment create \
 | **Policy** | Deklarativt regelverk (deny, audit, append, deployIfNotExists) |
 | **Initiative** | Samling av policies |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -246,7 +246,7 @@ az role assignment create \
 | `az policy assignment create ...` | Tilldela policy |
 | `az account management-group create ...` | Skapa MG |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -259,7 +259,7 @@ az policy assignment create \
   --params '{"tagName":{"value":"env"}}'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -269,7 +269,7 @@ az policy assignment create \
 | **Initiative** | Policy-samling för ett mål |
 | **Management Group** | Organiserar subscriptions |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -278,14 +278,14 @@ az policy assignment create \
 | `RequestDisallowedByPolicy` | Policy blockerar resurs | Läs `policyDefinitionDisplayName` och justera resurs eller undantag |
 | `AssignmentDenied` | Fel scope eller roll | Se till att du har `Owner`/`Contributor` på scope |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
 | Punkt | Förklaring |
 |-------|------------|
 | **Policy före drift** | Sätt guardrails innan du provisionerar |
-| **Hierarki** | MG → Subscription → RG ger kontroll per nivå |
+| **Hierarki** | MG -> Subscription -> RG ger kontroll per nivå |
 | **Tag enforcement** | Gör kost och ägande spårbart |
 """,
         },
@@ -297,7 +297,7 @@ az policy assignment create \
             "xp_reward": 75,
             "content": """# Identitet: Entra ID och Service Principals
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -307,7 +307,7 @@ az policy assignment create \
 | **Zero trust** | MFA/Conditional Access styr åtkomst |
 | **RBAC** | All access kopplas mot Entra-principals |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -318,7 +318,7 @@ az policy assignment create \
 | **Managed Identity** | Id för Azure-resurser |
 | **App Registration** | Definierar SPN och API-behörigheter |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -328,7 +328,7 @@ az policy assignment create \
 | `az identity create ...` | Skapa managed identity |
 | `az role assignment create ...` | Tilldela roll till SPN/MI |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -347,7 +347,7 @@ az identity create \
   --location westeurope
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -357,7 +357,7 @@ az identity create \
 | **Managed Identity** | Automatiskt roterade hemligheter |
 | **Conditional Access** | Policys för inloggning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -366,7 +366,7 @@ az identity create \
 | `AADSTS700016` | App ej registrerad | Skapa app registration eller kontrollera namn |
 | `Insufficient privileges to complete the operation` | Saknar Directory.ReadWrite | Be admin om rätt behörighet |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -385,7 +385,7 @@ az identity create \
             "xp_reward": 75,
             "content": """# Nätverk: VNet, Subnets, Peering, Private Endpoints
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -395,7 +395,7 @@ az identity create \
 | **Hybrid** | VPN/ExpressRoute kräver rätt adressplan |
 | **Kubernetes** | AKS och ACR behöver nätverksdesign |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -407,7 +407,7 @@ az identity create \
 | **Peering** | Länka två VNets med privat routing |
 | **Private Endpoint** | Privat åtkomst till PaaS-tjänst |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -417,7 +417,7 @@ az identity create \
 | `az network vnet peering create ...` | Skapa peering |
 | `az network private-endpoint create ...` | Skapa private endpoint |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -439,7 +439,7 @@ az network vnet peering create \
   --allow-vnet-access
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -449,7 +449,7 @@ az network vnet peering create \
 | **UDR** | Custom routes |
 | **Private DNS** | Namn för privata endpoints |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -458,7 +458,7 @@ az network vnet peering create \
 | `AddressPrefixConflict` | Överlappande CIDR | Planera IP-plan och undvik overlap |
 | `PeeringFailed` | Ej tillåten kombination | Kontrollera allow-forwarded/allow-gateway |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -477,7 +477,7 @@ az network vnet peering create \
             "xp_reward": 70,
             "content": """# Hybridkoppling: VPN, ExpressRoute, Private DNS
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -487,7 +487,7 @@ az network vnet peering create \
 | **Säkra vägar** | Undvik publik exponering |
 | **DNS** | Namnupplösning krävs för privata endpoints |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -497,7 +497,7 @@ az network vnet peering create \
 | **ExpressRoute** | Privat krets med SLA |
 | **Private DNS Zones** | Hanterar namn för privata endpoints |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -507,7 +507,7 @@ az network vnet peering create \
 | `az network vpn-connection create ...` | Skapa tunnel |
 | `az network private-dns zone create ...` | Private DNS zon |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -526,7 +526,7 @@ az network private-dns link vnet create \
   --registration-enabled false
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -536,7 +536,7 @@ az network private-dns link vnet create \
 | **ExpressRoute** | Privat linje med SLA |
 | **Private DNS** | Namn för privata endpoints |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -545,7 +545,7 @@ az network private-dns link vnet create \
 | `GatewayNotFound` | Ingen gateway i VNet | Skapa gateway-subnet och gateway |
 | DNS-resolver löser ej namn | Private DNS ej länkat | Länka zon till VNet |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -564,7 +564,7 @@ az network private-dns link vnet create \
             "xp_reward": 75,
             "content": """# Compute: VM och Scale Sets
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -574,7 +574,7 @@ az network private-dns link vnet create \
 | **Autoskalning** | VMSS ger elasticitet |
 | **Image-hygien** | Golden images med Packer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -585,7 +585,7 @@ az network private-dns link vnet create \
 | **Images** | Marketplace, Shared Image Gallery |
 | **Extensions** | CustomScript/AMA/DependencyAgent |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -595,7 +595,7 @@ az network private-dns link vnet create \
 | `az vmss create ...` | Skapa VM scale set |
 | `az sig image-definition create ...` | Image Gallery definition |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -620,7 +620,7 @@ az vmss create \
   --vm-sku Standard_B2ms
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -630,7 +630,7 @@ az vmss create \
 | **SIG** | Shared Image Gallery |
 | **Extensions** | Efterkonfig av VM |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -639,7 +639,7 @@ az vmss create \
 | `AllocationFailed` | SKU ej tillgänglig i zon | Byt zon/SKU |
 | Provisioning timeout | CustomScript fel | Kolla extension-loggar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -658,7 +658,7 @@ az vmss create \
             "xp_reward": 60,
             "content": """# Storage: Blob, File, Lifecycle
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -668,7 +668,7 @@ az vmss create \
 | **Backup** | Säkra data över tid |
 | **Kost** | Tiering spar pengar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -679,7 +679,7 @@ az vmss create \
 | **Lifecycle** | Flytta data mellan hot/cool/archive |
 | **SAS** | Delad åtkomsttoken |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -689,7 +689,7 @@ az vmss create \
 | `az storage blob upload ...` | Ladda upp blob |
 | `az storage share-rm create ...` | Skapa fileshare |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -705,7 +705,7 @@ az storage container create --account-name saappdev --name artifacts --auth-mode
 az storage blob upload --account-name saappdev --container-name artifacts --name app.tar.gz --file app.tar.gz --auth-mode login
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -715,7 +715,7 @@ az storage blob upload --account-name saappdev --container-name artifacts --name
 | **Immutability** | Skydd mot radering/ändring |
 | **Lifecycle** | Automatiskt tier-byte |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -724,7 +724,7 @@ az storage blob upload --account-name saappdev --container-name artifacts --name
 | `AuthorizationPermissionMismatch` | Fel auth-läge | Använd `--auth-mode login` eller SAS |
 | NFS mount misslyckas | Fel subnet eller protokoll | Aktivera NFS och tillåt subnet i nätverk |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -743,7 +743,7 @@ az storage blob upload --account-name saappdev --container-name artifacts --name
             "xp_reward": 70,
             "content": """# Data: SQL, PostgreSQL, Backup
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -753,7 +753,7 @@ az storage blob upload --account-name saappdev --container-name artifacts --name
 | **Säkerhet** | Private endpoints + audit |
 | **Backup/DR** | Geo-redundans och PITR |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -764,7 +764,7 @@ az storage blob upload --account-name saappdev --container-name artifacts --name
 | **PostgreSQL Flexible** | OSS-PaaS med AZ-stöd |
 | **Backup** | PITR och geo-restore |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -774,7 +774,7 @@ az storage blob upload --account-name saappdev --container-name artifacts --name
 | `az sql db create ...` | Skapa databasen |
 | `az postgres flexible-server create ...` | Skapa Postgres |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -796,7 +796,7 @@ az sql db create \
   --capacity 2
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -806,7 +806,7 @@ az sql db create \
 | **PITR** | Point-in-time-restore |
 | **Geo-redundans** | Kopia i annan region |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -815,7 +815,7 @@ az sql db create \
 | `Firewall rule not found` | IP blockerad | Lägg till VNet/firewall-regel |
 | Timeout mot DB | Ingen private endpoint/DNS | Lägg till PE + Private DNS |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -834,7 +834,7 @@ az sql db create \
             "xp_reward": 60,
             "content": """# Säkerhet: Key Vault och hemligheter
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -844,7 +844,7 @@ az sql db create \
 | **Runtime** | Appar behöver nycklar/certs säkert |
 | **Rotation** | Automatiskt byte av nycklar/certs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -854,7 +854,7 @@ az sql db create \
 | **Access policy/RBAC** | Styr åtkomst |
 | **Managed Identity** | Hämtar secrets utan lösen |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -864,7 +864,7 @@ az sql db create \
 | `az keyvault secret set ...` | Sätt secret |
 | `az keyvault secret show ...` | Läs secret |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -879,7 +879,7 @@ az keyvault set-policy \
   --secret-permissions get list
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -889,7 +889,7 @@ az keyvault set-policy \
 | **Access Policy** | Rättigheter på vault |
 | **Private Endpoint** | Privat åtkomst |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -898,7 +898,7 @@ az keyvault set-policy \
 | `Forbidden` | Saknar rätt policy/RBAC | Lägg till MI/SPN med rättigheter |
 | DNS-resolver når ej vault | Ingen private DNS | Lägg till privatelink.vaultcore.azure.net |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -917,7 +917,7 @@ az keyvault set-policy \
             "xp_reward": 60,
             "content": """# Container Registry (ACR) och bilder
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -927,7 +927,7 @@ az keyvault set-policy \
 | **AKS/Apps** | ACR som privat registry |
 | **CI/CD** | Push/pull med token/MI |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -937,7 +937,7 @@ az keyvault set-policy \
 | **Tasks** | Inbyggda bygg/scan-jobb |
 | **Content Trust** | Signering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -947,7 +947,7 @@ az keyvault set-policy \
 | `az acr login ...` | Logga in |
 | `az acr task create ...` | Bygg/scan |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -959,7 +959,7 @@ az acr login --name acrappdev
 az acr build --registry acrappdev --image api:1.0 .
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -969,7 +969,7 @@ az acr build --registry acrappdev --image api:1.0 .
 | **Admin user** | Undvik i produktion, använd MI |
 | **Private Link** | Privat åtkomst |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -978,7 +978,7 @@ az acr build --registry acrappdev --image api:1.0 .
 | `DENIED: client unauthorized` | Saknar rätt roll | Tilldela `AcrPull`/`AcrPush` |
 | Pull timeout från AKS | Saknar PE/DNS | Lägg till private endpoint och DNS |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -997,7 +997,7 @@ az acr build --registry acrappdev --image api:1.0 .
             "xp_reward": 80,
             "content": """# AKS grunder
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1007,7 +1007,7 @@ az acr build --registry acrappdev --image api:1.0 .
 | **GitOps** | Integrerar med Flux/Argo |
 | **Nätverk/säkerhet** | Kräver rätt design med PE/NSG |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1018,7 +1018,7 @@ az acr build --registry acrappdev --image api:1.0 .
 | **Ingress** | NGINX/App Gateway Ingress Controller |
 | **AAD integration** | RBAC mot Entra |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1028,7 +1028,7 @@ az acr build --registry acrappdev --image api:1.0 .
 | `az aks get-credentials ...` | Hämta kubeconfig |
 | `az aks nodepool add ...` | Lägg till pool |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1046,7 +1046,7 @@ az aks get-credentials --resource-group rg-app-dev --name aks-app
 kubectl get nodes
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1056,7 +1056,7 @@ kubectl get nodes
 | **Nodepool** | VMSS-grupp |
 | **AGIC** | App Gateway Ingress Controller |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1065,7 +1065,7 @@ kubectl get nodes
 | Pod IP tar slut | För liten subnet | Planera större prefix |
 | `ImagePullBackOff` | Saknar ACR-rätt | `--attach-acr` eller MI med AcrPull |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1084,7 +1084,7 @@ kubectl get nodes
             "xp_reward": 70,
             "content": """# Pipelines: Azure DevOps och GitHub Actions
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1094,7 +1094,7 @@ kubectl get nodes
 | **Service Principals** | Säker auth mot Azure |
 | **Miljöer** | Gates och approvals |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1105,7 +1105,7 @@ kubectl get nodes
 | **Service Connection** | SPN + rättigheter |
 | **Self-hosted runner** | Behövs för privata nät |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1114,7 +1114,7 @@ kubectl get nodes
 | `az devops service-endpoint azurerm create ...` | Skapa service connection |
 | `az pipelines create ...` | Skapa pipeline |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1133,7 +1133,7 @@ jobs:
       - run: az deployment group create --resource-group rg-app-dev --template-file main.bicep
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1143,7 +1143,7 @@ jobs:
 | **Secrets store** | GitHub Secrets/ADO Library |
 | **Gates** | Approvals/checks |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1152,7 +1152,7 @@ jobs:
 | `invalid_client` vid login | Fel klientid/hemlighet | Regenerera SPN-sekret |
 | Timeout mot privata resurser | Runner saknar nätåtkomst | Använd self-hosted runner i VNet |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1171,7 +1171,7 @@ jobs:
             "xp_reward": 70,
             "content": """# IaC: Bicep
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1181,7 +1181,7 @@ jobs:
 | **Snabb feedback** | Bra språkstöd och linters |
 | **Moduler** | Återanvändbara block |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1191,7 +1191,7 @@ jobs:
 | **Output** | Returnerar värden till pipeline |
 | **Module** | Återanvändbart Bicep-block |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1200,7 +1200,7 @@ jobs:
 | `az bicep build --file main.bicep` | Kompilera |
 | `az deployment group create ...` | Deploya |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1215,7 +1215,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1225,7 +1225,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 | **modules** | Återanvändbarhet |
 | **targetScope** | rg/subscription |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1234,7 +1234,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 | `BCP`-fel | Syntaxfel | Kör `az bicep build` lokalt |
 | `DeploymentFailed` | Policy blockerar | Läs errorDetails och justera |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1253,7 +1253,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
             "xp_reward": 75,
             "content": """# IaC: Terraform i Azure
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1263,7 +1263,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 | **State** | Lagra i remote backend |
 | **Moduler** | Återanvändbar kod |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1273,7 +1273,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 | **Provider** | azurerm-versioner |
 | **Module** | Återanvändbar Terraform-kod |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1283,7 +1283,7 @@ resource rgSa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 | `terraform plan` | Planera |
 | `terraform apply` | Köra |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1303,7 +1303,7 @@ provider "azurerm" {
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1313,7 +1313,7 @@ provider "azurerm" {
 | **Workspace** | Isolera miljöer |
 | **Vars** | Använd tfvars + Key Vault |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1322,7 +1322,7 @@ provider "azurerm" {
 | `Error acquiring state lock` | Lås kvar | Släpp lås i storage eller vänta |
 | `ExpiredToken` | Kortlivad token | Logga in igen eller använd federated identity |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1341,7 +1341,7 @@ provider "azurerm" {
             "xp_reward": 70,
             "content": """# Observability: Monitor, Log Analytics, App Insights
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1351,7 +1351,7 @@ provider "azurerm" {
 | **SLO/SLA** | Mäta latency och fel |
 | **Kost** | Optimera resurser via metriker |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1361,7 +1361,7 @@ provider "azurerm" {
 | **Application Insights** | APM för appar |
 | **Alerts** | Regler + action groups |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1371,7 +1371,7 @@ provider "azurerm" {
 | `az monitor app-insights component create ...` | Skapa App Insights |
 | `az monitor metrics alert create ...` | Skapa alert |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1388,7 +1388,7 @@ az monitor metrics alert create \
   --window-size 5m
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1398,7 +1398,7 @@ az monitor metrics alert create \
 | **Action Group** | Mottagare (mail/webhook/ITSM) |
 | **Diagnostic settings** | Skicka loggar till LA/Event Hub/Storage |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1407,7 +1407,7 @@ az monitor metrics alert create \
 | Inga loggar i LA | Diagnostic settings saknas | Aktivera per resurs |
 | Dubbelbilling | Både App Insights klassisk + workspace | Använd workspace-läget |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1426,7 +1426,7 @@ az monitor metrics alert create \
             "xp_reward": 55,
             "content": """# Kost och budget
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1436,7 +1436,7 @@ az monitor metrics alert create \
 | **Miljöer** | Dev vs prod kräver olika policys |
 | **Autoskalning** | Undvik överprovisionering |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1447,7 +1447,7 @@ az monitor metrics alert create \
 | **Tags** | Kostallokering |
 | **Reservations** | Rabatt på långvarig användning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1456,7 +1456,7 @@ az monitor metrics alert create \
 | `az consumption budget create ...` | Skapa budget |
 | `az tag create/update` | Hantera taggar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1470,7 +1470,7 @@ az consumption budget create \
   --notifications '{"Ops":{"enabled":true,"operator":"GreaterThan","threshold":80,"contactEmails":["finops@company.com"]}}'
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1480,7 +1480,7 @@ az consumption budget create \
 | **Reservation** | Rabatt på VM/DB vid commitment |
 | **Spot** | Billigare, avbrytbar compute |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1489,7 +1489,7 @@ az consumption budget create \
 | Budget triggar ej | Notifier saknas | Lägg till mail/webhook |
 | Svår kostspårning | Taggar saknas | Enforce tag-policy |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1508,7 +1508,7 @@ az consumption budget create \
             "xp_reward": 60,
             "content": """# Serverless: Functions och Event Grid
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1518,7 +1518,7 @@ az consumption budget create \
 | **Kosteffektivt** | Betala per körning |
 | **Snabbt att skeppa** | Minimal infrastruktur |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1528,7 +1528,7 @@ az consumption budget create \
 | **Triggers** | HTTP, Timer, Queue, Event Grid |
 | **Consumption/Plan** | Skala vid behov |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1538,7 +1538,7 @@ az consumption budget create \
 | `func new` | Skapa function lokalt |
 | `az eventgrid event-subscription create ...` | Koppla event |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1553,7 +1553,7 @@ az functionapp create \
   --runtime python
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1563,7 +1563,7 @@ az functionapp create \
 | **Bindings** | Kopplingar till köer/lagring |
 | **Durable** | Orchestreringar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1572,7 +1572,7 @@ az functionapp create \
 | `Storage account not found` | Fel namn/region | Kontrollera existens |
 | Timeout i HTTP-funktion | För lång körning | Använd Premium/isolated eller kö-trigger |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1591,7 +1591,7 @@ az functionapp create \
             "xp_reward": 60,
             "content": """# Messaging: Service Bus och Event Hubs
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1601,7 +1601,7 @@ az functionapp create \
 | **Observability** | Event flöden för analys |
 | **Backpressure** | Hantera spikes |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1611,7 +1611,7 @@ az functionapp create \
 | **Event Hubs** | Hög throughput event-streaming |
 | **Shared Access Policy** | Nycklar per klient |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1621,7 +1621,7 @@ az functionapp create \
 | `az eventhubs namespace create ...` | Skapa EH |
 | `az eventhubs eventhub create ...` | Skapa hub |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1633,7 +1633,7 @@ az eventhubs namespace create --resource-group rg-app-dev --name eh-telemetry --
 az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-telemetry --name telemetry --partition-count 4
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1643,7 +1643,7 @@ az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-tel
 | **SAS** | Nyckel per policy |
 | **Capture** | Skriv EH-data till Blob |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1652,7 +1652,7 @@ az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-tel
 | `Unauthorized` | Fel SAS/policy | Skapa nyckel och ge rätt policy |
 | Droppade meddelanden | Ingen DLQ-hantering | Aktivera och övervaka DLQ |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1671,7 +1671,7 @@ az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-tel
             "xp_reward": 60,
             "content": """# Backup och Disaster Recovery
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varför viktigt för DevOps?
 
@@ -1681,7 +1681,7 @@ az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-tel
 | **Skydd mot fel** | Regionavbrott |
 | **Compliance** | Bevisa backuper och tester |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Huvudinnehåll
 
@@ -1691,7 +1691,7 @@ az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-tel
 | **Backup Policy** | Frekvens och retention |
 | **ASR** | Site Recovery för VMs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kommandon/Syntax
 
@@ -1701,7 +1701,7 @@ az eventhubs eventhub create --resource-group rg-app-dev --namespace-name eh-tel
 | `az backup protection enable-for-vm ...` | Aktivera backup |
 | `az backup restore restore-disks ...` | Återställ |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiska exempel
 
@@ -1710,7 +1710,7 @@ az backup vault create --resource-group rg-app-dev --name rsv-app-dev --location
 az backup protection enable-for-vm --resource-group rg-app-dev --vault-name rsv-app-dev --vm vm-api --policy-name DefaultPolicy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1720,7 +1720,7 @@ az backup protection enable-for-vm --resource-group rg-app-dev --vault-name rsv-
 | **Vault** | Håller backupdata |
 | **ASR** | Replikering till sekundär region |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och lösningar
 
@@ -1729,7 +1729,7 @@ az backup protection enable-for-vm --resource-group rg-app-dev --vault-name rsv-
 | Backup misslyckas | Agent/extension fel | Kontrollera extension-loggar |
 | Restore saknar nät | VNet ej specificerat | Ange nät vid restore |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

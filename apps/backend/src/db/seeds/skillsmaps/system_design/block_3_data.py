@@ -52,7 +52,7 @@ NoSQL:
 
 ```yaml
 Key-Value Store:
-  Struktur: key → value
+  Struktur: key -> value
   Use cases:
     - Caching
     - Sessions
@@ -60,7 +60,7 @@ Key-Value Store:
   Exempel: Redis, DynamoDB, Memcached
 
 Document Store:
-  Struktur: key → JSON/BSON document
+  Struktur: key -> JSON/BSON document
   Use cases:
     - Content management
     - User profiles
@@ -68,7 +68,7 @@ Document Store:
   Exempel: MongoDB, CouchDB, Firestore
 
 Wide Column:
-  Struktur: Row key → column families
+  Struktur: Row key -> column families
   Use cases:
     - Time series
     - Analytics
@@ -87,19 +87,19 @@ Graph:
 ## Database Selection Matrix
 
 ```
-┌──────────────────┬──────────────────────────────────┐
-│    Use Case      │        Recommended DB            │
-├──────────────────┼──────────────────────────────────┤
-│ Financial trans  │ PostgreSQL, MySQL               │
-│ User sessions    │ Redis, DynamoDB                 │
-│ Product catalog  │ MongoDB, PostgreSQL             │
-│ Analytics/OLAP   │ ClickHouse, Snowflake           │
-│ Time series      │ TimescaleDB, InfluxDB           │
-│ Full-text search │ Elasticsearch, Meilisearch      │
-│ Social graph     │ Neo4j, Amazon Neptune           │
-│ Caching          │ Redis, Memcached                │
-│ Queue            │ Redis, SQS, RabbitMQ            │
-└──────────────────┴──────────────────────────────────┘
++------------------+----------------------------------+
+|    Use Case      |        Recommended DB            |
++------------------+----------------------------------+
+| Financial trans  | PostgreSQL, MySQL               |
+| User sessions    | Redis, DynamoDB                 |
+| Product catalog  | MongoDB, PostgreSQL             |
+| Analytics/OLAP   | ClickHouse, Snowflake           |
+| Time series      | TimescaleDB, InfluxDB           |
+| Full-text search | Elasticsearch, Meilisearch      |
+| Social graph     | Neo4j, Amazon Neptune           |
+| Caching          | Redis, Memcached                |
+| Queue            | Redis, SQS, RabbitMQ            |
++------------------+----------------------------------+
 ```
 
 ## When to Use What
@@ -133,16 +133,16 @@ def choose_database(requirements):
 ## Polyglot Persistence
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    Application                       │
-└───────────────────────┬─────────────────────────────┘
-                        │
-    ┌───────────────────┼───────────────────┐
-    │                   │                   │
-┌───▼───┐          ┌────▼────┐         ┌────▼────┐
-│ Redis │          │PostgreSQL│        │  Elastic │
-│(Cache)│          │ (Core)  │         │ (Search) │
-└───────┘          └─────────┘         └──────────┘
++-----------------------------------------------------+
+|                    Application                       |
++-----------------------+-----------------------------+
+                        |
+    +-------------------+-------------------+
+    |                   |                   |
++---▼---+          +----▼----+         +----▼----+
+| Redis |          |PostgreSQL|        |  Elastic |
+|(Cache)|          | (Core)  |         | (Search) |
++-------+          +---------+         +----------+
 ```
 
 ## ACID vs BASE
@@ -235,21 +235,21 @@ Disaster Recovery:
 
 ```
          Writes
-           │
+           |
            ▼
-     ┌───────────┐
-     │  Master   │
-     │ (Primary) │
-     └─────┬─────┘
-           │ Replication
-     ┌─────┴─────┬─────────┐
+     +-----------+
+     |  Master   |
+     | (Primary) |
+     +-----+-----+
+           | Replication
+     +-----+-----+---------+
      ▼           ▼         ▼
-┌─────────┐ ┌─────────┐ ┌─────────┐
-│ Slave 1 │ │ Slave 2 │ │ Slave 3 │
-│(Replica)│ │(Replica)│ │(Replica)│
-└────┬────┘ └────┬────┘ └────┬────┘
-     │           │           │
-     └───────────┴───────────┘
++---------+ +---------+ +---------+
+| Slave 1 | | Slave 2 | | Slave 3 |
+|(Replica)| |(Replica)| |(Replica)|
++----+----+ +----+----+ +----+----+
+     |           |           |
+     +-----------+-----------+
               Reads
 ```
 
@@ -272,15 +272,15 @@ Master-Slave:
 ## Master-Master (Multi-Primary)
 
 ```
-     ┌───────────────────────────┐
-     │         Writes            │
-     │                           │
+     +---------------------------+
+     |         Writes            |
+     |                           |
      ▼                           ▼
-┌─────────┐                 ┌─────────┐
-│ Master1 │◄───Replication──►│ Master2 │
-│         │                 │         │
-└────┬────┘                 └────┬────┘
-     │                           │
++---------+                 +---------+
+| Master1 |◄---Replication--►| Master2 |
+|         |                 |         |
++----+----+                 +----+----+
+     |                           |
      ▼                           ▼
    Reads                       Reads
 ```
@@ -336,8 +336,8 @@ Asynchronous Replication:
 # Replication lag = tid mellan master write och replica update
 
 # Problemscenario:
-# 1. User updates profile (→ master)
-# 2. User refreshes page (→ slave)
+# 1. User updates profile (-> master)
+# 2. User refreshes page (-> slave)
 # 3. Slave har inte fått update än
 # 4. User ser gammal data!
 
@@ -452,18 +452,18 @@ NODE_11_SHARDING = {
 
 ```
 Utan Sharding:
-┌────────────────────────────┐
-│     Single Database        │
-│   (100M rows, 1TB)         │
-│   Performance issues!      │
-└────────────────────────────┘
++----------------------------+
+|     Single Database        |
+|   (100M rows, 1TB)         |
+|   Performance issues!      |
++----------------------------+
 
 Med Sharding:
-┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│ Shard 1  │  │ Shard 2  │  │ Shard 3  │  │ Shard 4  │
-│ A-F      │  │ G-L      │  │ M-R      │  │ S-Z      │
-│ 25M rows │  │ 25M rows │  │ 25M rows │  │ 25M rows │
-└──────────┘  └──────────┘  └──────────┘  └──────────┘
++----------+  +----------+  +----------+  +----------+
+| Shard 1  |  | Shard 2  |  | Shard 3  |  | Shard 4  |
+| A-F      |  | G-L      |  | M-R      |  | S-Z      |
+| 25M rows |  | 25M rows |  | 25M rows |  | 25M rows |
++----------+  +----------+  +----------+  +----------+
 ```
 
 ## Sharding Strategies
@@ -478,13 +478,13 @@ Range-Based Sharding:
     - Enkelt att implementera
     - Range queries fungerar
   Nackdelar:
-    - Hotspots (nya users → sista shard)
+    - Hotspots (nya users -> sista shard)
     - Obalanserad distribution
 
 Hash-Based Sharding:
   Hur: hash(key) % num_shards
   Exempel:
-    hash("user123") % 4 = 2 → Shard 2
+    hash("user123") % 4 = 2 -> Shard 2
   Fördelar:
     - Jämn distribution
     - Ingen hotspot
@@ -506,14 +506,14 @@ Directory-Based Sharding:
 
 ```
 Problem med hash % N:
-  - Vid N ändring → nästan alla keys flyttas
+  - Vid N ändring -> nästan alla keys flyttas
   - Resharding = massiv data migration
 
 Consistent Hashing:
   - Ring av hash values
   - Servers placerade på ring
-  - Key → närmaste server clockwise
-  - Vid server add/remove → endast nearby keys flyttas
+  - Key -> närmaste server clockwise
+  - Vid server add/remove -> endast nearby keys flyttas
 ```
 
 ```python
@@ -599,17 +599,17 @@ Lösningar:
 
 ```yaml
 # Vitess architecture
-┌──────────────┐
-│    VTGate    │  ← Query router
-└──────┬───────┘
-       │
-┌──────┴───────┐
-│   VTTablet   │  ← Per-shard proxy
-└──────┬───────┘
-       │
-┌──────┴───────┐
-│    MySQL     │  ← Actual database
-└──────────────┘
++--------------+
+|    VTGate    |  <- Query router
++------+-------+
+       |
++------+-------+
+|   VTTablet   |  <- Per-shard proxy
++------+-------+
+       |
++------+-------+
+|    MySQL     |  <- Actual database
++--------------+
 
 Features:
   - Automatic sharding
@@ -669,35 +669,35 @@ NODE_12_CACHING = {
 ## Cache Layers
 
 ```
-┌────────────────────────────────────────────────────┐
-│                    User Request                    │
-└────────────────────────┬───────────────────────────┘
-                         │
-                ┌────────▼────────┐
-                │  Browser Cache  │  ← Client-side
-                └────────┬────────┘
-                         │
-                ┌────────▼────────┐
-                │      CDN        │  ← Edge
-                └────────┬────────┘
-                         │
-                ┌────────▼────────┐
-                │  Load Balancer  │
-                └────────┬────────┘
-                         │
-                ┌────────▼────────┐
-                │ Application     │  ← In-memory
-                │ Cache (Local)   │
-                └────────┬────────┘
-                         │
-                ┌────────▼────────┐
-                │ Distributed     │  ← Redis/Memcached
-                │ Cache           │
-                └────────┬────────┘
-                         │
-                ┌────────▼────────┐
-                │    Database     │  ← Query cache
-                └─────────────────┘
++----------------------------------------------------+
+|                    User Request                    |
++------------------------+---------------------------+
+                         |
+                +--------▼--------+
+                |  Browser Cache  |  <- Client-side
+                +--------+--------+
+                         |
+                +--------▼--------+
+                |      CDN        |  <- Edge
+                +--------+--------+
+                         |
+                +--------▼--------+
+                |  Load Balancer  |
+                +--------+--------+
+                         |
+                +--------▼--------+
+                | Application     |  <- In-memory
+                | Cache (Local)   |
+                +--------+--------+
+                         |
+                +--------▼--------+
+                | Distributed     |  <- Redis/Memcached
+                | Cache           |
+                +--------+--------+
+                         |
+                +--------▼--------+
+                |    Database     |  <- Query cache
+                +-----------------+
 ```
 
 ## Caching Patterns
@@ -706,7 +706,7 @@ NODE_12_CACHING = {
 Cache-Aside (Lazy Loading):
   Read:
     1. Check cache
-    2. If miss → read from DB
+    2. If miss -> read from DB
     3. Store in cache
     4. Return data
 
@@ -807,14 +807,14 @@ Event-Based:
 
 Version-Based:
   - Key includes version
-  - user:123:v5 → user:123:v6
+  - user:123:v5 -> user:123:v6
   - Old versions auto-expire
 ```
 
 ## Cache Stampede Prevention
 
 ```python
-# Problem: Cache expires → all requests hit DB
+# Problem: Cache expires -> all requests hit DB
 
 # Solution 1: Locking
 def get_with_lock(key):

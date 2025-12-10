@@ -39,18 +39,18 @@ AZURE_NODE_19_DEFENDER_V2 = {
                         "title": "Free vs Paid Tiers",
                         "explanation": "Free: Secure Score, recommendations, asset inventory. Paid (per resource): JIT access, vulnerability scanning, security alerts, compliance dashboards.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ FREE (CSPM Basic)                           │
-├─────────────────────────────────────────────┤
-│ ✓ Secure Score   ✓ Recommendations         │
-│ ✓ Asset inventory ✓ Azure best practices   │
-├─────────────────────────────────────────────┤
-│ PAID (CWPP) - per resource                  │
-├─────────────────────────────────────────────┤
-│ Servers ~$15/mo │ SQL ~$15/mo              │
-│ Containers ~$7  │ Storage ~$0.02/10k       │
-│ + JIT, Vuln scan, Alerts, Compliance       │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| FREE (CSPM Basic)                           |
++---------------------------------------------+
+| ✓ Secure Score   ✓ Recommendations         |
+| ✓ Asset inventory ✓ Azure best practices   |
++---------------------------------------------+
+| PAID (CWPP) - per resource                  |
++---------------------------------------------+
+| Servers ~$15/mo | SQL ~$15/mo              |
+| Containers ~$7  | Storage ~$0.02/10k       |
+| + JIT, Vuln scan, Alerts, Compliance       |
++---------------------------------------------+""",
                         "pro_tip": "Börja med free tier - aktivera paid för kritiska workloads.",
                         "common_mistake": "Att aktivera alla Defender plans utan kostnadskalkyl."
                     },
@@ -58,15 +58,15 @@ AZURE_NODE_19_DEFENDER_V2 = {
                         "title": "Secure Score",
                         "explanation": "Procent (0-100%) som mäter säkerhetsläget. Varje recommendation har poäng. Uppdateras var 24:e timme.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ SECURE SCORE: 67%                           │
-├─────────────────────────────────────────────┤
-│ Controls:                                   │
-│ • Enable MFA              +10 points        │
-│ • Encrypt data at rest    +8 points         │
-│ • Restrict network access +5 points         │
-│ • Enable Azure Defender   +15 points        │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| SECURE SCORE: 67%                           |
++---------------------------------------------+
+| Controls:                                   |
+| • Enable MFA              +10 points        |
+| • Encrypt data at rest    +8 points         |
+| • Restrict network access +5 points         |
+| • Enable Azure Defender   +15 points        |
++---------------------------------------------+""",
                         "pro_tip": "Fokusera på High severity recommendations först.",
                         "common_mistake": "Att jaga 100% score - vissa recommendations passar inte alla miljöer."
                     }
@@ -149,7 +149,7 @@ AZURE_NODE_19_DEFENDER_V2 = {
                 ],
                 "hints": [
                     "az security pricing create för aktivering",
-                    "Portal: Defender for Cloud → Recommendations",
+                    "Portal: Defender for Cloud -> Recommendations",
                     "Security contacts för alert notifications"
                 ],
                 "solution": """# 1. Visa nuvarande score
@@ -167,7 +167,7 @@ az security contact create --email security@company.com --name default \\
     --alert-notifications on --alerts-to-admins on
 
 # 5. Vanliga remediations:
-# - Enable MFA: Portal → Entra ID → Security → MFA
+# - Enable MFA: Portal -> Entra ID -> Security -> MFA
 # - Encrypt disks: az vm encryption enable
 # - Network security: NSG rules, Private Endpoints
 # - Enable audit logs: Diagnostic settings

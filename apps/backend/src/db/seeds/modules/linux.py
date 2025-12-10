@@ -32,7 +32,7 @@ MODULE = {
 
 Valkommen till Linux-varlden! Har lar du dig hur Linux organiserar sina filer - grunden for allt du kommer gora som DevOps-ingenjor.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation och Setup
 
@@ -58,7 +58,7 @@ cat /etc/os-release
 # VERSION="22.04.3 LTS (Jammy Jellyfish)"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -71,24 +71,24 @@ cat /etc/os-release
 
 Som DevOps-ingenjor lever du i terminalen. Du maste veta var saker ligger!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Linux Filstruktur - Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         / (root)                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   /bin ────── Grundlaggande kommandon (ls, cp, mv)         │
-│   /etc ────── Konfigurationsfiler                          │
-│   /var ────── Variabel data (loggar, databaser)            │
-│   /usr ────── Installerade program                         │
-│   /home ───── Anvandarkataloger                            │
-│   /tmp ────── Temporara filer                              │
-│   /opt ────── Tredjepartsprogram                           │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         / (root)                            |
++-------------------------------------------------------------+
+|                                                             |
+|   /bin ------ Grundlaggande kommandon (ls, cp, mv)         |
+|   /etc ------ Konfigurationsfiler                          |
+|   /var ------ Variabel data (loggar, databaser)            |
+|   /usr ------ Installerade program                         |
+|   /home ----- Anvandarkataloger                            |
+|   /tmp ------ Temporara filer                              |
+|   /opt ------ Tredjepartsprogram                           |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Katalog | Syfte | Exempel |
@@ -101,7 +101,7 @@ Som DevOps-ingenjor lever du i terminalen. Du maste veta var saker ligger!
 | `/tmp` | Temporart | Rensas vid reboot |
 | `/opt` | Tredjepartsprogram | Chrome, containerd |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /bin - Grundlaggande kommandon
 
@@ -124,7 +124,7 @@ which cp
 | `cat` | Visa filinnehall |
 | `echo` | Skriv ut text |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /etc - Alla installningar
 
@@ -155,7 +155,7 @@ head -5 /etc/passwd
 sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /var - Data som andras
 
@@ -179,7 +179,7 @@ watch -n 2 'ls -lh /var/log/*.log'
 | `/var/log/auth.log` | Inloggningsforsok |
 | `/var/lib/` | Databaser, state |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /usr - Installerade program
 
@@ -204,7 +204,7 @@ ls /usr/local/bin/
 | `/usr/lib/` | Bibliotek |
 | `/usr/share/` | Delad data |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /home - Anvandarnas utrymme
 
@@ -227,7 +227,7 @@ cat ~/.bashrc | head -20
 | `~/.ssh/` | SSH-nycklar |
 | `~/.profile` | Miljövariabler |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /tmp och /opt
 
@@ -251,7 +251,7 @@ du -sh /opt/*
 | `/tmp` | Rensas automatiskt |
 | `/opt` | Ett program per mapp |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -263,7 +263,7 @@ du -sh /opt/*
 | Anvandarfiler | `/home` |
 | Temp-filer | `/tmp` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -293,7 +293,7 @@ du -sh /opt/*
 
 I Linux ar allt en fil - aven harddiskar och USB-minnen. Har lar du dig hur Linux hanterar lagringsenheter och hur du kopplar dem till filsystemet.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -304,22 +304,22 @@ I Linux ar allt en fil - aven harddiskar och USB-minnen. Har lar du dig hur Linu
 | **Automatisering** | Konfigurera auto-mount |
 | **Disk full** | Forsta var saker ar mountade |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Sa fungerar mounting
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    MOUNT PROCESS                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   /dev/sdb1 ──────────► mount ──────────► /mnt/external    │
-│   (fysisk disk)                           (tillganglig)     │
-│                                                             │
-│   Disk dyker upp      Kommando           Nu kan du          │
-│   i /dev              kopplar ihop       lasa/skriva        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    MOUNT PROCESS                            |
++-------------------------------------------------------------+
+|                                                             |
+|   /dev/sdb1 ----------► mount ----------► /mnt/external    |
+|   (fysisk disk)                           (tillganglig)     |
+|                                                             |
+|   Disk dyker upp      Kommando           Nu kan du          |
+|   i /dev              kopplar ihop       lasa/skriva        |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -327,10 +327,10 @@ I Linux ar allt en fil - aven harddiskar och USB-minnen. Har lar du dig hur Linu
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 # sda      8:0    0   100G  0 disk
-# ├─sda1   8:1    0    99G  0 part /
-# └─sda2   8:2    0     1G  0 part [SWAP]
+# +-sda1   8:1    0    99G  0 part /
+# +-sda2   8:2    0     1G  0 part [SWAP]
 # sdb      8:16   0   500G  0 disk
-# └─sdb1   8:17   0   500G  0 part
+# +-sdb1   8:17   0   500G  0 part
 ```
 
 | Kolumn | Betydelse |
@@ -340,7 +340,7 @@ lsblk
 | TYPE | disk/part |
 | MOUNTPOINT | Var den ar monterad |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## /dev - Alla enheter
 
@@ -368,7 +368,7 @@ head -c 16 /dev/urandom | xxd   # Slumptal
 | `/dev/null` | Svart hal |
 | `/dev/urandom` | Slumptalsgenerator |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Mounta en disk
 
@@ -393,7 +393,7 @@ ls /mnt/external
 df -h /mnt/external
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Unmounta sakert
 
@@ -413,7 +413,7 @@ lsof /mnt/external        # Se vilka processer
 sudo umount -l /mnt/external   # Lazy unmount
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Automatisk mount med /etc/fstab
 
@@ -425,10 +425,10 @@ blkid /dev/sdb1
 
 ```
 /etc/fstab format:
-┌──────────────────────────────────────────────────────────┐
-│ <file system>  <mount point>  <type>  <options>  <dump>  │
-│ UUID=abc-123   /mnt/external  ext4    defaults   0    2  │
-└──────────────────────────────────────────────────────────┘
++----------------------------------------------------------+
+| <file system>  <mount point>  <type>  <options>  <dump>  |
+| UUID=abc-123   /mnt/external  ext4    defaults   0    2  |
++----------------------------------------------------------+
 ```
 
 | Falt | Betydelse |
@@ -445,7 +445,7 @@ blkid /dev/sdb1
 sudo mount -a
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga mount-typer
 
@@ -466,7 +466,7 @@ sudo mount -t cifs //server/share /mnt/smb -o user=admin
 sudo mount -t tmpfs -o size=1G tmpfs /mnt/ramdisk
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -477,7 +477,7 @@ sudo mount -t tmpfs -o size=1G tmpfs /mnt/ramdisk
 | Boot failar | Fel i fstab | `mount -a` forst! |
 | "permission denied" | Fel rattigheter | `sudo mount` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -507,7 +507,7 @@ sudo mount -t tmpfs -o size=1G tmpfs /mnt/ramdisk
 
 Permissions ar Linux sakerhetssystem - de avgor vem som kan lasa, skriva och kora filer. Utan denna kunskap kommer du stota pa "Permission denied" overallt!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -520,23 +520,23 @@ Permissions ar Linux sakerhetssystem - de avgor vem som kan lasa, skriva och kor
 
 Permissions avgor vem som kan gora vad med en fil. Du stoter pa detta dagligen!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Sa fungerar permissions
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    PERMISSION STRING                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   -rw-r--r-- 1 john developers 1024 Dec 7 myfile.txt       │
-│   │└┬┘└┬┘└┬┘                                                │
-│   │ │  │  └── Others: r-- (bara lasa)                      │
-│   │ │  └───── Group:  r-- (bara lasa)                      │
-│   │ └──────── Owner:  rw- (lasa och skriva)                │
-│   └────────── Filtyp: - (fil), d (katalog), l (lank)       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    PERMISSION STRING                        |
++-------------------------------------------------------------+
+|                                                             |
+|   -rw-r--r-- 1 john developers 1024 Dec 7 myfile.txt       |
+|   |+++++++++                                                |
+|   | |  |  +-- Others: r-- (bara lasa)                      |
+|   | |  +----- Group:  r-- (bara lasa)                      |
+|   | +-------- Owner:  rw- (lasa och skriva)                |
+|   +---------- Filtyp: - (fil), d (katalog), l (lank)       |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 | Tecken | Betydelse |
@@ -546,7 +546,7 @@ Permissions avgor vem som kan gora vad med en fil. Du stoter pa detta dagligen!
 | `x` | Execute - kora/oppna katalog |
 | `-` | Ingen permission |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Oktala permissions (siffror)
 
@@ -565,7 +565,7 @@ chmod 644 config.txt   # rw-r--r-- - config-filer
 chmod 600 ~/.ssh/id_rsa # rw------- - SSH-nycklar (OBLIGATORISKT!)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Andra permissions med chmod
 
@@ -591,7 +591,7 @@ chmod 644 nginx.conf     # Config bara owner andrar
 chmod 600 secrets.env    # Hemligt - bara owner
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Andra agare med chown
 
@@ -612,7 +612,7 @@ sudo chown nginx:www-data /var/www/html/index.html
 sudo chown -R deploy:deploy /var/www/app/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga permission-monster
 
@@ -641,7 +641,7 @@ chmod 755 /var/www/
 chmod 700 ~/.ssh/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -667,7 +667,7 @@ chmod 700 ~/.ssh/
 sudo chown -R www-data:www-data /var/www/html/
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -697,7 +697,7 @@ sudo chown -R www-data:www-data /var/www/html/
 
 Lankar ar kraftfulla verktyg i Linux som mojliggor zero-downtime deploys, flexibel filhantering och effektiv lagring. Har lar du dig hur de fungerar under huven.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -710,30 +710,30 @@ Lankar ar kraftfulla verktyg i Linux som mojliggor zero-downtime deploys, flexib
 
 Lankar ar fundamentala for hur Linux fungerar och anvands overallt i produktion.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar en inode?
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         INODE                               │
-├─────────────────────────────────────────────────────────────┤
-│  Varje fil har en inode - ett "ID-kort" med metadata        │
-│                                                             │
-│  ┌─────────────┐                                            │
-│  │ Inode 12345 │                                            │
-│  ├─────────────┤                                            │
-│  │ Permissions │                                            │
-│  │ Owner/Group │                                            │
-│  │ Timestamps  │                                            │
-│  │ Size        │                                            │
-│  │ Data blocks │──────► [Faktisk data pa disk]             │
-│  └─────────────┘                                            │
-│         ▲                                                   │
-│         │                                                   │
-│   "myfile.txt" (filnamn ar bara en etikett)                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         INODE                               |
++-------------------------------------------------------------+
+|  Varje fil har en inode - ett "ID-kort" med metadata        |
+|                                                             |
+|  +-------------+                                            |
+|  | Inode 12345 |                                            |
+|  +-------------+                                            |
+|  | Permissions |                                            |
+|  | Owner/Group |                                            |
+|  | Timestamps  |                                            |
+|  | Size        |                                            |
+|  | Data blocks |------► [Faktisk data pa disk]             |
+|  +-------------+                                            |
+|         ▲                                                   |
+|         |                                                   |
+|   "myfile.txt" (filnamn ar bara en etikett)                |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -752,30 +752,30 @@ stat myfile.txt
 | `stat file` | All metadata |
 | `df -i` | Inode-anvandning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hard Links
 
 En hard link ar ett extra namn som pekar pa SAMMA inode.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      HARD LINK                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   "original.txt" ─────┐                                     │
-│                       │                                     │
-│                       ▼                                     │
-│               ┌─────────────┐                               │
-│               │ Inode 12345 │──────► [Data]                │
-│               └─────────────┘                               │
-│                       ▲                                     │
-│                       │                                     │
-│   "hardlink.txt" ─────┘                                     │
-│                                                             │
-│   Bada namnen ar LIKVARDIGA - samma inode, samma data      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      HARD LINK                              |
++-------------------------------------------------------------+
+|                                                             |
+|   "original.txt" -----+                                     |
+|                       |                                     |
+|                       ▼                                     |
+|               +-------------+                               |
+|               | Inode 12345 |------► [Data]                |
+|               +-------------+                               |
+|                       ▲                                     |
+|                       |                                     |
+|   "hardlink.txt" -----+                                     |
+|                                                             |
+|   Bada namnen ar LIKVARDIGA - samma inode, samma data      |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -803,25 +803,25 @@ cat hardlink.txt
 | Fungerar over filsystem | Nej |
 | Kan lanka kataloger | Nej |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Symbolic Links (Symlinks)
 
 En symlink ar en pekare till ett FILNAMN - inte inoden.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     SYMBOLIC LINK                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   "symlink" ─────► "/path/to/original.txt" ─────► [Data]   │
-│   (egen inode)     (pekar pa NAMNET)                        │
-│                                                             │
-│   Om original.txt raderas:                                  │
-│   "symlink" ─────► "/path/to/original.txt" ─────► BROKEN!  │
-│                    (namnet finns inte langre)               │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                     SYMBOLIC LINK                           |
++-------------------------------------------------------------+
+|                                                             |
+|   "symlink" -----► "/path/to/original.txt" -----► [Data]   |
+|   (egen inode)     (pekar pa NAMNET)                        |
+|                                                             |
+|   Om original.txt raderas:                                  |
+|   "symlink" -----► "/path/to/original.txt" -----► BROKEN!  |
+|                    (namnet finns inte langre)               |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -843,7 +843,7 @@ cat loggen   # Visar syslog
 | Fungerar over filsystem | Ja |
 | Kan lanka kataloger | Ja |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jamforelse
 
@@ -874,7 +874,7 @@ cat hard_copy    # FUNGERAR
 cat soft_copy    # BROKEN!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Inode Exhaustion
 
@@ -897,25 +897,25 @@ find /tmp -type f | wc -l
 | IUse% = 100% | For manga filer | Radera filer |
 | Ledigt utrymme finns | Smafiler (cache) | `find ... -delete` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Symlinks for Deployment
 
 ```
 Zero-Downtime Deploy:
-┌─────────────────────────────────────────────────────────────┐
-│  /app/releases/v1.0.0/                                      │
-│  /app/releases/v1.1.0/                                      │
-│  /app/current ─────► releases/v1.0.0                        │
-│                                                             │
-│  Deploy ny version:                                         │
-│  ln -sfn /app/releases/v1.1.0 /app/current                 │
-│                                                             │
-│  /app/current ─────► releases/v1.1.0  (atomiskt byte!)     │
-│                                                             │
-│  Rollback:                                                  │
-│  ln -sfn /app/releases/v1.0.0 /app/current                 │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  /app/releases/v1.0.0/                                      |
+|  /app/releases/v1.1.0/                                      |
+|  /app/current -----► releases/v1.0.0                        |
+|                                                             |
+|  Deploy ny version:                                         |
+|  ln -sfn /app/releases/v1.1.0 /app/current                 |
+|                                                             |
+|  /app/current -----► releases/v1.1.0  (atomiskt byte!)     |
+|                                                             |
+|  Rollback:                                                  |
+|  ln -sfn /app/releases/v1.0.0 /app/current                 |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -929,7 +929,7 @@ ln -sfn /app/releases/v1.1.0 /app/current
 ln -sfn /app/releases/v1.0.0 /app/current
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -959,7 +959,7 @@ ln -sfn /app/releases/v1.0.0 /app/current
 
 Nar disken blir full stannar allt. Har lar du dig hitta vad som tar plats, rensa upp, och hantera diskar som ett proffs.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -970,20 +970,20 @@ Nar disken blir full stannar allt. Har lar du dig hitta vad som tar plats, rensa
 | **Utokad lagring** | Nar applikationer vaxer |
 | **LVM** | Flexibel diskhantering i produktion |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kolla diskutrymme med df
 
 ```
 Disk Usage Overview:
-┌─────────────────────────────────────────────────────────────┐
-│  df -h                                                      │
-├─────────────────────────────────────────────────────────────┤
-│  Filesystem      Size  Used Avail Use% Mounted on          │
-│  /dev/sda1        50G   35G   13G  73% /                   │
-│  /dev/sdb1       100G   80G   15G  85% /data               │
-│  tmpfs           2.0G  100M  1.9G   5% /tmp                │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  df -h                                                      |
++-------------------------------------------------------------+
+|  Filesystem      Size  Used Avail Use% Mounted on          |
+|  /dev/sda1        50G   35G   13G  73% /                   |
+|  /dev/sdb1       100G   80G   15G  85% /data               |
+|  tmpfs           2.0G  100M  1.9G   5% /tmp                |
++-------------------------------------------------------------+
 ```
 
 | Kommando | Beskrivning |
@@ -1003,7 +1003,7 @@ df -h /var/log
 df -i
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hitta vad som tar plats med du
 
@@ -1030,7 +1030,7 @@ du -sh /* 2>/dev/null | sort -rh | head -10
 # 3.2G    /home
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Hitta stora filer
 
@@ -1047,7 +1047,7 @@ find / -type f -size +100M 2>/dev/null
 find /var/log -type f -size +50M -exec ls -lh {} \\;
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbstadning
 
@@ -1068,22 +1068,22 @@ sudo apt clean
 find /var/log -name "*.log.*.gz" -mtime +30 -delete
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Partitioner och filsystem
 
 ```
 Disk Structure:
-┌─────────────────────────────────────────────────────────────┐
-│  lsblk                                                      │
-├─────────────────────────────────────────────────────────────┤
-│  NAME   SIZE TYPE MOUNTPOINT                                │
-│  sda    100G disk                                           │
-│  ├─sda1  99G part /                                        │
-│  └─sda2   1G part [SWAP]                                   │
-│  sdb    500G disk                                           │
-│  └─sdb1 500G part /data                                    │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  lsblk                                                      |
++-------------------------------------------------------------+
+|  NAME   SIZE TYPE MOUNTPOINT                                |
+|  sda    100G disk                                           |
+|  +-sda1  99G part /                                        |
+|  +-sda2   1G part [SWAP]                                   |
+|  sdb    500G disk                                           |
+|  +-sdb1 500G part /data                                    |
++-------------------------------------------------------------+
 ```
 
 | Kommando | Beskrivning |
@@ -1109,20 +1109,20 @@ sudo mkdir /mnt/newdisk
 sudo mount /dev/sdb1 /mnt/newdisk
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## LVM Basics
 
 ```
 LVM Architecture:
-┌─────────────────────────────────────────────────────────────┐
-│  Physical Volumes (PV)  ──►  Volume Group (VG)             │
-│  /dev/sda3                   ubuntu-vg                      │
-│  /dev/sdb1                        │                         │
-│                                   ▼                         │
-│                          Logical Volumes (LV)               │
-│                          root-lv, swap-lv                   │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  Physical Volumes (PV)  --►  Volume Group (VG)             |
+|  /dev/sda3                   ubuntu-vg                      |
+|  /dev/sdb1                        |                         |
+|                                   ▼                         |
+|                          Logical Volumes (LV)               |
+|                          root-lv, swap-lv                   |
++-------------------------------------------------------------+
 ```
 
 | Kommando | Beskrivning |
@@ -1144,7 +1144,7 @@ sudo lvextend -L +50G /dev/ubuntu/root
 sudo resize2fs /dev/ubuntu/root
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1155,7 +1155,7 @@ sudo resize2fs /dev/ubuntu/root
 | Kan inte mounta | Fel filsystemstyp | `mkfs.ext4` |
 | resize2fs funkar inte | XFS filsystem | `xfs_growfs` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1185,7 +1185,7 @@ sudo resize2fs /dev/ubuntu/root
 
 Processer ar allt som kor i Linux - fran din terminal till webservrar. Har lar du dig forsta hur de fungerar, vilka tillstand de kan vara i, och hur du hanterar dem.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1196,25 +1196,25 @@ Processer ar allt som kor i Linux - fran din terminal till webservrar. Har lar d
 | **Processtrad** | Forsta vad som startade vad |
 | **Optimering** | Resource-anvandning |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Processer i Linux
 
 ```
 Process Hierarchy:
-┌─────────────────────────────────────────────────────────────┐
-│  systemd (PID 1) ─────────── Forsta processen              │
-│       │                                                     │
-│       ├── sshd ─────────────── SSH-daemon                  │
-│       │     └── bash ────────── Ditt shell                 │
-│       │           └── vim ───── Din editor                 │
-│       │                                                     │
-│       ├── nginx ────────────── Webbserver                  │
-│       │     ├── worker                                     │
-│       │     └── worker                                     │
-│       │                                                     │
-│       └── mysqld ───────────── Databas                     │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  systemd (PID 1) ----------- Forsta processen              |
+|       |                                                     |
+|       +-- sshd --------------- SSH-daemon                  |
+|       |     +-- bash ---------- Ditt shell                 |
+|       |           +-- vim ----- Din editor                 |
+|       |                                                     |
+|       +-- nginx -------------- Webbserver                  |
+|       |     +-- worker                                     |
+|       |     +-- worker                                     |
+|       |                                                     |
+|       +-- mysqld ------------- Databas                     |
++-------------------------------------------------------------+
 ```
 
 | Begrepp | Beskrivning |
@@ -1235,7 +1235,7 @@ echo $$
 echo $PPID
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Process States (STAT)
 
@@ -1262,21 +1262,21 @@ ps aux | grep nginx
 # www   1235  0.2  0.5 S    nginx: worker
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Zombie-processer
 
 ```
 Zombie Process:
-┌─────────────────────────────────────────────────────────────┐
-│  En zombie ar en process som ar KLAR men vars foralder     │
-│  inte har "hamtat" den annu.                               │
-│                                                             │
-│  - Tar ingen CPU eller minne                               │
-│  - Upptar plats i processtabellen                          │
-│  - KAN INTE dodas med kill!                                │
-│  - Losning: doda foraldern                                 │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  En zombie ar en process som ar KLAR men vars foralder     |
+|  inte har "hamtat" den annu.                               |
+|                                                             |
+|  - Tar ingen CPU eller minne                               |
+|  - Upptar plats i processtabellen                          |
+|  - KAN INTE dodas med kill!                                |
+|  - Losning: doda foraldern                                 |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1290,7 +1290,7 @@ ps -o ppid= -p 5678
 kill 1234
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Processtrad
 
@@ -1303,16 +1303,16 @@ kill 1234
 ```bash
 # Visa processtrad
 pstree
-# systemd─┬─sshd───sshd───bash───pstree
-#         ├─nginx─┬─nginx
-#         │       └─nginx
-#         └─mysqld
+# systemd-+-sshd---sshd---bash---pstree
+#         +-nginx-+-nginx
+#         |       +-nginx
+#         +-mysqld
 
 # Med PID
 pstree -p
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Process-information i /proc
 
@@ -1334,7 +1334,7 @@ ls /proc/1234/fd/
 cat /proc/1234/cmdline | tr '\\0' ' '
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1345,7 +1345,7 @@ cat /proc/1234/cmdline | tr '\\0' ' '
 | Hogt CPU | Runaway process | `top`, sedan `kill` |
 | Processen kan inte dodas | Kernel-state | `kill -9` eller reboot |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1374,7 +1374,7 @@ cat /proc/1234/cmdline | tr '\\0' ' '
 
 Nar du jobbar med Linux-servrar maste du kunna kora langvariga processer utan att blockera terminalen. Har lar du dig skilja pa forgrund och bakgrund.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1384,20 +1384,20 @@ Nar du jobbar med Linux-servrar maste du kunna kora langvariga processer utan at
 | **Maste gora flera saker** | Terminaln blockerad |
 | **Backup pa natten** | Maste vara inloggad |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Forgrund vs Bakgrund
 
 ```
 Terminal Control:
-┌─────────────────────────────────────────────────────────────┐
-│  FORGRUND                   │  BAKGRUND                    │
-│  ─────────                  │  ─────────                   │
-│  - Blockerar terminalen     │  - Terminal fri              │
-│  - Ctrl+C avbryter          │  - Maste anvanda kill        │
-│  - Direkt output            │  - Output kan ga forlorad    │
-│  - Standard for kommandon   │  - Kraver & eller bg         │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  FORGRUND                   |  BAKGRUND                    |
+|  ---------                  |  ---------                   |
+|  - Blockerar terminalen     |  - Terminal fri              |
+|  - Ctrl+C avbryter          |  - Maste anvanda kill        |
+|  - Direkt output            |  - Output kan ga forlorad    |
+|  - Standard for kommandon   |  - Kraver & eller bg         |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1411,7 +1411,7 @@ sleep 60 &
 # Terminalen fri
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jobs-kommandot
 
@@ -1432,7 +1432,7 @@ jobs
 # [2]-  Stopped    vim file.txt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Flytta mellan forgrund och bakgrund
 
@@ -1456,7 +1456,7 @@ fg %1
 bg %1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Overleva logout med nohup
 
@@ -1478,18 +1478,18 @@ nohup ./backup.sh > backup.log 2>&1 &
 disown %1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Screen/tmux for langvariga jobb
 
 ```
 Session Management:
-┌─────────────────────────────────────────────────────────────┐
-│  screen -S deploy      Skapa session                       │
-│  Ctrl+A, D             Detach (koppla loss)                │
-│  screen -ls            Lista sessioner                     │
-│  screen -r deploy      Ateranslut                          │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  screen -S deploy      Skapa session                       |
+|  Ctrl+A, D             Detach (koppla loss)                |
+|  screen -ls            Lista sessioner                     |
+|  screen -r deploy      Ateranslut                          |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1502,7 +1502,7 @@ screen -S deploy
 screen -r deploy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt exempel
 
@@ -1517,7 +1517,7 @@ screen -r deploy
 nohup ./deploy.sh > /var/log/deploy.log 2>&1 &
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1547,7 +1547,7 @@ nohup ./deploy.sh > /var/log/deploy.log 2>&1 &
 
 Jobbkontroll ar konsten att hantera flera processer fran en terminal - pausa, ateruppta, och se till att de overlever aven om du tappar anslutningen.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1557,18 +1557,18 @@ Jobbkontroll ar konsten att hantera flera processer fran en terminal - pausa, at
 | **SSH tappar** | Jobb maste overleva |
 | **Flera jobb** | Parallellt arbete |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Jobs-kommandot
 
 ```
 Job Notation:
-┌─────────────────────────────────────────────────────────────┐
-│  %1    Jobb nummer 1                                       │
-│  %+    Current job (default)                               │
-│  %-    Previous job                                        │
-│  %%    Samma som %+                                        │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  %1    Jobb nummer 1                                       |
+|  %+    Current job (default)                               |
+|  %-    Previous job                                        |
+|  %%    Samma som %+                                        |
++-------------------------------------------------------------+
 ```
 
 | Kommando | Beskrivning |
@@ -1583,7 +1583,7 @@ jobs
 # [2]-  Stopped    vim config.txt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Pausa och ateruppta
 
@@ -1607,7 +1607,7 @@ bg %1
 fg %1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Starta flera jobb parallellt
 
@@ -1624,7 +1624,7 @@ jobs
 # [3]+  Running    ./job3.sh &
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## nohup - overlev logout
 
@@ -1642,7 +1642,7 @@ nohup ./backup.sh &
 nohup ./backup.sh > backup.log 2>&1 &
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## disown - radda glomda jobb
 
@@ -1658,7 +1658,7 @@ disown %1
 # Nu overlever den logout
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt exempel
 
@@ -1677,7 +1677,7 @@ disown -h %1
 ps aux | grep migrate
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1706,7 +1706,7 @@ ps aux | grep migrate
 
 Signaler ar hur Linux kommunicerar med processer - fran Ctrl+C till graceful shutdown. Har lar du dig anvanda dem ratt for att undvika dataforlust.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1716,7 +1716,7 @@ Signaler ar hur Linux kommunicerar med processer - fran Ctrl+C till graceful shu
 | **Reload config** | Utan omstart |
 | **Hanterad process** | Doda korrekt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## De viktigaste signalerna
 
@@ -1734,21 +1734,21 @@ Signaler ar hur Linux kommunicerar med processer - fran Ctrl+C till graceful shu
 kill -l
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SIGTERM vs SIGKILL
 
 ```
 Signal Comparison:
-┌─────────────────────────────────────────────────────────────┐
-│  SIGTERM (15)               │  SIGKILL (9)                 │
-│  ────────────               │  ────────────                │
-│  - "Snalla avsluta"         │  - "Do. Nu."                 │
-│  - Process far stada        │  - Ingen cleanup             │
-│  - Kan ignoreras            │  - Kan INTE ignoreras        │
-│  - Forst val                │  - Sista utväg               │
-│  - Sparar data              │  - Risk for dataforlust      │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  SIGTERM (15)               |  SIGKILL (9)                 |
+|  ------------               |  ------------                |
+|  - "Snalla avsluta"         |  - "Do. Nu."                 |
+|  - Process far stada        |  - Ingen cleanup             |
+|  - Kan ignoreras            |  - Kan INTE ignoreras        |
+|  - Forst val                |  - Sista utväg               |
+|  - Sparar data              |  - Risk for dataforlust      |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1758,7 +1758,7 @@ sleep 5             # Vanta
 kill -9 12345       # SIGKILL om nodvandigt
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## kill, killall, pkill
 
@@ -1784,7 +1784,7 @@ pkill -f "python backup.py"
 pgrep nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SIGHUP for reload
 
@@ -1802,7 +1802,7 @@ kill -HUP $(cat /var/run/nginx.pid)
 sudo systemctl reload nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## trap i scripts
 
@@ -1823,7 +1823,7 @@ while true; do
 done
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1852,7 +1852,7 @@ done
 
 Nar servern blir langsam ar processovervakning ditt forsta verktyg. Har lar du dig identifiera vilken process som ater CPU eller minne.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1863,7 +1863,7 @@ Nar servern blir langsam ar processovervakning ditt forsta verktyg. Har lar du d
 | **Port upptagen** | lsof -i :port |
 | **Hitta PID** | pgrep |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## ps - ogonblicksbild
 
@@ -1889,18 +1889,18 @@ ps aux | grep nginx
 ps aux --sort=-%mem | head -10
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## top - realtidsovervakning
 
 ```
 Top Interface:
-┌─────────────────────────────────────────────────────────────┐
-│  load average: 0.52, 0.48, 0.45                            │
-│  ──────────────────────────                                │
-│  1 min  5 min  15 min                                      │
-│  Under antal CPU-karnor = OK                               │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  load average: 0.52, 0.48, 0.45                            |
+|  --------------------------                                |
+|  1 min  5 min  15 min                                      |
+|  Under antal CPU-karnor = OK                               |
++-------------------------------------------------------------+
 ```
 
 | Tangent | Funktion |
@@ -1916,7 +1916,7 @@ top
 top -bn1 | head -20  # Batch mode for scripts
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## htop - modern overvakning
 
@@ -1938,7 +1938,7 @@ htop
 htop -u www-data
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## pgrep och lsof
 
@@ -1960,7 +1960,7 @@ lsof -i :80
 lsof -p 1234
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felsokningsworkflow
 
@@ -1981,7 +1981,7 @@ ps aux --sort=-%mem | head -10
 lsof -i :3000
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2010,7 +2010,7 @@ lsof -i :3000
 
 Systemd ar hjartat i moderna Linux - det ar PID 1 som startar och hanterar alla tjanster. Har lar du dig forsta hur det fungerar.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2020,21 +2020,21 @@ Systemd ar hjartat i moderna Linux - det ar PID 1 som startar och hanterar alla 
 | **Automatisk omstart** | Konfigurera korrekt |
 | **Boot-ordning** | Hantera beroenden |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Systemd oversikt
 
 ```
 Systemd Hierarchy:
-┌─────────────────────────────────────────────────────────────┐
-│  systemd (PID 1)                                           │
-│       │                                                     │
-│       ├── service units ────── nginx, postgres, etc        │
-│       ├── socket units ─────── aktivering via socket       │
-│       ├── timer units ──────── schemalagda jobb            │
-│       ├── target units ─────── grupper (multi-user)        │
-│       └── mount units ──────── filsystem                   │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  systemd (PID 1)                                           |
+|       |                                                     |
+|       +-- service units ------ nginx, postgres, etc        |
+|       +-- socket units ------- aktivering via socket       |
+|       +-- timer units -------- schemalagda jobb            |
+|       +-- target units ------- grupper (multi-user)        |
+|       +-- mount units -------- filsystem                   |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -2042,7 +2042,7 @@ Systemd Hierarchy:
 ps -p 1
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Unit-typer
 
@@ -2060,7 +2060,7 @@ ps -p 1
 systemctl list-units --type=service --state=running
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Unit-filer - var finns de?
 
@@ -2075,7 +2075,7 @@ systemctl list-units --type=service --state=running
 systemctl show nginx --property=FragmentPath
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Dependencies
 
@@ -2094,7 +2094,7 @@ systemctl list-dependencies nginx
 systemctl list-dependencies --reverse nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Targets
 
@@ -2113,7 +2113,7 @@ systemctl get-default
 sudo systemctl set-default multi-user.target
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Cgroups - resurskontroll
 
@@ -2125,7 +2125,7 @@ systemd-cgls
 systemd-cgtop
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2154,7 +2154,7 @@ systemd-cgtop
 
 For att kora dina applikationer som tjanster maste du skapa unit-filer. Har lar du dig syntaxen for services, timers och sockets.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2164,17 +2164,17 @@ For att kora dina applikationer som tjanster maste du skapa unit-filer. Har lar 
 | **Schemalagda jobb** | Timer istallet for cron |
 | **On-demand start** | Socket activation |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service unit struktur
 
 ```
 Unit File Sections:
-┌─────────────────────────────────────────────────────────────┐
-│  [Unit]        Beskrivning och dependencies                │
-│  [Service]     Hur tjansten kors                           │
-│  [Install]     Nar den aktiveras                           │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  [Unit]        Beskrivning och dependencies                |
+|  [Service]     Hur tjansten kors                           |
+|  [Install]     Nar den aktiveras                           |
++-------------------------------------------------------------+
 ```
 
 | Sektion | Direktiv | Betydelse |
@@ -2187,7 +2187,7 @@ Unit File Sections:
 | [Service] | Restart | on-failure, always |
 | [Install] | WantedBy | multi-user.target |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Exempel: Service unit
 
@@ -2214,7 +2214,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now myapp
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Timer units
 
@@ -2243,7 +2243,7 @@ sudo systemctl enable --now backup.timer
 systemctl list-timers
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Socket units
 
@@ -2262,7 +2262,7 @@ WantedBy=sockets.target
 
 Tjansten startas forst nar nagon ansluter till porten.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Viktiga direktiv
 
@@ -2274,7 +2274,7 @@ Tjansten startas forst nar nagon ansluter till porten.
 | Restart | on-failure | Vid krasch |
 | Restart | always | Alltid |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2303,7 +2303,7 @@ Tjansten startas forst nar nagon ansluter till porten.
 
 Varje webbserver, databas och applikation pa en Linux-server kor som en tjanst. Har lar du dig hantera dem med systemctl.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2314,7 +2314,7 @@ Varje webbserver, databas och applikation pa en Linux-server kor som en tjanst. 
 | **Reload config** | `systemctl reload` |
 | **Felsokning** | `systemctl status` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande kommandon
 
@@ -2334,7 +2334,7 @@ sudo systemctl reload nginx
 systemctl status nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Enable/Disable
 
@@ -2351,7 +2351,7 @@ sudo systemctl enable --now nginx
 systemctl is-enabled nginx
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Lista tjanster
 
@@ -2367,7 +2367,7 @@ systemctl list-units --type=service --state=running
 systemctl list-units --type=service --state=failed
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Mask/Unmask
 
@@ -2389,7 +2389,7 @@ sudo systemctl unmask apache2
 | disable | Ja | Nej |
 | mask | Nej | Nej |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Deploy-workflow
 
@@ -2407,7 +2407,7 @@ systemctl status myapp
 journalctl -u myapp -n 20
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2436,7 +2436,7 @@ journalctl -u myapp -n 20
 
 Nar en server inte startar behover du forsta bootprocessen for att felstoka. Har lar du dig hela kedjan fran strom till korande system.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2446,26 +2446,26 @@ Nar en server inte startar behover du forsta bootprocessen for att felstoka. Har
 | **Rescue mode** | Fixa trasigt system |
 | **Boot-ordning** | Konfigurera targets |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Boot-sekvensen
 
 ```
 Boot Process:
-┌─────────────────────────────────────────────────────────────┐
-│  1. BIOS/UEFI ──── Hittar boot-enhet                       │
-│         │                                                   │
-│  2. GRUB ─────── Laddar kernel + initramfs                 │
-│         │                                                   │
-│  3. Kernel ───── Initierar hardvara                        │
-│         │                                                   │
-│  4. Initramfs ── Mountar riktiga root                      │
-│         │                                                   │
-│  5. Systemd ──── Startar tjanster                          │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  1. BIOS/UEFI ---- Hittar boot-enhet                       |
+|         |                                                   |
+|  2. GRUB ------- Laddar kernel + initramfs                 |
+|         |                                                   |
+|  3. Kernel ----- Initierar hardvara                        |
+|         |                                                   |
+|  4. Initramfs -- Mountar riktiga root                      |
+|         |                                                   |
+|  5. Systemd ---- Startar tjanster                          |
++-------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Targets (systemds runlevels)
 
@@ -2485,7 +2485,7 @@ systemctl get-default
 sudo systemctl set-default multi-user.target
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Byta target vid korning
 
@@ -2501,7 +2501,7 @@ sudo systemctl isolate rescue.target
 sudo systemctl reboot
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## GRUB bootloader
 
@@ -2516,7 +2516,7 @@ sudo systemctl reboot
 sudo update-grub
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Rescue och Emergency mode
 
@@ -2535,7 +2535,7 @@ sudo update-grub
 mount -o remount,rw /
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felstok boot-problem
 
@@ -2550,7 +2550,7 @@ journalctl -b -1
 journalctl -b -p err
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2579,7 +2579,7 @@ journalctl -b -p err
 
 Loggar ar dina ogon in i systemet. Nar nagot gar fel ar journalctl forsta verktyget du anvander. Har lar du dig bemstra logganalys.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2589,7 +2589,7 @@ Loggar ar dina ogon in i systemet. Nar nagot gar fel ar journalctl forsta verkty
 | **Senaste errors** | `journalctl -p err` |
 | **Realtid** | `journalctl -f` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## journalctl grundlaggande
 
@@ -2605,7 +2605,7 @@ journalctl -f
 # Ctrl+C for att avsluta
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Filtrera efter tjanst
 
@@ -2620,7 +2620,7 @@ journalctl -u nginx -n 100
 journalctl -u nginx -f
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Filtrera efter prioritet
 
@@ -2640,7 +2640,7 @@ journalctl -p err          # Errors och varre
 journalctl -p warning      # Warnings och varre
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Boot-loggar
 
@@ -2655,7 +2655,7 @@ journalctl -b
 journalctl -b -1 -p err
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Traditionella loggar i /var/log/
 
@@ -2671,7 +2671,7 @@ sudo tail -f /var/log/auth.log
 sudo tail -f /var/log/nginx/error.log
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Logrotate
 
@@ -2682,7 +2682,7 @@ cat /etc/logrotate.d/nginx
 # daily, rotate 14, compress
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felsokningsworkflow
 
@@ -2700,7 +2700,7 @@ journalctl -u myapp -p err --since "1 hour ago"
 journalctl -u myapp --since "10:00" --until "10:05"
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2729,7 +2729,7 @@ journalctl -u myapp --since "10:00" --until "10:05"
 
 Linux ar ett multiuser-system. Du maste kunna skapa anvandare for deploy, services och teammedlemmar. Har lar du dig grunderna.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2739,7 +2739,7 @@ Linux ar ett multiuser-system. Du maste kunna skapa anvandare for deploy, servic
 | **Service accounts** | Applikationer |
 | **Teammedlemmar** | SSH-access |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Skapa anvandare
 
@@ -2755,7 +2755,7 @@ sudo useradd -m -s /bin/bash deploy
 sudo passwd deploy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Viktiga filer
 
@@ -2771,7 +2771,7 @@ sudo passwd deploy
 cat /etc/passwd | grep deploy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Modifiera anvandare
 
@@ -2788,7 +2788,7 @@ sudo usermod -aG docker deploy
 # Utan -a tas andra grupper bort!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grupper
 
@@ -2804,7 +2804,7 @@ sudo usermod -aG developers john
 groups john
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ta bort anvandare
 
@@ -2819,7 +2819,7 @@ sudo tar -czvf /backup/user_home.tar.gz /home/user
 sudo userdel -r user
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Service accounts
 
@@ -2828,7 +2828,7 @@ sudo userdel -r user
 sudo useradd -r -s /usr/sbin/nologin myapp
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt: Deploy-anvandare
 
@@ -2845,7 +2845,7 @@ sudo chmod 700 /home/deploy/.ssh
 sudo usermod -aG docker deploy
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2874,7 +2874,7 @@ sudo usermod -aG docker deploy
 
 sudo ar hur anvandare far tillfallig root-access. Ratt konfigurerad sudo ger kontroll over vem som kan gora vad, med fullstandig audit trail.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -2884,7 +2884,7 @@ sudo ar hur anvandare far tillfallig root-access. Ratt konfigurerad sudo ger kon
 | **Automation** | Specifika kommandon |
 | **Sakerhet** | Begransad access |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Grundlaggande sudo
 
@@ -2901,7 +2901,7 @@ sudo -i
 sudo -u postgres psql
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## visudo - redigera sudoers
 
@@ -2913,7 +2913,7 @@ sudo visudo
 # nano /etc/sudoers  # FEL!
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## sudoers syntax
 
@@ -2928,7 +2928,7 @@ Format: vem   var=(som vem)  vad
 | `deploy ALL=(ALL) NOPASSWD: ALL` | Utan losenord (farligt!) |
 | `deploy ALL=(ALL) NOPASSWD: /bin/cmd` | Specifikt kommando |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Filer i /etc/sudoers.d/
 
@@ -2941,7 +2941,7 @@ deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart myapp
 deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl status myapp
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Best practices
 
@@ -2952,7 +2952,7 @@ deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl status myapp
 | Anvand visudo | nano /etc/sudoers |
 | Begransade rattigheter | Full access |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felsok
 
@@ -2967,7 +2967,7 @@ groups username
 sudo grep sudo /var/log/auth.log
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -2996,7 +2996,7 @@ sudo grep sudo /var/log/auth.log
 
 PAM (Pluggable Authentication Modules) ar Linux modulsystem for autentisering. Istallet for att varje program har egen auth-kod delegerar de till PAM.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -3006,21 +3006,21 @@ PAM (Pluggable Authentication Modules) ar Linux modulsystem for autentisering. I
 | **Grupprestriktioner** | Begransat sudo |
 | **Resurslimits** | Processer, filer |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## PAM-arkitektur
 
 ```
 PAM Flow:
-┌─────────────────────────────────────────────────────────────┐
-│  Program (ssh, sudo, login)                                │
-│         │                                                   │
-│         v                                                   │
-│  /etc/pam.d/tjanst ────── Konfiguration                   │
-│         │                                                   │
-│         v                                                   │
-│  PAM moduler (/lib/security/) ── .so filer                 │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  Program (ssh, sudo, login)                                |
+|         |                                                   |
+|         v                                                   |
+|  /etc/pam.d/tjanst ------ Konfiguration                   |
+|         |                                                   |
+|         v                                                   |
+|  PAM moduler (/lib/security/) -- .so filer                 |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -3028,7 +3028,7 @@ ls /etc/pam.d/
 cat /etc/pam.d/sudo
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## PAM-typer
 
@@ -3039,7 +3039,7 @@ cat /etc/pam.d/sudo
 | password | Losenordsandringar |
 | session | Vid login/logout |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Kontrollflaggor
 
@@ -3050,7 +3050,7 @@ cat /etc/pam.d/sudo
 | sufficient | Lyckas = klart |
 | optional | Spelar ingen roll |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga moduler
 
@@ -3061,7 +3061,7 @@ cat /etc/pam.d/sudo
 | pam_limits.so | Resursbegransningar |
 | pam_pwquality.so | Losenordspolicy |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Limits i /etc/security/limits.conf
 
@@ -3074,7 +3074,7 @@ cat /etc/pam.d/sudo
 cat /etc/security/limits.conf
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felsokning
 
@@ -3086,7 +3086,7 @@ sudo grep -i pam /var/log/auth.log
 pamtester sudo user authenticate
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3115,26 +3115,26 @@ pamtester sudo user authenticate
 
 SSH ar dorren till din server och varje exponerad maskin bombarderas konstant med automatiska inloggningsattacker. Hardening handlar om att gora den dorren sa svar att forcera som mojligt genom att lasa ut angripare pa flera nivaer.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SSH Hardening Checklista
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    SSH HARDENING STEG                           │
-├─────────────────────────────────────────────────────────────────┤
-│  [ ] 1. Byt SSH-port (2222 eller annan)                        │
-│  [ ] 2. Inaktivera root login (PermitRootLogin no)             │
-│  [ ] 3. Generera SSH-nycklar (ed25519)                         │
-│  [ ] 4. Inaktivera losenord (PasswordAuthentication no)        │
-│  [ ] 5. Begränsa anvandare (AllowUsers/AllowGroups)            │
-│  [ ] 6. Installera fail2ban                                     │
-│  [ ] 7. Konfigurera timeouts                                    │
-│  [ ] 8. Verifiera med sshd -t                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    SSH HARDENING STEG                           |
++-----------------------------------------------------------------+
+|  [ ] 1. Byt SSH-port (2222 eller annan)                        |
+|  [ ] 2. Inaktivera root login (PermitRootLogin no)             |
+|  [ ] 3. Generera SSH-nycklar (ed25519)                         |
+|  [ ] 4. Inaktivera losenord (PasswordAuthentication no)        |
+|  [ ] 5. Begränsa anvandare (AllowUsers/AllowGroups)            |
+|  [ ] 6. Installera fail2ban                                     |
+|  [ ] 7. Konfigurera timeouts                                    |
+|  [ ] 8. Verifiera med sshd -t                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## SSH-konfigurationsfilen
 
@@ -3146,18 +3146,18 @@ SSH ar dorren till din server och varje exponerad maskin bombarderas konstant me
 | `sudo sshd -t` | Testa konfigurationssyntax |
 | `sudo sshd -T` | Visa effektiv konfiguration |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Steg 1: Byt SSH-port
 
 ```
 Port 22 (default)         Port 2222 (ny)
-       │                         │
+       |                         |
        ▼                         ▼
-   ┌───────┐                 ┌───────┐
-   │ 99%   │   ───────►      │ <1%   │
-   │ bots  │   efter byte    │ bots  │
-   └───────┘                 └───────┘
+   +-------+                 +-------+
+   | 99%   |   -------►      | <1%   |
+   | bots  |   efter byte    | bots  |
+   +-------+                 +-------+
 ```
 
 ```bash
@@ -3176,7 +3176,7 @@ sudo systemctl restart sshd      # applicera
 sudo ufw allow 2222/tcp
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Steg 2: Inaktivera root-login
 
@@ -3194,7 +3194,7 @@ PermitRootLogin no
 sudo grep "^sudo" /etc/group
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Steg 3: SSH-nycklar
 
@@ -3217,17 +3217,17 @@ nano ~/.ssh/authorized_keys          # klistra in publik nyckel
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Steg 4: Inaktivera losenord
 
 ```
 INNAN: Losenord + Nycklar           EFTER: Endast Nycklar
-      ┌─────────────┐                    ┌─────────────┐
-      │  Losenord   │ ──► X              │   Nyckel    │
-      │    eller    │      STANG AV      │   ENDAST    │
-      │   Nyckel    │                    └─────────────┘
-      └─────────────┘
+      +-------------+                    +-------------+
+      |  Losenord   | --► X              |   Nyckel    |
+      |    eller    |      STANG AV      |   ENDAST    |
+      |   Nyckel    |                    +-------------+
+      +-------------+
 ```
 
 ```bash
@@ -3241,7 +3241,7 @@ ChallengeResponseAuthentication no
 sudo sshd -t && sudo systemctl restart sshd
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Steg 5: Begransa atkomst
 
@@ -3259,7 +3259,7 @@ AllowUsers alice bob deploy
 AllowGroups sshusers admins
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Steg 6: Sakerhetsinställningar
 
@@ -3273,22 +3273,22 @@ AllowGroups sshusers admins
 | `AllowTcpForwarding` | no | Stang av port forwarding |
 | `Protocol` | 2 | Endast SSH v2 |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Fail2ban Installation
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    FAIL2BAN FLODE                               │
-│                                                                 │
-│    /var/log/auth.log                                           │
-│           │                                                     │
-│           ▼                                                     │
-│    ┌─────────────┐    3 fel inom    ┌─────────────┐            │
-│    │  Fail2ban   │ ──────────────►  │   BANNED    │            │
-│    │  overvakar  │    10 minuter    │   1 timme   │            │
-│    └─────────────┘                  └─────────────┘            │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    FAIL2BAN FLODE                               |
+|                                                                 |
+|    /var/log/auth.log                                           |
+|           |                                                     |
+|           ▼                                                     |
+|    +-------------+    3 fel inom    +-------------+            |
+|    |  Fail2ban   | --------------►  |   BANNED    |            |
+|    |  overvakar  |    10 minuter    |   1 timme   |            |
+|    +-------------+                  +-------------+            |
++-----------------------------------------------------------------+
 ```
 
 ```bash
@@ -3321,7 +3321,7 @@ sudo systemctl enable --now fail2ban
 sudo fail2ban-client status sshd
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Komplett Hardened sshd_config
 
@@ -3359,7 +3359,7 @@ PermitUserEnvironment no
 LogLevel VERBOSE
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Verifiering
 
@@ -3371,7 +3371,7 @@ LogLevel VERBOSE
 | Lyckade logins | `sudo grep "Accepted" /var/log/auth.log \\| tail -10` |
 | Fail2ban status | `sudo fail2ban-client status sshd` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -3401,28 +3401,28 @@ LogLevel VERBOSE
 
 En brandvagg ar vakten vid varje port pa din server och bestammer vilken trafik som far komma in och ga ut. Utan brandvagg ar alla portar oppna for vem som helst pa internet att forsoka ansluta till.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Brandvagg Oversikt
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      INTERNET                                   │
-│                          │                                      │
-│                          ▼                                      │
-│                    ┌───────────┐                                │
-│                    │ BRANDVAGG │                                │
-│                    └─────┬─────┘                                │
-│                          │                                      │
-│          ┌───────────────┼───────────────┐                      │
-│          ▼               ▼               ▼                      │
-│     Port 22         Port 80        Port 443     Port 3306       │
-│      ALLOW           ALLOW          ALLOW         DENY          │
-│       SSH            HTTP          HTTPS         MySQL          │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                      INTERNET                                   |
+|                          |                                      |
+|                          ▼                                      |
+|                    +-----------+                                |
+|                    | BRANDVAGG |                                |
+|                    +-----+-----+                                |
+|                          |                                      |
+|          +---------------+---------------+                      |
+|          ▼               ▼               ▼                      |
+|     Port 22         Port 80        Port 443     Port 3306       |
+|      ALLOW           ALLOW          ALLOW         DENY          |
+|       SSH            HTTP          HTTPS         MySQL          |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## UFW vs iptables vs firewalld
 
@@ -3433,7 +3433,7 @@ En brandvagg ar vakten vid varje port pa din server och bestammer vilken trafik 
 | firewalld | RHEL/CentOS | Medel | Zoner och services |
 | nftables | Moderna | Avancerad | Ersatter iptables |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## UFW - Uncomplicated Firewall
 
@@ -3446,20 +3446,20 @@ En brandvagg ar vakten vid varje port pa din server och bestammer vilken trafik 
 | `sudo ufw disable` | Inaktivera brandvagg |
 | `sudo ufw reset` | Aterstall allt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## UFW Grundkonfiguration
 
 ```
 VIKTIGT ORDNING:
                     1. allow ssh
-                          │
+                          |
                           ▼
                     2. default deny incoming
-                          │
+                          |
                           ▼
                     3. default allow outgoing
-                          │
+                          |
                           ▼
                     4. ufw enable
 ```
@@ -3478,7 +3478,7 @@ sudo ufw default allow outgoing  # tillat all utgaende
 sudo ufw enable
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## UFW Vanliga Regler
 
@@ -3494,7 +3494,7 @@ sudo ufw enable
 | `sudo ufw allow from 192.168.1.100 to any port 22` | IP + port |
 | `sudo ufw allow 6000:6007/tcp` | Portintervall |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Ta Bort UFW-regler
 
@@ -3515,22 +3515,22 @@ sudo ufw delete allow from 192.168.1.100
 sudo ufw reset
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## iptables Grunder
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     IPTABLES CHAINS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  INKOMMANDE ──► [INPUT]    ──► Lokal process                   │
-│                                                                 │
-│  Lokal process ──► [OUTPUT] ──► UTGAENDE                       │
-│                                                                 │
-│  INKOMMANDE ──► [FORWARD] ──► UTGAENDE (routing)               │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     IPTABLES CHAINS                             |
++-----------------------------------------------------------------+
+|                                                                 |
+|  INKOMMANDE --► [INPUT]    --► Lokal process                   |
+|                                                                 |
+|  Lokal process --► [OUTPUT] --► UTGAENDE                       |
+|                                                                 |
+|  INKOMMANDE --► [FORWARD] --► UTGAENDE (routing)               |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
 | Kommando | Beskrivning |
@@ -3541,7 +3541,7 @@ sudo ufw reset
 | `sudo iptables -L -n -v --line-numbers` | Allt |
 | `sudo iptables -F` | Flush (rensa) allt |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## iptables Syntax
 
@@ -3577,7 +3577,7 @@ sudo iptables -A INPUT -i lo -j ACCEPT
 sudo iptables -A INPUT -j DROP
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## iptables Spara Regler
 
@@ -3595,7 +3595,7 @@ sudo iptables -L INPUT --line-numbers
 sudo iptables -D INPUT 3             # ta bort regel 3
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Praktiskt Exempel: Webbserver
 
@@ -3620,7 +3620,7 @@ sudo iptables -A INPUT -j DROP                                # neka resten
 sudo netfilter-persistent save                                # spara
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## firewalld (RHEL/CentOS)
 
@@ -3634,7 +3634,7 @@ sudo netfilter-persistent save                                # spara
 | `sudo firewall-cmd --reload` | Ladda om |
 | `sudo firewall-cmd --remove-service=http --permanent` | Ta bort |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Felsokning
 
@@ -3647,31 +3647,31 @@ sudo netfilter-persistent save                                # spara
 | Aktivera UFW-logg | `sudo ufw logging on` |
 | Visa logg | `sudo tail -f /var/log/ufw.log` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga Misstag
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   MISSTAG ATT UNDVIKA                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. Aktivera brandvagg INNAN SSH ar tillaten                   │
-│     Losning: ufw allow ssh FORST                               │
-│                                                                 │
-│  2. Glommer ESTABLISHED,RELATED i iptables                     │
-│     Losning: -m state --state ESTABLISHED,RELATED -j ACCEPT    │
-│                                                                 │
-│  3. Blockera loopback (localhost)                              │
-│     Losning: -A INPUT -i lo -j ACCEPT                          │
-│                                                                 │
-│  4. Glommer spara iptables-regler                              │
-│     Losning: netfilter-persistent save                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   MISSTAG ATT UNDVIKA                           |
++-----------------------------------------------------------------+
+|                                                                 |
+|  1. Aktivera brandvagg INNAN SSH ar tillaten                   |
+|     Losning: ufw allow ssh FORST                               |
+|                                                                 |
+|  2. Glommer ESTABLISHED,RELATED i iptables                     |
+|     Losning: -m state --state ESTABLISHED,RELATED -j ACCEPT    |
+|                                                                 |
+|  3. Blockera loopback (localhost)                              |
+|     Losning: -A INPUT -i lo -j ACCEPT                          |
+|                                                                 |
+|  4. Glommer spara iptables-regler                              |
+|     Losning: netfilter-persistent save                         |
+|                                                                 |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

@@ -39,15 +39,15 @@ AZURE_NODE_18_KEYVAULT_V2 = {
                         "title": "Key Vault Objects",
                         "explanation": "Secrets (connection strings, API keys), Keys (kryptografiska nycklar), Certificates (SSL/TLS). Standard = software-backed, Premium = HSM-backed.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ KEY VAULT: kv-myapp                         │
-├─────────────────────────────────────────────┤
-│ Secrets      │ db-password, api-key        │
-│ Keys         │ encryption-key, signing-key │
-│ Certificates │ ssl-cert, code-sign-cert    │
-├─────────────────────────────────────────────┤
-│ Standard (~$0.03/op) │ Premium (HSM ~$1/key)│
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| KEY VAULT: kv-myapp                         |
++---------------------------------------------+
+| Secrets      | db-password, api-key        |
+| Keys         | encryption-key, signing-key |
+| Certificates | ssl-cert, code-sign-cert    |
++---------------------------------------------+
+| Standard (~$0.03/op) | Premium (HSM ~$1/key)|
++---------------------------------------------+""",
                         "pro_tip": "Secrets versioneras automatiskt - du kan rollback till tidigare version.",
                         "common_mistake": "Att inte aktivera purge protection i produktion."
                     },
@@ -55,13 +55,13 @@ AZURE_NODE_18_KEYVAULT_V2 = {
                         "title": "Access Control",
                         "explanation": "RBAC (rekommenderat) eller Access Policies. RBAC-roller: Key Vault Secrets User (läs), Key Vault Secrets Officer (hantera), Key Vault Administrator (full).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ RBAC (Recommended)                          │
-├─────────────────────────────────────────────┤
-│ Secrets User    │ Get, List secrets        │
-│ Secrets Officer │ + Set, Delete, Backup    │
-│ Administrator   │ Full access + purge      │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| RBAC (Recommended)                          |
++---------------------------------------------+
+| Secrets User    | Get, List secrets        |
+| Secrets Officer | + Set, Delete, Backup    |
+| Administrator   | Full access + purge      |
++---------------------------------------------+""",
                         "pro_tip": "Använd --enable-rbac-authorization vid vault creation.",
                         "common_mistake": "Att blanda Access Policies och RBAC - välj en modell."
                     }

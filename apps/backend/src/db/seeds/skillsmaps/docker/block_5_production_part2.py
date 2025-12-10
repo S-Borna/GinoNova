@@ -23,30 +23,30 @@ Observability ar kritiskt for produktions-Docker-miljoer. Det innefattar metrics
 ### Observability Pillars
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    OBSERVABILITY PILLARS                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│                         OBSERVABILITY                                    │
-│                              │                                           │
-│            ┌─────────────────┼─────────────────┐                        │
-│            │                 │                 │                        │
-│            ▼                 ▼                 ▼                        │
-│     ┌──────────┐      ┌──────────┐      ┌──────────┐                   │
-│     │  METRICS │      │   LOGS   │      │  TRACES  │                   │
-│     │          │      │          │      │          │                   │
-│     │ What is  │      │ What     │      │ How      │                   │
-│     │happening │      │happened  │      │ it flows │                   │
-│     │          │      │          │      │          │                   │
-│     │Prometheus│      │ Loki/ELK │      │ Jaeger   │                   │
-│     │ Grafana  │      │ Grafana  │      │ Zipkin   │                   │
-│     └──────────┘      └──────────┘      └──────────┘                   │
-│                                                                          │
-│  METRICS: Quantitative data (CPU, memory, requests/sec)                 │
-│  LOGS: Qualitative events (errors, warnings, info)                      │
-│  TRACES: Request flow across services                                   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    OBSERVABILITY PILLARS                                 |
++-------------------------------------------------------------------------+
+|                                                                          |
+|                         OBSERVABILITY                                    |
+|                              |                                           |
+|            +-----------------+-----------------+                        |
+|            |                 |                 |                        |
+|            ▼                 ▼                 ▼                        |
+|     +----------+      +----------+      +----------+                   |
+|     |  METRICS |      |   LOGS   |      |  TRACES  |                   |
+|     |          |      |          |      |          |                   |
+|     | What is  |      | What     |      | How      |                   |
+|     |happening |      |happened  |      | it flows |                   |
+|     |          |      |          |      |          |                   |
+|     |Prometheus|      | Loki/ELK |      | Jaeger   |                   |
+|     | Grafana  |      | Grafana  |      | Zipkin   |                   |
+|     +----------+      +----------+      +----------+                   |
+|                                                                          |
+|  METRICS: Quantitative data (CPU, memory, requests/sec)                 |
+|  LOGS: Qualitative events (errors, warnings, info)                      |
+|  TRACES: Request flow across services                                   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Prometheus Stack
@@ -379,7 +379,7 @@ groups:
 
 ---
 
-**Nasta Node:** Docker at Scale →
+**Nasta Node:** Docker at Scale ->
 ''',
     "xp_reward": 180,
     "estimated_minutes": 85,
@@ -405,35 +405,35 @@ Att kora Docker i enterprise-skala kraver specifika patterns och strategier for 
 ### Scale Considerations
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    DOCKER AT SCALE                                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  SCALE DIMENSIONS:                                                       │
-│  ─────────────────────────────────────────────────────────────────────  │
-│                                                                          │
-│  HORIZONTAL                     VERTICAL                                │
-│  ──────────                     ────────                                │
-│  More containers                Bigger containers                       │
-│  More nodes                     More resources per container            │
-│  Load balancing                 Optimized images                        │
-│                                                                          │
-│  ORGANIZATIONAL                 OPERATIONAL                             │
-│  ──────────────                 ───────────                             │
-│  Multiple teams                 CI/CD pipelines                         │
-│  Multiple environments          Monitoring at scale                     │
-│  Image governance               Incident response                       │
-│                                                                          │
-│  CHALLENGES AT SCALE:                                                   │
-│  ─────────────────────────────────────────────────────────────────────  │
-│  • Image sprawl (100s of images)                                        │
-│  • Registry management                                                  │
-│  • Secret distribution                                                  │
-│  • Network complexity                                                   │
-│  • Log volume (TB/day)                                                 │
-│  • Cost optimization                                                    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    DOCKER AT SCALE                                       |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  SCALE DIMENSIONS:                                                       |
+|  ---------------------------------------------------------------------  |
+|                                                                          |
+|  HORIZONTAL                     VERTICAL                                |
+|  ----------                     --------                                |
+|  More containers                Bigger containers                       |
+|  More nodes                     More resources per container            |
+|  Load balancing                 Optimized images                        |
+|                                                                          |
+|  ORGANIZATIONAL                 OPERATIONAL                             |
+|  --------------                 -----------                             |
+|  Multiple teams                 CI/CD pipelines                         |
+|  Multiple environments          Monitoring at scale                     |
+|  Image governance               Incident response                       |
+|                                                                          |
+|  CHALLENGES AT SCALE:                                                   |
+|  ---------------------------------------------------------------------  |
+|  • Image sprawl (100s of images)                                        |
+|  • Registry management                                                  |
+|  • Secret distribution                                                  |
+|  • Network complexity                                                   |
+|  • Log volume (TB/day)                                                 |
+|  • Cost optimization                                                    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Image Management
@@ -587,35 +587,35 @@ spec:
 ## 6. Cost Optimization
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    COST OPTIMIZATION STRATEGIES                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  IMAGE OPTIMIZATION                                                      │
-│  □ Use multi-stage builds (reduce size 50-90%)                          │
-│  □ Use distroless/alpine bases                                          │
-│  □ Remove development dependencies                                      │
-│  □ Cleanup in same layer                                                │
-│                                                                          │
-│  RESOURCE OPTIMIZATION                                                  │
-│  □ Right-size container resources                                       │
-│  □ Use auto-scaling                                                     │
-│  □ Implement resource quotas                                            │
-│  □ Spot/preemptible instances                                          │
-│                                                                          │
-│  REGISTRY OPTIMIZATION                                                  │
-│  □ Implement retention policies                                         │
-│  □ Use regional registries                                              │
-│  □ Cache base images                                                    │
-│  □ Lifecycle policies                                                   │
-│                                                                          │
-│  BUILD OPTIMIZATION                                                     │
-│  □ Efficient caching                                                    │
-│  □ Parallel builds                                                      │
-│  □ Incremental builds                                                   │
-│  □ Remote cache                                                         │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    COST OPTIMIZATION STRATEGIES                          |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  IMAGE OPTIMIZATION                                                      |
+|  □ Use multi-stage builds (reduce size 50-90%)                          |
+|  □ Use distroless/alpine bases                                          |
+|  □ Remove development dependencies                                      |
+|  □ Cleanup in same layer                                                |
+|                                                                          |
+|  RESOURCE OPTIMIZATION                                                  |
+|  □ Right-size container resources                                       |
+|  □ Use auto-scaling                                                     |
+|  □ Implement resource quotas                                            |
+|  □ Spot/preemptible instances                                          |
+|                                                                          |
+|  REGISTRY OPTIMIZATION                                                  |
+|  □ Implement retention policies                                         |
+|  □ Use regional registries                                              |
+|  □ Cache base images                                                    |
+|  □ Lifecycle policies                                                   |
+|                                                                          |
+|  BUILD OPTIMIZATION                                                     |
+|  □ Efficient caching                                                    |
+|  □ Parallel builds                                                      |
+|  □ Incremental builds                                                   |
+|  □ Remote cache                                                         |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. Team Workflows
@@ -627,22 +627,22 @@ spec:
 
 # Registry structure
 registry.example.com/
-├── platform/              # Platform team
-│   ├── api
-│   ├── gateway
-│   └── auth
-├── data/                  # Data team
-│   ├── etl
-│   ├── warehouse
-│   └── ml-models
-├── frontend/              # Frontend team
-│   ├── web
-│   ├── mobile-api
-│   └── cdn
-└── shared/                # Shared images
-    ├── base-python
-    ├── base-node
-    └── ci-tools
++-- platform/              # Platform team
+|   +-- api
+|   +-- gateway
+|   +-- auth
++-- data/                  # Data team
+|   +-- etl
+|   +-- warehouse
+|   +-- ml-models
++-- frontend/              # Frontend team
+|   +-- web
+|   +-- mobile-api
+|   +-- cdn
++-- shared/                # Shared images
+    +-- base-python
+    +-- base-node
+    +-- ci-tools
 ```
 
 ## 8. Disaster Recovery

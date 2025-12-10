@@ -39,18 +39,18 @@ LINUX_NODE_8_USERS_V2 = {
                         "title": "User & Group Files",
                         "explanation": "/etc/passwd (user info), /etc/shadow (encrypted passwords), /etc/group (grupper). Varje user har UID, varje grupp har GID.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ /etc/passwd                                 │
-│ john:x:1000:1000:John Doe:/home/john:/bin/bash│
-│  │   │  │    │      │        │         │     │
-│  │   │  │    │      │        │         └─shell│
-│  │   │  │    │      │        └─home dir      │
-│  │   │  │    │      └─comment (GECOS)        │
-│  │   │  │    └─primary GID                   │
-│  │   │  └─UID                                │
-│  │   └─password (x = in shadow)              │
-│  └─username                                  │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| /etc/passwd                                 |
+| john:x:1000:1000:John Doe:/home/john:/bin/bash|
+|  |   |  |    |      |        |         |     |
+|  |   |  |    |      |        |         +-shell|
+|  |   |  |    |      |        +-home dir      |
+|  |   |  |    |      +-comment (GECOS)        |
+|  |   |  |    +-primary GID                   |
+|  |   |  +-UID                                |
+|  |   +-password (x = in shadow)              |
+|  +-username                                  |
++---------------------------------------------+""",
                         "pro_tip": "UID 0 = root. UIDs under 1000 är ofta system-användare.",
                         "common_mistake": "Att editera passwd/shadow manuellt. Använd useradd/usermod!"
                     },
@@ -58,14 +58,14 @@ LINUX_NODE_8_USERS_V2 = {
                         "title": "sudo & sudoers",
                         "explanation": "sudo kör kommandon som root. /etc/sudoers styr vem som får. Editera ALLTID med visudo (syntax check).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ SUDOERS FORMAT                              │
-│ user  host=(runas) commands                 │
-├─────────────────────────────────────────────┤
-│ john  ALL=(ALL) ALL                         │
-│ %sudo ALL=(ALL) ALL                         │
-│ deploy ALL=(ALL) NOPASSWD: /bin/systemctl   │
-└─────────────────────────────────────────────┘
++---------------------------------------------+
+| SUDOERS FORMAT                              |
+| user  host=(runas) commands                 |
++---------------------------------------------+
+| john  ALL=(ALL) ALL                         |
+| %sudo ALL=(ALL) ALL                         |
+| deploy ALL=(ALL) NOPASSWD: /bin/systemctl   |
++---------------------------------------------+
 # % = grupp, NOPASSWD = inget lösenord""",
                         "pro_tip": "Lägg egna regler i /etc/sudoers.d/ istället för att ändra huvudfilen.",
                         "common_mistake": "Att editera sudoers utan visudo - syntax-fel = låst ute!"

@@ -23,7 +23,7 @@ DOTNET_NODE_9_ASPNET_INTRO = {
     ],
     "content": """# ASP.NET Core Introduction
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -40,41 +40,41 @@ Du maste forsta:
 - **Middleware pipeline** - request/response flow
 - **Minimal API vs Controllers** - nar anvanda vilken
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 ASP.NET Core Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  ASP.NET CORE REQUEST PIPELINE                   │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  HTTP Request                                                   │
-│       │                                                          │
-│       ▼                                                          │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │                      KESTREL                             │    │
-│  │              (High-performance web server)               │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│       │                                                          │
-│       ▼                                                          │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │                   MIDDLEWARE PIPELINE                    │    │
-│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐        │    │
-│  │  │ Logging │→│  CORS   │→│  Auth   │→│ Routing │        │    │
-│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘        │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│       │                                                          │
-│       ▼                                                          │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │                    ENDPOINT                              │    │
-│  │            (Controller / Minimal API)                    │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│       │                                                          │
-│       ▼                                                          │
-│  HTTP Response                                                  │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  ASP.NET CORE REQUEST PIPELINE                   |
++-----------------------------------------------------------------+
+|                                                                  |
+|  HTTP Request                                                   |
+|       |                                                          |
+|       ▼                                                          |
+|  +---------------------------------------------------------+    |
+|  |                      KESTREL                             |    |
+|  |              (High-performance web server)               |    |
+|  +---------------------------------------------------------+    |
+|       |                                                          |
+|       ▼                                                          |
+|  +---------------------------------------------------------+    |
+|  |                   MIDDLEWARE PIPELINE                    |    |
+|  |  +---------+ +---------+ +---------+ +---------+        |    |
+|  |  | Logging |->|  CORS   |->|  Auth   |->| Routing |        |    |
+|  |  +---------+ +---------+ +---------+ +---------+        |    |
+|  +---------------------------------------------------------+    |
+|       |                                                          |
+|       ▼                                                          |
+|  +---------------------------------------------------------+    |
+|  |                    ENDPOINT                              |    |
+|  |            (Controller / Minimal API)                    |    |
+|  +---------------------------------------------------------+    |
+|       |                                                          |
+|       ▼                                                          |
+|  HTTP Response                                                  |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -88,12 +88,12 @@ cd MyApi
 
 # Projektstruktur
 MyApi/
-├── MyApi.csproj           # Projektfil
-├── Program.cs             # Allt i en fil!
-├── appsettings.json       # Configuration
-├── appsettings.Development.json
-└── Properties/
-    └── launchSettings.json  # Dev-inställningar
++-- MyApi.csproj           # Projektfil
++-- Program.cs             # Allt i en fil!
++-- appsettings.json       # Configuration
++-- appsettings.Development.json
++-- Properties/
+    +-- launchSettings.json  # Dev-inställningar
 ```
 
 ### Minimal API (Modern Approach)
@@ -326,7 +326,7 @@ builder.Services.AddCors(options =>
 app.UseCors();
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -337,7 +337,7 @@ app.UseCors();
 | `app.MapGet()` | Definiera GET endpoint |
 | `Results.Ok()` | Returnera 200 OK |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -348,7 +348,7 @@ app.UseCors();
 | 404 Not Found | Fel route | Kontrollera routing |
 | 500 Internal Error | Exception | Kolla loggar |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -387,7 +387,7 @@ DOTNET_NODE_10_ROUTING = {
     ],
     "content": """# Routing och Endpoints
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -404,33 +404,33 @@ Du maste forsta:
 - **Constraints** - :int, :guid for validering
 - **Route groups** - organisera relaterade endpoints
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ---
 
 ## 🧠 Routing Patterns
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     ROUTING PATTERNS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  PATTERN                   │  EXAMPLE URL                       │
-│  ────────────────────────────────────────────────────────────   │
-│  /api/users                │  /api/users                        │
-│  /api/users/{id}           │  /api/users/123                    │
-│  /api/users/{id}/orders    │  /api/users/123/orders             │
-│  /api/products/{*slug}     │  /api/products/electronics/phones  │
-│  /api/v{version}/items     │  /api/v2/items                     │
-│                                                                  │
-│  CONSTRAINTS                                                    │
-│  ────────────────────────────────────────────────────────────   │
-│  {id:int}                  │  Only integers                     │
-│  {name:alpha}              │  Only letters                      │
-│  {id:range(1,100)}         │  Between 1 and 100                 │
-│  {filename:regex(.*\\.pdf)}│  Matches regex                     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                     ROUTING PATTERNS                             |
++-----------------------------------------------------------------+
+|                                                                  |
+|  PATTERN                   |  EXAMPLE URL                       |
+|  ------------------------------------------------------------   |
+|  /api/users                |  /api/users                        |
+|  /api/users/{id}           |  /api/users/123                    |
+|  /api/users/{id}/orders    |  /api/users/123/orders             |
+|  /api/products/{*slug}     |  /api/products/electronics/phones  |
+|  /api/v{version}/items     |  /api/v2/items                     |
+|                                                                  |
+|  CONSTRAINTS                                                    |
+|  ------------------------------------------------------------   |
+|  {id:int}                  |  Only integers                     |
+|  {name:alpha}              |  Only letters                      |
+|  {id:range(1,100)}         |  Between 1 and 100                 |
+|  {filename:regex(.*\\.pdf)}|  Matches regex                     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -653,7 +653,7 @@ app.MapGet("/api/users/{id:int}", (int id) => ...);  // Sedan (constraint)
 // /api/Users == /api/users == /API/USERS
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -664,7 +664,7 @@ app.MapGet("/api/users/{id:int}", (int id) => ...);  // Sedan (constraint)
 | `{id?}` | Optional parameter |
 | `{*catchAll}` | Catch-all parameter |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -675,7 +675,7 @@ app.MapGet("/api/users/{id:int}", (int id) => ...);  // Sedan (constraint)
 | Model binding failed | Fel format | Validera input |
 | Wrong method | GET vs POST | Kontrollera HTTP verb |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -714,7 +714,7 @@ DOTNET_NODE_11_MIDDLEWARE = {
     ],
     "content": """# Middleware Pipeline
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -731,51 +731,51 @@ Du maste forsta:
 - **Use vs Run** - middleware chain vs terminal
 - **Custom middleware** - reusable logic
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Middleware Pipeline
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   MIDDLEWARE PIPELINE                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  REQUEST →                                                      │
-│                                                                  │
-│  ┌──────────────┐                                               │
-│  │  Exception   │ ← Catches all exceptions                      │
-│  │   Handler    │                                               │
-│  └──────┬───────┘                                               │
-│         ▼                                                        │
-│  ┌──────────────┐                                               │
-│  │    HTTPS     │ ← Redirects HTTP to HTTPS                     │
-│  │  Redirect    │                                               │
-│  └──────┬───────┘                                               │
-│         ▼                                                        │
-│  ┌──────────────┐                                               │
-│  │   Static     │ ← Serves wwwroot files                        │
-│  │    Files     │                                               │
-│  └──────┬───────┘                                               │
-│         ▼                                                        │
-│  ┌──────────────┐                                               │
-│  │    CORS      │ ← Cross-origin headers                        │
-│  └──────┬───────┘                                               │
-│         ▼                                                        │
-│  ┌──────────────┐                                               │
-│  │    Auth      │ ← Who are you?                                │
-│  └──────┬───────┘                                               │
-│         ▼                                                        │
-│  ┌──────────────┐                                               │
-│  │   Routing    │ ← Match endpoint                              │
-│  └──────┬───────┘                                               │
-│         ▼                                                        │
-│  ┌──────────────┐                                               │
-│  │  Endpoint    │ ← Your code!                                  │
-│  └──────────────┘                                               │
-│                                                                  │
-│  ← RESPONSE                                                     │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   MIDDLEWARE PIPELINE                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  REQUEST ->                                                      |
+|                                                                  |
+|  +--------------+                                               |
+|  |  Exception   | <- Catches all exceptions                      |
+|  |   Handler    |                                               |
+|  +------+-------+                                               |
+|         ▼                                                        |
+|  +--------------+                                               |
+|  |    HTTPS     | <- Redirects HTTP to HTTPS                     |
+|  |  Redirect    |                                               |
+|  +------+-------+                                               |
+|         ▼                                                        |
+|  +--------------+                                               |
+|  |   Static     | <- Serves wwwroot files                        |
+|  |    Files     |                                               |
+|  +------+-------+                                               |
+|         ▼                                                        |
+|  +--------------+                                               |
+|  |    CORS      | <- Cross-origin headers                        |
+|  +------+-------+                                               |
+|         ▼                                                        |
+|  +--------------+                                               |
+|  |    Auth      | <- Who are you?                                |
+|  +------+-------+                                               |
+|         ▼                                                        |
+|  +--------------+                                               |
+|  |   Routing    | <- Match endpoint                              |
+|  +------+-------+                                               |
+|         ▼                                                        |
+|  +--------------+                                               |
+|  |  Endpoint    | <- Your code!                                  |
+|  +--------------+                                               |
+|                                                                  |
+|  <- RESPONSE                                                     |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---
@@ -1056,7 +1056,7 @@ if (!context.Response.HasStarted)
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens
 
@@ -1067,7 +1067,7 @@ if (!context.Response.HasStarted)
 | `Map()` | Branch pipeline |
 | `UseWhen()` | Conditional middleware |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -1078,7 +1078,7 @@ if (!context.Response.HasStarted)
 | Missing next | Glomde await | await _next(context) |
 | Wrong order | Authn efter Authz | Authn fore Authz |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -1117,7 +1117,7 @@ DOTNET_NODE_12_CONFIG = {
     ],
     "content": """# Configuration och Dependency Injection
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -1134,29 +1134,29 @@ Du maste forsta:
 - **Options pattern** - strongly-typed config
 - **DI lifetimes** - Transient, Scoped, Singleton
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## 🧠 Configuration Sources
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  CONFIGURATION SOURCES                           │
-│                  (i prioritetsordning)                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  1. appsettings.json           ← Bas-konfiguration              │
-│         ▼                                                        │
-│  2. appsettings.{Environment}.json  ← Environment-specific      │
-│         ▼                                                        │
-│  3. User Secrets (Development) ← Lokala hemligheter             │
-│         ▼                                                        │
-│  4. Environment Variables      ← Container/cloud config          │
-│         ▼                                                        │
-│  5. Command Line Arguments     ← Runtime overrides              │
-│                                                                  │
-│  SENARE KÄLLOR SKRIVER ÖVER TIDIGARE!                           │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  CONFIGURATION SOURCES                           |
+|                  (i prioritetsordning)                           |
++-----------------------------------------------------------------+
+|                                                                  |
+|  1. appsettings.json           <- Bas-konfiguration              |
+|         ▼                                                        |
+|  2. appsettings.{Environment}.json  <- Environment-specific      |
+|         ▼                                                        |
+|  3. User Secrets (Development) <- Lokala hemligheter             |
+|         ▼                                                        |
+|  4. Environment Variables      <- Container/cloud config          |
+|         ▼                                                        |
+|  5. Command Line Arguments     <- Runtime overrides              |
+|                                                                  |
+|  SENARE KÄLLOR SKRIVER ÖVER TIDIGARE!                           |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
 ---

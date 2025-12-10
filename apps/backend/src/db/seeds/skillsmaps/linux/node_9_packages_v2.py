@@ -39,17 +39,17 @@ LINUX_NODE_9_PACKAGES_V2 = {
                         "title": "apt (Debian/Ubuntu)",
                         "explanation": "apt update (hämta paketlista), apt upgrade (uppgradera), apt install (installera), apt remove (ta bort), apt autoremove (städa).",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ APT WORKFLOW                                │
-├─────────────────────────────────────────────┤
-│ apt update         │ Hämta ny paketlista    │
-│ apt upgrade        │ Uppgradera alla paket │
-│ apt install pkg    │ Installera paket      │
-│ apt remove pkg     │ Ta bort paket         │
-│ apt autoremove     │ Ta bort oanvända deps │
-│ apt search term    │ Sök paket             │
-│ apt show pkg       │ Visa paketinfo        │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| APT WORKFLOW                                |
++---------------------------------------------+
+| apt update         | Hämta ny paketlista    |
+| apt upgrade        | Uppgradera alla paket |
+| apt install pkg    | Installera paket      |
+| apt remove pkg     | Ta bort paket         |
+| apt autoremove     | Ta bort oanvända deps |
+| apt search term    | Sök paket             |
+| apt show pkg       | Visa paketinfo        |
++---------------------------------------------+""",
                         "pro_tip": "apt update && apt upgrade -y för att köra båda i ett steg.",
                         "common_mistake": "Att glömma 'apt update' innan install - du får gamla versioner!"
                     },
@@ -57,17 +57,17 @@ LINUX_NODE_9_PACKAGES_V2 = {
                         "title": "yum/dnf (RHEL/CentOS)",
                         "explanation": "dnf är nya yum (RHEL 8+). Samma syntax: dnf install, dnf update, dnf remove. EPEL repo ger extra paket.",
                         "diagram": """
-┌─────────────────────────────────────────────┐
-│ DNF/YUM WORKFLOW                            │
-├─────────────────────────────────────────────┤
-│ dnf check-update   │ Visa tillgängliga upd │
-│ dnf update         │ Uppgradera alla       │
-│ dnf install pkg    │ Installera            │
-│ dnf remove pkg     │ Ta bort               │
-│ dnf search term    │ Sök                   │
-│ dnf info pkg       │ Visa info             │
-│ dnf history        │ Visa historik         │
-└─────────────────────────────────────────────┘""",
++---------------------------------------------+
+| DNF/YUM WORKFLOW                            |
++---------------------------------------------+
+| dnf check-update   | Visa tillgängliga upd |
+| dnf update         | Uppgradera alla       |
+| dnf install pkg    | Installera            |
+| dnf remove pkg     | Ta bort               |
+| dnf search term    | Sök                   |
+| dnf info pkg       | Visa info             |
+| dnf history        | Visa historik         |
++---------------------------------------------+""",
                         "pro_tip": "dnf history undo <id> kan ångra en installation!",
                         "common_mistake": "Att blanda yum och dnf - håll dig till en."
                     }

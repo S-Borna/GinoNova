@@ -23,43 +23,43 @@ ConfigMaps och Secrets är Kubernetes-resurser för att separera konfiguration f
 ### Separation of Concerns
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                CONFIGURATION MANAGEMENT PRINCIPLE                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ❌ ANTI-PATTERN: Configuration i image                                 │
-│  ┌──────────────────────────────────────────────────────────────┐      │
-│  │                    CONTAINER IMAGE                            │      │
-│  │  ┌────────────────────────────────────────────────────────┐  │      │
-│  │  │  Application Code                                       │  │      │
-│  │  │  + config/database.yml  ← Hårdkodad config             │  │      │
-│  │  │  + .env                 ← Secrets i image! 😱          │  │      │
-│  │  └────────────────────────────────────────────────────────┘  │      │
-│  │  Ny image krävs för varje config-ändring                     │      │
-│  └──────────────────────────────────────────────────────────────┘      │
-│                                                                          │
-│  ✅ BEST PRACTICE: ConfigMaps & Secrets                                 │
-│  ┌──────────────────────────────────────────────────────────────┐      │
-│  │                    CONTAINER IMAGE                            │      │
-│  │  ┌────────────────────────────────────────────────────────┐  │      │
-│  │  │  Application Code Only                                  │  │      │
-│  │  │  (reads config from env/files at runtime)               │  │      │
-│  │  └────────────────────────────────────────────────────────┘  │      │
-│  └──────────────────────────────────────────────────────────────┘      │
-│                        │                     │                          │
-│                        ▼                     ▼                          │
-│              ┌──────────────┐      ┌──────────────┐                    │
-│              │  ConfigMap   │      │   Secret     │                    │
-│              │              │      │              │                    │
-│              │ DB_HOST=...  │      │ DB_PASS=...  │                    │
-│              │ LOG_LEVEL=...│      │ API_KEY=...  │                    │
-│              └──────────────┘      └──────────────┘                    │
-│                                                                          │
-│  ✅ Samma image i alla miljöer                                          │
-│  ✅ Config-ändringar utan rebuild                                       │
-│  ✅ Secrets hanteras separat                                            │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                CONFIGURATION MANAGEMENT PRINCIPLE                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ❌ ANTI-PATTERN: Configuration i image                                 |
+|  +--------------------------------------------------------------+      |
+|  |                    CONTAINER IMAGE                            |      |
+|  |  +--------------------------------------------------------+  |      |
+|  |  |  Application Code                                       |  |      |
+|  |  |  + config/database.yml  <- Hårdkodad config             |  |      |
+|  |  |  + .env                 <- Secrets i image! 😱          |  |      |
+|  |  +--------------------------------------------------------+  |      |
+|  |  Ny image krävs för varje config-ändring                     |      |
+|  +--------------------------------------------------------------+      |
+|                                                                          |
+|  ✅ BEST PRACTICE: ConfigMaps & Secrets                                 |
+|  +--------------------------------------------------------------+      |
+|  |                    CONTAINER IMAGE                            |      |
+|  |  +--------------------------------------------------------+  |      |
+|  |  |  Application Code Only                                  |  |      |
+|  |  |  (reads config from env/files at runtime)               |  |      |
+|  |  +--------------------------------------------------------+  |      |
+|  +--------------------------------------------------------------+      |
+|                        |                     |                          |
+|                        ▼                     ▼                          |
+|              +--------------+      +--------------+                    |
+|              |  ConfigMap   |      |   Secret     |                    |
+|              |              |      |              |                    |
+|              | DB_HOST=...  |      | DB_PASS=...  |                    |
+|              | LOG_LEVEL=...|      | API_KEY=...  |                    |
+|              +--------------+      +--------------+                    |
+|                                                                          |
+|  ✅ Samma image i alla miljöer                                          |
+|  ✅ Config-ändringar utan rebuild                                       |
+|  ✅ Secrets hanteras separat                                            |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. ConfigMaps
@@ -210,20 +210,20 @@ spec:
 ### Secret Types
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         SECRET TYPES                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Type                          │ Användning                             │
-│  ─────────────────────────────┼────────────────────────────────────── │
-│  Opaque                        │ Generiska secrets (default)           │
-│  kubernetes.io/service-account │ ServiceAccount tokens                 │
-│  kubernetes.io/dockerconfigjson│ Docker registry credentials          │
-│  kubernetes.io/tls             │ TLS certificates                      │
-│  kubernetes.io/basic-auth      │ Basic authentication                  │
-│  kubernetes.io/ssh-auth        │ SSH keys                              │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         SECRET TYPES                                     |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Type                          | Användning                             |
+|  -----------------------------+-------------------------------------- |
+|  Opaque                        | Generiska secrets (default)           |
+|  kubernetes.io/service-account | ServiceAccount tokens                 |
+|  kubernetes.io/dockerconfigjson| Docker registry credentials          |
+|  kubernetes.io/tls             | TLS certificates                      |
+|  kubernetes.io/basic-auth      | Basic authentication                  |
+|  kubernetes.io/ssh-auth        | SSH keys                              |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ### Skapa Secrets
@@ -457,29 +457,29 @@ echo 'bXlwYXNzd29yZA==' | base64 -d
 ## 6. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│               CONFIGMAPS & SECRETS BEST PRACTICES                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ ConfigMaps                                                          │
-│     □ Använd för icke-känslig konfiguration                             │
-│     □ Organisera per applikation/miljö                                  │
-│     □ Versionera i Git                                                  │
-│     □ Använd immutable: true för stabila configs                        │
-│                                                                          │
-│  ✅ Secrets                                                             │
-│     □ ALDRIG commita i Git                                              │
-│     □ Använd externa secret managers (Vault, AWS SM)                    │
-│     □ Aktivera encryption at rest                                       │
-│     □ Begränsa access med RBAC                                          │
-│     □ Rotera secrets regelbundet                                        │
-│                                                                          │
-│  ✅ Gemensamt                                                           │
-│     □ Använd readOnly: true på volume mounts                            │
-│     □ Sätt restriktiva file permissions                                 │
-│     □ Undvik envFrom om möjligt (explicit är bättre)                    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|               CONFIGMAPS & SECRETS BEST PRACTICES                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ ConfigMaps                                                          |
+|     □ Använd för icke-känslig konfiguration                             |
+|     □ Organisera per applikation/miljö                                  |
+|     □ Versionera i Git                                                  |
+|     □ Använd immutable: true för stabila configs                        |
+|                                                                          |
+|  ✅ Secrets                                                             |
+|     □ ALDRIG commita i Git                                              |
+|     □ Använd externa secret managers (Vault, AWS SM)                    |
+|     □ Aktivera encryption at rest                                       |
+|     □ Begränsa access med RBAC                                          |
+|     □ Rotera secrets regelbundet                                        |
+|                                                                          |
+|  ✅ Gemensamt                                                           |
+|     □ Använd readOnly: true på volume mounts                            |
+|     □ Sätt restriktiva file permissions                                 |
+|     □ Undvik envFrom om möjligt (explicit är bättre)                    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 7. External Secret Management
@@ -532,7 +532,7 @@ spec:
 
 ---
 
-**Nästa Node:** Volumes & Persistent Storage →
+**Nästa Node:** Volumes & Persistent Storage ->
 ''',
     "xp_reward": 150,
     "estimated_minutes": 50,
@@ -558,41 +558,41 @@ Containers är efemära - data försvinner när containern startas om. Kubernete
 ### Storage Challenge
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    THE PERSISTENT STORAGE PROBLEM                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  UTAN VOLUMES:                                                           │
-│  ┌────────────────────────────────────────────────────────────────┐    │
-│  │  Pod                                                            │    │
-│  │  ┌──────────────────────────────────────────────────────────┐  │    │
-│  │  │  Container                                                │  │    │
-│  │  │  ┌────────────────────────────────────────────────────┐  │  │    │
-│  │  │  │  /data  ← Data lagras här                          │  │  │    │
-│  │  │  │         ← Container restarts = DATA BORTA 💥       │  │  │    │
-│  │  │  └────────────────────────────────────────────────────┘  │  │    │
-│  │  └──────────────────────────────────────────────────────────┘  │    │
-│  └────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-│  MED VOLUMES:                                                            │
-│  ┌────────────────────────────────────────────────────────────────┐    │
-│  │  Pod                                                            │    │
-│  │  ┌──────────────────────────────────────────────────────────┐  │    │
-│  │  │  Container                                                │  │    │
-│  │  │  ┌────────────────────────────────────────────────────┐  │  │    │
-│  │  │  │  /data  ← Mounted volume                           │  │  │    │
-│  │  │  └────────────────────────────────────────────────────┘  │  │    │
-│  │  └────────────────────────────┬─────────────────────────────┘  │    │
-│  │                               │                                 │    │
-│  │  ┌────────────────────────────▼─────────────────────────────┐  │    │
-│  │  │                     VOLUME                                │  │    │
-│  │  │  • emptyDir: Pod-livstid                                 │  │    │
-│  │  │  • hostPath: Node-livstid                                │  │    │
-│  │  │  • PVC: Cluster-livstid ✅                               │  │    │
-│  │  └──────────────────────────────────────────────────────────┘  │    │
-│  └────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    THE PERSISTENT STORAGE PROBLEM                        |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  UTAN VOLUMES:                                                           |
+|  +----------------------------------------------------------------+    |
+|  |  Pod                                                            |    |
+|  |  +----------------------------------------------------------+  |    |
+|  |  |  Container                                                |  |    |
+|  |  |  +----------------------------------------------------+  |  |    |
+|  |  |  |  /data  <- Data lagras här                          |  |  |    |
+|  |  |  |         <- Container restarts = DATA BORTA 💥       |  |  |    |
+|  |  |  +----------------------------------------------------+  |  |    |
+|  |  +----------------------------------------------------------+  |    |
+|  +----------------------------------------------------------------+    |
+|                                                                          |
+|  MED VOLUMES:                                                            |
+|  +----------------------------------------------------------------+    |
+|  |  Pod                                                            |    |
+|  |  +----------------------------------------------------------+  |    |
+|  |  |  Container                                                |  |    |
+|  |  |  +----------------------------------------------------+  |  |    |
+|  |  |  |  /data  <- Mounted volume                           |  |  |    |
+|  |  |  +----------------------------------------------------+  |  |    |
+|  |  +----------------------------+-----------------------------+  |    |
+|  |                               |                                 |    |
+|  |  +----------------------------▼-----------------------------+  |    |
+|  |  |                     VOLUME                                |  |    |
+|  |  |  • emptyDir: Pod-livstid                                 |  |    |
+|  |  |  • hostPath: Node-livstid                                |  |    |
+|  |  |  • PVC: Cluster-livstid ✅                               |  |    |
+|  |  +----------------------------------------------------------+  |    |
+|  +----------------------------------------------------------------+    |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 2. Volume Types
@@ -679,64 +679,64 @@ spec:
 ## 3. Persistent Volumes Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                  PERSISTENT VOLUMES ARCHITECTURE                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                         APPLICATION                               │  │
-│  │                            POD                                    │  │
-│  │  ┌──────────────────────────────────────────────────────────┐    │  │
-│  │  │  volumeMounts:                                            │    │  │
-│  │  │    - name: data                                           │    │  │
-│  │  │      mountPath: /data                                     │    │  │
-│  │  └──────────────────────────────────────────────────────────┘    │  │
-│  │                              │                                    │  │
-│  │                              ▼                                    │  │
-│  │  ┌──────────────────────────────────────────────────────────┐    │  │
-│  │  │  volumes:                                                 │    │  │
-│  │  │    - name: data                                           │    │  │
-│  │  │      persistentVolumeClaim:                               │    │  │
-│  │  │        claimName: app-pvc                                 │    │  │
-│  │  └──────────────────────────────────────────────────────────┘    │  │
-│  └─────────────────────────────────┬────────────────────────────────┘  │
-│                                    │                                    │
-│                                    │ Binds to                          │
-│                                    ▼                                    │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │               PERSISTENTVOLUMECLAIM (PVC)                         │  │
-│  │  ┌──────────────────────────────────────────────────────────┐    │  │
-│  │  │  name: app-pvc                                            │    │  │
-│  │  │  accessModes: ReadWriteOnce                               │    │  │
-│  │  │  resources.requests.storage: 10Gi                         │    │  │
-│  │  │  storageClassName: standard                               │    │  │
-│  │  └──────────────────────────────────────────────────────────┘    │  │
-│  └─────────────────────────────────┬────────────────────────────────┘  │
-│                                    │                                    │
-│                                    │ Binds to                          │
-│                                    ▼                                    │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                  PERSISTENTVOLUME (PV)                            │  │
-│  │  ┌──────────────────────────────────────────────────────────┐    │  │
-│  │  │  name: pv-001                                             │    │  │
-│  │  │  capacity.storage: 10Gi                                   │    │  │
-│  │  │  accessModes: ReadWriteOnce                               │    │  │
-│  │  │  storageClassName: standard                               │    │  │
-│  │  │  hostPath/nfs/awsElasticBlockStore/etc                    │    │  │
-│  │  └──────────────────────────────────────────────────────────┘    │  │
-│  └─────────────────────────────────┬────────────────────────────────┘  │
-│                                    │                                    │
-│                                    │ Provisions                        │
-│                                    ▼                                    │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                      PHYSICAL STORAGE                             │  │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐    │  │
-│  │  │  AWS EBS   │ │ GCP PD    │ │   NFS      │ │  Ceph      │    │  │
-│  │  │  Volume    │ │ Volume    │ │   Share    │ │  Block     │    │  │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘    │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                  PERSISTENT VOLUMES ARCHITECTURE                         |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  +------------------------------------------------------------------+  |
+|  |                         APPLICATION                               |  |
+|  |                            POD                                    |  |
+|  |  +----------------------------------------------------------+    |  |
+|  |  |  volumeMounts:                                            |    |  |
+|  |  |    - name: data                                           |    |  |
+|  |  |      mountPath: /data                                     |    |  |
+|  |  +----------------------------------------------------------+    |  |
+|  |                              |                                    |  |
+|  |                              ▼                                    |  |
+|  |  +----------------------------------------------------------+    |  |
+|  |  |  volumes:                                                 |    |  |
+|  |  |    - name: data                                           |    |  |
+|  |  |      persistentVolumeClaim:                               |    |  |
+|  |  |        claimName: app-pvc                                 |    |  |
+|  |  +----------------------------------------------------------+    |  |
+|  +---------------------------------+--------------------------------+  |
+|                                    |                                    |
+|                                    | Binds to                          |
+|                                    ▼                                    |
+|  +------------------------------------------------------------------+  |
+|  |               PERSISTENTVOLUMECLAIM (PVC)                         |  |
+|  |  +----------------------------------------------------------+    |  |
+|  |  |  name: app-pvc                                            |    |  |
+|  |  |  accessModes: ReadWriteOnce                               |    |  |
+|  |  |  resources.requests.storage: 10Gi                         |    |  |
+|  |  |  storageClassName: standard                               |    |  |
+|  |  +----------------------------------------------------------+    |  |
+|  +---------------------------------+--------------------------------+  |
+|                                    |                                    |
+|                                    | Binds to                          |
+|                                    ▼                                    |
+|  +------------------------------------------------------------------+  |
+|  |                  PERSISTENTVOLUME (PV)                            |  |
+|  |  +----------------------------------------------------------+    |  |
+|  |  |  name: pv-001                                             |    |  |
+|  |  |  capacity.storage: 10Gi                                   |    |  |
+|  |  |  accessModes: ReadWriteOnce                               |    |  |
+|  |  |  storageClassName: standard                               |    |  |
+|  |  |  hostPath/nfs/awsElasticBlockStore/etc                    |    |  |
+|  |  +----------------------------------------------------------+    |  |
+|  +---------------------------------+--------------------------------+  |
+|                                    |                                    |
+|                                    | Provisions                        |
+|                                    ▼                                    |
+|  +------------------------------------------------------------------+  |
+|  |                      PHYSICAL STORAGE                             |  |
+|  |  +------------+ +------------+ +------------+ +------------+    |  |
+|  |  |  AWS EBS   | | GCP PD    | |   NFS      | |  Ceph      |    |  |
+|  |  |  Volume    | | Volume    | |   Share    | |  Block     |    |  |
+|  |  +------------+ +------------+ +------------+ +------------+    |  |
+|  +------------------------------------------------------------------+  |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 4. PersistentVolume & PersistentVolumeClaim
@@ -832,31 +832,31 @@ spec:
 ## 5. Access Modes
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          ACCESS MODES                                    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Mode               │ Abbrev │ Description                              │
-│  ───────────────────┼────────┼──────────────────────────────────────── │
-│  ReadWriteOnce      │ RWO    │ En node kan mounta read-write           │
-│  ReadOnlyMany       │ ROX    │ Flera nodes kan mounta read-only        │
-│  ReadWriteMany      │ RWX    │ Flera nodes kan mounta read-write       │
-│  ReadWriteOncePod   │ RWOP   │ En pod kan mounta read-write (K8s 1.22+)│
-│                                                                          │
-│  Storage Support:                                                        │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  Storage Type    │ RWO │ ROX │ RWX │                           │   │
-│  │  ────────────────┼─────┼─────┼─────┤                           │   │
-│  │  AWS EBS         │  ✅ │  ❌ │  ❌ │                           │   │
-│  │  GCP PD          │  ✅ │  ✅ │  ❌ │                           │   │
-│  │  Azure Disk      │  ✅ │  ❌ │  ❌ │                           │   │
-│  │  NFS             │  ✅ │  ✅ │  ✅ │                           │   │
-│  │  Ceph RBD        │  ✅ │  ✅ │  ❌ │                           │   │
-│  │  CephFS          │  ✅ │  ✅ │  ✅ │                           │   │
-│  │  AWS EFS         │  ✅ │  ✅ │  ✅ │                           │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                          ACCESS MODES                                    |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  Mode               | Abbrev | Description                              |
+|  -------------------+--------+---------------------------------------- |
+|  ReadWriteOnce      | RWO    | En node kan mounta read-write           |
+|  ReadOnlyMany       | ROX    | Flera nodes kan mounta read-only        |
+|  ReadWriteMany      | RWX    | Flera nodes kan mounta read-write       |
+|  ReadWriteOncePod   | RWOP   | En pod kan mounta read-write (K8s 1.22+)|
+|                                                                          |
+|  Storage Support:                                                        |
+|  +-----------------------------------------------------------------+   |
+|  |  Storage Type    | RWO | ROX | RWX |                           |   |
+|  |  ----------------+-----+-----+-----+                           |   |
+|  |  AWS EBS         |  ✅ |  ❌ |  ❌ |                           |   |
+|  |  GCP PD          |  ✅ |  ✅ |  ❌ |                           |   |
+|  |  Azure Disk      |  ✅ |  ❌ |  ❌ |                           |   |
+|  |  NFS             |  ✅ |  ✅ |  ✅ |                           |   |
+|  |  Ceph RBD        |  ✅ |  ✅ |  ❌ |                           |   |
+|  |  CephFS          |  ✅ |  ✅ |  ✅ |                           |   |
+|  |  AWS EFS         |  ✅ |  ✅ |  ✅ |                           |   |
+|  +-----------------------------------------------------------------+   |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 6. Praktiska Övningar
@@ -1002,30 +1002,30 @@ initContainers:
 ## 8. Best Practices
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    STORAGE BEST PRACTICES                                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ✅ Provisioning                                                        │
-│     □ Använd dynamic provisioning med StorageClass                      │
-│     □ Aktivera allowVolumeExpansion                                     │
-│     □ Sätt WaitForFirstConsumer för bättre scheduling                  │
-│                                                                          │
-│  ✅ Data Protection                                                     │
-│     □ Använd Retain reclaim policy för viktig data                      │
-│     □ Implementera backup-strategi                                      │
-│     □ Testa disaster recovery                                           │
-│                                                                          │
-│  ✅ Performance                                                         │
-│     □ Välj rätt storage type (SSD vs HDD)                               │
-│     □ Sätt IOPS/throughput baserat på workload                          │
-│     □ Använd ReadWriteOncePod för exklusiv access                       │
-│                                                                          │
-│  ✅ Multi-tenancy                                                       │
-│     □ ResourceQuotas för storage per namespace                          │
-│     □ LimitRanges för PVC storlek                                       │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    STORAGE BEST PRACTICES                                |
++-------------------------------------------------------------------------+
+|                                                                          |
+|  ✅ Provisioning                                                        |
+|     □ Använd dynamic provisioning med StorageClass                      |
+|     □ Aktivera allowVolumeExpansion                                     |
+|     □ Sätt WaitForFirstConsumer för bättre scheduling                  |
+|                                                                          |
+|  ✅ Data Protection                                                     |
+|     □ Använd Retain reclaim policy för viktig data                      |
+|     □ Implementera backup-strategi                                      |
+|     □ Testa disaster recovery                                           |
+|                                                                          |
+|  ✅ Performance                                                         |
+|     □ Välj rätt storage type (SSD vs HDD)                               |
+|     □ Sätt IOPS/throughput baserat på workload                          |
+|     □ Använd ReadWriteOncePod för exklusiv access                       |
+|                                                                          |
+|  ✅ Multi-tenancy                                                       |
+|     □ ResourceQuotas för storage per namespace                          |
+|     □ LimitRanges för PVC storlek                                       |
+|                                                                          |
++-------------------------------------------------------------------------+
 ```
 
 ## 9-14. Sammanfattning & Task
@@ -1052,7 +1052,7 @@ initContainers:
 
 ---
 
-**Nästa Node:** StatefulSets - Stateful Applications →
+**Nästa Node:** StatefulSets - Stateful Applications ->
 ''',
     "xp_reward": 155,
     "estimated_minutes": 60,

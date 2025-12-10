@@ -64,22 +64,22 @@ Det finns tre huvudmodeller för molntjänster. Skillnaden handlar om **vem som 
 - Exempel: Microsoft 365, Dynamics 365
 """,
             "diagram": """
-┌─────────────────────────────────────────────────────────────┐
-│           ANSVAR PER MODELL                                 │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ON-PREM      IaaS        PaaS        SaaS                 │
-│  ┌──────┐   ┌──────┐    ┌──────┐    ┌──────┐              │
-│  │ App  │   │ App  │    │ App  │    │ App  │ ← Azure      │
-│  │ Data │   │ Data │    │ Data │    │ Data │ ← Azure      │
-│  │ RT   │   │ RT   │    │ RT   │ ←  │ RT   │ ← Azure      │
-│  │ OS   │   │ OS   │ ←  │ OS   │ ←  │ OS   │ ← Azure      │
-│  │ VM   │   │ VM   │ ←  │ VM   │ ←  │ VM   │ ← Azure      │
-│  │ HW   │   │ HW   │ ←  │ HW   │ ←  │ HW   │ ← Azure      │
-│  └──────┘   └──────┘    └──────┘    └──────┘              │
-│                                                             │
-│  ← = Azure ansvarar                                        │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|           ANSVAR PER MODELL                                 |
++-------------------------------------------------------------+
+|                                                             |
+|  ON-PREM      IaaS        PaaS        SaaS                 |
+|  +------+   +------+    +------+    +------+              |
+|  | App  |   | App  |    | App  |    | App  | <- Azure      |
+|  | Data |   | Data |    | Data |    | Data | <- Azure      |
+|  | RT   |   | RT   |    | RT   | <-  | RT   | <- Azure      |
+|  | OS   |   | OS   | <-  | OS   | <-  | OS   | <- Azure      |
+|  | VM   |   | VM   | <-  | VM   | <-  | VM   | <- Azure      |
+|  | HW   |   | HW   | <-  | HW   | <-  | HW   | <- Azure      |
+|  +------+   +------+    +------+    +------+              |
+|                                                             |
+|  <- = Azure ansvarar                                        |
++-------------------------------------------------------------+
 """,
             "pro_tip": "Starta med PaaS (App Service) för webappar. Du slipper hantera OS-uppdateringar och kan fokusera på kod.",
             "common_mistake": "Att välja IaaS (VMs) när PaaS räcker. VMs kräver underhåll och kostar mer."
@@ -108,25 +108,25 @@ Azure är uppbyggt i tre nivåer:
 - West Europe (Nederländerna) - stort utbud
 """,
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│        EUROPE GEOGRAPHY                         │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  ┌─────────────────────────────────────────┐   │
-│  │  Sweden Central Region                   │   │
-│  │  ┌───────┐ ┌───────┐ ┌───────┐         │   │
-│  │  │ AZ 1  │ │ AZ 2  │ │ AZ 3  │         │   │
-│  │  └───────┘ └───────┘ └───────┘         │   │
-│  └─────────────────────────────────────────┘   │
-│                                                 │
-│  ┌─────────────────────────────────────────┐   │
-│  │  North Europe Region (Ireland)           │   │
-│  │  ┌───────┐ ┌───────┐ ┌───────┐         │   │
-│  │  │ AZ 1  │ │ AZ 2  │ │ AZ 3  │         │   │
-│  │  └───────┘ └───────┘ └───────┘         │   │
-│  └─────────────────────────────────────────┘   │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|        EUROPE GEOGRAPHY                         |
++-------------------------------------------------+
+|                                                 |
+|  +-----------------------------------------+   |
+|  |  Sweden Central Region                   |   |
+|  |  +-------+ +-------+ +-------+         |   |
+|  |  | AZ 1  | | AZ 2  | | AZ 3  |         |   |
+|  |  +-------+ +-------+ +-------+         |   |
+|  +-----------------------------------------+   |
+|                                                 |
+|  +-----------------------------------------+   |
+|  |  North Europe Region (Ireland)           |   |
+|  |  +-------+ +-------+ +-------+         |   |
+|  |  | AZ 1  | | AZ 2  | | AZ 3  |         |   |
+|  |  +-------+ +-------+ +-------+         |   |
+|  +-----------------------------------------+   |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Välj Sweden Central för lägst latens från Sverige. North Europe är ofta billigare om latens inte är kritiskt."
         },
@@ -318,7 +318,7 @@ bekanta dig med miljön och sätta upp grundläggande kostnadskontroll.
 
 # 2. Hitta Cost Management:
 #    - Klicka på din Subscription i vänstermenyn
-#    - Välj "Cost Management" → "Budgets"
+#    - Välj "Cost Management" -> "Budgets"
 #    - Klicka "Add" för att skapa budget
 
 # 3. Skapa budget:
@@ -380,7 +380,7 @@ AZURE_NODE_2_RESOURCES_V2 = {
         "headline": "Organisera ditt Azure-kaos",
         "hook": "Utan Resource Groups blir din Azure-miljö en röra av 200 resurser utan struktur. Med rätt organisation hittar du allt på sekunder och kan radera hela miljöer med ett kommando.",
         "learning_objectives": [
-            "Förstå Azure-hierarkin (Tenant → Subscription → Resource Group → Resource)",
+            "Förstå Azure-hierarkin (Tenant -> Subscription -> Resource Group -> Resource)",
             "Skapa och hantera Resource Groups med Azure CLI",
             "Använda naming conventions enligt Microsoft CAF",
             "Skydda resurser med Tags och Locks"
@@ -398,10 +398,10 @@ AZURE_NODE_2_RESOURCES_V2 = {
             "explanation": """
 Allt i Azure följer en hierarki. Tänk på det som mappar på din dator:
 
-**Tenant** (Azure AD) → Din organisation
-  └── **Subscription** → Faktureringscontainer (en per miljö/avdelning)
-      └── **Resource Group** → Logisk mapp för relaterade resurser
-          └── **Resources** → VMs, databaser, storage, etc.
+**Tenant** (Azure AD) -> Din organisation
+  +-- **Subscription** -> Faktureringscontainer (en per miljö/avdelning)
+      +-- **Resource Group** -> Logisk mapp för relaterade resurser
+          +-- **Resources** -> VMs, databaser, storage, etc.
 
 **Varför detta spelar roll:**
 - RBAC (rättigheter) ärvs nedåt i hierarkin
@@ -409,20 +409,20 @@ Allt i Azure följer en hierarki. Tänk på det som mappar på din dator:
 - Radera en Resource Group = alla resurser i den försvinner
 """,
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           AZURE AD TENANT                       │
-│           (din-organisation.onmicrosoft.com)    │
-├─────────────────────────────────────────────────┤
-│  ┌──────────────┐  ┌──────────────┐            │
-│  │ Dev Subscr.  │  │ Prod Subscr. │            │
-│  └──────┬───────┘  └──────┬───────┘            │
-│         │                 │                     │
-│   ┌─────┴─────┐     ┌─────┴─────┐              │
-│   │ rg-app-dev│     │rg-app-prod│              │
-│   └─────┬─────┘     └─────┬─────┘              │
-│         │                 │                     │
-│    [VM] [DB]         [VM] [DB]                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           AZURE AD TENANT                       |
+|           (din-organisation.onmicrosoft.com)    |
++-------------------------------------------------+
+|  +--------------+  +--------------+            |
+|  | Dev Subscr.  |  | Prod Subscr. |            |
+|  +------+-------+  +------+-------+            |
+|         |                 |                     |
+|   +-----+-----+     +-----+-----+              |
+|   | rg-app-dev|     |rg-app-prod|              |
+|   +-----+-----+     +-----+-----+              |
+|         |                 |                     |
+|    [VM] [DB]         [VM] [DB]                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Ha separata Subscriptions för Dev och Prod - det är det enklaste sättet att isolera kostnader och förhindra misstag."
         },
@@ -480,7 +480,7 @@ Locks förhindrar oavsiktlig radering eller ändring:
 - CanNotDelete på alla produktions-Resource Groups
 - ReadOnly på kritisk infrastruktur
 """,
-            "common_mistake": "Glömmer att ta bort lock innan du försöker radera → förvirrande felmeddelanden."
+            "common_mistake": "Glömmer att ta bort lock innan du försöker radera -> förvirrande felmeddelanden."
         }
     ],
 
@@ -608,10 +608,10 @@ rg-demo-dev-ne-001      northeurope  Succeeded""",
             {
                 "question": "Vilken hierarki är korrekt?",
                 "options": [
-                    "Resource → Resource Group → Subscription → Tenant",
-                    "Tenant → Resource Group → Subscription → Resource",
-                    "Tenant → Subscription → Resource Group → Resource",
-                    "Subscription → Tenant → Resource Group → Resource"
+                    "Resource -> Resource Group -> Subscription -> Tenant",
+                    "Tenant -> Resource Group -> Subscription -> Resource",
+                    "Tenant -> Subscription -> Resource Group -> Resource",
+                    "Subscription -> Tenant -> Resource Group -> Resource"
                 ],
                 "correct_answer": 2,
                 "explanation": "Tenant är toppen, sedan Subscription, Resource Group, och sist resurser."

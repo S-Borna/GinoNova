@@ -66,25 +66,25 @@ AZURE_NODE_5_V2 = {
 - Machine learning, rendering
 - Ex: Standard_NC6 (6 vCPU + K80 GPU) ~$650/mån""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              VM SIZE NAMING                      │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   Standard_D4as_v5                              │
-│   │       ││││  │                               │
-│   │       ││││  └── Version (v5 = latest)       │
-│   │       │││└── a = AMD processor              │
-│   │       ││└── s = Premium SSD support         │
-│   │       │└── 4 = vCPU count                   │
-│   │       └── D = Family (General Purpose)      │
-│   └── Tier (Standard vs Basic)                  │
-│                                                 │
-│   SUFFIXES:                                     │
-│   s = Premium SSD    a = AMD CPU                │
-│   r = RDMA support   d = Local temp disk        │
-│   i = Isolated       l = Low memory             │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              VM SIZE NAMING                      |
++-------------------------------------------------+
+|                                                 |
+|   Standard_D4as_v5                              |
+|   |       ||||  |                               |
+|   |       ||||  +-- Version (v5 = latest)       |
+|   |       |||+-- a = AMD processor              |
+|   |       ||+-- s = Premium SSD support         |
+|   |       |+-- 4 = vCPU count                   |
+|   |       +-- D = Family (General Purpose)      |
+|   +-- Tier (Standard vs Basic)                  |
+|                                                 |
+|   SUFFIXES:                                     |
+|   s = Premium SSD    a = AMD CPU                |
+|   r = RDMA support   d = Local temp disk        |
+|   i = Isolated       l = Low memory             |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Börja med B-series för dev/test och uppgradera till D-series för produktion. Du sparar 70%+ på dev.",
             "common_mistake": "Att välja för stor VM 'för säkerhets skull'. Börja litet och skala upp vid behov - du betalar per minut."
@@ -132,28 +132,28 @@ az vm create \\
     --admin-password "SecureP@ss123!"
 ```""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              VM CREATION FLOW                    │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   az vm create                                  │
-│         │                                       │
-│         ▼                                       │
-│   ┌─────────────────────────────────────────┐   │
-│   │  CREATES AUTOMATICALLY:                 │   │
-│   │  • Virtual Machine                      │   │
-│   │  • OS Disk (managed)                    │   │
-│   │  • Network Interface (NIC)              │   │
-│   │  • Virtual Network (if not exists)      │   │
-│   │  • Subnet (if not exists)               │   │
-│   │  • Public IP (optional)                 │   │
-│   │  • Network Security Group (NSG)         │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   ⚠️  OBS: Alla dessa resurser kostar!         │
-│   💡 Radera RG för att ta bort allt på en gång │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              VM CREATION FLOW                    |
++-------------------------------------------------+
+|                                                 |
+|   az vm create                                  |
+|         |                                       |
+|         ▼                                       |
+|   +-----------------------------------------+   |
+|   |  CREATES AUTOMATICALLY:                 |   |
+|   |  • Virtual Machine                      |   |
+|   |  • OS Disk (managed)                    |   |
+|   |  • Network Interface (NIC)              |   |
+|   |  • Virtual Network (if not exists)      |   |
+|   |  • Subnet (if not exists)               |   |
+|   |  • Public IP (optional)                 |   |
+|   |  • Network Security Group (NSG)         |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   ⚠️  OBS: Alla dessa resurser kostar!         |
+|   💡 Radera RG för att ta bort allt på en gång |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd --public-ip-address '' för produktion. Sätt istället VMs bakom Load Balancer eller Bastion.",
             "common_mistake": "Att glömma --generate-ssh-keys och sedan inte kunna logga in. Keys sparas i ~/.ssh/"
@@ -181,29 +181,29 @@ az vm create \\
 - Enklare backup och restore
 - Garanterad 99.9% SLA""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              VM DISK ARCHITECTURE               │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │              VIRTUAL MACHINE            │   │
-│   │                                         │   │
-│   │   /dev/sda (OS Disk)                   │   │
-│   │   ├── Premium SSD                       │   │
-│   │   └── 128GB, P10 tier                  │   │
-│   │                                         │   │
-│   │   /dev/sdb (Temp Disk) ⚠️               │   │
-│   │   ├── Local SSD (FREE!)                │   │
-│   │   └── DATA LOST on deallocate!         │   │
-│   │                                         │   │
-│   │   /dev/sdc (Data Disk)                 │   │
-│   │   ├── Premium SSD                       │   │
-│   │   └── 256GB, P15 tier                  │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   💡 Temp disk = pagefile/swap only!           │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              VM DISK ARCHITECTURE               |
++-------------------------------------------------+
+|                                                 |
+|   +-----------------------------------------+   |
+|   |              VIRTUAL MACHINE            |   |
+|   |                                         |   |
+|   |   /dev/sda (OS Disk)                   |   |
+|   |   +-- Premium SSD                       |   |
+|   |   +-- 128GB, P10 tier                  |   |
+|   |                                         |   |
+|   |   /dev/sdb (Temp Disk) ⚠️               |   |
+|   |   +-- Local SSD (FREE!)                |   |
+|   |   +-- DATA LOST on deallocate!         |   |
+|   |                                         |   |
+|   |   /dev/sdc (Data Disk)                 |   |
+|   |   +-- Premium SSD                       |   |
+|   |   +-- 256GB, P15 tier                  |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   💡 Temp disk = pagefile/swap only!           |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd Premium SSD (P10+) för OS disk. Skillnaden är ~$10/mån men boot time går från 60s till 15s.",
             "common_mistake": "Att spara data på temp disk (/dev/sdb). Den raderas vid deallocate och VM-flytt!"
@@ -236,30 +236,30 @@ az vm create \\
 | Multi-VM, datacenter failure | Availability Zones |
 | Auto-scaling | VM Scale Sets |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           AVAILABILITY ZONES                     │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   REGION: North Europe                          │
-│   ┌─────────┐ ┌─────────┐ ┌─────────┐          │
-│   │ ZONE 1  │ │ ZONE 2  │ │ ZONE 3  │          │
-│   │         │ │         │ │         │          │
-│   │  [VM-1] │ │  [VM-2] │ │  [VM-3] │          │
-│   │  [DB-1] │ │  [DB-2] │ │  [DB-3] │          │
-│   │         │ │         │ │         │          │
-│   └────┬────┘ └────┬────┘ └────┬────┘          │
-│        │           │           │                │
-│        └───────────┼───────────┘                │
-│                    │                            │
-│            ┌───────┴───────┐                    │
-│            │ LOAD BALANCER │                    │
-│            │  (Zone-redundant)│                 │
-│            └───────────────┘                    │
-│                                                 │
-│   ✅ If Zone 1 fails → Zone 2 & 3 take over    │
-│   ✅ 99.99% SLA                                 │
-│                                                 │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           AVAILABILITY ZONES                     |
++-------------------------------------------------+
+|                                                 |
+|   REGION: North Europe                          |
+|   +---------+ +---------+ +---------+          |
+|   | ZONE 1  | | ZONE 2  | | ZONE 3  |          |
+|   |         | |         | |         |          |
+|   |  [VM-1] | |  [VM-2] | |  [VM-3] |          |
+|   |  [DB-1] | |  [DB-2] | |  [DB-3] |          |
+|   |         | |         | |         |          |
+|   +----+----+ +----+----+ +----+----+          |
+|        |           |           |                |
+|        +-----------+-----------+                |
+|                    |                            |
+|            +-------+-------+                    |
+|            | LOAD BALANCER |                    |
+|            |  (Zone-redundant)|                 |
+|            +---------------+                    |
+|                                                 |
+|   ✅ If Zone 1 fails -> Zone 2 & 3 take over    |
+|   ✅ 99.99% SLA                                 |
+|                                                 |
++-------------------------------------------------+
 """,
             "pro_tip": "För kritiska applikationer: minst 2 VMs i olika Availability Zones + Zone-redundant Load Balancer.",
             "common_mistake": "Att sätta alla VMs i samma zone 'för enkelhet'. En zone-failure tar ner hela tjänsten."

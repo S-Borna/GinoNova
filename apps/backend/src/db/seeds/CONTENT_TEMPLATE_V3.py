@@ -79,13 +79,13 @@ Som DevOps-ingenjör kommer du [SPECIFIK SITUATION]. Att förstå [DETTA KONCEPT
 [FÖRKLARING I 2-3 MENINGAR]
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     KONCEPTUELLT DIAGRAM                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   [KOMPONENT A] ────▶ [KOMPONENT B] ────▶ [KOMPONENT C]    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                     KONCEPTUELLT DIAGRAM                     |
++-------------------------------------------------------------+
+|                                                              |
+|   [KOMPONENT A] ----▶ [KOMPONENT B] ----▶ [KOMPONENT C]    |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ### Nyckeltermer
@@ -252,20 +252,20 @@ Som DevOps-ingenjör kommer du använda Git hundratals gånger per dag. Det är 
 Varje fil i Git befinner sig i ett av tre tillstånd:
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        GIT'S TRE TILLSTÅND                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   WORKING         ──▶    STAGING        ──▶    REPOSITORY          │
-│   DIRECTORY              AREA                  (.git)               │
-│                                                                      │
-│   ┌─────────┐           ┌─────────┐           ┌─────────┐          │
-│   │ Dina    │  git add  │ Redo    │ git commit│ Sparad  │          │
-│   │ ändringar│ ───────▶ │ att     │ ─────────▶│ historik│          │
-│   │         │           │ sparas  │           │         │          │
-│   └─────────┘           └─────────┘           └─────────┘          │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                        GIT'S TRE TILLSTÅND                          |
++---------------------------------------------------------------------+
+|                                                                      |
+|   WORKING         --▶    STAGING        --▶    REPOSITORY          |
+|   DIRECTORY              AREA                  (.git)               |
+|                                                                      |
+|   +---------+           +---------+           +---------+          |
+|   | Dina    |  git add  | Redo    | git commit| Sparad  |          |
+|   | ändringar| -------▶ | att     | ---------▶| historik|          |
+|   |         |           | sparas  |           |         |          |
+|   +---------+           +---------+           +---------+          |
+|                                                                      |
++---------------------------------------------------------------------+
 ```
 
 | Tillstånd | Beskrivning | Kommando för att flytta |
@@ -407,7 +407,7 @@ e4f5g6h docs: add initial readme
 
 I denna task har du lärt dig:
 - ✅ Git's tre tillstånd och hur filer flyttas mellan dem
-- ✅ Det dagliga arbetsflödet: status → add → commit
+- ✅ Det dagliga arbetsflödet: status -> add -> commit
 - ✅ Hur man skriver bra commit-meddelanden med konventioner
 - ✅ Vanliga problem och hur man löser dem
 

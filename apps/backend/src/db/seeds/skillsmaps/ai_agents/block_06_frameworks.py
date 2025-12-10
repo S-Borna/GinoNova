@@ -14,7 +14,7 @@ NODE_11_LANGCHAIN = {
 
 Det mest populara frameworket for att bygga AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vad ar LangChain?
 
@@ -27,7 +27,7 @@ LangChain ar ett open-source framework for att bygga applikationer med LLMs. Det
 | Agents | Autonoma beslut om tools |
 | Memory | Konversationshistorik |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -38,7 +38,7 @@ LangChain ar ett open-source framework for att bygga applikationer med LLMs. Det
 | Ekosystem | Manga integrationer |
 | Community | Stort community, bra docs |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - LangChain Components
 
@@ -49,40 +49,40 @@ LangChain ar ett open-source framework for att bygga applikationer med LLMs. Det
 | AgentExecutor | langchain.agents | Agent runner |
 | ConversationBufferMemory | langchain.memory | Minne |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## LangChain Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   LANGCHAIN ARCHITECTURE                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                      APPLICATION                           │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│                           v                                      │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │                   AGENT EXECUTOR                           │ │
-│  │  - Manages agent loop                                      │ │
-│  │  - Handles tools                                           │ │
-│  │  - Memory integration                                      │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│                           │                                      │
-│           ┌───────────────┼───────────────┐                     │
-│           v               v               v                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │    LLM      │  │   TOOLS     │  │   MEMORY    │             │
-│  │  - OpenAI   │  │  - Custom   │  │  - Buffer   │             │
-│  │  - Anthropic│  │  - Built-in │  │  - Summary  │             │
-│  │  - Local    │  │  - API wrap │  │  - Vector   │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                   LANGCHAIN ARCHITECTURE                         |
++-----------------------------------------------------------------+
+|                                                                  |
+|  +-----------------------------------------------------------+ |
+|  |                      APPLICATION                           | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|                           v                                      |
+|  +-----------------------------------------------------------+ |
+|  |                   AGENT EXECUTOR                           | |
+|  |  - Manages agent loop                                      | |
+|  |  - Handles tools                                           | |
+|  |  - Memory integration                                      | |
+|  +-----------------------------------------------------------+ |
+|                           |                                      |
+|           +---------------+---------------+                     |
+|           v               v               v                      |
+|  +-------------+  +-------------+  +-------------+             |
+|  |    LLM      |  |   TOOLS     |  |   MEMORY    |             |
+|  |  - OpenAI   |  |  - Custom   |  |  - Buffer   |             |
+|  |  - Anthropic|  |  - Built-in |  |  - Summary  |             |
+|  |  - Local    |  |  - API wrap |  |  - Vector   |             |
+|  +-------------+  +-------------+  +-------------+             |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Installation och Setup
 
@@ -104,7 +104,7 @@ llm = ChatOpenAI(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Custom Tools
 
@@ -147,7 +147,7 @@ class CalculatorTool(BaseTool):
 tools = [search_database, get_weather, CalculatorTool()]
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Agent Setup
 
@@ -190,7 +190,7 @@ result = agent_executor.invoke({
 print(result["output"])
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Memory
 
@@ -224,7 +224,7 @@ result1 = agent_with_memory.invoke({"input": "Jag heter Erik"})
 result2 = agent_with_memory.invoke({"input": "Vad heter jag?"})
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## LangChain Expression Language (LCEL)
 
@@ -253,7 +253,7 @@ route_chain = RunnableBranch(
 )
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -264,7 +264,7 @@ route_chain = RunnableBranch(
 | Memory overflow | For lang konversation | Anvand SummaryMemory |
 | Parsing error | Dalig LLM output | handle_parsing_errors=True |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 
@@ -295,7 +295,7 @@ NODE_12_OTHER_FRAMEWORKS = {
 
 Utforska alternativa frameworks for AI-agenter.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Framework Oversikt
 
@@ -308,7 +308,7 @@ Olika frameworks har olika styrkor och anvandningsomraden.
 | CrewAI | Rollbaserade team |
 | Haystack | Search och QA |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Varfor viktigt for DevOps?
 
@@ -319,7 +319,7 @@ Olika frameworks har olika styrkor och anvandningsomraden.
 | Framtidssaker | Ekosystemet utvecklas snabbt |
 | Kostnad | Vissa frameworks ar mer effektiva |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Snabbreferens - Framework Selection
 
@@ -330,42 +330,42 @@ Olika frameworks har olika styrkor och anvandningsomraden.
 | Rollbaserat | CrewAI | Enkelt rollsystem |
 | Enterprise search | Haystack | Production-ready |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Framework Comparison
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  FRAMEWORK COMPARISON                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  LANGCHAIN          LLAMAINDEX        AUTOGEN                   │
-│  ┌──────────┐       ┌──────────┐      ┌──────────┐              │
-│  │ Chains   │       │ Indexes  │      │ Agents   │              │
-│  │ Agents   │       │ Query    │      │ Converse │              │
-│  │ Tools    │       │ RAG      │      │ Roles    │              │
-│  │ Memory   │       │ Nodes    │      │ Groups   │              │
-│  └──────────┘       └──────────┘      └──────────┘              │
-│      │                  │                  │                     │
-│      v                  v                  v                     │
-│  General-purpose   Data-focused     Multi-agent                 │
-│  Agent building    RAG/Search       Conversations               │
-│                                                                  │
-│  CREWAI            HAYSTACK                                     │
-│  ┌──────────┐      ┌──────────┐                                 │
-│  │ Crew     │      │ Pipeline │                                 │
-│  │ Tasks    │      │ Nodes    │                                 │
-│  │ Roles    │      │ Stores   │                                 │
-│  └──────────┘      └──────────┘                                 │
-│      │                  │                                        │
-│      v                  v                                        │
-│  Role-based        Enterprise                                   │
-│  teams             search/QA                                    │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                  FRAMEWORK COMPARISON                            |
++-----------------------------------------------------------------+
+|                                                                  |
+|  LANGCHAIN          LLAMAINDEX        AUTOGEN                   |
+|  +----------+       +----------+      +----------+              |
+|  | Chains   |       | Indexes  |      | Agents   |              |
+|  | Agents   |       | Query    |      | Converse |              |
+|  | Tools    |       | RAG      |      | Roles    |              |
+|  | Memory   |       | Nodes    |      | Groups   |              |
+|  +----------+       +----------+      +----------+              |
+|      |                  |                  |                     |
+|      v                  v                  v                     |
+|  General-purpose   Data-focused     Multi-agent                 |
+|  Agent building    RAG/Search       Conversations               |
+|                                                                  |
+|  CREWAI            HAYSTACK                                     |
+|  +----------+      +----------+                                 |
+|  | Crew     |      | Pipeline |                                 |
+|  | Tasks    |      | Nodes    |                                 |
+|  | Roles    |      | Stores   |                                 |
+|  +----------+      +----------+                                 |
+|      |                  |                                        |
+|      v                  v                                        |
+|  Role-based        Enterprise                                   |
+|  teams             search/QA                                    |
+|                                                                  |
++-----------------------------------------------------------------+
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## LlamaIndex
 
@@ -407,7 +407,7 @@ agent = ReActAgent.from_tools(
 response = agent.chat("Vad sager dokumentationen om deployment?")
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## AutoGen
 
@@ -460,7 +460,7 @@ groupchat = autogen.GroupChat(
 manager = autogen.GroupChatManager(groupchat=groupchat)
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## CrewAI
 
@@ -508,7 +508,7 @@ crew = Crew(
 result = crew.kickoff(inputs={"topic": "AI i DevOps"})
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Haystack
 
@@ -544,7 +544,7 @@ result = pipeline.run({
 })
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Vanliga fel och losningar
 
@@ -555,7 +555,7 @@ result = pipeline.run({
 | CrewAI task fail | Otydlig description | Mer specifik task |
 | Haystack error | Disconnected components | Kolla pipeline.connect |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+------------------------------------------------------------
 
 ## Key Takeaways
 

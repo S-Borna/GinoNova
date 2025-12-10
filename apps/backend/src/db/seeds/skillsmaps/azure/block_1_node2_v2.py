@@ -19,7 +19,7 @@ AZURE_NODE_2_V2 = {
         "headline": "Organisera Azure som ett proffs",
         "hook": "Utan struktur blir molnet kaos. Resource Groups är din ordning i stormen.",
         "learning_objectives": [
-            "Förstå Azure resource hierarchy (Tenant → Subscription → Resource Group → Resource)",
+            "Förstå Azure resource hierarchy (Tenant -> Subscription -> Resource Group -> Resource)",
             "Skapa och hantera Resource Groups med Azure CLI",
             "Använda Tags för kostnadsuppföljning och organisation",
             "Sätta Resource Locks för att skydda kritiska resurser",
@@ -66,25 +66,25 @@ AZURE_NODE_2_V2 = {
 - Faktiska tjänster: VMs, databaser, storage
 - Ärver permissions från RG""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│           AZURE AD TENANT                        │
-│  (contoso.onmicrosoft.com)                      │
-├─────────────────────────────────────────────────┤
-│         MANAGEMENT GROUP                         │
-│  ┌───────────────┬───────────────┐              │
-│  │   MG-Prod     │   MG-NonProd  │              │
-├──┴───────────────┴───────────────┴──────────────┤
-│           SUBSCRIPTIONS                          │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐           │
-│  │Sub-Prod │ │Sub-Dev  │ │Sub-Test │           │
-├──┴─────────┴─┴─────────┴─┴─────────┴────────────┤
-│         RESOURCE GROUPS                          │
-│  ┌────────────┐ ┌────────────┐                  │
-│  │rg-app-prod │ │rg-db-prod  │                  │
-├──┴────────────┴─┴────────────┴──────────────────┤
-│            RESOURCES                             │
-│  [VM] [Storage] [SQL] [App Service]             │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|           AZURE AD TENANT                        |
+|  (contoso.onmicrosoft.com)                      |
++-------------------------------------------------+
+|         MANAGEMENT GROUP                         |
+|  +---------------+---------------+              |
+|  |   MG-Prod     |   MG-NonProd  |              |
++--+---------------+---------------+--------------+
+|           SUBSCRIPTIONS                          |
+|  +---------+ +---------+ +---------+           |
+|  |Sub-Prod | |Sub-Dev  | |Sub-Test |           |
++--+---------+-+---------+-+---------+------------+
+|         RESOURCE GROUPS                          |
+|  +------------+ +------------+                  |
+|  |rg-app-prod | |rg-db-prod  |                  |
++--+------------+-+------------+------------------+
+|            RESOURCES                             |
+|  [VM] [Storage] [SQL] [App Service]             |
++-------------------------------------------------+
 """,
             "pro_tip": "En Resource Group kan innehålla resurser från olika regioner, men RG:n själv har en 'location' för metadata.",
             "common_mistake": "Att sätta ALLA resurser i en enda Resource Group. Separera efter applikation, miljö eller livscykel."
@@ -97,21 +97,21 @@ AZURE_NODE_2_V2 = {
 **Strategi 1: Per Applikation**
 ```
 rg-webapp-prod
-├── app-service
-├── sql-database
-└── storage-account
++-- app-service
++-- sql-database
++-- storage-account
 ```
 
 **Strategi 2: Per Resurstyp**
 ```
 rg-compute-prod
-├── vm-web-01
-├── vm-web-02
-└── vm-api-01
++-- vm-web-01
++-- vm-web-02
++-- vm-api-01
 
 rg-data-prod
-├── sql-main
-└── cosmos-cache
++-- sql-main
++-- cosmos-cache
 ```
 
 **Strategi 3: Per Miljö (Rekommenderat)**
@@ -125,22 +125,22 @@ rg-myapp-prod
 `rg-<app>-<env>-<region>`
 Exempel: `rg-webshop-prod-neu`""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│     RESOURCE GROUP NAMING CONVENTION            │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   rg - webshop - prod - neu                     │
-│   │      │        │      │                      │
-│   │      │        │      └── Region (northeu)   │
-│   │      │        └── Environment               │
-│   │      └── Application name                   │
-│   └── Resource type prefix                      │
-│                                                 │
-│   Examples:                                     │
-│   • rg-webshop-prod-neu                         │
-│   • rg-api-dev-weu                              │
-│   • rg-shared-infra-global                      │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|     RESOURCE GROUP NAMING CONVENTION            |
++-------------------------------------------------+
+|                                                 |
+|   rg - webshop - prod - neu                     |
+|   |      |        |      |                      |
+|   |      |        |      +-- Region (northeu)   |
+|   |      |        +-- Environment               |
+|   |      +-- Application name                   |
+|   +-- Resource type prefix                      |
+|                                                 |
+|   Examples:                                     |
+|   • rg-webshop-prod-neu                         |
+|   • rg-api-dev-weu                              |
+|   • rg-shared-infra-global                      |
++-------------------------------------------------+
 """,
             "pro_tip": "Sätt aldrig produktion och utveckling i samma Resource Group. När någon råkar köra 'az group delete' på dev...",
             "common_mistake": "Att använda svenska/långa namn som 'MinFörstaResursGrupp'. Håll dig till engelska, lowercase, bindestreck."
@@ -171,26 +171,26 @@ Exempel: `rg-webshop-prod-neu`""",
 | `expiry-date` | Auto-cleanup | 2024-12-31 |
 | `criticality` | SLA-nivå | high, medium, low |""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              TAGGING STRATEGY                    │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │  vm-web-01                              │   │
-│   │  ├── environment: prod                  │   │
-│   │  ├── owner: team-web                    │   │
-│   │  ├── cost-center: CC-WEB-001           │   │
-│   │  ├── project: e-commerce               │   │
-│   │  └── criticality: high                 │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   Cost Analysis → Filter by tag:cost-center     │
-│   ┌─────────────────────────────────────────┐   │
-│   │ CC-WEB-001:     $1,234                  │   │
-│   │ CC-API-001:     $567                    │   │
-│   │ CC-DATA-001:    $2,345                  │   │
-│   └─────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              TAGGING STRATEGY                    |
++-------------------------------------------------+
+|                                                 |
+|   +-----------------------------------------+   |
+|   |  vm-web-01                              |   |
+|   |  +-- environment: prod                  |   |
+|   |  +-- owner: team-web                    |   |
+|   |  +-- cost-center: CC-WEB-001           |   |
+|   |  +-- project: e-commerce               |   |
+|   |  +-- criticality: high                 |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   Cost Analysis -> Filter by tag:cost-center     |
+|   +-----------------------------------------+   |
+|   | CC-WEB-001:     $1,234                  |   |
+|   | CC-API-001:     $567                    |   |
+|   | CC-DATA-001:    $2,345                  |   |
+|   +-----------------------------------------+   |
++-------------------------------------------------+
 """,
             "pro_tip": "Använd Azure Policy för att KRÄVA tags. Ingen resurs utan 'cost-center' tag får skapas.",
             "common_mistake": "Inkonsekvent tagging: 'Environment', 'environment', 'env', 'ENV'. Bestäm EN standard och håll dig till den."
@@ -213,33 +213,33 @@ Exempel: `rg-webshop-prod-neu`""",
 - Perfekt för audit/compliance
 
 **Lock-nivåer:**
-- Subscription-nivå → gäller alla RGs
-- Resource Group-nivå → gäller alla resurser i RG
-- Resurs-nivå → gäller enskild resurs
+- Subscription-nivå -> gäller alla RGs
+- Resource Group-nivå -> gäller alla resurser i RG
+- Resurs-nivå -> gäller enskild resurs
 
 **OBS:** Locks ärvs nedåt men kan INTE åsidosättas underifrån.""",
             "diagram": """
-┌─────────────────────────────────────────────────┐
-│              RESOURCE LOCKS                      │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│   DELETE LOCK                                   │
-│   ┌─────────────────────────────────────────┐   │
-│   │  🔒 rg-prod-database                    │   │
-│   │     ├── ✅ az sql db update (OK)        │   │
-│   │     └── ❌ az sql db delete (BLOCKED)   │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   READONLY LOCK                                 │
-│   ┌─────────────────────────────────────────┐   │
-│   │  🔒 rg-audit-logs                       │   │
-│   │     ├── ❌ az storage update (BLOCKED)  │   │
-│   │     └── ❌ az storage delete (BLOCKED)  │   │
-│   └─────────────────────────────────────────┘   │
-│                                                 │
-│   ⚠️  Owner-rättighet krävs för att ta bort    │
-│       locks!                                    │
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|              RESOURCE LOCKS                      |
++-------------------------------------------------+
+|                                                 |
+|   DELETE LOCK                                   |
+|   +-----------------------------------------+   |
+|   |  🔒 rg-prod-database                    |   |
+|   |     +-- ✅ az sql db update (OK)        |   |
+|   |     +-- ❌ az sql db delete (BLOCKED)   |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   READONLY LOCK                                 |
+|   +-----------------------------------------+   |
+|   |  🔒 rg-audit-logs                       |   |
+|   |     +-- ❌ az storage update (BLOCKED)  |   |
+|   |     +-- ❌ az storage delete (BLOCKED)  |   |
+|   +-----------------------------------------+   |
+|                                                 |
+|   ⚠️  Owner-rättighet krävs för att ta bort    |
+|       locks!                                    |
++-------------------------------------------------+
 """,
             "pro_tip": "Sätt Delete Lock på ALLA produktions-databaser dag ett. Någon KOMMER råka klicka delete någon gång.",
             "common_mistake": "Att glömma ta bort lock innan planerat underhåll. Plötsligt fungerar inte ditt Terraform apply."
@@ -361,7 +361,7 @@ DoNotDelete   CanNotDelete   Production environment - do not delete""",
             {
                 "id": "fc1",
                 "front": "Vad är hierarkin i Azure uppifrån och ner?",
-                "back": "Tenant → Management Groups → Subscriptions → Resource Groups → Resources"
+                "back": "Tenant -> Management Groups -> Subscriptions -> Resource Groups -> Resources"
             },
             {
                 "id": "fc2",

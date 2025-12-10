@@ -38,12 +38,12 @@ AWS dominerar molnmarknaden med ~32% market share. Nastan varje DevOps-jobb krav
 
 ```
 TRADITIONELLT (On-Premise)          CLOUD (AWS)
-┌─────────────────────┐            ┌─────────────────────┐
-│  Kop servrar        │            │  Hyr kapacitet      │
-│  Installera i DC    │     →      │  Starta pa sekunder │
-│  Underhall hardvara │            │  Betala per anvand. │
-│  Skala manuellt     │            │  Skala automatiskt  │
-└─────────────────────┘            └─────────────────────┘
++---------------------+            +---------------------+
+|  Kop servrar        |            |  Hyr kapacitet      |
+|  Installera i DC    |     ->      |  Starta pa sekunder |
+|  Underhall hardvara |            |  Betala per anvand. |
+|  Skala manuellt     |            |  Skala automatiskt  |
++---------------------+            +---------------------+
      Veckor/Manader                      Minuter
 ```
 
@@ -66,22 +66,22 @@ TRADITIONELLT (On-Premise)          CLOUD (AWS)
 
 ```
                     AWS GLOBAL INFRASTRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   REGION: eu-north-1 (Stockholm)                           │
-│   ┌─────────────────────────────────────────────────────┐  │
-│   │                                                     │  │
-│   │   AZ: eu-north-1a    AZ: eu-north-1b    AZ: eu-north-1c │
-│   │   ┌─────────┐        ┌─────────┐        ┌─────────┐ │  │
-│   │   │ Datacenter│      │ Datacenter│      │ Datacenter│ │  │
-│   │   │ Cluster  │       │ Cluster  │       │ Cluster  │ │  │
-│   │   └─────────┘        └─────────┘        └─────────┘ │  │
-│   │         ↑                 ↑                 ↑       │  │
-│   │         └────── High-speed links ───────────┘       │  │
-│   │                                                     │  │
-│   └─────────────────────────────────────────────────────┘  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                                                             |
+|   REGION: eu-north-1 (Stockholm)                           |
+|   +-----------------------------------------------------+  |
+|   |                                                     |  |
+|   |   AZ: eu-north-1a    AZ: eu-north-1b    AZ: eu-north-1c |
+|   |   +---------+        +---------+        +---------+ |  |
+|   |   | Datacenter|      | Datacenter|      | Datacenter| |  |
+|   |   | Cluster  |       | Cluster  |       | Cluster  | |  |
+|   |   +---------+        +---------+        +---------+ |  |
+|   |         ↑                 ↑                 ↑       |  |
+|   |         +------ High-speed links -----------+       |  |
+|   |                                                     |  |
+|   +-----------------------------------------------------+  |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 **Region:** Geografiskt omrade (t.ex. eu-north-1 = Stockholm)
@@ -117,11 +117,11 @@ TRADITIONELLT (On-Premise)          CLOUD (AWS)
 # ROOT USER = Gud-mode - ALDRIG anvand for dagligt arbete!
 
 # Steg 1: Aktivera MFA pa root
-AWS Console → Security Credentials → MFA → Activate MFA
+AWS Console -> Security Credentials -> MFA -> Activate MFA
 # Anvand app som Google Authenticator eller Authy
 
 # Steg 2: Skapa admin IAM-anvandare
-AWS Console → IAM → Users → Add User
+AWS Console -> IAM -> Users -> Add User
 # Ge AdministratorAccess policy
 # Anvand DENNA for dagligt arbete
 ```
@@ -161,7 +161,7 @@ aws --version
 
 ```bash
 # Skapa Access Key i IAM Console:
-# IAM → Users → [din user] → Security credentials → Create access key
+# IAM -> Users -> [din user] -> Security credentials -> Create access key
 
 # Konfigurera CLI
 aws configure
@@ -211,7 +211,7 @@ aws ec2 describe-instances
 # KRITISKT: Undvik overraskningar!
 
 # Via Console:
-# 1. Billing → Budgets → Create budget
+# 1. Billing -> Budgets -> Create budget
 # 2. Valj "Cost budget"
 # 3. Satt manadlig budget (t.ex. $10)
 # 4. Lagg till email-alert vid 80% och 100%
@@ -221,7 +221,7 @@ aws ec2 describe-instances
 
 ```bash
 # Aktivera Cost Explorer (tar 24h forsta gangen)
-# Billing → Cost Explorer → Enable
+# Billing -> Cost Explorer -> Enable
 
 # Se kostnader per tjanst
 aws ce get-cost-and-usage \
@@ -302,27 +302,27 @@ IAM ar gratis men det viktigaste du konfigurerar i AWS.
 
 ```
                         IAM STRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                         AWS ACCOUNT                          │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                        IAM                           │    │
-│  │                                                      │    │
-│  │   USERS          GROUPS           ROLES             │    │
-│  │   ┌─────┐        ┌─────┐         ┌─────┐           │    │
-│  │   │Alice│        │Devs │         │EC2  │           │    │
-│  │   │Bob  │   →    │Admin│    ←    │Role │           │    │
-│  │   │Carl │        │     │         │     │           │    │
-│  │   └─────┘        └─────┘         └─────┘           │    │
-│  │      │              │               │               │    │
-│  │      └──────────────┴───────────────┘               │    │
-│  │                     │                               │    │
-│  │              ┌──────▼──────┐                        │    │
-│  │              │  POLICIES   │                        │    │
-│  │              │ (JSON docs) │                        │    │
-│  │              └─────────────┘                        │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         AWS ACCOUNT                          |
+|  +-----------------------------------------------------+    |
+|  |                        IAM                           |    |
+|  |                                                      |    |
+|  |   USERS          GROUPS           ROLES             |    |
+|  |   +-----+        +-----+         +-----+           |    |
+|  |   |Alice|        |Devs |         |EC2  |           |    |
+|  |   |Bob  |   ->    |Admin|    <-    |Role |           |    |
+|  |   |Carl |        |     |         |     |           |    |
+|  |   +-----+        +-----+         +-----+           |    |
+|  |      |              |               |               |    |
+|  |      +--------------+---------------+               |    |
+|  |                     |                               |    |
+|  |              +------▼------+                        |    |
+|  |              |  POLICIES   |                        |    |
+|  |              | (JSON docs) |                        |    |
+|  |              +-------------+                        |    |
+|  |                                                      |    |
+|  +-----------------------------------------------------+    |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Beskrivning | Exempel |
@@ -416,24 +416,24 @@ aws iam get-group --group-name Developers
 ### Policy Types
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    POLICY TYPES                          │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  AWS MANAGED          CUSTOMER MANAGED     INLINE       │
-│  ┌──────────┐         ┌──────────┐        ┌──────────┐ │
-│  │ Skapade  │         │ Du skapar│        │ Direkt pa│ │
-│  │ av AWS   │         │ sjalv    │        │ user/role│ │
-│  │          │         │          │        │          │ │
-│  │ ReadOnly │         │ CustomS3 │        │ {inline} │ │
-│  │ PowerUser│         │ MyAppPol │        │          │ │
-│  └──────────┘         └──────────┘        └──────────┘ │
-│       ↓                    ↓                   ↓        │
-│  Anvand forst!       For specifika          Undvik!    │
-│  Enkelt, sakert      behov                  Svart att  │
-│                                             underhalla │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    POLICY TYPES                          |
++---------------------------------------------------------+
+|                                                          |
+|  AWS MANAGED          CUSTOMER MANAGED     INLINE       |
+|  +----------+         +----------+        +----------+ |
+|  | Skapade  |         | Du skapar|        | Direkt pa| |
+|  | av AWS   |         | sjalv    |        | user/role| |
+|  |          |         |          |        |          | |
+|  | ReadOnly |         | CustomS3 |        | {inline} | |
+|  | PowerUser|         | MyAppPol |        |          | |
+|  +----------+         +----------+        +----------+ |
+|       ↓                    ↓                   ↓        |
+|  Anvand forst!       For specifika          Undvik!    |
+|  Enkelt, sakert      behov                  Svart att  |
+|                                             underhalla |
+|                                                          |
++---------------------------------------------------------+
 ```
 
 ### Vanliga AWS Managed Policies
@@ -457,14 +457,14 @@ aws iam get-group --group-name Developers
 SCENARIO: EC2 behover lasa fran S3
 
 DÅLIGT (hardkodade credentials):
-┌─────────┐
-│   EC2   │ ──── Access Key i kod ──── RISK! Kan lackas
-└─────────┘
++---------+
+|   EC2   | ---- Access Key i kod ---- RISK! Kan lackas
++---------+
 
 BRA (IAM Role):
-┌─────────┐     ┌─────────┐     ┌─────────┐
-│   EC2   │ ←── │  Role   │ ←── │  Policy │
-└─────────┘     └─────────┘     └─────────┘
++---------+     +---------+     +---------+
+|   EC2   | <--- |  Role   | <--- |  Policy |
++---------+     +---------+     +---------+
                      ↓
               Temporara credentials
               Roteras automatiskt
@@ -539,22 +539,22 @@ export AWS_SESSION_TOKEN="..."
 ### Vad ar Least Privilege?
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  LEAST PRIVILEGE                         │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  DÅLIGT: "Give them admin, easier that way"             │
-│  ┌─────────────────────────────────────────────┐        │
-│  │  User → AdministratorAccess → ALLT          │        │
-│  └─────────────────────────────────────────────┘        │
-│                                                          │
-│  BRA: "Give minimum needed to do the job"               │
-│  ┌─────────────────────────────────────────────┐        │
-│  │  User → S3ReadOnly → Endast lasa S3         │        │
-│  │       → EC2Describe → Endast lista EC2      │        │
-│  └─────────────────────────────────────────────┘        │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                  LEAST PRIVILEGE                         |
++---------------------------------------------------------+
+|                                                          |
+|  DÅLIGT: "Give them admin, easier that way"             |
+|  +---------------------------------------------+        |
+|  |  User -> AdministratorAccess -> ALLT          |        |
+|  +---------------------------------------------+        |
+|                                                          |
+|  BRA: "Give minimum needed to do the job"               |
+|  +---------------------------------------------+        |
+|  |  User -> S3ReadOnly -> Endast lasa S3         |        |
+|  |       -> EC2Describe -> Endast lista EC2      |        |
+|  +---------------------------------------------+        |
+|                                                          |
++---------------------------------------------------------+
 ```
 
 ### Praktiskt Exempel
@@ -663,40 +663,40 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 
 ```
                         VPC ARCHITECTURE
-┌─────────────────────────────────────────────────────────────┐
-│  VPC: 10.0.0.0/16 (65,536 IPs)                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │   PUBLIC SUBNETS                PRIVATE SUBNETS    │    │
-│  │   ┌──────────────┐              ┌──────────────┐   │    │
-│  │   │ 10.0.1.0/24  │              │ 10.0.3.0/24  │   │    │
-│  │   │ (AZ-a)       │              │ (AZ-a)       │   │    │
-│  │   │  ┌────────┐  │              │  ┌────────┐  │   │    │
-│  │   │  │  EC2   │  │              │  │  EC2   │  │   │    │
-│  │   │  │ (web)  │  │              │  │ (app)  │  │   │    │
-│  │   │  └────────┘  │              │  └────────┘  │   │    │
-│  │   └──────────────┘              └──────────────┘   │    │
-│  │   ┌──────────────┐              ┌──────────────┐   │    │
-│  │   │ 10.0.2.0/24  │              │ 10.0.4.0/24  │   │    │
-│  │   │ (AZ-b)       │              │ (AZ-b)       │   │    │
-│  │   │  ┌────────┐  │              │  ┌────────┐  │   │    │
-│  │   │  │  EC2   │  │              │  │  RDS   │  │   │    │
-│  │   │  │ (web)  │  │              │  │ (db)   │  │   │    │
-│  │   │  └────────┘  │              │  └────────┘  │   │    │
-│  │   └──────────────┘              └──────────────┘   │    │
-│  │         │                              │           │    │
-│  │         ▼                              ▼           │    │
-│  │   ┌──────────┐                   ┌──────────┐     │    │
-│  │   │ Internet │                   │   NAT    │     │    │
-│  │   │ Gateway  │                   │ Gateway  │     │    │
-│  │   └──────────┘                   └──────────┘     │    │
-│  │         │                              │           │    │
-│  └─────────┼──────────────────────────────┼───────────┘    │
-│            │                              │                 │
-│            ▼                              ▼                 │
-│       INTERNET                    Outbound only            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  VPC: 10.0.0.0/16 (65,536 IPs)                              |
+|  +-----------------------------------------------------+    |
+|  |                                                     |    |
+|  |   PUBLIC SUBNETS                PRIVATE SUBNETS    |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   | 10.0.1.0/24  |              | 10.0.3.0/24  |   |    |
+|  |   | (AZ-a)       |              | (AZ-a)       |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   |  |  EC2   |  |              |  |  EC2   |  |   |    |
+|  |   |  | (web)  |  |              |  | (app)  |  |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   | 10.0.2.0/24  |              | 10.0.4.0/24  |   |    |
+|  |   | (AZ-b)       |              | (AZ-b)       |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   |  |  EC2   |  |              |  |  RDS   |  |   |    |
+|  |   |  | (web)  |  |              |  | (db)   |  |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |         |                              |           |    |
+|  |         ▼                              ▼           |    |
+|  |   +----------+                   +----------+     |    |
+|  |   | Internet |                   |   NAT    |     |    |
+|  |   | Gateway  |                   | Gateway  |     |    |
+|  |   +----------+                   +----------+     |    |
+|  |         |                              |           |    |
+|  +---------+------------------------------+-----------+    |
+|            |                              |                 |
+|            ▼                              ▼                 |
+|       INTERNET                    Outbound only            |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Komponenter
@@ -707,7 +707,7 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 | **Subnet** | Del av VPC i en AZ |
 | **Route Table** | Routing-regler |
 | **Internet Gateway** | VPC ↔ Internet |
-| **NAT Gateway** | Private subnet → Internet |
+| **NAT Gateway** | Private subnet -> Internet |
 | **Security Group** | Instans-firewall |
 | **NACL** | Subnet-firewall |
 
@@ -719,9 +719,9 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 
 ```
 10.0.0.0/16
-    │    │
-    │    └── Prefix length (hur manga bits ar natverk)
-    └────── Natverk-adress
+    |    |
+    |    +-- Prefix length (hur manga bits ar natverk)
+    +------ Natverk-adress
 
 /16 = 65,536 IPs (2^16)
 /24 = 256 IPs (2^8)
@@ -742,19 +742,19 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 VPC: 10.0.0.0/16
 
 Public Subnets:
-├── 10.0.1.0/24  (AZ-a) - 256 IPs
-├── 10.0.2.0/24  (AZ-b) - 256 IPs
-└── 10.0.3.0/24  (AZ-c) - 256 IPs
++-- 10.0.1.0/24  (AZ-a) - 256 IPs
++-- 10.0.2.0/24  (AZ-b) - 256 IPs
++-- 10.0.3.0/24  (AZ-c) - 256 IPs
 
 Private Subnets:
-├── 10.0.10.0/24 (AZ-a) - 256 IPs
-├── 10.0.11.0/24 (AZ-b) - 256 IPs
-└── 10.0.12.0/24 (AZ-c) - 256 IPs
++-- 10.0.10.0/24 (AZ-a) - 256 IPs
++-- 10.0.11.0/24 (AZ-b) - 256 IPs
++-- 10.0.12.0/24 (AZ-c) - 256 IPs
 
 Database Subnets:
-├── 10.0.20.0/24 (AZ-a) - 256 IPs
-├── 10.0.21.0/24 (AZ-b) - 256 IPs
-└── 10.0.22.0/24 (AZ-c) - 256 IPs
++-- 10.0.20.0/24 (AZ-a) - 256 IPs
++-- 10.0.21.0/24 (AZ-b) - 256 IPs
++-- 10.0.22.0/24 (AZ-c) - 256 IPs
 ```
 
 ---
@@ -889,17 +889,17 @@ aws ec2 associate-route-table \
 ### Jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│           SECURITY GROUPS vs NACLs                          │
-├─────────────────────┬───────────────────────────────────────┤
-│   SECURITY GROUP    │              NACL                     │
-├─────────────────────┼───────────────────────────────────────┤
-│ Instans-niva        │ Subnet-niva                           │
-│ Stateful            │ Stateless                             │
-│ Bara Allow-regler   │ Allow + Deny                          │
-│ Utvardering: Alla   │ Utvardering: Ordning (nummer)         │
-│ Default: Deny all in│ Default: Allow all                    │
-└─────────────────────┴───────────────────────────────────────┘
++-------------------------------------------------------------+
+|           SECURITY GROUPS vs NACLs                          |
++---------------------+---------------------------------------+
+|   SECURITY GROUP    |              NACL                     |
++---------------------+---------------------------------------+
+| Instans-niva        | Subnet-niva                           |
+| Stateful            | Stateless                             |
+| Bara Allow-regler   | Allow + Deny                          |
+| Utvardering: Alla   | Utvardering: Ordning (nummer)         |
+| Default: Deny all in| Default: Allow all                    |
++---------------------+---------------------------------------+
 ```
 
 ### Security Group Exempel
@@ -1037,35 +1037,35 @@ Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
 
 ```
                          EC2 INSTANCE
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │                    EC2 INSTANCE                       │  │
-│  │                                                       │  │
-│  │   ┌─────────────┐    ┌─────────────┐                 │  │
-│  │   │    vCPU     │    │   Memory    │                 │  │
-│  │   │   (2-128+)  │    │  (1-768GB)  │                 │  │
-│  │   └─────────────┘    └─────────────┘                 │  │
-│  │                                                       │  │
-│  │   ┌─────────────────────────────────────────────┐    │  │
-│  │   │              ROOT VOLUME (EBS)               │    │  │
-│  │   │         /dev/xvda (8-16GB typical)          │    │  │
-│  │   └─────────────────────────────────────────────┘    │  │
-│  │                                                       │  │
-│  │   ┌─────────────────────────────────────────────┐    │  │
-│  │   │            NETWORK INTERFACE                 │    │  │
-│  │   │     Private IP: 10.0.1.45                   │    │  │
-│  │   │     Public IP: 52.xxx.xxx.xxx (optional)    │    │  │
-│  │   └─────────────────────────────────────────────┘    │  │
-│  │                                                       │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                           │                                 │
-│              ┌────────────┴────────────┐                   │
-│              │     Security Group      │                   │
-│              │    (Virtual Firewall)   │                   │
-│              └─────────────────────────┘                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                                                             |
+|  +------------------------------------------------------+  |
+|  |                    EC2 INSTANCE                       |  |
+|  |                                                       |  |
+|  |   +-------------+    +-------------+                 |  |
+|  |   |    vCPU     |    |   Memory    |                 |  |
+|  |   |   (2-128+)  |    |  (1-768GB)  |                 |  |
+|  |   +-------------+    +-------------+                 |  |
+|  |                                                       |  |
+|  |   +---------------------------------------------+    |  |
+|  |   |              ROOT VOLUME (EBS)               |    |  |
+|  |   |         /dev/xvda (8-16GB typical)          |    |  |
+|  |   +---------------------------------------------+    |  |
+|  |                                                       |  |
+|  |   +---------------------------------------------+    |  |
+|  |   |            NETWORK INTERFACE                 |    |  |
+|  |   |     Private IP: 10.0.1.45                   |    |  |
+|  |   |     Public IP: 52.xxx.xxx.xxx (optional)    |    |  |
+|  |   +---------------------------------------------+    |  |
+|  |                                                       |  |
+|  +------------------------------------------------------+  |
+|                           |                                 |
+|              +------------+------------+                   |
+|              |     Security Group      |                   |
+|              |    (Virtual Firewall)   |                   |
+|              +-------------------------+                   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1076,10 +1076,10 @@ Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
 
 ```
 m5.xlarge
-│ │  │
-│ │  └── Size: nano, micro, small, medium, large, xlarge, 2xlarge...
-│ └───── Generation: 5th generation
-└────── Family: m = general purpose
+| |  |
+| |  +-- Size: nano, micro, small, medium, large, xlarge, 2xlarge...
+| +----- Generation: 5th generation
++------ Family: m = general purpose
 ```
 
 ### Instance Families
@@ -1170,24 +1170,24 @@ ssh -i my-key.pem ec2-user@$PUBLIC_IP
 ### Vad ar User Data?
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      USER DATA                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Script som kors AUTOMATISKT vid forsta boot                │
-│                                                              │
-│  ┌────────────┐     ┌────────────┐     ┌────────────┐      │
-│  │  EC2 Start │ ──▶ │ User Data  │ ──▶ │   Server   │      │
-│  │            │     │   Script   │     │   Ready!   │      │
-│  └────────────┘     └────────────┘     └────────────┘      │
-│                                                              │
-│  Perfekt for:                                                │
-│  - Installera software                                       │
-│  - Konfigurera services                                      │
-│  - Ladda ner applikation                                     │
-│  - Starta processer                                          │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      USER DATA                               |
++-------------------------------------------------------------+
+|                                                              |
+|  Script som kors AUTOMATISKT vid forsta boot                |
+|                                                              |
+|  +------------+     +------------+     +------------+      |
+|  |  EC2 Start | --▶ | User Data  | --▶ |   Server   |      |
+|  |            |     |   Script   |     |   Ready!   |      |
+|  +------------+     +------------+     +------------+      |
+|                                                              |
+|  Perfekt for:                                                |
+|  - Installera software                                       |
+|  - Konfigurera services                                      |
+|  - Ladda ner applikation                                     |
+|  - Starta processer                                          |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ### User Data Exempel
@@ -1336,34 +1336,34 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
 ### Instance States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    EC2 LIFECYCLE                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   ┌─────────┐                                               │
-│   │ pending │ ──── Instance starting                        │
-│   └────┬────┘                                               │
-│        │                                                     │
-│        ▼                                                     │
-│   ┌─────────┐                                               │
-│   │ running │ ◀──── Normal operation                        │
-│   └────┬────┘                                               │
-│        │                                                     │
-│   ┌────┴────┐                                               │
-│   │         │                                                │
-│   ▼         ▼                                                │
-│ ┌─────────┐ ┌──────────┐                                    │
-│ │stopping │ │shutting- │                                    │
-│ │         │ │down      │                                    │
-│ └────┬────┘ └────┬─────┘                                    │
-│      │           │                                           │
-│      ▼           ▼                                           │
-│ ┌─────────┐ ┌──────────┐                                    │
-│ │ stopped │ │terminated│                                    │
-│ │(no cost)│ │ (gone!)  │                                    │
-│ └─────────┘ └──────────┘                                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    EC2 LIFECYCLE                             |
++-------------------------------------------------------------+
+|                                                              |
+|   +---------+                                               |
+|   | pending | ---- Instance starting                        |
+|   +----+----+                                               |
+|        |                                                     |
+|        ▼                                                     |
+|   +---------+                                               |
+|   | running | ◀---- Normal operation                        |
+|   +----+----+                                               |
+|        |                                                     |
+|   +----+----+                                               |
+|   |         |                                                |
+|   ▼         ▼                                                |
+| +---------+ +----------+                                    |
+| |stopping | |shutting- |                                    |
+| |         | |down      |                                    |
+| +----+----+ +----+-----+                                    |
+|      |           |                                           |
+|      ▼           ▼                                           |
+| +---------+ +----------+                                    |
+| | stopped | |terminated|                                    |
+| |(no cost)| | (gone!)  |                                    |
+| +---------+ +----------+                                    |
+|                                                              |
++-------------------------------------------------------------+
 
 VIKTIGT:
 - Stopped = No compute cost, EBS cost continues
@@ -1456,31 +1456,31 @@ S3 ar designat for 99.999999999% (11 9:or) durability. Du forlorar 1 objekt av 1
 
 ```
                            S3 STRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                         S3 BUCKET                            │
-│                    my-company-data-prod                      │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │   /logs/                                            │    │
-│  │   ├── app/                                          │    │
-│  │   │   ├── 2025-12-01.log                           │    │
-│  │   │   └── 2025-12-02.log                           │    │
-│  │   └── access/                                       │    │
-│  │       └── access.log                                │    │
-│  │                                                     │    │
-│  │   /backups/                                         │    │
-│  │   ├── db-backup-2025-12-01.sql.gz                  │    │
-│  │   └── db-backup-2025-12-02.sql.gz                  │    │
-│  │                                                     │    │
-│  │   /static/                                          │    │
-│  │   ├── images/                                       │    │
-│  │   │   └── logo.png                                 │    │
-│  │   └── css/                                          │    │
-│  │       └── style.css                                │    │
-│  │                                                     │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         S3 BUCKET                            |
+|                    my-company-data-prod                      |
+|  +-----------------------------------------------------+    |
+|  |                                                     |    |
+|  |   /logs/                                            |    |
+|  |   +-- app/                                          |    |
+|  |   |   +-- 2025-12-01.log                           |    |
+|  |   |   +-- 2025-12-02.log                           |    |
+|  |   +-- access/                                       |    |
+|  |       +-- access.log                                |    |
+|  |                                                     |    |
+|  |   /backups/                                         |    |
+|  |   +-- db-backup-2025-12-01.sql.gz                  |    |
+|  |   +-- db-backup-2025-12-02.sql.gz                  |    |
+|  |                                                     |    |
+|  |   /static/                                          |    |
+|  |   +-- images/                                       |    |
+|  |   |   +-- logo.png                                 |    |
+|  |   +-- css/                                          |    |
+|  |       +-- style.css                                |    |
+|  |                                                     |    |
+|  +-----------------------------------------------------+    |
+|                                                              |
++-------------------------------------------------------------+
 
 VIKTIGT:
 - Bucket name = Globalt unikt (hela AWS)
@@ -1544,25 +1544,25 @@ aws s3 rm s3://my-bucket/folder/ --recursive
 ### Jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    S3 STORAGE CLASSES                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  STANDARD          STANDARD-IA       GLACIER               │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐          │
-│  │ Frequent │      │Infrequent│      │  Archive │          │
-│  │  Access  │      │  Access  │      │          │          │
-│  │          │      │          │      │          │          │
-│  │ $0.023/GB│      │ $0.0125/GB│     │$0.004/GB │          │
-│  │          │      │ +retrieval│      │ +hours   │          │
-│  └──────────┘      └──────────┘      └──────────┘          │
-│       │                 │                  │                │
-│       ▼                 ▼                  ▼                │
-│  App data,        Backups >30d,      Archives,             │
-│  frequently       DR data            compliance            │
-│  accessed                            7+ years              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    S3 STORAGE CLASSES                        |
++-------------------------------------------------------------+
+|                                                              |
+|  STANDARD          STANDARD-IA       GLACIER               |
+|  +----------+      +----------+      +----------+          |
+|  | Frequent |      |Infrequent|      |  Archive |          |
+|  |  Access  |      |  Access  |      |          |          |
+|  |          |      |          |      |          |          |
+|  | $0.023/GB|      | $0.0125/GB|     |$0.004/GB |          |
+|  |          |      | +retrieval|      | +hours   |          |
+|  +----------+      +----------+      +----------+          |
+|       |                 |                  |                |
+|       ▼                 ▼                  ▼                |
+|  App data,        Backups >30d,      Archives,             |
+|  frequently       DR data            compliance            |
+|  accessed                            7+ years              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 | Class | Cost/GB | Retrieval | Use Case |
@@ -1763,29 +1763,29 @@ RDS ar managed database - du fokuserar pa schema och queries, AWS skoter resten.
 ## RDS vs EC2 Database
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│             RDS vs SELF-MANAGED (EC2)                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  YOU MANAGE              │      AWS MANAGES (RDS)           │
-│  ┌───────────────────┐   │   ┌───────────────────┐          │
-│  │ Application       │   │   │ Application       │          │
-│  │ Optimization      │   │   │ Optimization      │          │
-│  │ Queries           │   │   │ Queries           │          │
-│  ├───────────────────┤   │   └───────────────────┘          │
-│  │ Schema            │   │                                   │
-│  │ Scaling           │   │         ┌───────────────┐        │
-│  │ High Availability │   │         │ MANAGED:      │        │
-│  │ Backups           │   │         │ - Patching    │        │
-│  │ Patching          │   │         │ - Backups     │        │
-│  │ OS Installation   │   │         │ - HA/Failover │        │
-│  │ Server Maintenance│   │         │ - Monitoring  │        │
-│  │ Power/Network     │   │         │ - Scaling     │        │
-│  └───────────────────┘   │         └───────────────┘        │
-│                                                              │
-│  Timmar/vecka             │         Minuter/manad           │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|             RDS vs SELF-MANAGED (EC2)                        |
++-------------------------------------------------------------+
+|                                                              |
+|  YOU MANAGE              |      AWS MANAGES (RDS)           |
+|  +-------------------+   |   +-------------------+          |
+|  | Application       |   |   | Application       |          |
+|  | Optimization      |   |   | Optimization      |          |
+|  | Queries           |   |   | Queries           |          |
+|  +-------------------+   |   +-------------------+          |
+|  | Schema            |   |                                   |
+|  | Scaling           |   |         +---------------+        |
+|  | High Availability |   |         | MANAGED:      |        |
+|  | Backups           |   |         | - Patching    |        |
+|  | Patching          |   |         | - Backups     |        |
+|  | OS Installation   |   |         | - HA/Failover |        |
+|  | Server Maintenance|   |         | - Monitoring  |        |
+|  | Power/Network     |   |         | - Scaling     |        |
+|  +-------------------+   |         +---------------+        |
+|                                                              |
+|  Timmar/vecka             |         Minuter/manad           |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -1865,30 +1865,30 @@ echo "RDS Endpoint: $ENDPOINT"
 ### High Availability
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    MULTI-AZ DEPLOYMENT                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   AZ-a (Primary)              AZ-b (Standby)               │
-│   ┌──────────────┐            ┌──────────────┐             │
-│   │     RDS      │◀──────────▶│     RDS      │             │
-│   │   PRIMARY    │  Sync      │   STANDBY    │             │
-│   │              │  Repl.     │              │             │
-│   └──────────────┘            └──────────────┘             │
-│          │                           │                      │
-│          │                           │                      │
-│          ▼                           ▼                      │
-│   ┌──────────────┐            ┌──────────────┐             │
-│   │     EBS      │            │     EBS      │             │
-│   └──────────────┘            └──────────────┘             │
-│                                                              │
-│   VID FAILOVER:                                             │
-│   1. Primary fails                                          │
-│   2. Standby promoted (60-120 sek)                         │
-│   3. DNS endpoint resolves to new primary                  │
-│   4. Din app marker inget (samma endpoint)                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    MULTI-AZ DEPLOYMENT                       |
++-------------------------------------------------------------+
+|                                                              |
+|   AZ-a (Primary)              AZ-b (Standby)               |
+|   +--------------+            +--------------+             |
+|   |     RDS      |◀----------▶|     RDS      |             |
+|   |   PRIMARY    |  Sync      |   STANDBY    |             |
+|   |              |  Repl.     |              |             |
+|   +--------------+            +--------------+             |
+|          |                           |                      |
+|          |                           |                      |
+|          ▼                           ▼                      |
+|   +--------------+            +--------------+             |
+|   |     EBS      |            |     EBS      |             |
+|   +--------------+            +--------------+             |
+|                                                              |
+|   VID FAILOVER:                                             |
+|   1. Primary fails                                          |
+|   2. Standby promoted (60-120 sek)                         |
+|   3. DNS endpoint resolves to new primary                  |
+|   4. Din app marker inget (samma endpoint)                 |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -1919,8 +1919,8 @@ REPLICA_ENDPOINT=$(aws rds describe-db-instances \
     --output text)
 
 # I din app:
-# Writes → Primary endpoint
-# Reads → Replica endpoint
+# Writes -> Primary endpoint
+# Reads -> Replica endpoint
 ```
 
 ---
@@ -2006,35 +2006,35 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 ### DNS Resolution
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DNS RESOLUTION                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   User types: www.example.com                               │
-│                     │                                        │
-│                     ▼                                        │
-│   ┌─────────────────────────────────┐                       │
-│   │      Recursive Resolver         │                       │
-│   │   (ISP or 8.8.8.8)              │                       │
-│   └─────────────────────────────────┘                       │
-│                     │                                        │
-│         ┌───────────┴───────────┐                           │
-│         ▼                       ▼                           │
-│   ┌──────────┐           ┌──────────┐                       │
-│   │   Root   │           │   TLD    │                       │
-│   │  Server  │    →      │ (.com)   │                       │
-│   └──────────┘           └──────────┘                       │
-│                                │                             │
-│                                ▼                             │
-│                         ┌──────────────┐                    │
-│                         │   Route53    │                    │
-│                         │  (Authorit.) │                    │
-│                         └──────────────┘                    │
-│                                │                             │
-│                                ▼                             │
-│                         52.xx.xx.xx (IP)                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    DNS RESOLUTION                            |
++-------------------------------------------------------------+
+|                                                              |
+|   User types: www.example.com                               |
+|                     |                                        |
+|                     ▼                                        |
+|   +---------------------------------+                       |
+|   |      Recursive Resolver         |                       |
+|   |   (ISP or 8.8.8.8)              |                       |
+|   +---------------------------------+                       |
+|                     |                                        |
+|         +-----------+-----------+                           |
+|         ▼                       ▼                           |
+|   +----------+           +----------+                       |
+|   |   Root   |           |   TLD    |                       |
+|   |  Server  |    ->      | (.com)   |                       |
+|   +----------+           +----------+                       |
+|                                |                             |
+|                                ▼                             |
+|                         +--------------+                    |
+|                         |   Route53    |                    |
+|                         |  (Authorit.) |                    |
+|                         +--------------+                    |
+|                                |                             |
+|                                ▼                             |
+|                         52.xx.xx.xx (IP)                    |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -2043,11 +2043,11 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 | Type | Syfte | Exempel |
 |------|-------|---------|
-| **A** | Name → IPv4 | www → 52.1.2.3 |
-| **AAAA** | Name → IPv6 | www → 2001:db8::1 |
-| **CNAME** | Name → Name | www → app.example.com |
-| **ALIAS** | Name → AWS resource | www → d123.cloudfront.net |
-| **MX** | Mail servers | @ → mail.example.com |
+| **A** | Name -> IPv4 | www -> 52.1.2.3 |
+| **AAAA** | Name -> IPv6 | www -> 2001:db8::1 |
+| **CNAME** | Name -> Name | www -> app.example.com |
+| **ALIAS** | Name -> AWS resource | www -> d123.cloudfront.net |
+| **MX** | Mail servers | @ -> mail.example.com |
 | **TXT** | Text records | Verification, SPF |
 | **NS** | Name servers | Delegation |
 
@@ -2055,15 +2055,15 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 ```
 A RECORD:
-www.example.com → 52.1.2.3
+www.example.com -> 52.1.2.3
 (Direkt till IP)
 
 CNAME:
-www.example.com → app.example.com
+www.example.com -> app.example.com
 (Pointer till annat namn - INTE pa apex/root!)
 
 ALIAS (AWS-specifik):
-example.com → d123.cloudfront.net
+example.com -> d123.cloudfront.net
 (Fungerar pa apex, gratis queries till AWS resources)
 ```
 
@@ -2132,23 +2132,23 @@ aws route53 change-resource-record-sets \
 
 ```
 SIMPLE (default):
-User → DNS → Single endpoint
+User -> DNS -> Single endpoint
 
 WEIGHTED (A/B testing, gradual rollout):
-User → DNS → 70% old version
-           → 30% new version
+User -> DNS -> 70% old version
+           -> 30% new version
 
 LATENCY (lowest latency):
-User (EU) → DNS → eu-north-1 endpoint
-User (US) → DNS → us-east-1 endpoint
+User (EU) -> DNS -> eu-north-1 endpoint
+User (US) -> DNS -> us-east-1 endpoint
 
 FAILOVER (disaster recovery):
-User → DNS → Primary (healthy) ✓
-           → Secondary (standby)
+User -> DNS -> Primary (healthy) ✓
+           -> Secondary (standby)
 
 GEOLOCATION (based on location):
-User (Sweden) → DNS → Swedish content
-User (Germany) → DNS → German content
+User (Sweden) -> DNS -> Swedish content
+User (Germany) -> DNS -> German content
 ```
 
 ### Weighted Routing Exempel
@@ -2260,33 +2260,33 @@ CloudWatch ar centralen for all monitoring, logging och alerting i AWS.
 ## CloudWatch Components
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CLOUDWATCH                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   METRICS              LOGS                ALARMS           │
-│   ┌──────────┐        ┌──────────┐        ┌──────────┐     │
-│   │ CPU %    │        │ App logs │        │ CPU > 80%│     │
-│   │ Memory   │        │ Access   │        │ Errors   │     │
-│   │ Network  │        │ System   │        │ Latency  │     │
-│   └──────────┘        └──────────┘        └──────────┘     │
-│        │                   │                   │            │
-│        └───────────────────┴───────────────────┘            │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────────┐                         │
-│                    │  DASHBOARDS  │                         │
-│                    │  (Visualize) │                         │
-│                    └──────────────┘                         │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────────┐                         │
-│                    │    ACTIONS   │                         │
-│                    │ SNS, Lambda  │                         │
-│                    │ Auto Scaling │                         │
-│                    └──────────────┘                         │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    CLOUDWATCH                                |
++-------------------------------------------------------------+
+|                                                              |
+|   METRICS              LOGS                ALARMS           |
+|   +----------+        +----------+        +----------+     |
+|   | CPU %    |        | App logs |        | CPU > 80%|     |
+|   | Memory   |        | Access   |        | Errors   |     |
+|   | Network  |        | System   |        | Latency  |     |
+|   +----------+        +----------+        +----------+     |
+|        |                   |                   |            |
+|        +-------------------+-------------------+            |
+|                            |                                 |
+|                            ▼                                 |
+|                    +--------------+                         |
+|                    |  DASHBOARDS  |                         |
+|                    |  (Visualize) |                         |
+|                    +--------------+                         |
+|                            |                                 |
+|                            ▼                                 |
+|                    +--------------+                         |
+|                    |    ACTIONS   |                         |
+|                    | SNS, Lambda  |                         |
+|                    | Auto Scaling |                         |
+|                    +--------------+                         |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -2379,19 +2379,19 @@ aws cloudwatch describe-alarms \
 ### Alarm States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ALARM STATES                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   OK              ALARM           INSUFFICIENT_DATA         │
-│   ┌─────┐         ┌─────┐         ┌─────┐                  │
-│   │ ✓   │    →    │ ⚠️  │    →    │ ?   │                  │
-│   │     │         │     │         │     │                  │
-│   └─────┘         └─────┘         └─────┘                  │
-│   Threshold       Threshold       Not enough               │
-│   not breached    breached        data points              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    ALARM STATES                              |
++-------------------------------------------------------------+
+|                                                              |
+|   OK              ALARM           INSUFFICIENT_DATA         |
+|   +-----+         +-----+         +-----+                  |
+|   | ✓   |    ->    | ⚠️  |    ->    | ?   |                  |
+|   |     |         |     |         |     |                  |
+|   +-----+         +-----+         +-----+                  |
+|   Threshold       Threshold       Not enough               |
+|   not breached    breached        data points              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -2541,11 +2541,11 @@ aws logs describe-log-groups --query 'logGroups[].logGroupName'
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2573,7 +2573,7 @@ AWS Lambda är **serverless computing** - du betalar bara för exekveringstiden!
 
 ### Lambda Execution Model:
 ```
-Event → Lambda Function → Response
+Event -> Lambda Function -> Response
   ↓
 - API Gateway request
 - S3 upload
@@ -2712,11 +2712,11 @@ def lambda_handler(event, context):
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2744,11 +2744,11 @@ Klicka-och-skapa i AWS Console? Det är för amatörer!
 
 ### CloudFormation Stack Lifecycle:
 ```
-Template → Create Stack → Resources Provisioned
+Template -> Create Stack -> Resources Provisioned
                 ↓
-         Update Stack → Rolling updates
+         Update Stack -> Rolling updates
                 ↓
-         Delete Stack → All resources removed
+         Delete Stack -> All resources removed
 ```
 
 ### Template Anatomy:
@@ -2941,11 +2941,11 @@ Kör: `aws cloudformation create-stack --stack-name web-app --template-body file
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -2973,11 +2973,11 @@ Din webbsida laddar på 3 sekunder? Det är en EVIGHET på internet!
 
 ### CloudFront Architecture:
 ```
-User → Edge Location → Regional Cache → Origin
+User -> Edge Location -> Regional Cache -> Origin
          ↓
-    Cache HIT? → Return cached content
+    Cache HIT? -> Return cached content
          ↓
-    Cache MISS → Fetch from origin → Cache → Return
+    Cache MISS -> Fetch from origin -> Cache -> Return
 ```
 
 ### Origin Types:
@@ -2988,10 +2988,10 @@ User → Edge Location → Regional Cache → Origin
 
 ### Cache Behaviors:
 ```
-/api/*     → ALB (no cache, TTL 0)
-/static/*  → S3 (cache 1 year)
-/images/*  → S3 (cache 1 week)
-/*         → ALB (cache 5 min)
+/api/*     -> ALB (no cache, TTL 0)
+/static/*  -> S3 (cache 1 year)
+/images/*  -> S3 (cache 1 week)
+/*         -> ALB (cache 5 min)
 ```
 
 ---
@@ -3101,11 +3101,11 @@ curl -I https://d1234567890.cloudfront.net/
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3136,9 +3136,9 @@ En server down = site down? Nej tack!
 
 ### ALB Architecture:
 ```
-Internet → ALB → Target Group 1 (EC2 instances)
-              → Target Group 2 (Lambda functions)
-              → Target Group 3 (IP addresses)
+Internet -> ALB -> Target Group 1 (EC2 instances)
+              -> Target Group 2 (Lambda functions)
+              -> Target Group 3 (IP addresses)
 ```
 
 ### Key Components:
@@ -3149,9 +3149,9 @@ Internet → ALB → Target Group 1 (EC2 instances)
 
 ### Routing Examples:
 ```
-api.example.com/*     → API Target Group
-www.example.com/*     → Web Target Group
-example.com/images/*  → S3 (via Lambda)
+api.example.com/*     -> API Target Group
+www.example.com/*     -> Web Target Group
+example.com/images/*  -> S3 (via Lambda)
 ```
 
 ---
@@ -3284,11 +3284,11 @@ curl http://ALB-DNS/api/health
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3317,9 +3317,9 @@ Behöver du en databas som skalar från 0 till miljoner requests/sekund?
 ### Data Model:
 ```
 Table: users
-├── Partition Key: user_id (required)
-├── Sort Key: created_at (optional)
-└── Attributes: name, email, settings (any JSON)
++-- Partition Key: user_id (required)
++-- Sort Key: created_at (optional)
++-- Attributes: name, email, settings (any JSON)
 
 Primary Key = Partition Key + Sort Key (if exists)
 ```
@@ -3477,11 +3477,11 @@ aws dynamodb create-table \
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3502,31 +3502,31 @@ Tight coupling mellan services? Det är en tidsbomd!
 ## 📚 Koncept
 
 ### SNS (Simple Notification Service):
-- **Pub/Sub** - 1 publisher → many subscribers
+- **Pub/Sub** - 1 publisher -> many subscribers
 - **Push-based** - meddelanden skickas direkt
 - **Fan-out** - ett meddelande till många endpoints
 
 ### SQS (Simple Queue Service):
-- **Message Queue** - 1 producer → 1 consumer (per message)
+- **Message Queue** - 1 producer -> 1 consumer (per message)
 - **Pull-based** - consumers pollar för meddelanden
 - **Buffering** - hantera traffic spikes
 
 ### SNS vs SQS:
 ```
-SNS: Publisher → Topic → [Email, SMS, Lambda, SQS, HTTP]
+SNS: Publisher -> Topic -> [Email, SMS, Lambda, SQS, HTTP]
      (Push to all subscribers immediately)
 
-SQS: Producer → Queue → Consumer
+SQS: Producer -> Queue -> Consumer
      (Pull when ready, messages persist until processed)
 ```
 
 ### Common Pattern - Fan-out:
 ```
-Order Service → SNS Topic "new-order"
-                    ├→ SQS: inventory-queue → Inventory Service
-                    ├→ SQS: shipping-queue → Shipping Service
-                    ├→ SQS: notification-queue → Email Service
-                    └→ Lambda: analytics → DynamoDB
+Order Service -> SNS Topic "new-order"
+                    +-> SQS: inventory-queue -> Inventory Service
+                    +-> SQS: shipping-queue -> Shipping Service
+                    +-> SQS: notification-queue -> Email Service
+                    +-> Lambda: analytics -> DynamoDB
 ```
 
 ---
@@ -3681,11 +3681,11 @@ def process_orders():
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3866,11 +3866,11 @@ aws secretsmanager get-secret-value \
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -3900,13 +3900,13 @@ Docker på din laptop är nice. Men hur kör du 100 containers i produktion?
 ### ECS Architecture:
 ```
 Cluster
-├── Service (long-running)
-│   ├── Task Definition (blueprint)
-│   │   └── Container Definitions
-│   └── Tasks (running instances)
-│       ├── Task 1 (container1, container2)
-│       └── Task 2 (container1, container2)
-└── Task (one-off job)
++-- Service (long-running)
+|   +-- Task Definition (blueprint)
+|   |   +-- Container Definitions
+|   +-- Tasks (running instances)
+|       +-- Task 1 (container1, container2)
+|       +-- Task 2 (container1, container2)
++-- Task (one-off job)
 ```
 
 ### Key Components:
@@ -4084,11 +4084,11 @@ aws ecs describe-services --cluster demo-cluster --services demo-service
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -4111,14 +4111,14 @@ Kubernetes är kraftfullt men komplext. Vem vill hantera control plane?
 ### EKS Architecture:
 ```
 EKS Control Plane (AWS-managed)
-├── API Server
-├── etcd (HA across 3 AZs)
-└── Controller Manager
++-- API Server
++-- etcd (HA across 3 AZs)
++-- Controller Manager
 
 Data Plane (You manage)
-├── Managed Node Groups (recommended)
-├── Self-managed nodes (EC2)
-└── Fargate (serverless)
++-- Managed Node Groups (recommended)
++-- Self-managed nodes (EC2)
++-- Fargate (serverless)
 ```
 
 ### EKS vs ECS:
@@ -4305,11 +4305,11 @@ curl http://$(kubectl get svc demo-api -o jsonpath='{.status.loadBalancer.ingres
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -4332,12 +4332,12 @@ AWS Security är DITT ansvar (Shared Responsibility Model). Lär dig göra det r
 ### Shared Responsibility Model:
 ```
 AWS ansvarar för:          Du ansvarar för:
-├── Hardware               ├── Data
-├── Networking             ├── IAM
-├── Virtualization         ├── OS patching (EC2)
-└── Managed services       ├── Network config
-                           ├── Encryption
-                           └── Application security
++-- Hardware               +-- Data
++-- Networking             +-- IAM
++-- Virtualization         +-- OS patching (EC2)
++-- Managed services       +-- Network config
+                           +-- Encryption
+                           +-- Application security
 ```
 
 ### Security Pillars:
@@ -4518,11 +4518,11 @@ aws securityhub get-findings --filters '{
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -4559,11 +4559,11 @@ AWS-fakturan gick genom taket? Du är inte ensam.
 ### Cost Hierarchy:
 ```
 Organization (consolidated billing)
-├── Account 1 (Production)
-│   ├── Service: EC2
-│   │   └── Tags: Environment=prod, Team=backend
-│   └── Service: RDS
-└── Account 2 (Development)
++-- Account 1 (Production)
+|   +-- Service: EC2
+|   |   +-- Tags: Environment=prod, Team=backend
+|   +-- Service: RDS
++-- Account 2 (Development)
 ```
 
 ---
@@ -4737,11 +4737,11 @@ if __name__ == '__main__':
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -4763,33 +4763,33 @@ Kunskaper utan bevis? Certifieringar öppnar dörrar!
 
 ### Foundational (ingen förkunskap):
 ```
-┌─────────────────────────────────────┐
-│  AWS Certified Cloud Practitioner   │
-│  - Grundläggande AWS-kunskap        │
-│  - 90 min, 65 frågor                │
-│  - Bra för alla roller              │
-└─────────────────────────────────────┘
++-------------------------------------+
+|  AWS Certified Cloud Practitioner   |
+|  - Grundläggande AWS-kunskap        |
+|  - 90 min, 65 frågor                |
+|  - Bra för alla roller              |
++-------------------------------------+
 ```
 
 ### Associate (1+ år erfarenhet):
 ```
-┌────────────────────┬────────────────────┬────────────────────┐
-│ Solutions Architect│   Developer        │   SysOps Admin     │
-│   Associate        │   Associate        │   Associate        │
-│                    │                    │                    │
-│ Arkitektur &       │ Utveckling &       │ Drift &            │
-│ Design patterns    │ CI/CD, Lambda      │ Övervakning        │
-└────────────────────┴────────────────────┴────────────────────┘
++--------------------+--------------------+--------------------+
+| Solutions Architect|   Developer        |   SysOps Admin     |
+|   Associate        |   Associate        |   Associate        |
+|                    |                    |                    |
+| Arkitektur &       | Utveckling &       | Drift &            |
+| Design patterns    | CI/CD, Lambda      | Övervakning        |
++--------------------+--------------------+--------------------+
 ```
 
 ### Professional (2+ år erfarenhet):
 ```
-┌────────────────────────────┬────────────────────────────┐
-│ Solutions Architect Pro    │   DevOps Engineer Pro      │
-│                            │                            │
-│ Komplexa multi-tier        │ CI/CD, Automation          │
-│ Enterprise arkitektur      │ IaC, Monitoring            │
-└────────────────────────────┴────────────────────────────┘
++----------------------------+----------------------------+
+| Solutions Architect Pro    |   DevOps Engineer Pro      |
+|                            |                            |
+| Komplexa multi-tier        | CI/CD, Automation          |
+| Enterprise arkitektur      | IaC, Monitoring            |
++----------------------------+----------------------------+
 ```
 
 ### Specialty:
@@ -4808,21 +4808,21 @@ Kunskaper utan bevis? Certifieringar öppnar dörrar!
 
 ```
 START
-  │
+  |
   ▼
 Cloud Practitioner (valfritt men bra grund)
-  │
+  |
   ▼
-Solutions Architect Associate ← REKOMMENDERAS FÖRST
-  │
-  ├─────────────────────┐
+Solutions Architect Associate <- REKOMMENDERAS FÖRST
+  |
+  +---------------------+
   ▼                     ▼
 Developer Associate   SysOps Associate
-  │                     │
-  └─────────┬───────────┘
+  |                     |
+  +---------+-----------+
             ▼
     DevOps Engineer Professional
-            │
+            |
             ▼
     Security Specialty (valfritt)
 ```
@@ -4943,12 +4943,12 @@ AWS dominerar molnmarknaden med ~32% market share. Nastan varje DevOps-jobb krav
 
 ```
 TRADITIONELLT (On-Premise)          CLOUD (AWS)
-┌─────────────────────┐            ┌─────────────────────┐
-│  Kop servrar        │            │  Hyr kapacitet      │
-│  Installera i DC    │     →      │  Starta pa sekunder │
-│  Underhall hardvara │            │  Betala per anvand. │
-│  Skala manuellt     │            │  Skala automatiskt  │
-└─────────────────────┘            └─────────────────────┘
++---------------------+            +---------------------+
+|  Kop servrar        |            |  Hyr kapacitet      |
+|  Installera i DC    |     ->      |  Starta pa sekunder |
+|  Underhall hardvara |            |  Betala per anvand. |
+|  Skala manuellt     |            |  Skala automatiskt  |
++---------------------+            +---------------------+
      Veckor/Manader                      Minuter
 ```
 
@@ -4971,22 +4971,22 @@ TRADITIONELLT (On-Premise)          CLOUD (AWS)
 
 ```
                     AWS GLOBAL INFRASTRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   REGION: eu-north-1 (Stockholm)                           │
-│   ┌─────────────────────────────────────────────────────┐  │
-│   │                                                     │  │
-│   │   AZ: eu-north-1a    AZ: eu-north-1b    AZ: eu-north-1c │
-│   │   ┌─────────┐        ┌─────────┐        ┌─────────┐ │  │
-│   │   │ Datacenter│      │ Datacenter│      │ Datacenter│ │  │
-│   │   │ Cluster  │       │ Cluster  │       │ Cluster  │ │  │
-│   │   └─────────┘        └─────────┘        └─────────┘ │  │
-│   │         ↑                 ↑                 ↑       │  │
-│   │         └────── High-speed links ───────────┘       │  │
-│   │                                                     │  │
-│   └─────────────────────────────────────────────────────┘  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                                                             |
+|   REGION: eu-north-1 (Stockholm)                           |
+|   +-----------------------------------------------------+  |
+|   |                                                     |  |
+|   |   AZ: eu-north-1a    AZ: eu-north-1b    AZ: eu-north-1c |
+|   |   +---------+        +---------+        +---------+ |  |
+|   |   | Datacenter|      | Datacenter|      | Datacenter| |  |
+|   |   | Cluster  |       | Cluster  |       | Cluster  | |  |
+|   |   +---------+        +---------+        +---------+ |  |
+|   |         ↑                 ↑                 ↑       |  |
+|   |         +------ High-speed links -----------+       |  |
+|   |                                                     |  |
+|   +-----------------------------------------------------+  |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 **Region:** Geografiskt omrade (t.ex. eu-north-1 = Stockholm)
@@ -5022,11 +5022,11 @@ TRADITIONELLT (On-Premise)          CLOUD (AWS)
 # ROOT USER = Gud-mode - ALDRIG anvand for dagligt arbete!
 
 # Steg 1: Aktivera MFA pa root
-AWS Console → Security Credentials → MFA → Activate MFA
+AWS Console -> Security Credentials -> MFA -> Activate MFA
 # Anvand app som Google Authenticator eller Authy
 
 # Steg 2: Skapa admin IAM-anvandare
-AWS Console → IAM → Users → Add User
+AWS Console -> IAM -> Users -> Add User
 # Ge AdministratorAccess policy
 # Anvand DENNA for dagligt arbete
 ```
@@ -5066,7 +5066,7 @@ aws --version
 
 ```bash
 # Skapa Access Key i IAM Console:
-# IAM → Users → [din user] → Security credentials → Create access key
+# IAM -> Users -> [din user] -> Security credentials -> Create access key
 
 # Konfigurera CLI
 aws configure
@@ -5116,7 +5116,7 @@ aws ec2 describe-instances
 # KRITISKT: Undvik overraskningar!
 
 # Via Console:
-# 1. Billing → Budgets → Create budget
+# 1. Billing -> Budgets -> Create budget
 # 2. Valj "Cost budget"
 # 3. Satt manadlig budget (t.ex. $10)
 # 4. Lagg till email-alert vid 80% och 100%
@@ -5126,7 +5126,7 @@ aws ec2 describe-instances
 
 ```bash
 # Aktivera Cost Explorer (tar 24h forsta gangen)
-# Billing → Cost Explorer → Enable
+# Billing -> Cost Explorer -> Enable
 
 # Se kostnader per tjanst
 aws ce get-cost-and-usage \
@@ -5207,27 +5207,27 @@ IAM ar gratis men det viktigaste du konfigurerar i AWS.
 
 ```
                         IAM STRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                         AWS ACCOUNT                          │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                        IAM                           │    │
-│  │                                                      │    │
-│  │   USERS          GROUPS           ROLES             │    │
-│  │   ┌─────┐        ┌─────┐         ┌─────┐           │    │
-│  │   │Alice│        │Devs │         │EC2  │           │    │
-│  │   │Bob  │   →    │Admin│    ←    │Role │           │    │
-│  │   │Carl │        │     │         │     │           │    │
-│  │   └─────┘        └─────┘         └─────┘           │    │
-│  │      │              │               │               │    │
-│  │      └──────────────┴───────────────┘               │    │
-│  │                     │                               │    │
-│  │              ┌──────▼──────┐                        │    │
-│  │              │  POLICIES   │                        │    │
-│  │              │ (JSON docs) │                        │    │
-│  │              └─────────────┘                        │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         AWS ACCOUNT                          |
+|  +-----------------------------------------------------+    |
+|  |                        IAM                           |    |
+|  |                                                      |    |
+|  |   USERS          GROUPS           ROLES             |    |
+|  |   +-----+        +-----+         +-----+           |    |
+|  |   |Alice|        |Devs |         |EC2  |           |    |
+|  |   |Bob  |   ->    |Admin|    <-    |Role |           |    |
+|  |   |Carl |        |     |         |     |           |    |
+|  |   +-----+        +-----+         +-----+           |    |
+|  |      |              |               |               |    |
+|  |      +--------------+---------------+               |    |
+|  |                     |                               |    |
+|  |              +------▼------+                        |    |
+|  |              |  POLICIES   |                        |    |
+|  |              | (JSON docs) |                        |    |
+|  |              +-------------+                        |    |
+|  |                                                      |    |
+|  +-----------------------------------------------------+    |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Beskrivning | Exempel |
@@ -5321,24 +5321,24 @@ aws iam get-group --group-name Developers
 ### Policy Types
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    POLICY TYPES                          │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  AWS MANAGED          CUSTOMER MANAGED     INLINE       │
-│  ┌──────────┐         ┌──────────┐        ┌──────────┐ │
-│  │ Skapade  │         │ Du skapar│        │ Direkt pa│ │
-│  │ av AWS   │         │ sjalv    │        │ user/role│ │
-│  │          │         │          │        │          │ │
-│  │ ReadOnly │         │ CustomS3 │        │ {inline} │ │
-│  │ PowerUser│         │ MyAppPol │        │          │ │
-│  └──────────┘         └──────────┘        └──────────┘ │
-│       ↓                    ↓                   ↓        │
-│  Anvand forst!       For specifika          Undvik!    │
-│  Enkelt, sakert      behov                  Svart att  │
-│                                             underhalla │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    POLICY TYPES                          |
++---------------------------------------------------------+
+|                                                          |
+|  AWS MANAGED          CUSTOMER MANAGED     INLINE       |
+|  +----------+         +----------+        +----------+ |
+|  | Skapade  |         | Du skapar|        | Direkt pa| |
+|  | av AWS   |         | sjalv    |        | user/role| |
+|  |          |         |          |        |          | |
+|  | ReadOnly |         | CustomS3 |        | {inline} | |
+|  | PowerUser|         | MyAppPol |        |          | |
+|  +----------+         +----------+        +----------+ |
+|       ↓                    ↓                   ↓        |
+|  Anvand forst!       For specifika          Undvik!    |
+|  Enkelt, sakert      behov                  Svart att  |
+|                                             underhalla |
+|                                                          |
++---------------------------------------------------------+
 ```
 
 ### Vanliga AWS Managed Policies
@@ -5362,14 +5362,14 @@ aws iam get-group --group-name Developers
 SCENARIO: EC2 behover lasa fran S3
 
 DÅLIGT (hardkodade credentials):
-┌─────────┐
-│   EC2   │ ──── Access Key i kod ──── RISK! Kan lackas
-└─────────┘
++---------+
+|   EC2   | ---- Access Key i kod ---- RISK! Kan lackas
++---------+
 
 BRA (IAM Role):
-┌─────────┐     ┌─────────┐     ┌─────────┐
-│   EC2   │ ←── │  Role   │ ←── │  Policy │
-└─────────┘     └─────────┘     └─────────┘
++---------+     +---------+     +---------+
+|   EC2   | <--- |  Role   | <--- |  Policy |
++---------+     +---------+     +---------+
                      ↓
               Temporara credentials
               Roteras automatiskt
@@ -5444,22 +5444,22 @@ export AWS_SESSION_TOKEN="..."
 ### Vad ar Least Privilege?
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  LEAST PRIVILEGE                         │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  DÅLIGT: "Give them admin, easier that way"             │
-│  ┌─────────────────────────────────────────────┐        │
-│  │  User → AdministratorAccess → ALLT          │        │
-│  └─────────────────────────────────────────────┘        │
-│                                                          │
-│  BRA: "Give minimum needed to do the job"               │
-│  ┌─────────────────────────────────────────────┐        │
-│  │  User → S3ReadOnly → Endast lasa S3         │        │
-│  │       → EC2Describe → Endast lista EC2      │        │
-│  └─────────────────────────────────────────────┘        │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                  LEAST PRIVILEGE                         |
++---------------------------------------------------------+
+|                                                          |
+|  DÅLIGT: "Give them admin, easier that way"             |
+|  +---------------------------------------------+        |
+|  |  User -> AdministratorAccess -> ALLT          |        |
+|  +---------------------------------------------+        |
+|                                                          |
+|  BRA: "Give minimum needed to do the job"               |
+|  +---------------------------------------------+        |
+|  |  User -> S3ReadOnly -> Endast lasa S3         |        |
+|  |       -> EC2Describe -> Endast lista EC2      |        |
+|  +---------------------------------------------+        |
+|                                                          |
++---------------------------------------------------------+
 ```
 
 ### Praktiskt Exempel
@@ -5568,40 +5568,40 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 
 ```
                         VPC ARCHITECTURE
-┌─────────────────────────────────────────────────────────────┐
-│  VPC: 10.0.0.0/16 (65,536 IPs)                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │   PUBLIC SUBNETS                PRIVATE SUBNETS    │    │
-│  │   ┌──────────────┐              ┌──────────────┐   │    │
-│  │   │ 10.0.1.0/24  │              │ 10.0.3.0/24  │   │    │
-│  │   │ (AZ-a)       │              │ (AZ-a)       │   │    │
-│  │   │  ┌────────┐  │              │  ┌────────┐  │   │    │
-│  │   │  │  EC2   │  │              │  │  EC2   │  │   │    │
-│  │   │  │ (web)  │  │              │  │ (app)  │  │   │    │
-│  │   │  └────────┘  │              │  └────────┘  │   │    │
-│  │   └──────────────┘              └──────────────┘   │    │
-│  │   ┌──────────────┐              ┌──────────────┐   │    │
-│  │   │ 10.0.2.0/24  │              │ 10.0.4.0/24  │   │    │
-│  │   │ (AZ-b)       │              │ (AZ-b)       │   │    │
-│  │   │  ┌────────┐  │              │  ┌────────┐  │   │    │
-│  │   │  │  EC2   │  │              │  │  RDS   │  │   │    │
-│  │   │  │ (web)  │  │              │  │ (db)   │  │   │    │
-│  │   │  └────────┘  │              │  └────────┘  │   │    │
-│  │   └──────────────┘              └──────────────┘   │    │
-│  │         │                              │           │    │
-│  │         ▼                              ▼           │    │
-│  │   ┌──────────┐                   ┌──────────┐     │    │
-│  │   │ Internet │                   │   NAT    │     │    │
-│  │   │ Gateway  │                   │ Gateway  │     │    │
-│  │   └──────────┘                   └──────────┘     │    │
-│  │         │                              │           │    │
-│  └─────────┼──────────────────────────────┼───────────┘    │
-│            │                              │                 │
-│            ▼                              ▼                 │
-│       INTERNET                    Outbound only            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  VPC: 10.0.0.0/16 (65,536 IPs)                              |
+|  +-----------------------------------------------------+    |
+|  |                                                     |    |
+|  |   PUBLIC SUBNETS                PRIVATE SUBNETS    |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   | 10.0.1.0/24  |              | 10.0.3.0/24  |   |    |
+|  |   | (AZ-a)       |              | (AZ-a)       |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   |  |  EC2   |  |              |  |  EC2   |  |   |    |
+|  |   |  | (web)  |  |              |  | (app)  |  |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   | 10.0.2.0/24  |              | 10.0.4.0/24  |   |    |
+|  |   | (AZ-b)       |              | (AZ-b)       |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   |  |  EC2   |  |              |  |  RDS   |  |   |    |
+|  |   |  | (web)  |  |              |  | (db)   |  |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |         |                              |           |    |
+|  |         ▼                              ▼           |    |
+|  |   +----------+                   +----------+     |    |
+|  |   | Internet |                   |   NAT    |     |    |
+|  |   | Gateway  |                   | Gateway  |     |    |
+|  |   +----------+                   +----------+     |    |
+|  |         |                              |           |    |
+|  +---------+------------------------------+-----------+    |
+|            |                              |                 |
+|            ▼                              ▼                 |
+|       INTERNET                    Outbound only            |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Komponenter
@@ -5612,7 +5612,7 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 | **Subnet** | Del av VPC i en AZ |
 | **Route Table** | Routing-regler |
 | **Internet Gateway** | VPC ↔ Internet |
-| **NAT Gateway** | Private subnet → Internet |
+| **NAT Gateway** | Private subnet -> Internet |
 | **Security Group** | Instans-firewall |
 | **NACL** | Subnet-firewall |
 
@@ -5624,9 +5624,9 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 
 ```
 10.0.0.0/16
-    │    │
-    │    └── Prefix length (hur manga bits ar natverk)
-    └────── Natverk-adress
+    |    |
+    |    +-- Prefix length (hur manga bits ar natverk)
+    +------ Natverk-adress
 
 /16 = 65,536 IPs (2^16)
 /24 = 256 IPs (2^8)
@@ -5647,19 +5647,19 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 VPC: 10.0.0.0/16
 
 Public Subnets:
-├── 10.0.1.0/24  (AZ-a) - 256 IPs
-├── 10.0.2.0/24  (AZ-b) - 256 IPs
-└── 10.0.3.0/24  (AZ-c) - 256 IPs
++-- 10.0.1.0/24  (AZ-a) - 256 IPs
++-- 10.0.2.0/24  (AZ-b) - 256 IPs
++-- 10.0.3.0/24  (AZ-c) - 256 IPs
 
 Private Subnets:
-├── 10.0.10.0/24 (AZ-a) - 256 IPs
-├── 10.0.11.0/24 (AZ-b) - 256 IPs
-└── 10.0.12.0/24 (AZ-c) - 256 IPs
++-- 10.0.10.0/24 (AZ-a) - 256 IPs
++-- 10.0.11.0/24 (AZ-b) - 256 IPs
++-- 10.0.12.0/24 (AZ-c) - 256 IPs
 
 Database Subnets:
-├── 10.0.20.0/24 (AZ-a) - 256 IPs
-├── 10.0.21.0/24 (AZ-b) - 256 IPs
-└── 10.0.22.0/24 (AZ-c) - 256 IPs
++-- 10.0.20.0/24 (AZ-a) - 256 IPs
++-- 10.0.21.0/24 (AZ-b) - 256 IPs
++-- 10.0.22.0/24 (AZ-c) - 256 IPs
 ```
 
 ---
@@ -5794,17 +5794,17 @@ aws ec2 associate-route-table \
 ### Jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│           SECURITY GROUPS vs NACLs                          │
-├─────────────────────┬───────────────────────────────────────┤
-│   SECURITY GROUP    │              NACL                     │
-├─────────────────────┼───────────────────────────────────────┤
-│ Instans-niva        │ Subnet-niva                           │
-│ Stateful            │ Stateless                             │
-│ Bara Allow-regler   │ Allow + Deny                          │
-│ Utvardering: Alla   │ Utvardering: Ordning (nummer)         │
-│ Default: Deny all in│ Default: Allow all                    │
-└─────────────────────┴───────────────────────────────────────┘
++-------------------------------------------------------------+
+|           SECURITY GROUPS vs NACLs                          |
++---------------------+---------------------------------------+
+|   SECURITY GROUP    |              NACL                     |
++---------------------+---------------------------------------+
+| Instans-niva        | Subnet-niva                           |
+| Stateful            | Stateless                             |
+| Bara Allow-regler   | Allow + Deny                          |
+| Utvardering: Alla   | Utvardering: Ordning (nummer)         |
+| Default: Deny all in| Default: Allow all                    |
++---------------------+---------------------------------------+
 ```
 
 ### Security Group Exempel
@@ -5942,35 +5942,35 @@ Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
 
 ```
                          EC2 INSTANCE
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │                    EC2 INSTANCE                       │  │
-│  │                                                       │  │
-│  │   ┌─────────────┐    ┌─────────────┐                 │  │
-│  │   │    vCPU     │    │   Memory    │                 │  │
-│  │   │   (2-128+)  │    │  (1-768GB)  │                 │  │
-│  │   └─────────────┘    └─────────────┘                 │  │
-│  │                                                       │  │
-│  │   ┌─────────────────────────────────────────────┐    │  │
-│  │   │              ROOT VOLUME (EBS)               │    │  │
-│  │   │         /dev/xvda (8-16GB typical)          │    │  │
-│  │   └─────────────────────────────────────────────┘    │  │
-│  │                                                       │  │
-│  │   ┌─────────────────────────────────────────────┐    │  │
-│  │   │            NETWORK INTERFACE                 │    │  │
-│  │   │     Private IP: 10.0.1.45                   │    │  │
-│  │   │     Public IP: 52.xxx.xxx.xxx (optional)    │    │  │
-│  │   └─────────────────────────────────────────────┘    │  │
-│  │                                                       │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                           │                                 │
-│              ┌────────────┴────────────┐                   │
-│              │     Security Group      │                   │
-│              │    (Virtual Firewall)   │                   │
-│              └─────────────────────────┘                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                                                             |
+|  +------------------------------------------------------+  |
+|  |                    EC2 INSTANCE                       |  |
+|  |                                                       |  |
+|  |   +-------------+    +-------------+                 |  |
+|  |   |    vCPU     |    |   Memory    |                 |  |
+|  |   |   (2-128+)  |    |  (1-768GB)  |                 |  |
+|  |   +-------------+    +-------------+                 |  |
+|  |                                                       |  |
+|  |   +---------------------------------------------+    |  |
+|  |   |              ROOT VOLUME (EBS)               |    |  |
+|  |   |         /dev/xvda (8-16GB typical)          |    |  |
+|  |   +---------------------------------------------+    |  |
+|  |                                                       |  |
+|  |   +---------------------------------------------+    |  |
+|  |   |            NETWORK INTERFACE                 |    |  |
+|  |   |     Private IP: 10.0.1.45                   |    |  |
+|  |   |     Public IP: 52.xxx.xxx.xxx (optional)    |    |  |
+|  |   +---------------------------------------------+    |  |
+|  |                                                       |  |
+|  +------------------------------------------------------+  |
+|                           |                                 |
+|              +------------+------------+                   |
+|              |     Security Group      |                   |
+|              |    (Virtual Firewall)   |                   |
+|              +-------------------------+                   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -5981,10 +5981,10 @@ Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
 
 ```
 m5.xlarge
-│ │  │
-│ │  └── Size: nano, micro, small, medium, large, xlarge, 2xlarge...
-│ └───── Generation: 5th generation
-└────── Family: m = general purpose
+| |  |
+| |  +-- Size: nano, micro, small, medium, large, xlarge, 2xlarge...
+| +----- Generation: 5th generation
++------ Family: m = general purpose
 ```
 
 ### Instance Families
@@ -6075,24 +6075,24 @@ ssh -i my-key.pem ec2-user@$PUBLIC_IP
 ### Vad ar User Data?
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      USER DATA                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Script som kors AUTOMATISKT vid forsta boot                │
-│                                                              │
-│  ┌────────────┐     ┌────────────┐     ┌────────────┐      │
-│  │  EC2 Start │ ──▶ │ User Data  │ ──▶ │   Server   │      │
-│  │            │     │   Script   │     │   Ready!   │      │
-│  └────────────┘     └────────────┘     └────────────┘      │
-│                                                              │
-│  Perfekt for:                                                │
-│  - Installera software                                       │
-│  - Konfigurera services                                      │
-│  - Ladda ner applikation                                     │
-│  - Starta processer                                          │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      USER DATA                               |
++-------------------------------------------------------------+
+|                                                              |
+|  Script som kors AUTOMATISKT vid forsta boot                |
+|                                                              |
+|  +------------+     +------------+     +------------+      |
+|  |  EC2 Start | --▶ | User Data  | --▶ |   Server   |      |
+|  |            |     |   Script   |     |   Ready!   |      |
+|  +------------+     +------------+     +------------+      |
+|                                                              |
+|  Perfekt for:                                                |
+|  - Installera software                                       |
+|  - Konfigurera services                                      |
+|  - Ladda ner applikation                                     |
+|  - Starta processer                                          |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ### User Data Exempel
@@ -6241,34 +6241,34 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
 ### Instance States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    EC2 LIFECYCLE                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   ┌─────────┐                                               │
-│   │ pending │ ──── Instance starting                        │
-│   └────┬────┘                                               │
-│        │                                                     │
-│        ▼                                                     │
-│   ┌─────────┐                                               │
-│   │ running │ ◀──── Normal operation                        │
-│   └────┬────┘                                               │
-│        │                                                     │
-│   ┌────┴────┐                                               │
-│   │         │                                                │
-│   ▼         ▼                                                │
-│ ┌─────────┐ ┌──────────┐                                    │
-│ │stopping │ │shutting- │                                    │
-│ │         │ │down      │                                    │
-│ └────┬────┘ └────┬─────┘                                    │
-│      │           │                                           │
-│      ▼           ▼                                           │
-│ ┌─────────┐ ┌──────────┐                                    │
-│ │ stopped │ │terminated│                                    │
-│ │(no cost)│ │ (gone!)  │                                    │
-│ └─────────┘ └──────────┘                                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    EC2 LIFECYCLE                             |
++-------------------------------------------------------------+
+|                                                              |
+|   +---------+                                               |
+|   | pending | ---- Instance starting                        |
+|   +----+----+                                               |
+|        |                                                     |
+|        ▼                                                     |
+|   +---------+                                               |
+|   | running | ◀---- Normal operation                        |
+|   +----+----+                                               |
+|        |                                                     |
+|   +----+----+                                               |
+|   |         |                                                |
+|   ▼         ▼                                                |
+| +---------+ +----------+                                    |
+| |stopping | |shutting- |                                    |
+| |         | |down      |                                    |
+| +----+----+ +----+-----+                                    |
+|      |           |                                           |
+|      ▼           ▼                                           |
+| +---------+ +----------+                                    |
+| | stopped | |terminated|                                    |
+| |(no cost)| | (gone!)  |                                    |
+| +---------+ +----------+                                    |
+|                                                              |
++-------------------------------------------------------------+
 
 VIKTIGT:
 - Stopped = No compute cost, EBS cost continues
@@ -6361,31 +6361,31 @@ S3 ar designat for 99.999999999% (11 9:or) durability. Du forlorar 1 objekt av 1
 
 ```
                            S3 STRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                         S3 BUCKET                            │
-│                    my-company-data-prod                      │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │   /logs/                                            │    │
-│  │   ├── app/                                          │    │
-│  │   │   ├── 2025-12-01.log                           │    │
-│  │   │   └── 2025-12-02.log                           │    │
-│  │   └── access/                                       │    │
-│  │       └── access.log                                │    │
-│  │                                                     │    │
-│  │   /backups/                                         │    │
-│  │   ├── db-backup-2025-12-01.sql.gz                  │    │
-│  │   └── db-backup-2025-12-02.sql.gz                  │    │
-│  │                                                     │    │
-│  │   /static/                                          │    │
-│  │   ├── images/                                       │    │
-│  │   │   └── logo.png                                 │    │
-│  │   └── css/                                          │    │
-│  │       └── style.css                                │    │
-│  │                                                     │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         S3 BUCKET                            |
+|                    my-company-data-prod                      |
+|  +-----------------------------------------------------+    |
+|  |                                                     |    |
+|  |   /logs/                                            |    |
+|  |   +-- app/                                          |    |
+|  |   |   +-- 2025-12-01.log                           |    |
+|  |   |   +-- 2025-12-02.log                           |    |
+|  |   +-- access/                                       |    |
+|  |       +-- access.log                                |    |
+|  |                                                     |    |
+|  |   /backups/                                         |    |
+|  |   +-- db-backup-2025-12-01.sql.gz                  |    |
+|  |   +-- db-backup-2025-12-02.sql.gz                  |    |
+|  |                                                     |    |
+|  |   /static/                                          |    |
+|  |   +-- images/                                       |    |
+|  |   |   +-- logo.png                                 |    |
+|  |   +-- css/                                          |    |
+|  |       +-- style.css                                |    |
+|  |                                                     |    |
+|  +-----------------------------------------------------+    |
+|                                                              |
++-------------------------------------------------------------+
 
 VIKTIGT:
 - Bucket name = Globalt unikt (hela AWS)
@@ -6449,25 +6449,25 @@ aws s3 rm s3://my-bucket/folder/ --recursive
 ### Jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    S3 STORAGE CLASSES                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  STANDARD          STANDARD-IA       GLACIER               │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐          │
-│  │ Frequent │      │Infrequent│      │  Archive │          │
-│  │  Access  │      │  Access  │      │          │          │
-│  │          │      │          │      │          │          │
-│  │ $0.023/GB│      │ $0.0125/GB│     │$0.004/GB │          │
-│  │          │      │ +retrieval│      │ +hours   │          │
-│  └──────────┘      └──────────┘      └──────────┘          │
-│       │                 │                  │                │
-│       ▼                 ▼                  ▼                │
-│  App data,        Backups >30d,      Archives,             │
-│  frequently       DR data            compliance            │
-│  accessed                            7+ years              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    S3 STORAGE CLASSES                        |
++-------------------------------------------------------------+
+|                                                              |
+|  STANDARD          STANDARD-IA       GLACIER               |
+|  +----------+      +----------+      +----------+          |
+|  | Frequent |      |Infrequent|      |  Archive |          |
+|  |  Access  |      |  Access  |      |          |          |
+|  |          |      |          |      |          |          |
+|  | $0.023/GB|      | $0.0125/GB|     |$0.004/GB |          |
+|  |          |      | +retrieval|      | +hours   |          |
+|  +----------+      +----------+      +----------+          |
+|       |                 |                  |                |
+|       ▼                 ▼                  ▼                |
+|  App data,        Backups >30d,      Archives,             |
+|  frequently       DR data            compliance            |
+|  accessed                            7+ years              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 | Class | Cost/GB | Retrieval | Use Case |
@@ -6668,29 +6668,29 @@ RDS ar managed database - du fokuserar pa schema och queries, AWS skoter resten.
 ## RDS vs EC2 Database
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│             RDS vs SELF-MANAGED (EC2)                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  YOU MANAGE              │      AWS MANAGES (RDS)           │
-│  ┌───────────────────┐   │   ┌───────────────────┐          │
-│  │ Application       │   │   │ Application       │          │
-│  │ Optimization      │   │   │ Optimization      │          │
-│  │ Queries           │   │   │ Queries           │          │
-│  ├───────────────────┤   │   └───────────────────┘          │
-│  │ Schema            │   │                                   │
-│  │ Scaling           │   │         ┌───────────────┐        │
-│  │ High Availability │   │         │ MANAGED:      │        │
-│  │ Backups           │   │         │ - Patching    │        │
-│  │ Patching          │   │         │ - Backups     │        │
-│  │ OS Installation   │   │         │ - HA/Failover │        │
-│  │ Server Maintenance│   │         │ - Monitoring  │        │
-│  │ Power/Network     │   │         │ - Scaling     │        │
-│  └───────────────────┘   │         └───────────────┘        │
-│                                                              │
-│  Timmar/vecka             │         Minuter/manad           │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|             RDS vs SELF-MANAGED (EC2)                        |
++-------------------------------------------------------------+
+|                                                              |
+|  YOU MANAGE              |      AWS MANAGES (RDS)           |
+|  +-------------------+   |   +-------------------+          |
+|  | Application       |   |   | Application       |          |
+|  | Optimization      |   |   | Optimization      |          |
+|  | Queries           |   |   | Queries           |          |
+|  +-------------------+   |   +-------------------+          |
+|  | Schema            |   |                                   |
+|  | Scaling           |   |         +---------------+        |
+|  | High Availability |   |         | MANAGED:      |        |
+|  | Backups           |   |         | - Patching    |        |
+|  | Patching          |   |         | - Backups     |        |
+|  | OS Installation   |   |         | - HA/Failover |        |
+|  | Server Maintenance|   |         | - Monitoring  |        |
+|  | Power/Network     |   |         | - Scaling     |        |
+|  +-------------------+   |         +---------------+        |
+|                                                              |
+|  Timmar/vecka             |         Minuter/manad           |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -6770,30 +6770,30 @@ echo "RDS Endpoint: $ENDPOINT"
 ### High Availability
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    MULTI-AZ DEPLOYMENT                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   AZ-a (Primary)              AZ-b (Standby)               │
-│   ┌──────────────┐            ┌──────────────┐             │
-│   │     RDS      │◀──────────▶│     RDS      │             │
-│   │   PRIMARY    │  Sync      │   STANDBY    │             │
-│   │              │  Repl.     │              │             │
-│   └──────────────┘            └──────────────┘             │
-│          │                           │                      │
-│          │                           │                      │
-│          ▼                           ▼                      │
-│   ┌──────────────┐            ┌──────────────┐             │
-│   │     EBS      │            │     EBS      │             │
-│   └──────────────┘            └──────────────┘             │
-│                                                              │
-│   VID FAILOVER:                                             │
-│   1. Primary fails                                          │
-│   2. Standby promoted (60-120 sek)                         │
-│   3. DNS endpoint resolves to new primary                  │
-│   4. Din app marker inget (samma endpoint)                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    MULTI-AZ DEPLOYMENT                       |
++-------------------------------------------------------------+
+|                                                              |
+|   AZ-a (Primary)              AZ-b (Standby)               |
+|   +--------------+            +--------------+             |
+|   |     RDS      |◀----------▶|     RDS      |             |
+|   |   PRIMARY    |  Sync      |   STANDBY    |             |
+|   |              |  Repl.     |              |             |
+|   +--------------+            +--------------+             |
+|          |                           |                      |
+|          |                           |                      |
+|          ▼                           ▼                      |
+|   +--------------+            +--------------+             |
+|   |     EBS      |            |     EBS      |             |
+|   +--------------+            +--------------+             |
+|                                                              |
+|   VID FAILOVER:                                             |
+|   1. Primary fails                                          |
+|   2. Standby promoted (60-120 sek)                         |
+|   3. DNS endpoint resolves to new primary                  |
+|   4. Din app marker inget (samma endpoint)                 |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -6824,8 +6824,8 @@ REPLICA_ENDPOINT=$(aws rds describe-db-instances \
     --output text)
 
 # I din app:
-# Writes → Primary endpoint
-# Reads → Replica endpoint
+# Writes -> Primary endpoint
+# Reads -> Replica endpoint
 ```
 
 ---
@@ -6911,35 +6911,35 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 ### DNS Resolution
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DNS RESOLUTION                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   User types: www.example.com                               │
-│                     │                                        │
-│                     ▼                                        │
-│   ┌─────────────────────────────────┐                       │
-│   │      Recursive Resolver         │                       │
-│   │   (ISP or 8.8.8.8)              │                       │
-│   └─────────────────────────────────┘                       │
-│                     │                                        │
-│         ┌───────────┴───────────┐                           │
-│         ▼                       ▼                           │
-│   ┌──────────┐           ┌──────────┐                       │
-│   │   Root   │           │   TLD    │                       │
-│   │  Server  │    →      │ (.com)   │                       │
-│   └──────────┘           └──────────┘                       │
-│                                │                             │
-│                                ▼                             │
-│                         ┌──────────────┐                    │
-│                         │   Route53    │                    │
-│                         │  (Authorit.) │                    │
-│                         └──────────────┘                    │
-│                                │                             │
-│                                ▼                             │
-│                         52.xx.xx.xx (IP)                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    DNS RESOLUTION                            |
++-------------------------------------------------------------+
+|                                                              |
+|   User types: www.example.com                               |
+|                     |                                        |
+|                     ▼                                        |
+|   +---------------------------------+                       |
+|   |      Recursive Resolver         |                       |
+|   |   (ISP or 8.8.8.8)              |                       |
+|   +---------------------------------+                       |
+|                     |                                        |
+|         +-----------+-----------+                           |
+|         ▼                       ▼                           |
+|   +----------+           +----------+                       |
+|   |   Root   |           |   TLD    |                       |
+|   |  Server  |    ->      | (.com)   |                       |
+|   +----------+           +----------+                       |
+|                                |                             |
+|                                ▼                             |
+|                         +--------------+                    |
+|                         |   Route53    |                    |
+|                         |  (Authorit.) |                    |
+|                         +--------------+                    |
+|                                |                             |
+|                                ▼                             |
+|                         52.xx.xx.xx (IP)                    |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -6948,11 +6948,11 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 | Type | Syfte | Exempel |
 |------|-------|---------|
-| **A** | Name → IPv4 | www → 52.1.2.3 |
-| **AAAA** | Name → IPv6 | www → 2001:db8::1 |
-| **CNAME** | Name → Name | www → app.example.com |
-| **ALIAS** | Name → AWS resource | www → d123.cloudfront.net |
-| **MX** | Mail servers | @ → mail.example.com |
+| **A** | Name -> IPv4 | www -> 52.1.2.3 |
+| **AAAA** | Name -> IPv6 | www -> 2001:db8::1 |
+| **CNAME** | Name -> Name | www -> app.example.com |
+| **ALIAS** | Name -> AWS resource | www -> d123.cloudfront.net |
+| **MX** | Mail servers | @ -> mail.example.com |
 | **TXT** | Text records | Verification, SPF |
 | **NS** | Name servers | Delegation |
 
@@ -6960,15 +6960,15 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 ```
 A RECORD:
-www.example.com → 52.1.2.3
+www.example.com -> 52.1.2.3
 (Direkt till IP)
 
 CNAME:
-www.example.com → app.example.com
+www.example.com -> app.example.com
 (Pointer till annat namn - INTE pa apex/root!)
 
 ALIAS (AWS-specifik):
-example.com → d123.cloudfront.net
+example.com -> d123.cloudfront.net
 (Fungerar pa apex, gratis queries till AWS resources)
 ```
 
@@ -7037,23 +7037,23 @@ aws route53 change-resource-record-sets \
 
 ```
 SIMPLE (default):
-User → DNS → Single endpoint
+User -> DNS -> Single endpoint
 
 WEIGHTED (A/B testing, gradual rollout):
-User → DNS → 70% old version
-           → 30% new version
+User -> DNS -> 70% old version
+           -> 30% new version
 
 LATENCY (lowest latency):
-User (EU) → DNS → eu-north-1 endpoint
-User (US) → DNS → us-east-1 endpoint
+User (EU) -> DNS -> eu-north-1 endpoint
+User (US) -> DNS -> us-east-1 endpoint
 
 FAILOVER (disaster recovery):
-User → DNS → Primary (healthy) ✓
-           → Secondary (standby)
+User -> DNS -> Primary (healthy) ✓
+           -> Secondary (standby)
 
 GEOLOCATION (based on location):
-User (Sweden) → DNS → Swedish content
-User (Germany) → DNS → German content
+User (Sweden) -> DNS -> Swedish content
+User (Germany) -> DNS -> German content
 ```
 
 ### Weighted Routing Exempel
@@ -7165,33 +7165,33 @@ CloudWatch ar centralen for all monitoring, logging och alerting i AWS.
 ## CloudWatch Components
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CLOUDWATCH                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   METRICS              LOGS                ALARMS           │
-│   ┌──────────┐        ┌──────────┐        ┌──────────┐     │
-│   │ CPU %    │        │ App logs │        │ CPU > 80%│     │
-│   │ Memory   │        │ Access   │        │ Errors   │     │
-│   │ Network  │        │ System   │        │ Latency  │     │
-│   └──────────┘        └──────────┘        └──────────┘     │
-│        │                   │                   │            │
-│        └───────────────────┴───────────────────┘            │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────────┐                         │
-│                    │  DASHBOARDS  │                         │
-│                    │  (Visualize) │                         │
-│                    └──────────────┘                         │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────────┐                         │
-│                    │    ACTIONS   │                         │
-│                    │ SNS, Lambda  │                         │
-│                    │ Auto Scaling │                         │
-│                    └──────────────┘                         │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    CLOUDWATCH                                |
++-------------------------------------------------------------+
+|                                                              |
+|   METRICS              LOGS                ALARMS           |
+|   +----------+        +----------+        +----------+     |
+|   | CPU %    |        | App logs |        | CPU > 80%|     |
+|   | Memory   |        | Access   |        | Errors   |     |
+|   | Network  |        | System   |        | Latency  |     |
+|   +----------+        +----------+        +----------+     |
+|        |                   |                   |            |
+|        +-------------------+-------------------+            |
+|                            |                                 |
+|                            ▼                                 |
+|                    +--------------+                         |
+|                    |  DASHBOARDS  |                         |
+|                    |  (Visualize) |                         |
+|                    +--------------+                         |
+|                            |                                 |
+|                            ▼                                 |
+|                    +--------------+                         |
+|                    |    ACTIONS   |                         |
+|                    | SNS, Lambda  |                         |
+|                    | Auto Scaling |                         |
+|                    +--------------+                         |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -7284,19 +7284,19 @@ aws cloudwatch describe-alarms \
 ### Alarm States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ALARM STATES                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   OK              ALARM           INSUFFICIENT_DATA         │
-│   ┌─────┐         ┌─────┐         ┌─────┐                  │
-│   │ ✓   │    →    │ ⚠️  │    →    │ ?   │                  │
-│   │     │         │     │         │     │                  │
-│   └─────┘         └─────┘         └─────┘                  │
-│   Threshold       Threshold       Not enough               │
-│   not breached    breached        data points              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    ALARM STATES                              |
++-------------------------------------------------------------+
+|                                                              |
+|   OK              ALARM           INSUFFICIENT_DATA         |
+|   +-----+         +-----+         +-----+                  |
+|   | ✓   |    ->    | ⚠️  |    ->    | ?   |                  |
+|   |     |         |     |         |     |                  |
+|   +-----+         +-----+         +-----+                  |
+|   Threshold       Threshold       Not enough               |
+|   not breached    breached        data points              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -7446,11 +7446,11 @@ aws logs describe-log-groups --query 'logGroups[].logGroupName'
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -7478,7 +7478,7 @@ AWS Lambda är **serverless computing** - du betalar bara för exekveringstiden!
 
 ### Lambda Execution Model:
 ```
-Event → Lambda Function → Response
+Event -> Lambda Function -> Response
   ↓
 - API Gateway request
 - S3 upload
@@ -7617,11 +7617,11 @@ def lambda_handler(event, context):
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -7649,11 +7649,11 @@ Klicka-och-skapa i AWS Console? Det är för amatörer!
 
 ### CloudFormation Stack Lifecycle:
 ```
-Template → Create Stack → Resources Provisioned
+Template -> Create Stack -> Resources Provisioned
                 ↓
-         Update Stack → Rolling updates
+         Update Stack -> Rolling updates
                 ↓
-         Delete Stack → All resources removed
+         Delete Stack -> All resources removed
 ```
 
 ### Template Anatomy:
@@ -7846,11 +7846,11 @@ Kör: `aws cloudformation create-stack --stack-name web-app --template-body file
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -7878,11 +7878,11 @@ Din webbsida laddar på 3 sekunder? Det är en EVIGHET på internet!
 
 ### CloudFront Architecture:
 ```
-User → Edge Location → Regional Cache → Origin
+User -> Edge Location -> Regional Cache -> Origin
          ↓
-    Cache HIT? → Return cached content
+    Cache HIT? -> Return cached content
          ↓
-    Cache MISS → Fetch from origin → Cache → Return
+    Cache MISS -> Fetch from origin -> Cache -> Return
 ```
 
 ### Origin Types:
@@ -7893,10 +7893,10 @@ User → Edge Location → Regional Cache → Origin
 
 ### Cache Behaviors:
 ```
-/api/*     → ALB (no cache, TTL 0)
-/static/*  → S3 (cache 1 year)
-/images/*  → S3 (cache 1 week)
-/*         → ALB (cache 5 min)
+/api/*     -> ALB (no cache, TTL 0)
+/static/*  -> S3 (cache 1 year)
+/images/*  -> S3 (cache 1 week)
+/*         -> ALB (cache 5 min)
 ```
 
 ---
@@ -8006,11 +8006,11 @@ curl -I https://d1234567890.cloudfront.net/
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8041,9 +8041,9 @@ En server down = site down? Nej tack!
 
 ### ALB Architecture:
 ```
-Internet → ALB → Target Group 1 (EC2 instances)
-              → Target Group 2 (Lambda functions)
-              → Target Group 3 (IP addresses)
+Internet -> ALB -> Target Group 1 (EC2 instances)
+              -> Target Group 2 (Lambda functions)
+              -> Target Group 3 (IP addresses)
 ```
 
 ### Key Components:
@@ -8054,9 +8054,9 @@ Internet → ALB → Target Group 1 (EC2 instances)
 
 ### Routing Examples:
 ```
-api.example.com/*     → API Target Group
-www.example.com/*     → Web Target Group
-example.com/images/*  → S3 (via Lambda)
+api.example.com/*     -> API Target Group
+www.example.com/*     -> Web Target Group
+example.com/images/*  -> S3 (via Lambda)
 ```
 
 ---
@@ -8189,11 +8189,11 @@ curl http://ALB-DNS/api/health
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8222,9 +8222,9 @@ Behöver du en databas som skalar från 0 till miljoner requests/sekund?
 ### Data Model:
 ```
 Table: users
-├── Partition Key: user_id (required)
-├── Sort Key: created_at (optional)
-└── Attributes: name, email, settings (any JSON)
++-- Partition Key: user_id (required)
++-- Sort Key: created_at (optional)
++-- Attributes: name, email, settings (any JSON)
 
 Primary Key = Partition Key + Sort Key (if exists)
 ```
@@ -8382,11 +8382,11 @@ aws dynamodb create-table \
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8407,31 +8407,31 @@ Tight coupling mellan services? Det är en tidsbomd!
 ## 📚 Koncept
 
 ### SNS (Simple Notification Service):
-- **Pub/Sub** - 1 publisher → many subscribers
+- **Pub/Sub** - 1 publisher -> many subscribers
 - **Push-based** - meddelanden skickas direkt
 - **Fan-out** - ett meddelande till många endpoints
 
 ### SQS (Simple Queue Service):
-- **Message Queue** - 1 producer → 1 consumer (per message)
+- **Message Queue** - 1 producer -> 1 consumer (per message)
 - **Pull-based** - consumers pollar för meddelanden
 - **Buffering** - hantera traffic spikes
 
 ### SNS vs SQS:
 ```
-SNS: Publisher → Topic → [Email, SMS, Lambda, SQS, HTTP]
+SNS: Publisher -> Topic -> [Email, SMS, Lambda, SQS, HTTP]
      (Push to all subscribers immediately)
 
-SQS: Producer → Queue → Consumer
+SQS: Producer -> Queue -> Consumer
      (Pull when ready, messages persist until processed)
 ```
 
 ### Common Pattern - Fan-out:
 ```
-Order Service → SNS Topic "new-order"
-                    ├→ SQS: inventory-queue → Inventory Service
-                    ├→ SQS: shipping-queue → Shipping Service
-                    ├→ SQS: notification-queue → Email Service
-                    └→ Lambda: analytics → DynamoDB
+Order Service -> SNS Topic "new-order"
+                    +-> SQS: inventory-queue -> Inventory Service
+                    +-> SQS: shipping-queue -> Shipping Service
+                    +-> SQS: notification-queue -> Email Service
+                    +-> Lambda: analytics -> DynamoDB
 ```
 
 ---
@@ -8586,11 +8586,11 @@ def process_orders():
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8771,11 +8771,11 @@ aws secretsmanager get-secret-value \
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -8805,13 +8805,13 @@ Docker på din laptop är nice. Men hur kör du 100 containers i produktion?
 ### ECS Architecture:
 ```
 Cluster
-├── Service (long-running)
-│   ├── Task Definition (blueprint)
-│   │   └── Container Definitions
-│   └── Tasks (running instances)
-│       ├── Task 1 (container1, container2)
-│       └── Task 2 (container1, container2)
-└── Task (one-off job)
++-- Service (long-running)
+|   +-- Task Definition (blueprint)
+|   |   +-- Container Definitions
+|   +-- Tasks (running instances)
+|       +-- Task 1 (container1, container2)
+|       +-- Task 2 (container1, container2)
++-- Task (one-off job)
 ```
 
 ### Key Components:
@@ -8989,11 +8989,11 @@ aws ecs describe-services --cluster demo-cluster --services demo-service
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9016,14 +9016,14 @@ Kubernetes är kraftfullt men komplext. Vem vill hantera control plane?
 ### EKS Architecture:
 ```
 EKS Control Plane (AWS-managed)
-├── API Server
-├── etcd (HA across 3 AZs)
-└── Controller Manager
++-- API Server
++-- etcd (HA across 3 AZs)
++-- Controller Manager
 
 Data Plane (You manage)
-├── Managed Node Groups (recommended)
-├── Self-managed nodes (EC2)
-└── Fargate (serverless)
++-- Managed Node Groups (recommended)
++-- Self-managed nodes (EC2)
++-- Fargate (serverless)
 ```
 
 ### EKS vs ECS:
@@ -9210,11 +9210,11 @@ curl http://$(kubectl get svc demo-api -o jsonpath='{.status.loadBalancer.ingres
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9237,12 +9237,12 @@ AWS Security är DITT ansvar (Shared Responsibility Model). Lär dig göra det r
 ### Shared Responsibility Model:
 ```
 AWS ansvarar för:          Du ansvarar för:
-├── Hardware               ├── Data
-├── Networking             ├── IAM
-├── Virtualization         ├── OS patching (EC2)
-└── Managed services       ├── Network config
-                           ├── Encryption
-                           └── Application security
++-- Hardware               +-- Data
++-- Networking             +-- IAM
++-- Virtualization         +-- OS patching (EC2)
++-- Managed services       +-- Network config
+                           +-- Encryption
+                           +-- Application security
 ```
 
 ### Security Pillars:
@@ -9423,11 +9423,11 @@ aws securityhub get-findings --filters '{
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9464,11 +9464,11 @@ AWS-fakturan gick genom taket? Du är inte ensam.
 ### Cost Hierarchy:
 ```
 Organization (consolidated billing)
-├── Account 1 (Production)
-│   ├── Service: EC2
-│   │   └── Tags: Environment=prod, Team=backend
-│   └── Service: RDS
-└── Account 2 (Development)
++-- Account 1 (Production)
+|   +-- Service: EC2
+|   |   +-- Tags: Environment=prod, Team=backend
+|   +-- Service: RDS
++-- Account 2 (Development)
 ```
 
 ---
@@ -9642,11 +9642,11 @@ if __name__ == '__main__':
 > **"Kunskap utan praktik är bara teori – här bygger vi verkliga färdigheter."**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DEVOPS CONTINUOUS FLOW                            │
-├─────────────────────────────────────────────────────────────────────┤
-│   Code ──▶ Build ──▶ Test ──▶ Deploy ──▶ Monitor ──▶ Feedback      │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                    DEVOPS CONTINUOUS FLOW                            |
++---------------------------------------------------------------------+
+|   Code --▶ Build --▶ Test --▶ Deploy --▶ Monitor --▶ Feedback      |
++---------------------------------------------------------------------+
 ```
 
 ### Vad du kommer lära dig
@@ -9668,33 +9668,33 @@ Kunskaper utan bevis? Certifieringar öppnar dörrar!
 
 ### Foundational (ingen förkunskap):
 ```
-┌─────────────────────────────────────┐
-│  AWS Certified Cloud Practitioner   │
-│  - Grundläggande AWS-kunskap        │
-│  - 90 min, 65 frågor                │
-│  - Bra för alla roller              │
-└─────────────────────────────────────┘
++-------------------------------------+
+|  AWS Certified Cloud Practitioner   |
+|  - Grundläggande AWS-kunskap        |
+|  - 90 min, 65 frågor                |
+|  - Bra för alla roller              |
++-------------------------------------+
 ```
 
 ### Associate (1+ år erfarenhet):
 ```
-┌────────────────────┬────────────────────┬────────────────────┐
-│ Solutions Architect│   Developer        │   SysOps Admin     │
-│   Associate        │   Associate        │   Associate        │
-│                    │                    │                    │
-│ Arkitektur &       │ Utveckling &       │ Drift &            │
-│ Design patterns    │ CI/CD, Lambda      │ Övervakning        │
-└────────────────────┴────────────────────┴────────────────────┘
++--------------------+--------------------+--------------------+
+| Solutions Architect|   Developer        |   SysOps Admin     |
+|   Associate        |   Associate        |   Associate        |
+|                    |                    |                    |
+| Arkitektur &       | Utveckling &       | Drift &            |
+| Design patterns    | CI/CD, Lambda      | Övervakning        |
++--------------------+--------------------+--------------------+
 ```
 
 ### Professional (2+ år erfarenhet):
 ```
-┌────────────────────────────┬────────────────────────────┐
-│ Solutions Architect Pro    │   DevOps Engineer Pro      │
-│                            │                            │
-│ Komplexa multi-tier        │ CI/CD, Automation          │
-│ Enterprise arkitektur      │ IaC, Monitoring            │
-└────────────────────────────┴────────────────────────────┘
++----------------------------+----------------------------+
+| Solutions Architect Pro    |   DevOps Engineer Pro      |
+|                            |                            |
+| Komplexa multi-tier        | CI/CD, Automation          |
+| Enterprise arkitektur      | IaC, Monitoring            |
++----------------------------+----------------------------+
 ```
 
 ### Specialty:
@@ -9713,21 +9713,21 @@ Kunskaper utan bevis? Certifieringar öppnar dörrar!
 
 ```
 START
-  │
+  |
   ▼
 Cloud Practitioner (valfritt men bra grund)
-  │
+  |
   ▼
-Solutions Architect Associate ← REKOMMENDERAS FÖRST
-  │
-  ├─────────────────────┐
+Solutions Architect Associate <- REKOMMENDERAS FÖRST
+  |
+  +---------------------+
   ▼                     ▼
 Developer Associate   SysOps Associate
-  │                     │
-  └─────────┬───────────┘
+  |                     |
+  +---------+-----------+
             ▼
     DevOps Engineer Professional
-            │
+            |
             ▼
     Security Specialty (valfritt)
 ```
@@ -9848,12 +9848,12 @@ AWS dominerar molnmarknaden med ~32% market share. Nastan varje DevOps-jobb krav
 
 ```
 TRADITIONELLT (On-Premise)          CLOUD (AWS)
-┌─────────────────────┐            ┌─────────────────────┐
-│  Kop servrar        │            │  Hyr kapacitet      │
-│  Installera i DC    │     →      │  Starta pa sekunder │
-│  Underhall hardvara │            │  Betala per anvand. │
-│  Skala manuellt     │            │  Skala automatiskt  │
-└─────────────────────┘            └─────────────────────┘
++---------------------+            +---------------------+
+|  Kop servrar        |            |  Hyr kapacitet      |
+|  Installera i DC    |     ->      |  Starta pa sekunder |
+|  Underhall hardvara |            |  Betala per anvand. |
+|  Skala manuellt     |            |  Skala automatiskt  |
++---------------------+            +---------------------+
      Veckor/Manader                      Minuter
 ```
 
@@ -9876,22 +9876,22 @@ TRADITIONELLT (On-Premise)          CLOUD (AWS)
 
 ```
                     AWS GLOBAL INFRASTRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   REGION: eu-north-1 (Stockholm)                           │
-│   ┌─────────────────────────────────────────────────────┐  │
-│   │                                                     │  │
-│   │   AZ: eu-north-1a    AZ: eu-north-1b    AZ: eu-north-1c │
-│   │   ┌─────────┐        ┌─────────┐        ┌─────────┐ │  │
-│   │   │ Datacenter│      │ Datacenter│      │ Datacenter│ │  │
-│   │   │ Cluster  │       │ Cluster  │       │ Cluster  │ │  │
-│   │   └─────────┘        └─────────┘        └─────────┘ │  │
-│   │         ↑                 ↑                 ↑       │  │
-│   │         └────── High-speed links ───────────┘       │  │
-│   │                                                     │  │
-│   └─────────────────────────────────────────────────────┘  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                                                             |
+|   REGION: eu-north-1 (Stockholm)                           |
+|   +-----------------------------------------------------+  |
+|   |                                                     |  |
+|   |   AZ: eu-north-1a    AZ: eu-north-1b    AZ: eu-north-1c |
+|   |   +---------+        +---------+        +---------+ |  |
+|   |   | Datacenter|      | Datacenter|      | Datacenter| |  |
+|   |   | Cluster  |       | Cluster  |       | Cluster  | |  |
+|   |   +---------+        +---------+        +---------+ |  |
+|   |         ↑                 ↑                 ↑       |  |
+|   |         +------ High-speed links -----------+       |  |
+|   |                                                     |  |
+|   +-----------------------------------------------------+  |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 **Region:** Geografiskt omrade (t.ex. eu-north-1 = Stockholm)
@@ -9927,11 +9927,11 @@ TRADITIONELLT (On-Premise)          CLOUD (AWS)
 # ROOT USER = Gud-mode - ALDRIG anvand for dagligt arbete!
 
 # Steg 1: Aktivera MFA pa root
-AWS Console → Security Credentials → MFA → Activate MFA
+AWS Console -> Security Credentials -> MFA -> Activate MFA
 # Anvand app som Google Authenticator eller Authy
 
 # Steg 2: Skapa admin IAM-anvandare
-AWS Console → IAM → Users → Add User
+AWS Console -> IAM -> Users -> Add User
 # Ge AdministratorAccess policy
 # Anvand DENNA for dagligt arbete
 ```
@@ -9971,7 +9971,7 @@ aws --version
 
 ```bash
 # Skapa Access Key i IAM Console:
-# IAM → Users → [din user] → Security credentials → Create access key
+# IAM -> Users -> [din user] -> Security credentials -> Create access key
 
 # Konfigurera CLI
 aws configure
@@ -10021,7 +10021,7 @@ aws ec2 describe-instances
 # KRITISKT: Undvik overraskningar!
 
 # Via Console:
-# 1. Billing → Budgets → Create budget
+# 1. Billing -> Budgets -> Create budget
 # 2. Valj "Cost budget"
 # 3. Satt manadlig budget (t.ex. $10)
 # 4. Lagg till email-alert vid 80% och 100%
@@ -10031,7 +10031,7 @@ aws ec2 describe-instances
 
 ```bash
 # Aktivera Cost Explorer (tar 24h forsta gangen)
-# Billing → Cost Explorer → Enable
+# Billing -> Cost Explorer -> Enable
 
 # Se kostnader per tjanst
 aws ce get-cost-and-usage \
@@ -10112,27 +10112,27 @@ IAM ar gratis men det viktigaste du konfigurerar i AWS.
 
 ```
                         IAM STRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                         AWS ACCOUNT                          │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                        IAM                           │    │
-│  │                                                      │    │
-│  │   USERS          GROUPS           ROLES             │    │
-│  │   ┌─────┐        ┌─────┐         ┌─────┐           │    │
-│  │   │Alice│        │Devs │         │EC2  │           │    │
-│  │   │Bob  │   →    │Admin│    ←    │Role │           │    │
-│  │   │Carl │        │     │         │     │           │    │
-│  │   └─────┘        └─────┘         └─────┘           │    │
-│  │      │              │               │               │    │
-│  │      └──────────────┴───────────────┘               │    │
-│  │                     │                               │    │
-│  │              ┌──────▼──────┐                        │    │
-│  │              │  POLICIES   │                        │    │
-│  │              │ (JSON docs) │                        │    │
-│  │              └─────────────┘                        │    │
-│  │                                                      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         AWS ACCOUNT                          |
+|  +-----------------------------------------------------+    |
+|  |                        IAM                           |    |
+|  |                                                      |    |
+|  |   USERS          GROUPS           ROLES             |    |
+|  |   +-----+        +-----+         +-----+           |    |
+|  |   |Alice|        |Devs |         |EC2  |           |    |
+|  |   |Bob  |   ->    |Admin|    <-    |Role |           |    |
+|  |   |Carl |        |     |         |     |           |    |
+|  |   +-----+        +-----+         +-----+           |    |
+|  |      |              |               |               |    |
+|  |      +--------------+---------------+               |    |
+|  |                     |                               |    |
+|  |              +------▼------+                        |    |
+|  |              |  POLICIES   |                        |    |
+|  |              | (JSON docs) |                        |    |
+|  |              +-------------+                        |    |
+|  |                                                      |    |
+|  +-----------------------------------------------------+    |
++-------------------------------------------------------------+
 ```
 
 | Komponent | Beskrivning | Exempel |
@@ -10226,24 +10226,24 @@ aws iam get-group --group-name Developers
 ### Policy Types
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    POLICY TYPES                          │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  AWS MANAGED          CUSTOMER MANAGED     INLINE       │
-│  ┌──────────┐         ┌──────────┐        ┌──────────┐ │
-│  │ Skapade  │         │ Du skapar│        │ Direkt pa│ │
-│  │ av AWS   │         │ sjalv    │        │ user/role│ │
-│  │          │         │          │        │          │ │
-│  │ ReadOnly │         │ CustomS3 │        │ {inline} │ │
-│  │ PowerUser│         │ MyAppPol │        │          │ │
-│  └──────────┘         └──────────┘        └──────────┘ │
-│       ↓                    ↓                   ↓        │
-│  Anvand forst!       For specifika          Undvik!    │
-│  Enkelt, sakert      behov                  Svart att  │
-│                                             underhalla │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                    POLICY TYPES                          |
++---------------------------------------------------------+
+|                                                          |
+|  AWS MANAGED          CUSTOMER MANAGED     INLINE       |
+|  +----------+         +----------+        +----------+ |
+|  | Skapade  |         | Du skapar|        | Direkt pa| |
+|  | av AWS   |         | sjalv    |        | user/role| |
+|  |          |         |          |        |          | |
+|  | ReadOnly |         | CustomS3 |        | {inline} | |
+|  | PowerUser|         | MyAppPol |        |          | |
+|  +----------+         +----------+        +----------+ |
+|       ↓                    ↓                   ↓        |
+|  Anvand forst!       For specifika          Undvik!    |
+|  Enkelt, sakert      behov                  Svart att  |
+|                                             underhalla |
+|                                                          |
++---------------------------------------------------------+
 ```
 
 ### Vanliga AWS Managed Policies
@@ -10267,14 +10267,14 @@ aws iam get-group --group-name Developers
 SCENARIO: EC2 behover lasa fran S3
 
 DÅLIGT (hardkodade credentials):
-┌─────────┐
-│   EC2   │ ──── Access Key i kod ──── RISK! Kan lackas
-└─────────┘
++---------+
+|   EC2   | ---- Access Key i kod ---- RISK! Kan lackas
++---------+
 
 BRA (IAM Role):
-┌─────────┐     ┌─────────┐     ┌─────────┐
-│   EC2   │ ←── │  Role   │ ←── │  Policy │
-└─────────┘     └─────────┘     └─────────┘
++---------+     +---------+     +---------+
+|   EC2   | <--- |  Role   | <--- |  Policy |
++---------+     +---------+     +---------+
                      ↓
               Temporara credentials
               Roteras automatiskt
@@ -10349,22 +10349,22 @@ export AWS_SESSION_TOKEN="..."
 ### Vad ar Least Privilege?
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  LEAST PRIVILEGE                         │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  DÅLIGT: "Give them admin, easier that way"             │
-│  ┌─────────────────────────────────────────────┐        │
-│  │  User → AdministratorAccess → ALLT          │        │
-│  └─────────────────────────────────────────────┘        │
-│                                                          │
-│  BRA: "Give minimum needed to do the job"               │
-│  ┌─────────────────────────────────────────────┐        │
-│  │  User → S3ReadOnly → Endast lasa S3         │        │
-│  │       → EC2Describe → Endast lista EC2      │        │
-│  └─────────────────────────────────────────────┘        │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
++---------------------------------------------------------+
+|                  LEAST PRIVILEGE                         |
++---------------------------------------------------------+
+|                                                          |
+|  DÅLIGT: "Give them admin, easier that way"             |
+|  +---------------------------------------------+        |
+|  |  User -> AdministratorAccess -> ALLT          |        |
+|  +---------------------------------------------+        |
+|                                                          |
+|  BRA: "Give minimum needed to do the job"               |
+|  +---------------------------------------------+        |
+|  |  User -> S3ReadOnly -> Endast lasa S3         |        |
+|  |       -> EC2Describe -> Endast lista EC2      |        |
+|  +---------------------------------------------+        |
+|                                                          |
++---------------------------------------------------------+
 ```
 
 ### Praktiskt Exempel
@@ -10473,40 +10473,40 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 
 ```
                         VPC ARCHITECTURE
-┌─────────────────────────────────────────────────────────────┐
-│  VPC: 10.0.0.0/16 (65,536 IPs)                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │   PUBLIC SUBNETS                PRIVATE SUBNETS    │    │
-│  │   ┌──────────────┐              ┌──────────────┐   │    │
-│  │   │ 10.0.1.0/24  │              │ 10.0.3.0/24  │   │    │
-│  │   │ (AZ-a)       │              │ (AZ-a)       │   │    │
-│  │   │  ┌────────┐  │              │  ┌────────┐  │   │    │
-│  │   │  │  EC2   │  │              │  │  EC2   │  │   │    │
-│  │   │  │ (web)  │  │              │  │ (app)  │  │   │    │
-│  │   │  └────────┘  │              │  └────────┘  │   │    │
-│  │   └──────────────┘              └──────────────┘   │    │
-│  │   ┌──────────────┐              ┌──────────────┐   │    │
-│  │   │ 10.0.2.0/24  │              │ 10.0.4.0/24  │   │    │
-│  │   │ (AZ-b)       │              │ (AZ-b)       │   │    │
-│  │   │  ┌────────┐  │              │  ┌────────┐  │   │    │
-│  │   │  │  EC2   │  │              │  │  RDS   │  │   │    │
-│  │   │  │ (web)  │  │              │  │ (db)   │  │   │    │
-│  │   │  └────────┘  │              │  └────────┘  │   │    │
-│  │   └──────────────┘              └──────────────┘   │    │
-│  │         │                              │           │    │
-│  │         ▼                              ▼           │    │
-│  │   ┌──────────┐                   ┌──────────┐     │    │
-│  │   │ Internet │                   │   NAT    │     │    │
-│  │   │ Gateway  │                   │ Gateway  │     │    │
-│  │   └──────────┘                   └──────────┘     │    │
-│  │         │                              │           │    │
-│  └─────────┼──────────────────────────────┼───────────┘    │
-│            │                              │                 │
-│            ▼                              ▼                 │
-│       INTERNET                    Outbound only            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|  VPC: 10.0.0.0/16 (65,536 IPs)                              |
+|  +-----------------------------------------------------+    |
+|  |                                                     |    |
+|  |   PUBLIC SUBNETS                PRIVATE SUBNETS    |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   | 10.0.1.0/24  |              | 10.0.3.0/24  |   |    |
+|  |   | (AZ-a)       |              | (AZ-a)       |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   |  |  EC2   |  |              |  |  EC2   |  |   |    |
+|  |   |  | (web)  |  |              |  | (app)  |  |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |   | 10.0.2.0/24  |              | 10.0.4.0/24  |   |    |
+|  |   | (AZ-b)       |              | (AZ-b)       |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   |  |  EC2   |  |              |  |  RDS   |  |   |    |
+|  |   |  | (web)  |  |              |  | (db)   |  |   |    |
+|  |   |  +--------+  |              |  +--------+  |   |    |
+|  |   +--------------+              +--------------+   |    |
+|  |         |                              |           |    |
+|  |         ▼                              ▼           |    |
+|  |   +----------+                   +----------+     |    |
+|  |   | Internet |                   |   NAT    |     |    |
+|  |   | Gateway  |                   | Gateway  |     |    |
+|  |   +----------+                   +----------+     |    |
+|  |         |                              |           |    |
+|  +---------+------------------------------+-----------+    |
+|            |                              |                 |
+|            ▼                              ▼                 |
+|       INTERNET                    Outbound only            |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ### Komponenter
@@ -10517,7 +10517,7 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 | **Subnet** | Del av VPC i en AZ |
 | **Route Table** | Routing-regler |
 | **Internet Gateway** | VPC ↔ Internet |
-| **NAT Gateway** | Private subnet → Internet |
+| **NAT Gateway** | Private subnet -> Internet |
 | **Security Group** | Instans-firewall |
 | **NACL** | Subnet-firewall |
 
@@ -10529,9 +10529,9 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 
 ```
 10.0.0.0/16
-    │    │
-    │    └── Prefix length (hur manga bits ar natverk)
-    └────── Natverk-adress
+    |    |
+    |    +-- Prefix length (hur manga bits ar natverk)
+    +------ Natverk-adress
 
 /16 = 65,536 IPs (2^16)
 /24 = 256 IPs (2^8)
@@ -10552,19 +10552,19 @@ Tanka pa VPC som ditt eget datacenter i AWS - du bestammer vilka IP-ranges, subn
 VPC: 10.0.0.0/16
 
 Public Subnets:
-├── 10.0.1.0/24  (AZ-a) - 256 IPs
-├── 10.0.2.0/24  (AZ-b) - 256 IPs
-└── 10.0.3.0/24  (AZ-c) - 256 IPs
++-- 10.0.1.0/24  (AZ-a) - 256 IPs
++-- 10.0.2.0/24  (AZ-b) - 256 IPs
++-- 10.0.3.0/24  (AZ-c) - 256 IPs
 
 Private Subnets:
-├── 10.0.10.0/24 (AZ-a) - 256 IPs
-├── 10.0.11.0/24 (AZ-b) - 256 IPs
-└── 10.0.12.0/24 (AZ-c) - 256 IPs
++-- 10.0.10.0/24 (AZ-a) - 256 IPs
++-- 10.0.11.0/24 (AZ-b) - 256 IPs
++-- 10.0.12.0/24 (AZ-c) - 256 IPs
 
 Database Subnets:
-├── 10.0.20.0/24 (AZ-a) - 256 IPs
-├── 10.0.21.0/24 (AZ-b) - 256 IPs
-└── 10.0.22.0/24 (AZ-c) - 256 IPs
++-- 10.0.20.0/24 (AZ-a) - 256 IPs
++-- 10.0.21.0/24 (AZ-b) - 256 IPs
++-- 10.0.22.0/24 (AZ-c) - 256 IPs
 ```
 
 ---
@@ -10699,17 +10699,17 @@ aws ec2 associate-route-table \
 ### Jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│           SECURITY GROUPS vs NACLs                          │
-├─────────────────────┬───────────────────────────────────────┤
-│   SECURITY GROUP    │              NACL                     │
-├─────────────────────┼───────────────────────────────────────┤
-│ Instans-niva        │ Subnet-niva                           │
-│ Stateful            │ Stateless                             │
-│ Bara Allow-regler   │ Allow + Deny                          │
-│ Utvardering: Alla   │ Utvardering: Ordning (nummer)         │
-│ Default: Deny all in│ Default: Allow all                    │
-└─────────────────────┴───────────────────────────────────────┘
++-------------------------------------------------------------+
+|           SECURITY GROUPS vs NACLs                          |
++---------------------+---------------------------------------+
+|   SECURITY GROUP    |              NACL                     |
++---------------------+---------------------------------------+
+| Instans-niva        | Subnet-niva                           |
+| Stateful            | Stateless                             |
+| Bara Allow-regler   | Allow + Deny                          |
+| Utvardering: Alla   | Utvardering: Ordning (nummer)         |
+| Default: Deny all in| Default: Allow all                    |
++---------------------+---------------------------------------+
 ```
 
 ### Security Group Exempel
@@ -10847,35 +10847,35 @@ Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
 
 ```
                          EC2 INSTANCE
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │                    EC2 INSTANCE                       │  │
-│  │                                                       │  │
-│  │   ┌─────────────┐    ┌─────────────┐                 │  │
-│  │   │    vCPU     │    │   Memory    │                 │  │
-│  │   │   (2-128+)  │    │  (1-768GB)  │                 │  │
-│  │   └─────────────┘    └─────────────┘                 │  │
-│  │                                                       │  │
-│  │   ┌─────────────────────────────────────────────┐    │  │
-│  │   │              ROOT VOLUME (EBS)               │    │  │
-│  │   │         /dev/xvda (8-16GB typical)          │    │  │
-│  │   └─────────────────────────────────────────────┘    │  │
-│  │                                                       │  │
-│  │   ┌─────────────────────────────────────────────┐    │  │
-│  │   │            NETWORK INTERFACE                 │    │  │
-│  │   │     Private IP: 10.0.1.45                   │    │  │
-│  │   │     Public IP: 52.xxx.xxx.xxx (optional)    │    │  │
-│  │   └─────────────────────────────────────────────┘    │  │
-│  │                                                       │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                           │                                 │
-│              ┌────────────┴────────────┐                   │
-│              │     Security Group      │                   │
-│              │    (Virtual Firewall)   │                   │
-│              └─────────────────────────┘                   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                                                             |
+|  +------------------------------------------------------+  |
+|  |                    EC2 INSTANCE                       |  |
+|  |                                                       |  |
+|  |   +-------------+    +-------------+                 |  |
+|  |   |    vCPU     |    |   Memory    |                 |  |
+|  |   |   (2-128+)  |    |  (1-768GB)  |                 |  |
+|  |   +-------------+    +-------------+                 |  |
+|  |                                                       |  |
+|  |   +---------------------------------------------+    |  |
+|  |   |              ROOT VOLUME (EBS)               |    |  |
+|  |   |         /dev/xvda (8-16GB typical)          |    |  |
+|  |   +---------------------------------------------+    |  |
+|  |                                                       |  |
+|  |   +---------------------------------------------+    |  |
+|  |   |            NETWORK INTERFACE                 |    |  |
+|  |   |     Private IP: 10.0.1.45                   |    |  |
+|  |   |     Public IP: 52.xxx.xxx.xxx (optional)    |    |  |
+|  |   +---------------------------------------------+    |  |
+|  |                                                       |  |
+|  +------------------------------------------------------+  |
+|                           |                                 |
+|              +------------+------------+                   |
+|              |     Security Group      |                   |
+|              |    (Virtual Firewall)   |                   |
+|              +-------------------------+                   |
+|                                                             |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -10886,10 +10886,10 @@ Med EC2 kan du starta en server pa sekunder och betala per timme (eller sekund).
 
 ```
 m5.xlarge
-│ │  │
-│ │  └── Size: nano, micro, small, medium, large, xlarge, 2xlarge...
-│ └───── Generation: 5th generation
-└────── Family: m = general purpose
+| |  |
+| |  +-- Size: nano, micro, small, medium, large, xlarge, 2xlarge...
+| +----- Generation: 5th generation
++------ Family: m = general purpose
 ```
 
 ### Instance Families
@@ -10980,24 +10980,24 @@ ssh -i my-key.pem ec2-user@$PUBLIC_IP
 ### Vad ar User Data?
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      USER DATA                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Script som kors AUTOMATISKT vid forsta boot                │
-│                                                              │
-│  ┌────────────┐     ┌────────────┐     ┌────────────┐      │
-│  │  EC2 Start │ ──▶ │ User Data  │ ──▶ │   Server   │      │
-│  │            │     │   Script   │     │   Ready!   │      │
-│  └────────────┘     └────────────┘     └────────────┘      │
-│                                                              │
-│  Perfekt for:                                                │
-│  - Installera software                                       │
-│  - Konfigurera services                                      │
-│  - Ladda ner applikation                                     │
-│  - Starta processer                                          │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                      USER DATA                               |
++-------------------------------------------------------------+
+|                                                              |
+|  Script som kors AUTOMATISKT vid forsta boot                |
+|                                                              |
+|  +------------+     +------------+     +------------+      |
+|  |  EC2 Start | --▶ | User Data  | --▶ |   Server   |      |
+|  |            |     |   Script   |     |   Ready!   |      |
+|  +------------+     +------------+     +------------+      |
+|                                                              |
+|  Perfekt for:                                                |
+|  - Installera software                                       |
+|  - Konfigurera services                                      |
+|  - Ladda ner applikation                                     |
+|  - Starta processer                                          |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ### User Data Exempel
@@ -11146,34 +11146,34 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
 ### Instance States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    EC2 LIFECYCLE                             │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   ┌─────────┐                                               │
-│   │ pending │ ──── Instance starting                        │
-│   └────┬────┘                                               │
-│        │                                                     │
-│        ▼                                                     │
-│   ┌─────────┐                                               │
-│   │ running │ ◀──── Normal operation                        │
-│   └────┬────┘                                               │
-│        │                                                     │
-│   ┌────┴────┐                                               │
-│   │         │                                                │
-│   ▼         ▼                                                │
-│ ┌─────────┐ ┌──────────┐                                    │
-│ │stopping │ │shutting- │                                    │
-│ │         │ │down      │                                    │
-│ └────┬────┘ └────┬─────┘                                    │
-│      │           │                                           │
-│      ▼           ▼                                           │
-│ ┌─────────┐ ┌──────────┐                                    │
-│ │ stopped │ │terminated│                                    │
-│ │(no cost)│ │ (gone!)  │                                    │
-│ └─────────┘ └──────────┘                                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    EC2 LIFECYCLE                             |
++-------------------------------------------------------------+
+|                                                              |
+|   +---------+                                               |
+|   | pending | ---- Instance starting                        |
+|   +----+----+                                               |
+|        |                                                     |
+|        ▼                                                     |
+|   +---------+                                               |
+|   | running | ◀---- Normal operation                        |
+|   +----+----+                                               |
+|        |                                                     |
+|   +----+----+                                               |
+|   |         |                                                |
+|   ▼         ▼                                                |
+| +---------+ +----------+                                    |
+| |stopping | |shutting- |                                    |
+| |         | |down      |                                    |
+| +----+----+ +----+-----+                                    |
+|      |           |                                           |
+|      ▼           ▼                                           |
+| +---------+ +----------+                                    |
+| | stopped | |terminated|                                    |
+| |(no cost)| | (gone!)  |                                    |
+| +---------+ +----------+                                    |
+|                                                              |
++-------------------------------------------------------------+
 
 VIKTIGT:
 - Stopped = No compute cost, EBS cost continues
@@ -11266,31 +11266,31 @@ S3 ar designat for 99.999999999% (11 9:or) durability. Du forlorar 1 objekt av 1
 
 ```
                            S3 STRUCTURE
-┌─────────────────────────────────────────────────────────────┐
-│                         S3 BUCKET                            │
-│                    my-company-data-prod                      │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │   /logs/                                            │    │
-│  │   ├── app/                                          │    │
-│  │   │   ├── 2025-12-01.log                           │    │
-│  │   │   └── 2025-12-02.log                           │    │
-│  │   └── access/                                       │    │
-│  │       └── access.log                                │    │
-│  │                                                     │    │
-│  │   /backups/                                         │    │
-│  │   ├── db-backup-2025-12-01.sql.gz                  │    │
-│  │   └── db-backup-2025-12-02.sql.gz                  │    │
-│  │                                                     │    │
-│  │   /static/                                          │    │
-│  │   ├── images/                                       │    │
-│  │   │   └── logo.png                                 │    │
-│  │   └── css/                                          │    │
-│  │       └── style.css                                │    │
-│  │                                                     │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                         S3 BUCKET                            |
+|                    my-company-data-prod                      |
+|  +-----------------------------------------------------+    |
+|  |                                                     |    |
+|  |   /logs/                                            |    |
+|  |   +-- app/                                          |    |
+|  |   |   +-- 2025-12-01.log                           |    |
+|  |   |   +-- 2025-12-02.log                           |    |
+|  |   +-- access/                                       |    |
+|  |       +-- access.log                                |    |
+|  |                                                     |    |
+|  |   /backups/                                         |    |
+|  |   +-- db-backup-2025-12-01.sql.gz                  |    |
+|  |   +-- db-backup-2025-12-02.sql.gz                  |    |
+|  |                                                     |    |
+|  |   /static/                                          |    |
+|  |   +-- images/                                       |    |
+|  |   |   +-- logo.png                                 |    |
+|  |   +-- css/                                          |    |
+|  |       +-- style.css                                |    |
+|  |                                                     |    |
+|  +-----------------------------------------------------+    |
+|                                                              |
++-------------------------------------------------------------+
 
 VIKTIGT:
 - Bucket name = Globalt unikt (hela AWS)
@@ -11354,25 +11354,25 @@ aws s3 rm s3://my-bucket/folder/ --recursive
 ### Jamforelse
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    S3 STORAGE CLASSES                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  STANDARD          STANDARD-IA       GLACIER               │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐          │
-│  │ Frequent │      │Infrequent│      │  Archive │          │
-│  │  Access  │      │  Access  │      │          │          │
-│  │          │      │          │      │          │          │
-│  │ $0.023/GB│      │ $0.0125/GB│     │$0.004/GB │          │
-│  │          │      │ +retrieval│      │ +hours   │          │
-│  └──────────┘      └──────────┘      └──────────┘          │
-│       │                 │                  │                │
-│       ▼                 ▼                  ▼                │
-│  App data,        Backups >30d,      Archives,             │
-│  frequently       DR data            compliance            │
-│  accessed                            7+ years              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    S3 STORAGE CLASSES                        |
++-------------------------------------------------------------+
+|                                                              |
+|  STANDARD          STANDARD-IA       GLACIER               |
+|  +----------+      +----------+      +----------+          |
+|  | Frequent |      |Infrequent|      |  Archive |          |
+|  |  Access  |      |  Access  |      |          |          |
+|  |          |      |          |      |          |          |
+|  | $0.023/GB|      | $0.0125/GB|     |$0.004/GB |          |
+|  |          |      | +retrieval|      | +hours   |          |
+|  +----------+      +----------+      +----------+          |
+|       |                 |                  |                |
+|       ▼                 ▼                  ▼                |
+|  App data,        Backups >30d,      Archives,             |
+|  frequently       DR data            compliance            |
+|  accessed                            7+ years              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 | Class | Cost/GB | Retrieval | Use Case |
@@ -11573,29 +11573,29 @@ RDS ar managed database - du fokuserar pa schema och queries, AWS skoter resten.
 ## RDS vs EC2 Database
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│             RDS vs SELF-MANAGED (EC2)                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  YOU MANAGE              │      AWS MANAGES (RDS)           │
-│  ┌───────────────────┐   │   ┌───────────────────┐          │
-│  │ Application       │   │   │ Application       │          │
-│  │ Optimization      │   │   │ Optimization      │          │
-│  │ Queries           │   │   │ Queries           │          │
-│  ├───────────────────┤   │   └───────────────────┘          │
-│  │ Schema            │   │                                   │
-│  │ Scaling           │   │         ┌───────────────┐        │
-│  │ High Availability │   │         │ MANAGED:      │        │
-│  │ Backups           │   │         │ - Patching    │        │
-│  │ Patching          │   │         │ - Backups     │        │
-│  │ OS Installation   │   │         │ - HA/Failover │        │
-│  │ Server Maintenance│   │         │ - Monitoring  │        │
-│  │ Power/Network     │   │         │ - Scaling     │        │
-│  └───────────────────┘   │         └───────────────┘        │
-│                                                              │
-│  Timmar/vecka             │         Minuter/manad           │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|             RDS vs SELF-MANAGED (EC2)                        |
++-------------------------------------------------------------+
+|                                                              |
+|  YOU MANAGE              |      AWS MANAGES (RDS)           |
+|  +-------------------+   |   +-------------------+          |
+|  | Application       |   |   | Application       |          |
+|  | Optimization      |   |   | Optimization      |          |
+|  | Queries           |   |   | Queries           |          |
+|  +-------------------+   |   +-------------------+          |
+|  | Schema            |   |                                   |
+|  | Scaling           |   |         +---------------+        |
+|  | High Availability |   |         | MANAGED:      |        |
+|  | Backups           |   |         | - Patching    |        |
+|  | Patching          |   |         | - Backups     |        |
+|  | OS Installation   |   |         | - HA/Failover |        |
+|  | Server Maintenance|   |         | - Monitoring  |        |
+|  | Power/Network     |   |         | - Scaling     |        |
+|  +-------------------+   |         +---------------+        |
+|                                                              |
+|  Timmar/vecka             |         Minuter/manad           |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -11675,30 +11675,30 @@ echo "RDS Endpoint: $ENDPOINT"
 ### High Availability
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    MULTI-AZ DEPLOYMENT                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   AZ-a (Primary)              AZ-b (Standby)               │
-│   ┌──────────────┐            ┌──────────────┐             │
-│   │     RDS      │◀──────────▶│     RDS      │             │
-│   │   PRIMARY    │  Sync      │   STANDBY    │             │
-│   │              │  Repl.     │              │             │
-│   └──────────────┘            └──────────────┘             │
-│          │                           │                      │
-│          │                           │                      │
-│          ▼                           ▼                      │
-│   ┌──────────────┐            ┌──────────────┐             │
-│   │     EBS      │            │     EBS      │             │
-│   └──────────────┘            └──────────────┘             │
-│                                                              │
-│   VID FAILOVER:                                             │
-│   1. Primary fails                                          │
-│   2. Standby promoted (60-120 sek)                         │
-│   3. DNS endpoint resolves to new primary                  │
-│   4. Din app marker inget (samma endpoint)                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    MULTI-AZ DEPLOYMENT                       |
++-------------------------------------------------------------+
+|                                                              |
+|   AZ-a (Primary)              AZ-b (Standby)               |
+|   +--------------+            +--------------+             |
+|   |     RDS      |◀----------▶|     RDS      |             |
+|   |   PRIMARY    |  Sync      |   STANDBY    |             |
+|   |              |  Repl.     |              |             |
+|   +--------------+            +--------------+             |
+|          |                           |                      |
+|          |                           |                      |
+|          ▼                           ▼                      |
+|   +--------------+            +--------------+             |
+|   |     EBS      |            |     EBS      |             |
+|   +--------------+            +--------------+             |
+|                                                              |
+|   VID FAILOVER:                                             |
+|   1. Primary fails                                          |
+|   2. Standby promoted (60-120 sek)                         |
+|   3. DNS endpoint resolves to new primary                  |
+|   4. Din app marker inget (samma endpoint)                 |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ```bash
@@ -11729,8 +11729,8 @@ REPLICA_ENDPOINT=$(aws rds describe-db-instances \
     --output text)
 
 # I din app:
-# Writes → Primary endpoint
-# Reads → Replica endpoint
+# Writes -> Primary endpoint
+# Reads -> Replica endpoint
 ```
 
 ---
@@ -11816,35 +11816,35 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 ### DNS Resolution
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DNS RESOLUTION                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   User types: www.example.com                               │
-│                     │                                        │
-│                     ▼                                        │
-│   ┌─────────────────────────────────┐                       │
-│   │      Recursive Resolver         │                       │
-│   │   (ISP or 8.8.8.8)              │                       │
-│   └─────────────────────────────────┘                       │
-│                     │                                        │
-│         ┌───────────┴───────────┐                           │
-│         ▼                       ▼                           │
-│   ┌──────────┐           ┌──────────┐                       │
-│   │   Root   │           │   TLD    │                       │
-│   │  Server  │    →      │ (.com)   │                       │
-│   └──────────┘           └──────────┘                       │
-│                                │                             │
-│                                ▼                             │
-│                         ┌──────────────┐                    │
-│                         │   Route53    │                    │
-│                         │  (Authorit.) │                    │
-│                         └──────────────┘                    │
-│                                │                             │
-│                                ▼                             │
-│                         52.xx.xx.xx (IP)                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    DNS RESOLUTION                            |
++-------------------------------------------------------------+
+|                                                              |
+|   User types: www.example.com                               |
+|                     |                                        |
+|                     ▼                                        |
+|   +---------------------------------+                       |
+|   |      Recursive Resolver         |                       |
+|   |   (ISP or 8.8.8.8)              |                       |
+|   +---------------------------------+                       |
+|                     |                                        |
+|         +-----------+-----------+                           |
+|         ▼                       ▼                           |
+|   +----------+           +----------+                       |
+|   |   Root   |           |   TLD    |                       |
+|   |  Server  |    ->      | (.com)   |                       |
+|   +----------+           +----------+                       |
+|                                |                             |
+|                                ▼                             |
+|                         +--------------+                    |
+|                         |   Route53    |                    |
+|                         |  (Authorit.) |                    |
+|                         +--------------+                    |
+|                                |                             |
+|                                ▼                             |
+|                         52.xx.xx.xx (IP)                    |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -11853,11 +11853,11 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 | Type | Syfte | Exempel |
 |------|-------|---------|
-| **A** | Name → IPv4 | www → 52.1.2.3 |
-| **AAAA** | Name → IPv6 | www → 2001:db8::1 |
-| **CNAME** | Name → Name | www → app.example.com |
-| **ALIAS** | Name → AWS resource | www → d123.cloudfront.net |
-| **MX** | Mail servers | @ → mail.example.com |
+| **A** | Name -> IPv4 | www -> 52.1.2.3 |
+| **AAAA** | Name -> IPv6 | www -> 2001:db8::1 |
+| **CNAME** | Name -> Name | www -> app.example.com |
+| **ALIAS** | Name -> AWS resource | www -> d123.cloudfront.net |
+| **MX** | Mail servers | @ -> mail.example.com |
 | **TXT** | Text records | Verification, SPF |
 | **NS** | Name servers | Delegation |
 
@@ -11865,15 +11865,15 @@ Namn kommer fran TCP/UDP port 53 (DNS) + Route 66 (highway).
 
 ```
 A RECORD:
-www.example.com → 52.1.2.3
+www.example.com -> 52.1.2.3
 (Direkt till IP)
 
 CNAME:
-www.example.com → app.example.com
+www.example.com -> app.example.com
 (Pointer till annat namn - INTE pa apex/root!)
 
 ALIAS (AWS-specifik):
-example.com → d123.cloudfront.net
+example.com -> d123.cloudfront.net
 (Fungerar pa apex, gratis queries till AWS resources)
 ```
 
@@ -11942,23 +11942,23 @@ aws route53 change-resource-record-sets \
 
 ```
 SIMPLE (default):
-User → DNS → Single endpoint
+User -> DNS -> Single endpoint
 
 WEIGHTED (A/B testing, gradual rollout):
-User → DNS → 70% old version
-           → 30% new version
+User -> DNS -> 70% old version
+           -> 30% new version
 
 LATENCY (lowest latency):
-User (EU) → DNS → eu-north-1 endpoint
-User (US) → DNS → us-east-1 endpoint
+User (EU) -> DNS -> eu-north-1 endpoint
+User (US) -> DNS -> us-east-1 endpoint
 
 FAILOVER (disaster recovery):
-User → DNS → Primary (healthy) ✓
-           → Secondary (standby)
+User -> DNS -> Primary (healthy) ✓
+           -> Secondary (standby)
 
 GEOLOCATION (based on location):
-User (Sweden) → DNS → Swedish content
-User (Germany) → DNS → German content
+User (Sweden) -> DNS -> Swedish content
+User (Germany) -> DNS -> German content
 ```
 
 ### Weighted Routing Exempel
@@ -12070,33 +12070,33 @@ CloudWatch ar centralen for all monitoring, logging och alerting i AWS.
 ## CloudWatch Components
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CLOUDWATCH                                │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   METRICS              LOGS                ALARMS           │
-│   ┌──────────┐        ┌──────────┐        ┌──────────┐     │
-│   │ CPU %    │        │ App logs │        │ CPU > 80%│     │
-│   │ Memory   │        │ Access   │        │ Errors   │     │
-│   │ Network  │        │ System   │        │ Latency  │     │
-│   └──────────┘        └──────────┘        └──────────┘     │
-│        │                   │                   │            │
-│        └───────────────────┴───────────────────┘            │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────────┐                         │
-│                    │  DASHBOARDS  │                         │
-│                    │  (Visualize) │                         │
-│                    └──────────────┘                         │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────────┐                         │
-│                    │    ACTIONS   │                         │
-│                    │ SNS, Lambda  │                         │
-│                    │ Auto Scaling │                         │
-│                    └──────────────┘                         │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    CLOUDWATCH                                |
++-------------------------------------------------------------+
+|                                                              |
+|   METRICS              LOGS                ALARMS           |
+|   +----------+        +----------+        +----------+     |
+|   | CPU %    |        | App logs |        | CPU > 80%|     |
+|   | Memory   |        | Access   |        | Errors   |     |
+|   | Network  |        | System   |        | Latency  |     |
+|   +----------+        +----------+        +----------+     |
+|        |                   |                   |            |
+|        +-------------------+-------------------+            |
+|                            |                                 |
+|                            ▼                                 |
+|                    +--------------+                         |
+|                    |  DASHBOARDS  |                         |
+|                    |  (Visualize) |                         |
+|                    +--------------+                         |
+|                            |                                 |
+|                            ▼                                 |
+|                    +--------------+                         |
+|                    |    ACTIONS   |                         |
+|                    | SNS, Lambda  |                         |
+|                    | Auto Scaling |                         |
+|                    +--------------+                         |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---
@@ -12189,19 +12189,19 @@ aws cloudwatch describe-alarms \
 ### Alarm States
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ALARM STATES                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   OK              ALARM           INSUFFICIENT_DATA         │
-│   ┌─────┐         ┌─────┐         ┌─────┐                  │
-│   │ ✓   │    →    │ ⚠️  │    →    │ ?   │                  │
-│   │     │         │     │         │     │                  │
-│   └─────┘         └─────┘         └─────┘                  │
-│   Threshold       Threshold       Not enough               │
-│   not breached    breached        data points              │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    ALARM STATES                              |
++-------------------------------------------------------------+
+|                                                              |
+|   OK              ALARM           INSUFFICIENT_DATA         |
+|   +-----+         +-----+         +-----+                  |
+|   | ✓   |    ->    | ⚠️  |    ->    | ?   |                  |
+|   |     |         |     |         |     |                  |
+|   +-----+         +-----+         +-----+                  |
+|   Threshold       Threshold       Not enough               |
+|   not breached    breached        data points              |
+|                                                              |
++-------------------------------------------------------------+
 ```
 
 ---

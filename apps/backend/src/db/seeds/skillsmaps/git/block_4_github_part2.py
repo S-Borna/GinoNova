@@ -23,45 +23,45 @@ NODE_15_ISSUES_PROJECTS = {
 ### Issue Anatomy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         ISSUE STRUCTURE                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   #123 - Login button not working on mobile                             │
-│   ───────────────────────────────────────────                           │
-│                                                                         │
-│   Status: Open                Labels: bug, mobile, high-priority        │
-│   Assignees: @developer       Milestone: v2.1                           │
-│   Project: Sprint 12          Linked PR: #125                           │
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │ DESCRIPTION                                                     │   │
-│   │                                                                 │   │
-│   │ ## Bug Description                                              │   │
-│   │ The login button doesn't respond to taps on iOS Safari.        │   │
-│   │                                                                 │   │
-│   │ ## Steps to Reproduce                                           │   │
-│   │ 1. Open site on iPhone                                          │   │
-│   │ 2. Go to /login                                                 │   │
-│   │ 3. Tap "Sign In" button                                         │   │
-│   │ 4. Nothing happens                                              │   │
-│   │                                                                 │   │
-│   │ ## Expected Behavior                                            │   │
-│   │ Login form should submit                                        │   │
-│   │                                                                 │   │
-│   │ ## Environment                                                  │   │
-│   │ - Device: iPhone 14                                             │   │
-│   │ - OS: iOS 17.1                                                  │   │
-│   │ - Browser: Safari                                               │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   TIMELINE:                                                             │
-│   @user opened this issue 2 hours ago                                   │
-│   @developer was assigned 1 hour ago                                    │
-│   @developer linked PR #125                                             │
-│   @tester commented: "Confirmed on my device"                           │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                         ISSUE STRUCTURE                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   #123 - Login button not working on mobile                             |
+|   -------------------------------------------                           |
+|                                                                         |
+|   Status: Open                Labels: bug, mobile, high-priority        |
+|   Assignees: @developer       Milestone: v2.1                           |
+|   Project: Sprint 12          Linked PR: #125                           |
+|                                                                         |
+|   +-----------------------------------------------------------------+   |
+|   | DESCRIPTION                                                     |   |
+|   |                                                                 |   |
+|   | ## Bug Description                                              |   |
+|   | The login button doesn't respond to taps on iOS Safari.        |   |
+|   |                                                                 |   |
+|   | ## Steps to Reproduce                                           |   |
+|   | 1. Open site on iPhone                                          |   |
+|   | 2. Go to /login                                                 |   |
+|   | 3. Tap "Sign In" button                                         |   |
+|   | 4. Nothing happens                                              |   |
+|   |                                                                 |   |
+|   | ## Expected Behavior                                            |   |
+|   | Login form should submit                                        |   |
+|   |                                                                 |   |
+|   | ## Environment                                                  |   |
+|   | - Device: iPhone 14                                             |   |
+|   | - OS: iOS 17.1                                                  |   |
+|   | - Browser: Safari                                               |   |
+|   +-----------------------------------------------------------------+   |
+|                                                                         |
+|   TIMELINE:                                                             |
+|   @user opened this issue 2 hours ago                                   |
+|   @developer was assigned 1 hour ago                                    |
+|   @developer linked PR #125                                             |
+|   @tester commented: "Confirmed on my device"                           |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -208,35 +208,35 @@ gh issue transfer 123 owner/other-repo
 ### Standard Labels
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      LABEL SYSTEM                                       │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   TYPE:                                                                 │
-│   ├── bug           🔴 red      - Something isn't working               │
-│   ├── enhancement   🔵 blue     - New feature request                   │
-│   ├── documentation 🟢 green    - Documentation changes                 │
-│   └── question      🟣 purple   - Further information requested         │
-│                                                                         │
-│   PRIORITY:                                                             │
-│   ├── critical      🔴 red      - Must fix immediately                  │
-│   ├── high          🟠 orange   - Important, fix soon                   │
-│   ├── medium        🟡 yellow   - Normal priority                       │
-│   └── low           🟢 green    - Nice to have                          │
-│                                                                         │
-│   STATUS:                                                               │
-│   ├── triage        ⚪ gray     - Needs assessment                      │
-│   ├── in-progress   🔵 blue     - Being worked on                       │
-│   ├── blocked       🔴 red      - Cannot proceed                        │
-│   └── needs-review  🟣 purple   - Needs code review                     │
-│                                                                         │
-│   COMPONENT:                                                            │
-│   ├── frontend      🔵 teal     - UI/UX related                         │
-│   ├── backend       🔵 navy     - Server/API related                    │
-│   ├── database      🟤 brown    - Database related                      │
-│   └── infra         ⚪ gray     - Infrastructure                        │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                      LABEL SYSTEM                                       |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   TYPE:                                                                 |
+|   +-- bug           🔴 red      - Something isn't working               |
+|   +-- enhancement   🔵 blue     - New feature request                   |
+|   +-- documentation 🟢 green    - Documentation changes                 |
+|   +-- question      🟣 purple   - Further information requested         |
+|                                                                         |
+|   PRIORITY:                                                             |
+|   +-- critical      🔴 red      - Must fix immediately                  |
+|   +-- high          🟠 orange   - Important, fix soon                   |
+|   +-- medium        🟡 yellow   - Normal priority                       |
+|   +-- low           🟢 green    - Nice to have                          |
+|                                                                         |
+|   STATUS:                                                               |
+|   +-- triage        ⚪ gray     - Needs assessment                      |
+|   +-- in-progress   🔵 blue     - Being worked on                       |
+|   +-- blocked       🔴 red      - Cannot proceed                        |
+|   +-- needs-review  🟣 purple   - Needs code review                     |
+|                                                                         |
+|   COMPONENT:                                                            |
+|   +-- frontend      🔵 teal     - UI/UX related                         |
+|   +-- backend       🔵 navy     - Server/API related                    |
+|   +-- database      🟤 brown    - Database related                      |
+|   +-- infra         ⚪ gray     - Infrastructure                        |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ### Creating Labels via CLI
@@ -262,42 +262,42 @@ gh label delete "wontfix"
 ### Project Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    GITHUB PROJECT BOARD                                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌─ Sprint 12 ─────────────────────────────────────────────────────┐   │
-│   │                                                                 │   │
-│   │  📋 Backlog    🏃 In Progress    👀 Review    ✅ Done           │   │
-│   │  ──────────    ─────────────    ────────    ──────             │   │
-│   │                                                                 │   │
-│   │  ┌─────────┐   ┌─────────┐      ┌─────────┐ ┌─────────┐        │   │
-│   │  │ #134    │   │ #128    │      │ #125    │ │ #120    │        │   │
-│   │  │ Feature │   │ Bug fix │      │ PR #126 │ │ Done!   │        │   │
-│   │  │ ────────│   │ ────────│      │ ────────│ │ ────────│        │   │
-│   │  │ @dev1   │   │ @dev2   │      │ @dev1   │ │ @dev2   │        │   │
-│   │  └─────────┘   └─────────┘      └─────────┘ └─────────┘        │   │
-│   │                                                                 │   │
-│   │  ┌─────────┐                                 ┌─────────┐        │   │
-│   │  │ #135    │                                 │ #119    │        │   │
-│   │  │ Docs    │                                 │ Shipped │        │   │
-│   │  └─────────┘                                 └─────────┘        │   │
-│   │                                                                 │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   VIEWS:                                                                │
-│   • Board (Kanban)                                                      │
-│   • Table (Spreadsheet)                                                 │
-│   • Roadmap (Timeline)                                                  │
-│                                                                         │
-│   CUSTOM FIELDS:                                                        │
-│   • Status (Single select)                                              │
-│   • Priority (Single select)                                            │
-│   • Sprint (Iteration)                                                  │
-│   • Estimate (Number)                                                   │
-│   • Due date (Date)                                                     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    GITHUB PROJECT BOARD                                 |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   +- Sprint 12 -----------------------------------------------------+   |
+|   |                                                                 |   |
+|   |  📋 Backlog    🏃 In Progress    👀 Review    ✅ Done           |   |
+|   |  ----------    -------------    --------    ------             |   |
+|   |                                                                 |   |
+|   |  +---------+   +---------+      +---------+ +---------+        |   |
+|   |  | #134    |   | #128    |      | #125    | | #120    |        |   |
+|   |  | Feature |   | Bug fix |      | PR #126 | | Done!   |        |   |
+|   |  | --------|   | --------|      | --------| | --------|        |   |
+|   |  | @dev1   |   | @dev2   |      | @dev1   | | @dev2   |        |   |
+|   |  +---------+   +---------+      +---------+ +---------+        |   |
+|   |                                                                 |   |
+|   |  +---------+                                 +---------+        |   |
+|   |  | #135    |                                 | #119    |        |   |
+|   |  | Docs    |                                 | Shipped |        |   |
+|   |  +---------+                                 +---------+        |   |
+|   |                                                                 |   |
+|   +-----------------------------------------------------------------+   |
+|                                                                         |
+|   VIEWS:                                                                |
+|   • Board (Kanban)                                                      |
+|   • Table (Spreadsheet)                                                 |
+|   • Roadmap (Timeline)                                                  |
+|                                                                         |
+|   CUSTOM FIELDS:                                                        |
+|   • Status (Single select)                                              |
+|   • Priority (Single select)                                            |
+|   • Sprint (Iteration)                                                  |
+|   • Estimate (Number)                                                   |
+|   • Due date (Date)                                                     |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
@@ -352,7 +352,7 @@ jobs:
 
 ```bash
 # Via GitHub UI:
-# Repository → Issues → Milestones → New milestone
+# Repository -> Issues -> Milestones -> New milestone
 
 # Milestone structure:
 # - Title: v2.0.0
@@ -401,10 +401,10 @@ Fixes #123, fixes #124, fixes #125
 
 ```
 Issue #100 (Epic)
-├── Issue #101 (Task) - Linked via description
-├── Issue #102 (Task) - Linked via description
-└── PR #103 - "Closes #101"
-    └── Commits referencing #100
++-- Issue #101 (Task) - Linked via description
++-- Issue #102 (Task) - Linked via description
++-- PR #103 - "Closes #101"
+    +-- Commits referencing #100
 ```
 
 ---
@@ -446,42 +446,42 @@ NODE_16_GITHUB_ACTIONS = {
 ## Actions Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    GITHUB ACTIONS ARCHITECTURE                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   WORKFLOW (.github/workflows/ci.yml)                                   │
-│   ──────────────────────────────────                                    │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │ name: CI                                                        │   │
-│   │                                                                 │   │
-│   │ on: [push, pull_request]    ← TRIGGER                           │   │
-│   │                                                                 │   │
-│   │ jobs:                                                           │   │
-│   │   ┌─────────────────────────────────────────────────────────┐   │   │
-│   │   │ JOB: test                                               │   │   │
-│   │   │ runs-on: ubuntu-latest  ← RUNNER                        │   │   │
-│   │   │                                                         │   │   │
-│   │   │ steps:                                                  │   │   │
-│   │   │   ┌───────────────────────────────────────────────┐     │   │   │
-│   │   │   │ STEP 1: actions/checkout@v4                   │     │   │   │
-│   │   │   │ STEP 2: actions/setup-node@v4                 │     │   │   │
-│   │   │   │ STEP 3: npm install                           │     │   │   │
-│   │   │   │ STEP 4: npm test                              │     │   │   │
-│   │   │   └───────────────────────────────────────────────┘     │   │   │
-│   │   └─────────────────────────────────────────────────────────┘   │   │
-│   │                                                                 │   │
-│   │   ┌─────────────────────────────────────────────────────────┐   │   │
-│   │   │ JOB: build                                              │   │   │
-│   │   │ needs: test             ← DEPENDENCY                    │   │   │
-│   │   │ ...                                                     │   │   │
-│   │   └─────────────────────────────────────────────────────────┘   │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   COMPONENTS:                                                           │
-│   Workflow → Jobs → Steps → Actions                                     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------------------+
+|                    GITHUB ACTIONS ARCHITECTURE                          |
++-------------------------------------------------------------------------+
+|                                                                         |
+|   WORKFLOW (.github/workflows/ci.yml)                                   |
+|   ----------------------------------                                    |
+|   +-----------------------------------------------------------------+   |
+|   | name: CI                                                        |   |
+|   |                                                                 |   |
+|   | on: [push, pull_request]    <- TRIGGER                           |   |
+|   |                                                                 |   |
+|   | jobs:                                                           |   |
+|   |   +---------------------------------------------------------+   |   |
+|   |   | JOB: test                                               |   |   |
+|   |   | runs-on: ubuntu-latest  <- RUNNER                        |   |   |
+|   |   |                                                         |   |   |
+|   |   | steps:                                                  |   |   |
+|   |   |   +-----------------------------------------------+     |   |   |
+|   |   |   | STEP 1: actions/checkout@v4                   |     |   |   |
+|   |   |   | STEP 2: actions/setup-node@v4                 |     |   |   |
+|   |   |   | STEP 3: npm install                           |     |   |   |
+|   |   |   | STEP 4: npm test                              |     |   |   |
+|   |   |   +-----------------------------------------------+     |   |   |
+|   |   +---------------------------------------------------------+   |   |
+|   |                                                                 |   |
+|   |   +---------------------------------------------------------+   |   |
+|   |   | JOB: build                                              |   |   |
+|   |   | needs: test             <- DEPENDENCY                    |   |   |
+|   |   | ...                                                     |   |   |
+|   |   +---------------------------------------------------------+   |   |
+|   +-----------------------------------------------------------------+   |
+|                                                                         |
+|   COMPONENTS:                                                           |
+|   Workflow -> Jobs -> Steps -> Actions                                     |
+|                                                                         |
++-------------------------------------------------------------------------+
 ```
 
 ---
