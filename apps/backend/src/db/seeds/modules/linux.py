@@ -491,7 +491,7 @@ Ett mount point är en katalog i filsystemsträdet där ett filsystem ansluts. N
 
 ```
 Före mount:                    Efter mount:
-                              
+
 /                              /
 ├── home/                      ├── home/
 ├── var/                       ├── var/
@@ -500,7 +500,7 @@ Före mount:                    Efter mount:
                                        ├── file1.txt
                                        ├── file2.txt
                                        └── subdir/
-                                       
+
                                /dev/sdb1 monterad på /mnt/data
 ```
 
@@ -1155,27 +1155,27 @@ WEB_GROUP="www-data"
 # Säkerställ korrekta permissions efter deploy
 fix_permissions() {
     echo "Fixing permissions..."
-    
+
     # Ägare och grupp
     sudo chown -R $DEPLOY_USER:$WEB_GROUP $APP_DIR
-    
+
     # Kataloger: 755 (rwxr-xr-x)
     find $APP_DIR -type d -exec chmod 755 {} \;
-    
+
     # Filer: 644 (rw-r--r--)
     find $APP_DIR -type f -exec chmod 644 {} \;
-    
+
     # Körbara scripts: 755
     find $APP_DIR/bin -type f -exec chmod 755 {} \;
-    
+
     # Känsliga filer: 640
     chmod 640 $APP_DIR/.env
     chmod 640 $APP_DIR/config/secrets.yml
-    
+
     # Skrivbara kataloger för webbserver
     chmod 775 $APP_DIR/storage
     chmod 775 $APP_DIR/cache
-    
+
     echo "Permissions fixed!"
 }
 
@@ -1285,11 +1285,11 @@ chmod 644 /tmp/webapp/.env
 chmod 755 /tmp/webapp/config/database.yml
 
 # Audit
-echo "=== Permission Audit ===" 
+echo "=== Permission Audit ==="
 find /tmp/webapp -ls
 
 # Hitta problem
-echo "=== Världsskrivbara filer ===" 
+echo "=== Världsskrivbara filer ==="
 find /tmp/webapp -perm -002 -ls
 
 # Åtgärda
@@ -1852,10 +1852,10 @@ check_inodes() {
         filesystem=$(echo $line | awk '{print $1}')
         iuse=$(echo $line | awk '{print $5}' | tr -d '%')
         mount=$(echo $line | awk '{print $6}')
-        
+
         if [ "$iuse" -ge "$THRESHOLD" ]; then
             echo "WARNING: $mount is ${iuse}% inodes used"
-            
+
             # Hitta top directories
             echo "Top directories by file count:"
             find "$mount" -xdev -type f -printf '%h\n' 2>/dev/null | \
@@ -1888,10 +1888,10 @@ BACKUP_YESTERDAY="$BACKUP_BASE/$YESTERDAY"
 
 if [ -d "$BACKUP_YESTERDAY" ]; then
     echo "Creating incremental backup with hard links..."
-    
+
     # Kopiera med hard links för oförändrade filer
     cp -al "$BACKUP_YESTERDAY" "$BACKUP_TODAY"
-    
+
     # Synka ändringar (ersätter modifierade filer)
     rsync -a --delete "$SOURCE/" "$BACKUP_TODAY/"
 else
@@ -2325,7 +2325,7 @@ df -i
 # Visa blockenheter och deras mount points
 lsblk
 # NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-# sda      8:0    0   100G  0 disk 
+# sda      8:0    0   100G  0 disk
 # ├─sda1   8:1    0   512M  0 part /boot/efi
 # └─sda2   8:2    0  99.5G  0 part /
 
@@ -2551,10 +2551,10 @@ check_disk() {
     df -h | tail -n +2 | while read line; do
         usage=$(echo "$line" | awk '{print $5}' | tr -d '%')
         mount=$(echo "$line" | awk '{print $6}')
-        
+
         if [ "$usage" -ge "$THRESHOLD" ]; then
             echo "WARNING: $mount is ${usage}% full"
-            
+
             # Visa vad som tar plats
             echo "Top consumers in $mount:"
             du -sh "$mount"/* 2>/dev/null | sort -rh | head -5
@@ -3208,10 +3208,10 @@ echo ""
 for zpid in $zombies; do
     ppid=$(ps -o ppid= -p $zpid 2>/dev/null | tr -d ' ')
     pname=$(ps -o comm= -p $ppid 2>/dev/null)
-    
+
     echo "Zombie PID $zpid"
     echo "  Parent: $ppid ($pname)"
-    
+
     # Försök trigga cleanup med SIGCHLD
     echo "  Sending SIGCHLD to parent..."
     kill -SIGCHLD $ppid 2>/dev/null
@@ -3244,18 +3244,18 @@ log() {
 
 check_service() {
     local service=$1
-    
+
     # Hitta huvudprocess
     pid=$(pgrep -x $service | head -1)
-    
+
     if [ -z "$pid" ]; then
         log "WARNING: $service not running!"
         return 1
     fi
-    
+
     # Kontrollera tillstånd
     state=$(ps -o stat= -p $pid | head -c1)
-    
+
     case $state in
         R|S)
             log "OK: $service (PID $pid) state: $state"
@@ -3270,7 +3270,7 @@ check_service() {
             log "CRITICAL: $service (PID $pid) is zombie!"
             ;;
     esac
-    
+
     # Visa resurser
     cpu=$(ps -o %cpu= -p $pid)
     mem=$(ps -o %mem= -p $pid)
@@ -3460,24 +3460,24 @@ echo ""
 
 while true; do
     pid=$(pgrep -x "$PROCESS" | head -1)
-    
+
     if [ -z "$pid" ]; then
         echo "[$(date '+%H:%M:%S')] WARNING: $PROCESS not running!"
     else
         state=$(ps -o stat= -p $pid | head -c1)
         cpu=$(ps -o %cpu= -p $pid | tr -d ' ')
         mem=$(ps -o %mem= -p $pid | tr -d ' ')
-        
+
         status="OK"
         case $state in
             D) status="WARNING: I/O Wait" ;;
             Z) status="CRITICAL: Zombie" ;;
             T) status="WARNING: Stopped" ;;
         esac
-        
+
         echo "[$(date '+%H:%M:%S')] PID:$pid State:$state CPU:${cpu}% MEM:${mem}% - $status"
     fi
-    
+
     sleep $INTERVAL
 done
 ```
@@ -3796,15 +3796,15 @@ LOGFILE="/var/log/deploy-$(date +%Y%m%d-%H%M%S).log"
 
 deploy() {
     echo "Starting deployment at $(date)" >> $LOGFILE
-    
+
     # Deployment steps
     git pull >> $LOGFILE 2>&1
     npm install >> $LOGFILE 2>&1
     npm run build >> $LOGFILE 2>&1
-    
+
     # Restart service
     sudo systemctl restart myapp >> $LOGFILE 2>&1
-    
+
     echo "Deployment complete at $(date)" >> $LOGFILE
 }
 
@@ -4428,7 +4428,7 @@ vim config.yml
 # ^Z (pausa)
 # [1]+  Stopped    vim config.yml
 
-# 2. Starta logövervakning i bakgrunden  
+# 2. Starta logövervakning i bakgrunden
 tail -f /var/log/app.log &
 # [2] 12346
 
@@ -5160,7 +5160,7 @@ echo ""
 if kill -0 "$PID" 2>/dev/null; then
     echo "Process still running, sending SIGKILL..."
     kill -KILL "$PID"
-    
+
     # Vänta på SIGKILL
     waited=0
     while kill -0 "$PID" 2>/dev/null; do
@@ -5749,7 +5749,7 @@ Exempel (4-karnig server):
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Grundlaggande processlistning med ps
 
@@ -6028,7 +6028,7 @@ done
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Anvand ratt verktyg for ratten situation
 
@@ -6097,7 +6097,7 @@ diff /var/log/baseline/ps_yesterday.txt /var/log/baseline/ps_today.txt
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Hitta resurstjuvar
 
@@ -6108,7 +6108,7 @@ diff /var/log/baseline/ps_yesterday.txt /var/log/baseline/ps_today.txt
 # Uppgift: Hitta de 5 processer som anvander mest CPU och minne
 
 # CPU-toppen
-echo "=== Top 5 CPU ===" 
+echo "=== Top 5 CPU ==="
 ps aux --sort=-%cpu | head -6
 
 # Minnes-toppen
@@ -6368,7 +6368,7 @@ Cgroup Hierarchy:
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Utforska systemd status
 
@@ -6580,7 +6580,7 @@ systemd-analyze critical-chain
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Unit file organisation
 
@@ -6648,7 +6648,7 @@ ReadWritePaths=/var/log/myapp
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Utforska ditt systems arkitektur
 
@@ -6890,7 +6890,7 @@ OnCalendar Syntax:
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Skapa en enkel service
 
@@ -7134,7 +7134,7 @@ WantedBy=timers.target
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Anvand drop-ins for overrides
 
@@ -7212,7 +7212,7 @@ StartLimitBurst=5
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Skapa en enkel service
 
@@ -7464,7 +7464,7 @@ Ytterligare en viktig distinktion:
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Grundlaggande tjansthantering
 
@@ -7648,12 +7648,12 @@ FAILURES=""
 for svc in "${SERVICES[@]}"; do
     if ! systemctl is-active --quiet "$svc"; then
         FAILURES+="$svc "
-        
+
         # Forsok starta om
         echo "Attempting to restart $svc..."
         sudo systemctl restart "$svc"
         sleep 5
-        
+
         if ! systemctl is-active --quiet "$svc"; then
             echo "CRITICAL: $svc failed to restart!"
         fi
@@ -7685,7 +7685,7 @@ sudo systemctl reload-or-restart nginx
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Anvand enable --now
 
@@ -7748,7 +7748,7 @@ systemctl list-unit-files --state=masked
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Deployment simulation
 
@@ -7815,7 +7815,7 @@ sudo systemctl restart mybroken
 for service in nginx postgresql redis-server; do
     status=$(systemctl is-active "$service")
     enabled=$(systemctl is-enabled "$service" 2>/dev/null)
-    
+
     echo "$service: $status (enabled: $enabled)"
 done
 ```
@@ -7987,7 +7987,7 @@ Genererade filer (ror ej!):
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Forsta nuvarande target
 
@@ -8148,7 +8148,7 @@ systemctl list-unit-files --state=enabled --type=service | grep -E "cups|bluetoo
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Servrar bor anvanda multi-user.target
 
@@ -8206,7 +8206,7 @@ cat /proc/cmdline
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Utforska din boot-konfiguration
 
@@ -8403,7 +8403,7 @@ Varje loggrad i journald har metadata:
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Grundlaggande journalctl
 
@@ -8619,7 +8619,7 @@ sudo logrotate -f /etc/logrotate.d/nginx
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Standardiserad felsokningsworkflow
 
@@ -8678,7 +8678,7 @@ sudo journalctl --vacuum-size=500M  # Max 500MB
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Hitta errors fran senaste timmen
 
@@ -8860,7 +8860,7 @@ john:x:1000:1000:John Smith:/home/john:/bin/bash
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Skapa anvandare
 
@@ -9049,7 +9049,7 @@ last -10
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Alltid -a med usermod -G
 
@@ -9105,7 +9105,7 @@ sudo useradd -c "CI/CD Deploy - Jenkins" deploy
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Skapa en full anvandare
 
@@ -9288,7 +9288,7 @@ john   ALL=(ALL)          ALL
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Anvand visudo
 
@@ -9460,7 +9460,7 @@ sudo grep "sudo:" /var/log/auth.log | tail -10
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Alltid visudo
 
@@ -9519,7 +9519,7 @@ deploy ALL=(ALL) NOPASSWD: ALL
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Skapa deploy-regler
 
@@ -9736,7 +9736,7 @@ Control Flags:
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 ### Steg 1: Utforska PAM-konfiguration
 
@@ -9890,7 +9890,7 @@ sudo faillock --user john --reset    # Aterstall
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 ### 1. Ha alltid backup-terminal
 
@@ -9948,7 +9948,7 @@ pamtester sudo john authenticate
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Utforska PAM
 
@@ -10107,7 +10107,7 @@ SSH SECURITY LAYERS
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 Komplett SSH-hardening fran grunden:
 
@@ -10248,7 +10248,7 @@ sudo fail2ban-client set sshd unbanip 192.168.1.100
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 1. Nyckelbaserad autentisering - Generera ed25519-nycklar med stark losen och inaktivera losenordsautentisering helt efter verifierad nyckel-login
 2. Minimal atkomst - Anvand AllowGroups istallet for AllowUsers for enklare administration och lagg endast till nodvandiga anvandare
@@ -10274,7 +10274,7 @@ sudo fail2ban-client set sshd unbanip 192.168.1.100
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Grundlaggande SSH Hardening
 Implementera komplett SSH-hardening pa en testserver med nyckelbaserad autentisering, PermitRootLogin no, och anpassad port.
@@ -10485,7 +10485,7 @@ PACKET FLOW THROUGH FIREWALL
 
 ------------------------------------------------------------
 
-## Steg-for-steg Guide
+## Steg-för-steg Guide
 
 Komplett brandvaggskonfiguration med UFW:
 
@@ -10609,7 +10609,7 @@ sudo iptables -L -n -v --line-numbers
 
 ------------------------------------------------------------
 
-## Basta Praxis
+## Bästa Praxis
 
 1. SSH forst alltid - Tillat ALLTID SSH innan du aktiverar brandvaggen eller sattar default deny policy
 2. Default deny incoming - Satt default policy till deny och tillat endast nodvandiga portar explicit
@@ -10635,7 +10635,7 @@ sudo iptables -L -n -v --line-numbers
 
 ------------------------------------------------------------
 
-## Ovningar
+## Övningar
 
 ### Ovning 1: Grundlaggande webbserver-brandvagg
 Konfigurera UFW for en webbserver som ska tillata SSH, HTTP och HTTPS men blockera allt annat.
