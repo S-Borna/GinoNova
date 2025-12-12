@@ -44657,13 +44657,14 @@ def get_tracks() -> list[dict]:
 
 def get_modules() -> list[dict]:
     """Returns all 15 modules, with Linux V3 replacing the original."""
-    from .modules_v3.module_linux_v3 import MODULE_LINUX_MASTERY_V3
+    from .modules.linux import MODULE as MODULE_LINUX_MASTERY_V3
+    from .modules.docker import MODULE as MODULE_DOCKER_MASTERY_V3
 
-    # Replace linux-mastery with V3 version
+    # Replace linux-mastery and docker modules with latest ULTIMATE versions
     result = []
     for module in BOOTCAMP_MODULES:
         if module["slug"] == "linux-mastery":
-            # Use V3 but preserve bootcamp metadata
+            # Use latest ULTIMATE version but preserve bootcamp metadata
             v3_module = MODULE_LINUX_MASTERY_V3.copy()
             v3_module["order_index"] = module["order_index"]
             v3_module["prerequisites"] = module.get("prerequisites", [])

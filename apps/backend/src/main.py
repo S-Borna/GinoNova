@@ -189,6 +189,32 @@ def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
     existing_modules = list_modules()
     skillsmap_slugs = [m["slug"] for m in ALL_SKILLSMAP_MODULES]
     existing_slugs = [m.slug for m in existing_modules]
+    
+    # Import update function for content sync
+    from .db.task_repository import list_tasks_by_module, update_task
+    from .schemas.task import TaskUpdate
+
+    # ALWAYS sync content for specific modules (linux-mastery, docker-mastery)
+    sync_modules = ["linux-mastery", "docker-mastery"]
+    for module_data in ALL_SKILLSMAP_MODULES:
+        if module_data["slug"] in sync_modules:
+            existing_module = next((m for m in existing_modules if m.slug == module_data["slug"]), None)
+            if existing_module:
+                existing_tasks = list_tasks_by_module(existing_module.id)
+                seed_tasks = module_data.get("tasks", [])
+                updated_count = 0
+                for seed_task in seed_tasks:
+                    db_task = next((t for t in existing_tasks if t.order_index == seed_task.get("order_index")), None)
+                    if db_task and seed_task.get("content"):
+                        new_content = seed_task.get("content", "")
+                        old_len = len(db_task.content or "")
+                        new_len = len(new_content)
+                        # Update if new content is significantly different
+                        if new_len > old_len or "## Introduktion" in new_content:
+                            update_task(db_task.id, TaskUpdate(content=new_content))
+                            updated_count += 1
+                if updated_count > 0:
+                    logger.info(f"🔄 Synced {module_data['slug']}: {updated_count} tasks updated with new content")
 
     # Count how many skillsmaps are already seeded
     already_seeded = sum(1 for slug in skillsmap_slugs if slug in existing_slugs)
