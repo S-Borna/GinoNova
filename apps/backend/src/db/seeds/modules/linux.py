@@ -16,7 +16,7 @@ MODULE = {
     "description": "Komplett Linux-administration - från filsystem till brandväggar med naturlig svensk pedagogik",
     "track_slug": "foundation",
     "order_index": 2,
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "estimated_hours": 30,
     "prerequisites": ["environment-tooling-setup"],
     "icon": "🐧",
@@ -892,7 +892,7 @@ Förståelse för dessa koncept är direkt tillämpbar i molnmiljöer (EBS, Azur
         {
             "title": 'File Permissions',
             "slug": 'file-permissions',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# File Permissions
@@ -1478,7 +1478,7 @@ Best practices inkluderar principle of least privilege, användning av grupper i
         {
             "title": 'Inodes, Hard Links och Symbolic Links',
             "slug": 'inodes-links',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# Inodes, Hard Links och Symbolic Links
@@ -2178,7 +2178,7 @@ För DevOps är symlinks kritiska för zero-downtime deployments. Tekniken `ln -
         {
             "title": 'Disk Management',
             "slug": 'disk-management',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# Disk Management
@@ -2869,7 +2869,7 @@ Best practices inkluderar proaktiv monitoring vid 80% användning, separata voly
         {
             "title": 'Process Lifecycle and States',
             "slug": 'process-lifecycle',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# Process Lifecycle and States
@@ -3541,7 +3541,7 @@ Zombie-processer är avslutade processer som väntar på att föräldern ska anr
         {
             "title": 'Foreground vs Background Processes',
             "slug": 'foreground-background-processes',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# Foreground vs Background Processes
@@ -4149,7 +4149,7 @@ Screen och tmux är session managers som skapar persistenta terminalsessioner so
         {
             "title": 'Job Control (jobs, fg, bg, nohup)',
             "slug": 'job-control',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# Job Control (jobs, fg, bg, nohup)
@@ -4781,7 +4781,7 @@ wait låter dig vänta på specifika jobb eller alla bakgrundsjobb, användbart 
         {
             "title": 'Signals (SIGTERM, SIGKILL, SIGHUP)',
             "slug": 'signals',
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 90,
             "xp_reward": 150,
             "content": """# Signals (SIGTERM, SIGKILL, SIGHUP)

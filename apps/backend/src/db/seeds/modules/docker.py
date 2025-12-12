@@ -16,7 +16,7 @@ MODULE = {
     "description": "Komplett Docker-kunskap - från containers till produktion med naturlig svensk pedagogik",
     "track_slug": "containers",
     "order_index": 18,
-    "difficulty": "intermediate",
+    "difficulty": "medium",
     "estimated_hours": 25,
     "prerequisites": ["linux-mastery"],
     "icon": "🐳",
@@ -14678,7 +14678,7 @@ Hela teamet kan komma igang snabbt med ett enda kommando.
         {
             "title": "Docker Ecosystem & Tools",
             "slug": "docker-ecosystem-tools",
-            "difficulty": "intermediate",
+            "difficulty": "medium",
             "estimated_minutes": 45,
             "xp_reward": 90,
             "content": """# Docker Ecosystem och Verktyg
