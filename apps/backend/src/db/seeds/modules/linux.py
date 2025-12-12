@@ -16,7 +16,7 @@ MODULE = {
     "description": "Komplett Linux-administration - från filsystem till brandväggar med naturlig svensk pedagogik",
     "track_slug": "foundation",
     "order_index": 2,
-    "difficulty": "medium",
+    "difficulty": "intermediate",
     "estimated_hours": 30,
     "prerequisites": ["environment-tooling-setup"],
     "icon": "🐧",

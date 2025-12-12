@@ -16,7 +16,7 @@ MODULE = {
     "description": "Komplett Docker-kunskap - från containers till produktion med naturlig svensk pedagogik",
     "track_slug": "containers",
     "order_index": 18,
-    "difficulty": "medium",
+    "difficulty": "intermediate",
     "estimated_hours": 25,
     "prerequisites": ["linux-mastery"],
     "icon": "🐳",
