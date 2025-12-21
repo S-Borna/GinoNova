@@ -339,219 +339,345 @@ Dessa bygger vidare pa allt du lart dig har - variabler, argument och korbarhet 
             "order_index": 2,
             "content": r"""# Textbearbetning: grep, sed & awk
 
-> **TL;DR:** `grep` hittar rader som matchar mönster. `sed` ersätter text. `awk` är ett programmeringsspråk för kolumnbaserad data. Tillsammans = superkrafter för logganalys och konfigurationsändringar.
+## Varfor viktigt for DevOps
+
+Textbearbetning ar kanske den viktigaste farditgheten i Linux-administration:
+
+- Logganalys: Hitta fel bland miljontals rader i /var/log/
+- Konfigurationshantering: Andra installningar i config-filer automatiskt
+- Datautvinning: Plocka ut specifik information fran output
+- Rapportering: Sammanstalla statistik fran systemdata
+- Felsökning: Snabbt identifiera problem i stora datamangder
+- Automation: Transformera data mellan olika format
+
+I din gruppuppgift behover du andra SSH-porten i sshd_config med sed, soka efter anvandare med grep, och parsa output med awk. Dessa tre verktyg ar dina basta vanner.
 
 ---
 
-## 🎯 Varför detta är viktigt
+## Vad ar grep?
 
-I **gruppuppgiften** behöver du:
-- Söka i config-filer (`grep`)
-- Ändra SSH-port i sshd_config (`sed`)
-- Parsa output från kommandon (`awk`)
-
-**Kursmål:** *Skriva bash-skript för att automatisera vanliga uppgifter* (Kap 4-6 i Bash Book)
-
----
-
-## 🔍 grep - Sök efter mönster
-
-### Grundläggande syntax
+grep star for "Global Regular Expression Print". Det soker igenom filer rad for rad och skriver ut de rader som matchar ett monster. Tank pa det som "Ctrl+F for terminalen" - fast mycket kraftfullare.
 
 ```bash
-grep "mönster" fil
+# Grundlaggande syntax:
+grep "monster" fil
+# grep laser filen rad for rad
+# Om raden innehaller "monster" skrivs den ut
+# Annars hoppas den over
+
+# Exempel: Sök efter "error" i en loggfil
+grep "error" /var/log/syslog
+# Detta skriver ut ALLA rader som innehaller ordet "error"
+# Kan vara hundratals rader!
+
+# Praktiskt exempel fran gruppuppgiften:
+grep "Port" /etc/ssh/sshd_config
+# Hittar raden som definierar SSH-porten
+# Output: #Port 22
+# eller: Port 6622
 ```
 
-### Vanliga flaggor
+## grep flaggor - gor sokningen smartare
 
-| Flagga | Betydelse | Exempel |
-|--------|-----------|---------|
-| `-i` | Ignorera skiftläge | `grep -i "error" log.txt` |
-| `-r` | Rekursivt i mappar | `grep -r "TODO" ./src/` |
-| `-n` | Visa radnummer | `grep -n "Port" sshd_config` |
-| `-v` | Invertera (visa EJ matchande) | `grep -v "^#" config` |
-| `-c` | Räkna antal matchningar | `grep -c "error" log.txt` |
-| `-E` | Extended regex | `grep -E "error|warning" log.txt` |
-
-### Praktiska exempel
+Utan flaggor ar grep ganska "dum" - den matchar exakt vad du skriver. Med flaggor blir den mycket smartare:
 
 ```bash
-# Hitta alla som får logga in via SSH (från gruppuppgiften)
-grep "AllowUsers" /etc/ssh/sshd_config
+# -i (ignore case) - ignorera stora/sma bokstaver
+grep -i "error" log.txt
+# Matchar: error, Error, ERROR, eRrOr
+# Utan -i matchar bara exakt "error"
 
-# Visa aktiva rader i config (ignorera kommentarer)
-grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"
+# -n (line numbers) - visa radnummer
+grep -n "Port" /etc/ssh/sshd_config
+# Output: 15:#Port 22
+# Nu vet du att det ar rad 15!
 
-# Sök efter "error" ELLER "failed" i loggar
-grep -iE "error|failed" /var/log/syslog
+# -r (recursive) - sok i alla filer i en mapp
+grep -r "TODO" ./src/
+# Soker i ALLA filer under src-mappen
+# Perfekt for att hitta alla TODOs i ett projekt
 
-# Räkna misslyckade inloggningar
+# -v (invert) - visa rader som INTE matchar
+grep -v "^#" /etc/ssh/sshd_config
+# ^ betyder "borjan av raden"
+# Visar alla rader som INTE borjar med # (kommentarer)
+# Detta filtrerar bort kommentarer!
+
+# -c (count) - rakna antal matchningar
 grep -c "Failed password" /var/log/auth.log
+# Output: 47
+# Istallet for 47 rader far du bara siffran 47
+
+# -E (extended regex) - anvand regex
+grep -E "error|warning|failed" /var/log/syslog
+# | betyder "eller"
+# Matchar rader med error ELLER warning ELLER failed
+```
+
+## Kombinera grep-flaggor
+
+Du kan kombinera flera flaggor for kraftfulla sokningar:
+
+```bash
+# Sok case-insensitive OCH visa radnummer
+grep -in "error" /var/log/syslog
+# -i = ignore case, -n = radnummer
+
+# Sok rekursivt efter TODO, ignorera case
+grep -ri "todo" ./src/
+# Hittar TODO, Todo, todo i alla filer
+
+# Visa aktiva rader i config (inte kommentarer, inte tomma)
+grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"
+# Forsta grep: ta bort kommentarsrader
+# Andra grep: ta bort tomma rader (^$ = tom rad)
+# | (pipe) skickar output fran forsta till andra
 ```
 
 ---
 
-## ✏️ sed - Stream Editor
+## Vad ar sed?
 
-### Grundläggande syntax
-
-```bash
-sed 's/gammalt/nytt/' fil       # Första på varje rad
-sed 's/gammalt/nytt/g' fil      # Alla förekomster
-sed -i 's/gammalt/nytt/g' fil   # Ändra filen direkt
-```
-
-### Vanliga användningar
+sed star for "Stream Editor". Det laser text rad for rad, gor andringar, och skriver ut resultatet. Tank pa det som "Sok och ersatt for terminalen" - men mycket kraftfullare.
 
 ```bash
-# Byt SSH-port (från gruppuppgiften)
-sed -i 's/^#Port 22/Port 6622/' /etc/ssh/sshd_config
+# Grundlaggande syntax:
+sed 's/gammalt/nytt/' fil
+# s = substitute (ersatt)
+# Forsta forekomsten pa varje rad ersatts
 
-# Ta bort alla kommentarsrader
-sed '/^#/d' config.txt
-
-# Lägg till text i början av varje rad
-sed 's/^/PREFIX: /' fil.txt
-
-# Ersätt endast på rad 5
-sed '5s/old/new/' fil.txt
+# Exempel:
+echo "hello world" | sed 's/world/DevOps/'
+# Output: hello DevOps
+# "world" ersattes med "DevOps"
 ```
 
-### Flaggor för sed
+## sed - viktiga varianter
 
-| Flagga | Betydelse |
-|--------|-----------|
-| `-i` | In-place (ändra filen) |
-| `-n` | Tysta output |
-| `-e` | Flera kommandon |
+```bash
+# Ersatt ALLA forekomster (inte bara forsta)
+sed 's/gammalt/nytt/g' fil
+# g = global, alla forekomster pa varje rad
 
-### Viktigt för gruppuppgiften
+# Andra filen DIREKT (farligt! gor backup forst)
+sed -i 's/gammalt/nytt/g' fil
+# -i = in-place, andrar originalfilen
+# VARNING: Det finns ingen undo!
+
+# Gör backup automatiskt
+sed -i.bak 's/gammalt/nytt/g' fil
+# Skapar fil.bak innan andring
+# Livräddare om nagot gar fel!
+
+# Ta bort rader som matchar monster
+sed '/monster/d' fil
+# d = delete
+# Alla rader som innehaller "monster" tas bort
+
+# Ersatt bara pa specifik rad
+sed '5s/gammalt/nytt/' fil
+# Ersatter bara pa rad 5
+```
+
+## sed i gruppuppgiften - andra SSH-port
+
+Detta ar ett av de viktigaste anvandningsfallen:
 
 ```bash
 #!/bin/bash
-# Konfigurera SSH-porten
+# Konfigurera SSH-porten fran 22 till 6622
 
 SSH_PORT=6622
 
-# Sätt custom port
+# Steg 1: Avkommentera och andra Port-raden
+# Ursprunglig rad: #Port 22
+# Ny rad: Port 6622
+
 sed -i "s/^#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
+# ^#Port 22 = rad som borjar med #Port 22
+# Port $SSH_PORT = ersatts med Port 6622
+# Vi anvander " istallet for ' for att variabeln ska expandera
+
+# Steg 2: Om raden redan ar avkommenterad (Port 22)
 sed -i "s/^Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
 
-# Verifiera
+# Steg 3: Verifiera andringen
 grep "^Port" /etc/ssh/sshd_config
+# Output ska vara: Port 6622
+
+# Steg 4: Starta om SSH for att aktivera
+sudo systemctl restart sshd
 ```
 
 ---
 
-## 📊 awk - Textanalys & Kolumner
+## Vad ar awk?
 
-### Grundläggande syntax
+awk ar ett helt programmeringssprak for textbearbetning. Det ar specialiserat pa kolumnbaserad data - tank pa det som "Excel for terminalen". Varje rad delas automatiskt upp i kolumner.
 
 ```bash
-awk '{print $1}' fil     # Skriv ut kolumn 1
-awk '{print $NF}' fil    # Skriv ut sista kolumnen
+# Grundlaggande syntax:
+awk '{print $1}' fil
+# $1 = forsta kolumnen
+# $2 = andra kolumnen
+# $NF = sista kolumnen (Number of Fields)
+# $0 = hela raden
+
+# Exempel med ls -l output:
+ls -l
+# -rw-r--r-- 1 said devops 1234 Dec 21 10:00 file.txt
+# $1         $2 $3   $4     $5   $6  $7  $8    $9
+
+# Visa bara filnamn (sista kolumnen)
+ls -l | awk '{print $NF}'
+# Output: file.txt
 ```
 
-### Inbyggda variabler
+## awk - andra separator
 
-| Variabel | Betydelse |
-|----------|-----------|
-| `$0` | Hela raden |
-| `$1, $2...` | Kolumn 1, 2, etc. |
-| `$NF` | Sista kolumnen |
-| `NR` | Radnummer |
-| `NF` | Antal kolumner |
-| `FS` | Fältseparator (default: space) |
-
-### Praktiska exempel
+Som standard anvander awk mellanslag/tab som separator. Men manga filer anvander andra tecken:
 
 ```bash
-# Lista alla användarnamn från /etc/passwd
+# /etc/passwd anvander kolon som separator
+# Rad: said:x:1000:1000:Said:/home/said:/bin/bash
+# $1   $2 $3   $4   $5   $6          $7
+
+# Utan -F (fel resultat):
+awk '{print $1}' /etc/passwd
+# Output: said:x:1000:1000:Said:/home/said:/bin/bash
+# Hela raden! Eftersom det inte finns nagra mellanslag
+
+# Med -F: (ratt resultat):
 awk -F: '{print $1}' /etc/passwd
+# Output: said
+# Nu ar kolon separator, sa $1 ar bara "said"
 
-# Visa användare och deras shells
+# Visa anvandarnamn och shell:
 awk -F: '{print $1, $7}' /etc/passwd
-
-# Hitta användare med bash som shell
-awk -F: '$7 ~ /bash/ {print $1}' /etc/passwd
-
-# Summera diskutrymme (kolumn 3)
-df -h | awk '{print $3}'
-
-# Visa processer som använder mest minne
-ps aux | awk '{print $4, $11}' | sort -rn | head -5
+# Output: said /bin/bash
+# Komma mellan $1 och $7 ger mellanslag i output
 ```
 
-### Villkor i awk
+## awk med villkor
+
+awk kan filtrera rader baserat pa villkor:
 
 ```bash
-# Visa bara rader där kolumn 3 > 100
-awk '$3 > 100 {print $0}' data.txt
-
-# Visa användare med UID > 1000
+# Visa bara anvandare med UID over 1000
 awk -F: '$3 > 1000 {print $1, $3}' /etc/passwd
+# $3 > 1000 ar villkoret
+# {print $1, $3} ar vad som ska goras om villkoret ar sant
+# Output: nobody 65534
+
+# Visa anvandare som har bash som shell
+awk -F: '$7 ~ /bash/ {print $1}' /etc/passwd
+# ~ betyder "matchar regex"
+# /bash/ ar ett regex som soker efter "bash"
+# Output: said (och andra med bash)
+
+# Visa processer som anvander over 1% minne
+ps aux | awk '$4 > 1.0 {print $4, $11}'
+# $4 ar minnes-kolumnen i ps aux
+# $11 ar kommando-namnet
 ```
 
 ---
 
-## 🔗 Kombinera verktygen
+## Kombinera verktygen - Pipeline-magi
 
-### Pipeline-magi
+Den verkliga kraften kommer nar du kombinerar verktygen:
 
 ```bash
 # Hitta de 5 vanligaste felen i loggen
 grep -i "error" /var/log/syslog | awk '{print $5}' | sort | uniq -c | sort -rn | head -5
+# Steg for steg:
+# 1. grep -i "error"     -> Hitta alla error-rader
+# 2. awk '{print $5}'    -> Ta ut kolumn 5 (programnamnet)
+# 3. sort                -> Sortera alfabetiskt
+# 4. uniq -c             -> Rakna unika forekomster
+# 5. sort -rn            -> Sortera numeriskt, storst forst
+# 6. head -5             -> Visa topp 5
 
-# Lista användare i en grupp (från gruppuppgiften)
-grep "^devops:" /etc/group | awk -F: '{print $4}'
-
-# Hitta stora filer och visa storlek + namn
-find /var/log -type f -size +10M -exec ls -lh {} \; | awk '{print $5, $9}'
-```
-
-### Exempel från gruppuppgiften
-
-```bash
-#!/bin/bash
-# Kontrollera om användare finns
-
+# Exempel fran gruppuppgiften - kolla om anvandare finns:
 check_user() {
     local username=$1
     if grep -q "^$username:" /etc/passwd; then
+        # -q = quiet, ingen output, bara exit code
+        # ^$username: = rad som borjar med anvandarnamnet foljt av kolon
         echo "User $username exists"
-        # Visa UID och GID
         grep "^$username:" /etc/passwd | awk -F: '{print "UID:", $3, "GID:", $4}'
     else
         echo "User $username does not exist"
     fi
 }
 
-check_user "said"
+# Lista anvandare i en grupp
+grep "^devops:" /etc/group | awk -F: '{print $4}'
+# $4 i /etc/group ar medlemslistan
+# Output: said,anna,erik
 ```
 
 ---
 
-## 📋 Copy-Paste Referens
+## Vanliga misstag och losningar
 
-| Uppgift | Kommando |
-|---------|----------|
-| Sök i fil | `grep "mönster" fil` |
-| Sök rekursivt | `grep -r "mönster" mapp/` |
-| Ignorera skiftläge | `grep -i "mönster" fil` |
-| Ersätt text | `sed 's/old/new/g' fil` |
-| Ersätt i fil | `sed -i 's/old/new/g' fil` |
-| Första kolumnen | `awk '{print $1}' fil` |
-| Custom separator | `awk -F: '{print $1}' fil` |
-| Filtrera rader | `awk '$3 > 100' fil` |
+```bash
+# Misstag 1: Glomma -i i sed (filen andras inte)
+sed 's/old/new/' fil
+# Detta SKRIVER UT resultatet men ANDRAR INTE filen!
+sed -i 's/old/new/' fil
+# Nu andras filen
+
+# Misstag 2: Fel separator i awk
+awk '{print $1}' /etc/passwd
+# HELA raden skrivs ut eftersom default separator ar mellanslag
+awk -F: '{print $1}' /etc/passwd
+# Nu anvands kolon som separator
+
+# Misstag 3: Glomma ankare i grep
+grep "Port" /etc/ssh/sshd_config
+# Matchar "Port", "#Port", "Transport", etc.
+grep "^Port" /etc/ssh/sshd_config
+# ^ = borjan av rad, matchar bara "Port" i borjan
+
+# Misstag 4: Anvanda ' istallet for " med variabler
+sed -i 's/old/$NEW/' fil
+# $NEW ersatts INTE, du far bokstavligen "$NEW" i filen
+sed -i "s/old/$NEW/" fil
+# Nu expanderas variabeln korrekt
+```
 
 ---
 
-## ✅ Checkpoint
+## Snabbreferens
 
-1. Hur söker du case-insensitive med grep?
-2. Vad gör `sed -i`?
-3. Hur skriver du ut kolumn 3 med awk?
-4. Hur anger du kolon som separator i awk?
+| Uppgift | Kommando |
+|---------|----------|
+| Sok i fil | `grep "monster" fil` |
+| Sok case-insensitive | `grep -i "monster" fil` |
+| Sok rekursivt | `grep -r "monster" mapp/` |
+| Visa radnummer | `grep -n "monster" fil` |
+| Invertera (visa ej matchande) | `grep -v "monster" fil` |
+| Rakna matchningar | `grep -c "monster" fil` |
+| Ersatt text (visa) | `sed 's/old/new/g' fil` |
+| Ersatt text (andra fil) | `sed -i 's/old/new/g' fil` |
+| Ta bort rader | `sed '/monster/d' fil` |
+| Forsta kolumnen | `awk '{print $1}' fil` |
+| Custom separator | `awk -F: '{print $1}' fil` |
+| Sista kolumnen | `awk '{print $NF}' fil` |
+| Filtrera med villkor | `awk '$3 > 100' fil` |
+
+---
+
+## Nasta steg
+
+Nu kan du soka, ersatta och analysera text som ett proffs. Nasta steg ar att lara dig:
+
+- Kontrollstrukturer (if/else, loopar) for att fatta beslut i skript
+- Funktioner for att organisera din kod
+- Felhantering for robusta skript
+
+Grep, sed och awk kommer du anvanda i nastan varje skript du skriver!
 
 """,
             "quiz": [
