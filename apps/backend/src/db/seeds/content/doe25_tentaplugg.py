@@ -1290,7 +1290,7 @@ log_message() {
 # Huvudlogik
 main() {
     log_message "INFO" "Starting service check"
-    
+
     for service in "${SERVICES[@]}"; do
         if check_service "$service"; then
             SERVICE_STATUS["$service"]="UP"
@@ -1300,7 +1300,7 @@ main() {
             log_message "WARN" "$service is not running"
         fi
     done
-    
+
     # Visa resultat
     echo "=== Service Status ==="
     for svc in "${!SERVICE_STATUS[@]}"; do
@@ -1327,25 +1327,20 @@ main "$@"
             "quiz": [
                 {
                     "question": "Hur anropar du en funktion 'my_func' i Bash?",
-                    "options": [
-                        "my_func()",
-                        "call my_func",
-                        "my_func",
-                        "$(my_func)"
-                    ],
+                    "options": ["my_func()", "call my_func", "my_func", "$(my_func)"],
                     "correct": 2,
-                    "explanation": "I Bash anropas funktioner utan parenteser. my_func() är deklarationssyntax, inte anrop."
+                    "explanation": "I Bash anropas funktioner utan parenteser. my_func() är deklarationssyntax, inte anrop.",
                 },
                 {
-                    "question": "Vad är skillnaden mellan \"$@\" och \"$*\" i en funktion?",
+                    "question": 'Vad är skillnaden mellan "$@" och "$*" i en funktion?',
                     "options": [
                         "Ingen skillnad",
                         "$@ bevarar varje argument separat, $* slår ihop till en sträng",
                         "$* bevarar argument, $@ slår ihop",
-                        "$@ fungerar bara i funktioner"
+                        "$@ fungerar bara i funktioner",
                     ],
                     "correct": 1,
-                    "explanation": "\"$@\" expanderar varje argument som separat ord (bevarar quotes), \"$*\" slår ihop alla till en enda sträng."
+                    "explanation": '"$@" expanderar varje argument som separat ord (bevarar quotes), "$*" slår ihop alla till en enda sträng.',
                 },
                 {
                     "question": "Hur deklarerar du en associativ array i Bash?",
@@ -1353,10 +1348,10 @@ main "$@"
                         "assoc_array=()",
                         "declare -a assoc_array",
                         "declare -A assoc_array",
-                        "array -assoc assoc_array"
+                        "array -assoc assoc_array",
                     ],
                     "correct": 2,
-                    "explanation": "Associativa arrays MÅSTE deklareras med 'declare -A'. -a är för vanliga indexerade arrays."
+                    "explanation": "Associativa arrays MÅSTE deklareras med 'declare -A'. -a är för vanliga indexerade arrays.",
                 },
                 {
                     "question": "Vad gör 'trap cleanup EXIT'?",
@@ -1364,10 +1359,10 @@ main "$@"
                         "Kör cleanup() när användaren trycker Ctrl+C",
                         "Kör cleanup() när skriptet avslutas (oavsett hur)",
                         "Kör cleanup() vid SIGKILL",
-                        "Definierar en funktion som heter trap"
+                        "Definierar en funktion som heter trap",
                     ],
                     "correct": 1,
-                    "explanation": "trap med EXIT kör funktionen när skriptet avslutas, oavsett om det är normalt eller via signal (utom SIGKILL)."
+                    "explanation": "trap med EXIT kör funktionen när skriptet avslutas, oavsett om det är normalt eller via signal (utom SIGKILL).",
                 },
                 {
                     "question": "Hur får du antalet element i en array 'arr'?",
@@ -1375,10 +1370,10 @@ main "$@"
                         "len(arr)",
                         "${arr.length}",
                         "${#arr[@]}",
-                        "count ${arr[@]}"
+                        "count ${arr[@]}",
                     ],
                     "correct": 2,
-                    "explanation": "${#arr[@]} ger antalet element i arrayen. # före variabelnamn ger längden."
+                    "explanation": "${#arr[@]} ger antalet element i arrayen. # före variabelnamn ger längden.",
                 },
                 {
                     "question": "Vilken signal kan INTE fångas med trap?",
@@ -1386,12 +1381,12 @@ main "$@"
                         "SIGINT (Ctrl+C)",
                         "SIGTERM (kill)",
                         "SIGKILL (kill -9)",
-                        "SIGHUP (terminal close)"
+                        "SIGHUP (terminal close)",
                     ],
                     "correct": 2,
-                    "explanation": "SIGKILL (signal 9) kan aldrig fångas eller ignoreras. Det är en 'hård' avslutning som OS hanterar direkt."
-                }
-            ]
+                    "explanation": "SIGKILL (signal 9) kan aldrig fångas eller ignoreras. Det är en 'hård' avslutning som OS hanterar direkt.",
+                },
+            ],
         },
         # =============================================================================
         # NOD 5: Användare, Grupper & Rättigheter
@@ -1407,7 +1402,7 @@ main "$@"
             "content": """# 👥 Användare, Grupper & Rättigheter
 
 > **Kursmål:** "Kunskaper om användarhantering och filrättigheter" + "Färdigheter i att konfigurera användarkonton"
-> 
+>
 > **Deliverable 5.1:** Skapa användare och grupper med rätt behörigheter
 
 ---
@@ -1793,12 +1788,12 @@ main() {
     create_users
     create_project_dir
     setup_sudoers
-    
+
     log "=== Setup Complete ==="
     log "Users: ${USERS[*]}"
     log "Group: $GROUP_NAME"
     log "Project: $PROJECT_DIR"
-    
+
     # Verifiera
     ls -ld "$PROJECT_DIR"
     getent group "$GROUP_NAME"
@@ -1826,10 +1821,10 @@ main "$@"
                         "useradd username",
                         "useradd -m username",
                         "adduser username",
-                        "createuser username"
+                        "createuser username",
                     ],
                     "correct": 1,
-                    "explanation": "useradd -m skapar hemkatalogen. Utan -m skapas ingen hemkatalog (på de flesta distros)."
+                    "explanation": "useradd -m skapar hemkatalogen. Utan -m skapas ingen hemkatalog (på de flesta distros).",
                 },
                 {
                     "question": "Vad händer om du kör 'usermod -G docker username' (utan -a)?",
@@ -1837,21 +1832,16 @@ main "$@"
                         "Användaren läggs till i docker-gruppen",
                         "Användaren tas bort från alla andra grupper",
                         "Kommandot misslyckas",
-                        "Ingenting händer"
+                        "Ingenting händer",
                     ],
                     "correct": 1,
-                    "explanation": "Utan -a (append) ersätts ALLA sekundära grupper! Alltid använd 'usermod -aG' för att lägga till."
+                    "explanation": "Utan -a (append) ersätts ALLA sekundära grupper! Alltid använd 'usermod -aG' för att lägga till.",
                 },
                 {
                     "question": "Vad betyder chmod 755?",
-                    "options": [
-                        "rwxrwxrwx",
-                        "rwxr-xr-x",
-                        "rw-r--r--",
-                        "rwx------"
-                    ],
+                    "options": ["rwxrwxrwx", "rwxr-xr-x", "rw-r--r--", "rwx------"],
                     "correct": 1,
-                    "explanation": "7=rwx (4+2+1), 5=r-x (4+0+1). Så 755 = rwxr-xr-x. Ägare kan allt, andra kan läsa och köra."
+                    "explanation": "7=rwx (4+2+1), 5=r-x (4+0+1). Så 755 = rwxr-xr-x. Ägare kan allt, andra kan läsa och köra.",
                 },
                 {
                     "question": "Vad gör SetGID (chmod g+s) på en katalog?",
@@ -1859,10 +1849,10 @@ main "$@"
                         "Alla kan köra filer i katalogen",
                         "Nya filer ärver katalogens gruppägare",
                         "Bara ägaren kan ta bort filer",
-                        "Katalogen blir osynlig"
+                        "Katalogen blir osynlig",
                     ],
                     "correct": 1,
-                    "explanation": "SetGID på katalog gör att nya filer och kataloger ärver gruppägaren, istället för skaparens primära grupp."
+                    "explanation": "SetGID på katalog gör att nya filer och kataloger ärver gruppägaren, istället för skaparens primära grupp.",
                 },
                 {
                     "question": "Hur ska du redigera /etc/sudoers?",
@@ -1870,23 +1860,18 @@ main "$@"
                         "nano /etc/sudoers",
                         "vim /etc/sudoers",
                         "visudo",
-                        "sudo edit /etc/sudoers"
+                        "sudo edit /etc/sudoers",
                     ],
                     "correct": 2,
-                    "explanation": "Alltid använd visudo! Det validerar syntaxen innan sparning. Syntaxfel i sudoers = ingen kan använda sudo."
+                    "explanation": "Alltid använd visudo! Det validerar syntaxen innan sparning. Syntaxfel i sudoers = ingen kan använda sudo.",
                 },
                 {
                     "question": "Vilken rättighet ska filer i /etc/sudoers.d/ ha?",
-                    "options": [
-                        "644",
-                        "755",
-                        "440",
-                        "600"
-                    ],
+                    "options": ["644", "755", "440", "600"],
                     "correct": 2,
-                    "explanation": "Sudoers-filer måste ha 440 (r--r-----). Annars ignoreras de av sudo av säkerhetsskäl."
-                }
-            ]
+                    "explanation": "Sudoers-filer måste ha 440 (r--r-----). Annars ignoreras de av sudo av säkerhetsskäl.",
+                },
+            ],
         },
         # =============================================================================
         # NOD 6: SSH Mastery & Säkerhet
@@ -1902,7 +1887,7 @@ main "$@"
             "content": """# 🔐 SSH Mastery & Säkerhet
 
 > **Kursmål:** "Kunskaper om IT-säkerhet" + "Färdigheter i att säkra Linux-system"
-> 
+>
 > **Deliverable 5.2:** Konfigurera SSH på port 6622 med pubkey auth och härdning
 
 ---
@@ -2072,7 +2057,7 @@ backup_config() {
 set_ssh_option() {
     local key="$1"
     local value="$2"
-    
+
     if grep -q "^${key}" "$SSHD_CONFIG"; then
         # Ersätt existerande
         sed -i "s/^${key}.*/${key} ${value}/" "$SSHD_CONFIG"
@@ -2089,7 +2074,7 @@ set_ssh_option() {
 # Applicera härdning
 harden_ssh() {
     log "Applying SSH hardening..."
-    
+
     set_ssh_option "Port" "$SSH_PORT"
     set_ssh_option "PermitRootLogin" "no"
     set_ssh_option "PasswordAuthentication" "no"
@@ -2122,12 +2107,12 @@ main() {
     backup_config
     harden_ssh
     apply_changes
-    
+
     log "=== SSH Hardening Complete ==="
     log "Port: $SSH_PORT"
     log "Allowed users: $ALLOWED_USERS"
     log "Password auth: DISABLED"
-    
+
     echo ""
     echo "IMPORTANT: Test new connection before closing this session!"
     echo "ssh -p $SSH_PORT user@hostname"
@@ -2332,14 +2317,9 @@ echo "Security Score: $score/4"
             "quiz": [
                 {
                     "question": "Vilken rättighet ska din privata SSH-nyckel ha?",
-                    "options": [
-                        "644",
-                        "755",
-                        "600",
-                        "700"
-                    ],
+                    "options": ["644", "755", "600", "700"],
                     "correct": 2,
-                    "explanation": "Privata nycklar MÅSTE ha 600 (rw-------). SSH vägrar använda nycklar med för öppna rättigheter."
+                    "explanation": "Privata nycklar MÅSTE ha 600 (rw-------). SSH vägrar använda nycklar med för öppna rättigheter.",
                 },
                 {
                     "question": "Vilken SSH-inställning disablar root-inloggning?",
@@ -2347,10 +2327,10 @@ echo "Security Score: $score/4"
                         "DisableRoot yes",
                         "PermitRootLogin no",
                         "RootLogin false",
-                        "AllowRoot no"
+                        "AllowRoot no",
                     ],
                     "correct": 1,
-                    "explanation": "PermitRootLogin no förhindrar direktinloggning som root. Användare måste logga in som sig själva och sedan använda sudo."
+                    "explanation": "PermitRootLogin no förhindrar direktinloggning som root. Användare måste logga in som sig själva och sedan använda sudo.",
                 },
                 {
                     "question": "Hur kopierar du din publika nyckel till en server?",
@@ -2358,10 +2338,10 @@ echo "Security Score: $score/4"
                         "scp ~/.ssh/id_ed25519 user@server:",
                         "ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server",
                         "ssh user@server < ~/.ssh/id_ed25519.pub",
-                        "cp ~/.ssh/id_ed25519.pub user@server:"
+                        "cp ~/.ssh/id_ed25519.pub user@server:",
                     ],
                     "correct": 1,
-                    "explanation": "ssh-copy-id kopierar den publika nyckeln (.pub) till serverns authorized_keys och sätter rätt rättigheter automatiskt."
+                    "explanation": "ssh-copy-id kopierar den publika nyckeln (.pub) till serverns authorized_keys och sätter rätt rättigheter automatiskt.",
                 },
                 {
                     "question": "Vad gör 'AllowUsers alice bob' i sshd_config?",
@@ -2369,10 +2349,10 @@ echo "Security Score: $score/4"
                         "Skapar användare alice och bob",
                         "Endast alice och bob får logga in via SSH",
                         "alice och bob får root-access",
-                        "Blockerar alice och bob"
+                        "Blockerar alice och bob",
                     ],
                     "correct": 1,
-                    "explanation": "AllowUsers skapar en whitelist - ENDAST listade användare får ansluta via SSH. Alla andra blockeras."
+                    "explanation": "AllowUsers skapar en whitelist - ENDAST listade användare får ansluta via SSH. Alla andra blockeras.",
                 },
                 {
                     "question": "Vad ska du ALLTID göra innan du stänger SSH-sessionen efter att ha ändrat sshd_config?",
@@ -2380,10 +2360,10 @@ echo "Security Score: $score/4"
                         "Köra sudo reboot",
                         "Testa ny anslutning i annan terminal",
                         "Ta bort gamla nycklar",
-                        "Ändra root-lösenordet"
+                        "Ändra root-lösenordet",
                     ],
                     "correct": 1,
-                    "explanation": "Testa ALLTID ny anslutning innan du stänger den aktiva sessionen! Annars kan du låsa ut dig själv."
+                    "explanation": "Testa ALLTID ny anslutning innan du stänger den aktiva sessionen! Annars kan du låsa ut dig själv.",
                 },
                 {
                     "question": "Hur validerar du sshd_config innan restart?",
@@ -2391,12 +2371,12 @@ echo "Security Score: $score/4"
                         "ssh --validate",
                         "sshd -t",
                         "systemctl check sshd",
-                        "cat /etc/ssh/sshd_config | validate"
+                        "cat /etc/ssh/sshd_config | validate",
                     ],
                     "correct": 1,
-                    "explanation": "sshd -t testar konfigurationen utan att starta om tjänsten. Ingen output = allt OK."
-                }
-            ]
+                    "explanation": "sshd -t testar konfigurationen utan att starta om tjänsten. Ingen output = allt OK.",
+                },
+            ],
         },
         # =============================================================================
         # NOD 7: Brandväggar & Nätverk
@@ -2412,7 +2392,7 @@ echo "Security Score: $score/4"
             "content": """# 🔥 Brandväggar: UFW & firewalld
 
 > **Kursmål:** "Kunskaper om IT-säkerhet" + "Färdigheter i att säkra Linux-system"
-> 
+>
 > **Deliverable 5.2:** Konfigurera brandvägg för att tillåta endast nödvändiga portar
 
 ---
@@ -2780,22 +2760,22 @@ detect_firewall() {
 # UFW setup
 setup_ufw() {
     log "Configuring UFW..."
-    
+
     # Default policies
     sudo ufw default deny incoming
     sudo ufw default allow outgoing
-    
+
     # SSH
     sudo ufw allow "$SSH_PORT/tcp" comment 'SSH'
-    
+
     # Web
     for port in "${WEB_PORTS[@]}"; do
         sudo ufw allow "$port/tcp"
     done
-    
+
     # Aktivera
     sudo ufw --force enable
-    
+
     log "UFW Status:"
     sudo ufw status numbered
 }
@@ -2803,24 +2783,24 @@ setup_ufw() {
 # firewalld setup
 setup_firewalld() {
     log "Configuring firewalld..."
-    
+
     # Starta om ej igång
     sudo systemctl start firewalld
     sudo systemctl enable firewalld
-    
+
     # SSH på custom port
     sudo firewall-cmd --permanent --add-port="$SSH_PORT/tcp"
-    
+
     # Ta bort default SSH
     sudo firewall-cmd --permanent --remove-service=ssh 2>/dev/null || true
-    
+
     # Web
     sudo firewall-cmd --permanent --add-service=http
     sudo firewall-cmd --permanent --add-service=https
-    
+
     # Reload
     sudo firewall-cmd --reload
-    
+
     log "firewalld Status:"
     sudo firewall-cmd --list-all
 }
@@ -2829,7 +2809,7 @@ setup_firewalld() {
 main() {
     fw=$(detect_firewall)
     log "Detected firewall: $fw"
-    
+
     case "$fw" in
         ufw)
             setup_ufw
@@ -2842,7 +2822,7 @@ main() {
             exit 1
             ;;
     esac
-    
+
     log "=== Firewall Setup Complete ==="
     log "SSH Port: $SSH_PORT"
     log "Web Ports: ${WEB_PORTS[*]}"
@@ -2869,10 +2849,10 @@ main "$@"
                         "Starta om servern",
                         "Tillåta SSH-porten",
                         "Installera nginx",
-                        "Skapa ny användare"
+                        "Skapa ny användare",
                     ],
                     "correct": 1,
-                    "explanation": "Alltid tillåt SSH innan du aktiverar UFW! Annars låser du ut dig själv från servern."
+                    "explanation": "Alltid tillåt SSH innan du aktiverar UFW! Annars låser du ut dig själv från servern.",
                 },
                 {
                     "question": "Hur öppnar du port 80 permanent i firewalld?",
@@ -2880,10 +2860,10 @@ main "$@"
                         "firewall-cmd --add-port=80/tcp",
                         "firewall-cmd --permanent --add-port=80/tcp && firewall-cmd --reload",
                         "firewalld open 80",
-                        "systemctl allow 80"
+                        "systemctl allow 80",
                     ],
                     "correct": 1,
-                    "explanation": "Du behöver --permanent för att spara och --reload för att aktivera. Utan --permanent försvinner regeln vid restart."
+                    "explanation": "Du behöver --permanent för att spara och --reload för att aktivera. Utan --permanent försvinner regeln vid restart.",
                 },
                 {
                     "question": "Vilket kommando visar UFW-status med radnummer?",
@@ -2891,10 +2871,10 @@ main "$@"
                         "ufw status",
                         "ufw status numbered",
                         "ufw list",
-                        "ufw show rules"
+                        "ufw show rules",
                     ],
                     "correct": 1,
-                    "explanation": "ufw status numbered visar alla regler med nummer, vilket gör det enkelt att ta bort specifika regler."
+                    "explanation": "ufw status numbered visar alla regler med nummer, vilket gör det enkelt att ta bort specifika regler.",
                 },
                 {
                     "question": "Hur visar du alla brandväggsregler i firewalld?",
@@ -2902,10 +2882,10 @@ main "$@"
                         "firewall-cmd --status",
                         "firewall-cmd --list-all",
                         "firewalld show",
-                        "systemctl status firewalld"
+                        "systemctl status firewalld",
                     ],
                     "correct": 1,
-                    "explanation": "firewall-cmd --list-all visar alla regler, portar, tjänster och rich rules i den aktiva zonen."
+                    "explanation": "firewall-cmd --list-all visar alla regler, portar, tjänster och rich rules i den aktiva zonen.",
                 },
                 {
                     "question": "Vilka är rekommenderade default policies för en server?",
@@ -2913,10 +2893,10 @@ main "$@"
                         "allow incoming, allow outgoing",
                         "deny incoming, deny outgoing",
                         "deny incoming, allow outgoing",
-                        "allow incoming, deny outgoing"
+                        "allow incoming, deny outgoing",
                     ],
                     "correct": 2,
-                    "explanation": "deny incoming (blockera allt in) + allow outgoing (tillåt allt ut) är standard för servrar. Sedan öppnar du specifika portar."
+                    "explanation": "deny incoming (blockera allt in) + allow outgoing (tillåt allt ut) är standard för servrar. Sedan öppnar du specifika portar.",
                 },
                 {
                     "question": "Vilket kommando visar vilka portar som lyssnar på systemet?",
@@ -2924,12 +2904,12 @@ main "$@"
                         "ps aux",
                         "ss -tlnp",
                         "cat /etc/services",
-                        "ufw status"
+                        "ufw status",
                     ],
                     "correct": 1,
-                    "explanation": "ss -tlnp visar TCP-portar som lyssnar (-t), med portnummer (-n), och vilken process (-p). Alternativt netstat -tlnp."
-                }
-            ]
+                    "explanation": "ss -tlnp visar TCP-portar som lyssnar (-t), med portnummer (-n), och vilken process (-p). Alternativt netstat -tlnp.",
+                },
+            ],
         },
         # =============================================================================
         # NOD 8: Lagring - Block Storage, LUKS & systemd
@@ -2945,7 +2925,7 @@ main "$@"
             "content": """# 💾 Lagring: Block Storage, LUKS & systemd
 
 > **Kursmål:** "Kunskaper om Linux-systemadministration" + "Färdigheter i att hantera lagring"
-> 
+>
 > **Deliverable 5.3:** Konfigurera block storage med kryptering och skapa systemd services
 
 ---
@@ -2973,10 +2953,10 @@ main "$@"
 lsblk
 # Exempel output:
 # NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-# sda      8:0    0   50G  0 disk 
+# sda      8:0    0   50G  0 disk
 # ├─sda1   8:1    0    1G  0 part /boot
 # └─sda2   8:2    0   49G  0 part /
-# sdb      8:16   0  100G  0 disk 
+# sdb      8:16   0  100G  0 disk
 
 # Med mer detaljer
 lsblk -f    # Visa filsystem
@@ -3303,14 +3283,14 @@ log() {
 # ============================================
 setup_storage() {
     log "Setting up block storage..."
-    
+
     # Skapa partition (hela disken)
     echo -e "n\\np\\n1\\n\\n\\nw" | sudo fdisk "$DEVICE" || true
-    
+
     # Vänta på kernel
     sudo partprobe "$DEVICE"
     sleep 2
-    
+
     log "Partition created: $PARTITION"
 }
 
@@ -3319,26 +3299,26 @@ setup_storage() {
 # ============================================
 setup_luks() {
     log "Setting up LUKS encryption..."
-    
+
     # Skapa keyfile
     if [[ ! -f "$KEYFILE" ]]; then
         sudo dd if=/dev/urandom of="$KEYFILE" bs=256 count=1 2>/dev/null
         sudo chmod 400 "$KEYFILE"
         log "Keyfile created: $KEYFILE"
     fi
-    
+
     # Formatera med LUKS (keyfile istället för passphrase)
     sudo cryptsetup luksFormat --batch-mode "$PARTITION" "$KEYFILE"
     log "LUKS formatted: $PARTITION"
-    
+
     # Öppna
     sudo cryptsetup open "$PARTITION" "$LUKS_NAME" --key-file "$KEYFILE"
     log "LUKS opened: /dev/mapper/$LUKS_NAME"
-    
+
     # Skapa filsystem
     sudo mkfs.ext4 -L "$LUKS_NAME" "/dev/mapper/$LUKS_NAME"
     log "Filesystem created"
-    
+
     # Mounta
     sudo mkdir -p "$MOUNT_POINT"
     sudo mount "/dev/mapper/$LUKS_NAME" "$MOUNT_POINT"
@@ -3350,10 +3330,10 @@ setup_luks() {
 # ============================================
 create_service() {
     log "Creating systemd service..."
-    
+
     # Skapa app-katalog och script
     sudo mkdir -p "$MOUNT_POINT/app"
-    
+
     sudo cat > "$MOUNT_POINT/app/run.sh" << 'SCRIPT'
 #!/bin/bash
 echo "Application started at $(date)"
@@ -3363,7 +3343,7 @@ while true; do
 done
 SCRIPT
     sudo chmod +x "$MOUNT_POINT/app/run.sh"
-    
+
     # Skapa service-fil
     sudo cat > "/etc/systemd/system/${SERVICE_NAME}.service" << EOF
 [Unit]
@@ -3384,12 +3364,12 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-    
+
     # Aktivera
     sudo systemctl daemon-reload
     sudo systemctl enable "$SERVICE_NAME"
     sudo systemctl start "$SERVICE_NAME"
-    
+
     log "Service created and started: $SERVICE_NAME"
 }
 
@@ -3398,16 +3378,16 @@ EOF
 # ============================================
 setup_automount() {
     log "Setting up auto-mount..."
-    
+
     # Hämta UUID
     local uuid=$(sudo cryptsetup luksDump "$PARTITION" | grep "UUID" | head -1 | awk '{print $2}')
-    
+
     # crypttab
     echo "${LUKS_NAME}  UUID=${uuid}  ${KEYFILE}  luks" | sudo tee -a /etc/crypttab
-    
+
     # fstab
     echo "/dev/mapper/${LUKS_NAME}  ${MOUNT_POINT}  ext4  defaults  0  2" | sudo tee -a /etc/fstab
-    
+
     log "Auto-mount configured"
 }
 
@@ -3418,23 +3398,23 @@ verify() {
     echo ""
     echo "=== VERIFICATION ==="
     echo ""
-    
+
     echo "Block device:"
     lsblk "$DEVICE"
     echo ""
-    
+
     echo "LUKS status:"
     sudo cryptsetup status "$LUKS_NAME"
     echo ""
-    
+
     echo "Mount:"
     df -h "$MOUNT_POINT"
     echo ""
-    
+
     echo "Service status:"
     systemctl status "$SERVICE_NAME" --no-pager
     echo ""
-    
+
     echo "Recent logs:"
     journalctl -u "$SERVICE_NAME" -n 5 --no-pager
 }
@@ -3442,13 +3422,13 @@ verify() {
 # Main
 main() {
     log "=== Starting Deliverable 5.3 Setup ==="
-    
+
     setup_storage
     setup_luks
     create_service
     setup_automount
     verify
-    
+
     log "=== Setup Complete ==="
 }
 
@@ -3509,14 +3489,9 @@ journalctl -u service -f
             "quiz": [
                 {
                     "question": "Vilket kommando visar alla block devices och deras mount points?",
-                    "options": [
-                        "df -h",
-                        "lsblk",
-                        "fdisk -l",
-                        "mount"
-                    ],
+                    "options": ["df -h", "lsblk", "fdisk -l", "mount"],
                     "correct": 1,
-                    "explanation": "lsblk visar en hierarkisk vy av alla block devices med storlek, typ och mount points."
+                    "explanation": "lsblk visar en hierarkisk vy av alla block devices med storlek, typ och mount points.",
                 },
                 {
                     "question": "Vad gör 'cryptsetup open /dev/sdb1 mydata'?",
@@ -3524,10 +3499,10 @@ journalctl -u service -f
                         "Krypterar partitionen",
                         "Formaterar partitionen",
                         "Dekrypterar och gör volymen tillgänglig som /dev/mapper/mydata",
-                        "Monterar partitionen"
+                        "Monterar partitionen",
                     ],
                     "correct": 2,
-                    "explanation": "cryptsetup open låser upp en LUKS-krypterad volym och skapar en device mapper på /dev/mapper/<name>."
+                    "explanation": "cryptsetup open låser upp en LUKS-krypterad volym och skapar en device mapper på /dev/mapper/<name>.",
                 },
                 {
                     "question": "Var placerar du dina egna systemd service-filer?",
@@ -3535,10 +3510,10 @@ journalctl -u service -f
                         "/lib/systemd/system/",
                         "/etc/systemd/system/",
                         "/usr/lib/systemd/",
-                        "/var/systemd/services/"
+                        "/var/systemd/services/",
                     ],
                     "correct": 1,
-                    "explanation": "/etc/systemd/system/ är för användarskapade services. /lib/systemd/system/ är för paket-installerade."
+                    "explanation": "/etc/systemd/system/ är för användarskapade services. /lib/systemd/system/ är för paket-installerade.",
                 },
                 {
                     "question": "Vad måste du köra efter att ha ändrat en service-fil?",
@@ -3546,10 +3521,10 @@ journalctl -u service -f
                         "systemctl restart",
                         "systemctl reload",
                         "systemctl daemon-reload",
-                        "service reload"
+                        "service reload",
                     ],
                     "correct": 2,
-                    "explanation": "systemctl daemon-reload gör att systemd läser in ändrade service-filer. Sedan kan du restart:a tjänsten."
+                    "explanation": "systemctl daemon-reload gör att systemd läser in ändrade service-filer. Sedan kan du restart:a tjänsten.",
                 },
                 {
                     "question": "Vilken fil konfigurerar automatisk LUKS-öppning vid boot?",
@@ -3557,10 +3532,10 @@ journalctl -u service -f
                         "/etc/fstab",
                         "/etc/crypttab",
                         "/etc/luks.conf",
-                        "/etc/systemd/luks"
+                        "/etc/systemd/luks",
                     ],
                     "correct": 1,
-                    "explanation": "/etc/crypttab konfigurerar vilka LUKS-volymer som ska öppnas vid boot och med vilken nyckel."
+                    "explanation": "/etc/crypttab konfigurerar vilka LUKS-volymer som ska öppnas vid boot och med vilken nyckel.",
                 },
                 {
                     "question": "Hur visar du live-loggar för en systemd service?",
@@ -3568,12 +3543,12 @@ journalctl -u service -f
                         "tail -f /var/log/service.log",
                         "systemctl logs -f service",
                         "journalctl -u service -f",
-                        "cat /var/log/syslog | grep service"
+                        "cat /var/log/syslog | grep service",
                     ],
                     "correct": 2,
-                    "explanation": "journalctl -u <service> -f visar loggar för en specifik tjänst med -f för follow (live-uppdatering)."
-                }
-            ]
+                    "explanation": "journalctl -u <service> -f visar loggar för en specifik tjänst med -f för follow (live-uppdatering).",
+                },
+            ],
         },
         # =============================================================================
         # NOD 9: Docker & Containers
@@ -3589,7 +3564,7 @@ journalctl -u service -f
             "content": """# 🐳 Docker & Containers
 
 > **Kursmål:** "Kunskaper om containerteknologi"
-> 
+>
 > **Deliverable 5.3:** Installera Docker och skapa containeriserade tjänster
 
 ---
@@ -4023,42 +3998,42 @@ log() {
 # Installera Docker (Ubuntu)
 install_docker_ubuntu() {
     log "Installing Docker on Ubuntu..."
-    
+
     # Beroenden
     sudo apt update
     sudo apt install -y ca-certificates curl gnupg
-    
+
     # GPG key
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \\
         sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    
+
     # Repo
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \\
         https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \\
         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    
+
     # Install
     sudo apt update
     sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-    
+
     # Start
     sudo systemctl enable docker
     sudo systemctl start docker
-    
+
     # User group
     sudo usermod -aG docker "$USER"
-    
+
     log "Docker installed successfully"
 }
 
 # Skapa test-app
 create_test_app() {
     log "Creating test application..."
-    
+
     mkdir -p ~/docker-test
     cd ~/docker-test
-    
+
     # Dockerfile
     cat > Dockerfile << 'EOF'
 FROM python:3.11-slim
@@ -4071,7 +4046,7 @@ EXPOSE 5000
 
 CMD ["python", "app.py"]
 EOF
-    
+
     # Python app
     cat > app.py << 'EOF'
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -4095,7 +4070,7 @@ if __name__ == "__main__":
     print("Server running on port 5000")
     server.serve_forever()
 EOF
-    
+
     # Docker Compose
     cat > docker-compose.yml << 'EOF'
 version: '3.8'
@@ -4112,7 +4087,7 @@ services:
       timeout: 10s
       retries: 3
 EOF
-    
+
     log "Test app created in ~/docker-test"
 }
 
@@ -4120,15 +4095,15 @@ EOF
 build_and_run() {
     log "Building and running..."
     cd ~/docker-test
-    
+
     docker build -t myapp:test .
     docker run -d --name test-container -p 5000:5000 myapp:test
-    
+
     sleep 3
-    
+
     log "Testing endpoint..."
     curl -s http://localhost:5000 | jq .
-    
+
     log "Container logs:"
     docker logs test-container
 }
@@ -4138,19 +4113,19 @@ verify() {
     echo ""
     echo "=== VERIFICATION ==="
     echo ""
-    
+
     echo "Docker version:"
     docker --version
     echo ""
-    
+
     echo "Docker Compose version:"
     docker compose version
     echo ""
-    
+
     echo "Running containers:"
     docker ps
     echo ""
-    
+
     echo "Docker info:"
     docker info | grep -E "Server Version|Storage Driver|Operating System"
 }
@@ -4240,10 +4215,10 @@ docker volume prune       # Oanvända volumes
                         "docker start nginx -p 8080",
                         "docker run -d -p 8080:80 nginx",
                         "docker nginx -d -port 8080",
-                        "docker create nginx:8080"
+                        "docker create nginx:8080",
                     ],
                     "correct": 1,
-                    "explanation": "-d = detached (bakgrund), -p 8080:80 mappar host port 8080 till container port 80."
+                    "explanation": "-d = detached (bakgrund), -p 8080:80 mappar host port 8080 till container port 80.",
                 },
                 {
                     "question": "Hur går du in i en körande container för att köra bash?",
@@ -4251,10 +4226,10 @@ docker volume prune       # Oanvända volumes
                         "docker bash container",
                         "docker run -it container bash",
                         "docker exec -it container bash",
-                        "docker shell container"
+                        "docker shell container",
                     ],
                     "correct": 2,
-                    "explanation": "docker exec kör kommando i KÖRANDE container. -it ger interaktiv terminal."
+                    "explanation": "docker exec kör kommando i KÖRANDE container. -it ger interaktiv terminal.",
                 },
                 {
                     "question": "Vad gör 'docker run -v mydata:/var/lib/mysql mysql'?",
@@ -4262,10 +4237,10 @@ docker volume prune       # Oanvända volumes
                         "Kopierar data från host till container",
                         "Skapar en volume 'mydata' och mountar på /var/lib/mysql",
                         "Tar backup av MySQL",
-                        "Kör MySQL utan persistent data"
+                        "Kör MySQL utan persistent data",
                     ],
                     "correct": 1,
-                    "explanation": "-v volume:path mountar en Docker-hanterad volume. Data persisterar även om containern tas bort."
+                    "explanation": "-v volume:path mountar en Docker-hanterad volume. Data persisterar även om containern tas bort.",
                 },
                 {
                     "question": "Vilket kommando bygger en Docker image från en Dockerfile?",
@@ -4273,10 +4248,10 @@ docker volume prune       # Oanvända volumes
                         "docker create -t myapp .",
                         "docker build -t myapp .",
                         "docker image myapp .",
-                        "docker make -t myapp ."
+                        "docker make -t myapp .",
                     ],
                     "correct": 1,
-                    "explanation": "docker build -t name . bygger image från Dockerfile i current directory och taggar den."
+                    "explanation": "docker build -t name . bygger image från Dockerfile i current directory och taggar den.",
                 },
                 {
                     "question": "Vad händer om du kör 'docker compose down -v'?",
@@ -4284,10 +4259,10 @@ docker volume prune       # Oanvända volumes
                         "Stoppar containers men behåller volumes",
                         "Stoppar containers och tar bort volumes",
                         "Visar verbose output",
-                        "Validerar docker-compose.yml"
+                        "Validerar docker-compose.yml",
                     ],
                     "correct": 1,
-                    "explanation": "-v flaggan tar bort associated volumes. Utan -v bevaras volumes för nästa 'up'."
+                    "explanation": "-v flaggan tar bort associated volumes. Utan -v bevaras volumes för nästa 'up'.",
                 },
                 {
                     "question": "Hur visar du live-loggar från en container?",
@@ -4295,12 +4270,12 @@ docker volume prune       # Oanvända volumes
                         "docker logs container",
                         "docker logs -f container",
                         "docker tail container",
-                        "docker output container"
+                        "docker output container",
                     ],
                     "correct": 1,
-                    "explanation": "-f (follow) visar loggar i realtid, likt tail -f. Utan -f visas befintliga loggar och avslutas."
-                }
-            ]
+                    "explanation": "-f (follow) visar loggar i realtid, likt tail -f. Utan -f visas befintliga loggar och avslutas.",
+                },
+            ],
         },
         # =============================================================================
         # NOD 10: Felsökning & Tentasammanfattning
@@ -4821,10 +4796,10 @@ Du har nu gått igenom:
                         "Sätter miljövariabler",
                         "Aktiverar debug-läge",
                         "Exit vid fel, error vid undefined vars, fail på pipeline-fel",
-                        "Startar interaktivt läge"
+                        "Startar interaktivt läge",
                     ],
                     "correct": 2,
-                    "explanation": "e=exit on error, u=error på undefined variables, o pipefail=exit om något i pipeline misslyckas."
+                    "explanation": "e=exit on error, u=error på undefined variables, o pipefail=exit om något i pipeline misslyckas.",
                 },
                 {
                     "question": "Du har ändrat /etc/systemd/system/myapp.service. Vad måste du göra?",
@@ -4832,10 +4807,10 @@ Du har nu gått igenom:
                         "systemctl restart myapp",
                         "systemctl reload myapp",
                         "systemctl daemon-reload && systemctl restart myapp",
-                        "service myapp restart"
+                        "service myapp restart",
                     ],
                     "correct": 2,
-                    "explanation": "daemon-reload läser in ändrade service-filer. Sedan restart för att aktivera ändringarna."
+                    "explanation": "daemon-reload läser in ändrade service-filer. Sedan restart för att aktivera ändringarna.",
                 },
                 {
                     "question": "Vilket kommando lägger till användare 'bob' i gruppen 'docker' utan att ta bort från andra grupper?",
@@ -4843,10 +4818,10 @@ Du har nu gått igenom:
                         "usermod -G docker bob",
                         "usermod -aG docker bob",
                         "useradd -G docker bob",
-                        "groupadd docker bob"
+                        "groupadd docker bob",
                     ],
                     "correct": 1,
-                    "explanation": "-a (append) är KRITISKT! Utan -a ersätts alla sekundära grupper."
+                    "explanation": "-a (append) är KRITISKT! Utan -a ersätts alla sekundära grupper.",
                 },
                 {
                     "question": "SSH fungerar inte efter konfigändring. Vad borde du ha gjort?",
@@ -4854,10 +4829,10 @@ Du har nu gått igenom:
                         "Kört sshd -t innan restart",
                         "Startat om servern",
                         "Ändrat root-lösenordet",
-                        "Installerat om SSH"
+                        "Installerat om SSH",
                     ],
                     "correct": 0,
-                    "explanation": "sshd -t validerar konfigurationen. Alltid testa innan restart för att undvika utelåsning!"
+                    "explanation": "sshd -t validerar konfigurationen. Alltid testa innan restart för att undvika utelåsning!",
                 },
                 {
                     "question": "Vad är rätt ordning för att öppna port 443 permanent i firewalld?",
@@ -4865,10 +4840,10 @@ Du har nu gått igenom:
                         "firewall-cmd --add-port=443/tcp",
                         "firewall-cmd --reload && firewall-cmd --add-port=443/tcp",
                         "firewall-cmd --permanent --add-port=443/tcp && firewall-cmd --reload",
-                        "systemctl add-port 443"
+                        "systemctl add-port 443",
                     ],
                     "correct": 2,
-                    "explanation": "--permanent sparar regeln, --reload aktiverar den. Utan --permanent försvinner regeln vid restart."
+                    "explanation": "--permanent sparar regeln, --reload aktiverar den. Utan --permanent försvinner regeln vid restart.",
                 },
                 {
                     "question": "Din Docker container startar men du kan inte ansluta på port 8080. Vad kollar du först?",
@@ -4876,12 +4851,12 @@ Du har nu gått igenom:
                         "docker images",
                         "docker ps och kontrollera port-mapping",
                         "docker volume ls",
-                        "docker network ls"
+                        "docker network ls",
                     ],
                     "correct": 1,
-                    "explanation": "docker ps visar port-mappings. Kontrollera att -p 8080:80 är korrekt och att containern faktiskt kör."
-                }
-            ]
+                    "explanation": "docker ps visar port-mappings. Kontrollera att -p 8080:80 är korrekt och att containern faktiskt kör.",
+                },
+            ],
         },
     ],
 }
