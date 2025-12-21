@@ -29,147 +29,247 @@ MODULE = {
             "order_index": 1,
             "content": r"""# Bash Grunder & Shebang
 
-> **TL;DR:** Shebang (`#!/bin/bash`) berättar för systemet vilken tolk som kör skriptet. Utan den vet inte OS att filen ska köras med Bash. `chmod +x` gör skriptet körbart.
+## Varfor viktigt for DevOps
+
+Bash-scripting ar fundamentet for all automation i DevOps:
+
+- Reproducerbarhet: Skript gor samma sak varje gang, manniskor gor misstag
+- Dokumentation: Ett skript AR dokumentation - du kan lasa exakt vad som hander
+- Versionskontroll: Lagg skriptet i Git, spara andringar over tid
+- Skalbarhet: Konfigurera 100 servrar lika enkelt som 1
+- CI/CD: Pipelines ar i grunden Bash-skript
+- Felsökning: Enklare att debugga ett skript an att komma ihag 50 manuella steg
+
+I din gruppuppgift ska du skriva `sys-config.sh` som automatiserar serversetup. Utan korrekt shebang och korbarhet fungerar ingenting - det ar darfor vi borjar har.
 
 ---
 
-## 🎯 Varför detta är viktigt
+## Vad ar en Shebang?
 
-I **gruppuppgiften (deliverable)** ska du skriva ett `sys-config.sh` som automatiserar serversetup. Första raden måste vara korrekt shebang, annars fungerar inget.
-
-**Kursmål:** *Skriva bash-skript för att automatisera vanliga uppgifter.*
-
----
-
-## 📋 Grunden
-
-### Shebang - Skriptets första rad
+Shebang ar de tva forsta tecknen i ett skript: `#!`. Det berattar for operativsystemet vilken tolk (interpreter) som ska kora skriptet. Tank pa det som en "adresslapp" som sager "skicka den har filen till Bash for exekvering".
 
 ```bash
 #!/bin/bash
+# Shebang = "sharp" (#) + "bang" (!)
+# /bin/bash = sokvagen till Bash-tolken pa din dator
+
+# Utan shebang vet inte OS vad som ska kora filen:
+# - Ska det vara Python?
+# - Ska det vara Bash?
+# - Ska det vara Node.js?
+# Shebang svarar pa den fragan.
 ```
 
-| Del | Betydelse |
-|-----|-----------|
-| `#!` | "Shebang" - signalerar att detta är ett skript |
-| `/bin/bash` | Sökvägen till tolken (Bash) |
+---
 
-**Utan shebang?** Systemet vet inte hur filen ska köras.
+## Varfor behovs chmod +x?
 
-### Skapa ditt första skript
+Aven om du har en shebang kan du inte kora skriptet forran det har execute-permission. Linux har tre typer av rattigheter for filer:
 
 ```bash
-# 1. Skapa filen
-nano myscript.sh
+# De tre rattigheterna:
+# r = read (lasa filen)
+# w = write (andra filen)
+# x = execute (kora filen)
 
-# 2. Lägg till innehåll
-#!/bin/bash
-echo "Hello from my script!"
+# Nar du skapar en fil med nano/vim far den automatiskt rw- (las+skriv)
+# Men INTE x (execute) - det maste du lagga till sjalv
 
-# 3. Gör körbar
+# Kontrollera rattigheter:
+ls -l myscript.sh
+# -rw-r--r--  <-- Ingen x, kan inte koras!
+
+# Lagg till execute:
 chmod +x myscript.sh
 
-# 4. Kör
-./myscript.sh
+# Kontrollera igen:
+ls -l myscript.sh
+# -rwxr-xr-x  <-- Nu finns x, kan koras!
 ```
 
 ---
 
-## 📦 Variabler
-
-### Skapa och använda
+## Skapa ditt forsta skript - steg for steg
 
 ```bash
-# Skapa (INGEN space runt =)
+# Steg 1: Skapa filen
+nano myscript.sh
+# nano oppnar en enkel texteditor i terminalen
+# Du kan ocksa anvanda vim, code, eller nagot annat
+
+# Steg 2: Skriv innehallet
+#!/bin/bash
+# Mitt forsta skript
+echo "Hello, DevOps!"
+# echo skriver ut text till terminalen
+
+# Steg 3: Spara och stang
+# I nano: Ctrl+O (spara), Enter, Ctrl+X (stang)
+
+# Steg 4: Gor skriptet korbart
+chmod +x myscript.sh
+# +x betyder "lagg till execute permission"
+
+# Steg 5: Kor skriptet
+./myscript.sh
+# ./ betyder "i denna mapp" - annars letar systemet i PATH
+# Output: Hello, DevOps!
+```
+
+---
+
+## Variabler i Bash
+
+Variabler lagrar varden som du kan ateranvanda. Det finns en viktig regel i Bash som skiljer sig fran andra sprak:
+
+```bash
+# RATT - inga mellanslag runt =
 name="Said"
 port=6622
 
-# Använd (med $)
+# FEL - mellanslag runt = tolkas som kommando
+name = "Said"
+# Bash tror att "name" ar ett kommando med argumenten "=" och "Said"
+# Du far felet: "name: command not found"
+
+# Anvand variabler med $
 echo "User: $name"
+# Output: User: Said
+
 echo "SSH port: $port"
-```
+# Output: SSH port: 6622
 
-⚠️ **Vanligt fel:** `name = "Said"` → FEL (spaces runt =)
-
-### Positionsparametrar
-
-När du kör: `./script.sh arg1 arg2 arg3`
-
-| Variabel | Värde |
-|----------|-------|
-| `$0` | `./script.sh` (skriptnamnet) |
-| `$1` | `arg1` |
-| `$2` | `arg2` |
-| `$3` | `arg3` |
-| `$#` | `3` (antal argument) |
-| `$@` | Alla argument separat |
-| `$*` | Alla argument som en sträng |
-| `$?` | Exit-kod från senaste kommando |
-
-**Exempel från gruppuppgiften:**
-
-```bash
-#!/bin/bash
-# sys-config.sh
-
-echo "Running sys-config..."
-echo "Script name: $0"
-echo "Number of args: $#"
+# Varfor $?
+# $ sager till Bash "hamta vardet av denna variabel"
+# Utan $ skriver du bara texten "name" istallet for vardet
+echo "name"   # Output: name
+echo "$name"  # Output: Said
 ```
 
 ---
 
-## 🔧 Skillnaden mellan "$@" och "$*"
+## Positionsparametrar - ta emot argument
 
-**Viktigt för VG!**
+Nar nagon kor ditt skript kan de skicka med argument. Dessa hamnar i speciella variabler:
+
+```bash
+# Om nagon kor:
+./script.sh hello world foo
+
+# Da far du:
+# $0 = ./script.sh (skriptets namn)
+# $1 = hello (forsta argumentet)
+# $2 = world (andra argumentet)
+# $3 = foo (tredje argumentet)
+# $# = 3 (antal argument, exklusive $0)
+# $@ = hello world foo (alla argument som separata ord)
+# $* = hello world foo (alla argument som en strang)
+# $? = exit-kod fran senaste kommando (0 = success)
+
+# Praktiskt exempel for gruppuppgiften:
+#!/bin/bash
+# sys-config.sh - tar hostname som argument
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <hostname>"
+    # $0 visar skriptnamnet i hjalptext - professionellt!
+    exit 1
+fi
+
+hostname="$1"
+echo "Configuring server: $hostname"
+# Anvander forsta argumentet
+```
+
+---
+
+## Skillnaden mellan "$@" och "$*"
+
+Detta ar en klassisk VG-fraga pa tentan. Skillnaden syns bara nar argument innehaller mellanslag:
 
 ```bash
 #!/bin/bash
-echo "Med \$@:"
+# Kor med: ./script.sh "Hello World" "Goodbye Moon"
+# Alltsa TVA argument som vardera innehaller mellanslag
+
+echo "=== Med \"\$@\" ==="
 for arg in "$@"; do
-    echo "  Argument: $arg"
+    echo "Argument: '$arg'"
 done
+# Output:
+# Argument: 'Hello World'
+# Argument: 'Goodbye Moon'
+# Tva iterationer - varje argument bevaras separat!
 
-echo "Med \$*:"
+echo "=== Med \"\$*\" ==="
 for arg in "$*"; do
-    echo "  Argument: $arg"
+    echo "Argument: '$arg'"
 done
+# Output:
+# Argument: 'Hello World Goodbye Moon'
+# EN iteration - allt slas ihop till en strang!
+
+# REGEL: Anvand ALLTID "$@" (med citattecken) nar du loopar
+# "$*" ar nastan aldrig vad du vill ha
 ```
-
-Kör: `./script.sh "Hello World" "Goodbye"`
-
-| Metod | Resultat |
-|-------|----------|
-| `"$@"` | 2 iterationer: "Hello World", "Goodbye" |
-| `"$*"` | 1 iteration: "Hello World Goodbye" |
-
-**Regel:** Använd alltid `"$@"` när du loopar över argument!
 
 ---
 
-## 📋 Copy-Paste Referens
+## Vanliga misstag och losningar
+
+```bash
+# Misstag 1: Glomma shebang
+# Problem: Skriptet kors med fel tolk eller inte alls
+# Losning: Alltid borja med #!/bin/bash
+
+# Misstag 2: Glomma chmod +x
+# Problem: "Permission denied"
+# Losning: chmod +x script.sh
+
+# Misstag 3: Mellanslag runt =
+# Problem: "command not found"
+name = "Said"  # FEL
+name="Said"    # RATT
+
+# Misstag 4: Glomma $ framfor variabler
+# Problem: Skriver variabelnamnet istallet for vardet
+echo "name"    # FEL: skriver "name"
+echo "$name"   # RATT: skriver vardet
+
+# Misstag 5: Anvanda $* istallet for $@
+# Problem: Argument med mellanslag slas ihop
+for arg in $*; do     # FEL
+for arg in "$@"; do   # RATT
+```
+
+---
+
+## Snabbreferens
 
 | Uppgift | Kommando |
 |---------|----------|
 | Skapa skript | `nano script.sh` |
-| Lägg till shebang | `#!/bin/bash` (första raden) |
-| Gör körbart | `chmod +x script.sh` |
-| Kör skript | `./script.sh` |
-| Kör med argument | `./script.sh arg1 arg2` |
-| Visa alla argument | `echo "$@"` |
-| Antal argument | `echo "$#"` |
-| Exit-kod senaste | `echo "$?"` |
+| Shebang (forsta raden) | `#!/bin/bash` |
+| Gor korbart | `chmod +x script.sh` |
+| Kor skript | `./script.sh` |
+| Kor med argument | `./script.sh arg1 arg2` |
+| Forsta argumentet | `$1` |
+| Alla argument (korrekt) | `"$@"` |
+| Antal argument | `$#` |
+| Senaste exit-kod | `$?` |
+| Skriptets namn | `$0` |
 
 ---
 
-## ✅ Checkpoint
+## Nasta steg
 
-Innan du går vidare, kan du svara på:
+Nu nar du kan grunderna i Bash-scripting ar det dags att lara dig:
 
-1. Vad är en shebang och varför behövs den?
-2. Hur gör du ett skript körbart?
-3. Vad är skillnaden mellan `$@` och `$*`?
-4. Varför får det inte vara mellanslag runt `=` vid variabeltilldelning?
+- Textbearbetning med grep, sed och awk
+- Kontrollstrukturer (if/else, loopar)
+- Funktioner och felhantering
+
+Dessa bygger vidare pa allt du lart dig har - variabler, argument och korbarhet kommer anvandas overallt!
 
 """,
             "quiz": [
