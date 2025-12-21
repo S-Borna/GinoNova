@@ -1177,48 +1177,276 @@ sudo systemctl enable --now myapp
             "xp_reward": 120,
             "content": """# 11. File Permissions & Security
 
-## 🏆 TOP 10 – Kommandon
+## 🔐 Varför detta är KRITISKT för DevOps
 
-| # | Kommando | Användning |
-|---|----------|------------|
-| 1 | `chmod 755` | Script/katalog |
-| 2 | `chmod 644` | Vanlig fil |
-| 3 | `chown user:group` | Byt ägare |
-| 4 | `ls -la` | Visa rättigheter |
-| 5 | `chmod +x` | Gör körbart |
-| 6 | `chown -R` | Rekursivt |
-| 7 | `chmod 600` | Privat fil |
-| 8 | `umask` | Default |
-| 9 | `stat` | Detaljerad info |
-| 10 | `getfacl/setfacl` | ACLs |
+**Tänk dig detta scenario:** Du deployer en app kl 03:00. Allt ser bra ut, men appen startar inte. Du kollar loggarna – "Permission denied". Din SSH-nyckel har fel rättigheter. Databasen kan inte läsa config-filen. Nginx kan inte skriva till loggar.
+
+**Permission-problem är #1 orsaken till deployment-fails.** Lär dig detta ordentligt nu, så slipper du panik mitt i natten.
+
+---
+
+## 🧠 Förstå Linux-rättigheter – Det magiska nummersystemet
+
+Varje fil i Linux har TRE typer av rättigheter för TRE kategorier av användare:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  -rwxr-xr-x   1   said   devops   4096   Dec 21 10:30   script.sh
+│  │└┬┘└┬┘└┬┘       └─┬─┘  └──┬──┘
+│  │ │  │  │          │       │
+│  │ │  │  └── Others (alla andra)
+│  │ │  └───── Group (gruppen)
+│  │ └──────── User/Owner (ägaren)
+│  └────────── Filtyp (- = fil, d = katalog, l = länk)
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### De tre rättigheterna:
+
+| Symbol | Nummer | Betydelse | På fil | På katalog |
+|--------|--------|-----------|--------|------------|
+| `r` | 4 | **R**ead | Läsa innehåll | Lista filer (ls) |
+| `w` | 2 | **W**rite | Ändra innehåll | Skapa/ta bort filer |
+| `x` | 1 | e**X**ecute | Köra som program | Gå in i katalogen (cd) |
+
+### Så fungerar nummer-systemet:
+
+```
+rwx = 4 + 2 + 1 = 7  (full access)
+rw- = 4 + 2 + 0 = 6  (läs + skriv)
+r-x = 4 + 0 + 1 = 5  (läs + kör)
+r-- = 4 + 0 + 0 = 4  (bara läs)
+--- = 0 + 0 + 0 = 0  (ingen access)
+```
+
+**Exempel: `chmod 755`**
+```
+7 = rwx (user)    → Ägaren kan ALLT
+5 = r-x (group)   → Gruppen kan läsa och köra
+5 = r-x (others)  → Alla andra kan läsa och köra
+```
+
+---
+
+## 🏆 TOP 10 – Kommandon du MÅSTE kunna
+
+| # | Kommando | Vad det gör | När du använder det |
+|---|----------|-------------|---------------------|
+| 1 | `chmod 755` | rwxr-xr-x | Scripts, kataloger – körbart för alla |
+| 2 | `chmod 644` | rw-r--r-- | Config-filer – läsbart för alla |
+| 3 | `chown user:group` | Byt ägare | När app ska äga sina filer |
+| 4 | `ls -la` | Visa rättigheter | Felsöka permission denied |
+| 5 | `chmod +x` | Lägg till execute | Göra script körbart |
+| 6 | `chown -R` | Rekursivt byte | Hela kataloger |
+| 7 | `chmod 600` | rw------- | SSH-nycklar, secrets |
+| 8 | `umask` | Default permissions | Förstå nya filers rättigheter |
+| 9 | `stat` | Detaljerad info | Felsöka djupt |
+| 10 | `getfacl/setfacl` | Access Control Lists | Avancerad multi-user |
+
+---
+
+## 🎯 chmod – Ändra rättigheter
+
+### Nybörjare – De tre heliga numren
 
 ```bash
-# FÖRSTÅ RÄTTIGHETER
-# -rwxr-xr-x = 755
-# r=4, w=2, x=1
+# 📁 KATALOGER och 📜 SCRIPTS
+chmod 755 deploy.sh              # Alla kan läsa/köra, ägaren kan ändra
+chmod 755 /var/www/html          # Webserver-katalog
 
-# VANLIGA KOMBINATIONER
-chmod 755 script.sh             # ⭐ rwxr-xr-x (scripts, kataloger)
-chmod 644 config.txt            # ⭐ rw-r--r-- (vanliga filer)
-chmod 600 privat.key            # ⭐ rw------- (SSH-nycklar)
+# 📄 VANLIGA FILER (config, text, etc.)
+chmod 644 config.yml             # Alla kan läsa, ägaren kan ändra
+chmod 644 /etc/nginx/nginx.conf  # Nginx config
 
-# SYMBOLISKT
-chmod +x script.sh              # ⭐ Lägg till execute
-chmod u+x script.sh             # Bara för user
+# 🔒 HEMLIGA FILER (nycklar, lösenord)
+chmod 600 ~/.ssh/id_rsa          # ENDAST ägaren kan läsa/skriva
+chmod 600 .env                   # Environment secrets
+```
 
-# ÄGARE
-sudo chown nginx:www-data fil.txt
-sudo chown -R nginx:www-data /var/www/
+**💡 Minnesregel:**
+- **7**55 = Scripts & kataloger (behöver x för att köras/öppnas)
+- **6**44 = Config & dokument (ingen execute behövs)
+- **6**00 = Secrets (ingen annan ska se)
 
-# WEBSERVER-SETUP
-sudo chown -R www-data:www-data /var/www/html/
-find /var/www/html -type d -exec chmod 755 {} \\;
-find /var/www/html -type f -exec chmod 644 {} \\;
+### Mellanliggande – Symbolisk notation
 
-# SSH-NYCKLAR
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/id_rsa
-chmod 644 ~/.ssh/id_rsa.pub
+```bash
+# Ibland enklare att tänka i symboler istället för siffror
+
+chmod +x script.sh               # ⭐ Lägg till execute för ALLA
+chmod u+x script.sh              # Lägg till execute BARA för user (u)
+chmod g+w fil.txt                # Ge gruppen (g) skrivrättighet
+chmod o-r secret.txt             # Ta BORT läsrättighet för others (o)
+
+# Kombinera
+chmod u+rwx,g+rx,o+rx script.sh  # Samma som 755
+
+# Vem är vem?
+# u = user (ägaren)
+# g = group (gruppen)
+# o = others (alla andra)
+# a = all (alla tre)
+```
+
+### Avancerat – Speciella bits
+
+```bash
+# SETUID – Kör som filens ägare (farligt men ibland nödvändigt)
+chmod u+s /usr/bin/passwd        # Därför kan vanliga users byta lösenord
+chmod 4755 script.sh             # 4 = setuid bit
+
+# SETGID – Nya filer ärver gruppens ägarskap
+chmod g+s /shared/projekt/       # Bra för team-kataloger
+chmod 2755 katalog/              # 2 = setgid bit
+
+# STICKY BIT – Bara ägaren kan ta bort sina filer
+chmod +t /tmp                    # Därför kan inte alla ta bort andras filer i /tmp
+chmod 1777 /tmp                  # 1 = sticky bit
+```
+
+---
+
+## 👤 chown – Ändra ägare
+
+```bash
+# GRUNDLÄGGANDE
+sudo chown said fil.txt                    # Byt ägare till 'said'
+sudo chown said:devops fil.txt             # Byt ägare OCH grupp
+sudo chown :devops fil.txt                 # Byt BARA grupp
+
+# REKURSIVT – Hela katalogträd
+sudo chown -R www-data:www-data /var/www/  # ⭐ Webserver äger allt
+
+# BEVARA SYMLINKS
+sudo chown -h said:devops länk             # Ändra länken, inte målet
+```
+
+**⚠️ Vanligt misstag:** Glömmer `sudo`! Endast root kan ändra ägare till andra användare.
+
+---
+
+## 🌐 Verkliga DevOps-scenarier
+
+### Scenario 1: Deploya en webbapp
+
+```bash
+# 1. Skapa katalogstruktur
+sudo mkdir -p /var/www/myapp
+sudo mkdir -p /var/www/myapp/{logs,uploads,static}
+
+# 2. Sätt rätt ägare (webservern måste kunna läsa/skriva)
+sudo chown -R www-data:www-data /var/www/myapp
+
+# 3. Sätt rätt permissions
+find /var/www/myapp -type d -exec chmod 755 {} \\;  # Kataloger: 755
+find /var/www/myapp -type f -exec chmod 644 {} \\;  # Filer: 644
+
+# 4. Uploads behöver skrivrättighet
+chmod 775 /var/www/myapp/uploads
+
+# ✅ Nu kan nginx/apache läsa allt, och appen kan skriva till uploads
+```
+
+### Scenario 2: SSH-säkerhet (detta MÅSTE vara rätt!)
+
+```bash
+# SSH är EXTREMT känslig för fel permissions
+# Fel permissions = SSH vägrar fungera! 🚫
+
+chmod 700 ~/.ssh                 # BARA du kan gå in
+chmod 600 ~/.ssh/id_rsa          # ⚠️ KRITISKT: Privat nyckel
+chmod 644 ~/.ssh/id_rsa.pub      # Publik nyckel kan vara läsbar
+chmod 600 ~/.ssh/authorized_keys # Vem som får logga in som dig
+chmod 644 ~/.ssh/known_hosts     # Kända servrar
+
+# Felsök SSH-problem:
+ls -la ~/.ssh/
+# Om id_rsa är INTE 600 → SSH kommer vägra använda den!
+```
+
+**💥 True story:** Många deployment-pipelines failar för att CI/CD-servern kopierar SSH-nycklar med fel permissions. Lägg ALLTID till `chmod 600` efter att du kopierar nycklar.
+
+### Scenario 3: Docker & permissions
+
+```bash
+# Docker kör ofta som root INUTI containern
+# Men filer på host kan ha annan ägare
+
+# Vanligt problem: Container kan inte skriva till volym
+# Lösning:
+sudo chown -R 1000:1000 /data/app    # UID 1000 = ofta första användaren
+# Eller
+chmod 777 /data/app                   # 🚫 DÅLIGT men funkar (osäkert)
+
+# Bättre i Dockerfile:
+# USER 1000
+# RUN chown -R 1000:1000 /app
+```
+
+---
+
+## 🔍 Felsökning – När "Permission denied" dyker upp
+
+```bash
+# STEG 1: Kolla vad som är fel
+ls -la fil_som_inte_funkar.sh
+# Output: -rw-r--r-- 1 root root ...
+# Problem: Du är inte root och filen är inte körbar!
+
+# STEG 2: Kolla vem du är
+whoami                           # Visar din användare
+id                               # Visar user, grupper, UIDs
+
+# STEG 3: Detaljerad info
+stat fil.txt                     # Visar ALLT om filen
+namei -l /sökväg/till/fil        # Visar permissions hela vägen
+
+# STEG 4: Fixa det!
+sudo chmod +x script.sh          # Om script inte kan köras
+sudo chown $(whoami) fil.txt     # Om du behöver äga filen
+```
+
+---
+
+## 🛡️ Säkerhetsprinciper – Best Practices
+
+| Princip | Vad det betyder | Exempel |
+|---------|-----------------|---------|
+| **Least Privilege** | Ge minimal access | 644 istället för 666 |
+| **Aldrig 777** | Alla kan göra allt | 🚫 Säkerhetsrisk |
+| **Secrets = 600** | Bara ägaren ser | SSH-nycklar, .env |
+| **Webserver-filer** | Läsbar, inte skrivbar | 644 för HTML/CSS/JS |
+
+**⚠️ ALDRIG gör detta:**
+```bash
+chmod 777 /var/www               # 🚫 Alla kan ändra din webapp
+chmod 666 .env                   # 🚫 Alla kan läsa dina secrets
+chmod 777 ~/.ssh/id_rsa          # 🚫 SSH kommer vägra + säkerhetsrisk
+```
+
+---
+
+## 📋 Quick Reference Card
+
+```bash
+# PERMISSIONS CHEAT SHEET
+# ═══════════════════════════════════════════════════════════
+# FIL/ANVÄNDNING              PERMISSION    KOMMANDO
+# ═══════════════════════════════════════════════════════════
+# Script som ska köras        rwxr-xr-x     chmod 755
+# Config-fil                  rw-r--r--     chmod 644
+# SSH privat nyckel           rw-------     chmod 600
+# SSH publik nyckel           rw-r--r--     chmod 644
+# .env / secrets              rw-------     chmod 600
+# Webbkatalog                 rwxr-xr-x     chmod 755
+# Upload-katalog              rwxrwxr-x     chmod 775
+# /tmp                        rwxrwxrwt     chmod 1777
+# ═══════════════════════════════════════════════════════════
+
+# VANLIGA FIXAR
+chmod +x script.sh              # Gör körbar
+sudo chown -R $USER:$USER ./    # Gör dig till ägare
+sudo chown -R www-data:www-data /var/www/  # Webserver äger
 ```
 """,
             "quiz": [
@@ -1252,47 +1480,307 @@ chmod 644 ~/.ssh/id_rsa.pub
             "xp_reward": 90,
             "content": """# 12. Compression & Archives
 
-## 🏆 TOP 10 – Kommandon
+## 📦 Varför detta är viktigt för DevOps
 
-| # | Kommando | Användning |
-|---|----------|------------|
-| 1 | `tar -czvf` | Skapa .tar.gz |
-| 2 | `tar -xzvf` | Packa upp |
-| 3 | `tar -tzvf` | Lista innehåll |
-| 4 | `gzip/gunzip` | Komprimera |
-| 5 | `zip/unzip` | Windows-kompatibelt |
-| 6 | `tar -xjvf` | Packa upp .tar.bz2 |
-| 7 | `zcat` | Visa gzippad fil |
-| 8 | `tar --exclude` | Exkludera |
-| 9 | `du -sh arkiv.tar.gz` | Storlek |
-| 10 | `pigz` | Parallel gzip |
+**Scenario:** Din server har 50GB loggar. Diskutrymmet tar slut. Din backup tar 3 timmar att överföra.
 
-```bash
-# TAR
-tar -cvf arkiv.tar katalog/              # Bara tar
-tar -czvf arkiv.tar.gz katalog/          # ⭐ Med gzip
-tar -cjvf arkiv.tar.bz2 katalog/         # Med bzip2
+**Lösningen:** Komprimering kan minska 50GB → 5GB, och överföringstiden från 3 timmar → 20 minuter.
 
-tar -xzvf arkiv.tar.gz                   # ⭐ Packa upp
-tar -xzvf arkiv.tar.gz -C /destination/  # Till specifik plats
-tar -tzvf arkiv.tar.gz                   # Lista innehåll
+I DevOps-världen komprimerar du KONSTANT:
+- 📋 **Loggar** – roteras och gzippas automatiskt
+- 💾 **Backups** – måste vara komprimerade för att spara utrymme
+- 🚀 **Deployments** – artifacts packas och skickas
+- 📊 **Data exports** – stora dataset zipas innan överföring
 
-tar -czvf arkiv.tar.gz katalog/ --exclude='*.log'
+---
 
-# GZIP
-gzip fil.txt                    # → fil.txt.gz
-gunzip fil.txt.gz               # Expandera
-zcat fil.txt.gz                 # Visa utan att expandera
+## 🧠 Förstå formaten – Vilket ska du använda?
 
-# ZIP
-zip -r arkiv.zip katalog/       # ⭐ Rekursivt
-unzip arkiv.zip
-unzip arkiv.zip -d /destination/
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ FORMAT        │ KOMPRIMERING │ HASTIGHET  │ NÄR DU ANVÄNDER DET     │
+├───────────────┼──────────────┼────────────┼─────────────────────────┤
+│ .tar          │ Ingen        │ Snabbast   │ Bara paketera filer     │
+│ .tar.gz/.tgz  │ Bra (~70%)   │ Snabb      │ ⭐ STANDARD för Linux   │
+│ .tar.bz2      │ Bättre       │ Långsam    │ När storlek är kritisk  │
+│ .tar.xz       │ Bäst         │ Långsammast│ Distributionspaket      │
+│ .zip          │ Bra          │ Snabb      │ Windows-kompatibilitet  │
+│ .gz           │ Bra          │ Snabb      │ Enskilda filer          │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-**💡 Backup med datum:**
+**💡 Tumregel:** Använd `.tar.gz` som default. Det är Linux-standarden.
+
+---
+
+## 🏆 TOP 10 – Kommandon du måste kunna
+
+| # | Kommando | Vad det gör | Minnesregel |
+|---|----------|-------------|-------------|
+| 1 | `tar -czvf` | **C**reate g**Z**ip **V**erbose **F**ile | "Create Zip Verbose File" |
+| 2 | `tar -xzvf` | e**X**tract från .tar.gz | "eXtract" |
+| 3 | `tar -tzvf` | Lis**T**a innehåll | "lisT" |
+| 4 | `gzip/gunzip` | Komprimera/expandera | Snabb komprimering |
+| 5 | `zip -r/unzip` | Windows-format | När du delar med Windows |
+| 6 | `tar -xjvf` | Extract .tar.bz2 | **j** = bzip2 |
+| 7 | `zcat` | Visa gzippad fil | cat för .gz |
+| 8 | `tar --exclude` | Hoppa över filer | Skippa node_modules |
+| 9 | `pigz` | Parallell gzip | Multicore-komprimering |
+| 10 | `tar -C` | Extract till annan plats | **C**hange directory |
+
+---
+
+## 📦 tar – Tape ARchive (trots namnet, inte bara för band!)
+
+### Skapa arkiv
+
 ```bash
-tar -czvf /backup/app_$(date +%Y%m%d_%H%M%S).tar.gz /var/www/app/
+# GRUNDLÄGGANDE – Skapa .tar.gz (vanligast!)
+tar -czvf backup.tar.gz katalog/
+#     │││└─ f = filename (sist! följt av filnamnet)
+#     ││└── v = verbose (visa vad som händer)
+#     │└─── z = gzip compression
+#     └──── c = create (skapa nytt arkiv)
+
+# EXEMPEL
+tar -czvf projekt.tar.gz ./mitt-projekt/
+# Output:
+# mitt-projekt/
+# mitt-projekt/package.json
+# mitt-projekt/src/
+# mitt-projekt/src/index.js
+# ...
+
+# UTAN VERBOSE (tyst)
+tar -czf backup.tar.gz katalog/
+```
+
+### Packa upp arkiv
+
+```bash
+# PACKA UPP .tar.gz
+tar -xzvf backup.tar.gz
+#     └── x = extract (packa upp)
+
+# PACKA UPP TILL SPECIFIK KATALOG
+tar -xzvf backup.tar.gz -C /var/www/
+#                       └── -C = change to directory first
+
+# BARA SE VAD SOM FINNS I ARKIVET (utan att packa upp)
+tar -tzvf backup.tar.gz
+#     └── t = list (test/list contents)
+```
+
+### Avancerade tar-tricks
+
+```bash
+# EXKLUDERA FILER (superviktigt för node_modules!)
+tar -czvf projekt.tar.gz ./projekt \\
+    --exclude='node_modules' \\
+    --exclude='*.log' \\
+    --exclude='.git'
+
+# PACKA UPP BARA EN FIL FRÅN ARKIVET
+tar -xzvf backup.tar.gz projekt/config.yml
+
+# APPEND (lägg till filer till existerande arkiv) - BARA för .tar, inte .tar.gz!
+tar -rvf arkiv.tar nyfil.txt
+
+# MED BZIP2 (bättre komprimering, långsammare)
+tar -cjvf arkiv.tar.bz2 katalog/
+#     └── j = bzip2
+tar -xjvf arkiv.tar.bz2
+
+# MED XZ (bäst komprimering, långsammast)
+tar -cJvf arkiv.tar.xz katalog/
+#     └── J = xz
+tar -xJvf arkiv.tar.xz
+```
+
+---
+
+## 🗜️ gzip/gunzip – Komprimera enskilda filer
+
+```bash
+# KOMPRIMERA (original försvinner, ersätts med .gz)
+gzip access.log                  # → access.log.gz
+gzip -k access.log               # -k = keep (behåll originalet)
+
+# EXPANDERA
+gunzip access.log.gz             # → access.log
+gzip -d access.log.gz            # Samma sak (-d = decompress)
+
+# VISA UTAN ATT EXPANDERA
+zcat access.log.gz               # Visar innehållet
+zcat access.log.gz | grep ERROR  # Sök i komprimerad logg
+
+# KOMPRIMERINGSGRAD (1-9, default 6)
+gzip -9 stort-dataset.json       # Max komprimering (långsamt)
+gzip -1 snabb-backup.tar         # Snabbast (mindre komprimering)
+```
+
+**💡 DevOps-tips:** Logrotate använder gzip automatiskt. Du kommer se massor av `.log.1.gz`, `.log.2.gz` i `/var/log/`.
+
+---
+
+## 📁 zip/unzip – När du måste dela med Windows-folk
+
+```bash
+# SKAPA ZIP (rekursivt för kataloger)
+zip -r projekt.zip katalog/
+#   └── -r = recursive (inkludera undermappar)
+
+# PACKA UPP
+unzip projekt.zip
+unzip projekt.zip -d /destination/    # Till specifik plats
+
+# VISA INNEHÅLL
+unzip -l projekt.zip                  # Lista utan att packa upp
+
+# EXKLUDERA
+zip -r projekt.zip katalog/ -x "*.log" -x "*node_modules*"
+
+# KRYPTERA (om du MÅSTE skicka känslig data)
+zip -e hemlig.zip secret.txt          # Frågar efter lösenord
+```
+
+---
+
+## 🚀 Verkliga DevOps-scenarier
+
+### Scenario 1: Daglig backup med datum
+
+```bash
+#!/bin/bash
+# backup.sh - Körs via cron varje natt
+
+DATUM=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/backups"
+APP_DIR="/var/www/app"
+
+# Skapa backup med datum i filnamnet
+tar -czvf "${BACKUP_DIR}/app_${DATUM}.tar.gz" \\
+    --exclude='node_modules' \\
+    --exclude='*.log' \\
+    --exclude='.git' \\
+    "$APP_DIR"
+
+# Resultat: /backups/app_20231221_143022.tar.gz
+
+# Rensa gamla backups (behåll 7 dagar)
+find "$BACKUP_DIR" -name "app_*.tar.gz" -mtime +7 -delete
+```
+
+### Scenario 2: Deployment artifact
+
+```bash
+# I CI/CD pipeline - skapa deployment-paket
+cd /build
+
+# Bygg och paketera
+npm run build
+tar -czvf "release-v${VERSION}.tar.gz" \\
+    ./dist \\
+    ./package.json \\
+    ./package-lock.json
+
+# Ladda upp till artifact storage
+aws s3 cp "release-v${VERSION}.tar.gz" s3://artifacts/releases/
+```
+
+### Scenario 3: Transferera stora filer snabbt
+
+```bash
+# Problem: Kopiera 10GB data över nätverk
+
+# LÅNGSAMT (okomprimerat)
+scp -r /data server:/backup/              # 10GB transfer
+
+# SNABBARE (komprimera + pipe direkt)
+tar -czf - /data | ssh server "tar -xzf - -C /backup/"
+#     └── - betyder stdout/stdin (ingen temp-fil!)
+
+# Med progress bar (pv måste installeras)
+tar -cf - /data | pv | gzip | ssh server "gunzip | tar -xf - -C /backup/"
+```
+
+### Scenario 4: Söka i komprimerade loggar
+
+```bash
+# Dina loggar är gzippade av logrotate
+ls /var/log/nginx/
+# access.log
+# access.log.1.gz
+# access.log.2.gz
+# ...
+
+# SÖK I ALLA LOGGAR (både aktiv och komprimerade)
+zgrep "404" /var/log/nginx/access.log*      # zgrep kan läsa .gz direkt!
+zcat /var/log/nginx/access.log.*.gz | grep "500" | wc -l
+```
+
+---
+
+## ⚡ Parallell komprimering – pigz & pbzip2
+
+```bash
+# Problem: gzip använder bara EN CPU-kärna
+# Lösning: pigz (parallel implementation of gzip)
+
+# Installera
+sudo apt install pigz pbzip2
+
+# Använd (drop-in replacement för gzip)
+tar -cvf - katalog/ | pigz > backup.tar.gz
+
+# Med tar direkt
+tar -I pigz -cvf backup.tar.gz katalog/
+#   └── -I = use this compressor
+
+# Parallell bzip2
+tar -I pbzip2 -cvf backup.tar.bz2 katalog/
+
+# HASTIGHETSVINST på 8-core server:
+# gzip:  100GB → 2 timmar
+# pigz:  100GB → 15 minuter 🚀
+```
+
+---
+
+## 📋 Quick Reference Card
+
+```bash
+# KOMPRIMERING CHEAT SHEET
+# ═══════════════════════════════════════════════════════════
+# SKAPA ARKIV
+tar -czvf arkiv.tar.gz katalog/       # ⭐ Standard
+tar -cjvf arkiv.tar.bz2 katalog/      # Bättre komprimering
+zip -r arkiv.zip katalog/              # Windows-kompatibelt
+
+# PACKA UPP
+tar -xzvf arkiv.tar.gz                 # Här (tar.gz)
+tar -xzvf arkiv.tar.gz -C /dest/       # Till annan plats
+tar -xjvf arkiv.tar.bz2                # bzip2
+unzip arkiv.zip                        # zip
+
+# VISA INNEHÅLL
+tar -tzvf arkiv.tar.gz                 # Lista
+unzip -l arkiv.zip                     # Lista zip
+
+# KOMPRIMERA ENSKILD FIL
+gzip fil.txt                           # → fil.txt.gz
+gzip -k fil.txt                        # Behåll original
+
+# VISA KOMPRIMERAD
+zcat fil.txt.gz                        # Visa innehåll
+zgrep "sök" *.gz                       # Sök i gzippade filer
+# ═══════════════════════════════════════════════════════════
+
+# TAR FLAGS MINNESREGEL:
+# c = Create     x = eXtract    t = lisT
+# z = gZip       j = bzip2      J = xz
+# v = Verbose    f = File (ALLTID SIST!)
+# C = Change directory before extracting
 ```
 """,
             "quiz": [
@@ -1326,47 +1814,360 @@ tar -czvf /backup/app_$(date +%Y%m%d_%H%M%S).tar.gz /var/www/app/
             "xp_reward": 90,
             "content": """# 13. Environment & Variables
 
-## 🏆 TOP 10 – Kommandon
+## � Varför detta är FUNDAMENTALT för DevOps
 
-| # | Kommando | Användning |
-|---|----------|------------|
-| 1 | `export VAR=value` | Sätt miljövariabel |
-| 2 | `echo $VAR` | Visa värde |
-| 3 | `env` | Visa alla |
-| 4 | `printenv` | Visa specifik |
-| 5 | `unset VAR` | Ta bort |
-| 6 | `source ~/.bashrc` | Ladda om |
-| 7 | `VAR=x command` | Temporär |
-| 8 | `$PATH` | Sökväg |
-| 9 | `~/.bashrc` | Permanent |
-| 10 | `env VAR=x cmd` | Modifierad env |
+**Scenario:** Du deployer samma app till tre miljöer – dev, staging, prod. Samma kod, men olika databaser, olika API-nycklar, olika konfigurationer.
+
+**Lösningen:** Miljövariabler. Koden läser `$DATABASE_URL` och får rätt värde beroende på var den körs.
+
+**12-Factor App säger:** *"Store config in the environment"*. Det är DevOps-standarden.
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│  SAMMA KOD                                                     │
+│  ┌──────────────────────────────────────────────────────────┐ │
+│  │  import os                                                │ │
+│  │  db = os.environ["DATABASE_URL"]                         │ │
+│  └──────────────────────────────────────────────────────────┘ │
+│            │              │              │                     │
+│            ▼              ▼              ▼                     │
+│   ┌─────────────┐ ┌─────────────┐ ┌─────────────┐             │
+│   │    DEV      │ │   STAGING   │ │    PROD     │             │
+│   │ localhost   │ │ staging.db  │ │ prod.db.aws │             │
+│   └─────────────┘ └─────────────┘ └─────────────┘             │
+└────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🏆 TOP 10 – Kommandon du måste kunna
+
+| # | Kommando | Vad det gör | När du använder det |
+|---|----------|-------------|---------------------|
+| 1 | `export VAR=value` | Sätt miljövariabel | Konfigurera appar |
+| 2 | `echo $VAR` | Visa värde | Debug och verify |
+| 3 | `env` | Visa ALLA variabler | Se hela miljön |
+| 4 | `printenv VAR` | Visa specifik | Snabb check |
+| 5 | `unset VAR` | Ta bort variabel | Rensa konfiguration |
+| 6 | `source ~/.bashrc` | Ladda om config | Applicera ändringar |
+| 7 | `VAR=x command` | Temporär för ett kommando | Test utan att ändra |
+| 8 | `$PATH` | Kommando-sökvägar | Hitta installerade program |
+| 9 | `~/.bashrc` | Permanent config | Variabler som alltid ska finnas |
+| 10 | `env -i command` | Kör med tom miljö | Isolera tester |
+
+---
+
+## 🧠 Förstå variabler – Shell vs Environment
+
+Det finns en VIKTIG skillnad:
+
+```bash
+# SHELL-VARIABEL (bara i denna session, inte till child-processer)
+MY_VAR="hejsan"
+echo $MY_VAR                     # → hejsan
+bash -c 'echo $MY_VAR'           # → (tomt! child-process ser den inte)
+
+# MILJÖVARIABEL (exporteras till child-processer)
+export MY_VAR="hejsan"
+echo $MY_VAR                     # → hejsan
+bash -c 'echo $MY_VAR'           # → hejsan ✅
+
+# MINNESREGEL:
+# export = "gör variabeln synlig för ALLA processer som startar härifrån"
+```
+
+---
+
+## 🔧 Sätta och använda variabler
+
+### Grundläggande syntax
 
 ```bash
 # SÄTTA VARIABLER
-export DATABASE_URL="postgres://localhost/mydb"
-export NODE_ENV=production
+export DATABASE_URL="postgres://localhost:5432/mydb"
+export NODE_ENV="production"
+export DEBUG=true
 
-# VISA
-echo $HOME
-env                             # Alla miljövariabler
-printenv PATH
+# ⚠️ VIKTIGT: INGA MELLANSLAG runt =
+# RÄTT:  export VAR=value
+# FEL:   export VAR = value  ❌
+
+# MED MELLANSLAG I VÄRDET – använd citationstecken
+export MESSAGE="Hello World"
+export PATH_WITH_SPACES="/My Documents/scripts"
+
+# LÄSA VÄRDEN
+echo $DATABASE_URL              # Enkelt
+echo "URL är: $DATABASE_URL"    # I text
+echo ${DATABASE_URL}            # Explicit syntax
+echo "${DATABASE_URL}_suffix"   # När du bygger strängar
+```
+
+### Default-värden (superhändigt!)
+
+```bash
+# OM VARIABELN INTE ÄR SATT – använd default
+echo ${PORT:-8080}              # Om PORT inte finns → 8080
+echo ${DB_HOST:-localhost}      # Om DB_HOST inte finns → localhost
+
+# SÄTT VARIABELN OM DEN INTE FINNS
+: ${PORT:=8080}                 # Sätter PORT till 8080 om tom
+: ${NODE_ENV:=development}      # Default till development
+
+# I SCRIPTS (vanligt mönster)
+#!/bin/bash
+PORT=${PORT:-8080}
+HOST=${HOST:-0.0.0.0}
+echo "Starting server on $HOST:$PORT"
+```
+
+---
+
+## 📂 Viktiga systemvariabler
+
+```bash
+# DESSA FINNS ALLTID
+echo $HOME                       # /home/said – din hemkatalog
+echo $USER                       # said – ditt användarnamn
+echo $SHELL                      # /bin/bash – din shell
+echo $PWD                        # /var/www/app – nuvarande katalog
+echo $HOSTNAME                   # server01 – maskinens namn
+echo $LANG                       # sv_SE.UTF-8 – språkinställning
+
+# DESSA ÄR SPECIELLT VIKTIGA FÖR DEVOPS
+echo $PATH                       # Var systemet letar efter kommandon
+echo $LD_LIBRARY_PATH            # Var dynamiska bibliotek finns
+echo $EDITOR                     # Default editor (vim, nano, etc.)
+
+# PROCESS-RELATERADE
+echo $$                          # PID för denna shell
+echo $?                          # Exit code från förra kommandot
+echo $!                          # PID för senaste background-process
+```
+
+### $PATH – Förstå hur kommandon hittas
+
+```bash
+# PATH är en kolon-separerad lista av kataloger
+echo $PATH
+# /usr/local/bin:/usr/bin:/bin:/home/said/bin
+
+# När du skriver "python", söker systemet i ordning:
+# 1. /usr/local/bin/python
+# 2. /usr/bin/python
+# 3. /bin/python
+# 4. /home/said/bin/python
+# FÖRSTA MATCH vinner!
+
+# LÄGG TILL TILL PATH
+export PATH=$PATH:/opt/myapp/bin           # Lägg till sist
+export PATH=/opt/myapp/bin:$PATH           # Lägg till först (prioritet!)
+
+# VAR FINNS ETT KOMMANDO?
+which python                     # /usr/bin/python
+which -a python                  # ALLA python som finns i PATH
+type python                      # Mer info om vad det är
+```
+
+---
+
+## 💾 Permanenta vs temporära variabler
+
+### Temporär (bara denna session)
+
+```bash
+# Försvinner när du stänger terminalen
+export MY_VAR="hejsan"
+```
+
+### Permanent (för din användare)
+
+```bash
+# Lägg i ~/.bashrc (körs vid varje ny terminal)
+echo 'export MY_VAR="hejsan"' >> ~/.bashrc
+echo 'export PATH=$PATH:/opt/scripts' >> ~/.bashrc
+
+# LADDA OM UTAN ATT ÖPPNA NY TERMINAL
+source ~/.bashrc
+# eller kortare:
+. ~/.bashrc
+```
+
+### Systemvida (för alla användare)
+
+```bash
+# /etc/environment – enkla VAR=värde (ingen export)
+DATABASE_URL=postgres://...
+
+# /etc/profile.d/*.sh – scripts som körs vid login
+sudo vi /etc/profile.d/myapp.sh
+# export APP_HOME=/opt/myapp
+# export PATH=$PATH:$APP_HOME/bin
+```
+
+### Per-kommando (bara för det kommandot)
+
+```bash
+# Variabeln gäller BARA för detta kommando
+NODE_ENV=production npm start
+DEBUG=true ./myapp
+DATABASE_URL=test://db ./migrate
+
+# Kombinera flera
+NODE_ENV=production PORT=3000 npm start
+```
+
+---
+
+## 🚀 Verkliga DevOps-scenarier
+
+### Scenario 1: .env-filer (12-Factor App)
+
+```bash
+# .env fil (ALDRIG committa till git!)
+DATABASE_URL=postgres://prod:secret@db.aws.com/app
+REDIS_URL=redis://cache.aws.com
+SECRET_KEY=super_secret_123
+NODE_ENV=production
+
+# Ladda .env-fil i bash-script
+#!/bin/bash
+set -a                           # Auto-export alla variabler
+source .env
+set +a
+
+# Eller mer robust:
+export $(grep -v '^#' .env | xargs)
+
+# Verifiera
+env | grep DATABASE
+```
+
+### Scenario 2: Docker & miljövariabler
+
+```bash
+# Docker kör med -e för miljövariabler
+docker run -e NODE_ENV=production \\
+           -e DATABASE_URL=$DATABASE_URL \\
+           myapp
+
+# Eller läs från fil
+docker run --env-file .env myapp
+
+# docker-compose.yml
+# services:
+#   app:
+#     environment:
+#       - NODE_ENV=production
+#       - DATABASE_URL
+#     env_file:
+#       - .env
+```
+
+### Scenario 3: CI/CD pipelines
+
+```yaml
+# GitHub Actions
+jobs:
+  deploy:
+    env:
+      NODE_ENV: production
+    steps:
+      - run: echo $NODE_ENV
+      # Använd secrets (aldrig hårdkoda!)
+      - run: ./deploy.sh
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+
+# Jenkins
+environment {
+    DATABASE_URL = credentials('db-url')
+}
+```
+
+### Scenario 4: Felsök "command not found"
+
+```bash
+# Problem: Du installerade något men kan inte hitta det
+nvm install 18                   # Installerar node
+node --version                   # "command not found" 😱
+
+# Diagnos
+echo $PATH                       # Se vad som finns
+which node                       # Finns den?
+
+# Lösning: NVM lägger till i PATH, men du måste ladda om
+source ~/.nvm/nvm.sh
+# Eller lägg i ~/.bashrc så det alltid finns
+
+# VERIFIERING
+node --version                   # v18.x.x ✅
+```
+
+---
+
+## ⚠️ Säkerhet – ALDRIG committa secrets!
+
+```bash
+# ❌ ALDRIG GÖR DETTA
+export API_KEY=sk-123456789     # Kan ses i process list!
+git add .env                     # ALDRIG committa .env!
+
+# ✅ GÖR DETTA ISTÄLLET
+# 1. Lägg .env i .gitignore
+echo ".env" >> .gitignore
+
+# 2. Skapa .env.example (mall utan secrets)
+# DATABASE_URL=postgres://user:PASSWORD@host/db
+# API_KEY=your_key_here
+
+# 3. Använd secrets manager i produktion
+# - AWS Secrets Manager
+# - HashiCorp Vault
+# - GitHub Secrets
+# - Docker Secrets
+```
+
+---
+
+## 📋 Quick Reference Card
+
+```bash
+# MILJÖVARIABLER CHEAT SHEET
+# ═══════════════════════════════════════════════════════════
+# SÄTTA VARIABLER
+export VAR=value                 # Med export → synlig för child
+VAR=value                        # Utan export → bara denna shell
+VAR=value command                # Bara för det kommandot
+
+# LÄSA VARIABLER
+echo $VAR                        # Enkel
+echo ${VAR}                      # Explicit
+echo ${VAR:-default}             # Med default om tom
+printenv VAR                     # Bara miljövariabler
+
+# VISA ALLA
+env                              # Alla miljövariabler
+env | grep PATTERN               # Filtrera
+declare -p                       # Alla variabler (inkl. shell)
 
 # TA BORT
-unset MYVAR
+unset VAR                        # Ta bort variabel
 
-# VIKTIGA SYSTEMVARIABLER
-$HOME                           # Hemkatalog
-$USER                           # Användarnamn
-$PATH                           # Sökvägar för kommandon
-$PWD                            # Nuvarande katalog
+# PERMANENTA PLATSER
+~/.bashrc                        # Din användare (bash)
+~/.profile                       # Din användare (alla shells)
+/etc/environment                 # Systemvida
+/etc/profile.d/*.sh              # Systemvida scripts
 
-# PERMANENT (lägg i ~/.bashrc)
-echo 'export PATH=$PATH:/opt/myapp/bin' >> ~/.bashrc
-source ~/.bashrc
+# LADDA OM CONFIG
+source ~/.bashrc                 # Ladda om bashrc
+. ~/.bashrc                      # Samma sak (kortare)
 
-# TEMPORÄR
-NODE_ENV=development npm start
-DEBUG=true ./myapp
+# LADDA .env-FIL
+set -a; source .env; set +a
+export $(grep -v '^#' .env | xargs)
+# ═══════════════════════════════════════════════════════════
 ```
 """,
             "quiz": [
@@ -1400,43 +2201,345 @@ DEBUG=true ./myapp
             "xp_reward": 110,
             "content": """# 14. Disk Management
 
-## 🏆 TOP 10 – Kommandon
+## 💾 Varför detta är KRITISKT för DevOps
 
-| # | Kommando | Användning |
-|---|----------|------------|
-| 1 | `df -h` | Ledigt utrymme |
-| 2 | `du -sh` | Katalogstorlek |
-| 3 | `lsblk` | Lista diskar |
-| 4 | `mount` | Montera |
-| 5 | `umount` | Avmontera |
-| 6 | `fdisk -l` | Partitioner |
-| 7 | `mkfs.ext4` | Formatera |
-| 8 | `/etc/fstab` | Permanent montering |
-| 9 | `ncdu` | Interaktiv |
-| 10 | `blkid` | UUIDs |
+**03:00 på natten. PagerDuty ringer.**
+
+```
+🚨 ALERT: Disk space critical on prod-server-01
+   / filesystem at 98% capacity
+```
+
+Varje DevOps-ingenjör har varit där. Disken är full. Databasen kan inte skriva. Appen kraschar. Kaos.
+
+**Lär dig detta nu så du kan:**
+- 🔍 Snabbt hitta VAD som tar plats
+- 🗑️ Rensa upp säkert
+- 📊 Övervaka INNAN det blir kritiskt
+- 💿 Lägga till mer utrymme
+
+---
+
+## 🏆 TOP 10 – Kommandon du MÅSTE kunna
+
+| # | Kommando | Vad det gör | När du använder det |
+|---|----------|-------------|---------------------|
+| 1 | `df -h` | Ledigt utrymme per partition | "Hur mycket plats har jag kvar?" |
+| 2 | `du -sh` | Katalogstorlek | "Hur stor är denna mappen?" |
+| 3 | `lsblk` | Lista diskar & partitioner | "Vilka diskar finns?" |
+| 4 | `mount` | Montera filsystem | Göra disk tillgänglig |
+| 5 | `umount` | Avmontera | Innan du kopplar bort |
+| 6 | `fdisk -l` | Partitionsinformation | Se partitioner i detalj |
+| 7 | `mkfs.ext4` | Formatera disk | Ny disk som ska användas |
+| 8 | `/etc/fstab` | Permanent montering | Overleva omstart |
+| 9 | `ncdu` | Interaktiv diskanalys | Hitta vad som tar plats |
+| 10 | `blkid` | Visa UUID för diskar | Identifiera diskar unikt |
+
+---
+
+## 📊 df – Visa diskutrymme ("Disk Free")
 
 ```bash
-# VISA
-df -h                           # ⭐ Ledigt utrymme
-df -i                           # Inodes
-lsblk                           # ⭐ Diskar och partitioner
-lsblk -f                        # Med UUID
-blkid                           # UUIDs
+# GRUNDLÄGGANDE
+df -h                            # ⭐ Human-readable (GB, MB)
+# Filesystem      Size  Used Avail Use% Mounted on
+# /dev/sda1       100G   75G   25G  75% /
+# /dev/sdb1       500G  350G  150G  70% /data
+# tmpfs           8.0G  1.2G  6.8G  15% /dev/shm
+
+# 💡 Kolumner förklarade:
+# Size  = Total storlek
+# Used  = Använt
+# Avail = Ledigt
+# Use%  = Procent använt (HÅLL UNDER 80%!)
+# Mounted on = Var den finns i filsystemet
+
+# FILTRERA OUTPUT
+df -h /                          # Bara root-partitionen
+df -h /var                       # Var finns /var?
+df -h | grep -v tmpfs            # Skippa RAM-baserade
+
+# INODES (antalet filer, inte storlek)
+df -i                            # Inode-användning
+# Om 100% inodes men disk har plats = för många små filer!
+```
+
+### 🚨 Alert-nivåer:
+
+| Procent | Status | Åtgärd |
+|---------|--------|--------|
+| < 70% | ✅ OK | Inget |
+| 70-85% | ⚠️ Varning | Planera städning |
+| 85-95% | 🔶 Kritisk | Städa NU |
+| > 95% | 🔴 Nöd | Akut – allt kan sluta fungera |
+
+---
+
+## 📦 du – Hitta vad som tar plats ("Disk Usage")
+
+```bash
+# GRUNDLÄGGANDE
+du -sh katalog/                  # ⭐ Total storlek för en katalog
+du -sh /var/log                  # Hur stora är loggarna?
+du -sh /home/*                   # Varje användares hemkatalog
+
+# HITTA TJUVARNA – Sortera efter storlek
+du -h --max-depth=1 / | sort -h | tail -20
+#                │           │         └── Top 20 största
+#                │           └── Sortera numeriskt
+#                └── Bara en nivå ner (inte rekursivt)
+
+# HITTA STORA FILER DIREKT
+find / -type f -size +100M -exec ls -lh {} \\; 2>/dev/null | sort -k5 -h
+#                    │                                        └── Sortera på storlek
+#                    └── Filer större än 100MB
+
+# VANLIGA PLATSER SOM VÄXER
+du -sh /var/log                  # Loggar
+du -sh /var/cache                # Cache
+du -sh /tmp                      # Temporära filer
+du -sh /var/lib/docker           # Docker data
+du -sh ~/.local/share/Trash      # Papperskorgen
+```
+
+### 🎯 ncdu – Interaktiv diskanalys (INSTALLERA DETTA!)
+
+```bash
+# Installera
+sudo apt install ncdu            # Debian/Ubuntu
+sudo yum install ncdu            # RHEL/CentOS
+
+# Använd
+ncdu /                           # ⭐ Starta från root
+ncdu /var                        # Analysera /var
+
+# INTERFACE:
+# - Använd piltangenter för att navigera
+# - Enter för att gå in i katalog
+# - d för att ta bort (bekräfta först!)
+# - q för att avsluta
+
+# Exportera rapport
+ncdu -o rapport.json /
+ncdu -f rapport.json             # Läs in igen senare
+```
+
+**💡 ncdu är det bästa verktyget för att hitta diskproblem!**
+
+---
+
+## 💿 lsblk & blkid – Förstå dina diskar
+
+```bash
+# VISA DISKAR OCH PARTITIONER
+lsblk
+# NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+# sda      8:0    0   100G  0 disk
+# ├─sda1   8:1    0    99G  0 part /
+# └─sda2   8:2    0     1G  0 part [SWAP]
+# sdb      8:16   0   500G  0 disk
+# └─sdb1   8:17   0   500G  0 part /data
+
+# MED FILSYSTEM-INFO
+lsblk -f
+# NAME   FSTYPE LABEL UUID                                 MOUNTPOINT
+# sda1   ext4         a1b2c3d4-...                         /
+# sdb1   ext4   data  e5f6g7h8-...                         /data
+
+# VISA UUID (behövs för /etc/fstab)
+blkid
+# /dev/sda1: UUID="a1b2c3d4-..." TYPE="ext4"
+# /dev/sdb1: UUID="e5f6g7h8-..." TYPE="ext4"
+
+blkid /dev/sdb1                  # Specifik disk
+```
+
+---
+
+## 🔗 mount & umount – Montera filsystem
+
+```bash
+# SE VAD SOM ÄR MONTERAT
+mount                            # Alla monteringar
+mount | grep "^/dev"             # Bara riktiga diskar
+findmnt                          # ⭐ Snyggare output
+
+# MONTERA TILLFÄLLIGT
+sudo mount /dev/sdb1 /mnt/data   # Montera partition
+sudo mount /dev/cdrom /mnt/cdrom # Montera CD
+sudo mount -t nfs server:/share /mnt/nfs  # NFS-share
+
+# AVMONTERA
+sudo umount /mnt/data
+sudo umount -l /mnt/data         # Lazy unmount (om "device busy")
+
+# ⚠️ "Device is busy"? Hitta processen:
+lsof +f -- /mnt/data             # Vem använder den?
+fuser -m /mnt/data               # PIDs som använder
+```
+
+### /etc/fstab – Permanenta monteringar (överlever omstart)
+
+```bash
+# Visa nuvarande
+cat /etc/fstab
+
+# FORMAT (kolumner separerade av mellanslag/tab):
+# <device>          <mountpoint>  <type>  <options>     <dump> <pass>
+# UUID=a1b2c3d4...  /             ext4    defaults      0      1
+# UUID=e5f6g7h8...  /data         ext4    defaults      0      2
+# /dev/sdb1         /backup       ext4    defaults,nofail 0    2
+
+# 💡 Förklaring:
+# device     = UUID eller /dev/xxx (UUID är säkrare!)
+# mountpoint = Var den ska monteras
+# type       = Filsystemtyp (ext4, xfs, nfs, etc.)
+# options    = defaults, nofail, ro, noexec, etc.
+# dump       = 0 (ignorera för backup)
+# pass       = Boot-check ordning (1=root, 2=andra, 0=skippa)
+
+# LÄGG TILL NY MONTERNING STEG FÖR STEG:
+# 1. Hitta UUID
+blkid /dev/sdb1
+# /dev/sdb1: UUID="e5f6g7h8-..." TYPE="ext4"
+
+# 2. Skapa mount point
+sudo mkdir -p /mnt/data
+
+# 3. Lägg till i fstab (FÖRSIKTIGT!)
+echo 'UUID=e5f6g7h8-... /mnt/data ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
+
+# 4. TESTA INNAN OMSTART!
+sudo mount -a                    # Montera allt i fstab
+echo $?                          # 0 = OK
+
+# ⚠️ FEL I FSTAB = SERVER STARTAR INTE!
+# Använd alltid "nofail" för icke-kritiska diskar
+```
+
+---
+
+## 🆕 Ny disk – Komplett workflow
+
+```bash
+# SCENARIO: Du har lagt till en ny 100GB disk (/dev/sdc)
+
+# STEG 1: Verifiera att disken syns
+lsblk
+# sdc      8:32   0   100G  0 disk     ← Ny disk, ingen partition
+
+# STEG 2: Skapa partition
+sudo fdisk /dev/sdc
+# n (new partition)
+# p (primary)
+# 1 (partition number)
+# Enter (default first sector)
+# Enter (default last sector = hela disken)
+# w (write and exit)
+
+# STEG 3: Formatera
+sudo mkfs.ext4 /dev/sdc1
+# eller
+sudo mkfs.xfs /dev/sdc1          # XFS är bättre för stora filer
+
+# STEG 4: Skapa mount point
+sudo mkdir -p /mnt/newdisk
+
+# STEG 5: Montera
+sudo mount /dev/sdc1 /mnt/newdisk
+
+# STEG 6: Gör permanent (fstab)
+echo "UUID=$(blkid -s UUID -o value /dev/sdc1) /mnt/newdisk ext4 defaults,nofail 0 2" | sudo tee -a /etc/fstab
+
+# STEG 7: Verifiera
+df -h /mnt/newdisk
+```
+
+---
+
+## 🧹 Rensa diskutrymme – Emergency Cleanup
+
+```bash
+#!/bin/bash
+# cleanup.sh - Kör när disken är full!
+
+echo "🔍 Analyserar diskutrymme..."
+df -h /
+
+echo "\\n📦 Top 10 största kataloger i /var:"
+du -h --max-depth=1 /var 2>/dev/null | sort -h | tail -10
+
+echo "\\n🗑️ Rensar systemcache..."
+sudo apt clean                   # Rensa apt cache
+sudo journalctl --vacuum-size=100M  # Begränsa journal till 100MB
+
+echo "\\n📋 Rensar gamla loggar..."
+sudo find /var/log -name "*.gz" -delete
+sudo find /var/log -name "*.old" -delete
+sudo find /var/log -name "*.[0-9]" -delete
+
+echo "\\n🐳 Rensar Docker (om installerat)..."
+docker system prune -af 2>/dev/null || true
+
+echo "\\n🗑️ Rensar temporära filer..."
+sudo rm -rf /tmp/*
+sudo rm -rf /var/tmp/*
+
+echo "\\n✅ Efter städning:"
+df -h /
+```
+
+### Vanliga platser som tar plats:
+
+| Plats | Vad det är | Säker att rensa? |
+|-------|------------|------------------|
+| `/var/log` | Loggar | ✅ Gamla .gz filer |
+| `/var/cache/apt` | APT-cache | ✅ `apt clean` |
+| `/var/lib/docker` | Docker | ⚠️ `docker system prune` |
+| `/tmp` | Temp-filer | ✅ Men kolla först |
+| `/home/*/.cache` | User cache | ✅ Men fråga användare |
+| `/var/lib/snapd` | Snap-paket | ⚠️ Kan bryta saker |
+
+---
+
+## 📋 Quick Reference Card
+
+```bash
+# DISK MANAGEMENT CHEAT SHEET
+# ═══════════════════════════════════════════════════════════
+# SE UTRYMME
+df -h                            # Ledigt per partition
+df -h /                          # Bara root
+df -i                            # Inodes
+
+# HITTA STORA SAKER
+du -sh katalog/                  # Katalogstorlek
+du -h --max-depth=1 / | sort -h  # Top directories
+ncdu /                           # ⭐ Interaktiv analys
+
+# DISKAR & PARTITIONER
+lsblk                            # Lista diskar
+lsblk -f                         # Med filsystem
+blkid                            # UUID
 
 # MONTERA
-sudo mount /dev/sdb1 /mnt/data
-sudo umount /mnt/data
+sudo mount /dev/sdb1 /mnt/data   # Montera
+sudo umount /mnt/data            # Avmontera
+mount | grep sdb                 # Se monteringar
 
-# FORMATERA
-sudo mkfs.ext4 /dev/sdb1
+# FORMATERA (VARNING: Raderar allt!)
+sudo mkfs.ext4 /dev/sdb1         # ext4 format
+sudo mkfs.xfs /dev/sdb1          # xfs format
 
-# HITTA VAD SOM TAR PLATS
-du -h --max-depth=1 / | sort -h | tail -20
-ncdu /                          # ⭐ Interaktiv
+# FSTAB (permanent montering)
+# UUID=xxx-xxx /mnt/data ext4 defaults,nofail 0 2
+sudo mount -a                    # Testa fstab
 
-# PERMANENT MONTERING (/etc/fstab)
-UUID=abc123... /mnt/data ext4 defaults 0 2
-sudo mount -a                   # Testa fstab
+# EMERGENCY CLEANUP
+sudo apt clean                   # APT cache
+sudo journalctl --vacuum-size=100M
+docker system prune -af          # Docker cleanup
+# ═══════════════════════════════════════════════════════════
 ```
 """,
             "quiz": [
@@ -1470,37 +2573,248 @@ sudo mount -a                   # Testa fstab
             "xp_reward": 80,
             "content": """# 15. Quick Reference & Workflows
 
-## Daglig hälsokontroll
+## 🚑 Varför du BEHÖVER ett systematiskt tillvägagångssätt
+
+**Det är 03:00. PagerDuty ringer. Produktionen är nere.**
+
+Panik? Nej. Du har ett **systematiskt felsökningsflöde**. Du vet exakt var du ska börja och vad du ska kolla. Inom 10 minuter har du hittat problemet.
+
+Det är skillnaden mellan en junior som chansar, och en senior som metodiskt isolerar problemet.
+
+---
+
+## 🏥 Daglig hälsokontroll – "Hur mår servern?"
+
+Kör dessa kommandon varje morgon (eller automatisera dem!):
 
 ```bash
-# "Hur mår servern?"
-uptime                          # Load + drifttid
-free -h                         # Minne
-df -h                           # Disk
-ps aux --sort=-%cpu | head -5   # CPU-tjuvar
-systemctl --failed              # Kraschade services
+# 1. SNABB ÖVERBLICK (30 sekunder)
+uptime                          # Load + hur länge servern varit uppe
+# Output: 10:30:00 up 45 days, load average: 0.15, 0.20, 0.18
+#                               └── Ska vara < antal CPU-kärnor!
+
+free -h                         # RAM-användning
+# Output:        total    used    free    available
+#   Mem:         16Gi    12Gi    2.0Gi      3.5Gi
+#                              └── Om < 500MB → varning!
+
+df -h                           # Diskutrymme
+# Output: /dev/sda1  100G   75G   25G  75% /
+#                                 └── Om > 85% → fixa!
+
+# 2. PROCESSER (vad jobbar hårt?)
+ps aux --sort=-%cpu | head -5   # Top 5 CPU-användare
+ps aux --sort=-%mem | head -5   # Top 5 RAM-användare
+
+# 3. SERVICES (något som kraschat?)
+systemctl --failed              # Lista alla failade services
+# Om något visas → det är ett problem!
+
+# 4. SENASTE ERRORS
+journalctl -p err --since "24 hours ago" --no-pager | tail -20
 ```
 
-## Felsökningsflöde
+### 💡 Pro-tip: Skapa ett diagnostik-script!
 
 ```bash
-# APP FUNKAR INTE
-systemctl status myapp          # Kör den?
-journalctl -u myapp -n 50       # Loggar?
-ss -tlnp | grep :3000           # Lyssnar?
-curl localhost:3000             # Svarar lokalt?
+#!/bin/bash
+# healthcheck.sh - Kör varje morgon
 
-# DISK FULL
-df -h                           # Vilken partition?
-du -sh /var/*                   # Vad tar plats?
-find /var/log -name "*.log" -size +100M
-
-# NÄTVERKSPROBLEM
-ping 8.8.8.8                    # Internet?
-dig google.com                  # DNS?
-ss -tulpn                       # Portar?
-sudo ufw status                 # Brandvägg?
+echo "=== 🖥️  SYSTEM STATUS $(date) ==="
+echo ""
+echo "📊 Load & Uptime:"
+uptime
+echo ""
+echo "🧠 Memory:"
+free -h | grep Mem
+echo ""
+echo "💾 Disk:"
+df -h / | tail -1
+echo ""
+echo "🔴 Failed Services:"
+systemctl --failed --no-pager
+echo ""
+echo "⚠️  Recent Errors (last hour):"
+journalctl -p err --since "1 hour ago" --no-pager | tail -10 || echo "None!"
+echo ""
+echo "=== ✅ CHECK COMPLETE ==="
 ```
+
+---
+
+## 🔧 Felsökningsflöden – Systematiska checklists
+
+### 🔴 "Appen funkar inte!"
+
+```bash
+# STEG 1: Kör processen överhuvudtaget?
+systemctl status myapp
+# → active (running) = OK
+# → failed = PROBLEM
+
+# STEG 2: Vad säger loggarna?
+journalctl -u myapp -n 50 --no-pager
+# Sök efter ERROR, Exception, Failed
+
+# STEG 3: Lyssnar den på rätt port?
+ss -tlnp | grep :3000
+# Om tom output = appen lyssnar inte!
+
+# STEG 4: Kan du nå den lokalt?
+curl -v localhost:3000/health
+# Timeout? → App hänger
+# Connection refused? → App körs inte
+# 500 error? → App kraschar vid request
+
+# STEG 5: Kan du nå den externt?
+curl -v https://myapp.com/health
+# Funkar lokalt men inte externt? → Brandvägg/reverse proxy problem
+
+# STEG 6: Testa att starta manuellt
+sudo systemctl stop myapp
+sudo -u www-data /opt/myapp/start.sh
+# Ser du felet i terminalen nu?
+```
+
+### 💾 "Disk full!"
+
+```bash
+# STEG 1: Vilken partition är full?
+df -h
+# Filesystem      Size  Used Avail Use% Mounted on
+# /dev/sda1       100G   98G   2G   98% /     ← DEN!
+
+# STEG 2: Vad tar plats? (start från root)
+du -h --max-depth=1 / 2>/dev/null | sort -h | tail -10
+# /var = 50G? Gå djupare!
+
+du -h --max-depth=1 /var | sort -h | tail -10
+# /var/log = 45G? Hittat!
+
+# STEG 3: Hitta de stora filerna
+find /var/log -type f -size +100M -exec ls -lh {} \\;
+
+# STEG 4: Finns deleted-but-open filer? (sneaky!)
+lsof | grep deleted | head -20
+# Om ja → restart av den processen frigör utrymmet
+
+# STEG 5: Safe cleanup
+sudo journalctl --vacuum-size=500M  # Loggar
+sudo apt clean                       # APT cache
+docker system prune -af              # Docker (om installerat)
+```
+
+### 🌐 "Nätverket funkar inte!"
+
+```bash
+# SYSTEMATISK CHECKLISTA (kör i ordning!)
+
+# 1. Har vi IP?
+ip addr
+# Om ingen IP → DHCP problem eller kabel/wifi
+
+# 2. Funkar loopback?
+ping -c 2 127.0.0.1
+# Om timeout → systemet är väldigt trasigt
+
+# 3. Kan vi nå gateway?
+ping -c 2 $(ip route | grep default | awk '{print $3}')
+# Om timeout → lokalt nätverksproblem
+
+# 4. Kan vi nå internet?
+ping -c 2 8.8.8.8
+# Om timeout → ISP/routing problem
+
+# 5. Fungerar DNS?
+dig google.com +short
+# Om ingen output → DNS problem
+# Testa: cat /etc/resolv.conf
+
+# 6. Kan vi nå specifik tjänst?
+nc -zv target-server.com 443
+# Om timeout → brandvägg blockerar
+
+# 7. Lokal brandvägg?
+sudo ufw status                 # Ubuntu
+sudo iptables -L -n             # Alla distros
+```
+
+### 🐌 "Servern är långsam!"
+
+```bash
+# STEG 1: Vad är load?
+uptime
+# load average: 10.5, 8.2, 6.1
+# Om load > antal CPU-kärnor → ÖVERBELASTAD
+
+# STEG 2: Är det CPU eller wait?
+top
+# Titta på %us (user) och %wa (I/O wait)
+# Hög %us = CPU-intensiv process
+# Hög %wa = Disk/IO flaskhals
+
+# STEG 3: Vem använder CPU?
+ps aux --sort=-%cpu | head -10
+
+# STEG 4: Vem använder RAM?
+ps aux --sort=-%mem | head -10
+free -h
+
+# STEG 5: Disk I/O?
+iostat -x 1 5
+# Om %util > 80% för en disk → I/O flaskhals
+
+# STEG 6: Nätverks-flaskhals?
+iftop                           # Kräver installation
+# eller
+ss -s                           # Nätverksstatistik
+```
+
+---
+
+## 📋 Emergency Cheat Sheet
+
+```bash
+# 🔴 AKUT: Service nere
+systemctl restart myapp && journalctl -u myapp -f
+
+# 💾 AKUT: Disk full
+df -h && du -sh /var/* | sort -h && sudo journalctl --vacuum-size=100M
+
+# 🐌 AKUT: Servern hänger
+top                              # Se vad som kör
+kill -9 PID                      # Döda syndern (sista utväg!)
+
+# 🔥 AKUT: Kan inte logga in
+# 1. Prova en annan terminal/SSH-klient
+# 2. Kolla om disk är full (kan hindra SSH)
+# 3. Använd serverkonsol (AWS Console, etc.)
+
+# 🌐 AKUT: Sidan nere för alla
+curl -I https://mysite.com       # Svarar origin?
+curl -I https://mysite.com --resolve mysite.com:443:ORIGIN_IP
+# Om origin OK → Problem med CDN/load balancer
+
+# 🔐 AKUT: Glömt root-lösenord
+# Starta i recovery mode, mount root rw, passwd root
+```
+
+---
+
+## 🧰 Din verktygslåda – Memorera dessa!
+
+| Symptom | Första kommando |
+|---------|-----------------|
+| "Vad kör servern?" | `uptime && free -h && df -h` |
+| "Service nere" | `systemctl status NAME` |
+| "Vad säger loggarna?" | `journalctl -u NAME -n 100` |
+| "Vilken process tar CPU?" | `ps aux --sort=-%cpu | head` |
+| "Vilken process tar RAM?" | `ps aux --sort=-%mem | head` |
+| "Vad tar diskplats?" | `du -sh /* | sort -h | tail` |
+| "Vilka portar lyssnar?" | `ss -tulpn` |
+| "Kan jag nå internet?" | `ping 8.8.8.8` |
+| "Funkar DNS?" | `dig google.com` |
+| "Senaste errors?" | `journalctl -p err --since "1h"` |
 """,
             "quiz": [
                 {
@@ -1718,103 +3032,380 @@ make && make install || echo "Failed"
             "xp_reward": 110,
             "content": """# 17. User & Group Management
 
-## 🏆 TOP 10 – Kommandon
+## 👥 Varför detta är viktigt för DevOps
 
-| # | Kommando | Användning |
-|---|----------|------------|
-| 1 | `useradd` | Skapa användare |
-| 2 | `usermod` | Ändra användare |
-| 3 | `userdel` | Ta bort |
-| 4 | `passwd` | Sätt lösenord |
-| 5 | `groupadd` | Skapa grupp |
-| 6 | `usermod -aG` | Lägg till i grupp |
-| 7 | `id` | Visa user/group |
-| 8 | `su` / `sudo` | Byt användare |
-| 9 | `visudo` | Redigera sudoers |
-| 10 | `groups` | Visa grupper |
+**Scenario:** Ny utvecklare börjar på måndag. Hon behöver:
+- SSH-access till alla servrar
+- Kunna köra Docker-kommandon
+- Sudo-access för deployment
+- Ingå i rätt grupper för filrättigheter
+
+**Om du inte förstår users & groups:**
+- 🚫 "Permission denied" överallt
+- 🚫 SSH fungerar inte
+- 🚫 Docker vägrar köra
+- 🚫 Säkerhetsrisker med för bred access
 
 ---
 
-## Hantera användare
+## 🧠 Förstå users & groups
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Linux Security Model                                           │
+│  ═══════════════════                                           │
+│                                                                  │
+│  USER (alice)                                                    │
+│    └── UID: 1001                                                │
+│    └── Primary Group: alice (GID: 1001)                         │
+│    └── Secondary Groups: docker, sudo, developers               │
+│                                                                  │
+│  När alice skapar en fil:                                       │
+│    -rw-r--r-- 1 alice alice ... fil.txt                        │
+│                  │      │                                        │
+│                  │      └── Group = hennes primary group        │
+│                  └── Owner = alice                               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Viktiga filer:**
+| Fil | Innehåller |
+|-----|------------|
+| `/etc/passwd` | Alla användare (läsbar av alla) |
+| `/etc/shadow` | Lösenordshashes (bara root) |
+| `/etc/group` | Alla grupper |
+| `/etc/sudoers` | Sudo-rättigheter |
+
+---
+
+## 🏆 TOP 10 – Kommandon du måste kunna
+
+| # | Kommando | Vad det gör | När du använder det |
+|---|----------|-------------|---------------------|
+| 1 | `useradd -m` | Skapa användare med hemkatalog | Ny teammedlem |
+| 2 | `usermod -aG` | Lägg till i grupp | Ge Docker/sudo access |
+| 3 | `userdel -r` | Ta bort användare + hemkatalog | Person lämnar |
+| 4 | `passwd` | Sätt/ändra lösenord | Första login |
+| 5 | `groupadd` | Skapa ny grupp | Team-kataloger |
+| 6 | `id` | Visa UID, GID, grupper | Felsöka permissions |
+| 7 | `groups` | Lista grupptillhörighet | Snabb check |
+| 8 | `su -` | Byt till annan användare | Testa som annan |
+| 9 | `sudo -i` | Bli root | Admin-uppgifter |
+| 10 | `visudo` | Redigera sudoers säkert | Ge sudo-access |
+
+---
+
+## 👤 useradd – Skapa användare
 
 ```bash
-# SKAPA
-sudo useradd -m alice           # ⭐ Med hemkatalog
-sudo useradd -m -s /bin/bash alice   # Med bash
-sudo adduser alice              # ⭐ Interaktivt (Ubuntu)
+# GRUNDLÄGGANDE (Undvik detta!)
+sudo useradd alice              # Skapar användare utan hemkatalog ❌
 
-# LÖSENORD
+# RÄTT SÄTT ⭐
+sudo useradd -m -s /bin/bash alice
+#            │   └── Shell (bash istället för sh)
+#            └── Skapa hemkatalog (/home/alice)
+
+# FULLSTÄNDIGT (bäst för automation)
+sudo useradd \\
+    -m \\                        # Skapa hemkatalog
+    -s /bin/bash \\              # Sätt shell
+    -c "Alice Developer" \\      # Kommentar/beskrivning
+    -G docker,developers \\      # Extra grupper direkt
+    alice
+
+# SÄTT LÖSENORD EFTERÅT
 sudo passwd alice
+# Eller interaktivt:
+echo "alice:password123" | sudo chpasswd
 
-# ÄNDRA
-sudo usermod -aG sudo alice     # ⭐ Lägg till i sudo-grupp
+# VERIFIERA
+id alice
+# uid=1001(alice) gid=1001(alice) groups=1001(alice),999(docker),1002(developers)
+```
+
+### useradd flaggor:
+
+| Flagga | Betydelse |
+|--------|-----------|
+| `-m` | Skapa hemkatalog |
+| `-s SHELL` | Sätt login shell |
+| `-c "TEXT"` | Kommentar (visas i /etc/passwd) |
+| `-G grupp1,grupp2` | Extra grupper |
+| `-u UID` | Specifikt UID |
+| `-d /path` | Specifik hemkatalog |
+| `-e DATUM` | Utgångsdatum (YYYY-MM-DD) |
+
+---
+
+## 🔧 usermod – Ändra användare
+
+```bash
+# LÄGG TILL I GRUPP ⭐ (vanligaste!)
+sudo usermod -aG docker alice
+#            ││
+#            │└── Group (lägg till i grupp)
+#            └── Append (KRITISKT! Utan -a ersätts alla grupper!)
+
+# FLERA GRUPPER
+sudo usermod -aG docker,sudo,developers alice
+
+# ⚠️ VANLIGT MISSTAG:
+sudo usermod -G docker alice     # ❌ RADERAR alla andra grupper!
+sudo usermod -aG docker alice    # ✅ LÄGGER TILL utan att radera
+
+# ANDRA ÄNDRINGAR
+sudo usermod -l newname alice    # Byt användarnamn
+sudo usermod -s /bin/zsh alice   # Byt shell
+sudo usermod -L alice            # Lås kontot (kan inte logga in)
+sudo usermod -U alice            # Lås upp kontot
+```
+
+### ⚠️ Gruppändringar kräver ny login!
+
+```bash
+# Alice lade till sig i docker-gruppen men "permission denied"?
 sudo usermod -aG docker alice
 
-# TA BORT
-sudo userdel -r alice           # ⭐ Med hemkatalog
+# Det räcker INTE att köra:
+source ~/.bashrc                  # ❌ Hjälper inte
 
-# VISA
-id alice                        # UID, GID, grupper
-groups alice                    # Grupper
-whoami
+# Alice måste:
+# 1. Logga ut helt
+# 2. Logga in igen
+# ELLER (quick hack):
+su - alice                        # Starta ny session
+# ELLER:
+newgrp docker                     # Aktivera gruppen temporärt
 ```
 
 ---
 
-## Hantera grupper
+## 🗑️ userdel – Ta bort användare
 
 ```bash
-# SKAPA
-sudo groupadd developers
+# BARA ANVÄNDARE (behåll hemkatalog)
+sudo userdel alice
 
-# LÄGG TILL ANVÄNDARE ⭐
-sudo usermod -aG developers alice   # -a = append!
+# ⭐ ANVÄNDARE + HEMKATALOG + MAIL
+sudo userdel -r alice
+#            └── Remove all (hem + mail spool)
+
+# PRAKTISKT: Avsluta anställd
+sudo userdel -r alice
+# Eller säkrare: lås först, ta bort senare
+sudo usermod -L alice            # Lås direkt
+# ... efter backup ...
+sudo userdel -r alice
+```
+
+---
+
+## 👥 Grupper – Team-samarbete
+
+```bash
+# SKAPA GRUPP
+sudo groupadd developers
+sudo groupadd -g 2000 webteam    # Med specifikt GID
+
+# LÄGG TILL ANVÄNDARE
+sudo usermod -aG developers alice
+sudo usermod -aG developers bob
+
+# SE GRUPMEDLEMMAR
+getent group developers
+# developers:x:1002:alice,bob
 
 # TA BORT FRÅN GRUPP
 sudo gpasswd -d alice developers
 
-# VISA
-groups alice
-getent group developers         # Medlemmar
+# TA BORT GRUPP
+sudo groupdel developers
 ```
 
-**⚠️ OBS:** Gruppändringar kräver ny login!
-
----
-
-## sudo-access
+### Praktiskt: Team-katalog
 
 ```bash
-# REDIGERA SUDOERS ⭐
-sudo visudo
+# Skapa grupp och katalog för ett team
+sudo groupadd projekt-x
+sudo mkdir -p /opt/projekt-x
+sudo chown root:projekt-x /opt/projekt-x
+sudo chmod 2775 /opt/projekt-x
+#          │
+#          └── SetGID: Nya filer ärver gruppen automatiskt
 
-# VANLIGA TILLÄGG
-alice ALL=(ALL:ALL) ALL                         # Full sudo
-alice ALL=(ALL) NOPASSWD: ALL                   # Utan lösenord
-%developers ALL=(ALL) NOPASSWD: /opt/deploy.sh  # Grupp
+# Lägg till teammedlemmar
+sudo usermod -aG projekt-x alice
+sudo usermod -aG projekt-x bob
 
-# BYT TILL ROOT
-sudo -i                         # ⭐ Root shell
-sudo -u postgres psql           # Som annan användare
+# Nu kan alla i gruppen läsa/skriva i /opt/projekt-x
+# OCH nya filer skapas med gruppen projekt-x automatiskt!
 ```
 
 ---
 
-## Praktiskt: Ny teammedlem
+## 🔐 sudo – Privilegierad access
+
+### Ge sudo-access
+
+```bash
+# METOD 1: Lägg till i sudo-gruppen (rekommenderat)
+sudo usermod -aG sudo alice      # Debian/Ubuntu
+sudo usermod -aG wheel alice     # RHEL/CentOS
+
+# METOD 2: Specifik konfiguration via visudo
+sudo visudo
+
+# Lägg till en rad:
+alice ALL=(ALL:ALL) ALL          # Full sudo med lösenord
+alice ALL=(ALL) NOPASSWD: ALL    # ⚠️ Utan lösenord (CI/CD)
+
+# BEGRÄNSAD SUDO (bättre säkerhet)
+alice ALL=(ALL) /opt/deploy.sh   # Bara detta script
+%developers ALL=(ALL) NOPASSWD: /usr/bin/docker  # Grupp
+```
+
+### sudoers syntax förklarad:
+
+```
+alice   ALL=(ALL:ALL)  ALL
+│       │    │   │     │
+│       │    │   │     └── Vilka kommandon (ALL = alla)
+│       │    │   └── Som vilka grupper (ALL = alla)
+│       │    └── Som vilka användare (ALL = alla, inkl root)
+│       └── På vilka hosts (ALL = alla)
+└── Vem som får sudo
+```
+
+### Byt användare
+
+```bash
+# BLI ROOT
+sudo -i                          # ⭐ Root shell
+sudo su -                        # Alternativ
+
+# KÖR ETT KOMMANDO SOM ROOT
+sudo kommando
+
+# BYT TILL ANNAN ANVÄNDARE
+sudo -u postgres psql            # Kör psql som postgres
+sudo su - alice                  # Bli alice
+
+# VISA DINA SUDO-RÄTTIGHETER
+sudo -l
+```
+
+---
+
+## 🚀 Praktiskt: Onboarda ny teammedlem
 
 ```bash
 #!/bin/bash
-USERNAME="alice"
+# onboard.sh - Skapa ny teammedlem
+# Användning: sudo ./onboard.sh alice "Alice Developer" "ssh-ed25519 AAAA..."
 
-sudo useradd -m -s /bin/bash $USERNAME
-sudo usermod -aG sudo $USERNAME
-sudo usermod -aG docker $USERNAME
+set -euo pipefail
 
-sudo mkdir -p /home/$USERNAME/.ssh
-sudo chmod 700 /home/$USERNAME/.ssh
-echo "ssh-ed25519 AAAA..." | sudo tee /home/$USERNAME/.ssh/authorized_keys
-sudo chmod 600 /home/$USERNAME/.ssh/authorized_keys
-sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
+USERNAME="$1"
+FULLNAME="$2"
+SSH_KEY="$3"
+
+echo "🆕 Skapar användare: $USERNAME"
+
+# Skapa användare
+sudo useradd -m -s /bin/bash -c "$FULLNAME" "$USERNAME"
+
+# Lägg till i nödvändiga grupper
+sudo usermod -aG sudo,docker "$USERNAME"
+
+# Konfigurera SSH
+SSH_DIR="/home/$USERNAME/.ssh"
+sudo mkdir -p "$SSH_DIR"
+echo "$SSH_KEY" | sudo tee "$SSH_DIR/authorized_keys" > /dev/null
+
+# Sätt rätt permissions
+sudo chmod 700 "$SSH_DIR"
+sudo chmod 600 "$SSH_DIR/authorized_keys"
+sudo chown -R "$USERNAME:$USERNAME" "$SSH_DIR"
+
+# Tvinga lösenordsbyte vid första login (valfritt)
+# sudo chage -d 0 "$USERNAME"
+
+echo "✅ $USERNAME skapad och klar!"
+echo "   - Grupper: $(groups $USERNAME | cut -d: -f2)"
+echo "   - SSH-nyckel: installerad"
+echo "   - Hemkatalog: /home/$USERNAME"
+```
+
+---
+
+## 🔍 Felsökning
+
+```bash
+# "Permission denied" - men jag lade till mig i gruppen!
+id                               # Visa dina AKTIVA grupper
+# → Ser du inte docker? Du har inte loggat in på nytt!
+# Lösning: Logga ut och in, eller "newgrp docker"
+
+# Användare kan inte logga in
+sudo grep alice /etc/passwd      # Finns användaren?
+sudo passwd -S alice             # Status (L = locked?)
+sudo grep alice /etc/shadow      # Lösenordshash?
+
+# Vem är i en grupp?
+getent group docker
+
+# Vilka grupper finns?
+cat /etc/group | cut -d: -f1 | sort
+
+# Vem har sudo?
+grep -E '%sudo|%wheel' /etc/sudoers
+getent group sudo
+```
+
+---
+
+## 📋 Quick Reference Card
+
+```bash
+# USER MANAGEMENT CHEAT SHEET
+# ═══════════════════════════════════════════════════════════
+# SKAPA
+sudo useradd -m -s /bin/bash alice       # Skapa med hem + bash
+sudo passwd alice                         # Sätt lösenord
+
+# ÄNDRA
+sudo usermod -aG docker alice            # ⭐ Lägg till i grupp
+sudo usermod -aG sudo alice              # Ge sudo-access
+sudo usermod -s /bin/zsh alice           # Byt shell
+sudo usermod -L alice                    # Lås kontot
+
+# TA BORT
+sudo userdel -r alice                    # Med hemkatalog
+
+# GRUPPER
+sudo groupadd developers                 # Skapa grupp
+getent group developers                  # Visa medlemmar
+sudo gpasswd -d alice developers         # Ta bort från grupp
+
+# INFO
+id alice                                 # UID, GID, grupper
+groups alice                             # Bara grupper
+cat /etc/passwd | grep alice             # Användarinfo
+
+# SUDO
+sudo visudo                              # Redigera sudoers
+sudo -i                                  # Bli root
+sudo -u postgres psql                    # Kör som annan
+sudo -l                                  # Visa dina rättigheter
+
+# SSH-SETUP FÖR NY ANVÄNDARE
+sudo mkdir -p /home/alice/.ssh
+sudo chmod 700 /home/alice/.ssh
+echo "ssh-ed25519 AAAA..." | sudo tee /home/alice/.ssh/authorized_keys
+sudo chmod 600 /home/alice/.ssh/authorized_keys
+sudo chown -R alice:alice /home/alice/.ssh
+# ═══════════════════════════════════════════════════════════
 ```
 """,
             "quiz": [
@@ -1848,89 +3439,370 @@ sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
             "xp_reward": 110,
             "content": """# 18. Cron Jobs & Task Scheduling
 
-## 🏆 TOP 10 – Kommandon
+## ⏰ Varför detta är ESSENTIELLT för DevOps
 
-| # | Kommando | Användning |
-|---|----------|------------|
-| 1 | `crontab -e` | Redigera cron |
-| 2 | `crontab -l` | Lista cron |
-| 3 | `crontab -r` | Ta bort alla |
-| 4 | `/etc/cron.d/` | System cron |
-| 5 | `/etc/cron.daily/` | Dagliga scripts |
-| 6 | `systemctl status cron` | Status |
-| 7 | `journalctl -u cron` | Loggar |
-| 8 | `@reboot` | Vid uppstart |
-| 9 | `at` | Engångsjobb |
-| 10 | `*/5 * * * *` | Var 5:e minut |
+**Tänk dig en värld utan schemalagda jobb:**
+- 🚫 Du måste MANUELLT ta backup varje natt kl 02:00
+- 🚫 Du måste MANUELLT rensa gamla loggar varje vecka
+- 🚫 Du måste MANUELLT köra certifikatförnyelse varje månad
+- 🚫 Du måste MANUELLT starta services efter reboot
 
----
+**Med cron:**
+- ✅ Backup körs automatiskt varje natt
+- ✅ Loggar rensas automatiskt
+- ✅ Certifikat förnyas automatiskt
+- ✅ Allt startar vid reboot
 
-## Crontab syntax
-
-```
-# ┌───────────── minut (0-59)
-# │ ┌───────────── timme (0-23)
-# │ │ ┌───────────── dag (1-31)
-# │ │ │ ┌───────────── månad (1-12)
-# │ │ │ │ ┌───────────── veckodag (0-7)
-# │ │ │ │ │
-# * * * * * kommando
-
-# VANLIGA MÖNSTER
-* * * * *     # Varje minut
-*/5 * * * *   # ⭐ Var 5:e minut
-0 * * * *     # ⭐ Varje hel timme
-0 0 * * *     # ⭐ Midnatt varje dag
-0 0 * * 0     # Midnatt varje söndag
-0 0 1 * *     # Första dagen varje månad
-
-# SPECIALORD
-@reboot       # Vid uppstart
-@hourly       # Varje timme
-@daily        # Varje dag
-@weekly       # Varje vecka
-```
+**Cron är DevOps-automationens grundsten.**
 
 ---
 
-## Hantera crontab
+## 🧠 Förstå crontab-syntax
+
+```
+┌───────────── minut (0-59)
+│ ┌───────────── timme (0-23)
+│ │ ┌───────────── dag i månad (1-31)
+│ │ │ ┌───────────── månad (1-12)
+│ │ │ │ ┌───────────── veckodag (0-7, där 0 och 7 = söndag)
+│ │ │ │ │
+* * * * * kommando_att_köra
+```
+
+### Visuellt exempel:
+
+```
+30 2 * * * /opt/backup.sh
+
+30   = minut 30
+2    = timme 02 (02:30 på natten)
+*    = alla dagar i månaden
+*    = alla månader
+*    = alla veckodagar
+
+= "Kör /opt/backup.sh kl 02:30 varje natt"
+```
+
+---
+
+## 🏆 TOP 10 – Kommandon och mönster
+
+| # | Kommando/Mönster | Vad det gör |
+|---|------------------|-------------|
+| 1 | `crontab -e` | ⭐ Redigera dina cron-jobb |
+| 2 | `crontab -l` | ⭐ Lista dina cron-jobb |
+| 3 | `*/5 * * * *` | Var 5:e minut |
+| 4 | `0 * * * *` | Varje hel timme |
+| 5 | `0 0 * * *` | Midnatt varje dag |
+| 6 | `@reboot` | Vid systemstart |
+| 7 | `@daily` | En gång per dag (midnatt) |
+| 8 | `>> /var/log/job.log 2>&1` | Logga output |
+| 9 | `/etc/cron.d/` | System-cron (som root) |
+| 10 | `systemctl status cron` | Kolla att cron körs |
+
+---
+
+## 📅 Vanliga scheman med förklaring
 
 ```bash
-crontab -e                      # ⭐ Redigera
-crontab -l                      # ⭐ Lista
-crontab -r                      # Ta bort alla
+# VARJE MINUT (för testing – ta bort sen!)
+* * * * *                        # Varje minut
 
-sudo crontab -u nginx -l        # Annan användares cron
+# VAR X:E MINUT
+*/5 * * * *                      # ⭐ Var 5:e minut
+*/15 * * * *                     # Var 15:e minut
+*/30 * * * *                     # Varannan halvtimme
+
+# SPECIFIK TID
+30 8 * * *                       # 08:30 varje dag
+0 9 * * 1-5                      # 09:00 måndag-fredag
+0 */2 * * *                      # Varannan timme på heltimme
+
+# DAGLIGEN
+0 0 * * *                        # ⭐ Midnatt varje dag
+0 2 * * *                        # ⭐ 02:00 varje natt (bra för backup)
+0 6 * * *                        # 06:00 varje morgon
+
+# VECKOVIS
+0 0 * * 0                        # Midnatt varje söndag
+0 0 * * 1                        # Midnatt varje måndag
+0 9 * * 5                        # 09:00 varje fredag
+
+# MÅNADSVIS
+0 0 1 * *                        # Första dagen i varje månad
+0 0 15 * *                       # 15:e varje månad
+
+# ÅRLIGEN
+0 0 1 1 *                        # 1 januari, midnatt
+
+# SPECIALORD (lättare att läsa)
+@reboot                          # ⭐ Vid systemstart
+@hourly                          # Varje hel timme (= 0 * * * *)
+@daily                           # Midnatt (= 0 0 * * *)
+@weekly                          # Söndagsmidnatt (= 0 0 * * 0)
+@monthly                         # Första i månaden (= 0 0 1 * *)
+@annually                        # 1 januari (= 0 0 1 1 *)
+```
+
+### 🧮 Minnesregel:
+
+```
+"Minut Timme Dag Månad Veckodag"
+   M     T    D    M      V
+
+Tänk: "Min Tabell Delas Med Vänner"
 ```
 
 ---
 
-## Praktiska cron-exempel
+## 🛠️ Hantera dina cron-jobb
 
 ```bash
-# BACKUP VARJE NATT 02:00
+# VISA DINA JOBB
+crontab -l
+
+# REDIGERA (öppnar i default editor)
+crontab -e
+
+# TA BORT ALLA JOBB (⚠️ försiktigt!)
+crontab -r
+
+# SE ANNAN ANVÄNDARES CRON (kräver root)
+sudo crontab -u www-data -l
+sudo crontab -u nginx -e
+
+# KOLLA ATT CRON KÖRS
+systemctl status cron            # Ubuntu/Debian
+systemctl status crond           # CentOS/RHEL
+
+# SE CRON-LOGGAR
+grep CRON /var/log/syslog        # Ubuntu
+journalctl -u cron               # Systemd
+tail -f /var/log/cron            # CentOS
+```
+
+---
+
+## 🚀 Praktiska cron-jobb (kopiera och anpassa!)
+
+### Backup varje natt
+
+```bash
+# Cron-entry:
 0 2 * * * /opt/scripts/backup.sh >> /var/log/backup.log 2>&1
 
-# RENSA TEMP DAGLIGEN
-0 3 * * * find /tmp -type f -mtime +7 -delete
+# backup.sh:
+#!/bin/bash
+set -e
+BACKUP_DIR="/backup"
+APP_DIR="/var/www/myapp"
+DATE=$(date +%Y%m%d_%H%M%S)
 
-# HEALTH CHECK VAR 5:E MINUT
-*/5 * * * * curl -s https://myapp.com/health || echo "DOWN!" | mail admin@example.com
+echo "Starting backup at $(date)"
+tar -czvf "${BACKUP_DIR}/app_${DATE}.tar.gz" "$APP_DIR"
 
-# VID REBOOT
-@reboot /opt/myapp/start.sh
+# Behåll bara de senaste 7 dagarna
+find "$BACKUP_DIR" -name "app_*.tar.gz" -mtime +7 -delete
+echo "Backup complete at $(date)"
 ```
 
-**⚠️ Viktigt:**
-- Använd fullständiga sökvägar
-- Redirect output: `>> /var/log/job.log 2>&1`
+### Health check var 5:e minut
+
+```bash
+*/5 * * * * /opt/scripts/healthcheck.sh >> /var/log/healthcheck.log 2>&1
+
+# healthcheck.sh:
+#!/bin/bash
+URL="https://myapp.com/health"
+RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+
+if [ "$RESPONSE" != "200" ]; then
+    echo "[$(date)] ALERT: Health check failed! Status: $RESPONSE"
+    # Skicka alert
+    curl -X POST "https://hooks.slack.com/..." -d '{"text":"App is down!"}'
+fi
+```
+
+### Rensa gamla filer
+
+```bash
+# Rensa temp varje dag kl 03:00
+0 3 * * * find /tmp -type f -mtime +7 -delete
+
+# Rensa gamla loggar
+0 4 * * * find /var/log -name "*.log.gz" -mtime +30 -delete
+
+# Rensa Docker
+0 5 * * 0 docker system prune -af >> /var/log/docker-cleanup.log 2>&1
+```
+
+### Starta app vid reboot
+
+```bash
+@reboot /opt/myapp/start.sh >> /var/log/myapp-startup.log 2>&1
+
+# Eller med delay (vänta på nätverk etc):
+@reboot sleep 30 && /opt/myapp/start.sh
+```
+
+### Certifikatförnyelse (Let's Encrypt)
+
+```bash
+# Kör två gånger per dag (certbot förnyar bara om det behövs)
+0 0,12 * * * certbot renew --quiet && systemctl reload nginx
+```
 
 ---
 
-## Systemd Timers (alternativ)
+## ⚠️ Vanliga misstag och lösningar
+
+### 1. Glömd output-redirect
 
 ```bash
-systemctl list-timers           # ⭐ Lista alla timers
+# ❌ DÅLIGT: Output försvinner, inga loggar vid fel
+0 2 * * * /opt/backup.sh
+
+# ✅ BRA: Logga stdout OCH stderr
+0 2 * * * /opt/backup.sh >> /var/log/backup.log 2>&1
+```
+
+### 2. Relativa sökvägar
+
+```bash
+# ❌ DÅLIGT: Cron har inte samma PATH som din terminal
+0 2 * * * backup.sh
+0 2 * * * ./scripts/backup.sh
+
+# ✅ BRA: Använd alltid absoluta sökvägar
+0 2 * * * /opt/scripts/backup.sh
+```
+
+### 3. Glömd shebang i scriptet
+
+```bash
+# ❌ DÅLIGT: Script utan shebang kan faila i cron
+echo "hello"
+
+# ✅ BRA: Alltid shebang först
+#!/bin/bash
+echo "hello"
+```
+
+### 4. Environment-variabler saknas
+
+```bash
+# Cron har minimal miljö! Sätt variabler explicit:
+PATH=/usr/local/bin:/usr/bin:/bin
+NODE_ENV=production
+
+0 2 * * * /opt/scripts/app-job.sh
+
+# Eller ladda din profil i scriptet:
+#!/bin/bash
+source /home/deploy/.bashrc
+/opt/myapp/job.sh
+```
+
+### 5. Permissions på scriptet
+
+```bash
+# ❌ Script utan execute-permission körs inte
+# ✅ Fixa:
+chmod +x /opt/scripts/backup.sh
+```
+
+---
+
+## 📁 System-cron (/etc/cron.d/)
+
+För system-jobb (istället för användar-crontab):
+
+```bash
+# /etc/cron.d/myapp-backup
+
+# Format: MIN TIM DAG MÅN VEC ANVÄNDARE KOMMANDO
+0 2 * * * root /opt/scripts/backup.sh >> /var/log/backup.log 2>&1
+*/5 * * * * www-data /opt/myapp/healthcheck.sh
+```
+
+**Skillnader mot crontab:**
+- Filer i `/etc/cron.d/` istället för `crontab -e`
+- Måste ange ANVÄNDARE som ska köra jobbet
+- Bra för deployment/automation (kan versionshanteras)
+
+---
+
+## 🔍 Felsökning
+
+```bash
+# JOBBET KÖRDES ALDRIG?
+# 1. Kolla att cron körs
+systemctl status cron
+
+# 2. Kolla loggar
+grep CRON /var/log/syslog | tail -20
+# Eller
+journalctl -u cron --since "1 hour ago"
+
+# 3. Kolla syntax
+crontab -l                       # Ser det rätt ut?
+
+# 4. Testa scriptet manuellt som rätt användare
+sudo -u www-data /opt/scripts/backup.sh
+# Funkar det? Om inte, fixa scriptet först!
+
+# 5. Kolla att output-fil är skrivbar
+ls -la /var/log/backup.log
+touch /var/log/backup.log        # Kan du skapa den?
+
+# JOBBET KÖRDES MEN FAILADE?
+# Kolla din loggfil!
+cat /var/log/backup.log
+# Ingen loggfil? Du glömde redirecta output!
+```
+
+---
+
+## 📋 Quick Reference Card
+
+```bash
+# CRON CHEAT SHEET
+# ═══════════════════════════════════════════════════════════
+# HANTERA CRON
+crontab -l                       # Lista jobb
+crontab -e                       # Redigera jobb
+crontab -r                       # Ta bort alla
+
+# SYNTAX
+# MIN TIM DAG MÅN VEC kommando
+# *   *   *   *   *
+
+# VANLIGA MÖNSTER
+*/5 * * * *                      # Var 5:e minut
+0 * * * *                        # Varje timme
+0 0 * * *                        # Midnatt varje dag
+0 2 * * *                        # 02:00 varje natt
+0 0 * * 0                        # Varje söndag
+0 0 1 * *                        # Första i månaden
+
+# SPECIALORD
+@reboot                          # Vid uppstart
+@daily                           # Dagligen
+@weekly                          # Veckovis
+@monthly                         # Månadsvis
+
+# ALLTID LOGGA OUTPUT!
+0 2 * * * /script.sh >> /var/log/job.log 2>&1
+
+# SYSTEM-CRON (/etc/cron.d/filnamn)
+# MIN TIM DAG MÅN VEC USER kommando
+0 2 * * * root /script.sh >> /var/log/job.log 2>&1
+
+# FELSÖK
+systemctl status cron            # Körs cron?
+grep CRON /var/log/syslog        # Loggar
+sudo -u USER /script.sh          # Testa manuellt
+# ═══════════════════════════════════════════════════════════
 ```
 """,
             "quiz": [
