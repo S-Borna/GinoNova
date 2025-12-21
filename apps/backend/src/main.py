@@ -7,6 +7,7 @@ All content kommer från: src/db/seeds/content/
 
 Version: 2.0.0 - Linux 24/7 module
 """
+
 from contextlib import asynccontextmanager
 import logging
 
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 # CONTENT SEEDING — Enkel och ren
 # =============================================================================
+
 
 def seed_content():
     """
@@ -71,14 +73,16 @@ def seed_content():
     # Skapa tracks först
     track_id_map: dict[str, any] = {}
     for track_data in get_tracks():
-        track = create_track(TrackCreate(
-            name=track_data["name"],
-            slug=track_data["slug"],
-            description=track_data["description"],
-            color=track_data["color"],
-            icon=track_data["icon"],
-            order_index=track_data["order_index"],
-        ))
+        track = create_track(
+            TrackCreate(
+                name=track_data["name"],
+                slug=track_data["slug"],
+                description=track_data["description"],
+                color=track_data["color"],
+                icon=track_data["icon"],
+                order_index=track_data["order_index"],
+            )
+        )
         track_id_map[track_data["slug"]] = track.id
 
     # Skapa moduler och tasks
@@ -92,17 +96,21 @@ def seed_content():
         track_id = track_id_map.get(module_data.get("track_slug"))
 
         # Skapa modulen
-        module_name = module_data.get("name") or module_data.get("title", module_data["slug"])
-        module = create_module(ModuleCreate(
-            track_id=track_id,
-            name=module_name,
-            slug=module_data["slug"],
-            description=module_data.get("description"),
-            order_index=module_data.get("order_index", modules_created + 1),
-            difficulty=module_data.get("difficulty", "intermediate"),
-            estimated_hours=module_data.get("estimated_hours", 10.0),
-            prerequisites=module_data.get("prerequisites", []),
-        ))
+        module_name = module_data.get("name") or module_data.get(
+            "title", module_data["slug"]
+        )
+        module = create_module(
+            ModuleCreate(
+                track_id=track_id,
+                name=module_name,
+                slug=module_data["slug"],
+                description=module_data.get("description"),
+                order_index=module_data.get("order_index", modules_created + 1),
+                difficulty=module_data.get("difficulty", "intermediate"),
+                estimated_hours=module_data.get("estimated_hours", 10.0),
+                prerequisites=module_data.get("prerequisites", []),
+            )
+        )
         modules_created += 1
 
         # Skapa tasks
@@ -111,50 +119,62 @@ def seed_content():
             if difficulty not in ("easy", "medium", "hard"):
                 difficulty = "medium"
 
-            estimated_minutes = task_data.get("estimated_minutes") or \
-                {"easy": 15, "medium": 30, "hard": 45}.get(difficulty, 30)
-            xp_reward = task_data.get("xp_reward") or \
-                {"easy": 50, "medium": 100, "hard": 150}.get(difficulty, 100)
+            estimated_minutes = task_data.get("estimated_minutes") or {
+                "easy": 15,
+                "medium": 30,
+                "hard": 45,
+            }.get(difficulty, 30)
+            xp_reward = task_data.get("xp_reward") or {
+                "easy": 50,
+                "medium": 100,
+                "hard": 150,
+            }.get(difficulty, 100)
 
-            create_task(TaskCreate(
-                module_id=module.id,
-                title=task_data["title"],
-                description=task_data.get("description"),
-                content=task_data.get("content"),
-                content_blocks=task_data.get("content_blocks"),
-                requirements=task_data.get("requirements"),
-                order_index=task_data.get("order_index", idx + 1),
-                difficulty=difficulty,
-                estimated_minutes=estimated_minutes,
-                xp_reward=xp_reward,
-            ))
+            create_task(
+                TaskCreate(
+                    module_id=module.id,
+                    title=task_data["title"],
+                    description=task_data.get("description"),
+                    content=task_data.get("content"),
+                    content_blocks=task_data.get("content_blocks"),
+                    requirements=task_data.get("requirements"),
+                    order_index=task_data.get("order_index", idx + 1),
+                    difficulty=difficulty,
+                    estimated_minutes=estimated_minutes,
+                    xp_reward=xp_reward,
+                )
+            )
             tasks_created += 1
 
         # Skapa labs (om finns)
         for idx, lab_data in enumerate(module_data.get("labs", [])):
-            create_lab(LabCreate(
-                module_id=module.id,
-                title=lab_data["title"],
-                slug=lab_data.get("slug", f"lab-{idx+1}"),
-                estimated_hours=lab_data.get("hours", 2.0),
-                order_index=idx + 1,
-                difficulty="medium",
-                xp_reward=int(lab_data.get("hours", 2.0) * 50),
-            ))
+            create_lab(
+                LabCreate(
+                    module_id=module.id,
+                    title=lab_data["title"],
+                    slug=lab_data.get("slug", f"lab-{idx+1}"),
+                    estimated_hours=lab_data.get("hours", 2.0),
+                    order_index=idx + 1,
+                    difficulty="medium",
+                    xp_reward=int(lab_data.get("hours", 2.0) * 50),
+                )
+            )
             labs_created += 1
 
         # Skapa projekt (om finns)
         project_data = module_data.get("project")
         if project_data:
-            create_project(ProjectCreate(
-                module_id=module.id,
-                title=project_data["title"],
-                slug=project_data.get("slug", "project"),
-                description=project_data.get("description"),
-                deliverables=project_data.get("deliverables", []),
-                xp_reward=project_data.get("xp_reward", 500),
-                estimated_hours=project_data.get("estimated_hours", 5.0),
-            ))
+            create_project(
+                ProjectCreate(
+                    module_id=module.id,
+                    title=project_data["title"],
+                    slug=project_data.get("slug", "project"),
+                    description=project_data.get("description"),
+                    deliverables=project_data.get("deliverables", []),
+                    xp_reward=project_data.get("xp_reward", 500),
+                    estimated_hours=project_data.get("estimated_hours", 5.0),
+                )
+            )
             projects_created += 1
 
     logger.info(
@@ -167,6 +187,7 @@ def seed_content():
 # APPLICATION LIFESPAN
 # =============================================================================
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown events."""
@@ -174,6 +195,7 @@ async def lifespan(app: FastAPI):
 
     # Initialize PostgreSQL if configured
     from .db.database import is_db_configured, init_db
+
     if is_db_configured():
         logger.info("🗄️ PostgreSQL detected — initializing tables...")
         try:
@@ -186,6 +208,7 @@ async def lifespan(app: FastAPI):
 
     # Initialize Redis if configured
     from .db.redis_client import is_redis_configured
+
     if is_redis_configured():
         logger.info("🔴 Redis connected!")
     else:
@@ -241,6 +264,7 @@ app.add_middleware(
 # =============================================================================
 # HEALTH CHECKS
 # =============================================================================
+
 
 @app.get("/health")
 def health():
