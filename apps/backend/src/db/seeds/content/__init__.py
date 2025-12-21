@@ -39,12 +39,14 @@ from typing import Optional
 # IMPORT MODULES
 # =============================================================================
 from .linux_247 import MODULE as LINUX_247_MODULE
+from .doe25_tentaplugg import MODULE as DOE25_TENTAPLUGG_MODULE
 
 # =============================================================================
 # ALL MODULES — Lista med alla moduler som ska visas
 # =============================================================================
 ALL_MODULES: list[dict] = [
     LINUX_247_MODULE,
+    DOE25_TENTAPLUGG_MODULE,
 ]
 
 
