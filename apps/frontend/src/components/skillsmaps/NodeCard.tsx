@@ -367,7 +367,7 @@ export function NodeCard({
                     </div>
                 </div>
 
-                /* Node number with gradient */}
+                {/* Node number with gradient */}
                 <div className="flex items-center gap-2 mb-1">
                     <span className={cn(
                         "text-xs font-bold uppercase tracking-wider bg-gradient-to-r bg-clip-text text-transparent",
@@ -480,7 +480,7 @@ export function NodeCard({
                 </div>
             </div>
 
-            /* Progress indicator for in-progress */}
+            {/* Progress indicator for in-progress */}
             {isInProgress && (
                 <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-zinc-800/50 overflow-hidden">
                     <motion.div

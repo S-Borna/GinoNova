@@ -798,4 +798,3 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
 }
 
 export default LessonContent
-export default LessonContent
