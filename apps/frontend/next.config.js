@@ -4,6 +4,10 @@ module.exports = {
     // Output configuration for Netlify
     output: 'standalone',
 
+    // Next.js 16: Explicit webpack mode (Turbopack is default in 16)
+    // Keep webpack for production builds with custom optimization
+    turbopack: {},
+
     // 🛡️ SECURITY: Disable source maps in production
     productionBrowserSourceMaps: false,
 
