@@ -1,5 +1,5 @@
 """
-Dallas Dynamic FAQ - Läser automatiskt från ALL_V3_MODULES.
+Dallas Dynamic FAQ - Läser automatiskt från moduler.
 Ingen GPT-kostnad - endast lokala svar från plattformens faktiska innehåll.
 
 Version: 2.0 - Dynamisk (läser från moduler automatiskt)
@@ -11,10 +11,10 @@ from functools import lru_cache
 
 
 def get_all_modules() -> List[Dict[str, Any]]:
-    """Hämta alla moduler från v3 systemet."""
+    """Hämta alla moduler från content systemet."""
     try:
-        from ..db.seeds.modules_v3 import ALL_V3_MODULES
-        return ALL_V3_MODULES
+        from ..db.seeds.content import get_all_modules as get_content_modules
+        return get_content_modules()
     except ImportError:
         return []
 

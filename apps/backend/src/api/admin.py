@@ -22,16 +22,17 @@ from ..db.lab_repository import create_lab, clear_labs, list_labs
 from ..db.project_repository import create_project, clear_projects, list_projects
 from ..db import user_repository, progress_repository
 from ..db.database import is_db_configured
-from ..db.seeds.bootcamp_v3_data import (
+
+# Import från NYA content-strukturen
+from ..db.seeds.content import (
     get_tracks,
-    get_modules,
+    get_all_modules as get_modules,
     get_bootcamp_summary,
-)
-from ..db.seeds.modules_v3 import (
     get_all_modules as get_v3_modules,
-    get_module_count as get_v3_module_count,
+    get_total_modules as get_v3_module_count,
     get_total_tasks as get_v3_total_tasks,
 )
+
 from ..schemas.module import ModuleCreate
 from ..schemas.task import TaskCreate
 from ..schemas.track import TrackCreate
@@ -1381,23 +1382,15 @@ def seed_bootcamp_v4(
     add_phase_header(response)
     require_admin(current_user)
 
-    try:
-        from ..db.seeds.bootcamp_v4_content import seed_v4_content
-        result = seed_v4_content()
-
-        return SeedV4Response(
-            success=result["status"] == "success",
-            status=result["status"],
-            tracks=result.get("tracks", 0),
-            modules=result.get("modules", 0),
-            tasks=result.get("tasks", 0),
-            total_hours=result.get("total_hours", 0),
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to seed v4 content: {str(e)}"
-        )
+    # V4 content har flyttats till _archive - returnera info om detta
+    return SeedV4Response(
+        success=False,
+        status="deprecated",
+        tracks=0,
+        modules=0,
+        tasks=0,
+        total_hours=0,
+    )
 
 
 class SeedSkillsmapsResponse(BaseModel):

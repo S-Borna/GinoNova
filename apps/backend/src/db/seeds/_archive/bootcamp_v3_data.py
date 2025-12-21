@@ -44656,16 +44656,33 @@ def get_tracks() -> list[dict]:
 
 
 def get_modules() -> list[dict]:
-    """Returns all 15 modules, with Linux V3 replacing the original."""
+    """Returns all 15 modules, with ULTIMATE versions for Linux, Docker and CI/CD."""
     from .modules.linux import MODULE as MODULE_LINUX_MASTERY_V3
     from .modules.docker import MODULE as MODULE_DOCKER_MASTERY_V3
+    from .modules.cicd import MODULE as MODULE_CICD_MASTERY_V3
 
-    # Replace linux-mastery and docker modules with latest ULTIMATE versions
+    # Replace linux-mastery, docker-mastery and cicd-mastery with latest ULTIMATE versions
     result = []
     for module in BOOTCAMP_MODULES:
         if module["slug"] == "linux-mastery":
             # Use latest ULTIMATE version but preserve bootcamp metadata
             v3_module = MODULE_LINUX_MASTERY_V3.copy()
+            v3_module["order_index"] = module["order_index"]
+            v3_module["prerequisites"] = module.get("prerequisites", [])
+            v3_module["labs"] = module.get("labs", [])
+            v3_module["project"] = module.get("project")
+            result.append(v3_module)
+        elif module["slug"] == "docker-mastery":
+            # Use latest ULTIMATE version but preserve bootcamp metadata
+            v3_module = MODULE_DOCKER_MASTERY_V3.copy()
+            v3_module["order_index"] = module["order_index"]
+            v3_module["prerequisites"] = module.get("prerequisites", [])
+            v3_module["labs"] = module.get("labs", [])
+            v3_module["project"] = module.get("project")
+            result.append(v3_module)
+        elif module["slug"] == "cicd-mastery":
+            # Use latest ULTIMATE version but preserve bootcamp metadata
+            v3_module = MODULE_CICD_MASTERY_V3.copy()
             v3_module["order_index"] = module["order_index"]
             v3_module["prerequisites"] = module.get("prerequisites", [])
             v3_module["labs"] = module.get("labs", [])

@@ -150,7 +150,8 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     Returns:
         Combined content string from all nodes or None
     """
-    from src.db.seeds.modules import ALL_MODULES
+    from src.db.seeds.content import get_all_modules
+    ALL_MODULES = get_all_modules()
 
     # Find the module by slug
     module_data = None

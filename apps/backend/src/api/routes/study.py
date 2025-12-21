@@ -1,28 +1,28 @@
 """
-Study API Routes - Flashcards och Quiz från V3 modulinnehåll
+Study API Routes - Flashcards och Quiz från modulinnehåll
 =============================================================
 
-Dynamiskt genererat från modulernas noder med V3-formatering.
+Dynamiskt genererat från modulernas noder.
 Hämtar Key Takeaways, Kom ihåg-punkter och kommandotabeller.
-
-9 moduler med V3-format:
-- Linux, Docker, Kubernetes, Git, Bash, Terraform, Ansible, CI/CD, AWS
-
-Fallback till statisk study_data om V3-generering misslyckas.
 """
 from fastapi import APIRouter, HTTPException, status, Query
 from pydantic import BaseModel
 from typing import List, Optional
 import random
 
-# Ny V3-generator som primär källa
+# Ny generator som primär källa
 from src.services.study_generator import (
     get_v3_study_data,
     get_v3_study_modules,
     get_module_icon,
 )
-# Fallback till statisk data
-from src.db.seeds.study_data import STUDY_DATA_REGISTRY, get_all_study_modules
+
+# Fallback registry - tom om ingen study_data finns
+STUDY_DATA_REGISTRY = {}
+
+def get_all_study_modules():
+    """Fallback för study modules."""
+    return []
 
 router = APIRouter(prefix="/study", tags=["study"])
 
