@@ -29,88 +29,88 @@ MODULE = {
             "order_index": 1,
             "content": r"""# Bash Grunder & Shebang
 
-## Varfor viktigt for DevOps
+## Varför viktigt för DevOps
 
-Bash-scripting ar fundamentet for all automation i DevOps:
+Bash-scripting är fundamentet för all automation i DevOps:
 
-- Reproducerbarhet: Skript gor samma sak varje gang, manniskor gor misstag
-- Dokumentation: Ett skript AR dokumentation - du kan lasa exakt vad som hander
-- Versionskontroll: Lagg skriptet i Git, spara andringar over tid
+- Reproducerbarhet: Skript gör samma sak varje gång, människor gör misstag
+- Dokumentation: Ett skript ÄR dokumentation - du kan läsa exakt vad som händer
+- Versionskontroll: Lägg skriptet i Git, spåra ändringar över tid
 - Skalbarhet: Konfigurera 100 servrar lika enkelt som 1
-- CI/CD: Pipelines ar i grunden Bash-skript
-- Felsökning: Enklare att debugga ett skript an att komma ihag 50 manuella steg
+- CI/CD: Pipelines är i grunden Bash-skript
+- Felsökning: Enklare att debugga ett skript än att komma ihåg 50 manuella steg
 
-I din gruppuppgift ska du skriva `sys-config.sh` som automatiserar serversetup. Utan korrekt shebang och korbarhet fungerar ingenting - det ar darfor vi borjar har.
+I din gruppuppgift ska du skriva `sys-config.sh` som automatiserar serversetup. Utan korrekt shebang och körbarhet fungerar ingenting - det är därför vi börjar här.
 
 ---
 
-## Vad ar en Shebang?
+## Vad är en Shebang?
 
-Shebang ar de tva forsta tecknen i ett skript: `#!`. Det berattar for operativsystemet vilken tolk (interpreter) som ska kora skriptet. Tank pa det som en "adresslapp" som sager "skicka den har filen till Bash for exekvering".
+Shebang är de två första tecknen i ett skript: `#!`. Det berättar för operativsystemet vilken tolk (interpreter) som ska köra skriptet. Tänk på det som en "adresslapp" som säger "skicka den här filen till Bash för exekvering".
 
 ```bash
 #!/bin/bash
 # Shebang = "sharp" (#) + "bang" (!)
-# /bin/bash = sokvagen till Bash-tolken pa din dator
+# /bin/bash = sökvägen till Bash-tolken på din dator
 
-# Utan shebang vet inte OS vad som ska kora filen:
+# Utan shebang vet inte OS vad som ska köra filen:
 # - Ska det vara Python?
 # - Ska det vara Bash?
 # - Ska det vara Node.js?
-# Shebang svarar pa den fragan.
+# Shebang svarar på den frågan.
 ```
 
 ---
 
-## Varfor behovs chmod +x?
+## Varför behövs chmod +x?
 
-Aven om du har en shebang kan du inte kora skriptet forran det har execute-permission. Linux har tre typer av rattigheter for filer:
+Även om du har en shebang kan du inte köra skriptet förrän det har execute-permission. Linux har tre typer av rättigheter för filer:
 
 ```bash
-# De tre rattigheterna:
-# r = read (lasa filen)
-# w = write (andra filen)
-# x = execute (kora filen)
+# De tre rättigheterna:
+# r = read (läsa filen)
+# w = write (ändra filen)
+# x = execute (köra filen)
 
-# Nar du skapar en fil med nano/vim far den automatiskt rw- (las+skriv)
-# Men INTE x (execute) - det maste du lagga till sjalv
+# När du skapar en fil med nano/vim får den automatiskt rw- (läs+skriv)
+# Men INTE x (execute) - det måste du lägga till själv
 
-# Kontrollera rattigheter:
+# Kontrollera rättigheter:
 ls -l myscript.sh
-# -rw-r--r--  <-- Ingen x, kan inte koras!
+# -rw-r--r--  <-- Ingen x, kan inte köras!
 
-# Lagg till execute:
+# Lägg till execute:
 chmod +x myscript.sh
 
 # Kontrollera igen:
 ls -l myscript.sh
-# -rwxr-xr-x  <-- Nu finns x, kan koras!
+# -rwxr-xr-x  <-- Nu finns x, kan köras!
 ```
 
 ---
 
-## Skapa ditt forsta skript - steg for steg
+## Skapa ditt första skript - steg för steg
 
 ```bash
 # Steg 1: Skapa filen
 nano myscript.sh
-# nano oppnar en enkel texteditor i terminalen
-# Du kan ocksa anvanda vim, code, eller nagot annat
+# nano öppnar en enkel texteditor i terminalen
+# Du kan också använda vim, code, eller något annat
 
-# Steg 2: Skriv innehallet
+# Steg 2: Skriv innehållet
 #!/bin/bash
-# Mitt forsta skript
+# Mitt första skript
 echo "Hello, DevOps!"
 # echo skriver ut text till terminalen
 
-# Steg 3: Spara och stang
-# I nano: Ctrl+O (spara), Enter, Ctrl+X (stang)
+# Steg 3: Spara och stäng
+# I nano: Ctrl+O (spara), Enter, Ctrl+X (stäng)
 
-# Steg 4: Gor skriptet korbart
+# Steg 4: Gör skriptet körbart
 chmod +x myscript.sh
-# +x betyder "lagg till execute permission"
+# +x betyder "lägg till execute permission"
 
-# Steg 5: Kor skriptet
+# Steg 5: Kör skriptet
 ./myscript.sh
 # ./ betyder "i denna mapp" - annars letar systemet i PATH
 # Output: Hello, DevOps!
@@ -120,28 +120,28 @@ chmod +x myscript.sh
 
 ## Variabler i Bash
 
-Variabler lagrar varden som du kan ateranvanda. Det finns en viktig regel i Bash som skiljer sig fran andra sprak:
+Variabler lagrar värden som du kan återanvända. Det finns en viktig regel i Bash som skiljer sig från andra språk:
 
 ```bash
-# RATT - inga mellanslag runt =
+# RÄTT - inga mellanslag runt =
 name="Said"
 port=6622
 
 # FEL - mellanslag runt = tolkas som kommando
 name = "Said"
-# Bash tror att "name" ar ett kommando med argumenten "=" och "Said"
-# Du far felet: "name: command not found"
+# Bash tror att "name" är ett kommando med argumenten "=" och "Said"
+# Du får felet: "name: command not found"
 
-# Anvand variabler med $
+# Använd variabler med $
 echo "User: $name"
 # Output: User: Said
 
 echo "SSH port: $port"
 # Output: SSH port: 6622
 
-# Varfor $?
-# $ sager till Bash "hamta vardet av denna variabel"
-# Utan $ skriver du bara texten "name" istallet for vardet
+# Varför $?
+# $ säger till Bash "hämta värdet av denna variabel"
+# Utan $ skriver du bara texten "name" istället för värdet
 echo "name"   # Output: name
 echo "$name"  # Output: Said
 ```
@@ -150,47 +150,47 @@ echo "$name"  # Output: Said
 
 ## Positionsparametrar - ta emot argument
 
-Nar nagon kor ditt skript kan de skicka med argument. Dessa hamnar i speciella variabler:
+När någon kör ditt skript kan de skicka med argument. Dessa hamnar i speciella variabler:
 
 ```bash
-# Om nagon kor:
+# Om någon kör:
 ./script.sh hello world foo
 
-# Da far du:
+# Då får du:
 # $0 = ./script.sh (skriptets namn)
-# $1 = hello (forsta argumentet)
+# $1 = hello (första argumentet)
 # $2 = world (andra argumentet)
 # $3 = foo (tredje argumentet)
 # $# = 3 (antal argument, exklusive $0)
 # $@ = hello world foo (alla argument som separata ord)
-# $* = hello world foo (alla argument som en strang)
-# $? = exit-kod fran senaste kommando (0 = success)
+# $* = hello world foo (alla argument som en sträng)
+# $? = exit-kod från senaste kommando (0 = success)
 
-# Praktiskt exempel for gruppuppgiften:
+# Praktiskt exempel för gruppuppgiften:
 #!/bin/bash
 # sys-config.sh - tar hostname som argument
 
 if [ $# -lt 1 ]; then
     echo "Usage: $0 <hostname>"
-    # $0 visar skriptnamnet i hjalptext - professionellt!
+    # $0 visar skriptnamnet i hjälptext - professionellt!
     exit 1
 fi
 
 hostname="$1"
 echo "Configuring server: $hostname"
-# Anvander forsta argumentet
+# Använder första argumentet
 ```
 
 ---
 
 ## Skillnaden mellan "$@" och "$*"
 
-Detta ar en klassisk VG-fraga pa tentan. Skillnaden syns bara nar argument innehaller mellanslag:
+Detta är en klassisk VG-fråga på tentan. Skillnaden syns bara när argument innehåller mellanslag:
 
 ```bash
 #!/bin/bash
-# Kor med: ./script.sh "Hello World" "Goodbye Moon"
-# Alltsa TVA argument som vardera innehaller mellanslag
+# Kör med: ./script.sh "Hello World" "Goodbye Moon"
+# Alltså TVÅ argument som vardera innehåller mellanslag
 
 echo "=== Med \"\$@\" ==="
 for arg in "$@"; do
@@ -199,7 +199,7 @@ done
 # Output:
 # Argument: 'Hello World'
 # Argument: 'Goodbye Moon'
-# Tva iterationer - varje argument bevaras separat!
+# Två iterationer - varje argument bevaras separat!
 
 echo "=== Med \"\$*\" ==="
 for arg in "$*"; do
@@ -207,39 +207,39 @@ for arg in "$*"; do
 done
 # Output:
 # Argument: 'Hello World Goodbye Moon'
-# EN iteration - allt slas ihop till en strang!
+# EN iteration - allt slås ihop till en sträng!
 
-# REGEL: Anvand ALLTID "$@" (med citattecken) nar du loopar
-# "$*" ar nastan aldrig vad du vill ha
+# REGEL: Använd ALLTID "$@" (med citattecken) när du loopar
+# "$*" är nästan aldrig vad du vill ha
 ```
 
 ---
 
-## Vanliga misstag och losningar
+## Vanliga misstag och lösningar
 
 ```bash
-# Misstag 1: Glomma shebang
-# Problem: Skriptet kors med fel tolk eller inte alls
-# Losning: Alltid borja med #!/bin/bash
+# Misstag 1: Glömma shebang
+# Problem: Skriptet körs med fel tolk eller inte alls
+# Lösning: Alltid börja med #!/bin/bash
 
-# Misstag 2: Glomma chmod +x
+# Misstag 2: Glömma chmod +x
 # Problem: "Permission denied"
-# Losning: chmod +x script.sh
+# Lösning: chmod +x script.sh
 
 # Misstag 3: Mellanslag runt =
 # Problem: "command not found"
 name = "Said"  # FEL
-name="Said"    # RATT
+name="Said"    # RÄTT
 
-# Misstag 4: Glomma $ framfor variabler
-# Problem: Skriver variabelnamnet istallet for vardet
+# Misstag 4: Glömma $ framför variabler
+# Problem: Skriver variabelnamnet istället för värdet
 echo "name"    # FEL: skriver "name"
-echo "$name"   # RATT: skriver vardet
+echo "$name"   # RÄTT: skriver värdet
 
-# Misstag 5: Anvanda $* istallet for $@
-# Problem: Argument med mellanslag slas ihop
+# Misstag 5: Använda $* istället för $@
+# Problem: Argument med mellanslag slås ihop
 for arg in $*; do     # FEL
-for arg in "$@"; do   # RATT
+for arg in "$@"; do   # RÄTT
 ```
 
 ---
@@ -249,11 +249,11 @@ for arg in "$@"; do   # RATT
 | Uppgift | Kommando |
 |---------|----------|
 | Skapa skript | `nano script.sh` |
-| Shebang (forsta raden) | `#!/bin/bash` |
-| Gor korbart | `chmod +x script.sh` |
-| Kor skript | `./script.sh` |
-| Kor med argument | `./script.sh arg1 arg2` |
-| Forsta argumentet | `$1` |
+| Shebang (första raden) | `#!/bin/bash` |
+| Gör körbart | `chmod +x script.sh` |
+| Kör skript | `./script.sh` |
+| Kör med argument | `./script.sh arg1 arg2` |
+| Första argumentet | `$1` |
 | Alla argument (korrekt) | `"$@"` |
 | Antal argument | `$#` |
 | Senaste exit-kod | `$?` |
@@ -261,15 +261,15 @@ for arg in "$@"; do   # RATT
 
 ---
 
-## Nasta steg
+## Nästa steg
 
-Nu nar du kan grunderna i Bash-scripting ar det dags att lara dig:
+Nu när du kan grunderna i Bash-scripting är det dags att lära dig:
 
 - Textbearbetning med grep, sed och awk
 - Kontrollstrukturer (if/else, loopar)
 - Funktioner och felhantering
 
-Dessa bygger vidare pa allt du lart dig har - variabler, argument och korbarhet kommer anvandas overallt!
+Dessa bygger vidare på allt du lärt dig här - variabler, argument och körbarhet kommer användas överallt!
 
 """,
             "quiz": [
@@ -339,50 +339,50 @@ Dessa bygger vidare pa allt du lart dig har - variabler, argument och korbarhet 
             "order_index": 2,
             "content": r"""# Textbearbetning: grep, sed & awk
 
-## Varfor viktigt for DevOps
+## Varför viktigt för DevOps
 
-Textbearbetning ar kanske den viktigaste farditgheten i Linux-administration:
+Textbearbetning är kanske den viktigaste färdigheten i Linux-administration:
 
 - Logganalys: Hitta fel bland miljontals rader i /var/log/
-- Konfigurationshantering: Andra installningar i config-filer automatiskt
-- Datautvinning: Plocka ut specifik information fran output
-- Rapportering: Sammanstalla statistik fran systemdata
-- Felsökning: Snabbt identifiera problem i stora datamangder
+- Konfigurationshantering: Ändra inställningar i config-filer automatiskt
+- Datautvinning: Plocka ut specifik information från output
+- Rapportering: Sammanställa statistik från systemdata
+- Felsökning: Snabbt identifiera problem i stora datamängder
 - Automation: Transformera data mellan olika format
 
-I din gruppuppgift behover du andra SSH-porten i sshd_config med sed, soka efter anvandare med grep, och parsa output med awk. Dessa tre verktyg ar dina basta vanner.
+I din gruppuppgift behöver du ändra SSH-porten i sshd_config med sed, söka efter användare med grep, och parsa output med awk. Dessa tre verktyg är dina bästa vänner.
 
 ---
 
-## Vad ar grep?
+## Vad är grep?
 
-grep star for "Global Regular Expression Print". Det soker igenom filer rad for rad och skriver ut de rader som matchar ett monster. Tank pa det som "Ctrl+F for terminalen" - fast mycket kraftfullare.
+grep står för "Global Regular Expression Print". Det söker igenom filer rad för rad och skriver ut de rader som matchar ett mönster. Tänk på det som "Ctrl+F för terminalen" - fast mycket kraftfullare.
 
 ```bash
-# Grundlaggande syntax:
-grep "monster" fil
-# grep laser filen rad for rad
-# Om raden innehaller "monster" skrivs den ut
-# Annars hoppas den over
+# Grundläggande syntax:
+grep "mönster" fil
+# grep läser filen rad för rad
+# Om raden innehåller "mönster" skrivs den ut
+# Annars hoppas den över
 
 # Exempel: Sök efter "error" i en loggfil
 grep "error" /var/log/syslog
-# Detta skriver ut ALLA rader som innehaller ordet "error"
+# Detta skriver ut ALLA rader som innehåller ordet "error"
 # Kan vara hundratals rader!
 
-# Praktiskt exempel fran gruppuppgiften:
+# Praktiskt exempel från gruppuppgiften:
 grep "Port" /etc/ssh/sshd_config
 # Hittar raden som definierar SSH-porten
 # Output: #Port 22
 # eller: Port 6622
 ```
 
-## grep flaggor - gor sokningen smartare
+## grep flaggor - gör sökningen smartare
 
-Utan flaggor ar grep ganska "dum" - den matchar exakt vad du skriver. Med flaggor blir den mycket smartare:
+Utan flaggor är grep ganska "dum" - den matchar exakt vad du skriver. Med flaggor blir den mycket smartare:
 
 ```bash
-# -i (ignore case) - ignorera stora/sma bokstaver
+# -i (ignore case) - ignorera stora/små bokstäver
 grep -i "error" log.txt
 # Matchar: error, Error, ERROR, eRrOr
 # Utan -i matchar bara exakt "error"
@@ -390,25 +390,25 @@ grep -i "error" log.txt
 # -n (line numbers) - visa radnummer
 grep -n "Port" /etc/ssh/sshd_config
 # Output: 15:#Port 22
-# Nu vet du att det ar rad 15!
+# Nu vet du att det är rad 15!
 
-# -r (recursive) - sok i alla filer i en mapp
+# -r (recursive) - sök i alla filer i en mapp
 grep -r "TODO" ./src/
-# Soker i ALLA filer under src-mappen
-# Perfekt for att hitta alla TODOs i ett projekt
+# Söker i ALLA filer under src-mappen
+# Perfekt för att hitta alla TODOs i ett projekt
 
 # -v (invert) - visa rader som INTE matchar
 grep -v "^#" /etc/ssh/sshd_config
-# ^ betyder "borjan av raden"
-# Visar alla rader som INTE borjar med # (kommentarer)
+# ^ betyder "början av raden"
+# Visar alla rader som INTE börjar med # (kommentarer)
 # Detta filtrerar bort kommentarer!
 
-# -c (count) - rakna antal matchningar
+# -c (count) - räkna antal matchningar
 grep -c "Failed password" /var/log/auth.log
 # Output: 47
-# Istallet for 47 rader far du bara siffran 47
+# Istället för 47 rader får du bara siffran 47
 
-# -E (extended regex) - anvand regex
+# -E (extended regex) - använd regex
 grep -E "error|warning|failed" /var/log/syslog
 # | betyder "eller"
 # Matchar rader med error ELLER warning ELLER failed
@@ -416,35 +416,35 @@ grep -E "error|warning|failed" /var/log/syslog
 
 ## Kombinera grep-flaggor
 
-Du kan kombinera flera flaggor for kraftfulla sokningar:
+Du kan kombinera flera flaggor för kraftfulla sökningar:
 
 ```bash
-# Sok case-insensitive OCH visa radnummer
+# Sök case-insensitive OCH visa radnummer
 grep -in "error" /var/log/syslog
 # -i = ignore case, -n = radnummer
 
-# Sok rekursivt efter TODO, ignorera case
+# Sök rekursivt efter TODO, ignorera case
 grep -ri "todo" ./src/
 # Hittar TODO, Todo, todo i alla filer
 
 # Visa aktiva rader i config (inte kommentarer, inte tomma)
 grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"
-# Forsta grep: ta bort kommentarsrader
+# Första grep: ta bort kommentarsrader
 # Andra grep: ta bort tomma rader (^$ = tom rad)
-# | (pipe) skickar output fran forsta till andra
+# | (pipe) skickar output från första till andra
 ```
 
 ---
 
-## Vad ar sed?
+## Vad är sed?
 
-sed star for "Stream Editor". Det laser text rad for rad, gor andringar, och skriver ut resultatet. Tank pa det som "Sok och ersatt for terminalen" - men mycket kraftfullare.
+sed står för "Stream Editor". Det läser text rad för rad, gör ändringar, och skriver ut resultatet. Tänk på det som "Sök och ersätt för terminalen" - men mycket kraftfullare.
 
 ```bash
-# Grundlaggande syntax:
+# Grundläggande syntax:
 sed 's/gammalt/nytt/' fil
-# s = substitute (ersatt)
-# Forsta forekomsten pa varje rad ersatts
+# s = substitute (ersätt)
+# Första förekomsten på varje rad ersätts
 
 # Exempel:
 echo "hello world" | sed 's/world/DevOps/'
@@ -455,70 +455,70 @@ echo "hello world" | sed 's/world/DevOps/'
 ## sed - viktiga varianter
 
 ```bash
-# Ersatt ALLA forekomster (inte bara forsta)
+# Ersätt ALLA förekomster (inte bara första)
 sed 's/gammalt/nytt/g' fil
-# g = global, alla forekomster pa varje rad
+# g = global, alla förekomster på varje rad
 
-# Andra filen DIREKT (farligt! gor backup forst)
+# Ändra filen DIREKT (farligt! gör backup först)
 sed -i 's/gammalt/nytt/g' fil
-# -i = in-place, andrar originalfilen
+# -i = in-place, ändrar originalfilen
 # VARNING: Det finns ingen undo!
 
 # Gör backup automatiskt
 sed -i.bak 's/gammalt/nytt/g' fil
-# Skapar fil.bak innan andring
-# Livräddare om nagot gar fel!
+# Skapar fil.bak innan ändring
+# Livräddare om något går fel!
 
-# Ta bort rader som matchar monster
-sed '/monster/d' fil
+# Ta bort rader som matchar mönster
+sed '/mönster/d' fil
 # d = delete
-# Alla rader som innehaller "monster" tas bort
+# Alla rader som innehåller "mönster" tas bort
 
-# Ersatt bara pa specifik rad
+# Ersätt bara på specifik rad
 sed '5s/gammalt/nytt/' fil
-# Ersatter bara pa rad 5
+# Ersätter bara på rad 5
 ```
 
-## sed i gruppuppgiften - andra SSH-port
+## sed i gruppuppgiften - ändra SSH-port
 
-Detta ar ett av de viktigaste anvandningsfallen:
+Detta är ett av de viktigaste användningsfallen:
 
 ```bash
 #!/bin/bash
-# Konfigurera SSH-porten fran 22 till 6622
+# Konfigurera SSH-porten från 22 till 6622
 
 SSH_PORT=6622
 
-# Steg 1: Avkommentera och andra Port-raden
+# Steg 1: Avkommentera och ändra Port-raden
 # Ursprunglig rad: #Port 22
 # Ny rad: Port 6622
 
 sed -i "s/^#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
-# ^#Port 22 = rad som borjar med #Port 22
-# Port $SSH_PORT = ersatts med Port 6622
-# Vi anvander " istallet for ' for att variabeln ska expandera
+# ^#Port 22 = rad som börjar med #Port 22
+# Port $SSH_PORT = ersätts med Port 6622
+# Vi använder " istället för ' för att variabeln ska expandera
 
-# Steg 2: Om raden redan ar avkommenterad (Port 22)
+# Steg 2: Om raden redan är avkommenterad (Port 22)
 sed -i "s/^Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
 
-# Steg 3: Verifiera andringen
+# Steg 3: Verifiera ändringen
 grep "^Port" /etc/ssh/sshd_config
 # Output ska vara: Port 6622
 
-# Steg 4: Starta om SSH for att aktivera
+# Steg 4: Starta om SSH för att aktivera
 sudo systemctl restart sshd
 ```
 
 ---
 
-## Vad ar awk?
+## Vad är awk?
 
-awk ar ett helt programmeringssprak for textbearbetning. Det ar specialiserat pa kolumnbaserad data - tank pa det som "Excel for terminalen". Varje rad delas automatiskt upp i kolumner.
+awk är ett helt programmeringsspråk för textbearbetning. Det är specialiserat på kolumnbaserad data - tänk på det som "Excel för terminalen". Varje rad delas automatiskt upp i kolumner.
 
 ```bash
-# Grundlaggande syntax:
+# Grundläggande syntax:
 awk '{print $1}' fil
-# $1 = forsta kolumnen
+# $1 = första kolumnen
 # $2 = andra kolumnen
 # $NF = sista kolumnen (Number of Fields)
 # $0 = hela raden
@@ -533,26 +533,26 @@ ls -l | awk '{print $NF}'
 # Output: file.txt
 ```
 
-## awk - andra separator
+## awk - ändra separator
 
-Som standard anvander awk mellanslag/tab som separator. Men manga filer anvander andra tecken:
+Som standard använder awk mellanslag/tab som separator. Men många filer använder andra tecken:
 
 ```bash
-# /etc/passwd anvander kolon som separator
+# /etc/passwd använder kolon som separator
 # Rad: said:x:1000:1000:Said:/home/said:/bin/bash
 # $1   $2 $3   $4   $5   $6          $7
 
 # Utan -F (fel resultat):
 awk '{print $1}' /etc/passwd
 # Output: said:x:1000:1000:Said:/home/said:/bin/bash
-# Hela raden! Eftersom det inte finns nagra mellanslag
+# Hela raden! Eftersom det inte finns några mellanslag
 
-# Med -F: (ratt resultat):
+# Med -F: (rätt resultat):
 awk -F: '{print $1}' /etc/passwd
 # Output: said
-# Nu ar kolon separator, sa $1 ar bara "said"
+# Nu är kolon separator, så $1 är bara "said"
 
-# Visa anvandarnamn och shell:
+# Visa användarnamn och shell:
 awk -F: '{print $1, $7}' /etc/passwd
 # Output: said /bin/bash
 # Komma mellan $1 och $7 ger mellanslag i output
@@ -560,50 +560,50 @@ awk -F: '{print $1, $7}' /etc/passwd
 
 ## awk med villkor
 
-awk kan filtrera rader baserat pa villkor:
+awk kan filtrera rader baserat på villkor:
 
 ```bash
-# Visa bara anvandare med UID over 1000
+# Visa bara användare med UID över 1000
 awk -F: '$3 > 1000 {print $1, $3}' /etc/passwd
-# $3 > 1000 ar villkoret
-# {print $1, $3} ar vad som ska goras om villkoret ar sant
+# $3 > 1000 är villkoret
+# {print $1, $3} är vad som ska göras om villkoret är sant
 # Output: nobody 65534
 
-# Visa anvandare som har bash som shell
+# Visa användare som har bash som shell
 awk -F: '$7 ~ /bash/ {print $1}' /etc/passwd
 # ~ betyder "matchar regex"
-# /bash/ ar ett regex som soker efter "bash"
+# /bash/ är ett regex som söker efter "bash"
 # Output: said (och andra med bash)
 
-# Visa processer som anvander over 1% minne
+# Visa processer som använder över 1% minne
 ps aux | awk '$4 > 1.0 {print $4, $11}'
-# $4 ar minnes-kolumnen i ps aux
-# $11 ar kommando-namnet
+# $4 är minnes-kolumnen i ps aux
+# $11 är kommando-namnet
 ```
 
 ---
 
 ## Kombinera verktygen - Pipeline-magi
 
-Den verkliga kraften kommer nar du kombinerar verktygen:
+Den verkliga kraften kommer när du kombinerar verktygen:
 
 ```bash
 # Hitta de 5 vanligaste felen i loggen
 grep -i "error" /var/log/syslog | awk '{print $5}' | sort | uniq -c | sort -rn | head -5
-# Steg for steg:
+# Steg för steg:
 # 1. grep -i "error"     -> Hitta alla error-rader
 # 2. awk '{print $5}'    -> Ta ut kolumn 5 (programnamnet)
 # 3. sort                -> Sortera alfabetiskt
-# 4. uniq -c             -> Rakna unika forekomster
-# 5. sort -rn            -> Sortera numeriskt, storst forst
+# 4. uniq -c             -> Räkna unika förekomster
+# 5. sort -rn            -> Sortera numeriskt, störst först
 # 6. head -5             -> Visa topp 5
 
-# Exempel fran gruppuppgiften - kolla om anvandare finns:
+# Exempel från gruppuppgiften - kolla om användare finns:
 check_user() {
     local username=$1
     if grep -q "^$username:" /etc/passwd; then
         # -q = quiet, ingen output, bara exit code
-        # ^$username: = rad som borjar med anvandarnamnet foljt av kolon
+        # ^$username: = rad som börjar med användarnamnet följt av kolon
         echo "User $username exists"
         grep "^$username:" /etc/passwd | awk -F: '{print "UID:", $3, "GID:", $4}'
     else
@@ -611,38 +611,38 @@ check_user() {
     fi
 }
 
-# Lista anvandare i en grupp
+# Lista användare i en grupp
 grep "^devops:" /etc/group | awk -F: '{print $4}'
-# $4 i /etc/group ar medlemslistan
+# $4 i /etc/group är medlemslistan
 # Output: said,anna,erik
 ```
 
 ---
 
-## Vanliga misstag och losningar
+## Vanliga misstag och lösningar
 
 ```bash
-# Misstag 1: Glomma -i i sed (filen andras inte)
+# Misstag 1: Glömma -i i sed (filen ändras inte)
 sed 's/old/new/' fil
-# Detta SKRIVER UT resultatet men ANDRAR INTE filen!
+# Detta SKRIVER UT resultatet men ÄNDRAR INTE filen!
 sed -i 's/old/new/' fil
-# Nu andras filen
+# Nu ändras filen
 
 # Misstag 2: Fel separator i awk
 awk '{print $1}' /etc/passwd
-# HELA raden skrivs ut eftersom default separator ar mellanslag
+# HELA raden skrivs ut eftersom default separator är mellanslag
 awk -F: '{print $1}' /etc/passwd
-# Nu anvands kolon som separator
+# Nu används kolon som separator
 
-# Misstag 3: Glomma ankare i grep
+# Misstag 3: Glömma ankare i grep
 grep "Port" /etc/ssh/sshd_config
 # Matchar "Port", "#Port", "Transport", etc.
 grep "^Port" /etc/ssh/sshd_config
-# ^ = borjan av rad, matchar bara "Port" i borjan
+# ^ = början av rad, matchar bara "Port" i början
 
-# Misstag 4: Anvanda ' istallet for " med variabler
+# Misstag 4: Använda ' istället för " med variabler
 sed -i 's/old/$NEW/' fil
-# $NEW ersatts INTE, du far bokstavligen "$NEW" i filen
+# $NEW ersätts INTE, du får bokstavligen "$NEW" i filen
 sed -i "s/old/$NEW/" fil
 # Nu expanderas variabeln korrekt
 ```
@@ -653,31 +653,31 @@ sed -i "s/old/$NEW/" fil
 
 | Uppgift | Kommando |
 |---------|----------|
-| Sok i fil | `grep "monster" fil` |
-| Sok case-insensitive | `grep -i "monster" fil` |
-| Sok rekursivt | `grep -r "monster" mapp/` |
-| Visa radnummer | `grep -n "monster" fil` |
-| Invertera (visa ej matchande) | `grep -v "monster" fil` |
-| Rakna matchningar | `grep -c "monster" fil` |
-| Ersatt text (visa) | `sed 's/old/new/g' fil` |
-| Ersatt text (andra fil) | `sed -i 's/old/new/g' fil` |
-| Ta bort rader | `sed '/monster/d' fil` |
-| Forsta kolumnen | `awk '{print $1}' fil` |
+| Sök i fil | `grep "mönster" fil` |
+| Sök case-insensitive | `grep -i "mönster" fil` |
+| Sök rekursivt | `grep -r "mönster" mapp/` |
+| Visa radnummer | `grep -n "mönster" fil` |
+| Invertera (visa ej matchande) | `grep -v "mönster" fil` |
+| Räkna matchningar | `grep -c "mönster" fil` |
+| Ersätt text (visa) | `sed 's/old/new/g' fil` |
+| Ersätt text (ändra fil) | `sed -i 's/old/new/g' fil` |
+| Ta bort rader | `sed '/mönster/d' fil` |
+| Första kolumnen | `awk '{print $1}' fil` |
 | Custom separator | `awk -F: '{print $1}' fil` |
 | Sista kolumnen | `awk '{print $NF}' fil` |
 | Filtrera med villkor | `awk '$3 > 100' fil` |
 
 ---
 
-## Nasta steg
+## Nästa steg
 
-Nu kan du soka, ersatta och analysera text som ett proffs. Nasta steg ar att lara dig:
+Nu kan du söka, ersätta och analysera text som ett proffs. Nästa steg är att lära dig:
 
-- Kontrollstrukturer (if/else, loopar) for att fatta beslut i skript
-- Funktioner for att organisera din kod
-- Felhantering for robusta skript
+- Kontrollstrukturer (if/else, loopar) för att fatta beslut i skript
+- Funktioner för att organisera din kod
+- Felhantering för robusta skript
 
-Grep, sed och awk kommer du anvanda i nastan varje skript du skriver!
+Grep, sed och awk kommer du använda i nästan varje skript du skriver!
 
 """,
             "quiz": [
