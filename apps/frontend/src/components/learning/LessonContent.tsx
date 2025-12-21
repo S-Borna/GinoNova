@@ -2,17 +2,18 @@
 
 /**
  * ============================================================================
- * LESSON CONTENT - Pedagogisk och visuellt tilltalande lektionsvy
+ * LESSON CONTENT — PREMIUM VIBRANT DESIGN
  * ============================================================================
  *
- * Features:
- * - Progressbar för läsning
- * - Highlight av nyckelbegrepp
- * - Collapsible sektioner för quiz/svar
- * - Bättre kod-block med copy-funktion
- * - Visuella diagram och tabeller
+ * A stunning, colorful lesson viewer with:
+ * - Gradient progress bars
+ * - Color-coded sections
+ * - Vibrant callout boxes
+ * - Premium code blocks with syntax highlighting
+ * - Interactive elements
+ * - Beautiful typography
  *
- * @phase 4.1 - Enhanced Learning Experience
+ * @design VIBRANT-PREMIUM-2024
  */
 
 import { useState, useEffect, useRef } from "react"
@@ -20,7 +21,6 @@ import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import remarkGfm from "remark-gfm"
 import { cn } from "@saas/ui"
-import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
 import {
     Copy,
@@ -35,6 +35,17 @@ import {
     HelpCircle,
     CheckCircle2,
     Clock,
+    Zap,
+    Terminal,
+    Rocket,
+    AlertTriangle,
+    Info,
+    Star,
+    Sparkles,
+    Brain,
+    Flame,
+    Shield,
+    Award,
 } from "lucide-react"
 
 import "highlight.js/styles/github-dark.css"
@@ -47,52 +58,80 @@ interface LessonContentProps {
 }
 
 /* ============================================================================
+   VIBRANT COLOR PALETTE
+   ============================================================================ */
+
+const COLORS = {
+    // Primary gradients
+    primary: "from-violet-600 via-purple-600 to-indigo-600",
+    secondary: "from-cyan-500 via-blue-500 to-indigo-500",
+    accent: "from-amber-500 via-orange-500 to-red-500",
+    
+    // Section colors
+    tldr: {
+        bg: "bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10",
+        border: "border-emerald-500/30",
+        text: "text-emerald-400",
+        icon: "text-emerald-400",
+        glow: "shadow-emerald-500/20",
+    },
+    important: {
+        bg: "bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10",
+        border: "border-amber-500/30",
+        text: "text-amber-400",
+        icon: "text-amber-400",
+        glow: "shadow-amber-500/20",
+    },
+    tip: {
+        bg: "bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-violet-500/10",
+        border: "border-blue-500/30",
+        text: "text-blue-400",
+        icon: "text-blue-400",
+        glow: "shadow-blue-500/20",
+    },
+    warning: {
+        bg: "bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-fuchsia-500/10",
+        border: "border-rose-500/30",
+        text: "text-rose-400",
+        icon: "text-rose-400",
+        glow: "shadow-rose-500/20",
+    },
+    success: {
+        bg: "bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10",
+        border: "border-green-500/30",
+        text: "text-green-400",
+        icon: "text-green-400",
+        glow: "shadow-green-500/20",
+    },
+    code: {
+        bg: "bg-gradient-to-br from-slate-900 via-zinc-900 to-neutral-900",
+        border: "border-violet-500/20",
+        header: "bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-indigo-600/20",
+    },
+}
+
+/* ============================================================================
    HELPER: Extract code text from React children (fixes [object Object] bug)
    ============================================================================ */
 
 function extractCodeText(children: React.ReactNode): string {
-    // If it's already a string, return it
-    if (typeof children === 'string') {
-        return children
-    }
-
-    // If it's a number, convert to string
-    if (typeof children === 'number') {
-        return String(children)
-    }
-
-    // If it's null or undefined, return empty
-    if (children == null) {
-        return ''
-    }
-
-    // If it's an array, recursively extract and join
-    if (Array.isArray(children)) {
-        return children.map(extractCodeText).join('')
-    }
-
-    // If it's a React element, try to get its children
+    if (typeof children === 'string') return children
+    if (typeof children === 'number') return String(children)
+    if (children == null) return ''
+    if (Array.isArray(children)) return children.map(extractCodeText).join('')
     if (typeof children === 'object' && 'props' in children) {
         const element = children as React.ReactElement<{ children?: React.ReactNode }>
         return extractCodeText(element.props?.children)
     }
-
-    // Fallback: try to stringify (but avoid [object Object])
     const str = String(children)
     if (str === '[object Object]') {
-        // Try JSON.stringify as last resort
-        try {
-            return JSON.stringify(children, null, 2)
-        } catch {
-            return ''
-        }
+        try { return JSON.stringify(children, null, 2) } catch { return '' }
     }
-
     return str
 }
 
 /* ============================================================================
-   COPY BUTTON FOR CODE BLOCKS
+   PREMIUM COPY BUTTON
    ============================================================================ */
 
 function CopyButton({ code }: { code: string }) {
@@ -108,10 +147,13 @@ function CopyButton({ code }: { code: string }) {
         <button
             onClick={handleCopy}
             className={cn(
-                "absolute top-3 right-3 p-2 rounded-lg transition-all",
-                "bg-neutral-700/50 hover:bg-neutral-600/50",
-                "text-neutral-400 hover:text-white",
-                "opacity-0 group-hover:opacity-100"
+                "absolute top-3 right-3 p-2.5 rounded-xl transition-all duration-300",
+                "bg-white/5 backdrop-blur-sm",
+                "border border-white/10 hover:border-violet-500/50",
+                "text-zinc-400 hover:text-white",
+                "opacity-0 group-hover:opacity-100",
+                "hover:bg-violet-500/20 hover:shadow-lg hover:shadow-violet-500/20",
+                "transform hover:scale-105"
             )}
             title="Copy code"
         >
@@ -125,33 +167,114 @@ function CopyButton({ code }: { code: string }) {
 }
 
 /* ============================================================================
-   COLLAPSIBLE DETAILS (for quiz answers)
+   VIBRANT CALLOUT BOX
+   ============================================================================ */
+
+type CalloutType = 'tldr' | 'important' | 'tip' | 'warning' | 'success'
+
+function CalloutBox({ type, children }: { type: CalloutType; children: React.ReactNode }) {
+    const config = {
+        tldr: {
+            ...COLORS.tldr,
+            title: "TL;DR",
+            Icon: Zap,
+        },
+        important: {
+            ...COLORS.important,
+            title: "Viktigt",
+            Icon: AlertTriangle,
+        },
+        tip: {
+            ...COLORS.tip,
+            title: "Tips",
+            Icon: Lightbulb,
+        },
+        warning: {
+            ...COLORS.warning,
+            title: "Varning",
+            Icon: Shield,
+        },
+        success: {
+            ...COLORS.success,
+            title: "Bra jobbat!",
+            Icon: CheckCircle2,
+        },
+    }[type]
+
+    const { bg, border, text, icon, glow, title, Icon } = config
+
+    return (
+        <div className={cn(
+            "my-8 rounded-2xl overflow-hidden",
+            "border-l-4",
+            border,
+            "shadow-xl",
+            glow
+        )}>
+            <div className={cn(bg, "p-6")}>
+                <div className="flex items-start gap-4">
+                    <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center",
+                        "bg-gradient-to-br",
+                        type === 'tldr' && "from-emerald-500 to-teal-500",
+                        type === 'important' && "from-amber-500 to-orange-500",
+                        type === 'tip' && "from-blue-500 to-indigo-500",
+                        type === 'warning' && "from-rose-500 to-pink-500",
+                        type === 'success' && "from-green-500 to-emerald-500",
+                        "shadow-lg"
+                    )}>
+                        <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                        <span className={cn("text-sm font-bold uppercase tracking-wider", text)}>
+                            {title}
+                        </span>
+                        <div className="mt-2 text-zinc-300 leading-relaxed">
+                            {children}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   COLLAPSIBLE SECTION
    ============================================================================ */
 
 function CollapsibleDetails({ summary, children }: { summary: string; children: React.ReactNode }) {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <div className="my-4 rounded-xl border border-indigo-200 dark:border-indigo-800 overflow-hidden">
+        <div className={cn(
+            "my-6 rounded-2xl overflow-hidden",
+            "border border-violet-500/30",
+            "bg-gradient-to-r from-violet-500/5 via-purple-500/5 to-indigo-500/5",
+            "shadow-xl shadow-violet-500/10"
+        )}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "w-full flex items-center gap-2 px-4 py-3 text-left",
-                    "bg-indigo-50 dark:bg-indigo-950/50",
-                    "text-indigo-700 dark:text-indigo-300 font-medium",
-                    "hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+                    "w-full flex items-center gap-3 px-5 py-4 text-left",
+                    "bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-indigo-600/20",
+                    "text-violet-300 font-semibold",
+                    "hover:from-violet-600/30 hover:via-purple-600/30 hover:to-indigo-600/30",
+                    "transition-all duration-300"
                 )}
             >
-                {isOpen ? (
-                    <ChevronDown className="w-4 h-4" />
-                ) : (
-                    <ChevronRight className="w-4 h-4" />
-                )}
-                <HelpCircle className="w-4 h-4" />
-                {summary}
+                <div className={cn(
+                    "w-8 h-8 rounded-lg flex items-center justify-center",
+                    "bg-violet-500/20 transition-transform duration-300",
+                    isOpen && "rotate-90"
+                )}>
+                    <ChevronRight className="w-4 h-4 text-violet-400" />
+                </div>
+                <HelpCircle className="w-5 h-5 text-violet-400" />
+                <span>{summary}</span>
             </button>
             {isOpen && (
-                <div className="px-4 py-3 bg-white dark:bg-neutral-900 border-t border-indigo-200 dark:border-indigo-800">
+                <div className="px-5 py-4 border-t border-violet-500/20 text-zinc-300">
                     {children}
                 </div>
             )}
@@ -160,20 +283,167 @@ function CollapsibleDetails({ summary, children }: { summary: string; children: 
 }
 
 /* ============================================================================
-   SECTION HEADER (for ## headings)
+   VIBRANT SECTION HEADER
    ============================================================================ */
 
-function SectionHeader({ children, icon }: { children: React.ReactNode; icon?: React.ReactNode }) {
+function SectionHeader({ children, variant = 'default' }: { children: React.ReactNode; variant?: string }) {
+    const text = String(children).toLowerCase()
+    
+    // Determine color based on content
+    let gradient = "from-violet-500 via-purple-500 to-indigo-500"
+    let Icon = FileText
+    
+    if (text.includes("varför") || text.includes("mål") || text.includes("target")) {
+        gradient = "from-amber-500 via-orange-500 to-red-500"
+        Icon = Target
+    } else if (text.includes("praktisk") || text.includes("övning") || text.includes("example")) {
+        gradient = "from-cyan-500 via-blue-500 to-indigo-500"
+        Icon = Code2
+    } else if (text.includes("quiz") || text.includes("checkpoint") || text.includes("testa")) {
+        gradient = "from-fuchsia-500 via-pink-500 to-rose-500"
+        Icon = HelpCircle
+    } else if (text.includes("tips") || text.includes("pro")) {
+        gradient = "from-emerald-500 via-teal-500 to-cyan-500"
+        Icon = Lightbulb
+    } else if (text.includes("referens") || text.includes("copy-paste") || text.includes("cheat")) {
+        gradient = "from-yellow-500 via-amber-500 to-orange-500"
+        Icon = Star
+    } else if (text.includes("varning") || text.includes("obs") || text.includes("danger")) {
+        gradient = "from-rose-500 via-red-500 to-orange-500"
+        Icon = AlertTriangle
+    } else if (text.includes("kom ihåg") || text.includes("summary") || text.includes("sammanfatt")) {
+        gradient = "from-green-500 via-emerald-500 to-teal-500"
+        Icon = Brain
+    } else if (text.includes("grund") || text.includes("basic") || text.includes("introduk")) {
+        gradient = "from-blue-500 via-indigo-500 to-violet-500"
+        Icon = BookOpen
+    }
+
     return (
-        <div className="flex items-center gap-3 mt-10 mb-4 pb-3 border-b-2 border-indigo-500/30">
-            {icon && (
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500">
-                    {icon}
+        <div className="relative mt-12 mb-6">
+            {/* Glow effect */}
+            <div className={cn(
+                "absolute -inset-1 rounded-2xl blur-xl opacity-30",
+                `bg-gradient-to-r ${gradient}`
+            )} />
+            
+            <div className={cn(
+                "relative flex items-center gap-4 p-4 rounded-2xl",
+                "bg-zinc-900/80 backdrop-blur-sm",
+                "border border-white/10"
+            )}>
+                <div className={cn(
+                    "w-12 h-12 rounded-xl flex items-center justify-center",
+                    `bg-gradient-to-br ${gradient}`,
+                    "shadow-lg"
+                )}>
+                    <Icon className="w-6 h-6 text-white" />
                 </div>
-            )}
-            <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
-                {children}
-            </h2>
+                <h2 className={cn(
+                    "text-2xl font-bold bg-clip-text text-transparent",
+                    `bg-gradient-to-r ${gradient}`
+                )}>
+                    {children}
+                </h2>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   PREMIUM TABLE
+   ============================================================================ */
+
+function PremiumTable({ children }: { children: React.ReactNode }) {
+    return (
+        <div className={cn(
+            "my-8 rounded-2xl overflow-hidden",
+            "border border-violet-500/20",
+            "shadow-xl shadow-violet-500/10",
+            "bg-gradient-to-br from-zinc-900/80 via-zinc-900/60 to-zinc-800/40"
+        )}>
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                    {children}
+                </table>
+            </div>
+        </div>
+    )
+}
+
+/* ============================================================================
+   PREMIUM CODE BLOCK
+   ============================================================================ */
+
+function PremiumCodeBlock({ children, language = 'bash' }: { children: string; language?: string }) {
+    const langColors: Record<string, string> = {
+        bash: "from-emerald-500 to-teal-500",
+        shell: "from-emerald-500 to-teal-500",
+        sh: "from-emerald-500 to-teal-500",
+        javascript: "from-yellow-500 to-amber-500",
+        js: "from-yellow-500 to-amber-500",
+        typescript: "from-blue-500 to-indigo-500",
+        ts: "from-blue-500 to-indigo-500",
+        python: "from-blue-400 to-yellow-500",
+        py: "from-blue-400 to-yellow-500",
+        sql: "from-orange-500 to-red-500",
+        yaml: "from-pink-500 to-rose-500",
+        yml: "from-pink-500 to-rose-500",
+        json: "from-amber-500 to-orange-500",
+        dockerfile: "from-cyan-500 to-blue-500",
+        docker: "from-cyan-500 to-blue-500",
+        nginx: "from-green-500 to-emerald-500",
+        plaintext: "from-zinc-400 to-zinc-500",
+        ini: "from-violet-500 to-purple-500",
+    }
+
+    const gradient = langColors[language.toLowerCase()] || "from-violet-500 to-purple-500"
+
+    return (
+        <div className="group relative my-6">
+            {/* Glow effect */}
+            <div className={cn(
+                "absolute -inset-0.5 rounded-2xl blur-lg opacity-30",
+                `bg-gradient-to-r ${gradient}`
+            )} />
+            
+            <div className={cn(
+                "relative rounded-2xl overflow-hidden",
+                "border border-white/10",
+                COLORS.code.bg
+            )}>
+                {/* Language badge */}
+                <div className={cn(
+                    "flex items-center justify-between px-4 py-2",
+                    "border-b border-white/5",
+                    COLORS.code.header
+                )}>
+                    <div className="flex items-center gap-2">
+                        <Terminal className="w-4 h-4 text-violet-400" />
+                        <span className={cn(
+                            "text-xs font-bold uppercase tracking-wider",
+                            "bg-clip-text text-transparent",
+                            `bg-gradient-to-r ${gradient}`
+                        )}>
+                            {language}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-500/60" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
+                        <div className="w-3 h-3 rounded-full bg-green-500/60" />
+                    </div>
+                </div>
+                
+                {/* Code content */}
+                <pre className="p-4 overflow-x-auto">
+                    <code className="text-sm font-mono text-zinc-100 leading-relaxed">
+                        {children.trim()}
+                    </code>
+                </pre>
+                
+                <CopyButton code={children.trim()} />
+            </div>
         </div>
     )
 }
@@ -190,16 +460,12 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
     useEffect(() => {
         const handleScroll = () => {
             if (!contentRef.current) return
-
             const element = contentRef.current
             const rect = element.getBoundingClientRect()
             const windowHeight = window.innerHeight
             const elementHeight = element.scrollHeight
-
-            // Calculate how much has been scrolled through
             const scrolled = Math.max(0, -rect.top + windowHeight * 0.5)
             const progress = Math.min(100, (scrolled / elementHeight) * 100)
-
             setReadProgress(Math.round(progress))
             onProgressUpdate?.(Math.round(progress))
         }
@@ -208,168 +474,220 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
         return () => window.removeEventListener("scroll", handleScroll)
     }, [onProgressUpdate])
 
-    // Detect section types from heading content
-    const getSectionIcon = (text: string) => {
+    // Detect if content starts with TL;DR blockquote
+    const detectCalloutType = (text: string): CalloutType | null => {
         const lower = text.toLowerCase()
-        if (lower.includes("lärandemål") || lower.includes("mål")) return <Target className="w-4 h-4" />
-        if (lower.includes("praktisk") || lower.includes("övning")) return <Code2 className="w-4 h-4" />
-        if (lower.includes("quiz") || lower.includes("testa")) return <HelpCircle className="w-4 h-4" />
-        if (lower.includes("sammanfattning") || lower.includes("summary")) return <CheckCircle2 className="w-4 h-4" />
-        if (lower.includes("tips") || lower.includes("💡")) return <Lightbulb className="w-4 h-4" />
-        return <FileText className="w-4 h-4" />
+        if (lower.includes("tl;dr") || lower.includes("tldr")) return 'tldr'
+        if (lower.includes("varning") || lower.includes("obs!") || lower.includes("⚠️")) return 'warning'
+        if (lower.includes("tips") || lower.includes("💡")) return 'tip'
+        if (lower.includes("viktigt") || lower.includes("notera") || lower.includes("🎯")) return 'important'
+        return null
     }
 
     return (
         <div className="relative">
-            {/* Reading Progress Bar */}
-            <div className="sticky top-0 z-10 -mx-6 md:-mx-8 px-6 md:px-8 py-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-lg border-b border-neutral-200/50 dark:border-neutral-700/50">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 text-sm text-neutral-500">
-                        <BookOpen className="w-4 h-4" />
-                        <span>Läsframsteg</span>
+            {/* Premium Progress Bar */}
+            <div className={cn(
+                "sticky top-0 z-10 -mx-6 md:-mx-8 px-6 md:px-8 py-4",
+                "bg-zinc-900/90 backdrop-blur-xl",
+                "border-b border-white/5"
+            )}>
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                        <div className={cn(
+                            "w-8 h-8 rounded-lg flex items-center justify-center",
+                            "bg-gradient-to-br from-violet-500 to-purple-500"
+                        )}>
+                            <BookOpen className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-sm font-medium text-zinc-400">Läsframsteg</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm">
+                    <div className="flex items-center gap-4">
                         {estimatedMinutes && (
-                            <span className="flex items-center gap-1 text-neutral-400">
-                                <Clock className="w-3.5 h-3.5" />
+                            <span className="flex items-center gap-1.5 text-sm text-zinc-500">
+                                <Clock className="w-4 h-4" />
                                 ~{estimatedMinutes} min
                             </span>
                         )}
-                        <span className="font-medium text-indigo-500">{readProgress}%</span>
+                        <span className={cn(
+                            "text-lg font-bold bg-clip-text text-transparent",
+                            "bg-gradient-to-r from-violet-400 to-purple-400"
+                        )}>
+                            {readProgress}%
+                        </span>
                     </div>
                 </div>
-                <div className="h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                
+                {/* Animated gradient progress bar */}
+                <div className="relative h-2 rounded-full bg-zinc-800 overflow-hidden">
                     <div
-                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-300"
+                        className={cn(
+                            "absolute inset-y-0 left-0 rounded-full",
+                            "bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500",
+                            "transition-all duration-500 ease-out"
+                        )}
                         style={{ width: `${readProgress}%` }}
+                    />
+                    {/* Shimmer effect */}
+                    <div 
+                        className={cn(
+                            "absolute inset-y-0 w-1/3 -skew-x-12",
+                            "bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        )}
+                        style={{ 
+                            left: `${Math.max(0, readProgress - 30)}%`,
+                            opacity: readProgress > 0 && readProgress < 100 ? 1 : 0,
+                            animation: "shimmer 2s infinite"
+                        }}
                     />
                 </div>
             </div>
 
             {/* Lesson Content */}
-            <div ref={contentRef} className="pt-6">
-                <article className="prose prose-neutral dark:prose-invert max-w-none
-                    prose-headings:text-neutral-900 dark:prose-headings:text-white
-                    prose-p:text-neutral-700 dark:prose-p:text-neutral-300 prose-p:leading-relaxed
-                    prose-li:text-neutral-700 dark:prose-li:text-neutral-300
-                    prose-strong:text-neutral-900 dark:prose-strong:text-white
-                    prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-a:no-underline hover:prose-a:underline
-                    prose-blockquote:border-l-indigo-500 prose-blockquote:bg-indigo-50/50 dark:prose-blockquote:bg-indigo-950/30 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg
-                    prose-hr:border-neutral-300 dark:prose-hr:border-neutral-700
-                ">
+            <div ref={contentRef} className="pt-8">
+                <article className="prose prose-invert max-w-none">
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeHighlight]}
                         components={{
-                            // Enhanced headings
+                            // Premium H1
                             h1: ({ children }) => (
-                                <h1 className="text-3xl font-bold text-neutral-900 dark:text-white mb-6 mt-8 first:mt-0">
+                                <h1 className={cn(
+                                    "text-4xl md:text-5xl font-black mb-8 mt-0",
+                                    "bg-clip-text text-transparent",
+                                    "bg-gradient-to-r from-white via-zinc-200 to-zinc-400"
+                                )}>
                                     {children}
                                 </h1>
                             ),
-                            h2: ({ children }) => {
-                                const text = String(children)
+                            
+                            // Vibrant H2 sections
+                            h2: ({ children }) => (
+                                <SectionHeader>{children}</SectionHeader>
+                            ),
+                            
+                            // Styled H3
+                            h3: ({ children }) => {
+                                const text = String(children).toLowerCase()
+                                let gradient = "from-zinc-100 to-zinc-300"
+                                
+                                if (text.includes("exempel") || text.includes("example")) {
+                                    gradient = "from-cyan-400 to-blue-400"
+                                } else if (text.includes("syntax") || text.includes("format")) {
+                                    gradient = "from-violet-400 to-purple-400"
+                                } else if (text.includes("vanlig") || text.includes("common")) {
+                                    gradient = "from-amber-400 to-orange-400"
+                                }
+                                
                                 return (
-                                    <SectionHeader icon={getSectionIcon(text)}>
+                                    <h3 className={cn(
+                                        "text-xl font-bold mt-8 mb-4",
+                                        "bg-clip-text text-transparent",
+                                        `bg-gradient-to-r ${gradient}`
+                                    )}>
                                         {children}
-                                    </SectionHeader>
+                                    </h3>
                                 )
                             },
-                            h3: ({ children }) => (
-                                <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mt-8 mb-3">
-                                    {children}
-                                </h3>
-                            ),
 
-                            // Better paragraphs
+                            // Clean paragraphs
                             p: ({ children }) => (
-                                <p className="text-base leading-7 mb-4">{children}</p>
+                                <p className="text-base text-zinc-300 leading-8 mb-5">
+                                    {children}
+                                </p>
                             ),
 
-                            // Enhanced lists
+                            // Premium lists
                             ul: ({ children }) => (
-                                <ul className="my-4 space-y-2 list-none pl-0">
+                                <ul className="my-5 space-y-3 list-none pl-0">
                                     {children}
                                 </ul>
                             ),
                             ol: ({ children }) => (
-                                <ol className="my-4 space-y-2 list-decimal pl-6">
+                                <ol className="my-5 space-y-3 list-none pl-0 counter-reset-[item]">
                                     {children}
                                 </ol>
                             ),
                             li: ({ children, ...props }) => {
-                                // Check if it's in an unordered list
-                                const isUnordered = !(props as any).ordered
+                                const isOrdered = (props as any).ordered
                                 return (
-                                    <li className={cn(
-                                        "text-neutral-700 dark:text-neutral-300",
-                                        isUnordered && "flex items-start gap-2 pl-0"
-                                    )}>
-                                        {isUnordered && (
-                                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2.5 flex-shrink-0" />
+                                    <li className="flex items-start gap-3 text-zinc-300">
+                                        {isOrdered ? (
+                                            <span className={cn(
+                                                "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center",
+                                                "bg-gradient-to-br from-violet-500 to-purple-500",
+                                                "text-xs font-bold text-white"
+                                            )}>
+                                                {(props as any).index + 1}
+                                            </span>
+                                        ) : (
+                                            <span className={cn(
+                                                "flex-shrink-0 w-2 h-2 mt-2.5 rounded-full",
+                                                "bg-gradient-to-r from-violet-500 to-purple-500"
+                                            )} />
                                         )}
-                                        <span>{children}</span>
+                                        <span className="flex-1">{children}</span>
                                     </li>
                                 )
                             },
 
-                            // Beautiful tables
+                            // Premium tables
                             table: ({ children }) => (
-                                <div className="my-6 overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-700">
-                                    <table className="w-full text-sm">{children}</table>
-                                </div>
+                                <PremiumTable>{children}</PremiumTable>
                             ),
                             thead: ({ children }) => (
-                                <thead className="bg-neutral-100 dark:bg-neutral-800">{children}</thead>
+                                <thead className={cn(
+                                    "bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-indigo-600/20"
+                                )}>
+                                    {children}
+                                </thead>
                             ),
                             th: ({ children }) => (
-                                <th className="px-4 py-3 text-left font-semibold text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-700">
+                                <th className={cn(
+                                    "px-4 py-3 text-left font-bold",
+                                    "text-violet-300 border-b border-violet-500/30"
+                                )}>
                                     {children}
                                 </th>
                             ),
                             td: ({ children }) => (
-                                <td className="px-4 py-3 border-b border-neutral-200/50 dark:border-neutral-700/50">
+                                <td className={cn(
+                                    "px-4 py-3 text-zinc-300",
+                                    "border-b border-white/5"
+                                )}>
                                     {children}
                                 </td>
                             ),
 
-                            // Code blocks with copy button
+                            // Premium code blocks
                             pre: ({ children }) => {
-                                // Extract code text robustly (fixes [object Object] bug)
                                 const code = extractCodeText(children)
-
-                                // Try to get language from className
                                 let language = 'plaintext'
+                                
                                 if (typeof children === 'object' && children !== null && 'props' in children) {
                                     const childElement = children as React.ReactElement<{ className?: string }>
                                     const className = childElement?.props?.className || ''
                                     const languageMatch = className.match(/language-(\w+)/)
-                                    if (languageMatch) {
-                                        language = languageMatch[1]
-                                    }
+                                    if (languageMatch) language = languageMatch[1]
                                 }
 
                                 return (
-                                    <div className="group relative my-6">
-                                        <div className="absolute top-0 left-0 px-3 py-1 bg-neutral-700 text-neutral-400 text-xs rounded-br-lg rounded-tl-xl font-mono">
-                                            {language}
-                                        </div>
-                                        <pre className="bg-neutral-900 rounded-xl p-4 pt-8 overflow-x-auto border border-neutral-800">
-                                            <code className="text-sm font-mono text-neutral-100">
-                                                {code.trim()}
-                                            </code>
-                                        </pre>
-                                        <CopyButton code={code.trim()} />
-                                    </div>
+                                    <PremiumCodeBlock language={language}>
+                                        {code}
+                                    </PremiumCodeBlock>
                                 )
                             },
 
-                            // Inline code
+                            // Vibrant inline code
                             code: ({ className, children, ...props }) => {
                                 const isInline = !className
                                 if (isInline) {
                                     return (
-                                        <code className="px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded font-mono text-sm" {...props}>
+                                        <code className={cn(
+                                            "px-2 py-1 rounded-lg font-mono text-sm",
+                                            "bg-gradient-to-r from-violet-500/20 to-purple-500/20",
+                                            "text-violet-300 border border-violet-500/30"
+                                        )} {...props}>
                                             {children}
                                         </code>
                                     )
@@ -377,7 +695,21 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                                 return <code className={className} {...props}>{children}</code>
                             },
 
-                            // Details/Summary for collapsible content
+                            // Vibrant blockquotes/callouts
+                            blockquote: ({ children }) => {
+                                const text = extractCodeText(children)
+                                const type = detectCalloutType(text)
+                                
+                                if (type) {
+                                    return <CalloutBox type={type}>{children}</CalloutBox>
+                                }
+                                
+                                return (
+                                    <CalloutBox type="tip">{children}</CalloutBox>
+                                )
+                            },
+
+                            // Collapsible details
                             details: ({ children }) => {
                                 const childArray = Array.isArray(children) ? children : [children]
                                 const summary = childArray.find((child: any) => child?.type === 'summary')
@@ -389,25 +721,38 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                                     </CollapsibleDetails>
                                 )
                             },
-                            summary: () => null, // Handled by details
+                            summary: () => null,
 
-                            // Horizontal rule as section divider
+                            // Premium dividers
                             hr: () => (
-                                <div className="my-8 flex items-center gap-4">
-                                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent" />
-                                    <div className="w-2 h-2 rounded-full bg-indigo-500/50" />
-                                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent" />
+                                <div className="my-12 flex items-center gap-4">
+                                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+                                    <Sparkles className="w-5 h-5 text-violet-500" />
+                                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
                                 </div>
                             ),
 
-                            // Blockquotes as callouts
-                            blockquote: ({ children }) => (
-                                <div className="my-6 flex gap-3 p-4 bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500 rounded-r-xl">
-                                    <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                                    <div className="text-amber-900 dark:text-amber-100">
-                                        {children}
-                                    </div>
-                                </div>
+                            // Bold text
+                            strong: ({ children }) => (
+                                <strong className="font-bold text-white">
+                                    {children}
+                                </strong>
+                            ),
+
+                            // Links
+                            a: ({ href, children }) => (
+                                <a 
+                                    href={href}
+                                    className={cn(
+                                        "text-violet-400 hover:text-violet-300",
+                                        "underline decoration-violet-500/30 hover:decoration-violet-500",
+                                        "transition-colors"
+                                    )}
+                                    target={href?.startsWith('http') ? '_blank' : undefined}
+                                    rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                >
+                                    {children}
+                                </a>
                             ),
                         }}
                     >
@@ -416,19 +761,33 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                 </article>
             </div>
 
-            {/* Completion indicator */}
+            {/* Completion celebration */}
             {readProgress >= 90 && (
-                <div className="mt-8 p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                <div className={cn(
+                    "mt-12 relative rounded-2xl overflow-hidden",
+                    "border border-emerald-500/30"
+                )}>
+                    {/* Background glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10" />
+                    
+                    <div className="relative p-6 flex items-center gap-5">
+                        <div className={cn(
+                            "w-14 h-14 rounded-2xl flex items-center justify-center",
+                            "bg-gradient-to-br from-emerald-500 to-teal-500",
+                            "shadow-xl shadow-emerald-500/30"
+                        )}>
+                            <Award className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                            <p className="font-medium text-emerald-700 dark:text-emerald-300">
-                                Bra jobbat! Du har läst igenom lektionen.
+                            <p className={cn(
+                                "text-lg font-bold",
+                                "bg-clip-text text-transparent",
+                                "bg-gradient-to-r from-emerald-400 to-teal-400"
+                            )}>
+                                Utmärkt! Du har läst igenom lektionen!
                             </p>
-                            <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                                Glöm inte att markera som slutförd för att få dina XP!
+                            <p className="text-sm text-emerald-300/70 mt-1">
+                                Markera som slutförd för att samla dina XP och fortsätt till nästa nod.
                             </p>
                         </div>
                     </div>
@@ -438,4 +797,5 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
     )
 }
 
+export default LessonContent
 export default LessonContent
