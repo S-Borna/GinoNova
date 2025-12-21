@@ -138,13 +138,13 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                     background: `radial-gradient(circle at 70% 30%, ${skillsmap.color}40, transparent 50%), radial-gradient(circle at 30% 70%, ${skillsmap.color}20, transparent 40%)`
                 }}
             />
-            
+
             {/* Colored glow based on skillsmap color */}
             <div
                 className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-30"
                 style={{ backgroundColor: skillsmap.color }}
             />
-            
+
             {/* Second glow for depth */}
             <div
                 className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full blur-[100px] opacity-20"
