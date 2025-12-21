@@ -66,7 +66,7 @@ const COLORS = {
     primary: "from-violet-600 via-purple-600 to-indigo-600",
     secondary: "from-cyan-500 via-blue-500 to-indigo-500",
     accent: "from-amber-500 via-orange-500 to-red-500",
-    
+
     // Section colors
     tldr: {
         bg: "bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10",
@@ -288,11 +288,11 @@ function CollapsibleDetails({ summary, children }: { summary: string; children: 
 
 function SectionHeader({ children, variant = 'default' }: { children: React.ReactNode; variant?: string }) {
     const text = String(children).toLowerCase()
-    
+
     // Determine color based on content
     let gradient = "from-violet-500 via-purple-500 to-indigo-500"
     let Icon = FileText
-    
+
     if (text.includes("varför") || text.includes("mål") || text.includes("target")) {
         gradient = "from-amber-500 via-orange-500 to-red-500"
         Icon = Target
@@ -326,7 +326,7 @@ function SectionHeader({ children, variant = 'default' }: { children: React.Reac
                 "absolute -inset-1 rounded-2xl blur-xl opacity-30",
                 `bg-gradient-to-r ${gradient}`
             )} />
-            
+
             <div className={cn(
                 "relative flex items-center gap-4 p-4 rounded-2xl",
                 "bg-zinc-900/80 backdrop-blur-sm",
@@ -406,7 +406,7 @@ function PremiumCodeBlock({ children, language = 'bash' }: { children: string; l
                 "absolute -inset-0.5 rounded-2xl blur-lg opacity-30",
                 `bg-gradient-to-r ${gradient}`
             )} />
-            
+
             <div className={cn(
                 "relative rounded-2xl overflow-hidden",
                 "border border-white/10",
@@ -434,14 +434,14 @@ function PremiumCodeBlock({ children, language = 'bash' }: { children: string; l
                         <div className="w-3 h-3 rounded-full bg-green-500/60" />
                     </div>
                 </div>
-                
+
                 {/* Code content */}
                 <pre className="p-4 overflow-x-auto">
                     <code className="text-sm font-mono text-zinc-100 leading-relaxed">
                         {children.trim()}
                     </code>
                 </pre>
-                
+
                 <CopyButton code={children.trim()} />
             </div>
         </div>
@@ -517,7 +517,7 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                         </span>
                     </div>
                 </div>
-                
+
                 {/* Animated gradient progress bar */}
                 <div className="relative h-2 rounded-full bg-zinc-800 overflow-hidden">
                     <div
@@ -529,12 +529,12 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                         style={{ width: `${readProgress}%` }}
                     />
                     {/* Shimmer effect */}
-                    <div 
+                    <div
                         className={cn(
                             "absolute inset-y-0 w-1/3 -skew-x-12",
                             "bg-gradient-to-r from-transparent via-white/20 to-transparent"
                         )}
-                        style={{ 
+                        style={{
                             left: `${Math.max(0, readProgress - 30)}%`,
                             opacity: readProgress > 0 && readProgress < 100 ? 1 : 0,
                             animation: "shimmer 2s infinite"
@@ -560,17 +560,17 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                                     {children}
                                 </h1>
                             ),
-                            
+
                             // Vibrant H2 sections
                             h2: ({ children }) => (
                                 <SectionHeader>{children}</SectionHeader>
                             ),
-                            
+
                             // Styled H3
                             h3: ({ children }) => {
                                 const text = String(children).toLowerCase()
                                 let gradient = "from-zinc-100 to-zinc-300"
-                                
+
                                 if (text.includes("exempel") || text.includes("example")) {
                                     gradient = "from-cyan-400 to-blue-400"
                                 } else if (text.includes("syntax") || text.includes("format")) {
@@ -578,7 +578,7 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                                 } else if (text.includes("vanlig") || text.includes("common")) {
                                     gradient = "from-amber-400 to-orange-400"
                                 }
-                                
+
                                 return (
                                     <h3 className={cn(
                                         "text-xl font-bold mt-8 mb-4",
@@ -663,7 +663,7 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                             pre: ({ children }) => {
                                 const code = extractCodeText(children)
                                 let language = 'plaintext'
-                                
+
                                 if (typeof children === 'object' && children !== null && 'props' in children) {
                                     const childElement = children as React.ReactElement<{ className?: string }>
                                     const className = childElement?.props?.className || ''
@@ -699,11 +699,11 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                             blockquote: ({ children }) => {
                                 const text = extractCodeText(children)
                                 const type = detectCalloutType(text)
-                                
+
                                 if (type) {
                                     return <CalloutBox type={type}>{children}</CalloutBox>
                                 }
-                                
+
                                 return (
                                     <CalloutBox type="tip">{children}</CalloutBox>
                                 )
@@ -741,7 +741,7 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
 
                             // Links
                             a: ({ href, children }) => (
-                                <a 
+                                <a
                                     href={href}
                                     className={cn(
                                         "text-violet-400 hover:text-violet-300",
@@ -769,7 +769,7 @@ export function LessonContent({ content, title, estimatedMinutes, onProgressUpda
                 )}>
                     {/* Background glow */}
                     <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10" />
-                    
+
                     <div className="relative p-6 flex items-center gap-5">
                         <div className={cn(
                             "w-14 h-14 rounded-2xl flex items-center justify-center",

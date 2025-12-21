@@ -185,7 +185,7 @@ function NodeDetailSkeleton() {
                     </div>
                 </div>
             </div>
-            
+
             {/* Content skeleton */}
             <div className="rounded-3xl bg-zinc-900/80 p-8 space-y-4">
                 <div className="h-6 w-48 rounded-lg bg-zinc-800 animate-pulse" />
@@ -208,7 +208,7 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
         <div className="relative rounded-3xl overflow-hidden max-w-md mx-auto">
             {/* Background glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-red-500/10 to-pink-500/10" />
-            
+
             <div className="relative p-8 text-center">
                 <div className={cn(
                     "w-20 h-20 rounded-2xl mx-auto mb-6",
@@ -228,8 +228,8 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
                 <p className="text-zinc-400 mb-8">{error}</p>
                 <div className="flex gap-4 justify-center">
                     <Link prefetch={false} href={`/skillsmaps/${slug}`}>
-                        <Button 
-                            variant="outline" 
+                        <Button
+                            variant="outline"
                             className={cn(
                                 "rounded-xl px-6",
                                 "border-zinc-700 hover:border-violet-500/50",
@@ -240,8 +240,8 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
                             Tillbaka
                         </Button>
                     </Link>
-                    <Button 
-                        onClick={onRetry} 
+                    <Button
+                        onClick={onRetry}
                         className={cn(
                             "rounded-xl px-6",
                             "bg-gradient-to-r from-violet-500 to-purple-500",
@@ -395,13 +395,13 @@ export default function SkillsMapNodeDetailPage() {
                                 `bg-gradient-to-r ${TYPE_COLORS[node.type as keyof typeof TYPE_COLORS]?.gradient || TYPE_COLORS.concept.gradient}`,
                                 "opacity-10"
                             )} />
-                            
+
                             {/* Animated glow */}
                             <div className={cn(
                                 "absolute -inset-1 rounded-3xl blur-2xl opacity-20",
                                 `bg-gradient-to-r ${TYPE_COLORS[node.type as keyof typeof TYPE_COLORS]?.gradient || TYPE_COLORS.concept.gradient}`
                             )} />
-                            
+
                             <div className={cn(
                                 "relative p-8 md:p-10",
                                 "bg-zinc-900/80 backdrop-blur-xl",
@@ -417,7 +417,7 @@ export default function SkillsMapNodeDetailPage() {
                                         )}>
                                             Nod {node.orderIndex} av {skillsmap.totalNodes}
                                         </div>
-                                        
+
                                         {isCompleted && (
                                             <div className={cn(
                                                 "flex items-center gap-2 px-4 py-2 rounded-xl",
@@ -430,7 +430,7 @@ export default function SkillsMapNodeDetailPage() {
                                             </div>
                                         )}
                                     </div>
-                                    
+
                                     {/* XP Badge */}
                                     <div className={cn(
                                         "flex items-center gap-2 px-5 py-2.5 rounded-xl",
@@ -447,7 +447,7 @@ export default function SkillsMapNodeDetailPage() {
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 {/* Title with gradient */}
                                 <h1 className={cn(
                                     "text-3xl md:text-4xl font-black mb-4",
@@ -456,14 +456,14 @@ export default function SkillsMapNodeDetailPage() {
                                 )}>
                                     {node.title}
                                 </h1>
-                                
+
                                 {/* Description */}
                                 {node.description && (
                                     <p className="text-lg text-zinc-400 mb-8 max-w-2xl">
                                         {node.description}
                                     </p>
                                 )}
-                                
+
                                 {/* Meta badges */}
                                 <div className="flex flex-wrap items-center gap-3">
                                     {/* Time */}
@@ -476,7 +476,7 @@ export default function SkillsMapNodeDetailPage() {
                                             {node.estimatedMinutes} min
                                         </span>
                                     </div>
-                                    
+
                                     {/* Difficulty */}
                                     <div className={cn(
                                         "flex items-center gap-2 px-4 py-2 rounded-xl",
@@ -494,7 +494,7 @@ export default function SkillsMapNodeDetailPage() {
                                             {node.difficulty === "easy" ? "Enkel" : node.difficulty === "medium" ? "Medel" : "Svår"}
                                         </span>
                                     </div>
-                                    
+
                                     {/* Type */}
                                     {(() => {
                                         const typeConfig = TYPE_COLORS[node.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.concept
@@ -525,7 +525,7 @@ export default function SkillsMapNodeDetailPage() {
                         <div className="relative rounded-3xl overflow-hidden">
                             {/* Subtle glow */}
                             <div className="absolute -inset-1 rounded-3xl blur-2xl opacity-10 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
-                            
+
                             <div className={cn(
                                 "relative",
                                 "bg-zinc-900/80 backdrop-blur-xl",

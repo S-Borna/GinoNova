@@ -298,7 +298,7 @@ export function NodeCard({
                 config.gradient,
                 isHovered && "opacity-5"
             )} />
-            
+
             {/* Top gradient accent line */}
             <div className={cn(
                 "absolute top-0 left-0 right-0 h-1 bg-gradient-to-r opacity-0 transition-opacity duration-300",

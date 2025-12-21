@@ -35,22 +35,22 @@ export interface TaskFooterProps {
 }
 
 const difficultyConfig = {
-    easy: { 
-        label: 'Enkel', 
+    easy: {
+        label: 'Enkel',
         gradient: 'from-emerald-500 to-teal-500',
         bg: 'bg-gradient-to-r from-emerald-500/10 to-teal-500/10',
         border: 'border-emerald-500/30',
         text: 'text-emerald-400',
     },
-    medium: { 
-        label: 'Medel', 
+    medium: {
+        label: 'Medel',
         gradient: 'from-amber-500 to-orange-500',
         bg: 'bg-gradient-to-r from-amber-500/10 to-orange-500/10',
         border: 'border-amber-500/30',
         text: 'text-amber-400',
     },
-    hard: { 
-        label: 'Svår', 
+    hard: {
+        label: 'Svår',
         gradient: 'from-rose-500 to-red-500',
         bg: 'bg-gradient-to-r from-rose-500/10 to-red-500/10',
         border: 'border-rose-500/30',
@@ -83,7 +83,7 @@ export function TaskFooter({
         >
             {/* Background with gradient border */}
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
-            
+
             <div className={cn(
                 "bg-zinc-900/95 backdrop-blur-xl",
                 "px-4 py-5 sm:px-6"
@@ -181,7 +181,7 @@ export function TaskFooter({
                                 {!isCompleted && !isLoading && (
                                     <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                                 )}
-                                
+
                                 {isLoading ? (
                                     <>
                                         <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
