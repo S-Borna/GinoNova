@@ -4,6 +4,8 @@ DevOps Hub Backend — Main Application
 
 Clean architecture med enkel content-seeding.
 All content kommer från: src/db/seeds/content/
+
+Version: 2.0.0 - Linux 24/7 module
 """
 from contextlib import asynccontextmanager
 import logging
