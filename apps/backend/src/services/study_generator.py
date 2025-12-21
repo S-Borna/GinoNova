@@ -1,5 +1,5 @@
 """
-Study Generator - Dynamiskt generera flashcards och quiz från V3 modulinnehåll
+Study Generator - Dynamiskt generera flashcards och quiz från modulinnehåll
 ==============================================================================
 
 Hämtar innehåll från modulernas noder (tasks) och extraherar:
@@ -8,11 +8,14 @@ Hämtar innehåll från modulernas noder (tasks) och extraherar:
 - Kodexempel -> Quiz-frågor
 - Tabeller -> Quiz-frågor
 
-Detta ersätter statisk study_data med dynamiskt innehåll från V3-formaterade moduler.
+Detta ersätter statisk study_data med dynamiskt innehåll från moduler.
 """
 import re
 from typing import List, Dict, Optional, Any
-from src.db.seeds.modules import ALL_MODULES
+from src.db.seeds.content import get_all_modules
+
+# Hämta moduler vid import
+ALL_MODULES = get_all_modules()
 
 
 # =============================================================================

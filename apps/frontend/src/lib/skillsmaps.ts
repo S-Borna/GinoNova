@@ -90,6 +90,8 @@ interface SkillsMapMeta {
 }
 
 const SKILLSMAP_METADATA: Record<string, SkillsMapMeta> = {
+    // Linux 24/7 - Vår första modul!
+    "linux-247": { icon: "🐧", color: "#FCC624", tags: ["Linux", "CLI", "DevOps", "System Admin"] },
     "python-devops": { icon: "🐍", color: "#3776AB", tags: ["Scripting", "Automation", "API"] },
     "linux-mastery": { icon: "🐧", color: "#FCC624", tags: ["CLI", "System Admin", "Shell"] },
     "docker-mastery": { icon: "🐳", color: "#2496ED", tags: ["Containers", "DevOps", "Microservices"] },

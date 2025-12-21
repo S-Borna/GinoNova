@@ -62,6 +62,8 @@ import {
    ============================================================================ */
 
 const moduleColors: Record<string, { color: string; icon: string }> = {
+    // Linux 24/7 - Vår första modul!
+    "linux-247": { color: "#FCC624", icon: "🐧" },
     "environment-tooling-setup": { color: "#6366f1", icon: "🛠️" },
     "linux-mastery": { color: "#FCC624", icon: "🐧" },
     "shell-scripting-automation": { color: "#4EAA25", icon: "💻" },

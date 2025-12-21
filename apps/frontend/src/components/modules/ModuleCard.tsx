@@ -61,6 +61,8 @@ export interface ModuleCardProps {
    ============================================================================ */
 
 const moduleColors: Record<string, string> = {
+    // Linux 24/7 - Vår första modul!
+    "linux-247": "#FCC624",
     "environment-tooling-setup": "#6366f1",
     "linux-mastery": "#FCC624",
     "shell-scripting-automation": "#4EAA25",

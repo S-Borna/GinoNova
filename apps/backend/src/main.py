@@ -1,3 +1,10 @@
+"""
+DevOps Hub Backend — Main Application
+=====================================
+
+Clean architecture med enkel content-seeding.
+All content kommer från: src/db/seeds/content/
+"""
 from contextlib import asynccontextmanager
 import logging
 
@@ -8,53 +15,59 @@ from .core.settings import settings
 from .core.logging import configure_logging
 from .api.router import api_router
 
-# Import seeding functions
-from .db.module_repository import list_modules
-from .db.seeds.bootcamp_v3_data import get_bootcamp_summary
-
-# Import ILE content for interactive tasks
-from .db.seeds.ile_sample_content import SAMPLE_PERMISSIONS_TASK
-from .db.seeds.module_01_linux_content import MODULE_01_TASKS
-# Import skillsmaps modules from NEW clean structure
-from .db.seeds.modules import get_all_modules as get_skillsmap_modules
-
 configure_logging()
 logger = logging.getLogger(__name__)
 
 
-def auto_seed_if_empty():
+# =============================================================================
+# CONTENT SEEDING — Enkel och ren
+# =============================================================================
+
+def seed_content():
     """
-    Automatically seed the database if it's empty.
-    This ensures Bootcamp v3.0 content is always available after deploys.
+    Seed content från content/ — ENDA källan till moduler/tasks.
+
+    Denna funktion:
+    1. Kollar om data redan finns
+    2. Om inte, skapar tracks och moduler från content/
+    3. Loggar vad som hände
     """
-    # Import here to avoid circular imports
     from .db.module_repository import create_module, list_modules
     from .db.task_repository import create_task
-    from .db.track_repository import create_track, list_tracks, get_track_by_slug
+    from .db.track_repository import create_track, list_tracks
     from .db.lab_repository import create_lab
     from .db.project_repository import create_project
-    from .db.seeds.bootcamp_v3_data import get_tracks, get_modules, get_bootcamp_summary
     from .schemas.module import ModuleCreate
     from .schemas.task import TaskCreate
     from .schemas.track import TrackCreate
     from .schemas.lab import LabCreate
     from .schemas.project import ProjectCreate
 
-    # Check if we already have data
+    # Import från NYA content-strukturen
+    from .db.seeds.content import (
+        get_all_modules,
+        get_tracks,
+        get_bootcamp_summary,
+    )
+
+    # Kolla om vi redan har data
     existing_modules = list_modules()
     summary = get_bootcamp_summary()
 
-    if len(existing_modules) >= summary["modules"]:
-        logger.info(f"✅ Database already seeded: {len(existing_modules)} modules found")
+    if existing_modules:
+        logger.info(f"✅ Content already loaded: {len(existing_modules)} modules")
         return
 
-    logger.info("🌱 Auto-seeding Bootcamp v3.0 content...")
+    # Kolla om det finns content att seeda
+    modules_to_seed = get_all_modules()
+    if not modules_to_seed:
+        logger.info("📭 No content to seed — content/ is empty (this is fine!)")
+        return
 
-    # Track mapping for module creation
+    logger.info(f"🌱 Seeding content: {len(modules_to_seed)} modules...")
+
+    # Skapa tracks först
     track_id_map: dict[str, any] = {}
-
-    # Create tracks
-    tracks_created = 0
     for track_data in get_tracks():
         track = create_track(TrackCreate(
             name=track_data["name"],
@@ -65,213 +78,41 @@ def auto_seed_if_empty():
             order_index=track_data["order_index"],
         ))
         track_id_map[track_data["slug"]] = track.id
-        tracks_created += 1
 
-    # Create modules, tasks, labs, and projects
+    # Skapa moduler och tasks
     modules_created = 0
     tasks_created = 0
     labs_created = 0
     projects_created = 0
 
-    for module_data in get_modules():
-        # Get track ID
-        track_id = track_id_map.get(module_data["track_slug"])
+    for module_data in modules_to_seed:
+        # Hämta track ID
+        track_id = track_id_map.get(module_data.get("track_slug"))
 
-        # Create the module
-        module = create_module(ModuleCreate(
-            track_id=track_id,
-            name=module_data["name"],
-            slug=module_data["slug"],
-            description=module_data.get("description"),
-            order_index=module_data["order_index"],
-            difficulty=module_data.get("difficulty", "intermediate"),
-            estimated_hours=module_data.get("estimated_hours", 10.0),
-            prerequisites=module_data.get("prerequisites", []),
-        ))
-        modules_created += 1
-
-        # Create tasks for this module
-        for idx, task_data in enumerate(module_data.get("tasks", [])):
-            task_title = task_data["title"]
-
-            # Check if we have ILE content for this task
-            # SKIP ILE for linux-mastery - V3 has its own content
-            ile_content = None
-            if module_data["slug"] != "linux-mastery":
-                if task_title == "Understanding File Permissions" or "file permissions" in task_title.lower():
-                    ile_content = SAMPLE_PERMISSIONS_TASK
-                elif task_title in MODULE_01_TASKS:
-                    ile_content = MODULE_01_TASKS[task_title]
-
-            # Use ILE content if available, otherwise use original task data
-            if ile_content:
-                content_blocks = ile_content.get("content_blocks")
-                requirements = ile_content.get("requirements")
-                description = ile_content.get("description") or task_data.get("description")
-                estimated_minutes = ile_content.get("estimated_minutes") or task_data.get("estimated_minutes")
-                xp_reward = ile_content.get("xp_reward") or task_data.get("xp_reward")
-            else:
-                content_blocks = task_data.get("content_blocks")
-                requirements = task_data.get("requirements")
-                description = task_data.get("description")
-                estimated_minutes = task_data.get("estimated_minutes")
-                xp_reward = task_data.get("xp_reward")
-
-            difficulty = task_data.get("difficulty", "medium")
-            estimated_minutes = estimated_minutes or {"easy": 10, "medium": 15, "hard": 25}.get(difficulty, 15)
-            xp_reward = xp_reward or {"easy": 20, "medium": 30, "hard": 50}.get(difficulty, 30)
-
-            create_task(TaskCreate(
-                module_id=module.id,
-                title=task_title,
-                description=description,
-                content=task_data.get("content"),
-                content_blocks=content_blocks,
-                requirements=requirements,
-                order_index=idx + 1,
-                difficulty=difficulty,
-                estimated_minutes=estimated_minutes,
-                xp_reward=xp_reward,
-            ))
-            tasks_created += 1
-
-        # Create labs for this module
-        for idx, lab_data in enumerate(module_data.get("labs", [])):
-            create_lab(LabCreate(
-                module_id=module.id,
-                title=lab_data["title"],
-                slug=lab_data["slug"],
-                estimated_hours=lab_data.get("hours", 2.0),
-                order_index=idx + 1,
-                difficulty="medium",
-                xp_reward=int(lab_data.get("hours", 2.0) * 50),
-            ))
-            labs_created += 1
-
-        # Create project for this module (if exists)
-        project_data = module_data.get("project")
-        if project_data:
-            create_project(ProjectCreate(
-                module_id=module.id,
-                title=project_data["title"],
-                slug=project_data["slug"],
-                description=project_data.get("description"),
-                deliverables=project_data.get("deliverables", []),
-                xp_reward=project_data.get("xp_reward", 500),
-                estimated_hours=project_data.get("estimated_hours", 5.0),
-            ))
-            projects_created += 1
-
-    logger.info(
-        f"✅ Seeded Bootcamp v3.0: {tracks_created} tracks, {modules_created} modules, "
-        f"{tasks_created} tasks, {labs_created} labs, {projects_created} projects"
-    )
-
-    # Now seed skillsmaps modules
-    seed_skillsmaps_modules(track_id_map)
-
-
-def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
-    """
-    Seed the converted skillsmaps modules.
-    Uses NEW clean module structure from src/db/seeds/modules/
-    """
-    from .db.module_repository import create_module, list_modules
-    from .db.task_repository import create_task
-    from .db.track_repository import get_track_by_slug
-    from .schemas.module import ModuleCreate
-    from .schemas.task import TaskCreate
-
-    # Get modules from NEW clean structure
-    ALL_SKILLSMAP_MODULES = get_skillsmap_modules()
-
-    # Check if skillsmaps are already seeded
-    existing_modules = list_modules()
-    skillsmap_slugs = [m["slug"] for m in ALL_SKILLSMAP_MODULES]
-    existing_slugs = [m.slug for m in existing_modules]
-    
-    # Import update function for content sync
-    from .db.task_repository import list_tasks_by_module, update_task
-    from .schemas.task import TaskUpdate
-
-    # ALWAYS sync content for specific modules (linux-mastery, docker-mastery)
-    sync_modules = ["linux-mastery", "docker-mastery"]
-    for module_data in ALL_SKILLSMAP_MODULES:
-        if module_data["slug"] in sync_modules:
-            existing_module = next((m for m in existing_modules if m.slug == module_data["slug"]), None)
-            if existing_module:
-                existing_tasks = list_tasks_by_module(existing_module.id)
-                seed_tasks = module_data.get("tasks", [])
-                updated_count = 0
-                for seed_task in seed_tasks:
-                    db_task = next((t for t in existing_tasks if t.order_index == seed_task.get("order_index")), None)
-                    if db_task and seed_task.get("content"):
-                        new_content = seed_task.get("content", "")
-                        old_len = len(db_task.content or "")
-                        new_len = len(new_content)
-                        # Update if new content is significantly different
-                        if new_len > old_len or "## Introduktion" in new_content:
-                            update_task(db_task.id, TaskUpdate(content=new_content))
-                            updated_count += 1
-                if updated_count > 0:
-                    logger.info(f"🔄 Synced {module_data['slug']}: {updated_count} tasks updated with new content")
-
-    # Count how many skillsmaps are already seeded
-    already_seeded = sum(1 for slug in skillsmap_slugs if slug in existing_slugs)
-    if already_seeded >= len(ALL_SKILLSMAP_MODULES):
-        logger.info(f"✅ Skillsmaps already seeded: {already_seeded} modules found")
-        return
-
-    logger.info(f"🌱 Auto-seeding Skillsmaps modules ({len(ALL_SKILLSMAP_MODULES)} modules)...")
-
-    modules_created = 0
-    tasks_created = 0
-
-    for module_data in ALL_SKILLSMAP_MODULES:
-        # Skip if already exists
-        if module_data["slug"] in existing_slugs:
-            continue
-
-        # Get track ID - try from map first, then lookup
-        track_id = None
-        track_slug = module_data.get("track_slug")
-        if track_id_map and track_slug in track_id_map:
-            track_id = track_id_map[track_slug]
-        elif track_slug:
-            track = get_track_by_slug(track_slug)
-            if track:
-                track_id = track.id
-
-        # Offset order_index to avoid conflicts with bootcamp modules
-        # Skillsmaps order_index starts at 100, but schema allows max 20
-        # So we use: 20 + position in ALL_V3_MODULES list
-        order_offset = 16  # Start after bootcamp modules (15 modules)
-        adjusted_order = order_offset + modules_created
-
-        # Create the module - handle both "name" and "title" keys
+        # Skapa modulen
         module_name = module_data.get("name") or module_data.get("title", module_data["slug"])
         module = create_module(ModuleCreate(
             track_id=track_id,
             name=module_name,
             slug=module_data["slug"],
             description=module_data.get("description"),
-            order_index=adjusted_order,
+            order_index=module_data.get("order_index", modules_created + 1),
             difficulty=module_data.get("difficulty", "intermediate"),
             estimated_hours=module_data.get("estimated_hours", 10.0),
             prerequisites=module_data.get("prerequisites", []),
         ))
         modules_created += 1
 
-        # Create tasks for this module
+        # Skapa tasks
         for idx, task_data in enumerate(module_data.get("tasks", [])):
             difficulty = task_data.get("difficulty", "medium")
-            # Map 'expert' to 'hard' as schema only allows easy/medium/hard
-            if difficulty == "expert":
-                difficulty = "hard"
-            elif difficulty not in ("easy", "medium", "hard"):
+            if difficulty not in ("easy", "medium", "hard"):
                 difficulty = "medium"
-            estimated_minutes = task_data.get("estimated_minutes") or {"easy": 10, "medium": 15, "hard": 25}.get(difficulty, 15)
-            xp_reward = task_data.get("xp_reward") or {"easy": 20, "medium": 30, "hard": 50}.get(difficulty, 30)
+
+            estimated_minutes = task_data.get("estimated_minutes") or \
+                {"easy": 15, "medium": 30, "hard": 45}.get(difficulty, 30)
+            xp_reward = task_data.get("xp_reward") or \
+                {"easy": 50, "medium": 100, "hard": 150}.get(difficulty, 100)
 
             create_task(TaskCreate(
                 module_id=module.id,
@@ -280,26 +121,59 @@ def seed_skillsmaps_modules(track_id_map: dict[str, any] = None):
                 content=task_data.get("content"),
                 content_blocks=task_data.get("content_blocks"),
                 requirements=task_data.get("requirements"),
-                order_index=idx + 1,
+                order_index=task_data.get("order_index", idx + 1),
                 difficulty=difficulty,
                 estimated_minutes=estimated_minutes,
                 xp_reward=xp_reward,
             ))
             tasks_created += 1
 
-    logger.info(f"✅ Seeded Skillsmaps v3.0: {modules_created} modules, {tasks_created} tasks")
+        # Skapa labs (om finns)
+        for idx, lab_data in enumerate(module_data.get("labs", [])):
+            create_lab(LabCreate(
+                module_id=module.id,
+                title=lab_data["title"],
+                slug=lab_data.get("slug", f"lab-{idx+1}"),
+                estimated_hours=lab_data.get("hours", 2.0),
+                order_index=idx + 1,
+                difficulty="medium",
+                xp_reward=int(lab_data.get("hours", 2.0) * 50),
+            ))
+            labs_created += 1
 
+        # Skapa projekt (om finns)
+        project_data = module_data.get("project")
+        if project_data:
+            create_project(ProjectCreate(
+                module_id=module.id,
+                title=project_data["title"],
+                slug=project_data.get("slug", "project"),
+                description=project_data.get("description"),
+                deliverables=project_data.get("deliverables", []),
+                xp_reward=project_data.get("xp_reward", 500),
+                estimated_hours=project_data.get("estimated_hours", 5.0),
+            ))
+            projects_created += 1
+
+    logger.info(
+        f"✅ Seeded: {modules_created} modules, {tasks_created} tasks, "
+        f"{labs_created} labs, {projects_created} projects"
+    )
+
+
+# =============================================================================
+# APPLICATION LIFESPAN
+# =============================================================================
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown events."""
-    # Startup
     logger.info("🚀 Starting DevOps Hub Backend...")
 
     # Initialize PostgreSQL if configured
     from .db.database import is_db_configured, init_db
     if is_db_configured():
-        logger.info("🗄️ PostgreSQL detected - initializing tables...")
+        logger.info("🗄️ PostgreSQL detected — initializing tables...")
         try:
             init_db()
             logger.info("✅ Database tables ready!")
@@ -313,27 +187,31 @@ async def lifespan(app: FastAPI):
     if is_redis_configured():
         logger.info("🔴 Redis connected!")
     else:
-        logger.info("📝 Redis not configured - caching disabled")
+        logger.info("📝 Redis not configured — caching disabled")
 
-    auto_seed_if_empty()
+    # Seed content
+    seed_content()
+
     logger.info("✅ Backend ready!")
 
     yield  # App runs here
 
-    # Shutdown
     logger.info("👋 Shutting down DevOps Hub Backend...")
 
 
+# =============================================================================
+# FASTAPI APPLICATION
+# =============================================================================
+
 app = FastAPI(
-    title="saas-backend",
+    title="DevOpsHub API",
     version=settings.PROJECT_VERSION,
     lifespan=lifespan,
-    redirect_slashes=False  # Prevent 307 redirects for trailing slashes
+    redirect_slashes=False,
 )
 
-# CORS: Allow all origins in development, specific origins in production
-# Note: allow_credentials=True requires specific origins, not "*"
-default_origins = [
+# CORS configuration
+origins = [
     "http://localhost:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3000",
@@ -342,15 +220,11 @@ default_origins = [
     "https://www.ginonova.com",
     "https://saids-devopshub.netlify.app",
     "https://saasprojekt.netlify.app",
-    "https://*.netlify.app",
 ]
 
-# Parse custom origins from settings if provided
 if settings.API_ORIGINS and settings.API_ORIGINS != "*":
     custom_origins = [o.strip() for o in settings.API_ORIGINS.split(",")]
-    origins = list(set(default_origins + custom_origins))
-else:
-    origins = default_origins
+    origins = list(set(origins + custom_origins))
 
 app.add_middleware(
     CORSMiddleware,
@@ -358,18 +232,17 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    allow_origin_regex=r"https://.*\.netlify\.app",  # Allow all Netlify subdomains
+    allow_origin_regex=r"https://.*\.netlify\.app",
 )
 
-# Phase 29: Production Hardening Middleware
-# TEMPORARILY DISABLED - Rate limiting was blocking legitimate users
-# from .api.middleware.rate_limit import RateLimitMiddleware
-# app.add_middleware(RateLimitMiddleware, requests_per_minute=300)
-# TODO: Re-enable with proper Redis key expiration and higher limits
+
+# =============================================================================
+# HEALTH CHECKS
+# =============================================================================
 
 @app.get("/health")
 def health():
-    """Detailed health check with database status."""
+    """Detailed health check."""
     from .db.database import is_db_configured
     from .db.redis_client import is_redis_configured, get_redis_client
     from .db.module_repository import list_modules
@@ -378,40 +251,38 @@ def health():
         "status": "ok",
         "postgresql": "disconnected",
         "redis": "disconnected",
-        "modules_count": 0
+        "modules_count": 0,
     }
 
-    # Always count modules (works for both PostgreSQL and in-memory)
     try:
         modules = list_modules()
         status["modules_count"] = len(modules)
     except Exception:
         pass
 
-    # Check PostgreSQL
     if is_db_configured():
-        try:
-            status["postgresql"] = "connected"
-        except Exception as e:
-            status["postgresql"] = f"error: {str(e)[:50]}"
+        status["postgresql"] = "connected"
 
-    # Check Redis
     if is_redis_configured():
         try:
             client = get_redis_client()
             if client:
                 client.ping()
                 status["redis"] = "connected"
-        except Exception as e:
-            status["redis"] = f"error: {str(e)[:50]}"
+        except Exception:
+            pass
 
     return status
 
-# REQUIRED BY Railway & PaaS health checks
+
 @app.get("/.well-known/health")
 def well_known_health():
+    """PaaS health check endpoint."""
     return {"status": "ok"}
 
+
+# =============================================================================
+# API ROUTES
+# =============================================================================
+
 app.include_router(api_router, prefix="/api")
-
-
