@@ -127,12 +127,27 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                 "relative overflow-hidden rounded-3xl",
                 "bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950",
                 "border border-white/10",
-                "p-8"
+                "p-8",
+                "shadow-2xl"
             )}
         >
+            {/* Animated gradient background */}
+            <div
+                className="absolute inset-0 opacity-10"
+                style={{
+                    background: `radial-gradient(circle at 70% 30%, ${skillsmap.color}40, transparent 50%), radial-gradient(circle at 30% 70%, ${skillsmap.color}20, transparent 40%)`
+                }}
+            />
+            
             {/* Colored glow based on skillsmap color */}
             <div
-                className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full blur-[120px] opacity-20"
+                className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-30"
+                style={{ backgroundColor: skillsmap.color }}
+            />
+            
+            {/* Second glow for depth */}
+            <div
+                className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full blur-[100px] opacity-20"
                 style={{ backgroundColor: skillsmap.color }}
             />
 
@@ -148,19 +163,21 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
             )}
 
             <div className="relative flex flex-col md:flex-row md:items-start gap-6">
-                {/* Icon */}
+                {/* Icon with enhanced styling */}
                 <motion.div
                     className={cn(
-                        "w-20 h-20 rounded-2xl flex items-center justify-center shrink-0",
-                        "bg-gradient-to-br from-white/10 to-white/5",
-                        "border border-white/10"
+                        "w-24 h-24 rounded-2xl flex items-center justify-center shrink-0",
+                        "bg-gradient-to-br from-white/15 to-white/5",
+                        "border border-white/20",
+                        "backdrop-blur-xl"
                     )}
                     style={{
-                        boxShadow: `0 0 40px ${skillsmap.color}30`,
+                        boxShadow: `0 0 60px ${skillsmap.color}40, inset 0 0 30px ${skillsmap.color}10`,
                     }}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.08, rotate: 3 }}
+                    transition={{ type: "spring", stiffness: 300 }}
                 >
-                    <span className="text-5xl">{skillsmap.icon}</span>
+                    <span className="text-6xl drop-shadow-lg">{skillsmap.icon}</span>
                 </motion.div>
 
                 {/* Content */}
@@ -185,9 +202,13 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                             <Clock className="w-4 h-4" />
                             ~{skillsmap.estimatedHours}h
                         </span>
-                        <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                            <Zap className="w-4 h-4" />
-                            {skillsmap.totalXP} XP totalt
+                        <span className="flex items-center gap-1.5 font-bold">
+                            <div className="p-1 rounded bg-gradient-to-r from-amber-500/20 to-yellow-500/20">
+                                <Zap className="w-4 h-4 text-amber-400" />
+                            </div>
+                            <span className="bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
+                                {skillsmap.totalXP} XP totalt
+                            </span>
                         </span>
                         <span className={cn(
                             "flex items-center gap-1.5 font-medium",
@@ -201,27 +222,34 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                     {/* Progress */}
                     <div className="max-w-md">
                         <div className="flex items-center justify-between text-sm mb-2">
-                            <span className="text-zinc-500">Progress</span>
+                            <span className="text-zinc-400 font-medium">Progress</span>
                             <span className={cn(
-                                "font-bold",
-                                isComplete ? "text-emerald-400" : "text-purple-400"
+                                "font-black text-lg",
+                                isComplete ? "text-emerald-400" : "bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent"
                             )}>
                                 {progress}%
                             </span>
                         </div>
-                        <div className="h-2.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-3 bg-zinc-800/80 rounded-full overflow-hidden border border-zinc-700/50 relative">
                             <motion.div
-                                className="h-full rounded-full"
+                                className="h-full rounded-full relative"
                                 style={{
                                     background: isComplete
-                                        ? "linear-gradient(90deg, #10b981, #14b8a6)"
-                                        : `linear-gradient(90deg, ${skillsmap.color}, ${skillsmap.color}cc)`,
-                                    boxShadow: `0 0 15px ${isComplete ? "#10b981" : skillsmap.color}50`,
+                                        ? "linear-gradient(90deg, #10b981, #14b8a6, #06b6d4)"
+                                        : `linear-gradient(90deg, ${skillsmap.color}, ${skillsmap.color}cc, ${skillsmap.color}99)`,
+                                    boxShadow: `0 0 20px ${isComplete ? "#10b981" : skillsmap.color}60`,
                                 }}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                            />
+                                transition={{ duration: 1.2, ease: "easeOut" }}
+                            >
+                                {/* Shimmer effect */}
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                    animate={{ x: ["-100%", "200%"] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                />
+                            </motion.div>
                         </div>
                     </div>
                 </div>
@@ -336,15 +364,18 @@ export default function SkillsMapDetailPage() {
                                 onClick={handleContinue}
                                 size="lg"
                                 className={cn(
-                                    "rounded-xl px-6",
-                                    "bg-gradient-to-r from-purple-600 to-indigo-600",
-                                    "hover:from-purple-500 hover:to-indigo-500",
-                                    "shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                                    "rounded-2xl px-8 py-6 text-base font-bold",
+                                    "bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600",
+                                    "hover:from-violet-500 hover:via-purple-500 hover:to-indigo-500",
+                                    "shadow-[0_0_30px_rgba(139,92,246,0.4)]",
+                                    "hover:shadow-[0_0_40px_rgba(139,92,246,0.6)]",
+                                    "transition-all duration-300",
+                                    "border border-violet-500/30"
                                 )}
                             >
-                                <Play className="w-4 h-4 mr-2" />
+                                <Play className="w-5 h-5 mr-2" />
                                 Fortsätt: {nextNode.title}
-                                <ChevronRight className="w-4 h-4 ml-2" />
+                                <ChevronRight className="w-5 h-5 ml-2" />
                             </Button>
                         </motion.div>
                     )}
