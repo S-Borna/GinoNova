@@ -54,6 +54,7 @@ ALL_MODULES: list[dict] = [
 # API FUNCTIONS — Används av backend för att hämta content
 # =============================================================================
 
+
 def get_all_modules() -> list[dict]:
     """
     Returnerar alla moduler.
@@ -69,9 +70,17 @@ def get_camp_devops_modules() -> list[dict]:
     Returnerar Camp DevOps moduler (DevOps-fokuserade).
     Filtrera på track_slug om du vill separera.
     """
-    return [m for m in ALL_MODULES if m.get("track_slug") in [
-        "foundation", "cloud-infrastructure", "containers-orchestration", "platform-engineering"
-    ]]
+    return [
+        m
+        for m in ALL_MODULES
+        if m.get("track_slug")
+        in [
+            "foundation",
+            "cloud-infrastructure",
+            "containers-orchestration",
+            "platform-engineering",
+        ]
+    ]
 
 
 def get_module_by_slug(slug: str) -> Optional[dict]:
@@ -108,7 +117,9 @@ def get_bootcamp_summary() -> dict:
     return {
         "modules": get_total_modules(),
         "tasks": get_total_tasks(),
-        "tracks": len(set(m.get("track_slug") for m in ALL_MODULES if m.get("track_slug"))),
+        "tracks": len(
+            set(m.get("track_slug") for m in ALL_MODULES if m.get("track_slug"))
+        ),
     }
 
 
