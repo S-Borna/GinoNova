@@ -1,3381 +1,1737 @@
 """
-DOE25 Tentaplugg — 10 noder för Linux/Unix Server & Bash Programming
-Täcker alla kursmål, föreläsningar, hands-on och gruppuppgiften (deliverable).
-
-Målgrupp: YH DevOps-studenter inför tenta 7 januari 2026
-Nivå: G → VG
+Linux Tenta VG-Guide — 10 noder för komplett tentaförberedelse
+Baserad på Said's studiehandbok | Tenta 7 januari 2025
 """
 
 MODULE = {
     "id": "doe25-tentaplugg",
     "slug": "doe25-tentaplugg",
-    "title": "DOE25 Tentaplugg",
-    "description": "Komplett tentaförberedelse för Linux/Unix Server & Bash Programming. Täcker alla kursmål, föreläsningar och gruppuppgiften.",
+    "title": "Linux Tenta VG-Guide",
+    "description": "Komplett tentaförberedelse för Linux - 10 moduler från subnetting till Docker Compose. Baserad på Said's VG-guide.",
     "icon": "🎯",
     "difficulty": "intermediate",
-    "estimated_hours": 15,
+    "estimated_hours": 20,
     "order_index": 2,
     "tasks": [
         # =============================================================================
-        # NOD 1: Bash Grunder & Shebang
+        # NOD 1: Subnetting & Nätverk
         # =============================================================================
         {
-            "title": "Bash Grunder & Shebang",
-            "slug": "bash-grunder-shebang",
-            "description": "Shebang, chmod +x, variabler och positionsparametrar - grunden för all Bash-scripting.",
-            "difficulty": "easy",
-            "estimated_minutes": 25,
-            "xp_reward": 50,
+            "title": "Subnetting & Nätverk",
+            "slug": "subnetting-natverk",
+            "description": "Binärmetoden (lådmetoden) för att räkna ut subnät, Network ID, Broadcast och hosts.",
+            "difficulty": "medium",
+            "estimated_minutes": 45,
+            "xp_reward": 100,
             "order_index": 1,
-            "content": r"""# Bash Grunder & Shebang
+            "content": r"""# Subnetting & Nätverk
 
-## Varför viktigt för DevOps
+## Varför viktigt för tentan?
 
-Bash-scripting är fundamentet för all automation i DevOps:
-
-- Reproducerbarhet: Skript gör samma sak varje gång, människor gör misstag
-- Dokumentation: Ett skript ÄR dokumentation - du kan läsa exakt vad som händer
-- Versionskontroll: Lägg skriptet i Git, spåra ändringar över tid
-- Skalbarhet: Konfigurera 100 servrar lika enkelt som 1
-- CI/CD: Pipelines är i grunden Bash-skript
-- Felsökning: Enklare att debugga ett skript än att komma ihåg 50 manuella steg
-
-I din gruppuppgift ska du skriva `sys-config.sh` som automatiserar serversetup. Utan korrekt shebang och körbarhet fungerar ingenting - det är därför vi börjar här.
+Subnetting är ett av de vanligaste ämnena på tentan. Du MÅSTE kunna räkna ut:
+- Network ID
+- Broadcast-adress
+- First/Last Host
+- Antal hosts i ett subnät
 
 ---
 
-## Vad är en Shebang?
+## Binärmetoden (Lådmetoden)
 
-Shebang är de två första tecknen i ett skript: `#!`. Det berättar för operativsystemet vilken tolk (interpreter) som ska köra skriptet. Tänk på det som en "adresslapp" som säger "skicka den här filen till Bash för exekvering".
+### De 8 binära lådorna (en oktett)
+
+```
+128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
+```
+
+Varje position representerar en potens av 2. Tillsammans blir det 255 (maxvärde för en oktett).
+
+---
+
+## Steg-för-steg: Räkna ut subnät
+
+### Exempel: 46.84.126.147/28
+
+**Steg 1: Beräkna host-lådor**
 
 ```bash
-#!/bin/bash
-# Shebang = "sharp" (#) + "bang" (!)
-# /bin/bash = sökvägen till Bash-tolken på din dator
+32 - prefix = antal host-lådor
+32 - 28 = 4 host-lådor
+```
 
-# Utan shebang vet inte OS vad som ska köra filen:
-# - Ska det vara Python?
-# - Ska det vara Bash?
-# - Ska det vara Node.js?
-# Shebang svarar på den frågan.
+**Steg 2: Markera N (nät) och H (host)**
+
+```
+| 128 | 64 | 32 | 16 | 8 | 4 | 2 | 1 |
+   N    N    N    N  | H   H   H   H
+```
+
+De första 4 lådorna = Nät (N)
+De sista 4 lådorna = Host (H)
+
+**Steg 3: Konvertera 147 till binärt**
+
+```bash
+147 = 128 + 16 + 2 + 1
+    = 1 0 0 1 | 0 0 1 1
+```
+
+**Steg 4: Beräkna Network ID**
+
+Behåll N-lådorna, sätt H-lådorna till 0:
+
+```bash
+1 0 0 1 | 0 0 0 0 = 128 + 16 = 144
+```
+
+**Network ID = 46.84.126.144**
+
+**Steg 5: Beräkna Broadcast**
+
+Behåll N-lådorna, sätt H-lådorna till 1:
+
+```bash
+1 0 0 1 | 1 1 1 1 = 128 + 16 + 8 + 4 + 2 + 1 = 159
+```
+
+**Broadcast = 46.84.126.159**
+
+**Steg 6: First Host, Last Host, Next Subnet**
+
+```bash
+First Host  = Network + 1     = 144 + 1 = 145
+Last Host   = Broadcast - 1   = 159 - 1 = 158
+Next Subnet = Broadcast + 1   = 159 + 1 = 160
 ```
 
 ---
 
-## Varför behövs chmod +x?
+## Sammanfattning för 46.84.126.147/28
 
-Även om du har en shebang kan du inte köra skriptet förrän det har execute-permission. Linux har tre typer av rättigheter för filer:
+| Egenskap | Värde |
+|----------|-------|
+| Network | 46.84.126.144 |
+| First Host | 46.84.126.145 |
+| Last Host | 46.84.126.158 |
+| Broadcast | 46.84.126.159 |
+| Next Subnet | 46.84.126.160 |
+
+---
+
+## Vanliga prefix och antal hosts
+
+| Prefix | Adresser | Hosts | Användning |
+|--------|----------|-------|------------|
+| /24 | 256 | 254 | Klass C - standard |
+| /25 | 128 | 126 | Halvt C-nät |
+| /26 | 64 | 62 | Kvarts C-nät |
+| /27 | 32 | 30 | Litet nätverk |
+| /28 | 16 | 14 | Mycket litet |
+| /29 | 8 | 6 | Litet segment |
+| /30 | 4 | 2 | Punkt-till-punkt |
+
+---
+
+## Formel: Antal hosts
 
 ```bash
-# De tre rättigheterna:
-# r = read (läsa filen)
-# w = write (ändra filen)
-# x = execute (köra filen)
+Antal hosts = 2^(32-prefix) - 2
+```
 
-# När du skapar en fil med nano/vim får den automatiskt rw- (läs+skriv)
-# Men INTE x (execute) - det måste du lägga till själv
-
-# Kontrollera rättigheter:
-ls -l myscript.sh
-# -rw-r--r--  <-- Ingen x, kan inte köras!
-
-# Lägg till execute:
-chmod +x myscript.sh
-
-# Kontrollera igen:
-ls -l myscript.sh
-# -rwxr-xr-x  <-- Nu finns x, kan köras!
+Exempel /28:
+```bash
+2^(32-28) - 2 = 2^4 - 2 = 16 - 2 = 14 hosts
 ```
 
 ---
 
-## Skapa ditt första skript - steg för steg
+## Övning: Räkna själv
+
+**192.168.1.67/26**
 
 ```bash
-# Steg 1: Skapa filen
-nano myscript.sh
-# nano öppnar en enkel texteditor i terminalen
-# Du kan också använda vim, code, eller något annat
-
-# Steg 2: Skriv innehållet
-#!/bin/bash
-# Mitt första skript
-echo "Hello, DevOps!"
-# echo skriver ut text till terminalen
-
-# Steg 3: Spara och stäng
-# I nano: Ctrl+O (spara), Enter, Ctrl+X (stäng)
-
-# Steg 4: Gör skriptet körbart
-chmod +x myscript.sh
-# +x betyder "lägg till execute permission"
-
-# Steg 5: Kör skriptet
-./myscript.sh
-# ./ betyder "i denna mapp" - annars letar systemet i PATH
-# Output: Hello, DevOps!
-```
-
----
-
-## Variabler i Bash
-
-Variabler lagrar värden som du kan återanvända. Det finns en viktig regel i Bash som skiljer sig från andra språk:
-
-```bash
-# RÄTT - inga mellanslag runt =
-name="Said"
-port=6622
-
-# FEL - mellanslag runt = tolkas som kommando
-name = "Said"
-# Bash tror att "name" är ett kommando med argumenten "=" och "Said"
-# Du får felet: "name: command not found"
-
-# Använd variabler med $
-echo "User: $name"
-# Output: User: Said
-
-echo "SSH port: $port"
-# Output: SSH port: 6622
-
-# Varför $?
-# $ säger till Bash "hämta värdet av denna variabel"
-# Utan $ skriver du bara texten "name" istället för värdet
-echo "name"   # Output: name
-echo "$name"  # Output: Said
-```
-
----
-
-## Positionsparametrar - ta emot argument
-
-När någon kör ditt skript kan de skicka med argument. Dessa hamnar i speciella variabler:
-
-```bash
-# Om någon kör:
-./script.sh hello world foo
-
-# Då får du:
-# $0 = ./script.sh (skriptets namn)
-# $1 = hello (första argumentet)
-# $2 = world (andra argumentet)
-# $3 = foo (tredje argumentet)
-# $# = 3 (antal argument, exklusive $0)
-# $@ = hello world foo (alla argument som separata ord)
-# $* = hello world foo (alla argument som en sträng)
-# $? = exit-kod från senaste kommando (0 = success)
-
-# Praktiskt exempel för gruppuppgiften:
-#!/bin/bash
-# sys-config.sh - tar hostname som argument
-
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <hostname>"
-    # $0 visar skriptnamnet i hjälptext - professionellt!
-    exit 1
-fi
-
-hostname="$1"
-echo "Configuring server: $hostname"
-# Använder första argumentet
-```
-
----
-
-## Skillnaden mellan "$@" och "$*"
-
-Detta är en klassisk VG-fråga på tentan. Skillnaden syns bara när argument innehåller mellanslag:
-
-```bash
-#!/bin/bash
-# Kör med: ./script.sh "Hello World" "Goodbye Moon"
-# Alltså TVÅ argument som vardera innehåller mellanslag
-
-echo "=== Med \"\$@\" ==="
-for arg in "$@"; do
-    echo "Argument: '$arg'"
-done
-# Output:
-# Argument: 'Hello World'
-# Argument: 'Goodbye Moon'
-# Två iterationer - varje argument bevaras separat!
-
-echo "=== Med \"\$*\" ==="
-for arg in "$*"; do
-    echo "Argument: '$arg'"
-done
-# Output:
-# Argument: 'Hello World Goodbye Moon'
-# EN iteration - allt slås ihop till en sträng!
-
-# REGEL: Använd ALLTID "$@" (med citattecken) när du loopar
-# "$*" är nästan aldrig vad du vill ha
-```
-
----
-
-## Vanliga misstag och lösningar
-
-```bash
-# Misstag 1: Glömma shebang
-# Problem: Skriptet körs med fel tolk eller inte alls
-# Lösning: Alltid börja med #!/bin/bash
-
-# Misstag 2: Glömma chmod +x
-# Problem: "Permission denied"
-# Lösning: chmod +x script.sh
-
-# Misstag 3: Mellanslag runt =
-# Problem: "command not found"
-name = "Said"  # FEL
-name="Said"    # RÄTT
-
-# Misstag 4: Glömma $ framför variabler
-# Problem: Skriver variabelnamnet istället för värdet
-echo "name"    # FEL: skriver "name"
-echo "$name"   # RÄTT: skriver värdet
-
-# Misstag 5: Använda $* istället för $@
-# Problem: Argument med mellanslag slås ihop
-for arg in $*; do     # FEL
-for arg in "$@"; do   # RÄTT
+1. Host-lådor: 32 - 26 = 6
+2. Markering: NN | HHHHHH
+3. 67 i binärt: 01000011
+4. Network: 01000000 = 64
+5. Broadcast: 01111111 = 127
+6. First: 65, Last: 126, Next: 128
 ```
 
 ---
 
 ## Snabbreferens
 
-| Uppgift | Kommando |
-|---------|----------|
-| Skapa skript | `nano script.sh` |
-| Shebang (första raden) | `#!/bin/bash` |
-| Gör körbart | `chmod +x script.sh` |
-| Kör skript | `./script.sh` |
-| Kör med argument | `./script.sh arg1 arg2` |
-| Första argumentet | `$1` |
-| Alla argument (korrekt) | `"$@"` |
-| Antal argument | `$#` |
-| Senaste exit-kod | `$?` |
-| Skriptets namn | `$0` |
-
----
-
-## Nästa steg
-
-Nu när du kan grunderna i Bash-scripting är det dags att lära dig:
-
-- Textbearbetning med grep, sed och awk
-- Kontrollstrukturer (if/else, loopar)
-- Funktioner och felhantering
-
-Dessa bygger vidare på allt du lärt dig här - variabler, argument och körbarhet kommer användas överallt!
+| Uppgift | Metod |
+|---------|-------|
+| Host-bitar | 32 - prefix |
+| Network ID | Nolla alla host-bitar |
+| Broadcast | Ettställ alla host-bitar |
+| First host | Network + 1 |
+| Last host | Broadcast - 1 |
+| Antal hosts | 2^host-bitar - 2 |
 
 """,
             "quiz": [
                 {
-                    "question": "Vad gör första raden #!/bin/bash i ett skript?",
+                    "question": "Vad är Network ID för 192.168.1.100/26?",
                     "options": [
-                        "Det är en kommentar som ignoreras",
-                        "Den anger vilken tolk (Bash) som ska exekvera skriptet",
-                        "Den skapar en ny Bash-process",
-                        "Den importerar Bash-biblioteket",
+                        "192.168.1.0",
+                        "192.168.1.64",
+                        "192.168.1.96",
+                        "192.168.1.128",
                     ],
                     "correct": 1,
-                    "explanation": "Shebang (#!) anger vilken tolk som ska köra skriptet. Utan den vet inte OS hur filen ska exekveras.",
+                    "explanation": "Med /26 har vi 6 host-bitar. 100 i binärt är 01100100. Nollställ de 6 sista bitarna: 01000000 = 64.",
                 },
                 {
-                    "question": "Vilket kommando gör ett skript körbart?",
-                    "options": [
-                        "chmod -x script.sh",
-                        "chmod +r script.sh",
-                        "chmod +x script.sh",
-                        "chown +x script.sh",
-                    ],
-                    "correct": 2,
-                    "explanation": "chmod +x lägger till execute-permission (x) på filen så den kan köras direkt.",
-                },
-                {
-                    "question": "Om du kör ./script.sh hello world, vad innehåller $2?",
-                    "options": ["hello", "world", "./script.sh", "hello world"],
+                    "question": "Hur många hosts ryms i ett /28-nätverk?",
+                    "options": ["16", "14", "30", "62"],
                     "correct": 1,
-                    "explanation": "$1 = hello, $2 = world. $0 är skriptnamnet.",
+                    "explanation": "2^(32-28) - 2 = 2^4 - 2 = 16 - 2 = 14 hosts.",
                 },
                 {
-                    "question": 'Vad är FEL med denna rad: name = "Said"',
-                    "options": [
-                        "Citattecknen är fel typ",
-                        "Variabelnamnet är ogiltigt",
-                        "Mellanslag runt = är inte tillåtet",
-                        "echo saknas",
-                    ],
-                    "correct": 2,
-                    "explanation": 'I Bash får det INTE vara mellanslag runt =. Korrekt: name="Said"',
-                },
-                {
-                    "question": "Vad returnerar $# om du kör ./script.sh a b c?",
-                    "options": ["a b c", "3", "./script.sh", "0"],
-                    "correct": 1,
-                    "explanation": "$# ger antalet argument (exklusive skriptnamnet). Här: 3 stycken.",
-                },
-                {
-                    "question": 'Du ska loopa över argument som kan innehålla mellanslag. Använder du "$@" eller "$*"?',
-                    "options": ["$*", '"$*"', "$@", '"$@"'],
-                    "correct": 3,
-                    "explanation": '"$@" bevarar varje argument separat även om de innehåller mellanslag. "$*" slår ihop allt till en sträng.',
+                    "question": "Vad är Broadcast-adressen för 10.0.0.50/29?",
+                    "options": ["10.0.0.55", "10.0.0.63", "10.0.0.48", "10.0.0.56"],
+                    "correct": 0,
+                    "explanation": "/29 ger 3 host-bitar. Network är 10.0.0.48, Broadcast är 10.0.0.55 (alla host-bitar = 1).",
                 },
             ],
         },
         # =============================================================================
-        # NOD 2: Textbearbetning (grep, sed, awk)
+        # NOD 2: Filsystem & Grundkommandon
         # =============================================================================
         {
-            "title": "Textbearbetning: grep, sed & awk",
-            "slug": "textbearbetning-grep-sed-awk",
-            "description": "De tre musketererna för textbearbetning - grep söker, sed ersätter, awk analyserar.",
-            "difficulty": "medium",
-            "estimated_minutes": 35,
-            "xp_reward": 75,
-            "order_index": 2,
-            "content": r"""# Textbearbetning: grep, sed & awk
-
-## Varför viktigt för DevOps
-
-Textbearbetning är kanske den viktigaste färdigheten i Linux-administration:
-
-- Logganalys: Hitta fel bland miljontals rader i /var/log/
-- Konfigurationshantering: Ändra inställningar i config-filer automatiskt
-- Datautvinning: Plocka ut specifik information från output
-- Rapportering: Sammanställa statistik från systemdata
-- Felsökning: Snabbt identifiera problem i stora datamängder
-- Automation: Transformera data mellan olika format
-
-I din gruppuppgift behöver du ändra SSH-porten i sshd_config med sed, söka efter användare med grep, och parsa output med awk. Dessa tre verktyg är dina bästa vänner.
-
----
-
-## Vad är grep?
-
-grep står för "Global Regular Expression Print". Det söker igenom filer rad för rad och skriver ut de rader som matchar ett mönster. Tänk på det som "Ctrl+F för terminalen" - fast mycket kraftfullare.
-
-```bash
-# Grundläggande syntax:
-grep "mönster" fil
-# grep läser filen rad för rad
-# Om raden innehåller "mönster" skrivs den ut
-# Annars hoppas den över
-
-# Exempel: Sök efter "error" i en loggfil
-grep "error" /var/log/syslog
-# Detta skriver ut ALLA rader som innehåller ordet "error"
-# Kan vara hundratals rader!
-
-# Praktiskt exempel från gruppuppgiften:
-grep "Port" /etc/ssh/sshd_config
-# Hittar raden som definierar SSH-porten
-# Output: #Port 22
-# eller: Port 6622
-```
-
-## grep flaggor - gör sökningen smartare
-
-Utan flaggor är grep ganska "dum" - den matchar exakt vad du skriver. Med flaggor blir den mycket smartare:
-
-```bash
-# -i (ignore case) - ignorera stora/små bokstäver
-grep -i "error" log.txt
-# Matchar: error, Error, ERROR, eRrOr
-# Utan -i matchar bara exakt "error"
-
-# -n (line numbers) - visa radnummer
-grep -n "Port" /etc/ssh/sshd_config
-# Output: 15:#Port 22
-# Nu vet du att det är rad 15!
-
-# -r (recursive) - sök i alla filer i en mapp
-grep -r "TODO" ./src/
-# Söker i ALLA filer under src-mappen
-# Perfekt för att hitta alla TODOs i ett projekt
-
-# -v (invert) - visa rader som INTE matchar
-grep -v "^#" /etc/ssh/sshd_config
-# ^ betyder "början av raden"
-# Visar alla rader som INTE börjar med # (kommentarer)
-# Detta filtrerar bort kommentarer!
-
-# -c (count) - räkna antal matchningar
-grep -c "Failed password" /var/log/auth.log
-# Output: 47
-# Istället för 47 rader får du bara siffran 47
-
-# -E (extended regex) - använd regex
-grep -E "error|warning|failed" /var/log/syslog
-# | betyder "eller"
-# Matchar rader med error ELLER warning ELLER failed
-```
-
-## Kombinera grep-flaggor
-
-Du kan kombinera flera flaggor för kraftfulla sökningar:
-
-```bash
-# Sök case-insensitive OCH visa radnummer
-grep -in "error" /var/log/syslog
-# -i = ignore case, -n = radnummer
-
-# Sök rekursivt efter TODO, ignorera case
-grep -ri "todo" ./src/
-# Hittar TODO, Todo, todo i alla filer
-
-# Visa aktiva rader i config (inte kommentarer, inte tomma)
-grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"
-# Första grep: ta bort kommentarsrader
-# Andra grep: ta bort tomma rader (^$ = tom rad)
-# | (pipe) skickar output från första till andra
-```
-
----
-
-## Vad är sed?
-
-sed står för "Stream Editor". Det läser text rad för rad, gör ändringar, och skriver ut resultatet. Tänk på det som "Sök och ersätt för terminalen" - men mycket kraftfullare.
-
-```bash
-# Grundläggande syntax:
-sed 's/gammalt/nytt/' fil
-# s = substitute (ersätt)
-# Första förekomsten på varje rad ersätts
-
-# Exempel:
-echo "hello world" | sed 's/world/DevOps/'
-# Output: hello DevOps
-# "world" ersattes med "DevOps"
-```
-
-## sed - viktiga varianter
-
-```bash
-# Ersätt ALLA förekomster (inte bara första)
-sed 's/gammalt/nytt/g' fil
-# g = global, alla förekomster på varje rad
-
-# Ändra filen DIREKT (farligt! gör backup först)
-sed -i 's/gammalt/nytt/g' fil
-# -i = in-place, ändrar originalfilen
-# VARNING: Det finns ingen undo!
-
-# Gör backup automatiskt
-sed -i.bak 's/gammalt/nytt/g' fil
-# Skapar fil.bak innan ändring
-# Livräddare om något går fel!
-
-# Ta bort rader som matchar mönster
-sed '/mönster/d' fil
-# d = delete
-# Alla rader som innehåller "mönster" tas bort
-
-# Ersätt bara på specifik rad
-sed '5s/gammalt/nytt/' fil
-# Ersätter bara på rad 5
-```
-
-## sed i gruppuppgiften - ändra SSH-port
-
-Detta är ett av de viktigaste användningsfallen:
-
-```bash
-#!/bin/bash
-# Konfigurera SSH-porten från 22 till 6622
-
-SSH_PORT=6622
-
-# Steg 1: Avkommentera och ändra Port-raden
-# Ursprunglig rad: #Port 22
-# Ny rad: Port 6622
-
-sed -i "s/^#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
-# ^#Port 22 = rad som börjar med #Port 22
-# Port $SSH_PORT = ersätts med Port 6622
-# Vi använder " istället för ' för att variabeln ska expandera
-
-# Steg 2: Om raden redan är avkommenterad (Port 22)
-sed -i "s/^Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
-
-# Steg 3: Verifiera ändringen
-grep "^Port" /etc/ssh/sshd_config
-# Output ska vara: Port 6622
-
-# Steg 4: Starta om SSH för att aktivera
-sudo systemctl restart sshd
-```
-
----
-
-## Vad är awk?
-
-awk är ett helt programmeringsspråk för textbearbetning. Det är specialiserat på kolumnbaserad data - tänk på det som "Excel för terminalen". Varje rad delas automatiskt upp i kolumner.
-
-```bash
-# Grundläggande syntax:
-awk '{print $1}' fil
-# $1 = första kolumnen
-# $2 = andra kolumnen
-# $NF = sista kolumnen (Number of Fields)
-# $0 = hela raden
-
-# Exempel med ls -l output:
-ls -l
-# -rw-r--r-- 1 said devops 1234 Dec 21 10:00 file.txt
-# $1         $2 $3   $4     $5   $6  $7  $8    $9
-
-# Visa bara filnamn (sista kolumnen)
-ls -l | awk '{print $NF}'
-# Output: file.txt
-```
-
-## awk - ändra separator
-
-Som standard använder awk mellanslag/tab som separator. Men många filer använder andra tecken:
-
-```bash
-# /etc/passwd använder kolon som separator
-# Rad: said:x:1000:1000:Said:/home/said:/bin/bash
-# $1   $2 $3   $4   $5   $6          $7
-
-# Utan -F (fel resultat):
-awk '{print $1}' /etc/passwd
-# Output: said:x:1000:1000:Said:/home/said:/bin/bash
-# Hela raden! Eftersom det inte finns några mellanslag
-
-# Med -F: (rätt resultat):
-awk -F: '{print $1}' /etc/passwd
-# Output: said
-# Nu är kolon separator, så $1 är bara "said"
-
-# Visa användarnamn och shell:
-awk -F: '{print $1, $7}' /etc/passwd
-# Output: said /bin/bash
-# Komma mellan $1 och $7 ger mellanslag i output
-```
-
-## awk med villkor
-
-awk kan filtrera rader baserat på villkor:
-
-```bash
-# Visa bara användare med UID över 1000
-awk -F: '$3 > 1000 {print $1, $3}' /etc/passwd
-# $3 > 1000 är villkoret
-# {print $1, $3} är vad som ska göras om villkoret är sant
-# Output: nobody 65534
-
-# Visa användare som har bash som shell
-awk -F: '$7 ~ /bash/ {print $1}' /etc/passwd
-# ~ betyder "matchar regex"
-# /bash/ är ett regex som söker efter "bash"
-# Output: said (och andra med bash)
-
-# Visa processer som använder över 1% minne
-ps aux | awk '$4 > 1.0 {print $4, $11}'
-# $4 är minnes-kolumnen i ps aux
-# $11 är kommando-namnet
-```
-
----
-
-## Kombinera verktygen - Pipeline-magi
-
-Den verkliga kraften kommer när du kombinerar verktygen:
-
-```bash
-# Hitta de 5 vanligaste felen i loggen
-grep -i "error" /var/log/syslog | awk '{print $5}' | sort | uniq -c | sort -rn | head -5
-# Steg för steg:
-# 1. grep -i "error"     -> Hitta alla error-rader
-# 2. awk '{print $5}'    -> Ta ut kolumn 5 (programnamnet)
-# 3. sort                -> Sortera alfabetiskt
-# 4. uniq -c             -> Räkna unika förekomster
-# 5. sort -rn            -> Sortera numeriskt, störst först
-# 6. head -5             -> Visa topp 5
-
-# Exempel från gruppuppgiften - kolla om användare finns:
-check_user() {
-    local username=$1
-    if grep -q "^$username:" /etc/passwd; then
-        # -q = quiet, ingen output, bara exit code
-        # ^$username: = rad som börjar med användarnamnet följt av kolon
-        echo "User $username exists"
-        grep "^$username:" /etc/passwd | awk -F: '{print "UID:", $3, "GID:", $4}'
-    else
-        echo "User $username does not exist"
-    fi
-}
-
-# Lista användare i en grupp
-grep "^devops:" /etc/group | awk -F: '{print $4}'
-# $4 i /etc/group är medlemslistan
-# Output: said,anna,erik
-```
-
----
-
-## Vanliga misstag och lösningar
-
-```bash
-# Misstag 1: Glömma -i i sed (filen ändras inte)
-sed 's/old/new/' fil
-# Detta SKRIVER UT resultatet men ÄNDRAR INTE filen!
-sed -i 's/old/new/' fil
-# Nu ändras filen
-
-# Misstag 2: Fel separator i awk
-awk '{print $1}' /etc/passwd
-# HELA raden skrivs ut eftersom default separator är mellanslag
-awk -F: '{print $1}' /etc/passwd
-# Nu används kolon som separator
-
-# Misstag 3: Glömma ankare i grep
-grep "Port" /etc/ssh/sshd_config
-# Matchar "Port", "#Port", "Transport", etc.
-grep "^Port" /etc/ssh/sshd_config
-# ^ = början av rad, matchar bara "Port" i början
-
-# Misstag 4: Använda ' istället för " med variabler
-sed -i 's/old/$NEW/' fil
-# $NEW ersätts INTE, du får bokstavligen "$NEW" i filen
-sed -i "s/old/$NEW/" fil
-# Nu expanderas variabeln korrekt
-```
-
----
-
-## Snabbreferens
-
-| Uppgift | Kommando |
-|---------|----------|
-| Sök i fil | `grep "mönster" fil` |
-| Sök case-insensitive | `grep -i "mönster" fil` |
-| Sök rekursivt | `grep -r "mönster" mapp/` |
-| Visa radnummer | `grep -n "mönster" fil` |
-| Invertera (visa ej matchande) | `grep -v "mönster" fil` |
-| Räkna matchningar | `grep -c "mönster" fil` |
-| Ersätt text (visa) | `sed 's/old/new/g' fil` |
-| Ersätt text (ändra fil) | `sed -i 's/old/new/g' fil` |
-| Ta bort rader | `sed '/mönster/d' fil` |
-| Första kolumnen | `awk '{print $1}' fil` |
-| Custom separator | `awk -F: '{print $1}' fil` |
-| Sista kolumnen | `awk '{print $NF}' fil` |
-| Filtrera med villkor | `awk '$3 > 100' fil` |
-
----
-
-## Nästa steg
-
-Nu kan du söka, ersätta och analysera text som ett proffs. Nästa steg är att lära dig:
-
-- Kontrollstrukturer (if/else, loopar) för att fatta beslut i skript
-- Funktioner för att organisera din kod
-- Felhantering för robusta skript
-
-Grep, sed och awk kommer du använda i nästan varje skript du skriver!
-
-""",
-            "quiz": [
-                {
-                    "question": "Vilket kommando söker rekursivt i alla filer efter 'error'?",
-                    "options": [
-                        "grep 'error' *",
-                        "grep -r 'error' .",
-                        "find . -name 'error'",
-                        "search 'error' -r",
-                    ],
-                    "correct": 1,
-                    "explanation": "grep -r söker rekursivt i alla filer från angiven katalog.",
-                },
-                {
-                    "question": "Vad gör kommandot: sed -i 's/22/6622/' sshd_config",
-                    "options": [
-                        "Visar rader som innehåller 22",
-                        "Ersätter första 22 med 6622 direkt i filen",
-                        "Skapar en backup av filen",
-                        "Tar bort rader med 22",
-                    ],
-                    "correct": 1,
-                    "explanation": "-i betyder in-place edit - filen ändras direkt. s/22/6622/ ersätter första förekomsten av 22 med 6622.",
-                },
-                {
-                    "question": "Hur skriver du ut kolumn 1 och 3 med awk?",
-                    "options": [
-                        "awk '{print $1 $3}' fil",
-                        "awk '{print $1, $3}' fil",
-                        "awk -c '1,3' fil",
-                        "awk --columns 1,3 fil",
-                    ],
-                    "correct": 1,
-                    "explanation": "awk '{print $1, $3}' skriver ut kolumn 1 och 3 med mellanslag mellan.",
-                },
-                {
-                    "question": "Vad gör grep -v '^#' config.txt?",
-                    "options": [
-                        "Visar rader som börjar med #",
-                        "Visar rader som INTE börjar med #",
-                        "Tar bort alla #-tecken",
-                        "Räknar rader med #",
-                    ],
-                    "correct": 1,
-                    "explanation": "-v inverterar matchningen. ^# matchar rader som börjar med #. Alltså visas alla rader som INTE börjar med #.",
-                },
-                {
-                    "question": "Hur anger du kolon som fältseparator i awk?",
-                    "options": [
-                        "awk -s ':' '{print $1}'",
-                        "awk -F: '{print $1}'",
-                        "awk --sep=: '{print $1}'",
-                        "awk ':' '{print $1}'",
-                    ],
-                    "correct": 1,
-                    "explanation": "-F: sätter field separator till kolon. Viktigt för filer som /etc/passwd.",
-                },
-                {
-                    "question": "Vilket kommando räknar antalet rader som matchar 'error' i log.txt?",
-                    "options": [
-                        "grep -n 'error' log.txt",
-                        "grep -c 'error' log.txt",
-                        "grep -l 'error' log.txt",
-                        "wc -l 'error' log.txt",
-                    ],
-                    "correct": 1,
-                    "explanation": "grep -c (count) returnerar antalet matchande rader, inte raderna själva.",
-                },
-            ],
-        },
-        # =============================================================================
-        # NOD 3: Kontrollstrukturer & Best Practices
-        # =============================================================================
-        {
-            "title": "Kontrollstrukturer & Best Practices",
-            "slug": "kontrollstrukturer-best-practices",
-            "description": "if/else, for, while, case - plus set -euo pipefail och shellcheck för robusta skript.",
-            "difficulty": "medium",
+            "title": "Filsystem & Grundkommandon",
+            "slug": "filsystem-grundkommandon",
+            "description": "Linux filsystemstruktur, navigering, filhantering och sökning.",
+            "difficulty": "easy",
             "estimated_minutes": 40,
             "xp_reward": 100,
-            "order_index": 3,
-            "content": r"""# Kontrollstrukturer & Best Practices
+            "order_index": 2,
+            "content": r"""# Filsystem & Grundkommandon
 
-> **TL;DR:** `if` testar villkor, `for` loopar över listor, `while` loopar tills villkor är falskt, `case` är switch-sats. Använd alltid `set -euo pipefail` i början av skript. Kör `shellcheck` innan inlämning!
-
----
-
-## 🎯 Varför detta är viktigt
-
-I **gruppuppgiften** kräver shellcheck-kravet (5.5) att ditt sys-config.sh är felfritt. Du behöver kontrollstrukturer för att:
-- Kolla om användare redan finns
-- Loopa över gruppmedlemmar
-- Hantera fel
-
-**Kursmål:** *Skriva bash-skript för att automatisera vanliga uppgifter* (Kap 7-9 i Bash Book)
-
----
-
-## 🛡️ Best Practices - Börja ALLTID med detta
-
-### set -euo pipefail
+## Linux Filsystemstruktur
 
 ```bash
-#!/bin/bash
-set -euo pipefail
-
-# Din kod här...
-```
-
-| Option | Betydelse |
-|--------|-----------|
-| `-e` | Avsluta vid första fel (exit on error) |
-| `-u` | Fel om odefinierad variabel används |
-| `-o pipefail` | Pipeline misslyckas om något steg misslyckas |
-
-**Utan detta:** Skriptet fortsätter köra även om något går fel!
-
-### Shellcheck
-
-```bash
-# Installera
-sudo apt install shellcheck
-
-# Kör mot ditt skript
-shellcheck sys-config.sh
-
-# Ignorera specifik varning (använd SPARSAMT)
-# shellcheck disable=SC2086
-```
-
-**Gruppuppgiften kräver:** Inga shellcheck-fel eller varningar!
-
----
-
-## 🔀 if/else/elif
-
-### Grundläggande syntax
-
-```bash
-if [ villkor ]; then
-    # kod om sant
-elif [ annat_villkor ]; then
-    # kod om det andra är sant
-else
-    # kod om inget stämmer
-fi
-```
-
-### Test-kommandon
-
-| Test | Betydelse |
-|------|-----------|
-| `[ -f fil ]` | Filen finns |
-| `[ -d mapp ]` | Mappen finns |
-| `[ -z "$var" ]` | Variabeln är tom |
-| `[ -n "$var" ]` | Variabeln är INTE tom |
-| `[ "$a" = "$b" ]` | Strängarna är lika |
-| `[ "$a" != "$b" ]` | Strängarna är olika |
-| `[ $a -eq $b ]` | Numeriskt lika |
-| `[ $a -gt $b ]` | Större än |
-| `[ $a -lt $b ]` | Mindre än |
-
-### Exempel från gruppuppgiften
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Kolla om användare finns innan vi skapar
-create_user() {
-    local username=$1
-
-    if id "$username" &>/dev/null; then
-        echo "User $username already exists, skipping..."
-    else
-        echo "Creating user $username..."
-        useradd -m -s /bin/bash "$username"
-    fi
-}
-
-# Kolla om vi kör som root
-if [ "$EUID" -ne 0 ]; then
-    echo "This script must be run as root"
-    exit 1
-fi
-```
-
-### [[ ]] vs [ ]
-
-```bash
-# Moderna Bash - använd [[  ]]
-if [[ "$string" == *"pattern"* ]]; then
-    echo "Pattern found"
-fi
-
-# POSIX-kompatibelt - använd [  ]
-if [ "$a" = "$b" ]; then
-    echo "Equal"
-fi
-```
-
-**Tips:** `[[ ]]` är säkrare och kraftfullare, men `[ ]` är mer portabelt.
-
----
-
-## 🔄 for-loopar
-
-### Loopa över lista
-
-```bash
-# Loopa över argument
-for arg in "$@"; do
-    echo "Processing: $arg"
-done
-
-# Loopa över array
-users=("christian" "cebrail" "baraa" "marcus" "said")
-for user in "${users[@]}"; do
-    echo "Creating user: $user"
-done
-
-# Loopa över sekvens
-for i in {1..5}; do
-    echo "Iteration $i"
-done
-
-# C-style loop
-for ((i=0; i<5; i++)); do
-    echo "Index: $i"
-done
-```
-
-### Exempel från gruppuppgiften
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Gruppmedlemmar (Group 3)
-GROUP_MEMBERS=("christian" "cebrail" "baraa" "marcus" "said")
-GROUP_NAME="devops-group3"
-
-# Skapa grupp
-groupadd "$GROUP_NAME" 2>/dev/null || echo "Group exists"
-
-# Skapa användare och lägg till i grupp
-for member in "${GROUP_MEMBERS[@]}"; do
-    if ! id "$member" &>/dev/null; then
-        useradd -m -s /bin/bash -G "$GROUP_NAME" "$member"
-        echo "Created user: $member"
-    else
-        usermod -aG "$GROUP_NAME" "$member"
-        echo "Added existing user $member to group"
-    fi
-done
+/           # Rot - allt börjar här
+/etc        # Konfigurationsfiler (passwd, shadow, ssh)
+/home       # Användarnas hemmakataloger
+/var        # Variabel data (loggar, cache, spool)
+/opt        # Tredjepartsprogram
+/tmp        # Temporära filer (rensas vid omstart)
+/bin        # Grundläggande binärer (ls, cp, mv)
+/sbin       # Systemadministration (fdisk, iptables)
+/usr        # Användarprogram och bibliotek
+/dev        # Enheter (hårddiskar, terminaler)
+/proc       # Processinformation (virtuellt)
+/root       # Root-användarens hemma
 ```
 
 ---
 
-## 🔁 while-loopar
-
-### Grundläggande syntax
+## Navigering
 
 ```bash
-while [ villkor ]; do
-    # kod som körs medan villkoret är sant
-done
-```
+pwd                     # Print Working Directory
+cd /path/to/dir         # Change Directory
+cd ..                   # Upp en nivå
+cd ~                    # Till hemma
+cd -                    # Till förra katalogen (smart!)
 
-### Läsa fil rad för rad
-
-```bash
-# Säkert sätt att läsa fil
-while IFS= read -r line; do
-    echo "Line: $line"
-done < "file.txt"
-
-# Läsa från kommando
-while IFS= read -r user; do
-    echo "User: $user"
-done < <(cut -d: -f1 /etc/passwd)
-```
-
-### Vänta på tjänst
-
-```bash
-# Vänta tills SSH är uppe
-while ! systemctl is-active --quiet sshd; do
-    echo "Waiting for SSH..."
-    sleep 2
-done
-echo "SSH is running!"
+ls                      # Lista filer
+ls -l                   # Long format (permissions, ägare, storlek)
+ls -a                   # Visa dolda filer (börjar med .)
+ls -la                  # Kombinera
+ls -lh                  # Human readable storlek
+ls -lt                  # Sortera efter tid
+ls -lS                  # Sortera efter storlek
 ```
 
 ---
 
-## 🎯 case-satser
+## Fil- och kataloghantering
 
-### Grundläggande syntax
+### Skapa
 
 ```bash
-case "$variable" in
-    pattern1)
-        # kod
-        ;;
-    pattern2|pattern3)
-        # kod för flera mönster
-        ;;
-    *)
-        # default
-        ;;
-esac
+mkdir katalog           # Skapa katalog
+mkdir -p a/b/c          # Skapa med föräldrar
+touch fil.txt           # Skapa tom fil / uppdatera tidsstämpel
 ```
 
-### Exempel: Hantera flaggor
+### Kopiera
 
 ```bash
-#!/bin/bash
-set -euo pipefail
+cp fil.txt kopia.txt    # Kopiera fil
+cp -r katalog/ backup/  # Kopiera rekursivt (VIKTIGT!)
+cp -p fil.txt backup/   # Behåll permissions
+```
 
-show_help() {
-    echo "Usage: $0 [--install|--remove|--status]"
-}
+### Flytta/Byt namn
 
-case "${1:-}" in
-    --install|-i)
-        echo "Installing..."
-        ;;
-    --remove|-r)
-        echo "Removing..."
-        ;;
-    --status|-s)
-        echo "Checking status..."
-        ;;
-    --help|-h)
-        show_help
-        ;;
-    *)
-        echo "Unknown option: ${1:-none}"
-        show_help
-        exit 1
-        ;;
-esac
+```bash
+mv gammal.txt ny.txt    # Byt namn
+mv fil.txt /path/to/    # Flytta
+```
+
+### Ta bort
+
+```bash
+rm fil.txt              # Ta bort fil
+rm -r katalog/          # Ta bort katalog rekursivt
+rm -rf katalog/         # Force, ingen fråga (FARLIGT!)
+rmdir tom_katalog       # Ta bort tom katalog
 ```
 
 ---
 
-## 📋 Copy-Paste Referens
+## Sökning
+
+### find - sök filer
+
+```bash
+find /path -name "*.txt"              # Efter namn
+find /path -type f                    # Endast filer
+find /path -type d                    # Endast kataloger
+find /path -size +100M                # Större än 100MB
+find /path -mtime -7                  # Ändrade senaste 7 dagar
+find /path -user root                 # Ägs av root
+find /path -perm 755                  # Med permissions 755
+find /path -name "*.log" -delete      # Hitta och ta bort
+find /path -exec ls -l {} \;          # Kör kommando på resultat
+```
+
+### grep - sök i filer
+
+```bash
+grep "sökord" fil.txt                 # Sök i fil
+grep -r "sökord" /path/               # Rekursivt i katalog
+grep -i "sökord" fil.txt              # Case insensitive
+grep -n "sökord" fil.txt              # Visa radnummer
+grep -v "sökord" fil.txt              # Invertera (visa EJ matchande)
+grep -c "sökord" fil.txt              # Räkna matchningar
+grep -E "regex" fil.txt               # Extended regex (egrep)
+```
+
+---
+
+## Visa filinnehåll
+
+```bash
+cat fil.txt             # Visa hela filen
+head fil.txt            # Första 10 rader
+head -n 20 fil.txt      # Första 20 rader
+tail fil.txt            # Sista 10 rader
+tail -n 20 fil.txt      # Sista 20 rader
+tail -f fil.txt         # Följ filen i realtid (loggar!)
+less fil.txt            # Bläddra (q för quit, / för sök)
+```
+
+---
+
+## Pipes och Redirection
+
+### Pipes - skicka output till nästa kommando
+
+```bash
+ls -l | grep ".txt"     # Lista, filtrera på .txt
+cat fil | sort | uniq   # Visa, sortera, ta bort dubletter
+ps aux | grep nginx     # Hitta nginx-processer
+```
+
+### Redirection
+
+```bash
+echo "text" > fil.txt   # Skriv till fil (skriver över!)
+echo "text" >> fil.txt  # Lägg till i fil
+kommando 2> error.log   # Stderr till fil
+kommando &> all.log     # Både stdout och stderr
+kommando 2>&1           # Stderr till stdout
+kommando > /dev/null    # Kasta output
+kommando 2>/dev/null    # Kasta errors
+```
+
+---
+
+## Arkivering med tar
+
+```bash
+# Skapa arkiv
+tar -cvf arkiv.tar katalog/           # Create, Verbose, File
+tar -czvf arkiv.tar.gz katalog/       # Med gzip-komprimering
+tar -cjvf arkiv.tar.bz2 katalog/      # Med bzip2-komprimering
+
+# Extrahera
+tar -xvf arkiv.tar                    # Extract
+tar -xzvf arkiv.tar.gz                # Extrahera gzip
+tar -xzvf arkiv.tar.gz -C /path/      # Till specifik katalog
+
+# Visa innehåll
+tar -tzvf arkiv.tar.gz                # Lista innehåll
+```
+
+**Viktiga flaggor:** c=create, x=extract, t=list, v=verbose, f=file, z=gzip, p=preserve
+
+---
+
+## Diskutrymme
+
+```bash
+df -h                   # Disk Free - visa partitioner
+du -sh katalog/         # Disk Usage - katalogstorlek
+du -sh *                # Storlek på allt i nuvarande katalog
+du -h --max-depth=1     # En nivå djupt
+```
+
+---
+
+## Snabbreferens
 
 | Uppgift | Kommando |
 |---------|----------|
-| Robust skriptstart | `set -euo pipefail` |
-| Kolla fil finns | `if [ -f "/path/file" ]; then` |
-| Kolla mapp finns | `if [ -d "/path/dir" ]; then` |
-| Kolla användare finns | `if id "user" &>/dev/null; then` |
-| Loopa över array | `for item in "${array[@]}"; do` |
-| Läsa fil rad för rad | `while IFS= read -r line; do ... done < file` |
-| Shellcheck | `shellcheck script.sh` |
-
----
-
-## ✅ Checkpoint
-
-1. Vad gör `set -e` i början av ett skript?
-2. Hur testar du om en fil finns?
-3. Vad är skillnaden mellan `[ ]` och `[[ ]]`?
-4. Hur loopar du över alla element i en array?
+| Var är jag? | `pwd` |
+| Lista allt | `ls -lah` |
+| Kopiera mapp | `cp -r källa/ mål/` |
+| Ta bort mapp | `rm -rf katalog/` |
+| Hitta filer | `find /path -name "*.txt"` |
+| Sök i filer | `grep -r "text" /path/` |
+| Följ logg | `tail -f /var/log/syslog` |
+| Kolla disk | `df -h` |
 
 """,
             "quiz": [
                 {
-                    "question": "Vad gör 'set -e' i ett Bash-skript?",
+                    "question": "Vilket kommando kopierar en katalog rekursivt?",
                     "options": [
-                        "Aktiverar debug-läge",
-                        "Avslutar skriptet vid första fel",
-                        "Exporterar alla variabler",
-                        "Aktiverar extended globbing",
+                        "cp katalog/ backup/",
+                        "cp -r katalog/ backup/",
+                        "mv katalog/ backup/",
+                        "copy -r katalog/ backup/",
                     ],
                     "correct": 1,
-                    "explanation": "set -e (exit on error) gör att skriptet avslutas omedelbart om ett kommando returnerar icke-noll status.",
+                    "explanation": "cp -r (recursive) krävs för att kopiera kataloger med innehåll.",
                 },
                 {
-                    "question": "Hur testar du om filen /etc/passwd finns?",
+                    "question": "Vad gör kommandot 'tail -f /var/log/syslog'?",
                     "options": [
-                        "if [ -e /etc/passwd ]",
-                        "if [ -f /etc/passwd ]",
-                        "if [ -d /etc/passwd ]",
-                        "if exists /etc/passwd",
-                    ],
-                    "correct": 1,
-                    "explanation": "-f testar om det är en vanlig fil. -e testar om något finns (fil eller katalog). -d testar om det är en katalog.",
-                },
-                {
-                    "question": "Vilken syntax loopar korrekt över en array i Bash?",
-                    "options": [
-                        "for item in $array; do",
-                        "for item in ${array}; do",
-                        'for item in "${array[@]}"; do',
-                        "foreach item in array; do",
+                        "Visar första 10 raderna",
+                        "Visar sista 10 raderna",
+                        "Följer filen i realtid",
+                        "Filtrerar loggen",
                     ],
                     "correct": 2,
-                    "explanation": "${array[@]} expanderar alla element. Citattecken bevarar element med mellanslag.",
+                    "explanation": "tail -f (follow) visar nya rader i realtid - perfekt för att övervaka loggar.",
                 },
                 {
-                    "question": "Vad händer om du använder en odefinierad variabel med 'set -u'?",
+                    "question": "Vad betyder 'grep -v' flaggan?",
                     "options": [
-                        "Variabeln sätts till tom sträng",
-                        "Skriptet skriver en varning",
-                        "Skriptet avslutas med fel",
-                        "Ingenting speciellt",
+                        "Verbose output",
+                        "Visa radnummer",
+                        "Invertera matchning",
+                        "Case insensitive",
                     ],
                     "correct": 2,
-                    "explanation": "set -u gör att skriptet avslutas om du försöker använda en variabel som inte är definierad.",
-                },
-                {
-                    "question": "Hur avslutar du en case-gren i Bash?",
-                    "options": ["break", ";;", "end", "done"],
-                    "correct": 1,
-                    "explanation": "I Bash case-satser avslutas varje gren med ;; (dubbla semikolon).",
-                },
-                {
-                    "question": "Vad gör 'id username &>/dev/null' i ett if-villkor?",
-                    "options": [
-                        "Visar användarens ID",
-                        "Testar om användaren finns (utan output)",
-                        "Skapar användaren",
-                        "Tar bort användaren",
-                    ],
-                    "correct": 1,
-                    "explanation": "id returnerar 0 om användaren finns, icke-noll annars. &>/dev/null döljer all output.",
+                    "explanation": "grep -v inverterar matchningen och visar rader som INTE matchar mönstret.",
                 },
             ],
         },
         # =============================================================================
-        # NOD 4: Funktioner, Arrays & Signals (VG-nivå)
+        # NOD 3: Bash Scripting Grund
         # =============================================================================
         {
-            "title": "Funktioner, Arrays & Signals",
-            "slug": "funktioner-arrays-signals",
-            "description": "VG-nivå Bash: Funktioner med returvärden, arrays, och signalhantering med trap",
-            "difficulty": "advanced",
+            "title": "Bash Scripting Grund",
+            "slug": "bash-scripting-grund",
+            "description": "Shebang, variabler, specialvariabler, if-satser och test-operatorer.",
+            "difficulty": "medium",
             "estimated_minutes": 50,
-            "xp_reward": 200,
+            "xp_reward": 120,
             "order_index": 3,
-            "content": """# 🚀 Funktioner, Arrays & Signals (VG-nivå)
+            "content": r"""# Bash Scripting Grund
 
-> **Bash Book kap 10-12** - Detta är VG-materialet! Behärskar du detta är du redo för de svårare tentafrågorna.
+## Script-grunder
+
+```bash
+#!/bin/bash
+# Shebang - måste vara första raden!
+
+# Gör körbar
+chmod +x script.sh
+
+# Köra
+./script.sh
+bash script.sh
+```
 
 ---
 
-## 📋 TL;DR - Det viktigaste
+## Variabler
 
-| Koncept | Syntax | Viktigt att veta |
-|---------|--------|------------------|
-| **Funktion** | `fname() { ... }` | Ingen datatyp, inga parenteser vid anrop |
-| **Returvärde** | `return 0-255` | 0 = OK, använd `$?` för att läsa |
-| **Output capture** | `result=$(fname)` | Fånga echo/printf från funktion |
-| **Array deklaration** | `arr=("a" "b" "c")` | Index börjar på 0 |
-| **Alla element** | `"${arr[@]}"` | MED citattecken! |
-| **Array längd** | `${#arr[@]}` | Antal element |
-| **trap** | `trap 'cmd' SIGNAL` | Körs vid signal |
-| **Cleanup** | `trap cleanup EXIT` | Körs alltid vid avslut |
+**VIKTIGT: INGET mellanslag runt =**
+
+```bash
+# Tilldela (RÄTT)
+name="Said"
+age=25
+path="/home/said"
+
+# FEL - ger error!
+name = "Said"
+
+# Använda
+echo $name
+echo ${name}            # Rekommenderat, tydligare
+echo "Hej $name!"
+echo "Path är: ${path}/scripts"
+```
 
 ---
 
-## 🔧 Funktioner i Bash
-
-### Grundläggande syntax
+## Specialvariabler
 
 ```bash
-# Två sätt att definiera (båda fungerar)
-function my_func {
-    echo "Hello from function"
-}
-
-my_func() {
-    echo "Hello from function"
-}
-
-# Anropa (UTAN parenteser!)
-my_func
+$0          # Scriptets namn
+$1          # Första argumentet
+$2          # Andra argumentet
+$#          # Antal argument
+$@          # Alla argument (som lista)
+$*          # Alla argument (som sträng)
+$?          # Exit status från förra kommandot
+$$          # Processens PID
 ```
 
-### Funktionsargument
+---
+
+## Command Substitution
 
 ```bash
-#!/bin/bash
-set -euo pipefail
+# Kör kommando och spara output
+today=$(date +%Y-%m-%d)
+files=$(ls *.txt)
+user=$(whoami)
 
-# Funktioner har sina egna $1, $2, $@
-greet() {
-    local name="$1"      # local = lokal variabel
-    local greeting="${2:-Hello}"  # Default om ej angiven
-    echo "$greeting, $name!"
-}
-
-# Anropa med argument
-greet "Anna"              # Output: Hello, Anna!
-greet "Erik" "Hej"        # Output: Hej, Erik!
+echo "Datum: $today"
 ```
 
-### ⚠️ $@ vs $* - TENTAFRÅGA!
+---
+
+## Exit Status
 
 ```bash
-#!/bin/bash
-set -euo pipefail
+# 0 = lyckat, annat = fel
+ls /existing_dir
+echo $?                 # 0
 
-show_args_at() {
-    echo "Med \\$@:"
-    for arg in "$@"; do
-        echo "  Arg: '$arg'"
-    done
-}
+ls /nonexistent
+echo $?                 # icke-noll = fel
 
-show_args_star() {
-    echo "Med \\$*:"
-    for arg in "$*"; do
-        echo "  Arg: '$arg'"
-    done
-}
-
-# Test med: ./script.sh "hello world" foo bar
-# $@ ger: 3 argument (bevarar citattecken)
-# $* ger: 1 argument (allt som en sträng)
+# Avsluta script med status
+exit 0                  # Lyckat
+exit 1                  # Fel
 ```
 
-| Syntax | Beteende | Antal args för "hello world" foo bar |
-|--------|----------|--------------------------------------|
-| `"$@"` | Bevarar varje argument separat | 3: "hello world", "foo", "bar" |
-| `"$*"` | Slår ihop till en sträng | 1: "hello world foo bar" |
-| `$@` | Utan quotes, word splitting | Kan bli 4+ beroende på IFS |
+---
 
-### Returvärden
+## IF-satser
 
 ```bash
-#!/bin/bash
-set -euo pipefail
-
-# Return ger exit status (0-255)
-is_valid_user() {
-    local username="$1"
-    if id "$username" &>/dev/null; then
-        return 0   # Success
-    else
-        return 1   # Failure
-    fi
-}
-
-# Använd med if
-if is_valid_user "root"; then
-    echo "User exists"
-else
-    echo "User does not exist"
+# Grundläggande syntax
+if [ villkor ]; then
+    kommandon
 fi
 
-# Eller läs $?
-is_valid_user "nobody"
-status=$?
-echo "Exit status was: $status"
-```
+# If-else
+if [ villkor ]; then
+    kommandon
+else
+    andra kommandon
+fi
 
-### Fånga output från funktion
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Funktion som "returnerar" data via echo
-get_hostname() {
-    hostname -f
-}
-
-# Fånga output med command substitution
-my_host=$(get_hostname)
-echo "Hostname: $my_host"
-
-# Funktion med beräkning
-calculate_sum() {
-    local a="$1"
-    local b="$2"
-    echo $((a + b))  # Aritmetisk expansion
-}
-
-result=$(calculate_sum 10 20)
-echo "Sum: $result"  # Output: Sum: 30
+# If-elif-else
+if [ villkor1 ]; then
+    kommandon1
+elif [ villkor2 ]; then
+    kommandon2
+else
+    kommandon3
+fi
 ```
 
 ---
 
-## 📦 Arrays (Bash Book kap 11)
+## Test-operatorer
 
-### Skapa arrays
-
+### Strängar
 ```bash
-# Indexerade arrays (startar på 0)
-fruits=("apple" "banana" "cherry")
-numbers=(1 2 3 4 5)
-
-# Lägg till element
-fruits+=("date")
-
-# Explicit index
-colors[0]="red"
-colors[1]="green"
-colors[5]="blue"   # Index 2-4 är tomma
+[ "$str" = "text" ]     # Lika med
+[ "$str" != "text" ]    # Inte lika med
+[ -z "$str" ]           # Tom sträng
+[ -n "$str" ]           # Inte tom
 ```
 
-### Läsa från arrays
-
+### Numeriskt
 ```bash
-# Ett element
-echo "${fruits[0]}"      # apple
-echo "${fruits[1]}"      # banana
-
-# ALLA element - MÅSTE ha quotes!
-echo "${fruits[@]}"      # apple banana cherry date
-
-# Antal element
-echo "${#fruits[@]}"     # 4
-
-# Alla index
-echo "${!fruits[@]}"     # 0 1 2 3
+[ $a -eq $b ]           # Equal
+[ $a -ne $b ]           # Not equal
+[ $a -lt $b ]           # Less than
+[ $a -le $b ]           # Less or equal
+[ $a -gt $b ]           # Greater than
+[ $a -ge $b ]           # Greater or equal
 ```
 
-### Loopa över array
+### Filer
+```bash
+[ -f "$fil" ]           # Fil existerar
+[ -d "$dir" ]           # Katalog existerar
+[ -e "$path" ]          # Existerar (fil eller katalog)
+[ -r "$fil" ]           # Läsbar
+[ -w "$fil" ]           # Skrivbar
+[ -x "$fil" ]           # Körbar
+[ -s "$fil" ]           # Har innehåll
+```
+
+### Kombinera villkor
+```bash
+[ villkor1 -a villkor2 ]    # AND
+[ villkor1 -o villkor2 ]    # OR
+[ ! villkor ]               # NOT
+```
+
+---
+
+## CASE-satser
 
 ```bash
-#!/bin/bash
-set -euo pipefail
+case $variabel in
+    pattern1)
+        kommandon
+        ;;
+    pattern2|pattern3)
+        kommandon för båda
+        ;;
+    *)
+        default
+        ;;
+esac
+```
 
-servers=("web01" "web02" "db01" "cache01")
+---
 
-# RÄTT sätt - med quotes
-for server in "${servers[@]}"; do
-    echo "Checking: $server"
-    ping -c 1 "$server" &>/dev/null && echo "  UP" || echo "  DOWN"
+## Viktigt att komma ihåg
+
+1. **Citattecken runt variabler** - `"$var"` inte `$var`
+2. **Inget mellanslag runt =** - `var="value"`
+3. **-eq för tal, = för strängar**
+4. **Mellanslag runt [ och ]**
+
+""",
+            "quiz": [
+                {
+                    "question": "Vilken operator jämför två tal för likhet?",
+                    "options": ["=", "==", "-eq", "-e"],
+                    "correct": 2,
+                    "explanation": "-eq (equal) används för numeriska jämförelser. = används för strängar.",
+                },
+                {
+                    "question": "Vad innehåller $# i ett script?",
+                    "options": [
+                        "Scriptets namn",
+                        "Antal argument",
+                        "Exit status",
+                        "Process ID",
+                    ],
+                    "correct": 1,
+                    "explanation": "$# innehåller antalet argument som skickades till scriptet.",
+                },
+                {
+                    "question": "Vilken test-operator kontrollerar om en fil existerar?",
+                    "options": ["-e", "-d", "-f", "-x"],
+                    "correct": 2,
+                    "explanation": "-f kontrollerar om en regular file existerar. -d är för kataloger, -e för båda.",
+                },
+            ],
+        },
+        # =============================================================================
+        # NOD 4: Bash Scripting Avancerat
+        # =============================================================================
+        {
+            "title": "Bash Scripting Avancerat",
+            "slug": "bash-scripting-avancerat",
+            "description": "Loopar (for, while, until), funktioner, select-menyer och read.",
+            "difficulty": "medium",
+            "estimated_minutes": 50,
+            "xp_reward": 120,
+            "order_index": 4,
+            "content": r"""# Bash Scripting Avancerat
+
+## FOR-loop
+
+```bash
+# Lista
+for item in äpple banan citron; do
+    echo "Jag gillar $item"
 done
 
-# Med index
-for i in "${!servers[@]}"; do
-    echo "Server $i: ${servers[$i]}"
+# Filer
+for fil in *.txt; do
+    echo "Bearbetar $fil"
 done
-```
 
-### Array manipulation
+# Range
+for i in {1..5}; do
+    echo "Nummer: $i"
+done
 
-```bash
-#!/bin/bash
-set -euo pipefail
-
-arr=("a" "b" "c" "d" "e")
-
-# Slice (start:längd)
-echo "${arr[@]:1:3}"    # b c d (från index 1, 3 element)
-
-# Ta bort element
-unset 'arr[2]'          # Tar bort index 2
-echo "${arr[@]}"        # a b d e (index 2 är borta)
-
-# Ersätt mönster
-files=("file1.txt" "file2.txt" "file3.txt")
-echo "${files[@]/.txt/.bak}"  # file1.bak file2.bak file3.bak
-```
-
-### Associativa arrays (key-value)
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# MÅSTE deklareras med -A
-declare -A user_ports
-
-user_ports["web"]="80"
-user_ports["ssh"]="22"
-user_ports["https"]="443"
-
-# Läs värde
-echo "SSH port: ${user_ports[ssh]}"  # 22
-
-# Alla nycklar
-echo "Services: ${!user_ports[@]}"   # web ssh https
-
-# Loopa
-for service in "${!user_ports[@]}"; do
-    echo "$service uses port ${user_ports[$service]}"
+# C-style
+for ((i=1; i<=5; i++)); do
+    echo "Nummer: $i"
 done
 ```
 
 ---
 
-## 🚨 Signaler & trap (Bash Book kap 12)
-
-### Vanliga signaler
-
-| Signal | Nummer | Beskrivning | Kan fångas? |
-|--------|--------|-------------|-------------|
-| `SIGINT` | 2 | Ctrl+C | Ja |
-| `SIGTERM` | 15 | kill (default) | Ja |
-| `SIGKILL` | 9 | kill -9 | **NEJ** |
-| `SIGHUP` | 1 | Terminal stängs | Ja |
-| `EXIT` | - | Skript avslutas | Ja |
-
-### trap - fånga signaler
+## WHILE-loop
 
 ```bash
-#!/bin/bash
-set -euo pipefail
-
-# Kör kommando vid signal
-trap 'echo "Caught SIGINT!"' SIGINT
-
-echo "Press Ctrl+C..."
-sleep 60
-```
-
-### Cleanup-funktion (VIKTIGT för tentan!)
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-TEMP_FILE=""
-PID_FILE="/var/run/myapp.pid"
-
-cleanup() {
-    echo "Cleaning up..."
-    # Ta bort temp-filer
-    [[ -n "$TEMP_FILE" && -f "$TEMP_FILE" ]] && rm -f "$TEMP_FILE"
-    # Ta bort PID-fil
-    [[ -f "$PID_FILE" ]] && rm -f "$PID_FILE"
-    echo "Cleanup complete"
-}
-
-# Registrera cleanup för EXIT (körs ALLTID)
-trap cleanup EXIT
-
-# Nu kan skriptet göra sitt jobb
-TEMP_FILE=$(mktemp)
-echo "$$" > "$PID_FILE"
-
-echo "Working with temp file: $TEMP_FILE"
-# ... gör saker ...
-
-# cleanup() körs automatiskt när skriptet avslutas
-```
-
-### Socket-server med signal handling (Deliverable-relevant!)
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Globala variabler
-SOCKET_PATH="/tmp/my_socket.sock"
-RUNNING=true
-
-cleanup() {
-    echo "Shutting down..."
-    RUNNING=false
-    [[ -S "$SOCKET_PATH" ]] && rm -f "$SOCKET_PATH"
-    # Döda eventuella bakgrundsprocesser
-    jobs -p | xargs -r kill 2>/dev/null
-    exit 0
-}
-
-# Fånga signaler
-trap cleanup SIGINT SIGTERM EXIT
-
-# Skapa socket (kräver netcat/socat i praktiken)
-echo "Starting server on $SOCKET_PATH"
-
-# Simulerad server-loop
-while $RUNNING; do
-    echo "Server running... (Ctrl+C to stop)"
-    sleep 5
+counter=1
+while [ $counter -le 5 ]; do
+    echo "Nummer: $counter"
+    ((counter++))
 done
-```
 
-### Ignore vs Default
-
-```bash
-#!/bin/bash
-
-# Ignorera SIGINT (Ctrl+C gör ingenting)
-trap '' SIGINT
-
-# Återställ till default
-trap - SIGINT
-
-# Ignorera HUP (keep running after logout)
-trap '' SIGHUP
+# Läsa fil rad för rad
+while read line; do
+    echo "Rad: $line"
+done < fil.txt
 ```
 
 ---
 
-## 🎯 Checkpoint: Kombinerat exempel
+## UNTIL-loop
 
 ```bash
-#!/bin/bash
-set -euo pipefail
+# Kör TILLS villkoret blir sant
+counter=1
+until [ $counter -gt 5 ]; do
+    echo "Nummer: $counter"
+    ((counter++))
+done
+```
 
-# ============================================
-# Komplett skript med funktioner, arrays, trap
-# ============================================
+---
 
-declare -a SERVICES=("nginx" "sshd" "docker")
-declare -A SERVICE_STATUS
-LOG_FILE="/tmp/service_check.log"
+## BREAK och CONTINUE
 
-# Cleanup function
-cleanup() {
-    echo "Exiting gracefully..."
-    [[ -f "$LOG_FILE" ]] && rm -f "$LOG_FILE"
+```bash
+# break - hoppa ur loopen
+for i in {1..10}; do
+    if [ $i -eq 5 ]; then
+        break
+    fi
+    echo $i
+done
+
+# continue - hoppa till nästa iteration
+for i in {1..5}; do
+    if [ $i -eq 3 ]; then
+        continue
+    fi
+    echo $i     # Skriver 1, 2, 4, 5
+done
+```
+
+---
+
+## SELECT (menyer)
+
+```bash
+PS3="Välj alternativ: "
+select opt in "Starta" "Stoppa" "Avsluta"; do
+    case $opt in
+        "Starta") echo "Startar..." ;;
+        "Stoppa") echo "Stoppar..." ;;
+        "Avsluta") break ;;
+        *) echo "Ogiltigt" ;;
+    esac
+done
+```
+
+---
+
+## SHIFT
+
+```bash
+# Shift flyttar argument åt vänster
+while [ $# -gt 0 ]; do
+    echo "Argument: $1"
+    shift
+done
+```
+
+---
+
+## Funktioner
+
+```bash
+# Definiera funktion
+greet() {
+    echo "Hej $1!"
 }
-trap cleanup EXIT
 
-# Funktion: Kontrollera tjänst
-check_service() {
-    local service="$1"
-    if systemctl is-active --quiet "$service" 2>/dev/null; then
+# Med return-värde
+check_file() {
+    if [ -f "$1" ]; then
         return 0
     else
         return 1
     fi
 }
 
-# Funktion: Logga meddelande
-log_message() {
-    local level="$1"
-    local message="$2"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $message" >> "$LOG_FILE"
-}
+# Anropa
+greet "Said"
 
-# Huvudlogik
-main() {
-    log_message "INFO" "Starting service check"
-
-    for service in "${SERVICES[@]}"; do
-        if check_service "$service"; then
-            SERVICE_STATUS["$service"]="UP"
-            log_message "INFO" "$service is running"
-        else
-            SERVICE_STATUS["$service"]="DOWN"
-            log_message "WARN" "$service is not running"
-        fi
-    done
-
-    # Visa resultat
-    echo "=== Service Status ==="
-    for svc in "${!SERVICE_STATUS[@]}"; do
-        printf "%-10s: %s\\n" "$svc" "${SERVICE_STATUS[$svc]}"
-    done
-}
-
-# Kör main
-main "$@"
+if check_file "/etc/passwd"; then
+    echo "Filen finns"
+fi
 ```
 
 ---
 
-## ⚠️ Vanliga fel
+## Lokala variabler
 
-| Fel | Problem | Lösning |
-|-----|---------|---------|
-| `my_func()` vid anrop | Parenteser ska inte vara där | `my_func` |
-| `${array[*]}` i for-loop | Blir en sträng | `"${array[@]}"` |
-| Glömt `declare -A` | Associativ array fungerar ej | Alltid `declare -A` |
-| `return "text"` | Return tar bara 0-255 | Använd `echo` för text |
-| Glömt quotes vid `$@` | Word splitting | `"$@"` |
+```bash
+name="Global"
+
+test_scope() {
+    local name="Lokal"
+    echo "Inne: $name"
+}
+
+echo "Före: $name"   # Global
+test_scope           # Lokal
+echo "Efter: $name"  # Global
+```
+
+---
+
+## READ (användarinput)
+
+```bash
+read -p "Ditt namn: " name
+echo "Hej $name!"
+
+# Tyst input (lösenord)
+read -sp "Lösenord: " password
+
+# Med timeout
+read -t 10 -p "Svar inom 10 sek: " answer
+```
+
 """,
             "quiz": [
                 {
-                    "question": "Hur anropar du en funktion 'my_func' i Bash?",
-                    "options": ["my_func()", "call my_func", "my_func", "$(my_func)"],
-                    "correct": 2,
-                    "explanation": "I Bash anropas funktioner utan parenteser. my_func() är deklarationssyntax, inte anrop.",
+                    "question": "Vad gör 'shift' kommandot?",
+                    "options": [
+                        "Sorterar argument",
+                        "Flyttar argument åt vänster",
+                        "Lägger till argument",
+                        "Tar bort alla argument",
+                    ],
+                    "correct": 1,
+                    "explanation": "shift flyttar alla positionsparametrar ett steg åt vänster. $2 blir $1, osv.",
                 },
                 {
-                    "question": 'Vad är skillnaden mellan "$@" och "$*" i en funktion?',
+                    "question": "Vad är skillnaden mellan while och until?",
                     "options": [
                         "Ingen skillnad",
-                        "$@ bevarar varje argument separat, $* slår ihop till en sträng",
-                        "$* bevarar argument, $@ slår ihop",
-                        "$@ fungerar bara i funktioner",
+                        "while kör medan sant, until kör tills sant",
+                        "until är snabbare",
+                        "while kan bara användas med tal",
                     ],
                     "correct": 1,
-                    "explanation": '"$@" expanderar varje argument som separat ord (bevarar quotes), "$*" slår ihop alla till en enda sträng.',
+                    "explanation": "while kör så länge villkoret är sant. until kör tills villkoret blir sant.",
                 },
                 {
-                    "question": "Hur deklarerar du en associativ array i Bash?",
+                    "question": "Vad gör 'local' nyckelordet i en funktion?",
                     "options": [
-                        "assoc_array=()",
-                        "declare -a assoc_array",
-                        "declare -A assoc_array",
-                        "array -assoc assoc_array",
-                    ],
-                    "correct": 2,
-                    "explanation": "Associativa arrays MÅSTE deklareras med 'declare -A'. -a är för vanliga indexerade arrays.",
-                },
-                {
-                    "question": "Vad gör 'trap cleanup EXIT'?",
-                    "options": [
-                        "Kör cleanup() när användaren trycker Ctrl+C",
-                        "Kör cleanup() när skriptet avslutas (oavsett hur)",
-                        "Kör cleanup() vid SIGKILL",
-                        "Definierar en funktion som heter trap",
+                        "Exporterar variabeln",
+                        "Gör variabeln endast tillgänglig i funktionen",
+                        "Gör variabeln read-only",
+                        "Tar bort variabeln",
                     ],
                     "correct": 1,
-                    "explanation": "trap med EXIT kör funktionen när skriptet avslutas, oavsett om det är normalt eller via signal (utom SIGKILL).",
-                },
-                {
-                    "question": "Hur får du antalet element i en array 'arr'?",
-                    "options": [
-                        "len(arr)",
-                        "${arr.length}",
-                        "${#arr[@]}",
-                        "count ${arr[@]}",
-                    ],
-                    "correct": 2,
-                    "explanation": "${#arr[@]} ger antalet element i arrayen. # före variabelnamn ger längden.",
-                },
-                {
-                    "question": "Vilken signal kan INTE fångas med trap?",
-                    "options": [
-                        "SIGINT (Ctrl+C)",
-                        "SIGTERM (kill)",
-                        "SIGKILL (kill -9)",
-                        "SIGHUP (terminal close)",
-                    ],
-                    "correct": 2,
-                    "explanation": "SIGKILL (signal 9) kan aldrig fångas eller ignoreras. Det är en 'hård' avslutning som OS hanterar direkt.",
+                    "explanation": "local skapar en variabel som endast existerar inom funktionen.",
                 },
             ],
         },
         # =============================================================================
-        # NOD 5: Användare, Grupper & Rättigheter
+        # NOD 5: Användare & Rättigheter
         # =============================================================================
         {
-            "title": "Användare, Grupper & Rättigheter",
-            "slug": "anvandare-grupper-rattigheter",
-            "description": "Hantera användare, grupper, filrättigheter och sudo - kärnan i Linux-administration",
-            "difficulty": "intermediate",
+            "title": "Användare & Rättigheter",
+            "slug": "anvandare-rattigheter",
+            "description": "Användarhantering, grupper, chmod, chown, umask och speciella permissions.",
+            "difficulty": "medium",
             "estimated_minutes": 45,
-            "xp_reward": 175,
-            "order_index": 4,
-            "content": """# 👥 Användare, Grupper & Rättigheter
+            "xp_reward": 120,
+            "order_index": 5,
+            "content": r"""# Användare & Rättigheter
 
-> **Kursmål:** "Kunskaper om användarhantering och filrättigheter" + "Färdigheter i att konfigurera användarkonton"
->
-> **Deliverable 5.1:** Skapa användare och grupper med rätt behörigheter
+## Viktiga filer
 
----
-
-## 📋 TL;DR - Det viktigaste
-
-| Kommando | Beskrivning | Exempel |
-|----------|-------------|---------|
-| `useradd` | Skapa användare | `useradd -m -s /bin/bash user1` |
-| `usermod` | Ändra användare | `usermod -aG docker user1` |
-| `userdel` | Ta bort användare | `userdel -r user1` |
-| `groupadd` | Skapa grupp | `groupadd developers` |
-| `passwd` | Sätt lösenord | `passwd user1` |
-| `chmod` | Ändra rättigheter | `chmod 755 script.sh` |
-| `chown` | Ändra ägare | `chown user:group file` |
-| `id` | Visa användarinfo | `id username` |
-
----
-
-## 👤 Användarhantering
-
-### Skapa användare - useradd
-
-```bash
-# Grundläggande (UTAN hemkatalog)
-useradd username
-
-# Rekommenderat sätt (MED hemkatalog och shell)
-useradd -m -s /bin/bash username
-
-# Alla vanliga flaggor
-useradd -m \\
-    -s /bin/bash \\
-    -c "Full Name" \\
-    -G sudo,docker \\
-    -d /home/username \\
-    username
+### /etc/passwd (7 fält)
+```
+username:x:UID:GID:kommentar:hemma:shell
+said:x:1000:1000:Said Ali:/home/said:/bin/bash
 ```
 
-| Flagga | Beskrivning |
-|--------|-------------|
-| `-m` | Skapa hemkatalog |
-| `-s /bin/bash` | Sätt login shell |
-| `-c "comment"` | Beskrivning/fullständigt namn |
-| `-G group1,group2` | Lägg till i extra grupper |
-| `-d /path` | Ange hemkatalog |
-| `-e YYYY-MM-DD` | Kontot går ut detta datum |
+### /etc/shadow (lösenordshash)
+```
+username:hash:lastchange:min:max:warn:inactive:expire:reserved
+```
 
-### Sätt lösenord
+### /etc/group (4 fält)
+```
+groupname:x:GID:medlemmar
+sudo:x:27:said,anna
+```
+
+---
+
+## Användarhantering
 
 ```bash
-# Interaktivt
+# Skapa användare
+useradd -m username                   # Med hemkatalog
+useradd -m -s /bin/bash username      # Med shell
+useradd -m -G sudo,docker username    # Med grupper
+
+# Sätt lösenord
 passwd username
 
-# Non-interaktivt (för skript) - MINDRE SÄKERT
-echo "username:password" | chpasswd
+# Ändra användare
+usermod -aG sudo username             # Lägg till i grupp
+usermod -s /bin/zsh username          # Ändra shell
 
-# Tvinga byte vid första login
-passwd -e username
-```
-
-### Ändra användare - usermod
-
-```bash
-# Lägg till i grupp (BEVARA befintliga grupper med -a)
-usermod -aG docker username    # -a = append!
-
-# UTAN -a ersätts ALLA grupper!
-usermod -G docker username     # ⚠️ Farligt! Tar bort från andra grupper
-
-# Ändra shell
-usermod -s /bin/zsh username
-
-# Lås/lås upp konto
-usermod -L username    # Lock
-usermod -U username    # Unlock
-```
-
-### Ta bort användare
-
-```bash
-# Behåll hemkatalog
-userdel username
-
-# Ta bort ALLT (hemkatalog + mail spool)
-userdel -r username
+# Ta bort användare
+userdel username                      # Behåll hemkatalog
+userdel -r username                   # Ta bort allt
 ```
 
 ---
 
-## 👥 Grupphantering
-
-### Skapa och hantera grupper
+## Grupphantering
 
 ```bash
-# Skapa grupp
-groupadd developers
-
-# Skapa med specifikt GID
-groupadd -g 1500 devops
-
-# Ta bort grupp
-groupdel developers
-
-# Visa grupps medlemmar
-getent group developers
-```
-
-### Viktiga filer
-
-| Fil | Innehåll |
-|-----|----------|
-| `/etc/passwd` | Användarinformation |
-| `/etc/shadow` | Krypterade lösenord |
-| `/etc/group` | Gruppinformation |
-| `/etc/sudoers` | Sudo-behörigheter |
-
-```bash
-# Visa användarinfo från passwd
-cat /etc/passwd | grep username
-# Format: username:x:UID:GID:comment:home:shell
-
-# Visa gruppmedlemskap
-groups username
-id username
+groupadd groupname              # Skapa grupp
+usermod -aG groupname username  # Lägg till i grupp
+groups username                 # Visa grupper
+id username                     # Visa UID, GID, grupper
+groupdel groupname              # Ta bort grupp
 ```
 
 ---
 
-## 🔒 Filrättigheter
-
-### Förstå rättighetssträngen
-
-```
--rwxr-xr-- 1 owner group 4096 Dec 21 10:00 file.txt
-│├─┤├─┤├─┤
-│ │  │  └── Others (alla andra)
-│ │  └───── Group (gruppmedlemmar)
-│ └──────── User/Owner (ägaren)
-└────────── Filtyp (- = fil, d = katalog, l = länk)
-```
-
-| Tecken | Betydelse | Värde |
-|--------|-----------|-------|
-| `r` | Read (läsa) | 4 |
-| `w` | Write (skriva) | 2 |
-| `x` | Execute (köra) | 1 |
-| `-` | Ingen behörighet | 0 |
-
-### chmod - Ändra rättigheter
+## Sudo
 
 ```bash
-# Oktalt (vanligast)
-chmod 755 script.sh    # rwxr-xr-x
-chmod 644 config.txt   # rw-r--r--
-chmod 700 private/     # rwx------
-
-# Symboliskt
-chmod u+x script.sh    # Lägg till execute för user
-chmod g+w file.txt     # Lägg till write för group
-chmod o-r file.txt     # Ta bort read för others
-chmod a+r file.txt     # Lägg till read för alla (a = all)
-```
-
-### Vanliga chmod-värden
-
-| Värde | Rättigheter | Användning |
-|-------|-------------|------------|
-| `755` | rwxr-xr-x | Skript, program |
-| `644` | rw-r--r-- | Vanliga filer |
-| `700` | rwx------ | Privata kataloger |
-| `600` | rw------- | Känsliga filer (SSH keys) |
-| `777` | rwxrwxrwx | ⚠️ UNDVIK! Säkerhetsrisk |
-
-### chown - Ändra ägare
-
-```bash
-# Ändra ägare
-chown newowner file.txt
-
-# Ändra ägare och grupp
-chown newowner:newgroup file.txt
-
-# Bara grupp
-chown :newgroup file.txt
-# eller
-chgrp newgroup file.txt
-
-# Rekursivt (hela katalogen)
-chown -R user:group /path/to/dir/
-```
-
----
-
-## 🔑 Speciella rättigheter
-
-### SetUID, SetGID, Sticky Bit
-
-| Bit | Oktalt | Symboliskt | Effekt |
-|-----|--------|------------|--------|
-| SetUID | 4000 | `u+s` | Kör som filägare |
-| SetGID | 2000 | `g+s` | Kör som gruppägare / ärv grupp |
-| Sticky | 1000 | `+t` | Bara ägare kan ta bort |
-
-```bash
-# SetGID på katalog (VIKTIGT för delad katalog!)
-chmod g+s /shared/project/
-# Nya filer ärver gruppägaren
-
-# SetGID med oktal
-chmod 2775 /shared/project/
-
-# Sticky bit (används på /tmp)
-chmod +t /shared/
-chmod 1777 /tmp/
-```
-
-### SetGID för projektkataloger (Deliverable-relevant!)
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Skapa delad projektkatalog
-PROJECT_DIR="/opt/project"
-GROUP_NAME="developers"
-
-# Skapa grupp och katalog
-groupadd -f "$GROUP_NAME"
-mkdir -p "$PROJECT_DIR"
-
-# Sätt ägare och grupp
-chown root:"$GROUP_NAME" "$PROJECT_DIR"
-
-# SetGID + rwx för grupp
-chmod 2775 "$PROJECT_DIR"
-
-# Verifiera
-ls -ld "$PROJECT_DIR"
-# drwxrwsr-x 2 root developers ... /opt/project
-#      ^-- 's' = SetGID aktivt
-```
-
----
-
-## 🛡️ Sudo & Sudoers
-
-### Grundläggande sudo
-
-```bash
-# Kör som root
-sudo command
-
-# Kör som annan användare
-sudo -u otheruser command
-
-# Öppna root-shell
-sudo -i
-
-# Visa sudo-behörigheter
-sudo -l
-```
-
-### Redigera sudoers (ALLTID med visudo!)
-
-```bash
-# RÄTT sätt - validerar syntax
+# Redigera sudoers (ALLTID med visudo!)
 sudo visudo
 
-# Eller redigera specifik fil
-sudo visudo -f /etc/sudoers.d/developers
-```
-
-### Sudoers-syntax
-
-```bash
-# Format: WHO WHERE=(AS_WHO) WHAT
-# username ALL=(ALL:ALL) ALL
-
-# Ge användare full sudo
+# Syntax i sudoers
 username ALL=(ALL:ALL) ALL
 
-# Ge grupp sudo (notera %)
-%developers ALL=(ALL:ALL) ALL
+# Sudo utan lösenord
+username ALL=(ALL) NOPASSWD: ALL
 
-# Utan lösenord (för automation)
-deploy ALL=(ALL) NOPASSWD: ALL
-
-# Specifika kommandon utan lösenord
-backup ALL=(ALL) NOPASSWD: /usr/bin/rsync, /usr/bin/tar
-```
-
-### Skapa sudoers-fil för grupp
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Skapa sudoers-fil för developers
-cat > /etc/sudoers.d/developers << 'EOF'
-# Allow developers group to run specific commands
-%developers ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx
-%developers ALL=(ALL) NOPASSWD: /usr/bin/docker *
-EOF
-
-# Sätt rätt rättigheter (VIKTIGT!)
-chmod 440 /etc/sudoers.d/developers
-
-# Validera
-visudo -c
+# Grupp med sudo
+%sudo ALL=(ALL:ALL) ALL
 ```
 
 ---
 
-## 🎯 Checkpoint: Deliverable 5.1 Script
+## Permissions
 
-```bash
-#!/bin/bash
-set -euo pipefail
+```
+rwx = Read, Write, Execute
+4     2      1
 
-# ============================================
-# User & Group Setup Script
-# Deliverable 5.1 - DOE25
-# ============================================
-
-GROUP_NAME="devops"
-USERS=("alice" "bob" "charlie")
-PROJECT_DIR="/opt/devops-project"
-
-log() {
-    echo "[$(date '+%H:%M:%S')] $1"
-}
-
-# Skapa grupp
-create_group() {
-    if ! getent group "$GROUP_NAME" &>/dev/null; then
-        groupadd "$GROUP_NAME"
-        log "Created group: $GROUP_NAME"
-    else
-        log "Group $GROUP_NAME already exists"
-    fi
-}
-
-# Skapa användare
-create_users() {
-    for user in "${USERS[@]}"; do
-        if ! id "$user" &>/dev/null; then
-            useradd -m -s /bin/bash -G "$GROUP_NAME" "$user"
-            echo "${user}:ChangeMe123!" | chpasswd
-            passwd -e "$user"  # Tvinga lösenordsbyte
-            log "Created user: $user"
-        else
-            usermod -aG "$GROUP_NAME" "$user"
-            log "Added existing user $user to $GROUP_NAME"
-        fi
-    done
-}
-
-# Skapa projektkatalog med SetGID
-create_project_dir() {
-    mkdir -p "$PROJECT_DIR"
-    chown root:"$GROUP_NAME" "$PROJECT_DIR"
-    chmod 2775 "$PROJECT_DIR"
-    log "Created project directory with SetGID: $PROJECT_DIR"
-}
-
-# Skapa sudoers-fil
-setup_sudoers() {
-    local sudoers_file="/etc/sudoers.d/$GROUP_NAME"
-    cat > "$sudoers_file" << EOF
-# Sudoers for $GROUP_NAME group
-%$GROUP_NAME ALL=(ALL) NOPASSWD: /usr/bin/systemctl status *
-%$GROUP_NAME ALL=(ALL) NOPASSWD: /usr/bin/docker ps
-EOF
-    chmod 440 "$sudoers_file"
-    visudo -c && log "Sudoers configured successfully"
-}
-
-# Main
-main() {
-    log "Starting user setup..."
-    create_group
-    create_users
-    create_project_dir
-    setup_sudoers
-
-    log "=== Setup Complete ==="
-    log "Users: ${USERS[*]}"
-    log "Group: $GROUP_NAME"
-    log "Project: $PROJECT_DIR"
-
-    # Verifiera
-    ls -ld "$PROJECT_DIR"
-    getent group "$GROUP_NAME"
-}
-
-main "$@"
+User  Group  Others
+rwx   rwx    rwx
 ```
 
 ---
 
-## ⚠️ Vanliga fel
+## chmod
 
-| Fel | Problem | Lösning |
-|-----|---------|---------|
-| `usermod -G` utan `-a` | Tar bort från alla grupper | Alltid `usermod -aG` |
-| Redigera `/etc/sudoers` direkt | Syntax-fel = ingen sudo | Använd `visudo` |
-| `chmod 777` | Säkerhetsrisk | Använd specifika rättigheter |
-| Glömt `chmod 440` på sudoers | Sudo ignorerar filen | `chmod 440 /etc/sudoers.d/*` |
-| SetGID funkar inte | Glömt 2 i oktalt | `chmod 2775` inte `775` |
+### Symboliskt
+```bash
+chmod u+x fil.sh          # User +execute
+chmod g-w fil.txt         # Group -write
+chmod o=r fil.txt         # Others =read only
+chmod a+r fil.txt         # All +read
+```
+
+### Oktalt
+```bash
+chmod 755 fil.sh          # rwxr-xr-x
+chmod 644 fil.txt         # rw-r--r--
+chmod 700 privat/         # rwx------
+chmod -R 755 katalog/     # Rekursivt
+```
+
+---
+
+## chown
+
+```bash
+chown user fil.txt              # Ändra ägare
+chown user:group fil.txt        # Ändra ägare och grupp
+chown -R user:group katalog/    # Rekursivt
+```
+
+---
+
+## umask
+
+```bash
+umask                     # Visa nuvarande (ofta 022)
+
+# Beräkning
+# Filer: 666 - umask = default
+# Kataloger: 777 - umask = default
+
+# umask 022:
+# Filer:     644 (rw-r--r--)
+# Kataloger: 755 (rwxr-xr-x)
+```
+
+---
+
+## Speciella permissions
+
+### SUID (4xxx)
+```bash
+chmod u+s fil             # Kör som ägaren
+chmod 4755 fil
+```
+
+### SGID (2xxx)
+```bash
+chmod g+s katalog/        # Nya filer ärver grupp
+chmod 2755 katalog/
+```
+
+### Sticky bit (1xxx)
+```bash
+chmod +t katalog/         # Endast ägare kan ta bort
+chmod 1777 katalog/
+```
+
+---
+
+## Snabbreferens
+
+| Värde | Permissions | Användning |
+|-------|-------------|------------|
+| 755 | rwxr-xr-x | Scripts |
+| 644 | rw-r--r-- | Filer |
+| 700 | rwx------ | Privat katalog |
+| 600 | rw------- | SSH-nycklar |
+
 """,
             "quiz": [
                 {
-                    "question": "Vilket kommando skapar en användare MED hemkatalog?",
+                    "question": "Vad är chmod 755 i symbolisk form?",
+                    "options": ["rw-r--r--", "rwxr-xr-x", "rwx------", "rwxrwxrwx"],
+                    "correct": 1,
+                    "explanation": "755 = 7(rwx) + 5(r-x) + 5(r-x) = rwxr-xr-x",
+                },
+                {
+                    "question": "Vilket kommando lägger till en användare i gruppen 'docker'?",
                     "options": [
-                        "useradd username",
-                        "useradd -m username",
-                        "adduser username",
-                        "createuser username",
+                        "useradd -G docker user",
+                        "usermod -aG docker user",
+                        "groupadd docker user",
+                        "adduser docker user",
                     ],
                     "correct": 1,
-                    "explanation": "useradd -m skapar hemkatalogen. Utan -m skapas ingen hemkatalog (på de flesta distros).",
+                    "explanation": "usermod -aG (append Group) lägger till användaren i gruppen utan att ta bort från andra grupper.",
                 },
                 {
-                    "question": "Vad händer om du kör 'usermod -G docker username' (utan -a)?",
+                    "question": "Vad gör sticky bit på en katalog?",
                     "options": [
-                        "Användaren läggs till i docker-gruppen",
-                        "Användaren tas bort från alla andra grupper",
-                        "Kommandot misslyckas",
-                        "Ingenting händer",
+                        "Gör katalogen osynlig",
+                        "Endast ägare kan ta bort sina egna filer",
+                        "Alla kan ta bort alla filer",
+                        "Katalogen blir read-only",
                     ],
                     "correct": 1,
-                    "explanation": "Utan -a (append) ersätts ALLA sekundära grupper! Alltid använd 'usermod -aG' för att lägga till.",
-                },
-                {
-                    "question": "Vad betyder chmod 755?",
-                    "options": ["rwxrwxrwx", "rwxr-xr-x", "rw-r--r--", "rwx------"],
-                    "correct": 1,
-                    "explanation": "7=rwx (4+2+1), 5=r-x (4+0+1). Så 755 = rwxr-xr-x. Ägare kan allt, andra kan läsa och köra.",
-                },
-                {
-                    "question": "Vad gör SetGID (chmod g+s) på en katalog?",
-                    "options": [
-                        "Alla kan köra filer i katalogen",
-                        "Nya filer ärver katalogens gruppägare",
-                        "Bara ägaren kan ta bort filer",
-                        "Katalogen blir osynlig",
-                    ],
-                    "correct": 1,
-                    "explanation": "SetGID på katalog gör att nya filer och kataloger ärver gruppägaren, istället för skaparens primära grupp.",
-                },
-                {
-                    "question": "Hur ska du redigera /etc/sudoers?",
-                    "options": [
-                        "nano /etc/sudoers",
-                        "vim /etc/sudoers",
-                        "visudo",
-                        "sudo edit /etc/sudoers",
-                    ],
-                    "correct": 2,
-                    "explanation": "Alltid använd visudo! Det validerar syntaxen innan sparning. Syntaxfel i sudoers = ingen kan använda sudo.",
-                },
-                {
-                    "question": "Vilken rättighet ska filer i /etc/sudoers.d/ ha?",
-                    "options": ["644", "755", "440", "600"],
-                    "correct": 2,
-                    "explanation": "Sudoers-filer måste ha 440 (r--r-----). Annars ignoreras de av sudo av säkerhetsskäl.",
+                    "explanation": "Sticky bit (t) på kataloger betyder att endast filens ägare kan ta bort filen.",
                 },
             ],
         },
         # =============================================================================
-        # NOD 6: SSH Mastery & Säkerhet
+        # NOD 6: SSH & Säkerhet
         # =============================================================================
         {
-            "title": "SSH Mastery & Säkerhet",
-            "slug": "ssh-mastery-sakerhet",
-            "description": "Konfigurera SSH säkert: nycklar, härdning, port 6622 och AllowUsers",
-            "difficulty": "intermediate",
-            "estimated_minutes": 45,
-            "xp_reward": 175,
-            "order_index": 5,
-            "content": """# 🔐 SSH Mastery & Säkerhet
+            "title": "SSH & Säkerhet",
+            "slug": "ssh-sakerhet",
+            "description": "SSH-nycklar, sshd_config, scp och ssh-alias för säker åtkomst.",
+            "difficulty": "medium",
+            "estimated_minutes": 40,
+            "xp_reward": 100,
+            "order_index": 6,
+            "content": r"""# SSH & Säkerhet
 
-> **Kursmål:** "Kunskaper om IT-säkerhet" + "Färdigheter i att säkra Linux-system"
->
-> **Deliverable 5.2:** Konfigurera SSH på port 6622 med pubkey auth och härdning
-
----
-
-## 📋 TL;DR - Det viktigaste
-
-| Koncept | Konfiguration | Varför |
-|---------|---------------|--------|
-| **Ändra port** | `Port 6622` | Undvik automatiska attacker på 22 |
-| **Disable root** | `PermitRootLogin no` | Tvinga sudo-användning |
-| **Pubkey only** | `PasswordAuthentication no` | Mycket säkrare än lösenord |
-| **AllowUsers** | `AllowUsers alice bob` | Whitelist av användare |
-| **Key permissions** | `chmod 600 ~/.ssh/id_*` | SSH vägrar annars |
-
----
-
-## 🔑 SSH-nycklar
-
-### Generera nyckelpar
+## SSH-nycklar
 
 ```bash
-# Modern standard (Ed25519 - rekommenderat!)
-ssh-keygen -t ed25519 -C "your_email@example.com"
+# Generera nyckelpar (på klienten)
+ssh-keygen -t ed25519 -C "said@example.com"
+# Sparas i ~/.ssh/id_ed25519 (privat) och .pub (publik)
 
-# RSA (om Ed25519 inte stöds)
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+# Alternativ: RSA
+ssh-keygen -t rsa -b 4096
 
-# Med specifikt filnamn
-ssh-keygen -t ed25519 -f ~/.ssh/id_server_name -C "server access"
-```
-
-### Nyckelfilernas rättigheter (KRITISKT!)
-
-```bash
-# SSH VÄGRAR fungera med fel rättigheter!
-chmod 700 ~/.ssh              # Katalogen
-chmod 600 ~/.ssh/id_*         # Privata nycklar
-chmod 644 ~/.ssh/id_*.pub     # Publika nycklar
-chmod 600 ~/.ssh/authorized_keys
-chmod 644 ~/.ssh/known_hosts
-chmod 600 ~/.ssh/config
-```
-
-| Fil | Rättighet | Varför |
-|-----|-----------|--------|
-| `~/.ssh/` | 700 | Bara ägare får access |
-| `id_ed25519` | 600 | Privat nyckel - HEMLIG |
-| `id_ed25519.pub` | 644 | Publik nyckel - kan delas |
-| `authorized_keys` | 600 | Lista på tillåtna nycklar |
-
-### Kopiera publik nyckel till server
-
-```bash
-# Automatiskt (bästa sättet)
+# Kopiera publik nyckel till server
+ssh-copy-id user@server
 ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
 
 # Manuellt
-cat ~/.ssh/id_ed25519.pub | ssh user@server "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
-
-# Eller kopiera och klistra in
-cat ~/.ssh/id_ed25519.pub
-# Klistra in i serverns ~/.ssh/authorized_keys
+cat ~/.ssh/id_ed25519.pub | ssh user@server \
+    "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 ```
 
 ---
 
-## ⚙️ SSH Server-konfiguration
-
-### Huvudkonfigfil: /etc/ssh/sshd_config
+## SSH-konfiguration (server)
 
 ```bash
-# Öppna för redigering
+# Redigera /etc/ssh/sshd_config
 sudo nano /etc/ssh/sshd_config
 
-# Efter ändringar - ALLTID validera först!
-sudo sshd -t
-# Om ingen output = OK
+# Viktiga inställningar
+Port 2222                           # Byt från default 22
+PermitRootLogin no                  # Neka root-login
+PasswordAuthentication no           # Endast nycklar
+PubkeyAuthentication yes            # Tillåt nycklar
+AllowUsers said anna                # Endast dessa användare
+MaxAuthTries 3                      # Max inloggningsförsök
 
-# Starta om tjänsten
-sudo systemctl restart sshd
-```
-
-### Härdad konfiguration (Deliverable 5.2)
-
-```bash
-# /etc/ssh/sshd_config
-
-# === GRUNDLÄGGANDE HÄRDNING ===
-
-# Byt port (undvik automatiska attacker)
-Port 6622
-
-# Protokoll 2 only (1 är osäkert)
-Protocol 2
-
-# Disable root login
-PermitRootLogin no
-
-# Pubkey authentication (säkrare än lösenord)
-PubkeyAuthentication yes
-
-# DISABLE password authentication
-PasswordAuthentication no
-PermitEmptyPasswords no
-
-# Disable andra osäkra metoder
-ChallengeResponseAuthentication no
-KerberosAuthentication no
-GSSAPIAuthentication no
-
-# === ANVÄNDARBEGRÄNSNING ===
-
-# Whitelist användare (VIKTIGT!)
-AllowUsers alice bob deploy
-
-# Eller whitelist grupper
-# AllowGroups sshusers admins
-
-# === EXTRA SÄKERHET ===
-
-# Max inloggningsförsök
-MaxAuthTries 3
-
-# Idle timeout (sekunder)
-ClientAliveInterval 300
-ClientAliveCountMax 2
-
-# Disable X11 forwarding (om ej behövs)
-X11Forwarding no
-
-# Disable agent forwarding (om ej behövs)
-AllowAgentForwarding no
-
-# Logga mer
-LogLevel VERBOSE
-```
-
-### Steg-för-steg härdning
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# SSH Hardening Script
-# Deliverable 5.2 - DOE25
-# ============================================
-
-SSHD_CONFIG="/etc/ssh/sshd_config"
-BACKUP_FILE="/etc/ssh/sshd_config.backup.$(date +%Y%m%d)"
-SSH_PORT="6622"
-ALLOWED_USERS="alice bob deploy"
-
-log() {
-    echo "[$(date '+%H:%M:%S')] $1"
-}
-
-# Backup original
-backup_config() {
-    if [[ ! -f "$BACKUP_FILE" ]]; then
-        cp "$SSHD_CONFIG" "$BACKUP_FILE"
-        log "Backup created: $BACKUP_FILE"
-    fi
-}
-
-# Sätt eller uppdatera en SSH-inställning
-set_ssh_option() {
-    local key="$1"
-    local value="$2"
-
-    if grep -q "^${key}" "$SSHD_CONFIG"; then
-        # Ersätt existerande
-        sed -i "s/^${key}.*/${key} ${value}/" "$SSHD_CONFIG"
-    elif grep -q "^#${key}" "$SSHD_CONFIG"; then
-        # Avkommentera och sätt
-        sed -i "s/^#${key}.*/${key} ${value}/" "$SSHD_CONFIG"
-    else
-        # Lägg till
-        echo "${key} ${value}" >> "$SSHD_CONFIG"
-    fi
-    log "Set: ${key} ${value}"
-}
-
-# Applicera härdning
-harden_ssh() {
-    log "Applying SSH hardening..."
-
-    set_ssh_option "Port" "$SSH_PORT"
-    set_ssh_option "PermitRootLogin" "no"
-    set_ssh_option "PasswordAuthentication" "no"
-    set_ssh_option "PubkeyAuthentication" "yes"
-    set_ssh_option "PermitEmptyPasswords" "no"
-    set_ssh_option "MaxAuthTries" "3"
-    set_ssh_option "AllowUsers" "$ALLOWED_USERS"
-    set_ssh_option "X11Forwarding" "no"
-    set_ssh_option "ClientAliveInterval" "300"
-    set_ssh_option "ClientAliveCountMax" "2"
-}
-
-# Validera och starta om
-apply_changes() {
-    log "Validating configuration..."
-    if sshd -t; then
-        log "Configuration valid!"
-        systemctl restart sshd
-        log "SSH restarted on port $SSH_PORT"
-    else
-        log "ERROR: Invalid configuration!"
-        cp "$BACKUP_FILE" "$SSHD_CONFIG"
-        log "Restored backup"
-        exit 1
-    fi
-}
-
-# Main
-main() {
-    backup_config
-    harden_ssh
-    apply_changes
-
-    log "=== SSH Hardening Complete ==="
-    log "Port: $SSH_PORT"
-    log "Allowed users: $ALLOWED_USERS"
-    log "Password auth: DISABLED"
-
-    echo ""
-    echo "IMPORTANT: Test new connection before closing this session!"
-    echo "ssh -p $SSH_PORT user@hostname"
-}
-
-main "$@"
+# Starta om SSH
+sudo systemctl restart ssh          # Ubuntu/Debian
+sudo systemctl restart sshd         # CentOS/Fedora
 ```
 
 ---
 
-## 🔌 SSH Client-konfiguration
-
-### ~/.ssh/config (SUPER ANVÄNDBART!)
+## SSH-kommandon
 
 ```bash
-# Skapa/redigera
-nano ~/.ssh/config
+# Anslut
+ssh user@server
+ssh -p 2222 user@server             # Annan port
+ssh -i ~/.ssh/mykey user@server     # Specifik nyckel
 
-# Exempel på konfiguration
+# Kör kommando remote
+ssh user@server "ls -la"
+ssh user@server "df -h && free -m"
+
+# Kopiera filer (scp)
+scp fil.txt user@server:/path/      # Lokal -> Remote
+scp user@server:/path/fil.txt ./    # Remote -> Lokal
+scp -P 2222 fil.txt user@server:    # Annan port
+scp -r katalog/ user@server:/path/  # Rekursivt
+```
+
+---
+
+## SSH-alias
+
+```bash
+# ~/.ssh/config
 Host myserver
     HostName 192.168.1.100
-    User deploy
-    Port 6622
-    IdentityFile ~/.ssh/id_server
+    User said
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519
 
-Host production
-    HostName prod.example.com
-    User admin
-    Port 22
-    IdentityFile ~/.ssh/id_prod
-    ForwardAgent no
-
-Host *
-    # Defaults för alla hosts
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
-    AddKeysToAgent yes
-
-# Nu kan du ansluta med:
-# ssh myserver
-# ssh production
-```
-
-### Sätt rätt rättigheter
-
-```bash
-chmod 600 ~/.ssh/config
+# Nu kan du köra:
+ssh myserver
 ```
 
 ---
 
-## 🛡️ SSH-säkerhet i praktiken
+## Snabbreferens
 
-### Testa före ändringar!
+| Uppgift | Kommando |
+|---------|----------|
+| Generera nyckel | `ssh-keygen -t ed25519` |
+| Kopiera nyckel | `ssh-copy-id user@server` |
+| Anslut port 2222 | `ssh -p 2222 user@server` |
+| Kopiera fil | `scp fil.txt user@server:/path/` |
+| Kopiera mapp | `scp -r katalog/ user@server:` |
 
-```bash
-# INNAN du ändrar - öppna två terminaler!
-# Terminal 1: Din aktiva session (stäng INTE!)
-# Terminal 2: För att testa
-
-# Efter ändringar, testa från Terminal 2:
-ssh -p 6622 user@server
-
-# Om det funkar - nu kan du stänga Terminal 1
-```
-
-### Felsökning
-
-```bash
-# Verbose SSH-anslutning
-ssh -vvv user@server
-
-# Kontrollera SSH-tjänsten
-sudo systemctl status sshd
-sudo journalctl -u sshd -f
-
-# Kontrollera vad SSH lyssnar på
-sudo ss -tlnp | grep ssh
-sudo netstat -tlnp | grep sshd
-
-# Kontrollera brandvägg
-sudo ufw status
-sudo firewall-cmd --list-all
-```
-
-### Vanliga fel och lösningar
-
-| Fel | Orsak | Lösning |
-|-----|-------|---------|
-| Permission denied (publickey) | Fel rättigheter på nycklar | `chmod 600 ~/.ssh/id_*` |
-| Connection refused | Fel port eller tjänst nere | Kontrollera port och `systemctl status sshd` |
-| Host key verification failed | Serverns nyckel ändrad | Ta bort gammal rad i `known_hosts` |
-| Too many authentication failures | För många nycklar/försök | Använd `-i` för specifik nyckel |
-
----
-
-## 🔒 SSH med nycklar - Komplett flöde
-
-```bash
-# ============================================
-# 1. PÅ DIN LOKALA MASKIN
-# ============================================
-
-# Generera nyckel
-ssh-keygen -t ed25519 -f ~/.ssh/id_devops -C "devops-key"
-
-# Kontrollera att nycklarna skapades
-ls -la ~/.ssh/id_devops*
-
-# ============================================
-# 2. KOPIERA TILL SERVER
-# ============================================
-
-# Alternativ A: ssh-copy-id (enklast)
-ssh-copy-id -i ~/.ssh/id_devops.pub user@server
-
-# Alternativ B: Manuellt
-ssh user@server "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
-cat ~/.ssh/id_devops.pub | ssh user@server "cat >> ~/.ssh/authorized_keys"
-ssh user@server "chmod 600 ~/.ssh/authorized_keys"
-
-# ============================================
-# 3. TESTA
-# ============================================
-
-# Ska fungera utan lösenord
-ssh -i ~/.ssh/id_devops user@server
-
-# ============================================
-# 4. DISABLE PASSWORD AUTH (efter test!)
-# ============================================
-
-# På servern:
-sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sudo sshd -t && sudo systemctl restart sshd
-```
-
----
-
-## 🎯 Checkpoint: Deliverable 5.2 Verifiering
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# SSH Configuration Verification
-# ============================================
-
-echo "=== SSH Configuration Check ==="
-
-# Kontrollera port
-port=$(grep "^Port" /etc/ssh/sshd_config | awk '{print $2}')
-echo "SSH Port: ${port:-22 (default)}"
-
-# Kontrollera root login
-root=$(grep "^PermitRootLogin" /etc/ssh/sshd_config | awk '{print $2}')
-echo "Root Login: ${root:-yes (default)}"
-
-# Kontrollera password auth
-passwd=$(grep "^PasswordAuthentication" /etc/ssh/sshd_config | awk '{print $2}')
-echo "Password Auth: ${passwd:-yes (default)}"
-
-# Kontrollera allowed users
-users=$(grep "^AllowUsers" /etc/ssh/sshd_config | cut -d' ' -f2-)
-echo "Allowed Users: ${users:-all (default)}"
-
-# Kontrollera vad SSH lyssnar på
-echo ""
-echo "=== SSH Listening ==="
-ss -tlnp | grep ssh || netstat -tlnp | grep ssh
-
-# Kontrollera tjänststatus
-echo ""
-echo "=== Service Status ==="
-systemctl is-active sshd && echo "SSH is running" || echo "SSH is NOT running"
-
-# Säkerhetsstatus
-echo ""
-echo "=== Security Score ==="
-score=0
-[[ "${port:-22}" != "22" ]] && ((score++)) && echo "✅ Non-standard port"
-[[ "${root:-yes}" == "no" ]] && ((score++)) && echo "✅ Root login disabled"
-[[ "${passwd:-yes}" == "no" ]] && ((score++)) && echo "✅ Password auth disabled"
-[[ -n "${users:-}" ]] && ((score++)) && echo "✅ User whitelist configured"
-
-echo ""
-echo "Security Score: $score/4"
-```
-
----
-
-## ⚠️ Vanliga fel
-
-| Fel | Problem | Lösning |
-|-----|---------|---------|
-| Låst ute efter ändringar | Password disabled utan nyckel | Använd konsol/rescue mode |
-| SSH startar inte | Syntaxfel i config | `sshd -t` för att validera |
-| Nyckel fungerar inte | Fel rättigheter | `chmod 600` på privat nyckel |
-| AllowUsers fungerar inte | Fel syntax | Mellanslag mellan användare, inte komma |
 """,
             "quiz": [
                 {
-                    "question": "Vilken rättighet ska din privata SSH-nyckel ha?",
-                    "options": ["644", "755", "600", "700"],
-                    "correct": 2,
-                    "explanation": "Privata nycklar MÅSTE ha 600 (rw-------). SSH vägrar använda nycklar med för öppna rättigheter.",
-                },
-                {
-                    "question": "Vilken SSH-inställning disablar root-inloggning?",
+                    "question": "Vilken SSH-inställning nekar root att logga in?",
                     "options": [
-                        "DisableRoot yes",
+                        "DenyRoot yes",
                         "PermitRootLogin no",
                         "RootLogin false",
                         "AllowRoot no",
                     ],
                     "correct": 1,
-                    "explanation": "PermitRootLogin no förhindrar direktinloggning som root. Användare måste logga in som sig själva och sedan använda sudo.",
+                    "explanation": "PermitRootLogin no i /etc/ssh/sshd_config nekar direktinloggning som root.",
                 },
                 {
-                    "question": "Hur kopierar du din publika nyckel till en server?",
+                    "question": "Vilket kommando kopierar din publika nyckel till en server?",
                     "options": [
-                        "scp ~/.ssh/id_ed25519 user@server:",
-                        "ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server",
-                        "ssh user@server < ~/.ssh/id_ed25519.pub",
-                        "cp ~/.ssh/id_ed25519.pub user@server:",
+                        "ssh-copy",
+                        "scp ~/.ssh/id_ed25519.pub",
+                        "ssh-copy-id user@server",
+                        "ssh-keygen -c",
                     ],
-                    "correct": 1,
-                    "explanation": "ssh-copy-id kopierar den publika nyckeln (.pub) till serverns authorized_keys och sätter rätt rättigheter automatiskt.",
+                    "correct": 2,
+                    "explanation": "ssh-copy-id kopierar automatiskt din publika nyckel till serverns authorized_keys.",
                 },
                 {
-                    "question": "Vad gör 'AllowUsers alice bob' i sshd_config?",
-                    "options": [
-                        "Skapar användare alice och bob",
-                        "Endast alice och bob får logga in via SSH",
-                        "alice och bob får root-access",
-                        "Blockerar alice och bob",
-                    ],
+                    "question": "Vilken flagga anger en annan port för scp?",
+                    "options": ["-p", "-P", "--port", "-port"],
                     "correct": 1,
-                    "explanation": "AllowUsers skapar en whitelist - ENDAST listade användare får ansluta via SSH. Alla andra blockeras.",
-                },
-                {
-                    "question": "Vad ska du ALLTID göra innan du stänger SSH-sessionen efter att ha ändrat sshd_config?",
-                    "options": [
-                        "Köra sudo reboot",
-                        "Testa ny anslutning i annan terminal",
-                        "Ta bort gamla nycklar",
-                        "Ändra root-lösenordet",
-                    ],
-                    "correct": 1,
-                    "explanation": "Testa ALLTID ny anslutning innan du stänger den aktiva sessionen! Annars kan du låsa ut dig själv.",
-                },
-                {
-                    "question": "Hur validerar du sshd_config innan restart?",
-                    "options": [
-                        "ssh --validate",
-                        "sshd -t",
-                        "systemctl check sshd",
-                        "cat /etc/ssh/sshd_config | validate",
-                    ],
-                    "correct": 1,
-                    "explanation": "sshd -t testar konfigurationen utan att starta om tjänsten. Ingen output = allt OK.",
+                    "explanation": "scp använder stort -P för port (ssh använder litet -p). scp -P 2222 fil.txt user@server:",
                 },
             ],
         },
         # =============================================================================
-        # NOD 7: Brandväggar & Nätverk
+        # NOD 7: Firewall
         # =============================================================================
         {
-            "title": "Brandväggar: UFW & firewalld",
-            "slug": "brandvaggar-ufw-firewalld",
-            "description": "Konfigurera brandväggar med UFW (Ubuntu) och firewalld (RHEL/Rocky)",
-            "difficulty": "intermediate",
-            "estimated_minutes": 40,
-            "xp_reward": 175,
-            "order_index": 6,
-            "content": """# 🔥 Brandväggar: UFW & firewalld
+            "title": "Firewall",
+            "slug": "firewall",
+            "description": "UFW (Ubuntu) och FirewallD (CentOS/Fedora) för nätverkssäkerhet.",
+            "difficulty": "medium",
+            "estimated_minutes": 35,
+            "xp_reward": 100,
+            "order_index": 7,
+            "content": r"""# Firewall
 
-> **Kursmål:** "Kunskaper om IT-säkerhet" + "Färdigheter i att säkra Linux-system"
->
-> **Deliverable 5.2:** Konfigurera brandvägg för att tillåta endast nödvändiga portar
-
----
-
-## 📋 TL;DR - Det viktigaste
-
-| Distro | Brandvägg | Aktivera | Öppna port | Status |
-|--------|-----------|----------|------------|--------|
-| **Ubuntu/Debian** | UFW | `ufw enable` | `ufw allow 22` | `ufw status` |
-| **RHEL/Rocky** | firewalld | `systemctl start firewalld` | `firewall-cmd --add-port=22/tcp --permanent` | `firewall-cmd --list-all` |
-
----
-
-## 🛡️ UFW (Uncomplicated Firewall)
-
-> Ubuntu, Debian och derivat
-
-### Installation och aktivering
+## UFW (Ubuntu)
 
 ```bash
-# Installera (ofta förinstallerat)
-sudo apt install ufw
+# Status
+sudo ufw status
+sudo ufw status numbered
 
-# VIKTIGT: Tillåt SSH INNAN du aktiverar!
-sudo ufw allow ssh
-# eller
-sudo ufw allow 22/tcp
-
-# Aktivera brandväggen
+# Enable/Disable
 sudo ufw enable
+sudo ufw disable
 
-# Kontrollera status
-sudo ufw status verbose
-```
-
-### Grundläggande kommandon
-
-```bash
-# Tillåt port
-sudo ufw allow 80/tcp          # HTTP
-sudo ufw allow 443/tcp         # HTTPS
-sudo ufw allow 6622/tcp        # Custom SSH port
-
-# Tillåt tjänst (från /etc/services)
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufw allow https
-
-# Neka port
-sudo ufw deny 23/tcp           # Telnet
-
-# Ta bort regel
-sudo ufw delete allow 80/tcp
-
-# Visa status
-sudo ufw status numbered       # Med radnummer
-sudo ufw status verbose        # Detaljerad
-```
-
-### UFW med specifika IP-adresser
-
-```bash
-# Tillåt från specifik IP
-sudo ufw allow from 192.168.1.100
-
-# Tillåt från subnet
-sudo ufw allow from 192.168.1.0/24
-
-# Tillåt från IP till specifik port
+# Tillåt
+sudo ufw allow 22                   # Port
+sudo ufw allow ssh                  # Service
+sudo ufw allow 22/tcp               # Specifikt protokoll
+sudo ufw allow from 192.168.1.0/24  # Subnät
 sudo ufw allow from 192.168.1.100 to any port 22
 
-# Tillåt från subnet till port
-sudo ufw allow from 10.0.0.0/8 to any port 3306
-```
+# Neka
+sudo ufw deny 23
+sudo ufw deny from 10.0.0.0/8
 
-### Default policies
+# Ta bort regel
+sudo ufw status numbered
+sudo ufw delete 2                   # Ta bort regel nummer 2
 
-```bash
-# Se nuvarande policies
-sudo ufw status verbose
-
-# Sätt default (rekommenderat)
-sudo ufw default deny incoming   # Blockera allt inkommande
-sudo ufw default allow outgoing  # Tillåt allt utgående
-
-# Striktare (för servrar)
-sudo ufw default deny outgoing   # Blockera även utgående
-sudo ufw allow out 80/tcp        # Tillåt HTTP ut
-sudo ufw allow out 443/tcp       # Tillåt HTTPS ut
-sudo ufw allow out 53            # Tillåt DNS ut
-```
-
-### UFW - Komplett serversetup
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# UFW Firewall Setup
-# ============================================
-
-log() {
-    echo "[UFW] $1"
-}
-
-# Reset (om du vill börja om)
-# sudo ufw --force reset
-
-log "Setting default policies..."
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-log "Allowing SSH (port 6622)..."
-sudo ufw allow 6622/tcp comment 'SSH custom port'
-
-log "Allowing HTTP/HTTPS..."
-sudo ufw allow 80/tcp comment 'HTTP'
-sudo ufw allow 443/tcp comment 'HTTPS'
-
-log "Allowing Docker ports from internal network..."
-sudo ufw allow from 172.16.0.0/12 to any port 2375 comment 'Docker internal'
-
-log "Enabling UFW..."
-sudo ufw --force enable
-
-log "Final status:"
-sudo ufw status verbose
+# Reset
+sudo ufw reset
 ```
 
 ---
 
-## 🔥 firewalld (RHEL/Rocky/CentOS)
-
-> Red Hat, Rocky Linux, CentOS, Fedora
-
-### Installation och aktivering
+## FirewallD (Fedora/CentOS)
 
 ```bash
-# Installera
-sudo dnf install firewalld
-
-# Starta och aktivera
-sudo systemctl start firewalld
-sudo systemctl enable firewalld
-
-# Kontrollera status
-sudo systemctl status firewalld
+# Status
 sudo firewall-cmd --state
-```
-
-### Zoner i firewalld
-
-| Zon | Beskrivning | Default trust |
-|-----|-------------|---------------|
-| `drop` | Droppa allt inkommande | Ingen |
-| `block` | Avvisa med meddelande | Ingen |
-| `public` | Offentliga nätverk | Låg |
-| `work` | Arbetsnätverk | Medium |
-| `home` | Hemnätverk | Medium |
-| `trusted` | Lita på allt | Full |
-
-```bash
-# Visa aktiv zon
-firewall-cmd --get-active-zones
-
-# Visa default zon
-firewall-cmd --get-default-zone
-
-# Sätt default zon
-sudo firewall-cmd --set-default-zone=public
-
-# Lista alla zoner
-firewall-cmd --get-zones
-```
-
-### Grundläggande kommandon
-
-```bash
-# === TILLFÄLLIGA REGLER (försvinner vid restart) ===
-sudo firewall-cmd --add-port=80/tcp
-sudo firewall-cmd --add-service=http
-
-# === PERMANENTA REGLER (--permanent) ===
-sudo firewall-cmd --permanent --add-port=80/tcp
-sudo firewall-cmd --permanent --add-service=https
-sudo firewall-cmd --permanent --add-port=6622/tcp
-
-# VIKTIGT: Reload efter permanenta ändringar!
-sudo firewall-cmd --reload
-
-# === TA BORT REGLER ===
-sudo firewall-cmd --permanent --remove-port=80/tcp
-sudo firewall-cmd --permanent --remove-service=http
-sudo firewall-cmd --reload
-```
-
-### Visa konfiguration
-
-```bash
-# Visa allt i aktiv zon
 sudo firewall-cmd --list-all
 
-# Visa specifik zon
+# Öppna port
+sudo firewall-cmd --add-port=22/tcp --permanent
+sudo firewall-cmd --add-service=ssh --permanent
+
+# Ta bort
+sudo firewall-cmd --remove-port=22/tcp --permanent
+sudo firewall-cmd --remove-service=ssh --permanent
+
+# Ladda om (KRÄVS efter --permanent!)
+sudo firewall-cmd --reload
+
+# Zoner
+sudo firewall-cmd --get-active-zones
 sudo firewall-cmd --zone=public --list-all
-
-# Visa endast portar
-sudo firewall-cmd --list-ports
-
-# Visa endast tjänster
-sudo firewall-cmd --list-services
-```
-
-### Rich rules (avancerat)
-
-```bash
-# Tillåt från specifik IP
-sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.1.100" accept'
-
-# Tillåt port från subnet
-sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.0.0.0/8" port port="3306" protocol="tcp" accept'
-
-# Neka specifik IP
-sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.1.50" reject'
-
-# Logga och droppa
-sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.1.50" log prefix="BLOCKED: " level="warning" drop'
-
-# Reload!
-sudo firewall-cmd --reload
-```
-
-### firewalld - Komplett serversetup
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# firewalld Setup Script
-# ============================================
-
-log() {
-    echo "[firewalld] $1"
-}
-
-# Starta firewalld om det inte kör
-if ! systemctl is-active --quiet firewalld; then
-    log "Starting firewalld..."
-    sudo systemctl start firewalld
-    sudo systemctl enable firewalld
-fi
-
-log "Setting default zone to public..."
-sudo firewall-cmd --set-default-zone=public
-
-log "Adding SSH on custom port 6622..."
-sudo firewall-cmd --permanent --add-port=6622/tcp
-
-log "Adding HTTP and HTTPS..."
-sudo firewall-cmd --permanent --add-service=http
-sudo firewall-cmd --permanent --add-service=https
-
-log "Removing default SSH (port 22) if present..."
-sudo firewall-cmd --permanent --remove-service=ssh 2>/dev/null || true
-
-log "Adding Docker network access..."
-sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.0.0/12" accept'
-
-log "Reloading firewall..."
-sudo firewall-cmd --reload
-
-log "Final configuration:"
-sudo firewall-cmd --list-all
 ```
 
 ---
 
-## 📊 UFW vs firewalld - Jämförelse
+## Snabbreferens UFW
 
-| Uppgift | UFW | firewalld |
-|---------|-----|-----------|
-| Öppna port 80 | `ufw allow 80/tcp` | `firewall-cmd --permanent --add-port=80/tcp && firewall-cmd --reload` |
-| Öppna tjänst | `ufw allow http` | `firewall-cmd --permanent --add-service=http && firewall-cmd --reload` |
-| Status | `ufw status` | `firewall-cmd --list-all` |
-| Aktivera | `ufw enable` | `systemctl start firewalld` |
-| Disable | `ufw disable` | `systemctl stop firewalld` |
-| Från IP | `ufw allow from 1.2.3.4` | `--add-rich-rule='...'` |
+| Uppgift | Kommando |
+|---------|----------|
+| Aktivera | `sudo ufw enable` |
+| Status | `sudo ufw status` |
+| Tillåt SSH | `sudo ufw allow ssh` |
+| Tillåt port | `sudo ufw allow 8080/tcp` |
+| Ta bort regel | `sudo ufw delete 2` |
 
----
+## Snabbreferens FirewallD
 
-## 🌐 Nätverkskommandon (bonus)
+| Uppgift | Kommando |
+|---------|----------|
+| Status | `firewall-cmd --state` |
+| Öppna port | `firewall-cmd --add-port=80/tcp --permanent` |
+| Öppna service | `firewall-cmd --add-service=http --permanent` |
+| Reload | `firewall-cmd --reload` |
 
-### Visa nätverksstatus
-
-```bash
-# Visa lyssnande portar
-ss -tlnp                    # TCP
-ss -ulnp                    # UDP
-ss -tulnp                   # Båda
-
-# Äldre alternativ
-netstat -tlnp
-
-# Visa alla anslutningar
-ss -tan
-
-# Visa routing
-ip route
-# eller
-route -n
-
-# Visa IP-adresser
-ip addr
-# eller
-ip a
-```
-
-### Testa anslutningar
-
-```bash
-# Testa om port är öppen
-nc -zv hostname 22
-nc -zv hostname 80
-
-# Testa med timeout
-timeout 5 bash -c "</dev/tcp/hostname/22" && echo "Open" || echo "Closed"
-
-# Visa vilken process använder port
-sudo lsof -i :80
-sudo fuser 80/tcp
-```
-
----
-
-## 🎯 Checkpoint: Deliverable 5.2 Brandväggssetup
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# Firewall Setup - Works on Ubuntu/Rocky
-# Deliverable 5.2 - DOE25
-# ============================================
-
-SSH_PORT="6622"
-WEB_PORTS=("80" "443")
-
-log() {
-    echo "[$(date '+%H:%M:%S')] $1"
-}
-
-# Detektera distro och brandvägg
-detect_firewall() {
-    if command -v ufw &>/dev/null; then
-        echo "ufw"
-    elif command -v firewall-cmd &>/dev/null; then
-        echo "firewalld"
-    else
-        echo "none"
-    fi
-}
-
-# UFW setup
-setup_ufw() {
-    log "Configuring UFW..."
-
-    # Default policies
-    sudo ufw default deny incoming
-    sudo ufw default allow outgoing
-
-    # SSH
-    sudo ufw allow "$SSH_PORT/tcp" comment 'SSH'
-
-    # Web
-    for port in "${WEB_PORTS[@]}"; do
-        sudo ufw allow "$port/tcp"
-    done
-
-    # Aktivera
-    sudo ufw --force enable
-
-    log "UFW Status:"
-    sudo ufw status numbered
-}
-
-# firewalld setup
-setup_firewalld() {
-    log "Configuring firewalld..."
-
-    # Starta om ej igång
-    sudo systemctl start firewalld
-    sudo systemctl enable firewalld
-
-    # SSH på custom port
-    sudo firewall-cmd --permanent --add-port="$SSH_PORT/tcp"
-
-    # Ta bort default SSH
-    sudo firewall-cmd --permanent --remove-service=ssh 2>/dev/null || true
-
-    # Web
-    sudo firewall-cmd --permanent --add-service=http
-    sudo firewall-cmd --permanent --add-service=https
-
-    # Reload
-    sudo firewall-cmd --reload
-
-    log "firewalld Status:"
-    sudo firewall-cmd --list-all
-}
-
-# Main
-main() {
-    fw=$(detect_firewall)
-    log "Detected firewall: $fw"
-
-    case "$fw" in
-        ufw)
-            setup_ufw
-            ;;
-        firewalld)
-            setup_firewalld
-            ;;
-        *)
-            log "ERROR: No supported firewall found!"
-            exit 1
-            ;;
-    esac
-
-    log "=== Firewall Setup Complete ==="
-    log "SSH Port: $SSH_PORT"
-    log "Web Ports: ${WEB_PORTS[*]}"
-}
-
-main "$@"
-```
-
----
-
-## ⚠️ Vanliga fel
-
-| Fel | Problem | Lösning |
-|-----|---------|---------|
-| Låst ute | Aktiverade brandvägg utan SSH-regel | Använd konsol/VNC |
-| Regel fungerar inte (firewalld) | Glömde `--permanent` eller `--reload` | Lägg till båda |
-| Port öppen men ingen anslutning | Tjänsten lyssnar inte | Kolla med `ss -tlnp` |
-| UFW status inactive | Brandväggen ej aktiverad | `ufw enable` |
 """,
             "quiz": [
                 {
-                    "question": "Vad måste du göra INNAN du aktiverar UFW första gången?",
+                    "question": "Vilket kommando aktiverar UFW?",
                     "options": [
-                        "Starta om servern",
-                        "Tillåta SSH-porten",
-                        "Installera nginx",
-                        "Skapa ny användare",
-                    ],
-                    "correct": 1,
-                    "explanation": "Alltid tillåt SSH innan du aktiverar UFW! Annars låser du ut dig själv från servern.",
-                },
-                {
-                    "question": "Hur öppnar du port 80 permanent i firewalld?",
-                    "options": [
-                        "firewall-cmd --add-port=80/tcp",
-                        "firewall-cmd --permanent --add-port=80/tcp && firewall-cmd --reload",
-                        "firewalld open 80",
-                        "systemctl allow 80",
-                    ],
-                    "correct": 1,
-                    "explanation": "Du behöver --permanent för att spara och --reload för att aktivera. Utan --permanent försvinner regeln vid restart.",
-                },
-                {
-                    "question": "Vilket kommando visar UFW-status med radnummer?",
-                    "options": [
-                        "ufw status",
-                        "ufw status numbered",
-                        "ufw list",
-                        "ufw show rules",
-                    ],
-                    "correct": 1,
-                    "explanation": "ufw status numbered visar alla regler med nummer, vilket gör det enkelt att ta bort specifika regler.",
-                },
-                {
-                    "question": "Hur visar du alla brandväggsregler i firewalld?",
-                    "options": [
-                        "firewall-cmd --status",
-                        "firewall-cmd --list-all",
-                        "firewalld show",
-                        "systemctl status firewalld",
-                    ],
-                    "correct": 1,
-                    "explanation": "firewall-cmd --list-all visar alla regler, portar, tjänster och rich rules i den aktiva zonen.",
-                },
-                {
-                    "question": "Vilka är rekommenderade default policies för en server?",
-                    "options": [
-                        "allow incoming, allow outgoing",
-                        "deny incoming, deny outgoing",
-                        "deny incoming, allow outgoing",
-                        "allow incoming, deny outgoing",
+                        "ufw start",
+                        "ufw enable",
+                        "sudo ufw enable",
+                        "systemctl start ufw",
                     ],
                     "correct": 2,
-                    "explanation": "deny incoming (blockera allt in) + allow outgoing (tillåt allt ut) är standard för servrar. Sedan öppnar du specifika portar.",
+                    "explanation": "sudo ufw enable aktiverar UFW-brandväggen.",
                 },
                 {
-                    "question": "Vilket kommando visar vilka portar som lyssnar på systemet?",
+                    "question": "Vad måste du göra efter --permanent i firewalld?",
                     "options": [
-                        "ps aux",
-                        "ss -tlnp",
-                        "cat /etc/services",
-                        "ufw status",
+                        "Starta om servern",
+                        "Köra firewall-cmd --reload",
+                        "Inget, det gäller direkt",
+                        "Köra systemctl restart firewalld",
                     ],
                     "correct": 1,
-                    "explanation": "ss -tlnp visar TCP-portar som lyssnar (-t), med portnummer (-n), och vilken process (-p). Alternativt netstat -tlnp.",
+                    "explanation": "--permanent sparar regeln men aktiverar den inte. Du måste köra --reload för att aktivera.",
+                },
+                {
+                    "question": "Hur tar du bort regel nummer 3 i UFW?",
+                    "options": [
+                        "ufw remove 3",
+                        "ufw delete 3",
+                        "sudo ufw delete 3",
+                        "sudo ufw remove rule 3",
+                    ],
+                    "correct": 2,
+                    "explanation": "sudo ufw delete [nummer] tar bort regeln. Använd 'ufw status numbered' först för att se numren.",
                 },
             ],
         },
         # =============================================================================
-        # NOD 8: Lagring - Block Storage, LUKS & systemd
+        # NOD 8: Docker Basics
         # =============================================================================
         {
-            "title": "Lagring: Block Storage, LUKS & systemd",
-            "slug": "lagring-block-storage-luks-systemd",
-            "description": "Hantera block storage, kryptering med LUKS, och skapa systemd service-filer",
-            "difficulty": "advanced",
-            "estimated_minutes": 50,
-            "xp_reward": 200,
-            "order_index": 7,
-            "content": """# 💾 Lagring: Block Storage, LUKS & systemd
+            "title": "Docker Basics",
+            "slug": "docker-basics",
+            "description": "Containers, images, volumes och networks - grunderna i Docker.",
+            "difficulty": "medium",
+            "estimated_minutes": 45,
+            "xp_reward": 120,
+            "order_index": 8,
+            "content": r"""# Docker Basics
 
-> **Kursmål:** "Kunskaper om Linux-systemadministration" + "Färdigheter i att hantera lagring"
->
-> **Deliverable 5.3:** Konfigurera block storage med kryptering och skapa systemd services
-
----
-
-## 📋 TL;DR - Det viktigaste
-
-| Koncept | Kommando | Beskrivning |
-|---------|----------|-------------|
-| **Lista diskar** | `lsblk` | Visa alla block devices |
-| **Partitionera** | `fdisk /dev/sdb` | Skapa partitioner |
-| **Formatera** | `mkfs.ext4 /dev/sdb1` | Skapa filsystem |
-| **Mounta** | `mount /dev/sdb1 /mnt/data` | Anslut filsystem |
-| **LUKS skapa** | `cryptsetup luksFormat /dev/sdb1` | Kryptera partition |
-| **LUKS öppna** | `cryptsetup open /dev/sdb1 mydata` | Lås upp |
-| **systemd service** | `/etc/systemd/system/app.service` | Service-fil |
-
----
-
-## 💿 Block Storage Basics
-
-### Visa diskar och partitioner
+## Grundläggande kommandon
 
 ```bash
-# Lista alla block devices (BÄSTA kommandot!)
-lsblk
-# Exempel output:
-# NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-# sda      8:0    0   50G  0 disk
-# ├─sda1   8:1    0    1G  0 part /boot
-# └─sda2   8:2    0   49G  0 part /
-# sdb      8:16   0  100G  0 disk
+# Kör container
+docker run hello-world              # Testa installation
+docker run -it ubuntu bash          # Interaktivt
+docker run -d nginx                 # Bakgrund (detached)
+docker run --rm alpine echo "hej"   # Ta bort efter körning
+docker run --name mycontainer nginx # Namnge container
+docker run -p 8080:80 nginx         # Port mapping
 
-# Med mer detaljer
-lsblk -f    # Visa filsystem
-lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
+# Lista
+docker ps                           # Körande containers
+docker ps -a                        # Alla containers
+docker images                       # Alla images
 
-# Visa diskinfo
-sudo fdisk -l
-sudo fdisk -l /dev/sdb
+# Stoppa/Starta
+docker stop container_name
+docker start container_name
+docker restart container_name
 
-# Visa partitioner
-cat /proc/partitions
-```
-
-### Partitionera disk med fdisk
-
-```bash
-# Starta fdisk
-sudo fdisk /dev/sdb
-
-# Vanliga fdisk-kommandon:
-# n = new partition (skapa ny)
-# p = print (visa partitioner)
-# d = delete (ta bort)
-# t = type (ändra partitionstyp)
-# w = write (spara och avsluta)
-# q = quit (avsluta utan att spara)
-
-# Exempel: Skapa en partition som täcker hela disken
-# n -> p -> 1 -> Enter -> Enter -> w
-```
-
-### Skapa filsystem
-
-```bash
-# ext4 (rekommenderat för Linux)
-sudo mkfs.ext4 /dev/sdb1
-
-# Med label
-sudo mkfs.ext4 -L "mydata" /dev/sdb1
-
-# XFS (bra för stora filer)
-sudo mkfs.xfs /dev/sdb1
-
-# Visa filsysteminfo
-sudo blkid /dev/sdb1
-```
-
-### Mounta filsystem
-
-```bash
-# Skapa mount point
-sudo mkdir -p /mnt/data
-
-# Mounta
-sudo mount /dev/sdb1 /mnt/data
-
-# Verifiera
-df -h /mnt/data
-mount | grep sdb1
-
-# Unmounta
-sudo umount /mnt/data
-```
-
-### Permanent mount i /etc/fstab
-
-```bash
-# Hämta UUID (säkrare än device name)
-sudo blkid /dev/sdb1
-# Output: /dev/sdb1: UUID="abc123..." TYPE="ext4"
-
-# Redigera fstab
-sudo nano /etc/fstab
-
-# Lägg till rad:
-# UUID=abc123...  /mnt/data  ext4  defaults  0  2
-
-# Testa utan reboot
-sudo mount -a
-
-# Format för fstab:
-# <device/UUID>  <mount point>  <type>  <options>  <dump>  <pass>
+# Ta bort
+docker rm container_name            # Container
+docker rmi image_name               # Image
+docker container prune              # Alla stoppade
+docker image prune                  # Oanvända images
+docker system prune                 # Städa allt
 ```
 
 ---
 
-## 🔐 LUKS - Disk Encryption
+## Container-koncept
 
-### Vad är LUKS?
-
-**L**inux **U**nified **K**ey **S**etup - Standard för diskkryptering i Linux.
-
-### Skapa krypterad partition
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-DEVICE="/dev/sdb1"
-MAPPER_NAME="encrypted_data"
-MOUNT_POINT="/mnt/secure"
-
-# 1. Skapa LUKS-container (VARNING: Raderar all data!)
-sudo cryptsetup luksFormat "$DEVICE"
-# Du måste skriva YES och ange passphrase
-
-# 2. Öppna den krypterade volymen
-sudo cryptsetup open "$DEVICE" "$MAPPER_NAME"
-# Nu finns /dev/mapper/encrypted_data
-
-# 3. Skapa filsystem på den dekrypterade volymen
-sudo mkfs.ext4 "/dev/mapper/$MAPPER_NAME"
-
-# 4. Mounta
-sudo mkdir -p "$MOUNT_POINT"
-sudo mount "/dev/mapper/$MAPPER_NAME" "$MOUNT_POINT"
-
-echo "Encrypted volume mounted at $MOUNT_POINT"
 ```
+En container är en PROCESS som körs isolerad från systemet.
 
-### Hantera LUKS-volymer
-
-```bash
-# Öppna (unlock)
-sudo cryptsetup open /dev/sdb1 mydata
-# Skapar /dev/mapper/mydata
-
-# Stäng (lock)
-sudo umount /mnt/secure
-sudo cryptsetup close mydata
-
-# Visa status
-sudo cryptsetup status mydata
-
-# Visa LUKS header info
-sudo cryptsetup luksDump /dev/sdb1
-```
-
-### LUKS med keyfile (för automation)
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-DEVICE="/dev/sdb1"
-KEYFILE="/root/.luks-keyfile"
-
-# Skapa keyfile (256 bytes random data)
-sudo dd if=/dev/urandom of="$KEYFILE" bs=256 count=1
-sudo chmod 400 "$KEYFILE"
-
-# Lägg till keyfile som alternativ nyckel
-sudo cryptsetup luksAddKey "$DEVICE" "$KEYFILE"
-
-# Nu kan du öppna med keyfile istället för passphrase
-sudo cryptsetup open "$DEVICE" mydata --key-file "$KEYFILE"
-```
-
-### Auto-mount krypterad volym vid boot
-
-```bash
-# 1. Lägg till i /etc/crypttab
-# <name>  <device>  <keyfile>  <options>
-# mydata  UUID=xxx  /root/.luks-keyfile  luks
-
-# 2. Lägg till i /etc/fstab
-# /dev/mapper/mydata  /mnt/secure  ext4  defaults  0  2
-
-# Hämta UUID för crypttab:
-sudo cryptsetup luksDump /dev/sdb1 | grep UUID
+Isolering:
+- Användare: root i container ≠ root på host
+- Nätverk: egna interfaces
+- Filsystem: eget filsystem
+- Processer: ser ej host-processer
 ```
 
 ---
 
-## ⚙️ systemd Services
+## Port Mapping
 
-### Service-fil struktur
+```bash
+# -p host_port:container_port
+docker run -p 8080:80 nginx         # Host 8080 -> Container 80
+docker run -p 80:80 nginx           # Host 80 -> Container 80
+docker run -p 127.0.0.1:8080:80 nginx  # Endast localhost
+
+# OBS! Docker kringgår UFW/FirewallD!
+```
+
+---
+
+## Volumes (beständig data)
+
+```bash
+# Named volume (Docker hanterar)
+docker volume create mydata
+docker run -v mydata:/data alpine
+
+# Bind mount (specifik path)
+docker run -v /host/path:/container/path alpine
+docker run -v $(pwd)/data:/data alpine
+
+# Lista volymer
+docker volume ls
+
+# Ta bort
+docker volume rm mydata
+docker volume prune                 # Oanvända
+```
+
+---
+
+## Networks
+
+```bash
+# Typer
+bridge    # Default, containers kan kommunicera
+host      # Samma nätverk som host
+none      # Ingen nätverkskoppling
+
+# Kommandon
+docker network ls
+docker network create mynet
+docker run --network mynet alpine
+docker network rm mynet
+
+# Container-kommunikation (samma nätverk)
+docker run -d --name db --network mynet postgres
+docker run -d --name web --network mynet nginx
+# web kan nå db via hostname "db"
+```
+
+---
+
+## Snabbreferens
+
+| Uppgift | Kommando |
+|---------|----------|
+| Kör interaktivt | `docker run -it ubuntu bash` |
+| Kör i bakgrund | `docker run -d nginx` |
+| Port mapping | `docker run -p 8080:80 nginx` |
+| Med volume | `docker run -v mydata:/data nginx` |
+| Lista containers | `docker ps -a` |
+| Stoppa | `docker stop container_name` |
+| Ta bort | `docker rm container_name` |
+| Städa allt | `docker system prune` |
+
+""",
+            "quiz": [
+                {
+                    "question": "Vad gör flaggan -d i docker run?",
+                    "options": [
+                        "Delete after run",
+                        "Detached (bakgrund)",
+                        "Debug mode",
+                        "Download image",
+                    ],
+                    "correct": 1,
+                    "explanation": "-d (detached) kör containern i bakgrunden så du får tillbaka terminalen.",
+                },
+                {
+                    "question": "Hur mappar du host-port 8080 till container-port 80?",
+                    "options": [
+                        "-p 80:8080",
+                        "-p 8080:80",
+                        "-P 8080:80",
+                        "--port 8080=80",
+                    ],
+                    "correct": 1,
+                    "explanation": "-p host:container, alltså -p 8080:80 mappar host 8080 till container 80.",
+                },
+                {
+                    "question": "Vad är sant om Docker och firewall?",
+                    "options": [
+                        "Docker följer alltid UFW-regler",
+                        "Docker kringgår UFW/FirewallD",
+                        "Docker kräver att firewall är avstängd",
+                        "Firewall blockerar alltid Docker",
+                    ],
+                    "correct": 1,
+                    "explanation": "Docker manipulerar iptables direkt och kan kringgå UFW/FirewallD. Var försiktig med port-exponering!",
+                },
+            ],
+        },
+        # =============================================================================
+        # NOD 9: Docker Compose
+        # =============================================================================
+        {
+            "title": "Docker Compose",
+            "slug": "docker-compose",
+            "description": "Multi-container-applikationer med docker-compose.yml.",
+            "difficulty": "medium",
+            "estimated_minutes": 40,
+            "xp_reward": 120,
+            "order_index": 9,
+            "content": r"""# Docker Compose
+
+## Vad är Docker Compose?
+
+```
+Docker Compose = hantera multi-container-applikationer
+- Definiera services, networks, volumes i EN fil
+- Starta allt med ETT kommando
+- Automatisk nätverkshantering
+```
+
+---
+
+## docker-compose.yml exempel
+
+```yaml
+version: "3.8"
+
+services:
+  web:
+    image: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+volumes:
+  dbdata:
+```
+
+---
+
+## Compose-kommandon
+
+```bash
+# Starta (i katalogen med docker-compose.yml)
+docker compose up                   # Förgrund
+docker compose up -d                # Bakgrund (detached)
+
+# Stoppa
+docker compose down                 # Stoppa + ta bort containers
+docker compose down -v              # + ta bort volumes
+docker compose down --rmi all       # + ta bort images
+
+# Status
+docker compose ps
+docker compose logs
+docker compose logs -f              # Follow
+docker compose logs web             # Specifik service
+
+# Skala
+docker compose up -d --scale web=3  # 3 instanser av web
+```
+
+---
+
+## Miljövariabler
+
+```yaml
+# Direkt i compose (UNDVIK för känslig data!)
+services:
+  db:
+    environment:
+      POSTGRES_PASSWORD: secret
+
+# Från .env-fil (BÄTTRE!)
+services:
+  db:
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+```
+
+**.env fil (COMMITTA ALDRIG!)**
+```
+DB_PASSWORD=supersecret
+```
+
+**.gitignore**
+```
+.env
+```
+
+---
+
+## YAML-grunder
+
+```yaml
+# Key-value
+name: Said
+age: 25
+
+# Lista
+fruits:
+  - apple
+  - banana
+
+# Nested
+person:
+  name: Said
+  address:
+    city: Stockholm
+```
+
+---
+
+## Snabbreferens
+
+| Uppgift | Kommando |
+|---------|----------|
+| Starta | `docker compose up -d` |
+| Stoppa | `docker compose down` |
+| Stoppa + volymer | `docker compose down -v` |
+| Loggar | `docker compose logs -f` |
+| Status | `docker compose ps` |
+| Skala | `docker compose up -d --scale web=3` |
+
+""",
+            "quiz": [
+                {
+                    "question": "Vad gör 'docker compose down -v'?",
+                    "options": [
+                        "Verbose output",
+                        "Stoppar och tar bort volumes",
+                        "Validerar compose-fil",
+                        "Visar version",
+                    ],
+                    "correct": 1,
+                    "explanation": "-v tar även bort namngivna volumes. Utan -v behålls data i volumes.",
+                },
+                {
+                    "question": "Var ska känslig data som lösenord lagras?",
+                    "options": [
+                        "Direkt i docker-compose.yml",
+                        "I en .env-fil",
+                        "Som kommandoradsargument",
+                        "I Dockerfile",
+                    ],
+                    "correct": 1,
+                    "explanation": "Känslig data ska lagras i .env-filer som INTE committas till git.",
+                },
+                {
+                    "question": "Vad gör 'depends_on' i docker-compose.yml?",
+                    "options": [
+                        "Installerar dependencies",
+                        "Anger startordning för services",
+                        "Delar nätverk",
+                        "Kräver specifik version",
+                    ],
+                    "correct": 1,
+                    "explanation": "depends_on anger att en service ska starta efter en annan, t.ex. web efter db.",
+                },
+            ],
+        },
+        # =============================================================================
+        # NOD 10: Systemd
+        # =============================================================================
+        {
+            "title": "Systemd",
+            "slug": "systemd",
+            "description": "systemctl, journalctl och skapa egna service-filer.",
+            "difficulty": "medium",
+            "estimated_minutes": 35,
+            "xp_reward": 100,
+            "order_index": 10,
+            "content": r"""# Systemd
+
+## systemctl
+
+```bash
+# Service-hantering
+sudo systemctl start nginx
+sudo systemctl stop nginx
+sudo systemctl restart nginx
+sudo systemctl reload nginx         # Ladda om config
+
+# Status
+systemctl status nginx
+systemctl is-active nginx
+systemctl is-enabled nginx
+
+# Enable/Disable (vid boot)
+sudo systemctl enable nginx
+sudo systemctl disable nginx
+
+# Lista services
+systemctl list-units --type=service
+systemctl list-units --type=service --state=running
+```
+
+---
+
+## journalctl (loggar)
+
+```bash
+journalctl                          # Alla loggar
+journalctl -u nginx                 # Specifik service
+journalctl -u nginx -f              # Follow
+journalctl -u nginx --since "1 hour ago"
+journalctl -u nginx --since "2024-01-01"
+journalctl -b                       # Sedan boot
+journalctl -b -1                    # Förra boot
+```
+
+---
+
+## Skapa egen service
+
+**/etc/systemd/system/myapp.service**
 
 ```ini
-# /etc/systemd/system/myapp.service
-
 [Unit]
-Description=My Application Service
+Description=My Application
 After=network.target
-Wants=network-online.target
 
 [Service]
 Type=simple
-User=appuser
-Group=appgroup
+User=said
 WorkingDirectory=/opt/myapp
 ExecStart=/opt/myapp/start.sh
-ExecStop=/opt/myapp/stop.sh
 Restart=always
 RestartSec=5
 
@@ -3383,1704 +1739,84 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-### Service Types
-
-| Type | Beskrivning | Användning |
-|------|-------------|------------|
-| `simple` | Default, processen är tjänsten | De flesta applikationer |
-| `forking` | Processen forkar, parent avslutas | Traditionella daemons |
-| `oneshot` | Kör en gång, avslutas | Scripts, setup tasks |
-| `notify` | Som simple, men skickar signal | systemd-aware apps |
-
-### Skapa en enkel service
-
 ```bash
-#!/bin/bash
-set -euo pipefail
-
-# Skapa service-fil
-sudo cat > /etc/systemd/system/mywebapp.service << 'EOF'
-[Unit]
-Description=My Web Application
-After=network.target
-
-[Service]
-Type=simple
-User=www-data
-WorkingDirectory=/var/www/myapp
-ExecStart=/usr/bin/python3 /var/www/myapp/app.py
-Restart=always
-RestartSec=10
-StandardOutput=journal
-StandardError=journal
-
-# Säkerhetsinställningar
-NoNewPrivileges=true
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Ladda om systemd
-sudo systemctl daemon-reload
-
-# Aktivera och starta
-sudo systemctl enable mywebapp
-sudo systemctl start mywebapp
-
-# Kontrollera status
-sudo systemctl status mywebapp
-```
-
-### systemctl kommandon
-
-```bash
-# Start/Stop/Restart
+# Efter att skapat/ändrat service-fil
+sudo systemctl daemon-reload        # VIKTIGT!
+sudo systemctl enable myapp
 sudo systemctl start myapp
-sudo systemctl stop myapp
-sudo systemctl restart myapp
-sudo systemctl reload myapp      # Ladda om config utan restart
-
-# Enable/Disable (autostart)
-sudo systemctl enable myapp      # Starta vid boot
-sudo systemctl disable myapp     # Starta INTE vid boot
-
-# Status och info
-systemctl status myapp
-systemctl is-active myapp
-systemctl is-enabled myapp
-systemctl show myapp             # Alla properties
-
-# Lista tjänster
-systemctl list-units --type=service
-systemctl list-units --type=service --state=running
-systemctl list-unit-files --type=service
-
-# Efter ändringar i service-fil
-sudo systemctl daemon-reload
-
-# Loggar
-journalctl -u myapp              # Alla loggar
-journalctl -u myapp -f           # Follow (live)
-journalctl -u myapp --since today
-journalctl -u myapp -n 50        # Senaste 50 rader
-```
-
-### Service med environment variables
-
-```ini
-[Service]
-# Direkt i service-filen
-Environment="PORT=8080"
-Environment="DB_HOST=localhost"
-
-# Eller från fil
-EnvironmentFile=/etc/myapp/config.env
 ```
 
 ---
 
-## 🎯 Checkpoint: Deliverable 5.3
+## Service-fil förklaring
 
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# Block Storage + LUKS + systemd Setup
-# Deliverable 5.3 - DOE25
-# ============================================
-
-# Variabler
-DEVICE="/dev/sdb"
-PARTITION="${DEVICE}1"
-LUKS_NAME="appdata"
-MOUNT_POINT="/opt/appdata"
-KEYFILE="/root/.luks-key"
-SERVICE_NAME="myapp"
-
-log() {
-    echo "[$(date '+%H:%M:%S')] $1"
-}
-
-# ============================================
-# 1. BLOCK STORAGE SETUP
-# ============================================
-setup_storage() {
-    log "Setting up block storage..."
-
-    # Skapa partition (hela disken)
-    echo -e "n\\np\\n1\\n\\n\\nw" | sudo fdisk "$DEVICE" || true
-
-    # Vänta på kernel
-    sudo partprobe "$DEVICE"
-    sleep 2
-
-    log "Partition created: $PARTITION"
-}
-
-# ============================================
-# 2. LUKS ENCRYPTION
-# ============================================
-setup_luks() {
-    log "Setting up LUKS encryption..."
-
-    # Skapa keyfile
-    if [[ ! -f "$KEYFILE" ]]; then
-        sudo dd if=/dev/urandom of="$KEYFILE" bs=256 count=1 2>/dev/null
-        sudo chmod 400 "$KEYFILE"
-        log "Keyfile created: $KEYFILE"
-    fi
-
-    # Formatera med LUKS (keyfile istället för passphrase)
-    sudo cryptsetup luksFormat --batch-mode "$PARTITION" "$KEYFILE"
-    log "LUKS formatted: $PARTITION"
-
-    # Öppna
-    sudo cryptsetup open "$PARTITION" "$LUKS_NAME" --key-file "$KEYFILE"
-    log "LUKS opened: /dev/mapper/$LUKS_NAME"
-
-    # Skapa filsystem
-    sudo mkfs.ext4 -L "$LUKS_NAME" "/dev/mapper/$LUKS_NAME"
-    log "Filesystem created"
-
-    # Mounta
-    sudo mkdir -p "$MOUNT_POINT"
-    sudo mount "/dev/mapper/$LUKS_NAME" "$MOUNT_POINT"
-    log "Mounted at: $MOUNT_POINT"
-}
-
-# ============================================
-# 3. SYSTEMD SERVICE
-# ============================================
-create_service() {
-    log "Creating systemd service..."
-
-    # Skapa app-katalog och script
-    sudo mkdir -p "$MOUNT_POINT/app"
-
-    sudo cat > "$MOUNT_POINT/app/run.sh" << 'SCRIPT'
-#!/bin/bash
-echo "Application started at $(date)"
-while true; do
-    echo "Running... $(date)"
-    sleep 60
-done
-SCRIPT
-    sudo chmod +x "$MOUNT_POINT/app/run.sh"
-
-    # Skapa service-fil
-    sudo cat > "/etc/systemd/system/${SERVICE_NAME}.service" << EOF
-[Unit]
-Description=My Application on Encrypted Storage
-After=network.target
-Requires=dev-mapper-${LUKS_NAME}.device
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=${MOUNT_POINT}/app
-ExecStart=${MOUNT_POINT}/app/run.sh
-Restart=always
-RestartSec=10
-StandardOutput=journal
-StandardError=journal
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-    # Aktivera
-    sudo systemctl daemon-reload
-    sudo systemctl enable "$SERVICE_NAME"
-    sudo systemctl start "$SERVICE_NAME"
-
-    log "Service created and started: $SERVICE_NAME"
-}
-
-# ============================================
-# 4. SETUP CRYPTTAB & FSTAB
-# ============================================
-setup_automount() {
-    log "Setting up auto-mount..."
-
-    # Hämta UUID
-    local uuid=$(sudo cryptsetup luksDump "$PARTITION" | grep "UUID" | head -1 | awk '{print $2}')
-
-    # crypttab
-    echo "${LUKS_NAME}  UUID=${uuid}  ${KEYFILE}  luks" | sudo tee -a /etc/crypttab
-
-    # fstab
-    echo "/dev/mapper/${LUKS_NAME}  ${MOUNT_POINT}  ext4  defaults  0  2" | sudo tee -a /etc/fstab
-
-    log "Auto-mount configured"
-}
-
-# ============================================
-# 5. VERIFICATION
-# ============================================
-verify() {
-    echo ""
-    echo "=== VERIFICATION ==="
-    echo ""
-
-    echo "Block device:"
-    lsblk "$DEVICE"
-    echo ""
-
-    echo "LUKS status:"
-    sudo cryptsetup status "$LUKS_NAME"
-    echo ""
-
-    echo "Mount:"
-    df -h "$MOUNT_POINT"
-    echo ""
-
-    echo "Service status:"
-    systemctl status "$SERVICE_NAME" --no-pager
-    echo ""
-
-    echo "Recent logs:"
-    journalctl -u "$SERVICE_NAME" -n 5 --no-pager
-}
-
-# Main
-main() {
-    log "=== Starting Deliverable 5.3 Setup ==="
-
-    setup_storage
-    setup_luks
-    create_service
-    setup_automount
-    verify
-
-    log "=== Setup Complete ==="
-}
-
-# Kör bara om vi är root
-if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root"
-    exit 1
-fi
-
-main "$@"
-```
+| Sektion | Direktiv | Betydelse |
+|---------|----------|-----------|
+| [Unit] | Description | Beskrivning av tjänsten |
+| [Unit] | After | Starta efter denna tjänst |
+| [Service] | Type | simple, forking, oneshot |
+| [Service] | User | Kör som denna användare |
+| [Service] | ExecStart | Kommando att köra |
+| [Service] | Restart | always, on-failure, no |
+| [Install] | WantedBy | multi-user.target för boot |
 
 ---
 
-## 📚 Snabbreferens
+## Snabbreferens
 
-### Block Storage
-
-```bash
-lsblk                          # Lista diskar
-sudo fdisk /dev/sdb            # Partitionera
-sudo mkfs.ext4 /dev/sdb1       # Formatera
-sudo mount /dev/sdb1 /mnt/data # Mounta
-sudo blkid                     # Visa UUID:s
-```
-
-### LUKS
-
-```bash
-sudo cryptsetup luksFormat /dev/sdb1           # Kryptera
-sudo cryptsetup open /dev/sdb1 name            # Öppna
-sudo cryptsetup close name                     # Stäng
-sudo cryptsetup luksDump /dev/sdb1             # Info
-```
-
-### systemd
-
-```bash
-sudo systemctl start|stop|restart service
-sudo systemctl enable|disable service
-sudo systemctl status service
-sudo systemctl daemon-reload
-journalctl -u service -f
-```
+| Uppgift | Kommando |
+|---------|----------|
+| Starta service | `sudo systemctl start nginx` |
+| Stoppa service | `sudo systemctl stop nginx` |
+| Status | `systemctl status nginx` |
+| Aktivera vid boot | `sudo systemctl enable nginx` |
+| Visa loggar | `journalctl -u nginx` |
+| Följ loggar | `journalctl -u nginx -f` |
+| Ladda om config | `sudo systemctl daemon-reload` |
 
 ---
 
-## ⚠️ Vanliga fel
+## Viktigt att komma ihåg
 
-| Fel | Problem | Lösning |
-|-----|---------|---------|
-| Device busy | Disken används | `umount` först, kolla `lsof` |
-| LUKS won't open | Fel passphrase/keyfile | Kontrollera keyfile path och permissions |
-| Service failed | Fel i service-fil | `journalctl -u service` för detaljer |
-| Mount fail after reboot | Fel i fstab | Boot i rescue mode, fixa fstab |
-| daemon-reload glömt | Service-ändringar syns ej | Alltid `systemctl daemon-reload` |
+1. **daemon-reload** efter ändringar i service-filer
+2. **enable** för att starta vid boot
+3. **journalctl -u** för service-specifika loggar
+4. Service-filer ligger i `/etc/systemd/system/`
+
 """,
             "quiz": [
-                {
-                    "question": "Vilket kommando visar alla block devices och deras mount points?",
-                    "options": ["df -h", "lsblk", "fdisk -l", "mount"],
-                    "correct": 1,
-                    "explanation": "lsblk visar en hierarkisk vy av alla block devices med storlek, typ och mount points.",
-                },
-                {
-                    "question": "Vad gör 'cryptsetup open /dev/sdb1 mydata'?",
-                    "options": [
-                        "Krypterar partitionen",
-                        "Formaterar partitionen",
-                        "Dekrypterar och gör volymen tillgänglig som /dev/mapper/mydata",
-                        "Monterar partitionen",
-                    ],
-                    "correct": 2,
-                    "explanation": "cryptsetup open låser upp en LUKS-krypterad volym och skapar en device mapper på /dev/mapper/<name>.",
-                },
-                {
-                    "question": "Var placerar du dina egna systemd service-filer?",
-                    "options": [
-                        "/lib/systemd/system/",
-                        "/etc/systemd/system/",
-                        "/usr/lib/systemd/",
-                        "/var/systemd/services/",
-                    ],
-                    "correct": 1,
-                    "explanation": "/etc/systemd/system/ är för användarskapade services. /lib/systemd/system/ är för paket-installerade.",
-                },
                 {
                     "question": "Vad måste du köra efter att ha ändrat en service-fil?",
                     "options": [
                         "systemctl restart",
                         "systemctl reload",
                         "systemctl daemon-reload",
-                        "service reload",
+                        "systemctl refresh",
                     ],
                     "correct": 2,
-                    "explanation": "systemctl daemon-reload gör att systemd läser in ändrade service-filer. Sedan kan du restart:a tjänsten.",
+                    "explanation": "daemon-reload laddar om systemd's konfiguration så den ser ändringarna i service-filer.",
                 },
                 {
-                    "question": "Vilken fil konfigurerar automatisk LUKS-öppning vid boot?",
+                    "question": "Vilket kommando visar loggar för nginx-tjänsten?",
                     "options": [
-                        "/etc/fstab",
-                        "/etc/crypttab",
-                        "/etc/luks.conf",
-                        "/etc/systemd/luks",
-                    ],
-                    "correct": 1,
-                    "explanation": "/etc/crypttab konfigurerar vilka LUKS-volymer som ska öppnas vid boot och med vilken nyckel.",
-                },
-                {
-                    "question": "Hur visar du live-loggar för en systemd service?",
-                    "options": [
-                        "tail -f /var/log/service.log",
-                        "systemctl logs -f service",
-                        "journalctl -u service -f",
-                        "cat /var/log/syslog | grep service",
+                        "cat /var/log/nginx",
+                        "journalctl nginx",
+                        "journalctl -u nginx",
+                        "systemctl logs nginx",
                     ],
                     "correct": 2,
-                    "explanation": "journalctl -u <service> -f visar loggar för en specifik tjänst med -f för follow (live-uppdatering).",
+                    "explanation": "journalctl -u (unit) visar loggar för en specifik systemd-tjänst.",
                 },
-            ],
-        },
-        # =============================================================================
-        # NOD 9: Docker & Containers
-        # =============================================================================
-        {
-            "title": "Docker & Containers",
-            "slug": "docker-containers",
-            "description": "Installera Docker, skapa images med Dockerfile, hantera containers och volumes",
-            "difficulty": "intermediate",
-            "estimated_minutes": 50,
-            "xp_reward": 200,
-            "order_index": 8,
-            "content": """# 🐳 Docker & Containers
-
-> **Kursmål:** "Kunskaper om containerteknologi"
->
-> **Deliverable 5.3:** Installera Docker och skapa containeriserade tjänster
-
----
-
-## 📋 TL;DR - Det viktigaste
-
-| Kommando | Beskrivning |
-|----------|-------------|
-| `docker run -d nginx` | Starta container i bakgrunden |
-| `docker ps` | Visa körande containers |
-| `docker ps -a` | Visa ALLA containers |
-| `docker images` | Lista images |
-| `docker build -t name .` | Bygg image från Dockerfile |
-| `docker exec -it container bash` | Gå in i container |
-| `docker logs container` | Visa loggar |
-| `docker-compose up -d` | Starta med Compose |
-
----
-
-## 🔧 Docker Installation
-
-### Ubuntu/Debian
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Installera beroenden
-sudo apt update
-sudo apt install -y \\
-    ca-certificates \\
-    curl \\
-    gnupg \\
-    lsb-release
-
-# Lägg till Dockers GPG-nyckel
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \\
-    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-# Lägg till repository
-echo \\
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \\
-  https://download.docker.com/linux/ubuntu \\
-  $(lsb_release -cs) stable" | \\
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Installera Docker
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-# Starta och aktivera
-sudo systemctl enable docker
-sudo systemctl start docker
-
-# Lägg till användare i docker-gruppen (kräver ny login)
-sudo usermod -aG docker $USER
-
-# Verifiera
-docker --version
-docker compose version
-```
-
-### Rocky/RHEL
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# Lägg till Docker repo
-sudo dnf config-manager --add-repo \\
-    https://download.docker.com/linux/centos/docker-ce.repo
-
-# Installera
-sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-# Starta
-sudo systemctl enable docker
-sudo systemctl start docker
-
-# Användare i docker-gruppen
-sudo usermod -aG docker $USER
-```
-
----
-
-## 🏃 Köra Containers
-
-### docker run - grundläggande
-
-```bash
-# Enklaste sättet
-docker run hello-world
-
-# I bakgrunden (-d = detached)
-docker run -d nginx
-
-# Med namn
-docker run -d --name my-nginx nginx
-
-# Med port-mapping (-p host:container)
-docker run -d -p 8080:80 nginx
-# Besök http://localhost:8080
-
-# Med environment variables
-docker run -d -e "MYSQL_ROOT_PASSWORD=secret" mysql
-
-# Ta bort när den stannar
-docker run --rm nginx echo "Hello"
-```
-
-### Port-mapping förklarad
-
-```
--p 8080:80
-    │    │
-    │    └── Container-port (nginx lyssnar på 80 inuti)
-    └─────── Host-port (du ansluter till denna)
-```
-
-### Hantera containers
-
-```bash
-# Lista körande
-docker ps
-
-# Lista ALLA (inklusive stoppade)
-docker ps -a
-
-# Stoppa
-docker stop my-nginx
-
-# Starta igen
-docker start my-nginx
-
-# Starta om
-docker restart my-nginx
-
-# Ta bort (måste vara stoppad)
-docker rm my-nginx
-
-# Tvinga bort (även om den kör)
-docker rm -f my-nginx
-
-# Ta bort alla stoppade containers
-docker container prune
-```
-
-### Gå in i container
-
-```bash
-# Kör bash i körande container
-docker exec -it my-nginx bash
-
-# Kör specifikt kommando
-docker exec my-nginx cat /etc/nginx/nginx.conf
-
-# Interaktivt med ny container
-docker run -it ubuntu bash
-```
-
-### Loggar
-
-```bash
-# Visa loggar
-docker logs my-nginx
-
-# Follow (live)
-docker logs -f my-nginx
-
-# Senaste 100 rader
-docker logs --tail 100 my-nginx
-
-# Med timestamps
-docker logs -t my-nginx
-```
-
----
-
-## 📦 Images
-
-### Hantera images
-
-```bash
-# Lista images
-docker images
-
-# Ladda ner image
-docker pull nginx:latest
-docker pull nginx:1.24     # Specifik version
-
-# Ta bort image
-docker rmi nginx:latest
-
-# Ta bort oanvända images
-docker image prune
-
-# Ta bort ALLA oanvända images
-docker image prune -a
-```
-
-### Sök images
-
-```bash
-# Sök på Docker Hub
-docker search nginx
-
-# Visa tags för image (kräver jq)
-curl -s "https://hub.docker.com/v2/repositories/library/nginx/tags?page_size=10" | \\
-    jq -r '.results[].name'
-```
-
----
-
-## 📄 Dockerfile
-
-### Grundläggande Dockerfile
-
-```dockerfile
-# Base image
-FROM ubuntu:22.04
-
-# Metadata
-LABEL maintainer="your@email.com"
-LABEL description="My custom app"
-
-# Sätt environment variables
-ENV APP_HOME=/app
-ENV PORT=8080
-
-# Installera paket
-RUN apt-get update && apt-get install -y \\
-    python3 \\
-    python3-pip \\
-    && rm -rf /var/lib/apt/lists/*
-
-# Skapa app-katalog
-WORKDIR $APP_HOME
-
-# Kopiera filer
-COPY requirements.txt .
-RUN pip3 install -r requirements.txt
-
-COPY . .
-
-# Exponera port
-EXPOSE $PORT
-
-# Körs när containern startar
-CMD ["python3", "app.py"]
-```
-
-### Dockerfile best practices
-
-```dockerfile
-# 1. Använd specifik tag, inte :latest
-FROM python:3.11-slim
-
-# 2. Kombinera RUN-kommandon
-RUN apt-get update && apt-get install -y \\
-    package1 \\
-    package2 \\
-    && rm -rf /var/lib/apt/lists/*
-
-# 3. Kopiera requirements separat för caching
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-
-# 4. Kör inte som root
-RUN useradd -m appuser
-USER appuser
-
-# 5. Använd ENTRYPOINT + CMD
-ENTRYPOINT ["python3"]
-CMD ["app.py"]
-```
-
-### Bygga image
-
-```bash
-# Bygg från current directory
-docker build -t myapp .
-
-# Med tag/version
-docker build -t myapp:1.0 .
-
-# Med annan Dockerfile
-docker build -f Dockerfile.prod -t myapp:prod .
-
-# Visa build-processen utan cache
-docker build --no-cache -t myapp .
-```
-
----
-
-## 💾 Volumes & Data
-
-### Typer av data-persistens
-
-| Typ | Kommando | Användning |
-|-----|----------|------------|
-| **Volume** | `-v mydata:/data` | Docker-hanterad, bäst för DB |
-| **Bind mount** | `-v /host/path:/container/path` | Dev, config-filer |
-| **tmpfs** | `--tmpfs /tmp` | Temporär data i RAM |
-
-### Volumes (Docker-hanterade)
-
-```bash
-# Skapa volume
-docker volume create mydata
-
-# Lista volumes
-docker volume ls
-
-# Använd volume
-docker run -d \\
-    -v mydata:/var/lib/mysql \\
-    -e MYSQL_ROOT_PASSWORD=secret \\
-    mysql
-
-# Inspektera volume
-docker volume inspect mydata
-
-# Ta bort volume
-docker volume rm mydata
-
-# Ta bort oanvända volumes
-docker volume prune
-```
-
-### Bind mounts (Host-kataloger)
-
-```bash
-# Monta host-katalog
-docker run -d \\
-    -v /path/on/host:/path/in/container \\
-    nginx
-
-# Read-only
-docker run -d \\
-    -v /path/on/host:/data:ro \\
-    myapp
-
-# Exempel: Webb-server med lokal kod
-docker run -d \\
-    -p 8080:80 \\
-    -v $(pwd)/html:/usr/share/nginx/html:ro \\
-    nginx
-```
-
----
-
-## 🐙 Docker Compose
-
-### docker-compose.yml exempel
-
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build: .
-    ports:
-      - "8080:80"
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - ./app:/app
-    depends_on:
-      - db
-    restart: unless-stopped
-
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: myapp
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: unless-stopped
-
-volumes:
-  pgdata:
-```
-
-### Compose-kommandon
-
-```bash
-# Starta alla tjänster
-docker compose up -d
-
-# Visa status
-docker compose ps
-
-# Visa loggar
-docker compose logs -f
-
-# Stoppa
-docker compose stop
-
-# Stoppa och ta bort
-docker compose down
-
-# Ta bort inklusive volumes
-docker compose down -v
-
-# Bygg om images
-docker compose build
-docker compose up -d --build
-```
-
----
-
-## 🎯 Checkpoint: Deliverable - Docker Setup
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-# ============================================
-# Docker Installation & Verification
-# Deliverable 5.3 - DOE25
-# ============================================
-
-log() {
-    echo "[$(date '+%H:%M:%S')] $1"
-}
-
-# Installera Docker (Ubuntu)
-install_docker_ubuntu() {
-    log "Installing Docker on Ubuntu..."
-
-    # Beroenden
-    sudo apt update
-    sudo apt install -y ca-certificates curl gnupg
-
-    # GPG key
-    sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \\
-        sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-    # Repo
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \\
-        https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \\
-        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-    # Install
-    sudo apt update
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-    # Start
-    sudo systemctl enable docker
-    sudo systemctl start docker
-
-    # User group
-    sudo usermod -aG docker "$USER"
-
-    log "Docker installed successfully"
-}
-
-# Skapa test-app
-create_test_app() {
-    log "Creating test application..."
-
-    mkdir -p ~/docker-test
-    cd ~/docker-test
-
-    # Dockerfile
-    cat > Dockerfile << 'EOF'
-FROM python:3.11-slim
-
-WORKDIR /app
-
-COPY app.py .
-
-EXPOSE 5000
-
-CMD ["python", "app.py"]
-EOF
-
-    # Python app
-    cat > app.py << 'EOF'
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-import json
-from datetime import datetime
-
-class Handler(SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        response = {
-            "status": "healthy",
-            "timestamp": datetime.now().isoformat(),
-            "message": "Docker container is running!"
-        }
-        self.wfile.write(json.dumps(response).encode())
-
-if __name__ == "__main__":
-    server = HTTPServer(('0.0.0.0', 5000), Handler)
-    print("Server running on port 5000")
-    server.serve_forever()
-EOF
-
-    # Docker Compose
-    cat > docker-compose.yml << 'EOF'
-version: '3.8'
-
-services:
-  app:
-    build: .
-    ports:
-      - "5000:5000"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-EOF
-
-    log "Test app created in ~/docker-test"
-}
-
-# Bygg och kör
-build_and_run() {
-    log "Building and running..."
-    cd ~/docker-test
-
-    docker build -t myapp:test .
-    docker run -d --name test-container -p 5000:5000 myapp:test
-
-    sleep 3
-
-    log "Testing endpoint..."
-    curl -s http://localhost:5000 | jq .
-
-    log "Container logs:"
-    docker logs test-container
-}
-
-# Verify
-verify() {
-    echo ""
-    echo "=== VERIFICATION ==="
-    echo ""
-
-    echo "Docker version:"
-    docker --version
-    echo ""
-
-    echo "Docker Compose version:"
-    docker compose version
-    echo ""
-
-    echo "Running containers:"
-    docker ps
-    echo ""
-
-    echo "Docker info:"
-    docker info | grep -E "Server Version|Storage Driver|Operating System"
-}
-
-# Cleanup
-cleanup() {
-    log "Cleaning up..."
-    docker rm -f test-container 2>/dev/null || true
-    docker rmi myapp:test 2>/dev/null || true
-}
-
-# Main
-main() {
-    case "${1:-verify}" in
-        install)
-            install_docker_ubuntu
-            ;;
-        setup)
-            create_test_app
-            build_and_run
-            ;;
-        cleanup)
-            cleanup
-            ;;
-        verify|*)
-            verify
-            ;;
-    esac
-}
-
-main "$@"
-```
-
----
-
-## 📚 Snabbreferens
-
-```bash
-# === CONTAINERS ===
-docker run -d -p 8080:80 --name web nginx
-docker ps / docker ps -a
-docker stop/start/restart container
-docker rm container
-docker exec -it container bash
-docker logs -f container
-
-# === IMAGES ===
-docker images
-docker pull image:tag
-docker build -t name:tag .
-docker rmi image
-
-# === VOLUMES ===
-docker volume create/ls/rm name
-docker run -v volume:/path image
-docker run -v /host:/container image
-
-# === COMPOSE ===
-docker compose up -d
-docker compose down
-docker compose logs -f
-docker compose ps
-
-# === CLEANUP ===
-docker system prune -a    # ALLT oanvänt
-docker container prune    # Stoppade containers
-docker image prune -a     # Oanvända images
-docker volume prune       # Oanvända volumes
-```
-
----
-
-## ⚠️ Vanliga fel
-
-| Fel | Orsak | Lösning |
-|-----|-------|---------|
-| permission denied | Ej i docker-gruppen | `usermod -aG docker $USER` + ny login |
-| port already in use | Annan process använder porten | `docker ps`, ändra port eller stoppa |
-| no space left | Disk full av images/containers | `docker system prune -a` |
-| build fails | Fel i Dockerfile | Kolla syntax, COPY-paths |
-| volume mount empty | Fel path | Använd absolut path eller $(pwd) |
-""",
-            "quiz": [
                 {
-                    "question": "Vilket kommando startar en nginx-container i bakgrunden på port 8080?",
+                    "question": "Vad gör 'systemctl enable nginx'?",
                     "options": [
-                        "docker start nginx -p 8080",
-                        "docker run -d -p 8080:80 nginx",
-                        "docker nginx -d -port 8080",
-                        "docker create nginx:8080",
+                        "Startar nginx nu",
+                        "Gör att nginx startar vid boot",
+                        "Aktiverar nginx-moduler",
+                        "Tillåter nginx i firewall",
                     ],
                     "correct": 1,
-                    "explanation": "-d = detached (bakgrund), -p 8080:80 mappar host port 8080 till container port 80.",
-                },
-                {
-                    "question": "Hur går du in i en körande container för att köra bash?",
-                    "options": [
-                        "docker bash container",
-                        "docker run -it container bash",
-                        "docker exec -it container bash",
-                        "docker shell container",
-                    ],
-                    "correct": 2,
-                    "explanation": "docker exec kör kommando i KÖRANDE container. -it ger interaktiv terminal.",
-                },
-                {
-                    "question": "Vad gör 'docker run -v mydata:/var/lib/mysql mysql'?",
-                    "options": [
-                        "Kopierar data från host till container",
-                        "Skapar en volume 'mydata' och mountar på /var/lib/mysql",
-                        "Tar backup av MySQL",
-                        "Kör MySQL utan persistent data",
-                    ],
-                    "correct": 1,
-                    "explanation": "-v volume:path mountar en Docker-hanterad volume. Data persisterar även om containern tas bort.",
-                },
-                {
-                    "question": "Vilket kommando bygger en Docker image från en Dockerfile?",
-                    "options": [
-                        "docker create -t myapp .",
-                        "docker build -t myapp .",
-                        "docker image myapp .",
-                        "docker make -t myapp .",
-                    ],
-                    "correct": 1,
-                    "explanation": "docker build -t name . bygger image från Dockerfile i current directory och taggar den.",
-                },
-                {
-                    "question": "Vad händer om du kör 'docker compose down -v'?",
-                    "options": [
-                        "Stoppar containers men behåller volumes",
-                        "Stoppar containers och tar bort volumes",
-                        "Visar verbose output",
-                        "Validerar docker-compose.yml",
-                    ],
-                    "correct": 1,
-                    "explanation": "-v flaggan tar bort associated volumes. Utan -v bevaras volumes för nästa 'up'.",
-                },
-                {
-                    "question": "Hur visar du live-loggar från en container?",
-                    "options": [
-                        "docker logs container",
-                        "docker logs -f container",
-                        "docker tail container",
-                        "docker output container",
-                    ],
-                    "correct": 1,
-                    "explanation": "-f (follow) visar loggar i realtid, likt tail -f. Utan -f visas befintliga loggar och avslutas.",
-                },
-            ],
-        },
-        # =============================================================================
-        # NOD 10: Felsökning & Tentasammanfattning
-        # =============================================================================
-        {
-            "title": "🎯 Felsökning & Tentasammanfattning",
-            "slug": "felsokning-tentasammanfattning",
-            "description": "Det ultimata cheat sheet för tentan - alla kommandon, troubleshooting och kursmål på ett ställe",
-            "difficulty": "intermediate",
-            "estimated_minutes": 60,
-            "xp_reward": 250,
-            "order_index": 9,
-            "content": """# 🎯 Felsökning & Tentasammanfattning
-
-> **TENTA 7 JANUARI 2026** - Allt du behöver på ett ställe!
-
----
-
-## 📋 MASTER CHEAT SHEET
-
-### 🐚 Bash Scripting
-
-```bash
-#!/bin/bash
-set -euo pipefail    # ALLTID! e=exit on error, u=undefined vars, o pipefail
-
-# Variabler
-name="value"         # Inga mellanslag vid =
-echo "$name"         # Alltid citattecken
-echo "${name}"       # Säkrare syntax
-
-# Speciella variabler
-$0                   # Script-namn
-$1, $2...            # Argument
-$#                   # Antal argument
-$@                   # Alla argument (separata)
-$*                   # Alla argument (en sträng)
-$?                   # Exit status från förra kommandot
-$$                   # Process ID
-
-# Kommandosubstitution
-result=$(command)    # Moderna sättet
-result=`command`     # Gammalt, undvik
-```
-
-### 📊 Textbearbetning
-
-```bash
-# grep - sök
-grep "pattern" file
-grep -r "pattern" dir/     # Rekursivt
-grep -i "pattern" file     # Case insensitive
-grep -v "pattern" file     # Invertera (visa ICKE-matchande)
-grep -E "regex" file       # Extended regex
-
-# sed - ersätt
-sed 's/old/new/' file      # Första på varje rad
-sed 's/old/new/g' file     # Alla (global)
-sed -i 's/old/new/g' file  # In-place (ändra filen)
-
-# awk - kolumner
-awk '{print $1}' file      # Första kolumnen
-awk -F: '{print $1}' file  # Med delimiter :
-awk '$3 > 100' file        # Villkor
-```
-
-### 🔄 Kontrollstrukturer
-
-```bash
-# if-satser
-if [[ condition ]]; then
-    # kod
-elif [[ condition ]]; then
-    # kod
-else
-    # kod
-fi
-
-# Testoperatorer
-[[ -f file ]]        # Fil finns
-[[ -d dir ]]         # Katalog finns
-[[ -z "$var" ]]      # Variabel tom
-[[ -n "$var" ]]      # Variabel INTE tom
-[[ $a -eq $b ]]      # Numerisk likhet
-[[ "$a" == "$b" ]]   # String likhet
-
-# for-loop
-for item in "${array[@]}"; do
-    echo "$item"
-done
-
-for i in {1..10}; do
-    echo "$i"
-done
-
-# while-loop
-while [[ condition ]]; do
-    # kod
-done
-
-# case
-case "$var" in
-    pattern1) cmd ;;
-    pattern2|pattern3) cmd ;;
-    *) default ;;
-esac
-```
-
-### 🔧 Funktioner & Arrays
-
-```bash
-# Funktion
-my_func() {
-    local var="$1"   # Lokal variabel
-    echo "$var"
-    return 0         # Exit status
-}
-my_func "arg"        # Anropa UTAN ()
-
-# Array
-arr=("a" "b" "c")
-echo "${arr[0]}"     # Element
-echo "${arr[@]}"     # Alla
-echo "${#arr[@]}"    # Längd
-for item in "${arr[@]}"; do ...; done
-
-# Associativ array
-declare -A map
-map["key"]="value"
-echo "${map[key]}"
-```
-
-### 🚨 Signals & trap
-
-```bash
-cleanup() {
-    rm -f "$TEMP_FILE"
-}
-trap cleanup EXIT    # Körs ALLTID vid avslut
-trap cleanup SIGINT SIGTERM
-```
-
----
-
-## 👥 Användarhantering
-
-```bash
-# Skapa användare
-useradd -m -s /bin/bash username
-passwd username
-
-# Ändra användare (ALLTID -a för append!)
-usermod -aG groupname username
-
-# Grupper
-groupadd groupname
-groups username
-id username
-
-# Filer
-/etc/passwd          # Användare
-/etc/shadow          # Lösenord
-/etc/group           # Grupper
-/etc/sudoers         # Sudo-behörigheter
-```
-
----
-
-## 🔒 Filrättigheter
-
-```bash
-# chmod
-chmod 755 file       # rwxr-xr-x
-chmod 644 file       # rw-r--r--
-chmod 600 file       # rw------- (SSH keys!)
-chmod u+x file       # Lägg till execute för user
-
-# Speciella
-chmod 2775 dir       # SetGID (g+s)
-chmod +t dir         # Sticky bit
-
-# chown
-chown user:group file
-chown -R user:group dir/
-
-# Oktala värden
-# 4=read, 2=write, 1=execute
-# 755 = 7(rwx) 5(r-x) 5(r-x)
-```
-
----
-
-## 🔐 SSH
-
-```bash
-# Generera nyckel
-ssh-keygen -t ed25519 -C "email"
-
-# Kopiera nyckel
-ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
-
-# Rättigheter (KRITISKT!)
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/id_*
-chmod 644 ~/.ssh/id_*.pub
-chmod 600 ~/.ssh/authorized_keys
-
-# /etc/ssh/sshd_config - härdning
-Port 6622
-PermitRootLogin no
-PasswordAuthentication no
-AllowUsers alice bob
-
-# Validera och starta om
-sshd -t && systemctl restart sshd
-```
-
----
-
-## 🔥 Brandväggar
-
-### UFW (Ubuntu)
-
-```bash
-ufw allow 22/tcp
-ufw allow ssh
-ufw default deny incoming
-ufw default allow outgoing
-ufw enable
-ufw status numbered
-```
-
-### firewalld (Rocky/RHEL)
-
-```bash
-firewall-cmd --permanent --add-port=22/tcp
-firewall-cmd --permanent --add-service=http
-firewall-cmd --reload
-firewall-cmd --list-all
-```
-
----
-
-## 💾 Lagring
-
-```bash
-# Visa diskar
-lsblk
-lsblk -f             # Med filsystem
-
-# Partitionera
-fdisk /dev/sdb
-
-# Formatera
-mkfs.ext4 /dev/sdb1
-
-# Mounta
-mount /dev/sdb1 /mnt/data
-umount /mnt/data
-
-# /etc/fstab (permanent mount)
-UUID=xxx  /mnt/data  ext4  defaults  0  2
-```
-
-### LUKS
-
-```bash
-cryptsetup luksFormat /dev/sdb1
-cryptsetup open /dev/sdb1 mydata
-mkfs.ext4 /dev/mapper/mydata
-mount /dev/mapper/mydata /mnt/secure
-cryptsetup close mydata
-```
-
----
-
-## ⚙️ systemd
-
-```bash
-# Tjänsthantering
-systemctl start|stop|restart service
-systemctl enable|disable service
-systemctl status service
-systemctl daemon-reload     # Efter service-fil ändringar!
-
-# Loggar
-journalctl -u service
-journalctl -u service -f    # Follow
-journalctl -u service --since today
-
-# Service-fil: /etc/systemd/system/myapp.service
-[Unit]
-Description=My App
-After=network.target
-
-[Service]
-Type=simple
-User=appuser
-ExecStart=/path/to/app
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
----
-
-## 🐳 Docker
-
-```bash
-# Kör container
-docker run -d -p 8080:80 --name web nginx
-docker run -it ubuntu bash
-
-# Hantera
-docker ps                    # Körande
-docker ps -a                 # Alla
-docker stop|start|rm container
-docker exec -it container bash
-docker logs -f container
-
-# Images
-docker images
-docker pull nginx:latest
-docker build -t myapp .
-docker rmi image
-
-# Volumes
-docker volume create mydata
-docker run -v mydata:/data image
-docker run -v /host/path:/container/path image
-
-# Compose
-docker compose up -d
-docker compose down
-docker compose logs -f
-
-# Cleanup
-docker system prune -a
-```
-
----
-
-## 🔍 FELSÖKNING
-
-### Tjänster
-
-```bash
-# Tjänst startar inte?
-systemctl status service     # Se fel
-journalctl -u service -n 50  # Loggar
-systemctl cat service        # Visa service-fil
-
-# Syntaxfel i config?
-sshd -t                      # SSH
-nginx -t                     # Nginx
-visudo -c                    # Sudoers
-```
-
-### Nätverk
-
-```bash
-# Vad lyssnar?
-ss -tlnp
-netstat -tlnp
-
-# Testa port
-nc -zv host port
-curl -v http://host:port
-
-# DNS
-dig domain
-nslookup domain
-
-# Brandvägg blockerar?
-ufw status
-firewall-cmd --list-all
-```
-
-### Disk/Lagring
-
-```bash
-# Disk full?
-df -h
-du -sh /*
-
-# Vad använder disk?
-du -sh * | sort -h
-
-# Disk busy?
-lsof +D /mnt/data
-fuser -m /mnt/data
-```
-
-### Processer
-
-```bash
-# Hitta process
-ps aux | grep name
-pgrep -f name
-
-# Döda process
-kill PID
-kill -9 PID          # Force
-pkill -f name
-```
-
----
-
-## 📋 KURSMÅL - CHECKLISTA
-
-### ✅ Kunskaper
-
-| Kursmål | Nod | Nyckelkommandon |
-|---------|-----|-----------------|
-| 1. Användarhantering | 5 | useradd, usermod -aG, passwd |
-| 2. Filrättigheter | 5 | chmod, chown, SetGID |
-| 3. IT-säkerhet | 6, 7 | SSH härdning, brandväggar |
-| 4. Systemadministration | 8 | lsblk, mount, systemctl |
-| 5. Containerteknologi | 9 | docker run/build/compose |
-
-### ✅ Färdigheter
-
-| Kursmål | Nod | Vad du ska kunna |
-|---------|-----|------------------|
-| 1. Konfigurera användarkonton | 5 | Skript med useradd, grupper |
-| 2. Skripta med Bash | 1-4 | set -euo, funktioner, loops |
-| 3. Säkra Linux-system | 6, 7 | SSH keys, UFW/firewalld |
-| 4. Konfigurera nätverk | 6, 7 | Portar, brandväggsregler |
-
----
-
-## 🎯 DELIVERABLE CHECKLIST
-
-### 5.1 Users & Groups
-- [ ] `groupadd devops`
-- [ ] `useradd -m -s /bin/bash -G devops user`
-- [ ] Sudoers med `visudo`
-- [ ] SetGID på projektkatalog
-
-### 5.2 SSH & Firewall
-- [ ] Port 6622
-- [ ] PermitRootLogin no
-- [ ] PasswordAuthentication no
-- [ ] AllowUsers whitelist
-- [ ] UFW/firewalld regler
-
-### 5.3 Docker & systemd
-- [ ] Docker installerat
-- [ ] Dockerfile skapad
-- [ ] docker-compose.yml
-- [ ] systemd service-fil
-- [ ] journalctl fungerar
-
-### 5.4-5.5 README & Shellcheck
-- [ ] README.md med instruktioner
-- [ ] Alla scripts passerar shellcheck
-- [ ] set -euo pipefail överallt
-
----
-
-## 💡 VANLIGA TENTAFRÅGOR
-
-### Bash
-1. **Vad gör `set -euo pipefail`?** → e=exit on error, u=error på undefined vars, o pipefail=exit på pipeline-fel
-2. **Skillnad `$@` vs `$*`?** → $@ bevarar separata args, $* slår ihop till en sträng
-3. **Hur deklarerar du associativ array?** → `declare -A arr`
-
-### Användare
-4. **Hur lägger du till användare i grupp?** → `usermod -aG group user` (ALLTID -a!)
-5. **Vad gör SetGID på katalog?** → Nya filer ärver gruppägaren
-
-### SSH
-6. **Vilken rättighet ska privat SSH-nyckel ha?** → 600
-7. **Hur validerar du sshd_config?** → `sshd -t`
-
-### Brandvägg
-8. **Vad måste du göra innan `ufw enable`?** → Tillåta SSH!
-9. **firewalld permanent regel?** → `--permanent` + `--reload`
-
-### Docker
-10. **Hur går du in i körande container?** → `docker exec -it container bash`
-11. **Vad gör `-v mydata:/data`?** → Mountar volume
-
-### systemd
-12. **Vad gör du efter att ändra service-fil?** → `systemctl daemon-reload`
-13. **Hur ser du service-loggar live?** → `journalctl -u service -f`
-
----
-
-## 🏆 LYCKA TILL PÅ TENTAN!
-
-Du har nu gått igenom:
-- ✅ Bash scripting (shebang, variabler, set -euo pipefail)
-- ✅ Textbearbetning (grep, sed, awk)
-- ✅ Kontrollstrukturer (if, for, while, case)
-- ✅ Funktioner & arrays (VG-nivå)
-- ✅ Användarhantering (useradd, chmod, sudo)
-- ✅ SSH-säkerhet (nycklar, härdning)
-- ✅ Brandväggar (UFW & firewalld)
-- ✅ Lagring (LUKS, systemd)
-- ✅ Docker (containers, images, compose)
-
-**Pro tips för tentan:**
-1. Läs frågan NOGA
-2. `set -euo pipefail` i ALLA scripts
-3. `usermod -aG` (glöm inte -a!)
-4. SSH-nycklar = 600
-5. `systemctl daemon-reload` efter ändringar
-6. Testa SSH innan du stänger sessionen!
-
-**Du fixar det här! 💪**
-""",
-            "quiz": [
-                {
-                    "question": "Vad gör 'set -euo pipefail' i ett Bash-script?",
-                    "options": [
-                        "Sätter miljövariabler",
-                        "Aktiverar debug-läge",
-                        "Exit vid fel, error vid undefined vars, fail på pipeline-fel",
-                        "Startar interaktivt läge",
-                    ],
-                    "correct": 2,
-                    "explanation": "e=exit on error, u=error på undefined variables, o pipefail=exit om något i pipeline misslyckas.",
-                },
-                {
-                    "question": "Du har ändrat /etc/systemd/system/myapp.service. Vad måste du göra?",
-                    "options": [
-                        "systemctl restart myapp",
-                        "systemctl reload myapp",
-                        "systemctl daemon-reload && systemctl restart myapp",
-                        "service myapp restart",
-                    ],
-                    "correct": 2,
-                    "explanation": "daemon-reload läser in ändrade service-filer. Sedan restart för att aktivera ändringarna.",
-                },
-                {
-                    "question": "Vilket kommando lägger till användare 'bob' i gruppen 'docker' utan att ta bort från andra grupper?",
-                    "options": [
-                        "usermod -G docker bob",
-                        "usermod -aG docker bob",
-                        "useradd -G docker bob",
-                        "groupadd docker bob",
-                    ],
-                    "correct": 1,
-                    "explanation": "-a (append) är KRITISKT! Utan -a ersätts alla sekundära grupper.",
-                },
-                {
-                    "question": "SSH fungerar inte efter konfigändring. Vad borde du ha gjort?",
-                    "options": [
-                        "Kört sshd -t innan restart",
-                        "Startat om servern",
-                        "Ändrat root-lösenordet",
-                        "Installerat om SSH",
-                    ],
-                    "correct": 0,
-                    "explanation": "sshd -t validerar konfigurationen. Alltid testa innan restart för att undvika utelåsning!",
-                },
-                {
-                    "question": "Vad är rätt ordning för att öppna port 443 permanent i firewalld?",
-                    "options": [
-                        "firewall-cmd --add-port=443/tcp",
-                        "firewall-cmd --reload && firewall-cmd --add-port=443/tcp",
-                        "firewall-cmd --permanent --add-port=443/tcp && firewall-cmd --reload",
-                        "systemctl add-port 443",
-                    ],
-                    "correct": 2,
-                    "explanation": "--permanent sparar regeln, --reload aktiverar den. Utan --permanent försvinner regeln vid restart.",
-                },
-                {
-                    "question": "Din Docker container startar men du kan inte ansluta på port 8080. Vad kollar du först?",
-                    "options": [
-                        "docker images",
-                        "docker ps och kontrollera port-mapping",
-                        "docker volume ls",
-                        "docker network ls",
-                    ],
-                    "correct": 1,
-                    "explanation": "docker ps visar port-mappings. Kontrollera att -p 8080:80 är korrekt och att containern faktiskt kör.",
+                    "explanation": "enable skapar en symlink så att tjänsten startar automatiskt vid systemstart.",
                 },
             ],
         },
