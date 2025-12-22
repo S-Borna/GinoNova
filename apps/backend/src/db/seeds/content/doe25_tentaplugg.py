@@ -350,193 +350,411 @@ Utan att räkna i detalj - använd tabellen:
             "order_index": 2,
             "content": r"""# Filsystem & Grundkommandon
 
-## Linux Filsystemstruktur
+> **TL;DR:** Linux-filsystemet är som ett upp-och-ner-träd med `/` som rot. Lär dig var saker ligger, så hittar du config-filer och loggar utan att googla varje gång.
+
+---
+
+## Verkligt scenario: Din första dag som DevOps
+
+Du har precis SSH:at in på en produktionsserver. Nginx ger 502-fel.
+
+**Vad gör du?**
+
+1. Kolla loggarna: `/var/log/nginx/error.log`
+2. Kolla config: `/etc/nginx/nginx.conf`
+3. Kolla om tjänsten kör: `systemctl status nginx`
+
+Men hur visste du var filerna ligger? **Därför att Linux alltid organiserar saker på samma sätt.**
+
+---
+
+## Mental modell: Filsystemet är ett träd
+
+Tänk på ett upp-och-ner-träd:
+
+```
+                    /  (roten - allt börjar här)
+                    │
+    ┌───────┬───────┼───────┬───────┐
+    │       │       │       │       │
+   etc     var     home    opt     tmp
+    │       │       │
+ config   loggar  användare
+```
+
+**Varför detta spelar roll:**
+- Du behöver aldrig gissa var saker ligger
+- Alla Linux-system fungerar likadant
+- Felsökning blir systematiskt istället för slumpmässigt
+
+---
+
+## De viktiga mapparna - och VARFÖR
+
+### `/etc` - "Configuration Central"
 
 ```bash
-/           # Rot - allt börjar här
-/etc        # Konfigurationsfiler (passwd, shadow, ssh)
-/home       # Användarnas hemmakataloger
-/var        # Variabel data (loggar, cache, spool)
-/opt        # Tredjepartsprogram
-/tmp        # Temporära filer (rensas vid omstart)
-/bin        # Grundläggande binärer (ls, cp, mv)
-/sbin       # Systemadministration (fdisk, iptables)
-/usr        # Användarprogram och bibliotek
-/dev        # Enheter (hårddiskar, terminaler)
-/proc       # Processinformation (virtuellt)
-/root       # Root-användarens hemma
+/etc/passwd          # Alla användare (INTE lösenord!)
+/etc/shadow          # Krypterade lösenord (bara root)
+/etc/ssh/sshd_config # SSH-serverns config
+/etc/nginx/          # Nginx config
+/etc/hosts           # Lokal DNS-override
+```
+
+**DevOps-användning:** Nästan all server-konfiguration ligger här.
+
+### `/var` - "Saker som ändras"
+
+```bash
+/var/log/            # ALLA loggar
+/var/log/syslog      # Systemloggen
+/var/log/auth.log    # Inloggningsförsök
+/var/www/            # Webbserver-filer
+```
+
+**DevOps-användning:** Hit går du vid felsökning. Alltid.
+
+### `/home` - "Användarnas grejer"
+
+```bash
+/home/anna/          # Annas hem
+/home/anna/.bashrc   # Annas shell-config
+/home/anna/.ssh/     # Annas SSH-nycklar
+```
+
+**DevOps-användning:** Lägg INTE server-filer här. Använd `/opt` eller `/var/www`.
+
+### `/tmp` - "Tillfälligt"
+
+```bash
+/tmp/                # Rensas vid omstart!
+```
+
+**DevOps-varning:** Lägg ALDRIG viktigt här. Det försvinner.
+
+---
+
+## Navigering - så du inte går vilse
+
+### Grunderna
+
+```bash
+pwd                  # "Var är jag?" - Print Working Directory
+cd /var/log          # Gå till specifik plats
+cd ..                # Upp en nivå
+cd ~                 # Hem (samma som cd /home/dittnamn)
+cd -                 # Tillbaka till förra katalogen (supersmidigt!)
+```
+
+### Prova detta:
+
+```bash
+cd /var/log
+pwd                  # /var/log
+cd ..
+pwd                  # /var
+cd -
+pwd                  # /var/log (!)
+```
+
+> **Tips:** `cd -` är som "undo" för navigering. Pendla mellan två mappar snabbt!
+
+---
+
+## Lista filer: `ls` med superkrafter
+
+### Grundläggande
+
+```bash
+ls                   # Bara namn
+ls -l                # "Long" - alla detaljer
+ls -a                # Visa dolda (börjar med .)
+ls -la               # Kombinera!
+```
+
+### Läsa `ls -l` output:
+
+```
+-rw-r--r-- 1 anna devops 4096 Dec 20 10:30 config.txt
+│└──┬───┘    │     │      │        │         │
+│   │        │     │      │        │         └─ Filnamn
+│   │        │     │      │        └─ Datum
+│   │        │     │      └─ Storlek (bytes)
+│   │        │     └─ Grupp
+│   │        └─ Ägare
+│   └─ Permissions (mer om detta i Nod 5)
+└─ Typ (- = fil, d = katalog, l = länk)
+```
+
+### Pro-tips:
+
+```bash
+ls -lh               # Human readable (4.0K istället för 4096)
+ls -lt               # Sorterat efter tid (nyast först)
+ls -lS               # Sorterat efter storlek (störst först)
 ```
 
 ---
 
-## Navigering
-
-```bash
-pwd                     # Print Working Directory
-cd /path/to/dir         # Change Directory
-cd ..                   # Upp en nivå
-cd ~                    # Till hemma
-cd -                    # Till förra katalogen (smart!)
-
-ls                      # Lista filer
-ls -l                   # Long format (permissions, ägare, storlek)
-ls -a                   # Visa dolda filer (börjar med .)
-ls -la                  # Kombinera
-ls -lh                  # Human readable storlek
-ls -lt                  # Sortera efter tid
-ls -lS                  # Sortera efter storlek
-```
-
----
-
-## Fil- och kataloghantering
+## Skapa, kopiera, flytta, ta bort
 
 ### Skapa
 
 ```bash
-mkdir katalog           # Skapa katalog
-mkdir -p a/b/c          # Skapa med föräldrar
-touch fil.txt           # Skapa tom fil / uppdatera tidsstämpel
+touch fil.txt        # Skapa tom fil (eller uppdatera tidsstämpel)
+mkdir katalog        # Skapa katalog
+mkdir -p a/b/c       # Skapa hela kedjan om den inte finns
 ```
+
+**Varför `-p`?** Utan den får du fel om `a/` inte finns.
 
 ### Kopiera
 
 ```bash
-cp fil.txt kopia.txt    # Kopiera fil
-cp -r katalog/ backup/  # Kopiera rekursivt (VIKTIGT!)
-cp -p fil.txt backup/   # Behåll permissions
+cp fil.txt kopia.txt       # Kopiera fil
+cp -r katalog/ backup/     # Kopiera katalog (MÅSTE ha -r!)
 ```
 
-### Flytta/Byt namn
+> **Varning:** Utan `-r` kopieras bara själva katalog-entryn, inte innehållet!
+
+### Flytta / Byt namn
 
 ```bash
-mv gammal.txt ny.txt    # Byt namn
-mv fil.txt /path/to/    # Flytta
+mv gammal.txt ny.txt       # Byt namn
+mv fil.txt /annan/plats/   # Flytta
 ```
+
+**Notera:** `mv` gör båda - det finns inget separat "rename"-kommando.
 
 ### Ta bort
 
 ```bash
-rm fil.txt              # Ta bort fil
-rm -r katalog/          # Ta bort katalog rekursivt
-rm -rf katalog/         # Force, ingen fråga (FARLIGT!)
-rmdir tom_katalog       # Ta bort tom katalog
+rm fil.txt                 # Ta bort fil
+rm -r katalog/             # Ta bort katalog med innehåll
+rm -rf katalog/            # Force (frågar ej) - FARLIGT!
+```
+
+> **Varning:** `rm -rf /` raderar HELA systemet. Dubbelkolla alltid path:en!
+
+---
+
+## Sökning: find och grep
+
+### `find` - hitta FILER
+
+**Mental modell:** "Leta i filskåpet efter en mapp med visst namn"
+
+```bash
+find /var/log -name "*.log"          # Alla .log-filer
+find /home -type d -name "config"    # Kataloger som heter config
+find /tmp -size +100M                # Filer större än 100MB
+find /var -mtime -7                  # Ändrade senaste 7 dagarna
+```
+
+**Praktiskt exempel - rensa gamla loggar:**
+
+```bash
+find /var/log -name "*.log" -mtime +30 -delete
+```
+
+### `grep` - sök I filer
+
+**Mental modell:** "Sök i en boks TEXT efter ett ord"
+
+```bash
+grep "error" /var/log/syslog         # Hitta "error" i filen
+grep -r "password" /etc/             # Sök rekursivt i alla filer
+grep -i "error" fil.txt              # Case-insensitive
+grep -n "error" fil.txt              # Visa radnummer
+grep -v "debug" fil.txt              # Visa allt UTOM "debug"
+```
+
+**Praktiskt exempel - hitta misslyckade inloggningar:**
+
+```bash
+grep "Failed password" /var/log/auth.log
 ```
 
 ---
 
-## Sökning
+## Pipes och redirection: Kombinera kommandon
 
-### find - sök filer
+### Pipes: Skicka output vidare
 
-```bash
-find /path -name "*.txt"              # Efter namn
-find /path -type f                    # Endast filer
-find /path -type d                    # Endast kataloger
-find /path -size +100M                # Större än 100MB
-find /path -mtime -7                  # Ändrade senaste 7 dagar
-find /path -user root                 # Ägs av root
-find /path -perm 755                  # Med permissions 755
-find /path -name "*.log" -delete      # Hitta och ta bort
-find /path -exec ls -l {} \;          # Kör kommando på resultat
+```
+kommando1 | kommando2 | kommando3
+    │           │           │
+    └───────────┴───────────┘
+    Output blir nästa kommandos input
 ```
 
-### grep - sök i filer
+**Exempel:**
 
 ```bash
-grep "sökord" fil.txt                 # Sök i fil
-grep -r "sökord" /path/               # Rekursivt i katalog
-grep -i "sökord" fil.txt              # Case insensitive
-grep -n "sökord" fil.txt              # Visa radnummer
-grep -v "sökord" fil.txt              # Invertera (visa EJ matchande)
-grep -c "sökord" fil.txt              # Räkna matchningar
-grep -E "regex" fil.txt               # Extended regex (egrep)
+cat /var/log/syslog | grep "error" | head -20
+│                       │              │
+│                       │              └─ Visa bara första 20
+│                       └─ Filtrera på "error"
+└─ Läs filen
 ```
+
+### Redirection: Spara till fil
+
+```bash
+echo "text" > fil.txt    # Skriv (SKRIVER ÖVER!)
+echo "mer" >> fil.txt    # Lägg till
+kommando 2> error.log    # Spara bara errors
+kommando &> allt.log     # Spara allt (stdout + stderr)
+kommando > /dev/null     # Kasta output (tyst läge)
+```
+
+**Verkligt exempel - spara alla fel:**
+
+```bash
+./deploy.sh > deploy.log 2>&1
+```
+
+Detta sparar BÅDE vanlig output OCH fel till samma fil.
 
 ---
 
-## Visa filinnehåll
+## Läsa filer: cat, head, tail, less
 
 ```bash
-cat fil.txt             # Visa hela filen
-head fil.txt            # Första 10 rader
-head -n 20 fil.txt      # Första 20 rader
-tail fil.txt            # Sista 10 rader
-tail -n 20 fil.txt      # Sista 20 rader
-tail -f fil.txt         # Följ filen i realtid (loggar!)
-less fil.txt            # Bläddra (q för quit, / för sök)
+cat fil.txt              # Visa allt (dåligt för stora filer)
+head -20 fil.txt         # Första 20 raderna
+tail -20 fil.txt         # Sista 20 raderna
+tail -f /var/log/syslog  # FÖLJ filen live (ctrl+c för att avsluta)
+less fil.txt             # Bläddra (q=quit, /=sök, n=nästa träff)
 ```
 
----
-
-## Pipes och Redirection
-
-### Pipes - skicka output till nästa kommando
-
-```bash
-ls -l | grep ".txt"     # Lista, filtrera på .txt
-cat fil | sort | uniq   # Visa, sortera, ta bort dubletter
-ps aux | grep nginx     # Hitta nginx-processer
-```
-
-### Redirection
-
-```bash
-echo "text" > fil.txt   # Skriv till fil (skriver över!)
-echo "text" >> fil.txt  # Lägg till i fil
-kommando 2> error.log   # Stderr till fil
-kommando &> all.log     # Både stdout och stderr
-kommando 2>&1           # Stderr till stdout
-kommando > /dev/null    # Kasta output
-kommando 2>/dev/null    # Kasta errors
-```
+> **Tips:** `tail -f` är DIN BÄSTA VÄN vid felsökning. Kör den i en terminal medan du testar i en annan!
 
 ---
 
 ## Arkivering med tar
 
+### Minnesregel: **C**reate e**X**tract **T**able
+
 ```bash
-# Skapa arkiv
-tar -cvf arkiv.tar katalog/           # Create, Verbose, File
-tar -czvf arkiv.tar.gz katalog/       # Med gzip-komprimering
-tar -cjvf arkiv.tar.bz2 katalog/      # Med bzip2-komprimering
+# SKAPA arkiv
+tar -cvf backup.tar katalog/        # Create Verbose File
+tar -czvf backup.tar.gz katalog/    # Med gzip-komprimering
 
-# Extrahera
-tar -xvf arkiv.tar                    # Extract
-tar -xzvf arkiv.tar.gz                # Extrahera gzip
-tar -xzvf arkiv.tar.gz -C /path/      # Till specifik katalog
+# EXTRAHERA
+tar -xvf backup.tar                 # Extract
+tar -xzvf backup.tar.gz             # Extrahera gzip
+tar -xzvf backup.tar.gz -C /mål/    # Till specifik plats
 
-# Visa innehåll
-tar -tzvf arkiv.tar.gz                # Lista innehåll
+# VISA innehåll (utan att extrahera)
+tar -tvf backup.tar                 # Table (lista)
 ```
 
-**Viktiga flaggor:** c=create, x=extract, t=list, v=verbose, f=file, z=gzip, p=preserve
+**Flaggorna:**
+- `c` = Create
+- `x` = eXtract  
+- `t` = Table (visa)
+- `v` = Verbose
+- `f` = File (måste vara sist före filnamn!)
+- `z` = gzip
 
 ---
 
 ## Diskutrymme
 
 ```bash
-df -h                   # Disk Free - visa partitioner
-du -sh katalog/         # Disk Usage - katalogstorlek
-du -sh *                # Storlek på allt i nuvarande katalog
-du -h --max-depth=1     # En nivå djupt
+df -h                    # Visa partitioner och hur fulla de är
+du -sh /var/log          # Hur stor är denna mapp?
+du -sh *                 # Storlek på allt i nuvarande katalog
 ```
+
+**Praktiskt:** När disken är full, hitta bovarna:
+
+```bash
+du -sh /var/* | sort -h | tail -10
+```
+
+---
+
+## Övning 1: Navigering och sökning
+
+**Scenario:** Du ska hitta alla misslyckade SSH-inloggningar på en server.
+
+**Uppgift:**
+1. Vilken fil ska du söka i?
+2. Skriv kommandot för att hitta rader med "Failed password"
+3. Visa bara de 10 senaste
+
+.
+
+.
+
+.
+
+### Lösning:
+
+```bash
+# 1. Filen är /var/log/auth.log (på Debian/Ubuntu)
+#    eller /var/log/secure (på CentOS/RHEL)
+
+# 2-3. Kombinerat:
+grep "Failed password" /var/log/auth.log | tail -10
+```
+
+---
+
+## Övning 2: Backup och restore
+
+**Scenario:** Du ska ta backup på `/etc/nginx/` innan du ändrar config.
+
+**Uppgift:**
+1. Skapa komprimerad backup med tidsstämpel
+2. Lista innehållet utan att extrahera
+
+.
+
+.
+
+.
+
+### Lösning:
+
+```bash
+# 1. Skapa backup
+tar -czvf nginx-backup-$(date +%Y%m%d).tar.gz /etc/nginx/
+
+# 2. Verifiera innehåll
+tar -tzvf nginx-backup-*.tar.gz
+```
+
+---
+
+## Vanliga misstag på tentan
+
+| Misstag | Varför det är fel | Rätt sätt |
+|---------|-------------------|-----------|
+| `cp -r` glöms | Kopierar bara katalog-entry, inte innehåll | `cp -r katalog/ backup/` |
+| `rm -rf /var/log` | Kan radera för mycket | `rm -rf /var/log/*.old` (var specifik) |
+| Blandar `find` och `grep` | `find` hittar filer, `grep` söker i text | Välj rätt verktyg |
+| `>` vs `>>` | `>` skriver över! | Använd `>>` för att lägga till |
+| Glömmer `/` i path | `cd var` funkar bara om du är i `/` | `cd /var` med absolut path |
 
 ---
 
 ## Snabbreferens
 
-| Uppgift | Kommando |
-|---------|----------|
+| Behov | Kommando |
+|-------|----------|
 | Var är jag? | `pwd` |
-| Lista allt | `ls -lah` |
+| Lista med detaljer | `ls -lah` |
 | Kopiera mapp | `cp -r källa/ mål/` |
-| Ta bort mapp | `rm -rf katalog/` |
 | Hitta filer | `find /path -name "*.txt"` |
-| Sök i filer | `grep -r "text" /path/` |
-| Följ logg | `tail -f /var/log/syslog` |
-| Kolla disk | `df -h` |
+| Sök i filer | `grep "text" fil` |
+| Sök rekursivt | `grep -r "text" /path/` |
+| Följ logg live | `tail -f /var/log/syslog` |
+| Skapa backup | `tar -czvf backup.tar.gz /path/` |
+| Kolla diskutrymme | `df -h` |
+| Mappstorlek | `du -sh /path/` |
 
 """,
             "quiz": [
