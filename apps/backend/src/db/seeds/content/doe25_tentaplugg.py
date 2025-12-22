@@ -19,157 +19,296 @@ MODULE = {
         {
             "title": "Subnetting & Nätverk",
             "slug": "subnetting-natverk",
-            "description": "Binärmetoden (lådmetoden) för att räkna ut subnät, Network ID, Broadcast och hosts.",
+            "description": "Förstå hur IP-adresser delas upp i nätverk - med lådmetoden som fungerar varje gång.",
             "difficulty": "medium",
             "estimated_minutes": 45,
             "xp_reward": 100,
             "order_index": 1,
             "content": r"""# Subnetting & Nätverk
 
-## Varför viktigt för tentan?
-
-Subnetting är ett av de vanligaste ämnena på tentan. Du MÅSTE kunna räkna ut:
-- Network ID
-- Broadcast-adress
-- First/Last Host
-- Antal hosts i ett subnät
+> **TL;DR:** En IP-adress är som en postadress - en del säger vilken gata (nätverket), en del säger vilket hus (hosten). Subnetting handlar om att räkna ut var gränsen går.
 
 ---
 
-## Binärmetoden (Lådmetoden)
+## Varför behöver du kunna detta?
 
-### De 8 binära lådorna (en oktett)
+Tänk dig att du jobbar som DevOps och får i uppgift att sätta upp 50 servrar. Din chef säger:
 
-```
-128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
-```
+*"Vi har fått nätverket 10.0.0.0/24. Dela upp det i 4 separata segment - ett för webservrar, ett för databaser, ett för monitoring och ett för backup."*
 
-Varje position representerar en potens av 2. Tillsammans blir det 255 (maxvärde för en oktett).
+Utan subnetting-kunskaper stirrar du bara på skärmen. Med det kan du direkt säga:
+
+- Webservrar: 10.0.0.0/26 (62 adresser)
+- Databaser: 10.0.0.64/26 (62 adresser)
+- Monitoring: 10.0.0.128/26 (62 adresser)
+- Backup: 10.0.0.192/26 (62 adresser)
+
+**Det kommer frågor på detta på tentan. Garanterat.**
 
 ---
 
-## Steg-för-steg: Räkna ut subnät
+## Den mentala modellen: Gatan och husnumret
 
-### Exempel: 46.84.126.147/28
-
-**Steg 1: Beräkna host-lådor**
-
-```bash
-32 - prefix = antal host-lådor
-32 - 28 = 4 host-lådor
-```
-
-**Steg 2: Markera N (nät) och H (host)**
+Tänk på en IP-adress som en svensk postadress:
 
 ```
-| 128 | 64 | 32 | 16 | 8 | 4 | 2 | 1 |
-   N    N    N    N  | H   H   H   H
+Kungsgatan 147, Stockholm
+└─────────┘ └─┘
+  GATA     HUS
 ```
 
-De första 4 lådorna = Nät (N)
-De sista 4 lådorna = Host (H)
+En IP-adress fungerar likadant:
 
-**Steg 3: Konvertera 147 till binärt**
-
-```bash
-147 = 128 + 16 + 2 + 1
-    = 1 0 0 1 | 0 0 1 1
+```
+192.168.1.147/24
+└───────┘ └─┘
+ NÄTVERK  HOST
 ```
 
-**Steg 4: Beräkna Network ID**
+**/24 säger:** "De första 24 bitarna är gatunamnet, resten är husnumret."
 
-Behåll N-lådorna, sätt H-lådorna till 0:
+Alla på samma gata (nätverk) kan prata med varandra direkt. För att nå en annan gata behöver du en router (som en buss mellan stadsdelar).
 
-```bash
-1 0 0 1 | 0 0 0 0 = 128 + 16 = 144
+---
+
+## Lådmetoden - din bästa vän på tentan
+
+Istället för att räkna med binära tal i huvudet, använder vi **lådor**. Varje oktett (de fyra talen i en IP) har 8 lådor:
+
+```
+┌─────┬────┬────┬────┬───┬───┬───┬───┐
+│ 128 │ 64 │ 32 │ 16 │ 8 │ 4 │ 2 │ 1 │
+└─────┴────┴────┴────┴───┴───┴───┴───┘
+```
+
+> **Tips:** Memorera dessa värden - 128, 64, 32, 16, 8, 4, 2, 1. De kommer ALLTID i denna ordning.
+
+---
+
+## Steg-för-steg: Räkna ut 46.84.126.147/28
+
+Låt oss gå igenom ett helt exempel, långsamt.
+
+### Steg 1: Hur många bitar till host?
+
+```
+32 - prefix = host-bitar
+32 - 28 = 4 bitar till host
+```
+
+**Varför 32?** En IPv4-adress har alltid 32 bitar totalt.
+
+### Steg 2: Rita upp lådorna och markera
+
+Vi har 4 host-bitar, så vi markerar de **sista 4** lådorna som H (host):
+
+```
+┌─────┬────┬────┬────┬───┬───┬───┬───┐
+│ 128 │ 64 │ 32 │ 16 │ 8 │ 4 │ 2 │ 1 │
+├─────┼────┼────┼────┼───┼───┼───┼───┤
+│  N  │ N  │ N  │ N  │ H │ H │ H │ H │
+└─────┴────┴────┴────┴───┴───┴───┴───┘
+         NÄTVERK      │    HOST
+                      └─ gränsen!
+```
+
+**N** = Nätverksdelen (låst, identifierar nätverket)
+**H** = Hostdelen (varierar, identifierar enheter)
+
+### Steg 3: Konvertera 147 till lådorna
+
+Vi ska fylla lådorna så summan blir 147:
+
+```
+147 = 128 + ?
+147 - 128 = 19 kvar
+
+19 = 16 + ?
+19 - 16 = 3 kvar
+
+3 = 2 + 1 ✓
+```
+
+Så vi sätter 1:or i lådorna 128, 16, 2 och 1:
+
+```
+┌─────┬────┬────┬────┬───┬───┬───┬───┐
+│ 128 │ 64 │ 32 │ 16 │ 8 │ 4 │ 2 │ 1 │
+├─────┼────┼────┼────┼───┼───┼───┼───┤
+│  1  │ 0  │ 0  │ 1  │ 0 │ 0 │ 1 │ 1 │ = 147 ✓
+└─────┴────┴────┴────┴───┴───┴───┴───┘
+```
+
+### Steg 4: Hitta Network ID
+
+> **Viktigt:** Network ID = sätt alla host-bitar till 0
+
+```
+┌─────┬────┬────┬────┬───┬───┬───┬───┐
+│ 128 │ 64 │ 32 │ 16 │ 8 │ 4 │ 2 │ 1 │
+├─────┼────┼────┼────┼───┼───┼───┼───┤
+│  1  │ 0  │ 0  │ 1  │ 0 │ 0 │ 0 │ 0 │  ← host-bitar nollade
+└─────┴────┴────┴────┴───┴───┴───┴───┘
+         BEHÅLL       │   NOLLAT
+
+128 + 16 = 144
 ```
 
 **Network ID = 46.84.126.144**
 
-**Steg 5: Beräkna Broadcast**
+### Steg 5: Hitta Broadcast
 
-Behåll N-lådorna, sätt H-lådorna till 1:
+> **Viktigt:** Broadcast = sätt alla host-bitar till 1
 
-```bash
-1 0 0 1 | 1 1 1 1 = 128 + 16 + 8 + 4 + 2 + 1 = 159
+```
+┌─────┬────┬────┬────┬───┬───┬───┬───┐
+│ 128 │ 64 │ 32 │ 16 │ 8 │ 4 │ 2 │ 1 │
+├─────┼────┼────┼────┼───┼───┼───┼───┤
+│  1  │ 0  │ 0  │ 1  │ 1 │ 1 │ 1 │ 1 │  ← host-bitar maxade
+└─────┴────┴────┴────┴───┴───┴───┴───┘
+         BEHÅLL       │   ETTOR
+
+128 + 16 + 8 + 4 + 2 + 1 = 159
 ```
 
 **Broadcast = 46.84.126.159**
 
-**Steg 6: First Host, Last Host, Next Subnet**
+### Steg 6: First Host, Last Host, Next Subnet
 
-```bash
-First Host  = Network + 1     = 144 + 1 = 145
-Last Host   = Broadcast - 1   = 159 - 1 = 158
-Next Subnet = Broadcast + 1   = 159 + 1 = 160
+Det här är enkelt när du har Network och Broadcast:
+
+| Vad | Formel | Resultat |
+|-----|--------|----------|
+| First Host | Network + 1 | 144 + 1 = **145** |
+| Last Host | Broadcast - 1 | 159 - 1 = **158** |
+| Next Subnet | Broadcast + 1 | 159 + 1 = **160** |
+
+> **Varför +1 och -1?** Network-adressen och Broadcast-adressen kan inte användas av enheter. Network ID identifierar nätverket själv, Broadcast används för att skicka till alla.
+
+---
+
+## Komplett svar för 46.84.126.147/28
+
+| Fråga | Svar |
+|-------|------|
+| Network ID | 46.84.126.**144** |
+| First Host | 46.84.126.**145** |
+| Last Host | 46.84.126.**158** |
+| Broadcast | 46.84.126.**159** |
+| Next Subnet | 46.84.126.**160** |
+| Antal hosts | 2^4 - 2 = **14** |
+
+---
+
+## Vanliga prefix - memorera detta!
+
+| Prefix | Host-bitar | Adresser | Användbara hosts |
+|--------|-----------|----------|------------------|
+| /24 | 8 | 256 | 254 |
+| /25 | 7 | 128 | 126 |
+| /26 | 6 | 64 | 62 |
+| /27 | 5 | 32 | 30 |
+| /28 | 4 | 16 | 14 |
+| /29 | 3 | 8 | 6 |
+| /30 | 2 | 4 | 2 |
+
+> **Tips:** /30 med bara 2 hosts används för punkt-till-punkt-länkar mellan routrar.
+
+---
+
+## Övning 1: Gör själv (med facit)
+
+**Uppgift:** Räkna ut allt för **192.168.1.67/26**
+
+Försök själv först, scrolla sedan ner för facit.
+
+.
+
+.
+
+.
+
+.
+
+### Lösning:
+
+**Steg 1:** Host-bitar = 32 - 26 = **6 bitar**
+
+**Steg 2:** Lådor med 6 host-bitar markerade:
+
+```
+┌─────┬────┬────┬────┬───┬───┬───┬───┐
+│ 128 │ 64 │ 32 │ 16 │ 8 │ 4 │ 2 │ 1 │
+├─────┼────┼────┼────┼───┼───┼───┼───┤
+│  N  │ N  │ H  │ H  │ H │ H │ H │ H │
+└─────┴────┴────┴────┴───┴───┴───┴───┘
 ```
 
----
+**Steg 3:** 67 i binärt:
 
-## Sammanfattning för 46.84.126.147/28
-
-| Egenskap | Värde |
-|----------|-------|
-| Network | 46.84.126.144 |
-| First Host | 46.84.126.145 |
-| Last Host | 46.84.126.158 |
-| Broadcast | 46.84.126.159 |
-| Next Subnet | 46.84.126.160 |
-
----
-
-## Vanliga prefix och antal hosts
-
-| Prefix | Adresser | Hosts | Användning |
-|--------|----------|-------|------------|
-| /24 | 256 | 254 | Klass C - standard |
-| /25 | 128 | 126 | Halvt C-nät |
-| /26 | 64 | 62 | Kvarts C-nät |
-| /27 | 32 | 30 | Litet nätverk |
-| /28 | 16 | 14 | Mycket litet |
-| /29 | 8 | 6 | Litet segment |
-| /30 | 4 | 2 | Punkt-till-punkt |
-
----
-
-## Formel: Antal hosts
-
-```bash
-Antal hosts = 2^(32-prefix) - 2
+```
+67 = 64 + 2 + 1 = 01000011
 ```
 
-Exempel /28:
-```bash
-2^(32-28) - 2 = 2^4 - 2 = 16 - 2 = 14 hosts
+**Steg 4:** Network ID (nolla host-bitar):
+
 ```
+01 | 000000 → 01000000 = 64
+```
+
+**Steg 5:** Broadcast (maxa host-bitar):
+
+```
+01 | 111111 → 01111111 = 127
+```
+
+**Svar:**
+
+| Fråga | Svar |
+|-------|------|
+| Network ID | 192.168.1.**64** |
+| First Host | 192.168.1.**65** |
+| Last Host | 192.168.1.**126** |
+| Broadcast | 192.168.1.**127** |
+| Antal hosts | 2^6 - 2 = **62** |
 
 ---
 
-## Övning: Räkna själv
+## Övning 2: Snabbfrågor
 
-**192.168.1.67/26**
+Utan att räkna i detalj - använd tabellen:
 
-```bash
-1. Host-lådor: 32 - 26 = 6
-2. Markering: NN | HHHHHH
-3. 67 i binärt: 01000011
-4. Network: 01000000 = 64
-5. Broadcast: 01111111 = 127
-6. First: 65, Last: 126, Next: 128
-```
+1. **/27 - hur många hosts?** → 30
+2. **/24 - hur många hosts?** → 254
+3. **192.168.0.0/24 - vad är broadcast?** → 192.168.0.255 (alla host-bitar = 1)
 
 ---
 
-## Snabbreferens
+## Vanliga misstag på tentan
 
-| Uppgift | Metod |
-|---------|-------|
-| Host-bitar | 32 - prefix |
-| Network ID | Nolla alla host-bitar |
-| Broadcast | Ettställ alla host-bitar |
-| First host | Network + 1 |
-| Last host | Broadcast - 1 |
-| Antal hosts | 2^host-bitar - 2 |
+> **Varning:** Dessa fel kostar poäng varje år!
+
+| Misstag | Problem | Rätt |
+|---------|---------|------|
+| Glömmer -2 | Skriver 16 hosts för /28 | 16 - 2 = **14** hosts |
+| Fel oktett | Ändrar fel del av IP:n | Titta på var /XX landar |
+| Blandar N och H | Nollar fel bitar | N = nätverket (behåll), H = host (ändra) |
+| First = Network | Skriver .144 som first host | First = Network **+ 1** |
+
+---
+
+## Snabbreferens för tentan
+
+```
+1. Host-bitar = 32 - prefix
+2. Rita lådorna: 128|64|32|16|8|4|2|1
+3. Markera de sista X som H (host)
+4. Network = nolla alla H
+5. Broadcast = ettställ alla H
+6. First = Network + 1
+7. Last = Broadcast - 1
+8. Hosts = 2^(host-bitar) - 2
+```
 
 """,
             "quiz": [
