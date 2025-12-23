@@ -17,6 +17,15 @@ from src.db.seeds.content import get_all_modules
 # Hämta moduler vid import
 ALL_MODULES = get_all_modules()
 
+# Import manuellt skapad studydata för tentaplugg-moduler
+try:
+    from src.db.seeds.study_data.tentaplugg_linux_study import TENTAPLUGG_LINUX_STUDY
+    MANUAL_STUDY_DATA = {
+        "tentaplugg-linux": TENTAPLUGG_LINUX_STUDY
+    }
+except ImportError:
+    MANUAL_STUDY_DATA = {}
+
 
 # =============================================================================
 # MODULE REGISTRY - Mappar slug till modul-data
@@ -49,7 +58,11 @@ def get_all_v3_modules() -> List[str]:
         "cicd-mastery",
         "aws-mastery",
     ]
-    return [slug for slug in v3_slugs if slug in MODULE_REGISTRY]
+    # Lägg till manuellt skapade studydata-moduler
+    manual_slugs = list(MANUAL_STUDY_DATA.keys())
+    all_slugs = [slug for slug in v3_slugs if slug in MODULE_REGISTRY]
+    all_slugs.extend(manual_slugs)
+    return all_slugs
 
 
 # =============================================================================
@@ -271,9 +284,67 @@ def generate_study_data_for_module(module_slug: str) -> Optional[Dict[str, Any]]
 def get_v3_study_data(module_slug: str) -> Optional[Dict[str, Any]]:
     """
     Hämta studydata för en modul.
-    Genererar dynamiskt från V3-innehåll.
+    Prioriterar manuellt skapad studydata, annars genererar dynamiskt.
     """
+    # Kolla först om vi har manuellt skapad studydata
+    if module_slug in MANUAL_STUDY_DATA:
+        manual_data = MANUAL_STUDY_DATA[module_slug]
+        # Transformera till format som study.py förväntar sig
+        return {
+            "module_slug": manual_data.get("module_slug", module_slug),
+            "module_title": manual_data.get("module_title", module_slug),
+            "module_description": manual_data.get("module_description", ""),
+            "icon": manual_data.get("icon", "BookOpen"),
+            "flashcards": _transform_manual_flashcards(manual_data),
+            "quiz": _transform_manual_quiz(manual_data),
+            "nodes": manual_data.get("nodes", {}),
+            "source": "manual_study_data"
+        }
+
+    # Annars generera dynamiskt från V3-modulinnehåll
     return generate_study_data_for_module(module_slug)
+
+
+def _transform_manual_flashcards(data: Dict) -> Dict[str, List]:
+    """Transformerar manuellt skapade flashcards till rätt format"""
+    all_flashcards = {"easy": [], "medium": [], "hard": []}
+
+    nodes = data.get("nodes", {})
+    for node_slug, node_data in nodes.items():
+        flashcards = node_data.get("flashcards", {})
+        title = node_data.get("title", node_slug)
+
+        for difficulty in ["easy", "medium", "hard"]:
+            for fc in flashcards.get(difficulty, []):
+                all_flashcards[difficulty].append({
+                    "front": fc.get("front", ""),
+                    "back": fc.get("back", ""),
+                    "source": title
+                })
+
+    return all_flashcards
+
+
+def _transform_manual_quiz(data: Dict) -> Dict[str, List]:
+    """Transformerar manuellt skapade quiz till rätt format"""
+    all_quiz = {"easy": [], "medium": [], "hard": []}
+
+    nodes = data.get("nodes", {})
+    for node_slug, node_data in nodes.items():
+        quiz = node_data.get("quiz", {})
+        title = node_data.get("title", node_slug)
+
+        for difficulty in ["easy", "medium", "hard"]:
+            for q in quiz.get(difficulty, []):
+                all_quiz[difficulty].append({
+                    "question": q.get("question", ""),
+                    "options": q.get("options", []),
+                    "correct": q.get("correct", 0),
+                    "explanation": q.get("explanation", ""),
+                    "source": title
+                })
+
+    return all_quiz
 
 
 def get_v3_study_modules() -> List[str]:
@@ -295,6 +366,7 @@ ICON_MAP = {
     "ansible-mastery": "Server",
     "cicd-mastery": "GitBranch",
     "aws-mastery": "Cloud",
+    "tentaplugg-linux": "GraduationCap",
 }
 
 

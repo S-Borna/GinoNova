@@ -732,28 +732,3 @@ esac
     ]
 }
 
-# =============================================================================
-# FLASHCARDS för study_data
-# =============================================================================
-VILLKOR_FLASHCARDS = [
-    {"front": "if-sats syntax?", "back": "if [ villkor ]; then ... fi"},
-    {"front": "-eq testar?", "back": "Nummer är LIKA (equal)"},
-    {"front": "-ne testar?", "back": "Nummer är INTE lika (not equal)"},
-    {"front": "-lt testar?", "back": "Nummer är MINDRE (less than)"},
-    {"front": "-gt testar?", "back": "Nummer är STÖRRE (greater than)"},
-    {"front": "-le testar?", "back": "Nummer är MINDRE ELLER LIKA"},
-    {"front": "-ge testar?", "back": "Nummer är STÖRRE ELLER LIKA"},
-    {"front": "-z \"$var\" testar?", "back": "Om variabeln är TOM (zero)"},
-    {"front": "-n \"$var\" testar?", "back": "Om variabeln INTE är tom (non-zero)"},
-    {"front": "-e fil testar?", "back": "Om filen/katalogen EXISTS (finns)"},
-    {"front": "-f fil testar?", "back": "Om det är en vanlig FIL"},
-    {"front": "-d sökväg testar?", "back": "Om det är en DIRECTORY (katalog)"},
-    {"front": "-r fil testar?", "back": "Om filen är READABLE (läsbar)"},
-    {"front": "-w fil testar?", "back": "Om filen är WRITABLE (skrivbar)"},
-    {"front": "-x fil testar?", "back": "Om filen är EXECUTABLE (körbar)"},
-    {"front": "[ ] vs [[ ]]?", "back": "[ ] = POSIX, [[ ]] = Bash (kraftfullare)"},
-    {"front": "case avslutas med?", "back": "esac (case baklänges)"},
-    {"front": "Varje case-gren avslutas?", "back": ";;"},
-    {"front": "Wildcard i case?", "back": "*) för default"},
-    {"front": "Kolla om root?", "back": "[[ \"$EUID\" -ne 0 ]]"},
-]

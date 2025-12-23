@@ -14,33 +14,33 @@ STRUKTUR:
 # =============================================================================
 
 # MODUL 1: BASH
-from .nod_bash_grunder import BASH_GRUNDER_NODE, BASH_GRUNDER_FLASHCARDS
-from .nod_variabler_quoting import VARIABLER_QUOTING_NODE, VARIABLER_QUOTING_FLASHCARDS
-from .nod_regex import REGEX_NODE, REGEX_FLASHCARDS
-from .nod_sed import SED_NODE, SED_FLASHCARDS
-from .nod_awk import AWK_NODE, AWK_FLASHCARDS
-from .nod_villkor import VILLKOR_NODE, VILLKOR_FLASHCARDS
-from .nod_interaktiva_skript import INTERAKTIVA_SKRIPT_NODE, INTERAKTIVA_SKRIPT_FLASHCARDS
-from .nod_loopar import LOOPAR_NODE, LOOPAR_FLASHCARDS
-from .nod_parametrar_arrays import PARAMETRAR_ARRAYS_NODE, PARAMETRAR_ARRAYS_FLASHCARDS
-from .nod_funktioner import FUNKTIONER_NODE, FUNKTIONER_FLASHCARDS
-from .nod_signals_traps import SIGNALS_TRAPS_NODE, SIGNALS_TRAPS_FLASHCARDS
+from .nod_bash_grunder import BASH_GRUNDER_NODE
+from .nod_variabler_quoting import VARIABLER_QUOTING_NODE
+from .nod_regex import REGEX_NODE
+from .nod_sed import SED_NODE
+from .nod_awk import AWK_NODE
+from .nod_villkor import VILLKOR_NODE
+from .nod_interaktiva_skript import INTERAKTIVA_SKRIPT_NODE
+from .nod_loopar import LOOPAR_NODE
+from .nod_parametrar_arrays import PARAMETRAR_ARRAYS_NODE
+from .nod_funktioner import FUNKTIONER_NODE
+from .nod_signals_traps import SIGNALS_TRAPS_NODE
 
 # MODUL 2: LINUX SYSTEM
-from .nod_users_groups import USERS_GROUPS_NODE, USERS_GROUPS_FLASHCARDS
-from .nod_permissions import PERMISSIONS_NODE, PERMISSIONS_FLASHCARDS
-from .nod_ssh_hardening import SSH_HARDENING_NODE, SSH_HARDENING_FLASHCARDS
-from .nod_ufw import UFW_NODE, UFW_FLASHCARDS
-from .nod_firewalld import FIREWALLD_NODE, FIREWALLD_FLASHCARDS
-from .nod_lagring import LAGRING_NODE, LAGRING_FLASHCARDS
-from .nod_backup_tar import BACKUP_TAR_NODE, BACKUP_TAR_FLASHCARDS
-from .nod_systemd import SYSTEMD_NODE, SYSTEMD_FLASHCARDS
+from .nod_users_groups import USERS_GROUPS_NODE
+from .nod_permissions import PERMISSIONS_NODE
+from .nod_ssh_hardening import SSH_HARDENING_NODE
+from .nod_ufw import UFW_NODE
+from .nod_firewalld import FIREWALLD_NODE
+from .nod_lagring import LAGRING_NODE
+from .nod_backup_tar import BACKUP_TAR_NODE
+from .nod_systemd import SYSTEMD_NODE
 
 # MODUL 3: DEVOPS
-from .nod_docker_grunder import DOCKER_GRUNDER_NODE, DOCKER_GRUNDER_FLASHCARDS
-from .nod_docker_images import DOCKER_IMAGES_NODE, DOCKER_IMAGES_FLASHCARDS
-from .nod_docker_compose import DOCKER_COMPOSE_NODE, DOCKER_COMPOSE_FLASHCARDS
-from .nod_git_basics import GIT_BASICS_NODE, GIT_BASICS_FLASHCARDS
+from .nod_docker_grunder import DOCKER_GRUNDER_NODE
+from .nod_docker_images import DOCKER_IMAGES_NODE
+from .nod_docker_compose import DOCKER_COMPOSE_NODE
+from .nod_git_basics import GIT_BASICS_NODE
 
 
 # =============================================================================
@@ -277,109 +277,7 @@ Det här är enkelt när du har Network och Broadcast:
 | /28 ger hur många hosts? | 14 |
 | /30 används för? | Punkt-till-punkt-länkar |
 
-""",
-    "quiz": [
-        {
-            "question": "Vad är Network ID för 192.168.1.100/26?",
-            "options": [
-                "192.168.1.0",
-                "192.168.1.64",
-                "192.168.1.96",
-                "192.168.1.128",
-            ],
-            "correct": 1,
-            "explanation": "Med /26 har vi 6 host-bitar. 100 i binärt är 01100100. Nollställ de 6 sista bitarna: 01000000 = 64.",
-        },
-        {
-            "question": "Hur många hosts ryms i ett /28-nätverk?",
-            "options": ["16", "14", "30", "62"],
-            "correct": 1,
-            "explanation": "2^(32-28) - 2 = 2^4 - 2 = 16 - 2 = 14 hosts.",
-        },
-        {
-            "question": "Vad är Broadcast-adressen för 10.0.0.50/29?",
-            "options": ["10.0.0.55", "10.0.0.63", "10.0.0.48", "10.0.0.56"],
-            "correct": 0,
-            "explanation": "/29 ger 3 host-bitar. Network är 10.0.0.48, Broadcast är 10.0.0.55 (alla host-bitar = 1).",
-        },
-        {
-            "question": "Hur beräknas antal host-bitar?",
-            "options": [
-                "32 + prefix",
-                "32 - prefix",
-                "prefix - 32",
-                "prefix / 4"
-            ],
-            "correct": 1,
-            "explanation": "Host-bitar = 32 - prefix. För /28: 32 - 28 = 4 host-bitar."
-        },
-        {
-            "question": "Vad är First Host för nätverket 172.16.0.0/24?",
-            "options": [
-                "172.16.0.0",
-                "172.16.0.1",
-                "172.16.0.254",
-                "172.16.0.255"
-            ],
-            "correct": 1,
-            "explanation": "First Host = Network ID + 1. Network ID är 172.16.0.0, så First Host = 172.16.0.1."
-        },
-        {
-            "question": "Vilken typ av adress är 192.168.1.255 i ett /24-nätverk?",
-            "options": [
-                "Network ID",
-                "First Host",
-                "Last Host",
-                "Broadcast"
-            ],
-            "correct": 3,
-            "explanation": "I ett /24-nätverk är .255 alltid broadcast-adressen (alla host-bitar = 1)."
-        },
-        {
-            "question": "Hur många användbara hosts finns i ett /30-nätverk?",
-            "options": [
-                "4",
-                "2",
-                "6",
-                "0"
-            ],
-            "correct": 1,
-            "explanation": "2^2 - 2 = 4 - 2 = 2 hosts. /30 används för punkt-till-punkt-länkar."
-        },
-        {
-            "question": "Vad är lådmetodens värden i ordning?",
-            "options": [
-                "1, 2, 4, 8, 16, 32, 64, 128",
-                "128, 64, 32, 16, 8, 4, 2, 1",
-                "256, 128, 64, 32, 16, 8, 4, 2",
-                "64, 32, 16, 8, 4, 2, 1, 0"
-            ],
-            "correct": 1,
-            "explanation": "Lådmetodens värden är 128, 64, 32, 16, 8, 4, 2, 1 - från MSB till LSB."
-        },
-        {
-            "question": "Om Network ID är 10.0.0.64 och Broadcast är 10.0.0.127, vad är Last Host?",
-            "options": [
-                "10.0.0.64",
-                "10.0.0.65",
-                "10.0.0.126",
-                "10.0.0.127"
-            ],
-            "correct": 2,
-            "explanation": "Last Host = Broadcast - 1. 10.0.0.127 - 1 = 10.0.0.126."
-        },
-        {
-            "question": "Varför subtraherar man 2 från 2^host-bitar för att få antal hosts?",
-            "options": [
-                "För att Router tar 2 adresser",
-                "Network ID och Broadcast kan inte användas av hosts",
-                "DNS kräver 2 adresser",
-                "Det är bara en konvention"
-            ],
-            "correct": 1,
-            "explanation": "Network ID (alla host-bitar = 0) och Broadcast (alla host-bitar = 1) kan inte tilldelas hosts."
-        },
-    ],
+"""
 }
 
 FILSYSTEM_NODE = {
@@ -581,146 +479,10 @@ du -sh *                 # Storlek på allt i katalogen
 | Skapa backup? | tar -czvf backup.tar.gz /path/ |
 | Kolla diskutrymme? | df -h |
 
-""",
-    "quiz": [
-        {
-            "question": "Vilket kommando kopierar en katalog rekursivt?",
-            "options": [
-                "cp katalog/ backup/",
-                "cp -r katalog/ backup/",
-                "mv katalog/ backup/",
-                "copy -r katalog/ backup/",
-            ],
-            "correct": 1,
-            "explanation": "cp -r (recursive) krävs för att kopiera kataloger med innehåll.",
-        },
-        {
-            "question": "Vad gör kommandot 'tail -f /var/log/syslog'?",
-            "options": [
-                "Visar första 10 raderna",
-                "Visar sista 10 raderna",
-                "Följer filen i realtid",
-                "Filtrerar loggen",
-            ],
-            "correct": 2,
-            "explanation": "tail -f (follow) visar nya rader i realtid - perfekt för att övervaka loggar.",
-        },
-        {
-            "question": "Vad betyder 'grep -v' flaggan?",
-            "options": [
-                "Verbose output",
-                "Visa radnummer",
-                "Invertera matchning (visa EJ matchande)",
-                "Case insensitive",
-            ],
-            "correct": 2,
-            "explanation": "grep -v inverterar matchningen och visar rader som INTE matchar mönstret.",
-        },
-        {
-            "question": "Vilken katalog innehåller systemkonfigurationer?",
-            "options": [
-                "/var",
-                "/etc",
-                "/home",
-                "/opt"
-            ],
-            "correct": 1,
-            "explanation": "/etc (etcetera) innehåller systemkonfigurationer som passwd, shadow, nginx etc."
-        },
-        {
-            "question": "Vad gör kommandot 'mkdir -p a/b/c'?",
-            "options": [
-                "Skapar bara katalogen c",
-                "Skapar hela katalogkedjan a/b/c",
-                "Flyttar kataloger",
-                "Ger fel om a inte finns"
-            ],
-            "correct": 1,
-            "explanation": "-p (parents) skapar alla överliggande kataloger som behövs."
-        },
-        {
-            "question": "Vad är skillnaden mellan > och >>?",
-            "options": [
-                "Ingen skillnad",
-                "> skriver över, >> lägger till",
-                ">> skriver över, > lägger till",
-                "> är för filer, >> är för kataloger"
-            ],
-            "correct": 1,
-            "explanation": "> skriver över filen (truncate), >> lägger till i slutet (append)."
-        },
-        {
-            "question": "Hur hittar du alla .log-filer i /var?",
-            "options": [
-                "grep -r '*.log' /var",
-                "find /var -name '*.log'",
-                "ls /var/*.log",
-                "search /var -type log"
-            ],
-            "correct": 1,
-            "explanation": "find med -name söker filer baserat på namn, stödjer wildcards."
-        },
-        {
-            "question": "Vad visar 'df -h'?",
-            "options": [
-                "Filstorleka",
-                "Diskpartitioner och ledigt utrymme",
-                "Kataloginnehåll",
-                "Dolda filer"
-            ],
-            "correct": 1,
-            "explanation": "df (disk free) visar filsystem och deras användning. -h gör det human readable."
-        },
-        {
-            "question": "Hur visar du dolda filer med ls?",
-            "options": [
-                "ls -h",
-                "ls -l",
-                "ls -a",
-                "ls -d"
-            ],
-            "correct": 2,
-            "explanation": "-a (all) visar alla filer inklusive dolda (de som börjar med .)"
-        },
-        {
-            "question": "Vad gör 'tar -czvf backup.tar.gz /data'?",
-            "options": [
-                "Extraherar backup.tar.gz till /data",
-                "Skapar gzip-komprimerad backup av /data",
-                "Listar innehållet i backup.tar.gz",
-                "Tar bort /data"
-            ],
-            "correct": 1,
-            "explanation": "c=create, z=gzip, v=verbose, f=file. Skapar komprimerad backup."
-        },
-    ],
+"""
 }
 
-SUBNETTING_FLASHCARDS = [
-    {"front": "Hur beräknas host-bitar?", "back": "32 - prefix (t.ex. 32-28=4)"},
-    {"front": "Lådmetoden - värdena?", "back": "128, 64, 32, 16, 8, 4, 2, 1"},
-    {"front": "Network ID beräknas hur?", "back": "Nollställ alla host-bitar"},
-    {"front": "Broadcast beräknas hur?", "back": "Ettställ alla host-bitar"},
-    {"front": "First host formel?", "back": "Network ID + 1"},
-    {"front": "Last host formel?", "back": "Broadcast - 1"},
-    {"front": "Antal hosts formel?", "back": "2^(host-bitar) - 2"},
-    {"front": "/24 ger hur många hosts?", "back": "254 hosts"},
-    {"front": "/28 ger hur många hosts?", "back": "14 hosts"},
-    {"front": "/30 används för?", "back": "Punkt-till-punkt-länkar (2 hosts)"},
-]
 
-FILSYSTEM_FLASHCARDS = [
-    {"front": "/etc innehåller?", "back": "Konfigurationsfiler"},
-    {"front": "/var/log innehåller?", "back": "Loggfiler"},
-    {"front": "/home innehåller?", "back": "Användarnas hemkataloger"},
-    {"front": "/tmp rensas när?", "back": "Vid omstart"},
-    {"front": "Kopiera katalog?", "back": "cp -r källa/ mål/"},
-    {"front": "Hitta filer?", "back": "find /path -name '*.txt'"},
-    {"front": "Sök i fil?", "back": "grep 'text' fil"},
-    {"front": "Sök rekursivt?", "back": "grep -r 'text' /path/"},
-    {"front": "Följ logg live?", "back": "tail -f /var/log/syslog"},
-    {"front": "Skapa tar.gz backup?", "back": "tar -czvf backup.tar.gz /path/"},
-]
 
 
 # =============================================================================
@@ -788,48 +550,10 @@ MODULE = {
 }
 
 
-# =============================================================================
-# SAMLA ALLA FLASHCARDS
-# =============================================================================
-
-ALL_FLASHCARDS = {
-    # MODUL 0
-    "subnetting-natverk": SUBNETTING_FLASHCARDS,
-    "filsystem-grundkommandon": FILSYSTEM_FLASHCARDS,
-    
-    # MODUL 1: BASH
-    "bash-grunder-shebang": BASH_GRUNDER_FLASHCARDS,
-    "variabler-quoting-expansions": VARIABLER_QUOTING_FLASHCARDS,
-    "regular-expressions-regex": REGEX_FLASHCARDS,
-    "sed-stream-editor": SED_FLASHCARDS,
-    "awk-pattern-processing": AWK_FLASHCARDS,
-    "villkor-if-elif-else-case": VILLKOR_FLASHCARDS,
-    "interaktiva-skript-read-validering": INTERAKTIVA_SKRIPT_FLASHCARDS,
-    "loopar-for-while-until": LOOPAR_FLASHCARDS,
-    "parametrar-arrays": PARAMETRAR_ARRAYS_FLASHCARDS,
-    "funktioner-scope": FUNKTIONER_FLASHCARDS,
-    "signals-traps": SIGNALS_TRAPS_FLASHCARDS,
-    
-    # MODUL 2: LINUX SYSTEM
-    "users-groups": USERS_GROUPS_FLASHCARDS,
-    "permissions-chmod-chown": PERMISSIONS_FLASHCARDS,
-    "ssh-hardening": SSH_HARDENING_FLASHCARDS,
-    "ufw-firewall": UFW_FLASHCARDS,
-    "firewalld": FIREWALLD_FLASHCARDS,
-    "lagring-partitioner-lvm": LAGRING_FLASHCARDS,
-    "backup-tar-rsync": BACKUP_TAR_FLASHCARDS,
-    "systemd-services": SYSTEMD_FLASHCARDS,
-    
-    # MODUL 3: DEVOPS
-    "docker-grunder": DOCKER_GRUNDER_FLASHCARDS,
-    "docker-images-dockerfile": DOCKER_IMAGES_FLASHCARDS,
-    "docker-compose": DOCKER_COMPOSE_FLASHCARDS,
-    "git-basics": GIT_BASICS_FLASHCARDS,
-}
 
 
 # =============================================================================
 # EXPORTERA
 # =============================================================================
 
-__all__ = ["MODULE", "ALL_FLASHCARDS"]
+__all__ = ["MODULE"]
