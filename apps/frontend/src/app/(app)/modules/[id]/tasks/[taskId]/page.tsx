@@ -58,11 +58,71 @@ import {
     HelpCircle,
 } from "lucide-react"
 
+// DOE25 Static Data
+import { DOE25_MODULE, DOE25Task, getTaskById } from "@/data/doe25-module"
+
+/* ============================================================================
+   DOE25 CONTENT GENERATOR
+   ============================================================================ */
+
+function generateDOE25Content(task: DOE25Task): string {
+    let content = `# ${task.title}\n\n`
+    content += `${task.description}\n\n`
+
+    for (const block of task.content_blocks) {
+        switch (block.type) {
+            case "intro":
+                if (block.headline) {
+                    content += `## ${block.headline}\n\n`
+                }
+                if (block.learning_objectives && block.learning_objectives.length > 0) {
+                    content += `### Lärandemål\n\n`
+                    for (const obj of block.learning_objectives) {
+                        content += `- ${obj}\n`
+                    }
+                    content += `\n`
+                }
+                break
+
+            case "concept":
+                if (block.title) {
+                    content += `## ${block.title}\n\n`
+                }
+                if (block.explanation) {
+                    content += `${block.explanation}\n\n`
+                }
+                if (block.pro_tip) {
+                    content += `> 💡 **Pro-tip:** ${block.pro_tip}\n\n`
+                }
+                break
+
+            case "code":
+                if (block.title) {
+                    content += `### ${block.title}\n\n`
+                }
+                if (block.code) {
+                    content += `\`\`\`${block.language || "bash"}\n${block.code}\n\`\`\`\n\n`
+                }
+                break
+
+            case "checkpoint":
+                if (block.message) {
+                    content += `---\n\n✅ **${block.message}**\n\n`
+                }
+                break
+        }
+    }
+
+    return content
+}
+
 /* ============================================================================
    MODULE COLORS
    ============================================================================ */
 
 const moduleColors: Record<string, { color: string; icon: string }> = {
+    // DOE25 Tenta
+    "doe25-tenta": { color: "#f59e0b", icon: "📝" },
     // Linux 24/7 - Vår första modul!
     "linux-247": { color: "#FCC624", icon: "🐧" },
     "environment-tooling-setup": { color: "#6366f1", icon: "🛠️" },
@@ -221,6 +281,74 @@ export default function TaskDetailPage() {
         setError(null)
 
         try {
+            // Special handling for DOE25 Tenta - use static data
+            if (moduleId === "doe25-tenta") {
+                const doe25Task = getTaskById(taskId)
+                if (!doe25Task) {
+                    setError("Task hittades inte")
+                    setLoading(false)
+                    return
+                }
+
+                // Convert DOE25 task to TaskPublic format
+                const taskData: TaskPublic = {
+                    id: doe25Task.id,
+                    title: doe25Task.title,
+                    description: doe25Task.description,
+                    content: generateDOE25Content(doe25Task),
+                    order_index: doe25Task.order_index,
+                    module_id: "doe25-tenta",
+                    difficulty: "medium",
+                    estimated_minutes: doe25Task.estimated_minutes,
+                    xp_reward: 100,
+                    task_tier: "standard",
+                    is_active: true,
+                    parent_task_id: null,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                }
+
+                // Module data
+                const moduleData: ModulePublic = {
+                    id: DOE25_MODULE.id,
+                    name: DOE25_MODULE.name,
+                    slug: DOE25_MODULE.slug,
+                    description: DOE25_MODULE.description,
+                    order_index: 0,
+                    difficulty: DOE25_MODULE.difficulty,
+                    estimated_hours: DOE25_MODULE.estimated_hours,
+                    prerequisites: [],
+                    is_active: true,
+                    track_id: "tenta",
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                }
+
+                // All tasks for navigation
+                const allDoe25Tasks: TaskPublic[] = DOE25_MODULE.tasks.map(t => ({
+                    id: t.id,
+                    title: t.title,
+                    description: t.description,
+                    content: "",
+                    order_index: t.order_index,
+                    module_id: "doe25-tenta",
+                    difficulty: "medium",
+                    estimated_minutes: t.estimated_minutes,
+                    xp_reward: 100,
+                    task_tier: "standard",
+                    is_active: true,
+                    parent_task_id: null,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                }))
+
+                setTask(taskData)
+                setModule(moduleData)
+                setAllTasks(allDoe25Tasks)
+                setLoading(false)
+                return
+            }
+
             // Fetch task, module, and all tasks in parallel
             const [taskResult, moduleResult, tasksResult] = await Promise.all([
                 getTask(taskId),

@@ -47,6 +47,9 @@ import {
     HelpCircle,
 } from "lucide-react"
 
+// DOE25 Static Data
+import { DOE25_MODULE } from "@/data/doe25-module"
+
 /* ============================================================================
    TYPES
    ============================================================================ */
@@ -139,6 +142,7 @@ const typeConfig: Record<string, {
    ============================================================================ */
 
 const moduleColors: Record<string, { color: string; icon: string }> = {
+    "doe25-tenta": { color: "#f59e0b", icon: "📝" },
     "environment-tooling-setup": { color: "#6366f1", icon: "🛠️" },
     "linux-mastery": { color: "#FCC624", icon: "🐧" },
     "shell-scripting-automation": { color: "#4EAA25", icon: "💻" },
@@ -685,6 +689,41 @@ export default function ModuleDetailPage() {
         setError(null)
 
         try {
+            // Special handling for DOE25 Tenta - use static data
+            if (moduleId === "doe25-tenta") {
+                const tasks: TaskUI[] = DOE25_MODULE.tasks.map((t, index) => ({
+                    id: t.id,
+                    title: t.title,
+                    description: t.description,
+                    orderIndex: t.order_index,
+                    isCompleted: false,
+                    estimatedMinutes: t.estimated_minutes,
+                    xpReward: 100,
+                    type: "concept" as const,
+                    difficulty: "medium" as const,
+                    status: "not_started" as const,
+                }))
+
+                const moduleUI: ModuleDetailUI = {
+                    id: DOE25_MODULE.id,
+                    slug: DOE25_MODULE.slug,
+                    title: DOE25_MODULE.name,
+                    description: DOE25_MODULE.description,
+                    icon: "📝",
+                    color: "#f59e0b",
+                    totalTasks: tasks.length,
+                    completedTasks: 0,
+                    totalXP: 3000,
+                    estimatedHours: DOE25_MODULE.estimated_hours,
+                    difficulty: DOE25_MODULE.difficulty,
+                    tasks,
+                }
+
+                setModule(moduleUI)
+                setLoading(false)
+                return
+            }
+
             const moduleResult = await getModule(moduleId)
             if (!moduleResult.ok) {
                 setError(moduleResult.message)
