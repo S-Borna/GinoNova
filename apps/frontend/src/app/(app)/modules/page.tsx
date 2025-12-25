@@ -90,6 +90,31 @@ function getModuleIcon(name: string): string {
    ============================================================================ */
 
 const MOCK_MODULES: EnhancedModule[] = [
+    // =========== DOE25 TENTA - PRIORITERAD ===========
+    {
+        id: "doe25-tenta",
+        name: "DOE25 Tenta",
+        slug: "doe25-tenta",
+        description: "Komplett tentaplugg för Linux/Unix Server - Alla 8 kursmål (KM1-KM8). Tenta: 7 januari 2025.",
+        order_index: 0,
+        orderIndex: 0,
+        difficulty: "intermediate",
+        estimated_hours: 30,
+        estimatedHours: 30,
+        prerequisites: [],
+        is_active: true,
+        track_id: "tenta",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        icon: "📝",
+        progress: 0,
+        tasksCompleted: 0,
+        totalTasks: 8,
+        status: "not_started",
+        tags: ["Linux", "Tenta", "KM1-KM8"],
+        xp: 3000,
+    },
+    // =========== BOOTCAMP MODULER ===========
     {
         id: "m1",
         name: "DevOps Foundations",
