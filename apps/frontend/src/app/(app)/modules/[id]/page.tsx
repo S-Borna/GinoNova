@@ -256,15 +256,55 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
             animate={{ opacity: 1, y: 0 }}
             className={cn(
                 "relative overflow-hidden rounded-3xl",
-                "bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950",
-                "border border-white/10",
-                "p-8"
+                "bg-[#0a0a0f]", // Deep cosmic background
+                "border border-purple-500/20",
+                "p-8 md:p-10"
             )}
+            style={{
+                boxShadow: `0 0 80px ${module.color}20, 0 0 40px rgba(168,85,247,0.1)`,
+            }}
         >
-            {/* Colored glow based on module color */}
-            <div
-                className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full blur-[120px] opacity-20"
-                style={{ backgroundColor: module.color }}
+            {/* EPIC AURORA GLOW — Multi-layered */}
+            <motion.div
+                className="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full opacity-30"
+                style={{
+                    background: `radial-gradient(circle, ${module.color}60 0%, transparent 70%)`,
+                    filter: "blur(80px)",
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.2, 0.4, 0.2],
+                }}
+                transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            />
+            <motion.div
+                className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full opacity-20"
+                style={{
+                    background: "radial-gradient(circle, rgba(168,85,247,0.5) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                }}
+                animate={{
+                    scale: [1, 1.15, 1],
+                    x: [0, 20, 0],
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            />
+
+            {/* Grid pattern overlay */}
+            <div 
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                    backgroundSize: "40px 40px",
+                }}
             />
 
             {/* Sparkle for complete */}
@@ -279,28 +319,41 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
             )}
 
             <div className="relative flex flex-col md:flex-row md:items-start gap-6">
-                {/* Icon */}
+                {/* Icon — Pulsating Glow */}
                 <motion.div
                     className={cn(
-                        "w-20 h-20 rounded-2xl flex items-center justify-center shrink-0",
+                        "w-24 h-24 rounded-3xl flex items-center justify-center shrink-0",
                         "bg-gradient-to-br from-white/10 to-white/5",
-                        "border border-white/10"
+                        "border border-white/20"
                     )}
-                    style={{ boxShadow: `0 0 40px ${module.color}30` }}
-                    whileHover={{ scale: 1.05 }}
+                    style={{ boxShadow: `0 0 60px ${module.color}40` }}
+                    whileHover={{ scale: 1.08, rotate: 5 }}
+                    animate={{
+                        boxShadow: [
+                            `0 0 40px ${module.color}30`,
+                            `0 0 80px ${module.color}50`,
+                            `0 0 40px ${module.color}30`,
+                        ],
+                    }}
+                    transition={{
+                        boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                    }}
                 >
-                    <span className="text-5xl">{module.icon}</span>
+                    <span className="text-6xl drop-shadow-lg">{module.icon}</span>
                 </motion.div>
 
                 {/* Content */}
                 <div className="flex-1">
-                    <h1 className={cn(
-                        "text-3xl md:text-4xl font-black mb-2",
-                        "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
-                    )}>
+                    <h1 
+                        className={cn(
+                            "text-4xl md:text-5xl font-black mb-3 tracking-tight",
+                            "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
+                        )}
+                        style={{ textShadow: `0 0 40px ${module.color}40` }}
+                    >
                         {module.title}
                     </h1>
-                    <p className="text-zinc-400 mb-4 max-w-2xl">
+                    <p className="text-zinc-300 text-lg mb-5 max-w-2xl leading-relaxed">
                         {module.description}
                     </p>
 
@@ -327,30 +380,39 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
                         </span>
                     </div>
 
-                    {/* Progress */}
-                    <div className="max-w-md">
-                        <div className="flex items-center justify-between text-sm mb-2">
-                            <span className="text-zinc-500">Progress</span>
+                    {/* Progress — Premium Animated Bar */}
+                    <div className="max-w-lg">
+                        <div className="flex items-center justify-between text-sm mb-3">
+                            <span className="text-zinc-400 font-medium">Progress</span>
                             <span className={cn(
-                                "font-bold",
-                                isComplete ? "text-emerald-400" : "text-purple-400"
+                                "font-black text-2xl",
+                                isComplete 
+                                    ? "bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent" 
+                                    : "bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
                             )}>
                                 {progress}%
                             </span>
                         </div>
-                        <div className="h-2.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-3 bg-zinc-800/80 rounded-full overflow-hidden">
                             <motion.div
-                                className="h-full rounded-full"
+                                className="h-full rounded-full relative overflow-hidden"
                                 style={{
                                     background: isComplete
-                                        ? "linear-gradient(90deg, #10b981, #14b8a6)"
-                                        : `linear-gradient(90deg, ${module.color}, ${module.color}cc)`,
-                                    boxShadow: `0 0 15px ${isComplete ? "#10b981" : module.color}50`,
+                                        ? "linear-gradient(90deg, #10b981, #14b8a6, #06b6d4)"
+                                        : `linear-gradient(90deg, ${module.color}, #a855f7, #ec4899)`,
+                                    boxShadow: `0 0 30px ${isComplete ? "#10b981" : module.color}60`,
                                 }}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                            />
+                                transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                {/* Shimmer effect */}
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                    animate={{ x: ["-100%", "200%"] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                />
+                            </motion.div>
                         </div>
                     </div>
                 </div>
@@ -360,7 +422,7 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
 }
 
 /* ============================================================================
-   TASK CARD — Premium Style matching NodeCard
+   TASK CARD — Netflix Premium Style 🎬
    ============================================================================ */
 
 function TaskCard({
@@ -396,33 +458,51 @@ function TaskCard({
             className={cn(
                 "group relative h-full",
                 "rounded-2xl",
-                "bg-zinc-900/80 backdrop-blur-sm",
-                "border border-zinc-800/80",
-                "transition-all duration-300",
-                isHovered && "border-zinc-700/80 shadow-[0_8px_30px_rgba(0,0,0,0.4)]",
-                isComplete && "opacity-75",
-                "cursor-pointer"
+                "bg-[#0d0d12]", // Cosmic dark
+                "border border-purple-500/10",
+                "transition-all duration-500",
+                "cursor-pointer overflow-hidden"
             )}
             onClick={() => onClick(task.id)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            whileHover={{ y: -4, scale: 1.02 }}
-            transition={{ duration: 0.2 }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+                boxShadow: isHovered 
+                    ? "0 20px 60px rgba(168,85,247,0.15), 0 0 40px rgba(168,85,247,0.1)" 
+                    : "0 4px 20px rgba(0,0,0,0.3)",
+            }}
         >
-            <div className="p-5 flex flex-col h-full">
+            {/* Gradient border glow on hover */}
+            {isHovered && (
+                <motion.div
+                    className="absolute inset-0 rounded-2xl pointer-events-none"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    style={{
+                        background: "linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(6,182,212,0.1) 50%, rgba(236,72,153,0.15) 100%)",
+                    }}
+                />
+            )}
+
+            <div className="relative p-6 flex flex-col h-full">
                 {/* Top Row: Icon + Type Badge + Bookmark */}
                 <div className="flex items-start justify-between mb-4">
-                    {/* Icon container */}
+                    {/* Icon container with glow */}
                     <motion.div
                         className={cn(
-                            "w-12 h-12 rounded-xl flex items-center justify-center",
+                            "w-14 h-14 rounded-xl flex items-center justify-center",
                             config.bgClass,
-                            "border border-white/5"
+                            "border border-white/10"
                         )}
-                        animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
-                        transition={{ duration: 0.2 }}
+                        animate={isHovered ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }}
+                        transition={{ duration: 0.3 }}
+                        style={{
+                            boxShadow: isHovered ? `0 0 30px ${config.colorClass.replace('text-', '').replace('-400', '')}40` : "none",
+                        }}
                     >
-                        <span className="text-2xl">{config.emoji}</span>
+                        <span className="text-3xl">{config.emoji}</span>
                     </motion.div>
 
                     {/* Right side: Status + Bookmark */}
@@ -430,12 +510,12 @@ function TaskCard({
                         <motion.button
                             onClick={handleBookmark}
                             className={cn(
-                                "p-1.5 rounded-lg transition-all duration-200",
+                                "p-2 rounded-xl transition-all duration-200",
                                 isBookmarked
-                                    ? "text-amber-400 bg-amber-500/20"
-                                    : "text-zinc-500 hover:text-amber-400 hover:bg-amber-500/10"
+                                    ? "text-amber-400 bg-amber-500/20 border border-amber-500/30"
+                                    : "text-zinc-500 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent"
                             )}
-                            whileHover={{ scale: 1.1 }}
+                            whileHover={{ scale: 1.15 }}
                             whileTap={{ scale: 0.9 }}
                             disabled={bookmarkLoading}
                         >
@@ -447,22 +527,27 @@ function TaskCard({
                         </motion.button>
 
                         {isComplete && (
-                            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                                <span className="text-xs font-medium text-emerald-300">Klar</span>
-                            </div>
+                            <motion.div 
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
+                                animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                <span className="text-xs font-bold text-emerald-300">Klar</span>
+                            </motion.div>
                         )}
                         {isInProgress && (
-                            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-500/20">
-                                <Loader2 className="w-3.5 h-3.5 text-purple-400 animate-spin" />
-                                <span className="text-xs font-medium text-purple-300">Pågår</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-500/30">
+                                <Loader2 className="w-4 h-4 text-purple-400 animate-spin" />
+                                <span className="text-xs font-bold text-purple-300">Pågår</span>
                             </div>
                         )}
                         {!isComplete && !isInProgress && (
                             <span className={cn(
-                                "px-2.5 py-1 rounded-full text-xs font-medium",
+                                "px-3 py-1.5 rounded-xl text-xs font-bold border",
                                 config.bgClass,
-                                config.colorClass
+                                config.colorClass,
+                                "border-white/10"
                             )}>
                                 {config.label}
                             </span>
@@ -471,15 +556,15 @@ function TaskCard({
                 </div>
 
                 {/* Task number */}
-                <span className="text-xs font-medium text-zinc-600 uppercase tracking-wide">
+                <span className="text-xs font-bold text-purple-400/60 uppercase tracking-[0.15em]">
                     Task {task.orderIndex}
                 </span>
 
                 {/* Title */}
                 <h3 className={cn(
-                    "mt-1 text-lg font-semibold leading-tight",
-                    "text-white",
-                    isComplete && "text-zinc-400"
+                    "mt-2 text-xl font-bold leading-tight",
+                    "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent",
+                    isComplete && "opacity-60"
                 )}>
                     {task.title}
                 </h3>
@@ -487,25 +572,28 @@ function TaskCard({
                 {/* Description - flex-grow to push meta to bottom */}
                 <div className="flex-grow">
                     {task.description && (
-                        <p className="mt-2 text-sm text-zinc-500 line-clamp-3">
+                        <p className="mt-3 text-sm text-zinc-400 line-clamp-3 leading-relaxed">
                             {task.description}
                         </p>
                     )}
                 </div>
 
                 {/* Meta row - always at bottom */}
-                <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-zinc-800">
+                <div className="flex flex-wrap items-center gap-4 mt-5 pt-5 border-t border-purple-500/10">
                     {/* Time */}
-                    <div className="flex items-center gap-1.5 text-zinc-500">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span className="text-xs font-medium">{task.estimatedMinutes} min</span>
+                    <div className="flex items-center gap-1.5 text-zinc-400">
+                        <Clock className="w-4 h-4" />
+                        <span className="text-sm font-medium">{task.estimatedMinutes} min</span>
                     </div>
 
                     {/* XP */}
-                    <div className="flex items-center gap-1.5 text-amber-400">
-                        <Zap className="w-3.5 h-3.5" />
-                        <span className="text-xs font-bold">{task.xpReward} XP</span>
-                    </div>
+                    <motion.div 
+                        className="flex items-center gap-1.5"
+                        animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
+                    >
+                        <Zap className="w-4 h-4 text-amber-400" />
+                        <span className="text-sm font-black text-amber-400">{task.xpReward} XP</span>
+                    </motion.div>
 
                     {/* Difficulty */}
                     <DifficultyDots difficulty={task.difficulty} />
@@ -518,13 +606,13 @@ function TaskCard({
                                 onClick(task.id)
                             }}
                             className={cn(
-                                "ml-auto flex items-center gap-1.5 px-4 py-2 rounded-xl",
-                                "text-sm font-medium transition-all duration-200",
-                                "bg-white text-zinc-900",
-                                "hover:bg-zinc-100"
+                                "ml-auto flex items-center gap-2 px-5 py-2.5 rounded-xl",
+                                "text-sm font-bold transition-all duration-300",
+                                "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
+                                "hover:from-purple-500 hover:to-pink-500"
                             )}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168,85,247,0.4)" }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             {isInProgress ? (
                                 <>
@@ -533,7 +621,7 @@ function TaskCard({
                                 </>
                             ) : (
                                 <>
-                                    <Play className="w-3.5 h-3.5" />
+                                    <Play className="w-4 h-4" />
                                     <span>Börja</span>
                                 </>
                             )}
@@ -681,14 +769,15 @@ export default function ModuleDetailPage() {
     }
 
     return (
-        <PageLayout maxWidth="standard" background="gray">
-            {/* Back button */}
+        <PageLayout maxWidth="standard" background="cosmic">
+            {/* Back button — Premium styled */}
             <Link
                 href="/modules"
                 className={cn(
-                    "inline-flex items-center gap-2 text-sm mb-6",
-                    "text-zinc-500 hover:text-white",
-                    "transition-colors"
+                    "inline-flex items-center gap-2 text-sm mb-6 px-4 py-2 rounded-xl",
+                    "text-zinc-400 hover:text-white",
+                    "bg-white/5 hover:bg-white/10 border border-white/10",
+                    "transition-all duration-300"
                 )}
             >
                 <ArrowLeft className="w-4 h-4" />
@@ -701,49 +790,75 @@ export default function ModuleDetailPage() {
                 <ErrorState error={error} onRetry={fetchModule} />
             ) : module ? (
                 <motion.div
-                    className="space-y-8"
+                    className="space-y-10"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                 >
                     {/* Header */}
                     <ModuleHeader module={module} />
 
-                    {/* Continue button */}
+                    {/* Continue button — Epic glow */}
                     {nextTask && (
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <Button
+                            <motion.button
                                 onClick={handleContinue}
-                                size="lg"
                                 className={cn(
-                                    "rounded-xl px-6",
-                                    "bg-gradient-to-r from-purple-600 to-indigo-600",
-                                    "hover:from-purple-500 hover:to-indigo-500",
-                                    "shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                                    "inline-flex items-center gap-2 rounded-2xl px-8 py-4",
+                                    "bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600",
+                                    "text-white font-bold text-lg",
+                                    "transition-all duration-300"
                                 )}
+                                whileHover={{ 
+                                    scale: 1.02,
+                                    boxShadow: "0 0 50px rgba(168,85,247,0.5), 0 0 100px rgba(236,72,153,0.3)",
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                animate={{
+                                    boxShadow: [
+                                        "0 0 30px rgba(168,85,247,0.3)",
+                                        "0 0 60px rgba(168,85,247,0.5)",
+                                        "0 0 30px rgba(168,85,247,0.3)",
+                                    ],
+                                }}
+                                transition={{
+                                    boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                                }}
                             >
-                                <Play className="w-4 h-4 mr-2" />
+                                <Play className="w-5 h-5" />
                                 Fortsätt: {nextTask.title}
-                                <ChevronRight className="w-4 h-4 ml-2" />
-                            </Button>
+                                <ChevronRight className="w-5 h-5" />
+                            </motion.button>
                         </motion.div>
                     )}
 
                     {/* Tasks grid */}
                     <Section>
-                        <Headline level={2} className="mb-6 text-white">
-                            Tasks
-                        </Headline>
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                        <div className="flex items-center gap-3 mb-8">
+                            <motion.div
+                                className="p-3 rounded-xl bg-purple-500/20 border border-purple-500/30"
+                                animate={{ boxShadow: ["0 0 10px rgba(168,85,247,0.2)", "0 0 20px rgba(168,85,247,0.4)", "0 0 10px rgba(168,85,247,0.2)"] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                <BookOpen className="w-5 h-5 text-purple-400" />
+                            </motion.div>
+                            <Headline level={2} className="text-white font-bold">
+                                Tasks
+                            </Headline>
+                            <span className="text-zinc-500 text-sm ml-2">
+                                {module.tasks.length} lektioner
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             {module.tasks.map((task, index) => (
                                 <motion.div
                                     key={task.id}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 + index * 0.03 }}
+                                    transition={{ delay: 0.1 + index * 0.03, ease: [0.16, 1, 0.3, 1] }}
                                 >
                                     <TaskCard
                                         task={task}

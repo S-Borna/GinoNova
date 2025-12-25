@@ -414,14 +414,15 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
     const taskTypeConfig = typeConfig[taskType] || typeConfig.standard
 
     return (
-        <PageLayout maxWidth="standard" background="gray">
+        <PageLayout maxWidth="standard" background="cosmic">
             {/* Back button */}
             <Link
                 href={`/modules/${moduleId}`}
                 className={cn(
-                    "inline-flex items-center gap-2 text-sm mb-6",
-                    "text-zinc-500 hover:text-white",
-                    "transition-colors"
+                    "inline-flex items-center gap-2 text-sm mb-6 px-4 py-2 rounded-xl",
+                    "text-zinc-400 hover:text-white",
+                    "bg-white/5 hover:bg-white/10 border border-white/10",
+                    "transition-all duration-300"
                 )}
             >
                 <ArrowLeft className="w-4 h-4" />
@@ -438,149 +439,234 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                 >
-                    {/* Task Header - Premium Style */}
+                    {/* Task Header — EPIC Cosmic Premium Style */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className={cn(
                             "relative overflow-hidden rounded-3xl",
-                            "bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950",
-                            "border border-white/10",
-                            "p-8"
+                            "bg-[#0a0a0f]", // Deep cosmic
+                            "border border-purple-500/20",
+                            "p-8 md:p-10"
                         )}
+                        style={{
+                            boxShadow: `0 0 80px ${moduleConfig.color}20, 0 0 40px rgba(168,85,247,0.1)`,
+                        }}
                     >
-                        {/* Colored glow based on module color */}
-                        <div
-                            className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full blur-[120px] opacity-20"
-                            style={{ backgroundColor: moduleConfig.color }}
+                        {/* AURORA GLOW — Multi-layered */}
+                        <motion.div
+                            className="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full"
+                            style={{
+                                background: `radial-gradient(circle, ${moduleConfig.color}50 0%, transparent 70%)`,
+                                filter: "blur(80px)",
+                            }}
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.3, 0.5, 0.3],
+                            }}
+                            transition={{
+                                duration: 6,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            }}
+                        />
+                        <motion.div
+                            className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full"
+                            style={{
+                                background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)",
+                                filter: "blur(60px)",
+                            }}
+                            animate={{
+                                scale: [1, 1.15, 1],
+                                x: [0, 20, 0],
+                            }}
+                            transition={{
+                                duration: 8,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            }}
+                        />
+
+                        {/* Grid pattern */}
+                        <div 
+                            className="absolute inset-0 opacity-[0.03]"
+                            style={{
+                                backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                                backgroundSize: "40px 40px",
+                            }}
                         />
 
                         {/* Completed sparkle */}
                         {isCompleted && (
                             <motion.div
-                                className="absolute top-6 right-6 text-emerald-400"
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                className="absolute top-6 right-6"
+                                animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                                transition={{ rotate: { duration: 4, repeat: Infinity, ease: "linear" }, scale: { duration: 2, repeat: Infinity } }}
                             >
-                                <Sparkles className="w-6 h-6" />
+                                <Sparkles className="w-8 h-8 text-emerald-400" />
                             </motion.div>
                         )}
 
                         <div className="relative flex flex-col md:flex-row md:items-start gap-6">
-                            {/* Task Type Icon */}
+                            {/* Task Type Icon — Pulsating */}
                             <motion.div
                                 className={cn(
-                                    "w-20 h-20 rounded-2xl flex items-center justify-center shrink-0",
+                                    "w-24 h-24 rounded-3xl flex items-center justify-center shrink-0",
                                     "bg-gradient-to-br from-white/10 to-white/5",
-                                    "border border-white/10"
+                                    "border border-white/20"
                                 )}
-                                style={{ boxShadow: `0 0 40px ${moduleConfig.color}30` }}
-                                whileHover={{ scale: 1.05 }}
+                                style={{ boxShadow: `0 0 60px ${moduleConfig.color}40` }}
+                                whileHover={{ scale: 1.08, rotate: 5 }}
+                                animate={{
+                                    boxShadow: [
+                                        `0 0 40px ${moduleConfig.color}30`,
+                                        `0 0 80px ${moduleConfig.color}50`,
+                                        `0 0 40px ${moduleConfig.color}30`,
+                                    ],
+                                }}
+                                transition={{
+                                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                                }}
                             >
-                                <span className="text-5xl">{taskTypeConfig.emoji}</span>
+                                <span className="text-6xl drop-shadow-lg">{taskTypeConfig.emoji}</span>
                             </motion.div>
 
                             {/* Content */}
                             <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <span className="text-xs font-bold text-purple-400/60 uppercase tracking-[0.15em]">
                                         Task {task.order_index}
                                     </span>
                                     <span className={cn(
-                                        "px-2.5 py-1 rounded-full text-xs font-medium",
+                                        "px-3 py-1.5 rounded-xl text-xs font-bold border",
                                         taskTypeConfig.bgClass,
-                                        taskTypeConfig.colorClass
+                                        taskTypeConfig.colorClass,
+                                        "border-white/10"
                                     )}>
                                         {taskTypeConfig.label}
                                     </span>
                                     {isCompleted && (
-                                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20">
-                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                                            <span className="text-xs font-medium text-emerald-300">Klar</span>
-                                        </span>
+                                        <motion.span 
+                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
+                                            animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        >
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                            <span className="text-xs font-bold text-emerald-300">Klar</span>
+                                        </motion.span>
                                     )}
                                 </div>
 
-                                <h1 className={cn(
-                                    "text-2xl md:text-3xl font-black mb-2",
-                                    "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
-                                )}>
+                                <h1 
+                                    className={cn(
+                                        "text-3xl md:text-4xl font-black mb-3 tracking-tight",
+                                        "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
+                                    )}
+                                    style={{ textShadow: `0 0 40px ${moduleConfig.color}40` }}
+                                >
                                     {task.title}
                                 </h1>
 
                                 {task.description && (
-                                    <p className="text-zinc-400 mb-4 max-w-2xl">
+                                    <p className="text-zinc-300 text-lg mb-5 max-w-2xl leading-relaxed">
                                         {task.description}
                                     </p>
                                 )}
 
-                                {/* Meta row */}
-                                <div className="flex flex-wrap items-center gap-4 text-sm">
-                                    <span className="flex items-center gap-1.5 text-zinc-400">
-                                        <Clock className="w-4 h-4" />
-                                        {task.estimated_minutes} min
+                                {/* Meta row — Premium styled */}
+                                <div className="flex flex-wrap items-center gap-5 text-sm">
+                                    <span className="flex items-center gap-2 text-zinc-300 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                                        <Clock className="w-4 h-4 text-purple-400" />
+                                        <span className="font-medium">{task.estimated_minutes} min</span>
                                     </span>
-                                    <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                                        <Zap className="w-4 h-4" />
-                                        +{task.xp_reward} XP
-                                    </span>
+                                    <motion.span 
+                                        className="flex items-center gap-2 bg-amber-500/10 px-4 py-2 rounded-xl border border-amber-500/30"
+                                        whileHover={{ scale: 1.05 }}
+                                    >
+                                        <Zap className="w-4 h-4 text-amber-400" />
+                                        <span className="font-black text-amber-400">+{task.xp_reward} XP</span>
+                                    </motion.span>
                                     <DifficultyDots difficulty={task.difficulty} />
                                 </div>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* Lesson Content - Premium Style */}
+                    {/* Lesson Content — Premium Cosmic Style */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         className={cn(
-                            "relative overflow-hidden rounded-2xl",
-                            "bg-zinc-900/80 backdrop-blur-sm",
-                            "border border-zinc-800/80",
-                            "p-6 md:p-8"
+                            "relative overflow-hidden rounded-3xl",
+                            "bg-[#0a0a0f]/90 backdrop-blur-xl",
+                            "border border-purple-500/20",
+                            "p-8 md:p-10"
                         )}
+                        style={{
+                            boxShadow: "0 0 60px rgba(168,85,247,0.08), 0 20px 40px rgba(0,0,0,0.4)",
+                        }}
                     >
-                        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-zinc-800">
-                            {hasContentBlocks ? (
-                                <Play className="w-5 h-5 text-purple-400" />
-                            ) : (
-                                <BookOpen className="w-5 h-5 text-purple-400" />
-                            )}
-                            <Headline level={2} className="text-white">
+                        {/* Subtle glow */}
+                        <div 
+                            className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full opacity-20 blur-[80px] pointer-events-none"
+                            style={{ background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)" }}
+                        />
+                        
+                        <div className="relative flex items-center gap-3 mb-8 pb-6 border-b border-purple-500/20">
+                            <motion.div
+                                className={cn(
+                                    "p-3 rounded-xl",
+                                    hasContentBlocks ? "bg-purple-500/20" : "bg-blue-500/20",
+                                    "border border-white/10"
+                                )}
+                                whileHover={{ scale: 1.1 }}
+                            >
+                                {hasContentBlocks ? (
+                                    <Play className="w-5 h-5 text-purple-400" />
+                                ) : (
+                                    <BookOpen className="w-5 h-5 text-blue-400" />
+                                )}
+                            </motion.div>
+                            <Headline level={2} className="text-white font-bold">
                                 {hasContentBlocks ? "Interaktiv Lektion" : "Lektionsinnehåll"}
                             </Headline>
                             {hasContentBlocks && taskProgress && (
-                                <span className="ml-auto text-sm text-zinc-500">
+                                <motion.span 
+                                    className="ml-auto text-sm font-medium px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                                    animate={{ boxShadow: ["0 0 5px rgba(168,85,247,0.2)", "0 0 15px rgba(168,85,247,0.3)", "0 0 5px rgba(168,85,247,0.2)"] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                >
                                     {taskProgress.progress_percent || 0}% klart
-                                </span>
+                                </motion.span>
                             )}
                         </div>
 
-                        {hasContentBlocks ? (
-                            <ContentBlockRenderer
-                                blocks={(task as any).content_blocks}
-                                taskId={taskId}
-                                progress={taskProgress}
-                                onBlockComplete={handleBlockComplete}
-                                onQuizAnswer={handleQuizAnswer}
-                                onTerminalCommand={handleTerminalCommand}
-                            />
-                        ) : (
-                            <LessonContent
-                                content={filteredContent || placeholderContent}
-                                title={task.title}
-                                estimatedMinutes={task.estimated_minutes}
-                            />
-                        )}
+                        <div className="relative">
+                            {hasContentBlocks ? (
+                                <ContentBlockRenderer
+                                    blocks={(task as any).content_blocks}
+                                    taskId={taskId}
+                                    progress={taskProgress}
+                                    onBlockComplete={handleBlockComplete}
+                                    onQuizAnswer={handleQuizAnswer}
+                                    onTerminalCommand={handleTerminalCommand}
+                                />
+                            ) : (
+                                <LessonContent
+                                    content={filteredContent || placeholderContent}
+                                    title={task.title}
+                                    estimatedMinutes={task.estimated_minutes}
+                                />
+                            )}
+                        </div>
 
                         {/* Related Tasks / Fördjupning */}
                         {relatedTasks.length > 0 && (
                             <RelatedTasks
                                 tasks={relatedTasks}
                                 moduleId={moduleId}
-                                className="mt-8"
+                                className="mt-10 pt-8 border-t border-purple-500/20"
                             />
                         )}
                     </motion.div>
