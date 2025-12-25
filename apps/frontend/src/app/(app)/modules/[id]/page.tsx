@@ -22,6 +22,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { PageLayout, Section, Headline } from "@saas/ui"
 import { Button } from "@/components/ui/button"
+import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 import { useBookmarks } from "@/hooks/useBookmarks"
 import { getModule } from "@/lib/modules"
 import { getTasksForModule } from "@/lib/tasks"
@@ -769,7 +770,11 @@ export default function ModuleDetailPage() {
     }
 
     return (
-        <PageLayout maxWidth="standard" background="cosmic">
+        <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
+
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Back button — Premium styled */}
             <Link
                 href="/modules"
@@ -872,6 +877,7 @@ export default function ModuleDetailPage() {
                     </Section>
                 </motion.div>
             ) : null}
-        </PageLayout>
+            </div>
+        </div>
     )
 }

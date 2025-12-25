@@ -60,74 +60,11 @@ import {
     Flame,
     Brain,
 } from "lucide-react"
+import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 
 /* ============================================================================
-   COSMIC AURORA BACKGROUND ✨
+   Using shared CosmicAurora from @/components/ui/cosmic-aurora
    ============================================================================ */
-
-function CosmicAurora() {
-    return (
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            {/* Purple orb - top right */}
-            <motion.div
-                className="absolute w-[600px] h-[600px] rounded-full"
-                style={{
-                    background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
-                    filter: "blur(60px)",
-                    top: "-10%",
-                    right: "-5%",
-                }}
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Cyan orb - bottom left */}
-            <motion.div
-                className="absolute w-[500px] h-[500px] rounded-full"
-                style={{
-                    background: "radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 70%)",
-                    filter: "blur(60px)",
-                    bottom: "10%",
-                    left: "-10%",
-                }}
-                animate={{
-                    scale: [1.1, 1, 1.1],
-                    opacity: [0.2, 0.4, 0.2],
-                }}
-                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Pink orb - center */}
-            <motion.div
-                className="absolute w-[400px] h-[400px] rounded-full"
-                style={{
-                    background: "radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)",
-                    filter: "blur(80px)",
-                    top: "40%",
-                    left: "30%",
-                }}
-                animate={{
-                    x: [0, 50, 0],
-                    y: [0, -30, 0],
-                    opacity: [0.15, 0.25, 0.15],
-                }}
-                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Subtle grid overlay */}
-            <div
-                className="absolute inset-0 opacity-[0.015]"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(rgba(139,92,246,0.5) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '60px 60px'
-                }}
-            />
-        </div>
-    )
-}
 
 /* ============================================================================
    VIBRANT COLOR SYSTEM

@@ -33,6 +33,9 @@ import { BookOpen, Trophy, RefreshCw, AlertCircle, Settings2, Sparkles } from "l
 // @saas/ui Design System
 import { PageLayout, Section, Block, Headline, Subtext } from "@saas/ui"
 
+// Cosmic Design System
+import { CosmicAurora } from "@/components/ui/cosmic-aurora"
+
 /* ============================================================================
    TYPES
    ============================================================================ */
@@ -699,30 +702,41 @@ export default function ModulesPage() {
 
     if (loading) {
         return (
-            <PageLayout maxWidth="wide" background="gray">
-                <PageSkeleton />
-            </PageLayout>
+            <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+                <CosmicAurora />
+                <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <PageSkeleton />
+                </div>
+            </div>
         )
     }
 
     if (error) {
         return (
-            <PageLayout maxWidth="wide" background="gray">
-                <ErrorState error={error ?? "Ett fel uppstod"} onRetry={handleRefresh} />
-            </PageLayout>
+            <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+                <CosmicAurora />
+                <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <ErrorState error={error ?? "Ett fel uppstod"} onRetry={handleRefresh} />
+                </div>
+            </div>
         )
     }
 
     if (modules.length === 0) {
         return (
-            <PageLayout maxWidth="wide" background="gray">
-                <EmptyState />
-            </PageLayout>
+            <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+                <CosmicAurora />
+                <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <EmptyState />
+                </div>
+            </div>
         )
     }
 
     return (
-        <PageLayout maxWidth="wide" background="gray">
+        <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+            <CosmicAurora />
+            <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <AnimatePresence>
                 <motion.div
                     className="space-y-8"
@@ -784,6 +798,7 @@ export default function ModulesPage() {
                     </Section>
                 </motion.div>
             </AnimatePresence>
-        </PageLayout>
+            </div>
+        </div>
     )
 }
